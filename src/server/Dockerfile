@@ -8,7 +8,6 @@ RUN pnpm install
 FROM base as pre-build
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
-COPY scripts ./scripts
 
 FROM pre-build as build
 RUN pnpm run build
