@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: $IMAGE
-          image: registry.digitalocean.com/signals/$IMAGE
+          image: $REGISTRY/$IMAGE
           ports:
             - containerPort: 80
           resources:
@@ -37,4 +37,4 @@ spec:
     - port: 80
   selector:
     app: $IMAGE
-    
+  
