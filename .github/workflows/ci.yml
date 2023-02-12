@@ -84,6 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
+      REGISTRY: ${{ secrets.REGISTRY }}
       IMAGE: ${{ github.event.repository.name }}-client-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
       WORKING_DIR: src/client
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
