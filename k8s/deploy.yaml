@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $IMAGE
+  namespace: $K8S_NAMESPACE
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: $IMAGE
+  template:
+    metadata:
+      labels:
+        app: $IMAGE
+    spec:
+      containers:
+        - name: $IMAGE
+          image: $REGISTRY/$IMAGE
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "$K8S_MEMORY_REQUESTS"
+              cpu: "$K8S_CPU_REQUESTS"
+            limits:
+              memory: "$K8S_MEMORY_LIMITS"
+              cpu: "$K8S_CPU_LIMITS"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $IMAGE
+  namespace: $K8S_NAMESPACE
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+  selector:
+    app: $IMAGE
+  
