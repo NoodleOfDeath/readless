@@ -21,8 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
-      COMPONENT: client
-      IMAGE: ${{ github.event.repository.name }}-${{ env.COMPONENT }}-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+      IMAGE: ${{ github.event.repository.name }}-client-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
       WORKING_DIR: src/client
       API_ENDPOINT: ${{ secrets.API_ENDPOINT }}
       GENERATE_SOURCEMAP: ${{ secrets.GENERATE_SOURCEMAP }}
@@ -58,8 +57,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   #   env:
-  #     COMPONENT: api
-  #     IMAGE: ${{ github.event.repository.name }}-${{ COMPONENT }}-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+  #     IMAGE: ${{ github.event.repository.name }}-api-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   #   steps:
   #     - name: Print Job Description
   #       run: |
@@ -87,8 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
-      COMPONENT: client
-      IMAGE: ${{ github.event.repository.name }}-${{ env.COMPONENT }}-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+      IMAGE: ${{ github.event.repository.name }}-client-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
       WORKING_DIR: src/client
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
       K8S_MEMORY_REQUESTS: ${{ secrets.K8S_MEMORY_REQUESTS }}
@@ -123,8 +120,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   #   env:
-  #     COMPONENT: api
-  #     IMAGE: ${{ github.event.repository.name }}-${{ COMPONENT }}-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+  #     IMAGE: ${{ github.event.repository.name }}-api-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   #     CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
   #     K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
   #     K8S_MEMORY_REQUESTS: ${{ secrets.K8S_MEMORY_REQUESTS }}
