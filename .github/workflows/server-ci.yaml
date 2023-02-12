@@ -21,7 +21,6 @@ env:
 
 jobs:
   build-api:
-    needs: build-client
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
