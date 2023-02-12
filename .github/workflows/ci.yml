@@ -36,7 +36,8 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          docker build . --file $WORKING_DIR/Dockerfile --tag $IMAGE:latest \
+          cd $WORKING_DIR && \
+          docker build . --file Dockerfile --tag $IMAGE:latest \
             --build-arg API_ENDPOINT=$API_ENDPOINT \
             --build-arg GENERATE_SOURCEMAP=$GENERATE_SOURCEMAP
       - name: Install doctl
