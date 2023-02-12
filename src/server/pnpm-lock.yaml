@@ -9,6 +9,7 @@ specifiers:
   '@types/qs': ^6.9.7
   body-parser: ^1.20.0
   cors: ^2.8.5
+  dotenv: ^16.0.3
   express: ^4.18.2
   express-validator: ^6.14.2
   nodemon: ^2.0.19
@@ -32,6 +33,7 @@ devDependencies:
   '@types/express-serve-static-core': 4.17.33
   '@types/node': 18.13.0
   '@types/qs': 6.9.7
+  dotenv: 16.0.3
   nodemon: 2.0.20
   only-allow: 1.1.1
   rimraf: 3.0.2
@@ -564,6 +566,11 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       path-type: 3.0.0
+    dev: true
+
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
     dev: true
 
   /ee-first/1.1.1:

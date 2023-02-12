@@ -48,6 +48,7 @@
     "@types/express-serve-static-core": "^4.17.31",
     "@types/node": "^18.11.10",
     "@types/qs": "^6.9.7",
+    "dotenv": "^16.0.3",
     "nodemon": "^2.0.19",
     "only-allow": "^1.1.1",
     "rimraf": "^3.0.2",
