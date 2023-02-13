@@ -52,7 +52,7 @@ export default function Home() {
         <Typography variant="h4">
           Listen to our weekly podcast on the following podcast providers!
         </Typography>
-        <Grid container spacing={2}>
+        <Grid container justifyContent="center" spacing={2}>
           {DIRECTORIES.map((directory) => (
             <Grid
               key={directory.label}
