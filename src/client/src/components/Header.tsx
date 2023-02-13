@@ -25,14 +25,6 @@ type NavigationItemProps = {
 
 const NAVIGATION_ITEMS: NavigationItemProps[] = [
   {
-    label: "Home",
-    onClick: ({ navigate }) => navigate?.("/"),
-  },
-  {
-    label: "Contact Us",
-    onClick: ({ navigate }) => navigate?.("/contact"),
-  },
-  {
     label: "Podcast",
     items: [
       {
