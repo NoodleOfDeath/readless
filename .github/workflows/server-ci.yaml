@@ -11,7 +11,7 @@ on:
       - ".github/workflows/server-ci.yaml"
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.ref }}-server
   cancel-in-progress: true
 
 env:

@@ -7,12 +7,14 @@ export type Route = {
   path: string;
   element?: React.ReactNode;
   children?: Route[];
+  redirect?: string;
 };
 
 export const routes: Route[] = [
   {
     path: "/",
     element: <Home />,
+    redirect: "/contact",
   },
   {
     path: "/contact",

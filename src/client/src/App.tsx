@@ -23,20 +23,22 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <AppContainer>
-        <Header />
-        <AppContent>
-          <BrowserRouter>
+        <BrowserRouter>
+          <Header />
+          <AppContent>
             <Routes>
-              {routes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={route.element}
-                />
-              ))}
+              {routes.map((route) => {
+                return (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={route.element}
+                  />
+                );
+              })}
             </Routes>
-          </BrowserRouter>
-        </AppContent>
+          </AppContent>
+        </BrowserRouter>
       </AppContainer>
     </ThemeProvider>
   );
