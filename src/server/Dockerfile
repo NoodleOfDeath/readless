@@ -1,0 +1,16 @@
+FROM node:16.15.0 as base
+RUN npm install -g pnpm
+WORKDIR /home/node/app
+COPY package.json ./
+COPY src ./src
+RUN pnpm install
+
+FROM base as pre-build
+COPY tsconfig.json ./
+COPY tsconfig.build.json ./
+
+FROM pre-build as build
+RUN pnpm run build
+
+FROM build as api
+CMD pnpm start

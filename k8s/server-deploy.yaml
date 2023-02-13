@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $IMAGE
+  namespace: $K8S_NAMESPACE
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: $IMAGE
+  template:
+    metadata:
+      labels:
+        app: $IMAGE
+    spec:
+      containers:
+        - name: $IMAGE
+          image: $REGISTRY/$IMAGE
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "$K8S_MEMORY_REQUESTS"
+              cpu: "$K8S_CPU_REQUESTS"
+            limits:
+              memory: "$K8S_MEMORY_LIMITS"
+              cpu: "$K8S_CPU_LIMITS"
+          env:
+            - name: CORS_ORIGIN
+              value: "$CORS_ORIGIN"
+            # - name: PG_CA_CERT
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: do-ca-cert
+            #       key: do.crt
+            # - name: PG_URL
+            #   value: "$PG_URL"
+            - name: PORT
+              value: "$PORT"
+            # - name: RECAPTCHA_SECRET_KEY
+            #   value: "$RECAPTCHA_SECRET_KEY"
+          livenessProbe:
+            httpGet:
+              path: /v1/healthz
+              port: $PORT
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /v1/healthz
+              port: $PORT
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $IMAGE
+  namespace: $K8S_NAMESPACE
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+  selector:
+    app: $IMAGE
