@@ -79,7 +79,7 @@ jobs:
       - name: Add kubectl cert
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/deploy.yaml | kubectl apply -f -
+        run: envsubst < $GITHUB_WORKSPACE/k8s/client-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$IMAGE --namespace $K8S_NAMESPACE
       - name: Verify deployment
