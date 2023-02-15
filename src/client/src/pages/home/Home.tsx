@@ -15,15 +15,10 @@ import Page from "@/components/Page";
 const StyledCard = muiStyled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.white,
-  width: "100%",
   minWidth: 250,
   maxWidth: 1280,
   minHeight: 250,
   maxHeight: 500,
-  margin: "auto",
-  alignSelf: "center",
-  alignItems: "center",
-  pointer: "cursor",
 }));
 
 const DIRECTORIES = [
