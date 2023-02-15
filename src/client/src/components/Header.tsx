@@ -7,14 +7,16 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Theme,
   Toolbar,
   Typography,
   TypographyProps,
   styled as muiStyled,
+  useMediaQuery,
 } from "@mui/material";
 import { Icon } from "@mdi/react";
-import { mdiApple, mdiSpotify } from "@mdi/js";
 import Logo from "@/components/Logo";
+import { PODCAST_LINKS } from "@/config/PodcastLinks";
 
 type NavigationItemProps = {
   label: string;
@@ -26,26 +28,7 @@ type NavigationItemProps = {
 const NAVIGATION_ITEMS: NavigationItemProps[] = [
   {
     label: "Podcast",
-    items: [
-      {
-        label: "Apple Podcasts",
-        icon: mdiApple,
-        onClick: () =>
-          window.open(
-            "https://podcasts.apple.com/us/podcast/chatgptalks/id1671374300",
-            "_blank"
-          ),
-      },
-      {
-        label: "Spotify",
-        icon: mdiSpotify,
-        onClick: () =>
-          window.open(
-            "https://open.spotify.com/episode/0zE70NQAZTF0mc8VKWR8DS?si=r0M8WQrcTFCEJw33XHq_-A",
-            "_blank"
-          ),
-      },
-    ],
+    items: PODCAST_LINKS,
   },
 ];
 
@@ -135,6 +118,7 @@ const StyledHeaderTitle = muiStyled(
 
 export default function Header() {
   const navigate = useNavigate();
+  const smAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -142,7 +126,7 @@ export default function Header() {
           <Logo />
         </IconButton>
         <StyledHeaderTitle onClick={() => navigate("/")}>
-          ChatGPTalks
+          {smAndUp && <>ChatGPTalks</>}
         </StyledHeaderTitle>
         {NAVIGATION_ITEMS.map((item) => (
           <NavigationItem key={item.label} {...item} />
