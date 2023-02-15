@@ -119,11 +119,8 @@ function NavigationItem({ label, onClick, items }: NavigationItemProps) {
 }
 
 const StyledToolbar = muiStyled(Toolbar)(({ theme }) => ({
-  margin: "0 auto",
-  maxWidth: 1280,
   minHeight: 64,
   padding: theme.spacing(0, 2),
-  width: "100%",
 }));
 
 const StyledHeaderTitle = muiStyled(

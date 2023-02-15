@@ -62,7 +62,7 @@ export default function Home() {
             >
               <StyledCard onClick={directory.onClick}>
                 <CardMedia>
-                  <Icon path={directory.icon} size={10} color="white" />
+                  <Icon path={directory.icon} size={6} color="white" />
                 </CardMedia>
                 <CardContent>
                   <Typography variant="h4">{directory.label}</Typography>
