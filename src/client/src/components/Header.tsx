@@ -44,7 +44,7 @@ const NAVIGATION_ITEMS: NavigationItemProps[] = [
             "https://open.spotify.com/episode/0zE70NQAZTF0mc8VKWR8DS?si=r0M8WQrcTFCEJw33XHq_-A",
             "_blank"
           ),
-      },p
+      }
     ],
   },
 ];
