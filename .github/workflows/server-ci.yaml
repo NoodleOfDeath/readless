@@ -16,7 +16,7 @@ concurrency:
 
 env:
   IMAGE: ${{ github.event.repository.name }}-api-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
-  REGISTRY: ${{ secrets.REGISTRY }}
+  REGISTRY: ${{ vars.REGISTRY }}
   WORKING_DIR: src/server
 
 jobs:
@@ -52,14 +52,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
-      CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+      CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
-      K8S_MEMORY_REQUESTS: ${{ secrets.K8S_MEMORY_REQUESTS }}
-      K8S_CPU_REQUESTS: ${{ secrets.K8S_CPU_REQUESTS }}
-      K8S_MEMORY_LIMITS: ${{ secrets.K8S_MEMORY_LIMITS }}
-      K8S_CPU_LIMITS: ${{ secrets.K8S_CPU_LIMITS }}
+      K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
+      K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
+      K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
+      K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
+      K8S_REPLICA_COUNT: ${{ vars.K8S_REPLICA_COUNT }}
       PG_URL: ${{ secrets.PG_URL }}
-      PORT: ${{ secrets.PORT }}
+      PORT: ${{ vars.PORT }}
       RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
     steps:
       - name: Print Job Description
