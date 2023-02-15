@@ -6,65 +6,74 @@ import {
   Grid,
   Stack,
   styled as muiStyled,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Icon } from "@mdi/react";
-import { mdiApple, mdiSpotify } from "@mdi/js";
 import Page from "@/components/Page";
+import { PODCAST_LINKS } from "@/config/PodcastLinks";
+import { useNavigate } from "react-router-dom";
+
+const StyledGrid = muiStyled(Grid)(({ theme }) => ({
+  margin: 0,
+  width: "calc(100% - 16px)",
+}));
 
 const StyledCard = muiStyled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.white,
-  minWidth: 300,
+  maxWidth: 1280,
+  minWidth: 200,
 }));
 
-const DIRECTORIES = [
-  {
-    label: "Apple Podcasts",
-    icon: mdiApple,
-    onClick: () =>
-      window.open(
-        "https://podcasts.apple.com/us/podcast/chatgptalks/id1671374300",
-        "_blank"
-      ),
-  },
-  {
-    label: "Spotify",
-    icon: mdiSpotify,
-    onClick: () =>
-      window.open(
-        "https://open.spotify.com/episode/0zE70NQAZTF0mc8VKWR8DS?si=r0M8WQrcTFCEJw33XHq_-A",
-        "_blank"
-      ),
-  },
-];
+const StyledCardMedia = muiStyled(CardMedia)(({ theme }) => ({
+  padding: theme.spacing(1),
+  alignItems: "center",
+  justifyContent: "center",
+  display: "flex",
+  flexDirection: "row",
+}));
+
+const StyledCardContent = muiStyled(CardContent)(({ theme }) => ({
+  padding: theme.spacing(1),
+}));
 
 export default function Home() {
+  const navigate = useNavigate();
+  const smAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+
+  const iconSize = React.useMemo(() => (smAndUp ? 5 : 3), [smAndUp]);
+  const labelSize = React.useMemo(() => (smAndUp ? "h4" : "h6"), [smAndUp]);
+
   return (
     <Page>
       <Stack spacing={2}>
         <Typography variant="h4">
           Listen to our weekly podcast on the following podcast providers!
         </Typography>
-        <Grid container justifyContent="center" spacing={2}>
-          {DIRECTORIES.map((directory) => (
+        <StyledGrid container justifyContent="center" spacing={2}>
+          {PODCAST_LINKS.map((link) => (
             <Grid
-              key={directory.label}
+              key={link.label}
               item
-              sm={12}
-              md={Math.floor(12 / DIRECTORIES.length)}
+              sm={6}
+              md={4}
+              xl={Math.floor(12 / PODCAST_LINKS.length)}
             >
-              <StyledCard onClick={directory.onClick}>
-                <CardMedia>
-                  <Icon path={directory.icon} size={6} color="white" />
-                </CardMedia>
-                <CardContent>
-                  <Typography variant="h4">{directory.label}</Typography>
-                </CardContent>
+              <StyledCard onClick={() => link.onClick?.({ navigate })}>
+                {link.icon && (
+                  <StyledCardMedia>
+                    <Icon path={link.icon} size={iconSize} color="white" />
+                  </StyledCardMedia>
+                )}
+                <StyledCardContent>
+                  <Typography variant={labelSize}>{link.label}</Typography>
+                </StyledCardContent>
               </StyledCard>
             </Grid>
           ))}
-        </Grid>
+        </StyledGrid>
       </Stack>
     </Page>
   );
