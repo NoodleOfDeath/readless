@@ -12,10 +12,20 @@ import { Icon } from "@mdi/react";
 import { mdiApple, mdiSpotify } from "@mdi/js";
 import Page from "@/components/Page";
 
+const StyledGrid = muiStyled(Grid)(({ theme }) => ({
+  margin: 0,
+  width: "calc(100% - 16px)",
+}));
+
 const StyledCard = muiStyled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.white,
+  maxWidth: 1280,
   minWidth: 300,
+}));
+
+const StyledCardMedia = muiStyled(CardMedia)(({ theme }) => ({
+  padding: theme.spacing(2),
 }));
 
 const DIRECTORIES = [
@@ -46,7 +56,7 @@ export default function Home() {
         <Typography variant="h4">
           Listen to our weekly podcast on the following podcast providers!
         </Typography>
-        <Grid container justifyContent="center" spacing={2}>
+        <StyledGrid container justifyContent="center" spacing={2}>
           {DIRECTORIES.map((directory) => (
             <Grid
               key={directory.label}
@@ -55,16 +65,16 @@ export default function Home() {
               md={Math.floor(12 / DIRECTORIES.length)}
             >
               <StyledCard onClick={directory.onClick}>
-                <CardMedia>
-                  <Icon path={directory.icon} size={6} color="white" />
-                </CardMedia>
+                <StyledCardMedia>
+                  <Icon path={directory.icon} size={5} color="white" />
+                </StyledCardMedia>
                 <CardContent>
                   <Typography variant="h4">{directory.label}</Typography>
                 </CardContent>
               </StyledCard>
             </Grid>
           ))}
-        </Grid>
+        </StyledGrid>
       </Stack>
     </Page>
   );

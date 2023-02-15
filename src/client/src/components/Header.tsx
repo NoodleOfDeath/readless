@@ -44,7 +44,7 @@ const NAVIGATION_ITEMS: NavigationItemProps[] = [
             "https://open.spotify.com/episode/0zE70NQAZTF0mc8VKWR8DS?si=r0M8WQrcTFCEJw33XHq_-A",
             "_blank"
           ),
-      }
+      },
     ],
   },
 ];
@@ -119,6 +119,7 @@ function NavigationItem({ label, onClick, items }: NavigationItemProps) {
 }
 
 const StyledToolbar = muiStyled(Toolbar)(({ theme }) => ({
+  maxWidth: 1280,
   minHeight: 64,
   padding: theme.spacing(0, 2),
 }));
