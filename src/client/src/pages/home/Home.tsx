@@ -15,10 +15,8 @@ import Page from "@/components/Page";
 const StyledCard = muiStyled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.white,
-  minWidth: 250,
-  maxWidth: 1280,
-  minHeight: 250,
-  maxHeight: 500,
+  width: 400,
+  height: 400,
 }));
 
 const DIRECTORIES = [
