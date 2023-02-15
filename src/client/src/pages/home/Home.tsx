@@ -39,7 +39,7 @@ const DIRECTORIES = [
     icon: mdiSpotify,
     onClick: () =>
       window.open(
-        "https://open.spotify.com/show/0Egt3CuK6HAJApcMJYP5MV?si=f4640afdb77f49f5",
+        "https://open.spotify.com/episode/0zE70NQAZTF0mc8VKWR8DS?si=r0M8WQrcTFCEJw33XHq_-A",
         "_blank"
       ),
   },
