@@ -4,6 +4,10 @@ ChatGPTalks is the model for a fully automated user content-driven podcast pipel
 
 The goal is to provide a template that allows users to collectively interact with ChatGPT in so-called "channels" and direct the dialog in an informative/entertaining way that brings the most value to all participants.
 
+Dev/Staging: https://dev.chatgptalks.ai
+
+Production: https://chatgptalks.ai
+
 ## Contribution
 
 To make a contribution, simply make a new PR onto the `dev` branch. I will automatically be tagged for review and once I approve you're free to merge it!
