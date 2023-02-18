@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ChatGPTService } from '@/services';
 
 const router = Router();
 
@@ -16,6 +17,16 @@ router.get('/login', (req, res) => {
   } else {
     res.send("Welcome Back!");
   }
+});
+
+router.get('/chat', (req, res) => {
+  const message = req.query.message;
+  if (!message) {
+    res.send("Bad Request");
+  }
+  ChatGPTService.default.send(message)
+    .then((r) => res.send(r))
+    .catch((r) => res.status(500).send("Internal Error"));
 });
 
 export default router;
