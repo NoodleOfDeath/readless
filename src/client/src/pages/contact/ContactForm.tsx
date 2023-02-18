@@ -11,7 +11,7 @@ type ContactFormData = {
 };
 
 type FormField = {
-  type: "text";
+  type: "text" | "password";
   label: string;
   required?: boolean;
   name: keyof ContactFormData;
@@ -27,11 +27,13 @@ const FORM_FIELDS: FormField[] = [
     type: "text",
     label: "Email",
     name: "email",
+    required: true,
   },
   {
     type: "text",
     label: "Feedback",
     name: "feedback",
+    required: true,
   },
 ];
 
@@ -69,9 +71,9 @@ export default function ContactForm() {
               return (
                 <StyledTextField
                   key={field.name}
-                  required
                   label={field.label}
                   variant="outlined"
+                  required={field.required}
                   {...register(field.name, { required: field.required })}
                 />
               );

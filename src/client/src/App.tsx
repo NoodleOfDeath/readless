@@ -1,19 +1,22 @@
 import React from "react";
-import Header from "./components/Header";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
-import { routes } from "@/pages";
 import styled from "styled-components";
 import { ThemeProvider } from "@mui/material";
+
+import { routes } from "@/pages";
 import { theme } from "@/theme";
 
-const AppContainer = styled.div`
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
+const StyledAppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
   margin: -10px;
 `;
 
-const AppContent = styled.div`
+const StyledAppContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -22,10 +25,10 @@ const AppContent = styled.div`
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppContainer>
+      <StyledAppContainer>
         <BrowserRouter>
           <Header />
-          <AppContent>
+          <StyledAppContent>
             <Routes>
               {routes.map((route) => {
                 return (
@@ -37,9 +40,10 @@ function App() {
                 );
               })}
             </Routes>
-          </AppContent>
+          </StyledAppContent>
+          <Footer />
         </BrowserRouter>
-      </AppContainer>
+      </StyledAppContainer>
     </ThemeProvider>
   );
 }

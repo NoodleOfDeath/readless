@@ -2,7 +2,8 @@ import { Card, CardContent, styled as muiStyled } from "@mui/material";
 import React from "react";
 
 const StyledCard = muiStyled(Card)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
+  color: theme.palette.common.white,
+  backgroundColor: "transparent",
   width: "100%",
   maxWidth: 1280,
   margin: "auto",

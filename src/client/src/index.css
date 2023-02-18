@@ -1,0 +1,6 @@
+html {
+  margin: none;
+  background-image: linear-gradient(black, #666);
+  width: 100vw;
+  height: 100vh;
+}

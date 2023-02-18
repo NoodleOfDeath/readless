@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "My first arg is $1"
+echo "My second arg is $2"
+
+curl -X POST \
+  -d "email=$1&passwd=$2" \
+  http://localhost:6970/v1/login
