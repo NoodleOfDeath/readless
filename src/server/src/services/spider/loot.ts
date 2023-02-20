@@ -4,7 +4,7 @@ export type LootProps = {
   url: string;
   timestamp: number;
   text?: string;
-  contentFilter?: string;
+  queryFilter?: string;
   root?: HTMLElement;
   title?: string;
   nodes?: HTMLElement[];
@@ -17,30 +17,34 @@ export class Loot implements LootProps {
   url: string;
   timestamp: number;
   text: string;
-  contentFilter?: string;
+  queryFilter?: string;
   root?: HTMLElement;
   title?: string;
   nodes?: HTMLElement[];
   json?: Record<string, unknown>[];
 
-  get rawText() {
+  get nodeText() {
     return this.nodes?.map((node) => node.rawText) ?? [];
+  }
+
+  get filteredText() {
+    return this.nodeText.filter((text) => text.trim().length > 0).join('\n');
   }
 
   constructor({
     url,
     timestamp = Date.now(),
     text,
-    contentFilter = 'h1,h2,h3,h4,h5,h6,p,blockquote',
-    root,
+    queryFilter = 'h1,h2,h3,h4,h5,h6,p,blockquote',
+    root = parse(text),
   }: LootInitProps) {
     this.url = url;
     this.timestamp = timestamp;
     this.text = text;
-    this.contentFilter = contentFilter;
-    this.root = root ?? parse(text);
+    this.queryFilter = queryFilter;
+    this.root = root;
     this.title = root.querySelector('title').rawText;
-    this.nodes = root.querySelectorAll(contentFilter);
+    this.nodes = root.querySelectorAll(queryFilter);
     this.json = root.querySelectorAll("script[type='application/json']").map((e) => JSON.parse(e.rawText)) as Record<
       string,
       unknown

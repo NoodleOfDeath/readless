@@ -14,6 +14,10 @@ type ArticleCreationAttributes = {
   paranoid: true,
 })
 export class Article extends Model<Article, ArticleCreationAttributes> {
+  static get empty(): Partial<Article> {
+    return {};
+  }
+
   @Column({
     allowNull: false,
   })

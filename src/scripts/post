@@ -1,5 +1,5 @@
 #!/bin/bash
 
 curl -X POST \
-  -d "url=https://chatgptalks.ai" \
-  http://localhost:6970/v1/mine
+  -d "url=https://www.bustle.com/life/memes-tweets-about-chatgpt-ai" \
+  http://localhost:6970/v1/scrape

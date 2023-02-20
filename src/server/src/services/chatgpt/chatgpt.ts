@@ -28,6 +28,7 @@ export class ChatGPTService extends BaseService {
       const reply = await this.api.sendMessage(message, opts);
       this.conversationId = reply.conversationId;
       this.parentMessageId = reply.id;
+      return reply;
     } catch (e) {
       console.error(e);
     }
