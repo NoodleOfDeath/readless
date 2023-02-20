@@ -1,14 +1,14 @@
 {
   "name": "chatgptalks-api",
   "version": "0.0.1",
-  "main": "./index.js",
+  "type": "module",
   "export": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "bugs": {
     "url": "https://github.com/noodleofdeath/chatgptalks/issues",
@@ -23,11 +23,12 @@
     "preinstall": "npx only-allow pnpm",
     "start": "node dist/index.js",
     "dev": "nodemon -x 'ts-node ./serve.ts'",
+    "gen": "pgtyped -c ./src/schema/config.json",
     "build": "rimraf dist && tsc -p tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
     "format": "prettier --write 'src/**/*.ts'",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register --inline-diffs --timeout 1000000 tests/index.spec.ts",
+    "test": "jest",
     "generate-docs": "typedoc"
   },
   "husky": {
@@ -39,19 +40,31 @@
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "express-validator": "^6.14.2"
+    "express-validator": "^6.14.2",
+    "node-fetch": "^3.3.0",
+    "node-html-parser": "^6.1.4",
+    "pg": "^8.9.0",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.28.0",
+    "sequelize-typescript": "^2.1.5"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.14",
     "@types/express-serve-static-core": "^4.17.31",
-    "@types/node": "^18.11.10",
+    "@types/jest": "^29.4.0",
+    "@types/node": "^18.13.0",
+    "@types/node-fetch": "^2.6.2",
+    "@types/pg": "^8.6.6",
     "@types/qs": "^6.9.7",
+    "@types/validator": "^13.7.12",
     "dotenv": "^16.0.3",
+    "jest": "^29.4.3",
     "nodemon": "^2.0.19",
     "only-allow": "^1.1.1",
     "rimraf": "^3.0.2",
+    "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
     "tscpaths": "^0.0.9",
