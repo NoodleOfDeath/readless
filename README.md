@@ -1,12 +1,12 @@
-# chatgptalks
+# The Skoop
 
-ChatGPTalks is the model for a fully automated user content-driven podcast pipeline that is powered by ChatGPT.
+The Skoop (formerly ChatGPTalks) is the model for a fully automated user content-driven podcast pipeline that is powered by ChatGPT.
 
 The goal is to provide a template that allows users to collectively interact with ChatGPT in so-called "channels" and direct the dialog in an informative/entertaining way that brings the most value to all participants.
 
-Dev/Staging: https://dev.chatgptalks.ai
+Dev/Staging: https://dev.theskoop.ai
 
-Production: https://chatgptalks.ai
+Production: https://theskoop.ai
 
 ## Contribution
 
