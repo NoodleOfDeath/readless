@@ -4,9 +4,9 @@ The Skoop (formerly ChatGPTalks) is the model for a fully automated user content
 
 The goal is to provide a template that allows users to collectively interact with ChatGPT in so-called "channels" and direct the dialog in an informative/entertaining way that brings the most value to all participants.
 
-Dev/Staging: https://dev.theskoop.ai
+Dev/Staging: [https://dev.theskoop.ai](https://dev.theskoop.ai)
 
-Production: https://theskoop.ai
+Production: [https://theskoop.ai](https://theskoop.ai)
 
 ## Contribution
 

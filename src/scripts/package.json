@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "export": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,11 +18,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/argparse": "^2.0.10",
+    "@types/node-fetch": "^2.6.2",
     "@types/pg": "^8.6.6",
     "dotenv": "^16.0.3",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "argparse": "^2.0.1",
+    "node-fetch": "2.6.7",
     "pg": "^8.9.0"
   }
 }

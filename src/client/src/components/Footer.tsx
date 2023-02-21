@@ -1,5 +1,5 @@
-import React from 'react';
-import { BottomNavigation, styled as muiStyled } from '@mui/material';
+import React from "react";
+import { BottomNavigation, styled as muiStyled } from "@mui/material";
 
 const StyledBottomNavigation = muiStyled(BottomNavigation)(({ theme }) => ({
   color: theme.palette.common.white,
@@ -10,7 +10,7 @@ const StyledBottomNavigation = muiStyled(BottomNavigation)(({ theme }) => ({
 export default function Footer() {
   return (
     <StyledBottomNavigation>
-      Copyright &copy; {new Date().getFullYear()} ChatGPTalks
+      Copyright &copy; {new Date().getFullYear()} TheSkoop
     </StyledBottomNavigation>
   );
 }

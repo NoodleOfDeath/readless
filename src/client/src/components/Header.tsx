@@ -126,7 +126,7 @@ export default function Header() {
           <Logo />
         </IconButton>
         <StyledHeaderTitle onClick={() => navigate("/")}>
-          {smAndUp && <>ChatGPTalks</>}
+          {smAndUp && <>TheSkoop</>}
         </StyledHeaderTitle>
         {NAVIGATION_ITEMS.map((item) => (
           <NavigationItem key={item.label} {...item} />
