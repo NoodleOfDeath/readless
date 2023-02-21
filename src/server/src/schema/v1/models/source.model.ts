@@ -1,21 +1,18 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { Reference } from './reference.model';
+import {
+  TitledCategorizedPost,
+  TitledCategorizedPostAttributes,
+  TitledCategorizedPostCreationAttributes,
+} from './post';
 
-type SourceAttributes = {
-  id: number;
-  title: string;
+export type SourceAttributes = TitledCategorizedPostAttributes & {
   url: string;
-  rawText: string;
   filteredText: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
 };
 
-type SourceCreationAttributes = {
-  title: string;
+export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes & {
   url: string;
-  rawText: string;
   filteredText: string;
 };
 
@@ -24,24 +21,20 @@ type SourceCreationAttributes = {
   timestamps: true,
   paranoid: true,
 })
-export class Source extends Model<SourceAttributes, SourceCreationAttributes> {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  title: string;
+export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreationAttributes> {
+  static get empty() {
+    return this.json();
+  }
+
+  static json(defaults?: Partial<Source>): Partial<Source> {
+    return defaults ?? {};
+  }
 
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
   url: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-  })
-  rawText: string;
 
   @Column({
     type: DataType.TEXT,

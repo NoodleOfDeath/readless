@@ -5,9 +5,7 @@
     "require": ["tsconfig-paths/register"],
     "experimentalSpecifierResolution": "node",
     "experimentalModules": true,
-    "compilerOptions": {
-      
-    }
+    "compilerOptions": {}
   },
   "compilerOptions": {
     "target": "esnext",

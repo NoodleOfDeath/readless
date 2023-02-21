@@ -8,14 +8,18 @@ const app = express();
 
 app.use(cors({ origin: new RegExp(process.env.CORS_ORIGIN, 'i') }));
 
-app.use(bodyParser.urlencoded({ 
-  extended: false, 
-  limit: process.env.REQ_SIZE_LIMIT,
-}))
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+    limit: process.env.REQ_SIZE_LIMIT,
+  }),
+);
 
-app.use(bodyParser.json({
-  limit: process.env.REQ_SIZE_LIMIT,
-}));
+app.use(
+  bodyParser.json({
+    limit: process.env.REQ_SIZE_LIMIT,
+  }),
+);
 
 app.set('trust proxy', 1);
 

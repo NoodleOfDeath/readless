@@ -1,41 +1,27 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { HasMany, Table } from 'sequelize-typescript';
+import {
+  TitledCategorizedPost,
+  TitledCategorizedPostAttributes,
+  TitledCategorizedPostCreationAttributes,
+} from './post';
 import { Reference } from './reference.model';
 
-type ArticleCreationAttributes = {
-  title: string;
-  category: string;
-  subcategory?: string;
-  content: string;
-};
+export type ArticleAttributes = TitledCategorizedPostAttributes & {};
+export type ArticleCreationAttributes = TitledCategorizedPostCreationAttributes & {};
 
 @Table({
   modelName: 'article',
   timestamps: true,
   paranoid: true,
 })
-export class Article extends Model<Article, ArticleCreationAttributes> {
-  static get empty(): Partial<Article> {
-    return {};
+export class Article extends TitledCategorizedPost<ArticleAttributes, ArticleCreationAttributes> {
+  static get empty() {
+    return this.json();
   }
 
-  @Column({
-    allowNull: false,
-  })
-  title: string;
-
-  @Column({
-    allowNull: false,
-  })
-  category: string;
-
-  @Column
-  subcategory: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-  })
-  content: string;
+  static json(defaults?: Partial<Article>): Partial<Article> {
+    return defaults ?? {};
+  }
 
   @HasMany(() => Reference, 'articleId')
   references: Reference[];

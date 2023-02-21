@@ -5,11 +5,17 @@ import { Loot } from './loot';
 type FetchOpts = {};
 
 export class SpiderService extends BaseService {
-  async fetch(url: string, opts: FetchOpts = {}) {
+  async fetch(url: string | string[], opts: FetchOpts = {}) {
+    const results: Loot[] = [];
+    const urls = Array.isArray(url) ? url : [url];
     try {
-      const response = await fetch(url);
-      const text = await response.text();
-      return new Loot({ url, text });
+      for (const url of urls) {
+        const response = await fetch(url);
+        const text = await response.text();
+        const loot = new Loot({ url, text });
+        results.push(loot);
+      }
+      return results;
     } catch (e) {
       console.error(e);
     }

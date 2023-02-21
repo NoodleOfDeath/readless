@@ -12,8 +12,8 @@ export type DBServiceInitProps = {
 export class DBService extends BaseService {
   sq: Sequelize;
 
-  constructor({ 
-    connectionString = process.env.PG_URL,
+  constructor({
+    connectionString = process.env.PG_CONNECTION_STRING,
     models = [...Object.values(Models)],
   }: DBServiceInitProps = {}) {
     super();

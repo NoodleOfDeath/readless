@@ -1,5 +1,11 @@
-import { ChatGPTAPI, SendMessageOptions } from 'chatgpt';
+import { ChatGPTAPI, ChatMessage, SendMessageOptions } from 'chatgpt';
 import { BaseService } from '../base';
+
+export type Prompt = {
+  text: string;
+  prefix?: string;
+  action: <T>(reply: ChatMessage, target?: T) => void;
+};
 
 export type ChatGPTServiceInitProps = {
   apiKey?: string;
@@ -19,13 +25,14 @@ export class ChatGPTService extends BaseService {
 
   async send(
     message: string,
-    opts: SendMessageOptions = {
-      conversationId: this.conversationId,
-      parentMessageId: this.parentMessageId,
-    },
+    {
+      conversationId = this.conversationId,
+      parentMessageId = this.parentMessageId,
+      ...remainingOpts
+    }: SendMessageOptions = {},
   ) {
     try {
-      const reply = await this.api.sendMessage(message, opts);
+      const reply = await this.api.sendMessage(message, { conversationId, parentMessageId, ...remainingOpts });
       this.conversationId = reply.conversationId;
       this.parentMessageId = reply.id;
       return reply;

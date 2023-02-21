@@ -28,7 +28,20 @@ export class Loot implements LootProps {
   }
 
   get filteredText() {
-    return this.nodeText.filter((text) => text.trim().length > 0).join('\n');
+    return this.nodeText.filter((text) => text.replace(/^[\s\n]*$/g, '').length > 0).join('\n');
+  }
+
+  get asPromptData() {
+    return JSON.stringify(
+      {
+        url: this.url,
+        timestamp: this.timestamp,
+        title: this.title,
+        filteredText: this.filteredText,
+      },
+      null,
+      2,
+    );
   }
 
   constructor({
