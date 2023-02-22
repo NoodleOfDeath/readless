@@ -2,21 +2,24 @@ import React from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   AppBar,
+  Box,
   Button,
+  Drawer,
   IconButton,
+  List,
   Menu,
   MenuItem,
   Stack,
-  Theme,
   Toolbar,
   Typography,
   TypographyProps,
   styled as muiStyled,
-  useMediaQuery,
+  Divider,
 } from "@mui/material";
 import { Icon } from "@mdi/react";
 import Logo from "@/components/Logo";
 import { PODCAST_LINKS } from "@/config/PodcastLinks";
+import { mdiHome, mdiInformation, mdiMenu, mdiPodcast } from "@mdi/js";
 
 type NavigationItemProps = {
   label: string;
@@ -27,7 +30,22 @@ type NavigationItemProps = {
 
 const NAVIGATION_ITEMS: NavigationItemProps[] = [
   {
+    label: "Home",
+    icon: mdiHome,
+    onClick({ navigate }) {
+      navigate?.("/");
+    },
+  },
+  {
+    label: "About",
+    icon: mdiInformation,
+    onClick({ navigate }) {
+      navigate?.("/about");
+    },
+  },
+  {
     label: "Podcast",
+    icon: mdiPodcast,
     items: PODCAST_LINKS,
   },
 ];
@@ -43,7 +61,7 @@ const StyledMenu = muiStyled(Menu)(({ theme }) => ({
   },
 }));
 
-function NavigationItem({ label, onClick, items }: NavigationItemProps) {
+function NavigationItem({ label, icon, items, onClick }: NavigationItemProps) {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -62,7 +80,12 @@ function NavigationItem({ label, onClick, items }: NavigationItemProps) {
 
   return (
     <>
-      <StyledButton onClick={handleClick}>{label}</StyledButton>
+      <StyledButton
+        onClick={handleClick}
+        startIcon={icon && <Icon path={icon} size={1} />}
+      >
+        {label}
+      </StyledButton>
       {items && (
         <StyledMenu
           anchorEl={anchorEl}
@@ -102,6 +125,8 @@ function NavigationItem({ label, onClick, items }: NavigationItemProps) {
 }
 
 const StyledToolbar = muiStyled(Toolbar)(({ theme }) => ({
+  margin: "auto",
+  width: "inherit",
   maxWidth: 1280,
   minHeight: 64,
   padding: theme.spacing(0, 2),
@@ -116,9 +141,46 @@ const StyledHeaderTitle = muiStyled(
   flexGrow: 1,
 }));
 
+const StyledDrawer = muiStyled(Drawer)(({ theme }) => ({
+  "& .MuiDrawer-paper": {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+}));
+
+const StyledBox = muiStyled(Box)(({ theme }) => ({
+  width: 250,
+}));
+
 export default function Header() {
   const navigate = useNavigate();
-  const smAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+
+  const [open, setOpen] = React.useState(false);
+  const drawerRef = React.useRef<HTMLDivElement>(null);
+
+  const toggleDrawer = React.useCallback(
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      } else if (event && event.type === "click") {
+        if (
+          drawerRef.current &&
+          drawerRef.current.contains(event.target as HTMLElement)
+        ) {
+          return;
+        }
+        event.stopPropagation();
+      }
+      setOpen(open);
+    },
+    [drawerRef]
+  );
+
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -126,11 +188,30 @@ export default function Header() {
           <Logo />
         </IconButton>
         <StyledHeaderTitle onClick={() => navigate("/")}>
-          {smAndUp && <>TheSkoop</>}
+          TheSkoop
         </StyledHeaderTitle>
-        {NAVIGATION_ITEMS.map((item) => (
-          <NavigationItem key={item.label} {...item} />
-        ))}
+        <StyledButton onClick={toggleDrawer(true)}>
+          <Icon path={mdiMenu} size={1} />
+        </StyledButton>
+        <StyledDrawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+          <StyledBox
+            role="presentation"
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+            ref={drawerRef}
+          >
+            <List>
+              {NAVIGATION_ITEMS.map((item, i) => (
+                <React.Fragment key={item.label}>
+                  <NavigationItem {...item} />
+                  {i < NAVIGATION_ITEMS.length - 1 && (
+                    <Divider color="white" orientation="horizontal" />
+                  )}
+                </React.Fragment>
+              ))}
+            </List>
+          </StyledBox>
+        </StyledDrawer>
       </StyledToolbar>
     </AppBar>
   );

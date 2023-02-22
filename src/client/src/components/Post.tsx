@@ -1,15 +1,19 @@
 import React from "react";
 import { format } from "date-fns";
+import ReactMarkdown from "react-markdown";
+
 import { SourceAttributes } from "@/api/Api";
 import {
   Card,
   CardContent,
   CardHeader,
   Grid,
+  GridProps,
+  Link,
+  Stack,
   Typography,
   styled as muiStyled,
-  GridProps,
-  Stack,
+  Chip,
 } from "@mui/material";
 
 export const CONSUMPTION_MODES = ["cursory", "casual", "research"] as const;
@@ -38,10 +42,9 @@ type Props = GridProps & {
 
 const StyledCard = muiStyled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
+  margin: "auto",
   maxWidth: 1280,
   minWidth: 200,
-  cursor: "pointer",
 }));
 
 const StyledCardHeader = muiStyled(CardHeader)(({ theme }) => ({
@@ -58,6 +61,18 @@ const StyledCardContent = muiStyled(CardContent)(({ theme }) => ({
 
 const StyledStack = muiStyled(Stack)(({ theme }) => ({
   margin: theme.spacing(1),
+}));
+
+const StyledChipCategory = muiStyled(Chip)(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
+const StyledChipSubcategory = muiStyled(Chip)(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
+const StyledChipTag = muiStyled(Chip)(({ theme }) => ({
+  margin: theme.spacing(0.5),
 }));
 
 export default function Post({
@@ -93,30 +108,60 @@ export default function Post({
   }, [source?.url]);
 
   return (
-    <Grid item {...rest} onClick={onClick}>
+    <Grid item {...rest}>
       <StyledCard>
         <StyledCardHeader
           title={source?.alternateTitle}
-          subheader={createdAt}
+          subheader={
+            <Stack>
+              {createdAt}
+              <Link
+                variant="caption"
+                href={source?.url}
+                target="_blank"
+                color="inherit"
+              >
+                {source?.url}
+              </Link>
+            </Stack>
+          }
         />
         <StyledCardContent>
           <StyledStack spacing={2}>
             {consumptionMode === "cursory" && (
               <Typography variant={labelSize}>
-                {source?.shortSummary}
+                <ReactMarkdown>{source?.shortSummary}</ReactMarkdown>
               </Typography>
             )}
             {consumptionMode === "casual" && (
-              <Typography variant={labelSize}>{source?.summary}</Typography>
+              <Typography variant={labelSize}>
+                <ReactMarkdown>{source?.summary}</ReactMarkdown>
+              </Typography>
             )}
             {consumptionMode === "research" && (
-              <Typography variant={labelSize}>{source?.abridged}</Typography>
+              <Typography variant={labelSize}>
+                <ReactMarkdown>{source?.abridged}</ReactMarkdown>
+              </Typography>
             )}
             <Typography variant="caption">
-              {source?.category} - {source?.subcategory}
+              <StyledChipCategory label={source?.category} color="secondary" />
+              <StyledChipSubcategory
+                label={source?.subcategory}
+                color="secondary"
+              />
             </Typography>
             <Typography variant="caption">
-              {source?.tags.map((tag) => `#${tag}`).join(" ")}
+              {source?.tags.map((tag) => {
+                const trimmedTag = tag.trim();
+                return (
+                  <StyledChipTag
+                    label={trimmedTag}
+                    key={trimmedTag}
+                    color="secondary"
+                    size="small"
+                  />
+                );
+              })}
             </Typography>
           </StyledStack>
         </StyledCardContent>

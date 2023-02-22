@@ -4,11 +4,13 @@ import { BaseService } from '../base';
 export type Prompt = {
   text: string;
   prefix?: string;
-  action: <T>(reply: ChatMessage, target?: T) => void;
+  size?: number;
+  action: (reply: ChatMessage) => void;
 };
 
 export type ChatGPTServiceInitProps = {
   apiKey?: string;
+  maxResponseTokens?: number;
 };
 
 export class ChatGPTService extends BaseService {
@@ -16,10 +18,11 @@ export class ChatGPTService extends BaseService {
   conversationId?: string;
   parentMessageId?: string;
 
-  constructor({ apiKey = process.env.OPENAI_API_KEY }: ChatGPTServiceInitProps = {}) {
+  constructor({ apiKey = process.env.OPENAI_API_KEY, maxResponseTokens = 1_000 }: ChatGPTServiceInitProps = {}) {
     super();
     this.api = new ChatGPTAPI({
       apiKey,
+      maxResponseTokens,
     });
   }
 
@@ -28,11 +31,17 @@ export class ChatGPTService extends BaseService {
     {
       conversationId = this.conversationId,
       parentMessageId = this.parentMessageId,
+      timeoutMs = 120_000,
       ...remainingOpts
     }: SendMessageOptions = {},
   ) {
     try {
-      const reply = await this.api.sendMessage(message, { conversationId, parentMessageId, ...remainingOpts });
+      const reply = await this.api.sendMessage(message, {
+        conversationId,
+        parentMessageId,
+        timeoutMs,
+        ...remainingOpts,
+      });
       this.conversationId = reply.conversationId;
       this.parentMessageId = reply.id;
       return reply;

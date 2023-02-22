@@ -10,17 +10,22 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { Api, SourceAttributes } from "@/api/Api";
-import Page from "@/components/Page";
-import Post from "@/components/Post";
-import ConsumptionModeSelector from "@/components/ConsumptionModeSelector";
 import { BaseContext } from "@/contexts";
+import { Api, SourceAttributes } from "@/api/Api";
+
+import Page from "@/components/layout/Page";
+import Post from "@/components/Post";
+
+import ConsumptionModeSelector from "@/pages/home/ConsumptionModeSelector";
 
 const StyledGrid = muiStyled(Grid)(({ theme }) => ({
-  margin: 0,
+  margin: "auto",
   width: "calc(100% - 16px)",
+  alignItems: "center",
+  justifyContent: "center",
 }));
-export default function Home() {
+
+export default function HomePage() {
   const navigate = useNavigate();
   const { consumptionMode } = React.useContext(BaseContext);
 
@@ -29,16 +34,11 @@ export default function Home() {
   );
   const [loading, setLoading] = React.useState<boolean>(true);
 
-  const smAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
+  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
   const gridSize = React.useMemo(() => {
-    if (consumptionMode === "casual") {
-      return smAndUp ? (recentSources.length < 3 ? 12 : 4) : 12;
-    } else if (consumptionMode === "research") {
-      return smAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
-    }
-    return smAndUp ? (recentSources.length < 4 ? 12 : 3) : 12;
-  }, [consumptionMode, recentSources, smAndUp]);
+    return mdAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
+  }, [recentSources, mdAndUp]);
 
   React.useEffect(() => {
     new Api({

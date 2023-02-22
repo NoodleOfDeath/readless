@@ -69,10 +69,14 @@ export abstract class Post<
 export type TitledCategorizedPostAttributes = PostAttributes & {
   title: string;
   category: string;
-  subcategory?: string;
+  subcategory: string;
 };
 
-export type TitledCategorizedPostCreationAttributes = PostCreationAttributes;
+export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
+  title: string;
+  category: string;
+  subcategory: string;
+};
 
 export class TitledCategorizedPost<
     A extends TitledCategorizedPostAttributes = TitledCategorizedPostAttributes,
@@ -99,6 +103,7 @@ export class TitledCategorizedPost<
 
   @Column({
     type: DataType.STRING,
+    allowNull: false,
   })
   subcategory: string;
 }
