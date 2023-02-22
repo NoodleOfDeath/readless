@@ -2,7 +2,11 @@ import React from "react";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 
+import BaseContextProvider, {
+  DEFAULT_BASE_CONTEXT,
+} from "@/contexts/BaseContext";
 import { routes } from "@/pages";
 import { theme } from "@/theme";
 
@@ -25,25 +29,28 @@ const StyledAppContent = styled.div`
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <StyledAppContainer>
-        <BrowserRouter>
-          <Header />
-          <StyledAppContent>
-            <Routes>
-              {routes.map((route) => {
-                return (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    element={route.element}
-                  />
-                );
-              })}
-            </Routes>
-          </StyledAppContent>
-          <Footer />
-        </BrowserRouter>
-      </StyledAppContainer>
+      <CssBaseline />
+      <BaseContextProvider>
+        <StyledAppContainer>
+          <BrowserRouter>
+            <Header />
+            <StyledAppContent>
+              <Routes>
+                {routes.map((route) => {
+                  return (
+                    <Route
+                      key={route.path}
+                      path={route.path}
+                      element={route.element}
+                    />
+                  );
+                })}
+              </Routes>
+            </StyledAppContent>
+            <Footer />
+          </BrowserRouter>
+        </StyledAppContainer>
+      </BaseContextProvider>
     </ThemeProvider>
   );
 }

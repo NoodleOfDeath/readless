@@ -16,6 +16,13 @@ router.post('/', body('urls').isArray({ min: 1 }), validate, async (req, res) =>
     // create the prompt action map to be sent to chatgpt
     const sources: Source[] = [];
     const sourcePrompts = loot.map((gem, i) => {
+      const alternateTitle: Prompt = {
+        text: gem.filteredText,
+        prefix: `Please give this article (Source #${i + 1}) from ${gem.url} titled "${
+          gem.title
+        }" a new title relevant to its content no longer than 255 characters`,
+        action: (reply, sourceInfo: Partial<Source>) => (sourceInfo.alternateTitle = reply.text),
+      };
       const abridgedPrompt: Prompt = {
         text: gem.filteredText,
         prefix: `Please summarize the article (Source #${i + 1}) from ${gem.url} titled "${
@@ -54,7 +61,15 @@ router.post('/', body('urls').isArray({ min: 1 }), validate, async (req, res) =>
       };
       return {
         gem,
-        prompts: [abridgedPrompt, summaryPrompt, shortSummaryPrompt, tagsPrompt, categoryPrompt, subcategoryPrompt],
+        prompts: [
+          alternateTitle,
+          abridgedPrompt,
+          summaryPrompt,
+          shortSummaryPrompt,
+          tagsPrompt,
+          categoryPrompt,
+          subcategoryPrompt,
+        ],
       };
     });
     // initialize chatgpt service and send the prompt

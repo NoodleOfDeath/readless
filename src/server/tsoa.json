@@ -1,8 +1,9 @@
 {
   "entryFile": "src/index.ts",
+  "routes": "src/api/v1/controllers/index.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
   "spec": {
     "outputDirectory": "public",
-    "specVersion": 1
+    "specVersion": 3
   }
 }

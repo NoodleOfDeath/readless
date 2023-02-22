@@ -86,7 +86,7 @@ export class TitledCategorizedPost<
   }
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(1024),
     allowNull: false,
   })
   title: string;

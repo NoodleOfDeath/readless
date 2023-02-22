@@ -1,30 +1,84 @@
-import { Get, Route } from 'tsoa';
+import { SourceAttributes } from './../../../../schema/v1/models/source.model';
+import { Get, Query, Path, Route } from 'tsoa';
 import { Source } from '../../../../schema/v1/models';
 import { FindAndCountOptions } from '../../../../schema/v1/models/types';
 
 @Route('/v1/sources')
 export class SourceController {
-  @Get('/:category?/:subcategory?/:title?')
+  @Get('/')
   public async getSources(
-    category?: string,
-    subcategory?: string,
-    title?: string,
-    pageSize = 10,
-    page = 0,
-    offset = pageSize * page,
-  ): Promise<Source[]> {
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page,
+  ): Promise<SourceAttributes[]> {
     const options: FindAndCountOptions<Source> = {
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
     };
-    const filters: Record<string, string> = {};
-    if (title) filters.title = title;
-    if (category) filters.category = category;
-    if (subcategory) filters.subcategory = subcategory;
-    if (Object.keys(filters).length > 0) {
-      options.where = filters;
-    }
+    const sources = await Source.findAndCountAll(options);
+    return sources.rows;
+  }
+
+  @Get('/:category/')
+  public async getSourcesForCategory(
+    @Path() category: string,
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page,
+  ): Promise<SourceAttributes[]> {
+    const options: FindAndCountOptions<Source> = {
+      limit: pageSize,
+      offset: offset,
+      order: [['createdAt', 'DESC']],
+      where: {
+        category,
+      },
+    };
+    const sources = await Source.findAndCountAll(options);
+    return sources.rows;
+  }
+
+  @Get('/:category/:subcategory')
+  public async getSourcesForCategoryAndSubCategory(
+    @Path() category: string,
+    @Path() subcategory: string,
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page,
+  ): Promise<SourceAttributes[]> {
+    const options: FindAndCountOptions<Source> = {
+      limit: pageSize,
+      offset: offset,
+      order: [['createdAt', 'DESC']],
+      where: {
+        category,
+        subcategory,
+      },
+    };
+    const sources = await Source.findAndCountAll(options);
+    return sources.rows;
+  }
+
+  @Get('/:category/:subcategory/:title')
+  public async getSourcesForCategoryAndSubCategoryAndTitle(
+    @Path() category: string,
+    @Path() subcategory: string,
+    @Path() title: string,
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page,
+  ): Promise<SourceAttributes[]> {
+    const options: FindAndCountOptions<Source> = {
+      limit: pageSize,
+      offset: offset,
+      order: [['createdAt', 'DESC']],
+      where: {
+        category,
+        subcategory,
+        title,
+      },
+    };
     const sources = await Source.findAndCountAll(options);
     return sources.rows;
   }

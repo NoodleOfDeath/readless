@@ -2,9 +2,8 @@ import { Router } from 'express';
 import { param } from 'express-validator';
 
 import { pagination, validate } from '../../middleware';
-
-import { Source } from '../../../../schema/v1/models';
-import { FindAndCountOptions } from '../../../../schema/v1/models/types';
+import { SourceController } from './../../controllers/sources/index';
+import { SourceAttributes } from '../../../../schema/v1/models';
 
 const router = Router();
 
@@ -18,21 +17,25 @@ router.get(
   async (req, res) => {
     const { category, subcategory, title } = req.params;
     const { pageSize = 10, page = 0, offset = page * pageSize } = req.query;
-
-    const options: FindAndCountOptions<Source> = {
-      limit: pageSize,
-      offset,
-      order: [['createdAt', 'DESC']],
-    };
-    const filters: Record<string, string> = {};
-    if (title) filters.title = title;
-    if (category) filters.category = category;
-    if (subcategory) filters.subcategory = subcategory;
-    if (Object.keys(filters).length > 0) {
-      options.where = filters;
+    const controller = new SourceController();
+    let response: SourceAttributes[] = [];
+    if (category && subcategory && title) {
+      response = await controller.getSourcesForCategoryAndSubCategoryAndTitle(
+        category,
+        subcategory,
+        title,
+        pageSize,
+        page,
+        offset,
+      );
+    } else if (category && subcategory) {
+      response = await controller.getSourcesForCategoryAndSubCategory(category, subcategory, pageSize, page, offset);
+    } else if (category) {
+      response = await controller.getSourcesForCategory(category, pageSize, page, offset);
+    } else {
+      response = await controller.getSources(pageSize, page, offset);
     }
-    const sources = await Source.findAndCountAll(options);
-    res.json({ data: sources.rows });
+    res.json(response);
   },
 );
 

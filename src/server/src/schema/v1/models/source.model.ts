@@ -9,11 +9,13 @@ import {
 export type SourceAttributes = TitledCategorizedPostAttributes & {
   url: string;
   filteredText: string;
+  alternateTitle: string;
 };
 
 export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes & {
   url: string;
   filteredText: string;
+  alternateTitle: string;
 };
 
 @Table({
@@ -41,6 +43,12 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
     allowNull: false,
   })
   filteredText: string;
+
+  @Column({
+    type: DataType.STRING(1024),
+    allowNull: false,
+  })
+  alternateTitle: string;
 
   @HasMany(() => Reference, 'sourceId')
   references: Reference[];
