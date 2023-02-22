@@ -1,4 +1,4 @@
-FROM node:16.15.0 as base
+FROM node:19.3.0 as base
 RUN npm install -g pnpm
 WORKDIR /home/node/app
 COPY package.json ./
@@ -9,6 +9,7 @@ COPY src ./src
 COPY public ./public
 COPY tsconfig.json ./
 COPY config-overrides.js ./
+COPY swagger.json ./
 RUN pnpm run gen
 
 FROM pre-build as build
