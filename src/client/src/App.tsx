@@ -10,8 +10,8 @@ import BaseContextProvider, {
 import { routes } from "@/pages";
 import { theme } from "@/theme";
 
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const StyledAppContainer = styled.div`
   display: flex;

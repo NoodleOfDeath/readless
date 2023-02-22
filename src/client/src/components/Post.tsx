@@ -103,9 +103,16 @@ export default function Post({
     [source?.createdAt]
   );
 
-  const onClick = React.useCallback(() => {
-    window.open(source?.url, "_blank");
-  }, [source?.url]);
+  const content = React.useMemo(() => {
+    switch (consumptionMode) {
+      case "cursory":
+        return source?.shortSummary;
+      case "casual":
+        return source?.summary;
+      case "research":
+        return source?.abridged;
+    }
+  }, [consumptionMode, source]);
 
   return (
     <Grid item {...rest}>
@@ -128,21 +135,9 @@ export default function Post({
         />
         <StyledCardContent>
           <StyledStack spacing={2}>
-            {consumptionMode === "cursory" && (
-              <Typography variant={labelSize}>
-                <ReactMarkdown>{source?.shortSummary}</ReactMarkdown>
-              </Typography>
-            )}
-            {consumptionMode === "casual" && (
-              <Typography variant={labelSize}>
-                <ReactMarkdown>{source?.summary}</ReactMarkdown>
-              </Typography>
-            )}
-            {consumptionMode === "research" && (
-              <Typography variant={labelSize}>
-                <ReactMarkdown>{source?.abridged}</ReactMarkdown>
-              </Typography>
-            )}
+            <Typography component={"div"} variant={labelSize}>
+              <ReactMarkdown skipHtml={true}>{content}</ReactMarkdown>
+            </Typography>
             <Typography variant="caption">
               <StyledChipCategory label={source?.category} color="secondary" />
               <StyledChipSubcategory
