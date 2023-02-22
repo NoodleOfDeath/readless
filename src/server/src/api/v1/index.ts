@@ -5,7 +5,6 @@ import { DBService } from '../../services';
 
 import articlesRouter from './routes/articles';
 import sourcesRouter from './routes/sources';
-import scrapeRouter from './routes/scrape';
 const router = Router();
 
 async function main() {
@@ -13,7 +12,6 @@ async function main() {
 
   router.use('/articles', articlesRouter);
   router.use('/sources', sourcesRouter);
-  router.use('/scrape', scrapeRouter);
 
   router.get('/healthz', (_, res) => res.send('OK'));
 

@@ -1,27 +1,30 @@
 import React from "react";
-import Home from "@/pages/home/Home";
-import Error404NotFound from "@/pages/errors/Error404NotFound";
-import ContactForm from "@/pages/contact/ContactForm";
+import HomePage from "@/pages/home/HomePage";
+import Error404NotFoundPage from "@/pages/errors/Error404NotFoundPage";
+import ContactPage from "@/pages/contact/ContactPage";
+import AboutPage from "@/pages/about/AboutPage";
 
 export type Route = {
   path: string;
   element?: React.ReactNode;
   children?: Route[];
-  redirect?: string;
 };
 
 export const routes: Route[] = [
   {
     path: "/",
-    element: <Home />,
-    redirect: "/contact",
+    element: <HomePage />,
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
   },
   {
     path: "/contact",
-    element: <ContactForm />,
+    element: <ContactPage />,
   },
   {
     path: "/*",
-    element: <Error404NotFound />,
+    element: <Error404NotFoundPage />,
   },
 ];

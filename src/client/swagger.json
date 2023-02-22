@@ -70,9 +70,21 @@
 							}
 						},
 						"required": [
+							"subcategory",
 							"category",
 							"title"
 						],
+						"type": "object"
+					}
+				]
+			},
+			"ArticleAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/TitledCategorizedPostAttributes"
+					},
+					{
+						"properties": {},
 						"type": "object"
 					}
 				]
@@ -113,9 +125,9 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/v1/sources": {
+		"/v1/articles": {
 			"get": {
-				"operationId": "GetSources",
+				"operationId": "GetArticles",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -123,7 +135,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/SourceAttributes"
+										"$ref": "#/components/schemas/ArticleAttributes"
 									},
 									"type": "array"
 								}
@@ -131,6 +143,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Articles"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -163,6 +178,335 @@
 						}
 					}
 				]
+			},
+			"post": {
+				"operationId": "WriteArticleFromSources",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ArticleAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"items": {
+									"type": "number",
+									"format": "double"
+								},
+								"type": "array"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/articles/{category}": {
+			"get": {
+				"operationId": "GetArticlesForCategory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ArticleAttributes"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/articles/{category}/{subcategory}": {
+			"get": {
+				"operationId": "GetArticlesForCategoryAndSubcategory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ArticleAttributes"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "subcategory",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/articles/{category}/{subcategory}/{title}": {
+			"get": {
+				"operationId": "GetArticleForCategoryAndSubcategoryAndTitle",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ArticleAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "subcategory",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "title",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/sources": {
+			"get": {
+				"operationId": "GetSources",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/SourceAttributes"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Sources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "ReadAndSummarizeSource",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SourceAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Sources"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "string"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/v1/sources/{category}": {
@@ -183,6 +527,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Sources"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -243,6 +590,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Sources"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -295,22 +645,22 @@
 		},
 		"/v1/sources/{category}/{subcategory}/{title}": {
 			"get": {
-				"operationId": "GetSourcesForCategoryAndSubCategoryAndTitle",
+				"operationId": "GetSourceForCategoryAndSubCategoryAndTitle",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/SourceAttributes"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/SourceAttributes"
 								}
 							}
 						}
 					}
 				},
+				"tags": [
+					"Sources"
+				],
 				"security": [],
 				"parameters": [
 					{

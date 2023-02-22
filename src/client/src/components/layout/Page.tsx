@@ -1,15 +1,15 @@
-import { Container, styled as muiStyled } from "@mui/material";
+import { Container, ContainerProps, styled as muiStyled } from "@mui/material";
 import React from "react";
 
-const StyledContainer = muiStyled(Container)(({ theme }) => ({
-  backgroundColor: "transparent",
-  width: "100%",
-  maxWidth: 1280,
-  margin: "auto",
+const StyledContainer = muiStyled((props: ContainerProps) => (
+  <Container {...props} maxWidth={false} />
+))(({ theme }) => ({
   marginTop: theme.spacing(5),
+  maxWidth: 1280,
   alignSelf: "center",
   alignItems: "center",
   textAlign: "center",
+  justifyContent: "center",
 }));
 
 type Props = React.PropsWithChildren<{}>;

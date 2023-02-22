@@ -2,7 +2,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import styled from "styled-components";
-import Page from "@/components/Page";
+import Page from "@/components/layout/Page";
 
 type ContactFormData = {
   name: string;
@@ -52,7 +52,7 @@ const StyledForm = styled.form`
 
 const StyledTextField = styled(TextField)``;
 
-export default function ContactForm() {
+export default function ContactPage() {
   const { register, handleSubmit } = useForm<ContactFormData>();
 
   const onSubmit = React.useCallback<SubmitHandler<ContactFormData>>((data) => {
