@@ -1,4 +1,4 @@
-FROM node:16.15.0 as base
+FROM node:19.3.0 as base
 RUN npm install -g pnpm
 WORKDIR /home/node/app
 COPY package.json ./
