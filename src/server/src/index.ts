@@ -38,7 +38,6 @@ app.use(
 );
 
 app.set('trust proxy', 1);
-app.use(express.static('public'));
 
 app.use('/v1', v1router);
 

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import SwaggerUi from 'swagger-ui-express';
 
 import { DBService } from '../../services';
@@ -9,6 +9,8 @@ const router = Router();
 
 async function main() {
   await DBService.init();
+  
+  router.use(express.static('public'));
 
   router.use('/articles', articlesRouter);
   router.use('/sources', sourcesRouter);
@@ -20,7 +22,7 @@ async function main() {
     SwaggerUi.serve,
     SwaggerUi.setup(undefined, {
       swaggerOptions: {
-        url: '/swagger.json',
+        url: '/v1/swagger.json',
       },
     }),
   );

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { param } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { pagination, validate } from '../../middleware';
 
@@ -39,6 +39,18 @@ router.get(
       response = await controller.getSources(pageSize, page, offset);
     }
     res.json(response);
+  },
+);
+
+router.post(
+  '/',
+  body('url').isString(),
+  validate,
+  async (req, res) => {
+    const { url } = req.body;
+    const controller = new SourceController();
+    const source = await controller.readAndSummarizeSource(url);
+    res.json(source);
   },
 );
 

@@ -6,15 +6,26 @@ import fetch from "node-fetch";
 
 const parser = new ArgumentParser({});
 
-parser.add_argument("url", { nargs: "+" });
+parser.add_argument("url");
+
+parser.add_argument("-d", "--dev", { action: "store_true" });
+parser.add_argument("-p", "--prod", { action: "store_true" });
 
 const args = parser.parse_args();
 
+let target = "http://localhost:6970";
+
+if (args.dev) {
+  target = "https://api.dev.theskoop.ai";
+} else if (args.prod) {
+  target = "https://api.theskoop.ai";
+}
+
 async function main() {
-  await fetch("http://localhost:6970/v1/scrape", {
+  await fetch(`${target}/v1/sources`, {
     method: "POST",
     body: JSON.stringify({
-      urls: args.url,
+      url: args.url,
     }),
     headers: {
       "Content-Type": "application/json",
