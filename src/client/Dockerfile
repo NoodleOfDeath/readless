@@ -9,6 +9,7 @@ COPY src ./src
 COPY public ./public
 COPY tsconfig.json ./
 COPY config-overrides.js ./
+COPY swagger.json ./
 RUN pnpm run gen
 
 FROM pre-build as build
