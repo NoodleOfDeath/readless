@@ -28,6 +28,8 @@ spec:
           env:
             - name: CORS_ORIGIN
               value: "$CORS_ORIGIN"
+            - name: OPENAI_API_KEY
+              value: "$OPENAI_API_KEY"
             - name: PG_CONNECTION_STRING
               value: "$PG_CONNECTION_STRING"
             - name: PORT
