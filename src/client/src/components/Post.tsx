@@ -8,13 +8,15 @@ import {
   Grid,
   Typography,
   styled as muiStyled,
+  GridProps,
+  Stack,
 } from "@mui/material";
 
 export const CONSUMPTION_MODES = ["cursory", "casual", "research"] as const;
 
 export type ConsumptionMode = typeof CONSUMPTION_MODES[number];
 
-type Props = {
+type Props = GridProps & {
   source?: SourceAttributes;
   consumptionMode?: ConsumptionMode;
   labelSize?:
@@ -39,6 +41,7 @@ const StyledCard = muiStyled(Card)(({ theme }) => ({
   color: theme.palette.common.white,
   maxWidth: 1280,
   minWidth: 200,
+  cursor: "pointer",
 }));
 
 const StyledCardHeader = muiStyled(CardHeader)(({ theme }) => ({
@@ -51,6 +54,10 @@ const StyledCardHeader = muiStyled(CardHeader)(({ theme }) => ({
 
 const StyledCardContent = muiStyled(CardContent)(({ theme }) => ({
   padding: theme.spacing(1),
+}));
+
+const StyledStack = muiStyled(Stack)(({ theme }) => ({
+  margin: theme.spacing(1),
 }));
 
 export default function Post({
@@ -73,30 +80,45 @@ export default function Post({
     updatedAt: "0",
   },
   consumptionMode = "cursory",
-  labelSize = "subtitle1",
+  labelSize = "body1",
+  ...rest
 }: Props = {}) {
   const createdAt = React.useMemo(
     () => format(new Date(source?.createdAt ?? 0), "MMM dd, yyyy - h:mma"),
     [source?.createdAt]
   );
 
+  const onClick = React.useCallback(() => {
+    window.open(source?.url, "_blank");
+  }, [source?.url]);
+
   return (
-    <Grid item sm={6} md={4} xl={3}>
+    <Grid item {...rest} onClick={onClick}>
       <StyledCard>
         <StyledCardHeader
           title={source?.alternateTitle}
           subheader={createdAt}
         />
         <StyledCardContent>
-          {consumptionMode === "cursory" && (
-            <Typography variant={labelSize}>{source?.shortSummary}</Typography>
-          )}
-          {consumptionMode === "casual" && (
-            <Typography variant={labelSize}>{source?.summary}</Typography>
-          )}
-          {consumptionMode === "research" && (
-            <Typography variant={labelSize}>{source?.abridged}</Typography>
-          )}
+          <StyledStack spacing={2}>
+            {consumptionMode === "cursory" && (
+              <Typography variant={labelSize}>
+                {source?.shortSummary}
+              </Typography>
+            )}
+            {consumptionMode === "casual" && (
+              <Typography variant={labelSize}>{source?.summary}</Typography>
+            )}
+            {consumptionMode === "research" && (
+              <Typography variant={labelSize}>{source?.abridged}</Typography>
+            )}
+            <Typography variant="caption">
+              {source?.category} - {source?.subcategory}
+            </Typography>
+            <Typography variant="caption">
+              {source?.tags.map((tag) => `#${tag}`).join(" ")}
+            </Typography>
+          </StyledStack>
         </StyledCardContent>
       </StyledCard>
     </Grid>

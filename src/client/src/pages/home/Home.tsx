@@ -30,10 +30,15 @@ export default function Home() {
   const [loading, setLoading] = React.useState<boolean>(true);
 
   const smAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
-  const labelSize = React.useMemo(
-    () => (smAndUp ? "subtitle1" : "caption"),
-    [smAndUp]
-  );
+
+  const gridSize = React.useMemo(() => {
+    if (consumptionMode === "casual") {
+      return smAndUp ? (recentSources.length < 3 ? 12 : 4) : 12;
+    } else if (consumptionMode === "research") {
+      return smAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
+    }
+    return smAndUp ? (recentSources.length < 4 ? 12 : 3) : 12;
+  }, [consumptionMode, recentSources, smAndUp]);
 
   React.useEffect(() => {
     new Api({
@@ -58,7 +63,7 @@ export default function Home() {
               key={source.id}
               source={source}
               consumptionMode={consumptionMode}
-              labelSize={labelSize}
+              xs={gridSize}
             />
           ))}
           {loading && <CircularProgress size={10} variant="indeterminate" />}

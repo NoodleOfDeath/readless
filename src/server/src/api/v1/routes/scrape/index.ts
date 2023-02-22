@@ -27,14 +27,14 @@ router.post('/', body('urls').isArray({ min: 1 }), validate, async (req, res) =>
         text: gem.filteredText,
         prefix: `Please summarize the article (Source #${i + 1}) from ${gem.url} titled "${
           gem.title
-        }" in half the number of sentences without using phrases like "the article".`,
+        }" using at least 800 words and without using phrases like "the article".`,
         action: (reply, sourceInfo: Partial<Source>) => (sourceInfo.abridged = reply.text),
       };
       const summaryPrompt: Prompt = {
         text: gem.filteredText,
         prefix: `Please summarize the article (Source #${i + 1}) from ${gem.url} titled "${
           gem.title
-        }" in 3-5 sentences without using phrases like "the article".`,
+        }" using at 300-400 words without using phrases like "the article".`,
         action: (reply, sourceInfo: Partial<Source>) => (sourceInfo.summary = reply.text),
       };
       const shortSummaryPrompt: Prompt = {
@@ -46,18 +46,28 @@ router.post('/', body('urls').isArray({ min: 1 }), validate, async (req, res) =>
       };
       const tagsPrompt: Prompt = {
         text: gem.filteredText,
-        prefix: `Please provide a list of at least 10 tags most relevant to this article separated by commas`,
-        action: (reply, sourceInfo: Partial<Source>) => (sourceInfo.tags = reply.text.split(',')),
+        prefix: `Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10`,
+        action: (reply, sourceInfo: Partial<Source>) => {
+          sourceInfo.tags = reply.text.replace(/^tags:\s*/i, '').split(',');
+        },
       };
       const categoryPrompt: Prompt = {
         text: gem.filteredText,
         prefix: `Please provide a one word category for this article`,
-        action: (reply, sourceInfo: Partial<Source>) => (sourceInfo.category = reply.text.trim().replace(/.$/, '')),
+        action: (reply, sourceInfo: Partial<Source>) =>
+          (sourceInfo.category = reply.text
+            .replace(/^category:\s*/i, '')
+            .trim()
+            .replace(/.$/, '')),
       };
       const subcategoryPrompt: Prompt = {
         text: gem.filteredText,
         prefix: `Please provide a one word subcategory for this article`,
-        action: (reply, sourceInfo: Partial<Source>) => (sourceInfo.subcategory = reply.text.trim().replace(/.$/, '')),
+        action: (reply, sourceInfo: Partial<Source>) =>
+          (sourceInfo.subcategory = reply.text
+            .replace(/^subcategory:\s*/i, '')
+            .trim()
+            .replace(/.$/, '')),
       };
       return {
         gem,
