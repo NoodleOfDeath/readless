@@ -1,0 +1,11 @@
+html {
+  margin: none;
+  width: 100vw;
+  height: 100vh;
+  word-spacing: -0.4em;
+}
+
+@font-face {
+  font-family: "Fhwaseriesd2020minu30";
+  src: url("../public/fonts/Fhwaseriesd2020minu30.otf");
+}

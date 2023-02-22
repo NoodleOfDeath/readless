@@ -1,16 +1,19 @@
 {
   "ts-node": {
-    "require": ["tsconfig-paths/register"],
+    "esm": true,
     "files": true,
+    "require": ["tsconfig-paths/register"],
+    "experimentalSpecifierResolution": "node",
+    "experimentalModules": true,
     "compilerOptions": {}
   },
   "compilerOptions": {
-    "target": "ES2019",
-    "lib": ["ES2019", "dom"],
+    "target": "esnext",
+    "lib": ["esnext", "dom"],
     "declaration": true,
     "esModuleInterop": true,
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "esnext",
+    "moduleResolution": "node",
     "noImplicitAny": false,
     "removeComments": true,
     "noLib": false,

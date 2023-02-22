@@ -4,11 +4,14 @@ WORKDIR /home/node/app
 COPY package.json ./
 RUN pnpm install
 
-FROM base as build
+FROM base as pre-build
 COPY src ./src
 COPY public ./public
 COPY tsconfig.json ./
 COPY config-overrides.js ./
+RUN pnpm run gen
+
+FROM pre-build as build
 ARG API_ENDPOINT
 ENV API_ENDPOINT=${API_ENDPOINT}
 ARG GENERATE_SOURCEMAP

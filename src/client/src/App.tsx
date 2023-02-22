@@ -1,19 +1,26 @@
 import React from "react";
-import Header from "./components/Header";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
-import { routes } from "@/pages";
 import styled from "styled-components";
 import { ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+
+import BaseContextProvider, {
+  DEFAULT_BASE_CONTEXT,
+} from "@/contexts/BaseContext";
+import { routes } from "@/pages";
 import { theme } from "@/theme";
 
-const AppContainer = styled.div`
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
+const StyledAppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
   margin: -10px;
 `;
 
-const AppContent = styled.div`
+const StyledAppContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -22,24 +29,28 @@ const AppContent = styled.div`
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppContainer>
-        <BrowserRouter>
-          <Header />
-          <AppContent>
-            <Routes>
-              {routes.map((route) => {
-                return (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    element={route.element}
-                  />
-                );
-              })}
-            </Routes>
-          </AppContent>
-        </BrowserRouter>
-      </AppContainer>
+      <CssBaseline />
+      <BaseContextProvider>
+        <StyledAppContainer>
+          <BrowserRouter>
+            <Header />
+            <StyledAppContent>
+              <Routes>
+                {routes.map((route) => {
+                  return (
+                    <Route
+                      key={route.path}
+                      path={route.path}
+                      element={route.element}
+                    />
+                  );
+                })}
+              </Routes>
+            </StyledAppContent>
+            <Footer />
+          </BrowserRouter>
+        </StyledAppContainer>
+      </BaseContextProvider>
     </ThemeProvider>
   );
 }

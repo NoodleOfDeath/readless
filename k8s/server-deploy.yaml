@@ -28,13 +28,8 @@ spec:
           env:
             - name: CORS_ORIGIN
               value: "$CORS_ORIGIN"
-            # - name: PG_CA_CERT
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: do-ca-cert
-            #       key: do.crt
-            - name: PG_URL
-              value: "$PG_URL"
+            - name: PG_CONNECTION_STRING
+              value: "$PG_CONNECTION_STRING"
             - name: PORT
               value: "$PORT"
             - name: RECAPTCHA_SECRET_KEY

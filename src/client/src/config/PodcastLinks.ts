@@ -15,7 +15,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
     icon: mdiApple,
     onClick: () =>
       window.open(
-        "https://podcasts.apple.com/us/podcast/chatgptalks/id1671374300",
+        "https://podcasts.apple.com/us/podcast/theskoop/id1671374300",
         "_blank"
       ),
   },
@@ -24,7 +24,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
     icon: mdiAws,
     onClick: () =>
       window.open(
-        "https://music.amazon.com/podcasts/0a765ea8-0b43-4862-9b21-57af667298b0/chatgptalks",
+        "https://music.amazon.com/podcasts/0a765ea8-0b43-4862-9b21-57af667298b0/theskoop",
         "_blank"
       ),
   },
@@ -42,7 +42,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
     icon: iheart,
     onClick: () =>
       window.open(
-        "https://www.iheart.com/podcast/269-chatgptalks-108727878?&autoplay=true",
+        "https://www.iheart.com/podcast/269-theskoop-108727878?&autoplay=true",
         "_blank"
       ),
   },

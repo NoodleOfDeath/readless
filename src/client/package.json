@@ -1,5 +1,5 @@
 {
-  "name": "chatgptalks-client",
+  "name": "theskoop-client",
   "version": "0.2.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,9 @@
     "dev": "nodemon -x 'react-app-rewired start'",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject"
+    "eject": "react-app-rewired eject",
+    "swagger": "curl http://localhost:6970/swagger.json > ./swagger.json && pnpm run gen",
+    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api"
   },
   "eslintConfig": {
     "extends": [
@@ -41,6 +43,7 @@
     "@types/node": "^16.18.12",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
+    "date-fns": "^2.29.3",
     "node-fetch": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

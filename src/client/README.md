@@ -1,3 +1,3 @@
-# ChatGPTalks Client
+# TheSkoop Client
 
-This is the client for the ChatGPTalks project
+This is the client for the TheSkoop project

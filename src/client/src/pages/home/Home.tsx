@@ -1,8 +1,6 @@
 import React from "react";
 import {
-  Card,
-  CardContent,
-  CardMedia,
+  CircularProgress,
   Grid,
   Stack,
   styled as muiStyled,
@@ -10,69 +8,65 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { Icon } from "@mdi/react";
-import Page from "@/components/Page";
-import { PODCAST_LINKS } from "@/config/PodcastLinks";
 import { useNavigate } from "react-router-dom";
+
+import { Api, SourceAttributes } from "@/api/Api";
+import Page from "@/components/Page";
+import Post from "@/components/Post";
+import ConsumptionModeSelector from "@/components/ConsumptionModeSelector";
+import { BaseContext } from "@/contexts";
 
 const StyledGrid = muiStyled(Grid)(({ theme }) => ({
   margin: 0,
   width: "calc(100% - 16px)",
 }));
-
-const StyledCard = muiStyled(Card)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
-  maxWidth: 1280,
-  minWidth: 200,
-}));
-
-const StyledCardMedia = muiStyled(CardMedia)(({ theme }) => ({
-  padding: theme.spacing(1),
-  alignItems: "center",
-  justifyContent: "center",
-  display: "flex",
-  flexDirection: "row",
-}));
-
-const StyledCardContent = muiStyled(CardContent)(({ theme }) => ({
-  padding: theme.spacing(1),
-}));
-
 export default function Home() {
   const navigate = useNavigate();
+  const { consumptionMode } = React.useContext(BaseContext);
+
+  const [recentSources, setRecentSources] = React.useState<SourceAttributes[]>(
+    []
+  );
+  const [loading, setLoading] = React.useState<boolean>(true);
+
   const smAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
 
-  const iconSize = React.useMemo(() => (smAndUp ? 5 : 3), [smAndUp]);
-  const labelSize = React.useMemo(() => (smAndUp ? "h4" : "h6"), [smAndUp]);
+  const gridSize = React.useMemo(() => {
+    if (consumptionMode === "casual") {
+      return smAndUp ? (recentSources.length < 3 ? 12 : 4) : 12;
+    } else if (consumptionMode === "research") {
+      return smAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
+    }
+    return smAndUp ? (recentSources.length < 4 ? 12 : 3) : 12;
+  }, [consumptionMode, recentSources, smAndUp]);
+
+  React.useEffect(() => {
+    new Api({
+      baseUrl: process.env.API_ENDPOINT,
+    }).v1
+      .getSources({})
+      .then((response) => {
+        setRecentSources(response.data);
+        setLoading(false);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <Page>
       <Stack spacing={2}>
-        <Typography variant="h4">
-          Listen to our weekly podcast on the following podcast providers!
-        </Typography>
+        <Typography variant="h4">News that fits your schedule</Typography>
+        <ConsumptionModeSelector />
         <StyledGrid container justifyContent="center" spacing={2}>
-          {PODCAST_LINKS.map((link) => (
-            <Grid
-              key={link.label}
-              item
-              sm={6}
-              md={4}
-              xl={Math.floor(12 / PODCAST_LINKS.length)}
-            >
-              <StyledCard onClick={() => link.onClick?.({ navigate })}>
-                {link.icon && (
-                  <StyledCardMedia>
-                    <Icon path={link.icon} size={iconSize} color="white" />
-                  </StyledCardMedia>
-                )}
-                <StyledCardContent>
-                  <Typography variant={labelSize}>{link.label}</Typography>
-                </StyledCardContent>
-              </StyledCard>
-            </Grid>
+          {recentSources.map((source) => (
+            <Post
+              key={source.id}
+              source={source}
+              consumptionMode={consumptionMode}
+              xs={gridSize}
+            />
           ))}
+          {loading && <CircularProgress size={10} variant="indeterminate" />}
         </StyledGrid>
       </Stack>
     </Page>
