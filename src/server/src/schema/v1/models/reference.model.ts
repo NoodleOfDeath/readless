@@ -1,4 +1,4 @@
-import { Table, Column, Model, Index, ForeignKey } from 'sequelize-typescript';
+import { Table, Column, Model, Index, ForeignKey, DataType } from 'sequelize-typescript';
 import { Article } from './article.model';
 import { Source } from './source.model';
 
@@ -16,6 +16,7 @@ export class Reference extends Model<Reference, ReferenceCreationAttributes> {
   @Index({ name: 'reference_articleId_sourceId', unique: true })
   @ForeignKey(() => Article)
   @Column({
+    type: DataType.INTEGER,
     allowNull: false,
   })
   articleId: number;
@@ -27,6 +28,7 @@ export class Reference extends Model<Reference, ReferenceCreationAttributes> {
   @Index({ name: 'reference_articleId_sourceId', unique: true })
   @ForeignKey(() => Source)
   @Column({
+    type: DataType.INTEGER,
     allowNull: false,
   })
   sourceId: number;

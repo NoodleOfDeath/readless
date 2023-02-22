@@ -1,3 +1,4 @@
+import { SourceCreationAttributes } from './../../../../schema/v1/models/source.model';
 import { Article, Reference, Source } from '../../../../schema/v1/models';
 import { Router } from 'express';
 import { body } from 'express-validator';
@@ -96,7 +97,7 @@ router.post('/', body('urls').isArray({ min: 1 }), validate, async (req, res) =>
         const reply = await chatgpt.send(prompt.text, { promptPrefix: prompt.prefix });
         prompt.action(reply, sourceInfo);
       }
-      const source = new Source(sourceInfo);
+      const source = new Source(sourceInfo as SourceCreationAttributes);
       sources.push(await source.save());
     }
     return res.json({ sources });
