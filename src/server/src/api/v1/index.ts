@@ -6,25 +6,28 @@ import { DBService } from '../../services';
 import articlesRouter from './routes/articles';
 import sourcesRouter from './routes/sources';
 import scrapeRouter from './routes/scrape';
-
-await DBService.init();
-
 const router = Router();
 
-router.use('/articles', articlesRouter);
-router.use('/sources', sourcesRouter);
-router.use('/scrape', scrapeRouter);
+async function main() {
+  await DBService.init();
 
-router.get('/healthz', (_, res) => res.send('OK'));
+  router.use('/articles', articlesRouter);
+  router.use('/sources', sourcesRouter);
+  router.use('/scrape', scrapeRouter);
 
-router.use(
-  '/docs',
-  SwaggerUi.serve,
-  SwaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: '/swagger.json',
-    },
-  }),
-);
+  router.get('/healthz', (_, res) => res.send('OK'));
+
+  router.use(
+    '/docs',
+    SwaggerUi.serve,
+    SwaggerUi.setup(undefined, {
+      swaggerOptions: {
+        url: '/swagger.json',
+      },
+    }),
+  );
+}
+
+main();
 
 export default router;

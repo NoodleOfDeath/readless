@@ -2,7 +2,7 @@
   "name": "theskoop-api",
   "version": "0.0.1",
   "type": "module",
-  "export": "dist/index.js",
+  "export": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -21,16 +21,16 @@
   "homepage": "https://github.com/noodleofdeath/theskoop",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "start": "node dist/index.js",
+    "start": "node dist/index.cjs",
     "dev": "nodemon -x 'ts-node ./serve.ts'",
     "gen": "pgtyped -c ./src/schema/config.json",
-    "build": "rimraf dist && tsc -p tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
+    "build": "rimraf dist && esbuild ./src --bundle --platform=node --outfile=./dist/index.cjs",
     "format": "prettier --write 'src/**/*.ts'",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "test": "jest",
     "generate-docs": "typedoc",
-    "swagger": "tsoa swagger"
+    "swagger": "tsoa spec -c tsoa.config.json"
   },
   "husky": {
     "hooks": {
@@ -43,11 +43,13 @@
     "body-parser": "^1.20.1",
     "chatgpt": "^4.7.2",
     "cors": "^2.8.5",
+    "esbuild": "^0.17.10",
     "express": "^4.18.2",
     "express-validator": "^6.14.3",
     "node-fetch": "^3.3.0",
     "node-html-parser": "^6.1.4",
     "pg": "^8.9.0",
+    "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.28.0",
     "sequelize-typescript": "^2.1.5",

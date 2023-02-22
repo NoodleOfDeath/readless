@@ -97,6 +97,8 @@ export class TitledCategorizedPost<
   })
   category: string;
 
-  @Column
+  @Column({
+    type: DataType.STRING,
+  })
   subcategory: string;
 }
