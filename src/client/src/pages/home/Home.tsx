@@ -46,10 +46,15 @@ export default function Home() {
     }).v1
       .getSources({})
       .then((response) => {
-        setRecentSources(response.data);
-        setLoading(false);
+        setRecentSources(response.data ?? []);
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error(error);
+        setRecentSources([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
