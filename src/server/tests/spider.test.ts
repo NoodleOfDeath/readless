@@ -10,12 +10,7 @@ describe('fetches a url', () => {
       const resp = await spider.fetch(target);
       assert(resp);
       assert(resp.title);
-      console.log(resp.title);
-      assert(resp.nodes);
-      assert(resp.nodes.length > 0);
-      resp.nodes.forEach((node) => console.log(node.rawText));
-      // console.log(JSON.stringify(resp.json ?? {}, null, 2));
-      setTimeout(() => assert(true), 500);
+      assert(resp.json);
     } catch (e) {
       console.error(e);
       assert(false);

@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { BaseService } from '../base';
 import { Loot } from './loot';
 
@@ -7,8 +7,7 @@ type FetchOpts = {};
 export class SpiderService extends BaseService {
   async fetch(url: string, opts: FetchOpts = {}) {
     try {
-      const response = await fetch(url);
-      const text = await response.text();
+      const { data: text } = await axios.get(url);
       const loot = new Loot({ url, text });
       return loot;
     } catch (e) {
