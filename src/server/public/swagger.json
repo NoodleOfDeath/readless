@@ -6,6 +6,65 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"Attr_Article.typeofARTICLE_ATTRS-at-number_": {
+				"properties": {
+					"id": {
+						"anyOf": [
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{}
+						]
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"abridged": {
+						"type": "string"
+					},
+					"summary": {
+						"type": "string"
+					},
+					"shortSummary": {
+						"type": "string"
+					},
+					"createdAt": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{}
+						]
+					},
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"subcategory": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"tags",
+					"abridged",
+					"summary",
+					"shortSummary",
+					"title",
+					"category",
+					"subcategory"
+				],
+				"type": "object"
+			},
+			"ArticleAttr": {
+				"$ref": "#/components/schemas/Attr_Article.typeofARTICLE_ATTRS-at-number_"
+			},
 			"PostAttributes": {
 				"properties": {
 					"deletedAt": {
@@ -89,6 +148,73 @@
 					}
 				]
 			},
+			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
+				"properties": {
+					"id": {
+						"anyOf": [
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{}
+						]
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"abridged": {
+						"type": "string"
+					},
+					"summary": {
+						"type": "string"
+					},
+					"shortSummary": {
+						"type": "string"
+					},
+					"createdAt": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{}
+						]
+					},
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"subcategory": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"alternateTitle": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"tags",
+					"abridged",
+					"summary",
+					"shortSummary",
+					"title",
+					"category",
+					"subcategory",
+					"url",
+					"alternateTitle"
+				],
+				"type": "object"
+			},
+			"SourceAttr": {
+				"$ref": "#/components/schemas/Attr_Source.typeofSOURCE_ATTRS-at-number_"
+			},
 			"SourceAttributes": {
 				"allOf": [
 					{
@@ -135,7 +261,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/ArticleAttributes"
+										"$ref": "#/components/schemas/ArticleAttr"
 									},
 									"type": "array"
 								}
@@ -224,7 +350,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/ArticleAttributes"
+										"$ref": "#/components/schemas/ArticleAttr"
 									},
 									"type": "array"
 								}
@@ -287,7 +413,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/ArticleAttributes"
+										"$ref": "#/components/schemas/ArticleAttr"
 									},
 									"type": "array"
 								}
@@ -434,7 +560,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/SourceAttributes"
+										"$ref": "#/components/schemas/SourceAttr"
 									},
 									"type": "array"
 								}
@@ -519,7 +645,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/SourceAttributes"
+										"$ref": "#/components/schemas/SourceAttr"
 									},
 									"type": "array"
 								}
@@ -582,7 +708,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/SourceAttributes"
+										"$ref": "#/components/schemas/SourceAttr"
 									},
 									"type": "array"
 								}

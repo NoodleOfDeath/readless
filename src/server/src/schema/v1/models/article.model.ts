@@ -1,13 +1,17 @@
 import { HasMany, Table } from 'sequelize-typescript';
 import {
+  Attr,
   TitledCategorizedPost,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from './post';
+import { ARTICLE_ATTRS } from './types';
 import { Reference } from './reference.model';
 
 export type ArticleAttributes = TitledCategorizedPostAttributes & {};
 export type ArticleCreationAttributes = TitledCategorizedPostCreationAttributes & {};
+
+export type ArticleAttr = Attr<Article, (typeof ARTICLE_ATTRS)[number]>;
 
 @Table({
   modelName: 'article',

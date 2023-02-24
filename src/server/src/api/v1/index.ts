@@ -9,7 +9,7 @@ const router = Router();
 
 async function main() {
   await DBService.init();
-  
+
   router.use(express.static('public'));
 
   router.use('/articles', articlesRouter);

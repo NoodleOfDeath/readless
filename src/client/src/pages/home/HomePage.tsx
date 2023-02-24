@@ -3,15 +3,15 @@ import {
   CircularProgress,
   Grid,
   Stack,
-  styled as muiStyled,
   Theme,
   Typography,
+  styled as muiStyled,
   useMediaQuery,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { BaseContext } from "@/contexts";
-import { Api, SourceAttributes } from "@/api/Api";
+import { Api, SourceAttr } from "@/api/Api";
 
 import Page from "@/components/layout/Page";
 import Post from "@/components/Post";
@@ -29,9 +29,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { consumptionMode } = React.useContext(BaseContext);
 
-  const [recentSources, setRecentSources] = React.useState<SourceAttributes[]>(
-    []
-  );
+  const [recentSources, setRecentSources] = React.useState<SourceAttr[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));

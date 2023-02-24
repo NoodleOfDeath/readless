@@ -2,7 +2,7 @@ import React from "react";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
 
-import { SourceAttributes } from "@/api/Api";
+import { SourceAttr, SourceAttributes } from "@/api/Api";
 import {
   Card,
   CardContent,
@@ -21,7 +21,7 @@ export const CONSUMPTION_MODES = ["cursory", "casual", "research"] as const;
 export type ConsumptionMode = typeof CONSUMPTION_MODES[number];
 
 type Props = GridProps & {
-  source?: SourceAttributes;
+  source?: SourceAttr | SourceAttributes;
   consumptionMode?: ConsumptionMode;
   labelSize?:
     | "button"

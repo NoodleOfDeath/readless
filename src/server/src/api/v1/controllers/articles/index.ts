@@ -1,8 +1,14 @@
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt } from '../../../../services';
-import { Article, ArticleAttributes, ArticleCreationAttributes, Reference } from '../../../../schema/v1/models';
-import { FindAndCountOptions } from '../../../../schema/v1/models/types';
+import {
+  Article,
+  ArticleAttr,
+  ArticleAttributes,
+  ArticleCreationAttributes,
+  Reference,
+} from '../../../../schema/v1/models';
+import { ARTICLE_ATTRS, FindAndCountOptions } from '../../../../schema/v1/models/types';
 
 @Route('/v1/articles')
 @Tags('Articles')
@@ -12,8 +18,9 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<ArticleAttributes[]> {
+  ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
+      attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
@@ -28,8 +35,9 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<ArticleAttributes[]> {
+  ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
+      attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
@@ -48,8 +56,9 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<ArticleAttributes[]> {
+  ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
+      attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],

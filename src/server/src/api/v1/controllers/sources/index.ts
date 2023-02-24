@@ -1,8 +1,8 @@
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt, SpiderService } from '../../../../services';
-import { Source, SourceAttributes, SourceCreationAttributes } from '../../../../schema/v1/models';
-import { FindAndCountOptions } from '../../../../schema/v1/models/types';
+import { Source, SourceAttr, SourceAttributes, SourceCreationAttributes } from '../../../../schema/v1/models';
+import { FindAndCountOptions, SOURCE_ATTRS } from '../../../../schema/v1/models/types';
 
 @Route('/v1/sources')
 @Tags('Sources')
@@ -12,8 +12,9 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<SourceAttributes[]> {
+  ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
+      attributes: [...SOURCE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
@@ -28,8 +29,9 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<SourceAttributes[]> {
+  ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
+      attributes: [...SOURCE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
@@ -48,8 +50,9 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<SourceAttributes[]> {
+  ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
+      attributes: [...SOURCE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
@@ -90,7 +93,7 @@ export class SourceController {
     try {
       // fetch web content with the spider
       const spider = new SpiderService();
-      const loot = await spider.fetch(url);
+      const loot = await spider.scrape(url);
       // create the prompt action map to be sent to chatgpt
       const sourceInfo = Source.json({
         url: loot.url,

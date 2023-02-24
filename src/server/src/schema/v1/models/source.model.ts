@@ -1,10 +1,12 @@
 import { Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { Reference } from './reference.model';
 import {
+  Attr,
   TitledCategorizedPost,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from './post';
+import { SOURCE_ATTRS } from './types';
 
 export type SourceAttributes = TitledCategorizedPostAttributes & {
   url: string;
@@ -17,6 +19,8 @@ export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes &
   filteredText: string;
   alternateTitle: string;
 };
+
+export type SourceAttr = Attr<Source, (typeof SOURCE_ATTRS)[number]>;
 
 @Table({
   modelName: 'source',

@@ -1,4 +1,9 @@
 import { Column, DataType, Model } from 'sequelize-typescript';
+import { POST_ATTRS, TITLED_CATEGORIZED_POST_ATTRS } from './types';
+
+export type Attr<Model, K extends keyof Model> = {
+  [Key in K]: Model[Key];
+};
 
 export type PostAttributes = {
   id?: number;
@@ -19,6 +24,8 @@ export type PostCreationAttributes = {
   summary: string;
   shortSummary: string;
 };
+
+export type PostAttr = Attr<Post, (typeof POST_ATTRS)[number]>;
 
 export abstract class Post<
     A extends PostAttributes = PostAttributes,
@@ -78,7 +85,9 @@ export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
   subcategory: string;
 };
 
-export class TitledCategorizedPost<
+export type TitledCategorizedPostAttr = Attr<TitledCategorizedPost, (typeof TITLED_CATEGORIZED_POST_ATTRS)[number]>;
+
+export abstract class TitledCategorizedPost<
     A extends TitledCategorizedPostAttributes = TitledCategorizedPostAttributes,
     B extends TitledCategorizedPostCreationAttributes = TitledCategorizedPostCreationAttributes,
   >
