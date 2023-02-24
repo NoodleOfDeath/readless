@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { param } from 'express-validator';
+import { param, query } from 'express-validator';
 
-import { pagination, referralHandler, validate } from '../../middleware';
+import { pagination, validate } from '../../middleware';
 
 import { ArticleController } from './../../controllers';
 import { ArticleAttr, ArticleAttributes } from '../../../../schema/v1/models';
@@ -10,15 +10,15 @@ const router = Router();
 
 router.get(
   '/:category?/:subcategory?/:title?',
-  referralHandler,
   param('category').isString().optional(),
   param('subcategory').isString().optional(),
   param('title').isString().optional(),
+  query('filter').isString().optional(),
   ...pagination,
   validate,
   async (req, res) => {
     const { category, subcategory, title } = req.params;
-    const { pageSize = 10, page = 0, offset = 0 } = req.query;
+    const { filter, pageSize = 10, page = 0, offset = 0 } = req.query;
     const controller = new ArticleController();
     let response: ArticleAttr[] | ArticleAttributes = [];
     if (category && subcategory && title) {
@@ -26,18 +26,15 @@ router.get(
         await controller.getArticleForCategoryAndSubcategoryAndTitle(
           category,
           subcategory,
-          title,
-          pageSize,
-          page,
-          offset,
+          title
         ),
       ];
     } else if (category && subcategory) {
-      response = await controller.getArticlesForCategoryAndSubcategory(category, subcategory, pageSize, page, offset);
+      response = await controller.getArticlesForCategoryAndSubcategory(category, subcategory, filter, pageSize, page, offset);
     } else if (category) {
-      response = await controller.getArticlesForCategory(category, pageSize, page, offset);
+      response = await controller.getArticlesForCategory(category, filter, pageSize, page, offset);
     } else {
-      response = await controller.getArticles(pageSize, page, offset);
+      response = await controller.getArticles(filter, pageSize, page, offset);
     }
     res.json(response);
   },

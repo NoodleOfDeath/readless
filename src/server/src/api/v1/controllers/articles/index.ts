@@ -15,10 +15,10 @@ import { ARTICLE_ATTRS, FindAndCountOptions } from '../../../../schema/v1/models
 export class ArticleController {
   @Get('/')
   public async getArticles(
+    @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
@@ -33,10 +33,10 @@ export class ArticleController {
   @Get('/:category/')
   public async getArticlesForCategory(
     @Path() category: string,
+    @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
@@ -55,10 +55,10 @@ export class ArticleController {
   public async getArticlesForCategoryAndSubcategory(
     @Path() category: string,
     @Path() subcategory: string,
+    @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
@@ -79,15 +79,8 @@ export class ArticleController {
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<ArticleAttributes> {
     const options: FindAndCountOptions<Article> = {
-      limit: pageSize,
-      offset: offset,
-      order: [['createdAt', 'DESC']],
       where: {
         category,
         subcategory,

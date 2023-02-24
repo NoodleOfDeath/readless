@@ -9,10 +9,10 @@ import { FindAndCountOptions, SOURCE_ATTRS } from '../../../../schema/v1/models/
 export class SourceController {
   @Get('/')
   public async getSources(
+    @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -27,10 +27,10 @@ export class SourceController {
   @Get('/:category/')
   public async getSourcesForCategory(
     @Path() category: string,
+    @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -49,10 +49,10 @@ export class SourceController {
   public async getSourcesForCategoryAndSubCategory(
     @Path() category: string,
     @Path() subcategory: string,
+    @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -73,15 +73,8 @@ export class SourceController {
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page,
-    @Query() ref?: string,
   ): Promise<SourceAttributes> {
     const options: FindAndCountOptions<Source> = {
-      limit: pageSize,
-      offset: offset,
-      order: [['createdAt', 'DESC']],
       where: {
         category,
         subcategory,

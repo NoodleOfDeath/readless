@@ -1,18 +1,24 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import { validate } from '../../middleware';
-import { RequestController } from '../../controllers';
+import { ReferralController } from '../../controllers';
 
 const router = Router();
 
 router.post(
   '/', 
-  body('ref').isString(),
+  body('referrer').isString(),
+  body('target').isString(),
+  body('userAgent').isString(),
   validate,
   async (req, res) => {
-    const { ref } = req.body;
+    const { referrer, target, userAgent } = req.body;
     try {
-      await RequestController.record(ref);
+      await new ReferralController().record({
+        referrer,
+        target,
+        userAgent,
+      });
       res.status(200).send('OK');
     } catch(e) {
       console.error(e);
@@ -20,3 +26,5 @@ router.post(
     }
   },
 );
+
+export default router;

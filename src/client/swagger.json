@@ -189,6 +189,9 @@
 					}
 				]
 			},
+			"ReferralCreationAttributes": {
+				"$ref": "#/components/schemas/ReferralAttributes"
+			},
 			"Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_": {
 				"properties": {
 					"id": {
@@ -317,6 +320,14 @@
 				"parameters": [
 					{
 						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "pageSize",
 						"required": false,
 						"schema": {
@@ -342,14 +353,6 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
-						"schema": {
-							"type": "string"
 						}
 					}
 				]
@@ -422,6 +425,14 @@
 					},
 					{
 						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "pageSize",
 						"required": false,
 						"schema": {
@@ -447,14 +458,6 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
-						"schema": {
-							"type": "string"
 						}
 					}
 				]
@@ -501,6 +504,14 @@
 					},
 					{
 						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "pageSize",
 						"required": false,
 						"schema": {
@@ -526,14 +537,6 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
-						"schema": {
-							"type": "string"
 						}
 					}
 				]
@@ -582,50 +585,13 @@
 						"schema": {
 							"type": "string"
 						}
-					},
-					{
-						"in": "query",
-						"name": "pageSize",
-						"required": false,
-						"schema": {
-							"default": 10,
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"default": 0,
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "offset",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
 					}
 				]
 			}
 		},
 		"/v1/referrals": {
 			"post": {
-				"operationId": "RecordReferral",
+				"operationId": "Record",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -648,15 +614,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"target": {
-										"type": "string"
-									},
-									"ref": {
-										"type": "string"
-									}
-								},
-								"type": "object"
+								"$ref": "#/components/schemas/ReferralCreationAttributes"
 							}
 						}
 					}
@@ -688,6 +646,14 @@
 				"parameters": [
 					{
 						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "pageSize",
 						"required": false,
 						"schema": {
@@ -713,14 +679,6 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
-						"schema": {
-							"type": "string"
 						}
 					}
 				]
@@ -797,6 +755,14 @@
 					},
 					{
 						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "pageSize",
 						"required": false,
 						"schema": {
@@ -822,14 +788,6 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
-						"schema": {
-							"type": "string"
 						}
 					}
 				]
@@ -876,6 +834,14 @@
 					},
 					{
 						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "pageSize",
 						"required": false,
 						"schema": {
@@ -901,14 +867,6 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
-						"schema": {
-							"type": "string"
 						}
 					}
 				]
@@ -954,43 +912,6 @@
 						"in": "path",
 						"name": "title",
 						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pageSize",
-						"required": false,
-						"schema": {
-							"default": 10,
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"default": 0,
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "offset",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "ref",
-						"required": false,
 						"schema": {
 							"type": "string"
 						}

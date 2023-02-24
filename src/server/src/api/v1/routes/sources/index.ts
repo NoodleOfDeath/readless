@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
-import { pagination, referralHandler, validate } from '../../middleware';
+import { pagination, validate } from '../../middleware';
 
 import { SourceController } from './../../controllers/sources';
 import { SourceAttr, SourceAttributes } from '../../../../schema/v1/models';
@@ -10,15 +10,15 @@ const router = Router();
 
 router.get(
   '/:category?/:subcategory?/:title?',
-  referralHandler,
   param('category').isString().optional(),
   param('subcategory').isString().optional(),
   param('title').isString().optional(),
+  query('filter').isString().optional(),
   ...pagination,
   validate,
   async (req, res) => {
     const { category, subcategory, title } = req.params;
-    const { pageSize = 10, page = 0, offset = page * pageSize } = req.query;
+    const { filter, pageSize = 10, page = 0, offset = page * pageSize } = req.query;
     const controller = new SourceController();
     let response: SourceAttr[] | SourceAttributes = [];
     if (category && subcategory && title) {
@@ -26,16 +26,13 @@ router.get(
         category,
         subcategory,
         title,
-        pageSize,
-        page,
-        offset,
       );
     } else if (category && subcategory) {
-      response = await controller.getSourcesForCategoryAndSubCategory(category, subcategory, pageSize, page, offset);
+      response = await controller.getSourcesForCategoryAndSubCategory(category, subcategory, filter, pageSize, page, offset);
     } else if (category) {
-      response = await controller.getSourcesForCategory(category, pageSize, page, offset);
+      response = await controller.getSourcesForCategory(category, filter, pageSize, page, offset);
     } else {
-      response = await controller.getSources(pageSize, page, offset);
+      response = await controller.getSources(filter, pageSize, page, offset);
     }
     res.json(response);
   },
