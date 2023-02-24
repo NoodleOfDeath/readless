@@ -93,17 +93,18 @@ export class SourceController {
     try {
       // fetch web content with the spider
       const spider = new SpiderService();
-      const loot = await spider.scrape(url);
+      const loot = await spider.loot(url);
+      const scrapeLoot = await spider.scrape(url);
       // create the prompt action map to be sent to chatgpt
       const sourceInfo = Source.json({
-        url: loot.url,
-        title: loot.title,
-        text: loot.text,
-        filteredText: loot.filteredText,
+        url: url,
+        title: scrapeLoot.title || loot.title,
+        text: scrapeLoot.text || loot.filteredText,
+        rawText: loot.text,
       });
       const prompts: Prompt[] = [
         {
-          text: loot.filteredText,
+          text: scrapeLoot.text || loot.filteredText,
           prefix: `Please give this article a new title relevant to its content no longer than 255 characters`,
           action: (reply) => (sourceInfo.alternateTitle = reply.text),
         },

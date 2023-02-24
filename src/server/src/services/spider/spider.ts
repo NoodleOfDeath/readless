@@ -15,17 +15,26 @@ export class SpiderService extends BaseService {
         selector: 'h1',
         output: 'text',
       },
-      content: {
+      text: {
         selector: 'p,blockquote',
         output: 'text',
       },
     },
   };
+  
+  async fetch(url: string) {
+    try {
+      const { data: text } = await axios.get(url);
+      return text;
+    } catch(e) {
+      console.error(e);
+    }
+  }
 
   /** Custom scraping implementation */
   async loot(url: string) {
     try {
-      const { data: text } = await axios.get(url);
+      const text = await this.fetch(url);
       const loot = new Loot({ url, text });
       return loot;
     } catch (e) {

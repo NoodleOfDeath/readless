@@ -10,13 +10,13 @@ import { SOURCE_ATTRS } from './types';
 
 export type SourceAttributes = TitledCategorizedPostAttributes & {
   url: string;
-  filteredText: string;
+  rawText: string;
   alternateTitle: string;
 };
 
 export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes & {
   url: string;
-  filteredText: string;
+  rawText: string;
   alternateTitle: string;
 };
 
@@ -46,7 +46,7 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
     type: DataType.TEXT,
     allowNull: false,
   })
-  filteredText: string;
+  rawText: string;
 
   @Column({
     type: DataType.STRING(1024),
