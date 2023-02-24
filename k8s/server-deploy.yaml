@@ -36,6 +36,8 @@ spec:
               value: "$PORT"
             - name: RECAPTCHA_SECRET_KEY
               value: "$RECAPTCHA_SECRET_KEY"
+            - name: WS_API_KEY
+              value: "$WS_API_KEY"
           livenessProbe:
             httpGet:
               path: /v1/healthz
