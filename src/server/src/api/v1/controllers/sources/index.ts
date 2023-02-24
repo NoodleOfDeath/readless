@@ -94,7 +94,7 @@ export class SourceController {
       // fetch web content with the spider
       const spider = new SpiderService();
       const loot = await spider.loot(url);
-      const scrapeLoot = await spider.scrape(url);
+      const scrapeLoot = (await spider.scrape(url)).collapsed();
       // create the prompt action map to be sent to chatgpt
       const sourceInfo = Source.json({
         url: url,
