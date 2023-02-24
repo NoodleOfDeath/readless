@@ -1,8 +1,8 @@
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt, SpiderService } from '../../../../services';
-import { Source, SourceAttr, SourceAttributes, SourceCreationAttributes } from '../../../../schema/v1/models';
-import { FindAndCountOptions, SOURCE_ATTRS } from '../../../../schema/v1/models/types';
+import { Source, SourceAttr, SourceAttributes, SourceCreationAttributes } from '../../schema';
+import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
 
 @Route('/v1/sources')
 @Tags('Sources')

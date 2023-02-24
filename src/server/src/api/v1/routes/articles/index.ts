@@ -4,7 +4,7 @@ import { param, query } from 'express-validator';
 import { pagination, validate } from '../../middleware';
 
 import { ArticleController } from './../../controllers';
-import { ArticleAttr, ArticleAttributes } from '../../../../schema/v1/models';
+import { ArticleAttr, ArticleAttributes } from '../../schema';
 
 const router = Router();
 
@@ -22,15 +22,16 @@ router.get(
     const controller = new ArticleController();
     let response: ArticleAttr[] | ArticleAttributes = [];
     if (category && subcategory && title) {
-      response = [
-        await controller.getArticleForCategoryAndSubcategoryAndTitle(
-          category,
-          subcategory,
-          title
-        ),
-      ];
+      response = [await controller.getArticleForCategoryAndSubcategoryAndTitle(category, subcategory, title)];
     } else if (category && subcategory) {
-      response = await controller.getArticlesForCategoryAndSubcategory(category, subcategory, filter, pageSize, page, offset);
+      response = await controller.getArticlesForCategoryAndSubcategory(
+        category,
+        subcategory,
+        filter,
+        pageSize,
+        page,
+        offset,
+      );
     } else if (category) {
       response = await controller.getArticlesForCategory(category, filter, pageSize, page, offset);
     } else {

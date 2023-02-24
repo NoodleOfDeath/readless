@@ -4,7 +4,7 @@ import { body, param, query } from 'express-validator';
 import { pagination, validate } from '../../middleware';
 
 import { SourceController } from './../../controllers/sources';
-import { SourceAttr, SourceAttributes } from '../../../../schema/v1/models';
+import { SourceAttr, SourceAttributes } from '../../schema';
 
 const router = Router();
 
@@ -22,13 +22,16 @@ router.get(
     const controller = new SourceController();
     let response: SourceAttr[] | SourceAttributes = [];
     if (category && subcategory && title) {
-      response = await controller.getSourceForCategoryAndSubCategoryAndTitle(
+      response = await controller.getSourceForCategoryAndSubCategoryAndTitle(category, subcategory, title);
+    } else if (category && subcategory) {
+      response = await controller.getSourcesForCategoryAndSubCategory(
         category,
         subcategory,
-        title,
+        filter,
+        pageSize,
+        page,
+        offset,
       );
-    } else if (category && subcategory) {
-      response = await controller.getSourcesForCategoryAndSubCategory(category, subcategory, filter, pageSize, page, offset);
     } else if (category) {
       response = await controller.getSourcesForCategory(category, filter, pageSize, page, offset);
     } else {

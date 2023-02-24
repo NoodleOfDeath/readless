@@ -1,14 +1,8 @@
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt } from '../../../../services';
-import {
-  Article,
-  ArticleAttr,
-  ArticleAttributes,
-  ArticleCreationAttributes,
-  Reference,
-} from '../../../../schema/v1/models';
-import { ARTICLE_ATTRS, FindAndCountOptions } from '../../../../schema/v1/models/types';
+import { Article, ArticleAttr, ArticleAttributes, ArticleCreationAttributes, Reference } from '../../schema';
+import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
 
 @Route('/v1/articles')
 @Tags('Articles')
