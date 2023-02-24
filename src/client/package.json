@@ -9,7 +9,7 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "swagger": "curl http://localhost:6970/v1/swagger.json > ./swagger.json && pnpm run gen",
+    "swagger": "(cd ../server && pnpm run swagger) && cp ../server/public/swagger.json ./swagger.json && pnpm run gen",
     "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api"
   },
   "eslintConfig": {

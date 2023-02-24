@@ -5,6 +5,8 @@ import { DBService } from '../../services';
 
 import articlesRouter from './routes/articles';
 import sourcesRouter from './routes/sources';
+import referralsRouter from './routes/referrals';
+
 const router = Router();
 
 async function main() {
@@ -14,6 +16,7 @@ async function main() {
 
   router.use('/articles', articlesRouter);
   router.use('/sources', sourcesRouter);
+  router.use('/referrals', referralsRouter);
 
   router.get('/healthz', (_, res) => res.send('OK'));
 

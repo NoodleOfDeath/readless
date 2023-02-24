@@ -6,7 +6,7 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Attr_Article.typeofARTICLE_ATTRS-at-number_": {
+			"Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_": {
 				"properties": {
 					"id": {
 						"anyOf": [
@@ -63,9 +63,9 @@
 				"type": "object"
 			},
 			"ArticleAttr": {
-				"$ref": "#/components/schemas/Attr_Article.typeofARTICLE_ATTRS-at-number_"
+				"$ref": "#/components/schemas/Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_"
 			},
-			"PostAttributes": {
+			"DatedAttributes": {
 				"properties": {
 					"deletedAt": {
 						"type": "string",
@@ -79,37 +79,49 @@
 						"type": "string",
 						"format": "date-time"
 					},
-					"shortSummary": {
-						"type": "string"
-					},
-					"summary": {
-						"type": "string"
-					},
-					"abridged": {
-						"type": "string"
-					},
-					"tags": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"text": {
-						"type": "string"
-					},
 					"id": {
 						"type": "number",
 						"format": "double"
 					}
 				},
-				"required": [
-					"shortSummary",
-					"summary",
-					"abridged",
-					"tags",
-					"text"
-				],
 				"type": "object"
+			},
+			"PostAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"shortSummary": {
+								"type": "string"
+							},
+							"summary": {
+								"type": "string"
+							},
+							"abridged": {
+								"type": "string"
+							},
+							"tags": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
+							"text": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"shortSummary",
+							"summary",
+							"abridged",
+							"tags",
+							"text"
+						],
+						"type": "object"
+					}
+				]
 			},
 			"TitledCategorizedPostAttributes": {
 				"allOf": [
@@ -148,7 +160,36 @@
 					}
 				]
 			},
-			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
+			"ReferralAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"userAgent": {
+								"type": "string",
+								"description": "the user agent info of the consumer of this referral"
+							},
+							"target": {
+								"type": "string",
+								"description": "the url path of the referral destination"
+							},
+							"referrer": {
+								"type": "string",
+								"description": "the url path this referral was copied from"
+							}
+						},
+						"required": [
+							"userAgent",
+							"target",
+							"referrer"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_": {
 				"properties": {
 					"id": {
 						"anyOf": [
@@ -213,7 +254,7 @@
 				"type": "object"
 			},
 			"SourceAttr": {
-				"$ref": "#/components/schemas/Attr_Source.typeofSOURCE_ATTRS-at-number_"
+				"$ref": "#/components/schemas/Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_"
 			},
 			"SourceAttributes": {
 				"allOf": [
@@ -225,7 +266,7 @@
 							"alternateTitle": {
 								"type": "string"
 							},
-							"filteredText": {
+							"rawText": {
 								"type": "string"
 							},
 							"url": {
@@ -234,7 +275,7 @@
 						},
 						"required": [
 							"alternateTitle",
-							"filteredText",
+							"rawText",
 							"url"
 						],
 						"type": "object"
@@ -301,6 +342,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]
@@ -399,6 +448,14 @@
 							"format": "double",
 							"type": "number"
 						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			}
@@ -469,6 +526,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]
@@ -546,8 +611,56 @@
 							"format": "double",
 							"type": "number"
 						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
+			}
+		},
+		"/v1/referrals": {
+			"post": {
+				"operationId": "RecordReferral",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ReferralAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Referrals"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"target": {
+										"type": "string"
+									},
+									"ref": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/v1/sources": {
@@ -601,6 +714,14 @@
 							"format": "double",
 							"type": "number"
 						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			},
@@ -628,7 +749,15 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"type": "string"
+								"properties": {
+									"url": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"url"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -693,6 +822,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]
@@ -764,6 +901,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]
@@ -840,6 +985,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "ref",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

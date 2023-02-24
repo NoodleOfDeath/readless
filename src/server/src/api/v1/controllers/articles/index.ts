@@ -18,6 +18,7 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
@@ -35,6 +36,7 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
@@ -56,6 +58,7 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<ArticleAttr[]> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
@@ -79,6 +82,7 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<ArticleAttributes> {
     const options: FindAndCountOptions<Article> = {
       limit: pageSize,

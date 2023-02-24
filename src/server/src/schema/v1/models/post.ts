@@ -1,23 +1,20 @@
 import { Column, DataType, Model } from 'sequelize-typescript';
 import { POST_ATTRS, TITLED_CATEGORIZED_POST_ATTRS } from './types';
+import { DatedAttributes } from './dated';
 
 export type Attr<Model, K extends keyof Model> = {
   [Key in K]: Model[Key];
 };
 
-export type PostAttributes = {
-  id?: number;
+export type PostAttributes = DatedAttributes & {
   text: string;
   tags: string[];
   abridged: string;
   summary: string;
   shortSummary: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date;
 };
 
-export type PostCreationAttributes = {
+export type PostCreationAttributes = DatedAttributes & {
   text: string;
   tags: string[];
   abridged: string;

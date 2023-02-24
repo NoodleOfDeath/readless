@@ -12,6 +12,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -29,6 +30,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -50,6 +52,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -73,6 +76,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
+    @Query() ref?: string,
   ): Promise<SourceAttributes> {
     const options: FindAndCountOptions<Source> = {
       limit: pageSize,
@@ -89,7 +93,7 @@ export class SourceController {
   }
 
   @Post('/')
-  public async readAndSummarizeSource(@Body() url: string): Promise<SourceAttributes> {
+  public async readAndSummarizeSource(@Body() { url }: { url: string }): Promise<SourceAttributes> {
     try {
       // fetch web content with the spider
       const spider = new SpiderService();
