@@ -25,22 +25,27 @@ type NavigationItemProps = {
   label: string;
   icon?: string;
   items?: NavigationItemProps[];
-  onClick?: (options: { navigate?: NavigateFunction }) => void;
+  onClick?: (options: {
+    navigate?: NavigateFunction;
+    handleClose: () => void;
+  }) => void;
 };
 
 const NAVIGATION_ITEMS: NavigationItemProps[] = [
   {
     label: "Home",
     icon: mdiHome,
-    onClick({ navigate }) {
+    onClick({ navigate, handleClose }) {
       navigate?.("/");
+      handleClose();
     },
   },
   {
     label: "About",
     icon: mdiInformation,
-    onClick({ navigate }) {
+    onClick({ navigate, handleClose }) {
       navigate?.("/about");
+      handleClose();
     },
   },
   {
@@ -50,8 +55,14 @@ const NAVIGATION_ITEMS: NavigationItemProps[] = [
   },
 ];
 
-const StyledButton = muiStyled(Button)(({ theme }) => ({
+const StyledMenuButton = muiStyled(Button)(({ theme }) => ({
   color: theme.palette.common.white,
+}));
+
+const StyledMenuItemButton = muiStyled(StyledMenuButton)(({ theme }) => ({
+  width: "100%",
+  padding: theme.spacing(1, 2),
+  justifyContent: "flex-start",
 }));
 
 const StyledMenu = muiStyled(Menu)(({ theme }) => ({
@@ -67,25 +78,27 @@ function NavigationItem({ label, icon, items, onClick }: NavigationItemProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
+  const handleClose = React.useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      onClick ? onClick({ navigate }) : setAnchorEl(event.currentTarget);
+      onClick
+        ? onClick({ navigate, handleClose })
+        : setAnchorEl(event.currentTarget);
     },
     [onClick]
   );
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
     <>
-      <StyledButton
+      <StyledMenuItemButton
         onClick={handleClick}
         startIcon={icon && <Icon path={icon} size={1} />}
       >
         {label}
-      </StyledButton>
+      </StyledMenuItemButton>
       {items && (
         <StyledMenu
           anchorEl={anchorEl}
@@ -106,7 +119,7 @@ function NavigationItem({ label, icon, items, onClick }: NavigationItemProps) {
           {items.map((item) => (
             <MenuItem
               key={item.label}
-              onClick={() => item.onClick?.({ navigate })}
+              onClick={() => item.onClick?.({ navigate, handleClose })}
             >
               <Stack direction="row" alignContent="center" spacing={2}>
                 {item.icon && (
@@ -190,9 +203,9 @@ export default function Header() {
         <StyledHeaderTitle onClick={() => navigate("/")}>
           TheSkoop
         </StyledHeaderTitle>
-        <StyledButton onClick={toggleDrawer(true)}>
+        <StyledMenuButton onClick={toggleDrawer(true)}>
           <Icon path={mdiMenu} size={1} />
-        </StyledButton>
+        </StyledMenuButton>
         <StyledDrawer anchor="right" open={open} onClose={toggleDrawer(false)}>
           <StyledBox
             role="presentation"

@@ -1,0 +1,21 @@
+{
+  "name": "podcast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "ts-node ./index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.2"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.21",
+    "dotenv": "^16.0.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^3.14.2"
+  }
+}
