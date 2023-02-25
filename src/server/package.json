@@ -61,6 +61,7 @@
     "sequelize-typescript": "^2.1.5",
     "swagger-ui-express": "^4.6.1",
     "tsoa": "^5.1.1",
+    "user-agents": "^1.0.1295",
     "winston": "^3.8.2"
   },
   "devDependencies": {
@@ -74,6 +75,7 @@
     "@types/node": "^18.13.0",
     "@types/pg": "^8.6.6",
     "@types/qs": "^6.9.7",
+    "@types/user-agents": "^1.0.2",
     "@types/validator": "^13.7.12",
     "concurrently": "^7.6.0",
     "dotenv": "^16.0.3",

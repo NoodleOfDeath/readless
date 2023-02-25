@@ -14,6 +14,7 @@ specifiers:
   '@types/pg': ^8.6.6
   '@types/qs': ^6.9.7
   '@types/swagger-ui-express': ^4.1.3
+  '@types/user-agents': ^1.0.2
   '@types/validator': ^13.7.12
   axios: ^1.3.4
   body-parser: ^1.20.1
@@ -46,6 +47,7 @@ specifiers:
   tscpaths: ^0.0.9
   tsoa: ^5.1.1
   typescript: ^4.9.5
+  user-agents: ^1.0.1295
   winston: ^3.8.2
 
 dependencies:
@@ -72,6 +74,7 @@ dependencies:
   sequelize-typescript: 2.1.5_qsaglb5prkljti5aimiedqwt54
   swagger-ui-express: 4.6.1_express@4.18.2
   tsoa: 5.1.1
+  user-agents: 1.0.1295
   winston: 3.8.2
 
 devDependencies:
@@ -85,6 +88,7 @@ devDependencies:
   '@types/node': 18.13.0
   '@types/pg': 8.6.6
   '@types/qs': 6.9.7
+  '@types/user-agents': 1.0.2
   '@types/validator': 13.7.12
   concurrently: 7.6.0
   dotenv: 16.0.3
@@ -2353,6 +2357,10 @@ packages:
     resolution: {integrity: sha512-txGIh+0eDFzKGC25zORnswy+br1Ha7hj5cMVwKIU7+s0U2AxxJru/jZSMU6OC9MJWP6+pc/hc6ZjyZShpsyY2g==}
     dev: false
 
+  /@types/user-agents/1.0.2:
+    resolution: {integrity: sha512-WOoL2UJTI6RxV8RB2kS3ZhxjjijI5G1i7mgU7mtlm4LsC1XGCfiV56h+GV4VZnAUkkkLQ4gbFGR/dggT01n0RA==}
+    dev: true
+
   /@types/validator/13.7.12:
     resolution: {integrity: sha512-YVtyAPqpefU+Mm/qqnOANW6IkqKpCSrarcyV269C8MA8Ux0dbkEuQwM/4CjL47kVEM2LgBef/ETfkH+c6+moFA==}
 
@@ -3262,6 +3270,11 @@ packages:
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
     dev: false
 
+  /detect-indent/6.0.0:
+    resolution: {integrity: sha512-oSyFlqaTHCItVRGK5RmrmjB+CmaMOW7IaNA/kdxqhoa6d17j/5ce9O9eWXmV/KEdRwqpQA+Vqe8a8Bsybu4YnA==}
+    engines: {node: '>=8'}
+    dev: false
+
   /detect-newline/3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
@@ -3283,6 +3296,11 @@ packages:
     dependencies:
       path-type: 3.0.0
     dev: true
+
+  /docopt/0.6.2:
+    resolution: {integrity: sha512-NqTbaYeE4gA/wU1hdKFdU+AFahpDOpgGLzHP42k6H6DKExJd0A55KEVWYhL9FEmHmgeLvEU2vuKXDuU+4yToOw==}
+    engines: {node: '>=0.10.0'}
+    dev: false
 
   /dom-serializer/2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
@@ -3316,6 +3334,15 @@ packages:
     dependencies:
       no-case: 3.0.4
       tslib: 2.4.0
+
+  /dot-json/1.2.2:
+    resolution: {integrity: sha512-AKL+GsO4wSEU4LU+fAk/PqN4nQ6PB1vT3HpMiZous9xCzK5S0kh4DzfUY0EfU67jsIXLlu0ty71659N9Nmg+Tw==}
+    hasBin: true
+    dependencies:
+      detect-indent: 6.0.0
+      docopt: 0.6.2
+      underscore-keypath: 0.0.22
+    dev: false
 
   /dot-prop/7.2.0:
     resolution: {integrity: sha512-Ol/IPXUARn9CSbkrdV4VJo7uCy1I3VuSiWCaFSg+8BdUOzF9n3jefIpcgAydvUZbTdEBZs2vEiTiS9m61ssiDA==}
@@ -5069,6 +5096,10 @@ packages:
       p-locate: 6.0.0
     dev: false
 
+  /lodash.clonedeep/4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+    dev: false
+
   /lodash.memoize/4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
     dev: true
@@ -6650,6 +6681,12 @@ packages:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
     dev: true
 
+  /underscore-keypath/0.0.22:
+    resolution: {integrity: sha512-fU7aYj1J2LQd+jqdQ67AlCOZKK3Pl+VErS8fGYcgZG75XB9/bY+RLM+F2xEcKHhHNtLvqqFyXAoZQlLYfec3Xg==}
+    dependencies:
+      underscore: 1.13.6
+    dev: false
+
   /underscore/1.13.6:
     resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
     dev: false
@@ -6722,6 +6759,13 @@ packages:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /user-agents/1.0.1295:
+    resolution: {integrity: sha512-9Rgw4X4FeHZ1d11X9zASRgLYlPKeBINZNRsitoL/RwNEXuNTnDiImMfqa5/+OoGBNRJ1kqxmH3bJL8Fu4m0VIg==}
+    dependencies:
+      dot-json: 1.2.2
+      lodash.clonedeep: 4.5.0
+    dev: false
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}

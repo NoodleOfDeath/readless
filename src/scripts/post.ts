@@ -2,7 +2,7 @@
 
 import "dotenv/config";
 import { ArgumentParser } from "argparse";
-import fetch from "node-fetch";
+import axios from "axios";
 
 const parser = new ArgumentParser({});
 
@@ -13,6 +13,8 @@ parser.add_argument("-p", "--prod", { action: "store_true" });
 
 const args = parser.parse_args();
 
+console.log(args);
+
 let target = "http://localhost:6970";
 
 if (args.dev) {
@@ -22,16 +24,16 @@ if (args.dev) {
 }
 
 async function main() {
-  await fetch(`${target}/v1/sources`, {
-    method: "POST",
-    body: JSON.stringify({
-      url: args.url,
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.text())
+  await axios
+    .post(
+      `${target}/v1/sources`,
+      {
+        url: args.url,
+      },
+      {
+        timeout: 120_000,
+      }
+    )
     .then(console.log)
     .catch(console.error);
 }

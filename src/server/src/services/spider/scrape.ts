@@ -22,7 +22,7 @@ export const COUNTRY_CODES = {
 export type Device = 'desktop' | 'mobile' | 'tablet';
 export type ProxyType = 'datacenter' | 'residential';
 export type CountryCode = keyof typeof COUNTRY_CODES;
-export type Country = (typeof COUNTRY_CODES)[CountryCode];
+export type Country = typeof COUNTRY_CODES[CountryCode];
 export type WaitForCSS = string;
 
 export type ScreenshotOptions =

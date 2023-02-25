@@ -178,6 +178,11 @@
 							"referrer": {
 								"type": "string",
 								"description": "the url path this referral was copied from"
+							},
+							"referrerId": {
+								"type": "number",
+								"format": "double",
+								"description": "id of a user if ref link was created while logged in"
 							}
 						},
 						"required": [

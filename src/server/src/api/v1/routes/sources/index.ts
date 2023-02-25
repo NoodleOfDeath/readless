@@ -41,10 +41,9 @@ router.get(
   },
 );
 
-router.post('/', body('url').isString(), validate, async (req, res) => {
-  const { url } = req.body;
+router.post('/', body('url').isURL(), validate, async (req, res) => {
   const controller = new SourceController();
-  const source = await controller.readAndSummarizeSource(url);
+  const source = await controller.readAndSummarizeSource(req.body);
   res.json(source);
 });
 

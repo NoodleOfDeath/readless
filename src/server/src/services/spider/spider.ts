@@ -1,4 +1,5 @@
 import axios from 'axios';
+import UserAgent from 'user-agents';
 import { BaseService } from '../base';
 import { Loot } from './loot';
 import { ExtractRule, ScrapeLoot, ScrapeOpts, ScrapeResponse, WS_API, encodeScrapeOpts } from './scrape';
@@ -8,25 +9,29 @@ export class SpiderService extends BaseService {
    * preset extract rules named after spider
    * species
    */
-  static ExtractRules: Record<string, Record<string, ExtractRule>> = {
+  static ExtractRules = {
     /** default and most common spider species */
     agelenidae: {
       title: {
         selector: 'h1',
         output: 'text',
-      },
+      } as ExtractRule,
       text: {
         selector: 'p,blockquote',
         output: 'text',
-      },
+      } as ExtractRule,
     },
   };
-  
+
   async fetch(url: string) {
     try {
-      const { data: text } = await axios.get(url);
+      const { data: text } = await axios.get(url, {
+        headers: {
+          'User-Agent': new UserAgent().random().toString(),
+        },
+      });
       return text;
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   }
