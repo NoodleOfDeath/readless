@@ -1,12 +1,12 @@
-import { Column, DataType, HasMany, Table } from 'sequelize-typescript';
-import { Reference } from './reference.model';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { SOURCE_ATTRS } from './types';
 import {
   Attr,
   TitledCategorizedPost,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from './post';
-import { SOURCE_ATTRS } from './types';
+import { Attachment } from './attachment.model';
 
 export type SourceAttributes = TitledCategorizedPostAttributes & {
   url: string;
@@ -20,7 +20,7 @@ export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes &
   alternateTitle: string;
 };
 
-export type SourceAttr = Attr<Source, (typeof SOURCE_ATTRS)[number]>;
+export type SourceAttr = Attr<Source, typeof SOURCE_ATTRS[number]>;
 
 @Table({
   modelName: 'source',
@@ -39,6 +39,7 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
+    unique: true,
   })
   url: string;
 
@@ -54,10 +55,12 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
   })
   alternateTitle: string;
 
-  @HasMany(() => Reference, 'sourceId')
-  references: Reference[];
-
-  get articles() {
-    return this.references.map(async (reference) => reference.article);
+  get attachments(): Promise<Attachment[]> {
+    return Attachment.findAll({
+      where: {
+        resourceType: 'article',
+        resourceId: this.id,
+      },
+    });
   }
 }

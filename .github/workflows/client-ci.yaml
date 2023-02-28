@@ -6,9 +6,13 @@ on:
       - main
       - dev
     paths:
-      - "src/client/**"
-      - "src/scripts/**"
       - ".github/workflows/client-ci.yaml"
+      - "k8s/client-deploy.yaml"
+      - "src/client/Dockerfile"
+      - "src/client/package.json"
+      - "src/client/swagger.json"
+      - "src/client/public/**"
+      - "src/client/src/**"
 
 concurrency:
   group: ${{ github.ref }}-client

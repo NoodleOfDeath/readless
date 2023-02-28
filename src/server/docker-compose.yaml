@@ -2,7 +2,7 @@ services:
   local:
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile.api.local
     ports:
       - '$PORT:$PORT'
     volumes:

@@ -33,13 +33,21 @@ export type ScreenshotOptions =
 
 export type ExtractRule = {
   selector: string;
-  output?: 'text' | 'html';
+  output?: 'text' | 'html' | 'href' | 'src' | 'outer_html' | 'inner_html' | 'inner_text' | 'outer_text';
 };
+
+export class ExtractRuleMap<T extends { [key: string]: ExtractRule }> {
+  [key: string]: ExtractRule;
+
+  constructor(rules: T) {
+    Object.assign(this, rules);
+  }
+}
 
 export type JSInstructions = {};
 export type BlockableResources = string;
 
-export type ScrapeOpts = {
+export type ScrapeOpts<T extends { [key: string]: ExtractRule }> = {
   api_key: string;
   device?: Device;
   proxy_type?: ProxyType;
@@ -54,7 +62,7 @@ export type ScrapeOpts = {
   window_height?: number;
   screenshot?: boolean;
   screenshot_options?: ScreenshotOptions;
-  extract_rules?: Record<string, ExtractRule>;
+  extract_rules?: ExtractRuleMap<T>;
   json_response?: boolean;
   js_dom?: boolean;
   js_instructions?: JSInstructions;
@@ -81,7 +89,7 @@ export function encodeScrapeOpts<T>(opts: Partial<T>) {
           typeof value === 'string'
             ? value
             : typeof value === 'boolean'
-            ? JSON.stringify(Boolean(value))
+            ? JSON.stringify(Number(value))
             : JSON.stringify(value),
         ]),
     ),
@@ -92,23 +100,21 @@ export function encodeScrapeOpts<T>(opts: Partial<T>) {
  * a response type expected from webscrapingapi
  * based on the extract rules passed
  */
-export type ScrapeResponse<T extends ScrapeOpts['extract_rules']> = {
+export type ScrapeResponse<T> = {
   [Key in keyof T]: string[];
 };
 
 /**
  * convenience class for handling scrape responses
  */
-export class ScrapeLoot<T extends ScrapeOpts['extract_rules']> {
-  resp: ScrapeResponse<T>;
-
-  constructor(resp: ScrapeResponse<T>) {
-    this.resp = resp;
-  }
-
-  collapsed() {
-    return Object.fromEntries(Object.entries(this.resp).map(([key, value]) => [key, value.join('\n')])) as {
-      [Key in keyof T]: string;
-    };
-  }
+export function mappedScrapeLoot<T extends { [key: string]: ExtractRule }>(data: ScrapeResponse<T>) {
+  return {
+    ...data,
+    /** collapses all properties listed in keys */
+    collapsed<S extends string>(...keys: S[]) {
+      return Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [key, keys.includes(key as S) ? value.join('\n') : value]),
+      ) as { [Key in keyof T]: Key extends S ? string : string[] };
+    },
+  };
 }

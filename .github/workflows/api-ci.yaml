@@ -1,4 +1,4 @@
-name: Server CI
+name: API CI
 
 on:
   push:
@@ -6,9 +6,13 @@ on:
       - main
       - dev
     paths:
-      - "src/server/**"
-      - "src/scripts/**"
-      - ".github/workflows/server-ci.yaml"
+      - ".github/workflows/api-ci.yaml"
+      - "k8s/api-deploy.yaml"
+      - "src/server/Dockerfile.api"
+      - "src/server/package.json"
+      - "src/server/public/**"
+      - "src/server/src/api/**"
+      - "src/server/src/index.ts"
 
 concurrency:
   group: ${{ github.ref }}-server
@@ -35,7 +39,7 @@ jobs:
       - name: Build
         run: |
           cd $WORKING_DIR && \
-          docker build . --file Dockerfile --tag $IMAGE:latest
+          docker build . --file Dockerfile.api --tag $IMAGE:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -63,6 +67,7 @@ jobs:
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PORT: ${{ vars.PORT }}
       RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+      REDIS_CONNECTION_STRING: ${{ secrets.REDIS_CONNECTION_STRING }}
       WS_API_KEY: ${{ secrets.WS_API_KEY }}
     steps:
       - name: Print Job Description
@@ -80,7 +85,7 @@ jobs:
       - name: Add kubectl cert
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/server-deploy.yaml | kubectl apply -f -
+        run: envsubst < $GITHUB_WORKSPACE/k8s/api-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$IMAGE --namespace $K8S_NAMESPACE
       - name: Verify deployment

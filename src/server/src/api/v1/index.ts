@@ -7,10 +7,13 @@ import articlesRouter from './routes/articles';
 import sourcesRouter from './routes/sources';
 import referralsRouter from './routes/referrals';
 
+import { AutomationService } from '../../services';
+
 const router = Router();
 
 async function main() {
   await DBService.init();
+  AutomationService.init();
 
   router.use(express.static('public'));
 

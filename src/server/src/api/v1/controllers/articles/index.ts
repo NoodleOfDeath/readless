@@ -1,7 +1,7 @@
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt } from '../../../../services';
-import { Article, ArticleAttr, ArticleAttributes, ArticleCreationAttributes, Reference } from '../../schema';
+import { Article, ArticleAttr, ArticleAttributes, ArticleCreationAttributes, Attachment } from '../../schema';
 import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
 
 @Route('/v1/articles')
@@ -136,8 +136,13 @@ export class ArticleController {
       await article.save();
       await article.reload();
       for (const source of sources) {
-        const reference = new Reference({ articleId: article.id, sourceId: source });
-        await reference.save();
+        const attachment = new Attachment({
+          resourceType: 'article',
+          resourceId: article.id,
+          attachmentType: 'source',
+          attachmentId: source,
+        });
+        await attachment.save();
       }
       await article.reload();
       return article;
