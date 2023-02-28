@@ -12,10 +12,9 @@ on:
       - "src/server/package.json"
       - "src/server/public/**"
       - "src/server/src/api/**"
-      - "src/server/src/index.ts"
 
 concurrency:
-  group: ${{ github.ref }}-server
+  group: ${{ github.ref }}-api
   cancel-in-progress: true
 
 env:
