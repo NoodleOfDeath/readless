@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 
-import { pagination, validate } from '../../middleware';
+import { pagination, rateLimit, validate } from '../../middleware';
 
 import { SourceController } from './../../controllers/sources';
 import { SourceAttr, SourceAttributes } from '../../schema';
@@ -41,10 +41,16 @@ router.get(
   },
 );
 
-router.post('/', body('url').isURL(), validate, async (req, res) => {
-  const controller = new SourceController();
-  const source = await controller.readAndSummarizeSource(req.body);
-  res.json(source);
-});
+router.post(
+  '/', 
+  rateLimit('2 per 1 min'),
+  body('url').isURL(), 
+  validate,
+  async (req, res) => {
+    const controller = new SourceController();
+    const source = await controller.readAndSummarizeSource(req.body);
+    res.json(source);
+  }
+);
 
 export default router;

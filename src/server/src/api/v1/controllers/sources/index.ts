@@ -88,10 +88,19 @@ export class SourceController {
   @Post('/')
   public async readAndSummarizeSource(@Body() { url }: { url: string }): Promise<SourceAttributes> {
     try {
+      const existingSource = await Source.findOne({ where: { url } });
+      if (existingSource) {
+        console.log(`Source already exists for ${url}`);
+        return existingSource;
+      }
       // fetch web content with the spider
       const spider = new SpiderService();
       const loot = await spider.loot(url);
-      const scrapeLoot = (await spider.scrape(url)).collapsed();
+      const scrapeLoot = (
+        await spider.scrape(url, {
+          extract_rules: SpiderService.ExtractRules.agelenidae,
+        })
+      ).collapsed('title', 'text');
       // create the prompt action map to be sent to chatgpt
       const sourceInfo = Source.json({
         url: url,

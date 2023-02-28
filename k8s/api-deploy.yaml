@@ -36,6 +36,8 @@ spec:
               value: "$PORT"
             - name: RECAPTCHA_SECRET_KEY
               value: "$RECAPTCHA_SECRET_KEY"
+            - name: REDIS_CONNECTION_STRING
+              value: "$REDIS_CONNECTION_STRING"
             - name: WS_API_KEY
               value: "$WS_API_KEY"
           livenessProbe:

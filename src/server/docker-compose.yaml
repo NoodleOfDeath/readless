@@ -1,10 +1,20 @@
 services:
-  local:
+  api:
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile.api.local
     ports:
       - '$PORT:$PORT'
     volumes:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
+
+  auto:
+    build:
+      context: .
+      dockerfile: Dockerfile.auto.local
+    volumes:
+      - .:/home/node/app
+      - ./node_modules:/home/node/app/node_modules
+
+      

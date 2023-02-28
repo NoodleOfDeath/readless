@@ -2,7 +2,15 @@ import axios from 'axios';
 import UserAgent from 'user-agents';
 import { BaseService } from '../base';
 import { Loot } from './loot';
-import { ExtractRule, ScrapeLoot, ScrapeOpts, ScrapeResponse, WS_API, encodeScrapeOpts } from './scrape';
+import {
+  ExtractRule,
+  ExtractRuleMap,
+  mappedScrapeLoot,
+  ScrapeOpts,
+  ScrapeResponse,
+  encodeScrapeOpts,
+  WS_API,
+} from './scrape';
 
 export class SpiderService extends BaseService {
   /**
@@ -11,16 +19,16 @@ export class SpiderService extends BaseService {
    */
   static ExtractRules = {
     /** default and most common spider species */
-    agelenidae: {
+    agelenidae: new ExtractRuleMap({
       title: {
         selector: 'h1',
         output: 'text',
-      } as ExtractRule,
+      },
       text: {
         selector: 'p,blockquote',
         output: 'text',
-      } as ExtractRule,
-    },
+      },
+    }),
   };
 
   async fetch(url: string) {
@@ -48,13 +56,9 @@ export class SpiderService extends BaseService {
   }
 
   /** WebscrapingAPI implementation */
-  async scrape<T extends ScrapeOpts['extract_rules']>(
+  async scrape<T extends { [key: string]: ExtractRule }>(
     url: string,
-    {
-      api_key = process.env.WS_API_KEY,
-      extract_rules = SpiderService.ExtractRules.agelenidae,
-      ...opts
-    }: Partial<ScrapeOpts> = {},
+    { api_key = process.env.WS_API_KEY, extract_rules, ...opts }: Partial<ScrapeOpts<T>> = {},
   ) {
     try {
       const params = encodeScrapeOpts({
@@ -64,8 +68,10 @@ export class SpiderService extends BaseService {
         ...opts,
       });
       const fullPath = `${WS_API}/v1?${params.toString()}`;
+      console.log('fetching from', fullPath);
       const { data } = await axios.get(fullPath);
-      return new ScrapeLoot(data as ScrapeResponse<T>);
+      if (!extract_rules) return data;
+      return mappedScrapeLoot(data as ScrapeResponse<T>);
     } catch (e) {
       console.error(e);
     }

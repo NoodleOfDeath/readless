@@ -1,4 +1,4 @@
-name: Server CI
+name: Automation CI
 
 on:
   push:
@@ -6,16 +6,18 @@ on:
       - main
       - dev
     paths:
-      - "src/server/**"
-      - "src/scripts/**"
-      - ".github/workflows/server-ci.yaml"
+      - ".github/workflows/auto-ci.yaml"
+      - "k8s/auto-deploy.yaml"
+      - "src/server/Dockerfile.auto"
+      - "src/server/package.json"
+      - "src/server/src/auto/**"
 
 concurrency:
   group: ${{ github.ref }}-server
   cancel-in-progress: true
 
 env:
-  IMAGE: ${{ github.event.repository.name }}-api-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+  IMAGE: ${{ github.event.repository.name }}-auto-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   REGISTRY: ${{ vars.REGISTRY }}
   WORKING_DIR: src/server
 
@@ -35,7 +37,7 @@ jobs:
       - name: Build
         run: |
           cd $WORKING_DIR && \
-          docker build . --file Dockerfile --tag $IMAGE:latest
+          docker build . --file Dockerfile.auto --tag $IMAGE:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -63,6 +65,7 @@ jobs:
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PORT: ${{ vars.PORT }}
       RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+      REDIS_CONNECTION_STRING: ${{ secrets.REDIS_CONNECTION_STRING }}
       WS_API_KEY: ${{ secrets.WS_API_KEY }}
     steps:
       - name: Print Job Description
@@ -80,7 +83,7 @@ jobs:
       - name: Add kubectl cert
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/server-deploy.yaml | kubectl apply -f -
+        run: envsubst < $GITHUB_WORKSPACE/k8s/auto-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$IMAGE --namespace $K8S_NAMESPACE
       - name: Verify deployment

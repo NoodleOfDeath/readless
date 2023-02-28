@@ -1,4 +1,4 @@
-import { HasMany, Table } from 'sequelize-typescript';
+import { Table } from 'sequelize-typescript';
 import {
   Attr,
   TitledCategorizedPost,
@@ -6,12 +6,12 @@ import {
   TitledCategorizedPostCreationAttributes,
 } from './post';
 import { ARTICLE_ATTRS } from './types';
-import { Reference } from './reference.model';
+import { Attachment } from './attachment.model';
 
 export type ArticleAttributes = TitledCategorizedPostAttributes & {};
 export type ArticleCreationAttributes = TitledCategorizedPostCreationAttributes & {};
 
-export type ArticleAttr = Attr<Article, (typeof ARTICLE_ATTRS)[number]>;
+export type ArticleAttr = Attr<Article, typeof ARTICLE_ATTRS[number]>;
 
 @Table({
   modelName: 'article',
@@ -27,10 +27,12 @@ export class Article extends TitledCategorizedPost<ArticleAttributes, ArticleCre
     return defaults ?? {};
   }
 
-  @HasMany(() => Reference, 'articleId')
-  references: Reference[];
-
-  get sources() {
-    return this.references.map(async (reference) => reference.source);
+  get attachments(): Promise<Attachment[]> {
+    return Attachment.findAll({
+      where: {
+        resourceType: 'article',
+        resourceId: this.id,
+      },
+    });
   }
 }

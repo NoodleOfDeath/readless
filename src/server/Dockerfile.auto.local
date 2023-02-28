@@ -8,4 +8,5 @@ RUN pnpm install
 FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
-CMD pnpm run dev
+COPY nodemon.json ./
+CMD pnpm run dev:auto

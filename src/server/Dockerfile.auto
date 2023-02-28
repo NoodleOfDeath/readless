@@ -1,0 +1,16 @@
+FROM node:19.3.0 as base
+RUN npm install -g pnpm
+WORKDIR /home/node/app
+COPY package.json ./
+COPY src ./src
+RUN pnpm install
+
+FROM base as pre-build
+COPY tsconfig.json ./
+COPY tsconfig.build.json ./
+
+FROM pre-build as build
+RUN pnpm run build:auto
+
+FROM build as auto
+CMD pnpm run start:auto
