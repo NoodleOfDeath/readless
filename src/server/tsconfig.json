@@ -2,12 +2,15 @@
   "ts-node": {
     "esm": true,
     "files": true,
-    "require": ["tsconfig-paths/register"],
     "experimentalSpecifierResolution": "node",
     "experimentalModules": true,
     "compilerOptions": {}
   },
   "esbuild": {
+    "esm": true,
+    "files": true,
+    "experimentalSpecifierResolution": "node",
+    "experimentalModules": true,
     "compilerOptions": {
       "transpileOnly": true
     }
@@ -28,9 +31,6 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "allowJs": false,
     "resolveJsonModule": true,
     "noUnusedLocals": true

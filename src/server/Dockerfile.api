@@ -11,6 +11,7 @@ COPY tsconfig.build.json ./
 
 FROM pre-build as build
 RUN pnpm run build:api
+COPY deps/_tiktoken_bg.wasm ./dist
 
 FROM build as api
 CMD pnpm run start:api

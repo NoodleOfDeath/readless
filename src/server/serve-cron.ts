@@ -1,2 +1,2 @@
 import 'dotenv/config';
-import './src/auto';
+import './src/cron';

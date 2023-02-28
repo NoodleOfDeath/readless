@@ -8,5 +8,6 @@ RUN pnpm install
 FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
+COPY serve-api.ts ./
 COPY nodemon.json ./
 CMD pnpm run dev:api

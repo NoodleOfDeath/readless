@@ -11,6 +11,7 @@ COPY tsconfig.build.json ./
 
 FROM pre-build as build
 RUN pnpm run build:cron
+COPY deps/_tiktoken_bg.wasm ./dist
 
 FROM build as cron
 CMD pnpm run start:cron

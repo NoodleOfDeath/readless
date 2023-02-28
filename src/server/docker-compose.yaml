@@ -2,6 +2,14 @@ services:
   api:
     build:
       context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - '$PORT:$PORT'
+    env_file:
+      - .env
+  api.local:
+    build:
+      context: .
       dockerfile: Dockerfile.api.local
     ports:
       - '$PORT:$PORT'
@@ -9,14 +17,14 @@ services:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
 
-  cron:
+  cron.local:
     build:
       context: .
       dockerfile: Dockerfile.cron.local
     volumes:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
-  work:
+  work.local:
     build:
       context: .
       dockerfile: Dockerfile.work.local

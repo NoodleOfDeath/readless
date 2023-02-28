@@ -8,5 +8,6 @@ RUN pnpm install
 FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
+COPY serve-cron.ts ./
 COPY nodemon.json ./
 CMD pnpm run dev:cron
