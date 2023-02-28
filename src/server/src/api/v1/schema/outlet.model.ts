@@ -2,22 +2,21 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 import { DatedAttributes } from './dated';
 import { Attachment } from './attachment.model';
 
+export type SiteMap = {
+  url: string;
+  selector: string;
+}
+
 export type OutletAttributes = DatedAttributes & {
   /** name of this outlet */
   name: string;
-  /** slug(s) of this outlet */
-  slug: string[];
-  /** base url of this outlet */
-  baseUrl: string;
-  /** exprs for matching new articles */
-  exprs: string[];
+  /** xml site maps for this outlet and selector for extracting urls */
+  siteMaps: SiteMap[];
 };
 
 export type OutletCreationAttributes = DatedAttributes & {
   name: string;
-  slug: string[];
-  baseUrl: string;
-  exprs: string[];
+  siteMaps: SiteMap[];
 };
 
 @Table({
@@ -48,23 +47,10 @@ export class Outlet<
   name: string;
 
   @Column({
-    type: DataType.ARRAY(DataType.STRING),
+    type: DataType.ARRAY(DataType.JSON),
     allowNull: false,
   })
-  slug: string[];
-
-  @Column({
-    type: DataType.STRING(2083),
-    allowNull: false,
-    unique: true,
-  })
-  baseUrl: string;
-
-  @Column({
-    type: DataType.ARRAY(DataType.STRING),
-    allowNull: false,
-  })
-  exprs: string[];
+  siteMaps: SiteMap[];
 
   get attachments(): Promise<Attachment[]> {
     return Attachment.findAll({

@@ -10,7 +10,7 @@ COPY tsconfig.json ./
 COPY tsconfig.build.json ./
 
 FROM pre-build as build
-RUN pnpm run build:api
+RUN pnpm run build:auto
 
-FROM build as api
-CMD pnpm run start:api
+FROM build as auto
+CMD pnpm run start:auto

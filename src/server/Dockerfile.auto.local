@@ -5,12 +5,8 @@ COPY package.json ./
 COPY src ./src
 RUN pnpm install
 
-FROM base as pre-build
+FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
-
-FROM pre-build as build
-RUN pnpm run build:api
-
-FROM build as api
-CMD pnpm run start:api
+COPY nodemon.json ./
+CMD pnpm run dev:auto

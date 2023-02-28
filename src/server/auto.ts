@@ -1,2 +1,2 @@
 import 'dotenv/config';
-import './src/api';
+import './src/auto';
