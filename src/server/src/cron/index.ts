@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { CronJob } from 'cron';
 import { parse } from 'node-html-parser';
+import { Op } from 'sequelize';
 import { DBService, QUEUES, QueueService } from '../services';
 import { Outlet, Source } from '../api/v1/schema';
 
@@ -39,12 +40,15 @@ async function pollForNews() {
           .map((e) =>
             siteMap.attribute && e.getAttribute(siteMap.attribute) ? e.getAttribute(siteMap.attribute) : e.textContent,
           );
-        for (const url of urls) {
-          const source = await Source.findOne({ where: { url } });
-          if (source) {
-            console.log(`Already processed url ${url}. Skipping `);
-            continue;
-          }
+        const existingSources = await Source.findAll({
+          where: {
+            url: {
+              [Op.in]: urls,
+            },
+          },
+        });
+        const filteredUrls = urls.filter((url) => !existingSources.some((source) => source.url === url));
+        for (const url of filteredUrls) {
           await queue.dispatch(
             QUEUES.siteMaps,
             url,
