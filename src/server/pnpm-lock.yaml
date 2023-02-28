@@ -20,6 +20,7 @@ specifiers:
   axios: ^1.3.4
   body-parser: ^1.20.1
   bottleneck: ^2.19.5
+  bull-arena: ^3.30.4
   bullmq: ^3.9.0
   chatgpt: ^4.7.2
   concurrently: ^7.6.0
@@ -61,6 +62,7 @@ dependencies:
   axios: 1.3.4
   body-parser: 1.20.1
   bottleneck: 2.19.5
+  bull-arena: 3.30.4
   bullmq: 3.9.0
   chatgpt: 4.7.2
   cors: 2.8.5
@@ -2845,6 +2847,21 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
+  /bull-arena/3.30.4:
+    resolution: {integrity: sha512-jVhOZcvtYSTb7baFXMOsK1v3rySFU+q4KMG88Uy2Y1F9lbiyZ8QRp6msoKgRfPhFE/GY8EHPgbGgcLLIf1V9IA==}
+    engines: {node: '>=7.6.0'}
+    dependencies:
+      body-parser: 1.20.1
+      express: 4.18.2
+      express-handlebars: 5.3.5
+      handlebars: 4.7.7
+      lodash: 4.17.21
+      moment: 2.29.4
+      tablesort: 5.3.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /bullmq/3.9.0:
     resolution: {integrity: sha512-cTjQosVo33u7WtK/b2NMkIC1HtprGzX3AnH9jFrUfbTkYoloF68RISMvg5ifWyMGIL3jgxFTsNHfLrfTpftawQ==}
     dependencies:
@@ -3683,6 +3700,15 @@ packages:
       jest-message-util: 29.4.3
       jest-util: 29.4.3
     dev: true
+
+  /express-handlebars/5.3.5:
+    resolution: {integrity: sha512-r9pzDc94ZNJ7FVvtsxLfPybmN0eFAUnR61oimNPRpD0D7nkLcezrkpZzoXS5TI75wYHRbflPLTU39B62pwB4DA==}
+    engines: {node: '>=v10.24.1'}
+    dependencies:
+      glob: 7.2.3
+      graceful-fs: 4.2.10
+      handlebars: 4.7.7
+    dev: false
 
   /express-rate-limit/6.7.0_express@4.18.2:
     resolution: {integrity: sha512-vhwIdRoqcYB/72TK3tRZI+0ttS8Ytrk24GfmsxDXK9o9IhHNO5bXRiXQSExPQ4GbaE5tvIS7j1SGrxsuWs+sGA==}
@@ -6565,6 +6591,10 @@ packages:
     dependencies:
       express: 4.18.2
       swagger-ui-dist: 4.15.5
+    dev: false
+
+  /tablesort/5.3.0:
+    resolution: {integrity: sha512-WkfcZBHsp47gVH9CBHG0ZXopriG01IA87arGrchvIe868d4RiXVvoYPS1zMq9IdW05kBs5iGsqxTABqLyWonbg==}
     dev: false
 
   /term-size/2.2.1:
