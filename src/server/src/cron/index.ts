@@ -2,7 +2,7 @@ import axios from 'axios';
 import { CronJob } from 'cron';
 import { parse } from 'node-html-parser';
 import { DBService, QueueService } from '../services';
-import { Outlet } from '../api/v1/schema';
+import { Outlet, Source } from '../api/v1/schema';
 
 async function main() {
   await DBService.init();
@@ -26,6 +26,11 @@ async function pollForNews() {
         const root = parse(data);
         const urls = root.querySelectorAll(siteMap.selector).map((e) => e.textContent)
         for (const url of urls) {
+          const source = await Source.findOne({ where: { url }});
+          if (source) {
+            console.log(`Already processed url ${url}. Skipping `);
+            continue;
+          }
           await queue.dispatch('urls', url, url, {
             jobId: url,
             lifo: true,

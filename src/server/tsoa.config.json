@@ -1,5 +1,5 @@
 {
-  "entryFile": "src/index.ts",
+  "entryFile": "src/api/index.ts",
   "routes": "src/api/v1/controllers/index.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
   "spec": {
