@@ -20,6 +20,12 @@ export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes &
   alternateTitle: string;
 };
 
+// Controller Payloads
+
+export type SourceReadAndSummarizePayload = {
+  url: string;
+};
+
 export type SourceAttr = Attr<Source, typeof SOURCE_ATTRS[number]>;
 
 @Table({

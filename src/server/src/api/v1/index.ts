@@ -3,10 +3,11 @@ import SwaggerUi from 'swagger-ui-express';
 
 import { DBService } from '../../services';
 
-import arenaRouter from './routes/arena';
-import articlesRouter from './routes/articles';
-import sourcesRouter from './routes/sources';
-import referralsRouter from './routes/referrals';
+import ArenaRouter from './routes/arena';
+import ArticleRouter from './routes/articles';
+import PolicyRouter from './routes/policies';
+import SourceRouter from './routes/sources';
+import ReferralRouter from './routes/referrals';
 
 const router = Router();
 
@@ -15,10 +16,11 @@ async function main() {
 
   router.use(express.static('public'));
 
-  router.use('/arena', arenaRouter);
-  router.use('/articles', articlesRouter);
-  router.use('/sources', sourcesRouter);
-  router.use('/referrals', referralsRouter);
+  router.use('/arena', ArenaRouter);
+  router.use('/articles', ArticleRouter);
+  router.use('/policies', PolicyRouter);
+  router.use('/sources', SourceRouter);
+  router.use('/referrals', ReferralRouter);
 
   router.get('/healthz', (_, res) => res.send('OK'));
 

@@ -12,6 +12,7 @@ import { theme } from "@/theme";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import CookieConsent from "@/components/layout/CookieConsent";
 
 const StyledAppContainer = styled.div`
   display: flex;
@@ -48,6 +49,7 @@ function App() {
               </Routes>
             </StyledAppContent>
             <Footer />
+            <CookieConsent />
           </BrowserRouter>
         </StyledAppContainer>
       </BaseContextProvider>

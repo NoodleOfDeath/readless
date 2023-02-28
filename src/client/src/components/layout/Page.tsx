@@ -1,19 +1,32 @@
 import { Container, ContainerProps, styled as muiStyled } from "@mui/material";
 import React from "react";
 
-const StyledContainer = muiStyled((props: ContainerProps) => (
+type Props = React.PropsWithChildren<{
+  left?: boolean;
+  right?: boolean;
+  center?: boolean;
+  align?: "left" | "right" | "center";
+}>;
+
+const StyledContainer = muiStyled((props: ContainerProps & Props) => (
   <Container {...props} maxWidth={false} />
-))(({ theme }) => ({
-  marginTop: theme.spacing(5),
-  maxWidth: 1280,
-  alignSelf: "center",
-  alignItems: "center",
-  textAlign: "center",
-  justifyContent: "center",
-}));
+))(
+  ({
+    theme,
+    left,
+    right,
+    center,
+    align = left ? "left" : right ? "right" : center ? "center" : "left",
+  }) => ({
+    marginTop: theme.spacing(5),
+    maxWidth: 1280,
+    alignSelf: align,
+    alignItems: align,
+    textAlign: align,
+    justifyContent: align,
+  })
+);
 
-type Props = React.PropsWithChildren<{}>;
-
-export default function Page({ children }: Props) {
-  return <StyledContainer>{children}</StyledContainer>;
+export default function Page({ children, ...other }: Props) {
+  return <StyledContainer {...other}>{children}</StyledContainer>;
 }

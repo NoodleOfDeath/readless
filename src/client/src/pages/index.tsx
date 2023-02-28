@@ -1,8 +1,10 @@
 import React from "react";
-import HomePage from "@/pages/home/HomePage";
-import Error404NotFoundPage from "@/pages/errors/Error404NotFoundPage";
-import ContactPage from "@/pages/contact/ContactPage";
 import AboutPage from "@/pages/about/AboutPage";
+import ContactPage from "@/pages/contact/ContactPage";
+import Error404NotFoundPage from "@/pages/errors/Error404NotFoundPage";
+import HomePage from "@/pages/home/HomePage";
+import PrivacyPage from "@/pages/privacy/PrivacyPage";
+import TermsPage from "@/pages/terms/TermsPage";
 
 export type Route = {
   path: string;
@@ -22,6 +24,14 @@ export const routes: Route[] = [
   {
     path: "/contact",
     element: <ContactPage />,
+  },
+  {
+    path: "/privacy",
+    element: <PrivacyPage />,
+  },
+  {
+    path: "/terms",
+    element: <TermsPage />,
   },
   {
     path: "/*",

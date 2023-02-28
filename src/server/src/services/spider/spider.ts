@@ -68,7 +68,6 @@ export class SpiderService extends BaseService {
         ...opts,
       });
       const fullPath = `${WS_API}/v1?${params.toString()}`;
-      console.log('fetching from', fullPath);
       const { data } = await axios.get(fullPath);
       if (!extract_rules) return data;
       return mappedScrapeLoot(data as ScrapeResponse<T>);
