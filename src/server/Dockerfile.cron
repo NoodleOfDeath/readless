@@ -10,7 +10,7 @@ COPY tsconfig.json ./
 COPY tsconfig.build.json ./
 
 FROM pre-build as build
-RUN pnpm run build:auto
+RUN pnpm run build:cron
 
-FROM build as auto
-CMD pnpm run start:auto
+FROM build as cron
+CMD pnpm run start:cron

@@ -9,4 +9,4 @@ FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
 COPY nodemon.json ./
-CMD pnpm run dev:auto
+CMD pnpm run dev:cron
