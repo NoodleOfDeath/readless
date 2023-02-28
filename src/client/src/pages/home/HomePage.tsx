@@ -56,7 +56,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <Page>
+    <Page center>
       <Stack spacing={2}>
         <Typography variant="h4">News that fits your schedule</Typography>
         <ConsumptionModeSelector />
