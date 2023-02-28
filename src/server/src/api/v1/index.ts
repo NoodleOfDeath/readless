@@ -3,6 +3,7 @@ import SwaggerUi from 'swagger-ui-express';
 
 import { DBService } from '../../services';
 
+import arenaRouter from './routes/arena';
 import articlesRouter from './routes/articles';
 import sourcesRouter from './routes/sources';
 import referralsRouter from './routes/referrals';
@@ -14,6 +15,7 @@ async function main() {
 
   router.use(express.static('public'));
 
+  router.use('/arena', arenaRouter);
   router.use('/articles', articlesRouter);
   router.use('/sources', sourcesRouter);
   router.use('/referrals', referralsRouter);
