@@ -6,7 +6,7 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_": {
+			"Attr_Article.typeofARTICLE_ATTRS-at-number_": {
 				"properties": {
 					"id": {
 						"anyOf": [
@@ -63,7 +63,7 @@
 				"type": "object"
 			},
 			"ArticleAttr": {
-				"$ref": "#/components/schemas/Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_"
+				"$ref": "#/components/schemas/Attr_Article.typeofARTICLE_ATTRS-at-number_"
 			},
 			"DatedAttributes": {
 				"properties": {
@@ -160,44 +160,29 @@
 					}
 				]
 			},
-			"ReferralAttributes": {
+			"PolicyAttributes": {
 				"allOf": [
 					{
 						"$ref": "#/components/schemas/DatedAttributes"
 					},
 					{
 						"properties": {
-							"userAgent": {
-								"type": "string",
-								"description": "the user agent info of the consumer of this referral"
+							"content": {
+								"type": "string"
 							},
-							"target": {
-								"type": "string",
-								"description": "the url path of the referral destination"
-							},
-							"referrer": {
-								"type": "string",
-								"description": "the url path this referral was copied from"
-							},
-							"referrerId": {
-								"type": "number",
-								"format": "double",
-								"description": "id of a user if ref link was created while logged in"
+							"name": {
+								"type": "string"
 							}
 						},
 						"required": [
-							"userAgent",
-							"target",
-							"referrer"
+							"content",
+							"name"
 						],
 						"type": "object"
 					}
 				]
 			},
-			"ReferralCreationAttributes": {
-				"$ref": "#/components/schemas/ReferralAttributes"
-			},
-			"Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_": {
+			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
 				"properties": {
 					"id": {
 						"anyOf": [
@@ -262,7 +247,7 @@
 				"type": "object"
 			},
 			"SourceAttr": {
-				"$ref": "#/components/schemas/Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_"
+				"$ref": "#/components/schemas/Attr_Source.typeofSOURCE_ATTRS-at-number_"
 			},
 			"SourceAttributes": {
 				"allOf": [
@@ -594,36 +579,48 @@
 				]
 			}
 		},
-		"/v1/referrals": {
-			"post": {
-				"operationId": "Record",
+		"/v1/policies/privacy": {
+			"get": {
+				"operationId": "GetPrivacyPolicy",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ReferralAttributes"
+									"$ref": "#/components/schemas/PolicyAttributes"
 								}
 							}
 						}
 					}
 				},
 				"tags": [
-					"Referrals"
+					"Policies"
 				],
 				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ReferralCreationAttributes"
+				"parameters": []
+			}
+		},
+		"/v1/policies/terms": {
+			"get": {
+				"operationId": "GetTermsOfService",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PolicyAttributes"
+								}
 							}
 						}
 					}
-				}
+				},
+				"tags": [
+					"Policies"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/v1/sources": {

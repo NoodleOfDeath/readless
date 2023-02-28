@@ -9,12 +9,17 @@ services:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
 
-  auto:
+  cron:
     build:
       context: .
-      dockerfile: Dockerfile.auto.local
+      dockerfile: Dockerfile.cron.local
     volumes:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
-
-      
+  work:
+    build:
+      context: .
+      dockerfile: Dockerfile.work.local
+    volumes:
+      - .:/home/node/app
+      - ./node_modules:/home/node/app/node_modules

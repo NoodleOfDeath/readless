@@ -1,18 +1,1 @@
-import { Body, Post, Route, Tags } from 'tsoa';
-import { Referral, ReferralAttributes, ReferralCreationAttributes } from '../../schema';
-
-@Route('/v1/referrals')
-@Tags('Referrals')
-export class ReferralController {
-  @Post('/')
-  async record(@Body() data: ReferralCreationAttributes): Promise<ReferralAttributes> {
-    try {
-      const referral = new Referral(data);
-      await referral.save();
-      await referral.reload();
-      return referral;
-    } catch (e) {
-      console.error(e);
-    }
-  }
-}
+export * from './ReferralController';
