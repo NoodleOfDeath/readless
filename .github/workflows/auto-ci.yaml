@@ -22,7 +22,7 @@ env:
   WORKING_DIR: src/server
 
 jobs:
-  build-api:
+  build-auto:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
@@ -49,8 +49,8 @@ jobs:
       - name: Push Docker Image
         run: docker push $REGISTRY/$IMAGE:latest
 
-  deploy-api:
-    needs: build-api
+  deploy-auto:
+    needs: build-auto
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
