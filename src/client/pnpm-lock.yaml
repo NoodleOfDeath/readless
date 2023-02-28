@@ -11,6 +11,7 @@ specifiers:
   '@testing-library/react': ^13.4.0
   '@testing-library/user-event': ^13.5.0
   '@types/jest': ^27.5.2
+  '@types/js-cookie': ^3.0.3
   '@types/node': ^16.18.12
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
@@ -24,9 +25,11 @@ specifiers:
   eslint-plugin-n: ^15.6.1
   eslint-plugin-promise: ^6.1.1
   eslint-plugin-react: ^7.32.2
+  js-cookie: ^3.0.1
   nodemon: ^2.0.20
   react: ^18.2.0
   react-app-rewired: ^2.2.1
+  react-cookie-consent: ^8.0.1
   react-dom: ^18.2.0
   react-hook-form: ^7.43.2
   react-markdown: ^8.0.5
@@ -46,7 +49,9 @@ dependencies:
   '@mui/lab': 5.0.0-alpha.120_2xjz24fcfpl7kgsqfa5xscfeo4
   '@mui/material': 5.11.10_xqeqsl5kvjjtyxwyi3jhw3yuli
   date-fns: 2.29.3
+  js-cookie: 3.0.1
   react: 18.2.0
+  react-cookie-consent: 8.0.1_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.2_react@18.2.0
   react-markdown: 8.0.5_pmekkgnqduwlme35zpnqhenc34
@@ -61,6 +66,7 @@ devDependencies:
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
   '@testing-library/user-event': 13.5.0_@testing-library+dom@9.0.0
   '@types/jest': 27.5.2
+  '@types/js-cookie': 3.0.3
   '@types/node': 16.18.12
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
@@ -2589,6 +2595,10 @@ packages:
     dependencies:
       jest-matcher-utils: 27.5.1
       pretty-format: 27.5.1
+    dev: true
+
+  /@types/js-cookie/3.0.3:
+    resolution: {integrity: sha512-Xe7IImK09HP1sv2M/aI+48a20VX+TdRJucfq4vfRVy6nWN8PYPOEnlMRSgxJAgYQIXJVL8dZ4/ilAM7dWNaOww==}
     dev: true
 
   /@types/json-schema/7.0.11:
@@ -6424,6 +6434,15 @@ packages:
       - ts-node
       - utf-8-validate
 
+  /js-cookie/2.2.1:
+    resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
+    dev: false
+
+  /js-cookie/3.0.1:
+    resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}
+    engines: {node: '>=12'}
+    dev: false
+
   /js-sdsl/4.3.0:
     resolution: {integrity: sha512-mifzlm2+5nZ+lEcLJMoBK0/IH/bDg8XnJfd/Wq6IP+xoCjLZsTOnV2QpxlVbX9bMnkl5PdEjNtBJ9Cj1NjifhQ==}
 
@@ -8221,6 +8240,16 @@ packages:
       react-scripts: 5.0.1_edde3jg72qecvyttdq7wbgx54a
       semver: 5.7.1
     dev: true
+
+  /react-cookie-consent/8.0.1_react@18.2.0:
+    resolution: {integrity: sha512-4A2jzPQDFfBhtxIz4hYX+vJ0QnOknGdOXpEoetXzgwUrMtxVJVow8YgBsGerNt5rJI7WhKkHwr8LmxekxgVejg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      js-cookie: 2.2.1
+      react: 18.2.0
+    dev: false
 
   /react-dev-utils/12.0.1_f3a4zrasoaotz7gdk64fcmlkrm:
     resolution: {integrity: sha512-84Ivxmr17KjUupyqzFode6xKhjwuEJDROWKJy/BthkL7Wn6NJ8h4WE6k/exAv6ImS+0oZLRRW5j/aINMHyeGeQ==}
