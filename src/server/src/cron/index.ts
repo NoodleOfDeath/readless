@@ -37,3 +37,5 @@ async function pollForNews() {
     console.error(e);
   }
 }
+
+main();
