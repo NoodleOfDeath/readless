@@ -61,7 +61,7 @@ jobs:
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
       K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
       K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
-      K8S_REPLICA_COUNT: ${{ vars.K8S_REPLICA_COUNT }}
+      K8S_REPLICA_COUNT_API: ${{ vars.K8S_REPLICA_COUNT_API }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PORT: ${{ vars.PORT }}
