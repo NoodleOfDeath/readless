@@ -311,6 +311,17 @@
 						"type": "object"
 					}
 				]
+			},
+			"ReadAndSummarizeSourcePayload": {
+				"properties": {
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"url"
+				],
+				"type": "object"
 			}
 		},
 		"securitySchemes": {}
@@ -755,7 +766,7 @@
 				]
 			},
 			"post": {
-				"operationId": "ReadAndSummarizeSource",
+				"operationId": "PostReadAndSummarizeSource",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -778,15 +789,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"url": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"url"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/ReadAndSummarizeSourcePayload"
 							}
 						}
 					}
