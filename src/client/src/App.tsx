@@ -4,11 +4,8 @@ import styled from "styled-components";
 import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import BaseContextProvider, {
-  DEFAULT_BASE_CONTEXT,
-} from "@/contexts/BaseContext";
+import { SessionContext } from "@/contexts";
 import { routes } from "@/pages";
-import { theme } from "@/theme";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -28,31 +25,32 @@ const StyledAppContent = styled.div`
 `;
 
 function App() {
+  
+  const { theme } = React.useContext(SessionContext);
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BaseContextProvider>
-        <StyledAppContainer>
-          <BrowserRouter>
-            <Header />
-            <StyledAppContent>
-              <Routes>
-                {routes.map((route) => {
-                  return (
-                    <Route
-                      key={route.path}
-                      path={route.path}
-                      element={route.element}
-                    />
-                  );
-                })}
-              </Routes>
-            </StyledAppContent>
-            <Footer />
-            <CookieConsent />
-          </BrowserRouter>
-        </StyledAppContainer>
-      </BaseContextProvider>
+      <StyledAppContainer>
+        <BrowserRouter>
+          <Header />
+          <StyledAppContent>
+            <Routes>
+              {routes.map((route) => {
+                return (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={route.element}
+                  />
+                );
+              })}
+            </Routes>
+          </StyledAppContent>
+          <Footer />
+          <CookieConsent />
+        </BrowserRouter>
+      </StyledAppContainer>
     </ThemeProvider>
   );
 }

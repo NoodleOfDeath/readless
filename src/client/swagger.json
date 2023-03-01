@@ -182,6 +182,43 @@
 					}
 				]
 			},
+			"ReferralAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"userAgent": {
+								"type": "string",
+								"description": "the user agent info of the consumer of this referral"
+							},
+							"target": {
+								"type": "string",
+								"description": "the url path of the referral destination"
+							},
+							"referrer": {
+								"type": "string",
+								"description": "the url path this referral was copied from"
+							},
+							"referrerId": {
+								"type": "number",
+								"format": "double",
+								"description": "id of a user if ref link was created while logged in"
+							}
+						},
+						"required": [
+							"userAgent",
+							"target",
+							"referrer"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"ReferralCreationAttributes": {
+				"$ref": "#/components/schemas/ReferralAttributes"
+			},
 			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
 				"properties": {
 					"id": {
@@ -621,6 +658,38 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/v1/referrals": {
+			"post": {
+				"operationId": "Record",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ReferralAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Referrals"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReferralCreationAttributes"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/v1/sources": {

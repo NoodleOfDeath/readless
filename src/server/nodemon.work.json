@@ -1,12 +1,12 @@
 {
   "verbose": true,
-  "ignore": ["**/*.sql"],
   "watch": [
-    ".env", 
-    "nodemon.json", 
-    "package.json", 
+    ".env",
+    "nodemon.work.json",
+    "package.json",
     "tsconfig.json",
-    "src/*",
+    "src/work/*",
+    "src/services/*",
     "node_modules/*"
   ],
   "ext": "css,html,js,json,ts",

@@ -8,19 +8,24 @@ export type SiteMap = {
   attribute?: 'href' | 'src';
 };
 
+export type FetchPolicy = {
+  count: number;
+  window: number;
+};
+
 export type OutletAttributes = DatedAttributes & {
   /** name of this outlet */
   name: string;
-  /** slug */
-  slug: string;
   /** xml site maps for this outlet and selector for extracting urls */
   siteMaps: SiteMap[];
+  /** fetch policy for this outlet */
+  fetchPolicy?: FetchPolicy;
 };
 
 export type OutletCreationAttributes = DatedAttributes & {
   name: string;
-  slug: string;
   siteMaps: SiteMap[];
+  fetchPolicy?: FetchPolicy;
 };
 
 @Table({
@@ -51,17 +56,15 @@ export class Outlet<
   name: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    unique: true,
-  })
-  slug: string;
-
-  @Column({
     type: DataType.ARRAY(DataType.JSON),
     allowNull: false,
   })
   siteMaps: SiteMap[];
+
+  @Column({
+    type: DataType.JSON,
+  })
+  fetchPolicy: FetchPolicy;
 
   get attachments(): Promise<Attachment[]> {
     return Attachment.findAll({

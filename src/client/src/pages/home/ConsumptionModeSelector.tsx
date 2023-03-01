@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { BaseContext } from "@/contexts/BaseContext";
+import { SessionContext } from "@/contexts";
 import { CONSUMPTION_MODES } from "@/components/Post";
 
 type Props = {};
@@ -54,7 +54,10 @@ const StyledButton = muiStyled(Button)<{ selected: boolean }>(
 );
 
 export default function ConsumptionModeSelector({}: Props) {
-  const { consumptionMode, setConsumptionMode } = React.useContext(BaseContext);
+  const { 
+    preferences: { consumptionMode = 'concise' }, 
+    setConsumptionMode,
+  } = React.useContext(SessionContext);
 
   return (
     <StyledContainer>

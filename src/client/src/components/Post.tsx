@@ -16,7 +16,7 @@ import {
   Chip,
 } from "@mui/material";
 
-export const CONSUMPTION_MODES = ["cursory", "casual", "research"] as const;
+export const CONSUMPTION_MODES = ["concise", "casual", "comprehensive"] as const;
 
 export type ConsumptionMode = typeof CONSUMPTION_MODES[number];
 
@@ -92,7 +92,7 @@ export default function Post({
     createdAt: "0",
     updatedAt: "0",
   },
-  consumptionMode = "cursory",
+  consumptionMode = "concise",
   labelSize = "body1",
   ...rest
 }: Props = {}) {
@@ -103,11 +103,11 @@ export default function Post({
 
   const content = React.useMemo(() => {
     switch (consumptionMode) {
-      case "cursory":
+      case "concise":
         return source?.shortSummary;
       case "casual":
         return source?.summary;
-      case "research":
+      case "comprehensive":
         return source?.abridged;
     }
   }, [consumptionMode, source]);

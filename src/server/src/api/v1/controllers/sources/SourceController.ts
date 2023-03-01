@@ -1,7 +1,13 @@
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt, SpiderService } from '../../../../services';
-import { Source, SourceAttr, SourceAttributes, SourceCreationAttributes } from '../../schema';
+import {
+  ReadAndSummarizeSourcePayload,
+  Source,
+  SourceAttr,
+  SourceAttributes,
+  SourceCreationAttributes,
+} from '../../schema';
 import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
 
 @Route('/v1/sources')
@@ -86,7 +92,14 @@ export class SourceController {
   }
 
   @Post('/')
-  public async readAndSummarizeSource(@Body() { url }: { url: string }): Promise<SourceAttributes> {
+  public async postReadAndSummarizeSource(@Body() { url }: ReadAndSummarizeSourcePayload): Promise<SourceAttributes> {
+    return this.readAndSummarizeSource({ url });
+  }
+
+  public async readAndSummarizeSource(
+    { url }: ReadAndSummarizeSourcePayload,
+    onProgress?: (progress: number) => void,
+  ): Promise<SourceAttributes> {
     try {
       const existingSource = await Source.findOne({ where: { url } });
       if (existingSource) {
@@ -158,15 +171,18 @@ export class SourceController {
       // initialize chatgpt service and send the prompt
       const chatgpt = new ChatGPTService();
       // iterate through each source prompt and send them to chatgpt
-      for (const prompt of prompts) {
+      for (let n = 0; n < prompts.length; n++) {
+        const prompt = prompts[n];
         const reply = await chatgpt.send(prompt.text, { promptPrefix: prompt.prefix });
         console.log(reply);
         prompt.action(reply);
+        onProgress?.((n + 1) / prompts.length);
       }
       console.log(sourceInfo);
       const source = new Source(sourceInfo as SourceCreationAttributes);
       await source.save();
       await source.reload();
+      onProgress?.(1);
       return source;
     } catch (e) {
       console.error(e);

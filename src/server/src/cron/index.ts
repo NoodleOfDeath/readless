@@ -25,9 +25,15 @@ async function pollForNews() {
   console.log('fetching news!');
   try {
     const { rows: outlets } = await Outlet.findAndCountAll();
-    const queue = new QueueService();
+    const queue = new QueueService({
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: true,
+        lifo: true,
+      },
+    });
     for (const outlet of outlets) {
-      const { name, slug, siteMaps } = outlet.toJSON();
+      const { id, name, siteMaps } = outlet.toJSON();
       console.log(`fetching sitemaps for ${name}`);
       if (siteMaps.length === 0) continue;
       for (const siteMap of siteMaps) {
@@ -53,12 +59,12 @@ async function pollForNews() {
             QUEUES.siteMaps,
             url,
             {
+              id,
+              name,
               url,
-              slug,
             },
             {
               jobId: url,
-              lifo: true,
             },
           );
         }

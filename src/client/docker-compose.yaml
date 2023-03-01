@@ -1,10 +1,17 @@
 services:
-  local:
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "$PORT:$PORT"
+
+  ui-local:
     build:
       context: .
       dockerfile: Dockerfile.local
     ports:
-      - '$PORT:$PORT'
+      - "$PORT:$PORT"
     volumes:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules

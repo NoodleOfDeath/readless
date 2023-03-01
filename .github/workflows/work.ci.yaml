@@ -1,4 +1,4 @@
-name: Cron CI
+name: Worker CI
 
 on:
   push:
@@ -6,23 +6,23 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/cron-ci.yaml"
-      - "k8s/cron-deploy.yaml"
-      - "src/server/Dockerfile.cron"
+      - ".github/workflows/work-ci.yaml"
+      - "k8s/work-deploy.yaml"
+      - "src/server/Dockerfile.work"
       - "src/server/package.json"
-      - "src/server/src/cron/**"
+      - "src/server/src/work/**"
 
 concurrency:
-  group: ${{ github.ref }}-cron
+  group: ${{ github.ref }}-work
   cancel-in-progress: true
 
 env:
-  IMAGE: ${{ github.event.repository.name }}-cron-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+  IMAGE: ${{ github.event.repository.name }}-work-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   REGISTRY: ${{ vars.REGISTRY }}
   WORKING_DIR: src/server
 
 jobs:
-  build-cron:
+  build-work:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
@@ -37,7 +37,7 @@ jobs:
       - name: Build
         run: |
           cd $WORKING_DIR && \
-          docker build . --file Dockerfile.cron --tag $IMAGE:latest
+          docker build . --file Dockerfile.work --tag $IMAGE:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -49,8 +49,8 @@ jobs:
       - name: Push Docker Image
         run: docker push $REGISTRY/$IMAGE:latest
 
-  deploy-cron:
-    needs: build-cron
+  deploy-work:
+    needs: build-work
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
@@ -83,7 +83,7 @@ jobs:
       - name: Add kubectl cert
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/cron-deploy.yaml | kubectl apply -f -
+        run: envsubst < $GITHUB_WORKSPACE/k8s/work-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$IMAGE --namespace $K8S_NAMESPACE
       - name: Verify deployment

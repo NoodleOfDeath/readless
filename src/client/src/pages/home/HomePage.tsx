@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { BaseContext } from "@/contexts";
+import { SessionContext } from "@/contexts";
 import { Api, SourceAttr } from "@/api/Api";
 
 import Page from "@/components/layout/Page";
@@ -27,7 +27,7 @@ const StyledGrid = muiStyled(Grid)(({ theme }) => ({
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { consumptionMode } = React.useContext(BaseContext);
+  const { preferences: { consumptionMode = 'concise' } } = React.useContext(SessionContext);
 
   const [recentSources, setRecentSources] = React.useState<SourceAttr[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);

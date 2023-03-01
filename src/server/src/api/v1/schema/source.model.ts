@@ -22,6 +22,10 @@ export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes &
 
 export type SourceAttr = Attr<Source, typeof SOURCE_ATTRS[number]>;
 
+export type ReadAndSummarizeSourcePayload = {
+  url: string;
+};
+
 @Table({
   modelName: 'source',
   timestamps: true,

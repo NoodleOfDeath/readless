@@ -9,5 +9,5 @@ FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
 COPY serve-cron.ts ./
-COPY nodemon.json ./
+COPY nodemon.cron.json ./
 CMD pnpm run dev:cron

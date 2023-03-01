@@ -49,7 +49,7 @@ router.get(
 router.post('/', rateLimit('2 per 1 min'), body('url').isURL(), validate, async (req, res) => {
   const controller = new SourceController();
   try {
-    const source = await controller.readAndSummarizeSource(req.body);
+    const source = await controller.postReadAndSummarizeSource(req.body);
     res.json(source);
   } catch (e) {
     console.error(e);

@@ -17,6 +17,13 @@ services:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
 
+  cron:
+    build:
+      context: .
+      dockerfile: Dockerfile.cron
+    env_file:
+      - .env
+
   cron.local:
     build:
       context: .
@@ -24,6 +31,14 @@ services:
     volumes:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
+
+  work:
+    build:
+      context: .
+      dockerfile: Dockerfile.work
+    env_file:
+      - .env
+
   work.local:
     build:
       context: .

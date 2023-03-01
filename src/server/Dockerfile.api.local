@@ -9,5 +9,5 @@ FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
 COPY serve-api.ts ./
-COPY nodemon.json ./
+COPY nodemon.api.json ./
 CMD pnpm run dev:api
