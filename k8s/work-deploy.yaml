@@ -28,6 +28,10 @@ spec:
           env:
             - name: CORS_ORIGIN
               value: "$CORS_ORIGIN"
+            - name: FETCH_RATE_LIMIT
+              value: "$FETCH_RATE_LIMIT"
+            - name: FETCH_INTERVAL_MS
+              value: "$FETCH_INTERVAL_MS"
             - name: OPENAI_API_KEY
               value: "$OPENAI_API_KEY"
             - name: PG_CONNECTION_STRING
@@ -38,6 +42,8 @@ spec:
               value: "$RECAPTCHA_SECRET_KEY"
             - name: REDIS_CONNECTION_STRING
               value: "$REDIS_CONNECTION_STRING"
+            - name: WORKER_CONCURRENCY
+              value: "$WORKER_CONCURRENCY"
             - name: WS_API_KEY
               value: "$WS_API_KEY"
           # livenessProbe:

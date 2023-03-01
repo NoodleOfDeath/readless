@@ -55,6 +55,8 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
+      FETCH_RATE_LIMIT: ${{ vars.FETCH_RATE_LIMIT }}
+      FETCH_INTERVAL_MS: ${{ vars.FETCH_INTERVAL_MS }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
       K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
@@ -66,6 +68,7 @@ jobs:
       PORT: ${{ vars.PORT }}
       RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
       REDIS_CONNECTION_STRING: ${{ secrets.REDIS_CONNECTION_STRING }}
+      WORKER_CONCURRENCY: ${{ vars.WORKER_CONCURRENCY }}
       WS_API_KEY: ${{ secrets.WS_API_KEY }}
     steps:
       - name: Print Job Description
