@@ -27,8 +27,6 @@ async function pollForNews() {
     const { rows: outlets } = await Outlet.findAndCountAll();
     const queue = new QueueService({
       defaultJobOptions: {
-        removeOnComplete: true,
-        removeOnFail: true,
         lifo: true,
       },
     });
