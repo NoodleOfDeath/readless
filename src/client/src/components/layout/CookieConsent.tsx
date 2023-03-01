@@ -5,7 +5,6 @@ import ReactCookieConsent from "react-cookie-consent";
 export default function CookieConsent() {
   return (
     <ReactCookieConsent
-      debug
       location="bottom"
       buttonText="Accept"
       cookieName="cookieConsent"
