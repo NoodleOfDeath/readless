@@ -42,8 +42,10 @@ jobs:
       - name: install pnpm
         run: npm i -g pnpm 
       - name: Build
-        run: |
+        run: | # stupid work around until i get docker to behave
+          cd src/server && pnpm install && \
           cd $WORKING_DIR && \
+          pnpm install && \
           pnpm run swagger && \
           docker build . --file Dockerfile --tag $IMAGE:latest \
             --build-arg API_ENDPOINT=$API_ENDPOINT \
