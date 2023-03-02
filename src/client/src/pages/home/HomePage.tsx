@@ -51,7 +51,11 @@ export default function HomePage() {
     setRecentSources([]);
     setPage(1);
     api
-      .getSources({ filter: searchText, pageSize, page: 0 })
+      .getSources({ 
+        filter: searchText,
+        pageSize, m
+        page: 0,
+      })
       .then((response) => {
         setRecentSources(response.data ?? []);
       })
@@ -66,7 +70,11 @@ export default function HomePage() {
 
   const loadMore = () => {
     api
-      .getSources({ pageSize, page })
+      .getSources({ 
+        filter: searchText,
+        pageSize, 
+        page,
+      })
       .then((response) => {
         if (response.data) {
           setRecentSources((prev) => [...prev, ...response.data]);
