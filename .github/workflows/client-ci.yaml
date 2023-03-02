@@ -44,7 +44,7 @@ jobs:
       - name: Build
         run: | # stupid work around until i get docker to behave
           cd src/server && pnpm install && \
-          cd $WORKING_DIR && \
+          cd ../client && \
           pnpm install && \
           pnpm run swagger && \
           docker build . --file Dockerfile --tag $IMAGE:latest \
