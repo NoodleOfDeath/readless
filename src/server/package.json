@@ -51,7 +51,7 @@
     "bottleneck": "^2.19.5",
     "bull-arena": "^3.30.4",
     "bullmq": "^3.10.0",
-    "chatgpt": "4.8.1",
+    "chatgpt": "5.0.1",
     "cors": "^2.8.5",
     "cron": "^2.2.0",
     "esbuild": "^0.17.10",

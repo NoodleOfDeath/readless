@@ -146,8 +146,9 @@ export class SourceController {
       });
       const prompts: Prompt[] = [
         {
-          text: scrapeLoot.text || loot.filteredText,
-          prefix: `Please give this article a new title relevant to its content no longer than 255 characters`,
+          text: `Please give this article a new title relevant to its content no longer than 255 characters:\n\n${
+            scrapeLoot.text || loot.filteredText
+          }`,
           action: (reply) => (sourceInfo.alternateTitle = reply.text),
         },
         {
@@ -196,7 +197,7 @@ export class SourceController {
       // iterate through each source prompt and send them to chatgpt
       for (let n = 0; n < prompts.length; n++) {
         const prompt = prompts[n];
-        const reply = await chatgpt.send(prompt.text, { promptPrefix: prompt.prefix });
+        const reply = await chatgpt.send(prompt.text);
         console.log(reply);
         prompt.action(reply);
         onProgress?.((n + 1) / prompts.length);

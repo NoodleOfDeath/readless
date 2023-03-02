@@ -23,7 +23,7 @@ specifiers:
   bottleneck: ^2.19.5
   bull-arena: ^3.30.4
   bullmq: ^3.10.0
-  chatgpt: 4.8.1
+  chatgpt: 5.0.1
   concurrently: ^7.6.0
   cors: ^2.8.5
   cron: ^2.2.0
@@ -64,7 +64,7 @@ dependencies:
   bottleneck: 2.19.5
   bull-arena: 3.30.4
   bullmq: 3.10.0
-  chatgpt: 4.8.1
+  chatgpt: 5.0.1
   cors: 2.8.5
   cron: 2.2.0
   esbuild: 0.17.10
@@ -1436,8 +1436,8 @@ packages:
       kuler: 2.0.0
     dev: false
 
-  /@dqbd/tiktoken/0.2.1:
-    resolution: {integrity: sha512-Nw9Swn37xZLAvz64qA3tTxy4yJLMhYDj7dWS6uSoHkUJxTn+BcYA+r06O36Q3Jya52b3SvK/LDXzl1dVeHqrew==}
+  /@dqbd/tiktoken/0.4.0:
+    resolution: {integrity: sha512-iaHgmwKAOqowBFZKxelyszoeGLoNw62eOULcmyme1aA1Ymr3JgYl0V7jwpuUm7fksalycZajx3loFn9TRUaviw==}
     dev: false
 
   /@esbuild/android-arm/0.17.10:
@@ -3043,12 +3043,12 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /chatgpt/4.8.1:
-    resolution: {integrity: sha512-7Y4iX8Yq8azwNIVxnmoFs8qwb/5Y4SJrwfN+rLMzUn2Lbdd9v1Q+FrpVsI/1wNEc713B0Rja5ImF0zhaukQUsQ==}
+  /chatgpt/5.0.1:
+    resolution: {integrity: sha512-Wy+/2XL0FobiJFaQ6N5WnhRCnOwrUJCpoVCn67qqhiWrM1QW6lgmpvtDDKKDyvj7D1MLMjc2xB/kK8aT27mL/w==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@dqbd/tiktoken': 0.2.1
+      '@dqbd/tiktoken': 0.4.0
       cac: 6.7.14
       conf: 11.0.1
       eventsource-parser: 0.0.5
