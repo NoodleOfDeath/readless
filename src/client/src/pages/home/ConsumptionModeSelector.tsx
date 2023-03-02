@@ -1,35 +1,11 @@
 import React from "react";
 
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Container,
-  Stack,
-  styled as muiStyled,
-  Typography,
-} from "@mui/material";
+import { Box, Button, ButtonGroup, styled as muiStyled } from "@mui/material";
 
 import { SessionContext } from "@/contexts";
 import { CONSUMPTION_MODES } from "@/components/Post";
 
 type Props = {};
-
-const StyledContainer = muiStyled(Container)(({ theme }) => ({
-  backgroundColor: "transparent",
-  width: "100%",
-  maxWidth: 1280,
-  margin: "auto",
-  marginTop: theme.spacing(5),
-  alignSelf: "center",
-  alignItems: "center",
-  textAlign: "center",
-}));
-
-const StyledStack = muiStyled(Stack)(({ theme }) => ({
-  margin: theme.spacing(1),
-}));
-
 const StyledButtonGroup = muiStyled(ButtonGroup)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
@@ -54,31 +30,22 @@ const StyledButton = muiStyled(Button)<{ selected: boolean }>(
 );
 
 export default function ConsumptionModeSelector({}: Props) {
-  const { 
-    preferences: { consumptionMode = 'concise' }, 
+  const {
+    preferences: { consumptionMode = "concise" },
     setConsumptionMode,
   } = React.useContext(SessionContext);
 
   return (
-    <StyledContainer>
-      <StyledStack spacing={2}>
-        <Typography variant="h6">How much text do you want to read?</Typography>
-        <Typography variant="body1">left = less, right = more</Typography>
-        <StyledButtonGroup
-          variant="outlined"
-          aria-label="outlined button group"
+    <StyledButtonGroup variant="outlined" aria-label="outlined button group">
+      {CONSUMPTION_MODES.map((mode) => (
+        <StyledButton
+          key={mode}
+          onClick={() => setConsumptionMode(mode)}
+          selected={mode === consumptionMode}
         >
-          {CONSUMPTION_MODES.map((mode) => (
-            <StyledButton
-              key={mode}
-              onClick={() => setConsumptionMode(mode)}
-              selected={mode === consumptionMode}
-            >
-              {mode}
-            </StyledButton>
-          ))}
-        </StyledButtonGroup>
-      </StyledStack>
-    </StyledContainer>
+          {mode}
+        </StyledButton>
+      ))}
+    </StyledButtonGroup>
   );
 }

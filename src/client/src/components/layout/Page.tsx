@@ -1,16 +1,18 @@
-import { Container, ContainerProps, styled as muiStyled } from "@mui/material";
 import React from "react";
+import { Container, ContainerProps, styled as muiStyled } from "@mui/material";
 
-type Props = React.PropsWithChildren<{
+type Props = Omit<ContainerProps, "left" | "right" | "center" | "align"> & {
   left?: boolean;
   right?: boolean;
   center?: boolean;
   align?: "left" | "right" | "center";
-}>;
+};
 
-const StyledContainer = muiStyled((props: ContainerProps & Props) => (
-  <Container {...props} maxWidth={false} />
-))(
+const StyledContainer = muiStyled(
+  ({ left, right, center, align, ...props }: ContainerProps & Props) => (
+    <Container {...props} maxWidth={false} />
+  )
+)(
   ({
     theme,
     left,

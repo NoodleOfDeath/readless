@@ -10,14 +10,22 @@ export type Preferences = {
   consumptionMode?: ConsumptionMode;
 };
 
+export type SearchCache = {
+  searchText?: string;
+  searchOptions: string[];
+};
+
 export type Session = {
   theme: Theme;
   preferences: Preferences;
+  searchCache: SearchCache;
   setPreference: (
     key: keyof Preferences,
     value: Preferences[keyof Preferences]
   ) => void;
   setConsumptionMode: (consumptionMode: ConsumptionMode) => void;
+  setSearchText: (searchText: string) => void;
+  setSearchOptions: (searchOptions: string[]) => void;
 };
 
 type Props = React.PropsWithChildren<{}>;
@@ -25,8 +33,11 @@ type Props = React.PropsWithChildren<{}>;
 export const NULL_SESSION: Session = {
   theme: loadTheme(),
   preferences: {},
+  searchCache: { searchText: "", searchOptions: [] },
   setPreference: () => {},
   setConsumptionMode: () => {},
+  setSearchText: () => {},
+  setSearchOptions: () => {},
 };
 
 export const COOKIES = {
@@ -45,6 +56,10 @@ export function SessionContextProvider({ children }: Props) {
     loadTheme(isDarkModeEnabled ? "dark" : "light")
   );
   const [preferences, setPreferences] = React.useState<Preferences>({});
+  const [searchCache, setSearchCache] = React.useState<SearchCache>({
+    searchText: "",
+    searchOptions: [],
+  });
 
   const setPreference = <Key extends keyof Preferences>(
     key: Key,
@@ -78,8 +93,16 @@ export function SessionContextProvider({ children }: Props) {
       value={{
         theme,
         preferences,
+        searchCache: searchCache,
         setPreference,
         setConsumptionMode: (mode) => setPreference("consumptionMode", mode),
+        setSearchText: (text) =>
+          setSearchCache((prev) => ({ ...prev, searchText: text })),
+        setSearchOptions: (options) =>
+          setSearchCache((prev) => ({
+            ...prev,
+            searchOptions: options,
+          })),
       }}
     >
       {children}

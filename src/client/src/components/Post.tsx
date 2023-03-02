@@ -16,7 +16,11 @@ import {
   Chip,
 } from "@mui/material";
 
-export const CONSUMPTION_MODES = ["concise", "casual", "comprehensive"] as const;
+export const CONSUMPTION_MODES = [
+  "concise",
+  "casual",
+  "comprehensive",
+] as const;
 
 export type ConsumptionMode = typeof CONSUMPTION_MODES[number];
 
@@ -53,6 +57,7 @@ const StyledCardHeader = muiStyled(CardHeader)(({ theme }) => ({
   justifyContent: "center",
   display: "flex",
   flexDirection: "row",
+  wordBreak: "break-word",
 }));
 
 const StyledCardContent = muiStyled(CardContent)(({ theme }) => ({
@@ -60,7 +65,7 @@ const StyledCardContent = muiStyled(CardContent)(({ theme }) => ({
 }));
 
 const StyledStack = muiStyled(Stack)(({ theme }) => ({
-  margin: theme.spacing(1),
+  margin: theme.spacing(0.5),
 }));
 
 const StyledChipCategory = muiStyled(Chip)(({ theme }) => ({
@@ -143,19 +148,21 @@ export default function Post({
                 color="secondary"
               />
             </Typography>
-            <Typography variant="caption">
-              {source?.tags.map((tag) => {
-                const trimmedTag = tag.trim();
-                return (
-                  <StyledChipTag
-                    label={trimmedTag}
-                    key={trimmedTag}
-                    color="secondary"
-                    size="small"
-                  />
-                );
-              })}
-            </Typography>
+            {consumptionMode === "comprehensive" && (
+              <Typography variant="caption">
+                {source?.tags.map((tag) => {
+                  const trimmedTag = tag.trim();
+                  return (
+                    <StyledChipTag
+                      label={trimmedTag}
+                      key={trimmedTag}
+                      color="secondary"
+                      size="small"
+                    />
+                  );
+                })}
+              </Typography>
+            )}
           </StyledStack>
         </StyledCardContent>
       </StyledCard>

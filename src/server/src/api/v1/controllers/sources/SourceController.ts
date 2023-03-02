@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt, SpiderService } from '../../../../services';
@@ -22,6 +23,17 @@ export class SourceController {
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
+      where: {
+        [Op.or]: [
+          { title: { [Op.iRegexp]: filter } },
+          { alternateTitle: { [Op.iRegexp]: filter } },
+          { abridged: { [Op.iRegexp]: filter } },
+          { category: { [Op.iRegexp]: filter } },
+          { subcategory: { [Op.iRegexp]: filter } },
+          { url: { [Op.iRegexp]: filter } },
+          { tags: { [Op.contains]: [filter] } },
+        ],
+      },
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],

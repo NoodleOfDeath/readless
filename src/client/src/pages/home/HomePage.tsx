@@ -7,6 +7,7 @@ import {
   Typography,
   styled as muiStyled,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +17,7 @@ import { Api, SourceAttr } from "@/api/Api";
 import Page from "@/components/layout/Page";
 import Post from "@/components/Post";
 
-import ConsumptionModeSelector from "@/pages/home/ConsumptionModeSelector";
+import Filters from "@/pages/home/Filters";
 
 const StyledGrid = muiStyled(Grid)(({ theme }) => ({
   margin: "auto",
@@ -27,10 +28,18 @@ const StyledGrid = muiStyled(Grid)(({ theme }) => ({
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { preferences: { consumptionMode = 'concise' } } = React.useContext(SessionContext);
+  const api = new Api({
+    baseUrl: process.env.API_ENDPOINT,
+  }).v1;
+  const {
+    preferences: { consumptionMode = "concise" },
+    searchCache: { searchText },
+  } = React.useContext(SessionContext);
 
   const [recentSources, setRecentSources] = React.useState<SourceAttr[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [pageSize] = React.useState<number>(10);
+  const [page, setPage] = React.useState<number>(1);
 
   const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
@@ -39,10 +48,10 @@ export default function HomePage() {
   }, [recentSources, mdAndUp]);
 
   React.useEffect(() => {
-    new Api({
-      baseUrl: process.env.API_ENDPOINT,
-    }).v1
-      .getSources({})
+    setRecentSources([]);
+    setPage(1);
+    api
+      .getSources({ filter: searchText, pageSize, page: 0 })
       .then((response) => {
         setRecentSources(response.data ?? []);
       })
@@ -53,13 +62,27 @@ export default function HomePage() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [searchText]);
+
+  const loadMore = () => {
+    api
+      .getSources({ pageSize, page })
+      .then((response) => {
+        if (response.data) {
+          setRecentSources((prev) => [...prev, ...response.data]);
+          setPage((prev) => prev + 1);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <Page center>
       <Stack spacing={2}>
         <Typography variant="h4">News that fits your schedule</Typography>
-        <ConsumptionModeSelector />
+        <Filters />
         <StyledGrid container justifyContent="center" spacing={2}>
           {recentSources.map((source) => (
             <Post
@@ -71,6 +94,7 @@ export default function HomePage() {
           ))}
           {loading && <CircularProgress size={10} variant="indeterminate" />}
         </StyledGrid>
+        <Button onClick={() => loadMore()}>Load More</Button>
       </Stack>
     </Page>
   );

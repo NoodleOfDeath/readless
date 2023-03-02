@@ -7,6 +7,7 @@ specifiers:
   '@mdi/react': ^1.6.1
   '@mui/lab': 5.0.0-alpha.120
   '@mui/material': ^5.11.10
+  '@paypal/react-paypal-js': ^7.8.2
   '@testing-library/jest-dom': ^5.16.5
   '@testing-library/react': ^13.4.0
   '@testing-library/user-event': ^13.5.0
@@ -48,6 +49,7 @@ dependencies:
   '@mdi/react': 1.6.1
   '@mui/lab': 5.0.0-alpha.120_2xjz24fcfpl7kgsqfa5xscfeo4
   '@mui/material': 5.11.10_xqeqsl5kvjjtyxwyi3jhw3yuli
+  '@paypal/react-paypal-js': 7.8.2_biqbaboplfbrettd7655fr4n2y
   date-fns: 2.29.3
   js-cookie: 3.0.1
   react: 18.2.0
@@ -2165,6 +2167,30 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+
+  /@paypal/paypal-js/5.1.4:
+    resolution: {integrity: sha512-5ktge4DFOMu3rvFR4YWDiPm4wDUzOmghtCM9ZxgJyJCOJP+61IVYdrENysMay91T4GOZ10k2ywWcBN5shsGhLw==}
+    dependencies:
+      promise-polyfill: 8.3.0
+    dev: false
+
+  /@paypal/react-paypal-js/7.8.2_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-H6/qpAVkf57spCgvQPO7jNhtD58KdiywqKYmgmJm7Xnwu2wH03XfOsBjlINi1zM1VnzcyKhcliyBh9+uTAzI0g==}
+    peerDependencies:
+      react: '>=16.3.0'
+      react-dom: '>=16.3.0'
+    dependencies:
+      '@paypal/paypal-js': 5.1.4
+      '@paypal/sdk-constants': 1.0.129
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@paypal/sdk-constants/1.0.129:
+    resolution: {integrity: sha512-FnZk6JZDGDxPCKHHsQ7HBBpelEy8+VFO78PlvdubgY8LGCql9eU7q1SQLYSiSW0zA5Lpr6zqVSFY0gRmlUFO9g==}
+    dependencies:
+      hi-base32: 0.5.1
+    dev: false
 
   /@pmmmwh/react-refresh-webpack-plugin/0.5.10_unmakpayn7vcxadrrsbqlrpehy:
     resolution: {integrity: sha512-j0Ya0hCFZPd4x40qLzbhGsh9TMtdb+CJQiso+WxLOPNasohq9cc5SNUcwsZaRH6++Xh91Xkm/xHCkuIiIu0LUA==}
@@ -5436,6 +5462,10 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
+  /hi-base32/0.5.1:
+    resolution: {integrity: sha512-EmBBpvdYh/4XxsnUybsPag6VikPYnN30td+vQk+GI3qpahVEG9+gTkG0aXVxTjBqQ5T6ijbWIu77O+C5WFWsnA==}
+    dev: false
+
   /hoist-non-react-statics/3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
@@ -8135,6 +8165,10 @@ packages:
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
+
+  /promise-polyfill/8.3.0:
+    resolution: {integrity: sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==}
+    dev: false
 
   /promise/8.3.0:
     resolution: {integrity: sha512-rZPNPKTOYVNEEKFaq1HqTgOwZD+4/YHS5ukLzQCypkj+OkYx7iv0mA91lJlpPPZ8vMau3IIGj5Qlwrx+8iiSmg==}

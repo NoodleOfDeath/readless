@@ -21,7 +21,7 @@ export class SpiderService extends BaseService {
     /** default and most common spider species */
     agelenidae: new ExtractRuleMap({
       title: {
-        selector: 'h1',
+        selector: 'title',
         output: 'text',
       },
       text: {
