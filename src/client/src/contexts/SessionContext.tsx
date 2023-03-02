@@ -22,12 +22,10 @@ export type Session = {
   consumptionMode?: ConsumptionMode;
   searchText: string;
   searchOptions: string[];
-  setPreference: (
-    key: keyof Preferences,
-    value: Preferences[keyof Preferences]
-  ) => void;
-  setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode>>;
-  setConsumptionMode: React.Dispatch<React.SetStateAction<ConsumptionMode>>;
+  setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
+  setConsumptionMode: React.Dispatch<
+    React.SetStateAction<ConsumptionMode | undefined>
+  >;
   setSearchText: (
     state: React.SetStateAction<string>,
     opts?: SetSearchTextOptions
@@ -44,7 +42,6 @@ export const NULL_SESSION: Session = {
   consumptionMode: "concise",
   searchText: "",
   searchOptions: [],
-  setPreference: () => {},
   setDisplayMode: () => {},
   setConsumptionMode: () => {},
   setSearchText: () => {},
@@ -69,48 +66,55 @@ export function SessionContextProvider({ children }: Props) {
   );
   const [preferences, setPreferences] = React.useState<Preferences>({});
 
-  const [displayMode, setDisplayMode] = React.useState<PaletteMode>(
-    isDarkModeEnabled ? "dark" : "light"
+  const { displayMode, consumptionMode } = React.useMemo(
+    () => preferences,
+    [preferences]
   );
-  const [consumptionMode, setConsumptionMode] =
-    React.useState<ConsumptionMode>("concise");
   const [searchText, setSearchText] = React.useState("");
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
 
   // Convenience function to set a preference
-  const setPreference = <Key extends keyof Preferences>(
-    key: Key,
-    value: Preferences[Key]
-  ) => {
-    setPreferences((preferences) => {
-      const newPrefs = {
-        ...preferences,
-        [key]: value,
-      };
-      return (preferences = newPrefs);
-    });
-  };
+  const preferenceSetter =
+    <Key extends keyof Preferences>(key: Key) =>
+    (
+      value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])
+    ) => {
+      setPreferences((preferences) => {
+        const newPrefs = {
+          ...preferences,
+        };
+        if (!value) {
+          delete newPrefs[key];
+        } else {
+          newPrefs[key] =
+            value instanceof Function ? value(preferences[key]) : value;
+        }
+        return (preferences = newPrefs);
+      });
+    };
+
+  const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
+    return {
+      setDisplayMode: preferenceSetter("displayMode"),
+      setConsumptionMode: preferenceSetter("consumptionMode"),
+    };
+  }, [preferenceSetter]);
 
   // Load cookies on mount
   React.useEffect(() => {
-    setPreferences(JSON.parse(Cookies.get(COOKIES.preferences) || "{}"));
+    try {
+      const prefs = JSON.parse(Cookies.get(COOKIES.preferences) || "{}");
+      setPreferences(prefs);
+    } catch (e) {
+      console.error(e);
+      setPreferences({});
+    }
   }, []);
-
-  // Update theme when system theme changes
-  React.useEffect(() => {
-    setTheme(loadTheme(isDarkModeEnabled ? "dark" : "light"));
-  }, [isDarkModeEnabled]);
 
   // Update theme when user preference changes
   React.useEffect(() => {
-    setPreference("displayMode", displayMode);
-    setTheme(loadTheme(displayMode));
-  }, [displayMode]);
-
-  // Update consumption mode when user preference changes
-  React.useEffect(() => {
-    setPreference("consumptionMode", consumptionMode);
-  }, [consumptionMode]);
+    setTheme(loadTheme(displayMode ?? (isDarkModeEnabled ? "dark" : "light")));
+  }, [displayMode, isDarkModeEnabled]);
 
   // Save preferences as cookie when they change
   React.useEffect(() => {
@@ -129,7 +133,6 @@ export function SessionContextProvider({ children }: Props) {
         consumptionMode,
         searchText,
         searchOptions,
-        setPreference,
         setDisplayMode,
         setConsumptionMode,
         setSearchText: (

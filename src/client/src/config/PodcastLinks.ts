@@ -1,16 +1,11 @@
 import { mdiApple, mdiAws, mdiSpotify } from "@mdi/js";
 import iheart from "@/icons/iheart";
 import { NavigateFunction } from "react-router-dom";
-
-type NavigationItemProps = {
-  label: string;
-  icon?: string;
-  items?: NavigationItemProps[];
-  onClick?: (options: { navigate?: NavigateFunction }) => void;
-};
+import { NavigationItemProps } from "@/components/layout/header/NavigationItem";
 
 export const PODCAST_LINKS: NavigationItemProps[] = [
   {
+    id: "apple-podcast",
     label: "Apple Podcasts",
     icon: mdiApple,
     onClick: () =>
@@ -20,6 +15,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
       ),
   },
   {
+    id: "amazon-music",
     label: "Amazon Music",
     icon: mdiAws,
     onClick: () =>
@@ -29,6 +25,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
       ),
   },
   {
+    id: "spotify",
     label: "Spotify",
     icon: mdiSpotify,
     onClick: () =>
@@ -38,6 +35,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
       ),
   },
   {
+    id: "iheart",
     label: "iHeartRadio",
     icon: iheart,
     onClick: () =>

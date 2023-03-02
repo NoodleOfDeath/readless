@@ -7,7 +7,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { SessionContext } from "@/contexts";
 import { routes } from "@/pages";
 
-import Header from "@/components/layout/Header";
+import Header from "@/components/layout/header/Header";
 import Footer from "@/components/layout/Footer";
 import CookieConsent from "@/components/layout/CookieConsent";
 

@@ -20,7 +20,7 @@ export const SOURCE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'url', 'originalT
 /** light weight record for an article post */
 export const ARTICLE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS] as const;
 
-export const INTERACTION_TYPES = ['like', 'dislike', 'bookmark', 'share', 'comment'] as const;
+export const INTERACTION_TYPES = ['like', 'dislike', 'bookmark', 'share', 'comment', 'view'] as const;
 export type InteractionType = typeof INTERACTION_TYPES[number];
 
 export const RESOURCE_TYPES = ['article', 'interaction', 'media', 'outlet', 'source'] as const;

@@ -24,7 +24,6 @@ const LINKS = [
 const StyledFooter = muiStyled((props: ContainerProps) => (
   <Container {...props} maxWidth={false} />
 ))(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
   marginTop: theme.spacing(5),
   padding: theme.spacing(3),
   bottom: 0,
@@ -34,13 +33,11 @@ const StyledFooter = muiStyled((props: ContainerProps) => (
 }));
 
 const StyledStack = muiStyled(Stack)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
   margin: "auto",
   maxWidth: 1280,
 }));
 
 const StyledGrid = muiStyled(Grid)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
   margin: "auto",
   width: "100%",
   justifyContent: "left",
@@ -48,7 +45,6 @@ const StyledGrid = muiStyled(Grid)(({ theme }) => ({
 }));
 
 const StyledLink = muiStyled(Link)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
   marginRight: theme.spacing(1),
   textDecoration: "none",
   "&:hover": {

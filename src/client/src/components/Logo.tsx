@@ -1,10 +1,10 @@
 import React from "react";
-import styled from "styled-components";
+import { Paper, styled as muiStyled } from "@mui/material";
 
-const StyledIcon = styled.div`
-  filter: invert(100%) sepia(0%) saturate(7471%) hue-rotate(84deg)
-    brightness(100%) contrast(100%);
-`;
+const StyledIcon = muiStyled(Paper)(({ theme }) => ({
+  background: "transparent",
+  filter: 'invert(15%) sepia(45%) saturate(4372%) hue-rotate(347deg) brightness(91%) contrast(122%)',
+}));
 
 type Props = {
   height?: number;
@@ -12,7 +12,7 @@ type Props = {
 
 export default function Logo({ height = 40 }: Props = {}) {
   return (
-    <StyledIcon>
+    <StyledIcon elevation={0}>
       <img src="logo.svg" alt="logo" height={height} />
     </StyledIcon>
   );
