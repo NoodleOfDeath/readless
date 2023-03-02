@@ -130,7 +130,7 @@ export default function Post({
       <StyledCard>
         <StyledCardHeader
           consumptionMode={consumptionMode}
-          title={source?.originalTitle}
+          title={source?.title}
           subheader={
             <Stack>
               {createdAt}
