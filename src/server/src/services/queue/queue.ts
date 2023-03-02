@@ -1,5 +1,5 @@
 import { BaseJobOptions, Job, Queue, QueueOptions, Worker as BullMQWorker, WorkerOptions } from 'bullmq';
-import IORedis from 'ioredis';
+import IORedis, { RedisOptions } from 'ioredis';
 import { BaseService } from '../base';
 
 /** Dummy class to make TS happy */
@@ -7,6 +7,9 @@ export class QueueProps<DataType = {}, ReturnType = {}, NameType extends string 
   name: NameType;
   data?: DataType;
   resp?: ReturnType;
+  queueOptions?: QueueOptions;
+  jobOptions?: BaseJobOptions;
+  redisOptions?: RedisOptions;
   constructor(name: NameType) {
     this.name = name;
   }
@@ -19,21 +22,32 @@ export const QUEUES = {
 } as const;
 
 export type QueueServiceOptions = QueueOptions & {
-  redisClient: IORedis;
+  client: IORedis;
+  redisOptions: RedisOptions;
 };
+
+export const redisClient = (
+  connectionString = process.env.REDIS_CONNECTION_STRING,
+  { maxRetriesPerRequest = null, ...opts }: RedisOptions = {},
+) =>
+  new IORedis(connectionString, {
+    maxRetriesPerRequest,
+    ...opts,
+  });
 
 export class QueueService extends BaseService {
   defaultJobOptions: BaseJobOptions;
-  redisClient: IORedis;
+  client: IORedis;
   queues: { [key: string]: Queue } = {};
 
   constructor({
     defaultJobOptions,
-    redisClient = new IORedis(process.env.REDIS_CONNECTION_STRING),
+    redisOptions,
+    client = redisClient(undefined, redisOptions),
   }: Partial<QueueServiceOptions> = {}) {
     super();
     this.defaultJobOptions = defaultJobOptions;
-    this.redisClient = redisClient;
+    this.client = client;
   }
 
   async dispatch<DataType, ReturnType, NameType extends string = string>(
@@ -46,7 +60,7 @@ export class QueueService extends BaseService {
       (this.queues[jobQueue.name] as Queue<DataType>) ??
       new Queue<DataType, ReturnType, NameType>(jobQueue.name, {
         defaultJobOptions: this.defaultJobOptions,
-        connection: this.redisClient,
+        connection: this.client,
       });
     await queue.add(jobName, payload, options);
     this.queues[jobQueue.name] = queue;
@@ -57,7 +71,7 @@ export class QueueService extends BaseService {
   ): Queue<DataType> {
     return (
       (this.queues[jobQueue.name] as Queue<DataType>) ??
-      new Queue<DataType>(jobQueue.name, { defaultJobOptions: this.defaultJobOptions, connection: this.redisClient })
+      new Queue<DataType>(jobQueue.name, { defaultJobOptions: this.defaultJobOptions, connection: this.client })
     );
   }
 }
@@ -71,7 +85,7 @@ export class Worker<DataType, ReturnType, NameType extends string = string> exte
 
   get queue() {
     return new Queue<DataType, ReturnType, NameType>(this.queueProps.name, {
-      connection: new IORedis(process.env.REDIS_CONNECTION_STRING),
+      connection: redisClient(),
     });
   }
 
@@ -80,7 +94,7 @@ export class Worker<DataType, ReturnType, NameType extends string = string> exte
     handler: (job: Job<DataType, ReturnType, NameType>) => Promise<ReturnType>,
     options?: WorkerOptions,
   ) {
-    super(queueProps.name, handler, { ...options, connection: new IORedis(process.env.REDIS_CONNECTION_STRING) });
+    super(queueProps.name, handler, { ...options, connection: redisClient() });
     this.queueProps = queueProps;
   }
 }

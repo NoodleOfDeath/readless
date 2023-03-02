@@ -28,10 +28,10 @@ spec:
           env:
             - name: CORS_ORIGIN
               value: "$CORS_ORIGIN"
-            - name: FETCH_RATE_LIMIT
-              value: "$FETCH_RATE_LIMIT"
-            - name: FETCH_INTERVAL_MS
-              value: "$FETCH_INTERVAL_MS"
+            - name: WORKER_FETCH_RATE_LIMIT
+              value: "$WORKER_FETCH_RATE_LIMIT"
+            - name: WORKER_FETCH_INTERVAL_MS
+              value: "$WORKER_FETCH_INTERVAL_MS"
             - name: OPENAI_API_KEY
               value: "$OPENAI_API_KEY"
             - name: PG_CONNECTION_STRING

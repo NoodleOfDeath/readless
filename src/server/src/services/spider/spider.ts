@@ -51,7 +51,7 @@ export class SpiderService extends BaseService {
       const loot = new Loot({ url, text });
       return loot;
     } catch (e) {
-      console.error(e);
+      throw e;
     }
   }
 
@@ -73,7 +73,7 @@ export class SpiderService extends BaseService {
       if (!extract_rules) return data;
       return mappedScrapeLoot(data as ScrapeResponse<T>);
     } catch (e) {
-      console.error(e);
+      throw e;
     }
   }
 }

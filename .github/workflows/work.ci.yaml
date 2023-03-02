@@ -55,8 +55,8 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
-      FETCH_RATE_LIMIT: ${{ vars.FETCH_RATE_LIMIT }}
-      FETCH_INTERVAL_MS: ${{ vars.FETCH_INTERVAL_MS }}
+      WORKER_FETCH_RATE_LIMIT: ${{ vars.WORKER_FETCH_RATE_LIMIT }}
+      WORKER_FETCH_INTERVAL_MS: ${{ vars.WORKER_FETCH_INTERVAL_MS }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
       K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
