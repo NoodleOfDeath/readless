@@ -11,7 +11,8 @@ COPY tsconfig.build.json ./
 
 FROM pre-build as build
 RUN pnpm run build:api
-COPY deps/_tiktoken_bg.wasm ./dist
+# tiktoken hack 🙄
+RUN cp $(for f in node_modules/.pnpm/@dqbd+tiktoken*; do echo $f; done | sort -r | xargs | awk '{print $1}')/node_modules/@dqbd/tiktoken/dist/node/_tiktoken_bg.wasm ./dist
 
 FROM build as api
 CMD pnpm run start:api
