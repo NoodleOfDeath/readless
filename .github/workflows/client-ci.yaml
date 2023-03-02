@@ -39,6 +39,8 @@ jobs:
         with:
           ssh-key: ${{ secrets.GIT_SSH_KEY }}
           submodules: recursive
+      - name: install pnpm
+        run: npm i -g pnpm 
       - name: Build
         run: |
           cd $WORKING_DIR && \
