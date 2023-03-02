@@ -53,7 +53,7 @@ export default function HomePage() {
     api
       .getSources({ 
         filter: searchText,
-        pageSize, m
+        pageSize, 
         page: 0,
       })
       .then((response) => {
