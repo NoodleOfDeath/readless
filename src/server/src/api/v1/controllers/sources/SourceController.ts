@@ -23,7 +23,12 @@ export class SourceController {
   ): Promise<SourceAttr[]> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
-      where: {
+      limit: pageSize,
+      offset: offset,
+      order: [['createdAt', 'DESC']],
+    };
+    if (filter.replace(/\s+/g, '')) {
+      options.where = {
         [Op.or]: [
           { title: { [Op.iRegexp]: filter } },
           { alternateTitle: { [Op.iRegexp]: filter } },
@@ -33,11 +38,8 @@ export class SourceController {
           { url: { [Op.iRegexp]: filter } },
           { tags: { [Op.contains]: [filter] } },
         ],
-      },
-      limit: pageSize,
-      offset: offset,
-      order: [['createdAt', 'DESC']],
-    };
+      };
+    }
     const sources = await Source.findAndCountAll(options);
     return sources.rows;
   }
