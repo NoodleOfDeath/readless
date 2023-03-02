@@ -15,7 +15,7 @@ export class QueueProps<DataType = {}, ReturnType = {}, NameType extends string 
   }
 }
 
-export type SiteMapJobData = { id: number; name: string; url: string };
+export type SiteMapJobData = { id: number; name: string; url: string; force?: boolean };
 
 export const QUEUES = {
   siteMaps: new QueueProps<SiteMapJobData>('siteMaps'),

@@ -1,3 +1,4 @@
+import { ReadAndSummarizeSourceOptions } from './types';
 import { Op } from 'sequelize';
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
@@ -16,12 +17,16 @@ function applyFilter(filter?: string) {
   return {
     [Op.or]: [
       { title: { [Op.iRegexp]: filter } },
-      { alternateTitle: { [Op.iRegexp]: filter } },
+      { originalTitle: { [Op.iRegexp]: filter } },
+      { text: { [Op.iRegexp]: filter } },
       { abridged: { [Op.iRegexp]: filter } },
+      { summary: { [Op.iRegexp]: filter } },
+      { shortSummary: { [Op.iRegexp]: filter } },
+      { bullets: { [Op.contains]: [filter] } },
       { category: { [Op.iRegexp]: filter } },
       { subcategory: { [Op.iRegexp]: filter } },
-      { url: { [Op.iRegexp]: filter } },
       { tags: { [Op.contains]: [filter] } },
+      { url: { [Op.iRegexp]: filter } },
     ],
   };
 }
@@ -121,13 +126,17 @@ export class SourceController {
 
   public async readAndSummarizeSource(
     { url }: ReadAndSummarizeSourcePayload,
-    onProgress?: (progress: number) => void,
+    { onProgress, force }: ReadAndSummarizeSourceOptions = {},
   ): Promise<SourceAttributes> {
     try {
-      const existingSource = await Source.findOne({ where: { url } });
-      if (existingSource) {
-        console.log(`Source already exists for ${url}`);
-        return existingSource;
+      if (!force) {
+        const existingSource = await Source.findOne({ where: { url } });
+        if (existingSource) {
+          console.log(`Source already exists for ${url}`);
+          return existingSource;
+        }
+      } else {
+        console.log(`Forcing source rewrite for ${url}`);
       }
       // fetch web content with the spider
       const spider = new SpiderService();
@@ -140,20 +149,25 @@ export class SourceController {
       // create the prompt action map to be sent to chatgpt
       const sourceInfo = Source.json({
         url: url,
-        title: scrapeLoot.title || loot.title,
-        text: scrapeLoot.text || loot.filteredText,
+        originalTitle: scrapeLoot.title || loot.title,
         rawText: loot.text,
+        filteredText: scrapeLoot.text || loot.filteredText,
       });
       const prompts: Prompt[] = [
         {
-          text: `Please give this article a new title relevant to its content no longer than 255 characters:\n\n${
-            scrapeLoot.text || loot.filteredText
-          }`,
-          action: (reply) => (sourceInfo.alternateTitle = reply.text),
+          text: `Please give this article a new title relevant to its content no longer than 255 characters:\n\n${sourceInfo.filteredText}`,
+          action: (reply) => (sourceInfo.title = reply.text),
         },
         {
           text: [
-            `Please summarize the same article using between 300 and 800 words.`,
+            `Please summarize the same article using between 600 and 1500 words.`,
+            `Please do not use phrases like "the article".`,
+          ].join(' '),
+          action: (reply) => (sourceInfo.text = reply.text),
+        },
+        {
+          text: [
+            `Please summarize the same article using between 300 and 600 words.`,
             `Please do not use phrases like "the article".`,
           ].join(' '),
           action: (reply) => (sourceInfo.abridged = reply.text),
@@ -190,6 +204,16 @@ export class SourceController {
           text: `Please provide a one word subcategory for this article`,
           action: (reply) =>
             (sourceInfo.subcategory = reply.text.replace(/^subcategory:\s*/i, '').replace(/\.$/, '')).trim(),
+        },
+        {
+          text: `Finally, please provide 5 concise bullet point sentences no longer than 10 words each for this article`,
+          action: (reply) => {
+            sourceInfo.bullets = reply.text
+              .replace(/^bullets:\s*/i, '')
+              .replace(/\.$/, '')
+              .split(',')
+              .map((bullet) => bullet.trim());
+          },
         },
       ];
       // initialize chatgpt service and send the prompt

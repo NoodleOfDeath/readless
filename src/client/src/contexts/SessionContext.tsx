@@ -1,5 +1,6 @@
 import React from "react";
 import Cookies from "js-cookie";
+import { useSearchParams } from "react-router-dom";
 import { PaletteMode, Theme, useMediaQuery } from "@mui/material";
 import { ConsumptionMode } from "@/components/Post";
 
@@ -10,22 +11,28 @@ export type Preferences = {
   consumptionMode?: ConsumptionMode;
 };
 
-export type SearchCache = {
-  searchText?: string;
-  searchOptions: string[];
+export type SetSearchTextOptions = {
+  clearSearchParams?: boolean;
 };
 
 export type Session = {
   theme: Theme;
   preferences: Preferences;
-  searchCache: SearchCache;
+  displayMode?: PaletteMode;
+  consumptionMode?: ConsumptionMode;
+  searchText: string;
+  searchOptions: string[];
   setPreference: (
     key: keyof Preferences,
     value: Preferences[keyof Preferences]
   ) => void;
-  setConsumptionMode: (consumptionMode: ConsumptionMode) => void;
-  setSearchText: (searchText: string) => void;
-  setSearchOptions: (searchOptions: string[]) => void;
+  setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode>>;
+  setConsumptionMode: React.Dispatch<React.SetStateAction<ConsumptionMode>>;
+  setSearchText: (
+    state: React.SetStateAction<string>,
+    opts?: SetSearchTextOptions
+  ) => void;
+  setSearchOptions: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 type Props = React.PropsWithChildren<{}>;
@@ -33,8 +40,12 @@ type Props = React.PropsWithChildren<{}>;
 export const NULL_SESSION: Session = {
   theme: loadTheme(),
   preferences: {},
-  searchCache: { searchText: "", searchOptions: [] },
+  displayMode: "light",
+  consumptionMode: "concise",
+  searchText: "",
+  searchOptions: [],
   setPreference: () => {},
+  setDisplayMode: () => {},
   setConsumptionMode: () => {},
   setSearchText: () => {},
   setSearchOptions: () => {},
@@ -50,17 +61,23 @@ export const DEFAULT_SESSION_DURATION = 1000 * 60 * 60 * 24 * 2;
 export const SessionContext = React.createContext(NULL_SESSION);
 
 export function SessionContextProvider({ children }: Props) {
+  const [_, setSearchParams] = useSearchParams();
   const isDarkModeEnabled = useMediaQuery("(prefers-color-scheme: dark)");
 
   const [theme, setTheme] = React.useState(
     loadTheme(isDarkModeEnabled ? "dark" : "light")
   );
   const [preferences, setPreferences] = React.useState<Preferences>({});
-  const [searchCache, setSearchCache] = React.useState<SearchCache>({
-    searchText: "",
-    searchOptions: [],
-  });
 
+  const [displayMode, setDisplayMode] = React.useState<PaletteMode>(
+    isDarkModeEnabled ? "dark" : "light"
+  );
+  const [consumptionMode, setConsumptionMode] =
+    React.useState<ConsumptionMode>("concise");
+  const [searchText, setSearchText] = React.useState("");
+  const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
+
+  // Convenience function to set a preference
   const setPreference = <Key extends keyof Preferences>(
     key: Key,
     value: Preferences[Key]
@@ -68,41 +85,63 @@ export function SessionContextProvider({ children }: Props) {
     setPreferences((preferences) => {
       const newPrefs = {
         ...preferences,
+        [key]: value,
       };
-      newPrefs[key] = value;
       return (preferences = newPrefs);
     });
   };
 
+  // Load cookies on mount
   React.useEffect(() => {
     setPreferences(JSON.parse(Cookies.get(COOKIES.preferences) || "{}"));
   }, []);
 
+  // Update theme when system theme changes
   React.useEffect(() => {
-    const displayMode =
-      preferences.displayMode || (isDarkModeEnabled ? "dark" : "light");
+    setTheme(loadTheme(isDarkModeEnabled ? "dark" : "light"));
+  }, [isDarkModeEnabled]);
+
+  // Update theme when user preference changes
+  React.useEffect(() => {
+    setPreference("displayMode", displayMode);
     setTheme(loadTheme(displayMode));
+  }, [displayMode]);
+
+  // Update consumption mode when user preference changes
+  React.useEffect(() => {
+    setPreference("consumptionMode", consumptionMode);
+  }, [consumptionMode]);
+
+  // Save preferences as cookie when they change
+  React.useEffect(() => {
     Cookies.set(COOKIES.preferences, JSON.stringify(preferences), {
       path: "/",
       expires: DEFAULT_SESSION_DURATION,
     });
-  }, [isDarkModeEnabled, preferences]);
+  }, [preferences]);
 
   return (
     <SessionContext.Provider
       value={{
         theme,
         preferences,
-        searchCache: searchCache,
+        displayMode,
+        consumptionMode,
+        searchText,
+        searchOptions,
         setPreference,
-        setConsumptionMode: (mode) => setPreference("consumptionMode", mode),
-        setSearchText: (text) =>
-          setSearchCache((prev) => ({ ...prev, searchText: text })),
-        setSearchOptions: (options) =>
-          setSearchCache((prev) => ({
-            ...prev,
-            searchOptions: options,
-          })),
+        setDisplayMode,
+        setConsumptionMode,
+        setSearchText: (
+          state,
+          { clearSearchParams }: SetSearchTextOptions = {}
+        ) => {
+          setSearchText(state);
+          if (clearSearchParams) {
+            setSearchParams({});
+          }
+        },
+        setSearchOptions,
       }}
     >
       {children}

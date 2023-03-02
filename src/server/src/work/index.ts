@@ -3,7 +3,7 @@ import { SourceController } from '../api/v1/controllers';
 import { DBService, QUEUES, Worker } from '../services';
 
 /** Fetch rate per hour */
-const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 2;
+const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 2; // 2 for dev and testing
 const WORKER_FETCH_INTERVAL_MS = process.env.WORKER_FETCH_INTERVAL_MS
   ? Number(process.env.WORKER_FETCH_INTERVAL_MS)
   : 1000 * 60 * 60 * 24; // 24 hours
@@ -22,19 +22,26 @@ export async function main() {
         QUEUES.siteMaps,
         async (job) => {
           try {
-            const { url } = job.data;
-            const existingSource = await Source.findOne({
-              attributes: ['id'],
-              where: { url },
-            });
-            if (existingSource) {
-              console.log(`Source ${url} already processed. Skipping`);
-              return existingSource;
+            const { url, force } = job.data;
+            if (!force) {
+              const existingSource = await Source.findOne({
+                attributes: ['id'],
+                where: { url },
+              });
+              if (existingSource) {
+                console.log(`Source ${url} has already been processed. Use the force property to force a rewrite.`);
+                return existingSource;
+              }
             }
             const controller = new SourceController();
-            const source = await controller.readAndSummarizeSource({ url }, (progress) => {
-              job.updateProgress(progress);
-            });
+            const source = await controller.readAndSummarizeSource(
+              { url },
+              {
+                onProgress: (progress) => {
+                  job.updateProgress(progress);
+                },
+              },
+            );
             return source;
           } catch (e) {
             console.error(e);

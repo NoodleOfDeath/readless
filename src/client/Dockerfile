@@ -9,6 +9,7 @@ COPY src ./src
 COPY public ./public
 COPY tsconfig.json ./
 COPY config-overrides.js ./
+# ensure CI runs pnpm run swagger so this file exists
 COPY swagger.json ./
 RUN pnpm run gen
 

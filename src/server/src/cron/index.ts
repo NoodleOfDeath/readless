@@ -28,10 +28,6 @@ async function pollForNews() {
     const queue = new QueueService({
       defaultJobOptions: {
         lifo: true,
-        removeOnComplete: {
-          age: 360_000,
-          count: 0,
-        },
       },
     });
     for (const outlet of outlets) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack, styled as muiStyled } from "@mui/material";
-import ConsumptionModeSelector from "@/pages/home/ConsumptionModeSelector";
-import SearchBar from "@/pages/home/SearchBar";
+import ConsumptionModeSelector from "@/pages/search/ConsumptionModeSelector";
+import SearchBar from "@/pages/search/SearchBar";
 
 const StyledStack = muiStyled(Stack)(({ theme }) => ({
   width: "100%",

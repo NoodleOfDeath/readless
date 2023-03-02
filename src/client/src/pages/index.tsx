@@ -4,6 +4,7 @@ import ContactPage from "@/pages/contact/ContactPage";
 import Error404NotFoundPage from "@/pages/errors/Error404NotFoundPage";
 import HomePage from "@/pages/home/HomePage";
 import PrivacyPage from "@/pages/privacy/PrivacyPage";
+import SearchPage from "@/pages/search/SearchPage";
 import TermsPage from "@/pages/terms/TermsPage";
 
 export type Route = {
@@ -28,6 +29,10 @@ export const routes: Route[] = [
   {
     path: "/privacy",
     element: <PrivacyPage />,
+  },
+  {
+    path: "/search",
+    element: <SearchPage />,
   },
   {
     path: "/terms",

@@ -8,21 +8,21 @@ export type Attr<Model, K extends keyof Model> = {
 
 export type PostAttributes = DatedAttributes & {
   text: string;
-  tags: string[];
   abridged: string;
   summary: string;
   shortSummary: string;
+  bullets: string[];
 };
 
 export type PostCreationAttributes = DatedAttributes & {
   text: string;
-  tags: string[];
   abridged: string;
   summary: string;
   shortSummary: string;
+  bullets: string[];
 };
 
-export type PostAttr = Attr<Post, (typeof POST_ATTRS)[number]>;
+export type PostAttr = Attr<Post, typeof POST_ATTRS[number]>;
 
 export abstract class Post<
     A extends PostAttributes = PostAttributes,
@@ -46,12 +46,6 @@ export abstract class Post<
   text: string;
 
   @Column({
-    type: DataType.ARRAY(DataType.STRING),
-    allowNull: false,
-  })
-  tags: string[];
-
-  @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
@@ -68,21 +62,29 @@ export abstract class Post<
     allowNull: false,
   })
   shortSummary: string;
+
+  @Column({
+    type: DataType.ARRAY(DataType.STRING(1024)),
+    defaultValue: [],
+  })
+  bullets: string[];
 }
 
 export type TitledCategorizedPostAttributes = PostAttributes & {
   title: string;
   category: string;
   subcategory: string;
+  tags: string[];
 };
 
 export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
   title: string;
   category: string;
   subcategory: string;
+  tags: string[];
 };
 
-export type TitledCategorizedPostAttr = Attr<TitledCategorizedPost, (typeof TITLED_CATEGORIZED_POST_ATTRS)[number]>;
+export type TitledCategorizedPostAttr = Attr<TitledCategorizedPost, typeof TITLED_CATEGORIZED_POST_ATTRS[number]>;
 
 export abstract class TitledCategorizedPost<
     A extends TitledCategorizedPostAttributes = TitledCategorizedPostAttributes,
@@ -112,4 +114,10 @@ export abstract class TitledCategorizedPost<
     allowNull: false,
   })
   subcategory: string;
+
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    defaultValue: [],
+  })
+  tags: string[];
 }

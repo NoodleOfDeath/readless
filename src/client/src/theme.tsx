@@ -12,10 +12,10 @@ export const loadTheme = (mode: PaletteMode = "light") => {
         main: "#002984",
       },
       text: {
-        primary: "#fff",
+        primary: lightMode ? "#000" : "#fff",
       },
       background: {
-        default: "#031925",
+        default: lightMode ? "#eee" : "#031925",
       },
     },
     typography: {

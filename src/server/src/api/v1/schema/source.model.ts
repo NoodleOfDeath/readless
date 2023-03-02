@@ -11,16 +11,18 @@ import { Attachment } from './attachment.model';
 export type SourceAttributes = TitledCategorizedPostAttributes & {
   url: string;
   rawText: string;
-  alternateTitle: string;
+  filteredText: string;
+  originalTitle: string;
 };
 
 export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes & {
   url: string;
   rawText: string;
-  alternateTitle: string;
+  filteredText: string;
+  originalTitle: string;
 };
 
-export type SourceAttr = Attr<Source, (typeof SOURCE_ATTRS)[number]>;
+export type SourceAttr = Attr<Source, typeof SOURCE_ATTRS[number]>;
 
 export type ReadAndSummarizeSourcePayload = {
   url: string;
@@ -54,10 +56,16 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
   rawText: string;
 
   @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+  })
+  filteredText: string;
+
+  @Column({
     type: DataType.STRING(1024),
     allowNull: false,
   })
-  alternateTitle: string;
+  originalTitle: string;
 
   get attachments(): Promise<Attachment[]> {
     return Attachment.findAll({

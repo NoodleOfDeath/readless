@@ -42,6 +42,7 @@ jobs:
       - name: Build
         run: |
           cd $WORKING_DIR && \
+          pnpm run swagger && \
           docker build . --file Dockerfile --tag $IMAGE:latest \
             --build-arg API_ENDPOINT=$API_ENDPOINT \
             --build-arg GENERATE_SOURCEMAP=$GENERATE_SOURCEMAP

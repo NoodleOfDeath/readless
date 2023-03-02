@@ -25,31 +25,27 @@ const StyledAppContent = styled.div`
 `;
 
 function App() {
-  
   const { theme } = React.useContext(SessionContext);
-  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <StyledAppContainer>
-        <BrowserRouter>
-          <Header />
-          <StyledAppContent>
-            <Routes>
-              {routes.map((route) => {
-                return (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    element={route.element}
-                  />
-                );
-              })}
-            </Routes>
-          </StyledAppContent>
-          <Footer />
-          <CookieConsent />
-        </BrowserRouter>
+        <Header />
+        <StyledAppContent>
+          <Routes>
+            {routes.map((route) => {
+              return (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={route.element}
+                />
+              );
+            })}
+          </Routes>
+        </StyledAppContent>
+        <Footer />
+        <CookieConsent />
       </StyledAppContainer>
     </ThemeProvider>
   );

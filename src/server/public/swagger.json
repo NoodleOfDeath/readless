@@ -17,12 +17,6 @@
 							{}
 						]
 					},
-					"tags": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
 					"abridged": {
 						"type": "string"
 					},
@@ -31,6 +25,12 @@
 					},
 					"shortSummary": {
 						"type": "string"
+					},
+					"bullets": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"createdAt": {
 						"anyOf": [
@@ -49,16 +49,23 @@
 					},
 					"subcategory": {
 						"type": "string"
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
-					"tags",
 					"abridged",
 					"summary",
 					"shortSummary",
+					"bullets",
 					"title",
 					"category",
-					"subcategory"
+					"subcategory",
+					"tags"
 				],
 				"type": "object"
 			},
@@ -93,6 +100,12 @@
 					},
 					{
 						"properties": {
+							"bullets": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
 							"shortSummary": {
 								"type": "string"
 							},
@@ -102,21 +115,15 @@
 							"abridged": {
 								"type": "string"
 							},
-							"tags": {
-								"items": {
-									"type": "string"
-								},
-								"type": "array"
-							},
 							"text": {
 								"type": "string"
 							}
 						},
 						"required": [
+							"bullets",
 							"shortSummary",
 							"summary",
 							"abridged",
-							"tags",
 							"text"
 						],
 						"type": "object"
@@ -130,6 +137,12 @@
 					},
 					{
 						"properties": {
+							"tags": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
 							"subcategory": {
 								"type": "string"
 							},
@@ -141,6 +154,7 @@
 							}
 						},
 						"required": [
+							"tags",
 							"subcategory",
 							"category",
 							"title"
@@ -219,7 +233,7 @@
 			"ReferralCreationAttributes": {
 				"$ref": "#/components/schemas/ReferralAttributes"
 			},
-			"Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_": {
+			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
 				"properties": {
 					"id": {
 						"anyOf": [
@@ -230,12 +244,6 @@
 							{}
 						]
 					},
-					"tags": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
 					"abridged": {
 						"type": "string"
 					},
@@ -244,6 +252,12 @@
 					},
 					"shortSummary": {
 						"type": "string"
+					},
+					"bullets": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"createdAt": {
 						"anyOf": [
@@ -263,28 +277,35 @@
 					"subcategory": {
 						"type": "string"
 					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"url": {
 						"type": "string"
 					},
-					"alternateTitle": {
+					"originalTitle": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"tags",
 					"abridged",
 					"summary",
 					"shortSummary",
+					"bullets",
 					"title",
 					"category",
 					"subcategory",
+					"tags",
 					"url",
-					"alternateTitle"
+					"originalTitle"
 				],
 				"type": "object"
 			},
 			"SourceAttr": {
-				"$ref": "#/components/schemas/Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_"
+				"$ref": "#/components/schemas/Attr_Source.typeofSOURCE_ATTRS-at-number_"
 			},
 			"SourceAttributes": {
 				"allOf": [
@@ -293,7 +314,10 @@
 					},
 					{
 						"properties": {
-							"alternateTitle": {
+							"originalTitle": {
+								"type": "string"
+							},
+							"filteredText": {
 								"type": "string"
 							},
 							"rawText": {
@@ -304,7 +328,8 @@
 							}
 						},
 						"required": [
-							"alternateTitle",
+							"originalTitle",
+							"filteredText",
 							"rawText",
 							"url"
 						],

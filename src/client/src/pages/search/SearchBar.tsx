@@ -12,10 +12,8 @@ const StyledAutocomplete = muiStyled(Autocomplete)(({ theme }) => ({
 }));
 
 export default function SearchBar() {
-  const {
-    searchCache: { searchText, searchOptions },
-    setSearchText,
-  } = React.useContext(SessionContext);
+  const { searchText, searchOptions, setSearchText } =
+    React.useContext(SessionContext);
 
   const computedOptions = React.useMemo(
     () => [...searchOptions, searchText],
@@ -28,12 +26,12 @@ export default function SearchBar() {
       placeholder="Search the Skoop..."
       value={searchText}
       options={computedOptions}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          onChange={(event) => setSearchText(event.currentTarget.value)}
-        />
-      )}
+      onChange={(_, value, reason) =>
+        reason === "clear"
+          ? setSearchText("", { clearSearchParams: true })
+          : setSearchText(value as string)
+      }
+      renderInput={(params) => <TextField {...params} />}
     />
   );
 }
