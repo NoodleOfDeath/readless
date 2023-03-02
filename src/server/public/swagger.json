@@ -6,7 +6,7 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Attr_Article.typeofARTICLE_ATTRS-at-number_": {
+			"Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_": {
 				"properties": {
 					"id": {
 						"anyOf": [
@@ -63,7 +63,7 @@
 				"type": "object"
 			},
 			"ArticleAttr": {
-				"$ref": "#/components/schemas/Attr_Article.typeofARTICLE_ATTRS-at-number_"
+				"$ref": "#/components/schemas/Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_"
 			},
 			"DatedAttributes": {
 				"properties": {
@@ -219,7 +219,7 @@
 			"ReferralCreationAttributes": {
 				"$ref": "#/components/schemas/ReferralAttributes"
 			},
-			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
+			"Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_": {
 				"properties": {
 					"id": {
 						"anyOf": [
@@ -284,7 +284,7 @@
 				"type": "object"
 			},
 			"SourceAttr": {
-				"$ref": "#/components/schemas/Attr_Source.typeofSOURCE_ATTRS-at-number_"
+				"$ref": "#/components/schemas/Attr_Source.(typeofSOURCE_ATTRS)%5Bnumber%5D_"
 			},
 			"SourceAttributes": {
 				"allOf": [
@@ -342,10 +342,23 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/ArticleAttr"
+									"properties": {
+										"rows": {
+											"items": {
+												"$ref": "#/components/schemas/ArticleAttr"
+											},
+											"type": "array"
+										},
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
 									},
-									"type": "array"
+									"required": [
+										"rows",
+										"count"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -439,10 +452,23 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/ArticleAttr"
+									"properties": {
+										"rows": {
+											"items": {
+												"$ref": "#/components/schemas/ArticleAttr"
+											},
+											"type": "array"
+										},
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
 									},
-									"type": "array"
+									"required": [
+										"rows",
+										"count"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -510,10 +536,23 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/ArticleAttr"
+									"properties": {
+										"rows": {
+											"items": {
+												"$ref": "#/components/schemas/ArticleAttr"
+											},
+											"type": "array"
+										},
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
 									},
-									"type": "array"
+									"required": [
+										"rows",
+										"count"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -712,10 +751,23 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/SourceAttr"
+									"properties": {
+										"rows": {
+											"items": {
+												"$ref": "#/components/schemas/SourceAttr"
+											},
+											"type": "array"
+										},
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
 									},
-									"type": "array"
+									"required": [
+										"rows",
+										"count"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -805,10 +857,23 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/SourceAttr"
+									"properties": {
+										"rows": {
+											"items": {
+												"$ref": "#/components/schemas/SourceAttr"
+											},
+											"type": "array"
+										},
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
 									},
-									"type": "array"
+									"required": [
+										"rows",
+										"count"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -869,17 +934,30 @@
 		},
 		"/v1/sources/{category}/{subcategory}": {
 			"get": {
-				"operationId": "GetSourcesForCategoryAndSubCategory",
+				"operationId": "GetSourcesForCategoryAndSubcategory",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/SourceAttr"
+									"properties": {
+										"rows": {
+											"items": {
+												"$ref": "#/components/schemas/SourceAttr"
+											},
+											"type": "array"
+										},
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
 									},
-									"type": "array"
+									"required": [
+										"rows",
+										"count"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -948,7 +1026,7 @@
 		},
 		"/v1/sources/{category}/{subcategory}/{title}": {
 			"get": {
-				"operationId": "GetSourceForCategoryAndSubCategoryAndTitle",
+				"operationId": "GetSourceForCategoryAndSubcategoryAndTitle",
 				"responses": {
 					"200": {
 						"description": "Ok",

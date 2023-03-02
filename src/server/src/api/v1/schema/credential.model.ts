@@ -59,8 +59,7 @@ export class Credential<
     allowNull: false,
   })
   expires: Date;
-  
+
   @BelongsTo(() => User, 'userId')
   user: User;
-  
 }

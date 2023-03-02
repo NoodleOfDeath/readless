@@ -36,6 +36,7 @@ export default function HomePage() {
     searchCache: { searchText },
   } = React.useContext(SessionContext);
 
+  const [totalResults, setTotalResults] = React.useState<number>(0);
   const [recentSources, setRecentSources] = React.useState<SourceAttr[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [pageSize] = React.useState<number>(10);
@@ -51,16 +52,18 @@ export default function HomePage() {
     setRecentSources([]);
     setPage(1);
     api
-      .getSources({ 
+      .getSources({
         filter: searchText,
-        pageSize, 
+        pageSize,
         page: 0,
       })
       .then((response) => {
-        setRecentSources(response.data ?? []);
+        setTotalResults(response.data.count);
+        setRecentSources(response.data.rows);
       })
       .catch((error) => {
         console.error(error);
+        setTotalResults(0);
         setRecentSources([]);
       })
       .finally(() => {
@@ -70,14 +73,15 @@ export default function HomePage() {
 
   const loadMore = () => {
     api
-      .getSources({ 
+      .getSources({
         filter: searchText,
-        pageSize, 
+        pageSize,
         page,
       })
       .then((response) => {
         if (response.data) {
-          setRecentSources((prev) => [...prev, ...response.data]);
+          setTotalResults(response.data.count);
+          setRecentSources((prev) => [...prev, ...response.data.rows]);
           setPage((prev) => prev + 1);
         }
       })
@@ -102,7 +106,9 @@ export default function HomePage() {
           ))}
           {loading && <CircularProgress size={10} variant="indeterminate" />}
         </StyledGrid>
-        <Button onClick={() => loadMore()}>Load More</Button>
+        {totalResults > pageSize * page && (
+          <Button onClick={() => loadMore()}>Load More</Button>
+        )}
       </Stack>
     </Page>
   );

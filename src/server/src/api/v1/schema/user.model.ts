@@ -11,10 +11,7 @@ export type UserCreationAttributes = DatedAttributes & {};
   timestamps: true,
   paranoid: true,
 })
-export class User<
-    A extends UserAttributes = UserAttributes,
-    B extends UserCreationAttributes = UserCreationAttributes,
-  >
+export class User<A extends UserAttributes = UserAttributes, B extends UserCreationAttributes = UserCreationAttributes>
   extends Model<A, B>
   implements UserAttributes
 {
@@ -25,8 +22,7 @@ export class User<
   static json(defaults?: Partial<User>): Partial<User> {
     return defaults ?? {};
   }
-  
+
   @HasMany(() => UserAlias, 'userId')
   aliases: UserAlias[];
-  
 }

@@ -51,8 +51,7 @@ export class UserAlias<
     allowNull: false,
   })
   value: string;
-  
+
   @BelongsTo(() => User, 'userId')
   user: User;
-  
 }

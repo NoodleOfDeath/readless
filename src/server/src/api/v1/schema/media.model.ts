@@ -44,5 +44,4 @@ export class Media<
     allowNull: false,
   })
   url: string;
-  
 }

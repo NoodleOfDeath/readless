@@ -21,29 +21,27 @@ export type ReferralCreationAttributes = ReferralAttributes;
   paranoid: true,
 })
 export class Referral extends Model<ReferralAttributes, ReferralCreationAttributes> implements ReferralAttributes {
-  
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
   })
   referrerId: number;
-  
+
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
   referrer: string;
-  
+
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
   target: string;
-  
+
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
   userAgent: string;
-
 }

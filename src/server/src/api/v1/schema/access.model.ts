@@ -41,6 +41,5 @@ export class Access<
     type: DataType.TEXT,
     allowNull: false,
   })
-  scope: string; 
-  
+  scope: string;
 }

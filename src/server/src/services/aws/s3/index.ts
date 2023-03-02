@@ -4,11 +4,10 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { BaseService } from '../../base';
 
 export class S3Service extends BaseService {
-  
-  s3Client: S3Client; 
-  
+  s3Client: S3Client;
+
   constructor({
-    endpoint = 'https://theskoop.nyc3.digitaloceanspaces.com', 
+    endpoint = 'https://theskoop.nyc3.digitaloceanspaces.com',
     forcePathStyle = false,
     region = 'nyc3',
     credentials = {
@@ -24,14 +23,13 @@ export class S3Service extends BaseService {
       credentials,
     });
   }
-  
+
   async uploadObject(params: any) {
     try {
       const data = await this.s3Client.send(new PutObjectCommand(params));
       return data;
     } catch (err) {
-      console.log("Error", err);
+      console.log('Error', err);
     }
-  };
-  
+  }
 }

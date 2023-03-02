@@ -1,8 +1,22 @@
+import { Op } from 'sequelize';
 import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
 
 import { ChatGPTService, Prompt } from '../../../../services';
 import { Article, ArticleAttr, ArticleAttributes, ArticleCreationAttributes, Attachment } from '../../schema';
 import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
+
+function applyFilter(filter?: string) {
+  if (!filter) return undefined;
+  return {
+    [Op.or]: [
+      { title: { [Op.iRegexp]: filter } },
+      { abridged: { [Op.iRegexp]: filter } },
+      { category: { [Op.iRegexp]: filter } },
+      { subcategory: { [Op.iRegexp]: filter } },
+      { tags: { [Op.contains]: [filter] } },
+    ],
+  };
+}
 
 @Route('/v1/articles')
 @Tags('Articles')
@@ -13,15 +27,20 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<ArticleAttr[]> {
+  ): Promise<{
+    count: number;
+    rows: ArticleAttr[];
+  }> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
     };
-    const articles = await Article.findAndCountAll(options);
-    return articles.rows;
+    if (filter.replace(/\s+/g, '')) {
+      options.where = applyFilter(filter);
+    }
+    return await Article.findAndCountAll(options);
   }
 
   @Get('/:category/')
@@ -31,18 +50,20 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<ArticleAttr[]> {
+  ): Promise<{
+    count: number;
+    rows: ArticleAttr[];
+  }> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
       where: {
-        category,
+        [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f),
       },
     };
-    const articles = await Article.findAndCountAll(options);
-    return articles.rows;
+    return await Article.findAndCountAll(options);
   }
 
   @Get('/:category/:subcategory')
@@ -53,19 +74,20 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<ArticleAttr[]> {
+  ): Promise<{
+    count: number;
+    rows: ArticleAttr[];
+  }> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
       where: {
-        category,
-        subcategory,
+        [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f),
       },
     };
-    const articles = await Article.findAndCountAll(options);
-    return articles.rows;
+    return await Article.findAndCountAll(options);
   }
 
   @Get('/:category/:subcategory/:title')
@@ -81,8 +103,7 @@ export class ArticleController {
         title,
       },
     };
-    const article = await Article.findOne(options);
-    return article;
+    return await Article.findOne(options);
   }
 
   @Post('/')

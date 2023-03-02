@@ -14,10 +14,7 @@ export type RoleCreationAttributes = DatedAttributes & {
   timestamps: true,
   paranoid: true,
 })
-export class Role<
-    A extends RoleAttributes = RoleAttributes,
-    B extends RoleCreationAttributes = RoleCreationAttributes,
-  >
+export class Role<A extends RoleAttributes = RoleAttributes, B extends RoleCreationAttributes = RoleCreationAttributes>
   extends Model<A, B>
   implements RoleAttributes
 {
@@ -34,5 +31,4 @@ export class Role<
     allowNull: false,
   })
   name: string;
-  
 }

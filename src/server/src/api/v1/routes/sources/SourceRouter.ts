@@ -20,12 +20,15 @@ router.get(
     const { category, subcategory, title } = req.params;
     const { filter, pageSize = 10, page = 0, offset = page * pageSize } = req.query;
     const controller = new SourceController();
-    let response: SourceAttr[] | SourceAttributes = [];
+    let response: { count: number; rows: SourceAttr[] } | SourceAttributes = {
+      count: 0,
+      rows: [],
+    };
     try {
       if (category && subcategory && title) {
-        response = await controller.getSourceForCategoryAndSubCategoryAndTitle(category, subcategory, title);
+        response = await controller.getSourceForCategoryAndSubcategoryAndTitle(category, subcategory, title);
       } else if (category && subcategory) {
-        response = await controller.getSourcesForCategoryAndSubCategory(
+        response = await controller.getSourcesForCategoryAndSubcategory(
           category,
           subcategory,
           filter,

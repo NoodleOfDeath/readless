@@ -11,6 +11,21 @@ import {
 } from '../../schema';
 import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
 
+function applyFilter(filter?: string) {
+  if (!filter) return undefined;
+  return {
+    [Op.or]: [
+      { title: { [Op.iRegexp]: filter } },
+      { alternateTitle: { [Op.iRegexp]: filter } },
+      { abridged: { [Op.iRegexp]: filter } },
+      { category: { [Op.iRegexp]: filter } },
+      { subcategory: { [Op.iRegexp]: filter } },
+      { url: { [Op.iRegexp]: filter } },
+      { tags: { [Op.contains]: [filter] } },
+    ],
+  };
+}
+
 @Route('/v1/sources')
 @Tags('Sources')
 export class SourceController {
@@ -20,7 +35,10 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<SourceAttr[]> {
+  ): Promise<{
+    count: number;
+    rows: SourceAttr[];
+  }> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
@@ -28,20 +46,9 @@ export class SourceController {
       order: [['createdAt', 'DESC']],
     };
     if (filter.replace(/\s+/g, '')) {
-      options.where = {
-        [Op.or]: [
-          { title: { [Op.iRegexp]: filter } },
-          { alternateTitle: { [Op.iRegexp]: filter } },
-          { abridged: { [Op.iRegexp]: filter } },
-          { category: { [Op.iRegexp]: filter } },
-          { subcategory: { [Op.iRegexp]: filter } },
-          { url: { [Op.iRegexp]: filter } },
-          { tags: { [Op.contains]: [filter] } },
-        ],
-      };
+      options.where = applyFilter(filter);
     }
-    const sources = await Source.findAndCountAll(options);
-    return sources.rows;
+    return await Source.findAndCountAll(options);
   }
 
   @Get('/:category/')
@@ -51,45 +58,48 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<SourceAttr[]> {
+  ): Promise<{
+    count: number;
+    rows: SourceAttr[];
+  }> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
       where: {
-        category,
+        [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f),
       },
     };
-    const sources = await Source.findAndCountAll(options);
-    return sources.rows;
+    return await Source.findAndCountAll(options);
   }
 
   @Get('/:category/:subcategory')
-  public async getSourcesForCategoryAndSubCategory(
+  public async getSourcesForCategoryAndSubcategory(
     @Path() category: string,
     @Path() subcategory: string,
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-  ): Promise<SourceAttr[]> {
+  ): Promise<{
+    count: number;
+    rows: SourceAttr[];
+  }> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
       where: {
-        category,
-        subcategory,
+        [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f),
       },
     };
-    const sources = await Source.findAndCountAll(options);
-    return sources.rows;
+    return await Source.findAndCountAll(options);
   }
 
   @Get('/:category/:subcategory/:title')
-  public async getSourceForCategoryAndSubCategoryAndTitle(
+  public async getSourceForCategoryAndSubcategoryAndTitle(
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string,
@@ -101,8 +111,7 @@ export class SourceController {
         title,
       },
     };
-    const sources = await Source.findOne(options);
-    return sources;
+    return await Source.findOne(options);
   }
 
   @Post('/')

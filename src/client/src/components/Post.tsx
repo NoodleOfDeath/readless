@@ -15,6 +15,7 @@ import {
   styled as muiStyled,
   Chip,
 } from "@mui/material";
+import { SessionContext } from "@/contexts";
 
 export const CONSUMPTION_MODES = [
   "concise",

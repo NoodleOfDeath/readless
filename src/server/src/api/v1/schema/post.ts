@@ -22,7 +22,7 @@ export type PostCreationAttributes = DatedAttributes & {
   shortSummary: string;
 };
 
-export type PostAttr = Attr<Post, typeof POST_ATTRS[number]>;
+export type PostAttr = Attr<Post, (typeof POST_ATTRS)[number]>;
 
 export abstract class Post<
     A extends PostAttributes = PostAttributes,
@@ -82,7 +82,7 @@ export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
   subcategory: string;
 };
 
-export type TitledCategorizedPostAttr = Attr<TitledCategorizedPost, typeof TITLED_CATEGORIZED_POST_ATTRS[number]>;
+export type TitledCategorizedPostAttr = Attr<TitledCategorizedPost, (typeof TITLED_CATEGORIZED_POST_ATTRS)[number]>;
 
 export abstract class TitledCategorizedPost<
     A extends TitledCategorizedPostAttributes = TitledCategorizedPostAttributes,

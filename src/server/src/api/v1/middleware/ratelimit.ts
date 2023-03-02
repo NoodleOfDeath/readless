@@ -1,6 +1,6 @@
 import RateLimitMiddleware, { Options } from 'express-rate-limit';
 import RedisStore, { RedisReply } from 'rate-limit-redis';
-import IORedis from 'ioredis'; 
+import IORedis from 'ioredis';
 
 export type RateLimit = [max: number, windowMs: number];
 export type RateLimitOptions = Options & {
@@ -14,7 +14,7 @@ export type RateLimitString = `${number}${'every' | 'in' | 'per' | '/'}${number}
   | ('m' | 'min' | 'mins' | 'minute' | 'minutes')
   | ('h' | 'hr' | 'hrs' | 'hour' | 'hours')
   | ('d' | 'day' | 'days')}`;
-  
+
 export const DEFAULT_RATE_LIMIT: RateLimitString = '120 per 2 min'; // 120 requests per 2 minutes
 export const DEFAULT_WINDOW_MS = 2 * 60 * 1000;
 export const DEFAULT_MAX = 120;

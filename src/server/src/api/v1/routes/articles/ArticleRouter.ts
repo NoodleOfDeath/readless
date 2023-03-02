@@ -20,10 +20,13 @@ router.get(
     const { category, subcategory, title } = req.params;
     const { filter, pageSize = 10, page = 0, offset = 0 } = req.query;
     const controller = new ArticleController();
-    let response: ArticleAttr[] | ArticleAttributes = [];
+    let response: { count: number; rows: ArticleAttr[] } | ArticleAttributes = {
+      count: 0,
+      rows: [],
+    };
     try {
       if (category && subcategory && title) {
-        response = [await controller.getArticleForCategoryAndSubcategoryAndTitle(category, subcategory, title)];
+        response = await controller.getArticleForCategoryAndSubcategoryAndTitle(category, subcategory, title);
       } else if (category && subcategory) {
         response = await controller.getArticlesForCategoryAndSubcategory(
           category,

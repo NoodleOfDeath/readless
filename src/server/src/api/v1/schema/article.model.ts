@@ -11,7 +11,7 @@ import { Attachment } from './attachment.model';
 export type ArticleAttributes = TitledCategorizedPostAttributes & {};
 export type ArticleCreationAttributes = TitledCategorizedPostCreationAttributes & {};
 
-export type ArticleAttr = Attr<Article, typeof ARTICLE_ATTRS[number]>;
+export type ArticleAttr = Attr<Article, (typeof ARTICLE_ATTRS)[number]>;
 
 @Table({
   modelName: 'article',

@@ -20,7 +20,7 @@ export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes &
   alternateTitle: string;
 };
 
-export type SourceAttr = Attr<Source, typeof SOURCE_ATTRS[number]>;
+export type SourceAttr = Attr<Source, (typeof SOURCE_ATTRS)[number]>;
 
 export type ReadAndSummarizeSourcePayload = {
   url: string;
