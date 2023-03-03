@@ -42,7 +42,7 @@ function generateDynamicUrls(url: string, params?: SiteMapParams, index = -1): s
           default:
             if (params && !Number.isNaN(Number($1))) {
               const i = Number($1);
-              if (i === index + 1) return params;
+              if (i === index) return params;
             }
             return $0;
         }
