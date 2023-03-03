@@ -5,13 +5,6 @@
   "parserOptions": { "project": ["./tsconfig.json"] },
   "plugins": ["@typescript-eslint", "react-hooks"],
   "rules": {
-    "@typescript-eslint/strict-boolean-expressions": [
-      2,
-      {
-        "allowString": false,
-        "allowNumber": false
-      }
-    ],
     "react-hooks/rules-of-hooks": "error", // For checking rules of hooks
     "react-hooks/exhaustive-deps": "warn" // For checking hook dependencies
   },

@@ -3,6 +3,7 @@
   "ignore": [],
   "watch": [
     ".env",
+    ".eslintrc",
     "config-overrides.js",
     "nodemon.json",
     "package.json",

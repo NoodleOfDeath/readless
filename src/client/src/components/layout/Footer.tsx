@@ -8,7 +8,9 @@ import {
   Link,
   Stack,
   styled,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Icon from "@mdi/react";
 import { mdiFacebook, mdiInstagram, mdiTwitter } from "@mdi/js";
@@ -64,6 +66,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 export default function Footer() {
+  
+  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
+  
   return (
     <StyledFooter>
       <StyledStack>
@@ -72,11 +77,13 @@ export default function Footer() {
             Copyright &copy; {new Date().getFullYear()} TheSkoop
           </Typography>
           <Box flexGrow={1} />
-          <Stack direction="row" spacing={2}>
+          <Stack direction={mdAndUp ? "row" : "column"} spacing={2}>
             <Typography>Follow us on</Typography>
-            <Icon path={mdiFacebook} size={1} />
-            <Icon path={mdiInstagram} size={1} />
-            <Icon path={mdiTwitter} size={1} />
+            <Stack direction="row" spacing={1}>
+              <Icon path={mdiFacebook} size={1} />
+              <Icon path={mdiInstagram} size={1} />
+              <Icon path={mdiTwitter} size={1} />
+            </Stack>
           </Stack>
         </StyledHorizontalStack>
         <Divider variant="fullWidth" />

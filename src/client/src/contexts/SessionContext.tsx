@@ -33,7 +33,7 @@ export type Session = {
   setSearchOptions: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-type Props = React.PropsWithChildren<{}>;
+type Props = React.PropsWithChildren;
 
 export const NULL_SESSION: Session = {
   theme: loadTheme(),
@@ -42,10 +42,18 @@ export const NULL_SESSION: Session = {
   consumptionMode: "concise",
   searchText: "",
   searchOptions: [],
-  setDisplayMode: () => {},
-  setConsumptionMode: () => {},
-  setSearchText: () => {},
-  setSearchOptions: () => {},
+  setDisplayMode: () => {
+    /* placeholder function */
+  },
+  setConsumptionMode: () => {
+    /* placeholder function */
+  },
+  setSearchText: () => {
+    /* placeholder function */
+  },
+  setSearchOptions: () => {
+    /* placeholder function */
+  },
 };
 
 export const COOKIES = {
@@ -143,6 +151,7 @@ export function SessionContextProvider({ children }: Props) {
           if (clearSearchParams) {
             setSearchParams({});
           }
+          console.log(state);
         },
         setSearchOptions,
       }}

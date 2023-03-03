@@ -55,13 +55,15 @@ export default function TruncatedText({
   }, [children, maxCharCount, variant]);
 
   return (
-    <div>
-      {isTruncated ? truncatedText : children}
+    <>
+      <div onClick={() => setIsTruncated(!isTruncated)}>
+        {isTruncated ? truncatedText : children}
+      </div>
       {!isTruncated && showLessText && (
-        <StyledLink onClick={() => setIsTruncated(!isTruncated)}>
+        <StyledLink onClick={() => setIsTruncated(false)}>
           {showLessText}
         </StyledLink>
       )}
-    </div>
+    </>
   );
 }
