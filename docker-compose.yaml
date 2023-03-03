@@ -1,0 +1,76 @@
+services:
+  ui:
+    build:
+      context: .
+      dockerfile: src/client/Dockerfile
+    ports:
+      - "$PORT:$PORT"
+    env_file:
+      - src/client/.env
+
+  ui-local:
+    build:
+      context: .
+      dockerfile: src/client/Dockerfile.local
+    ports:
+      - "$PORT:$PORT"
+    env_file:
+      - src/client/.env
+    volumes:
+      - ./src/client:/home/node/app
+      - ./src/client/node_modules:/home/node/app/node_modules
+
+  api:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.api
+    ports:
+      - "$PORT:$PORT"
+    env_file:
+      - src/server/.env
+
+  api-local:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.api.local
+    ports:
+      - "$PORT:$PORT"
+    env_file:
+      - src/server/.env
+    volumes:
+      - ./src/server:/home/node/app
+      - ./src/server/node_modules:/home/node/app/node_modules
+
+  cron:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.cron
+    env_file:
+      - src/server/.env
+
+  cron-local:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.cron.local
+    env_file:
+      - src/server/.env
+    volumes:
+      - ./src/server:/home/node/app
+      - ./src/server/node_modules:/home/node/app/node_modules
+
+  worker:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.worker
+    env_file:
+      - src/server/.env
+
+  worker-local:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.worker.local
+    env_file:
+      - src/server/.env
+    volumes:
+      - ./src/server:/home/node/app
+      - ./src/server/node_modules:/home/node/app/node_modules

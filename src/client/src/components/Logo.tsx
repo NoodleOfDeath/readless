@@ -1,9 +1,10 @@
 import React from "react";
-import { Paper, styled as muiStyled } from "@mui/material";
+import { Paper, styled } from "@mui/material";
 
-const StyledIcon = muiStyled(Paper)(({ theme }) => ({
+const StyledIcon = styled(Paper)(({ theme }) => ({
   background: "transparent",
-  filter: 'invert(15%) sepia(45%) saturate(4372%) hue-rotate(347deg) brightness(91%) contrast(122%)',
+  filter:
+    "invert(15%) sepia(45%) saturate(4372%) hue-rotate(347deg) brightness(91%) contrast(122%)",
 }));
 
 type Props = {

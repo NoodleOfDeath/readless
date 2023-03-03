@@ -2,10 +2,10 @@
   "verbose": true,
   "watch": [
     ".env",
-    "nodemon.work.json",
+    "nodemon.worker.json",
     "package.json",
     "tsconfig.json",
-    "src/work/*",
+    "src/worker/*",
     "src/services/*",
     "node_modules/*"
   ],

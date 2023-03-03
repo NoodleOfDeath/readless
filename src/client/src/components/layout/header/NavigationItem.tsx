@@ -1,10 +1,4 @@
-import {
-  Button,
-  Menu,
-  MenuItem,
-  Stack,
-  styled as muiStyled,
-} from "@mui/material";
+import { Button, Menu, MenuItem, Stack, styled } from "@mui/material";
 import { Icon } from "@mdi/react";
 import React from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
@@ -18,7 +12,7 @@ export type NavigationItemProps = {
   onClick?: (options: { navigate?: NavigateFunction }) => void;
 };
 
-const StyledMenuItemButton = muiStyled(Button)(({ theme }) => ({
+const StyledMenuItemButton = styled(Button)(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(1, 2),
   justifyContent: "flex-start",
@@ -49,17 +43,16 @@ export default function NavigationItem({
 
   return (
     <MenuItem>
-      {(onClick ||
-        (items && items.length > 0)) && (
-          <StyledMenuItemButton
-            onClick={handleClick}
-            startIcon={icon && <Icon path={icon} size={1} />}
-          >
-            {label}
-          </StyledMenuItemButton>
-        )}
+      {(onClick || (items && items.length > 0)) && (
+        <StyledMenuItemButton
+          onClick={handleClick}
+          startIcon={icon && <Icon path={icon} size={1} />}
+        >
+          {label}
+        </StyledMenuItemButton>
+      )}
       {content && <>{content}</>}
-      {items &&items.length > 0 && (
+      {items && items.length > 0 && (
         <Menu
           anchorEl={anchorEl}
           open={open}
@@ -80,11 +73,9 @@ export default function NavigationItem({
             <MenuItem key={item.id}>
               <StyledMenuItemButton
                 onClick={() => item.onClick?.({ navigate })}
-                startIcon={item.icon && (
-                  <Icon path={item.icon} size={1} />
-                  )}
-                  >
-              {item.label}
+                startIcon={item.icon && <Icon path={item.icon} size={1} />}
+              >
+                {item.label}
               </StyledMenuItemButton>
             </MenuItem>
           ))}

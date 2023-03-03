@@ -1,8 +1,8 @@
 import React from "react";
-import { Autocomplete, TextField, styled as muiStyled } from "@mui/material";
+import { Autocomplete, TextField, styled } from "@mui/material";
 import { SessionContext } from "@/contexts";
 
-const StyledAutocomplete = muiStyled(Autocomplete)(({ theme }) => ({
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   width: "100%",
   maxWidth: 1280,
   margin: "auto",

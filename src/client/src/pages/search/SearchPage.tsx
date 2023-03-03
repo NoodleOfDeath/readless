@@ -5,7 +5,7 @@ import {
   Stack,
   Theme,
   Typography,
-  styled as muiStyled,
+  styled,
   useMediaQuery,
   Button,
 } from "@mui/material";
@@ -19,7 +19,7 @@ import Post from "@/components/Post";
 
 import Filters from "@/pages/search/Filters";
 
-const StyledGrid = muiStyled(Grid)(({ theme }) => ({
+const StyledGrid = styled(Grid)(({ theme }) => ({
   margin: "auto",
   width: "calc(100% - 16px)",
   alignItems: "center",
@@ -45,8 +45,9 @@ export default function SearchPage() {
   const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
   const gridSize = React.useMemo(() => {
+    if (consumptionMode === "comprehensive") return 12;
     return mdAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
-  }, [recentSources, mdAndUp]);
+  }, [consumptionMode, recentSources, mdAndUp]);
 
   React.useEffect(() => {
     if (searchParams.get("q")) {

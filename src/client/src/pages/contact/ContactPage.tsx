@@ -1,7 +1,6 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button, Stack, TextField, Typography } from "@mui/material";
-import styled from "styled-components";
+import { Button, Stack, TextField, Typography, styled } from "@mui/material";
 import Page from "@/components/layout/Page";
 
 type ContactFormData = {
@@ -37,7 +36,7 @@ const FORM_FIELDS: FormField[] = [
   },
 ];
 
-const StyledForm = styled.form`
+const StyledForm = styled("form")`
   display: flex;
   flex-direction: column;
   align-items: center;

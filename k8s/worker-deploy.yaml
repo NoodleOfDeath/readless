@@ -4,7 +4,7 @@ metadata:
   name: $IMAGE
   namespace: $K8S_NAMESPACE
 spec:
-  replicas: $K8S_REPLICA_COUNT_WORK
+  replicas: $K8S_REPLICA_COUNT_WORKER
   selector:
     matchLabels:
       app: $IMAGE

@@ -32,17 +32,17 @@ services:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules
 
-  work:
+  worker:
     build:
       context: .
-      dockerfile: Dockerfile.work
+      dockerfile: Dockerfile.worker
     env_file:
       - .env
 
-  work.local:
+  worker.local:
     build:
       context: .
-      dockerfile: Dockerfile.work.local
+      dockerfile: Dockerfile.worker.local
     volumes:
       - .:/home/node/app
       - ./node_modules:/home/node/app/node_modules

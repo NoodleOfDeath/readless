@@ -10,7 +10,7 @@ import {
   Menu,
   Paper,
   Toolbar,
-  styled as muiStyled,
+  styled,
 } from "@mui/material";
 import { Icon } from "@mdi/react";
 import { mdiHome, mdiInformation, mdiMenu, mdiPodcast } from "@mdi/js";
@@ -51,7 +51,7 @@ const NAVIGATION_ITEMS: NavigationItemProps[] = [
   },
 ];
 
-const StyledToolbar = muiStyled(Toolbar)(({ theme }) => ({
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   margin: "auto",
   width: "inherit",
   maxWidth: 1280,
@@ -59,12 +59,12 @@ const StyledToolbar = muiStyled(Toolbar)(({ theme }) => ({
   padding: theme.spacing(0, 2),
 }));
 
-const StyledHeaderTitle = muiStyled(Paper)(({ theme }) => ({
+const StyledHeaderTitle = styled(Paper)(({ theme }) => ({
   flexGrow: 1,
   background: "transparent",
 }));
 
-const StyledBox = muiStyled(Box)(({ theme }) => ({
+const StyledBox = styled(Box)(({ theme }) => ({
   width: 250,
 }));
 
@@ -83,7 +83,10 @@ export default function Header() {
   const openMenu = React.useCallback(
     (open: boolean) =>
       (
-        event: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>
+        event:
+          | React.KeyboardEvent<HTMLElement>
+          | React.MouseEvent<HTMLElement>
+          | React.TouchEvent<HTMLElement>
       ) => {
         if (!event) {
           setAnchorEl(null);

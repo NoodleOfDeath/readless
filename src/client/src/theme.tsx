@@ -26,20 +26,24 @@ export const loadTheme = (mode: PaletteMode = "light") => {
       MuiPaper: {
         styleOverrides: {
           root: ({ theme }) => {
-            const lightMode = theme.palette.mode === 'light';
+            const lightMode = theme.palette.mode === "light";
             return {
-              background: lightMode ? "linear-gradient(to bottom, #FFFFFF, #FEFEFE, #F5F5F5)" : "linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)",
+              background: lightMode
+                ? "linear-gradient(to bottom, #FFFFFF, #FEFEFE, #F5F5F5)"
+                : "linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)",
             };
-          }
-        }
+          },
+        },
       },
       MuiButton: {
         styleOverrides: {
           root: ({ theme }) => {
-            const lightMode = theme.palette.mode === 'light';
+            const lightMode = theme.palette.mode === "light";
             return {
-              color: lightMode ? theme.palette.primary.main: theme.palette.primary.light,
-            }
+              color: lightMode
+                ? theme.palette.primary.main
+                : theme.palette.primary.light,
+            };
           },
         },
       },

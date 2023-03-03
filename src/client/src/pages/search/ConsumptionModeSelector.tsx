@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Box, Button, ButtonGroup, styled as muiStyled } from "@mui/material";
+import { Box, Button, ButtonGroup, styled } from "@mui/material";
 
 import { SessionContext } from "@/contexts";
 import { CONSUMPTION_MODES } from "@/components/Post";
 
 type Props = {};
-const StyledButtonGroup = muiStyled(ButtonGroup)(({ theme }) => ({
+const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   justifyContent: "center",
@@ -14,7 +14,7 @@ const StyledButtonGroup = muiStyled(ButtonGroup)(({ theme }) => ({
   margin: theme.spacing(1),
 }));
 
-const StyledButton = muiStyled(Button)<{ selected: boolean }>(
+const StyledButton = styled(Button)<{ selected: boolean }>(
   ({ theme, selected }) => ({
     backgroundColor: selected ? theme.palette.primary.main : "transparent",
     color: selected ? theme.palette.common.white : theme.palette.primary.main,

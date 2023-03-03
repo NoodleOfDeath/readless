@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import { styled } from "@mui/material";
 
 type Props = {
   children?: string;
@@ -12,7 +12,7 @@ type Props = {
   variant?: "start" | "middle" | "end";
 };
 
-const StyledLink = styled.span`
+const StyledLink = styled("span")`
   cursor: pointer;
   margin-left: 1rem;
 `;

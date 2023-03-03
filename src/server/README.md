@@ -2,7 +2,7 @@
 
 [![API CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/api-ci.yaml)
 [![Cron CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml)
-[![Worker CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/work-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/work-ci.yaml)
+[![Worker CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml)
 
 This is the backend API, CronJob manager (responsible for periodically seeking and queuing jobs) and Worker containers (responsible for processing jobs) for the TheSkoop project
 

@@ -6,23 +6,23 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/work-ci.yaml"
-      - "k8s/work-deploy.yaml"
-      - "src/server/Dockerfile.work"
+      - ".github/workflows/worker-ci.yaml"
+      - "k8s/worker-deploy.yaml"
+      - "src/server/Dockerfile.worker"
       - "src/server/package.json"
-      - "src/server/src/work/**"
+      - "src/server/src/worker/**"
 
 concurrency:
-  group: ${{ github.ref }}-work
+  group: ${{ github.ref }}-worker
   cancel-in-progress: true
 
 env:
-  IMAGE: ${{ github.event.repository.name }}-work-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+  IMAGE: ${{ github.event.repository.name }}-worker-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   REGISTRY: ${{ vars.REGISTRY }}
   WORKING_DIR: src/server
 
 jobs:
-  build-work:
+  build-worker:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
@@ -37,7 +37,7 @@ jobs:
       - name: Build
         run: |
           cd $WORKING_DIR && \
-          docker build . --file Dockerfile.work --tag $IMAGE:latest
+          docker build . --file Dockerfile.worker --tag $IMAGE:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -49,8 +49,8 @@ jobs:
       - name: Push Docker Image
         run: docker push $REGISTRY/$IMAGE:latest
 
-  deploy-work:
-    needs: build-work
+  deploy-worker:
+    needs: build-worker
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
@@ -86,7 +86,7 @@ jobs:
       - name: Add kubectl cert
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/work-deploy.yaml | kubectl apply -f -
+        run: envsubst < $GITHUB_WORKSPACE/k8s/worker-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$IMAGE --namespace $K8S_NAMESPACE
       - name: Verify deployment

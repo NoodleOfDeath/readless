@@ -8,6 +8,6 @@ RUN pnpm install
 FROM base as dev
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
-COPY serve-work.ts ./
-COPY nodemon.work.json ./
-CMD pnpm run dev:work
+COPY serve-worker.ts ./
+COPY nodemon.worker.json ./
+CMD pnpm run dev:worker

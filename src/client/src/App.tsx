@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
-import styled from "styled-components";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider, styled, Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import { SessionContext } from "@/contexts";
@@ -11,14 +10,14 @@ import Header from "@/components/layout/header/Header";
 import Footer from "@/components/layout/Footer";
 import CookieConsent from "@/components/layout/CookieConsent";
 
-const StyledAppContainer = styled.div`
+const StyledAppContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   height: 100vh;
   margin: -10px;
 `;
 
-const StyledAppContent = styled.div`
+const StyledAppContent = styled(Box)`
   flex: 1;
   display: flex;
   flex-direction: column;

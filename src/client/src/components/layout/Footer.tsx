@@ -1,14 +1,17 @@
 import React from "react";
 import {
+  Box,
   Container,
   ContainerProps,
   Divider,
   Grid,
   Link,
   Stack,
-  styled as muiStyled,
+  styled,
   Typography,
 } from "@mui/material";
+import Icon from "@mdi/react";
+import { mdiFacebook, mdiInstagram, mdiTwitter } from "@mdi/js";
 
 const LINKS = [
   {
@@ -21,9 +24,11 @@ const LINKS = [
   },
 ];
 
-const StyledFooter = muiStyled((props: ContainerProps) => (
-  <Container {...props} maxWidth={false} />
+const StyledFooter = styled((props: ContainerProps) => (
+  <Container {...props} maxWidth={false} component="footer" />
 ))(({ theme }) => ({
+  background: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
   marginTop: theme.spacing(5),
   padding: theme.spacing(3),
   bottom: 0,
@@ -32,19 +37,25 @@ const StyledFooter = muiStyled((props: ContainerProps) => (
   justifyContent: "left",
 }));
 
-const StyledStack = muiStyled(Stack)(({ theme }) => ({
+const StyledStack = styled(Stack)(({ theme }) => ({
   margin: "auto",
   maxWidth: 1280,
 }));
 
-const StyledGrid = muiStyled(Grid)(({ theme }) => ({
+const StyledHorizontalStack = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(2),
+  flexGrow: 1,
+}));
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
   margin: "auto",
   width: "100%",
   justifyContent: "left",
   marginTop: theme.spacing(2),
 }));
 
-const StyledLink = muiStyled(Link)(({ theme }) => ({
+const StyledLink = styled(Link)(({ theme }) => ({
+  color: theme.palette.primary.contrastText,
   marginRight: theme.spacing(1),
   textDecoration: "none",
   "&:hover": {
@@ -56,10 +67,19 @@ export default function Footer() {
   return (
     <StyledFooter>
       <StyledStack>
-        <Typography>
-          Copyright &copy; {new Date().getFullYear()} TheSkoop
-        </Typography>
-        <Divider color="primary" variant="fullWidth" />
+        <StyledHorizontalStack direction="row">
+          <Typography>
+            Copyright &copy; {new Date().getFullYear()} TheSkoop
+          </Typography>
+          <Box flexGrow={1} />
+          <Stack direction="row" spacing={2}>
+            <Typography>Follow us on</Typography>
+            <Icon path={mdiFacebook} size={1} />
+            <Icon path={mdiInstagram} size={1} />
+            <Icon path={mdiTwitter} size={1} />
+          </Stack>
+        </StyledHorizontalStack>
+        <Divider variant="fullWidth" />
         <StyledGrid container spacing={2}>
           <Grid item>
             <Typography>
