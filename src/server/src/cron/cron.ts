@@ -76,6 +76,7 @@ async function pollForNews() {
             const href = (attribute && e.getAttribute(attribute) ? e.getAttribute(attribute) : e.textContent).trim();
             return /^https?:\/\//i.test(href) ? href : `${new URL(queryUrl).origin}/${href.replace(/^\//, '')}`;
           });
+          if (urls.length === 0) continue;
           const existingSources = await Source.findAll({
             where: {
               url: {
