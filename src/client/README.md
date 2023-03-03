@@ -1,5 +1,7 @@
 # TheSkoop Client
 
+[![Client CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/client-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/client-ci.yaml)
+
 This is the client for the TheSkoop project
 
 ## Getting Started - TL;DR Style (aka Docker)
