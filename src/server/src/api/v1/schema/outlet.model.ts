@@ -2,10 +2,28 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 import { DatedAttributes } from './dated';
 import { Attachment } from './attachment.model';
 
+export type SiteMapParams = string | string[][];
+
 export type SiteMap = {
+  /**
+   * Template url for retrieving news articles
+   * Can contain template options such as:
+   * YYYY = 4-digit year (current)
+   * YY = 2-digit year (current)
+   * MMMM = month name (current)
+   * MM = 2-digit month (current)
+   * M = 1/2-digit month (current)
+   * DD = 2-digit day (current)
+   * D = 1/2 digit day (current)
+   * $1, $2, ... = param1, param2, ...
+   */
   url: string;
+  /** css selector(s) for getting news links */
   selector: string;
+  /** attribute to extract from retrieved html nodes; if nothing is specified the element's `innerHTML` is used */
   attribute?: 'href' | 'src';
+  /** template params to dynamically interpolate */
+  params?: SiteMapParams;
 };
 
 export type FetchPolicy = {

@@ -206,6 +206,12 @@ export class SourceController {
             (sourceInfo.subcategory = reply.text.replace(/^subcategory:\s*/i, '').replace(/\.$/, '')).trim(),
         },
         {
+          text: `Please provide a short image prompt for an ai image generator to make an image for this article`,
+          action: (reply) => {
+            sourceInfo.imagePrompt = reply.text;
+          },
+        },
+        {
           text: `Finally, please provide 5 concise bullet point sentences no longer than 10 words each for this article`,
           action: (reply) => {
             sourceInfo.bullets = reply.text

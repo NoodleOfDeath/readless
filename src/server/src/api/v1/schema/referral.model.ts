@@ -4,13 +4,17 @@ import { User } from './user.model';
 
 export type ReferralAttributes = DatedAttributes & {
   /** id of a user if ref link was created while logged in */
-  referrerId?: number;
-  /** the url path this referral was copied from */
+  referredById?: number;
+  /** the IP address this referral was accessed from */
   referrer: string;
+  /** the url path this referral was generated from */
+  origin?: string;
   /** the url path of the referral destination */
   target: string;
   /** the user agent info of the consumer of this referral */
   userAgent: string;
+  /** geolocation of the referrer */
+  geolocation?: string;
 };
 
 export type ReferralCreationAttributes = ReferralAttributes;
@@ -25,13 +29,18 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
   @Column({
     type: DataType.INTEGER,
   })
-  referrerId: number;
+  referredById: number;
 
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
   referrer: string;
+
+  @Column({
+    type: DataType.STRING(2083),
+  })
+  origin?: string;
 
   @Column({
     type: DataType.STRING(2083),
@@ -44,4 +53,9 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
     allowNull: false,
   })
   userAgent: string;
+
+  @Column({
+    type: DataType.TEXT,
+  })
+  geolocation: string;
 }

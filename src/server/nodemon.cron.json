@@ -7,6 +7,7 @@
     "tsconfig.json",
     "src/cron/*",
     "src/services/*",
+    "src/api/v1/schema/*",
     "node_modules/*"
   ],
   "ext": "css,html,js,json,ts",

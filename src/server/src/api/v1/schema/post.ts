@@ -12,6 +12,7 @@ export type PostAttributes = DatedAttributes & {
   summary: string;
   shortSummary: string;
   bullets: string[];
+  imagePrompt: string;
 };
 
 export type PostCreationAttributes = DatedAttributes & {
@@ -20,6 +21,7 @@ export type PostCreationAttributes = DatedAttributes & {
   summary: string;
   shortSummary: string;
   bullets: string[];
+  imagePrompt: string;
 };
 
 export type PostAttr = Attr<Post, typeof POST_ATTRS[number]>;
@@ -68,6 +70,12 @@ export abstract class Post<
     defaultValue: [],
   })
   bullets: string[];
+  
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+  })
+  imagePrompt: string;
 }
 
 export type TitledCategorizedPostAttributes = PostAttributes & {

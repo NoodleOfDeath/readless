@@ -7,7 +7,7 @@ services:
       - '$PORT:$PORT'
     env_file:
       - .env
-  api.local:
+  api-local:
     build:
       context: .
       dockerfile: Dockerfile.api.local
@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
 
-  cron.local:
+  cron-local:
     build:
       context: .
       dockerfile: Dockerfile.cron.local
@@ -39,7 +39,7 @@ services:
     env_file:
       - .env
 
-  worker.local:
+  worker-local:
     build:
       context: .
       dockerfile: Dockerfile.worker.local
