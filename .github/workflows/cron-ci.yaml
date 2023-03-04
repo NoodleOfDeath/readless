@@ -7,8 +7,8 @@ on:
       - dev
     paths:
       - ".github/workflows/cron-ci.yaml"
+      - "Dockerfile.cron"
       - "k8s/cron-deploy.yaml"
-      - "src/server/Dockerfile.cron"
       - "src/server/package.json"
       - "src/server/src/cron/**"
 
@@ -19,7 +19,6 @@ concurrency:
 env:
   IMAGE: ${{ github.event.repository.name }}-cron-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   REGISTRY: ${{ vars.REGISTRY }}
-  WORKING_DIR: src/server
 
 jobs:
   build-cron:
@@ -36,7 +35,6 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          cd $WORKING_DIR && \
           docker build . --file Dockerfile.cron --tag $IMAGE:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2

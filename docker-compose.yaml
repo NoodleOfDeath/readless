@@ -1,42 +1,42 @@
 services:
-  ui:
+  web:
     build:
       context: .
-      dockerfile: src/client/Dockerfile
+      dockerfile: Dockerfile.web
+    env_file:
+      - src/web/.env
     ports:
       - "$PORT:$PORT"
-    env_file:
-      - src/client/.env
 
-  ui-local:
+  web-local:
     build:
       context: .
-      dockerfile: src/client/Dockerfile.local
+      dockerfile: Dockerfile.web.local
+    env_file:
+      - src/web/.env
     ports:
       - "$PORT:$PORT"
-    env_file:
-      - src/client/.env
     volumes:
-      - ./src/client:/home/node/app
-      - ./src/client/node_modules:/home/node/app/node_modules
+      - ./src/web:/home/node/app
+      - ./src/web/node_modules:/home/node/app/node_modules
 
   api:
     build:
       context: .
-      dockerfile: src/server/Dockerfile.api
-    ports:
-      - "$PORT:$PORT"
+      dockerfile: Dockerfile.api
     env_file:
       - src/server/.env
+    ports:
+      - "$PORT:$PORT"
 
   api-local:
     build:
       context: .
-      dockerfile: src/server/Dockerfile.api.local
-    ports:
-      - "$PORT:$PORT"
+      dockerfile: Dockerfile.api.local
     env_file:
       - src/server/.env
+    ports:
+      - "$PORT:$PORT"
     volumes:
       - ./src/server:/home/node/app
       - ./src/server/node_modules:/home/node/app/node_modules
@@ -44,14 +44,14 @@ services:
   cron:
     build:
       context: .
-      dockerfile: src/server/Dockerfile.cron
+      dockerfile: Dockerfile.cron
     env_file:
       - src/server/.env
 
   cron-local:
     build:
       context: .
-      dockerfile: src/server/Dockerfile.cron.local
+      dockerfile: Dockerfile.cron.local
     env_file:
       - src/server/.env
     volumes:
@@ -61,14 +61,14 @@ services:
   worker:
     build:
       context: .
-      dockerfile: src/server/Dockerfile.worker
+      dockerfile: Dockerfile.worker
     env_file:
       - src/server/.env
 
   worker-local:
     build:
       context: .
-      dockerfile: src/server/Dockerfile.worker.local
+      dockerfile: Dockerfile.worker.local
     env_file:
       - src/server/.env
     volumes:

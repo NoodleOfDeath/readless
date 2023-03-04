@@ -7,8 +7,8 @@ on:
       - dev
     paths:
       - ".github/workflows/worker-ci.yaml"
+      - "Dockerfile.worker"
       - "k8s/worker-deploy.yaml"
-      - "src/server/Dockerfile.worker"
       - "src/server/package.json"
       - "src/server/src/worker/**"
 
@@ -19,7 +19,6 @@ concurrency:
 env:
   IMAGE: ${{ github.event.repository.name }}-worker-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   REGISTRY: ${{ vars.REGISTRY }}
-  WORKING_DIR: src/server
 
 jobs:
   build-worker:
@@ -36,7 +35,6 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          cd $WORKING_DIR && \
           docker build . --file Dockerfile.worker --tag $IMAGE:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2

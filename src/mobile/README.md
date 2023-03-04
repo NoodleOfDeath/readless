@@ -1,1 +1,1 @@
-# TheSkoop Mobile Application Project
+# TheSkoop Mobile Application

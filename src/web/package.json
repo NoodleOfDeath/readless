@@ -1,0 +1,69 @@
+{
+  "name": "theskoop-client",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "start": "react-app-rewired start",
+    "dev": "nodemon -x 'react-app-rewired start'",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
+    "format": "prettier --write .",
+    "swagger": "(cd ../server && pnpm run swagger) && cp ../server/public/swagger.json ./swagger.json && pnpm run gen",
+    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mdi/js": "^7.1.96",
+    "@mdi/react": "^1.6.1",
+    "@mui/lab": "5.0.0-alpha.120",
+    "@mui/material": "^5.11.11",
+    "@paypal/react-paypal-js": "^7.8.2",
+    "date-fns": "^2.29.3",
+    "js-cookie": "^3.0.1",
+    "react": "^18.2.0",
+    "react-cookie-consent": "^8.0.1",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.4",
+    "react-markdown": "^8.0.5",
+    "react-router-dom": "^6.8.2",
+    "react-scripts": "5.0.1",
+    "react-share": "^4.4.1",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/js-cookie": "^3.0.3",
+    "@types/node": "^16.18.14",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "dotenv-webpack": "^8.0.1",
+    "nodemon": "^2.0.21",
+    "react-app-rewired": "^2.2.1",
+    "terser-webpack-plugin": "^5.3.6",
+    "typescript": "*"
+  }
+}

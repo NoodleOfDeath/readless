@@ -1,0 +1,13 @@
+FROM node:19.3.0 as base
+RUN npm install -g pnpm
+WORKDIR /home/node/app
+COPY src/server/package.json ./
+COPY src/server/src ./src
+RUN pnpm install
+
+FROM base as dev
+COPY src/server/tsconfig.json ./
+COPY src/server/tsconfig.build.json ./
+COPY src/server/serve-api.ts ./
+COPY src/server/nodemon.api.json ./
+CMD pnpm run dev:api
