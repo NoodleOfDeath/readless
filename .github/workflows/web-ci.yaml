@@ -1,4 +1,4 @@
-name: Client CI
+name: Web Client CI
 
 on:
   push:
