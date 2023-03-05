@@ -16,6 +16,13 @@ const WORKER_CONCURRENCY = Math.min(
 
 const fetchMap: Record<string, number> = {};
 
+setInterval(() => {
+  // reset fetch count every interval
+  Object.keys(fetchMap).forEach((key) => {
+    fetchMap[key] = 0;
+  });
+}, WORKER_FETCH_INTERVAL_MS);
+
 export async function main() {
   await DBService.init();
   doWork();
