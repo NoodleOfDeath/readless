@@ -121,13 +121,13 @@ export class SourceController {
 
   @Post('/')
   public async postReadAndSummarizeSource(@Body() { url }: ReadAndSummarizeSourcePayload): Promise<SourceAttributes> {
-    return this.readAndSummarizeSource({ url });
+    return this.readAndSummarizeSource({ url});
   }
 
   public async readAndSummarizeSource(
     { url }: ReadAndSummarizeSourcePayload,
-    { onProgress, force }: ReadAndSummarizeSourceOptions = {},
-  ): Promise<SourceAttributes> {
+    { onProgress, commit, force }: ReadAndSummarizeSourceOptions = {},
+  ): Promise<Source> {
     try {
       if (!force) {
         const existingSource = await Source.findOne({ where: { url } });
@@ -234,8 +234,10 @@ export class SourceController {
       }
       console.log(sourceInfo);
       const source = new Source(sourceInfo as SourceCreationAttributes);
-      await source.save();
-      await source.reload();
+      if (commit) {
+        await source.save();
+        await source.reload();
+      }
       onProgress?.(1);
       return source;
     } catch (e) {

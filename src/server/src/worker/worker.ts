@@ -76,6 +76,17 @@ export async function doWork() {
               },
             },
           );
+          if (/^(?:i'm sorry|i apologize)/i.test(source.title) ||
+          /^(?:i'm sorry|i apologize)/i.test(source.abridged) || 
+          /^(?:i'm sorry|i apologize)/i.test(source.summary)) {
+            console.log(`Source ${url} has been blocked by the outlet. Removing job.`);
+            await job.remove();
+            await siteMapWorker.queue.add(job.name, job.data, {
+              jobId: job.id,
+              delay: WORKER_FETCH_INTERVAL_MS
+            });
+            return;
+          }
           return source;
         } catch (e) {
           console.error(e);

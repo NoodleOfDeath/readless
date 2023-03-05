@@ -1,16 +1,18 @@
 import { CronJob } from 'cron';
+import { Op } from 'sequelize';
 import axios from 'axios';
 import { parse } from 'node-html-parser';
 
 import { DBService, QUEUES, QueueService } from '../services';
-import { Outlet, SiteMapParams } from '../api/v1/schema';
+import { Outlet, SiteMapParams, Source } from '../api/v1/schema';
 
 async function main() {
   await DBService.init();
   // poll for new current events every 30 min
-  const job = new CronJob('*/30 * * * *', () => pollForNews());
-  job.start();
+  new CronJob('*/30 * * * *', () => pollForNews()).start();
+  new CronJob('*/30 * * * *', () => cleanBadSources()).start();
   pollForNews();
+  cleanBadSources();
 }
 
 const DAY = 1000 * 60 * 60 * 24;
@@ -101,6 +103,23 @@ async function pollForNews() {
         }
       }
     }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function cleanBadSources() {
+  console.log('cleaning bad sources!');
+  try {
+    await Source.destroy({
+      where: {
+        [Op.or]: [
+          { title: { [Op.iRegexp]: '^i\'m (?:sorry|apologize)' } },
+          { abridged: { [Op.iRegexp]: '^i\'m (?:sorry|apologize)' } },
+          { summary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize)' } },
+        ]
+      },
+    });
   } catch (e) {
     console.error(e);
   }
