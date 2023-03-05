@@ -70,26 +70,33 @@ async function pollForNews() {
         const queryUrls = generateDynamicUrls(siteMap.url, params);
         for (const queryUrl of queryUrls) {
           console.log(`fetching ${queryUrls} from outlet ${name}...`);
-          const { data } = await axios.get(queryUrl);
-          const root = parse(data);
-          const urls = root.querySelectorAll(selector).map((e) => {
-            const href = (attribute && e.getAttribute(attribute) ? e.getAttribute(attribute) : e.textContent).trim();
-            return /^https?:\/\//i.test(href) ? href : `${new URL(queryUrl).origin}/${href.replace(/^\//, '')}`;
-          });
-          if (urls.length === 0) continue;
-          for (const url of urls) {
-            await queue.dispatch(
-              QUEUES.siteMaps,
-              url,
-              {
-                id,
-                name,
+          try {
+            const { data } = await axios.get(queryUrl, {
+              timeout: 10_000,
+            });
+            const root = parse(data);
+            const urls = root.querySelectorAll(selector).map((e) => {
+              const href = (attribute && e.getAttribute(attribute) ? e.getAttribute(attribute) : e.textContent).trim();
+              return /^https?:\/\//i.test(href) ? href : `${new URL(queryUrl).origin}/${href.replace(/^\//, '')}`;
+            });
+            if (urls.length === 0) continue;
+            for (const url of urls) {
+              await queue.dispatch(
+                QUEUES.siteMaps,
                 url,
-              },
-              {
-                jobId: url,
-              },
-            );
+                {
+                  id,
+                  name,
+                  url,
+                },
+                {
+                  jobId: url,
+                },
+              );
+            }
+          } catch (e) {
+            console.error(e);
+            continue;
           }
         }
       }
