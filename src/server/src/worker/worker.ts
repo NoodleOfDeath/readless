@@ -5,7 +5,7 @@ import { DBService, QUEUES, Worker } from '../services';
 import { Outlet, Source } from '../api/v1/schema';
 
 /** Fetch rate per interval */
-const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 2; // 2 for dev and testing
+const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 1; // 1 for dev and testing
 const WORKER_FETCH_INTERVAL_MS = process.env.WORKER_FETCH_INTERVAL_MS
   ? Number(process.env.WORKER_FETCH_INTERVAL_MS)
   : 1000 * 60 * 60 * 24; // 24 hours
@@ -85,10 +85,6 @@ export async function doWork() {
       {
         autorun: true,
         concurrency: WORKER_CONCURRENCY,
-        limiter: {
-          max: WORKER_FETCH_RATE_LIMIT,
-          duration: WORKER_FETCH_INTERVAL_MS,
-        },
       },
     );
   } catch (e) {
