@@ -1,6 +1,7 @@
-import { Source } from '../api/v1/schema';
 import { SourceController } from '../api/v1/controllers';
 import { DBService, QUEUES, Worker } from '../services';
+import { Outlet, Source } from '../api/v1/schema';
+import { Op } from 'sequelize';
 
 /** Fetch rate per interval */
 const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 2; // 2 for dev and testing
@@ -11,6 +12,8 @@ const WORKER_CONCURRENCY = Math.min(
   process.env.WORKER_CONCURRENCY ? Number(process.env.WORKER_CONCURRENCY) : 3,
   WORKER_FETCH_RATE_LIMIT,
 );
+
+const fetchMap: Record<string, number> = {};
 
 export async function main() {
   await DBService.init();
@@ -24,7 +27,27 @@ export async function doWork() {
       QUEUES.siteMaps,
       async (job) => {
         try {
-          const { url, force } = job.data;
+          const { id, name, url, force } = job.data;
+          const outlet = (await Outlet.findOne({
+            where: {
+              [Op.or]: [{ id }, { name }],
+            }
+          }))?.toJSON();
+          if (!outlet) {
+            console.log(`Outlet ${id} not found`);
+            await job.moveToFailed(new Error(`Outlet ${id} not found`), siteMapWorker.queue.token, true);
+            return;
+          }
+          const fetchCount = fetchMap[outlet.name] ?? 0;
+          if (fetchCount >= WORKER_FETCH_RATE_LIMIT) {
+            console.log(`Outlet ${outlet.name} has reached its fetch limit of ${WORKER_FETCH_RATE_LIMIT} per ${WORKER_FETCH_INTERVAL_MS}ms`);
+            await job.remove();
+            await siteMapWorker.queue.add(job.name, job.data, {
+              jobId: job.id,
+              delay: WORKER_FETCH_INTERVAL_MS
+            });
+            return;
+          }
           if (!force) {
             const existingSource = await Source.findOne({
               attributes: ['id'],
@@ -35,6 +58,7 @@ export async function doWork() {
               return existingSource;
             }
           }
+          fetchMap[outlet.name] = fetchCount + 1;
           const controller = new SourceController();
           const source = await controller.readAndSummarizeSource(
             { url },
