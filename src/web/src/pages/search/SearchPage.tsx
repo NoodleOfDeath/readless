@@ -76,7 +76,7 @@ export default function SearchPage() {
         setLoading(false);
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, searchText]);
+  }, [searchText]);
 
   const loadMore = () => {
     api
