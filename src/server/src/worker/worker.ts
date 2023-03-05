@@ -66,7 +66,7 @@ export async function doWork() {
               return existingSource;
             }
           }
-          fetchMap[outlet.name] = fetchCount + 1;
+          fetchMap[outlet.name] = fetchMap[outlet.name] + 1;
           const controller = new SourceController();
           const source = await controller.readAndSummarizeSource(
             { url },
