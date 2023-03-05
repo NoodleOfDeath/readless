@@ -1,6 +1,6 @@
-import fs from "fs";
-import p from "path";
-import ffmpeg from "fluent-ffmpeg";
+import ffmpeg from 'fluent-ffmpeg';
+import fs from 'fs';
+import p from 'path';
 
 type AudioEditorOptions = {
   watchDir: string;
@@ -29,14 +29,14 @@ function resolveOutputPath(
   outputName?: string,
   outputDir?: string,
   overwrite = false,
-  ext = p.parse(path).ext || ".wav",
+  ext = p.parse(path).ext || '.wav',
   count = 0
 ) {
   const prefix = p.basename(outputName || path, ext);
-  const suffix = count > 0 ? `-${count}` : "";
+  const suffix = count > 0 ? `-${count}` : '';
   const newPath = p.join(
     outputDir || p.dirname(path),
-    [prefix, suffix, ext].join("")
+    [prefix, suffix, ext].join('')
   );
   if (fs.existsSync(newPath) && !overwrite) {
     return resolveOutputPath(
@@ -56,12 +56,12 @@ export class AudioEditingService {
   outputDir: string;
 
   get batchCount(): number {
-    return fs.existsSync(".batch")
-      ? parseInt(fs.readFileSync(".batch", { encoding: "utf-8" }).toString())
+    return fs.existsSync('.batch')
+      ? parseInt(fs.readFileSync('.batch', { encoding: 'utf-8' }).toString())
       : 0;
   }
   set batchCount(count: number) {
-    fs.writeFileSync(".batch", count.toString(), { encoding: "utf-8" });
+    fs.writeFileSync('.batch', count.toString(), { encoding: 'utf-8' });
   }
 
   namingSchema: (name: string, index: number) => string;
@@ -103,7 +103,7 @@ export class AudioEditingService {
   ): Promise<string> {
     try {
       const opts: string[] = [];
-      if (typeof clip === "string") {
+      if (typeof clip === 'string') {
         opts.push(`-t ${clip}`);
       } else {
         const metadata = await ffprobeSync(path);
@@ -113,7 +113,7 @@ export class AudioEditingService {
         if (clip?.end) {
           const duration = metadata.format.duration;
           const end = clip.end;
-          const endSeconds = end.endsWith("s")
+          const endSeconds = end.endsWith('s')
             ? parseFloat(end.slice(0, -1))
             : parseFloat(end);
           const endOffset =
@@ -121,7 +121,7 @@ export class AudioEditingService {
           opts.push(`-t ${endOffset}s`);
         }
       }
-      ffmpeg(path).inputOptions(opts.join(" ")).output(outputPath).run();
+      ffmpeg(path).inputOptions(opts.join(' ')).output(outputPath).run();
       return outputPath;
     } catch (e) {
       console.error(e);
@@ -131,7 +131,7 @@ export class AudioEditingService {
   async merge(opts: Partial<AudioEditOptions> = {}, ...paths: string[]) {
     try {
       if (paths.length < 2) {
-        throw new Error("Must provide at least two paths to merge");
+        throw new Error('Must provide at least two paths to merge');
       }
       const path = paths.shift();
       const outputPath =

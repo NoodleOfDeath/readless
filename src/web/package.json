@@ -1,5 +1,5 @@
 {
-  "name": "theskoop-client",
+  "name": "theskoop-web",
   "version": "0.2.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,8 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "format": "prettier --write .",
-    "swagger": "(cd ../server && pnpm run swagger) && cp ../server/public/swagger.json ./swagger.json && pnpm run gen",
-    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api"
+    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api",
+    "swagger": "(cd ../server && pnpm run swagger) && cp ../server/public/swagger.json ./swagger.json && pnpm run gen"
   },
   "eslintConfig": {
     "extends": [

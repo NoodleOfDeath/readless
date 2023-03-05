@@ -1,8 +1,10 @@
-import { BaseJobOptions, Job, Queue, QueueOptions, Worker as BullMQWorker, WorkerOptions } from 'bullmq';
+import { BaseJobOptions, Worker as BullMQWorker, Job, Queue, QueueOptions, WorkerOptions } from 'bullmq';
 import IORedis, { RedisOptions } from 'ioredis';
+
 import { BaseService } from '../base';
 
 /** Dummy class to make TS happy */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export class QueueProps<DataType = {}, ReturnType = {}, NameType extends string = string> {
   name: NameType;
   data?: DataType;

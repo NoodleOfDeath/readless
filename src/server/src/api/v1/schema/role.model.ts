@@ -1,4 +1,5 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 
 export type RoleAttributes = DatedAttributes & {
@@ -30,5 +31,5 @@ export class Role<A extends RoleAttributes = RoleAttributes, B extends RoleCreat
     type: DataType.STRING,
     allowNull: false,
   })
-  name: string;
+    name: string;
 }

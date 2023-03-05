@@ -66,6 +66,7 @@ export const DEFAULT_SESSION_DURATION = 1000 * 60 * 60 * 24 * 2;
 export const SessionContext = React.createContext(NULL_SESSION);
 
 export function SessionContextProvider({ children }: Props) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSearchParams] = useSearchParams();
   const isDarkModeEnabled = useMediaQuery("(prefers-color-scheme: dark)");
 
@@ -82,8 +83,8 @@ export function SessionContextProvider({ children }: Props) {
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
 
   // Convenience function to set a preference
-  const preferenceSetter =
-    <Key extends keyof Preferences>(key: Key) =>
+  const preferenceSetter = React.useCallback
+    (<Key extends keyof Preferences>(key: Key) =>
     (
       value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])
     ) => {
@@ -99,7 +100,7 @@ export function SessionContextProvider({ children }: Props) {
         }
         return (preferences = newPrefs);
       });
-    };
+    }, []);
 
   const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
     return {

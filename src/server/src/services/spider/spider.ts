@@ -1,15 +1,17 @@
-import axios from 'axios';
 import UserAgent from 'user-agents';
+import axios from 'axios';
+
 import { BaseService } from '../base';
+
 import { Loot } from './loot';
 import {
   ExtractRule,
   ExtractRuleMap,
-  mappedScrapeLoot,
   ScrapeOpts,
   ScrapeResponse,
-  encodeScrapeOpts,
   WS_API,
+  encodeScrapeOpts,
+  mappedScrapeLoot,
 } from './scrape';
 
 export class SpiderService extends BaseService {
@@ -46,13 +48,9 @@ export class SpiderService extends BaseService {
 
   /** Custom scraping implementation */
   async loot(url: string) {
-    try {
-      const text = await this.fetch(url);
-      const loot = new Loot({ url, text });
-      return loot;
-    } catch (e) {
-      throw e;
-    }
+    const text = await this.fetch(url);
+    const loot = new Loot({ url, text });
+    return loot;
   }
 
   /** WebscrapingAPI implementation */
@@ -60,20 +58,16 @@ export class SpiderService extends BaseService {
     url: string,
     { api_key = process.env.WS_API_KEY, extract_rules, ...opts }: Partial<ScrapeOpts<T>> = {},
   ) {
-    try {
-      const params = encodeScrapeOpts({
-        url,
-        api_key,
-        extract_rules,
-        ...opts,
-      });
-      const fullPath = `${WS_API}/v1?${params.toString()}`;
-      console.log('fetching from', fullPath);
-      const { data } = await axios.get(fullPath);
-      if (!extract_rules) return data;
-      return mappedScrapeLoot(data as ScrapeResponse<T>);
-    } catch (e) {
-      throw e;
-    }
+    const params = encodeScrapeOpts({
+      url,
+      api_key,
+      extract_rules,
+      ...opts,
+    });
+    const fullPath = `${WS_API}/v1?${params.toString()}`;
+    console.log('fetching from', fullPath);
+    const { data } = await axios.get(fullPath);
+    if (!extract_rules) return data;
+    return mappedScrapeLoot(data as ScrapeResponse<T>);
   }
 }

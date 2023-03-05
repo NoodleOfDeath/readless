@@ -1,4 +1,5 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 import { User } from './user.model';
 
@@ -29,33 +30,33 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
   @Column({
     type: DataType.INTEGER,
   })
-  referredById: number;
+    referredById: number;
 
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
-  referrer: string;
+    referrer: string;
 
   @Column({
     type: DataType.STRING(2083),
   })
-  origin?: string;
+    origin?: string;
 
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
-  target: string;
+    target: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  userAgent: string;
+    userAgent: string;
 
   @Column({
     type: DataType.TEXT,
   })
-  geolocation: string;
+    geolocation: string;
 }

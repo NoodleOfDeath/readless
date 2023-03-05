@@ -1,5 +1,5 @@
 import React from "react";
-import { format, formatDistance } from "date-fns";
+import { formatDistance } from "date-fns";
 import {
   Card,
   CardContent,
@@ -10,7 +10,6 @@ import {
   Typography,
   styled,
   Chip,
-  Paper,
 } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
@@ -72,10 +71,10 @@ export default function Post({
 }: Props = {}) {
   const navigate = useNavigate();
 
-  const createdAt = React.useMemo(
-    () => format(new Date(source?.createdAt ?? 0), "MMM dd, yyyy - h:mma"),
-    [source?.createdAt]
-  );
+  // const createdAt = React.useMemo(
+  //   () => format(new Date(source?.createdAt ?? 0), "MMM dd, yyyy - h:mma"),
+  //   [source?.createdAt]
+  // );
 
   const timeAgo = React.useMemo(
     () =>
@@ -102,7 +101,7 @@ export default function Post({
         </Link>
       </StyledHeaderStack>
     );
-  }, [createdAt, timeAgo, source]);
+  }, [timeAgo, source]);
 
   const content = React.useMemo(() => {
     if (!source) return "";

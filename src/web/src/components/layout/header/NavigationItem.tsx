@@ -1,4 +1,4 @@
-import { Button, Menu, MenuItem, Stack, styled } from "@mui/material";
+import { Button, Menu, MenuItem, styled } from "@mui/material";
 import { Icon } from "@mdi/react";
 import React from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
@@ -38,7 +38,7 @@ export default function NavigationItem({
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onClick ? onClick({ navigate }) : setAnchorEl(event.currentTarget);
     },
-    [onClick]
+    [navigate, onClick]
   );
 
   return (

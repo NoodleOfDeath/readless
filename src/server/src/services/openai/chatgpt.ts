@@ -1,4 +1,5 @@
 import { ChatGPTAPI, ChatMessage, SendMessageOptions } from 'chatgpt';
+
 import { BaseService } from '../base';
 
 export type Prompt = {

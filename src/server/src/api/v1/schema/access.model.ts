@@ -1,4 +1,5 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 
 export type AccessAttributes = DatedAttributes & {
@@ -35,11 +36,11 @@ export class Access<
     type: DataType.INTEGER,
     allowNull: false,
   })
-  resourceId: number;
+    resourceId: number;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  scope: string;
+    scope: string;
 }

@@ -1,4 +1,6 @@
 import { Column, DataType, Table } from 'sequelize-typescript';
+
+import { Attachment } from './attachment.model';
 import { SOURCE_ATTRS } from './types';
 import {
   Attr,
@@ -6,7 +8,6 @@ import {
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from './post';
-import { Attachment } from './attachment.model';
 
 export type SourceAttributes = TitledCategorizedPostAttributes & {
   url: string;
@@ -47,25 +48,25 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
     allowNull: false,
     unique: true,
   })
-  url: string;
+    url: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  rawText: string;
+    rawText: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  filteredText: string;
+    filteredText: string;
 
   @Column({
     type: DataType.STRING(1024),
     allowNull: false,
   })
-  originalTitle: string;
+    originalTitle: string;
 
   get attachments(): Promise<Attachment[]> {
     return Attachment.findAll({

@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   Button,
 } from "@mui/material";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {  useSearchParams } from "react-router-dom";
 
 import { SessionContext } from "@/contexts";
 import { Api, SourceAttr } from "@/api/Api";
@@ -27,7 +27,6 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
 }));
 
 export default function SearchPage() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const api = new Api({
@@ -76,7 +75,7 @@ export default function SearchPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [searchText]);
+  }, [api, pageSize, searchText]);
 
   const loadMore = () => {
     api

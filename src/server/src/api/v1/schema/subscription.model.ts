@@ -1,4 +1,5 @@
 import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 import { User } from './user.model';
 
@@ -33,9 +34,9 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     type: DataType.NUMBER,
     allowNull: false,
   })
-  userId: number;
+    userId: number;
   
   @BelongsTo(() => User, 'userId')
-  user: User;
+    user: User;
 
 }

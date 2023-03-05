@@ -1,4 +1,5 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 
 export type PolicyAttributes = DatedAttributes & {
@@ -35,11 +36,11 @@ export class Policy<
     type: DataType.STRING,
     allowNull: false,
   })
-  name: string;
+    name: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  content: string;
+    content: string;
 }

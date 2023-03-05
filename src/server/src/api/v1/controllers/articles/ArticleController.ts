@@ -1,8 +1,8 @@
 import { Op } from 'sequelize';
-import { Body, Get, Query, Path, Post, Route, Tags } from 'tsoa';
+import { Body, Get, Path, Post, Query, Route, Tags } from 'tsoa';
 
-import { Article, ArticleAttr, ArticleAttributes } from '../../schema';
 import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
+import { Article, ArticleAttr, ArticleAttributes } from '../../schema';
 
 function applyFilter(filter?: string) {
   if (!filter) return undefined;
@@ -106,6 +106,7 @@ export class ArticleController {
   }
 
   @Post('/')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async writeArticleFromSources(@Body() sources: number[]): Promise<ArticleAttributes> {
     // article creation is suppressed in the first release
     return null;

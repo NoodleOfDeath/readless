@@ -1,6 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { InteractionType } from './types';
+
 import { DatedAttributes } from './dated';
+import { InteractionType } from './types';
 import { User } from './user.model';
 
 export type InteractionAttributes = DatedAttributes & {
@@ -48,30 +49,30 @@ export class Interaction<
     type: DataType.STRING,
     allowNull: false,
   })
-  type: InteractionType;
+    type: InteractionType;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  targetId: number;
+    targetId: number;
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
   })
-  actorId?: number;
+    actorId?: number;
 
   @Column({
     type: DataType.STRING,
   })
-  actorTag?: string;
+    actorTag?: string;
 
   @Column({
     type: DataType.TEXT,
   })
-  value?: string;
+    value?: string;
 
   @BelongsTo(() => User, 'actorId')
-  actor?: User;
+    actor?: User;
 }

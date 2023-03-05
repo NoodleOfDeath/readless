@@ -1,14 +1,17 @@
 import { Table } from 'sequelize-typescript';
+
+import { ARTICLE_ATTRS } from './types';
+import { Attachment } from './attachment.model';
 import {
   Attr,
   TitledCategorizedPost,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from './post';
-import { ARTICLE_ATTRS } from './types';
-import { Attachment } from './attachment.model';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type ArticleAttributes = TitledCategorizedPostAttributes & {};
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type ArticleCreationAttributes = TitledCategorizedPostCreationAttributes & {};
 
 export type ArticleAttr = Attr<Article, (typeof ARTICLE_ATTRS)[number]>;

@@ -1,6 +1,5 @@
 import { mdiApple, mdiAws, mdiSpotify } from "@mdi/js";
 import iheart from "@/icons/iheart";
-import { NavigateFunction } from "react-router-dom";
 import { NavigationItemProps } from "@/components/layout/header/NavigationItem";
 
 export const PODCAST_LINKS: NavigationItemProps[] = [

@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { validate } from '../../middleware';
+
 import { ReferralController } from '../../controllers';
+import { validate } from '../../middleware';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Typography } from "@mui/material";
-import { Icon } from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
+import { Icon } from "@mdi/react";
 import {
   Timeline,
   TimelineConnector,
@@ -12,6 +12,7 @@ import {
   TimelineSeparator,
 } from "@mui/lab";
 import ReactMarkdown from "react-markdown";
+
 import { MILESTONES } from "@/pages/about/milestones";
 
 export default function RoadMap() {

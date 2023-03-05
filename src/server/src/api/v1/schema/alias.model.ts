@@ -1,4 +1,5 @@
 import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 import { User } from './user.model';
 
@@ -38,20 +39,20 @@ export class UserAlias<
     type: DataType.INTEGER,
     allowNull: false,
   })
-  userId: number;
+    userId: number;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  type: string;
+    type: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  value: string;
+    value: string;
 
   @BelongsTo(() => User, 'userId')
-  user: User;
+    user: User;
 }

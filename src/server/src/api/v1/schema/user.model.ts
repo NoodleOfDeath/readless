@@ -1,9 +1,12 @@
 import { HasMany, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 import { UserAlias } from './alias.model';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type UserAttributes = DatedAttributes & {};
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type UserCreationAttributes = DatedAttributes & {};
 
 @Table({
@@ -24,5 +27,5 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   @HasMany(() => UserAlias, 'userId')
-  aliases: UserAlias[];
+    aliases: UserAlias[];
 }

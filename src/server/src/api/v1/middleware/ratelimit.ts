@@ -1,6 +1,6 @@
+import IORedis from 'ioredis';
 import RateLimitMiddleware, { Options } from 'express-rate-limit';
 import RedisStore, { RedisReply } from 'rate-limit-redis';
-import IORedis from 'ioredis';
 
 export type RateLimit = [max: number, windowMs: number];
 export type RateLimitOptions = Options & {
@@ -19,29 +19,28 @@ export const DEFAULT_RATE_LIMIT: RateLimitString = '120 per 2 min'; // 120 reque
 export const DEFAULT_WINDOW_MS = 2 * 60 * 1000;
 export const DEFAULT_MAX = 120;
 
-const parseRateLimitString = (limit: RateLimitString): Partial<RateLimitOptions> => {
+function parseRateLimitString(limit: RateLimitString): Partial<RateLimitOptions> {
   const [max, interval] = limit.split(/\s*(?:every|in|per|\/)\s*/);
-  const [_, window, unit] =
-    /(\d+)\s*(ms|milliseconds?|s|secs?|seconds?|m|mins?|minutes?|hr?|hrs?|hours?|d|days?)/.exec(interval) || [];
+  const [_, window, unit] = /(\d+)\s*(ms|milliseconds?|s|secs?|seconds?|m|mins?|minutes?|hr?|hrs?|hours?|d|days?)/.exec(interval) || [];
   const rate: RateLimit = [
     Number.parseInt(max),
     Number.parseInt(window) *
-      (/ms|milliseconds?/.test(unit)
-        ? 1
-        : /s|secs?|seconds?/.test(unit)
+    (/ms|milliseconds?/.test(unit)
+      ? 1
+      : /s|secs?|seconds?/.test(unit)
         ? 1000
         : /m|mins?|minutes?/.test(unit)
-        ? 1000 * 60
-        : /hr?|hrs?|hours?/.test(unit)
-        ? 1000 * 60 * 60
-        : /d|days?/.test(unit)
-        ? 1000 * 60 * 60 * 24
-        : 1),
+          ? 1000 * 60
+          : /hr?|hrs?|hours?/.test(unit)
+            ? 1000 * 60 * 60
+            : /d|days?/.test(unit)
+              ? 1000 * 60 * 60 * 24
+              : 1),
   ];
   return {
     rate,
   };
-};
+}
 
 export const rateLimit = (
   opts: RateLimitString | Partial<RateLimitOptions> = DEFAULT_RATE_LIMIT,

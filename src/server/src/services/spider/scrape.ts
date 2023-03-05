@@ -44,6 +44,7 @@ export class ExtractRuleMap<T extends { [key: string]: ExtractRule }> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type JSInstructions = {};
 export type BlockableResources = string;
 
@@ -89,8 +90,8 @@ export function encodeScrapeOpts<T>(opts: Partial<T>) {
           typeof value === 'string'
             ? value
             : typeof value === 'boolean'
-            ? JSON.stringify(Number(value))
-            : JSON.stringify(value),
+              ? JSON.stringify(Number(value))
+              : JSON.stringify(value),
         ]),
     ),
   );

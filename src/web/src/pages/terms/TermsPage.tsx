@@ -1,8 +1,8 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-import Page from "@/components/layout/Page";
 import { Api } from "@/api/Api";
+import Page from "@/components/layout/Page";
 
 export default function TermsPage() {
   const [text, setText] = React.useState("");

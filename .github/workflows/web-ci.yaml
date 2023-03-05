@@ -66,7 +66,7 @@ jobs:
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
       K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
       K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
-      K8S_REPLICA_COUNT_CLIENT: ${{ vars.K8S_REPLICA_COUNT_CLIENT }}
+      K8S_REPLICA_COUNT_WEB: ${{ vars.K8S_REPLICA_COUNT_WEB }}
       PORT: ${{ vars.PORT }}
     steps:
       - name: Print Job Description

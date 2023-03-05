@@ -1,4 +1,5 @@
 import React from "react";
+
 import AboutPage from "@/pages/about/AboutPage";
 import Error404NotFoundPage from "@/pages/errors/Error404NotFoundPage";
 import HomePage from "@/pages/home/HomePage";

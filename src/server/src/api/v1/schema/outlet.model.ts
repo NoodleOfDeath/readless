@@ -1,6 +1,7 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
-import { DatedAttributes } from './dated';
+
 import { Attachment } from './attachment.model';
+import { DatedAttributes } from './dated';
 
 export type SiteMapParams = string | string[][];
 
@@ -71,18 +72,18 @@ export class Outlet<
     allowNull: false,
     unique: true,
   })
-  name: string;
+    name: string;
 
   @Column({
     type: DataType.ARRAY(DataType.JSON),
     allowNull: false,
   })
-  siteMaps: SiteMap[];
+    siteMaps: SiteMap[];
 
   @Column({
     type: DataType.JSON,
   })
-  fetchPolicy: FetchPolicy;
+    fetchPolicy: FetchPolicy;
 
   get attachments(): Promise<Attachment[]> {
     return Attachment.findAll({

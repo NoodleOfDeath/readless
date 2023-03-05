@@ -18,8 +18,8 @@ describe('spider tests', () => {
     for (const target of TARGETS) {
       test(`custom scraping: ${target}`, async () => {
         try {
-          const resp = await spider.loot(target)
-          console.log("loot", resp.filteredText);
+          const resp = await spider.loot(target);
+          console.log('loot', resp.filteredText);
           expect(!!resp).toBe(true);
         } catch (e) {
           console.error(e);
@@ -28,7 +28,7 @@ describe('spider tests', () => {
       test(`webscraping with webscraping api: ${target}`, async () => {
         try {
           const resp = await spider.scrape(target);
-          console.log("scrape", resp.collapsed());
+          console.log('scrape', resp.collapsed());
           expect(!!resp).toBe(true);
         } catch (e) {
           console.error(e);

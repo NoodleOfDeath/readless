@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { param, query } from 'express-validator';
 
-import { pagination, validate } from '../../middleware';
-
 import { ArticleController } from '../../controllers';
 import { ArticleAttr, ArticleAttributes } from '../../schema';
+import { pagination, validate } from '../../middleware';
 
 const router = Router();
 

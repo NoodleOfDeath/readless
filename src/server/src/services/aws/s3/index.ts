@@ -1,7 +1,17 @@
 // Step 1: Import the S3Client object and all necessary SDK commands.
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 
 import { BaseService } from '../../base';
+
+type S3ServiceOptions = {
+  endpoint?: string;
+  forcePathStyle?: boolean;
+  region?: string;
+  credentials?: {
+    accessKeyId: string;
+    secretAccessKey: string;
+  };
+};
 
 export class S3Service extends BaseService {
   s3Client: S3Client;
@@ -14,7 +24,7 @@ export class S3Service extends BaseService {
       accessKeyId: 'C58A976M583E23R1O00N',
       secretAccessKey: process.env.SPACES_SECRET,
     },
-  }: any = {}) {
+  }: S3ServiceOptions = {}) {
     super();
     this.s3Client = new S3Client({
       endpoint,
@@ -24,7 +34,7 @@ export class S3Service extends BaseService {
     });
   }
 
-  async uploadObject(params: any) {
+  async uploadObject(params: PutObjectCommandInput) {
     try {
       const data = await this.s3Client.send(new PutObjectCommand(params));
       return data;

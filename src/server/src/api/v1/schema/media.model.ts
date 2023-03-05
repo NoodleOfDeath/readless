@@ -1,4 +1,5 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
+
 import { DatedAttributes } from './dated';
 
 export type MediaAttributes = DatedAttributes & {
@@ -37,11 +38,11 @@ export class Media<
     type: DataType.STRING,
     allowNull: false,
   })
-  type: string;
+    type: string;
 
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
-  url: string;
+    url: string;
 }

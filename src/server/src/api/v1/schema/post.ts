@@ -1,6 +1,7 @@
 import { Column, DataType, Model } from 'sequelize-typescript';
-import { POST_ATTRS, TITLED_CATEGORIZED_POST_ATTRS } from './types';
+
 import { DatedAttributes } from './dated';
+import { POST_ATTRS, TITLED_CATEGORIZED_POST_ATTRS } from './types';
 
 export type Attr<Model, K extends keyof Model> = {
   [Key in K]: Model[Key];
@@ -45,37 +46,37 @@ export abstract class Post<
     type: DataType.TEXT,
     allowNull: false,
   })
-  text: string;
+    text: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  abridged: string;
+    abridged: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  summary: string;
+    summary: string;
 
   @Column({
     type: DataType.STRING(1024),
     allowNull: false,
   })
-  shortSummary: string;
+    shortSummary: string;
 
   @Column({
     type: DataType.ARRAY(DataType.STRING(1024)),
     defaultValue: [],
   })
-  bullets: string[];
+    bullets: string[];
   
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
-  imagePrompt: string;
+    imagePrompt: string;
 }
 
 export type TitledCategorizedPostAttributes = PostAttributes & {
@@ -109,23 +110,23 @@ export abstract class TitledCategorizedPost<
     type: DataType.STRING(1024),
     allowNull: false,
   })
-  title: string;
+    title: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  category: string;
+    category: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  subcategory: string;
+    subcategory: string;
 
   @Column({
     type: DataType.ARRAY(DataType.STRING),
     defaultValue: [],
   })
-  tags: string[];
+    tags: string[];
 }

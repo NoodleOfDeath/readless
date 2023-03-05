@@ -74,10 +74,6 @@ export default function Header() {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleClose = React.useCallback(() => {
-    setAnchorEl(null);
-  }, []);
-
   const menuRef = React.useRef<HTMLDivElement>(null);
 
   const openMenu = React.useCallback(
