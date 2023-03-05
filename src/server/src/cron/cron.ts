@@ -114,9 +114,10 @@ async function cleanBadSources() {
     await Source.destroy({
       where: {
         [Op.or]: [
-          { title: { [Op.iRegexp]: '^i\'m (?:sorry|apologize)' } },
-          { abridged: { [Op.iRegexp]: '^i\'m (?:sorry|apologize)' } },
-          { summary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize)' } },
+          { title: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
+          { title: { [Op.iRegexp]: '\\w{200,}' } },
+          { abridged: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
+          { summary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
         ]
       },
     });

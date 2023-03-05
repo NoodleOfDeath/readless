@@ -43,6 +43,7 @@ export async function doWork() {
           }))?.toJSON();
           if (!outlet) {
             console.log(`Outlet ${id} not found`);
+            await job.remove();
             await job.moveToFailed(new Error(`Outlet ${id} not found`), siteMapWorker.queue.token, true);
             return;
           }
@@ -76,20 +77,27 @@ export async function doWork() {
               },
             },
           );
-          if (/^(?:i'm sorry|i apologize)/i.test(source.title) ||
-          /^(?:i'm sorry|i apologize)/i.test(source.abridged) || 
-          /^(?:i'm sorry|i apologize)/i.test(source.summary)) {
-            console.log(`Source ${url} has been blocked by the outlet. Removing job.`);
+          if (
+            /^(?:i'm sorry|i apologize|sign\s?up)/i.test(source.title) ||
+          /^(?:i'm sorry|i apologize|sign\s?up)/i.test(source.abridged) || 
+          /^(?:i'm sorry|i apologize|sign\s?up)/i.test(source.summary)) {
+            console.log(`Source ${url} has been blocked by the outlet. delaying job.`);
             await job.remove();
             await siteMapWorker.queue.add(job.name, job.data, {
               jobId: job.id,
               delay: WORKER_FETCH_INTERVAL_MS
             });
             return;
+          } else if (source.title.length > 200) {
+            console.log(`Source ${url} has a title that is too long. failing job.`);
+            await job.remove();
+            await job.moveToFailed(new Error('Title is too long'),  siteMapWorker.queue.token, true);
+            return;
           }
           return source;
         } catch (e) {
           console.error(e);
+          await job.remove();
           await job.moveToFailed(e, siteMapWorker.queue.token, true);
         }
       },
