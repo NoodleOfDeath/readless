@@ -75,7 +75,8 @@ export default function SearchPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [api, pageSize, searchText]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, searchText]);
 
   const loadMore = () => {
     api

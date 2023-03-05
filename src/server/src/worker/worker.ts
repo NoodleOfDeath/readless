@@ -1,7 +1,8 @@
+import { Op } from 'sequelize';
+
 import { SourceController } from '../api/v1/controllers';
 import { DBService, QUEUES, Worker } from '../services';
 import { Outlet, Source } from '../api/v1/schema';
-import { Op } from 'sequelize';
 
 /** Fetch rate per interval */
 const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 2; // 2 for dev and testing
