@@ -1,10 +1,9 @@
 import { CronJob } from 'cron';
-import { Op } from 'sequelize';
 import axios from 'axios';
 import { parse } from 'node-html-parser';
 
 import { DBService, QUEUES, QueueService } from '../services';
-import { Outlet, SiteMapParams, Source } from '../api/v1/schema';
+import { Outlet, SiteMapParams } from '../api/v1/schema';
 
 async function main() {
   await DBService.init();
@@ -78,15 +77,7 @@ async function pollForNews() {
             return /^https?:\/\//i.test(href) ? href : `${new URL(queryUrl).origin}/${href.replace(/^\//, '')}`;
           });
           if (urls.length === 0) continue;
-          const existingSources = await Source.findAll({
-            where: {
-              url: {
-                [Op.in]: urls,
-              },
-            },
-          });
-          const filteredUrls = urls.filter((url) => !existingSources.some((source) => source.url === url));
-          for (const url of filteredUrls) {
+          for (const url of urls) {
             await queue.dispatch(
               QUEUES.siteMaps,
               url,
