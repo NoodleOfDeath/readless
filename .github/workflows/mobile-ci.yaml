@@ -23,6 +23,7 @@ env:
 jobs:
   build-mobile:
     runs-on: macos-latest
+    if: ${{ contains(github.event.head_commit.message, '#mobile') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       API_ENDPOINT: ${{ vars.API_ENDPOINT }}
@@ -40,6 +41,7 @@ jobs:
   deploy-mobile:
     needs: build-mobile
     runs-on: macos-latest
+    if: ${{ contains(github.event.head_commit.message, '#mobile') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description
