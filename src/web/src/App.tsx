@@ -29,6 +29,19 @@ function App() {
   
   const location = useLocation();
   
+  const [geolocation, setGeolocation] = React.useState({
+    latitude: NaN,
+    longitude: NaN,
+  });
+  
+  React.useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition((location) => {
+      setGeolocation(location.coords);
+      console.log('fuck', location);
+    })
+  }, []);
+  
   React.useEffect(() => {
     const api = new Api({
       baseUrl: process.env.API_ENDPOINT,
@@ -37,11 +50,12 @@ function App() {
       type: 'nav',
       data: { 
         path: location, 
-        geolocation: navigator.geolocation
+        geolocation,
       },
       userAgent: navigator.userAgent,
-    });
-  }, [location]);
+    })
+      .catch(console.error);
+  }, [location, geolocation]);
   
   const { theme } = React.useContext(SessionContext);
   
