@@ -1,0 +1,53 @@
+name: Mobile CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - ".github/workflows/mobile-ci.yaml"
+      - "k8s/mobile-deploy.yaml"
+      - "src/mobile/package.json"
+      - "src/mobile/public/**"
+      - "src/mobile/src/**"
+      - "src/server/api/**"
+
+concurrency:
+  group: ${{ github.ref }}-mobile
+  cancel-in-progress: true
+
+env:
+  IMAGE: ${{ github.event.repository.name }}-mobile-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+
+jobs:
+  build-mobile:
+    runs-on: macos-latest
+    environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+    env:
+      API_ENDPOINT: ${{ vars.API_ENDPOINT }}
+      GENERATE_SOURCEMAP: ${{ vars.GENERATE_SOURCEMAP }}
+    steps:
+      - name: Print Job Description
+        run: |
+          echo building \"$IMAGE\" from branch \"${{ github.ref_name }}\"
+      - name: Git Checkout
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.GIT_SSH_KEY }}
+          submodules: recursive
+
+  deploy-mobile:
+    needs: build-mobile
+    runs-on: macos-latest
+    environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+    steps:
+      - name: Print Job Description
+        run: |
+          echo deploying \"$IMAGE\" from branch \"${{ github.ref_name }}\"
+      - name: Git Checkout
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.GIT_SSH_KEY }}
+          submodules: recursive
+      
