@@ -21,8 +21,22 @@ export const SOURCE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'url', 'originalT
 /** light weight record for an article post */
 export const ARTICLE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS] as const;
 
-export const INTERACTION_TYPES = ['like', 'dislike', 'bookmark', 'share', 'comment', 'view'] as const;
-export type InteractionType = typeof INTERACTION_TYPES[number];
+export const RESOURCE_TYPES = {
+  article: 'article',
+  interaction: 'interaction',
+  media: 'media',
+  outlet: 'outlet',
+  source: 'source',
+} as const;
+export type ResourceType = keyof typeof RESOURCE_TYPES;
 
-export const RESOURCE_TYPES = ['article', 'interaction', 'media', 'outlet', 'source'] as const;
-export type ResourceType = typeof RESOURCE_TYPES[number];
+export const INTERACTION_TYPES = {
+  like: 'like',
+  dislike: 'dislike',
+  bookmark: 'bookmark',
+  share: 'share',
+  comment: 'comment',
+  view: 'view',
+} as const;
+
+export type InteractionType = keyof typeof INTERACTION_TYPES;

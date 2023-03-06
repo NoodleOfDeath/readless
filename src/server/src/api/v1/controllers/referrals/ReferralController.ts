@@ -5,7 +5,7 @@ import { Referral, ReferralAttributes, ReferralCreationAttributes } from '../../
 @Tags('Referrals')
 export class ReferralController {
   @Post('/')
-  async record(@Body() data: ReferralCreationAttributes): Promise<ReferralAttributes> {
+  async recordReferral(@Body() data: ReferralCreationAttributes): Promise<ReferralAttributes> {
     try {
       const referral = new Referral(data);
       await referral.save();

@@ -4,6 +4,7 @@ import { DBService } from '../../services';
 
 import arenaRouter from './routes/arena';
 import articleRouter from './routes/articles';
+import metricRouter from './routes/metrics';
 import policyRouter from './routes/policies';
 import referralRouter from './routes/referrals';
 import sourceRouter from './routes/sources';
@@ -15,6 +16,7 @@ async function main() {
   router.use(express.static('public'));
   router.use('/arena', arenaRouter);
   router.use('/articles', articleRouter);
+  router.use('/metrics', metricRouter);
   router.use('/policies', policyRouter);
   router.use('/referrals', referralRouter);
   router.use('/sources', sourceRouter);

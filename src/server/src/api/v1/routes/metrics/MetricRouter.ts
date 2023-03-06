@@ -1,23 +1,25 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import { ReferralController } from '../../controllers';
+import { MetricController } from '../../controllers';
 import { validate } from '../../middleware';
 
 const router = Router();
 
 router.post(
   '/',
+  body('type').isString(),
+  body('data').isObject(),
   body('referrer').isString(),
-  body('target').isString(),
   body('userAgent').isString(),
   validate,
   async (req, res) => {
-    const { referrer, target, userAgent } = req.body;
+    const { type, data, userAgent } = req.body;
     try {
-      await new ReferralController().recordReferral({
-        referrer,
-        target,
+      await new MetricController().recordMetric({
+        type,
+        data,
+        referrer: req.ips,
         userAgent,
       });
       res.status(200).send('OK');

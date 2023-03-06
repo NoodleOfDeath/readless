@@ -100,6 +100,9 @@
 					},
 					{
 						"properties": {
+							"imagePrompt": {
+								"type": "string"
+							},
 							"bullets": {
 								"items": {
 									"type": "string"
@@ -120,6 +123,7 @@
 							}
 						},
 						"required": [
+							"imagePrompt",
 							"bullets",
 							"shortSummary",
 							"summary",
@@ -174,6 +178,52 @@
 					}
 				]
 			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"MetricAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"userAgent": {
+								"type": "string",
+								"description": "the user agent info of the consumer of this referral"
+							},
+							"referrer": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array",
+								"description": "ip address(es) of actor"
+							},
+							"data": {
+								"$ref": "#/components/schemas/Record_string.unknown_"
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"click",
+									"nav"
+								]
+							}
+						},
+						"required": [
+							"userAgent",
+							"data",
+							"type"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"MetricCreationAttributes": {
+				"$ref": "#/components/schemas/MetricAttributes"
+			},
 			"PolicyAttributes": {
 				"allOf": [
 					{
@@ -203,6 +253,10 @@
 					},
 					{
 						"properties": {
+							"geolocation": {
+								"type": "string",
+								"description": "geolocation of the referrer"
+							},
 							"userAgent": {
 								"type": "string",
 								"description": "the user agent info of the consumer of this referral"
@@ -211,11 +265,15 @@
 								"type": "string",
 								"description": "the url path of the referral destination"
 							},
+							"origin": {
+								"type": "string",
+								"description": "the url path this referral was generated from"
+							},
 							"referrer": {
 								"type": "string",
-								"description": "the url path this referral was copied from"
+								"description": "the IP address this referral was accessed from"
 							},
-							"referrerId": {
+							"referredById": {
 								"type": "number",
 								"format": "double",
 								"description": "id of a user if ref link was created while logged in"
@@ -691,6 +749,38 @@
 				]
 			}
 		},
+		"/v1/metrics": {
+			"post": {
+				"operationId": "RecordMetric",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MetricAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Metricss"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MetricCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/v1/policies/privacy": {
 			"get": {
 				"operationId": "GetPrivacyPolicy",
@@ -737,7 +827,7 @@
 		},
 		"/v1/referrals": {
 			"post": {
-				"operationId": "Record",
+				"operationId": "RecordReferral",
 				"responses": {
 					"200": {
 						"description": "Ok",
