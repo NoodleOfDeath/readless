@@ -4,6 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev:api": "(cd src/server && pnpm dev:api)",
+    "dev:cron": "(cd src/server && pnpm dev:cron)",
+    "dev:worker": "(cd src/server && pnpm dev:worker)",
+    "dev:web": "(cd src/web && pnpm dev)",
+    "start:api": "(cd src/server && pnpm start:api)",
+    "start:cron": "(cd src/server && pnpm start:cron)",
+    "start:worker": "(cd src/server && pnpm start:worker)",
+    "start:web": "(cd src/server && pnpm start:web)",
     "format": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },

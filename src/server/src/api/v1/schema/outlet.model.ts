@@ -19,12 +19,14 @@ export type SiteMap = {
    * $1, $2, ... = param1, param2, ...
    */
   url: string;
+  /** template params to dynamically interpolate */
+  params?: SiteMapParams;
+  /** keep query string */
+  keepQuery?: boolean;
   /** css selector(s) for getting news links */
   selector: string;
   /** attribute to extract from retrieved html nodes; if nothing is specified the element's `innerHTML` is used */
   attribute?: 'href' | 'src';
-  /** template params to dynamically interpolate */
-  params?: SiteMapParams;
 };
 
 export type FetchPolicy = {

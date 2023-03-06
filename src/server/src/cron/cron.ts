@@ -68,19 +68,25 @@ async function pollForNews() {
       console.log(`fetching sitemaps for ${name}`);
       if (siteMaps.length === 0) continue;
       for (const siteMap of siteMaps) {
-        const { selector, attribute, params } = siteMap;
+        const { params, keepQuery, selector, attribute } = siteMap;
         const queryUrls = generateDynamicUrls(siteMap.url, params);
         for (const queryUrl of queryUrls) {
-          console.log(`fetching ${queryUrls} from outlet ${name}...`);
+          console.log(`fetching ${queryUrl} from ${name}...`);
           try {
             const { data } = await axios.get(queryUrl, {
               timeout: 10_000,
             });
             const root = parse(data);
-            const urls = root.querySelectorAll(selector).map((e) => {
+            const nodes = root.querySelectorAll(selector);
+            const urls = nodes.map((e) => {
               const href = (attribute && e.getAttribute(attribute) ? e.getAttribute(attribute) : e.textContent).trim();
-              return /^https?:\/\//i.test(href) ? href : `${new URL(queryUrl).origin}/${href.replace(/^\//, '')}`;
+              const url = new URL(queryUrl);
+              const fullUrl = 
+                new URL(/^https?:\/\//i.test(href) ? href : 
+                  [url.origin, href.replace(/^\//, '')].join('/'));
+              return keepQuery ? fullUrl.href : [fullUrl.origin, fullUrl.pathname].join('');
             });
+            console.log(urls);
             if (urls.length === 0) continue;
             for (const url of urls) {
               await queue.dispatch(

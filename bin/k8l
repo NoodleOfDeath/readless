@@ -1,0 +1,41 @@
+#!/bin/bash
+
+THIS=$(basename $0)
+
+usage() {
+  echo "Usage: $THIS [-t|--tail <lines>] [-h|--help] <pattern>"
+  echo "  -t|--tail <lines>  Number of lines to tail"
+  echo "  -h|--help          Show this help"
+  echo "  <pattern>          Pattern to match in deployment name"
+  exit 1
+}
+
+ARGS=()
+TAIL=10
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -[0-9][0-9]*)
+    TAIL="${1:1}"
+    ;;
+  -h | --help)
+    usage
+    ;;
+  -t | --tail)
+    TAIL="$2"
+    shift
+    ;;
+  *)
+    ARGS+=("$1")
+    ;;
+  esac
+  shift
+done
+
+PATTERN="${ARGS[0]}"
+
+if [[ -z "$PATTERN" ]]; then
+  usage
+fi
+
+kubectl logs -l app=$(kubectl get deploy | grep $PATTERN | awk '{print $1}') --tail=$TAIL -f
