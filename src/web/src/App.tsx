@@ -38,7 +38,6 @@ function App() {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition((location) => {
       setGeolocation(location.coords);
-      console.log('fuck', location);
     })
   }, []);
   

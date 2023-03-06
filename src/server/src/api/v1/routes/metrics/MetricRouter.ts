@@ -10,7 +10,6 @@ router.post(
   '/',
   body('type').isString(),
   body('data').isObject(),
-  body('referrer').isString(),
   body('userAgent').isString(),
   validate,
   async (req, res) => {
