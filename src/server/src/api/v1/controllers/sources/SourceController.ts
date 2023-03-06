@@ -268,9 +268,11 @@ export class SourceController {
       const prompt = prompts[n];
       const reply = await chatgpt.send(prompt.text);
       console.log(reply);
-      const error = prompt.catchFailure && prompt.catchFailure(reply);
-      if (error) { 
-        throw error;
+      if (prompt.catchFailure) {
+        const error = prompt.catchFailure(reply);
+        if (error) { 
+          throw error;
+        }
       }
       prompt.action(reply);
       if (onProgress) {
