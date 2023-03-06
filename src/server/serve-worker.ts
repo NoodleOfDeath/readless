@@ -1,2 +1,2 @@
 import 'dotenv/config';
-import './src/work';
+import './src/worker';

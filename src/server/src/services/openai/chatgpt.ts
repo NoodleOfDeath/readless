@@ -5,6 +5,7 @@ import { BaseService } from '../base';
 export type Prompt = {
   text: string;
   size?: number;
+  catchFailure?: (reply: ChatMessage) => Error | undefined;
   action: (reply: ChatMessage) => void;
 };
 

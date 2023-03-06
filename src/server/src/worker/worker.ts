@@ -75,23 +75,6 @@ export async function doWork() {
               },
             },
           );
-          if (
-            /^(?:i'm sorry|i apologize|sign\s?up)/i.test(source.title) ||
-          /^(?:i'm sorry|i apologize|sign\s?up)/i.test(source.abridged) || 
-          /^(?:i'm sorry|i apologize|sign\s?up)/i.test(source.summary)) {
-            console.log(`Source ${url} has been blocked by the outlet. delaying job.`);
-            await siteMapWorker.queue.add(job.name, job.data, {
-              jobId: job.id,
-              delay: WORKER_FETCH_INTERVAL_MS
-            });
-            return;
-          } else if (source.title?.length > 200) {
-            console.log(`Source ${url} has a title that is too long. failing job.`);
-            await job.moveToFailed(new Error('Title is too long'),  siteMapWorker.queue.token, true);
-            return;
-          }
-          await source.save();
-          await source.reload();
           return source;
         } catch (e) {
           console.error(e);
