@@ -24,6 +24,7 @@ env:
 jobs:
   build-api:
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '~api') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description
@@ -51,6 +52,7 @@ jobs:
   deploy-api:
     needs: build-api
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '~api') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
