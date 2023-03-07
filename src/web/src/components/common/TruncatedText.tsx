@@ -4,6 +4,7 @@ import { styled } from "@mui/material";
 type Props = {
   children?: string;
   maxCharCount?: number;
+  wordBreak?: 'normal' | 'break-all' | 'keep-all' | 'break-word';
   showMoreText?: string;
   showLessText?: string;
   truncateStart?: boolean;
@@ -12,7 +13,11 @@ type Props = {
   variant?: "start" | "middle" | "end";
 };
 
-const StyledLink = styled("span")`
+const StyledText = styled("div")<Props>`
+  wordBreak: ${({ wordBreak }) => wordBreak};
+`
+
+const StyledLink = styled("span")<Props>`
   cursor: pointer;
   margin-left: 1rem;
 `;
@@ -20,6 +25,7 @@ const StyledLink = styled("span")`
 export default function TruncatedText({
   children,
   maxCharCount = 100,
+  wordBreak = 'normal',
   showLessText,
   truncateStart,
   truncateMiddle,
@@ -56,9 +62,9 @@ export default function TruncatedText({
 
   return (
     <>
-      <div onClick={() => setIsTruncated(!isTruncated)}>
+      <StyledText onClick={() => setIsTruncated(!isTruncated)} wordBreak={wordBreak}>
         {isTruncated ? truncatedText : children}
-      </div>
+      </StyledText>
       {!isTruncated && showLessText && (
         <StyledLink onClick={() => setIsTruncated(false)}>
           {showLessText}

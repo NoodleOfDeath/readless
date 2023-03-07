@@ -10,7 +10,7 @@
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api",
-    "swagger": "(cd ../server && pnpm run swagger) && cp ../server/public/swagger.json ./swagger.json && pnpm run gen"
+    "swagger": "(cd ../server && pnpm swagger) && cp ../server/public/swagger.json ./swagger.json && npx swagger-typescript-api -p ./swagger.json -o ./src/api"
   },
   "eslintConfig": {
     "extends": [
