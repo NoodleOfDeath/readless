@@ -73,6 +73,7 @@ export async function doWork() {
               onProgress: (progress) => {
                 job.updateProgress(progress);
               },
+              outletId: id,
             },
           );
           return source;

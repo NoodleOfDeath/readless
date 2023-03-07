@@ -124,8 +124,11 @@ export class SourceController {
 
   public async readAndSummarizeSource(
     { url }: ReadAndSummarizeSourcePayload,
-    { onProgress, force }: ReadAndSummarizeSourceOptions = {},
+    { onProgress, force, outletId, }: ReadAndSummarizeSourceOptions = {},
   ): Promise<Source> {
+    if (!outletId) {
+      throw new Error('no outlet id specified');
+    }
     if (!force) {
       const existingSource = await Source.findOne({ where: { url } });
       if (existingSource) {
@@ -145,6 +148,7 @@ export class SourceController {
     ).collapsed('title', 'text');
     // create the prompt action map to be sent to chatgpt
     const sourceInfo = Source.json({
+      outletId,
       url: url,
       originalTitle: scrapeLoot.title || loot.title,
       rawText: loot.text,
