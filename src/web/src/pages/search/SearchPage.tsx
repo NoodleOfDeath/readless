@@ -104,12 +104,12 @@ export default function SearchPage() {
         <Filters />
         <StyledGrid container justifyContent="center" spacing={2}>
           {recentSources.map((source) => (
+            <Grid key={source.id} item xs={gridSize}>
             <Post
-              key={source.id}
               source={source}
               consumptionMode={consumptionMode}
-              xs={gridSize}
             />
+            </Grid>
           ))}
           {loading && <CircularProgress size={10} variant="indeterminate" />}
         </StyledGrid>

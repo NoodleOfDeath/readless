@@ -112,7 +112,6 @@ export default function Header() {
           }
           event.stopPropagation();
         }
-        console.log(event);
         setAnchorEl(open ? event?.currentTarget : null);
         setOpen(open);
       },

@@ -1,21 +1,23 @@
 import React from "react";
 import { formatDistance } from "date-fns";
 import {
+  Box,
   Card,
-  CardContent,
-  Grid,
-  GridProps,
+  CardMedia,
   Link,
+  List,
   Stack,
   Typography,
   styled,
-  Chip,
+  Divider,
+  Button,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import ReactMarkdown from "react-markdown";
-import { useNavigate } from "react-router-dom";
 
 import { SourceAttr, SourceAttributes } from "@/api/Api";
-import TruncatedText from "@/components/common/TruncatedText";
+import Icon from "@mdi/react";
+import { mdiDotsHorizontal } from "@mdi/js";
 
 export const CONSUMPTION_MODES = [
   // "bulleted",
@@ -26,42 +28,28 @@ export const CONSUMPTION_MODES = [
 
 export type ConsumptionMode = (typeof CONSUMPTION_MODES)[number];
 
-type Props = GridProps & {
+type Props = {
   source?: SourceAttr | SourceAttributes;
   consumptionMode?: ConsumptionMode;
 };
 
-const StyledCard = styled(Card)<Props>(({ consumptionMode }) => ({
+const StyledCard = styled(Card)(({ theme }) => ({
   minWidth: 200,
   display: "flex",
-  flexDirection: consumptionMode === "concise" ? "row" : "column",
+  padding: theme.spacing(2),
+  justifyContent: "left",
+  textAlign: "left",
 }));
 
-const StyledHeaderStack = styled(Stack)(({ theme }) => ({
-  justifyContent: "center",
-  padding: theme.spacing(1),
+const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
+  width: 120,
+  height: 120,
+  marginLeft: theme.spacing(2),
+  borderRadius: 8,
 }));
 
-const StyledCardContent = styled(CardContent)<Props>(({ theme }) => ({
-  padding: theme.spacing(1),
-}));
-
-const StyledStack = styled(Stack)<Props>(({ theme }) => ({
-  margin: theme.spacing(0.5),
-}));
-
-const StyledChipCategory = styled(Chip)<Props>(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  cursor: "pointer",
-}));
-
-const StyledChipSubcategory = styled(Chip)<Props>(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  cursor: "pointer",
-}));
-
-const StyledChipTag = styled(Chip)<Props>(({ theme }) => ({
-  margin: theme.spacing(0.5),
+const StyledBox = styled(Box)(({ theme }) => ({
+  width: 250,
 }));
 
 export default function Post({
@@ -69,12 +57,11 @@ export default function Post({
   consumptionMode = "concise",
   ...rest
 }: Props = {}) {
-  const navigate = useNavigate();
 
-  // const createdAt = React.useMemo(
-  //   () => format(new Date(source?.createdAt ?? 0), "MMM dd, yyyy - h:mma"),
-  //   [source?.createdAt]
-  // );
+  const [showMenu, setShowMenu] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const menuRef = React.useRef<HTMLDivElement|null>(null);
 
   const timeAgo = React.useMemo(
     () =>
@@ -83,77 +70,97 @@ export default function Post({
       }),
     [source?.createdAt]
   );
-
-  const header = React.useMemo(() => {
-    return (
-      <StyledHeaderStack>
-        <Typography variant="h6">{source?.title}</Typography>
-        <Typography>{timeAgo}</Typography>
-        <Link
-          variant="caption"
-          href={source?.url}
-          target="_blank"
-          color="inherit"
-        >
-          <TruncatedText maxCharCount={50} truncateMiddle>
-            {source?.url}
-          </TruncatedText>
-        </Link>
-      </StyledHeaderStack>
-    );
-  }, [timeAgo, source]);
-
-  const content = React.useMemo(() => {
-    if (!source) return "";
-    switch (consumptionMode) {
-      // case "bulleted":
-      //   return source?.bullets?.map((b) => `- ${b}`).join("\n");
-      case "concise":
-        return source.shortSummary;
-      case "casual":
-        return source.summary;
-      case "comprehensive":
-        return source.abridged;
-    }
-  }, [consumptionMode, source]);
+  
+  const openMenu = React.useCallback(
+    (open: boolean) =>
+      (
+        event:
+          | React.KeyboardEvent<HTMLElement>
+          | React.MouseEvent<HTMLElement>
+          | React.TouchEvent<HTMLElement>
+      ) => {
+        if (!event) {
+          setAnchorEl(null);
+          setShowMenu(false);
+          return;
+        }
+        if (
+          event.type === "keydown" &&
+          ((event as React.KeyboardEvent).key === "Tab" ||
+            (event as React.KeyboardEvent).key === "Shift")
+        ) {
+          return;
+        } else if (event.type === "click") {
+          if (
+            menuRef.current &&
+            menuRef.current.contains(event.currentTarget)
+          ) {
+            return;
+          }
+          event.stopPropagation();
+        } else if (event.type === "touchmove") {
+          if (
+            menuRef.current &&
+            menuRef.current.contains(event.currentTarget)
+          ) {
+            return;
+          }
+          event.stopPropagation();
+        }
+        setAnchorEl(open ? event?.currentTarget : null);
+        setShowMenu(open);
+      },
+    [menuRef]
+  );
 
   return (
-    <Grid item {...rest}>
-      <StyledCard consumptionMode={consumptionMode}>
-        {header}
-        <StyledCardContent consumptionMode={consumptionMode}>
-          <StyledStack spacing={2}>
-            <ReactMarkdown skipHtml={true}>{content}</ReactMarkdown>
-            <Typography variant="caption">
-              <StyledChipCategory
-                label={source?.category}
-                color="secondary"
-                onClick={() => navigate(`/search?q=${source?.category}`)}
-              />
-              <StyledChipSubcategory
-                label={source?.subcategory}
-                color="secondary"
-                onClick={() => navigate(`/search?q=${source?.subcategory}`)}
-              />
-            </Typography>
-            {consumptionMode === "comprehensive" && (
-              <Typography variant="caption">
-                {source?.tags.map((tag) => {
-                  const trimmedTag = tag.trim();
-                  return (
-                    <StyledChipTag
-                      label={trimmedTag}
-                      key={trimmedTag}
-                      color="secondary"
-                      size="small"
-                    />
-                  );
-                })}
-              </Typography>
-            )}
-          </StyledStack>
-        </StyledCardContent>
-      </StyledCard>
-    </Grid>
+  <StyledCard>
+    <Stack spacing={2}>
+      <Stack direction="row"><Typography variant="h6">{source?.title}</Typography>
+      <StyledCardMedia><img width={120} height={120} /></StyledCardMedia>
+      </Stack>
+      <Divider variant="fullWidth" />
+      <Stack direction="row" spacing={1}>
+        <Typography variant="subtitle2">{timeAgo}</Typography>
+        <Box flexGrow={1} />
+        <Button onClick={openMenu(true)}>
+          <Icon path={mdiDotsHorizontal} size={1} />
+        </Button>
+        <Menu
+          open={showMenu}
+          anchorEl={anchorEl}
+          onClose={openMenu(false)}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}>
+          <StyledBox
+            role="presentation"
+            onClick={openMenu(false)}
+            onKeyDown={openMenu(false)}
+            onTouchMove={openMenu(false)}
+            ref={menuRef}
+          >
+            <List>
+              <MenuItem>
+                <Link
+                  variant="caption"
+                  href={source?.url}
+                  target="_blank"
+                  color="inherit"
+                >
+                  View Original Source
+                </Link>
+              </MenuItem>
+          </List>
+          </StyledBox>
+        </Menu>
+      </Stack>
+    </Stack>
+  </StyledCard>
   );
 }

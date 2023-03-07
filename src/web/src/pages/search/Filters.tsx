@@ -1,6 +1,5 @@
 import React from "react";
 import { Stack, styled } from "@mui/material";
-import ConsumptionModeSelector from "@/pages/search/ConsumptionModeSelector";
 import SearchBar from "@/pages/search/SearchBar";
 
 const StyledStack = styled(Stack)(({ theme }) => ({
@@ -16,7 +15,6 @@ export default function Filters() {
   return (
     <StyledStack>
       <SearchBar />
-      <ConsumptionModeSelector />
     </StyledStack>
   );
 }
