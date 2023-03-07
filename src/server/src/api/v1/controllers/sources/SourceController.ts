@@ -156,7 +156,7 @@ export class SourceController {
     });
     const prompts: Prompt[] = [
       {
-        text: `Please give this article a new title relevant to its content using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
+        text: `Please read the following article ignoring any text that appears to be ad related or about signing up. Please provide a new title for the article using no more than 120 characters. If there is not enough information to work with simply respond with \"No Comment\":\n\n${sourceInfo.filteredText}`,
         catchFailure: (reply) => { 
           if (reply.text.length > 120)
             return new Error('Title too long');
