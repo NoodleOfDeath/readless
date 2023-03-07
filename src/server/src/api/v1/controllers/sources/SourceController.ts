@@ -156,7 +156,7 @@ export class SourceController {
     });
     const prompts: Prompt[] = [
       {
-        text: `Please read the following article ignoring any text that appears to be ad related or about signing up. Please provide a new title for the article using no more than 120 characters. If there is not enough information to work with simply respond with \"Bad Prompt\":\n\n${sourceInfo.filteredText}`,
+        text: `Please read the following article ignoring any text that appears to be ad related or about signing up for the news outlet that wrote the article. Please provide a new title for the article using no more than 120 characters. If there is not enough information to work with simply respond with \"Bad Prompt\":\n\n${sourceInfo.filteredText}`,
         catchFailure: (reply) => { 
           if (/^"?Bad Prompt"?/.test(reply.text))
             return new Error('Bad Prompt');
