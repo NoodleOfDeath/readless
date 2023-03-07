@@ -60,10 +60,12 @@ const StyledBackButton = styled(Button)<Props>(({ theme }) => ({
   border: theme.palette.secondary.main,
 }));
 
-const StyledConsumptionModeContainer = styled(Box)<Props>(({ theme, consumptionMode }) => ({
+const StyledConsumptionModeContainer = styled(Box)<Props & {mdAndUp: boolean}>(({ theme, consumptionMode, mdAndUp }) => ({
   position: consumptionMode ? 'fixed' : 'relative',
-  right: consumptionMode ? theme.spacing(4) : undefined,
-  top: consumptionMode ? theme.spacing(10) : undefined,
+  right: consumptionMode && mdAndUp  ? theme.spacing(4) : undefined,
+  top: consumptionMode && mdAndUp  ? theme.spacing(10) : undefined,
+  bottom: consumptionMode && !mdAndUp  ? theme.spacing(4) : undefined,
+  borderRadius: 8,
 }));
 
 const StyledCardMedia = styled(CardMedia)<Props>(({ theme }) => ({
@@ -105,6 +107,7 @@ export default function Post({
   onChange,
 }: Props = {}) {
 
+  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
   const lgAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
   const [showMenu, setShowMenu] = React.useState(false);
@@ -220,7 +223,7 @@ export default function Post({
       <Stack direction={bottomRowDirection} spacing={1}>
         <Typography variant="subtitle2">{timeAgo}</Typography>
         <Box flexGrow={1} />
-        <StyledConsumptionModeContainer consumptionMode={consumptionMode} >
+        <StyledConsumptionModeContainer consumptionMode={consumptionMode} mdAndUp={mdAndUp}>
           <ConsumptionModeSelector consumptionMode={consumptionMode} onChange={(mode) => onChange?.(mode)} />
         </StyledConsumptionModeContainer>
         <Button onClick={openMenu(true)}>
