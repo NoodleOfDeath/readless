@@ -29,18 +29,6 @@ function App() {
   
   const location = useLocation();
   
-  const [geolocation, setGeolocation] = React.useState({
-    latitude: NaN,
-    longitude: NaN,
-  });
-  
-  React.useEffect(() => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((location) => {
-      setGeolocation(location.coords);
-    })
-  }, []);
-  
   React.useEffect(() => {
     const api = new Api({
       baseUrl: process.env.API_ENDPOINT,
@@ -48,13 +36,12 @@ function App() {
     api.recordMetric({
       type: 'nav',
       data: { 
-        path: location, 
-        geolocation,
+        path: location
       },
       userAgent: navigator.userAgent,
     })
       .catch(console.error);
-  }, [location, geolocation]);
+  }, [location]);
   
   const { theme } = React.useContext(SessionContext);
   
