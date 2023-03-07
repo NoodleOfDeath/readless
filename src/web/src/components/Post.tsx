@@ -64,6 +64,7 @@ const StyledCategoryBox = styled(Box)<Props>(({ theme }) => ({
   alignItems: "center",
   borderRadius: 8,
   background: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
 }));
 
 const StyledStack = styled(Stack)<Props>(({ theme }) => ({
