@@ -18,11 +18,28 @@ export const loadTheme = (mode: PaletteMode = "light") => {
         secondary: lightMode ? "#757575" : "#BDBDBD",
         disabled: lightMode ? "#bdbdbd" : "#757575",
       },
+      background: {
+        paper: lightMode
+          ? "linear-gradient(to bottom, #FFFFFF, #FEFEFE, #F5F5F5)"
+          : "linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)",
+      },
     },
     typography: {
       fontFamily: "Lato",
     },
     components: {
+      MuiScopedCssBaseline: {
+        styleOverrides: {
+          root: ({ theme }) => {
+            const lightMode = theme.palette.mode === "light";
+            return {
+              background: lightMode
+                ? "linear-gradient(to bottom, #FFFFFF, #FEFEFE, #F5F5F5)"
+                : "linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)",
+            };
+          },
+        },
+      },
       MuiPaper: {
         styleOverrides: {
           root: ({ theme }) => {

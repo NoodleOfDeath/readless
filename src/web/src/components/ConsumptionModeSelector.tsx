@@ -15,6 +15,7 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   justifyContent: "center",
   alignItems: "center",
   margin: theme.spacing(1),
+  background: theme.palette.background.default,
 }));
 
 const StyledButton = styled(Button)<{ selected: boolean }>(

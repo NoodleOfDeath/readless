@@ -13,6 +13,8 @@ import {
   Button,
   Menu,
   MenuItem,
+  useMediaQuery,
+  Theme,
 } from "@mui/material";
 
 import { SourceWithOutletAttr, SourceWithOutletName } from "@/api/Api";
@@ -48,14 +50,20 @@ const StyledCard = styled(Card)<Props>(({ theme }) => ({
 const StyledBackButton = styled(Button)<Props>(({ theme }) => ({
   position: 'fixed',
   left: theme.spacing(2),
-  bottom: theme.spacing(4),
-  width: 40,
+  top: theme.spacing(10),
+  paddingRight: theme.spacing(5),
   height: 40,
   borderRadius: 20,
   background: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
   opacity: 0.8,
   border: theme.palette.secondary.main,
+}));
+
+const StyledConsumptionModeContainer = styled(Box)<Props>(({ theme, consumptionMode }) => ({
+  position: consumptionMode ? 'fixed' : 'relative',
+  right: consumptionMode ? theme.spacing(4) : undefined,
+  top: consumptionMode ? theme.spacing(10) : undefined,
 }));
 
 const StyledCardMedia = styled(CardMedia)<Props>(({ theme }) => ({
@@ -97,6 +105,8 @@ export default function Post({
   onChange,
 }: Props = {}) {
 
+  const lgAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
+
   const [showMenu, setShowMenu] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -120,6 +130,10 @@ export default function Post({
     </StyledCategoryBox>
     );
   }, [source?.category, source?.subcategory]);
+
+  const bottomRowDirection = React.useMemo(() => {
+    return lgAndUp ? "row" : "column";
+  }, [lgAndUp]);
 
   const content = React.useMemo(() => {
     if (!source) return null;
@@ -189,23 +203,26 @@ export default function Post({
     <StyledStack spacing={2}>
       <Stack direction="row">
         {consumptionMode !== undefined && (
-          <StyledBackButton onClick={() => onChange?.()}>
-            <Icon path={mdiChevronLeft} size={2} />
+          <StyledBackButton onClick={() => onChange?.()} startIcon={
+            <Icon path={mdiChevronLeft} size={2} />}>
+              Back to Results
           </StyledBackButton>
         )}
         <Stack spacing={1}>
           <Typography variant="subtitle1">{source?.outletName}</Typography>
           <Typography variant="h6"><TruncatedText maxCharCount={120}>{source?.title}</TruncatedText></Typography>
         </Stack>
-        <StyledCardMedia>
+        {!consumptionMode && (<StyledCardMedia>
           {icon}  
-        </StyledCardMedia>
+        </StyledCardMedia>)}
       </Stack>
       <Divider variant="fullWidth" />
-      <Stack direction="row" spacing={1}>
+      <Stack direction={bottomRowDirection} spacing={1}>
         <Typography variant="subtitle2">{timeAgo}</Typography>
         <Box flexGrow={1} />
-        <ConsumptionModeSelector consumptionMode={consumptionMode} onChange={(mode) => onChange?.(mode)} />
+        <StyledConsumptionModeContainer consumptionMode={consumptionMode} >
+          <ConsumptionModeSelector consumptionMode={consumptionMode} onChange={(mode) => onChange?.(mode)} />
+        </StyledConsumptionModeContainer>
         <Button onClick={openMenu(true)}>
           <Icon path={mdiDotsHorizontal} size={1} />
         </Button>
