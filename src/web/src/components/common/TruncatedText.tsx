@@ -54,7 +54,7 @@ export default function TruncatedText({
           )}`;
         case "end":
         default:
-          return `${children?.slice(0, maxCharCount)}...`;
+          return `${children?.slice(0, maxCharCount)}${(children?.length ?? 0) > maxCharCount ? '...' : ''}`;
       }
     }
     return children;

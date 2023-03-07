@@ -7,13 +7,13 @@ import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
 import {
   ReadAndSummarizeSourcePayload,
   Source,
-  SourceAttr,
-  SourceAttributes,
   SourceCreationAttributes,
+  SourceWithOutletAttr,
+  SourceWithOutletName,
 } from '../../schema';
 
 function applyFilter(filter?: string) {
-  if (!filter) return undefined;
+  if (!filter || filter.replace(/\s/g, '').length === 0) return undefined;
   return {
     [Op.or]: [
       { title: { [Op.iRegexp]: filter } },
@@ -42,7 +42,7 @@ export class SourceController {
     @Query() offset = pageSize * page,
   ): Promise<{
     count: number;
-    rows: SourceAttr[];
+    rows: SourceWithOutletAttr[];
   }> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -50,9 +50,7 @@ export class SourceController {
       offset: offset,
       order: [['createdAt', 'DESC']],
     };
-    if (filter.replace(/\s+/g, '')) {
-      options.where = applyFilter(filter);
-    }
+    options.where = applyFilter(filter);
     return await Source.findAndCountAll(options);
   }
 
@@ -65,7 +63,7 @@ export class SourceController {
     @Query() offset = pageSize * page,
   ): Promise<{
     count: number;
-    rows: SourceAttr[];
+    rows: SourceWithOutletAttr[];
   }> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -89,7 +87,7 @@ export class SourceController {
     @Query() offset = pageSize * page,
   ): Promise<{
     count: number;
-    rows: SourceAttr[];
+    rows: SourceWithOutletAttr[];
   }> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -108,7 +106,7 @@ export class SourceController {
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string,
-  ): Promise<SourceAttributes> {
+  ): Promise<SourceWithOutletName> {
     const options: FindAndCountOptions<Source> = {
       where: {
         category,
@@ -120,7 +118,7 @@ export class SourceController {
   }
 
   @Post('/')
-  public async postReadAndSummarizeSource(@Body() { url }: ReadAndSummarizeSourcePayload): Promise<SourceAttributes> {
+  public async postReadAndSummarizeSource(@Body() { url }: ReadAndSummarizeSourcePayload): Promise<SourceWithOutletName> {
     return this.readAndSummarizeSource({ url});
   }
 

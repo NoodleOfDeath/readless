@@ -1,7 +1,8 @@
-import { Column, DataType, Table } from 'sequelize-typescript';
+import { AfterFind, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 
 import { Attachment } from './attachment.model';
-import { SOURCE_ATTRS } from './types';
+import { Outlet } from './outlet.model';
+import {  SOURCE_ATTRS } from './types';
 import {
   Attr,
   TitledCategorizedPost,
@@ -10,13 +11,16 @@ import {
 } from './post';
 
 export type SourceAttributes = TitledCategorizedPostAttributes & {
+  outletId: number;
   url: string;
   rawText: string;
   filteredText: string;
   originalTitle: string;
 };
+export type SourceWithOutletName = SourceAttributes & { outletName: string };
 
 export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes & {
+  outletId: number;
   url: string;
   rawText: string;
   filteredText: string;
@@ -24,6 +28,7 @@ export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes &
 };
 
 export type SourceAttr = Attr<Source, typeof SOURCE_ATTRS[number]>;
+export type SourceWithOutletAttr = SourceAttr & { outletName: string };
 
 export type ReadAndSummarizeSourcePayload = {
   url: string;
@@ -34,7 +39,7 @@ export type ReadAndSummarizeSourcePayload = {
   timestamps: true,
   paranoid: true,
 })
-export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreationAttributes> {
+export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCreationAttributes> implements SourceWithOutletName {
   static get empty() {
     return this.json();
   }
@@ -42,6 +47,16 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
   static json(defaults?: Partial<Source>): Partial<Source> {
     return defaults ?? {};
   }
+  
+  
+  @ForeignKey(() => Outlet)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+    outletId: number;
+  
+  outletName: string;
 
   @Column({
     type: DataType.STRING(2083),
@@ -76,4 +91,23 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
       },
     });
   }
+  
+  @AfterFind
+  static async addOutletName(sources: Source[]) {
+    const outletIds = sources.map((source) => {
+      return source.toJSON().outletId;
+    });
+    const outlets = await Outlet.findAll({
+      where: {
+        id: outletIds,
+      },
+    });
+    sources.forEach((source) => {
+      const outlet = outlets.find((o) => o.id === source.toJSON().outletId);
+      source.set('outletName', outlet?.toJSON().name ?? '', {
+        raw: true,
+      });
+    });
+  }
+
 }

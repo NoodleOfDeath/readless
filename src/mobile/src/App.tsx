@@ -5,9 +5,39 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useColorScheme } from 'react-native';
 
-import HomeScreen from './screens/HomeScreen';
+import AudioScreen from './screens/AudioScreen';
+import DiscoverScreen from './screens/DiscoverScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import SettingsScreen from './screens/SettingsScreen';
+import SearchScreen from './screens/SearchScreen';
+import SkoopScreen from './screens/SkoopScreen';
+
+const SCREENS = [
+  {
+    name: 'Discover',
+    component: DiscoverScreen,
+    icon: 'home',
+  },
+  {
+    name: 'Skoop+',
+    component: SkoopScreen,
+    icon: 'plus',
+  },
+  {
+    name: 'Audio',
+    component: AudioScreen,
+    icon: 'headphones',
+  },
+  {
+    name: 'Profile',
+    component: ProfileScreen,
+    icon: 'user',
+  },
+  {
+    name: 'Search',
+    component: SearchScreen,
+    icon: 'search',
+  },
+] as const;
 
 function App() {
 
@@ -23,28 +53,17 @@ function App() {
         colors: styles.navContainerColors,
       }}
     >
-      <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
-            const icons: {[key:string]: string} = {
-              Home: 'home',
-              Profile: 'user',
-              Settings: 'cog',
-            };
-            return (
+      <Tab.Navigator initialRouteName="Discover">
+        {SCREENS.map((screen) => <Tab.Screen key={screen.name} name={screen.name} component={screen.component}
+          options={{
+            tabBarIcon: (props) => (
               <Icon
-                name={icons[route.name]}
-                color={color}
-                size={size}
+                name={screen.icon}  
+                {...props}
               />
-            );
-          },
-        })}
-      >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+            ),
+          }}
+        />)}
       </Tab.Navigator>
     </NavigationContainer>
   );

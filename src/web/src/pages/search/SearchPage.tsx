@@ -12,10 +12,10 @@ import {
 import {  useSearchParams } from "react-router-dom";
 
 import { SessionContext } from "@/contexts";
-import { Api, SourceAttr } from "@/api/Api";
+import { Api, SourceWithOutletAttr } from "@/api/Api";
 
 import Page from "@/components/layout/Page";
-import Post from "@/components/Post";
+import Post, { ConsumptionMode } from "@/components/Post";
 
 import Filters from "@/pages/search/Filters";
 
@@ -32,21 +32,23 @@ export default function SearchPage() {
   const api = new Api({
     baseUrl: process.env.API_ENDPOINT,
   }).v1;
-  const { consumptionMode, searchText, setSearchText } =
+  const { searchText, setSearchText } =
     React.useContext(SessionContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
-  const [recentSources, setRecentSources] = React.useState<SourceAttr[]>([]);
+  const [recentSources, setRecentSources] = React.useState<SourceWithOutletAttr[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [pageSize] = React.useState<number>(10);
   const [page, setPage] = React.useState<number>(1);
 
+  const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
+  const [consumptionMode, setConsumptionMode] = React.useState<ConsumptionMode|undefined>();
+
   const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
   const gridSize = React.useMemo(() => {
-    if (consumptionMode === "comprehensive") return 12;
     return mdAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
-  }, [consumptionMode, recentSources, mdAndUp]);
+  }, [recentSources, mdAndUp]);
 
   React.useEffect(() => {
     if (searchParams.get("q")) {
@@ -78,6 +80,11 @@ export default function SearchPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
+  const expandPost = React.useCallback((id?: number, mode?: ConsumptionMode) => {
+    setExpandedPost(mode ? id : undefined);
+    setConsumptionMode(mode);
+  }, []);
+
   const loadMore = () => {
     api
       .getSources({
@@ -103,17 +110,25 @@ export default function SearchPage() {
         <Typography variant="h4">News that fits your schedule</Typography>
         <Filters />
         <StyledGrid container justifyContent="center" spacing={2}>
-          {recentSources.map((source) => (
+          {expandedPost === undefined ? recentSources.map((source, i) => (
             <Grid key={source.id} item xs={gridSize}>
-            <Post
-              source={source}
-              consumptionMode={consumptionMode}
-            />
+              <Post 
+                source={source}
+                onChange={(mode) => expandPost(i, mode)}
+                />
             </Grid>
-          ))}
+          )) : (
+            <Grid item xs={12}>
+              <Post
+                source={recentSources[expandedPost]}
+                onChange={(mode) => expandPost(expandedPost, mode)}
+                consumptionMode={consumptionMode}
+              />
+            </Grid>
+          )}
           {loading && <CircularProgress size={10} variant="indeterminate" />}
         </StyledGrid>
-        {totalResults > pageSize * page && (
+        {expandedPost === undefined && totalResults > pageSize * page && (
           <Button onClick={() => loadMore()}>Load More</Button>
         )}
       </Stack>

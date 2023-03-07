@@ -2,8 +2,12 @@ import React from "react";
 
 import { Button, ButtonGroup, styled } from "@mui/material";
 
-import { SessionContext } from "@/contexts";
-import { CONSUMPTION_MODES } from "@/components/Post";
+import { ConsumptionMode, CONSUMPTION_MODES } from "@/components/Post";
+
+type Props = {
+  consumptionMode?: string;
+  onChange?: (mode: ConsumptionMode) => void;
+};
 
 const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   display: "flex",
@@ -28,18 +32,17 @@ const StyledButton = styled(Button)<{ selected: boolean }>(
   })
 );
 
-export default function ConsumptionModeSelector() {
-  const {
-    preferences: { consumptionMode = "concise" },
-    setConsumptionMode,
-  } = React.useContext(SessionContext);
-
+export default function ConsumptionModeSelector({
+  consumptionMode,
+  onChange,
+}: Props = {}) {
+  
   return (
     <StyledButtonGroup variant="outlined" aria-label="outlined button group">
       {CONSUMPTION_MODES.map((mode) => (
         <StyledButton
           key={mode}
-          onClick={() => setConsumptionMode(mode)}
+          onClick={() => onChange?.(mode)}
           selected={mode === consumptionMode}
         >
           {mode}

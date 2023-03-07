@@ -63,7 +63,7 @@ export default function HomeScreen() {
       {recentSources.map((source) => (
         <Post key={source.id} />
       ))}
-      <Button title="Load More" color={styles.button.color}></Button>
+      <Button title="Load More" color={styles.button.color} onPress={loadMore} />
     </Screen>
   );
 }

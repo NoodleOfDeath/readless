@@ -17,7 +17,7 @@ export const POST_ATTRS = ['id', 'abridged', 'summary', 'shortSummary', 'bullets
 /** light weight record for a post with title, category, subcategory, and tags */
 export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category', 'subcategory', 'tags'] as const;
 /** light weight record for a source post */
-export const SOURCE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'url', 'originalTitle'] as const;
+export const SOURCE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
 /** light weight record for an article post */
 export const ARTICLE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS] as const;
 
