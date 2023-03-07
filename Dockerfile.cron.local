@@ -10,4 +10,4 @@ COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 COPY src/server/serve-cron.ts ./
 COPY src/server/nodemon.cron.json ./
-CMD pnpm run dev:cron
+CMD pnpm dev:cron

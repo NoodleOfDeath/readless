@@ -10,4 +10,4 @@ COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 COPY src/server/serve-worker.ts ./
 COPY src/server/nodemon.worker.json ./
-CMD pnpm run dev:worker
+CMD pnpm dev:worker

@@ -12,8 +12,8 @@
     "start:cron": "(cd src/server && pnpm start:cron)",
     "start:worker": "(cd src/server && pnpm start:worker)",
     "start:web": "(cd src/server && pnpm start:web)",
-    "format": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
-    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint src --ext .js,.jsx,.ts,.tsx --fix"
   },
   "keywords": [],
   "author": "",

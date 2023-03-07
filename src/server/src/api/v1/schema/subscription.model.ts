@@ -5,12 +5,16 @@ import { User } from './user.model';
 
 export type SubscriptionAttributes = DatedAttributes & {
   userId: number;
-  
+  renewsOn: Date;
+  platform: string;
+  platformUUID: string;
 };
 
 export type SubscriptionCreationAttributes = DatedAttributes & {
   userId: number;
-  
+  renewsOn: Date;
+  platform: string;
+  platformUUID: string;
 };
 
 @Table({
@@ -35,6 +39,24 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     allowNull: false,
   })
     userId: number;
+  
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+    renewsOn: Date;
+  
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    platform: string;
+  
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    platformUUID: string;
   
   @BelongsTo(() => User, 'userId')
     user: User;

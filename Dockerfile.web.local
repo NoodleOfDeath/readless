@@ -16,7 +16,7 @@ COPY src/web/tsconfig.json ./
 COPY src/web/config-overrides.js ./
 COPY src/web/nodemon.json ./
 COPY src/web/.env ./
-RUN pnpm run swagger
+RUN pnpm swagger
 
 FROM pre-build as dev
-CMD pnpm run dev
+CMD pnpm dev

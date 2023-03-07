@@ -10,4 +10,4 @@ COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 COPY src/server/serve-api.ts ./
 COPY src/server/nodemon.api.json ./
-CMD pnpm run dev:api
+CMD pnpm dev:api

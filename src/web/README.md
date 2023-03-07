@@ -9,5 +9,6 @@ This is the web application for the TheSkoop project
 If you want to skip the workspace setup process, you can run the local docker image via docker compose (hot reloads will be slightly slower than using `pnpm dev`):
 
 ```bash
+theskoop $ cat src/web/.env-example > src/web/.env
 theskoop $ ./compose.sh web --local
 ```

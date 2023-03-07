@@ -37,6 +37,17 @@ jobs:
         with:
           ssh-key: ${{ secrets.GIT_SSH_KEY }}
           submodules: recursive
+      - name: Install pnpm
+        run: |
+          npm install -g pnpm
+      - name: Pod Install
+        run: |
+          cd src/mobile \
+          pod install
+      - name: Build
+        run: |
+          cd src/mobile \
+          pnpm build
 
   deploy-mobile:
     needs: build-mobile
@@ -52,4 +63,3 @@ jobs:
         with:
           ssh-key: ${{ secrets.GIT_SSH_KEY }}
           submodules: recursive
-      

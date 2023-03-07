@@ -8,10 +8,13 @@ This is the backend API, CronJob manager (responsible for periodically seeking a
 
 ## Getting Started - TL;DR Style (aka Docker)
 
-If you want to skip the workspace setup process, you can run the local docker image via docker compose (hot reloads will be slightly slower than using `pnpm run dev`):
+If you want to skip the workspace setup process, you can run the local docker image via docker compose (hot reloads will be slightly slower than using `pnpm dev`):
 
 ```bash
-src/server $ docker compose up
+src/server $ cat .env-example > .env
+src/server $ docker compose up api-local
+src/server $ docker compose up cron-local
+src/server $ docker compose up worker-local
 ```
 
 ## Getting Started (Workspace Setup - Recommended for Development)
@@ -25,13 +28,15 @@ npm i -g pnpm
 This project also is fully ESM so make sure your node version is >= 18.
 
 ```bash
-git clone git@github.com:NoodleOfDeath/theskoop.git
-cd theskoop/src/server
-pnpm install
-echo PORT=6970 > .env
-pnpm run dev
+~ $ git clone git@github.com:NoodleOfDeath/theskoop.git
+~ $ cd theskoop/src/server
+src/server $ pnpm install
+src/server $ cat .env-example > .env
+src/server $ pnpm dev:api
+src/server $ pnpm dev:cron
+src/server $ pnpm dev:worker
 ```
 
 ## Contribution
 
-When making a PR please name your branch something like `/feat/server/feature-name` or `/fix/server/fix-name` then request my review!
+When making a PR please name your branch something like `<your-initials>/feat/server/feature-name` or `<your-initials>/fix/server/fix-name` then request my review!

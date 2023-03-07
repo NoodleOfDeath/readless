@@ -13,6 +13,46 @@ Dev/Staging: [https://dev.theskoop.ai](https://dev.theskoop.ai)
 
 Production: [https://theskoop.ai](https://theskoop.ai)
 
+## Getting Started
+
+### Web Client
+
+[See the README](src/web/README.md)
+
+```bash
+theskoop $ cat src/web/.env-example > src/web/.env
+theskoop $ ./compose.sh web --local
+```
+
+### Server API
+
+[See the README](src/server/README.md)
+
+```bash
+theskoop $ cat src/server/.env-example > src/server/.env
+theskoop $ ./compose.sh api --local
+```
+
+### Server Cron
+
+[See the README](src/server/README.md)
+
+```bash
+
+```bash
+theskoop $ cat src/server/.env-example > src/server/.env
+theskoop $ ./compose.sh cron --local
+```
+
+### Server Worker
+
+[See the README](src/server/README.md)
+
+```bash
+theskoop $ cat src/server/.env-example > src/server/.env
+theskoop $ ./compose.sh worker --local
+```
+
 ## Contribution
 
 To make a contribution, simply make a new PR onto the `dev` branch. I will automatically be tagged for review and once I approve you're free to merge it!
