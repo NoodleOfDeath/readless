@@ -46,7 +46,14 @@ const StyledCard = styled(Card)<Props>(({ theme }) => ({
 }));
 
 const StyledBackButton = styled(Button)<Props>(({ theme }) => ({
-  marginRight: theme.spacing(2),
+  position: 'fixed',
+  left: theme.spacing(2),
+  bottom: theme.spacing(2),
+  width: 40,
+  height: 40,
+  borderRadius: 20,
+  background: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
 }));
 
 const StyledCardMedia = styled(CardMedia)<Props>(({ theme }) => ({
