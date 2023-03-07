@@ -48,12 +48,14 @@ const StyledCard = styled(Card)<Props>(({ theme }) => ({
 const StyledBackButton = styled(Button)<Props>(({ theme }) => ({
   position: 'fixed',
   left: theme.spacing(2),
-  bottom: theme.spacing(2),
+  bottom: theme.spacing(4),
   width: 40,
   height: 40,
   borderRadius: 20,
   background: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
+  opacity: 0.8,
+  border: theme.palette.secondary.main,
 }));
 
 const StyledCardMedia = styled(CardMedia)<Props>(({ theme }) => ({
@@ -188,7 +190,7 @@ export default function Post({
       <Stack direction="row">
         {consumptionMode !== undefined && (
           <StyledBackButton onClick={() => onChange?.()}>
-            <Icon path={mdiChevronLeft} size={1} />
+            <Icon path={mdiChevronLeft} size={2} />
           </StyledBackButton>
         )}
         <Stack spacing={1}>
