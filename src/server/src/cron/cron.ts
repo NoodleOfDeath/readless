@@ -61,6 +61,7 @@ async function pollForNews() {
     const queue = new QueueService({
       defaultJobOptions: {
         lifo: true,
+        removeOnFail: true,
       },
     });
     for (const outlet of outlets) {

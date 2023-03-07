@@ -93,8 +93,9 @@ export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCr
   }
   
   @AfterFind
-  static async addOutletName(sources?: Source[]) {
-    if (!sources) return;
+  static async addOutletName(cursor?: Source | Source[]) {
+    if (!cursor) return;
+    const sources = Array.isArray(cursor) ? cursor : [cursor];
     const outletIds = sources.map((source) => {
       return source.toJSON().outletId;
     });
