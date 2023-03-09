@@ -7,7 +7,8 @@
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
     ],
     "overrides": [],
     "parser": "@typescript-eslint/parser",
@@ -16,6 +17,7 @@
         "sourceType": "module"
     },
     "plugins": [
+        "babel",
         "react",
         "@typescript-eslint"
     ],
@@ -30,7 +32,8 @@
         ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            "always"
         ],
         "semi": [
             "error",
@@ -58,6 +61,31 @@
                     "multiple"
                 ],
                 "allowSeparatedGroups": true
+            }
+        ],
+        "react/jsx-one-expression-per-line": [
+            "error",
+            {
+                "allow": "single-child"
+            }
+        ],
+        "react/jsx-closing-tag-location": [
+            "error",
+            {
+                "selfClosing": "after-props",
+                "nonEmpty": "after-props"
+            }
+        ],
+        "react/jsx-wrap-multilines": [
+            "error",
+            {
+                "declaration": "parens-new-line",
+                "assignment": "parens-new-line",
+                "return": "parens-new-line",
+                "arrow": "parens-new-line",
+                "condition": "parens-new-line",
+                "logical": "parens-new-line",
+                "prop": "parens-new-line"
             }
         ]
     }

@@ -25,6 +25,16 @@
 		017B5C7D29B77FFE0065913E /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 017B5C6D29B77FFE0065913E /* SimpleLineIcons.ttf */; };
 		017B5C7E29B77FFE0065913E /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 017B5C6E29B77FFE0065913E /* MaterialIcons.ttf */; };
 		017B5C8029B783E20065913E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 017B5C7F29B783E10065913E /* Images.xcassets */; };
+		01886BB129BA464E004302F8 /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BA729BA464E004302F8 /* Lato-BlackItalic.ttf */; };
+		01886BB229BA464E004302F8 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BA829BA464E004302F8 /* Lato-Italic.ttf */; };
+		01886BB329BA464E004302F8 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BA929BA464E004302F8 /* Lato-Light.ttf */; };
+		01886BB429BA464E004302F8 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BAA29BA464E004302F8 /* Lato-Bold.ttf */; };
+		01886BB529BA464E004302F8 /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BAB29BA464E004302F8 /* Lato-BoldItalic.ttf */; };
+		01886BB629BA464E004302F8 /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BAC29BA464E004302F8 /* Lato-Thin.ttf */; };
+		01886BB729BA464E004302F8 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BAD29BA464E004302F8 /* Lato-Regular.ttf */; };
+		01886BB829BA464E004302F8 /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BAE29BA464E004302F8 /* Lato-Black.ttf */; };
+		01886BB929BA464E004302F8 /* Lato-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BAF29BA464E004302F8 /* Lato-LightItalic.ttf */; };
+		01886BBA29BA464E004302F8 /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01886BB029BA464E004302F8 /* Lato-ThinItalic.ttf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-TheSkoop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-TheSkoop.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -64,6 +74,22 @@
 		017B5C6D29B77FFE0065913E /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		017B5C6E29B77FFE0065913E /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		017B5C7F29B783E10065913E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = TheSkoop/Images.xcassets; sourceTree = "<group>"; };
+		01886BA729BA464E004302F8 /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-BlackItalic.ttf"; sourceTree = "<group>"; };
+		01886BA829BA464E004302F8 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
+		01886BA929BA464E004302F8 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
+		01886BAA29BA464E004302F8 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
+		01886BAB29BA464E004302F8 /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-BoldItalic.ttf"; sourceTree = "<group>"; };
+		01886BAC29BA464E004302F8 /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Thin.ttf"; sourceTree = "<group>"; };
+		01886BAD29BA464E004302F8 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
+		01886BAE29BA464E004302F8 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
+		01886BAF29BA464E004302F8 /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-LightItalic.ttf"; sourceTree = "<group>"; };
+		01886BB029BA464E004302F8 /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
+		01886BBB29BA590D004302F8 /* DMMono-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMMono-Light.ttf"; sourceTree = "<group>"; };
+		01886BBC29BA590D004302F8 /* DMMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMMono-Medium.ttf"; sourceTree = "<group>"; };
+		01886BBD29BA590E004302F8 /* DMMono-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMMono-Italic.ttf"; sourceTree = "<group>"; };
+		01886BBE29BA590E004302F8 /* DMMono-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMMono-MediumItalic.ttf"; sourceTree = "<group>"; };
+		01886BBF29BA590E004302F8 /* DMMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMMono-Regular.ttf"; sourceTree = "<group>"; };
+		01886BC029BA590E004302F8 /* DMMono-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMMono-LightItalic.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* TheSkoop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TheSkoop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = TheSkoop/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = TheSkoop/AppDelegate.mm; sourceTree = "<group>"; };
@@ -119,6 +145,22 @@
 		017B5C5E29B77FFE0065913E /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				01886BBD29BA590E004302F8 /* DMMono-Italic.ttf */,
+				01886BBB29BA590D004302F8 /* DMMono-Light.ttf */,
+				01886BC029BA590E004302F8 /* DMMono-LightItalic.ttf */,
+				01886BBC29BA590D004302F8 /* DMMono-Medium.ttf */,
+				01886BBE29BA590E004302F8 /* DMMono-MediumItalic.ttf */,
+				01886BBF29BA590E004302F8 /* DMMono-Regular.ttf */,
+				01886BAE29BA464E004302F8 /* Lato-Black.ttf */,
+				01886BA729BA464E004302F8 /* Lato-BlackItalic.ttf */,
+				01886BAA29BA464E004302F8 /* Lato-Bold.ttf */,
+				01886BAB29BA464E004302F8 /* Lato-BoldItalic.ttf */,
+				01886BA829BA464E004302F8 /* Lato-Italic.ttf */,
+				01886BA929BA464E004302F8 /* Lato-Light.ttf */,
+				01886BAF29BA464E004302F8 /* Lato-LightItalic.ttf */,
+				01886BAD29BA464E004302F8 /* Lato-Regular.ttf */,
+				01886BAC29BA464E004302F8 /* Lato-Thin.ttf */,
+				01886BB029BA464E004302F8 /* Lato-ThinItalic.ttf */,
 				017B5C5F29B77FFE0065913E /* Fontisto.ttf */,
 				017B5C6029B77FFE0065913E /* Octicons.ttf */,
 				017B5C6129B77FFE0065913E /* Feather.ttf */,
@@ -301,19 +343,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01886BB129BA464E004302F8 /* Lato-BlackItalic.ttf in Resources */,
+				01886BBA29BA464E004302F8 /* Lato-ThinItalic.ttf in Resources */,
+				01886BB629BA464E004302F8 /* Lato-Thin.ttf in Resources */,
 				017B5C7929B77FFE0065913E /* FontAwesome5_Regular.ttf in Resources */,
 				017B5C7029B77FFE0065913E /* Octicons.ttf in Resources */,
 				017B5C7329B77FFE0065913E /* FontAwesome5_Brands.ttf in Resources */,
 				017B5C7729B77FFE0065913E /* Ionicons.ttf in Resources */,
 				017B5C7E29B77FFE0065913E /* MaterialIcons.ttf in Resources */,
+				01886BB929BA464E004302F8 /* Lato-LightItalic.ttf in Resources */,
+				01886BB329BA464E004302F8 /* Lato-Light.ttf in Resources */,
 				017B5C7829B77FFE0065913E /* FontAwesome5_Solid.ttf in Resources */,
 				017B5C7D29B77FFE0065913E /* SimpleLineIcons.ttf in Resources */,
+				01886BB829BA464E004302F8 /* Lato-Black.ttf in Resources */,
 				017B5C7229B77FFE0065913E /* Entypo.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				01886BB429BA464E004302F8 /* Lato-Bold.ttf in Resources */,
+				01886BB229BA464E004302F8 /* Lato-Italic.ttf in Resources */,
 				017B5C8029B783E20065913E /* Images.xcassets in Resources */,
 				017B5C7529B77FFE0065913E /* AntDesign.ttf in Resources */,
 				017B5C7B29B77FFE0065913E /* Zocial.ttf in Resources */,
+				01886BB729BA464E004302F8 /* Lato-Regular.ttf in Resources */,
 				017B5C7629B77FFE0065913E /* Foundation.ttf in Resources */,
+				01886BB529BA464E004302F8 /* Lato-BoldItalic.ttf in Resources */,
 				017B5C7129B77FFE0065913E /* Feather.ttf in Resources */,
 				017B5C7C29B77FFE0065913E /* EvilIcons.ttf in Resources */,
 				017B5C7A29B77FFE0065913E /* FontAwesome.ttf in Resources */,
@@ -562,9 +614,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TheSkoop/TheSkoop.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = D2A5EST4Q4;
+				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TheSkoop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TheSkoop;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -577,9 +632,12 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ai.theskoop.TheSkoop;
 				PRODUCT_NAME = TheSkoop;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -592,8 +650,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TheSkoop/TheSkoop.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = D2A5EST4Q4;
+				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = TheSkoop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TheSkoop;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -606,8 +667,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ai.theskoop.TheSkoop;
 				PRODUCT_NAME = TheSkoop;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

@@ -952,7 +952,7 @@
 						"name": "pageSize",
 						"required": false,
 						"schema": {
-							"default": 1,
+							"default": 10,
 							"format": "double",
 							"type": "number"
 						}
