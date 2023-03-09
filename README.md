@@ -38,8 +38,6 @@ theskoop $ ./compose.sh api --local
 [See the README](src/server/README.md)
 
 ```bash
-
-```bash
 theskoop $ cat src/server/.env-example > src/server/.env
 theskoop $ ./compose.sh cron --local
 ```
