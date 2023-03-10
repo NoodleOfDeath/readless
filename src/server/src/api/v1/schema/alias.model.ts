@@ -15,18 +15,18 @@ export type HeadlessAliasCreationAttributes = HeadlessAliasAttributes;
   timestamps: true,
   paranoid: true,
 })
-export class HeadlessUserAlias<
-    A extends HeadlessUserAliasAttributes = HeadlessUserAliasAttributes,
-    B extends HeadlessUserAliasCreationAttributes = HeadlessUserAliasCreationAttributes,
+export class HeadlessAlias<
+    A extends HeadlessAliasAttributes = HeadlessAliasAttributes,
+    B extends HeadlessAliasCreationAttributes = HeadlessAliasCreationAttributes,
   >
   extends Model<A, B>
-  implements HeadlessUserAliasAttributes
+  implements HeadlessAliasAttributes
 {
   static get empty() {
     return this.json();
   }
 
-  static json(defaults?: Partial<HeadlessUserAlias>): Partial<HeadlessUserAlias> {
+  static json(defaults?: Partial<HeadlessAlias>): Partial<HeadlessAlias> {
     return defaults ?? {};
   }
 
@@ -58,7 +58,7 @@ export class UserAlias<
     A extends UserAliasAttributes = UserAliasAttributes,
     B extends UserAliasCreationAttributes = UserAliasCreationAttributes,
   >
-  extends HeadlessUserAlias<A, B>
+  extends HeadlessAlias<A, B>
   implements UserAliasAttributes
 {
   static get empty() {

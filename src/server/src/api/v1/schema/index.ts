@@ -1,7 +1,8 @@
 // export * from './access.model';
 export * from './alias.model';
 export * from './article.model';
-export * from './association.model';
+export * from './article_source.model';
+export * from './article_topic.model';
 export * from './attachment.model';
 // export * from './credential.model';
 // export * from './interaction.model';
@@ -13,6 +14,7 @@ export * from './policy.model';
 export * from './referral.model';
 // export * from './role.model';
 export * from './source.model';
+export * from './source_topic.model';
 // export * from './subscription.model';
 export * from './topic.model';
 export * from './user.model';

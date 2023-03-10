@@ -48,7 +48,6 @@ export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCr
     return defaults ?? {};
   }
   
-  
   @ForeignKey(() => Outlet)
   @Column({
     type: DataType.INTEGER,
