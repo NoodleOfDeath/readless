@@ -1,6 +1,5 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-import { Attachment } from './attachment.model';
 import { DatedAttributes } from './dated';
 
 export type SiteMapParams = string | string[][];
@@ -87,12 +86,4 @@ export class Outlet<
   })
     fetchPolicy: FetchPolicy;
 
-  get attachments(): Promise<Attachment[]> {
-    return Attachment.findAll({
-      where: {
-        resourceType: 'article',
-        resourceId: this.id,
-      },
-    });
-  }
 }

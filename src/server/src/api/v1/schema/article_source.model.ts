@@ -41,13 +41,13 @@ export class ArticleSource<A extends ArticleSourceAttributes = ArticleSourceAttr
     allowNull: false,
   })
     sourceId: number;
-  
+    
   get article() {
     return Article.findByPk(this.articleId);
   }
     
-  get source() { 
+  get source() {
     return Source.findByPk(this.sourceId);
   }
-
+  
 }

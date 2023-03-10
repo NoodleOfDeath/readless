@@ -27,13 +27,6 @@ export class SourceTopic<A extends SourceTopicAttributes = SourceTopicAttributes
   static json(defaults?: Partial<SourceTopic>): Partial<SourceTopic> {
     return defaults ?? {};
   }
-  
-  @ForeignKey(() => Topic)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-    topicId: number;
     
   @ForeignKey(() => Source)
   @Column({
@@ -41,13 +34,20 @@ export class SourceTopic<A extends SourceTopicAttributes = SourceTopicAttributes
     allowNull: false,
   })
     sourceId: number;
-    
-  get topic() { 
-    return Topic.findByPk(this.topicId);
-  }
+  
+  @ForeignKey(() => Topic)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+    topicId: number;
   
   get source() {
     return Source.findByPk(this.sourceId);
+  }
+    
+  get topic() { 
+    return Topic.findByPk(this.topicId);
   }
 
 }

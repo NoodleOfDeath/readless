@@ -6,6 +6,7 @@ import { User } from './user.model';
 export type HeadlessAliasAttributes = DatedAttributes & {
   type: string;
   value: string;
+  claimedOn?: Date;
 };
 
 export type HeadlessAliasCreationAttributes = HeadlessAliasAttributes;
@@ -41,6 +42,11 @@ export class HeadlessAlias<
     allowNull: false,
   })
     value: string;
+
+  @Column({
+    type: DataType.DATE,
+  })
+    claimedOn: Date;
 }
 
 export type UserAliasAttributes = HeadlessAliasCreationAttributes & {

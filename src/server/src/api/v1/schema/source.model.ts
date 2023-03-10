@@ -1,6 +1,5 @@
 import { AfterFind, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 
-import { Attachment } from './attachment.model';
 import { Outlet } from './outlet.model';
 import {  SOURCE_ATTRS } from './types';
 import {
@@ -81,15 +80,6 @@ export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCr
     allowNull: false,
   })
     originalTitle: string;
-
-  get attachments(): Promise<Attachment[]> {
-    return Attachment.findAll({
-      where: {
-        resourceType: 'article',
-        resourceId: this.id,
-      },
-    });
-  }
   
   @AfterFind
   static async addOutletName(cursor?: Source | Source[]) {

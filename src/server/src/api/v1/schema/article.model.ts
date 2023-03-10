@@ -1,7 +1,7 @@
-import { Table } from 'sequelize-typescript';
+import { HasMany, Table } from 'sequelize-typescript';
 
+import { ArticleTopic } from './article_topic.model';
 import { ARTICLE_ATTRS } from './types';
-import { Attachment } from './attachment.model';
 import {
   Attr,
   TitledCategorizedPost,
@@ -29,13 +29,12 @@ export class Article extends TitledCategorizedPost<ArticleAttributes, ArticleCre
   static json(defaults?: Partial<Article>): Partial<Article> {
     return defaults ?? {};
   }
-
-  get attachments(): Promise<Attachment[]> {
-    return Attachment.findAll({
-      where: {
-        resourceType: 'article',
-        resourceId: this.id,
-      },
-    });
+  
+  @HasMany(() => ArticleTopic, 'articleId')
+    _topics: ArticleTopic[];
+    
+  get topics() {
+    return this._topics.map((t) => t.topic);
   }
+
 }

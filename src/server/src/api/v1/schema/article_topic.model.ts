@@ -27,6 +27,13 @@ export class ArticleTopic<A extends ArticleTopicAttributes = ArticleTopicAttribu
   static json(defaults?: Partial<ArticleTopic>): Partial<ArticleTopic> {
     return defaults ?? {};
   }
+    
+  @ForeignKey(() => Article)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+    articleId: number;
   
   @ForeignKey(() => Topic)
   @Column({
@@ -35,19 +42,12 @@ export class ArticleTopic<A extends ArticleTopicAttributes = ArticleTopicAttribu
   })
     topicId: number;
     
-  @ForeignKey(() => Article)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-    articleId: number;
-    
-  get topic() { 
-    return Topic.findByPk(this.topicId);
-  }
-  
   get article() {
     return Article.findByPk(this.articleId);
   }
 
+  get topic() {
+    return Topic.findByPk(this.topicId);
+  }
+    
 }
