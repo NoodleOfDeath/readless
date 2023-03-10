@@ -3,16 +3,13 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 import { DatedAttributes } from './dated';
 
 export type SubscriptionAttributes = DatedAttributes & {
+  aliasType: string;
   alias: string;
   feedType: string;
   feedId: number;
 };
 
-export type SubscriptionCreationAttributes = DatedAttributes & {
-  alias: string;
-  feedType: string;
-  feedId: string;
-};
+export type SubscriptionCreationAttributes = SubscriptionAttributes;
 
 @Table({
   modelName: 'subscription',
@@ -31,6 +28,20 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     return defaults ?? {};
   }
   
+  @Index({
+    name: 'subscriptions_aliasType_alias_key',
+    unique: true
+  })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    aliasType: string;
+  
+  @Index({
+    name: 'subscriptions_aliasType_alias_key',
+    unique: true,
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,
