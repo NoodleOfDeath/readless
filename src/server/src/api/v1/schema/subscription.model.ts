@@ -1,12 +1,12 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, ForeignKey, Index, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
+import { Newsletter } from './newsletter.model';
 
 export type SubscriptionAttributes = DatedAttributes & {
   aliasType: string;
   alias: string;
-  feedType: string;
-  feedId: number;
+  newsletterId: number;
 };
 
 export type SubscriptionCreationAttributes = SubscriptionAttributes;
@@ -48,16 +48,11 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
   })
     alias: string;
   
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-    feedType: string;
-  
+  @ForeignKey(() => Newsletter)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-    feedId: number;
+    newsletterId: number;
 
 }

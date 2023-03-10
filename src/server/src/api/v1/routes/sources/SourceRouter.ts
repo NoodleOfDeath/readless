@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { body, param, query } from 'express-validator';
-
+import { param, query } from 'express-validator';
 
 import { SourceController } from '../../controllers';
 import { SourceAttr, SourceAttributes } from '../../schema';
-import { pagination, rateLimit, validate } from '../../middleware';
+import { pagination, validate } from '../../middleware';
 
 const router = Router();
 
@@ -48,16 +47,5 @@ router.get(
     }
   },
 );
-
-router.post('/', rateLimit('2 per 1 min'), body('url').isURL(), validate, async (req, res) => {
-  const controller = new SourceController();
-  try {
-    const source = await controller.postReadAndSummarizeSource(req.body);
-    res.json(source);
-  } catch (e) {
-    console.error(e);
-    res.status(500).send('Internal Error');
-  }
-});
 
 export default router;
