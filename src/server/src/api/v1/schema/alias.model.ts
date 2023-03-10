@@ -3,17 +3,51 @@ import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript'
 import { DatedAttributes } from './dated';
 import { User } from './user.model';
 
-export type UserAliasAttributes = DatedAttributes & {
-  userId: number;
+export type HeadlessAliasAttributes = DatedAttributes & {
   type: string;
   value: string;
 };
 
-export type UserAliasCreationAttributes = DatedAttributes & {
+export type HeadlessAliasCreationAttributes = HeadlessAliasAttributes;
+
+@Table({
+  modelName: 'headless_alias',
+  timestamps: true,
+  paranoid: true,
+})
+export class HeadlessUserAlias<
+    A extends HeadlessUserAliasAttributes = HeadlessUserAliasAttributes,
+    B extends HeadlessUserAliasCreationAttributes = HeadlessUserAliasCreationAttributes,
+  >
+  extends Model<A, B>
+  implements HeadlessUserAliasAttributes
+{
+  static get empty() {
+    return this.json();
+  }
+
+  static json(defaults?: Partial<HeadlessUserAlias>): Partial<HeadlessUserAlias> {
+    return defaults ?? {};
+  }
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    type: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+    value: string;
+}
+
+export type UserAliasAttributes = HeadlessAliasCreationAttributes & {
   userId: number;
-  type: string;
-  value: string;
 };
+
+export type UserAliasCreationAttributes = UserAliasAttributes;
 
 @Table({
   modelName: 'alias',
@@ -24,7 +58,7 @@ export class UserAlias<
     A extends UserAliasAttributes = UserAliasAttributes,
     B extends UserAliasCreationAttributes = UserAliasCreationAttributes,
   >
-  extends Model<A, B>
+  extends HeadlessUserAlias<A, B>
   implements UserAliasAttributes
 {
   static get empty() {
@@ -40,18 +74,6 @@ export class UserAlias<
     allowNull: false,
   })
     userId: number;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-    type: string;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-    value: string;
 
   @BelongsTo(() => User, 'userId')
     user: User;

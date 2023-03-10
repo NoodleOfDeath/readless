@@ -2,7 +2,7 @@ import React from "react";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import Screen from "../../components/common/SafeScrollView";
+import SafeScrollView from "../../components/common/SafeScrollView";
 import Post from "../../components/post/Post";
 import { ConsumptionMode } from "../../components/post/ConsumptionModeSelector";
 import FlexView from "../../components/common/FlexView";
@@ -38,7 +38,7 @@ export default function PostScreen({
   }, [source]);
 
   return (
-    <Screen>
+    <SafeScrollView>
       <FlexView mt={10}>
         {source && (
           <Post
@@ -48,6 +48,6 @@ export default function PostScreen({
           />
         )}
       </FlexView>
-    </Screen>
+    </SafeScrollView>
   );
 }

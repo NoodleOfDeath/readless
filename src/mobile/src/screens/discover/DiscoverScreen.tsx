@@ -4,10 +4,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import ResultsView from "./ResultsView";
 import PostScreen from "../post/PostScreen";
-import { RootStackParamList } from "./types";
+import { RootParamList } from "../../types";
 
 export default function HomeScreen() {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
+  const Stack = createNativeStackNavigator<RootParamList["Discover"]>();
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen

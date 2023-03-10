@@ -6,6 +6,7 @@ export * from './attachment.model';
 // export * from './credential.model';
 // export * from './interaction.model';
 export * from './media.model';
+//export * from './membership.model';
 export * from './metric.model';
 export * from './outlet.model';
 export * from './policy.model';

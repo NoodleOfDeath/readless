@@ -1,7 +1,7 @@
-import { TopicAssociation } from './association.model';
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
+import { TopicAssociation } from './association.model';
 
 export type TopicAttributes = DatedAttributes & {
   name: string;

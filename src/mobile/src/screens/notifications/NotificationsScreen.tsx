@@ -1,7 +1,7 @@
 import React from "react";
 
-import Screen from "../../components/common/SafeScrollView";
+import SafeScrollView from "../../components/common/SafeScrollView";
 
 export default function NotificationsScreen() {
-  return <Screen></Screen>;
+  return <SafeScrollView></SafeScrollView>;
 }

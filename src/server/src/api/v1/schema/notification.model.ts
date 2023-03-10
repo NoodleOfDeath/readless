@@ -10,11 +10,11 @@ export type NotificationAttributes = DatedAttributes & {
 
 export type NotificationCreationAttributes = DatedAttributes & {
   userId: number;
-  
+  type: 'email' | 'push' | 'text' | 'toast';
 };
 
 @Table({
-  modelName: 'subscription',
+  modelName: 'notification',
   timestamps: true,
   paranoid: true,
 })

@@ -10,6 +10,7 @@ import SessionContextProvider, {
 
 import { SCREENS } from "./screens";
 import { useTheme } from "./components/common/theme";
+import { linkingOptions } from "./types";
 
 export default function TabController() {
   const theme = useTheme();
@@ -22,6 +23,7 @@ export default function TabController() {
             dark: !theme.isLightMode,
             colors: theme.navContainerColors,
           }}
+          linking={linkingOptions}
         >
           <Tab.Navigator
             initialRouteName="Discover"
@@ -36,6 +38,7 @@ export default function TabController() {
                 component={screen.component}
                 options={{
                   tabBarIcon: (props) => <Icon name={screen.icon} {...props} />,
+                  headerRight: screen.headerRight,
                 }}
               />
             ))}
