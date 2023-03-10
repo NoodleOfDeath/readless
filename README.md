@@ -15,12 +15,6 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ## Roadmap
 
-Welcome Alpha Testers!
-
-This is first raw POC (proof of concept) I throw together in 2 weeks (website, backend, and automated cloud deployment included). The mobile app is a major WIP but you should be able to at least read the news and refresh the discover page. Lots more to come!
-
-Release Roadmap:
-
 ### v1.0.0
 
 - [x] Automated summarization of news articles in various consumption lengths
