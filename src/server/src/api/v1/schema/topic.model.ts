@@ -1,5 +1,4 @@
-import { TopicAssociation } from './association.model';
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
 
@@ -41,16 +40,5 @@ export class Topic<A extends TopicAttributes = TopicAttributes, B extends TopicC
     allowNull: false,
   })
     description: string;
-
-  @HasMany(() => TopicAssociation, 'topicId')
-    associations: TopicAssociation[];
-
-  get articles() {
-    return this.associations.filter(association => association.postType === 'article').map(association => association.post);
-  }
-
-  get sources() {
-    return this.associations.filter(association => association.postType === 'source').map(association => association.post);
-  }
 
 }

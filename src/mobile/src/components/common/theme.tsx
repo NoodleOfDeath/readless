@@ -36,6 +36,13 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           fontFamily: "Lato",
           justifyContent: "center",
         },
+        buttonPadded: {
+          alignItems: "center",
+          color: "#8B0000",
+          fontFamily: "Lato",
+          justifyContent: "center",
+          padding: 10,
+        },
         card: {
           background: isLightMode ? "#F5F5F5" : "#111",
           borderRadius: 10,

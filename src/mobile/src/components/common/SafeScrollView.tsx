@@ -14,7 +14,7 @@ type Props = ScrollViewProps & {
   onRefresh?: () => void;
 };
 
-export default function Screen({
+export default function SafeScrollView({
   children,
   refreshing = false,
   onRefresh,

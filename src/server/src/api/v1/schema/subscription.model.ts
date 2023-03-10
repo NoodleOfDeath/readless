@@ -1,20 +1,17 @@
-import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
-import { User } from './user.model';
 
 export type SubscriptionAttributes = DatedAttributes & {
-  userId: number;
-  renewsOn: Date;
-  platform: string;
-  platformUUID: string;
+  alias: string;
+  feedType: string;
+  feedId: number;
 };
 
 export type SubscriptionCreationAttributes = DatedAttributes & {
-  userId: number;
-  renewsOn: Date;
-  platform: string;
-  platformUUID: string;
+  alias: string;
+  feedType: string;
+  feedId: string;
 };
 
 @Table({
@@ -35,30 +32,21 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
   }
   
   @Column({
-    type: DataType.NUMBER,
+    type: DataType.STRING,
     allowNull: false,
   })
-    userId: number;
-  
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-  })
-    renewsOn: Date;
+    alias: string;
   
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-    platform: string;
+    feedType: string;
   
   @Column({
-    type: DataType.STRING,
+    type: DataType.INTEGER,
     allowNull: false,
   })
-    platformUUID: string;
-  
-  @BelongsTo(() => User, 'userId')
-    user: User;
+    feedId: number;
 
 }

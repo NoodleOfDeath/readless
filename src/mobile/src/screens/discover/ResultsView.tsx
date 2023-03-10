@@ -10,7 +10,7 @@ import { SourceWithOutletAttr } from "../../api/Api";
 
 import FlexView from "../../components/common/FlexView";
 import Post from "../../components/post/Post";
-import Screen from "../../components/common/SafeScrollView";
+import SafeScrollView from "../../components/common/SafeScrollView";
 import { useTheme } from "../../components/common/theme";
 import { ConsumptionMode } from "../../components/post/ConsumptionModeSelector";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -110,7 +110,7 @@ export default function ResultsView({ navigation }: Props) {
           value={searchText}
         />
       </FlexView>
-      <Screen
+      <SafeScrollView
         refreshing={loading}
         onRefresh={() => load(pageSize, 0, searchText)}
       >
@@ -130,7 +130,7 @@ export default function ResultsView({ navigation }: Props) {
             />
           )}
         </FlexView>
-      </Screen>
+      </SafeScrollView>
     </>
   );
 }
