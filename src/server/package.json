@@ -47,6 +47,7 @@
     "bull-arena": "^3.30.4",
     "bullmq": "^3.10.0",
     "chatgpt": "5.0.1",
+    "cheerio": "1.0.0-rc.12",
     "cors": "^2.8.5",
     "cron": "^2.2.0",
     "esbuild": "^0.17.10",

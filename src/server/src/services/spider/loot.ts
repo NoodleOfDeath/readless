@@ -1,18 +1,18 @@
-import { HTMLElement, parse } from 'node-html-parser';
+import { load } from "cheerio";
 
 export type LootProps = {
   url: string;
   timestamp: number;
   text?: string;
   queryFilter?: string;
-  root?: HTMLElement;
   title?: string;
-  nodes?: HTMLElement[];
   tags?: string[];
   categories?: string[];
 };
 
-export type LootInitProps = Omit<LootProps, 'timestamp'> & { timestamp?: number };
+export type LootInitProps = Omit<LootProps, "timestamp"> & {
+  timestamp?: number;
+};
 
 export class Loot implements LootProps {
   url: string;
@@ -20,9 +20,7 @@ export class Loot implements LootProps {
   text: string;
   filteredText?: string;
   queryFilter?: string;
-  root?: HTMLElement;
   title?: string;
-  nodes?: HTMLElement[];
   tags?: string[];
   categories?: string[];
 
@@ -30,18 +28,14 @@ export class Loot implements LootProps {
     url,
     timestamp = Date.now(),
     text,
-    queryFilter = 'h1,h2,h3,h4,h5,h6,p,blockquote',
-    root = parse(text),
+    queryFilter = "h1,h2,h3,h4,h5,h6,p,blockquote",
   }: LootInitProps) {
     this.url = url;
     this.timestamp = timestamp;
     this.text = text;
     this.queryFilter = queryFilter;
-    this.root = root;
-    this.title = root.querySelector('title').rawText;
-    const nodes = root.querySelectorAll(queryFilter);
-    this.filteredText = (nodes?.map((node) => node.rawText) ?? [])
-      .filter((text) => text.replace(/^[\s\n]*$/g, '').length > 0)
-      .join('\n');
+    const $ = load(text);
+    this.title = $("title").text();
+    this.filteredText = $(queryFilter).text();
   }
 }
