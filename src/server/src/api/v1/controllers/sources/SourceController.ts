@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Body, Get, Path, Post, Query, Route, Tags } from 'tsoa';
+import { Get, Path, Query, Route, Tags } from 'tsoa';
 
 import { ReadAndSummarizeSourceOptions } from './types';
 import { ChatGPTService, Prompt, SpiderService } from '../../../../services';
@@ -117,11 +117,6 @@ export class SourceController {
     return await Source.findOne(options);
   }
 
-  @Post('/')
-  public async postReadAndSummarizeSource(@Body() { url }: ReadAndSummarizeSourcePayload): Promise<SourceWithOutletName> {
-    return this.readAndSummarizeSource({ url});
-  }
-
   public async readAndSummarizeSource(
     { url }: ReadAndSummarizeSourcePayload,
     { onProgress, force, outletId, }: ReadAndSummarizeSourceOptions = {},
@@ -156,10 +151,8 @@ export class SourceController {
     });
     const prompts: Prompt[] = [
       {
-        text: `Please read the following article ignoring any text that appears to be ad related or about signing up for the news outlet that wrote the article. Please provide a new title for the article using no more than 120 characters. If there is not enough information to work with simply respond with \"Bad Prompt\":\n\n${sourceInfo.filteredText}`,
+        text: `Please read the following article and provide a single sentence summary using no more than 120 characters\":\n\n${sourceInfo.filteredText}`,
         catchFailure: (reply) => { 
-          if (/^"?Bad Prompt"?/.test(reply.text))
-            return new Error('Bad Prompt');
           if (reply.text.length > 120)
             return new Error('Title too long');
         },
