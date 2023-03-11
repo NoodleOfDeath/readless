@@ -10,6 +10,7 @@ import {
   Menu,
   Paper,
   Toolbar,
+  Typography,
   styled,
 } from "@mui/material";
 import { Icon } from "@mdi/react";
@@ -125,9 +126,9 @@ export default function Header() {
           <Logo />
         </IconButton>
         <StyledHeaderTitle elevation={0}>
-          <Button onClick={() => navigate("/")} component="h5">
-            TheSkoop
-          </Button>
+          <Typography onClick={() => navigate("/")} component="h4">
+            theSkoop
+          </Typography>
         </StyledHeaderTitle>
         <Button onClick={openMenu(true)}>
           <Icon path={mdiMenu} size={1} />

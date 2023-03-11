@@ -7,7 +7,7 @@ import { SourceWithOutletAttr } from "../../api/Api";
 
 import FlexView from "../common/FlexView";
 import Menu from "../common/Menu";
-import { useTheme } from "../common/theme";
+import { useTheme } from "../theme";
 
 import ConsumptionModeSelector, {
   ConsumptionMode,
@@ -22,7 +22,7 @@ type Props = {
 
 export default function Post({
   source,
-  tickIntervalMs = 30_000,
+  tickIntervalMs = 60_000,
   mode,
   onChange,
 }: Props) {

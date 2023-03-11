@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useTheme } from "../components/common/theme";
+import { useTheme } from "../components/theme";
 
 import AudioScreen from "./audio/AudioScreen";
 import DiscoverScreen from "./discover/DiscoverScreen";

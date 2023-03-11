@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet, useColorScheme } from "react-native";
 
 // eslint-disable-next-line @typescript-eslint/ban-types

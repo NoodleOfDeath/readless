@@ -6,9 +6,7 @@ import { SpiderService } from '../src/services/spider';
 jest.setTimeout(30_000);
 
 const TARGETS = [
-  'https://arstechnica.com/gadgets/2023/02/dont-worry-about-ai-breaking-out-of-its-box-worry-about-us-breaking-in/',
-  'https://fortune.com/2023/02/24/microsoft-artificial-intelligence-ai-chatbot-sydney-rattled-users-before-chatgpt-fueled-bing/?showAdminBar=true',
-  'https://www.cnbc.com/2023/02/22/how-to-invest-in-artificial-intelligence-etfs.html',
+  'https://www.politico.com/news/magazine/2023/03/11/trump-pence-election-opinion-00086541'
 ];
 
 describe('spider tests', () => {

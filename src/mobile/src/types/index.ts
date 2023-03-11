@@ -14,7 +14,7 @@ export type RootParamList = {
   Settings: undefined;
 };
 
-const linkingOptions: LinkingOptions<RootParamList> = {
+export const linkingOptions: LinkingOptions<RootParamList> = {
   prefixes: ["https://www.theskoop.ai", "https://theskoop.ai", "skoop://"],
   config: {
     screens: {

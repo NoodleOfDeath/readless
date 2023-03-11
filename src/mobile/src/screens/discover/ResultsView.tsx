@@ -11,7 +11,7 @@ import { SourceWithOutletAttr } from "../../api/Api";
 import FlexView from "../../components/common/FlexView";
 import Post from "../../components/post/Post";
 import SafeScrollView from "../../components/common/SafeScrollView";
-import { useTheme } from "../../components/common/theme";
+import { useTheme } from "../../components/theme";
 import { ConsumptionMode } from "../../components/post/ConsumptionModeSelector";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types";

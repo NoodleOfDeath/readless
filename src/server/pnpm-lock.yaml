@@ -35,7 +35,6 @@ specifiers:
   express-winston: ^4.2.0
   ioredis: ^5.3.1
   jest: ^29.4.3
-  node-html-parser: ^6.1.5
   nodemon: ^2.0.21
   only-allow: ^1.1.1
   openai: ^3.2.1
@@ -74,7 +73,6 @@ dependencies:
   express-validator: 6.15.0
   express-winston: 4.2.0_winston@3.8.2
   ioredis: 5.3.1
-  node-html-parser: 6.1.5
   openai: 3.2.1
   pg: 8.9.0
   pg-hstore: 2.3.4
@@ -4297,11 +4295,6 @@ packages:
     dependencies:
       function-bind: 1.1.1
 
-  /he/1.2.0:
-    resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
-    hasBin: true
-    dev: false
-
   /header-case/2.0.4:
     resolution: {integrity: sha512-H/vuk5TEEVZwrR0lp2zed9OCo1uAILMlx0JEMgC26rzyJJ3N1v6XkwHHXJQdR2doSjcGPM6OKPYoJgf0plJ11Q==}
     dependencies:
@@ -5546,13 +5539,6 @@ packages:
     resolution: {integrity: sha512-YlCCc6Wffkx0kHkmam79GKvDQ6x+QZkMjFGrIMxgFNILFvGSbCp2fCBC55pGTT9gVaz8Na5CLmxt/urtzRv36w==}
     hasBin: true
     optional: true
-
-  /node-html-parser/6.1.5:
-    resolution: {integrity: sha512-fAaM511feX++/Chnhe475a0NHD8M7AxDInsqQpz6x63GRF7xYNdS8Vo5dKsIVPgsOvG7eioRRTZQnWBrhDHBSg==}
-    dependencies:
-      css-select: 5.1.0
-      he: 1.2.0
-    dev: false
 
   /node-int64/0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}

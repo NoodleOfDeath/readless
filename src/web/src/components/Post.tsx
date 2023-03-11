@@ -25,7 +25,7 @@ import ConsumptionModeSelector from "@/components/ConsumptionModeSelector";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export const CONSUMPTION_MODES = [
-  // "bulleted",
+  "bulleted",
   "concise",
   "casual",
   "comprehensive",
@@ -142,6 +142,9 @@ export default function Post({
     if (!source) return null;
     let text: string = ''
     switch (consumptionMode) {
+      case "bulleted":
+        text = source.bullets.join("\n");
+        break;
       case "concise":
         text = source.shortSummary
         break;
