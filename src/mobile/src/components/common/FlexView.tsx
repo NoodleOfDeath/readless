@@ -3,7 +3,7 @@ import LinearGradient, {
   LinearGradientProps,
 } from "react-native-linear-gradient";
 
-import { useTheme } from "./theme";
+import { useTheme } from "../theme";
 
 type Props = Omit<LinearGradientProps, "colors" | "style"> & {
   row?: boolean;

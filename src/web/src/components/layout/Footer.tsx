@@ -73,7 +73,7 @@ export default function Footer() {
       <StyledStack>
         <StyledHorizontalStack direction="row">
           <Typography>
-            Copyright &copy; {new Date().getFullYear()} TheSkoop
+            Copyright &copy; {new Date().getFullYear()} theSkoop
           </Typography>
           <Box flexGrow={1} />
           <Stack direction={mdAndUp ? "row" : "column"} spacing={2}>

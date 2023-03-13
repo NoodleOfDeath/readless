@@ -1,15 +1,20 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, ForeignKey, Index, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
+import { Newsletter } from './newsletter.model';
 
 export type SubscriptionAttributes = DatedAttributes & {
   aliasType: string;
   alias: string;
-  feedType: string;
-  feedId: number;
+  newsletterId: number;
 };
 
-export type SubscriptionCreationAttributes = SubscriptionAttributes;
+export type SubscriptionCreationAttributes = DatedAttributes & {
+  aliasType: string;
+  alias: string;
+  newsletterId?: number;
+  newsletterName?: string;
+};
 
 @Table({
   modelName: 'subscription',
@@ -29,7 +34,7 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
   }
   
   @Index({
-    name: 'subscriptions_aliasType_alias_key',
+    name: 'subscriptions_aliasType_alias_newsletterId_key',
     unique: true
   })
   @Column({
@@ -39,7 +44,7 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     aliasType: string;
   
   @Index({
-    name: 'subscriptions_aliasType_alias_key',
+    name: 'subscriptions_aliasType_alias_newsletterId_key',
     unique: true,
   })
   @Column({
@@ -47,17 +52,16 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     allowNull: false,
   })
     alias: string;
-  
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
+
+  @Index({
+    name: 'subscriptions_aliasType_alias_newsletterId_key',
+    unique: true,
   })
-    feedType: string;
-  
+  @ForeignKey(() => Newsletter)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-    feedId: number;
+    newsletterId: number;
 
 }

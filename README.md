@@ -1,4 +1,4 @@
-# TheSkoop
+# theSkoop
 
 [![Web Client CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/web-ci.yaml)
 [![Mobile Client CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/mobile-ci.yaml)
@@ -7,7 +7,7 @@
 [![Cron CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml)
 [![Worker CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml)
 
-TheSkoop is the model for a fully automated user content-driven podcast and news outlet pipeline that is powered by ChatGPT!
+theSkoop is the model for a fully automated user content-driven podcast and news outlet pipeline that is powered by ChatGPT!
 
 Dev/Staging: [https://dev.theskoop.ai](https://dev.theskoop.ai)
 

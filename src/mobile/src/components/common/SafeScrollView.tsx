@@ -7,7 +7,7 @@ import {
 } from "react-native";
 
 import FlexView from "./FlexView";
-import { useTheme } from "./theme";
+import { useTheme } from "../theme";
 
 type Props = ScrollViewProps & {
   refreshing?: boolean;

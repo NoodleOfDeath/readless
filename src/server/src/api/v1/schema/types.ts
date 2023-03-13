@@ -40,3 +40,4 @@ export const INTERACTION_TYPES = {
 } as const;
 
 export type InteractionType = keyof typeof INTERACTION_TYPES;
+

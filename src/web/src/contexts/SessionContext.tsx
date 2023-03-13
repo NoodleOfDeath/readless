@@ -1,7 +1,10 @@
 import React from "react";
 import Cookies from "js-cookie";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { PaletteMode, Theme, useMediaQuery } from "@mui/material";
+
+import API, { FeatureAttributes } from "@/api";
+
 import { ConsumptionMode } from "@/components/Post";
 
 import { loadTheme } from "@/theme";
@@ -16,6 +19,8 @@ export type SetSearchTextOptions = {
 };
 
 export type Session = {
+  enabledFeatures: Record<string, FeatureAttributes>,
+  pathIsEnabled: (path: string) => boolean,
   theme: Theme;
   preferences: Preferences;
   displayMode?: PaletteMode;
@@ -36,6 +41,8 @@ export type Session = {
 type Props = React.PropsWithChildren;
 
 export const NULL_SESSION: Session = {
+  enabledFeatures: {},
+  pathIsEnabled: () => false,
   theme: loadTheme(),
   preferences: {},
   displayMode: "light",
@@ -66,10 +73,14 @@ export const DEFAULT_SESSION_DURATION = 1000 * 60 * 60 * 24 * 2;
 export const SessionContext = React.createContext(NULL_SESSION);
 
 export function SessionContextProvider({ children }: Props) {
+  
+  const location = useLocation();
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSearchParams] = useSearchParams();
   const isDarkModeEnabled = useMediaQuery("(prefers-color-scheme: dark)");
-
+  
+  const [enabledFeatures, setEnabledFeatures] = React.useState<Record<string, FeatureAttributes>>({});
   const [theme, setTheme] = React.useState(
     loadTheme(isDarkModeEnabled ? "dark" : "light")
   );
@@ -114,6 +125,11 @@ export function SessionContextProvider({ children }: Props) {
     try {
       const prefs = JSON.parse(Cookies.get(COOKIES.preferences) || "{}");
       setPreferences(prefs);
+      API.getFeatures()
+        .then((response) => {
+          setEnabledFeatures(Object.fromEntries(response.data.map((feature) => [feature.name, feature])));
+        })
+        .catch(console.error);
     } catch (e) {
       console.error(e);
       setPreferences({});
@@ -132,10 +148,33 @@ export function SessionContextProvider({ children }: Props) {
       expires: DEFAULT_SESSION_DURATION,
     });
   }, [preferences]);
+  
+  const pathIsEnabled = React.useCallback((path: string) => enabledFeatures[path]?.enabled === true, [enabledFeatures]);
+  
+  React.useEffect(() => {
+    // record page visit
+    API.recordMetric({
+      type: 'nav',
+      data: { 
+        path: location
+      },
+      userAgent: navigator.userAgent,
+    })
+      .catch(console.error);
+    // if path is not enabled redirect to home
+    switch (location.pathname) {
+    case '/search':
+      if (!pathIsEnabled(location.pathname)) {
+        navigate('/');
+      }
+    }
+  }, [pathIsEnabled, location, navigate]);
 
   return (
     <SessionContext.Provider
       value={{
+        enabledFeatures,
+        pathIsEnabled,
         theme,
         preferences,
         displayMode,

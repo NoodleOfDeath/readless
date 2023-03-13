@@ -5,14 +5,19 @@ import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
 import { Article, ArticleAttr, ArticleAttributes } from '../../schema';
 
 function applyFilter(filter?: string) {
-  if (!filter) return undefined;
+  if (!filter || filter.replace(/\s/g, '').length === 0) return undefined;
   return {
     [Op.or]: [
       { title: { [Op.iRegexp]: filter } },
+      { text: { [Op.iRegexp]: filter } },
       { abridged: { [Op.iRegexp]: filter } },
+      { summary: { [Op.iRegexp]: filter } },
+      { shortSummary: { [Op.iRegexp]: filter } },
+      { bullets: { [Op.contains]: [filter] } },
       { category: { [Op.iRegexp]: filter } },
       { subcategory: { [Op.iRegexp]: filter } },
       { tags: { [Op.contains]: [filter] } },
+      { url: { [Op.iRegexp]: filter } },
     ],
   };
 }
@@ -36,9 +41,7 @@ export class ArticleController {
       offset: offset,
       order: [['createdAt', 'DESC']],
     };
-    if (filter.replace(/\s+/g, '')) {
-      options.where = applyFilter(filter);
-    }
+    options.where = applyFilter(filter);
     return await Article.findAndCountAll(options);
   }
 

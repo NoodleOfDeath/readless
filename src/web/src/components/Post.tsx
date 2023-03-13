@@ -2,6 +2,7 @@ import React from "react";
 import { formatDistance } from "date-fns";
 import {
   Box,
+  BoxProps,
   Card,
   CardMedia,
   Link,
@@ -16,16 +17,17 @@ import {
   useMediaQuery,
   Theme,
 } from "@mui/material";
-
-import { SourceWithOutletAttr, SourceWithOutletName } from "@/api/Api";
 import Icon from "@mdi/react";
 import { mdiChevronLeft, mdiDotsHorizontal } from "@mdi/js";
-import TruncatedText from "@/components/common/TruncatedText";
-import ConsumptionModeSelector from "@/components/ConsumptionModeSelector";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
+import { SourceWithOutletAttr, SourceWithOutletName } from "@/api";
+
+import TruncatedText from "@/components/common/TruncatedText";
+import ConsumptionModeSelector from "@/components/ConsumptionModeSelector";
+
 export const CONSUMPTION_MODES = [
-  // "bulleted",
+  "bulleted",
   "concise",
   "casual",
   "comprehensive",
@@ -39,7 +41,7 @@ type Props = {
   onChange?: (mode?: ConsumptionMode) => void;
 };
 
-const StyledCard = styled(Card)<Props>(({ theme }) => ({
+const StyledCard = styled(Card)(({ theme }) => ({
   minWidth: 200,
   display: "flex",
   padding: theme.spacing(2),
@@ -47,7 +49,7 @@ const StyledCard = styled(Card)<Props>(({ theme }) => ({
   textAlign: "left",
 }));
 
-const StyledBackButton = styled(Button)<Props>(({ theme }) => ({
+const StyledBackButton = styled(Button)(({ theme }) => ({
   position: 'fixed',
   left: theme.spacing(2),
   top: theme.spacing(10),
@@ -60,7 +62,7 @@ const StyledBackButton = styled(Button)<Props>(({ theme }) => ({
   border: theme.palette.secondary.main,
 }));
 
-const StyledConsumptionModeContainer = styled(Box)<Props & {mdAndUp: boolean}>(({ theme, consumptionMode, mdAndUp }) => ({
+const StyledConsumptionModeContainer = styled(({ consumptionMode, mdAndUp, ...props }: BoxProps & Props & { mdAndUp: boolean }) => <Box {...props} />)(({ theme, consumptionMode, mdAndUp }) => ({
   position: consumptionMode ? 'fixed' : 'relative',
   right: consumptionMode && mdAndUp  ? theme.spacing(4) : undefined,
   top: consumptionMode && mdAndUp  ? theme.spacing(10) : undefined,
@@ -68,14 +70,14 @@ const StyledConsumptionModeContainer = styled(Box)<Props & {mdAndUp: boolean}>((
   borderRadius: 8,
 }));
 
-const StyledCardMedia = styled(CardMedia)<Props>(({ theme }) => ({
+const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   width: 120,
   height: 120,
   marginLeft: theme.spacing(2),
   borderRadius: 8,
 }));
 
-const StyledCategoryBox = styled(Box)<Props>(({ theme }) => ({
+const StyledCategoryBox = styled(Box)(({ theme }) => ({
   width: 120,
   height: 120,
   display: "flex",
@@ -86,18 +88,18 @@ const StyledCategoryBox = styled(Box)<Props>(({ theme }) => ({
   color: theme.palette.primary.contrastText,
 }));
 
-const StyledStack = styled(Stack)<Props>(({ theme }) => ({
+const StyledStack = styled(Stack)(({ theme }) => ({
   width: "100%",
 }));
 
-const StyledCategoryStack = styled(Stack)<Props>(({ theme }) => ({
+const StyledCategoryStack = styled(Stack)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   JustifyContent: "center",
   textAlign: "center",
 }));
 
-const StyledMenuBox = styled(Box)<Props>(({ theme }) => ({
+const StyledMenuBox = styled(Box)(({ theme }) => ({
   width: 250,
 }));
 
@@ -111,9 +113,9 @@ export default function Post({
   const lgAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
   const [showMenu, setShowMenu] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
-  const menuRef = React.useRef<HTMLDivElement|null>(null);
+  const menuRef = React.useRef<HTMLDivElement | null>(null);
 
   const timeAgo = React.useMemo(
     () =>
@@ -142,6 +144,9 @@ export default function Post({
     if (!source) return null;
     let text: string = ''
     switch (consumptionMode) {
+      case "bulleted":
+        text = source.bullets.join("\n");
+        break;
       case "concise":
         text = source.shortSummary
         break;

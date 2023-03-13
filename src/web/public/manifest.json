@@ -1,0 +1,69 @@
+{
+  "background_color": "#8b0000",
+  "categories": ["social", "news", "magazines"],
+  "description": "Concise, multi-perspective, no clickbait news. They way it should be.",
+  "display": "standalone",
+  "gcm_sender_id": "49625052041",
+  "gcm_user_visible_only": true,
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "src": "android-chrome-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    }
+  ],
+  "name": "theSkoop",
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "586x1041",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot2.png",
+      "sizes": "586x1041",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot3.png",
+      "sizes": "586x1041",
+      "type": "image/png"
+    }
+  ],
+  "share_target": {},
+  "shortcuts": [],
+  "short_name": "theSkoop",
+  "start_url": "https://theskoop.ai/?utm_source=homescreen&utm_medium=shortcut",
+  "theme_color": "#8b0000",
+  "scope": "/",
+  "android_package_name": "ai.theskoop.android",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "id": "ai.theskoop.android",
+      "platform": "chromeos_play",
+      "url": "https://play.google.com/store/apps/details?id=ai.theskoop.android"
+    }
+  ],
+  "launch_handler": {
+    "route_to": "existing-client",
+    "navigate_existing_client": "never"
+  }
+}

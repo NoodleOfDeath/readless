@@ -2,7 +2,7 @@ import React from "react";
 import { ButtonGroup } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { useTheme } from "../common/theme";
+import { useTheme } from "../theme";
 
 export const CONSUMPTION_MODES = {
   keyPoints: "format-list-bulleted",

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import { SourceController } from '../api/v1/controllers';
+import { ScribeService } from '../services';
 import { DBService, QUEUES, Worker } from '../services';
 import { Outlet, Source } from '../api/v1/schema';
 
@@ -66,8 +66,8 @@ export async function doWork() {
             }
           }
           fetchMap[outlet.name] = fetchMap[outlet.name] + 1;
-          const controller = new SourceController();
-          const source = await controller.readAndSummarizeSource(
+          const scribe = new ScribeService();
+          const source = await scribe.readAndSummarizeSource(
             { url },
             {
               onProgress: (progress) => {

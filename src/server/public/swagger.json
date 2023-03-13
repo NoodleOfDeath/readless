@@ -178,119 +178,6 @@
 					}
 				]
 			},
-			"Record_string.unknown_": {
-				"properties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
-			"MetricAttributes": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/DatedAttributes"
-					},
-					{
-						"properties": {
-							"userAgent": {
-								"type": "string",
-								"description": "the user agent info of the consumer of this referral"
-							},
-							"referrer": {
-								"items": {
-									"type": "string"
-								},
-								"type": "array",
-								"description": "ip address(es) of actor"
-							},
-							"data": {
-								"$ref": "#/components/schemas/Record_string.unknown_"
-							},
-							"type": {
-								"type": "string",
-								"enum": [
-									"click",
-									"nav"
-								]
-							}
-						},
-						"required": [
-							"userAgent",
-							"data",
-							"type"
-						],
-						"type": "object"
-					}
-				]
-			},
-			"MetricCreationAttributes": {
-				"$ref": "#/components/schemas/MetricAttributes"
-			},
-			"PolicyAttributes": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/DatedAttributes"
-					},
-					{
-						"properties": {
-							"content": {
-								"type": "string"
-							},
-							"name": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"content",
-							"name"
-						],
-						"type": "object"
-					}
-				]
-			},
-			"ReferralAttributes": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/DatedAttributes"
-					},
-					{
-						"properties": {
-							"geolocation": {
-								"type": "string",
-								"description": "geolocation of the referrer"
-							},
-							"userAgent": {
-								"type": "string",
-								"description": "the user agent info of the consumer of this referral"
-							},
-							"target": {
-								"type": "string",
-								"description": "the url path of the referral destination"
-							},
-							"origin": {
-								"type": "string",
-								"description": "the url path this referral was generated from"
-							},
-							"referrer": {
-								"type": "string",
-								"description": "the IP address this referral was accessed from"
-							},
-							"referredById": {
-								"type": "number",
-								"format": "double",
-								"description": "id of a user if ref link was created while logged in"
-							}
-						},
-						"required": [
-							"userAgent",
-							"target",
-							"referrer"
-						],
-						"type": "object"
-					}
-				]
-			},
-			"ReferralCreationAttributes": {
-				"$ref": "#/components/schemas/ReferralAttributes"
-			},
 			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
 				"properties": {
 					"id": {
@@ -441,16 +328,148 @@
 					}
 				]
 			},
-			"ReadAndSummarizeSourcePayload": {
-				"properties": {
-					"url": {
-						"type": "string"
+			"SubscriptionAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"newsletterId": {
+								"type": "number",
+								"format": "double"
+							},
+							"alias": {
+								"type": "string"
+							},
+							"aliasType": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"newsletterId",
+							"alias",
+							"aliasType"
+						],
+						"type": "object"
 					}
-				},
-				"required": [
-					"url"
-				],
-				"type": "object"
+				]
+			},
+			"SubscriptionCreationAttributes": {
+				"$ref": "#/components/schemas/SubscriptionAttributes"
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"MetricAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"userAgent": {
+								"type": "string",
+								"description": "the user agent info of the consumer of this referral"
+							},
+							"referrer": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array",
+								"description": "ip address(es) of actor"
+							},
+							"data": {
+								"$ref": "#/components/schemas/Record_string.unknown_"
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"click",
+									"nav"
+								]
+							}
+						},
+						"required": [
+							"userAgent",
+							"data",
+							"type"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"MetricCreationAttributes": {
+				"$ref": "#/components/schemas/MetricAttributes"
+			},
+			"PolicyAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"content": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"content",
+							"name"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"ReferralAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"geolocation": {
+								"type": "string",
+								"description": "geolocation of the referrer"
+							},
+							"userAgent": {
+								"type": "string",
+								"description": "the user agent info of the consumer of this referral"
+							},
+							"target": {
+								"type": "string",
+								"description": "the url path of the referral destination"
+							},
+							"origin": {
+								"type": "string",
+								"description": "the url path this referral was generated from"
+							},
+							"referrer": {
+								"type": "string",
+								"description": "the IP address this referral was accessed from"
+							},
+							"referredById": {
+								"type": "number",
+								"format": "double",
+								"description": "id of a user if ref link was created while logged in"
+							}
+						},
+						"required": [
+							"userAgent",
+							"target",
+							"referrer"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"ReferralCreationAttributes": {
+				"$ref": "#/components/schemas/ReferralAttributes"
 			}
 		},
 		"securitySchemes": {}
@@ -795,114 +814,6 @@
 				]
 			}
 		},
-		"/v1/metrics": {
-			"post": {
-				"operationId": "RecordMetric",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/MetricAttributes"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Metricss"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/MetricCreationAttributes"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/v1/policies/privacy": {
-			"get": {
-				"operationId": "GetPrivacyPolicy",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/PolicyAttributes"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Policies"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/v1/policies/terms": {
-			"get": {
-				"operationId": "GetTermsOfService",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/PolicyAttributes"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Policies"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/v1/referrals": {
-			"post": {
-				"operationId": "RecordReferral",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ReferralAttributes"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Referrals"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ReferralCreationAttributes"
-							}
-						}
-					}
-				}
-			}
-		},
 		"/v1/sources": {
 			"get": {
 				"operationId": "GetSources",
@@ -977,36 +888,6 @@
 						}
 					}
 				]
-			},
-			"post": {
-				"operationId": "PostReadAndSummarizeSource",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SourceWithOutletName"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Sources"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ReadAndSummarizeSourcePayload"
-							}
-						}
-					}
-				}
 			}
 		},
 		"/v1/sources/{category}": {
@@ -1230,6 +1111,146 @@
 						}
 					}
 				]
+			}
+		},
+		"/v1/newsletter/subscribe": {
+			"post": {
+				"operationId": "SubscribeToNewsletter",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SubscriptionAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Newsletters"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubscriptionCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/metrics": {
+			"post": {
+				"operationId": "RecordMetric",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MetricAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Metricss"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MetricCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/policies/privacy": {
+			"get": {
+				"operationId": "GetPrivacyPolicy",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PolicyAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Policies"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/v1/policies/terms": {
+			"get": {
+				"operationId": "GetTermsOfService",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PolicyAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Policies"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/v1/referrals": {
+			"post": {
+				"operationId": "RecordReferral",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ReferralAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Referrals"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReferralCreationAttributes"
+							}
+						}
+					}
+				}
 			}
 		}
 	},
