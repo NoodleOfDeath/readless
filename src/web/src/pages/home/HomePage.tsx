@@ -67,7 +67,7 @@ export default function HomePage() {
                 />
               <FormControlLabel control={<Checkbox {...register("dev")} />} label="Send me development progress updates!" />
               <FormControlLabel control={<Checkbox {...register("beta")} />} label="Also add me as a beta tester!" />
-              <Button onClick={handleSubmit(onSubmit)}>Join Developer Newsletter</Button>
+              <Button onClick={handleSubmit(onSubmit)}>Join Newsletter</Button>
             </StyledStack>
           </form>
         </>
