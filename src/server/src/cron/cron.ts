@@ -114,7 +114,6 @@ async function pollForNews() {
                   : [fullUrl.origin, fullUrl.pathname].join("");
               })
               .filter((u) => !!u);
-            console.log("fuck", urls);
             if (urls.length === 0) continue;
             for (const url of urls) {
               await queue.dispatch(

@@ -1,9 +1,7 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { ThemeProvider, styled, Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-
-import { Api } from '@/api/Api';
 
 import { SessionContext } from "@/contexts";
 import { routes } from "@/pages";
@@ -26,22 +24,6 @@ const StyledAppContent = styled(Box)`
 `;
 
 function App() {
-  
-  const location = useLocation();
-  
-  React.useEffect(() => {
-    const api = new Api({
-      baseUrl: process.env.API_ENDPOINT,
-    }).v1;
-    api.recordMetric({
-      type: 'nav',
-      data: { 
-        path: location
-      },
-      userAgent: navigator.userAgent,
-    })
-      .catch(console.error);
-  }, [location]);
   
   const { theme } = React.useContext(SessionContext);
   

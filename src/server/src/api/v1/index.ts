@@ -2,8 +2,9 @@ import express, { Router } from 'express';
 
 import { DBService } from '../../services';
 
-import arenaRouter from './routes/arena';
 import articleRouter from './routes/articles';
+import bullBoardRouter from './routes/bull-board';
+import featureRouter from './routes/features';
 import metricRouter from './routes/metrics';
 import newsletterRourer from './routes/newsletter';
 import policyRouter from './routes/policies';
@@ -15,8 +16,9 @@ const router = Router();
 async function main() {
   await DBService.init();
   router.use(express.static('public'));
-  router.use('/arena', arenaRouter);
   router.use('/articles', articleRouter);
+  router.use('/bull-board', bullBoardRouter);
+  router.use('/features', featureRouter);
   router.use('/metrics', metricRouter);
   router.use('/newsletter', newsletterRourer);
   router.use('/policies', policyRouter);

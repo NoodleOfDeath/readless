@@ -9,7 +9,12 @@ export type SubscriptionAttributes = DatedAttributes & {
   newsletterId: number;
 };
 
-export type SubscriptionCreationAttributes = SubscriptionAttributes;
+export type SubscriptionCreationAttributes = DatedAttributes & {
+  aliasType: string;
+  alias: string;
+  newsletterId?: number;
+  newsletterName?: string;
+};
 
 @Table({
   modelName: 'subscription',
@@ -29,7 +34,7 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
   }
   
   @Index({
-    name: 'subscriptions_aliasType_alias_key',
+    name: 'subscriptions_aliasType_alias_newsletterId_key',
     unique: true
   })
   @Column({
@@ -39,7 +44,7 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     aliasType: string;
   
   @Index({
-    name: 'subscriptions_aliasType_alias_key',
+    name: 'subscriptions_aliasType_alias_newsletterId_key',
     unique: true,
   })
   @Column({
@@ -47,7 +52,11 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     allowNull: false,
   })
     alias: string;
-  
+
+  @Index({
+    name: 'subscriptions_aliasType_alias_newsletterId_key',
+    unique: true,
+  })
   @ForeignKey(() => Newsletter)
   @Column({
     type: DataType.INTEGER,

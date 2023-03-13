@@ -9,10 +9,10 @@ import {
   useMediaQuery,
   Button,
 } from "@mui/material";
-import {  useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { SessionContext } from "@/contexts";
-import { Api, SourceWithOutletAttr } from "@/api/Api";
+import API, { SourceWithOutletAttr } from "@/api";
 
 import Page from "@/components/layout/Page";
 import Post, { ConsumptionMode } from "@/components/Post";
@@ -29,11 +29,10 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
 
-  const api = new Api({
-    baseUrl: process.env.API_ENDPOINT,
-  }).v1;
-  const { searchText, setSearchText } =
-    React.useContext(SessionContext);
+  const { 
+    searchText, 
+    setSearchText,
+  } = React.useContext(SessionContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
   const [recentSources, setRecentSources] = React.useState<SourceWithOutletAttr[]>([]);
@@ -59,7 +58,7 @@ export default function SearchPage() {
   React.useEffect(() => {
     setRecentSources([]);
     setPage(1);
-    api
+    API
       .getSources({
         filter: searchText,
         pageSize,
@@ -86,7 +85,7 @@ export default function SearchPage() {
   }, []);
 
   const loadMore = () => {
-    api
+    API
       .getSources({
         filter: searchText,
         pageSize,

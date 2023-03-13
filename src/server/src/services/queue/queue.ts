@@ -34,6 +34,9 @@ export const redisClient = (
 ) =>
   new IORedis(connectionString, {
     maxRetriesPerRequest,
+    tls: {
+      rejectUnauthorized: false,
+    },
     ...opts,
   });
 

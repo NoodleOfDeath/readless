@@ -1,3 +1,5 @@
+export * from './feature.model';
+
 export * from './media.model';
 export * from './outlet.model';
 export * from './topic.model';
