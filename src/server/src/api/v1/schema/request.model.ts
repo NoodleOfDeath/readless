@@ -4,12 +4,9 @@ import { DatedAttributes } from './dated';
 
 export type RequestAttributes = DatedAttributes & {
   remoteAddr: string;
-  referrer: string;
+  referrer?: string;
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  params?: Record<string, unknown>;
-  query?: Record<string, unknown>;
-  body?: Record<string, unknown>;
 }
 
 export type RequestCreationAttributes = RequestAttributes;
@@ -51,20 +48,5 @@ export class Request<A extends RequestAttributes = RequestAttributes, B extends 
     allowNull: false,
   })
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-
-  @Column({
-    type: DataType.JSON,
-  })
-    params?: Record<string, unknown>;
-
-  @Column({
-    type: DataType.JSON,
-  })
-    query?: Record<string, unknown>;
-
-  @Column({
-    type: DataType.JSON,
-  })
-    body?: Record<string, unknown>;
 
 }

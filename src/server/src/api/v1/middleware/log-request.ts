@@ -9,11 +9,7 @@ export const logRequest: RequestHandler = async (req, res, next) => {
       referrer: req.get('Referrer'),
       path: req.path,
       method: req.method as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-      params: req.params,
-      query: req.query,
-      body: req.body,
     });
-    console.log(request);
     await request.save();
   } catch (e) {
     console.error(e);

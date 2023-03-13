@@ -1,1 +1,1 @@
-export * from './scribe';
+export * from './ScribeService';

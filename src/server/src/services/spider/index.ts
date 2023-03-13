@@ -1,1 +1,1 @@
-export * from './spider';
+export * from './SpiderService';
