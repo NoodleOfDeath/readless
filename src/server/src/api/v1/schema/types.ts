@@ -12,6 +12,26 @@ export type Attr<Model, K extends keyof Model> = {
   [Key in K]: Model[Key];
 };
 
+export const RESOURCE_TYPES = {
+  article: 'article',
+  interaction: 'interaction',
+  media: 'media',
+  outlet: 'outlet',
+  source: 'source',
+} as const;
+
+export type ResourceType = keyof typeof RESOURCE_TYPES;
+
+export const ACCESS_LEVELS = {
+  read: 'read',
+  write: 'write',
+  delete: 'delete',
+} as const;
+
+export type AccessLevel = keyof typeof ACCESS_LEVELS;
+
+// Resources
+
 /** light weight record for a post */
 export const POST_ATTRS = ['id', 'abridged', 'summary', 'shortSummary', 'bullets', 'createdAt'] as const;
 /** light weight record for a post with title, category, subcategory, and tags */
@@ -20,15 +40,6 @@ export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category'
 export const SOURCE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
 /** light weight record for an article post */
 export const ARTICLE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS] as const;
-
-export const RESOURCE_TYPES = {
-  article: 'article',
-  interaction: 'interaction',
-  media: 'media',
-  outlet: 'outlet',
-  source: 'source',
-} as const;
-export type ResourceType = keyof typeof RESOURCE_TYPES;
 
 export const INTERACTION_TYPES = {
   like: 'like',
@@ -40,4 +51,3 @@ export const INTERACTION_TYPES = {
 } as const;
 
 export type InteractionType = keyof typeof INTERACTION_TYPES;
-

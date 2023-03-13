@@ -1,7 +1,7 @@
 import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
-import { User } from './user.model';
+import { User } from './user/user.model';
 
 export type MembershipAttributes = DatedAttributes & {
   userId: number;
@@ -17,7 +17,7 @@ export type MembershipCreationAttributes = DatedAttributes & {
   tier: number;
   platform: string;
   platformUUID: string;
-};p
+};p;
 
 @Table({
   modelName: 'membership',
@@ -52,7 +52,7 @@ export class Membership<A extends MembershipAttributes = MembershipAttributes, B
     type: DataType.NUMBER,
     allowNull: false,
   })
-  tier: number;
+    tier: number;
   
   @Column({
     type: DataType.STRING,

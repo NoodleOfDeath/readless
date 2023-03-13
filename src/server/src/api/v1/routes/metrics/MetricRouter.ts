@@ -2,12 +2,13 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 
 import { MetricController } from '../../controllers';
-import { validate } from '../../middleware';
+import { logRequest, validate } from '../../middleware';
 
 const router = Router();
 
 router.post(
   '/',
+  logRequest,
   body('type').isString(),
   body('data').isObject(),
   body('userAgent').isString(),
@@ -24,7 +25,7 @@ router.post(
       res.status(200).send('OK');
     } catch (e) {
       console.error(e);
-      res.status(500).send('Internal Error');
+      res.status(500).send('Internal Server Error');
     }
   },
 );

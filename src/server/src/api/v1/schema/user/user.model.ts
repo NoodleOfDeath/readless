@@ -1,6 +1,6 @@
 import { HasMany, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
 import { UserAlias } from './alias.model';
 
 // eslint-disable-next-line @typescript-eslint/ban-types

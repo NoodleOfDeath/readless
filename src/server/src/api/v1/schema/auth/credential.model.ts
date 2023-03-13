@@ -1,20 +1,20 @@
-import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
-import { User } from './user.model';
+import { DatedAttributes } from '../dated';
+import { User } from '../user/user.model';
 
 export type CredentialAttributes = DatedAttributes & {
   userId: number;
   type: string;
   value: string;
-  expires: Date;
+  expiresOn: Date;
 };
 
 export type CredentialCreationAttributes = DatedAttributes & {
   userId: number;
   type: string;
   value: string;
-  expires: Date;
+  expiresOn: Date;
 };
 
 @Table({
@@ -27,8 +27,7 @@ export class Credential<
     B extends CredentialCreationAttributes = CredentialCreationAttributes,
   >
   extends Model<A, B>
-  implements CredentialAttributes
-{
+  implements CredentialAttributes {
   static get empty() {
     return this.json();
   }
@@ -37,6 +36,7 @@ export class Credential<
     return defaults ?? {};
   }
 
+  @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -50,17 +50,17 @@ export class Credential<
     type: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.TEXT,
     allowNull: false,
   })
     value: string;
 
   @Column({
     type: DataType.DATE,
-    allowNull: false,
   })
-    expires: Date;
-
-  @BelongsTo(() => User, 'userId')
-    user: User;
+    expiresOn: Date;
+    
+  get user() {
+    return User.findByPk(this.userId);
+  }
 }

@@ -1,12 +1,14 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
-import { InteractionType } from './types';
-import { User } from './user.model';
+import { User } from './user/user.model';
+import { InteractionType, ResourceType } from './types';
 
 export type InteractionAttributes = DatedAttributes & {
   /** type of this interaction */
   type: InteractionType;
+  /** type of the resource being interacted with */
+  targetType: ResourceType;
   /** id of the resource being interacted with */
   targetId: number;
   /** if a user is logged in this is a userId */
@@ -50,6 +52,12 @@ export class Interaction<
     allowNull: false,
   })
     type: InteractionType;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    targetType: ResourceType;
 
   @Column({
     type: DataType.INTEGER,

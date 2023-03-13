@@ -1,6 +1,6 @@
 import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
 import { User } from './user.model';
 
 export type HeadlessAliasAttributes = DatedAttributes & {
@@ -38,7 +38,7 @@ export class HeadlessAlias<
     type: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING(2083),
     allowNull: false,
   })
     value: string;

@@ -1,8 +1,8 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
 import { Article } from './article.model';
-import { Source } from './source.model';
+import { Source } from '../source/source.model';
 
 export type ArticleSourceAttributes = DatedAttributes & {
   articleId: number;
@@ -42,12 +42,12 @@ export class ArticleSource<A extends ArticleSourceAttributes = ArticleSourceAttr
   })
     sourceId: number;
     
-  get article() {
-    return Article.findByPk(this.articleId);
+  async article() {
+    return await Article.findByPk(this.articleId);
   }
     
-  get source() {
-    return Source.findByPk(this.sourceId);
+  async source() {
+    return await Source.findByPk(this.sourceId);
   }
   
 }

@@ -1,17 +1,17 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
 import { Article } from './article.model';
-import { Topic } from './topic.model';
+import { Topic } from '../topic/topic.model';
 
 export type ArticleTopicAttributes = DatedAttributes & {
-  topicId: number;
   articleId: number;
+  topicId: number;
 };
 
 export type ArticleTopicCreationAttributes = DatedAttributes & {
-  topicId: number;
   articleId: number;
+  topicId: number;
 };
 
 @Table({
@@ -42,12 +42,12 @@ export class ArticleTopic<A extends ArticleTopicAttributes = ArticleTopicAttribu
   })
     topicId: number;
     
-  get article() {
-    return Article.findByPk(this.articleId);
+  async article() {
+    return await Article.findByPk(this.articleId);
   }
 
-  get topic() {
-    return Topic.findByPk(this.topicId);
+  async topic() {
+    return await Topic.findByPk(this.topicId);
   }
     
 }

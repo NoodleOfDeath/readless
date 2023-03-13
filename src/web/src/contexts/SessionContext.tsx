@@ -14,6 +14,12 @@ export type Preferences = {
   consumptionMode?: ConsumptionMode;
 };
 
+export type UserData = {
+  id: number;
+  jwt: string;
+  tokens?: string[];
+}
+
 export type SetSearchTextOptions = {
   clearSearchParams?: boolean;
 };
@@ -23,10 +29,12 @@ export type Session = {
   pathIsEnabled: (path: string) => boolean,
   theme: Theme;
   preferences: Preferences;
+  userData?: UserData;
   displayMode?: PaletteMode;
   consumptionMode?: ConsumptionMode;
   searchText: string;
   searchOptions: string[];
+  setUserData: React.Dispatch<React.SetStateAction<UserData | undefined>>;
   setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
   setConsumptionMode: React.Dispatch<
     React.SetStateAction<ConsumptionMode | undefined>
@@ -49,6 +57,7 @@ export const NULL_SESSION: Session = {
   consumptionMode: "concise",
   searchText: "",
   searchOptions: [],
+  setUserData: () => {},
   setDisplayMode: () => {
     /* placeholder function */
   },
@@ -65,6 +74,7 @@ export const NULL_SESSION: Session = {
 
 export const COOKIES = {
   preferences: "preferences",
+  userData: "userData",
 };
 
 // 2 days
@@ -85,6 +95,7 @@ export function SessionContextProvider({ children }: Props) {
     loadTheme(isDarkModeEnabled ? "dark" : "light")
   );
   const [preferences, setPreferences] = React.useState<Preferences>({});
+  const [userData, setUserData] = React.useState<UserData | undefined>();
 
   const { displayMode, consumptionMode } = React.useMemo(
     () => preferences,
@@ -125,6 +136,18 @@ export function SessionContextProvider({ children }: Props) {
     try {
       const prefs = JSON.parse(Cookies.get(COOKIES.preferences) || "{}");
       setPreferences(prefs);
+    } catch (e) {
+      console.error(e);
+      setPreferences({});
+    }
+    try {
+      const userData = JSON.parse(Cookies.get(COOKIES.userData) || "{}");
+      setUserData(userData);
+    } catch (e) {
+      console.error(e);
+      setUserData(undefined);
+    }
+    try {
       API.getFeatures()
         .then((response) => {
           setEnabledFeatures(Object.fromEntries(response.data.map((feature) => [feature.name, feature])));
@@ -132,7 +155,6 @@ export function SessionContextProvider({ children }: Props) {
         .catch(console.error);
     } catch (e) {
       console.error(e);
-      setPreferences({});
     }
   }, []);
 
@@ -148,6 +170,14 @@ export function SessionContextProvider({ children }: Props) {
       expires: DEFAULT_SESSION_DURATION,
     });
   }, [preferences]);
+
+  // Save preferences as cookie when they change
+  React.useEffect(() => {
+    Cookies.set(COOKIES.userData, JSON.stringify(userData), {
+      path: "/",
+      expires: DEFAULT_SESSION_DURATION,
+    });
+  }, [userData]);
   
   const pathIsEnabled = React.useCallback((path: string) => enabledFeatures[path]?.enabled === true, [enabledFeatures]);
   
@@ -177,10 +207,12 @@ export function SessionContextProvider({ children }: Props) {
         pathIsEnabled,
         theme,
         preferences,
+        userData,
         displayMode,
         consumptionMode,
         searchText,
         searchOptions,
+        setUserData,
         setDisplayMode,
         setConsumptionMode,
         setSearchText: (

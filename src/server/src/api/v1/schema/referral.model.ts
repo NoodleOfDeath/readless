@@ -1,13 +1,13 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
-import { User } from './user.model';
+import { User } from './user/user.model';
 
 export type ReferralAttributes = DatedAttributes & {
   /** id of a user if ref link was created while logged in */
   referredById?: number;
   /** the IP address this referral was accessed from */
-  referrer: string;
+  remoteAddr: string;
   /** the url path this referral was generated from */
   origin?: string;
   /** the url path of the referral destination */
@@ -36,7 +36,7 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
     type: DataType.STRING(2083),
     allowNull: false,
   })
-    referrer: string;
+    remoteAddr: string;
 
   @Column({
     type: DataType.STRING(2083),

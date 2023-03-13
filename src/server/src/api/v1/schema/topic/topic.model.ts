@@ -1,31 +1,31 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
 
-export type NewsletterAttributes = DatedAttributes & {
+export type TopicAttributes = DatedAttributes & {
   name: string;
   description: string;
 };
 
-export type NewsletterCreationAttributes = DatedAttributes & {
+export type TopicCreationAttributes = DatedAttributes & {
   name: string;
   description: string;
 };
 
 @Table({
-  modelName: 'newsletter',
+  modelName: 'topic',
   timestamps: true,
   paranoid: true,
 })
-export class Newsletter<A extends NewsletterAttributes = NewsletterAttributes, B extends NewsletterCreationAttributes = NewsletterCreationAttributes>
+export class Topic<A extends TopicAttributes = TopicAttributes, B extends TopicCreationAttributes = TopicCreationAttributes>
   extends Model<A, B>
-  implements NewsletterAttributes
+  implements TopicAttributes
 {
   static get empty() {
     return this.json();
   }
 
-  static json(defaults?: Partial<Newsletter>): Partial<Newsletter> {
+  static json(defaults?: Partial<Topic>): Partial<Topic> {
     return defaults ?? {};
   }
   

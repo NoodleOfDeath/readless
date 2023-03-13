@@ -1,17 +1,17 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
 import { Source } from './source.model';
-import { Topic } from './topic.model';
+import { Topic } from '../topic/topic.model';
 
 export type SourceTopicAttributes = DatedAttributes & {
-  topicId: number;
   sourceId: number;
+  topicId: number;
 };
 
 export type SourceTopicCreationAttributes = DatedAttributes & {
-  topicId: number;
   sourceId: number;
+  topicId: number;
 };
 
 @Table({
@@ -42,12 +42,12 @@ export class SourceTopic<A extends SourceTopicAttributes = SourceTopicAttributes
   })
     topicId: number;
   
-  get source() {
-    return Source.findByPk(this.sourceId);
+  async source() {
+    return await Source.findByPk(this.sourceId);
   }
     
-  get topic() { 
-    return Topic.findByPk(this.topicId);
+  async topic() { 
+    return await Topic.findByPk(this.topicId);
   }
 
 }

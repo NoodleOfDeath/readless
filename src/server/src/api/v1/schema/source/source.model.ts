@@ -1,13 +1,13 @@
 import { AfterFind, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 
-import { Outlet } from './outlet.model';
-import {  SOURCE_ATTRS } from './types';
+import { Outlet } from '../outlet/outlet.model';
+import {  SOURCE_ATTRS } from '../types';
 import {
   Attr,
   TitledCategorizedPost,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
-} from './post';
+} from '../post';
 
 export type SourceAttributes = TitledCategorizedPostAttributes & {
   outletId: number;

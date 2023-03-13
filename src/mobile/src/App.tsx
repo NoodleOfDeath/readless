@@ -1,23 +1,19 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { MenuProvider } from "react-native-popup-menu";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MenuProvider } from 'react-native-popup-menu';
 
-import SessionContextProvider, {
-  SessionContext,
-} from "./contexts/SessionContext";
-
-import { SCREENS} from "./screens";
-import { useTheme } from "./components/theme";
-import { linkingOptions } from "./types";
-
+import SessionContextProvider from './contexts/SessionContext';
+import { SCREENS } from './screens';
+import { useTheme } from './components/theme';
+import { linkingOptions } from './types';
 import OnboardingScreen from './screens/onboarding/OnboardingScreen';
 
 export default function TabController() {
   const theme = useTheme();
   const Tab = createBottomTabNavigator();
-  const [showOnboarding, setShowOnboarding] = React.useState(false);
+  const [showOnboarding, setShowOnboarding] = React.useState(true);
   return (
     <SessionContextProvider>
       <MenuProvider>
@@ -29,13 +25,13 @@ export default function TabController() {
           linking={linkingOptions}
         >
           {showOnboarding ? (
-            <OnboardingScreen />
+            <OnboardingScreen onClose={() => setShowOnboarding(false)} />
           ) : (
             <Tab.Navigator
               initialRouteName="Discover"
-              screenOptions={
-                React.useContext(SessionContext).tabControllerScreenOptions
-              }
+              screenOptions={{
+                headerShown: true,
+              }}
             >
               {SCREENS.map((screen) => (
                 <Tab.Screen
@@ -43,7 +39,9 @@ export default function TabController() {
                   name={screen.name}
                   component={screen.component}
                   options={{
-                    tabBarIcon: (props) => <Icon name={screen.icon} {...props} />,
+                    tabBarIcon: (props) => (
+                      <Icon name={screen.icon} {...props} />
+                    ),
                     headerRight: screen.headerRight,
                   }}
                 />

@@ -2,7 +2,6 @@ import UserAgent from 'user-agents';
 import axios from 'axios';
 
 import { BaseService } from '../base';
-
 import { Loot } from './loot';
 import {
   ExtractRule,

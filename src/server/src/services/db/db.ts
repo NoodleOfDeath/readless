@@ -1,7 +1,6 @@
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 
 import { BaseService } from '../base';
-
 import * as Models from '../../api/v1/schema';
 
 export type DBServiceInitProps = {

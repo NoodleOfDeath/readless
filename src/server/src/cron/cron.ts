@@ -1,16 +1,16 @@
-import { CronJob } from "cron";
-import { Op } from "sequelize";
-import axios from "axios";
-import { load } from "cheerio";
+import { CronJob } from 'cron';
+import { Op } from 'sequelize';
+import axios from 'axios';
+import { load } from 'cheerio';
 
-import { DBService, QUEUES, QueueService } from "../services";
-import { Outlet, SiteMapParams, Source } from "../api/v1/schema";
+import { DBService, QUEUES, QueueService } from '../services';
+import { Outlet, SiteMapParams, Source } from '../api/v1/schema';
 
 async function main() {
   await DBService.init();
   // poll for new current events every 30 min
-  new CronJob("*/30 * * * *", () => pollForNews()).start();
-  new CronJob("*/30 * * * *", () => cleanBadSources()).start();
+  new CronJob('*/30 * * * *', () => pollForNews()).start();
+  new CronJob('*/30 * * * *', () => cleanBadSources()).start();
   pollForNews();
   cleanBadSources();
 }
@@ -35,35 +35,35 @@ function generateDynamicUrls(
       url.replace(/\$\{(.*?)(?:(-?\d\d?)|\+(\d\d?))?\}/g, ($0, $1, $2, $3) => {
         const offset = Number($2 ?? 0) + Number($3 ?? 0);
         switch ($1) {
-          case "YYYY":
-            return new Date(Date.now() + offset * YEAR)
-              .getFullYear()
-              .toString();
-          case "M":
-            return (((new Date().getMonth() + offset) % 12) + 1).toString();
-          case "MM":
-            return (((new Date().getMonth() + offset) % 12) + 1)
-              .toString()
-              .padStart(2, "0");
-          case "MMMM":
-            return new Date(
-              `2050-${((new Date().getMonth() + offset) % 12) + 1}-01`
-            ).toLocaleString("default", {
-              month: "long",
-            });
-          case "D":
-            return new Date(Date.now() + offset * DAY).getDate().toString();
-          case "DD":
-            return new Date(Date.now() + offset * DAY)
-              .getDate()
-              .toString()
-              .padStart(2, "0");
-          default:
-            if (params && !Number.isNaN(Number($1))) {
-              const i = Number($1);
-              if (i === index) return params;
-            }
-            return $0;
+        case 'YYYY':
+          return new Date(Date.now() + offset * YEAR)
+            .getFullYear()
+            .toString();
+        case 'M':
+          return (((new Date().getMonth() + offset) % 12) + 1).toString();
+        case 'MM':
+          return (((new Date().getMonth() + offset) % 12) + 1)
+            .toString()
+            .padStart(2, '0');
+        case 'MMMM':
+          return new Date(
+            `2050-${((new Date().getMonth() + offset) % 12) + 1}-01`
+          ).toLocaleString('default', {
+            month: 'long',
+          });
+        case 'D':
+          return new Date(Date.now() + offset * DAY).getDate().toString();
+        case 'DD':
+          return new Date(Date.now() + offset * DAY)
+            .getDate()
+            .toString()
+            .padStart(2, '0');
+        default:
+          if (params && !Number.isNaN(Number($1))) {
+            const i = Number($1);
+            if (i === index) return params;
+          }
+          return $0;
         }
       })
     );
@@ -72,7 +72,7 @@ function generateDynamicUrls(
 }
 
 async function pollForNews() {
-  console.log("fetching news!");
+  console.log('fetching news!');
   try {
     const { rows: outlets } = await Outlet.findAndCountAll();
     const queue = new QueueService({
@@ -107,11 +107,11 @@ async function pollForNews() {
                 const fullUrl = new URL(
                   /^https?:\/\//i.test(href)
                     ? href
-                    : [url.origin, href.replace(/^\//, "")].join("/")
+                    : [url.origin, href.replace(/^\//, '')].join('/')
                 );
                 return keepQuery
                   ? fullUrl.href
-                  : [fullUrl.origin, fullUrl.pathname].join("");
+                  : [fullUrl.origin, fullUrl.pathname].join('');
               })
               .filter((u) => !!u);
             if (urls.length === 0) continue;
@@ -142,15 +142,15 @@ async function pollForNews() {
 }
 
 async function cleanBadSources() {
-  console.log("cleaning bad sources!");
+  console.log('cleaning bad sources!');
   try {
     await Source.destroy({
       where: {
         [Op.or]: [
-          { title: { [Op.iRegexp]: "^i'm (?:sorry|apologize|sign\\s?up)" } },
-          { title: { [Op.iRegexp]: "\\w{200,}" } },
-          { abridged: { [Op.iRegexp]: "^i'm (?:sorry|apologize|sign\\s?up)" } },
-          { summary: { [Op.iRegexp]: "^i'm (?:sorry|apologize|sign\\s?up)" } },
+          { title: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
+          { title: { [Op.iRegexp]: '\\w{200,}' } },
+          { abridged: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
+          { summary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
         ],
       },
     });

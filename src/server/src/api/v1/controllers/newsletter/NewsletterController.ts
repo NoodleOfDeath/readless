@@ -1,4 +1,5 @@
 import { Body, Post, Route, Tags } from 'tsoa';
+
 import { Newsletter, Subscription, SubscriptionAttributes, SubscriptionCreationAttributes } from '../../schema';
 
 @Route('/v1/newsletter')

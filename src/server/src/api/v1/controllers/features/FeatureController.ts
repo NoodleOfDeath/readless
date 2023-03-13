@@ -1,4 +1,5 @@
 import { Get, Path, Route, Tags } from 'tsoa';
+
 import { Feature, FeatureAttributes } from '../../schema';
 
 @Route('/v1/features')

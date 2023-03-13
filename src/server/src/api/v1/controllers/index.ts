@@ -1,5 +1,7 @@
 export * from './features';
 
+export * from './auth';
+
 export * from './articles';
 export * from './sources';
 

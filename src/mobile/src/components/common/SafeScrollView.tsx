@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import {
   RefreshControl,
   SafeAreaView,
   ScrollView,
   ScrollViewProps,
-} from "react-native";
+} from 'react-native';
 
-import FlexView from "./FlexView";
-import { useTheme } from "../theme";
+import FlexView from './FlexView';
+import { useTheme } from '../theme';
 
 type Props = ScrollViewProps & {
   refreshing?: boolean;

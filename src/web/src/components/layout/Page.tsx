@@ -2,6 +2,7 @@ import React from "react";
 import { Container, ContainerProps, styled } from "@mui/material";
 
 type Props = Omit<ContainerProps, "left" | "right" | "center" | "align"> & {
+  title?: string;
   left?: boolean;
   right?: boolean;
   center?: boolean;
@@ -29,6 +30,6 @@ const StyledContainer = styled(
   })
 );
 
-export default function Page({ children, ...other }: Props) {
+export default function Page({ children, title, ...other }: Props) {
   return <StyledContainer {...other}>{children}</StyledContainer>;
 }

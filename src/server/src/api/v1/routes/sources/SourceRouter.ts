@@ -3,12 +3,13 @@ import { param, query } from 'express-validator';
 
 import { SourceController } from '../../controllers';
 import { SourceAttr, SourceAttributes } from '../../schema';
-import { pagination, validate } from '../../middleware';
+import { logRequest, pagination, validate } from '../../middleware';
 
 const router = Router();
 
 router.get(
   '/:category?/:subcategory?/:title?',
+  logRequest,
   param('category').isString().optional(),
   param('subcategory').isString().optional(),
   param('title').isString().optional(),
@@ -43,7 +44,7 @@ router.get(
       res.json(response);
     } catch (e) {
       console.error(e);
-      res.status(500).send('Internal Error');
+      res.status(500).send('Internal Server Error');
     }
   },
 );

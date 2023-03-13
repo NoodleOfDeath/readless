@@ -1,8 +1,8 @@
 import express, { Router } from 'express';
 
 import { DBService } from '../../services';
-
 import articleRouter from './routes/articles';
+import authRouter from './routes/auth';
 import bullBoardRouter from './routes/bull-board';
 import featureRouter from './routes/features';
 import metricRouter from './routes/metrics';
@@ -17,6 +17,7 @@ async function main() {
   await DBService.init();
   router.use(express.static('public'));
   router.use('/articles', articleRouter);
+  router.use('/auth', authRouter);
   router.use('/bull-board', bullBoardRouter);
   router.use('/features', featureRouter);
   router.use('/metrics', metricRouter);

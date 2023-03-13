@@ -1,6 +1,6 @@
 import { Column, DataType, ForeignKey, Index, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
 import { Newsletter } from './newsletter.model';
 
 export type SubscriptionAttributes = DatedAttributes & {

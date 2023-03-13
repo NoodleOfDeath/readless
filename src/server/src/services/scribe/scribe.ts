@@ -4,8 +4,9 @@ import {
   ReadAndSummarizeSourcePayload,
   Source,
 } from '../../api/v1/schema';
-
 import { BaseService } from '../base';
+
+const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 
 export class ScribeService extends BaseService {
   
@@ -29,6 +30,9 @@ export class ScribeService extends BaseService {
     const spider = new SpiderService();
     const loot = await spider.loot(url);
     // create the prompt action map to be sent to chatgpt
+    if (loot.filteredText.length > MAX_OPENAI_TOKEN_COUNT) {
+      throw new Error('Article too long for OpenAI');
+    }
     const sourceInfo = Source.json({
       outletId,
       url: url,
@@ -38,7 +42,7 @@ export class ScribeService extends BaseService {
     });
     const prompts: Prompt[] = [
       {
-        text: `Please read the following article and provide a single sentence summary using no more than 120 characters\":\n\n${sourceInfo.filteredText}`,
+        text: `Please read the following article and provide a single sentence summary using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
         catchFailure: (reply) => { 
           if (reply.text.length > 120)
             return new Error('Title too long');

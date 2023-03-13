@@ -4,7 +4,8 @@ import { Queue } from 'bullmq';
 import { Router } from 'express';
 import { createBullBoard } from '@bull-board/api';
 
-import { redisClient, QUEUES } from './../../../../services';
+import { logRequest } from '../../middleware';
+import { QUEUES, redisClient } from './../../../../services';
 
 const router = Router();
 
@@ -21,6 +22,6 @@ createBullBoard({
   serverAdapter: serverAdapter,
 });
 
-router.use(serverAdapter.getRouter());
+router.use(logRequest, serverAdapter.getRouter());
 
 export default router;

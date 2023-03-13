@@ -1,8 +1,8 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
-import { DatedAttributes } from './dated';
+import { DatedAttributes } from '../dated';
+import { Media } from '../media.model';
 import { Source } from './source.model';
-import { Media } from './media.model';
 
 export type SourceMediaAttributes = DatedAttributes & {
   sourceId: number;
@@ -42,12 +42,12 @@ export class SourceMedia<A extends SourceMediaAttributes = SourceMediaAttributes
   })
     mediaId: number;
     
-  get source() {
-    return Source.findByPk(this.sourceId);
+  async source() {
+    return await Source.findByPk(this.sourceId);
   }
   
-  get media() {
-    return Media.findByPk(this.mediaId);
+  async media() {
+    return await Media.findByPk(this.mediaId);
   }
     
 }

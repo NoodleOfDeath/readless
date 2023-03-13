@@ -6,6 +6,113 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"DatedAttributes": {
+				"properties": {
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object"
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"FeatureAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"data": {
+								"$ref": "#/components/schemas/Record_string.unknown_"
+							},
+							"enabled": {
+								"type": "boolean"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"enabled",
+							"name"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"LoginResponse": {
+				"properties": {
+					"jwt": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"jwt",
+					"id"
+				],
+				"type": "object"
+			},
+			"Partial_LoginOptions_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2address": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"RegistrationResponse": {
+				"type": "number",
+				"format": "double"
+			},
+			"Partial_RegistrationOptions_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2address": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
 			"Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_": {
 				"properties": {
 					"id": {
@@ -71,27 +178,6 @@
 			},
 			"ArticleAttr": {
 				"$ref": "#/components/schemas/Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_"
-			},
-			"DatedAttributes": {
-				"properties": {
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"type": "object"
 			},
 			"PostAttributes": {
 				"allOf": [
@@ -356,12 +442,33 @@
 				]
 			},
 			"SubscriptionCreationAttributes": {
-				"$ref": "#/components/schemas/SubscriptionAttributes"
-			},
-			"Record_string.unknown_": {
-				"properties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"newsletterName": {
+								"type": "string"
+							},
+							"newsletterId": {
+								"type": "number",
+								"format": "double"
+							},
+							"alias": {
+								"type": "string"
+							},
+							"aliasType": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"alias",
+							"aliasType"
+						],
+						"type": "object"
+					}
+				]
 			},
 			"MetricAttributes": {
 				"allOf": [
@@ -449,7 +556,7 @@
 								"type": "string",
 								"description": "the url path this referral was generated from"
 							},
-							"referrer": {
+							"remoteAddr": {
 								"type": "string",
 								"description": "the IP address this referral was accessed from"
 							},
@@ -462,7 +569,7 @@
 						"required": [
 							"userAgent",
 							"target",
-							"referrer"
+							"remoteAddr"
 						],
 						"type": "object"
 					}
@@ -481,6 +588,126 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/v1/features": {
+			"get": {
+				"operationId": "GetFeatures",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/FeatureAttributes"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Features"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/v1/features/{feature}": {
+			"get": {
+				"operationId": "GetFeature",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FeatureAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Features"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "feature",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/v1/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_LoginOptions_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RegistrationResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_RegistrationOptions_"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/v1/articles": {
 			"get": {
 				"operationId": "GetArticles",
@@ -1126,6 +1353,31 @@
 								}
 							}
 						}
+					}
+				},
+				"tags": [
+					"Newsletters"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubscriptionCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/newsletter/unsubscribe": {
+			"post": {
+				"operationId": "UnsubscribeFromNewsletter",
+				"responses": {
+					"204": {
+						"description": "No content"
 					}
 				},
 				"tags": [

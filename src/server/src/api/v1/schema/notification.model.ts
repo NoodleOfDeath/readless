@@ -1,7 +1,7 @@
-import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
-import { User } from './user.model';
+import { User } from './user/user.model';
 
 export type NotificationAttributes = DatedAttributes & {
   userId: number;
@@ -29,7 +29,8 @@ export class Notification<A extends NotificationAttributes = NotificationAttribu
   static json(defaults?: Partial<Notification>): Partial<Notification> {
     return defaults ?? {};
   }
-  
+
+  @ForeignKey(() => User)
   @Column({
     type: DataType.NUMBER,
     allowNull: false,
@@ -41,8 +42,5 @@ export class Notification<A extends NotificationAttributes = NotificationAttribu
     allowNull: false,
   })
     type: 'email' | 'push' | 'text' | 'toast';
-  
-  @BelongsTo(() => User, 'userId')
-    user: User;
 
 }

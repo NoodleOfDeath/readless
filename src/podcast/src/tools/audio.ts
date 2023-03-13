@@ -1,6 +1,7 @@
-import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import p from 'path';
+
+import ffmpeg from 'fluent-ffmpeg';
 
 type AudioEditorOptions = {
   watchDir: string;
