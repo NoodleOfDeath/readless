@@ -15,7 +15,7 @@ export default function TermsPage() {
   }, []);
 
   return (
-    <Page left>
+    <Page left title="Terms of Service">
       <ReactMarkdown>{text}</ReactMarkdown>
     </Page>
   );

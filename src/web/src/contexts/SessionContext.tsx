@@ -137,14 +137,12 @@ export function SessionContextProvider({ children }: Props) {
       const prefs = JSON.parse(Cookies.get(COOKIES.preferences) || "{}");
       setPreferences(prefs);
     } catch (e) {
-      console.error(e);
       setPreferences({});
     }
     try {
       const userData = JSON.parse(Cookies.get(COOKIES.userData) || "{}");
       setUserData(userData);
     } catch (e) {
-      console.error(e);
       setUserData(undefined);
     }
     try {

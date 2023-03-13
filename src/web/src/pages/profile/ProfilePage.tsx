@@ -8,7 +8,7 @@ export default function ProfilePage() {
   const { userData } = React.useContext(SessionContext);
 
   return (
-    <Page left>
+    <Page left title="Profile">
       <ReactMarkdown>{String(userData?.id)}</ReactMarkdown>
     </Page>
   );

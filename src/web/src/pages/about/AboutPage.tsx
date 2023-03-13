@@ -7,7 +7,7 @@ import RoadMap from "./RoadMap";
 
 export default function AboutPage() {
   return (
-    <Page>
+    <Page title="About">
       <Card>
         <CardHeader title="About" />
         <CardContent>

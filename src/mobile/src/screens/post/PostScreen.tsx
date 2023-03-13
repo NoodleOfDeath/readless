@@ -1,17 +1,17 @@
-import React from 'react';
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React from "react";
+import { RouteProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import SafeScrollView from '../../components/common/SafeScrollView';
-import Post from '../../components/post/Post';
-import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
-import FlexView from '../../components/common/FlexView';
-import { RootStackParamList } from '../discover/types';
-import { SessionContext } from '../../contexts/SessionContext';
+import SafeScrollView from "../../components/common/SafeScrollView";
+import Post from "../../components/post/Post";
+import { ConsumptionMode } from "../../components/post/ConsumptionModeSelector";
+import FlexView from "../../components/common/FlexView";
+import { RootStackParamList } from "../discover/types";
+import { SessionContext } from "../../contexts/SessionContext";
 
 type Props = {
-  route: RouteProp<RootStackParamList, 'Post'>;
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Post'>;
+  route: RouteProp<RootStackParamList, "Post">;
+  navigation: NativeStackNavigationProp<RootStackParamList, "Post">;
 };
 
 export default function PostScreen({

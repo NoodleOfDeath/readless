@@ -1,7 +1,15 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { Button, Stack, TextField, styled } from '@mui/material';
+import {
+  Button,
+  Stack,
+  TextField,
+  styled,
+  Typography,
+  Link,
+} from '@mui/material';
+import { GoogleLogin } from '@react-oauth/google';
 
 import API, { PartialLoginOptions } from '@/api';
 import { SessionContext } from '@/contexts';
@@ -32,21 +40,36 @@ export default function LoginPage() {
   );
 
   return (
-    <Page>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <StyledStack spacing={2}>
-          <TextField
-            label='Email'
-            {...register('email')}
-          />
-          <TextField
-            type="password"
-            label='Password'
-            {...register('password')}
-          />
-          <Button type='submit'>Login</Button>
+    <Page title='Login'>
+      <StyledStack spacing={2}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <StyledStack spacing={2}>
+            <TextField
+              label='Email'
+              {...register('email')}
+            />
+            <TextField
+              type='password'
+              label='Password'
+              {...register('password')}
+            />
+            <Button type='submit'>Login</Button>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                console.log(credentialResponse);
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+              useOneTap
+            />
+          </StyledStack>
+        </form>
+        <StyledStack spacing={1}>
+          <Typography variant='body2'>Don't have an account?</Typography>{' '}
+          <Link href='/register'>Register Here</Link>
         </StyledStack>
-      </form>
+      </StyledStack>
     </Page>
   );
 }

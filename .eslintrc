@@ -16,11 +16,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "import",
-    "react",
-    "@typescript-eslint"
-  ],
+  "plugins": ["import", "react", "@typescript-eslint"],
   "rules": {
     "comma-spacing": [
       "error",
@@ -29,22 +25,10 @@
         "after": true
       }
     ],
-    "indent": [
-      "error",
-      2
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn", // or "error"
@@ -60,12 +44,7 @@
         "ignoreCase": false,
         "ignoreDeclarationSort": true,
         "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": [
-          "none",
-          "all",
-          "single",
-          "multiple"
-        ],
+        "memberSyntaxSortOrder": ["none", "all", "single", "multiple"],
         "allowSeparatedGroups": true
       }
     ],
@@ -77,10 +56,7 @@
           "builtin",
           "external",
           "internal",
-          [
-            "parent",
-            "sibling"
-          ],
+          ["parent", "sibling"],
           "index"
         ]
       }

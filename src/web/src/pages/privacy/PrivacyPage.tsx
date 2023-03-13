@@ -15,7 +15,7 @@ export default function PrivacyPage() {
   }, []);
 
   return (
-    <Page left>
+    <Page left title="Privacy Policy">
       <ReactMarkdown>{text}</ReactMarkdown>
     </Page>
   );

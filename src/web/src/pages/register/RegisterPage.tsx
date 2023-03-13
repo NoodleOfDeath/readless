@@ -1,6 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Stack, TextField, styled } from "@mui/material";
+import {
+  Button,
+  Link,
+  Stack,
+  TextField,
+  styled,
+  Typography,
+} from '@mui/material';
 
 import API, { PartialRegistrationOptions } from '@/api';
 import Page from '@/components/layout/Page';
@@ -15,23 +22,36 @@ export default function RegisterPage() {
 
   const onSubmit = React.useCallback((data: PartialRegistrationOptions) => {
     API.register(data)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
     <Page title='Register'>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <StyledStack spacing={2}>
-          <TextField {...register('email')} label='Email' />
-          <TextField type="password" {...register('password')} label='Password' />
-          <Button type='submit'>Register</Button>
+      <StyledStack spacing={2}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <StyledStack spacing={2}>
+            <TextField
+              {...register('email')}
+              label='Email'
+            />
+            <TextField
+              type='password'
+              {...register('password')}
+              label='Password'
+            />
+            <Button type='submit'>Register</Button>
+          </StyledStack>
+        </form>
+        <StyledStack spacing={1}>
+          <Typography variant='body2'>Already have an account?</Typography>
+          <Link href='/login'>Login Here</Link>
         </StyledStack>
-      </form>
+      </StyledStack>
     </Page>
   );
 }

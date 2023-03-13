@@ -46,7 +46,7 @@ export default function HomePage() {
   }, [navigate, pathIsEnabled]);
 
   return (
-    <Page center>
+    <Page center title="theSkoop">
       <h1>theSkoop is currently in alpha test phase!</h1>
       {!success ? (
         <>

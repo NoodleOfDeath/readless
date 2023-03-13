@@ -31,5 +31,14 @@ const StyledContainer = styled(
 );
 
 export default function Page({ children, title, ...other }: Props) {
-  return <StyledContainer {...other}>{children}</StyledContainer>;
+  React.useEffect(() => {
+    if (title) {
+      document.title = title;
+    }
+  }, [title]);
+  return (
+    <StyledContainer {...other}>
+      {children}
+    </StyledContainer>
+  );
 }

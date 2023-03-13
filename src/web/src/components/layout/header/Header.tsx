@@ -14,7 +14,7 @@ import {
   styled,
 } from "@mui/material";
 import { Icon } from "@mdi/react";
-import { mdiHome, mdiInformation, mdiMenu, mdiPodcast } from "@mdi/js";
+import { mdiHome, mdiInformation, mdiLogin, mdiMenu, mdiPodcast } from "@mdi/js";
 
 import Logo from "@/components/Logo";
 import LightDarkModeButtons from "@/components/layout/header/LightDarkModeButtons";
@@ -25,11 +25,19 @@ import NavigationItem, {
 
 const NAVIGATION_ITEMS: NavigationItemProps[] = [
   {
-    id: "home",
+    id: "Home",
     label: "Home",
     icon: mdiHome,
     onClick({ navigate }) {
       navigate?.("/");
+    },
+  },
+  {
+    id: "Login",
+    label: "Login",
+    icon: mdiLogin,
+    onClick({ navigate }) {
+      navigate?.("/login");
     },
   },
   {

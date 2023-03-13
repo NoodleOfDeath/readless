@@ -42,7 +42,7 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 - [ ] First release to the app stores
 - [ ] Launch of referral and pre-loyalty programs
 
-### v1.4.0 
+### v1.4.0
 
 - [ ] Adding of comments and messaging support (hopefully will not be a heavy lift as moderation could be outsourced to ChatGPT)
 

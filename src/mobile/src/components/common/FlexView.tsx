@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import LinearGradient, {
   LinearGradientProps,
-} from 'react-native-linear-gradient';
+} from "react-native-linear-gradient";
 
-import { useTheme } from '../theme';
+import { useTheme } from "../theme";
 
-type Props = Omit<LinearGradientProps, 'colors' | 'style'> & {
+type Props = Omit<LinearGradientProps, "colors" | "style"> & {
   row?: boolean;
   col?: boolean;
   m?: number;
@@ -19,7 +19,7 @@ type Props = Omit<LinearGradientProps, 'colors' | 'style'> & {
   pl?: number;
   pr?: number;
   colors?: string[];
-  style?: React.ComponentProps<typeof LinearGradient>['style'] & {
+  style?: React.ComponentProps<typeof LinearGradient>["style"] & {
     background?: string | string[];
   };
 };
@@ -28,7 +28,7 @@ export default function FlexView({
   children,
   row,
   col,
-  colors = ['transparent', 'transparent'],
+  colors = ["transparent", "transparent"],
   m,
   mt = m,
   mb = m,
@@ -56,8 +56,8 @@ export default function FlexView({
       row
         ? theme.components.flexRow
         : col
-          ? theme.components.flexCol
-          : undefined
+        ? theme.components.flexCol
+        : undefined
     );
     if (mt) attrs.push({ marginTop: mt });
     if (mb) attrs.push({ marginBottom: mb });

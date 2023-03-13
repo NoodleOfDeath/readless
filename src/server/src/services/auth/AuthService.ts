@@ -34,6 +34,8 @@ export type LoginResponse = {
 
 export type RegistrationResponse = number;
 
+export class AuthError extends Error {}
+
 export class AuthService extends BaseService {
   constructor() {
     super();
@@ -112,12 +114,12 @@ export class AuthService extends BaseService {
         },
       }))?.toJSON();
       if (!credential) {
-        throw new Error(
+        throw new AuthError(
           'User dont have no not password does not exist for user account',
         );
       }
       if (!bcrypt.compareSync(password, credential.value)) {
-        throw new Error('Password is incorrect');
+        throw new AuthError('Password is incorrect');
       }
     }
     // user is authenticated, generate JWT

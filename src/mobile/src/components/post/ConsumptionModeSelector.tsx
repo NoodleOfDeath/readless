@@ -1,15 +1,15 @@
-import React from 'react';
-import { ButtonGroup } from 'react-native-elements';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from "react";
+import { ButtonGroup } from "react-native-elements";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { useTheme } from '../theme';
+import { useTheme } from "../theme";
 
 export const CONSUMPTION_MODES = {
-  keyPoints: 'format-list-bulleted',
-  concise: 'view-headline',
-  casual: 'view-list',
-  comprehensive: 'view-stream',
-  comparative: 'view-column',
+  keyPoints: "format-list-bulleted",
+  concise: "view-headline",
+  casual: "view-list",
+  comprehensive: "view-stream",
+  comparative: "view-column",
 } as const;
 
 export type ConsumptionMode = keyof typeof CONSUMPTION_MODES;

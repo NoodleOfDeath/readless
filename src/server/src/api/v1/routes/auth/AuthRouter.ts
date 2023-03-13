@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
 import { AuthController } from '../../controllers';
+import { AuthError } from './../../../../services';
 import { logRequest, validate } from '../../middleware';
 
 const router = Router();
@@ -21,8 +22,12 @@ router.post(
       const response = await new AuthController().login(req.body);
       res.json(response);
     } catch (e) {
-      console.log(e);
-      res.status(500).send('Internal Server Error');
+      if (e instanceof AuthError) {
+        res.status(401).send(e.message);
+      } else {
+        console.log(e);
+        res.status(500).send('Internal Server Error');
+      }
     }
   }
 );
