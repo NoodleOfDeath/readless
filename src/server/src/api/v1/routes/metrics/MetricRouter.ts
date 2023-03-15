@@ -14,7 +14,7 @@ router.post(
   validate,
   async (req, res) => {
     const {
-      type, data, userAgent 
+      type, data, userAgent, 
     } = req.body;
     try {
       await new MetricController().recordMetric({

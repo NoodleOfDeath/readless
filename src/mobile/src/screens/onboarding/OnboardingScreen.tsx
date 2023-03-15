@@ -1,12 +1,14 @@
-import React from 'react';
-import { Button, Text, View } from 'react-native';
-import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
+import React from 'react';
+import { interpolate } from 'react-native-reanimated';
+import {
+  Button, Text, View, 
+} from 'react-native';
 
-import { window } from '../../constants';
-import { useTheme } from '../../components/theme';
 import FlexView from '../../components/common/FlexView';
 import OnboardingCard from './OnboardingCard';
+import { useTheme } from '../../components/theme';
+import { window } from '../../constants';
 
 type Props = {
   onClose?: () => void;
@@ -35,7 +37,7 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
     const translateX = interpolate(
       value,
       [-1, 0, 1],
-      [-window.width, 0, window.width]
+      [-window.width, 0, window.width],
     );
     return {
       transform: [{ rotateZ }, { translateX }],

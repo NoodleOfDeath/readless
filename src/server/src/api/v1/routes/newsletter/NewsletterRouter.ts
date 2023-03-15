@@ -14,7 +14,7 @@ router.post(
   validate,
   async (req, res) => {
     const {
-      aliasType, alias, newsletterId, newsletterName 
+      aliasType, alias, newsletterId, newsletterName, 
     } = req.body;
     try {
       await new NewsletterController().subscribeToNewsletter({
@@ -39,7 +39,7 @@ router.post(
   validate,
   async (req, res) => {
     const {
-      aliasType, alias, newsletterId, newsletterName 
+      aliasType, alias, newsletterId, newsletterName, 
     } = req.body;
     try {
       await new NewsletterController().unsubscribeFromNewsletter({

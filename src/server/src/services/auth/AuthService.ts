@@ -7,15 +7,16 @@ import { AliasType } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 import { GoogleService } from '../google';
 import {
-  AliasOptions, AliasTicket, AuthError, AuthenticationOptions, AuthenticationResponse, LoginOptions, LoginResponse, RegistrationOptions 
+  AliasOptions, AliasTicket, AuthError, AuthenticationOptions, AuthenticationResponse, LoginOptions, LoginResponse, RegistrationOptions, 
 } from './types';
 import {
-  Credential, User, UserAlias 
+  Credential, User, UserAlias, 
 } from '../../api/v1/schema/models';
 
 const JWT_TOKEN_LIFETIME = '1d';
 
 export class AuthService extends BaseService {
+
   public parseAlias({
     email,
     eth2Address,
@@ -43,7 +44,7 @@ export class AuthService extends BaseService {
         const google = new GoogleService();
         const ticket = await google.verify(alias.payload.credential);
         const email = (
-          await google.getProfile(ticket, { access_token: alias.payload.credential, })
+          await google.getProfile(ticket, { access_token: alias.payload.credential })
         ).emailAddress;
         if (!email) {
           throw new AuthError('Google account does not have an email address');
@@ -71,7 +72,7 @@ export class AuthService extends BaseService {
         ? (await this.resolveAlias(alias))?.toJSON()
         : alias;
     if (userAlias) {
-      return await User.findOne({ where: { id: userAlias.userId, }, });
+      return await User.findOne({ where: { id: userAlias.userId } });
     }
     throw new AuthError('Unable to find a user with the specified payload');
   }
@@ -132,7 +133,7 @@ export class AuthService extends BaseService {
       }
     }
     // user is authenticated, generate JWT
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: JWT_TOKEN_LIFETIME, });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: JWT_TOKEN_LIFETIME });
     const newToken = new Credential({
       userId: user.id,
       type: 'jwt',
@@ -169,7 +170,7 @@ export class AuthService extends BaseService {
         const google = new GoogleService();
         const ticket = await google.verify(alias.payload.credential);
         const email = (
-          await google.getProfile(ticket, { access_token: alias.payload.credential, })
+          await google.getProfile(ticket, { access_token: alias.payload.credential })
         ).emailAddress;
         if (!email) {
           throw new AuthError('Google account does not have an email address');
@@ -204,7 +205,7 @@ export class AuthService extends BaseService {
       });
       await newCredential.save();
     }
-    return { userId: newUser.id, };
+    return { userId: newUser.id };
   }
 
   public async authenticate({
@@ -230,6 +231,7 @@ export class AuthService extends BaseService {
       await Credential.destroy({ where: { id: credential.id } });
       throw new AuthError('JWT has expired');
     }
-    return { userId: credential.userId, };
+    return { userId: credential.userId };
   }
+
 }

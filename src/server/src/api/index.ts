@@ -33,7 +33,7 @@ app.use(
 );
 
 app.use(
-  bodyParser.json({ limit: process.env.REQ_SIZE_LIMIT, }),
+  bodyParser.json({ limit: process.env.REQ_SIZE_LIMIT }),
 );
 
 app.set('trust proxy', 1);

@@ -17,10 +17,10 @@ router.get(
   validate,
   async (req, res) => {
     const {
-      category, subcategory, title 
+      category, subcategory, title, 
     } = req.params;
     const {
-      filter, pageSize = 10, page = 0, offset = page * pageSize 
+      filter, pageSize = 10, page = 0, offset = page * pageSize, 
     } = req.query;
     const controller = new SourceController();
     let response: { count: number; rows: SourceAttr[] } | SourceAttributes = {

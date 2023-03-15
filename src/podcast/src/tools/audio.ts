@@ -19,7 +19,9 @@ type AudioEditOptions = {
 function ffprobeSync(path: string): Promise<ffmpeg.FfprobeData> {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(path, (err, metadata) => {
-      if (err) return reject(err);
+      if (err) {
+        return reject(err);
+      }
       resolve(metadata);
     });
   });
@@ -31,13 +33,13 @@ function resolveOutputPath(
   outputDir?: string,
   overwrite = false,
   ext = p.parse(path).ext || '.wav',
-  count = 0
+  count = 0,
 ) {
   const prefix = p.basename(outputName || path, ext);
   const suffix = count > 0 ? `-${count}` : '';
   const newPath = p.join(
     outputDir || p.dirname(path),
-    [prefix, suffix, ext].join('')
+    [prefix, suffix, ext].join(''),
   );
   if (fs.existsSync(newPath) && !overwrite) {
     return resolveOutputPath(
@@ -46,13 +48,14 @@ function resolveOutputPath(
       outputDir,
       overwrite,
       ext,
-      count + 1
+      count + 1,
     );
   }
   return newPath;
 }
 
 export class AudioEditingService {
+
   watchDir: string;
   outputDir: string;
 
@@ -97,10 +100,10 @@ export class AudioEditingService {
         path,
         outputName,
         this.outputDir,
-        overwrite
+        overwrite,
       ),
       clip,
-    }: Partial<AudioEditOptions> = {}
+    }: Partial<AudioEditOptions> = {},
   ): Promise<string> {
     try {
       const opts: string[] = [];
@@ -141,7 +144,7 @@ export class AudioEditingService {
           path,
           opts.outputName,
           this.outputDir,
-          opts.overwrite
+          opts.overwrite,
         );
       let fd = ffmpeg(path);
       for (const input of paths) {
@@ -156,7 +159,7 @@ export class AudioEditingService {
 
   async batchEdit(
     dir: string,
-    opts: Partial<AudioEditOptions> = {}
+    opts: Partial<AudioEditOptions> = {},
   ): Promise<string[]> {
     this.incrementBatchCount();
     const files = fs
@@ -175,12 +178,13 @@ export class AudioEditingService {
           this.edit(f.path, {
             ...opts,
             outputName: this.namingSchema(f.path, i),
-          })
-        )
+          }),
+        ),
       );
       return outfiles;
     } catch (e) {
       console.error(e);
     }
   }
+
 }

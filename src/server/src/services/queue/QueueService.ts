@@ -1,5 +1,5 @@
 import {
-  BaseJobOptions, Worker as BullMQWorker, Job, Queue, QueueOptions, WorkerOptions 
+  BaseJobOptions, Worker as BullMQWorker, Job, Queue, QueueOptions, WorkerOptions, 
 } from 'bullmq';
 import IORedis, { RedisOptions } from 'ioredis';
 
@@ -8,6 +8,7 @@ import { BaseService } from '../base';
 /** Dummy class to make TS happy */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export class QueueProps<DataType = {}, ReturnType = {}, NameType extends string = string> {
+
   name: NameType;
   data?: DataType;
   resp?: ReturnType;
@@ -17,11 +18,12 @@ export class QueueProps<DataType = {}, ReturnType = {}, NameType extends string 
   constructor(name: NameType) {
     this.name = name;
   }
+
 }
 
 export type SiteMapJobData = { id: number; name: string; url: string; force?: boolean };
 
-export const QUEUES = { siteMaps: new QueueProps<SiteMapJobData>('siteMaps'), } as const;
+export const QUEUES = { siteMaps: new QueueProps<SiteMapJobData>('siteMaps') } as const;
 
 export type QueueServiceOptions = QueueOptions & {
   client: IORedis;
@@ -34,11 +36,12 @@ export const redisClient = (
 ) =>
   new IORedis(connectionString, {
     maxRetriesPerRequest,
-    tls: { rejectUnauthorized: false, },
+    tls: { rejectUnauthorized: false },
     ...opts,
   });
 
 export class QueueService extends BaseService {
+
   defaultJobOptions: BaseJobOptions;
   client: IORedis;
   queues: { [key: string]: Queue } = {};
@@ -77,6 +80,7 @@ export class QueueService extends BaseService {
       new Queue<DataType>(jobQueue.name, { defaultJobOptions: this.defaultJobOptions, connection: this.client })
     );
   }
+
 }
 
 export class Worker<DataType, ReturnType, NameType extends string = string> extends BullMQWorker<
@@ -84,10 +88,11 @@ export class Worker<DataType, ReturnType, NameType extends string = string> exte
   ReturnType,
   NameType
 > {
+
   queueProps: QueueProps<DataType, ReturnType, NameType>;
 
   get queue() {
-    return new Queue<DataType, ReturnType, NameType>(this.queueProps.name, { connection: redisClient(), });
+    return new Queue<DataType, ReturnType, NameType>(this.queueProps.name, { connection: redisClient() });
   }
 
   constructor(
@@ -98,4 +103,5 @@ export class Worker<DataType, ReturnType, NameType extends string = string> exte
     super(queueProps.name, handler, { ...options, connection: redisClient() });
     this.queueProps = queueProps;
   }
+
 }

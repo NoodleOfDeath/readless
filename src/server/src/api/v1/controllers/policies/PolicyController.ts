@@ -1,5 +1,5 @@
 import {
-  Get, Route, Tags 
+  Get, Route, Tags, 
 } from 'tsoa';
 
 import { Policy, PolicyAttributes } from '../../schema/resources/policy.model';
@@ -7,6 +7,7 @@ import { Policy, PolicyAttributes } from '../../schema/resources/policy.model';
 @Route('/v1/policies')
 @Tags('Policies')
 export class PolicyController {
+
   @Get('/privacy')
   public async getPrivacyPolicy(): Promise<PolicyAttributes> {
     return Policy.findOne({ where: { name: 'privacy' } });
@@ -16,4 +17,5 @@ export class PolicyController {
   public async getTermsOfService(): Promise<PolicyAttributes> {
     return Policy.findOne({ where: { name: 'terms' } });
   }
+
 }

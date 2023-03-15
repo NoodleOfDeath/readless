@@ -2,7 +2,7 @@ import 'dotenv/config';
 import fs from 'fs';
 
 import {
-  describe, expect, jest, test 
+  describe, expect, jest, test, 
 } from '@jest/globals';
 
 import { OpenAIService } from '../src/services/openai/openai';

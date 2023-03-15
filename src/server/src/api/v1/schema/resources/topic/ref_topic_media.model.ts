@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../../dated';
@@ -20,6 +20,7 @@ export type RefTopicMediaCreationAttributes = DatedAttributes & {
   paranoid: true,
 })
 export class RefTopicMedia<A extends RefTopicMediaAttributes = RefTopicMediaAttributes, B extends RefTopicMediaCreationAttributes = RefTopicMediaCreationAttributes> extends Model<A, B> implements RefTopicMediaAttributes {
+
   static get empty() {
     return this.json();
   }

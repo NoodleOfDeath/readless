@@ -1,14 +1,15 @@
 import {
-  Body, Post, Route, Tags 
+  Body, Post, Route, Tags, 
 } from 'tsoa';
 
 import {
-  Metric, MetricAttributes, MetricCreationAttributes 
+  Metric, MetricAttributes, MetricCreationAttributes, 
 } from '../../schema/models';
 
 @Route('/v1/metrics')
 @Tags('Metricss')
 export class MetricController {
+
   @Post('/')
   async recordMetric(@Body() data: MetricCreationAttributes): Promise<MetricAttributes> {
     try {
@@ -20,4 +21,5 @@ export class MetricController {
       console.error(e);
     }
   }
+
 }

@@ -15,8 +15,8 @@ export type UserCreationAttributes = DatedAttributes & {};
 })
 export class User<A extends UserAttributes = UserAttributes, B extends UserCreationAttributes = UserCreationAttributes>
   extends Model<A, B>
-  implements UserAttributes
-{
+  implements UserAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -24,4 +24,5 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   static json(defaults?: Partial<User>): Partial<User> {
     return defaults ?? {};
   }
+
 }

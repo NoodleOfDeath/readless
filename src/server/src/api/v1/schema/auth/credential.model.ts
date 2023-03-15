@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -29,6 +29,7 @@ export class Credential<
   >
   extends Model<A, B>
   implements CredentialAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -55,6 +56,7 @@ export class Credential<
   })
     value: string;
 
-  @Column({ type: DataType.DATE, })
+  @Column({ type: DataType.DATE })
     expiresOn: Date;
+
 }

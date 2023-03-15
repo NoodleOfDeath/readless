@@ -1,13 +1,13 @@
-import React from 'react';
-import { Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Pressable } from 'react-native';
+import React from 'react';
 
-import { useTheme } from '../components/theme';
 import AudioScreen from './audio/AudioScreen';
 import DiscoverScreen from './discover/DiscoverScreen';
 import NotificationsScreen from './notifications/NotificationsScreen';
 import ProfileScreen from './profile/ProfileScreen';
 import SkoopScreen from './skoop/SkoopScreen';
+import { useTheme } from '../components/theme';
 
 type ScreenProps = {
   name: string;
@@ -48,6 +48,7 @@ export const SCREENS: ScreenProps[] = [
     component: ProfileScreen,
     icon: 'account',
     headerRight: () => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const theme = useTheme();
       return (
         <Pressable style={theme.components.buttonPadded}>

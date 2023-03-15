@@ -1,6 +1,6 @@
 
 import {
-  Article, ArticleSource, ArticleTopic, Credential, Media, Newsletter, Outlet, Permission, RefArticleMedia, RefCredentialRole, RefOutletMedia, RefRolePermission, RefSourceMedia, RefSourceTopic, RefTopicMedia, RefUserRole, Role, Source, Subscription, Topic, User, UserAlias, UserMetadata 
+  Article, ArticleSource, ArticleTopic, Credential, Media, Newsletter, Outlet, Permission, RefArticleMedia, RefCredentialRole, RefOutletMedia, RefRolePermission, RefSourceMedia, RefSourceTopic, RefTopicMedia, RefUserRole, Role, Source, Subscription, Topic, User, UserAlias, UserMetadata, 
 } from './models';
 
 export function makeAssociations() {
@@ -12,7 +12,7 @@ export function makeAssociations() {
   User.hasMany(RefUserRole, { foreignKey: 'userId' });
   Role.hasMany(RefUserRole, { foreignKey: 'roleId' });
   Role.belongsToMany(User, {
-    through: RefUserRole, foreignKey: 'roleId', otherKey: 'userId'
+    through: RefUserRole, foreignKey: 'roleId', otherKey: 'userId',
   });
   User.hasMany(Credential, { foreignKey: 'userId' });
   Credential.belongsTo(User, { foreignKey: 'userId' });
@@ -20,13 +20,13 @@ export function makeAssociations() {
   Credential.hasMany(RefCredentialRole, { foreignKey: 'credentialId' });
   Role.hasMany(RefCredentialRole, { foreignKey: 'roleId' });
   Role.belongsToMany(Credential, {
-    through: RefCredentialRole, foreignKey: 'roleId', otherKey: 'credentialId' 
+    through: RefCredentialRole, foreignKey: 'roleId', otherKey: 'credentialId', 
   });
   // roles <- permissions
   Role.hasMany(RefRolePermission, { foreignKey: 'roleId' });
   Permission.hasMany(RefRolePermission, { foreignKey: 'permissionId' });
   Permission.belongsToMany(Role, {
-    through: RefRolePermission, foreignKey: 'permissionId', otherKey: 'roleId' 
+    through: RefRolePermission, foreignKey: 'permissionId', otherKey: 'roleId', 
   });
   // newsletter
   Newsletter.hasMany(Subscription, { foreignKey: 'newsletterId' });
@@ -51,6 +51,6 @@ export function makeAssociations() {
   Article.hasMany(ArticleSource, { foreignKey: 'articleId' });
   Source.hasMany(ArticleSource, { foreignKey: 'sourceId' });
   Source.belongsToMany(Article, {
-    through: ArticleSource, foreignKey: 'sourceId', otherKey: 'articleId' 
+    through: ArticleSource, foreignKey: 'sourceId', otherKey: 'articleId', 
   });
 }

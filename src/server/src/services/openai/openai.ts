@@ -12,22 +12,23 @@ export type CreateImageOptions = {
 }
 
 export class OpenAIService extends BaseService {
+
   api: OpenAIApi;
 
   constructor({ apiKey = process.env.OPENAI_API_KEY }: OpenAIServiceInitProps = {}) {
     super();
     this.api = new OpenAIApi(
-      new Configuration({ apiKey, }),
+      new Configuration({ apiKey }),
     );
   }
   
   async createImage(
     prompt: string, {
       n = 1,
-      size = '1024x1024'
+      size = '1024x1024',
     }: CreateImageOptions = {}) {
     return await this.api.createImage({
-      prompt, n, size 
+      prompt, n, size, 
     });
   }
   

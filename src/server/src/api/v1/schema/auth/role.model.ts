@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -19,8 +19,8 @@ export type RoleCreationAttributes = DatedAttributes & {
 })
 export class Role<A extends RoleAttributes = RoleAttributes, B extends RoleCreationAttributes = RoleCreationAttributes>
   extends Model<A, B>
-  implements RoleAttributes
-{
+  implements RoleAttributes {
+
   static get empty() { 
     return this.json();
   }

@@ -1,15 +1,15 @@
 import { Divider } from 'react-native-elements';
 import React from 'react';
 import { formatDistance } from 'date-fns';
-import { Linking, Pressable, Text } from 'react-native';
+import {
+  Linking, Pressable, Text, 
+} from 'react-native';
 
-import { SourceWithOutletAttr } from '../../api/Api';
 import FlexView from '../common/FlexView';
 import Menu from '../common/Menu';
+import { SourceWithOutletAttr } from '../../api/Api';
 import { useTheme } from '../theme';
-import ConsumptionModeSelector, {
-  ConsumptionMode,
-} from './ConsumptionModeSelector';
+import ConsumptionModeSelector, { ConsumptionMode } from './ConsumptionModeSelector';
 
 type Props = {
   source: SourceWithOutletAttr;
@@ -29,9 +29,7 @@ export default function Post({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const timeAgo = React.useMemo(() => {
-    return formatDistance(new Date(source.createdAt), lastTick, {
-      addSuffix: true,
-    });
+    return formatDistance(new Date(source.createdAt), lastTick, { addSuffix: true });
   }, [source.createdAt, lastTick]);
 
   const options = React.useMemo(() => {
@@ -54,7 +52,9 @@ export default function Post({
   }, [tickIntervalMs]);
 
   const content = React.useMemo(() => {
-    if (!mode || !source) return null;
+    if (!mode || !source) {
+      return null;
+    }
     switch (mode) {
     case 'keyPoints':
       return source.bullets.join('\n');

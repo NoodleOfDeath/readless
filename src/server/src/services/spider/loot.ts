@@ -15,6 +15,7 @@ export type LootInitProps = Omit<LootProps, 'timestamp'> & {
 };
 
 export class Loot implements LootProps {
+
   url: string;
   timestamp: number;
   text: string;
@@ -38,4 +39,5 @@ export class Loot implements LootProps {
     this.title = $('title').text();
     this.filteredText = $(queryFilter).text();
   }
+
 }

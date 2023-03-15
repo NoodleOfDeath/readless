@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 
 import { ScribeService } from '../services';
 import {
-  DBService, QUEUES, Worker 
+  DBService, QUEUES, Worker, 
 } from '../services';
 import { Outlet, Source } from '../api/v1/schema/models';
 
@@ -38,9 +38,9 @@ export async function doWork() {
       async (job) => {
         try {
           const {
-            id, name, url, force 
+            id, name, url, force, 
           } = job.data;
-          const outlet = (await Outlet.findOne({ where: { [Op.or]: [{ id }, { name }], } }))?.toJSON();
+          const outlet = (await Outlet.findOne({ where: { [Op.or]: [{ id }, { name }] } }))?.toJSON();
           if (!outlet) {
             console.log(`Outlet ${id} not found`);
             await job.moveToFailed(new Error(`Outlet ${id} not found`), siteMapWorker.queue.token, true);
@@ -51,7 +51,7 @@ export async function doWork() {
             console.log(`Outlet ${outlet.name} has reached its fetch limit of ${WORKER_FETCH_RATE_LIMIT} per ${WORKER_FETCH_INTERVAL_MS}ms`);
             await siteMapWorker.queue.add(job.name, job.data, {
               jobId: job.id,
-              delay: WORKER_FETCH_INTERVAL_MS
+              delay: WORKER_FETCH_INTERVAL_MS,
             });
             return;
           }

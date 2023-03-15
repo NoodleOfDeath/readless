@@ -21,6 +21,7 @@ export type ArticleAttr = Attr<Article, (typeof ARTICLE_ATTRS)[number]>;
   paranoid: true,
 })
 export class Article extends TitledCategorizedPost<ArticleAttributes, ArticleCreationAttributes> {
+
   static get empty() {
     return this.json();
   }

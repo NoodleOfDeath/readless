@@ -1,6 +1,6 @@
 // Step 1: Import the S3Client object and all necessary SDK commands.
 import {
-  PutObjectCommand, PutObjectCommandInput, S3Client 
+  PutObjectCommand, PutObjectCommandInput, S3Client, 
 } from '@aws-sdk/client-s3';
 
 import { BaseService } from '../../base';
@@ -16,6 +16,7 @@ type S3ServiceOptions = {
 };
 
 export class S3Service extends BaseService {
+
   s3Client: S3Client;
 
   constructor({
@@ -44,4 +45,5 @@ export class S3Service extends BaseService {
       console.log('Error', err);
     }
   }
+
 }

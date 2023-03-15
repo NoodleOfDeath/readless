@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -27,7 +27,8 @@ export type ReferralCreationAttributes = ReferralAttributes;
   paranoid: true,
 })
 export class Referral extends Model<ReferralAttributes, ReferralCreationAttributes> implements ReferralAttributes {
-  @Column({ type: DataType.INTEGER, })
+
+  @Column({ type: DataType.INTEGER })
     referredById: number;
 
   @Column({
@@ -36,7 +37,7 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
   })
     remoteAddr: string;
 
-  @Column({ type: DataType.STRING(2083), })
+  @Column({ type: DataType.STRING(2083) })
     origin?: string;
 
   @Column({
@@ -51,6 +52,7 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
   })
     userAgent: string;
 
-  @Column({ type: DataType.TEXT, })
+  @Column({ type: DataType.TEXT })
     geolocation: string;
+
 }

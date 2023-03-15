@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -19,6 +19,7 @@ export type RequestCreationAttributes = RequestAttributes;
   paranoid: true,
 })
 export class Request<A extends RequestAttributes = RequestAttributes, B extends RequestCreationAttributes = RequestCreationAttributes> extends Model<A, B> implements RequestAttributes {
+
   remoteAddress: string;
 
   static get empty() {
@@ -29,10 +30,10 @@ export class Request<A extends RequestAttributes = RequestAttributes, B extends 
     return defaults ?? {};
   }
 
-  @Column({ type: DataType.STRING(2083), })
+  @Column({ type: DataType.STRING(2083) })
     remoteAddr: string;
 
-  @Column({ type: DataType.STRING(2083), })
+  @Column({ type: DataType.STRING(2083) })
     referrer: string;
 
   @Column({

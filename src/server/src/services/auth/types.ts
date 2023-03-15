@@ -1,6 +1,6 @@
 import { AliasType, CredentialType } from '../../api/v1/schema/types';
 
-export const THIRD_PARTIES = { google: 'google', } as const;
+export const THIRD_PARTIES = { google: 'google' } as const;
 
 export type ThirdParty = typeof THIRD_PARTIES[keyof typeof THIRD_PARTIES];
 
@@ -23,12 +23,14 @@ export type AliasTicketOptions<T extends AliasType> = {
 };
 
 export class AliasTicket<T extends AliasType> implements AliasTicketOptions<T> {
+
   type: T;
   payload: T extends 'thirdParty' ? ThirdPartyAuth : string;
   constructor({ type, payload }: AliasTicketOptions<T>) {
     this.type = type;
     this.payload = payload;
   }
+
 }
 
 export type RegistrationOptions = AliasOptions & CredentialOptions & {

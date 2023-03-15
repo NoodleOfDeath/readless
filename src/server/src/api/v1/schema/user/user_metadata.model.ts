@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -23,8 +23,8 @@ export type UserMetadataCreationAttributes = DatedAttributes & {
 })
 export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttributes, B extends UserMetadataCreationAttributes = UserMetadataCreationAttributes>
   extends Model<A, B>
-  implements UserMetadataAttributes
-{
+  implements UserMetadataAttributes {
+
   static get empty() {
     return this.json();
   }

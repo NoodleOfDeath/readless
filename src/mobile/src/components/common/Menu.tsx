@@ -49,9 +49,7 @@ export default function Menu<T extends MenuOption>({
         )}
       </MenuTrigger>
       <MenuOptions
-        customStyles={{
-          optionsContainer: theme.components.menu,
-        }}
+        customStyles={{ optionsContainer: theme.components.menu }}
       >
         {options?.map((option, i) => (
           <React.Fragment key={option.label}>

@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../../dated';
@@ -60,8 +60,8 @@ export class Outlet<
     B extends OutletCreationAttributes = OutletCreationAttributes,
   >
   extends Model<A, B>
-  implements OutletAttributes
-{
+  implements OutletAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -83,7 +83,7 @@ export class Outlet<
   })
     siteMaps: SiteMap[];
 
-  @Column({ type: DataType.JSON, })
+  @Column({ type: DataType.JSON })
     fetchPolicy: FetchPolicy;
 
 }

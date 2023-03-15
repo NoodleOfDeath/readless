@@ -1,21 +1,22 @@
 import {
-  Body, Post, Route, Tags 
+  Body, Post, Route, Tags, 
 } from 'tsoa';
 
 import {
-  Newsletter, Subscription, SubscriptionAttributes, SubscriptionCreationAttributes 
+  Newsletter, Subscription, SubscriptionAttributes, SubscriptionCreationAttributes, 
 } from '../../schema/models';
 
 @Route('/v1/newsletter')
 @Tags('Newsletters')
 export class NewsletterController {
+
   @Post('/subscribe')
   async subscribeToNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<SubscriptionAttributes> {
     const {
-      aliasType, alias, newsletterName 
+      aliasType, alias, newsletterName, 
     } = data;
     if (newsletterName) {
-      const newsletter = (await Newsletter.findOne({ where: { name: newsletterName, } }))?.toJSON();
+      const newsletter = (await Newsletter.findOne({ where: { name: newsletterName } }))?.toJSON();
       if (newsletter) {
         data.newsletterId = newsletter.id;
       }
@@ -26,10 +27,11 @@ export class NewsletterController {
         aliasType,
         alias,
         newsletterId: data.newsletterId,
-      }
+      },
     }));
-    if (existingSubs.length > 0) 
-    {return existingSubs[0];}
+    if (existingSubs.length > 0) {
+      return existingSubs[0];
+    }
     const subscription = new Subscription(data);
     await subscription.save();
     await subscription.reload();
@@ -39,10 +41,10 @@ export class NewsletterController {
   @Post('/unsubscribe')
   async unsubscribeFromNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<void> {
     const {
-      aliasType, alias, newsletterName 
+      aliasType, alias, newsletterName, 
     } = data;
     if (newsletterName) {
-      const newsletter = (await Newsletter.findOne({ where: { name: newsletterName, } }))?.toJSON();
+      const newsletter = (await Newsletter.findOne({ where: { name: newsletterName } }))?.toJSON();
       if (newsletter) {
         data.newsletterId = newsletter.id;
       }
@@ -53,11 +55,12 @@ export class NewsletterController {
         aliasType,
         alias,
         newsletterId: data.newsletterId,
-      }
+      },
     }));
     if (existingSubs) {
-      for (const sub of existingSubs)
-      {await sub.destroy();}
+      for (const sub of existingSubs) {
+        await sub.destroy();
+      }
     }
   }
   

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
 
-import API, { PartialLoginOptions } from '@/api';
+import API, { PartialLoginOptions, ThirdParty } from '@/api';
 import { SessionContext } from '@/contexts';
 import Page from '@/components/layout/Page';
 
@@ -58,7 +58,7 @@ export default function LoginPage() {
               onSuccess={(credentialResponse) => {
                 handleLogin({
                   thirdParty: {
-                    name: 'google',
+                    name: ThirdParty.Google,
                     credential: credentialResponse.credential,
                   }
                 });

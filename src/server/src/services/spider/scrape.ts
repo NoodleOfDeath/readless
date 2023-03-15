@@ -37,11 +37,13 @@ export type ExtractRule = {
 };
 
 export class ExtractRuleMap<T extends { [key: string]: ExtractRule }> {
+
   [key: string]: ExtractRule;
 
   constructor(rules: T) {
     Object.assign(this, rules);
   }
+
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types

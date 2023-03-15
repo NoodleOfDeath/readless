@@ -7,23 +7,26 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
+    'prettier',
   ],
   overrides: [],
   parser: '@typescript-eslint/parser',
-  plugins: ['import', 'react', '@typescript-eslint'],
+  plugins: [
+    'import',
+    'react',
+    'react-native',
+    'prettier',
+    '@typescript-eslint',
+  ],
+  settings: { react: { version: '18.2.0' } },
   rules: {
     curly: ['error'],
-    'object-curly-spacing': ['error', 'always'],
+    'brace-style': ['error', '1tbs'],
     'comma-spacing': ['error'],
-    'array-element-newline': [
-      'error',
-      {
-        ArrayExpression: 'consistent',
-        ArrayPattern: { minItems: 3 },
-      },
-    ],
+    'comma-dangle': ['error', 'always-multiline'],
+    'object-curly-spacing': ['error', 'always'],
     'object-curly-newline': [
       'error',
       {
@@ -45,10 +48,12 @@ module.exports = {
         },
       },
     ],
+    'function-call-argument-newline': ['error', 'consistent'],
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
+    'padded-blocks': ['error', { classes: 'always' }],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn', // or "error"

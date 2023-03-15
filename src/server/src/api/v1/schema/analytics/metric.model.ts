@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -34,7 +34,7 @@ export class Metric extends Model<MetricAttributes, MetricAttributes> implements
   })
     data: Record<string, unknown>;
     
-  @Column({ type: DataType.ARRAY(DataType.STRING), })
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
     referrer?: string[];
 
   @Column({

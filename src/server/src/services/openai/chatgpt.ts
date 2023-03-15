@@ -1,5 +1,5 @@
 import {
-  ChatGPTAPI, ChatMessage, SendMessageOptions 
+  ChatGPTAPI, ChatMessage, SendMessageOptions, 
 } from 'chatgpt';
 
 import { BaseService } from '../base';
@@ -17,6 +17,7 @@ export type ChatGPTServiceInitProps = {
 };
 
 export class ChatGPTService extends BaseService {
+
   api: ChatGPTAPI;
   parentMessageId?: string;
 
@@ -50,4 +51,5 @@ export class ChatGPTService extends BaseService {
   abandonConversation() {
     delete this.parentMessageId;
   }
+
 }

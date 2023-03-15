@@ -17,7 +17,7 @@ router.post(
   validate,
   async (req, res) => {
     const {
-      referredById, origin, target, userAgent, geolocation 
+      referredById, origin, target, userAgent, geolocation, 
     } = req.body;
     try {
       await new ReferralController().recordReferral({
@@ -26,7 +26,7 @@ router.post(
         remoteAddr: req.ip,
         target,
         userAgent,
-        geolocation
+        geolocation,
       });
       res.status(200).send('OK');
     } catch (e) {

@@ -1,5 +1,5 @@
 import {
-  AfterFind, Column, DataType, Table 
+  AfterFind, Column, DataType, Table, 
 } from 'sequelize-typescript';
 
 import { Outlet } from '../outlet/outlet.model';
@@ -41,6 +41,7 @@ export type ReadAndSummarizeSourcePayload = {
   paranoid: true,
 })
 export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCreationAttributes> implements SourceWithOutletName {
+
   static get empty() {
     return this.json();
   }
@@ -84,15 +85,17 @@ export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCr
   
   @AfterFind
   static async addOutletName(cursor?: Source | Source[]) {
-    if (!cursor) {return;}
+    if (!cursor) {
+      return;
+    }
     const sources = Array.isArray(cursor) ? cursor : [cursor];
     const outletIds = sources.map((source) => {
       return source.toJSON().outletId;
     });
-    const outlets = await Outlet.findAll({ where: { id: outletIds, }, });
+    const outlets = await Outlet.findAll({ where: { id: outletIds } });
     sources.forEach((source) => {
       const outlet = outlets.find((o) => o.id === source.toJSON().outletId);
-      source.set('outletName', outlet?.toJSON().name ?? '', { raw: true, });
+      source.set('outletName', outlet?.toJSON().name ?? '', { raw: true });
     });
   }
 

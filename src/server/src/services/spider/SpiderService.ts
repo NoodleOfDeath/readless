@@ -14,6 +14,7 @@ import {
 } from './scrape';
 
 export class SpiderService extends BaseService {
+
   /**
    * preset extract rules named after spider
    * species
@@ -34,7 +35,7 @@ export class SpiderService extends BaseService {
 
   async fetch(url: string) {
     try {
-      const { data: text } = await axios.get(url, { headers: { 'User-Agent': new UserAgent().random().toString(), }, });
+      const { data: text } = await axios.get(url, { headers: { 'User-Agent': new UserAgent().random().toString() } });
       return text;
     } catch (e) {
       console.error(e);
@@ -64,7 +65,10 @@ export class SpiderService extends BaseService {
     const fullPath = `${WS_API}/v1?${params.toString()}`;
     console.log('fetching from', fullPath);
     const { data } = await axios.get(fullPath);
-    if (!extract_rules) {return data;}
+    if (!extract_rules) {
+      return data;
+    }
     return mappedScrapeLoot(data as ScrapeResponse<T>);
   }
+
 }

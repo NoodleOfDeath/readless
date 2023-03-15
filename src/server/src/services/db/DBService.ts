@@ -10,6 +10,7 @@ export type DBServiceInitProps = {
 };
 
 export class DBService extends BaseService {
+
   sq: Sequelize;
 
   constructor({
@@ -19,7 +20,7 @@ export class DBService extends BaseService {
     super();
     this.sq = new Sequelize(connectionString, {
       dialect: 'postgres',
-      dialectOptions: { ssl: { rejectUnauthorized: false, }, },
+      dialectOptions: { ssl: { rejectUnauthorized: false } },
       models,
     });
     makeAssociations();
@@ -34,7 +35,7 @@ export class DBService extends BaseService {
   async init() {
     await this.sq.authenticate();
     console.log(process.env.NODE_ENV);
-    await this.sq.sync({ force: process.env.NODE_ENV !== 'production' });
+    await this.sq.sync();
   }
 
 }

@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -27,8 +27,8 @@ export class Permission<
     B extends PermissionCreationAttributes = PermissionCreationAttributes,
   >
   extends Model<A, B>
-  implements PermissionAttributes
-{
+  implements PermissionAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -54,5 +54,6 @@ export class Permission<
     allowNull: false,
   })
     access: AccessLevel;
+
 }
 

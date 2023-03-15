@@ -11,8 +11,8 @@
     "eject": "react-app-rewired eject",
     "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/gen",
     "swagger": "(cd ../server && yarn swagger) && cp ../server/public/swagger.json ./swagger.json && yarn gen",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint": "eslint .  --ext .ts,.tsx",
+    "format": "eslint .  --ext .ts,.tsx --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -67,6 +67,6 @@
     "nodemon": "^2.0.21",
     "react-app-rewired": "^2.2.1",
     "terser-webpack-plugin": "^5.3.6",
-    "typescript": "*"
+    "typescript": "^4.9.5"
   }
 }

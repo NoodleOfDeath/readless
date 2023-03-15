@@ -6,14 +6,14 @@ const YEAR = 1000 * 60 * 60 * 24 * 365;
 function generateDynamicUrls(
   url: string,
   params?: string | string[][],
-  index = -1
+  index = -1,
 ): string[] {
   const urls: string[] = [];
   if (Array.isArray(params)) {
     urls.push(
       ...params
         .map((arr, i) => arr.map((p) => generateDynamicUrls(url, p, i)))
-        .flat(2)
+        .flat(2),
     );
   } else {
     urls.push(
@@ -32,10 +32,8 @@ function generateDynamicUrls(
             .padStart(2, '0');
         case 'MMMM':
           return new Date(
-            `2050-${((new Date().getMonth() + offset) % 12) + 1}-01`
-          ).toLocaleString('default', {
-            month: 'long',
-          });
+            `2050-${((new Date().getMonth() + offset) % 12) + 1}-01`,
+          ).toLocaleString('default', { month: 'long' });
         case 'D':
           return new Date(Date.now() + offset * DAY).getDate().toString();
         case 'DD':
@@ -46,11 +44,13 @@ function generateDynamicUrls(
         default:
           if (params && !Number.isNaN(Number($1))) {
             const i = Number($1);
-            if (i === index) return params;
+            if (i === index) {
+              return params;
+            }
           }
           return $0;
         }
-      })
+      }),
     );
   }
   return urls;
@@ -58,5 +58,5 @@ function generateDynamicUrls(
 console.log(
   generateDynamicUrls('https://www.bustle.com/archive/${MMMM}/${YYYY}/${1}', [
     ['style', 'entertainment'],
-  ])
+  ]),
 );

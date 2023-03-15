@@ -1,7 +1,9 @@
-import React from 'react';
-import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
-import type { AnimateProps } from 'react-native-reanimated';
+import { AnimateProps } from 'react-native-reanimated';
 import Animated from 'react-native-reanimated';
+import React from 'react';
+import type {
+  StyleProp, ViewProps, ViewStyle, 
+} from 'react-native';
 
 type Props = AnimateProps<ViewProps> & {
   style?: StyleProp<ViewStyle>;

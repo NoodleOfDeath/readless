@@ -1,5 +1,5 @@
-import React from 'react';
 import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
+import React from 'react';
 
 export type SessionContextType = {
   tabControllerScreenOptions: BottomTabNavigationOptions;
@@ -9,17 +9,13 @@ export type SessionContextType = {
 };
 
 export const SessionContext = React.createContext<SessionContextType>({
-  tabControllerScreenOptions: {
-    headerShown: true,
-  },
+  tabControllerScreenOptions: { headerShown: true },
   setTabControllerScreenOptions: () => {
     /** placeholder */
   },
 });
 
-export default function SessionContextProvider({
-  children,
-}: React.PropsWithChildren) {
+export default function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [tabControllerScreenOptions, setTabControllerScreenOptions] =
     React.useState<BottomTabNavigationOptions>({});
 

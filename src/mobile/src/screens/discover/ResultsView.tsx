@@ -1,22 +1,22 @@
+import { API_BASE_URL } from '@env';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
+import { RouteProp } from '@react-navigation/native';
 import { SearchBar } from 'react-native-elements';
 import axios from 'axios';
 import { Button, useColorScheme } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { API_BASE_URL } from '@env';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { SourceWithOutletAttr } from '../../api/Api';
+import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
 import FlexView from '../../components/common/FlexView';
 import Post from '../../components/post/Post';
+import { RootParamList } from '../../types';
 import SafeScrollView from '../../components/common/SafeScrollView';
+import { SourceWithOutletAttr } from '../../api/Api';
 import { useTheme } from '../../components/theme';
-import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
-import { RootStackParamList } from './types';
 
 type Props = {
-  route: RouteProp<RootStackParamList, 'Home'>;
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
+  route: RouteProp<RootParamList['Discover'], 'Home'>;
+  navigation: NativeStackNavigationProp<RootParamList['Discover'], 'Home'>;
 };
 
 export default function ResultsView({ navigation }: Props) {
@@ -56,7 +56,9 @@ export default function ResultsView({ navigation }: Props) {
       })
       .then((response) => {
         setRecentSources((prev) => {
-          if (page === 0) return response.data.rows;
+          if (page === 0) {
+            return response.data.rows;
+          }
           return [...prev, ...response.data.rows];
         });
         setTotalSourceCount(response.data.count);
@@ -92,7 +94,7 @@ export default function ResultsView({ navigation }: Props) {
         initialMode: mode,
       });
     },
-    [recentSources]
+    [navigation, recentSources],
   );
 
   return (
@@ -101,10 +103,9 @@ export default function ResultsView({ navigation }: Props) {
         <SearchBar
           placeholder="What's cooking in theSkoop?..."
           lightTheme={isLightMode}
-          onChangeText={(text) => {
-            setSearchText(text);
-            return 0;
-          }}
+          onChangeText={(text) => 
+            setSearchText(text) 
+          }
           value={searchText}
         />
       </FlexView>

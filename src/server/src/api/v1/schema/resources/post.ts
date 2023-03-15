@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model 
+  Column, DataType, Model, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -34,8 +34,8 @@ export abstract class Post<
     B extends PostCreationAttributes = PostCreationAttributes,
   >
   extends Model<A, B>
-  implements PostAttributes
-{
+  implements PostAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -79,6 +79,7 @@ export abstract class Post<
     allowNull: false,
   })
     imagePrompt: string;
+
 }
 
 export type TitledCategorizedPostAttributes = PostAttributes & {
@@ -102,8 +103,8 @@ export abstract class TitledCategorizedPost<
     B extends TitledCategorizedPostCreationAttributes = TitledCategorizedPostCreationAttributes,
   >
   extends Post<A, B>
-  implements TitledCategorizedPostAttributes
-{
+  implements TitledCategorizedPostAttributes {
+
   static json(defaults?: Partial<TitledCategorizedPost>): Partial<TitledCategorizedPost> {
     return defaults ?? {};
   }
@@ -131,4 +132,5 @@ export abstract class TitledCategorizedPost<
     defaultValue: [],
   })
     tags: string[];
+
 }

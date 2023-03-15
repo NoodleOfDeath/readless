@@ -1,7 +1,5 @@
 import React from 'react';
-import LinearGradient, {
-  LinearGradientProps,
-} from 'react-native-linear-gradient';
+import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient';
 
 import { useTheme } from '../theme';
 
@@ -57,21 +55,37 @@ export default function FlexView({
         ? theme.components.flexRow
         : col
           ? theme.components.flexCol
-          : undefined
+          : undefined,
     );
-    if (mt) attrs.push({ marginTop: mt });
-    if (mb) attrs.push({ marginBottom: mb });
-    if (ml) attrs.push({ marginLeft: ml });
-    if (mr) attrs.push({ marginRight: mr });
-    if (pt) attrs.push({ paddingTop: pt });
-    if (pb) attrs.push({ paddingBottom: pb });
-    if (pl) attrs.push({ paddingLeft: pl });
-    if (pr) attrs.push({ paddingRight: pr });
+    if (mt) {
+      attrs.push({ marginTop: mt });
+    }
+    if (mb) {
+      attrs.push({ marginBottom: mb });
+    }
+    if (ml) {
+      attrs.push({ marginLeft: ml });
+    }
+    if (mr) {
+      attrs.push({ marginRight: mr });
+    }
+    if (pt) {
+      attrs.push({ paddingTop: pt });
+    }
+    if (pb) {
+      attrs.push({ paddingBottom: pb });
+    }
+    if (pl) {
+      attrs.push({ paddingLeft: pl });
+    }
+    if (pr) {
+      attrs.push({ paddingRight: pr });
+    }
     return attrs
       .filter(Boolean)
       .flat()
       .reduce((acc, attr) => ({ ...acc, ...attr }), style ?? {});
-  }, [row, col, mt, mb, ml, mr, pt, pb, pl, pr, style]);
+  }, [row, theme.components.flexRow, theme.components.flexCol, col, mt, mb, ml, mr, pt, pb, pl, pr, style]);
   return (
     <LinearGradient colors={colors} {...{ ...props, style: viewStyle }}>
       {children}

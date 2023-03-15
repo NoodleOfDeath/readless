@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -22,8 +22,8 @@ export class HeadlessAlias<
     B extends HeadlessAliasCreationAttributes = HeadlessAliasCreationAttributes,
   >
   extends Model<A, B>
-  implements HeadlessAliasAttributes
-{
+  implements HeadlessAliasAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -44,8 +44,9 @@ export class HeadlessAlias<
   })
     value: string;
 
-  @Column({ type: DataType.DATE, })
+  @Column({ type: DataType.DATE })
     claimedOn: Date;
+
 }
 
 export type UserAliasAttributes = HeadlessAliasCreationAttributes & {
@@ -64,8 +65,8 @@ export class UserAlias<
     B extends UserAliasCreationAttributes = UserAliasCreationAttributes,
   >
   extends HeadlessAlias<A, B>
-  implements UserAliasAttributes
-{
+  implements UserAliasAttributes {
+
   static get empty() {
     return this.json();
   }

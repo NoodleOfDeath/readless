@@ -13,8 +13,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint": "eslint .  --ext .ts,.tsx",
+    "format": "eslint .  --ext .ts,.tsx --fix"
   },
   "keywords": [],
   "author": "",

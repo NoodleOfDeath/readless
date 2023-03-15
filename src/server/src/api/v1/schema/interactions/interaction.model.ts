@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -38,8 +38,8 @@ export class Interaction<
     B extends InteractionCreationAttributes = InteractionCreationAttributes,
   >
   extends Model<A, B>
-  implements InteractionAttributes
-{
+  implements InteractionAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -66,13 +66,13 @@ export class Interaction<
   })
     targetId: number;
 
-  @Column({ type: DataType.INTEGER, })
+  @Column({ type: DataType.INTEGER })
     actorId?: number;
 
-  @Column({ type: DataType.STRING, })
+  @Column({ type: DataType.STRING })
     actorTag?: string;
 
-  @Column({ type: DataType.TEXT, })
+  @Column({ type: DataType.TEXT })
     value?: string;
 
 }

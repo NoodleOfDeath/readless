@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../../dated';
@@ -26,8 +26,8 @@ export class Media<
     B extends MediaCreationAttributes = MediaCreationAttributes,
   >
   extends Model<A, B>
-  implements MediaAttributes
-{
+  implements MediaAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -47,4 +47,5 @@ export class Media<
     allowNull: false,
   })
     url: string;
+
 }

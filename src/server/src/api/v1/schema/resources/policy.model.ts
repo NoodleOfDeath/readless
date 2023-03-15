@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -24,8 +24,8 @@ export class Policy<
     B extends PolicyCreationAttributes = PolicyCreationAttributes,
   >
   extends Model<A, B>
-  implements PolicyAttributes
-{
+  implements PolicyAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -45,4 +45,5 @@ export class Policy<
     allowNull: false,
   })
     content: string;
+
 }

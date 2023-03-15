@@ -17,10 +17,10 @@ router.get(
   validate,
   async (req, res) => {
     const {
-      category, subcategory, title 
+      category, subcategory, title, 
     } = req.params;
     const {
-      filter, pageSize = 10, page = 0, offset = 0 
+      filter, pageSize = 10, page = 0, offset = 0, 
     } = req.query;
     const controller = new ArticleController();
     let response: { count: number; rows: ArticleAttr[] } | ArticleAttributes = {

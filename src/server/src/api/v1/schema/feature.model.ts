@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Model, Table 
+  Column, DataType, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from './dated';
@@ -23,8 +23,8 @@ export type FeatureCreationAttributes = DatedAttributes & {
 })
 export class Feature<A extends FeatureAttributes = FeatureAttributes, B extends FeatureCreationAttributes = FeatureCreationAttributes>
   extends Model<A, B>
-  implements FeatureAttributes
-{
+  implements FeatureAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -45,7 +45,7 @@ export class Feature<A extends FeatureAttributes = FeatureAttributes, B extends 
   })
     enabled: boolean;
   
-  @Column({ type: DataType.JSON, })
+  @Column({ type: DataType.JSON })
     data: Record<string, unknown>;
     
 }

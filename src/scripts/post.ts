@@ -27,12 +27,8 @@ async function main() {
   await axios
     .post(
       `${target}/v1/sources`,
-      {
-        url: args.url,
-      },
-      {
-        timeout: 120_000,
-      }
+      { url: args.url },
+      { timeout: 120_000 },
     )
     .then(console.log)
     .catch(console.error);

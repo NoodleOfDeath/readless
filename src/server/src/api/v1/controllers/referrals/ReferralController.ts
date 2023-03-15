@@ -1,14 +1,15 @@
 import {
-  Body, Post, Route, Tags 
+  Body, Post, Route, Tags, 
 } from 'tsoa';
 
 import {
-  Referral, ReferralAttributes, ReferralCreationAttributes 
+  Referral, ReferralAttributes, ReferralCreationAttributes, 
 } from '../../schema/models';
 
 @Route('/v1/referrals')
 @Tags('Referrals')
 export class ReferralController {
+
   @Post('/')
   async recordReferral(@Body() data: ReferralCreationAttributes): Promise<ReferralAttributes> {
     try {
@@ -20,4 +21,5 @@ export class ReferralController {
       console.error(e);
     }
   }
+
 }

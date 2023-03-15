@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
 
-import API, { PartialRegistrationOptions } from '@/api';
+import API, { PartialRegistrationOptions, ThirdParty } from '@/api';
 import Page from '@/components/layout/Page';
 
 const StyledStack = styled(Stack)`
@@ -53,7 +53,7 @@ export default function RegisterPage() {
               onSuccess={(credentialResponse) => {
                 handleRegistration({
                   thirdParty: {
-                    name: 'google',
+                    name: ThirdParty.Google,
                     credential: credentialResponse.credential,
                   },
                 });

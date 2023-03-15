@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import {
-  Get, Path, Query, Route, Tags 
+  Get, Path, Query, Route, Tags, 
 } from 'tsoa';
 
 import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
@@ -11,7 +11,9 @@ import {
 } from '../../schema/models';
 
 function applyFilter(filter?: string) {
-  if (!filter || filter.replace(/\s/g, '').length === 0) {return undefined;}
+  if (!filter || filter.replace(/\s/g, '').length === 0) {
+    return undefined;
+  }
   return {
     [Op.or]: [
       { title: { [Op.iRegexp]: filter } },
@@ -32,6 +34,7 @@ function applyFilter(filter?: string) {
 @Route('/v1/sources')
 @Tags('Sources')
 export class SourceController {
+
   @Get('/')
   public async getSources(
     @Query() filter?: string,
@@ -68,7 +71,7 @@ export class SourceController {
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
-      where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f), },
+      where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f) },
     };
     return await Source.findAndCountAll(options);
   }
@@ -90,7 +93,7 @@ export class SourceController {
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
-      where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f), },
+      where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f) },
     };
     return await Source.findAndCountAll(options);
   }

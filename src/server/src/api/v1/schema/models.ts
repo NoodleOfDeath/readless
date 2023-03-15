@@ -14,9 +14,9 @@ export * from './user/ref_user_role.model';
 
 // auth models
 export * from './auth/credential.model';
-export * from './auth/ref_credential_role.model';
 export * from './auth/permission.model';
 export * from './auth/role.model';
+export * from './auth/ref_credential_role.model';
 export * from './auth/ref_role_permission.model';
 
 // resource models

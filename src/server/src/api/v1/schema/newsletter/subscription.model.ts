@@ -1,5 +1,5 @@
 import {
-  Column, DataType, Index, Model, Table 
+  Column, DataType, Index, Model, Table, 
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -24,8 +24,8 @@ export type SubscriptionCreationAttributes = DatedAttributes & {
 })
 export class Subscription<A extends SubscriptionAttributes = SubscriptionAttributes, B extends SubscriptionCreationAttributes = SubscriptionCreationAttributes>
   extends Model<A, B>
-  implements SubscriptionAttributes
-{
+  implements SubscriptionAttributes {
+
   static get empty() {
     return this.json();
   }
@@ -36,7 +36,7 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
   
   @Index({
     name: 'subscriptions_aliasType_alias_newsletterId_key',
-    unique: true
+    unique: true,
   })
   @Column({
     type: DataType.STRING,

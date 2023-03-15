@@ -1,6 +1,6 @@
-import React from 'react';
 import { ButtonGroup } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from 'react';
 
 import { useTheme } from '../theme';
 
@@ -14,7 +14,7 @@ export const CONSUMPTION_MODES = {
 
 export type ConsumptionMode = keyof typeof CONSUMPTION_MODES;
 export const CONSUMPTION_MODE_NAMES = Object.keys(
-  CONSUMPTION_MODES
+  CONSUMPTION_MODES,
 ) as ConsumptionMode[];
 
 type Props = {
@@ -29,16 +29,20 @@ export default function ConsumptionModeSelector({
   const theme = useTheme();
 
   const selectedIndex = React.useMemo(() => {
-    if (!mode) return undefined;
+    if (!mode) {
+      return undefined;
+    }
     return CONSUMPTION_MODE_NAMES.indexOf(mode);
   }, [mode]);
 
   const handlePress = React.useCallback(
     (index: number) => {
-      if (index === CONSUMPTION_MODE_NAMES.length - 1) return;
+      if (index === CONSUMPTION_MODE_NAMES.length - 1) {
+        return;
+      }
       onChange?.(CONSUMPTION_MODE_NAMES[index]);
     },
-    [onChange]
+    [onChange],
   );
 
   return (
