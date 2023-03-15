@@ -17,9 +17,7 @@ export class OpenAIService extends BaseService {
   constructor({ apiKey = process.env.OPENAI_API_KEY }: OpenAIServiceInitProps = {}) {
     super();
     this.api = new OpenAIApi(
-      new Configuration({
-        apiKey,
-      }),
+      new Configuration({ apiKey, }),
     );
   }
   
@@ -28,7 +26,9 @@ export class OpenAIService extends BaseService {
       n = 1,
       size = '1024x1024'
     }: CreateImageOptions = {}) {
-    return await this.api.createImage({ prompt, n, size });
+    return await this.api.createImage({
+      prompt, n, size 
+    });
   }
   
 }

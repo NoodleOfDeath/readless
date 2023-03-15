@@ -6,12 +6,12 @@
     "postinstall": "sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 12.4/' ios/Pods/Pods.xcodeproj/project.pbxproj",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "start": "react-native start",
     "test": "jest",
     "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api --no-client",
-    "swagger": "(cd ../server && pnpm swagger) && cp ../server/public/swagger.json . && yarn gen"
+    "swagger": "(cd ../server && yarn swagger) && cp ../server/public/swagger.json . && yarn gen",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.7",

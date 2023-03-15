@@ -1,5 +1,7 @@
 // Step 1: Import the S3Client object and all necessary SDK commands.
-import { PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
+import {
+  PutObjectCommand, PutObjectCommandInput, S3Client 
+} from '@aws-sdk/client-s3';
 
 import { BaseService } from '../../base';
 

@@ -1,4 +1,6 @@
-import { ChatGPTAPI, ChatMessage, SendMessageOptions } from 'chatgpt';
+import {
+  ChatGPTAPI, ChatMessage, SendMessageOptions 
+} from 'chatgpt';
 
 import { BaseService } from '../base';
 
@@ -28,7 +30,9 @@ export class ChatGPTService extends BaseService {
 
   async send(
     message: string,
-    { parentMessageId = this.parentMessageId, timeoutMs = 120_000, ...remainingOpts }: SendMessageOptions = {},
+    {
+      parentMessageId = this.parentMessageId, timeoutMs = 120_000, ...remainingOpts 
+    }: SendMessageOptions = {},
   ) {
     try {
       const reply = await this.api.sendMessage(message, {

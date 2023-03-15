@@ -1,6 +1,10 @@
-import { Body, Post, Route, Tags } from 'tsoa';
+import {
+  Body, Post, Route, Tags 
+} from 'tsoa';
 
-import { Referral, ReferralAttributes, ReferralCreationAttributes } from '../../schema';
+import {
+  Referral, ReferralAttributes, ReferralCreationAttributes 
+} from '../../schema/models';
 
 @Route('/v1/referrals')
 @Tags('Referrals')

@@ -2,14 +2,13 @@ import { Router } from 'express';
 import { param, query } from 'express-validator';
 
 import { SourceController } from '../../controllers';
-import { SourceAttr, SourceAttributes } from '../../schema';
-import { logRequest, pagination, validate } from '../../middleware';
+import { SourceAttr, SourceAttributes } from '../../schema/models';
+import { pagination, validate } from '../../middleware';
 
 const router = Router();
 
 router.get(
   '/:category?/:subcategory?/:title?',
-  logRequest,
   param('category').isString().optional(),
   param('subcategory').isString().optional(),
   param('title').isString().optional(),
@@ -17,8 +16,12 @@ router.get(
   ...pagination,
   validate,
   async (req, res) => {
-    const { category, subcategory, title } = req.params;
-    const { filter, pageSize = 10, page = 0, offset = page * pageSize } = req.query;
+    const {
+      category, subcategory, title 
+    } = req.params;
+    const {
+      filter, pageSize = 10, page = 0, offset = page * pageSize 
+    } = req.query;
     const controller = new SourceController();
     let response: { count: number; rows: SourceAttr[] } | SourceAttributes = {
       count: 0,

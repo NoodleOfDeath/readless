@@ -1,7 +1,7 @@
-import { LinkingOptions } from "@react-navigation/native";
+import { LinkingOptions } from '@react-navigation/native';
 
-import { SourceWithOutletAttr } from "../api/Api";
-import { ConsumptionMode } from "../components/post/ConsumptionModeSelector";
+import { SourceWithOutletAttr } from '../api/Api';
+import { ConsumptionMode } from '../components/post/ConsumptionModeSelector';
 
 export type RootParamList = {
   Discover: {
@@ -15,14 +15,14 @@ export type RootParamList = {
 };
 
 export const linkingOptions: LinkingOptions<RootParamList> = {
-  prefixes: ["https://www.theskoop.ai", "https://theskoop.ai", "skoop://"],
+  prefixes: ['https://www.theskoop.ai', 'https://theskoop.ai', 'skoop://'],
   config: {
     screens: {
       Discover: {
-        path: "discover",
+        path: 'discover',
       },
       Settings: {
-        path: "settings",
+        path: 'settings',
       },
     },
   },

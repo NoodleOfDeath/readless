@@ -1,15 +1,15 @@
-import "dotenv/config";
-import fs from "fs";
-import p from "path";
+import 'dotenv/config';
+import fs from 'fs';
+import p from 'path';
 
-import { AudioEditingService } from "./src/tools/audio";
+import { AudioEditingService } from './src/tools/audio';
 
 const BATCH_DIR = process.env.BATCH_DIR as string;
 
 async function main() {
   const editor = new AudioEditingService();
   await editor.batchEdit(p.resolve(BATCH_DIR), {
-    clip: { end: "0.5s" },
+    clip: { end: '0.5s' },
   });
   async function merge() {
     if (
@@ -26,7 +26,7 @@ async function main() {
           Number(/(\d+).mp3$/.exec(a)?.[1] ?? 0) -
           Number(/(\d+).mp3$/.exec(b)?.[1] ?? 0)
       );
-    await editor.merge({ outputPath: p.resolve("./ep3.mp3") }, ...outfiles);
+    await editor.merge({ outputPath: p.resolve('./ep3.mp3') }, ...outfiles);
   }
   const interval = setInterval(merge, 1000);
 }

@@ -6,12 +6,12 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/api-ci.yaml"
-      - "Dockerfile.api"
-      - "k8s/api-deploy.yaml"
-      - "src/server/package.json"
-      - "src/server/public/**"
-      - "src/server/src/api/**"
+      - '.github/workflows/api-ci.yaml'
+      - 'Dockerfile.api'
+      - 'k8s/api-deploy.yaml'
+      - 'src/server/package.json'
+      - 'src/server/public/**'
+      - 'src/server/src/api/**'
 
 concurrency:
   group: ${{ github.ref }}-api
@@ -56,6 +56,8 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
       K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}

@@ -1,13 +1,12 @@
 FROM node:19.3.0 as base
-RUN npm install -g pnpm
 WORKDIR /home/node
 COPY src/server ./server
 WORKDIR /home/node/server
-RUN pnpm install
+RUN yarn install --non-interactive --frozen-lockfile
 WORKDIR /home/node/app
 COPY src/web/package.json ./
-COPY src/web/pnpm-lock.yaml ./
-RUN pnpm install
+COPY src/web/yarn-lock.yaml ./
+RUN yarn install --non-interactive --frozen-lockfile
 
 FROM base as pre-build
 COPY src/web/src ./src
@@ -16,7 +15,7 @@ COPY src/web/tsconfig.json ./
 COPY src/web/config-overrides.js ./
 COPY src/web/nodemon.json ./
 COPY src/web/.env ./
-RUN pnpm swagger
+RUN yarn swagger
 
 FROM pre-build as dev
-CMD pnpm dev
+CMD yarn dev

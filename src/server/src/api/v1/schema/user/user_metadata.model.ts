@@ -1,7 +1,8 @@
-import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import {
+  Column, DataType, Model, Table 
+} from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
-import { User } from './user.model';
 
 export type UserMetadataAttributes = DatedAttributes & {
   userId: number;
@@ -32,7 +33,6 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     return defaults ?? {};
   }
   
-  @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -50,9 +50,5 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     allowNull: false,
   })
     value: Record<string, unknown>;
-  
-  async user() {
-    return await User.findByPk(this.userId);
-  }
 
 }

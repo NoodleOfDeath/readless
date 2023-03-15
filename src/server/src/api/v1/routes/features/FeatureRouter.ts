@@ -2,13 +2,12 @@ import { Router } from 'express';
 import { param } from 'express-validator';
 
 import { FeatureController } from '../../controllers';
-import { logRequest, validate } from '../../middleware';
+import { validate } from '../../middleware';
 
 const router = Router();
 
 router.get(
   '/',
-  logRequest,
   async (req, res) => {
     try {
       const features = await new FeatureController().getFeatures();

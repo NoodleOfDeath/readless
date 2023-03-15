@@ -1,6 +1,10 @@
-import { Body, Post, Route, Tags } from 'tsoa';
+import {
+  Body, Post, Route, Tags 
+} from 'tsoa';
 
-import { Metric, MetricAttributes, MetricCreationAttributes } from '../../schema';
+import {
+  Metric, MetricAttributes, MetricCreationAttributes 
+} from '../../schema/models';
 
 @Route('/v1/metrics')
 @Tags('Metricss')

@@ -1,8 +1,10 @@
 import { Op } from 'sequelize';
 
 import { ScribeService } from '../services';
-import { DBService, QUEUES, Worker } from '../services';
-import { Outlet, Source } from '../api/v1/schema';
+import {
+  DBService, QUEUES, Worker 
+} from '../services';
+import { Outlet, Source } from '../api/v1/schema/models';
 
 /** Fetch rate per interval */
 const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 1; // 1 for dev and testing
@@ -35,12 +37,10 @@ export async function doWork() {
       QUEUES.siteMaps,
       async (job) => {
         try {
-          const { id, name, url, force } = job.data;
-          const outlet = (await Outlet.findOne({
-            where: {
-              [Op.or]: [{ id }, { name }],
-            }
-          }))?.toJSON();
+          const {
+            id, name, url, force 
+          } = job.data;
+          const outlet = (await Outlet.findOne({ where: { [Op.or]: [{ id }, { name }], } }))?.toJSON();
           if (!outlet) {
             console.log(`Outlet ${id} not found`);
             await job.moveToFailed(new Error(`Outlet ${id} not found`), siteMapWorker.queue.token, true);

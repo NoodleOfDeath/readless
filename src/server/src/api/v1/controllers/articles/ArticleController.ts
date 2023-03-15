@@ -1,11 +1,15 @@
 import { Op } from 'sequelize';
-import { Body, Get, Path, Post, Query, Route, Tags } from 'tsoa';
+import {
+  Body, Get, Path, Post, Query, Route, Tags 
+} from 'tsoa';
 
 import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
-import { Article, ArticleAttr, ArticleAttributes } from '../../schema';
+import {
+  Article, ArticleAttr, ArticleAttributes 
+} from '../../schema/models';
 
 function applyFilter(filter?: string) {
-  if (!filter || filter.replace(/\s/g, '').length === 0) return undefined;
+  if (!filter || filter.replace(/\s/g, '').length === 0) {return undefined;}
   return {
     [Op.or]: [
       { title: { [Op.iRegexp]: filter } },
@@ -61,9 +65,7 @@ export class ArticleController {
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
-      where: {
-        [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f),
-      },
+      where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f), },
     };
     return await Article.findAndCountAll(options);
   }
@@ -85,9 +87,7 @@ export class ArticleController {
       limit: pageSize,
       offset: offset,
       order: [['createdAt', 'DESC']],
-      where: {
-        [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f),
-      },
+      where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f), },
     };
     return await Article.findAndCountAll(options);
   }

@@ -1,8 +1,11 @@
-import { Body, Post, Route, Tags } from 'tsoa';
-
 import {
-  AuthService, LoginOptions, LoginResponse, RegistrationOptions, RegistrationResponse
-} from '../../../../services';
+  Body, Post, Route, Tags 
+} from 'tsoa';
+
+import { AuthService } from '../../../../services';
+import {
+  LoginOptions, LoginResponse, RegistrationOptions, RegistrationResponse
+} from '../../../../services/types';
 
 @Route('/v1/auth')
 @Tags('Auth')

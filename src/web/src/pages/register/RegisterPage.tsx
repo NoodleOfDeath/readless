@@ -8,6 +8,7 @@ import {
   styled,
   Typography,
 } from '@mui/material';
+import { GoogleLogin } from '@react-oauth/google';
 
 import API, { PartialRegistrationOptions } from '@/api';
 import Page from '@/components/layout/Page';
@@ -20,20 +21,23 @@ const StyledStack = styled(Stack)`
 export default function RegisterPage() {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = React.useCallback((data: PartialRegistrationOptions) => {
-    API.register(data)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  const handleRegistration = React.useCallback(
+    (data: PartialRegistrationOptions) => {
+      API.register(data)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    [],
+  );
 
   return (
     <Page title='Register'>
       <StyledStack spacing={2}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleRegistration)}>
           <StyledStack spacing={2}>
             <TextField
               {...register('email')}
@@ -45,6 +49,20 @@ export default function RegisterPage() {
               label='Password'
             />
             <Button type='submit'>Register</Button>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                handleRegistration({
+                  thirdParty: {
+                    name: 'google',
+                    credential: credentialResponse.credential,
+                  },
+                });
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+              useOneTap
+            />
           </StyledStack>
         </form>
         <StyledStack spacing={1}>

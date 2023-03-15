@@ -2,20 +2,23 @@ import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
 import { AuthController } from '../../controllers';
-import { AuthError } from './../../../../services';
-import { logRequest, validate } from '../../middleware';
+import { AuthError } from './../../../../services/types';
+import { validate } from '../../middleware';
 
 const router = Router();
 
 router.post(
   '/login',
-  logRequest,
   oneOf([
     body('email').isEmail(),
     body('eth2address'),
     body('username').isString(),
+    body('thirdParty').isObject(),
   ]),
-  body('password').isString().if(body('eth2address').not().exists()),
+  body('password')
+    .if(body('eth2address').not().exists())
+    .if(body('thirdParty').not().exists())
+    .isString(),
   validate,
   async (req, res) => {
     try {
@@ -29,7 +32,7 @@ router.post(
         res.status(500).send('Internal Server Error');
       }
     }
-  }
+  },
 );
 
 router.post(
@@ -38,8 +41,12 @@ router.post(
     body('email').isEmail(),
     body('eth2address'),
     body('username').isString(),
+    body('thirdParty').isObject(),
   ]),
-  body('password').isString().if(body('eth2address').not().exists()),
+  body('password')
+    .if(body('eth2address').not().exists())
+    .if(body('thirdParty').not().exists())
+    .isString(),
   validate,
   async (req, res) => {
     try {
@@ -49,7 +56,7 @@ router.post(
       console.log(e);
       res.status(500).send('Internal Server Error');
     }
-  }
+  },
 );
 
 export default router;

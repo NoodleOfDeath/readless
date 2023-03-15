@@ -62,14 +62,35 @@
 					"jwt": {
 						"type": "string"
 					},
-					"id": {
+					"userId": {
 						"type": "number",
 						"format": "double"
 					}
 				},
 				"required": [
 					"jwt",
-					"id"
+					"userId"
+				],
+				"type": "object"
+			},
+			"ThirdParty": {
+				"type": "string",
+				"enum": [
+					"google"
+				],
+				"nullable": false
+			},
+			"ThirdPartyAuth": {
+				"properties": {
+					"credential": {
+						"type": "string"
+					},
+					"name": {
+						"$ref": "#/components/schemas/ThirdParty"
+					}
+				},
+				"required": [
+					"name"
 				],
 				"type": "object"
 			},
@@ -78,13 +99,28 @@
 					"email": {
 						"type": "string"
 					},
-					"eth2address": {
+					"eth2Address": {
 						"type": "string"
 					},
 					"username": {
 						"type": "string"
 					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"otp": {
+						"type": "string"
+					},
 					"password": {
+						"type": "string"
+					},
+					"jwt": {
+						"type": "string"
+					},
+					"eth2SignedMessage": {
 						"type": "string"
 					}
 				},
@@ -92,22 +128,47 @@
 				"description": "Make all properties in T optional"
 			},
 			"RegistrationResponse": {
-				"type": "number",
-				"format": "double"
+				"properties": {
+					"userId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object"
 			},
 			"Partial_RegistrationOptions_": {
 				"properties": {
 					"email": {
 						"type": "string"
 					},
-					"eth2address": {
+					"eth2Address": {
 						"type": "string"
 					},
 					"username": {
 						"type": "string"
 					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"otp": {
+						"type": "string"
+					},
 					"password": {
 						"type": "string"
+					},
+					"jwt": {
+						"type": "string"
+					},
+					"eth2SignedMessage": {
+						"type": "string"
+					},
+					"headlessRequest": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",

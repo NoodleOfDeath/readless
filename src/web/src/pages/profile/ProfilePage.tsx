@@ -9,7 +9,7 @@ export default function ProfilePage() {
 
   return (
     <Page left title="Profile">
-      <ReactMarkdown>{String(userData?.id)}</ReactMarkdown>
+      <ReactMarkdown>{String(userData?.userId)}</ReactMarkdown>
     </Page>
   );
 }

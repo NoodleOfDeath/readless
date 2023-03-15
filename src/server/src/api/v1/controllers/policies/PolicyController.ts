@@ -1,6 +1,8 @@
-import { Get, Route, Tags } from 'tsoa';
+import {
+  Get, Route, Tags 
+} from 'tsoa';
 
-import { Policy, PolicyAttributes } from '../../schema/policy.model';
+import { Policy, PolicyAttributes } from '../../schema/resources/policy.model';
 
 @Route('/v1/policies')
 @Tags('Policies')

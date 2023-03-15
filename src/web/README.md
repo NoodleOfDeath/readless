@@ -6,9 +6,9 @@ This is the web application for the TheSkoop project
 
 ## Getting Started - TL;DR Style (aka Docker)
 
-If you want to skip the workspace setup process, you can run the local docker image via docker compose (hot reloads will be slightly slower than using `pnpm dev`):
+If you want to skip the workspace setup process, you can run the local docker image via docker compose (hot reloads will be slightly slower than using `yarn dev`):
 
 ```bash
 theskoop $ cat src/web/.env-example > src/web/.env
-theskoop $ ./compose.sh web --local
+theskoop $ compose web --local
 ```

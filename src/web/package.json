@@ -3,14 +3,16 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
+    "preinstall": "npx only-allow yarn",
     "start": "react-app-rewired start",
     "dev": "nodemon -x 'react-app-rewired start'",
     "build": "react-app-rewired build",
     "test": "jest",
     "eject": "react-app-rewired eject",
     "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/gen",
-    "swagger": "(cd ../server && pnpm swagger) && cp ../server/public/swagger.json ./swagger.json && pnpm gen"
+    "swagger": "(cd ../server && yarn swagger) && cp ../server/public/swagger.json ./swagger.json && yarn gen",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "eslintConfig": {
     "extends": [

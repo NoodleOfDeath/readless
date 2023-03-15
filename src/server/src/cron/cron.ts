@@ -3,8 +3,12 @@ import { Op } from 'sequelize';
 import axios from 'axios';
 import { load } from 'cheerio';
 
-import { DBService, QUEUES, QueueService } from '../services';
-import { Outlet, SiteMapParams, Source } from '../api/v1/schema';
+import {
+  DBService, QUEUES, QueueService 
+} from '../services';
+import {
+  Outlet, SiteMapParams, Source 
+} from '../api/v1/schema/models';
 
 async function main() {
   await DBService.init();
@@ -48,9 +52,7 @@ function generateDynamicUrls(
         case 'MMMM':
           return new Date(
             `2050-${((new Date().getMonth() + offset) % 12) + 1}-01`
-          ).toLocaleString('default', {
-            month: 'long',
-          });
+          ).toLocaleString('default', { month: 'long', });
         case 'D':
           return new Date(Date.now() + offset * DAY).getDate().toString();
         case 'DD':
@@ -61,7 +63,7 @@ function generateDynamicUrls(
         default:
           if (params && !Number.isNaN(Number($1))) {
             const i = Number($1);
-            if (i === index) return params;
+            if (i === index) {return params;}
           }
           return $0;
         }
@@ -82,18 +84,20 @@ async function pollForNews() {
       },
     });
     for (const outlet of outlets) {
-      const { id, name, siteMaps } = outlet.toJSON();
+      const {
+        id, name, siteMaps 
+      } = outlet.toJSON();
       console.log(`fetching sitemaps for ${name}`);
-      if (siteMaps.length === 0) continue;
+      if (siteMaps.length === 0) {continue;}
       for (const siteMap of siteMaps) {
-        const { params, keepQuery, selector, attribute } = siteMap;
+        const {
+          params, keepQuery, selector, attribute 
+        } = siteMap;
         const queryUrls = generateDynamicUrls(siteMap.url, params);
         for (const queryUrl of queryUrls) {
           console.log(`fetching ${queryUrl} from ${name}...`);
           try {
-            const { data } = await axios.get(queryUrl, {
-              timeout: 10_000,
-            });
+            const { data } = await axios.get(queryUrl, { timeout: 10_000, });
             const $ = load(data);
             const cheerio = $(selector);
             const urls = [...cheerio]
@@ -114,7 +118,7 @@ async function pollForNews() {
                   : [fullUrl.origin, fullUrl.pathname].join('');
               })
               .filter((u) => !!u);
-            if (urls.length === 0) continue;
+            if (urls.length === 0) {continue;}
             for (const url of urls) {
               await queue.dispatch(
                 QUEUES.siteMaps,
@@ -124,9 +128,7 @@ async function pollForNews() {
                   name,
                   url,
                 },
-                {
-                  jobId: url,
-                }
+                { jobId: url, }
               );
             }
           } catch (e) {

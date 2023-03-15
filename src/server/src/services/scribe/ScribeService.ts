@@ -1,10 +1,12 @@
-import { ReadAndSummarizeSourceOptions } from '../types';
-import { ChatGPTService, Prompt, SpiderService } from '../';
+import { BaseService } from '../base';
+import { ReadAndSummarizeSourceOptions } from './types';
+import {
+  ChatGPTService, Prompt, SpiderService 
+} from '../';
 import {
   ReadAndSummarizeSourcePayload,
   Source,
-} from '../../api/v1/schema';
-import { BaseService } from '../base';
+} from '../../api/v1/schema/models';
 
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 
@@ -12,7 +14,9 @@ export class ScribeService extends BaseService {
   
   public async readAndSummarizeSource(
     { url }: ReadAndSummarizeSourcePayload,
-    { onProgress, force, outletId, }: ReadAndSummarizeSourceOptions = {},
+    {
+      onProgress, force, outletId, 
+    }: ReadAndSummarizeSourceOptions = {},
   ): Promise<Source> {
     if (!outletId) {
       throw new Error('no outlet id specified');
@@ -45,7 +49,7 @@ export class ScribeService extends BaseService {
         text: `Please read the following article and provide a single sentence summary using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
         catchFailure: (reply) => { 
           if (reply.text.length > 120)
-            return new Error('Title too long');
+          {return new Error('Title too long');}
         },
         action: (reply) => (sourceInfo.title = reply.text),
       },
@@ -53,7 +57,7 @@ export class ScribeService extends BaseService {
         text: 'Please provide 5 concise bullet point sentences no longer than 10 words each for this article',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => {
           sourceInfo.bullets = reply.text
@@ -70,7 +74,7 @@ export class ScribeService extends BaseService {
         ].join(' '),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => (sourceInfo.shortSummary = reply.text),
       },
@@ -81,7 +85,7 @@ export class ScribeService extends BaseService {
         ].join(' '),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => (sourceInfo.summary = reply.text),
       },
@@ -92,7 +96,7 @@ export class ScribeService extends BaseService {
         ].join(' '),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => (sourceInfo.abridged = reply.text),
       },
@@ -103,7 +107,7 @@ export class ScribeService extends BaseService {
         ].join(' '),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => (sourceInfo.text = reply.text),
       },
@@ -111,7 +115,7 @@ export class ScribeService extends BaseService {
         text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => {
           sourceInfo.tags = reply.text
@@ -125,7 +129,7 @@ export class ScribeService extends BaseService {
         text: 'Please provide a one word category for this article',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => (sourceInfo.category = reply.text.replace(/^category:\s*/i, '').replace(/\.$/, '')).trim(),
       },
@@ -133,7 +137,7 @@ export class ScribeService extends BaseService {
         text: 'Please provide a one word subcategory for this article',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) =>
           (sourceInfo.subcategory = reply.text.replace(/^subcategory:\s*/i, '').replace(/\.$/, '')).trim(),
@@ -142,7 +146,7 @@ export class ScribeService extends BaseService {
         text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text))
-            return new Error('Bad response from chatgpt');
+          {return new Error('Bad response from chatgpt');}
         },
         action: (reply) => {
           sourceInfo.imagePrompt = reply.text;
@@ -171,7 +175,7 @@ export class ScribeService extends BaseService {
     const source = new Source(sourceInfo);
     await source.save();
     await source.reload();
-    if (onProgress) onProgress(1);
+    if (onProgress) {onProgress(1);}
     return source;
   }
   

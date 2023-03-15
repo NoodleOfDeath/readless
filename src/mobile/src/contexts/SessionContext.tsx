@@ -1,5 +1,5 @@
-import React from "react";
-import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
+import React from 'react';
+import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 
 export type SessionContextType = {
   tabControllerScreenOptions: BottomTabNavigationOptions;

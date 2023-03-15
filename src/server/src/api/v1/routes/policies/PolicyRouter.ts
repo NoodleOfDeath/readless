@@ -1,11 +1,10 @@
 import { Router } from 'express';
 
-import { logRequest } from '../../middleware';
 import { PolicyController } from '../../controllers';
 
 const router = Router();
 
-router.get('/privacy', logRequest, async (req, res) => {
+router.get('/privacy', async (req, res) => {
   const controller = new PolicyController();
   try {
     const policy = await controller.getPrivacyPolicy();
@@ -16,7 +15,7 @@ router.get('/privacy', logRequest, async (req, res) => {
   }
 });
 
-router.get('/terms', logRequest, async (req, res) => {
+router.get('/terms', async (req, res) => {
   const controller = new PolicyController();
   try {
     const policy = await controller.getTermsOfService();

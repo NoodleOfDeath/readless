@@ -1,19 +1,19 @@
 FROM node:19.3.0 as base
-RUN npm install -g pnpm
 WORKDIR /home/node
 COPY src/server ./server
 WORKDIR /home/node/server
-RUN pnpm install
+RUN yarn install --non-interactive --frozen-lockfile
 WORKDIR /home/node/app
 COPY src/web/package.json ./
-RUN pnpm install
+COPY src/web/yarn.lock ./
+RUN yarn install --non-interactive --frozen-lockfile
 
 FROM base as pre-build
 COPY src/web/src ./src
 COPY src/web/public ./public
 COPY src/web/tsconfig.json ./
 COPY src/web/config-overrides.js ./
-RUN pnpm swagger
+RUN yarn swagger
 
 FROM pre-build as build
 ARG API_ENDPOINT
@@ -27,7 +27,8 @@ RUN echo API_ENDPOINT=\"${API_ENDPOINT}\" >> .env
 RUN echo GENERATE_SOURCEMAP=\"${GENERATE_SOURCEMAP}\" >> .env
 RUN echo GOOGLE_CLIENT_ID=\"${GOOGLE_CLIENT_ID}\" >> .env
 
-RUN pnpm build
+ENV NODE_ENV=production
+RUN yarn build
 
 FROM nginx:alpine as web
 COPY src/web/nginx.conf /etc/nginx/nginx.conf

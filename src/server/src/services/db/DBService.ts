@@ -1,7 +1,8 @@
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 
+import * as Models from '../../api/v1/schema/models';
 import { BaseService } from '../base';
-import * as Models from '../../api/v1/schema';
+import { makeAssociations } from '../../api/v1/schema';
 
 export type DBServiceInitProps = {
   connectionString?: string;
@@ -18,13 +19,10 @@ export class DBService extends BaseService {
     super();
     this.sq = new Sequelize(connectionString, {
       dialect: 'postgres',
-      dialectOptions: {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      },
+      dialectOptions: { ssl: { rejectUnauthorized: false, }, },
       models,
     });
+    makeAssociations();
   }
 
   static async init() {
@@ -35,6 +33,8 @@ export class DBService extends BaseService {
 
   async init() {
     await this.sq.authenticate();
-    await this.sq.sync();
+    console.log(process.env.NODE_ENV);
+    await this.sq.sync({ force: process.env.NODE_ENV !== 'production' });
   }
+
 }

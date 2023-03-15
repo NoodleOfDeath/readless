@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/noodleofdeath/theskoop",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
+    "preinstall": "npx only-allow yarn",
     "start:api": "node dist/serve-api.cjs",
     "start:cron": "node dist/serve-cron.cjs",
     "start:worker": "node dist/serve-worker.cjs",
@@ -31,11 +31,13 @@
     "build:cron": "rimraf dist/serve-cron.cjs && esbuild ./src/cron --bundle --platform=node --outfile=./dist/serve-cron.cjs",
     "build:worker": "rimraf dist/serve-worker.cjs && esbuild ./src/worker --bundle --platform=node --outfile=./dist/serve-worker.cjs",
     "test": "jest",
-    "swagger": "tsoa spec -c tsoa.config.json"
+    "swagger": "tsoa spec -c tsoa.config.json",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "echo fuck && pretty-quick --staged"
     }
   },
   "dependencies": {
@@ -57,8 +59,11 @@
     "express-rate-limit": "^6.7.0",
     "express-validator": "^6.15.0",
     "express-winston": "^4.2.0",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^113.0.0",
     "ioredis": "^5.3.1",
     "jsonwebtoken": "^9.0.0",
+    "ms": "^2.1.3",
     "nock": "^13.3.0",
     "openai": "^3.2.1",
     "pg": "^8.9.0",
@@ -68,6 +73,7 @@
     "sequelize-typescript": "^2.1.5",
     "tsoa": "^5.1.1",
     "user-agents": "^1.0.1307",
+    "web3": "^1.8.2",
     "winston": "^3.8.2"
   },
   "devDependencies": {
@@ -93,7 +99,6 @@
     "mock-aws-s3": "^4.0.2",
     "nodemon": "^2.0.21",
     "only-allow": "^1.1.1",
-    "pnpm": "^7.28.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",

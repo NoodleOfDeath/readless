@@ -4,14 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:api": "(cd src/server && pnpm dev:api)",
-    "dev:cron": "(cd src/server && pnpm dev:cron)",
-    "dev:worker": "(cd src/server && pnpm dev:worker)",
-    "dev:web": "(cd src/web && pnpm dev)",
-    "start:api": "(cd src/server && pnpm start:api)",
-    "start:cron": "(cd src/server && pnpm start:cron)",
-    "start:worker": "(cd src/server && pnpm start:worker)",
-    "start:web": "(cd src/server && pnpm start:web)",
+    "install": "yarn install:server && yarn install:web && yarn install:mobile",
+    "install:server": "(cd src/server && yarn install)",
+    "install:web": "(cd src/web && yarn install)",
+    "install:mobile": "(cd src/mobile && yarn install)",
+    "dev:api": "(cd src/server && yarn dev:api)",
+    "dev:cron": "(cd src/server && yarn dev:cron)",
+    "dev:worker": "(cd src/server && yarn dev:worker)",
+    "dev:web": "(cd src/web && yarn dev)",
+    "start:api": "(cd src/server && yarn start:api)",
+    "start:cron": "(cd src/server && yarn start:cron)",
+    "start:worker": "(cd src/server && yarn start:worker)",
+    "start:web": "(cd src/server && yarn start:web)",
+    "start:ios": "(cd src/mobile && yarn ios)",
+    "start:android": "(cd src/mobile && yarn android)",
+    "start:native": "(cd src/mobile && yarn start)",
+    "start:native:reset": "(cd src/mobile && yarn start --reset-cache)",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "format": "eslint src --ext .js,.jsx,.ts,.tsx --fix"
   },
@@ -19,12 +27,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.54.1",
-    "@typescript-eslint/parser": "^5.54.1",
-    "eslint": "^8.35.0",
-    "eslint-plugin-react": "^7.32.2"
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "typescript": "*"
   },
-  "dependencies": {
-    "eslint-plugin-import": "^2.27.5"
-  }
+  "dependencies": {}
 }

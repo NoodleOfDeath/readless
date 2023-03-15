@@ -2,14 +2,13 @@ import { Router } from 'express';
 import { param, query } from 'express-validator';
 
 import { ArticleController } from '../../controllers';
-import { ArticleAttr, ArticleAttributes } from '../../schema';
-import { logRequest, pagination, validate } from '../../middleware';
+import { ArticleAttr, ArticleAttributes } from '../../schema/models';
+import { pagination, validate } from '../../middleware';
 
 const router = Router();
 
 router.get(
   '/:category?/:subcategory?/:title?',
-  logRequest,
   param('category').isString().optional(),
   param('subcategory').isString().optional(),
   param('title').isString().optional(),
@@ -17,8 +16,12 @@ router.get(
   ...pagination,
   validate,
   async (req, res) => {
-    const { category, subcategory, title } = req.params;
-    const { filter, pageSize = 10, page = 0, offset = 0 } = req.query;
+    const {
+      category, subcategory, title 
+    } = req.params;
+    const {
+      filter, pageSize = 10, page = 0, offset = 0 
+    } = req.query;
     const controller = new ArticleController();
     let response: { count: number; rows: ArticleAttr[] } | ArticleAttributes = {
       count: 0,

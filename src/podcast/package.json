@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node ./index.ts"
+    "test": "ts-node ./index.ts",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "keywords": [],
   "author": "",

@@ -6,13 +6,13 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/web-ci.yaml"
-      - "Dockerfile.web"
-      - "k8s/web-deploy.yaml"
-      - "src/web/package.json"
-      - "src/web/public/**"
-      - "src/web/src/**"
-      - "src/server/api/**"
+      - '.github/workflows/web-ci.yaml'
+      - 'Dockerfile.web'
+      - 'k8s/web-deploy.yaml'
+      - 'src/web/package.json'
+      - 'src/web/public/**'
+      - 'src/web/src/**'
+      - 'src/server/api/**'
 
 concurrency:
   group: ${{ github.ref }}-web
@@ -30,6 +30,7 @@ jobs:
     env:
       API_ENDPOINT: ${{ vars.API_ENDPOINT }}
       GENERATE_SOURCEMAP: ${{ vars.GENERATE_SOURCEMAP }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
     steps:
       - name: Print Job Description
         run: |
@@ -43,7 +44,8 @@ jobs:
         run: |
           docker build . --file Dockerfile.web --tag $IMAGE:latest \
             --build-arg API_ENDPOINT=$API_ENDPOINT \
-            --build-arg GENERATE_SOURCEMAP=$GENERATE_SOURCEMAP
+            --build-arg GENERATE_SOURCEMAP=$GENERATE_SOURCEMAP \
+            --build-arg GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:

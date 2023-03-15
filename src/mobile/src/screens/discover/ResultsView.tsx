@@ -1,30 +1,30 @@
-import React from "react";
-import { SearchBar } from "react-native-elements";
-import axios from "axios";
-import { Button, useColorScheme } from "react-native";
-import { RouteProp } from "@react-navigation/native";
-import { API_BASE_URL } from "@env";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React from 'react';
+import { SearchBar } from 'react-native-elements';
+import axios from 'axios';
+import { Button, useColorScheme } from 'react-native';
+import { RouteProp } from '@react-navigation/native';
+import { API_BASE_URL } from '@env';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { SourceWithOutletAttr } from "../../api/Api";
-import FlexView from "../../components/common/FlexView";
-import Post from "../../components/post/Post";
-import SafeScrollView from "../../components/common/SafeScrollView";
-import { useTheme } from "../../components/theme";
-import { ConsumptionMode } from "../../components/post/ConsumptionModeSelector";
-import { RootStackParamList } from "./types";
+import { SourceWithOutletAttr } from '../../api/Api';
+import FlexView from '../../components/common/FlexView';
+import Post from '../../components/post/Post';
+import SafeScrollView from '../../components/common/SafeScrollView';
+import { useTheme } from '../../components/theme';
+import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
+import { RootStackParamList } from './types';
 
 type Props = {
-  route: RouteProp<RootStackParamList, "Home">;
-  navigation: NativeStackNavigationProp<RootStackParamList, "Home">;
+  route: RouteProp<RootStackParamList, 'Home'>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
 export default function ResultsView({ navigation }: Props) {
-  const isLightMode = useColorScheme() === "light";
+  const isLightMode = useColorScheme() === 'light';
   const theme = useTheme({
     searchBar: {
       marginBottom: 10,
-      background: isLightMode ? "#fff" : "#8B0000",
+      background: isLightMode ? '#fff' : '#8B0000',
     },
   });
 
@@ -36,7 +36,7 @@ export default function ResultsView({ navigation }: Props) {
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
-  const [searchText, setSearchText] = React.useState("");
+  const [searchText, setSearchText] = React.useState('');
 
   const [selectedPost, setSelectedPost] = React.useState(-1);
   const [mode, setMode] = React.useState<ConsumptionMode | undefined>();
@@ -87,7 +87,7 @@ export default function ResultsView({ navigation }: Props) {
     (index: number, mode?: ConsumptionMode) => {
       setMode(mode);
       setSelectedPost(mode !== undefined ? index : -1);
-      navigation?.navigate("Post", {
+      navigation?.navigate('Post', {
         source: recentSources[index],
         initialMode: mode,
       });

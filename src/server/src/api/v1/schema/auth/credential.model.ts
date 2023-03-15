@@ -1,10 +1,11 @@
-import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import {
+  Column, DataType, Model, Table 
+} from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
-import { User } from '../user/user.model';
 
 export type CredentialAttributes = DatedAttributes & {
-  userId: number;
+  userId: number; 
   type: string;
   value: string;
   expiresOn: Date;
@@ -36,7 +37,6 @@ export class Credential<
     return defaults ?? {};
   }
 
-  @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -55,12 +55,6 @@ export class Credential<
   })
     value: string;
 
-  @Column({
-    type: DataType.DATE,
-  })
+  @Column({ type: DataType.DATE, })
     expiresOn: Date;
-    
-  get user() {
-    return User.findByPk(this.userId);
-  }
 }

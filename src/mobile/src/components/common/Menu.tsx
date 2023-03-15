@@ -1,15 +1,15 @@
-import { Divider } from "react-native-elements";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import React from "react";
+import { Divider } from 'react-native-elements';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from 'react';
 import {
   MenuOptions,
   MenuTrigger,
   Menu as ReactNativeMenu,
   MenuProps as ReactNativeMenuProps,
-} from "react-native-popup-menu";
-import { Pressable, Text } from "react-native";
+} from 'react-native-popup-menu';
+import { Pressable, Text } from 'react-native';
 
-import { useTheme } from "../theme";
+import { useTheme } from '../theme';
 
 export type MenuOption = {
   icon?: React.ReactNode;
@@ -19,7 +19,7 @@ export type MenuOption = {
 
 export type MenuProps<T extends MenuOption> = Omit<
   ReactNativeMenuProps,
-  "children"
+  'children'
 > & {
   icon?: React.ReactNode;
   iconSize?: number;
@@ -38,7 +38,7 @@ export default function Menu<T extends MenuOption>({
   return (
     <ReactNativeMenu {...props}>
       <MenuTrigger style={theme.components.button}>
-        {typeof icon === "string" ? (
+        {typeof icon === 'string' ? (
           <MaterialCommunityIcons
             name={icon}
             size={iconSize}
@@ -56,7 +56,7 @@ export default function Menu<T extends MenuOption>({
         {options?.map((option, i) => (
           <React.Fragment key={option.label}>
             <Pressable onPress={option.onPress} style={theme.components.button}>
-              {option.icon && typeof option.icon === "string" ? (
+              {option.icon && typeof option.icon === 'string' ? (
                 <MaterialCommunityIcons
                   name={option.icon}
                   size={iconSize}

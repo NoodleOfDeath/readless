@@ -25,7 +25,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { setUserData } = React.useContext(SessionContext);
 
-  const onSubmit = React.useCallback(
+  const handleLogin = React.useCallback(
     (data: PartialLoginOptions) => {
       API.login(data)
         .then((response) => {
@@ -42,7 +42,7 @@ export default function LoginPage() {
   return (
     <Page title='Login'>
       <StyledStack spacing={2}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <StyledStack spacing={2}>
             <TextField
               label='Email'
@@ -56,7 +56,12 @@ export default function LoginPage() {
             <Button type='submit'>Login</Button>
             <GoogleLogin
               onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
+                handleLogin({
+                  thirdParty: {
+                    name: 'google',
+                    credential: credentialResponse.credential,
+                  }
+                });
               }}
               onError={() => {
                 console.log('Login Failed');

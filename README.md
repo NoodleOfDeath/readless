@@ -19,23 +19,27 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 - [x] Automated summarization of news articles in various consumption lengths
 - [x] Basic MVP of web and mobile UI that can fetch results and view different length summaries
-- [ ] Add newsletter on web app for users to receive email progress updates
+- [x] Add newsletter on web app for users to receive email progress updates
 
 ### v1.1.0
 
-- [ ] Onboarding carousel
+- [ ] Onboarding carousel for mobile app
+- [ ] Onboarding guide for web app
 - [ ] Basic settings/preferences
 - [ ] Minor UI touch ups
 - [ ] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
 
 ### v1.2.0
 
-- [ ] User account registration/login
+- [ ] User account registration/login + third-party login support
 - [ ] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
 ### v1.3.0
 
 - [ ] Add support for interactions such as likes, dislikes, shares, reposts, and following other users
+- [ ] Add support for users to provide feedback about articles
+- [ ] Add support for users to flag articles as false, low-quality, etc.
+- [ ] Bounty/training/feedback program will play an important role in the loyalty and beta test programs
 
 ### v1.3.1
 
@@ -68,13 +72,19 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ## Develoment - Getting Started
 
+First add the `bin` directory to your executable `PATH`:
+
+```bash
+theskoop $ export PATH=\$PATH:~/git/noodleofdeath/theskoop/bin
+```
+
 ### Web Client
 
 [See the README](src/web/README.md)
 
 ```bash
 theskoop $ cat src/web/.env-example > src/web/.env
-theskoop $ ./compose.sh web --local
+theskoop $ compose web --local
 ```
 
 ### Server API
@@ -83,7 +93,7 @@ theskoop $ ./compose.sh web --local
 
 ```bash
 theskoop $ cat src/server/.env-example > src/server/.env
-theskoop $ ./compose.sh api --local
+theskoop $ compose api --local
 ```
 
 ### Server Cron
@@ -92,7 +102,7 @@ theskoop $ ./compose.sh api --local
 
 ```bash
 theskoop $ cat src/server/.env-example > src/server/.env
-theskoop $ ./compose.sh cron --local
+theskoop $ compose cron --local
 ```
 
 ### Server Worker
@@ -101,7 +111,7 @@ theskoop $ ./compose.sh cron --local
 
 ```bash
 theskoop $ cat src/server/.env-example > src/server/.env
-theskoop $ ./compose.sh worker --local
+theskoop $ compose worker --local
 ```
 
 ## Contribution

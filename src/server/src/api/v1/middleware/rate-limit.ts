@@ -21,7 +21,9 @@ export const DEFAULT_MAX = 120;
 
 function parseRateLimitString(limit: RateLimitString): Partial<RateLimitOptions> {
   const [max, interval] = limit.split(/\s*(?:every|in|per|\/)\s*/);
-  const [_, window, unit] = /(\d+)\s*(ms|milliseconds?|s|secs?|seconds?|m|mins?|minutes?|hr?|hrs?|hours?|d|days?)/.exec(interval) || [];
+  const [_,
+    window,
+    unit] = /(\d+)\s*(ms|milliseconds?|s|secs?|seconds?|m|mins?|minutes?|hr?|hrs?|hours?|d|days?)/.exec(interval) || [];
   const rate: RateLimit = [
     Number.parseInt(max),
     Number.parseInt(window) *
@@ -37,9 +39,7 @@ function parseRateLimitString(limit: RateLimitString): Partial<RateLimitOptions>
               ? 1000 * 60 * 60 * 24
               : 1),
   ];
-  return {
-    rate,
-  };
+  return { rate, };
 }
 
 export const rateLimit = (
@@ -55,9 +55,7 @@ export const rateLimit = (
     legacyHeaders = false,
     prefix = `${Date.now()}.${Math.random().toString(32)}`,
     handler = (_, response, __, options) => {
-      response.status(options.statusCode).json({
-        message: 'too many requests',
-      });
+      response.status(options.statusCode).json({ message: 'too many requests', });
     },
   } = options;
   return RateLimitMiddleware({

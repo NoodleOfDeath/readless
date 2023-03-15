@@ -15,9 +15,8 @@ export type Preferences = {
 };
 
 export type UserData = {
-  id: number;
+  userId: number;
   jwt: string;
-  tokens?: string[];
 }
 
 export type SetSearchTextOptions = {

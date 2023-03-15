@@ -1,7 +1,8 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import {
+  Column, DataType, Model, Table 
+} from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
-import { RolePermission } from './role_permission.model';
 
 export type RoleAttributes = DatedAttributes & {
   name: string;
@@ -33,12 +34,5 @@ export class Role<A extends RoleAttributes = RoleAttributes, B extends RoleCreat
     allowNull: false,
   })
     name: string;
-    
-  @HasMany(() => RolePermission, 'roleId')
-    _permissions: RolePermission[];
-    
-  async permissions() {
-    return await this._permissions.map((p) => p.permission);
-  }
   
 }

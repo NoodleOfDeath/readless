@@ -1,13 +1,13 @@
-import React from "react";
-import { Pressable } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React from 'react';
+import { Pressable } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { useTheme } from "../components/theme";
-import AudioScreen from "./audio/AudioScreen";
-import DiscoverScreen from "./discover/DiscoverScreen";
-import NotificationsScreen from "./notifications/NotificationsScreen";
-import ProfileScreen from "./profile/ProfileScreen";
-import SkoopScreen from "./skoop/SkoopScreen";
+import { useTheme } from '../components/theme';
+import AudioScreen from './audio/AudioScreen';
+import DiscoverScreen from './discover/DiscoverScreen';
+import NotificationsScreen from './notifications/NotificationsScreen';
+import ProfileScreen from './profile/ProfileScreen';
+import SkoopScreen from './skoop/SkoopScreen';
 
 type ScreenProps = {
   name: string;
@@ -24,29 +24,29 @@ type ScreenProps = {
 
 export const SCREENS: ScreenProps[] = [
   {
-    name: "Discover",
+    name: 'Discover',
     component: DiscoverScreen,
-    icon: "fire",
+    icon: 'fire',
   },
   {
-    name: "Skoop+",
+    name: 'Skoop+',
     component: SkoopScreen,
-    icon: "silverware-spoon",
+    icon: 'silverware-spoon',
   },
   {
-    name: "Audio",
+    name: 'Audio',
     component: AudioScreen,
-    icon: "headphones",
+    icon: 'headphones',
   },
   {
-    name: "Notifications",
+    name: 'Notifications',
     component: NotificationsScreen,
-    icon: "bell",
+    icon: 'bell',
   },
   {
-    name: "Profile",
+    name: 'Profile',
     component: ProfileScreen,
-    icon: "account",
+    icon: 'account',
     headerRight: () => {
       const theme = useTheme();
       return (

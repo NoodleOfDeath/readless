@@ -2,13 +2,12 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 
 import { ReferralController } from '../../controllers';
-import { logRequest, validate } from '../../middleware';
+import { validate } from '../../middleware';
 
 const router = Router();
 
 router.post(
   '/',
-  logRequest,
   body('referrer').isString(),
   body('target').isString(),
   body('userAgent').isString(),
@@ -17,7 +16,9 @@ router.post(
   body('geolocation').isString().optional(),
   validate,
   async (req, res) => {
-    const { referredById, origin, target, userAgent, geolocation } = req.body;
+    const {
+      referredById, origin, target, userAgent, geolocation 
+    } = req.body;
     try {
       await new ReferralController().recordReferral({
         referredById,

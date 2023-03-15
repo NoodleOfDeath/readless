@@ -1,5 +1,7 @@
 import 'dotenv/config';
-import { describe, expect, jest, test } from '@jest/globals';
+import {
+  describe, expect, jest, test 
+} from '@jest/globals';
 
 import { SpiderService } from '../src/services/spider';
 

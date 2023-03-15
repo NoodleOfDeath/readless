@@ -2,19 +2,20 @@ import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
 import { NewsletterController } from '../../controllers';
-import { logRequest, validate } from '../../middleware';
+import { validate } from '../../middleware';
 
 const router = Router();
 
 router.post(
   '/subscribe',
-  logRequest,
   body('aliasType').isString(),
   body('alias').isString(),
   oneOf([body('newsletterId').isNumeric(), body('newsletterName').isString()]),
   validate,
   async (req, res) => {
-    const { aliasType, alias, newsletterId, newsletterName } = req.body;
+    const {
+      aliasType, alias, newsletterId, newsletterName 
+    } = req.body;
     try {
       await new NewsletterController().subscribeToNewsletter({
         aliasType,
@@ -32,13 +33,14 @@ router.post(
 
 router.post(
   '/unsubscribe',
-  logRequest,
   body('aliasType').isString(),
   body('alias').isString(),
   oneOf([body('newsletterId').isNumeric(), body('newsletterName').isString()]),
   validate,
   async (req, res) => {
-    const { aliasType, alias, newsletterId, newsletterName } = req.body;
+    const {
+      aliasType, alias, newsletterId, newsletterName 
+    } = req.body;
     try {
       await new NewsletterController().unsubscribeFromNewsletter({
         aliasType,

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { Request } from '../schema';
+import { Request } from '../schema/models';
 
 export const logRequest: RequestHandler = async (req, res, next) => {
   try {

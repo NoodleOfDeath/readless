@@ -1,4 +1,6 @@
-import { BaseJobOptions, Worker as BullMQWorker, Job, Queue, QueueOptions, WorkerOptions } from 'bullmq';
+import {
+  BaseJobOptions, Worker as BullMQWorker, Job, Queue, QueueOptions, WorkerOptions 
+} from 'bullmq';
 import IORedis, { RedisOptions } from 'ioredis';
 
 import { BaseService } from '../base';
@@ -19,9 +21,7 @@ export class QueueProps<DataType = {}, ReturnType = {}, NameType extends string 
 
 export type SiteMapJobData = { id: number; name: string; url: string; force?: boolean };
 
-export const QUEUES = {
-  siteMaps: new QueueProps<SiteMapJobData>('siteMaps'),
-} as const;
+export const QUEUES = { siteMaps: new QueueProps<SiteMapJobData>('siteMaps'), } as const;
 
 export type QueueServiceOptions = QueueOptions & {
   client: IORedis;
@@ -34,9 +34,7 @@ export const redisClient = (
 ) =>
   new IORedis(connectionString, {
     maxRetriesPerRequest,
-    tls: {
-      rejectUnauthorized: false,
-    },
+    tls: { rejectUnauthorized: false, },
     ...opts,
   });
 
@@ -89,9 +87,7 @@ export class Worker<DataType, ReturnType, NameType extends string = string> exte
   queueProps: QueueProps<DataType, ReturnType, NameType>;
 
   get queue() {
-    return new Queue<DataType, ReturnType, NameType>(this.queueProps.name, {
-      connection: redisClient(),
-    });
+    return new Queue<DataType, ReturnType, NameType>(this.queueProps.name, { connection: redisClient(), });
   }
 
   constructor(
