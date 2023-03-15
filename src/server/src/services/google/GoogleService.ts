@@ -1,7 +1,4 @@
-import { google } from 'googleapis';
-import {
-  Credentials, LoginTicket, OAuth2Client, 
-} from 'google-auth-library';
+import { OAuth2Client } from 'google-auth-library';
 
 import { BaseService } from '../base';
 
@@ -28,26 +25,10 @@ export class GoogleService extends BaseService {
   }
   
   async verify(accessToken: string) {
-
     return await this.client.verifyIdToken({
       idToken: accessToken,
       audience: this.clientId,
     });
-  }
-  
-  async getProfile(ticket: LoginTicket, credentials: Credentials) {
-    // Get the user's Google ID
-    const userId = ticket.getPayload().sub;
-    console.log(ticket.getAttributes());
-    console.log(ticket.getPayload());
-    console.log(ticket.getEnvelope());
-    // Set the credentials to the client
-    this.client.setCredentials(credentials);
-    // Get the Gmail API instance
-    const gmail = google.gmail({ version: 'v1', auth: this.client });
-    // Get the user's email
-    const profile = await gmail.users.getProfile({ userId });
-    return profile.data;
   }
 
 }

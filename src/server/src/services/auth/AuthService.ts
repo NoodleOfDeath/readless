@@ -43,11 +43,12 @@ export class AuthService extends BaseService {
       if (alias.payload.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(alias.payload.credential);
-        const email = (
-          await google.getProfile(ticket, { access_token: alias.payload.credential })
-        ).emailAddress;
+        const { email, email_verified: emailVerified } = ticket.getPayload();
         if (!email) {
           throw new AuthError('Google account does not have an email address');
+        }
+        if (!emailVerified) {
+          throw new AuthError('Google account email is not verified');
         }
         return await this.resolveAlias({
           type: 'email',
@@ -95,11 +96,14 @@ export class AuthService extends BaseService {
   }
 
   public async login({
+    // alias options
     email,
     eth2Address,
     username,
     thirdParty,
+    // credential options
     password,
+    eth2SignedMessage,
   }: Partial<LoginOptions>): Promise<LoginResponse> {
     const aliases = {
       email,
@@ -113,6 +117,12 @@ export class AuthService extends BaseService {
       console.log(web3);
     } else if (alias.type === 'thirdParty') {
       // auth by thirdParty
+      await Credential.upsert(
+        {
+          userId: user.id,
+          value: thirdParty.credential,
+        },
+      );
     } else {
       // auth by password
       const credential = (
@@ -164,36 +174,31 @@ export class AuthService extends BaseService {
     if (user) {
       throw new AuthError('User already exists');
     }
+    let newAliasType: AliasType;
     let newAliasValue: string;
     if (typeof alias.payload !== 'string') {
       if (alias.payload.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(alias.payload.credential);
-        const email = (
-          await google.getProfile(ticket, { access_token: alias.payload.credential })
-        ).emailAddress;
+        const { email, email_verified: emailVerified } = ticket.getPayload();
         if (!email) {
           throw new AuthError('Google account does not have an email address');
         }
-        const user = (
-          await this.resolveUserByAlias({
-            type: 'email',
-            payload: email,
-          })
-        )?.toJSON();
-        if (user) {
-          throw new AuthError('User already exists');
+        if (!emailVerified) {
+          throw new AuthError('Google account email is not verified');
         }
+        newAliasType = 'email';
         newAliasValue = email;
       }
     } else {
+      newAliasType = alias.type;
       newAliasValue = alias.payload;
     }
     const newUser = new User();
     await newUser.save();
     const newAlias = new UserAlias({
       userId: newUser.id,
-      type: alias.type,
+      type: newAliasType,
       value: newAliasValue,
     });
     await newAlias.save();
