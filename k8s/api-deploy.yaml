@@ -32,6 +32,8 @@ spec:
               value: '$GOOGLE_CLIENT_ID'
             - name: GOOGLE_CLIENT_SECRET
               value: '$GOOGLE_CLIENT_SECRET'
+            - name: JWT_SECRET
+              value: '$JWT_SECRET'
             - name: OPENAI_API_KEY
               value: '$OPENAI_API_KEY'
             - name: PG_CONNECTION_STRING
