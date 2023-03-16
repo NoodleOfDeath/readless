@@ -26,7 +26,7 @@ router.post(
       res.status(200).send('OK');
     } catch (e) {
       console.error(e);
-      res.status(500).send('Internal Server Error');
+      res.status(500).json({ message: 'Internal Server Error' });
     }
   },
 );

@@ -7,7 +7,7 @@ export * from './interactions/referral.model';
 
 // user models
 export * from './user/user.model';
-export * from './user/user_alias.model';
+export * from './user/alias.model';
 export * from './user/user_metadata.model';
 export * from './user/ref_user_role.model';
 //export * from './membership.model';

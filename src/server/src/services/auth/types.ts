@@ -38,15 +38,24 @@ export type RegistrationOptions = AliasOptions & CredentialOptions & {
 };
 
 export type RegistrationResponse = {
-  userId: string;
-};
+  userId: number;
+  jwt?: string;
+}
 
 export type LoginOptions = AliasOptions & CredentialOptions;
 
 export type LoginResponse = {
   userId: number;
   jwt: string;
-};
+}
+
+export type LogoutOptions = CredentialOptions & {
+  userId: number; 
+}
+
+export type LogoutResponse = {
+  success: boolean;
+}
 
 export type AuthenticationOptions = LoginOptions & {
   jwt: string;
@@ -54,6 +63,4 @@ export type AuthenticationOptions = LoginOptions & {
 
 export type AuthenticationResponse = {
   userId: number;
-};
-
-export class AuthError extends Error {}
+}

@@ -14,7 +14,7 @@ router.get(
       res.json(features);
     } catch(e) {
       console.error(e);
-      res.status(500).send('Internal Server Error');
+      res.status(500).json({ message: 'Internal Server Error' });
     }
   },
 );
@@ -30,7 +30,7 @@ router.get(
       res.json(feature);
     } catch (e) {
       console.error(e);
-      res.status(500).send('Internal Server Error');
+      res.status(500).json({ message: 'Internal Server Error' });
     }
   },
 );

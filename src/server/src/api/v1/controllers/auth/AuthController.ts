@@ -1,8 +1,11 @@
 import {
-  Body, Post, Route, Tags, 
+  Body, Post, Response, Route, Tags, 
 } from 'tsoa';
 
-import { AuthService } from '../../../../services';
+import { AuthError, AuthService } from '../../../../services';
+import {
+  AuthenticationOptions, AuthenticationResponse, LogoutResponse, 
+} from './../../../../services/auth/types';
 import {
   LoginOptions, LoginResponse, RegistrationOptions, RegistrationResponse,
 } from '../../../../services/types';
@@ -12,17 +15,33 @@ import {
 export class AuthController {
 
   @Post('/login')
+  @Response<AuthError>(401, 'Unauthorized')
   public async login(@Body() body: Partial<LoginOptions>): Promise<LoginResponse> {
-    const response = await new AuthService().login(body);
-    return response;
+    return await new AuthService().login(body);
   }
 
   @Post('/register')
+  @Response<AuthError>(401, 'Unauthorized')
   public async register(
     @Body() body: Partial<RegistrationOptions>,
   ): Promise<RegistrationResponse> {
-    const response = await new AuthService().register(body);
-    return response;
+    return await new AuthService().register(body);
+  }
+
+  @Post('/logout')
+  @Response<AuthError>(401, 'Unauthorized')
+  public async logout(
+    @Body() body: Partial<LoginOptions>,
+  ): Promise<LogoutResponse> {
+    return await new AuthService().logout(body);
+  }
+
+  @Post('/authenticate')
+  @Response<AuthError>(401, 'Unauthorized')
+  public async authenticate(
+    @Body() body: Partial<AuthenticationOptions>,
+  ): Promise<AuthenticationResponse> {
+    return await new AuthService().authenticate(body);
   }
 
 }

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
 import { AuthController } from '../../controllers';
-import { AuthError } from './../../../../services/types';
+import { AuthError } from './../../../../services';
 import { validate } from '../../middleware';
 
 const router = Router();
@@ -26,10 +26,10 @@ router.post(
       res.json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).send(e.message);
+        res.status(401).json(e);
       } else {
         console.log(e);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ message: 'Internal Server Error' });
       }
     }
   },
@@ -53,8 +53,12 @@ router.post(
       const response = await new AuthController().register(req.body);
       res.status(201).json(response);
     } catch (e) {
-      console.log(e);
-      res.status(500).send('Internal Server Error');
+      if (e instanceof AuthError) {
+        res.status(401).json(e);
+      } else {
+        console.log(e);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
   },
 );

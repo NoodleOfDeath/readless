@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Link,
@@ -10,8 +11,9 @@ import {
 } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
 
-import API, { PartialRegistrationOptions, ThirdParty } from '@/api';
+import API, { AuthError, PartialRegistrationOptions, ThirdParty } from '@/api';
 import Page from '@/components/layout/Page';
+import { SessionContext } from '@/contexts';
 
 const StyledStack = styled(Stack)`
   align-content: center;
@@ -19,19 +21,32 @@ const StyledStack = styled(Stack)`
 `;
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
+  const [error, setError] = React.useState<AuthError|undefined>();
+  const { setUserData } = React.useContext(SessionContext);
 
   const handleRegistration = React.useCallback(
     (data: PartialRegistrationOptions) => {
       API.register(data)
-        .then((response) => {
-          console.log(response);
+        .then(({ data, error }) => {
+          if (error) {
+            setError(error);
+            return;
+          }
+          if (data.jwt) {
+            setUserData({
+              userId: data.userId,
+              jwt: data.jwt,
+            });
+            navigate('/profile')
+          }
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    [],
+    [ navigate, setUserData],
   );
 
   return (
@@ -48,6 +63,11 @@ export default function RegisterPage() {
               {...register('password')}
               label='Password'
             />
+            {error && (
+              <Typography variant='body2' color='error'>
+                {error.message}
+              </Typography>
+            )}
             <Button type='submit'>Register</Button>
             <GoogleLogin
               onSuccess={(credentialResponse) => {

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
 
-import API, { PartialLoginOptions, ThirdParty } from '@/api';
+import API, { AuthError, PartialLoginOptions, ThirdParty } from '@/api';
 import { SessionContext } from '@/contexts';
 import Page from '@/components/layout/Page';
 
@@ -21,15 +21,20 @@ const StyledStack = styled(Stack)`
 `;
 
 export default function LoginPage() {
-  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
   const { setUserData } = React.useContext(SessionContext);
+  const [error, setError] = React.useState<AuthError | undefined>(undefined);
 
   const handleLogin = React.useCallback(
     (data: PartialLoginOptions) => {
       API.login(data)
-        .then((response) => {
-          setUserData(response.data);
+        .then(({data, error}) => {
+          if (error) {
+            setError(error);
+            return;
+          }
+          setUserData(data);
           navigate('/profile');
         })
         .catch((error) => {
@@ -53,6 +58,11 @@ export default function LoginPage() {
               label='Password'
               {...register('password')}
             />
+            {error && (
+              <Typography variant='body2' color='error'>
+                {error.message}
+              </Typography>
+            )}
             <Button type='submit'>Login</Button>
             <GoogleLogin
               onSuccess={(credentialResponse) => {

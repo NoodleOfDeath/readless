@@ -4,14 +4,15 @@ import ms from 'ms';
 import web3 from 'web3';
 
 import { AliasType } from '../../api/v1/schema/types';
+import { AuthError } from './AuthError';
 import { BaseService } from '../base';
 import { GoogleService } from '../google';
 import {
-  AliasOptions, AliasTicket, AuthError, AuthenticationOptions, AuthenticationResponse, LoginOptions, LoginResponse, RegistrationOptions, 
-} from './types';
-import {
-  Credential, User, UserAlias, 
+  Alias, Credential,  User, 
 } from '../../api/v1/schema/models';
+import {
+  AliasOptions, AliasTicket, AuthenticationOptions, AuthenticationResponse, LoginOptions, LoginResponse, LogoutOptions, LogoutResponse, RegistrationOptions, RegistrationResponse,
+} from './types';
 
 const JWT_TOKEN_LIFETIME = '1d';
 
@@ -38,17 +39,17 @@ export class AuthService extends BaseService {
 
   public async resolveAlias<T extends AliasType>(
     alias: AliasTicket<T>, 
-  ): Promise<UserAlias> {
+  ): Promise<Alias> {
     if (typeof alias.payload !== 'string') {
       if (alias.payload.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(alias.payload.credential);
         const { email, email_verified: emailVerified } = ticket.getPayload();
         if (!email) {
-          throw new AuthError('Google account does not have an email address');
+          throw new AuthError('NO_THIRD_PARTY_ALIAS');
         }
         if (!emailVerified) {
-          throw new AuthError('Google account email is not verified');
+          throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
         }
         return await this.resolveAlias({
           type: 'email',
@@ -56,7 +57,7 @@ export class AuthService extends BaseService {
         });
       }
     } else {
-      return await UserAlias.findOne({
+      return await Alias.findOne({
         where: {
           type: alias.type,
           value: alias.payload,
@@ -66,7 +67,8 @@ export class AuthService extends BaseService {
   }
 
   public async resolveUserByAlias<T extends AliasType>(
-    alias: AliasTicket<T> | UserAlias,
+    alias: AliasTicket<T> | Alias,
+    throwIfNotFound = true,
   ) {
     const userAlias =
       alias instanceof AliasTicket
@@ -75,43 +77,30 @@ export class AuthService extends BaseService {
     if (userAlias) {
       return await User.findOne({ where: { id: userAlias.userId } });
     }
-    throw new AuthError('Unable to find a user with the specified payload');
+    if (throwIfNotFound) {
+      throw new AuthError('UNKNOWN_ALIAS');
+    }
   }
 
-  public async resolveUser(opts: Partial<AliasOptions>) {
+  public async resolveUser(opts: Partial<AliasOptions>, throwIfNotFound = true) {
     const alias = this.parseAlias(opts);
-    const user = await this.resolveUserByAlias(alias);
+    const user = await this.resolveUserByAlias(alias, throwIfNotFound);
     return {
       alias,
       user,
     };
   }
 
-  public async resolveUserAsJson(opts: Partial<AliasOptions>) {
-    const { alias, user } = await this.resolveUser(opts);
+  public async resolveUserAsJson(opts: Partial<AliasOptions>, throwIfNotFound = true) {
+    const { alias, user } = await this.resolveUser(opts, throwIfNotFound);
     return {
       alias,
       user: user?.toJSON(),
     };
   }
 
-  public async login({
-    // alias options
-    email,
-    eth2Address,
-    username,
-    thirdParty,
-    // credential options
-    password,
-    eth2SignedMessage,
-  }: Partial<LoginOptions>): Promise<LoginResponse> {
-    const aliases = {
-      email,
-      eth2Address,
-      username,
-      thirdParty,
-    };
-    const { alias, user } = (await this.resolveUserAsJson(aliases));
+  public async login(opts: Partial<LoginOptions>): Promise<LoginResponse> {
+    const { alias, user } = (await this.resolveUserAsJson(opts));
     if (alias.type === 'eth2Address') {
       // auth by eth2Address
       console.log(web3);
@@ -120,7 +109,8 @@ export class AuthService extends BaseService {
       await Credential.upsert(
         {
           userId: user.id,
-          value: thirdParty.credential,
+          type: [alias.type, opts.thirdParty?.name].join('/'),
+          value: opts.thirdParty?.credential,
         },
       );
     } else {
@@ -134,12 +124,10 @@ export class AuthService extends BaseService {
         })
       )?.toJSON();
       if (!credential) {
-        throw new AuthError(
-          'User does not have a password set. Please use a third party login method or request OTP.',
-        );
+        throw new AuthError('MISSING_PASSWORD');
       }
-      if (!bcrypt.compareSync(password, credential.value)) {
-        throw new AuthError('Password is incorrect');
+      if (!bcrypt.compareSync(opts.password, credential.value)) {
+        throw new AuthError('INVALID_CREDENTIALS');
       }
     }
     // user is authenticated, generate JWT
@@ -157,38 +145,28 @@ export class AuthService extends BaseService {
     };
   }
 
-  public async register({
-    email,
-    eth2Address,
-    username,
-    thirdParty,
-    password,
-  }: Partial<RegistrationOptions>) {
-    const alias = this.parseAlias({
-      email,
-      eth2Address,
-      username,
-      thirdParty,
-    });
-    const user = (await this.resolveUserByAlias(alias))?.toJSON();
+  public async register(opts: Partial<RegistrationOptions>): Promise<RegistrationResponse> {
+    const { alias, user } = (await this.resolveUserAsJson(opts, false));
     if (user) {
-      throw new AuthError('User already exists');
+      throw new AuthError('DUPLICATE_USER');
     }
     let newAliasType: AliasType;
     let newAliasValue: string;
+    let verified = false;
     if (typeof alias.payload !== 'string') {
       if (alias.payload.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(alias.payload.credential);
         const { email, email_verified: emailVerified } = ticket.getPayload();
         if (!email) {
-          throw new AuthError('Google account does not have an email address');
+          throw new AuthError('NO_THIRD_PARTY_ALIAS');
         }
         if (!emailVerified) {
-          throw new AuthError('Google account email is not verified');
+          throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
         }
         newAliasType = 'email';
         newAliasValue = email;
+        verified = true;
       }
     } else {
       newAliasType = alias.type;
@@ -196,45 +174,47 @@ export class AuthService extends BaseService {
     }
     const newUser = new User();
     await newUser.save();
-    const newAlias = new UserAlias({
+    const newAlias = new Alias({
       userId: newUser.id,
       type: newAliasType,
       value: newAliasValue,
+      verifiedOn: verified ? new Date() : undefined,
     });
     await newAlias.save();
-    if (password) {
+    if (opts.password) {
       const newCredential = new Credential({
         userId: newUser.id,
         type: 'password',
-        value: bcrypt.hashSync(password, 10),
+        value: bcrypt.hashSync(opts.password, 10),
       });
       await newCredential.save();
     }
+    if(verified) {
+      return await this.login(opts);
+    };
     return { userId: newUser.id };
   }
 
-  public async authenticate({
-    email,
-    eth2Address,
-    username,
-    password,
-    thirdParty,
-    jwt,
-  }: Partial<AuthenticationOptions>): Promise<AuthenticationResponse> {
+  public async logout({ userId }: Partial<LogoutOptions>): Promise<LogoutResponse> {
+    await Credential.destroy({ where: { userId } });
+    return { success: true };
+  }
+
+  public async authenticate(opts: Partial<AuthenticationOptions>): Promise<AuthenticationResponse> {
     const credential = (
       await Credential.findOne({
         where: {
           type: 'jwt',
-          value: jwt,
+          value: opts.jwt,
         },
       })
     )?.toJSON();
     if (!credential) {
-      throw new AuthError('JWT is invalid');
+      throw new AuthError('INVALID_CREDENTIALS');
     }
     if (new Date() > new Date(credential.expiresOn)) {
       await Credential.destroy({ where: { id: credential.id } });
-      throw new AuthError('JWT has expired');
+      throw new AuthError('EXPIRED_CREDENTIALS');
     }
     return { userId: credential.userId };
   }

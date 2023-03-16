@@ -73,6 +73,44 @@
 				],
 				"type": "object"
 			},
+			"AuthError": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					},
+					"code": {
+						"type": "number",
+						"format": "double"
+					},
+					"errorKey": {
+						"type": "string",
+						"enum": [
+							"DUPLICATE_USER",
+							"EXPIRED_CREDENTIALS",
+							"INVALID_CREDENTIALS",
+							"MISSING_PASSWORD",
+							"NO_THIRD_PARTY_ALIAS",
+							"THIRD_PARTY_ALIAS_NOT_VERIFIED",
+							"UNKNOWN_ALIAS"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"code",
+					"errorKey"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ThirdParty": {
 				"type": "string",
 				"enum": [
@@ -129,8 +167,12 @@
 			},
 			"RegistrationResponse": {
 				"properties": {
-					"userId": {
+					"jwt": {
 						"type": "string"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -169,6 +211,62 @@
 					},
 					"headlessRequest": {
 						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"LogoutResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object"
+			},
+			"AuthenticationResponse": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object"
+			},
+			"Partial_AuthenticationOptions_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2Address": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"otp": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"jwt": {
+						"type": "string"
+					},
+					"eth2SignedMessage": {
+						"type": "string"
 					}
 				},
 				"type": "object",
@@ -718,6 +816,16 @@
 								}
 							}
 						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -750,6 +858,16 @@
 								}
 							}
 						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -763,6 +881,90 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/Partial_RegistrationOptions_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LogoutResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_LoginOptions_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/authenticate": {
+			"post": {
+				"operationId": "Authenticate",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthenticationResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_AuthenticationOptions_"
 							}
 						}
 					}

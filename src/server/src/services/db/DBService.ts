@@ -22,6 +22,7 @@ export class DBService extends BaseService {
       dialect: 'postgres',
       dialectOptions: { ssl: { rejectUnauthorized: false } },
       models,
+      logging: !!process.env.SQL_LOGGING,
     });
     makeAssociations();
   }

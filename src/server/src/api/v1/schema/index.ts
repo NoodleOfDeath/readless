@@ -1,12 +1,12 @@
 
 import {
-  Article, ArticleSource, ArticleTopic, Credential, Media, Newsletter, Outlet, Permission, RefArticleMedia, RefCredentialRole, RefOutletMedia, RefRolePermission, RefSourceMedia, RefSourceTopic, RefTopicMedia, RefUserRole, Role, Source, Subscription, Topic, User, UserAlias, UserMetadata, 
+  Alias, Article, ArticleSource, ArticleTopic, Credential, Media, Newsletter, Outlet, Permission, RefArticleMedia, RefCredentialRole, RefOutletMedia, RefRolePermission, RefSourceMedia, RefSourceTopic, RefTopicMedia, RefUserRole, Role, Source, Subscription, Topic, User, UserMetadata, 
 } from './models';
 
 export function makeAssociations() {
 
   // users
-  User.hasMany(UserAlias, { foreignKey: 'userId' });
+  User.hasMany(Alias, { foreignKey: 'userId' });
   User.hasMany(UserMetadata, { foreignKey: 'userId' });
   // auth
   User.hasMany(RefUserRole, { foreignKey: 'userId' });
