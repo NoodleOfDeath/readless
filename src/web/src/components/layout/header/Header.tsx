@@ -14,51 +14,15 @@ import {
   styled,
 } from "@mui/material";
 import { Icon } from "@mdi/react";
-import { mdiHome, mdiInformation, mdiLogin, mdiMenu, mdiPodcast } from "@mdi/js";
+import { mdiHome, mdiInformation, mdiLogin, mdiLogout, mdiMenu, mdiPodcast } from "@mdi/js";
 
+import { SessionContext } from "@/contexts";
 import Logo from "@/components/Logo";
 import LightDarkModeButtons from "@/components/layout/header/LightDarkModeButtons";
 import { PODCAST_LINKS } from "@/config/PodcastLinks";
 import NavigationItem, {
   NavigationItemProps,
 } from "@/components/layout/header/NavigationItem";
-
-const NAVIGATION_ITEMS: NavigationItemProps[] = [
-  {
-    id: "Home",
-    label: "Home",
-    icon: mdiHome,
-    onClick({ navigate }) {
-      navigate?.("/");
-    },
-  },
-  {
-    id: "Login",
-    label: "Login",
-    icon: mdiLogin,
-    onClick({ navigate }) {
-      navigate?.("/login");
-    },
-  },
-  {
-    id: "About",
-    label: "About",
-    icon: mdiInformation,
-    onClick({ navigate }) {
-      navigate?.("/about");
-    },
-  },
-  {
-    id: "Podcast",
-    label: "Podcast",
-    icon: mdiPodcast,
-    items: PODCAST_LINKS,
-  },
-  {
-    id: "LightDarkModeButtons",
-    content: <LightDarkModeButtons />,
-  },
-];
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   margin: "auto",
@@ -78,7 +42,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export default function Header() {
+
   const navigate = useNavigate();
+  const { userData } = React.useContext(SessionContext);
 
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -126,6 +92,57 @@ export default function Header() {
       },
     [menuRef]
   );
+  
+  const NAVIGATION_ITEMS: NavigationItemProps[] = React.useMemo(() => [
+    {
+      id: "Home",
+      visible: true,
+      label: "Home",
+      icon: mdiHome,
+      onClick({ navigate }) {
+        navigate?.("/");
+      },
+    },
+    {
+      id: "Login",
+      visible: () => !userData?.userId,
+      label: "Login",
+      icon: mdiLogin,
+      onClick({ navigate }) {
+        navigate?.("/login");
+      },
+    },
+    {
+      id: "About",
+      visible: true,
+      label: "About",
+      icon: mdiInformation,
+      onClick({ navigate }) {
+        navigate?.("/about");
+      },
+    },
+    {
+      id: "Podcast",
+      visible: true,
+      label: "Podcast",
+      icon: mdiPodcast,
+      items: PODCAST_LINKS,
+    },
+    {
+      id: "Logout",
+      visible: () => !!userData?.userId,
+      label: "Logout",
+      icon: mdiLogout,
+      onClick({ navigate }) {
+        navigate?.("/logout");
+      },
+    },
+    {
+      id: "LightDarkModeButtons",
+      visible: true,
+      content: <LightDarkModeButtons />,
+    },
+  ], [userData]);
 
   return (
     <AppBar position="sticky">
@@ -162,7 +179,7 @@ export default function Header() {
             ref={menuRef}
           >
             <List>
-              {NAVIGATION_ITEMS.map((item, i) => (
+              {NAVIGATION_ITEMS.filter((item) => item.visible instanceof Function ? item.visible() : item.visible).map((item, i) => (
                 <React.Fragment key={item.id}>
                   <NavigationItem {...item} />
                   {i < NAVIGATION_ITEMS.length - 1 && (

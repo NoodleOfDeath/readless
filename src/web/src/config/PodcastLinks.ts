@@ -5,6 +5,7 @@ import { NavigationItemProps } from "@/components/layout/header/NavigationItem";
 export const PODCAST_LINKS: NavigationItemProps[] = [
   {
     id: "apple-podcast",
+    visible: true,
     label: "Apple Podcasts",
     icon: mdiApple,
     onClick: () =>
@@ -15,6 +16,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
   },
   {
     id: "amazon-music",
+    visible: true,
     label: "Amazon Music",
     icon: mdiAws,
     onClick: () =>
@@ -25,6 +27,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
   },
   {
     id: "spotify",
+    visible: true,
     label: "Spotify",
     icon: mdiSpotify,
     onClick: () =>
@@ -35,6 +38,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
   },
   {
     id: "iheart",
+    visible: true,
     label: "iHeartRadio",
     icon: iheart,
     onClick: () =>

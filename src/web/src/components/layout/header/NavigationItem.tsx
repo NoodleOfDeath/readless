@@ -5,6 +5,7 @@ import { NavigateFunction, useNavigate } from "react-router-dom";
 
 export type NavigationItemProps = {
   id: string;
+  visible?: boolean| (() => boolean);
   label?: string;
   icon?: string;
   content?: React.ReactNode;
@@ -29,6 +30,8 @@ export default function NavigationItem({
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
+  
+  const filteredItems = React.useMemo(() => items?.filter((item) => item.visible instanceof Function ? item.visible() : item.visible), [items]);
 
   const handleClose = React.useCallback(() => {
     setAnchorEl(null);
@@ -43,7 +46,7 @@ export default function NavigationItem({
 
   return (
     <MenuItem>
-      {(onClick || (items && items.length > 0)) && (
+      {(onClick || (filteredItems && filteredItems.length > 0)) && (
         <StyledMenuItemButton
           onClick={handleClick}
           startIcon={icon && <Icon path={icon} size={1} />}
@@ -52,7 +55,7 @@ export default function NavigationItem({
         </StyledMenuItemButton>
       )}
       {content && <>{content}</>}
-      {items && items.length > 0 && (
+      {filteredItems && filteredItems.length > 0 && (
         <Menu
           anchorEl={anchorEl}
           open={open}
@@ -69,7 +72,7 @@ export default function NavigationItem({
             horizontal: "right",
           }}
         >
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <MenuItem key={item.id}>
               <StyledMenuItemButton
                 onClick={() => item.onClick?.({ navigate })}

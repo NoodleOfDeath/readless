@@ -190,12 +190,19 @@ export function SessionContextProvider({ children }: Props) {
       .catch(console.error);
     // if path is not enabled redirect to home
     switch (location.pathname) {
+    case '/logout':
+      API.logout({...userData})
+      .then(() => {
+        setUserData(undefined);
+        navigate('/');
+      }).catch(console.error);
+      break;
     case '/search':
       if (!pathIsEnabled(location.pathname)) {
         navigate('/');
       }
     }
-  }, [pathIsEnabled, location, navigate]);
+  }, [pathIsEnabled, location, navigate, userData]);
 
   return (
     <SessionContext.Provider
