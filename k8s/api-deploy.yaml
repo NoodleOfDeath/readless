@@ -34,6 +34,14 @@ spec:
               value: '$GOOGLE_CLIENT_SECRET'
             - name: JWT_SECRET
               value: '$JWT_SECRET'
+            - name: MAIL_HOST
+              value: '$MAIL_HOST'
+            - name: MAIL_PASS
+              value: '$MAIL_PASS'
+            - name: MAIL_PORT
+              value: '$MAIL_PORT'
+            - name: 'MAIL_USER'
+              value: '$MAIL_USER'
             - name: OPENAI_API_KEY
               value: '$OPENAI_API_KEY'
             - name: PG_CONNECTION_STRING
