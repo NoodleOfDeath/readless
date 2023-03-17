@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ReactMarkdown from 'react-markdown';
+import { Card, CardContent } from '@mui/material';
 
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
@@ -10,7 +10,14 @@ export default function ProfilePage() {
 
   return (
     <Page left title="Profile">
-      <ReactMarkdown>{String(userData?.userId)}</ReactMarkdown>
+      <Card>
+        <CardContent>
+          <h4>Profile</h4>
+          User Id: 
+          {' '}
+          {String(userData?.userId)}
+        </CardContent>
+      </Card>
     </Page>
   );
 }

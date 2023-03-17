@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  mdiAccount,
   mdiHome,
   mdiInformation,
   mdiLogin,
@@ -118,7 +119,7 @@ export default function Header() {
     },
     {
       id: 'About',
-      visible: true,
+      visible: () => !userData?.userId,
       label: 'About',
       icon: mdiInformation,
       onClick({ navigate }) {
@@ -127,10 +128,19 @@ export default function Header() {
     },
     {
       id: 'Podcast',
-      visible: true,
+      visible: () => !userData?.userId,
       label: 'Podcast',
       icon: mdiPodcast,
       items: PODCAST_LINKS,
+    },
+    {
+      id: 'Profile',
+      visible: () => !!userData?.userId,
+      label: 'Profile',
+      icon: mdiAccount,
+      onClick({ navigate }) {
+        navigate?.('/profile');
+      },
     },
     {
       id: 'Logout',

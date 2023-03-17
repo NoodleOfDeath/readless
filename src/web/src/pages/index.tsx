@@ -38,7 +38,7 @@ export const routes: Route[] = [
   },
   {
     path: '/logout',
-    element: <ContemplatingPage />
+    element: <ContemplatingPage />,
   },
   {
     path: '/privacy',
@@ -66,7 +66,7 @@ export const routes: Route[] = [
   },
   {
     path: '/verify/alias',
-    element: <ContemplatingPage />
+    element: <ContemplatingPage />,
   },
   {
     path: '/*',

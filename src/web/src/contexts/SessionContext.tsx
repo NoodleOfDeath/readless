@@ -205,6 +205,12 @@ export function SessionContextProvider({ children }: Props) {
           navigate('/login');
         }).catch(console.error);
       break;
+    case '/profile':
+      if (!userData?.userId) {
+        navigate('/login');
+        return;
+      }
+      break;
     case '/search':
       if (!pathIsEnabled(location.pathname)) {
         navigate('/');
