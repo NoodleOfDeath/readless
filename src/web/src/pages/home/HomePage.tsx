@@ -15,10 +15,10 @@ import API from '@/api';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
 
-const StyledStack = styled(Stack)`
-  align-content: center;
-  align-items: center;
-`;
+const StyledStack = styled(Stack)(() => ({
+  alignContent: 'center',
+  alignItems: 'center',
+}));
 
 export default function HomePage() {
   const navigate = useNavigate();

@@ -27,24 +27,19 @@ type Props = {
   action?: 'logIn' | 'signUp';
 }
 
-const StyledGrid = styled(Grid)`
-`;
+const StyledGrid = styled(Grid)();
 
-const StyledStack = styled(Stack)`
-  align-items: center;
-`;
+const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
-const StyledAlternateCard = styled(StyledStack)`
-  background-color: ${({ theme }) => theme.palette.primary.main};
-  color: ${({ theme }) => theme.palette.primary.contrastText};
-  height: 100%;
-  justify-content: space-evenly;
-  padding: ${({ theme }) => theme.spacing(2)};
-`;
+const StyledAlternateCard = styled(StyledStack)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color:  theme.palette.primary.contrastText,
+  height: '100%',
+  justifyContent: 'space-evenly',
+  padding: theme.spacing(2),
+}));
 
-const StyledIcon = styled(Icon)`
-  margin-right: ${({ theme }) => theme.spacing(1)};
-`;
+const StyledIcon = styled(Icon)(({ theme }) => ({ marginRight:  theme.spacing(1) }));
 
 export default function LoginPage({ action = 'logIn' }: Props = {}) {
   const navigate = useNavigate();
