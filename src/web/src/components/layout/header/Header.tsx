@@ -39,12 +39,12 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   padding: theme.spacing(0, 2),
 }));
 
-const StyledHeaderTitle = styled(Paper)(({ theme }) => ({
+const StyledHeaderTitle = styled(Paper)(() => ({
   flexGrow: 1,
   background: 'transparent',
 }));
 
-const StyledBox = styled(Box)(({ theme }) => ({ width: 250 }));
+const StyledBox = styled(Box)(() => ({ width: 250 }));
 
 export default function Header() {
 

@@ -39,9 +39,6 @@ export default function ResultsView({ navigation }: Props) {
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
 
-  const [selectedPost, setSelectedPost] = React.useState(-1);
-  const [mode, setMode] = React.useState<ConsumptionMode | undefined>();
-
   const load = (pageSize: number, page: number, searchText: string) => {
     setLoading(true);
     if (page === 0) {
@@ -80,6 +77,7 @@ export default function ResultsView({ navigation }: Props) {
     load(pageSize, 0, searchText);
   }, [pageSize, searchText]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => onMount(), [pageSize, searchText]);
 
   const loadMore = React.useCallback(() => {
@@ -88,8 +86,6 @@ export default function ResultsView({ navigation }: Props) {
 
   const onExpandPost = React.useCallback(
     (index: number, mode?: ConsumptionMode) => {
-      setMode(mode);
-      setSelectedPost(mode !== undefined ? index : -1);
       navigation?.navigate('Post', {
         source: recentSources[index],
         initialMode: mode,
