@@ -40,8 +40,8 @@ export type ReadAndSummarizeSourcePayload = {
 
 @Table({
   modelName: 'source',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCreationAttributes> implements SourceWithOutletName {
 
@@ -54,35 +54,35 @@ export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCr
   }
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     outletId: number;
   
   outletName: string;
 
   @Column({
-    type: DataType.STRING(2083),
     allowNull: false,
+    type: DataType.STRING(2083),
     unique: true,
   })
     url: string;
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     rawText: string;
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     filteredText: string;
 
   @Column({
-    type: DataType.STRING(1024),
     allowNull: false,
+    type: DataType.STRING(1024),
   })
     originalTitle: string;
   

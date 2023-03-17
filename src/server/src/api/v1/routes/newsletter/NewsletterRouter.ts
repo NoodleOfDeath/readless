@@ -18,8 +18,8 @@ router.post(
     } = req.body;
     try {
       await new NewsletterController().subscribeToNewsletter({
-        aliasType,
         alias,
+        aliasType,
         newsletterId,
         newsletterName,
       });
@@ -43,8 +43,8 @@ router.post(
     } = req.body;
     try {
       await new NewsletterController().unsubscribeFromNewsletter({
-        aliasType,
         alias,
+        aliasType,
         newsletterId,
         newsletterName,
       });

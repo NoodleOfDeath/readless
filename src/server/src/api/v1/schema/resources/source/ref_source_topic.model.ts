@@ -19,8 +19,8 @@ export type RefSourceTopicCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: '_ref_source_topic',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class RefSourceTopic<A extends RefSourceTopicAttributes = RefSourceTopicAttributes, B extends RefSourceTopicCreationAttributes = RefSourceTopicCreationAttributes> extends Model<A, B> implements RefSourceTopicAttributes {
 
@@ -33,14 +33,14 @@ export class RefSourceTopic<A extends RefSourceTopicAttributes = RefSourceTopicA
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     sourceId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     topicId: number;
 

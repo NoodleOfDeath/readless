@@ -24,8 +24,8 @@ export default function ResultsView({ navigation }: Props) {
   const isLightMode = useColorScheme() === 'light';
   const theme = useTheme({
     searchBar: {
-      marginBottom: 10,
       background: isLightMode ? '#fff' : '#8B0000',
+      marginBottom: 10,
     },
   });
 
@@ -47,9 +47,9 @@ export default function ResultsView({ navigation }: Props) {
     axios
       .get(`${API_BASE_URL}/v1/sources`, {
         params: {
-          pageSize,
-          page,
           filter: searchText,
+          page,
+          pageSize,
         },
       })
       .then((response) => {
@@ -87,8 +87,8 @@ export default function ResultsView({ navigation }: Props) {
   const onExpandPost = React.useCallback(
     (index: number, mode?: ConsumptionMode) => {
       navigation?.navigate('Post', {
-        source: recentSources[index],
         initialMode: mode,
+        source: recentSources[index],
       });
     },
     [navigation, recentSources],

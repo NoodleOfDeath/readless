@@ -70,8 +70,8 @@ export class QueueService extends BaseService {
     const queue =
       (this.queues[jobQueue.name] as Queue<DataType>) ??
       new Queue<DataType, ReturnType, NameType>(jobQueue.name, {
-        defaultJobOptions: this.defaultJobOptions,
         connection: this.client,
+        defaultJobOptions: this.defaultJobOptions,
       });
     await queue.add(jobName, payload, options);
     this.queues[jobQueue.name] = queue;
@@ -82,7 +82,7 @@ export class QueueService extends BaseService {
   ): Queue<DataType> {
     return (
       (this.queues[jobQueue.name] as Queue<DataType>) ??
-      new Queue<DataType>(jobQueue.name, { defaultJobOptions: this.defaultJobOptions, connection: this.client })
+      new Queue<DataType>(jobQueue.name, { connection: this.client, defaultJobOptions: this.defaultJobOptions })
     );
   }
 

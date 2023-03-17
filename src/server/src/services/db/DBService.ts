@@ -21,8 +21,8 @@ export class DBService extends BaseService {
     this.sq = new Sequelize(connectionString, {
       dialect: 'postgres',
       dialectOptions: { ssl: { rejectUnauthorized: false } },
-      models,
       logging: !!process.env.SQL_LOGGING,
+      models,
     });
     makeAssociations();
   }

@@ -25,8 +25,8 @@ export type MembershipCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'membership',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Membership<A extends MembershipAttributes = MembershipAttributes, B extends MembershipCreationAttributes = MembershipCreationAttributes>
   extends Model<A, B>
@@ -41,32 +41,32 @@ export class Membership<A extends MembershipAttributes = MembershipAttributes, B
   }
   
   @Column({
-    type: DataType.NUMBER,
     allowNull: false,
+    type: DataType.NUMBER,
   })
     userId: number;
   
   @Column({
-    type: DataType.DATE,
     allowNull: false,
+    type: DataType.DATE,
   })
     renewsOn: Date;
   
   @Column({
-    type: DataType.NUMBER,
     allowNull: false,
+    type: DataType.NUMBER,
   })
     tier: number;
   
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     platform: string;
   
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     platformUUID: string;
   

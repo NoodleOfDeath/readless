@@ -14,16 +14,16 @@ import TermsPage from '@/pages/terms/TermsPage';
 
 export const ROUTES: Record<string, React.ReactNode> = {
   '/':              <HomePage />,
+  '/*':             <Error404NotFoundPage />,
   '/about':         <AboutPage />,
   '/error':         <ErrorPage />,
   '/login':         <LoginPage />,
   '/logout':        <ContemplatingPage />,
   '/privacy':       <PrivacyPage />,
   '/profile':       <ProfilePage />,
-  '/signup':        <LoginPage action={ 'signUp' } />,
   '/search':        <SearchPage />,
+  '/signup':        <LoginPage action={ 'signUp' } />,
   '/success':       <SuccessPage />,
   '/terms':         <TermsPage />,
   '/verify/alias':  <ContemplatingPage />,
-  '/*':             <Error404NotFoundPage />,
 };

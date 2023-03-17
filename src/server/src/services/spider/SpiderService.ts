@@ -22,13 +22,13 @@ export class SpiderService extends BaseService {
   static ExtractRules = {
     /** default and most common spider species */
     agelenidae: new ExtractRuleMap({
-      title: {
-        selector: 'title',
-        output: 'text',
-      },
       text: {
-        selector: 'p,blockquote',
         output: 'text',
+        selector: 'p,blockquote',
+      },
+      title: {
+        output: 'text',
+        selector: 'title',
       },
     }),
   };
@@ -45,7 +45,7 @@ export class SpiderService extends BaseService {
   /** Custom scraping implementation */
   async loot(url: string) {
     const text = await this.fetch(url);
-    const loot = new Loot({ url, text });
+    const loot = new Loot({ text, url });
     return loot;
   }
 
@@ -57,9 +57,9 @@ export class SpiderService extends BaseService {
     }: Partial<ScrapeOpts<T>> = {},
   ) {
     const params = encodeScrapeOpts({
-      url,
       api_key,
       extract_rules,
+      url,
       ...opts,
     });
     const fullPath = `${WS_API}/v1?${params.toString()}`;

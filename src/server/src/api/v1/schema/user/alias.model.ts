@@ -21,8 +21,8 @@ export type AliasCreationAttributes = AliasAttributes;
 
 @Table({
   modelName: 'alias',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Alias<
     A extends AliasAttributes = AliasAttributes,
@@ -39,8 +39,8 @@ export class Alias<
     return defaults ?? {};
   }
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     userId: number;
   
@@ -50,8 +50,8 @@ export class Alias<
     where: { deletedAt: null },
   })
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     type: string;
   
@@ -61,8 +61,8 @@ export class Alias<
     where: { deletedAt: null },
   })
   @Column({
-    type: DataType.STRING(2083),
     allowNull: false,
+    type: DataType.STRING(2083),
   })
     value: string;
 

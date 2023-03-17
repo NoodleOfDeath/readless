@@ -21,12 +21,12 @@ router.post(
     } = req.body;
     try {
       await new ReferralController().recordReferral({
-        referredById,
+        geolocation,
         origin,
+        referredById,
         remoteAddr: req.ip,
         target,
         userAgent,
-        geolocation,
       });
       res.status(200).send('OK');
     } catch (e) {

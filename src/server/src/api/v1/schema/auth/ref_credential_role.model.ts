@@ -19,8 +19,8 @@ export type RefCredentialRoleCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: '_ref_credential_role',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class RefCredentialRole<A extends RefCredentialRoleAttributes = RefCredentialRoleAttributes, B extends RefCredentialRoleCreationAttributes = RefCredentialRoleCreationAttributes> extends Model<A, B> implements RefCredentialRoleAttributes {
 
@@ -33,14 +33,14 @@ export class RefCredentialRole<A extends RefCredentialRoleAttributes = RefCreden
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     credentialId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     roleId: number;
 

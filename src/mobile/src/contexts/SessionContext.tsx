@@ -10,10 +10,10 @@ export type SessionContextType = {
 };
 
 export const SessionContext = React.createContext<SessionContextType>({
-  tabControllerScreenOptions: { headerShown: true },
   setTabControllerScreenOptions: () => {
     /** placeholder */
   },
+  tabControllerScreenOptions: { headerShown: true },
 });
 
 export default function SessionContextProvider({ children }: React.PropsWithChildren) {
@@ -23,8 +23,8 @@ export default function SessionContextProvider({ children }: React.PropsWithChil
   return (
     <SessionContext.Provider
       value={ {
-        tabControllerScreenOptions,
         setTabControllerScreenOptions,
+        tabControllerScreenOptions,
       } }>
       {children}
     </SessionContext.Provider>

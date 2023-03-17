@@ -20,9 +20,9 @@ export type NavigationItemProps = {
 };
 
 const StyledMenuItemButton = styled(Button)(({ theme }) => ({
-  width: '100%',
-  padding: theme.spacing(1, 2),
   justifyContent: 'flex-start',
+  padding: theme.spacing(1, 2),
+  width: '100%',
 }));
 
 export default function NavigationItem({
@@ -67,12 +67,12 @@ export default function NavigationItem({
           onClose={ handleClose }
           MenuListProps={ { 'aria-labelledby': 'basic-button' } }
           anchorOrigin={ {
-            vertical: 'bottom',
             horizontal: 'left',
+            vertical: 'bottom',
           } }
           transformOrigin={ {
-            vertical: 'bottom',
             horizontal: 'right',
+            vertical: 'bottom',
           } }>
           {filteredItems.map((item) => (
             <MenuItem key={ item.id }>

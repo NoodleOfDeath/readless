@@ -26,8 +26,8 @@ export class GoogleService extends BaseService {
   
   async verify(accessToken: string) {
     return await this.client.verifyIdToken({
-      idToken: accessToken,
       audience: this.clientId,
+      idToken: accessToken,
     });
   }
 

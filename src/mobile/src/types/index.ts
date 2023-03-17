@@ -15,11 +15,11 @@ export type RootParamList = {
 };
 
 export const linkingOptions: LinkingOptions<RootParamList> = {
-  prefixes: ['https://www.theskoop.ai', 'https://theskoop.ai', 'skoop://'],
   config: {
     screens: {
       Discover: { path: 'discover' },
       Settings: { path: 'settings' },
     },
   },
+  prefixes: ['https://www.theskoop.ai', 'https://theskoop.ai', 'skoop://'],
 };

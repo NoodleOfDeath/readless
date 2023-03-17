@@ -17,8 +17,8 @@ export type ArticleAttr = Attr<Article, (typeof ARTICLE_ATTRS)[number]>;
 
 @Table({
   modelName: 'article',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Article extends TitledCategorizedPost<ArticleAttributes, ArticleCreationAttributes> {
 

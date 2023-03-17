@@ -59,15 +59,15 @@ export const rateLimit = (
     },
   } = options;
   return RateLimitMiddleware({
-    windowMs,
+    handler,
+    legacyHeaders,
     max,
     standardHeaders,
-    legacyHeaders,
     store: new RedisStore({
       prefix,
       sendCommand: (...args: [command: string, ...args: (string | Buffer | number)[]]) =>
         redisClient.call(...args) as Promise<RedisReply | RedisReply[]>,
     }),
-    handler,
+    windowMs,
   });
 };

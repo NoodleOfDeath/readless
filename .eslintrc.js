@@ -7,11 +7,19 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   overrides: [],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'import', 'import-newlines'],
+  plugins: ['@typescript-eslint', 'import', 'import-newlines', 'sort-keys-fix'],
   rules: {
+    '@typescript-eslint/no-unused-vars': [
+      'warn', // or "error"
+      {
+        argsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
     'brace-style': ['error', '1tbs'],
-    'comma-spacing': ['error'],
     'comma-dangle': ['error', 'always-multiline'],
+    'comma-spacing': ['error'],
     curly: ['error'],
     'function-call-argument-newline': ['error', 'consistent'],
     'import-newlines/enforce': [
@@ -22,6 +30,60 @@ module.exports = {
         semi: false,
       },
     ],
+    'import/order': [
+      'error',
+      {
+        alphabetize: {
+          caseInsensitive: false,
+          order: 'asc',
+        },
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling'],
+          'index',
+        ],
+        'newlines-between': 'always',
+        pathGroups: [
+          {
+            group: 'external',
+            pattern: 'react+(|-native)',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+      },
+    ],
+    indent: ['error', 2],
+    'linebreak-style': ['error', 'unix'],
+    'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
+    'no-unused-vars': 'off',
+    'object-curly-newline': [
+      'error',
+      {
+        ExportDeclaration: {
+          minProperties: 3,
+          multiline: true,
+        },
+        ImportDeclaration: {
+          minProperties: 3,
+          multiline: true,
+        },
+        ObjectExpression: {
+          minProperties: 3,
+          multiline: true,
+        },
+        ObjectPattern: {
+          minProperties: 3,
+          multiline: true,
+        },
+      },
+    ],
+    'object-curly-spacing': ['error', 'always'],
+    'padded-blocks': ['error', { classes: 'always' }],
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
     'sort-imports': [
       'error',
       {
@@ -30,67 +92,6 @@ module.exports = {
         ignoreMemberSort: false,
       },
     ],
-    'import/order': [
-      'error',
-      {
-        'newlines-between': 'always',
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'index',
-        ],
-        pathGroups: [
-          {
-            pattern: 'react+(|-native)',
-            group: 'external',
-            position: 'before',
-          },
-        ],
-        pathGroupsExcludedImportTypes: ['react'],
-        alphabetize: {
-          order: 'asc',
-          caseInsensitive: false,
-        },
-      },
-    ],
-    indent: ['error', 2],
-    'linebreak-style': ['error', 'unix'],
-    'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
-    'no-unused-vars': 'off',
-    'object-curly-spacing': ['error', 'always'],
-    'object-curly-newline': [
-      'error',
-      {
-        ObjectExpression: {
-          multiline: true,
-          minProperties: 3,
-        },
-        ObjectPattern: {
-          multiline: true,
-          minProperties: 3,
-        },
-        ImportDeclaration: {
-          multiline: true,
-          minProperties: 3,
-        },
-        ExportDeclaration: {
-          multiline: true,
-          minProperties: 3,
-        },
-      },
-    ],
-    'padded-blocks': ['error', { classes: 'always' }],
-    quotes: ['error', 'single'],
-    semi: ['error', 'always'],
-    '@typescript-eslint/no-unused-vars': [
-      'warn', // or "error"
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        caughtErrorsIgnorePattern: '^_',
-      },
-    ],
+    'sort-keys-fix/sort-keys-fix': 'error',
   },
 };

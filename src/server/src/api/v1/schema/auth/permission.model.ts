@@ -22,8 +22,8 @@ export type PermissionCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'permission',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Permission<
     A extends PermissionAttributes = PermissionAttributes,
@@ -41,20 +41,20 @@ export class Permission<
   }
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     resourceType: ResourceType;
 
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     resourceId: number;
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     access: AccessLevel;
 

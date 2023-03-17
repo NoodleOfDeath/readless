@@ -10,8 +10,8 @@ export type UserCreationAttributes = DatedAttributes & {};
 
 @Table({
   modelName: 'user',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class User<A extends UserAttributes = UserAttributes, B extends UserCreationAttributes = UserCreationAttributes>
   extends Model<A, B>

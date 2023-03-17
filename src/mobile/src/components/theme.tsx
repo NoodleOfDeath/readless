@@ -53,19 +53,19 @@ export function useTheme<T extends {}>(other: T = {} as T) {
         },
         divider: {
           height: StyleSheet.hairlineWidth,
-          marginTop: 6,
           marginBottom: 6,
+          marginTop: 6,
         },
         flexCol: {
           flex: 1,
-          flexGrow: 1,
           flexDirection: 'column',
+          flexGrow: 1,
           justifyContent: 'space-between',
         },
         flexRow: {
           flex: 1,
-          flexGrow: 1,
           flexDirection: 'row',
+          flexGrow: 1,
           justifyContent: 'space-between',
         },
         menu: {
@@ -104,19 +104,54 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           fontFamily: 'DM Mono',
           fontSize: 16, // normal
         },
+        subtitle1: {
+          color: isLightMode ? '#000' : '#fff',
+          fontFamily: 'Lato',
+          fontSize: 16,
+          paddingBottom: 2,
+          paddingTop: 2,
+        },
+        subtitle1Center: {
+          color: isLightMode ? '#000' : '#fff',
+          fontFamily: 'Lato',
+          fontSize: 16,
+          justifyContent: 'center',
+          paddingBottom: 2,
+          paddingTop: 2,
+          textAlign: 'center',
+        },
+        subtitle2: {
+          color: isLightMode ? '#000' : '#fff',
+          fontFamily: 'Lato',
+          fontSize: 15, 
+          paddingBottom: 2,
+          // normal
+          paddingTop: 2,
+        },
+        subtitle2Center: {
+          color: isLightMode ? '#000' : '#fff',
+          fontFamily: 'Lato',
+          fontSize: 15, 
+          justifyContent: 'center',
+          
+          paddingBottom: 2,
+          // normal
+          paddingTop: 2,
+          textAlign: 'center',
+        },
         title1: {
           color: isLightMode ? '#000' : '#fff',
           fontFamily: 'Lato',
           fontSize: 20,
-          paddingTop: 2,
           paddingBottom: 2,
+          paddingTop: 2,
         },
         title2: {
           color: isLightMode ? '#000' : '#fff',
           fontFamily: 'Lato',
           fontSize: 18,
-          paddingTop: 2,
           paddingBottom: 2,
+          paddingTop: 2,
         },
         titleBold: {
           color: isLightMode ? '#000' : '#fff',
@@ -124,48 +159,16 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           fontSize: 20,
           fontWeight: 'bold',
         },
-        subtitle1: {
-          color: isLightMode ? '#000' : '#fff',
-          fontFamily: 'Lato',
-          fontSize: 16,
-          paddingTop: 2,
-          paddingBottom: 2,
-        },
-        subtitle2: {
-          color: isLightMode ? '#000' : '#fff',
-          fontFamily: 'Lato',
-          fontSize: 15, // normal
-          paddingTop: 2,
-          paddingBottom: 2,
-        },
-        subtitle1Center: {
-          color: isLightMode ? '#000' : '#fff',
-          fontFamily: 'Lato',
-          fontSize: 16,
-          paddingTop: 2,
-          paddingBottom: 2,
-          textAlign: 'center',
-          justifyContent: 'center',
-        },
-        subtitle2Center: {
-          color: isLightMode ? '#000' : '#fff',
-          fontFamily: 'Lato',
-          fontSize: 15, // normal
-          paddingTop: 2,
-          paddingBottom: 2,
-          textAlign: 'center',
-          justifyContent: 'center',
-        },
       },
       ...other,
     } as const),
     navContainerColors: {
-      primary: '#8B0000',
       background: isLightMode ? '#FFFFFF' : '#1E1E1E',
-      card: isLightMode ? '#FFFFFF' : '#1E1E1E',
-      text: isLightMode ? '#212121' : '#FFFFFF',
       border: isLightMode ? '#bdbdbd' : '#757575',
+      card: isLightMode ? '#FFFFFF' : '#1E1E1E',
       notification: '#8B0000',
+      primary: '#8B0000',
+      text: isLightMode ? '#212121' : '#FFFFFF',
     },
   };
 }

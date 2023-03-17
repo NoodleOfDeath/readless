@@ -5,12 +5,12 @@ import { Stack, styled } from '@mui/material';
 import SearchBar from '@/pages/search/SearchBar';
 
 const StyledStack = styled(Stack)(() => ({
-  width: '100%',
-  maxWidth: 1280,
-  margin: 'auto',
-  alignSelf: 'center',
   alignItems: 'center',
+  alignSelf: 'center',
+  margin: 'auto',
+  maxWidth: 1280,
   textAlign: 'center',
+  width: '100%',
 }));
 
 export default function Filters() {

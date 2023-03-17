@@ -19,8 +19,8 @@ export type NewsletterCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'newsletter',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Newsletter<A extends NewsletterAttributes = NewsletterAttributes, B extends NewsletterCreationAttributes = NewsletterCreationAttributes>
   extends Model<A, B>
@@ -35,14 +35,14 @@ export class Newsletter<A extends NewsletterAttributes = NewsletterAttributes, B
   }
   
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     name: string;
   
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     description: string;
 

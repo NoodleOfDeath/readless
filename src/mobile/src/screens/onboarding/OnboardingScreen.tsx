@@ -24,12 +24,12 @@ const PAGE_HEIGHT = window.height * scale;
 export default function OnboardingScreen({ onClose }: Props = {}) {
   const theme = useTheme({
     container: {
-      flex: 1,
-      fontFamily: 'Lato',
       backgroundColor: '#fff',
+      borderColor: 'red',
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: 'red',
+      flex: 1,
+      fontFamily: 'Lato',
     },
   });
 
@@ -53,10 +53,10 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
       <Carousel
         loop={ false }
         style={ {
-          width: window.width,
+          alignItems: 'center',
           height: window.height,
           justifyContent: 'center',
-          alignItems: 'center',
+          width: window.width,
         } }
         width={ PAGE_WIDTH }
         height={ PAGE_HEIGHT }
@@ -67,8 +67,8 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
               <View style={ theme.container }>
                 <Text
                   style={ {
-                    fontSize: 30,
                     color: 'black',
+                    fontSize: 30,
                   } }>
                   welcome to theSkoop!
                 </Text>

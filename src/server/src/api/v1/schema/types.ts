@@ -17,18 +17,18 @@ export type Attr<Model, K extends keyof Model> = {
 export const ALIAS_TYPES = {
   email: 'email',
   eth2Address: 'eth2Address',
-  username: 'username',
   phone: 'phone',
   thirdParty: 'thirdParty',
+  username: 'username',
 } as const;
 
 export type AliasType = ValuesOfKeys<typeof ALIAS_TYPES> | `thirdParty/${string}`;
 
 export const CREDENTIAL_TYPES = {
+  eth2SignedMessage: 'eth2SignedMessage',
+  jwt: 'jwt',
   otp: 'otp',
   password: 'password',
-  jwt: 'jwt',
-  eth2SignedMessage: 'eth2SignedMessage',
 } as const;
 
 export type CredentialType = ValuesOfKeys<typeof CREDENTIAL_TYPES>; 
@@ -44,19 +44,19 @@ export const RESOURCE_TYPES = {
 export type ResourceType = ValuesOfKeys<typeof RESOURCE_TYPES>;
 
 export const ACCESS_LEVELS = {
+  delete: 'delete',
   read: 'read',
   write: 'write',
-  delete: 'delete',
 } as const;
 
 export type AccessLevel = ValuesOfKeys<typeof ACCESS_LEVELS>;
 
 export const INTERACTION_TYPES = {
-  like: 'like',
-  dislike: 'dislike',
   bookmark: 'bookmark',
-  share: 'share',
   comment: 'comment',
+  dislike: 'dislike',
+  like: 'like',
+  share: 'share',
   view: 'view',
 } as const;
 

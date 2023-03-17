@@ -14,26 +14,26 @@ type Props = {
 };
 
 const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+  alignItems: 'center',
+  background: theme.palette.background.default,
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
-  alignItems: 'center',
   margin: theme.spacing(1),
-  background: theme.palette.background.default,
 }));
 
 const StyledButton = styled(Button)<{ selected: boolean }>(
   ({ theme, selected }) => ({
-    backgroundColor: selected ? theme.palette.primary.main : 'transparent',
-    color: selected ? theme.palette.common.white : theme.palette.primary.main,
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: theme.spacing(1),
-    padding: theme.spacing(1),
-    cursor: 'pointer',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.common.white,
     },
+    backgroundColor: selected ? theme.palette.primary.main : 'transparent',
+    border: `1px solid ${theme.palette.primary.main}`,
+    borderRadius: theme.spacing(1),
+    color: selected ? theme.palette.common.white : theme.palette.primary.main,
+    cursor: 'pointer',
+    padding: theme.spacing(1),
   }),
 );
 

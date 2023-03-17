@@ -19,8 +19,8 @@ export type ArticleSourceCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: '_ref_article_source',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class ArticleSource<A extends ArticleSourceAttributes = ArticleSourceAttributes, B extends ArticleSourceCreationAttributes = ArticleSourceCreationAttributes> extends Model<A, B> implements ArticleSourceAttributes {
 
@@ -33,14 +33,14 @@ export class ArticleSource<A extends ArticleSourceAttributes = ArticleSourceAttr
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     articleId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     sourceId: number;
   

@@ -19,8 +19,8 @@ topicId: number;
 
 @Table({
   modelName: '_ref_article_topic',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class ArticleTopic<A extends ArticleTopicAttributes = ArticleTopicAttributes, B extends ArticleTopicCreationAttributes = ArticleTopicCreationAttributes> extends Model<A, B> implements ArticleTopicAttributes {
 
@@ -33,14 +33,14 @@ export class ArticleTopic<A extends ArticleTopicAttributes = ArticleTopicAttribu
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     articleId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     topicId: number;
     

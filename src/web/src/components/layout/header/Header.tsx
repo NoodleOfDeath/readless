@@ -33,15 +33,15 @@ import { SessionContext } from '@/contexts';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   margin: 'auto',
-  width: 'inherit',
   maxWidth: 1280,
   minHeight: 64,
   padding: theme.spacing(0, 2),
+  width: 'inherit',
 }));
 
 const StyledHeaderTitle = styled(Paper)(() => ({
-  flexGrow: 1,
   background: 'transparent',
+  flexGrow: 1,
 }));
 
 const StyledBox = styled(Box)(() => ({ width: 250 }));
@@ -75,15 +75,7 @@ export default function Header() {
             (event as React.KeyboardEvent).key === 'Shift')
         ) {
           return;
-        } else if (event.type === 'click') {
-          if (
-            menuRef.current &&
-            menuRef.current.contains(event.currentTarget)
-          ) {
-            return;
-          }
-          event.stopPropagation();
-        } else if (event.type === 'touchmove') {
+        } else if (event.type === 'click' || event.type === 'touchmove') {
           if (
             menuRef.current &&
             menuRef.current.contains(event.currentTarget)
@@ -100,61 +92,61 @@ export default function Header() {
   
   const NAVIGATION_ITEMS: NavigationItemProps[] = React.useMemo(() => [
     {
-      id: 'Home',
-      visible: true,
-      label: 'Home',
       icon: mdiHome,
+      id: 'Home',
+      label: 'Home',
       onClick({ navigate }) {
         navigate?.('/');
       },
+      visible: true,
     },
     {
-      id: 'Login',
-      visible: () => !userData?.userId,
-      label: 'Login',
       icon: mdiLogin,
+      id: 'Login',
+      label: 'Login',
       onClick({ navigate }) {
         navigate?.('/login');
       },
+      visible: () => !userData?.userId,
     },
     {
-      id: 'About',
-      visible: () => !userData?.userId,
-      label: 'About',
       icon: mdiInformation,
+      id: 'About',
+      label: 'About',
       onClick({ navigate }) {
         navigate?.('/about');
       },
-    },
-    {
-      id: 'Podcast',
       visible: () => !userData?.userId,
-      label: 'Podcast',
-      icon: mdiPodcast,
-      items: PODCAST_LINKS,
     },
     {
-      id: 'Profile',
-      visible: () => !!userData?.userId,
-      label: 'Profile',
+      icon: mdiPodcast,
+      id: 'Podcast',
+      items: PODCAST_LINKS,
+      label: 'Podcast',
+      visible: () => !userData?.userId,
+    },
+    {
       icon: mdiAccount,
+      id: 'Profile',
+      label: 'Profile',
       onClick({ navigate }) {
         navigate?.('/profile');
       },
+      visible: () => !!userData?.userId,
     },
     {
-      id: 'Logout',
-      visible: () => !!userData?.userId,
-      label: 'Logout',
       icon: mdiLogout,
+      id: 'Logout',
+      label: 'Logout',
       onClick({ navigate }) {
         navigate?.('/logout');
       },
+      visible: () => !!userData?.userId,
     },
     {
+      content: <LightDarkModeButtons />,
       id: 'LightDarkModeButtons',
       visible: true,
-      content: <LightDarkModeButtons />,
     },
   ], [userData]);
 
@@ -177,12 +169,12 @@ export default function Header() {
           anchorEl={ anchorEl }
           onClose={ openMenu(false) }
           anchorOrigin={ {
-            vertical: 'top',
             horizontal: 'right',
+            vertical: 'top',
           } }
           transformOrigin={ {
-            vertical: 'top',
             horizontal: 'right',
+            vertical: 'top',
           } }>
           <StyledBox
             role="presentation"

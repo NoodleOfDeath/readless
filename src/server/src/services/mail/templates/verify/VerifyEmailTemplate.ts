@@ -10,8 +10,8 @@ export class VerifyEmailTemplate extends EmailTemplate<VerifyEmailProps> {
   constructor(
   ) {
     super({
-      subject: 'Verify your email',
       body: html,
+      subject: 'Verify your email',
     });
   }
 

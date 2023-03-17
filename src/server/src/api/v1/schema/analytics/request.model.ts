@@ -18,8 +18,8 @@ export type RequestCreationAttributes = RequestAttributes;
 
 @Table({
   modelName: 'request',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Request<A extends RequestAttributes = RequestAttributes, B extends RequestCreationAttributes = RequestCreationAttributes> extends Model<A, B> implements RequestAttributes {
 
@@ -40,14 +40,14 @@ export class Request<A extends RequestAttributes = RequestAttributes, B extends 
     referrer: string;
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     path: string;
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 

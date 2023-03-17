@@ -18,9 +18,9 @@ router.post(
     } = req.body;
     try {
       await new MetricController().recordMetric({
-        type,
         data,
         referrer: req.ips,
+        type,
         userAgent,
       });
       res.status(200).send('OK');

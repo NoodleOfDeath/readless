@@ -5,8 +5,8 @@ export const validate: RequestHandler = (req, resp, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     resp.status(400).send({
-      message: 'Bad Request',
       errors: errors.array(),
+      message: 'Bad Request',
     });
     return;
   }

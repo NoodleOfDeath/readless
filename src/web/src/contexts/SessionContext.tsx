@@ -58,31 +58,30 @@ export type Session = {
 type Props = React.PropsWithChildren;
 
 export const NULL_SESSION: Session = {
-  enabledFeatures: {},
-  pathIsEnabled: () => false,
-  theme: loadTheme(),
-  preferences: {},
+  consumptionMode: 'concise',
   // getters
   displayMode: 'light',
-  consumptionMode: 'concise',
-  searchText: '',
+  enabledFeatures: {},
+  pathIsEnabled: () => false,
+  preferences: {},
   searchOptions: [],
-  // setters
-  setUserData: () => {
+  searchText: '',
+  setConsumptionMode: () => {
     /* placeholder function */
   },
   setDisplayMode: () => {
     /* placeholder function */
   },
-  setConsumptionMode: () => {
+  setSearchOptions: () => {
     /* placeholder function */
   },
   setSearchText: () => {
     /* placeholder function */
   },
-  setSearchOptions: () => {
+  setUserData: () => {
     /* placeholder function */
   },
+  theme: loadTheme(),
 };
 
 export const COOKIES = {
@@ -135,8 +134,8 @@ export function SessionContextProvider({ children }: Props) {
 
   const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
     return {
-      setDisplayMode: preferenceSetter('displayMode'),
       setConsumptionMode: preferenceSetter('consumptionMode'),
+      setDisplayMode: preferenceSetter('displayMode'),
     };
   }, [preferenceSetter]);
 
@@ -169,16 +168,16 @@ export function SessionContextProvider({ children }: Props) {
   // Save preferences as cookie when they change
   React.useEffect(() => {
     Cookies.set(COOKIES.preferences, JSON.stringify(preferences), {
-      path: '/',
       expires: DEFAULT_SESSION_DURATION_MS,
+      path: '/',
     });
   }, [preferences]);
 
   // Save userData as a cookie it changes
   React.useEffect(() => {
     Cookies.set(COOKIES.userData, JSON.stringify(userData), {
-      path: '/',
       expires: DEFAULT_SESSION_DURATION_MS,
+      path: '/',
     });
   }, [userData]);
   
@@ -187,8 +186,8 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     // record page visit
     API.recordMetric({
-      type: 'nav',
       data: { path: location },
+      type: 'nav',
       userAgent: navigator.userAgent,
     })
       .catch(console.error);
@@ -231,8 +230,8 @@ export function SessionContextProvider({ children }: Props) {
         }
         navigate(`/success?${new URLSearchParams({
           msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
-          t: '3000',
           r: '/login',
+          t: '3000',
         }).toString()}`);
       }).catch(console.error);
       break;
@@ -243,18 +242,16 @@ export function SessionContextProvider({ children }: Props) {
   return (
     <SessionContext.Provider
       value={ {
+        consumptionMode,
+        displayMode,
         enabledFeatures,
         pathIsEnabled,
-        theme,
         preferences,
-        userData,
-        displayMode,
-        consumptionMode,
-        searchText,
         searchOptions,
-        setUserData,
-        setDisplayMode,
+        searchText,
         setConsumptionMode,
+        setDisplayMode,
+        setSearchOptions,
         setSearchText: (
           state,
           { clearSearchParams }: SetSearchTextOptions = {},
@@ -264,7 +261,9 @@ export function SessionContextProvider({ children }: Props) {
             setSearchParams({});
           }
         },
-        setSearchOptions,
+        setUserData,
+        theme,
+        userData,
       } }>
       {children}
     </SessionContext.Provider>

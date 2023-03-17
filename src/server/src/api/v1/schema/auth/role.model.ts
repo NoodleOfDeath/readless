@@ -17,8 +17,8 @@ export type RoleCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'role',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Role<A extends RoleAttributes = RoleAttributes, B extends RoleCreationAttributes = RoleCreationAttributes>
   extends Model<A, B>
@@ -33,8 +33,8 @@ export class Role<A extends RoleAttributes = RoleAttributes, B extends RoleCreat
   }
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     name: string;
   

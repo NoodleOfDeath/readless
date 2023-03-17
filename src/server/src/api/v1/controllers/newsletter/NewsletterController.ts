@@ -30,8 +30,8 @@ export class NewsletterController {
     }
     const existingSubs = await Subscription.findAll(({
       where: {
-        aliasType,
         alias,
+        aliasType,
         newsletterId: data.newsletterId,
       },
     }));
@@ -58,8 +58,8 @@ export class NewsletterController {
     }
     const existingSubs = await Subscription.findAll(({
       where: {
-        aliasType,
         alias,
+        aliasType,
         newsletterId: data.newsletterId,
       },
     }));

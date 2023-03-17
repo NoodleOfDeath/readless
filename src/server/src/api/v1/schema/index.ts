@@ -33,7 +33,7 @@ export function makeAssociations() {
   User.hasMany(RefUserRole, { foreignKey: 'userId' });
   Role.hasMany(RefUserRole, { foreignKey: 'roleId' });
   Role.belongsToMany(User, {
-    through: RefUserRole, foreignKey: 'roleId', otherKey: 'userId',
+    foreignKey: 'roleId', otherKey: 'userId', through: RefUserRole,
   });
   User.hasMany(Credential, { foreignKey: 'userId' });
   Credential.belongsTo(User, { foreignKey: 'userId' });
@@ -41,13 +41,13 @@ export function makeAssociations() {
   Credential.hasMany(RefCredentialRole, { foreignKey: 'credentialId' });
   Role.hasMany(RefCredentialRole, { foreignKey: 'roleId' });
   Role.belongsToMany(Credential, {
-    through: RefCredentialRole, foreignKey: 'roleId', otherKey: 'credentialId', 
+    foreignKey: 'roleId', otherKey: 'credentialId', through: RefCredentialRole, 
   });
   // roles <- permissions
   Role.hasMany(RefRolePermission, { foreignKey: 'roleId' });
   Permission.hasMany(RefRolePermission, { foreignKey: 'permissionId' });
   Permission.belongsToMany(Role, {
-    through: RefRolePermission, foreignKey: 'permissionId', otherKey: 'roleId', 
+    foreignKey: 'permissionId', otherKey: 'roleId', through: RefRolePermission, 
   });
   // newsletter
   Newsletter.hasMany(Subscription, { foreignKey: 'newsletterId' });
@@ -72,6 +72,6 @@ export function makeAssociations() {
   Article.hasMany(ArticleSource, { foreignKey: 'articleId' });
   Source.hasMany(ArticleSource, { foreignKey: 'sourceId' });
   Source.belongsToMany(Article, {
-    through: ArticleSource, foreignKey: 'sourceId', otherKey: 'articleId', 
+    foreignKey: 'sourceId', otherKey: 'articleId', through: ArticleSource, 
   });
 }

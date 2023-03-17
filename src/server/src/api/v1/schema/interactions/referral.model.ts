@@ -26,8 +26,8 @@ export type ReferralCreationAttributes = ReferralAttributes;
 
 @Table({
   modelName: 'referral',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Referral extends Model<ReferralAttributes, ReferralCreationAttributes> implements ReferralAttributes {
 
@@ -35,8 +35,8 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
     referredById: number;
 
   @Column({
-    type: DataType.STRING(2083),
     allowNull: false,
+    type: DataType.STRING(2083),
   })
     remoteAddr: string;
 
@@ -44,14 +44,14 @@ export class Referral extends Model<ReferralAttributes, ReferralCreationAttribut
     origin?: string;
 
   @Column({
-    type: DataType.STRING(2083),
     allowNull: false,
+    type: DataType.STRING(2083),
   })
     target: string;
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     userAgent: string;
 

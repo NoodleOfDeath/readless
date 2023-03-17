@@ -83,8 +83,8 @@ export default function LoginPage({ action = 'logIn' }: Props = {}) {
         }
         if (userData.jwt) {
           setUserData({ 
-            userId: userData.userId,
             jwt: userData.jwt,
+            userId: userData.userId,
           });
           navigate('/');
         } else {
@@ -129,13 +129,13 @@ export default function LoginPage({ action = 'logIn' }: Props = {}) {
                     onSuccess={ (credentialResponse) => {
                       action === 'logIn' ? handleLogIn({
                         thirdParty: {
-                          name: ThirdParty.Google,
                           credential: credentialResponse.credential,
+                          name: ThirdParty.Google,
                         },
                       }) : handleSignUp({
                         thirdParty: {
-                          name: ThirdParty.Google,
                           credential: credentialResponse.credential,
+                          name: ThirdParty.Google,
                         },
                       });
                     } }
@@ -150,11 +150,11 @@ export default function LoginPage({ action = 'logIn' }: Props = {}) {
                     InputProps={ { startAdornment: <StyledIcon path={ mdiEmail } size={ 1 } /> } }
                     required
                     { ...register('email', {
-                      required: true,
                       pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         message: 'invalid email address',
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       },
+                      required: true,
                     }) } />
                   <TextField
                     type='password'

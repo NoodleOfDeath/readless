@@ -19,10 +19,10 @@ import { SessionContext } from '@/contexts';
 import Filters from '@/pages/search/Filters';
 
 const StyledGrid = styled(Grid)(() => ({
-  margin: 'auto',
-  width: 'calc(100% - 16px)',
   alignItems: 'center',
   justifyContent: 'center',
+  margin: 'auto',
+  width: 'calc(100% - 16px)',
 }));
 
 export default function SearchPage() {
@@ -60,8 +60,8 @@ export default function SearchPage() {
     API
       .getSources({
         filter: searchText,
-        pageSize,
         page: 0,
+        pageSize,
       })
       .then((response) => {
         setTotalResults(response.data.count);
@@ -87,8 +87,8 @@ export default function SearchPage() {
     API
       .getSources({
         filter: searchText,
-        pageSize,
         page,
+        pageSize,
       })
       .then((response) => {
         if (response.data) {

@@ -55,8 +55,8 @@ export type OutletCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'outlet',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Outlet<
     A extends OutletAttributes = OutletAttributes,
@@ -74,15 +74,15 @@ export class Outlet<
   }
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
     unique: true,
   })
     name: string;
 
   @Column({
-    type: DataType.ARRAY(DataType.JSON),
     allowNull: false,
+    type: DataType.ARRAY(DataType.JSON),
   })
     siteMaps: SiteMap[];
 

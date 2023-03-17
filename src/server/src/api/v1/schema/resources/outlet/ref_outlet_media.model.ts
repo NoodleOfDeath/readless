@@ -19,8 +19,8 @@ export type RefOutletMediaCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: '_ref_outlet_media',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class RefOutletMedia<A extends RefOutletMediaAttributes = RefOutletMediaAttributes, B extends RefOutletMediaCreationAttributes = RefOutletMediaCreationAttributes> extends Model<A, B> implements RefOutletMediaAttributes {
 
@@ -33,14 +33,14 @@ export class RefOutletMedia<A extends RefOutletMediaAttributes = RefOutletMediaA
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     outletId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     mediaId: number;
     

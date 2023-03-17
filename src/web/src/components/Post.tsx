@@ -42,24 +42,24 @@ type Props = {
 };
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  minWidth: 200,
   display: 'flex',
-  padding: theme.spacing(2),
   justifyContent: 'left',
+  minWidth: 200,
+  padding: theme.spacing(2),
   textAlign: 'left',
 }));
 
 const StyledBackButton = styled(Button)(({ theme }) => ({
-  position: 'fixed',
-  left: theme.spacing(2),
-  top: theme.spacing(10),
-  paddingRight: theme.spacing(5),
-  height: 40,
-  borderRadius: 20,
   background: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
-  opacity: 0.8,
   border: theme.palette.secondary.main,
+  borderRadius: 20,
+  color: theme.palette.primary.contrastText,
+  height: 40,
+  left: theme.spacing(2),
+  opacity: 0.8,
+  paddingRight: theme.spacing(5),
+  position: 'fixed',
+  top: theme.spacing(10),
 }));
 
 // eslint-disable-next-line react/display-name
@@ -69,37 +69,37 @@ const StyledConsumptionModeContainer = styled(({
 }: BoxProps & Props & { mdAndUp: boolean }) => <Box { ...props } />)(({
   theme, consumptionMode, mdAndUp, 
 }) => ({
+  borderRadius: 8,
+  bottom: consumptionMode && !mdAndUp  ? theme.spacing(4) : undefined,
   position: consumptionMode ? 'fixed' : 'relative',
   right: consumptionMode && mdAndUp  ? theme.spacing(4) : undefined,
   top: consumptionMode && mdAndUp  ? theme.spacing(10) : undefined,
-  bottom: consumptionMode && !mdAndUp  ? theme.spacing(4) : undefined,
-  borderRadius: 8,
 }));
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
-  width: 120,
+  borderRadius: 8,
   height: 120,
   marginLeft: theme.spacing(2),
-  borderRadius: 8,
+  width: 120,
 }));
 
 const StyledCategoryBox = styled(Box)(({ theme }) => ({
-  width: 120,
-  height: 120,
-  display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
-  borderRadius: 8,
   background: theme.palette.primary.main,
+  borderRadius: 8,
   color: theme.palette.primary.contrastText,
+  display: 'flex',
+  height: 120,
+  justifyContent: 'center',
+  width: 120,
 }));
 
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
 
 const StyledCategoryStack = styled(Stack)(() => ({
-  display: 'flex',
-  alignItems: 'center',
   JustifyContent: 'center',
+  alignItems: 'center',
+  display: 'flex',
   textAlign: 'center',
 }));
 
@@ -246,12 +246,12 @@ export default function Post({
             anchorEl={ anchorEl }
             onClose={ openMenu(false) }
             anchorOrigin={ {
-              vertical: 'top',
               horizontal: 'right',
+              vertical: 'top',
             } }
             transformOrigin={ {
-              vertical: 'top',
               horizontal: 'right',
+              vertical: 'top',
             } }>
             <StyledMenuBox
               role="presentation"

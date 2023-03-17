@@ -22,12 +22,12 @@ import {
 
 const LINKS = [
   {
-    text: 'Privacy Policy',
     href: '/privacy',
+    text: 'Privacy Policy',
   },
   {
-    text: 'Terms of Service',
     href: '/terms',
+    text: 'Terms of Service',
   },
 ];
 
@@ -36,13 +36,13 @@ const StyledFooter = styled((props: ContainerProps) => (
   <Container { ...props } maxWidth={ false } component="footer" />
 ))(({ theme }) => ({
   background: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
-  marginTop: theme.spacing(5),
-  padding: theme.spacing(3),
   bottom: 0,
-  maxWidth: 'none',
-  textAlign: 'left',
+  color: theme.palette.primary.contrastText,
   justifyContent: 'left',
+  marginTop: theme.spacing(5),
+  maxWidth: 'none',
+  padding: theme.spacing(3),
+  textAlign: 'left',
 }));
 
 const StyledStack = styled(Stack)(() => ({
@@ -51,22 +51,22 @@ const StyledStack = styled(Stack)(() => ({
 }));
 
 const StyledHorizontalStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(2),
   flexGrow: 1,
+  padding: theme.spacing(2),
 }));
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
-  margin: 'auto',
-  width: '100%',
   justifyContent: 'left',
+  margin: 'auto',
   marginTop: theme.spacing(2),
+  width: '100%',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
+  '&:hover': { textDecoration: 'underline' },
   color: theme.palette.primary.contrastText,
   marginRight: theme.spacing(1),
   textDecoration: 'none',
-  '&:hover': { textDecoration: 'underline' },
 }));
 
 export default function Footer() {

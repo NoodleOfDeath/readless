@@ -22,8 +22,8 @@ export type SubscriptionCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'subscription',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Subscription<A extends SubscriptionAttributes = SubscriptionAttributes, B extends SubscriptionCreationAttributes = SubscriptionCreationAttributes>
   extends Model<A, B>
@@ -38,20 +38,20 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
   }
   
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     aliasType: string;
   
   @Column({
-    type: DataType.STRING(2083),
     allowNull: false,
+    type: DataType.STRING(2083),
   })
     alias: string;
 
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     newsletterId: number;
 

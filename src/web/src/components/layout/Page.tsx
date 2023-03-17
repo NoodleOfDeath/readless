@@ -30,12 +30,12 @@ const StyledContainer = styled(
     center,
     align = left ? 'left' : right ? 'right' : center ? 'center' : 'left',
   }) => ({
+    alignItems: align,
+    alignSelf: align,
+    justifyContent: align,
     marginTop: theme.spacing(5),
     maxWidth: 1280,
-    alignSelf: align,
-    alignItems: align,
     textAlign: align,
-    justifyContent: align,
   }),
 );
 

@@ -19,8 +19,8 @@ export type PolicyCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'policy',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Policy<
     A extends PolicyAttributes = PolicyAttributes,
@@ -38,14 +38,14 @@ export class Policy<
   }
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     name: string;
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     content: string;
 

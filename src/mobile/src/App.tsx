@@ -20,8 +20,8 @@ export default function TabController() {
       <MenuProvider>
         <NavigationContainer
           theme={ {
-            dark: !theme.isLightMode,
             colors: theme.navContainerColors,
+            dark: !theme.isLightMode,
           } }
           linking={ linkingOptions }>
           {showOnboarding ? (
@@ -36,10 +36,10 @@ export default function TabController() {
                   name={ screen.name }
                   component={ screen.component }
                   options={ {
+                    headerRight: screen.headerRight,
                     tabBarIcon: (props) => (
                       <Icon name={ screen.icon } { ...props } />
                     ),
-                    headerRight: screen.headerRight,
                   } } />
               ))}
             </Tab.Navigator>

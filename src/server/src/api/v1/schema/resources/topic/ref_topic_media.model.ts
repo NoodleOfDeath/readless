@@ -19,8 +19,8 @@ export type RefTopicMediaCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: '_ref_topic_media',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class RefTopicMedia<A extends RefTopicMediaAttributes = RefTopicMediaAttributes, B extends RefTopicMediaCreationAttributes = RefTopicMediaCreationAttributes> extends Model<A, B> implements RefTopicMediaAttributes {
 
@@ -33,14 +33,14 @@ export class RefTopicMedia<A extends RefTopicMediaAttributes = RefTopicMediaAttr
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     topicId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     mediaId: number;
     

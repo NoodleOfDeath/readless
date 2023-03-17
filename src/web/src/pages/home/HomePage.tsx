@@ -38,8 +38,8 @@ export default function HomePage() {
     for (const newsletterName of newsletters) {
       try { 
         await API.subscribeToNewsletter({
-          aliasType: 'email',
           alias: values.email,
+          aliasType: 'email',
           newsletterName,
         });
         setSuccess(true);
@@ -68,11 +68,11 @@ export default function HomePage() {
                 required
                 placeholder="Email"
                 { ...register('email', { 
-                  required: true,
                   pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: 'please enter a valid email address',
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   },
+                  required: true,
                 }) } />
               <FormControlLabel control={ <Checkbox { ...register('dev') } /> } label="Send me development progress updates!" />
               <FormControlLabel control={ <Checkbox { ...register('beta') } /> } label="Also add me as a beta tester!" />

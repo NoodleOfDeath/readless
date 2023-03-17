@@ -21,8 +21,8 @@ export type FeatureCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'feature',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Feature<A extends FeatureAttributes = FeatureAttributes, B extends FeatureCreationAttributes = FeatureCreationAttributes>
   extends Model<A, B>
@@ -37,14 +37,14 @@ export class Feature<A extends FeatureAttributes = FeatureAttributes, B extends 
   }
   
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     name: string;
   
   @Column({
-    type: DataType.BOOLEAN,
     allowNull: false,
+    type: DataType.BOOLEAN,
   })
     enabled: boolean;
   

@@ -17,16 +17,16 @@ export class MailService extends BaseService {
     port = process.env.MAIL_PORT ? Number(process.env.MAIL_PORT) : 465,
     secure = true,
     auth = {
-      user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
+      user: process.env.MAIL_USER,
     },
   }: Partial<MailServiceOptions> = {}) {
     super();
     this.client = createTransport({
+      auth,
       host,
       port,
       secure,
-      auth,
     });
   }
 

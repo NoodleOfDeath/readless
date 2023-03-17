@@ -20,20 +20,20 @@ export type MetricCreationAttributes = MetricAttributes;
 
 @Table({
   modelName: 'metric',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Metric extends Model<MetricAttributes, MetricAttributes> implements MetricAttributes {
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     type: 'click' | 'nav';
     
   @Column({
-    type: DataType.JSON,
     allowNull: false,
+    type: DataType.JSON,
   })
     data: Record<string, unknown>;
     
@@ -41,8 +41,8 @@ export class Metric extends Model<MetricAttributes, MetricAttributes> implements
     referrer?: string[];
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     userAgent: string;
 

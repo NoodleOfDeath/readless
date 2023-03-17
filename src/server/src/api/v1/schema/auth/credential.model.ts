@@ -24,8 +24,8 @@ export type CredentialCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'credential',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Credential<
     A extends CredentialAttributes = CredentialAttributes,
@@ -43,8 +43,8 @@ export class Credential<
   }
 
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     userId: number;
   
@@ -54,8 +54,8 @@ export class Credential<
     where: { deletedAt: null },
   })
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     type: string;
 
@@ -65,8 +65,8 @@ export class Credential<
     where: { deletedAt: null },
   })
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     value: string;
 

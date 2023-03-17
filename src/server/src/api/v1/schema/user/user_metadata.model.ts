@@ -22,8 +22,8 @@ export type UserMetadataCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'user_metadata',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttributes, B extends UserMetadataCreationAttributes = UserMetadataCreationAttributes>
   extends Model<A, B>
@@ -43,8 +43,8 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     where: { deletedAt: null },
   })
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     userId: number;
   
@@ -54,14 +54,14 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     where: { deletedAt: null },
   })
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     key: string;
     
   @Column({
-    type: DataType.JSON,
     allowNull: false,
+    type: DataType.JSON,
   })
     value: Record<string, unknown>;
 

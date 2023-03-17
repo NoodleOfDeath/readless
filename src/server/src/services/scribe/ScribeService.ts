@@ -37,29 +37,23 @@ export class ScribeService extends BaseService {
       throw new Error('Article too long for OpenAI');
     }
     const sourceInfo = Source.json({
-      outletId,
-      url: url,
-      originalTitle: loot.title,
-      rawText: loot.text,
       filteredText: loot.filteredText,
+      originalTitle: loot.title,
+      outletId,
+      rawText: loot.text,
+      url: url,
     });
     const prompts: Prompt[] = [
       {
-        text: `Please read the following article and provide a single sentence summary using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
+        action: (reply) => (sourceInfo.title = reply.text),
         catchFailure: (reply) => { 
           if (reply.text.length > 120) {
             return new Error('Title too long');
           }
         },
-        action: (reply) => (sourceInfo.title = reply.text),
+        text: `Please read the following article and provide a single sentence summary using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
       },
       {
-        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each for this article',
-        catchFailure: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            return new Error('Bad response from chatgpt');
-          }
-        },
         action: (reply) => {
           sourceInfo.bullets = reply.text
             .replace(/^bullets:\s*/i, '')
@@ -67,62 +61,62 @@ export class ScribeService extends BaseService {
             .split(',')
             .map((bullet) => bullet.trim());
         },
+        catchFailure: (reply) => { 
+          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
+            return new Error('Bad response from chatgpt');
+          }
+        },
+        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each for this article',
       },
       {
+        action: (reply) => (sourceInfo.shortSummary = reply.text),
+        catchFailure: (reply) => { 
+          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
+            return new Error('Bad response from chatgpt');
+          }
+        },
         text: [
           'Please summarize the same article in one sentence using no more than 255 characters.',
           'Please do not use phrases like "the article".',
         ].join(' '),
+      },
+      {
+        action: (reply) => (sourceInfo.summary = reply.text),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
             return new Error('Bad response from chatgpt');
           }
         },
-        action: (reply) => (sourceInfo.shortSummary = reply.text),
-      },
-      {
         text: [
           'Please summarize the same article using between 100 and 200 words.',
           'Please do not use phrases like "the article".',
         ].join(' '),
+      },
+      {
+        action: (reply) => (sourceInfo.abridged = reply.text),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
             return new Error('Bad response from chatgpt');
           }
         },
-        action: (reply) => (sourceInfo.summary = reply.text),
-      },
-      {
         text: [
           'Please summarize the same article using between 300 and 600 words.',
           'Please do not use phrases like "the article".',
         ].join(' '),
+      },
+      {
+        action: (reply) => (sourceInfo.text = reply.text),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
             return new Error('Bad response from chatgpt');
           }
         },
-        action: (reply) => (sourceInfo.abridged = reply.text),
-      },
-      {
         text: [
           'Please summarize the same article using between 600 and 1500 words.',
           'Please do not use phrases like "the article".',
         ].join(' '),
-        catchFailure: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            return new Error('Bad response from chatgpt');
-          }
-        },
-        action: (reply) => (sourceInfo.text = reply.text),
       },
       {
-        text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
-        catchFailure: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            return new Error('Bad response from chatgpt');
-          }
-        },
         action: (reply) => {
           sourceInfo.tags = reply.text
             .replace(/^tags:\s*/i, '')
@@ -130,36 +124,42 @@ export class ScribeService extends BaseService {
             .split(',')
             .map((tag) => tag.trim());
         },
-      },
-      {
-        text: 'Please provide a one word category for this article',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
             return new Error('Bad response from chatgpt');
           }
         },
+        text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
+      },
+      {
         action: (reply) => (sourceInfo.category = reply.text.replace(/^category:\s*/i, '').replace(/\.$/, '')).trim(),
-      },
-      {
-        text: 'Please provide a one word subcategory for this article',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
             return new Error('Bad response from chatgpt');
           }
         },
+        text: 'Please provide a one word category for this article',
+      },
+      {
         action: (reply) =>
           (sourceInfo.subcategory = reply.text.replace(/^subcategory:\s*/i, '').replace(/\.$/, '')).trim(),
-      },
-      {
-        text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
             return new Error('Bad response from chatgpt');
           }
         },
+        text: 'Please provide a one word subcategory for this article',
+      },
+      {
         action: (reply) => {
           sourceInfo.imagePrompt = reply.text;
         },
+        catchFailure: (reply) => { 
+          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
+            return new Error('Bad response from chatgpt');
+          }
+        },
+        text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
       },
     ];
     // initialize chatgpt service and send the prompt

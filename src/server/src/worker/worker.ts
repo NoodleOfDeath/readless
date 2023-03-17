@@ -52,8 +52,8 @@ export async function doWork() {
           if (fetchCount >= WORKER_FETCH_RATE_LIMIT) {
             console.log(`Outlet ${outlet.name} has reached its fetch limit of ${WORKER_FETCH_RATE_LIMIT} per ${WORKER_FETCH_INTERVAL_MS}ms`);
             await siteMapWorker.queue.add(job.name, job.data, {
-              jobId: job.id,
               delay: WORKER_FETCH_INTERVAL_MS,
+              jobId: job.id,
             });
             return;
           }

@@ -63,9 +63,9 @@ class JwtPayload {
 
   toJSON() {
     return {
-      userId: this.userId,
-      scopes: this.scopes,
       permissions: this.permissions,
+      scopes: this.scopes,
+      userId: this.userId,
     };
   }
 
@@ -97,8 +97,8 @@ export class AuthService extends BaseService {
           : 'thirdParty';
     const payload = email || username || eth2Address || thirdParty;
     return {
-      type,
       payload,
+      type,
       ...other,
     };
   }
@@ -119,8 +119,8 @@ export class AuthService extends BaseService {
         }
         const alias = await this.resolveAlias({
           ...probe,
-          type: `thirdParty/${probe.payload.name}`,
           payload: thirdPartyId,
+          type: `thirdParty/${probe.payload.name}`,
         });
         return alias;
       }
@@ -181,8 +181,8 @@ export class AuthService extends BaseService {
       const credential = (
         await Credential.findOne({
           where: {
-            userId: user.id,
             type: 'password',
+            userId: user.id,
           },
         })
       )?.toJSON();
@@ -196,8 +196,8 @@ export class AuthService extends BaseService {
     // user is authenticated, generate JWT
     const token = jwt.sign(new JwtPayload({ userId: user.id }).toJSON(), process.env.JWT_SECRET, { expiresIn: JWT_TOKEN_LIFETIME });
     return {
-      userId: user.id,
       jwt: token,
+      userId: user.id,
     };
   }
 
@@ -240,15 +240,15 @@ export class AuthService extends BaseService {
     if (thirdPartyId && typeof probe.payload !== 'string') {
       // bind third-party alias
       await Alias.create({
-        userId: newUser.id,
         type: `thirdParty/${probe.payload.name}`,
+        userId: newUser.id,
         value: thirdPartyId,
         verifiedAt: new Date(),
       });
     }
     await Alias.create({
-      userId: newUser.id,
       type: newAliasType,
+      userId: newUser.id,
       value: newAliasValue,
       verificationCode,
       verificationExpiresAt: verified ? undefined : new Date(Date.now() + ms('20m')),
@@ -256,8 +256,8 @@ export class AuthService extends BaseService {
     });
     if (opts.password) {
       const newCredential = new Credential({
-        userId: newUser.id,
         type: 'password',
+        userId: newUser.id,
         value: bcrypt.hashSync(opts.password, 10),
       });
       await newCredential.save();

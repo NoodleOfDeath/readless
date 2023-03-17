@@ -32,10 +32,10 @@ export class S3Service extends BaseService {
   }: S3ServiceOptions = {}) {
     super();
     this.s3Client = new S3Client({
+      credentials,
       endpoint,
       forcePathStyle,
       region,
-      credentials,
     });
   }
 

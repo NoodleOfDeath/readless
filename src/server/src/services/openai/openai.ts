@@ -28,7 +28,7 @@ export class OpenAIService extends BaseService {
       size = '1024x1024',
     }: CreateImageOptions = {}) {
     return await this.api.createImage({
-      prompt, n, size, 
+      n, prompt, size, 
     });
   }
   

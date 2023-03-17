@@ -19,8 +19,8 @@ export type RefRolePermissionCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: '_ref_role_permission',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class RefRolePermission<A extends RefRolePermissionAttributes = RefRolePermissionAttributes, B extends RefRolePermissionCreationAttributes = RefRolePermissionCreationAttributes> extends Model<A, B> implements RefRolePermissionAttributes {
 
@@ -33,14 +33,14 @@ export class RefRolePermission<A extends RefRolePermissionAttributes = RefRolePe
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     roleId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     permissionId: number;
 

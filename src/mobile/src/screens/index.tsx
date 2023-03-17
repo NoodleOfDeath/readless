@@ -25,29 +25,27 @@ type ScreenProps = {
 
 export const SCREENS: ScreenProps[] = [
   {
-    name: 'Discover',
     component: DiscoverScreen,
     icon: 'fire',
+    name: 'Discover',
   },
   {
-    name: 'Skoop+',
     component: SkoopScreen,
     icon: 'silverware-spoon',
+    name: 'Skoop+',
   },
   {
-    name: 'Audio',
     component: AudioScreen,
     icon: 'headphones',
+    name: 'Audio',
   },
   {
-    name: 'Notifications',
     component: NotificationsScreen,
     icon: 'bell',
+    name: 'Notifications',
   },
   {
-    name: 'Profile',
     component: ProfileScreen,
-    icon: 'account',
     headerRight: () => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const theme = useTheme();
@@ -57,5 +55,7 @@ export const SCREENS: ScreenProps[] = [
         </Pressable>
       );
     },
+    icon: 'account',
+    name: 'Profile',
   },
 ];

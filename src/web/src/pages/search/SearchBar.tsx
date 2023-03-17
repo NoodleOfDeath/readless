@@ -9,12 +9,12 @@ import {
 import { SessionContext } from '@/contexts';
 
 const StyledAutocomplete = styled(Autocomplete)(() => ({
-  width: '100%',
-  maxWidth: 1280,
-  margin: 'auto',
-  alignSelf: 'center',
   alignItems: 'center',
+  alignSelf: 'center',
+  margin: 'auto',
+  maxWidth: 1280,
   textAlign: 'center',
+  width: '100%',
 }));
 
 export default function SearchBar() {

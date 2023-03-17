@@ -21,8 +21,8 @@ export type MediaCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'media',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Media<
     A extends MediaAttributes = MediaAttributes,
@@ -40,14 +40,14 @@ export class Media<
   }
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     type: string;
 
   @Column({
-    type: DataType.STRING(2083),
     allowNull: false,
+    type: DataType.STRING(2083),
   })
     url: string;
 

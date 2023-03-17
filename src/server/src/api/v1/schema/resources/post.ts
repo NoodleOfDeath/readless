@@ -47,38 +47,38 @@ export abstract class Post<
   }
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     text: string;
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     abridged: string;
 
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     summary: string;
 
   @Column({
-    type: DataType.STRING(1024),
     allowNull: false,
+    type: DataType.STRING(1024),
   })
     shortSummary: string;
 
   @Column({
-    type: DataType.ARRAY(DataType.STRING(1024)),
     defaultValue: [],
+    type: DataType.ARRAY(DataType.STRING(1024)),
   })
     bullets: string[];
   
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     imagePrompt: string;
 
@@ -112,26 +112,26 @@ export abstract class TitledCategorizedPost<
   }
 
   @Column({
-    type: DataType.STRING(1024),
     allowNull: false,
+    type: DataType.STRING(1024),
   })
     title: string;
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     category: string;
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     subcategory: string;
 
   @Column({
-    type: DataType.ARRAY(DataType.STRING),
     defaultValue: [],
+    type: DataType.ARRAY(DataType.STRING),
   })
     tags: string[];
 

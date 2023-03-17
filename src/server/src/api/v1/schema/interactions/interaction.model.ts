@@ -33,8 +33,8 @@ export type InteractionCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'interaction',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Interaction<
     A extends InteractionAttributes = InteractionAttributes,
@@ -52,20 +52,20 @@ export class Interaction<
   }
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     type: InteractionType;
 
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     targetType: ResourceType;
 
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     targetId: number;
 

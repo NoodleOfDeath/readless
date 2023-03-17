@@ -19,8 +19,8 @@ export type TopicCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: 'topic',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class Topic<A extends TopicAttributes = TopicAttributes, B extends TopicCreationAttributes = TopicCreationAttributes>
   extends Model<A, B>
@@ -35,14 +35,14 @@ export class Topic<A extends TopicAttributes = TopicAttributes, B extends TopicC
   }
   
   @Column({
-    type: DataType.STRING,
     allowNull: false,
+    type: DataType.STRING,
   })
     name: string;
   
   @Column({
-    type: DataType.TEXT,
     allowNull: false,
+    type: DataType.TEXT,
   })
     description: string;
 

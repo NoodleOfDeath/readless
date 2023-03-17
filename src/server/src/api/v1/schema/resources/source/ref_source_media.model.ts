@@ -19,8 +19,8 @@ export type RefSourceMediaCreationAttributes = DatedAttributes & {
 
 @Table({
   modelName: '_ref_source_media',
-  timestamps: true,
   paranoid: true,
+  timestamps: true,
 })
 export class RefSourceMedia<A extends RefSourceMediaAttributes = RefSourceMediaAttributes, B extends RefSourceMediaCreationAttributes = RefSourceMediaCreationAttributes> extends Model<A, B> implements RefSourceMediaAttributes {
 
@@ -33,14 +33,14 @@ export class RefSourceMedia<A extends RefSourceMediaAttributes = RefSourceMediaA
   }
     
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     sourceId: number;
   
   @Column({
-    type: DataType.INTEGER,
     allowNull: false,
+    type: DataType.INTEGER,
   })
     mediaId: number;
   

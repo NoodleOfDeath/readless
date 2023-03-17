@@ -34,7 +34,7 @@ export default function RoadMap() {
             </TimelineDot>
             <TimelineConnector />
           </TimelineSeparator>
-          <TimelineContent sx={ { py: '12px', px: 2 } }>
+          <TimelineContent sx={ { px: 2, py: '12px' } }>
             <Typography variant="h6" component="span">
               {milestone.title}
             </Typography>
