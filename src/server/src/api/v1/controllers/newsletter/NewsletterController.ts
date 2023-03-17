@@ -70,5 +70,4 @@ export class NewsletterController {
     }
   }
   
-  
 }

@@ -154,15 +154,11 @@ export function SessionContextProvider({ children }: Props) {
     } catch (e) {
       setUserData(undefined);
     }
-    try {
-      API.getFeatures()
-        .then((response) => {
-          setEnabledFeatures(Object.fromEntries(response.data.map((feature) => [feature.name, feature])));
-        })
-        .catch(console.error);
-    } catch (e) {
-      console.error(e);
-    }
+    API.getFeatures()
+      .then((response) => {
+        setEnabledFeatures(Object.fromEntries(response.data.map((feature) => [feature.name, feature])));
+      })
+      .catch(console.error);
   }, []);
 
   // Update theme when user preference changes

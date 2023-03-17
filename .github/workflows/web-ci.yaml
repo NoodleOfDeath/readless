@@ -25,7 +25,7 @@ env:
 jobs:
   build-web:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~web') }}
+    if: ${{ !contains(github.event.head_commit.message, '~web') && !contains(github.event.head_commit.message, '~skip') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       API_ENDPOINT: ${{ vars.API_ENDPOINT }}
@@ -60,7 +60,6 @@ jobs:
   deploy-web:
     needs: build-web
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~web') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}

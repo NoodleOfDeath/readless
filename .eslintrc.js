@@ -57,6 +57,7 @@ module.exports = {
     ],
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
+    'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
     'no-unused-vars': 'off',
     'object-curly-spacing': ['error', 'always'],
     'object-curly-newline': [

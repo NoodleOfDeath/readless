@@ -8,7 +8,7 @@ import {
 
 import { SessionContext } from '@/contexts';
 
-const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+const StyledAutocomplete = styled(Autocomplete)(() => ({
   width: '100%',
   maxWidth: 1280,
   margin: 'auto',

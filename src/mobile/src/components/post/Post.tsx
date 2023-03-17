@@ -8,7 +8,6 @@ import {
 import { formatDistance } from 'date-fns';
 import { Divider } from 'react-native-elements';
 
-
 import ConsumptionModeSelector, { ConsumptionMode } from './ConsumptionModeSelector';
 import { SourceWithOutletAttr } from '../../api/Api';
 import FlexView from '../common/FlexView';

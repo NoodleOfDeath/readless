@@ -16,7 +16,7 @@ export default function SuccessPage() {
     if (redirect) {
       setTimeout(() => navigate(redirect), timeout);
     }
-  }, [redirect, timeout]);
+  }, [navigate, redirect, timeout]);
   
   return (
     <Page title="Yay!">

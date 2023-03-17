@@ -9,12 +9,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Route, Routes } from 'react-router-dom';
 
-
 import CookieConsent from '@/components/layout/CookieConsent';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/header/Header';
 import { SessionContext } from '@/contexts';
-import { routes } from '@/pages';
+import { ROUTES } from '@/pages';
 
 const StyledAppContainer = styled(Box)`
   display: flex;
@@ -40,12 +39,12 @@ function App() {
           <Header />
           <StyledAppContent>
             <Routes>
-              {routes.map((route) => {
+              {Object.entries(ROUTES).map(([route, element ]) => {
                 return (
                   <Route
-                    key={ route.path }
-                    path={ route.path }
-                    element={ route.element } />
+                    key={ route }
+                    path={ route }
+                    element={ element } />
                 );
               })}
             </Routes>

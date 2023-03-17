@@ -6,11 +6,11 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/worker-ci.yaml"
-      - "Dockerfile.worker"
-      - "k8s/worker-deploy.yaml"
-      - "src/server/package.json"
-      - "src/server/src/worker/**"
+      - '.github/workflows/worker-ci.yaml'
+      - 'Dockerfile.worker'
+      - 'k8s/worker-deploy.yaml'
+      - 'src/server/package.json'
+      - 'src/server/src/worker/**'
 
 concurrency:
   group: ${{ github.ref }}-worker
@@ -23,7 +23,7 @@ env:
 jobs:
   build-worker:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~worker') }}
+    if: ${{ !contains(github.event.head_commit.message, '~worker') && !contains(github.event.head_commit.message, '~skip')}}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description
@@ -51,7 +51,6 @@ jobs:
   deploy-worker:
     needs: build-worker
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~worker') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}

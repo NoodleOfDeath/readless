@@ -5,8 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { MenuProvider } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
-
 import { useTheme } from './components/theme';
 import SessionContextProvider from './contexts/SessionContext';
 import { SCREENS } from './screens';

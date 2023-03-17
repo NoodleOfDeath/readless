@@ -9,7 +9,6 @@ import reportWebVitals from './reportWebVitals';
 import './index.css';
 import { SessionContextProvider } from '@/contexts';
 
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );

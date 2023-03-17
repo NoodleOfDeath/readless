@@ -10,7 +10,6 @@ import {
 } from 'react-native-popup-menu';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
 import { useTheme } from '../theme';
 
 export type MenuOption = {
