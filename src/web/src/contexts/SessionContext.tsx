@@ -198,6 +198,12 @@ export function SessionContextProvider({ children }: Props) {
       .catch(console.error);
     // if path is not enabled redirect to home
     switch (location.pathname) {
+    case '/login':
+      if (userData?.userId) {
+        navigate('/');
+        return;
+      }
+      break;
     case '/logout':
       API.logout({ ...userData })
         .then(() => {

@@ -108,18 +108,19 @@ export class AuthService extends BaseService {
       if (probe.payload.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(probe.payload.credential);
-        const { email, email_verified: emailVerified } = ticket.getPayload();
+        const { email, email_verified: emailVerified, sub: thirdPartyId } = ticket.getPayload();
         if (!email) {
           throw new AuthError('NO_THIRD_PARTY_ALIAS');
         }
         if (!emailVerified) {
           throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
         }
-        return await this.resolveAlias({
+        const alias = await this.resolveAlias({
           ...probe,
-          type: 'email',
-          payload: email,
+          type: `thirdParty/${probe.payload.name}`,
+          payload: thirdPartyId,
         });
+        return alias;
       }
     } else {
       return await Alias.findOne({ 
@@ -138,25 +139,33 @@ export class AuthService extends BaseService {
         ? probe
         : (await this.resolveAlias(probe))?.toJSON();
     if (alias) {
-      return await User.findOne({ where: { id: alias.userId } });
+      return {
+        alias,
+        user: await User.findOne({ where: { id: alias.userId } }),
+      }
     } else if (!(probe instanceof Alias) && probe.failIfNotResolved) {
+      if (probe.type === 'thirdParty') {
+        throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
+      }
       throw new AuthError('INVALID_PASSWORD');
     }
   }
 
   public async resolveUser(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
     const probe = this.parseProbe(opts, other);
-    const user = await this.resolveUserByAlias(probe);
+    const { alias, user } = await this.resolveUserByAlias(probe);
     return {
       probe,
+      alias,
       user,
     };
   }
 
   public async resolveUserAsJson(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
-    const { probe, user } = await this.resolveUser(opts, other);
+    const { probe, alias, user } = await this.resolveUser(opts, other);
     return {
       probe,
+      alias,
       user: user?.toJSON(),
     };
   }
@@ -168,13 +177,6 @@ export class AuthService extends BaseService {
       console.log(web3);
     } else if (probe.type === 'thirdParty') {
       // auth by thirdParty
-      await Credential.upsert(
-        {
-          userId: user.id,
-          type: [probe.type, opts.thirdParty?.name].join('/'),
-          value: opts.thirdParty?.credential,
-        },
-      );
     } else {
       // auth by password
       const credential = (
@@ -202,29 +204,32 @@ export class AuthService extends BaseService {
 
   public async register(opts: Partial<RegistrationOptions>): Promise<RegistrationResponse> {
     const { probe, user } = await this.resolveUserAsJson(opts, { failIfNotResolved: false });
+    let newAliasType: AliasType;
+    let newAliasValue: string;
+    let thirdPartyId: string;
+    let verificationCode: string;
+    let verified = false;
     if (user) {
       throw new AuthError('DUPLICATE_USER');
     }
-    let newAliasType: AliasType;
-    let newAliasValue: string;
-    let verificationCode: string;
-    let verified = false;
     if (typeof probe.payload !== 'string') {
       if (probe.payload.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(probe.payload.credential);
         const { email, email_verified: emailVerified } = ticket.getPayload();
+        thirdPartyId = ticket.getPayload().sub;
         if (!email) {
           throw new AuthError('NO_THIRD_PARTY_ALIAS');
         }
         if (!emailVerified) {
           throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
         }
+        // auto-create new alias by email, as well
         newAliasType = 'email';
         newAliasValue = email;
         verified = true;
       }
-    } else {
+      } else {
       newAliasType = probe.type;
       newAliasValue = probe.payload;
     }
@@ -233,7 +238,16 @@ export class AuthService extends BaseService {
     if (!verified) {
       verificationCode = await generateVerificationCode();
     }
-    const newAlias = new Alias({
+    if (thirdPartyId && typeof probe.payload !== 'string') {
+      // bind third-party alias
+      await Alias.create({
+        userId: newUser.id,
+        type: `thirdParty/${probe.payload.name}`,
+        value: thirdPartyId,
+        verifiedAt: new Date(),
+      });
+    }
+    await Alias.create({
       userId: newUser.id,
       type: newAliasType,
       value: newAliasValue,
@@ -241,7 +255,6 @@ export class AuthService extends BaseService {
       verificationExpiresAt: verified ? undefined : new Date(Date.now() + ms('20m')),
       verifiedAt: verified ? new Date() : undefined,
     });
-    await newAlias.save();
     if (opts.password) {
       const newCredential = new Credential({
         userId: newUser.id,

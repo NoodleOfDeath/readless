@@ -22,7 +22,7 @@ export const ALIAS_TYPES = {
   thirdParty: 'thirdParty',
 } as const;
 
-export type AliasType = ValuesOfKeys<typeof ALIAS_TYPES>;
+export type AliasType = ValuesOfKeys<typeof ALIAS_TYPES> | `thirdParty/${string}`;
 
 export const CREDENTIAL_TYPES = {
   otp: 'otp',
