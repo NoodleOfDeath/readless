@@ -1,9 +1,14 @@
 import {
-  Body, Post, Route, Tags, 
+  Body,
+  Post,
+  Route,
+  Tags,
 } from 'tsoa';
 
 import {
-  Referral, ReferralAttributes, ReferralCreationAttributes, 
+  Referral,
+  ReferralAttributes,
+  ReferralCreationAttributes,
 } from '../../schema/models';
 
 @Route('/v1/referrals')

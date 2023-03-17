@@ -1,9 +1,15 @@
 import {
-  Body, Post, Route, Tags, 
+  Body,
+  Post,
+  Route,
+  Tags,
 } from 'tsoa';
 
 import {
-  Newsletter, Subscription, SubscriptionAttributes, SubscriptionCreationAttributes, 
+  Newsletter,
+  Subscription,
+  SubscriptionAttributes,
+  SubscriptionCreationAttributes,
 } from '../../schema/models';
 
 @Route('/v1/newsletter')

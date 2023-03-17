@@ -4,6 +4,9 @@ COPY src/server ./server
 WORKDIR /home/node/server
 RUN yarn install --non-interactive --frozen-lockfile
 WORKDIR /home/node/app
+COPY package.json ./
+COPY yarn-lock.yaml ./
+RUN yarn install --non-interactive --frozen-lockfile
 COPY src/web/package.json ./
 COPY src/web/yarn-lock.yaml ./
 RUN yarn install --non-interactive --frozen-lockfile

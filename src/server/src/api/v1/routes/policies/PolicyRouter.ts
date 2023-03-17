@@ -11,7 +11,7 @@ router.get('/privacy', async (req, res) => {
     res.json(policy);
   } catch (e) {
     console.error(e);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).end();
   }
 });
 
@@ -22,7 +22,7 @@ router.get('/terms', async (req, res) => {
     res.json(policy);
   } catch (e) {
     console.error(e);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).end();
   }
 });
 

@@ -6,6 +6,47 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"AuthError": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					},
+					"code": {
+						"type": "number",
+						"format": "double"
+					},
+					"errorKey": {
+						"type": "string",
+						"enum": [
+							"DUPLICATE_USER",
+							"EXPIRED_CREDENTIALS",
+							"EXPIRED_VERIFICATION_CODE",
+							"INVALID_CREDENTIALS",
+							"INVALID_PASSWORD",
+							"MISSING_PASSWORD",
+							"NO_THIRD_PARTY_ALIAS",
+							"STALE_VERIFICATION_CODE",
+							"THIRD_PARTY_ALIAS_NOT_VERIFIED",
+							"UNKNOWN_ALIAS"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"code",
+					"errorKey"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DatedAttributes": {
 				"properties": {
 					"deletedAt": {
@@ -73,44 +114,6 @@
 				],
 				"type": "object"
 			},
-			"AuthError": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"message": {
-						"type": "string"
-					},
-					"stack": {
-						"type": "string"
-					},
-					"code": {
-						"type": "number",
-						"format": "double"
-					},
-					"errorKey": {
-						"type": "string",
-						"enum": [
-							"DUPLICATE_USER",
-							"EXPIRED_CREDENTIALS",
-							"INVALID_CREDENTIALS",
-							"MISSING_PASSWORD",
-							"NO_THIRD_PARTY_ALIAS",
-							"THIRD_PARTY_ALIAS_NOT_VERIFIED",
-							"UNKNOWN_ALIAS"
-						],
-						"nullable": false
-					}
-				},
-				"required": [
-					"name",
-					"message",
-					"code",
-					"errorKey"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ThirdParty": {
 				"type": "string",
 				"enum": [
@@ -122,6 +125,17 @@
 				"properties": {
 					"credential": {
 						"type": "string"
+					},
+					"userId": {
+						"anyOf": [
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{
+								"type": "string"
+							}
+						]
 					},
 					"name": {
 						"$ref": "#/components/schemas/ThirdParty"
@@ -227,6 +241,28 @@
 				],
 				"type": "object"
 			},
+			"Partial_LogoutOptions_": {
+				"properties": {
+					"otp": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"jwt": {
+						"type": "string"
+					},
+					"eth2SignedMessage": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
 			"AuthenticationResponse": {
 				"properties": {
 					"userId": {
@@ -266,6 +302,41 @@
 						"type": "string"
 					},
 					"eth2SignedMessage": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"VerifyAliasResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object"
+			},
+			"Partial_VerifyAliasOptions_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2Address": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"verificationCode": {
 						"type": "string"
 					}
 				},
@@ -808,7 +879,7 @@
 				"operationId": "Login",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "OK",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -819,6 +890,16 @@
 					},
 					"401": {
 						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -849,8 +930,8 @@
 			"post": {
 				"operationId": "Register",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"201": {
+						"description": "Created",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -861,6 +942,16 @@
 					},
 					"401": {
 						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -891,8 +982,8 @@
 			"post": {
 				"operationId": "Logout",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"204": {
+						"description": "No Content",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -903,6 +994,16 @@
 					},
 					"401": {
 						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -922,7 +1023,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_LoginOptions_"
+								"$ref": "#/components/schemas/Partial_LogoutOptions_"
 							}
 						}
 					}
@@ -934,7 +1035,7 @@
 				"operationId": "Authenticate",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "OK",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -945,6 +1046,16 @@
 					},
 					"401": {
 						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -965,6 +1076,58 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/Partial_AuthenticationOptions_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/verify/alias": {
+			"post": {
+				"operationId": "VerifyAlias",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VerifyAliasResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_VerifyAliasOptions_"
 							}
 						}
 					}

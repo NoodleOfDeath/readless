@@ -1,12 +1,15 @@
-import Carousel from 'react-native-reanimated-carousel';
 import React from 'react';
-import { interpolate } from 'react-native-reanimated';
 import {
-  Button, Text, View, 
+  Button,
+  Text,
+  View,
 } from 'react-native';
 
-import FlexView from '../../components/common/FlexView';
+import { interpolate } from 'react-native-reanimated';
+import Carousel from 'react-native-reanimated-carousel';
+
 import OnboardingCard from './OnboardingCard';
+import FlexView from '../../components/common/FlexView';
 import { useTheme } from '../../components/theme';
 import { window } from '../../constants';
 
@@ -48,37 +51,35 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
   return (
     <FlexView>
       <Carousel
-        loop={false}
-        style={{
+        loop={ false }
+        style={ {
           width: window.width,
           height: window.height,
           justifyContent: 'center',
           alignItems: 'center',
-        }}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
-        data={[...new Array(6).keys()]}
-        renderItem={({ index }) => {
+        } }
+        width={ PAGE_WIDTH }
+        height={ PAGE_HEIGHT }
+        data={ [...new Array(6).keys()] }
+        renderItem={ ({ index }) => {
           return (
-            <OnboardingCard key={index}>
-              <View style={theme.container}>
+            <OnboardingCard key={ index }>
+              <View style={ theme.container }>
                 <Text
-                  style={{
+                  style={ {
                     fontSize: 30,
                     color: 'black',
-                  }}
-                >
+                  } }>
                   welcome to theSkoop!
                 </Text>
                 {index >= 4 && (
-                  <Button onPress={() => onClose?.()} title="Get Started" />
+                  <Button onPress={ () => onClose?.() } title="Get Started" />
                 )}
               </View>
             </OnboardingCard>
           );
-        }}
-        customAnimation={animationStyle}
-      />
+        } }
+        customAnimation={ animationStyle } />
     </FlexView>
   );
 }

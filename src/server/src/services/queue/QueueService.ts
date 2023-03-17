@@ -1,5 +1,10 @@
 import {
-  BaseJobOptions, Worker as BullMQWorker, Job, Queue, QueueOptions, WorkerOptions, 
+  BaseJobOptions,
+  Worker as BullMQWorker,
+  Job,
+  Queue,
+  QueueOptions,
+  WorkerOptions,
 } from 'bullmq';
 import IORedis, { RedisOptions } from 'ioredis';
 

@@ -1,6 +1,27 @@
-
 import {
-  Alias, Article, ArticleSource, ArticleTopic, Credential, Media, Newsletter, Outlet, Permission, RefArticleMedia, RefCredentialRole, RefOutletMedia, RefRolePermission, RefSourceMedia, RefSourceTopic, RefTopicMedia, RefUserRole, Role, Source, Subscription, Topic, User, UserMetadata, 
+  Alias,
+  Article,
+  ArticleSource,
+  ArticleTopic,
+  Credential,
+  Media,
+  Newsletter,
+  Outlet,
+  Permission,
+  RefArticleMedia,
+  RefCredentialRole,
+  RefOutletMedia,
+  RefRolePermission,
+  RefSourceMedia,
+  RefSourceTopic,
+  RefTopicMedia,
+  RefUserRole,
+  Role,
+  Source,
+  Subscription,
+  Topic,
+  User,
+  UserMetadata,
 } from './models';
 
 export function makeAssociations() {

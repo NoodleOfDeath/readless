@@ -1,14 +1,18 @@
-import { CronJob } from 'cron';
-import { Op } from 'sequelize';
 import axios from 'axios';
 import { load } from 'cheerio';
+import { CronJob } from 'cron';
+import { Op } from 'sequelize';
 
 import {
-  DBService, QUEUES, QueueService, 
-} from '../services';
-import {
-  Outlet, SiteMapParams, Source, 
+  Outlet,
+  SiteMapParams,
+  Source,
 } from '../api/v1/schema/models';
+import {
+  DBService,
+  QUEUES,
+  QueueService,
+} from '../services';
 
 async function main() {
   await DBService.init();

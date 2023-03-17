@@ -1,12 +1,19 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Checkbox, FormControlLabel,  Stack, TextField, styled } from "@mui/material";
-import { FieldValues, useForm } from "react-hook-form"; 
+import React from 'react';
 
-import API from "@/api";
-import { SessionContext } from "@/contexts";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  TextField,
+  styled,
+} from '@mui/material';
+import { FieldValues, useForm } from 'react-hook-form'; 
+import { useNavigate } from 'react-router-dom';
 
-import Page from "@/components/layout/Page";
+import API from '@/api';
+import Page from '@/components/layout/Page';
+import { SessionContext } from '@/contexts';
 
 const StyledStack = styled(Stack)`
   align-content: center;
@@ -21,15 +28,17 @@ export default function HomePage() {
   const [success, setSuccess] = React.useState(false);
   
   const onSubmit = React.useCallback(async (values: FieldValues) => {
-    const newsletters = ["public_debut"];
-    if (values.dev)
-      newsletters.push("progress_updates");
-    if (values.beta)
-      newsletters.push("beta_testers");
+    const newsletters = ['public_debut'];
+    if (values.dev) {
+      newsletters.push('progress_updates');
+    }
+    if (values.beta) {
+      newsletters.push('beta_testers');
+    }
     for (const newsletterName of newsletters) {
       try { 
         await API.subscribeToNewsletter({
-          aliasType: "email",
+          aliasType: 'email',
           alias: values.email,
           newsletterName,
         });
@@ -41,38 +50,38 @@ export default function HomePage() {
   }, []);
 
   React.useEffect(() => {
-    if (pathIsEnabled("/search"))
-      navigate("/search");
+    if (pathIsEnabled('/search')) {
+      navigate('/search');
+    }
   }, [navigate, pathIsEnabled]);
 
   return (
     <Page center title="theSkoop">
       <h1>theSkoop is currently in alpha test phase!</h1>
       {!success ? (
-        <>
+        <React.Fragment>
           <p>If you would like to be notified when this service is released to the public you may submit your email address below!</p>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <StyledStack spacing={2}>
+          <form onSubmit={ handleSubmit(onSubmit) }>
+            <StyledStack spacing={ 2 }>
               <TextField
                 type="email"
                 required
                 placeholder="Email"
-                {...register("email", { 
+                { ...register('email', { 
                   required: true,
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "please enter a valid email address"
+                    message: 'please enter a valid email address',
                   },
-                })}
-                />
-              <FormControlLabel control={<Checkbox {...register("dev")} />} label="Send me development progress updates!" />
-              <FormControlLabel control={<Checkbox {...register("beta")} />} label="Also add me as a beta tester!" />
-              <Button onClick={handleSubmit(onSubmit)}>Join Newsletter</Button>
+                }) } />
+              <FormControlLabel control={ <Checkbox { ...register('dev') } /> } label="Send me development progress updates!" />
+              <FormControlLabel control={ <Checkbox { ...register('beta') } /> } label="Also add me as a beta tester!" />
+              <Button onClick={ handleSubmit(onSubmit) }>Join Newsletter</Button>
             </StyledStack>
           </form>
-        </>
+        </React.Fragment>
       ) : (
-        <>You&apos; been added to the newsletter!</>
+        <React.Fragment>You&apos; been added to the newsletter!</React.Fragment>
       )}
     </Page>
   );

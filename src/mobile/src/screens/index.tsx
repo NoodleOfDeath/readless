@@ -1,6 +1,7 @@
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Pressable } from 'react-native';
 import React from 'react';
+import { Pressable } from 'react-native';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import AudioScreen from './audio/AudioScreen';
 import DiscoverScreen from './discover/DiscoverScreen';
@@ -51,8 +52,8 @@ export const SCREENS: ScreenProps[] = [
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const theme = useTheme();
       return (
-        <Pressable style={theme.components.buttonPadded}>
-          <Icon name="menu" size={32} color={theme.components.button.color} />
+        <Pressable style={ theme.components.buttonPadded }>
+          <Icon name="menu" size={ 32 } color={ theme.components.button.color } />
         </Pressable>
       );
     },

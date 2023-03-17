@@ -1,9 +1,16 @@
-import React from "react";
-import Page from "@/components/layout/Page";
-import { Card, CardContent, CardHeader, Stack } from "@mui/material";
-import ReactMarkdown from "react-markdown";
+import React from 'react';
 
-import RoadMap from "./RoadMap";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Stack,
+} from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+
+import RoadMap from './RoadMap';
+
+import Page from '@/components/layout/Page';
 
 export default function AboutPage() {
   return (
@@ -11,7 +18,7 @@ export default function AboutPage() {
       <Card>
         <CardHeader title="About" />
         <CardContent>
-          <Stack spacing={2}>
+          <Stack spacing={ 2 }>
             <ReactMarkdown>
               TheSkoop is an innovative web application that aims to provide
               users with a way to consume news and information quickly and

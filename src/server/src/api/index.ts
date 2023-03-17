@@ -4,8 +4,8 @@ import express from 'express';
 import expressWinston from 'express-winston';
 import winston from 'winston';
 
-import { rateLimit } from './v1/middleware';
 import v1router from './v1';
+import { rateLimit } from './v1/middleware';
 
 const app = express();
 

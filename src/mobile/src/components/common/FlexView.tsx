@@ -1,4 +1,5 @@
 import React from 'react';
+
 import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient';
 
 import { useTheme } from '../theme';
@@ -87,7 +88,7 @@ export default function FlexView({
       .reduce((acc, attr) => ({ ...acc, ...attr }), style ?? {});
   }, [row, theme.components.flexRow, theme.components.flexCol, col, mt, mb, ml, mr, pt, pb, pl, pr, style]);
   return (
-    <LinearGradient colors={colors} {...{ ...props, style: viewStyle }}>
+    <LinearGradient colors={ colors } { ...{ ...props, style: viewStyle } }>
       {children}
     </LinearGradient>
   );

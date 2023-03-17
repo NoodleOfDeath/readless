@@ -1,10 +1,12 @@
 import { Op } from 'sequelize';
 
+import { Outlet, Source } from '../api/v1/schema/models';
 import { ScribeService } from '../services';
 import {
-  DBService, QUEUES, Worker, 
+  DBService,
+  QUEUES,
+  Worker,
 } from '../services';
-import { Outlet, Source } from '../api/v1/schema/models';
 
 /** Fetch rate per interval */
 const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 1; // 1 for dev and testing

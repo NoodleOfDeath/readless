@@ -1,5 +1,7 @@
-import React from "react";
+import React from 'react';
+
 import {
+  Button,
   CircularProgress,
   Grid,
   Stack,
@@ -7,23 +9,20 @@ import {
   Typography,
   styled,
   useMediaQuery,
-  Button,
-} from "@mui/material";
-import { useSearchParams } from "react-router-dom";
+} from '@mui/material';
+import { useSearchParams } from 'react-router-dom';
 
-import { SessionContext } from "@/contexts";
-import API, { SourceWithOutletAttr } from "@/api";
+import API, { SourceWithOutletAttr } from '@/api';
+import Post, { ConsumptionMode } from '@/components/Post';
+import Page from '@/components/layout/Page';
+import { SessionContext } from '@/contexts';
+import Filters from '@/pages/search/Filters';
 
-import Page from "@/components/layout/Page";
-import Post, { ConsumptionMode } from "@/components/Post";
-
-import Filters from "@/pages/search/Filters";
-
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  margin: "auto",
-  width: "calc(100% - 16px)",
-  alignItems: "center",
-  justifyContent: "center",
+const StyledGrid = styled(Grid)(() => ({
+  margin: 'auto',
+  width: 'calc(100% - 16px)',
+  alignItems: 'center',
+  justifyContent: 'center',
 }));
 
 export default function SearchPage() {
@@ -43,15 +42,15 @@ export default function SearchPage() {
   const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
   const [consumptionMode, setConsumptionMode] = React.useState<ConsumptionMode|undefined>();
 
-  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
+  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
   const gridSize = React.useMemo(() => {
     return mdAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
   }, [recentSources, mdAndUp]);
 
   React.useEffect(() => {
-    if (searchParams.get("q")) {
-      setSearchText(searchParams.get("q") || "");
+    if (searchParams.get('q')) {
+      setSearchText(searchParams.get('q') || '');
     }
   }, [searchParams, setSearchText]);
 
@@ -105,30 +104,28 @@ export default function SearchPage() {
 
   return (
     <Page center>
-      <Stack spacing={2}>
+      <Stack spacing={ 2 }>
         <Typography variant="h4">News that fits your schedule</Typography>
         <Filters />
-        <StyledGrid container justifyContent="center" spacing={2}>
+        <StyledGrid container justifyContent="center" spacing={ 2 }>
           {expandedPost === undefined ? recentSources.map((source, i) => (
-            <Grid key={source.id} item xs={gridSize}>
+            <Grid key={ source.id } item xs={ gridSize }>
               <Post 
-                source={source}
-                onChange={(mode) => expandPost(i, mode)}
-                />
+                source={ source }
+                onChange={ (mode) => expandPost(i, mode) } />
             </Grid>
           )) : (
-            <Grid item xs={12}>
+            <Grid item xs={ 12 }>
               <Post
-                source={recentSources[expandedPost]}
-                onChange={(mode) => expandPost(expandedPost, mode)}
-                consumptionMode={consumptionMode}
-              />
+                source={ recentSources[expandedPost] }
+                onChange={ (mode) => expandPost(expandedPost, mode) }
+                consumptionMode={ consumptionMode } />
             </Grid>
           )}
-          {loading && <CircularProgress size={10} variant="indeterminate" />}
+          {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
         </StyledGrid>
         {expandedPost === undefined && totalResults > pageSize * page && (
-          <Button onClick={() => loadMore()}>Load More</Button>
+          <Button onClick={ () => loadMore() }>Load More</Button>
         )}
       </Stack>
     </Page>

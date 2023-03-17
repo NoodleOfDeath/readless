@@ -1,13 +1,21 @@
-import React from "react";
-import Cookies from "js-cookie";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { PaletteMode, Theme, useMediaQuery } from "@mui/material";
+import React from 'react';
 
-import API, { FeatureAttributes } from "@/api";
+import {
+  PaletteMode,
+  Theme,
+  useMediaQuery,
+} from '@mui/material';
+import Cookies from 'js-cookie';
+import ms from 'ms';
+import {
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 
-import { ConsumptionMode } from "@/components/Post";
-
-import { loadTheme } from "@/theme";
+import API, { FeatureAttributes } from '@/api';
+import { ConsumptionMode } from '@/components/Post';
+import { loadTheme } from '@/theme';
 
 export type Preferences = {
   displayMode?: PaletteMode;
@@ -29,10 +37,12 @@ export type Session = {
   theme: Theme;
   preferences: Preferences;
   userData?: UserData;
+  // getters
   displayMode?: PaletteMode;
   consumptionMode?: ConsumptionMode;
   searchText: string;
   searchOptions: string[];
+  // setters
   setUserData: React.Dispatch<React.SetStateAction<UserData | undefined>>;
   setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
   setConsumptionMode: React.Dispatch<
@@ -52,11 +62,15 @@ export const NULL_SESSION: Session = {
   pathIsEnabled: () => false,
   theme: loadTheme(),
   preferences: {},
-  displayMode: "light",
-  consumptionMode: "concise",
-  searchText: "",
+  // getters
+  displayMode: 'light',
+  consumptionMode: 'concise',
+  searchText: '',
   searchOptions: [],
-  setUserData: () => {},
+  // setters
+  setUserData: () => {
+    /* placeholder function */
+  },
   setDisplayMode: () => {
     /* placeholder function */
   },
@@ -72,12 +86,12 @@ export const NULL_SESSION: Session = {
 };
 
 export const COOKIES = {
-  preferences: "preferences",
-  userData: "userData",
+  preferences: 'preferences',
+  userData: 'userData',
 };
 
 // 2 days
-export const DEFAULT_SESSION_DURATION = 1000 * 60 * 60 * 24 * 2;
+export const DEFAULT_SESSION_DURATION_MS = ms('2d');
 
 export const SessionContext = React.createContext(NULL_SESSION);
 
@@ -85,34 +99,30 @@ export function SessionContextProvider({ children }: Props) {
   
   const location = useLocation();
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setSearchParams] = useSearchParams();
-  const isDarkModeEnabled = useMediaQuery("(prefers-color-scheme: dark)");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
   const [enabledFeatures, setEnabledFeatures] = React.useState<Record<string, FeatureAttributes>>({});
   const [theme, setTheme] = React.useState(
-    loadTheme(isDarkModeEnabled ? "dark" : "light")
+    loadTheme(prefersDarkMode ? 'dark' : 'light'),
   );
   const [preferences, setPreferences] = React.useState<Preferences>({});
   const [userData, setUserData] = React.useState<UserData | undefined>();
 
   const { displayMode, consumptionMode } = React.useMemo(
     () => preferences,
-    [preferences]
+    [preferences],
   );
-  const [searchText, setSearchText] = React.useState("");
+  const [searchText, setSearchText] = React.useState('');
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
 
   // Convenience function to set a preference
-  const preferenceSetter = React.useCallback
-    (<Key extends keyof Preferences>(key: Key) =>
+  const preferenceSetter = React.useCallback(<Key extends keyof Preferences>(key: Key) =>
     (
-      value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])
+      value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key]),
     ) => {
       setPreferences((preferences) => {
-        const newPrefs = {
-          ...preferences,
-        };
+        const newPrefs = { ...preferences };
         if (!value) {
           delete newPrefs[key];
         } else {
@@ -125,21 +135,21 @@ export function SessionContextProvider({ children }: Props) {
 
   const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
     return {
-      setDisplayMode: preferenceSetter("displayMode"),
-      setConsumptionMode: preferenceSetter("consumptionMode"),
+      setDisplayMode: preferenceSetter('displayMode'),
+      setConsumptionMode: preferenceSetter('consumptionMode'),
     };
   }, [preferenceSetter]);
 
   // Load cookies on mount
   React.useEffect(() => {
     try {
-      const prefs = JSON.parse(Cookies.get(COOKIES.preferences) || "{}");
+      const prefs = JSON.parse(Cookies.get(COOKIES.preferences) || '{}');
       setPreferences(prefs);
     } catch (e) {
       setPreferences({});
     }
     try {
-      const userData = JSON.parse(Cookies.get(COOKIES.userData) || "{}");
+      const userData = JSON.parse(Cookies.get(COOKIES.userData) || '{}');
       setUserData(userData);
     } catch (e) {
       setUserData(undefined);
@@ -157,22 +167,22 @@ export function SessionContextProvider({ children }: Props) {
 
   // Update theme when user preference changes
   React.useEffect(() => {
-    setTheme(loadTheme(displayMode ?? (isDarkModeEnabled ? "dark" : "light")));
-  }, [displayMode, isDarkModeEnabled]);
+    setTheme(loadTheme(displayMode ?? (prefersDarkMode ? 'dark' : 'light')));
+  }, [displayMode, prefersDarkMode]);
 
   // Save preferences as cookie when they change
   React.useEffect(() => {
     Cookies.set(COOKIES.preferences, JSON.stringify(preferences), {
-      path: "/",
-      expires: DEFAULT_SESSION_DURATION,
+      path: '/',
+      expires: DEFAULT_SESSION_DURATION_MS,
     });
   }, [preferences]);
 
-  // Save preferences as cookie when they change
+  // Save userData as a cookie it changes
   React.useEffect(() => {
     Cookies.set(COOKIES.userData, JSON.stringify(userData), {
-      path: "/",
-      expires: DEFAULT_SESSION_DURATION,
+      path: '/',
+      expires: DEFAULT_SESSION_DURATION_MS,
     });
   }, [userData]);
   
@@ -182,31 +192,49 @@ export function SessionContextProvider({ children }: Props) {
     // record page visit
     API.recordMetric({
       type: 'nav',
-      data: { 
-        path: location
-      },
+      data: { path: location },
       userAgent: navigator.userAgent,
     })
       .catch(console.error);
     // if path is not enabled redirect to home
     switch (location.pathname) {
     case '/logout':
-      API.logout({...userData})
-      .then(() => {
-        setUserData(undefined);
-        navigate('/');
-      }).catch(console.error);
+      API.logout({ ...userData })
+        .then(() => {
+          setUserData(undefined);
+          navigate('/login');
+        }).catch(console.error);
       break;
     case '/search':
       if (!pathIsEnabled(location.pathname)) {
         navigate('/');
       }
+      break;
+    case '/verify/alias': {
+      const verificationCode = searchParams.get('v');
+      if (!verificationCode) {
+        navigate('/error');
+        return;
+      }
+      API.verifyAlias({ verificationCode }).then(({ error }) => {
+        if (error) {
+          navigate(`/error?error=${JSON.stringify(error)}`);
+          return;
+        }
+        navigate(`/success?${new URLSearchParams({
+          msg: 'Your email has been successfully verfied',
+          t: '5000',
+          r: '/login',
+        }).toString()}`);
+      }).catch(console.error);
+      break;
     }
-  }, [pathIsEnabled, location, navigate, userData]);
+    }
+  }, [pathIsEnabled, location, navigate, searchParams, userData]);
 
   return (
     <SessionContext.Provider
-      value={{
+      value={ {
         enabledFeatures,
         pathIsEnabled,
         theme,
@@ -221,7 +249,7 @@ export function SessionContextProvider({ children }: Props) {
         setConsumptionMode,
         setSearchText: (
           state,
-          { clearSearchParams }: SetSearchTextOptions = {}
+          { clearSearchParams }: SetSearchTextOptions = {},
         ) => {
           setSearchText(state);
           if (clearSearchParams) {
@@ -229,8 +257,7 @@ export function SessionContextProvider({ children }: Props) {
           }
         },
         setSearchOptions,
-      }}
-    >
+      } }>
       {children}
     </SessionContext.Provider>
   );

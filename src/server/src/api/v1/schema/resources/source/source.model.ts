@@ -1,9 +1,12 @@
 import {
-  AfterFind, Column, DataType, Table, 
+  AfterFind,
+  Column,
+  DataType,
+  Table,
 } from 'sequelize-typescript';
 
-import { Outlet } from '../outlet/outlet.model';
 import {  SOURCE_ATTRS } from '../../types';
+import { Outlet } from '../outlet/outlet.model';
 import {
   Attr,
   TitledCategorizedPost,

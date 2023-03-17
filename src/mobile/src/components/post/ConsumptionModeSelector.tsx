@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { ButtonGroup } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import React from 'react';
 
 import { useTheme } from '../theme';
 
@@ -47,22 +48,20 @@ export default function ConsumptionModeSelector({
 
   return (
     <ButtonGroup
-      onPress={handlePress}
-      selectedIndex={selectedIndex}
-      buttons={Object.values(CONSUMPTION_MODES).map((icon, i) => (
+      onPress={ handlePress }
+      selectedIndex={ selectedIndex }
+      buttons={ Object.values(CONSUMPTION_MODES).map((icon, i) => (
         <MaterialCommunityIcons
-          key={i}
-          disabled={i === CONSUMPTION_MODE_NAMES.length - 1}
-          name={icon}
-          size={24}
+          key={ i }
+          disabled={ i === CONSUMPTION_MODE_NAMES.length - 1 }
+          name={ icon }
+          size={ 24 }
           style={
             i === CONSUMPTION_MODE_NAMES.length - 1
               ? theme.components.buttonDisabled
               : theme.components.button
-          }
-        />
-      ))}
-      containerStyle={theme.components.buttonGroup}
-    />
+          } />
+      )) }
+      containerStyle={ theme.components.buttonGroup } />
   );
 }

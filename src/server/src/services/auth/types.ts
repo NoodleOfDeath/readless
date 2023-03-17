@@ -6,6 +6,7 @@ export type ThirdParty = typeof THIRD_PARTIES[keyof typeof THIRD_PARTIES];
 
 export type ThirdPartyAuth = {
   name: ThirdParty;
+  userId?: number | string;
   credential?: string;
 };
 
@@ -17,21 +18,12 @@ export type CredentialOptions = {
   [key in CredentialType]: string;
 };
 
-export type AliasTicketOptions<T extends AliasType> = {
-  type: T;
-  payload: T extends 'thirdParty' ? ThirdPartyAuth : string;
+export type AliasProbe = Partial<AliasOptions> & {
+  type: AliasType;
+  payload: string | ThirdPartyAuth;
+  skipVerification?: boolean;
+  failIfNotResolved?: boolean;
 };
-
-export class AliasTicket<T extends AliasType> implements AliasTicketOptions<T> {
-
-  type: T;
-  payload: T extends 'thirdParty' ? ThirdPartyAuth : string;
-  constructor({ type, payload }: AliasTicketOptions<T>) {
-    this.type = type;
-    this.payload = payload;
-  }
-
-}
 
 export type RegistrationOptions = AliasOptions & CredentialOptions & {
   headlessRequest: boolean;
@@ -63,4 +55,12 @@ export type AuthenticationOptions = LoginOptions & {
 
 export type AuthenticationResponse = {
   userId: number;
+}
+
+export type VerifyAliasOptions = AliasOptions & {
+  verificationCode: string;
+}
+
+export type VerifyAliasResponse = {
+  success: boolean;
 }

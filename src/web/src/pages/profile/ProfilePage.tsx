@@ -1,8 +1,9 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
+import React from 'react';
 
-import { SessionContext } from "@/contexts";
-import Page from "@/components/layout/Page";
+import ReactMarkdown from 'react-markdown';
+
+import Page from '@/components/layout/Page';
+import { SessionContext } from '@/contexts';
 
 export default function ProfilePage() {
   const { userData } = React.useContext(SessionContext);

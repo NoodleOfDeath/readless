@@ -1,7 +1,13 @@
-import { Button, Menu, MenuItem, styled } from "@mui/material";
-import { Icon } from "@mdi/react";
-import React from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import React from 'react';
+
+import { Icon } from '@mdi/react';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  styled,
+} from '@mui/material';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 export type NavigationItemProps = {
   id: string;
@@ -14,9 +20,9 @@ export type NavigationItemProps = {
 };
 
 const StyledMenuItemButton = styled(Button)(({ theme }) => ({
-  width: "100%",
+  width: '100%',
   padding: theme.spacing(1, 2),
-  justifyContent: "flex-start",
+  justifyContent: 'flex-start',
 }));
 
 export default function NavigationItem({
@@ -41,43 +47,38 @@ export default function NavigationItem({
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onClick ? onClick({ navigate }) : setAnchorEl(event.currentTarget);
     },
-    [navigate, onClick]
+    [navigate, onClick],
   );
 
   return (
     <MenuItem>
       {(onClick || (filteredItems && filteredItems.length > 0)) && (
         <StyledMenuItemButton
-          onClick={handleClick}
-          startIcon={icon && <Icon path={icon} size={1} />}
-        >
+          onClick={ handleClick }
+          startIcon={ icon && <Icon path={ icon } size={ 1 } /> }>
           {label}
         </StyledMenuItemButton>
       )}
-      {content && <>{content}</>}
+      {content && <React.Fragment>{content}</React.Fragment>}
       {filteredItems && filteredItems.length > 0 && (
         <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
+          anchorEl={ anchorEl }
+          open={ open }
+          onClose={ handleClose }
+          MenuListProps={ { 'aria-labelledby': 'basic-button' } }
+          anchorOrigin={ {
+            vertical: 'bottom',
+            horizontal: 'left',
+          } }
+          transformOrigin={ {
+            vertical: 'bottom',
+            horizontal: 'right',
+          } }>
           {filteredItems.map((item) => (
-            <MenuItem key={item.id}>
+            <MenuItem key={ item.id }>
               <StyledMenuItemButton
-                onClick={() => item.onClick?.({ navigate })}
-                startIcon={item.icon && <Icon path={item.icon} size={1} />}
-              >
+                onClick={ () => item.onClick?.({ navigate }) }
+                startIcon={ item.icon && <Icon path={ item.icon } size={ 1 } /> }>
                 {item.label}
               </StyledMenuItemButton>
             </MenuItem>

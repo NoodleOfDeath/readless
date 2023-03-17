@@ -1,7 +1,7 @@
 import { LinkingOptions } from '@react-navigation/native';
 
-import { ConsumptionMode } from '../components/post/ConsumptionModeSelector';
 import { SourceWithOutletAttr } from '../api/Api';
+import { ConsumptionMode } from '../components/post/ConsumptionModeSelector';
 
 export type RootParamList = {
   Discover: {

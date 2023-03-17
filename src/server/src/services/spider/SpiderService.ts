@@ -1,7 +1,6 @@
-import UserAgent from 'user-agents';
 import axios from 'axios';
+import UserAgent from 'user-agents';
 
-import { BaseService } from '../base';
 import { Loot } from './loot';
 import {
   ExtractRule,
@@ -12,6 +11,7 @@ import {
   encodeScrapeOpts,
   mappedScrapeLoot,
 } from './scrape';
+import { BaseService } from '../base';
 
 export class SpiderService extends BaseService {
 

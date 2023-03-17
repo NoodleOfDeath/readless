@@ -1,15 +1,19 @@
-import { Divider } from 'react-native-elements';
 import React from 'react';
-import { formatDistance } from 'date-fns';
 import {
-  Linking, Pressable, Text, 
+  Linking,
+  Pressable,
+  Text,
 } from 'react-native';
 
+import { formatDistance } from 'date-fns';
+import { Divider } from 'react-native-elements';
+
+
+import ConsumptionModeSelector, { ConsumptionMode } from './ConsumptionModeSelector';
+import { SourceWithOutletAttr } from '../../api/Api';
 import FlexView from '../common/FlexView';
 import Menu from '../common/Menu';
-import { SourceWithOutletAttr } from '../../api/Api';
 import { useTheme } from '../theme';
-import ConsumptionModeSelector, { ConsumptionMode } from './ConsumptionModeSelector';
 
 type Props = {
   source: SourceWithOutletAttr;
@@ -70,20 +74,20 @@ export default function Post({
   }, [mode, source]);
 
   return (
-    <FlexView style={theme.components.card}>
-      <Text style={theme.typography.subtitle1}>{source.outletName.trim()}</Text>
-      <Pressable onPress={() => onChange?.('casual')}>
-        <Text style={theme.typography.title1}>{source.title.trim()}</Text>
+    <FlexView style={ theme.components.card }>
+      <Text style={ theme.typography.subtitle1 }>{source.outletName.trim()}</Text>
+      <Pressable onPress={ () => onChange?.('casual') }>
+        <Text style={ theme.typography.title1 }>{source.title.trim()}</Text>
       </Pressable>
-      <Divider orientation="horizontal" style={theme.components.divider} />
+      <Divider orientation="horizontal" style={ theme.components.divider } />
       <FlexView row>
-        <Text style={theme.typography.subtitle2}>{timeAgo}</Text>
-        <Menu icon="dots-horizontal" options={options} />
+        <Text style={ theme.typography.subtitle2 }>{timeAgo}</Text>
+        <Menu icon="dots-horizontal" options={ options } />
       </FlexView>
-      <FlexView mt={2}>
-        <ConsumptionModeSelector mode={mode} onChange={onChange} />
-        <FlexView mt={4}>
-          {content && <Text style={theme.typography.body1}>{content}</Text>}
+      <FlexView mt={ 2 }>
+        <ConsumptionModeSelector mode={ mode } onChange={ onChange } />
+        <FlexView mt={ 4 }>
+          {content && <Text style={ theme.typography.body1 }>{content}</Text>}
         </FlexView>
       </FlexView>
     </FlexView>

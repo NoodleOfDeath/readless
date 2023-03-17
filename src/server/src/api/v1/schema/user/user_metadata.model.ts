@@ -1,5 +1,9 @@
 import {
-  Column, DataType, Model, Table, 
+  Column,
+  DataType,
+  Index,
+  Model,
+  Table,
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -33,12 +37,22 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     return defaults ?? {};
   }
   
+  @Index({
+    name: 'user_metadata_userId_key_unique_key',
+    unique: true,
+    where: { deletedAt: null },
+  })
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
     userId: number;
-    
+  
+  @Index({
+    name: 'user_metadata_userId_key_unique_key',
+    unique: true,
+    where: { deletedAt: null },
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,

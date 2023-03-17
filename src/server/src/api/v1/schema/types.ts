@@ -1,6 +1,6 @@
+import { Attributes, FindAndCountOptions as SequelizeFindAndCountOptions } from 'sequelize';
 import { Hooks } from 'sequelize/types/hooks';
 import { Model } from 'sequelize-typescript';
-import { Attributes, FindAndCountOptions as SequelizeFindAndCountOptions } from 'sequelize';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FindAndCountOptions<T extends Model<any, any> | Hooks<Model<any, any>, any, any>> = Omit<

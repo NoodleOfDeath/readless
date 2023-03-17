@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { param, query } from 'express-validator';
 
 import { SourceController } from '../../controllers';
-import { SourceAttr, SourceAttributes } from '../../schema/models';
 import { pagination, validate } from '../../middleware';
+import { SourceAttr, SourceAttributes } from '../../schema/models';
 
 const router = Router();
 
@@ -47,7 +47,7 @@ router.get(
       res.json(response);
     } catch (e) {
       console.error(e);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(500).end();
     }
   },
 );

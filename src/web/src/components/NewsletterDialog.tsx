@@ -4,7 +4,7 @@ import { Dialog } from '@mui/material';
 
 export default function NewsletterDialog() {
   return (
-    <Dialog open={true}>
+    <Dialog open>
       Sign up for the newsletter!
     </Dialog>
   );

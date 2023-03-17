@@ -1,5 +1,9 @@
 import {
-  Column, DataType, Model, Table, 
+  Column,
+  DataType,
+  Index,
+  Model,
+  Table,
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -8,14 +12,14 @@ export type CredentialAttributes = DatedAttributes & {
   userId: number; 
   type: string;
   value: string;
-  expiresOn: Date;
+  expiresAt: Date;
 };
 
 export type CredentialCreationAttributes = DatedAttributes & {
   userId: number;
   type: string;
   value: string;
-  expiresOn: Date;
+  expiresAt: Date;
 };
 
 @Table({
@@ -43,13 +47,23 @@ export class Credential<
     allowNull: false,
   })
     userId: number;
-
+  
+  @Index({
+    name: 'credentials_type_value_unique_key',
+    unique: true,
+    where: { deletedAt: null },
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
     type: string;
 
+  @Index({
+    name: 'credentials_type_value_unique_key',
+    unique: true,
+    where: { deletedAt: null },
+  })
   @Column({
     type: DataType.TEXT,
     allowNull: false,
@@ -57,6 +71,6 @@ export class Credential<
     value: string;
 
   @Column({ type: DataType.DATE })
-    expiresOn: Date;
+    expiresAt: Date;
 
 }

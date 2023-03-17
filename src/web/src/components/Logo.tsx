@@ -1,10 +1,11 @@
-import React from "react";
-import { Paper, styled } from "@mui/material";
+import React from 'react';
+
+import { Paper, styled } from '@mui/material';
 
 const StyledIcon = styled(Paper)(({ theme }) => ({
-  background: "transparent",
+  background: 'transparent',
   filter:
-    "invert(15%) sepia(45%) saturate(4372%) hue-rotate(347deg) brightness(91%) contrast(122%)",
+    'invert(15%) sepia(45%) saturate(4372%) hue-rotate(347deg) brightness(91%) contrast(122%)',
 }));
 
 type Props = {
@@ -13,8 +14,8 @@ type Props = {
 
 export default function Logo({ height = 40 }: Props = {}) {
   return (
-    <StyledIcon elevation={0}>
-      <img src="logo.svg" alt="logo" height={height} />
+    <StyledIcon elevation={ 0 }>
+      <img src="logo.svg" alt="logo" height={ height } />
     </StyledIcon>
   );
 }

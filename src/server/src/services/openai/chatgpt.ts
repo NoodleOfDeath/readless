@@ -1,5 +1,7 @@
 import {
-  ChatGPTAPI, ChatMessage, SendMessageOptions, 
+  ChatGPTAPI,
+  ChatMessage,
+  SendMessageOptions,
 } from 'chatgpt';
 
 import { BaseService } from '../base';

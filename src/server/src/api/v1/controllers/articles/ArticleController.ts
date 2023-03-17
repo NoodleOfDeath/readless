@@ -1,12 +1,20 @@
 import { Op } from 'sequelize';
 import {
-  Body, Get, Path, Post, Query, Route, Tags, 
+  Body,
+  Get,
+  Path,
+  Post,
+  Query,
+  Route,
+  Tags,
 } from 'tsoa';
 
-import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
 import {
-  Article, ArticleAttr, ArticleAttributes, 
+  Article,
+  ArticleAttr,
+  ArticleAttributes,
 } from '../../schema/models';
+import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
 
 function applyFilter(filter?: string) {
   if (!filter || filter.replace(/\s/g, '').length === 0) {

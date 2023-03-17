@@ -1,14 +1,18 @@
 import { Op } from 'sequelize';
 import {
-  Get, Path, Query, Route, Tags, 
+  Get,
+  Path,
+  Query,
+  Route,
+  Tags,
 } from 'tsoa';
 
-import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
 import {
   Source,
   SourceWithOutletAttr,
   SourceWithOutletName,
 } from '../../schema/models';
+import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
 
 function applyFilter(filter?: string) {
   if (!filter || filter.replace(/\s/g, '').length === 0) {

@@ -1,5 +1,8 @@
 import {
-  Column, DataType, Index, Model, Table, 
+  Column,
+  DataType,
+  Model,
+  Table,
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';
@@ -34,30 +37,18 @@ export class Subscription<A extends SubscriptionAttributes = SubscriptionAttribu
     return defaults ?? {};
   }
   
-  @Index({
-    name: 'subscriptions_aliasType_alias_newsletterId_key',
-    unique: true,
-  })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
     aliasType: string;
   
-  @Index({
-    name: 'subscriptions_aliasType_alias_newsletterId_key',
-    unique: true,
-  })
   @Column({
     type: DataType.STRING(2083),
     allowNull: false,
   })
     alias: string;
 
-  @Index({
-    name: 'subscriptions_aliasType_alias_newsletterId_key',
-    unique: true,
-  })
   @Column({
     type: DataType.INTEGER,
     allowNull: false,

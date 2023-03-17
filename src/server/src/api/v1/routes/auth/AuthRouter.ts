@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
-import { AuthController } from '../../controllers';
 import { AuthError } from './../../../../services';
+import { AuthController } from '../../controllers';
 import { validate } from '../../middleware';
 
 const router = Router();
@@ -29,7 +29,7 @@ router.post(
         res.status(401).json(e);
       } else {
         console.log(e);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).end();
       }
     }
   },
@@ -57,7 +57,7 @@ router.post(
         res.status(401).json(e);
       } else {
         console.log(e);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).end();
       }
     }
   },
@@ -75,13 +75,13 @@ router.post(
   async (req, res) => {
     try {
       const response = await new AuthController().logout(req.body);
-      res.json(response);
+      res.status(204).json(response);
     } catch (e) {
       if (e instanceof AuthError) {
         res.status(401).json(e);
       } else {
         console.log(e);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).end();
       }
     }
   },
@@ -103,10 +103,28 @@ router.post(
         res.status(401).json(e);
       } else {
         console.log(e);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).end();
       }
     }
   },
 );
+
+router.post(
+  '/verify/alias',
+  validate,
+  async (req, res) => {
+    try {
+      const response = await new AuthController().verifyAlias(req.body);
+      res.json(response);
+    } catch(e) {
+      if (e instanceof AuthError) {
+        res.status(401).json(e);
+      } else {
+        console.log(e);
+        res.status(500).end();
+      }
+    }
+  }
+)
 
 export default router;

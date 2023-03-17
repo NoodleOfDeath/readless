@@ -1,5 +1,14 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+
+import {
+  mdiHome,
+  mdiInformation,
+  mdiLogin,
+  mdiLogout,
+  mdiMenu,
+  mdiPodcast,
+} from '@mdi/js';
+import { Icon } from '@mdi/react';
 import {
   AppBar,
   Box,
@@ -12,21 +21,18 @@ import {
   Toolbar,
   Typography,
   styled,
-} from "@mui/material";
-import { Icon } from "@mdi/react";
-import { mdiHome, mdiInformation, mdiLogin, mdiLogout, mdiMenu, mdiPodcast } from "@mdi/js";
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import { SessionContext } from "@/contexts";
-import Logo from "@/components/Logo";
-import LightDarkModeButtons from "@/components/layout/header/LightDarkModeButtons";
-import { PODCAST_LINKS } from "@/config/PodcastLinks";
-import NavigationItem, {
-  NavigationItemProps,
-} from "@/components/layout/header/NavigationItem";
+import Logo from '@/components/Logo';
+import LightDarkModeButtons from '@/components/layout/header/LightDarkModeButtons';
+import NavigationItem, { NavigationItemProps } from '@/components/layout/header/NavigationItem';
+import { PODCAST_LINKS } from '@/config/PodcastLinks';
+import { SessionContext } from '@/contexts';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-  margin: "auto",
-  width: "inherit",
+  margin: 'auto',
+  width: 'inherit',
   maxWidth: 1280,
   minHeight: 64,
   padding: theme.spacing(0, 2),
@@ -34,12 +40,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 const StyledHeaderTitle = styled(Paper)(({ theme }) => ({
   flexGrow: 1,
-  background: "transparent",
+  background: 'transparent',
 }));
 
-const StyledBox = styled(Box)(({ theme }) => ({
-  width: 250,
-}));
+const StyledBox = styled(Box)(({ theme }) => ({ width: 250 }));
 
 export default function Header() {
 
@@ -57,7 +61,7 @@ export default function Header() {
         event:
           | React.KeyboardEvent<HTMLElement>
           | React.MouseEvent<HTMLElement>
-          | React.TouchEvent<HTMLElement>
+          | React.TouchEvent<HTMLElement>,
       ) => {
         if (!event) {
           setAnchorEl(null);
@@ -65,12 +69,12 @@ export default function Header() {
           return;
         }
         if (
-          event.type === "keydown" &&
-          ((event as React.KeyboardEvent).key === "Tab" ||
-            (event as React.KeyboardEvent).key === "Shift")
+          event.type === 'keydown' &&
+          ((event as React.KeyboardEvent).key === 'Tab' ||
+            (event as React.KeyboardEvent).key === 'Shift')
         ) {
           return;
-        } else if (event.type === "click") {
+        } else if (event.type === 'click') {
           if (
             menuRef.current &&
             menuRef.current.contains(event.currentTarget)
@@ -78,7 +82,7 @@ export default function Header() {
             return;
           }
           event.stopPropagation();
-        } else if (event.type === "touchmove") {
+        } else if (event.type === 'touchmove') {
           if (
             menuRef.current &&
             menuRef.current.contains(event.currentTarget)
@@ -90,55 +94,55 @@ export default function Header() {
         setAnchorEl(open ? event?.currentTarget : null);
         setOpen(open);
       },
-    [menuRef]
+    [menuRef],
   );
   
   const NAVIGATION_ITEMS: NavigationItemProps[] = React.useMemo(() => [
     {
-      id: "Home",
+      id: 'Home',
       visible: true,
-      label: "Home",
+      label: 'Home',
       icon: mdiHome,
       onClick({ navigate }) {
-        navigate?.("/");
+        navigate?.('/');
       },
     },
     {
-      id: "Login",
+      id: 'Login',
       visible: () => !userData?.userId,
-      label: "Login",
+      label: 'Login',
       icon: mdiLogin,
       onClick({ navigate }) {
-        navigate?.("/login");
+        navigate?.('/login');
       },
     },
     {
-      id: "About",
+      id: 'About',
       visible: true,
-      label: "About",
+      label: 'About',
       icon: mdiInformation,
       onClick({ navigate }) {
-        navigate?.("/about");
+        navigate?.('/about');
       },
     },
     {
-      id: "Podcast",
+      id: 'Podcast',
       visible: true,
-      label: "Podcast",
+      label: 'Podcast',
       icon: mdiPodcast,
       items: PODCAST_LINKS,
     },
     {
-      id: "Logout",
+      id: 'Logout',
       visible: () => !!userData?.userId,
-      label: "Logout",
+      label: 'Logout',
       icon: mdiLogout,
       onClick({ navigate }) {
-        navigate?.("/logout");
+        navigate?.('/logout');
       },
     },
     {
-      id: "LightDarkModeButtons",
+      id: 'LightDarkModeButtons',
       visible: true,
       content: <LightDarkModeButtons />,
     },
@@ -147,41 +151,39 @@ export default function Header() {
   return (
     <AppBar position="sticky">
       <StyledToolbar>
-        <IconButton onClick={() => navigate("/")}>
+        <IconButton onClick={ () => navigate('/') }>
           <Logo />
         </IconButton>
-        <StyledHeaderTitle elevation={0}>
-          <Typography onClick={() => navigate("/")} component="h4">
+        <StyledHeaderTitle elevation={ 0 }>
+          <Typography onClick={ () => navigate('/') } component="h4">
             theSkoop
           </Typography>
         </StyledHeaderTitle>
-        <Button onClick={openMenu(true)}>
-          <Icon path={mdiMenu} size={1} />
+        <Button onClick={ openMenu(true) }>
+          <Icon path={ mdiMenu } size={ 1 } />
         </Button>
         <Menu
-          open={open}
-          anchorEl={anchorEl}
-          onClose={openMenu(false)}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-        >
+          open={ open }
+          anchorEl={ anchorEl }
+          onClose={ openMenu(false) }
+          anchorOrigin={ {
+            vertical: 'top',
+            horizontal: 'right',
+          } }
+          transformOrigin={ {
+            vertical: 'top',
+            horizontal: 'right',
+          } }>
           <StyledBox
             role="presentation"
-            onClick={openMenu(false)}
-            onKeyDown={openMenu(false)}
-            onTouchMove={openMenu(false)}
-            ref={menuRef}
-          >
+            onClick={ openMenu(false) }
+            onKeyDown={ openMenu(false) }
+            onTouchMove={ openMenu(false) }
+            ref={ menuRef }>
             <List>
               {NAVIGATION_ITEMS.filter((item) => item.visible instanceof Function ? item.visible() : item.visible).map((item, i) => (
-                <React.Fragment key={item.id}>
-                  <NavigationItem {...item} />
+                <React.Fragment key={ item.id }>
+                  <NavigationItem { ...item } />
                   {i < NAVIGATION_ITEMS.length - 1 && (
                     <Divider orientation="horizontal" />
                   )}

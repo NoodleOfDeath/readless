@@ -1,5 +1,7 @@
 import {
-  Get, Route, Tags, 
+  Get,
+  Route,
+  Tags,
 } from 'tsoa';
 
 import { Policy, PolicyAttributes } from '../../schema/resources/policy.model';

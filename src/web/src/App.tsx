@@ -1,15 +1,20 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { ThemeProvider, styled, Box } from '@mui/material';
+
+import {
+  Box,
+  ThemeProvider,
+  styled,
+} from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Route, Routes } from 'react-router-dom';
 
+
+import CookieConsent from '@/components/layout/CookieConsent';
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/header/Header';
 import { SessionContext } from '@/contexts';
 import { routes } from '@/pages';
-
-import Header from '@/components/layout/header/Header';
-import Footer from '@/components/layout/Footer';
-import CookieConsent from '@/components/layout/CookieConsent';
 
 const StyledAppContainer = styled(Box)`
   display: flex;
@@ -28,8 +33,8 @@ function App() {
   const { theme } = React.useContext(SessionContext);
 
   return (
-    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID as string}>
-      <ThemeProvider theme={theme}>
+    <GoogleOAuthProvider clientId={ process.env.GOOGLE_CLIENT_ID as string }>
+      <ThemeProvider theme={ theme }>
         <CssBaseline />
         <StyledAppContainer>
           <Header />
@@ -38,10 +43,9 @@ function App() {
               {routes.map((route) => {
                 return (
                   <Route
-                    key={route.path}
-                    path={route.path}
-                    element={route.element}
-                  />
+                    key={ route.path }
+                    path={ route.path }
+                    element={ route.element } />
                 );
               })}
             </Routes>

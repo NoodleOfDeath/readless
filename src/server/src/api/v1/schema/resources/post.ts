@@ -1,5 +1,7 @@
 import {
-  Column, DataType, Model, 
+  Column,
+  DataType,
+  Model,
 } from 'sequelize-typescript';
 
 import { DatedAttributes } from '../dated';

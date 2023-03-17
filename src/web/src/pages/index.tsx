@@ -1,14 +1,17 @@
-import React from "react";
+import React from 'react';
 
-import AboutPage from "@/pages/about/AboutPage";
-import Error404NotFoundPage from "@/pages/errors/Error404NotFoundPage";
-import HomePage from "@/pages/home/HomePage";
-import LoginPage from "./login/LoginPage";
-import RegisterPage from "@/pages/register/RegisterPage";
-import PrivacyPage from "@/pages/privacy/PrivacyPage";
-import ProfilePage from "@/pages/profile/ProfilePage";
-import SearchPage from "@/pages/search/SearchPage";
-import TermsPage from "@/pages/terms/TermsPage";
+import LoginPage from './login/LoginPage';
+
+import AboutPage from '@/pages/about/AboutPage';
+import ContemplatingPage from '@/pages/contemplating/ContemplatingPage';
+import Error404NotFoundPage from '@/pages/errors/Error404NotFoundPage';
+import ErrorPage from '@/pages/errors/ErrorPage';
+import HomePage from '@/pages/home/HomePage';
+import PrivacyPage from '@/pages/privacy/PrivacyPage';
+import ProfilePage from '@/pages/profile/ProfilePage';
+import SearchPage from '@/pages/search/SearchPage';
+import SuccessPage from '@/pages/success/SuccessPage';
+import TermsPage from '@/pages/terms/TermsPage';
 
 export type Route = {
   path: string;
@@ -18,39 +21,55 @@ export type Route = {
 
 export const routes: Route[] = [
   {
-    path: "/",
+    path: '/',
     element: <HomePage />,
   },
   {
-    path: "/about",
+    path: '/about',
     element: <AboutPage />,
   },
   {
-    path: "/login",
+    path: '/error',
+    element: <ErrorPage />,
+  },
+  {
+    path: '/login',
     element: <LoginPage />,
   },
   {
-    path: "/privacy",
+    path: '/logout',
+    element: <ContemplatingPage />
+  },
+  {
+    path: '/privacy',
     element: <PrivacyPage />,
   },
   {
-    path: "/profile",
+    path: '/profile',
     element: <ProfilePage />,
   },
   {
-    path: "/register",
-    element: <RegisterPage />,
+    path: '/signup',
+    element: <LoginPage action={ 'signUp' } />,
   },
   {
-    path: "/search",
+    path: '/search',
     element: <SearchPage />,
   },
   {
-    path: "/terms",
+    path: '/success',
+    element: <SuccessPage />,
+  },
+  {
+    path: '/terms',
     element: <TermsPage />,
   },
   {
-    path: "/*",
+    path: '/verify/alias',
+    element: <ContemplatingPage />
+  },
+  {
+    path: '/*',
     element: <Error404NotFoundPage />,
   },
 ];

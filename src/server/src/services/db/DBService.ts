@@ -1,8 +1,8 @@
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 
+import { makeAssociations } from '../../api/v1/schema';
 import * as Models from '../../api/v1/schema/models';
 import { BaseService } from '../base';
-import { makeAssociations } from '../../api/v1/schema';
 
 export type DBServiceInitProps = {
   connectionString?: string;
@@ -35,7 +35,6 @@ export class DBService extends BaseService {
 
   async init() {
     await this.sq.authenticate();
-    console.log(process.env.NODE_ENV);
     await this.sq.sync();
   }
 

@@ -1,5 +1,5 @@
-import IORedis from 'ioredis';
 import RateLimitMiddleware, { Options } from 'express-rate-limit';
+import IORedis from 'ioredis';
 import RedisStore, { RedisReply } from 'rate-limit-redis';
 
 export type RateLimit = [max: number, windowMs: number];

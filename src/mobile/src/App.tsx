@@ -1,14 +1,17 @@
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MenuProvider } from 'react-native-popup-menu';
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import OnboardingScreen from './screens/onboarding/OnboardingScreen';
-import { SCREENS } from './screens';
-import SessionContextProvider from './contexts/SessionContext';
-import { linkingOptions } from './types';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { MenuProvider } from 'react-native-popup-menu';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
+
 import { useTheme } from './components/theme';
+import SessionContextProvider from './contexts/SessionContext';
+import { SCREENS } from './screens';
+import OnboardingScreen from './screens/onboarding/OnboardingScreen';
+import { linkingOptions } from './types';
 
 export default function TabController() {
   const theme = useTheme();
@@ -18,31 +21,28 @@ export default function TabController() {
     <SessionContextProvider>
       <MenuProvider>
         <NavigationContainer
-          theme={{
+          theme={ {
             dark: !theme.isLightMode,
             colors: theme.navContainerColors,
-          }}
-          linking={linkingOptions}
-        >
+          } }
+          linking={ linkingOptions }>
           {showOnboarding ? (
-            <OnboardingScreen onClose={() => setShowOnboarding(false)} />
+            <OnboardingScreen onClose={ () => setShowOnboarding(false) } />
           ) : (
             <Tab.Navigator
               initialRouteName="Discover"
-              screenOptions={{ headerShown: true }}
-            >
+              screenOptions={ { headerShown: true } }>
               {SCREENS.map((screen) => (
                 <Tab.Screen
-                  key={screen.name}
-                  name={screen.name}
-                  component={screen.component}
-                  options={{
+                  key={ screen.name }
+                  name={ screen.name }
+                  component={ screen.component }
+                  options={ {
                     tabBarIcon: (props) => (
-                      <Icon name={screen.icon} {...props} />
+                      <Icon name={ screen.icon } { ...props } />
                     ),
                     headerRight: screen.headerRight,
-                  }}
-                />
+                  } } />
               ))}
             </Tab.Navigator>
           )}

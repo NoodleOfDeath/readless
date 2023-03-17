@@ -1,12 +1,11 @@
-import { BaseService } from '../base';
 import { ReadAndSummarizeSourceOptions } from './types';
 import {
-  ChatGPTService, Prompt, SpiderService, 
+  ChatGPTService,
+  Prompt,
+  SpiderService,
 } from '../';
-import {
-  ReadAndSummarizeSourcePayload,
-  Source,
-} from '../../api/v1/schema/models';
+import { ReadAndSummarizeSourcePayload, Source } from '../../api/v1/schema/models';
+import { BaseService } from '../base';
 
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 

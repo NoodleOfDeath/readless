@@ -1,18 +1,19 @@
-import { API_BASE_URL } from '@env';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
-import { RouteProp } from '@react-navigation/native';
-import { SearchBar } from 'react-native-elements';
-import axios from 'axios';
 import { Button, useColorScheme } from 'react-native';
 
-import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
-import FlexView from '../../components/common/FlexView';
-import Post from '../../components/post/Post';
-import { RootParamList } from '../../types';
-import SafeScrollView from '../../components/common/SafeScrollView';
+import { API_BASE_URL } from '@env';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import axios from 'axios';
+import { SearchBar } from 'react-native-elements';
+
 import { SourceWithOutletAttr } from '../../api/Api';
+import FlexView from '../../components/common/FlexView';
+import SafeScrollView from '../../components/common/SafeScrollView';
+import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
+import Post from '../../components/post/Post';
 import { useTheme } from '../../components/theme';
+import { RootParamList } from '../../types';
 
 type Props = {
   route: RouteProp<RootParamList['Discover'], 'Home'>;
@@ -98,38 +99,33 @@ export default function ResultsView({ navigation }: Props) {
   );
 
   return (
-    <>
-      <FlexView style={theme.searchBar}>
+    <React.Fragment>
+      <FlexView style={ theme.searchBar }>
         <SearchBar
           placeholder="What's cooking in theSkoop?..."
-          lightTheme={isLightMode}
-          onChangeText={(text) => 
-            setSearchText(text) 
-          }
-          value={searchText}
-        />
+          lightTheme={ isLightMode }
+          onChangeText={ (text) => 
+            setSearchText(text) }
+          value={ searchText } />
       </FlexView>
       <SafeScrollView
-        refreshing={loading}
-        onRefresh={() => load(pageSize, 0, searchText)}
-      >
+        refreshing={ loading }
+        onRefresh={ () => load(pageSize, 0, searchText) }>
         <FlexView>
           {recentSources.map((source, i) => (
             <Post
-              key={source.id}
-              source={source}
-              onChange={(mode) => onExpandPost(i, mode)}
-            />
+              key={ source.id }
+              source={ source }
+              onChange={ (mode) => onExpandPost(i, mode) } />
           ))}
           {!loading && totalSourceCount > recentSources.length && (
             <Button
               title="Load More"
-              color={theme.components.button.color}
-              onPress={loadMore}
-            />
+              color={ theme.components.button.color }
+              onPress={ loadMore } />
           )}
         </FlexView>
       </SafeScrollView>
-    </>
+    </React.Fragment>
   );
 }

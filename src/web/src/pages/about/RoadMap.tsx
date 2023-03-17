@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Typography } from "@mui/material";
-import { mdiCheck } from "@mdi/js";
-import { Icon } from "@mdi/react";
+import * as React from 'react';
+
+import { mdiCheck } from '@mdi/js';
+import { Icon } from '@mdi/react';
 import {
   Timeline,
   TimelineConnector,
@@ -10,30 +10,31 @@ import {
   TimelineItem,
   TimelineOppositeContent,
   TimelineSeparator,
-} from "@mui/lab";
-import ReactMarkdown from "react-markdown";
+} from '@mui/lab';
+import { Typography } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
 
-import { MILESTONES } from "@/pages/about/milestones";
+import { MILESTONES } from '@/pages/about/milestones';
 
 export default function RoadMap() {
   return (
     <Timeline position="alternate">
       {MILESTONES.map((milestone) => (
-        <TimelineItem key={milestone.title}>
+        <TimelineItem key={ milestone.title }>
           <TimelineOppositeContent
-            sx={{ m: "auto 0" }}
+            sx={ { m: 'auto 0' } }
             align="right"
             variant="body2"
-            color="text.secondary"
-          ></TimelineOppositeContent>
+            color="text.secondary">
+          </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineConnector />
             <TimelineDot color="primary">
-              {milestone.completed && <Icon path={mdiCheck} size={1} />}
+              {milestone.completed && <Icon path={ mdiCheck } size={ 1 } />}
             </TimelineDot>
             <TimelineConnector />
           </TimelineSeparator>
-          <TimelineContent sx={{ py: "12px", px: 2 }}>
+          <TimelineContent sx={ { py: '12px', px: 2 } }>
             <Typography variant="h6" component="span">
               {milestone.title}
             </Typography>

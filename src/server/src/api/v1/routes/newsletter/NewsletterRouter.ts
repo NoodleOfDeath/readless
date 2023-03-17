@@ -26,7 +26,7 @@ router.post(
       res.status(204).send('OK');
     } catch (e) {
       console.error(e);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(500).end();
     }
   },
 );
@@ -51,7 +51,7 @@ router.post(
       res.status(204).send('OK');
     } catch (e) {
       console.error(e);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(500).end();
     }
   },
 );

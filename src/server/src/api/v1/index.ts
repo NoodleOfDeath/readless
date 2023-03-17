@@ -1,6 +1,5 @@
 import express, { Router } from 'express';
 
-import { DBService } from '../../services';
 import articleRouter from './routes/articles';
 import authRouter from './routes/auth';
 import bullBoardRouter from './routes/bull-board';
@@ -10,6 +9,7 @@ import newsletterRourer from './routes/newsletter';
 import policyRouter from './routes/policies';
 import referralRouter from './routes/referrals';
 import sourceRouter from './routes/sources';
+import { DBService } from '../../services';
 
 const router = Router();
 

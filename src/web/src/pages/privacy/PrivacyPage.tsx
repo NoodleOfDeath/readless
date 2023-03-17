@@ -1,11 +1,12 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
+import React from 'react';
 
-import API from "@/api";
-import Page from "@/components/layout/Page";
+import ReactMarkdown from 'react-markdown';
+
+import API from '@/api';
+import Page from '@/components/layout/Page';
 
 export default function PrivacyPage() {
-  const [text, setText] = React.useState("");
+  const [text, setText] = React.useState('');
 
   React.useEffect(() => {
     API
