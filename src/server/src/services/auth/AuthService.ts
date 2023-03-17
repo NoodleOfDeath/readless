@@ -163,10 +163,7 @@ export class AuthService extends BaseService {
 
   public async resolveUserAsJson(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
     const payload = await this.resolveUser(opts, other);
-    const payload = await this.resolveUser(opts, other);
     return {
-      ...payload,
-      user: payload?.user?.toJSON(),
       ...payload,
       user: payload?.user?.toJSON(),
     };
