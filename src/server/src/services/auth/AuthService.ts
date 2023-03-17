@@ -156,20 +156,17 @@ export class AuthService extends BaseService {
 
   public async resolveUser(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
     const probe = this.parseProbe(opts, other);
-    const { alias, user } = await this.resolveUserByAlias(probe);
     return {
       probe,
-      alias,
-      user,
+      ...await this.resolveUserByAlias(probe)
     };
   }
 
   public async resolveUserAsJson(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
-    const { probe, alias, user } = await this.resolveUser(opts, other);
+    const payload = await this.resolveUser(opts, other);
     return {
-      probe,
-      alias,
-      user: user?.toJSON(),
+      ...payload,
+      user: payload?.user?.toJSON(),
     };
   }
 
@@ -303,6 +300,7 @@ export class AuthService extends BaseService {
     }
     await alias.update(
       { 
+        verificationCode: null,
         verificationExpiresAt: null,
         verifiedAt: new Date(),
       },
