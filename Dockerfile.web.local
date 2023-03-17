@@ -2,14 +2,11 @@ FROM node:19.3.0 as base
 WORKDIR /home/node
 COPY src/server ./server
 WORKDIR /home/node/server
-RUN yarn install --non-interactive --frozen-lockfile
+RUN yarn install --non-interactive --immutable
 WORKDIR /home/node/app
-COPY package.json ./
-COPY yarn-lock.yaml ./
-RUN yarn install --non-interactive --frozen-lockfile
 COPY src/web/package.json ./
-COPY src/web/yarn-lock.yaml ./
-RUN yarn install --non-interactive --frozen-lockfile
+COPY src/web/yarn.lock ./
+RUN yarn install --non-interactive --immutable
 
 FROM base as pre-build
 COPY src/web/src ./src

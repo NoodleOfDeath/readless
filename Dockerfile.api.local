@@ -3,7 +3,7 @@ WORKDIR /home/node/app
 COPY src/server/package.json ./
 COPY src/server/yarn.lock ./
 COPY src/server/src ./src
-RUN yarn install --non-interactive --production=false
+RUN yarn install --non-interactive --immutable
 
 FROM base as dev
 COPY src/server/tsconfig.json ./

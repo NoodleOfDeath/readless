@@ -124,7 +124,7 @@ router.post(
         res.status(500).end();
       }
     }
-  }
-)
+  },
+);
 
 export default router;

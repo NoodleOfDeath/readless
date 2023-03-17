@@ -108,7 +108,9 @@ export class AuthService extends BaseService {
       if (probe.payload.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(probe.payload.credential);
-        const { email, email_verified: emailVerified, sub: thirdPartyId } = ticket.getPayload();
+        const {
+          email, email_verified: emailVerified, sub: thirdPartyId, 
+        } = ticket.getPayload();
         if (!email) {
           throw new AuthError('NO_THIRD_PARTY_ALIAS');
         }
@@ -142,7 +144,7 @@ export class AuthService extends BaseService {
       return {
         alias,
         user: await User.findOne({ where: { id: alias.userId } }),
-      }
+      };
     } else if (!(probe instanceof Alias) && probe.failIfNotResolved) {
       if (probe.type === 'thirdParty') {
         throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
@@ -155,13 +157,16 @@ export class AuthService extends BaseService {
     const probe = this.parseProbe(opts, other);
     return {
       probe,
-      ...await this.resolveUserByAlias(probe)
+      ...await this.resolveUserByAlias(probe),
     };
   }
 
   public async resolveUserAsJson(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
     const payload = await this.resolveUser(opts, other);
+    const payload = await this.resolveUser(opts, other);
     return {
+      ...payload,
+      user: payload?.user?.toJSON(),
       ...payload,
       user: payload?.user?.toJSON(),
     };
@@ -226,7 +231,7 @@ export class AuthService extends BaseService {
         newAliasValue = email;
         verified = true;
       }
-      } else {
+    } else {
       newAliasType = probe.type;
       newAliasValue = probe.payload;
     }

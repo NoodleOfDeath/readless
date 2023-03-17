@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
   "scripts": {
+    "prepare": "husky install",
     "install": "yarn install:server && yarn install:web && yarn install:mobile",
     "install:server": "(cd src/server && yarn install)",
     "install:web": "(cd src/web && yarn install)",
@@ -38,6 +40,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.0.0",
+    "husky": "^8.0.3",
     "prettier": "^2.8.4",
     "typescript": "*"
   },

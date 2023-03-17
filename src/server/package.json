@@ -35,11 +35,6 @@
     "lint": "eslint .  --ext .ts,.tsx",
     "format": "eslint .  --ext .ts,.tsx --fix"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "echo fuck && pretty-quick --staged"
-    }
-  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.282.0",
     "@bull-board/api": "^5.0.0",

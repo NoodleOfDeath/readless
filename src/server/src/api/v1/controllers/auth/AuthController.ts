@@ -7,6 +7,7 @@ import {
   Tags,
 } from 'tsoa';
 
+import { AuthError, AuthService } from '../../../../services';
 import {
   AuthenticationOptions,
   AuthenticationResponse,
@@ -19,7 +20,6 @@ import {
   VerifyAliasOptions,
   VerifyAliasResponse,
 } from '../../../../services/types';
-import { AuthError, AuthService } from '../../../../services';
 
 @Route('/v1/auth')
 @Tags('Auth')
