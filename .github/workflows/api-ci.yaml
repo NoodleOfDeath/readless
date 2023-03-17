@@ -12,6 +12,7 @@ on:
       - 'src/server/package.json'
       - 'src/server/public/**'
       - 'src/server/src/api/**'
+      - 'src/server/src/services/**'
 
 concurrency:
   group: ${{ github.ref }}-api
