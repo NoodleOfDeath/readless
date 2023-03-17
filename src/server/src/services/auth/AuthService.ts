@@ -149,9 +149,6 @@ export class AuthService extends BaseService {
       }
       throw new AuthError('INVALID_PASSWORD');
     }
-    return {
-      alias,
-    }
   }
 
   public async resolveUser(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
