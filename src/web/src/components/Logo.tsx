@@ -15,7 +15,7 @@ type Props = {
 export default function Logo({ height = 40 }: Props = {}) {
   return (
     <StyledIcon elevation={ 0 }>
-      <img src="logo.svg" alt="logo" height={ height } />
+      <img src="/logo.svg" alt="logo" height={ height } />
     </StyledIcon>
   );
 }

@@ -222,8 +222,8 @@ export function SessionContextProvider({ children }: Props) {
           return;
         }
         navigate(`/success?${new URLSearchParams({
-          msg: 'Your email has been successfully verfied',
-          t: '5000',
+          msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
+          t: '3000',
           r: '/login',
         }).toString()}`);
       }).catch(console.error);
