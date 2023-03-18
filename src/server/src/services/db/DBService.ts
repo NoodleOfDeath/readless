@@ -35,7 +35,7 @@ export class DBService extends BaseService {
 
   async init() {
     await this.sq.authenticate();
-    await this.sq.sync({ alter: true });
+    await this.sq.sync();
   }
 
 }
