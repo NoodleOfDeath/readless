@@ -108,15 +108,17 @@ export class Alias<
         }, opts);
       }
     } else {
-      return {
-        alias: await Alias.findOne({ 
-          where: {
-            type: payload.type,
-            value: payload.value,
-            verifiedAt: opts.skipVerification ? undefined : { [Op.ne]: null },
-          },
-        }), payload,
-      };
+      const alias = await Alias.findOne({ 
+        where: {
+          type: payload.type,
+          value: payload.value,
+          verifiedAt: opts.skipVerification ? undefined : { [Op.ne]: null },
+        },
+      });
+      if (!alias && opts.failIfNotResolved) {
+        throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
+      }
+      return { alias, payload };
     }
   }
 

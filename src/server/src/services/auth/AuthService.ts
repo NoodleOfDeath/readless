@@ -55,7 +55,8 @@ export class AuthService extends BaseService {
       if (!credential) {
         throw new AuthError('MISSING_PASSWORD');
       }
-      if (!bcrypt.compareSync(req.password, credential.value)) {
+      const credentialData = credential.toJSON();
+      if (!bcrypt.compareSync(req.password, credentialData.value)) {
         throw new AuthError('INVALID_PASSWORD');
       }
     }
