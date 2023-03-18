@@ -8,6 +8,7 @@ import {
 } from 'tsoa';
 
 import {
+  BulkResponse,
   FindAndCountOptions,
   SOURCE_ATTRS,
   Source,
@@ -46,10 +47,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<{
-    count: number;
-    rows: SourceWithOutletAttr[];
-  }> {
+  ): Promise<BulkResponse<SourceWithOutletAttr>> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
@@ -89,10 +87,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<{
-    count: number;
-    rows: SourceWithOutletAttr[];
-  }> {
+  ): Promise<BulkResponse<SourceWithOutletAttr>> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,

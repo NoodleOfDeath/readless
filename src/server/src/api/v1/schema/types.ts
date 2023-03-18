@@ -15,6 +15,11 @@ export type FindAndCountOptions<T extends Model<any, any> | Hooks<Model<any, any
   'groups'
 >;
 
+export type BulkResponse<T> = {
+  count: number;
+  rows: T[];
+};
+
 // Model Types
 
 export * from './analytics/metric.types';

@@ -14,6 +14,7 @@ import {
   Article,
   ArticleAttr,
   ArticleAttributes,
+  BulkResponse,
   FindAndCountOptions,
 } from '../../schema';
 
@@ -47,10 +48,7 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<{
-    count: number;
-    rows: ArticleAttr[];
-  }> {
+  ): Promise<BulkResponse<ArticleAttr>> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
@@ -68,10 +66,7 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<{
-    count: number;
-    rows: ArticleAttr[];
-  }> {
+  ): Promise<BulkResponse<ArticleAttr>> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
@@ -90,10 +85,7 @@ export class ArticleController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<{
-    count: number;
-    rows: ArticleAttr[];
-  }> {
+  ): Promise<BulkResponse<ArticleAttr>> {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
