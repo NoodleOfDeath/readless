@@ -47,57 +47,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"DatedAttributes": {
-				"properties": {
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"type": "object"
-			},
-			"Record_string.unknown_": {
-				"properties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
-			"FeatureAttributes": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/DatedAttributes"
-					},
-					{
-						"properties": {
-							"data": {
-								"$ref": "#/components/schemas/Record_string.unknown_"
-							},
-							"enabled": {
-								"type": "boolean"
-							},
-							"name": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"enabled",
-							"name"
-						],
-						"type": "object"
-					}
-				]
-			},
 			"LoginResponse": {
 				"properties": {
 					"jwt": {
@@ -146,7 +95,7 @@
 				],
 				"type": "object"
 			},
-			"Partial_LoginOptions_": {
+			"Partial_LoginRequest_": {
 				"properties": {
 					"email": {
 						"type": "string"
@@ -154,7 +103,7 @@
 					"eth2Address": {
 						"type": "string"
 					},
-					"username": {
+					"otp": {
 						"type": "string"
 					},
 					"phone": {
@@ -163,16 +112,19 @@
 					"thirdParty": {
 						"$ref": "#/components/schemas/ThirdPartyAuth"
 					},
-					"otp": {
+					"username": {
 						"type": "string"
 					},
-					"password": {
+					"thirdParty/google": {
+						"type": "string"
+					},
+					"eth2SignedMessage": {
 						"type": "string"
 					},
 					"jwt": {
 						"type": "string"
 					},
-					"eth2SignedMessage": {
+					"password": {
 						"type": "string"
 					}
 				},
@@ -194,7 +146,7 @@
 				],
 				"type": "object"
 			},
-			"Partial_RegistrationOptions_": {
+			"Partial_RegistrationRequest_": {
 				"properties": {
 					"email": {
 						"type": "string"
@@ -202,7 +154,7 @@
 					"eth2Address": {
 						"type": "string"
 					},
-					"username": {
+					"otp": {
 						"type": "string"
 					},
 					"phone": {
@@ -211,20 +163,20 @@
 					"thirdParty": {
 						"$ref": "#/components/schemas/ThirdPartyAuth"
 					},
-					"otp": {
+					"username": {
 						"type": "string"
 					},
-					"password": {
-						"type": "string"
-					},
-					"jwt": {
+					"thirdParty/google": {
 						"type": "string"
 					},
 					"eth2SignedMessage": {
 						"type": "string"
 					},
-					"headlessRequest": {
-						"type": "boolean"
+					"jwt": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
 					}
 				},
 				"type": "object",
@@ -241,18 +193,18 @@
 				],
 				"type": "object"
 			},
-			"Partial_LogoutOptions_": {
+			"Partial_LogoutRequest_": {
 				"properties": {
 					"otp": {
 						"type": "string"
 					},
-					"password": {
+					"eth2SignedMessage": {
 						"type": "string"
 					},
 					"jwt": {
 						"type": "string"
 					},
-					"eth2SignedMessage": {
+					"password": {
 						"type": "string"
 					},
 					"userId": {
@@ -275,33 +227,13 @@
 				],
 				"type": "object"
 			},
-			"Partial_AuthenticationOptions_": {
+			"Partial_AuthenticationRequest_": {
 				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"eth2Address": {
-						"type": "string"
-					},
-					"username": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"thirdParty": {
-						"$ref": "#/components/schemas/ThirdPartyAuth"
-					},
-					"otp": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
+					"userId": {
+						"type": "number",
+						"format": "double"
 					},
 					"jwt": {
-						"type": "string"
-					},
-					"eth2SignedMessage": {
 						"type": "string"
 					}
 				},
@@ -319,7 +251,32 @@
 				],
 				"type": "object"
 			},
-			"Partial_VerifyAliasOptions_": {
+			"Partial_VerifyAliasRequest_": {
+				"properties": {
+					"verificationCode": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"VerifyOTPResponse": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"jwt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"userId",
+					"jwt"
+				],
+				"type": "object"
+			},
+			"Partial_VerifyOTPRequest_": {
 				"properties": {
 					"email": {
 						"type": "string"
@@ -327,7 +284,7 @@
 					"eth2Address": {
 						"type": "string"
 					},
-					"username": {
+					"otp": {
 						"type": "string"
 					},
 					"phone": {
@@ -336,23 +293,56 @@
 					"thirdParty": {
 						"$ref": "#/components/schemas/ThirdPartyAuth"
 					},
-					"verificationCode": {
+					"username": {
+						"type": "string"
+					},
+					"thirdParty/google": {
 						"type": "string"
 					}
 				},
 				"type": "object",
 				"description": "Make all properties in T optional"
 			},
-			"Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_": {
+			"GenerateOTPResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object"
+			},
+			"Partial_GenerateOTPRequest_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2Address": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"username": {
+						"type": "string"
+					},
+					"thirdParty/google": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"Attr_ArticleAttributes.(typeofARTICLE_ATTRS)%5Bnumber%5D_": {
 				"properties": {
 					"id": {
-						"anyOf": [
-							{
-								"type": "number",
-								"format": "double"
-							},
-							{}
-						]
+						"type": "number",
+						"format": "double"
 					},
 					"abridged": {
 						"type": "string"
@@ -370,13 +360,8 @@
 						"type": "array"
 					},
 					"createdAt": {
-						"anyOf": [
-							{
-								"type": "string",
-								"format": "date-time"
-							},
-							{}
-						]
+						"type": "string",
+						"format": "date-time"
 					},
 					"title": {
 						"type": "string"
@@ -407,7 +392,28 @@
 				"type": "object"
 			},
 			"ArticleAttr": {
-				"$ref": "#/components/schemas/Attr_Article.(typeofARTICLE_ATTRS)%5Bnumber%5D_"
+				"$ref": "#/components/schemas/Attr_ArticleAttributes.(typeofARTICLE_ATTRS)%5Bnumber%5D_"
+			},
+			"DatedAttributes": {
+				"properties": {
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object"
 			},
 			"PostAttributes": {
 				"allOf": [
@@ -484,26 +490,13 @@
 				]
 			},
 			"ArticleAttributes": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/TitledCategorizedPostAttributes"
-					},
-					{
-						"properties": {},
-						"type": "object"
-					}
-				]
+				"$ref": "#/components/schemas/TitledCategorizedPostAttributes"
 			},
 			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
 				"properties": {
 					"id": {
-						"anyOf": [
-							{
-								"type": "number",
-								"format": "double"
-							},
-							{}
-						]
+						"type": "number",
+						"format": "double"
 					},
 					"abridged": {
 						"type": "string"
@@ -556,6 +549,7 @@
 					}
 				},
 				"required": [
+					"id",
 					"abridged",
 					"summary",
 					"shortSummary",
@@ -700,6 +694,11 @@
 					}
 				]
 			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
 			"MetricAttributes": {
 				"allOf": [
 					{
@@ -818,62 +817,6 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/v1/features": {
-			"get": {
-				"operationId": "GetFeatures",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/FeatureAttributes"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Features"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/v1/features/{feature}": {
-			"get": {
-				"operationId": "GetFeature",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FeatureAttributes"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Features"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "feature",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/v1/auth/login": {
 			"post": {
 				"operationId": "Login",
@@ -919,7 +862,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_LoginOptions_"
+								"$ref": "#/components/schemas/Partial_LoginRequest_"
 							}
 						}
 					}
@@ -971,7 +914,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_RegistrationOptions_"
+								"$ref": "#/components/schemas/Partial_RegistrationRequest_"
 							}
 						}
 					}
@@ -1023,7 +966,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_LogoutOptions_"
+								"$ref": "#/components/schemas/Partial_LogoutRequest_"
 							}
 						}
 					}
@@ -1075,7 +1018,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_AuthenticationOptions_"
+								"$ref": "#/components/schemas/Partial_AuthenticationRequest_"
 							}
 						}
 					}
@@ -1127,7 +1070,111 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_VerifyAliasOptions_"
+								"$ref": "#/components/schemas/Partial_VerifyAliasRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/verify/otp": {
+			"post": {
+				"operationId": "VerifyOTP",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VerifyOTPResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_VerifyOTPRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/otp": {
+			"post": {
+				"operationId": "RequestOTP",
+				"responses": {
+					"201": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenerateOTPResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_GenerateOTPRequest_"
 							}
 						}
 					}

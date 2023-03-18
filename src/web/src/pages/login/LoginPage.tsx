@@ -16,8 +16,8 @@ import { useNavigate } from 'react-router-dom';
 
 import API, {
   AuthError,
-  PartialLoginOptions,
-  PartialRegistrationOptions,
+  PartialLoginRequest,
+  PartialRegistrationRequest,
   ThirdParty,
 } from '@/api';
 import Page from '@/components/layout/Page';
@@ -52,7 +52,7 @@ export default function LoginPage({ action = 'logIn' }: Props = {}) {
   const [needsToVerifyAlias, setNeedsToVerifyAlias] = React.useState(false);
 
   const handleLogIn = React.useCallback(
-    async (data: PartialLoginOptions) => {
+    async (data: PartialLoginRequest) => {
       try {
         const { data: userData, error } = await API.login(data);
         if (error) {
@@ -68,7 +68,7 @@ export default function LoginPage({ action = 'logIn' }: Props = {}) {
     [navigate, setUserData]
   );
 
-  const handleSignUp = React.useCallback(async (data: PartialRegistrationOptions) => {
+  const handleSignUp = React.useCallback(async (data: PartialRegistrationRequest) => {
     try {
       const { data: userData, error } = await API.register(data);
       if (error) {
