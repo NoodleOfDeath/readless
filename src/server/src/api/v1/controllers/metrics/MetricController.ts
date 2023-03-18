@@ -9,7 +9,7 @@ import {
   Metric,
   MetricAttributes,
   MetricCreationAttributes,
-} from '../../schema/models';
+} from '../../schema';
 
 @Route('/v1/metrics')
 @Tags('Metricss')

@@ -1,21 +1,11 @@
 import {
   Column,
   DataType,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../dated';
-
-export type PolicyAttributes = DatedAttributes & {
-  name: string;
-  content: string;
-};
-
-export type PolicyCreationAttributes = DatedAttributes & {
-  name: string;
-  content: string;
-};
+import { PolicyAttributes, PolicyCreationAttributes } from './policy.types';
+import { BaseModel } from '../base';
 
 @Table({
   modelName: 'policy',
@@ -26,16 +16,8 @@ export class Policy<
     A extends PolicyAttributes = PolicyAttributes,
     B extends PolicyCreationAttributes = PolicyCreationAttributes,
   >
-  extends Model<A, B>
+  extends BaseModel<A, B>
   implements PolicyAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<Policy>): Partial<Policy> {
-    return defaults ?? {};
-  }
 
   @Column({
     allowNull: false,

@@ -3,7 +3,6 @@ import express, { Router } from 'express';
 import articleRouter from './routes/articles';
 import authRouter from './routes/auth';
 import bullBoardRouter from './routes/bull-board';
-import featureRouter from './routes/features';
 import metricRouter from './routes/metrics';
 import newsletterRourer from './routes/newsletter';
 import policyRouter from './routes/policies';
@@ -19,7 +18,6 @@ async function main() {
   router.use('/articles', articleRouter);
   router.use('/auth', authRouter);
   router.use('/bull-board', bullBoardRouter);
-  router.use('/features', featureRouter);
   router.use('/metrics', metricRouter);
   router.use('/newsletter', newsletterRourer);
   router.use('/policies', policyRouter);

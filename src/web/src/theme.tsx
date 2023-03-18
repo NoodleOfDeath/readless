@@ -8,7 +8,7 @@ export const loadTheme = (mode: PaletteMode = 'light') => {
         styleOverrides: {
           root: ({ theme, ownerState }) => {
             if (theme.palette.mode === 'light') {
-              return { color: ownerState.variant === 'contained' ? '#FFFFFF' : theme.palette.primary.light };
+              return { color: ownerState.variant === 'contained' ? '#FFFFFF' : theme.palette.primary.main };
             } else {
               return { color: ownerState.variant === 'contained' ? '#FFFFFF' : theme.palette.primary.light };
             }

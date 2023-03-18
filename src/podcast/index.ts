@@ -20,11 +20,9 @@ async function main() {
     const outfiles = fs
       .readdirSync(process.env.OUTPUT_DIR as string)
       .map((f) => p.resolve(process.env.OUTPUT_DIR as string, f))
-      .sort(
-        (a, b) =>
-          Number(/(\d+).mp3$/.exec(a)?.[1] ?? 0) -
-          Number(/(\d+).mp3$/.exec(b)?.[1] ?? 0),
-      );
+      .sort((a, b) =>
+        Number(/(\d+).mp3$/.exec(a)?.[1] ?? 0) -
+          Number(/(\d+).mp3$/.exec(b)?.[1] ?? 0));
     await editor.merge({ outputPath: p.resolve('./ep3.mp3') }, ...outfiles);
   }
   const interval = setInterval(merge, 1000);

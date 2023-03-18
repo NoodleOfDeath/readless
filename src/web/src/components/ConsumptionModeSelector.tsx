@@ -22,20 +22,18 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   margin: theme.spacing(1),
 }));
 
-const StyledButton = styled(Button)<{ selected: boolean }>(
-  ({ theme, selected }) => ({
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
-    },
-    backgroundColor: selected ? theme.palette.primary.main : 'transparent',
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: theme.spacing(1),
-    color: selected ? theme.palette.common.white : theme.palette.primary.main,
-    cursor: 'pointer',
-    padding: theme.spacing(1),
-  }),
-);
+const StyledButton = styled(Button)<{ selected: boolean }>(({ theme, selected }) => ({
+  '&:hover': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+  backgroundColor: selected ? theme.palette.primary.main : 'transparent',
+  border: `1px solid ${theme.palette.primary.main}`,
+  borderRadius: theme.spacing(1),
+  color: selected ? theme.palette.common.white : theme.palette.primary.main,
+  cursor: 'pointer',
+  padding: theme.spacing(1),
+}));
 
 export default function ConsumptionModeSelector({
   consumptionMode,

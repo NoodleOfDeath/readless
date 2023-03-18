@@ -2,25 +2,15 @@ import {
   Column,
   DataType,
   Index,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../dated';
-
-export type CredentialAttributes = DatedAttributes & {
-  userId: number; 
-  type: string;
-  value: string;
-  expiresAt: Date;
-};
-
-export type CredentialCreationAttributes = DatedAttributes & {
-  userId: number;
-  type: string;
-  value: string;
-  expiresAt: Date;
-};
+import {
+  CredentialAttributes,
+  CredentialCreationAttributes,
+  CredentialType,
+} from './credential.types';
+import { BaseModel } from '../base';
 
 @Table({
   modelName: 'credential',
@@ -31,16 +21,8 @@ export class Credential<
     A extends CredentialAttributes = CredentialAttributes,
     B extends CredentialCreationAttributes = CredentialCreationAttributes,
   >
-  extends Model<A, B>
+  extends BaseModel<A, B>
   implements CredentialAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<Credential>): Partial<Credential> {
-    return defaults ?? {};
-  }
 
   @Column({
     allowNull: false,
@@ -57,7 +39,7 @@ export class Credential<
     allowNull: false,
     type: DataType.STRING,
   })
-    type: string;
+    type: CredentialType;
 
   @Index({
     name: 'credentials_type_value_unique_key',

@@ -1,29 +1,18 @@
 import {
   Column,
   DataType,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../dated';
-
-export type MetricAttributes = DatedAttributes & {
-  type: 'click' | 'nav';
-  data: Record<string, unknown>;
-  /** ip address(es) of actor */
-  referrer?: string[];
-  /** the user agent info of the consumer of this referral */
-  userAgent: string;
-};
-
-export type MetricCreationAttributes = MetricAttributes;
+import { MetricAttributes } from './metric.types';
+import { BaseModel } from '../base';
 
 @Table({
   modelName: 'metric',
   paranoid: true,
   timestamps: true,
 })
-export class Metric extends Model<MetricAttributes, MetricAttributes> implements MetricAttributes {
+export class Metric extends BaseModel<MetricAttributes, MetricAttributes> implements MetricAttributes {
 
   @Column({
     allowNull: false,

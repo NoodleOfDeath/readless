@@ -28,7 +28,7 @@ router.post(
       console.error(e);
       res.status(500).end();
     }
-  },
+  }
 );
 
 export default router;

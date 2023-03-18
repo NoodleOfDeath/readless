@@ -58,12 +58,10 @@ export default function Header() {
 
   const openMenu = React.useCallback(
     (open: boolean) =>
-      (
-        event:
+      (event:
           | React.KeyboardEvent<HTMLElement>
           | React.MouseEvent<HTMLElement>
-          | React.TouchEvent<HTMLElement>,
-      ) => {
+          | React.TouchEvent<HTMLElement>) => {
         if (!event) {
           setAnchorEl(null);
           setOpen(false);
@@ -87,7 +85,7 @@ export default function Header() {
         setAnchorEl(open ? event?.currentTarget : null);
         setOpen(open);
       },
-    [menuRef],
+    [menuRef]
   );
   
   const NAVIGATION_ITEMS: NavigationItemProps[] = React.useMemo(() => [

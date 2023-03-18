@@ -51,13 +51,11 @@ export default function FlexView({
   const viewStyle = React.useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
-    attrs.push(
-      row
-        ? theme.components.flexRow
-        : col
-          ? theme.components.flexCol
-          : undefined,
-    );
+    attrs.push(row
+      ? theme.components.flexRow
+      : col
+        ? theme.components.flexCol
+        : undefined);
     if (mt) {
       attrs.push({ marginTop: mt });
     }

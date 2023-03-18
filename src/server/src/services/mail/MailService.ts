@@ -32,9 +32,11 @@ export class MailService extends BaseService {
 
   async sendMail<
     TemplateName extends keyof typeof TEMPLATES, 
-  >(opts: SMTPTransport.Options,
+  >(
+    opts: SMTPTransport.Options,
     templateName?: TemplateName, 
-    params?: Omit<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain'>) {
+    params?: Omit<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain'>
+  ) {
     const options = {
       from: `<${process.env.MAIL_USER}> theSkoop`,
       ...opts,

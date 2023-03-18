@@ -5,38 +5,9 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import {  SOURCE_ATTRS } from '../../types';
+import { SourceCreationAttributes, SourceWithOutletName } from './source.types';
 import { Outlet } from '../outlet/outlet.model';
-import {
-  Attr,
-  TitledCategorizedPost,
-  TitledCategorizedPostAttributes,
-  TitledCategorizedPostCreationAttributes,
-} from '../post';
-
-export type SourceAttributes = TitledCategorizedPostAttributes & {
-  outletId: number;
-  url: string;
-  rawText: string;
-  filteredText: string;
-  originalTitle: string;
-};
-export type SourceWithOutletName = SourceAttributes & { outletName: string };
-
-export type SourceCreationAttributes = TitledCategorizedPostCreationAttributes & {
-  outletId: number;
-  url: string;
-  rawText: string;
-  filteredText: string;
-  originalTitle: string;
-};
-
-export type SourceAttr = Attr<Source, typeof SOURCE_ATTRS[number]>;
-export type SourceWithOutletAttr = SourceAttr & { outletName: string };
-
-export type ReadAndSummarizeSourcePayload = {
-  url: string;
-};
+import { TitledCategorizedPost } from '../post';
 
 @Table({
   modelName: 'source',
@@ -44,14 +15,6 @@ export type ReadAndSummarizeSourcePayload = {
   timestamps: true,
 })
 export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCreationAttributes> implements SourceWithOutletName {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<Source>): Partial<Source> {
-    return defaults ?? {};
-  }
   
   @Column({
     allowNull: false,

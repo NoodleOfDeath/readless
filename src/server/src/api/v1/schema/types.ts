@@ -2,73 +2,42 @@ import { Attributes, FindAndCountOptions as SequelizeFindAndCountOptions } from 
 import { Hooks } from 'sequelize/types/hooks';
 import { Model } from 'sequelize-typescript';
 
+export type DatedAttributes = {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FindAndCountOptions<T extends Model<any, any> | Hooks<Model<any, any>, any, any>> = Omit<
   SequelizeFindAndCountOptions<Attributes<T>>,
   'groups'
 >;
 
-export type ValuesOfKeys<T> = T[keyof T];
+// Model Types
 
-export type Attr<Model, K extends keyof Model> = {
-  [Key in K]: Model[Key];
-};
+export * from './analytics/metric.types';
+export * from './resources/policy.types';
 
-export const ALIAS_TYPES = {
-  email: 'email',
-  eth2Address: 'eth2Address',
-  phone: 'phone',
-  thirdParty: 'thirdParty',
-  username: 'username',
-} as const;
+export * from './user/alias.types';
+export * from './user/user.types';
+export * from './user/user_metadata.types';
 
-export type AliasType = ValuesOfKeys<typeof ALIAS_TYPES> | `thirdParty/${string}`;
+export * from './auth/credential.types';
 
-export const CREDENTIAL_TYPES = {
-  eth2SignedMessage: 'eth2SignedMessage',
-  jwt: 'jwt',
-  otp: 'otp',
-  password: 'password',
-} as const;
+export * from './newsletter/newsletter.types';
+export * from './newsletter/subscription.types';
 
-export type CredentialType = ValuesOfKeys<typeof CREDENTIAL_TYPES>; 
+export * from './resources/interaction/interaction.types';
+export * from './resources/interaction/referral.types';
 
-export const RESOURCE_TYPES = {
-  article: 'article',
-  interaction: 'interaction',
-  media: 'media',
-  outlet: 'outlet',
-  source: 'source',
-} as const;
+export * from './resources/media/media.types';
 
-export type ResourceType = ValuesOfKeys<typeof RESOURCE_TYPES>;
+export * from './resources/types';
+export * from './resources/post.types';
+export * from './resources/outlet/outlet.types';
+export * from './resources/source/source.types';
+export * from './resources/topic/topic.types';
+export * from './resources/article/article.types';
 
-export const ACCESS_LEVELS = {
-  delete: 'delete',
-  read: 'read',
-  write: 'write',
-} as const;
-
-export type AccessLevel = ValuesOfKeys<typeof ACCESS_LEVELS>;
-
-export const INTERACTION_TYPES = {
-  bookmark: 'bookmark',
-  comment: 'comment',
-  dislike: 'dislike',
-  like: 'like',
-  share: 'share',
-  view: 'view',
-} as const;
-
-export type InteractionType = ValuesOfKeys<typeof INTERACTION_TYPES>;
-
-// Resources
-
-/** light weight record for a post */
-export const POST_ATTRS = ['id', 'abridged', 'summary', 'shortSummary', 'bullets', 'createdAt'] as const;
-/** light weight record for a post with title, category, subcategory, and tags */
-export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category', 'subcategory', 'tags'] as const;
-/** light weight record for a source post */
-export const SOURCE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
-/** light weight record for an article post */
-export const ARTICLE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS] as const;

@@ -28,7 +28,7 @@ async function main() {
     .post(
       `${target}/v1/sources`,
       { url: args.url },
-      { timeout: 120_000 },
+      { timeout: 120_000 }
     )
     .then(console.log)
     .catch(console.error);

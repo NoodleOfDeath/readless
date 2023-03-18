@@ -35,7 +35,7 @@ export class ChatGPTService extends BaseService {
     message: string,
     {
       parentMessageId = this.parentMessageId, timeoutMs = 120_000, ...remainingOpts 
-    }: SendMessageOptions = {},
+    }: SendMessageOptions = {}
   ) {
     try {
       const reply = await this.api.sendMessage(message, {

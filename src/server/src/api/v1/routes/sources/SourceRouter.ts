@@ -3,7 +3,7 @@ import { param, query } from 'express-validator';
 
 import { SourceController } from '../../controllers';
 import { pagination, validate } from '../../middleware';
-import { SourceAttr, SourceAttributes } from '../../schema/models';
+import { SourceAttr, SourceAttributes } from '../../schema/types';
 
 const router = Router();
 
@@ -37,7 +37,7 @@ router.get(
           filter,
           pageSize,
           page,
-          offset,
+          offset
         );
       } else if (category) {
         response = await controller.getSourcesForCategory(category, filter, pageSize, page, offset);
@@ -49,7 +49,7 @@ router.get(
       console.error(e);
       res.status(500).end();
     }
-  },
+  }
 );
 
 export default router;

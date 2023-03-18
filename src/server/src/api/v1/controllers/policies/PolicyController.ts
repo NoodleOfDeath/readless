@@ -4,7 +4,7 @@ import {
   Tags,
 } from 'tsoa';
 
-import { Policy, PolicyAttributes } from '../../schema/resources/policy.model';
+import { Policy, PolicyAttributes } from '../../schema';
 
 @Route('/v1/policies')
 @Tags('Policies')

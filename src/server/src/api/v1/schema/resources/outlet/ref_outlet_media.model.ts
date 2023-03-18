@@ -1,36 +1,21 @@
 import {
   Column,
   DataType,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../../dated';
-
-export type RefOutletMediaAttributes = DatedAttributes & {
-  outletId: number;
-  mediaId: number;
-};
-
-export type RefOutletMediaCreationAttributes = DatedAttributes & {
-  outletId: number;
-  mediaId: number;
-};
+import {
+  RefOutletMediaAttributes,
+  RefOutletMediaCreationAttributes,
+} from './ref_outlet_media.types';
+import { BaseModel } from '../../base';
 
 @Table({
   modelName: '_ref_outlet_media',
   paranoid: true,
   timestamps: true,
 })
-export class RefOutletMedia<A extends RefOutletMediaAttributes = RefOutletMediaAttributes, B extends RefOutletMediaCreationAttributes = RefOutletMediaCreationAttributes> extends Model<A, B> implements RefOutletMediaAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<RefOutletMedia>): Partial<RefOutletMedia> {
-    return defaults ?? {};
-  }
+export class RefOutletMedia<A extends RefOutletMediaAttributes = RefOutletMediaAttributes, B extends RefOutletMediaCreationAttributes = RefOutletMediaCreationAttributes> extends BaseModel<A, B> implements RefOutletMediaAttributes {
     
   @Column({
     allowNull: false,

@@ -5,16 +5,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../dated';
-
-export type RequestAttributes = DatedAttributes & {
-  remoteAddr: string;
-  referrer?: string;
-  path: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-}
-
-export type RequestCreationAttributes = RequestAttributes;
+import { RequestAttributes, RequestCreationAttributes } from './request.types';
 
 @Table({
   modelName: 'request',

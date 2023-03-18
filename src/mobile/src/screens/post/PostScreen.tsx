@@ -21,9 +21,7 @@ export default function PostScreen({
 }: Props) {
   const { setTabControllerScreenOptions } = React.useContext(SessionContext);
 
-  const [mode, setMode] = React.useState<ConsumptionMode | undefined>(
-    initialMode,
-  );
+  const [mode, setMode] = React.useState<ConsumptionMode | undefined>(initialMode);
 
   React.useEffect(() => {
     navigation.setOptions({ headerTitle: source?.title });

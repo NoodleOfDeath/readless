@@ -47,7 +47,7 @@ export default function NavigationItem({
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onClick ? onClick({ navigate }) : setAnchorEl(event.currentTarget);
     },
-    [navigate, onClick],
+    [navigate, onClick]
   );
 
   return (

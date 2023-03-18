@@ -25,7 +25,7 @@ export default function SearchBar() {
 
   const computedOptions = React.useMemo(
     () => [...searchOptions, searchText],
-    [searchOptions, searchText],
+    [searchOptions, searchText]
   );
 
   return (

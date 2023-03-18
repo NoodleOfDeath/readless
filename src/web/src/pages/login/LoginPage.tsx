@@ -65,31 +65,29 @@ export default function LoginPage({ action = 'logIn' }: Props = {}) {
         console.log(error);
       }
     },
-    [navigate, setUserData],
+    [navigate, setUserData]
   );
 
-  const handleSignUp = React.useCallback(
-    async (data: PartialRegistrationOptions) => {
-      try {
-        const { data: userData, error } = await API.register(data);
-        if (error) {
-          setError(error);
-          return;
-        }
-        if (userData.jwt) {
-          setUserData({ 
-            jwt: userData.jwt,
-            userId: userData.userId,
-          });
-          navigate('/');
-        } else {
-          setNeedsToVerifyAlias(true);
-        }
-      } catch (error) {
-        console.log(error);
+  const handleSignUp = React.useCallback(async (data: PartialRegistrationOptions) => {
+    try {
+      const { data: userData, error } = await API.register(data);
+      if (error) {
+        setError(error);
+        return;
       }
-    }, [navigate, setUserData],
-  );
+      if (userData.jwt) {
+        setUserData({ 
+          jwt: userData.jwt,
+          userId: userData.userId,
+        });
+        navigate('/');
+      } else {
+        setNeedsToVerifyAlias(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [navigate, setUserData]);
 
   React.useEffect(() => {
     setError(undefined);

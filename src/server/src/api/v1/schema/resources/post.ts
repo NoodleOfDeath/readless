@@ -1,50 +1,19 @@
+import { Column, DataType } from 'sequelize-typescript';
+
 import {
-  Column,
-  DataType,
-  Model,
-} from 'sequelize-typescript';
-
-import { DatedAttributes } from '../dated';
-import { POST_ATTRS, TITLED_CATEGORIZED_POST_ATTRS } from '../types';
-
-export type Attr<Model, K extends keyof Model> = {
-  [Key in K]: Model[Key];
-};
-
-export type PostAttributes = DatedAttributes & {
-  text: string;
-  abridged: string;
-  summary: string;
-  shortSummary: string;
-  bullets: string[];
-  imagePrompt: string;
-};
-
-export type PostCreationAttributes = DatedAttributes & {
-  text: string;
-  abridged: string;
-  summary: string;
-  shortSummary: string;
-  bullets: string[];
-  imagePrompt: string;
-};
-
-export type PostAttr = Attr<Post, typeof POST_ATTRS[number]>;
+  PostAttributes,
+  PostCreationAttributes,
+  TitledCategorizedPostAttributes,
+  TitledCategorizedPostCreationAttributes,
+} from './post.types';
+import { BaseModel } from '../base';
 
 export abstract class Post<
     A extends PostAttributes = PostAttributes,
     B extends PostCreationAttributes = PostCreationAttributes,
   >
-  extends Model<A, B>
+  extends BaseModel<A, B>
   implements PostAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<Post>): Partial<Post> {
-    return defaults ?? {};
-  }
 
   @Column({
     allowNull: false,
@@ -84,32 +53,12 @@ export abstract class Post<
 
 }
 
-export type TitledCategorizedPostAttributes = PostAttributes & {
-  title: string;
-  category: string;
-  subcategory: string;
-  tags: string[];
-};
-
-export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
-  title: string;
-  category: string;
-  subcategory: string;
-  tags: string[];
-};
-
-export type TitledCategorizedPostAttr = Attr<TitledCategorizedPost, typeof TITLED_CATEGORIZED_POST_ATTRS[number]>;
-
 export abstract class TitledCategorizedPost<
     A extends TitledCategorizedPostAttributes = TitledCategorizedPostAttributes,
     B extends TitledCategorizedPostCreationAttributes = TitledCategorizedPostCreationAttributes,
   >
   extends Post<A, B>
   implements TitledCategorizedPostAttributes {
-
-  static json(defaults?: Partial<TitledCategorizedPost>): Partial<TitledCategorizedPost> {
-    return defaults ?? {};
-  }
 
   @Column({
     allowNull: false,

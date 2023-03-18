@@ -9,11 +9,9 @@ import {
   styled,
 } from '@mui/material';
 import { FieldValues, useForm } from 'react-hook-form'; 
-import { useNavigate } from 'react-router-dom';
 
 import API from '@/api';
 import Page from '@/components/layout/Page';
-import { SessionContext } from '@/contexts';
 
 const StyledStack = styled(Stack)(() => ({
   alignContent: 'center',
@@ -21,8 +19,6 @@ const StyledStack = styled(Stack)(() => ({
 }));
 
 export default function HomePage() {
-  const navigate = useNavigate();
-  const { pathIsEnabled } = React.useContext(SessionContext);
   
   const { handleSubmit, register } = useForm();
   const [success, setSuccess] = React.useState(false);
@@ -48,12 +44,6 @@ export default function HomePage() {
       }
     }
   }, []);
-
-  React.useEffect(() => {
-    if (pathIsEnabled('/search')) {
-      navigate('/search');
-    }
-  }, [navigate, pathIsEnabled]);
 
   return (
     <Page center title="theSkoop">

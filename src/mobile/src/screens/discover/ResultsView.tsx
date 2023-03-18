@@ -91,7 +91,7 @@ export default function ResultsView({ navigation }: Props) {
         source: recentSources[index],
       });
     },
-    [navigation, recentSources],
+    [navigation, recentSources]
   );
 
   return (

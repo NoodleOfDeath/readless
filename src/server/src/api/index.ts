@@ -9,43 +9,37 @@ import { rateLimit } from './v1/middleware';
 
 const app = express();
 
-app.use(
-  expressWinston.logger({
+app.use(expressWinston.logger({
     
-    // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
-    colorize: false,
+  // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
+  colorize: false,
     
-    // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-    expressFormat: true,
+  // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
+  expressFormat: true,
     
-    format: winston.format.combine(winston.format.colorize(), winston.format.json()), 
+  format: winston.format.combine(winston.format.colorize(), winston.format.json()), 
     
-    // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
-    ignoreRoute: () => {
-      return false;
-    }, 
+  // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
+  ignoreRoute: () => {
+    return false;
+  }, 
     
-    meta: true, 
+  meta: true, 
     
-    // optional: control whether you want to log the meta data about the request (default to true)
-    msg: 'HTTP {{req.method}} {{req.url}}', 
+  // optional: control whether you want to log the meta data about the request (default to true)
+  msg: 'HTTP {{req.method}} {{req.url}}', 
     
-    transports: [new winston.transports.Console()], // optional: allows to skip some log messages based on request and/or response
-  }),
-);
+  transports: [new winston.transports.Console()], // optional: allows to skip some log messages based on request and/or response
+}));
 
 app.use(cors({ origin: new RegExp(process.env.CORS_ORIGIN, 'i') }));
 
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-    limit: process.env.REQ_SIZE_LIMIT,
-  }),
-);
+app.use(bodyParser.urlencoded({
+  extended: false,
+  limit: process.env.REQ_SIZE_LIMIT,
+}));
 
-app.use(
-  bodyParser.json({ limit: process.env.REQ_SIZE_LIMIT }),
-);
+app.use(bodyParser.json({ limit: process.env.REQ_SIZE_LIMIT }));
 
 app.set('trust proxy', 1);
 
@@ -56,12 +50,10 @@ app.use('*', (_, res) => {
   res.status(404).json({ message: 'Bad Request' });
 });
 
-app.use(
-  expressWinston.errorLogger({
-    format: winston.format.combine(winston.format.colorize(), winston.format.json()),
-    transports: [new winston.transports.Console()],
-  }),
-);
+app.use(expressWinston.errorLogger({
+  format: winston.format.combine(winston.format.colorize(), winston.format.json()),
+  transports: [new winston.transports.Console()],
+}));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);

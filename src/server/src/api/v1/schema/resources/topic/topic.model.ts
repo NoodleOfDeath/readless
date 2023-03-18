@@ -1,21 +1,11 @@
 import {
   Column,
   DataType,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../../dated';
-
-export type TopicAttributes = DatedAttributes & {
-  name: string;
-  description: string;
-};
-
-export type TopicCreationAttributes = DatedAttributes & {
-  name: string;
-  description: string;
-};
+import { TopicAttributes, TopicCreationAttributes } from './topic.types';
+import { BaseModel } from '../../base';
 
 @Table({
   modelName: 'topic',
@@ -23,17 +13,9 @@ export type TopicCreationAttributes = DatedAttributes & {
   timestamps: true,
 })
 export class Topic<A extends TopicAttributes = TopicAttributes, B extends TopicCreationAttributes = TopicCreationAttributes>
-  extends Model<A, B>
+  extends BaseModel<A, B>
   implements TopicAttributes {
 
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<Topic>): Partial<Topic> {
-    return defaults ?? {};
-  }
-  
   @Column({
     allowNull: false,
     type: DataType.STRING,

@@ -15,7 +15,7 @@ const WORKER_FETCH_INTERVAL_MS = process.env.WORKER_FETCH_INTERVAL_MS
   : 1000 * 60 * 60 * 24; // 24 hours
 const WORKER_CONCURRENCY = Math.min(
   process.env.WORKER_CONCURRENCY ? Number(process.env.WORKER_CONCURRENCY) : 3,
-  WORKER_FETCH_RATE_LIMIT,
+  WORKER_FETCH_RATE_LIMIT
 );
 
 const fetchMap: Record<string, number> = {};
@@ -76,7 +76,7 @@ export async function doWork() {
                 job.updateProgress(progress);
               },
               outletId: id,
-            },
+            }
           );
           return source;
         } catch (e) {
@@ -87,7 +87,7 @@ export async function doWork() {
       {
         autorun: true,
         concurrency: WORKER_CONCURRENCY,
-      },
+      }
     );
   } catch (e) {
     console.error(e);

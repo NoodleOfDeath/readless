@@ -1,36 +1,18 @@
 import {
   Column,
   DataType,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../../dated';
-
-export type RefTopicMediaAttributes = DatedAttributes & {
-  topicId: number;
-  mediaId: number;
-};
-
-export type RefTopicMediaCreationAttributes = DatedAttributes & {
-  topicId: number;
-  mediaId: number;
-};
+import { RefTopicMediaAttributes, RefTopicMediaCreationAttributes } from './ref_topic_media.types';
+import { BaseModel } from '../../base';
 
 @Table({
   modelName: '_ref_topic_media',
   paranoid: true,
   timestamps: true,
 })
-export class RefTopicMedia<A extends RefTopicMediaAttributes = RefTopicMediaAttributes, B extends RefTopicMediaCreationAttributes = RefTopicMediaCreationAttributes> extends Model<A, B> implements RefTopicMediaAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<RefTopicMedia>): Partial<RefTopicMedia> {
-    return defaults ?? {};
-  }
+export class RefTopicMedia<A extends RefTopicMediaAttributes = RefTopicMediaAttributes, B extends RefTopicMediaCreationAttributes = RefTopicMediaCreationAttributes> extends BaseModel<A, B> implements RefTopicMediaAttributes {
     
   @Column({
     allowNull: false,

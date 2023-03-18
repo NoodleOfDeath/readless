@@ -14,9 +14,7 @@ export const CONSUMPTION_MODES = {
 } as const;
 
 export type ConsumptionMode = keyof typeof CONSUMPTION_MODES;
-export const CONSUMPTION_MODE_NAMES = Object.keys(
-  CONSUMPTION_MODES,
-) as ConsumptionMode[];
+export const CONSUMPTION_MODE_NAMES = Object.keys(CONSUMPTION_MODES) as ConsumptionMode[];
 
 type Props = {
   mode?: ConsumptionMode;
@@ -43,7 +41,7 @@ export default function ConsumptionModeSelector({
       }
       onChange?.(CONSUMPTION_MODE_NAMES[index]);
     },
-    [onChange],
+    [onChange]
   );
 
   return (

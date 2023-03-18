@@ -10,11 +10,12 @@ import {
 } from 'tsoa';
 
 import {
+  ARTICLE_ATTRS,
   Article,
   ArticleAttr,
   ArticleAttributes,
-} from '../../schema/models';
-import { ARTICLE_ATTRS, FindAndCountOptions } from '../../schema/types';
+  FindAndCountOptions,
+} from '../../schema';
 
 function applyFilter(filter?: string) {
   if (!filter || filter.replace(/\s/g, '').length === 0) {
@@ -45,7 +46,7 @@ export class ArticleController {
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page,
+    @Query() offset = pageSize * page
   ): Promise<{
     count: number;
     rows: ArticleAttr[];
@@ -53,7 +54,7 @@ export class ArticleController {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
-      offset: offset,
+      offset,
       order: [['createdAt', 'DESC']],
     };
     options.where = applyFilter(filter);
@@ -66,7 +67,7 @@ export class ArticleController {
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page,
+    @Query() offset = pageSize * page
   ): Promise<{
     count: number;
     rows: ArticleAttr[];
@@ -74,7 +75,7 @@ export class ArticleController {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
-      offset: offset,
+      offset,
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f) },
     };
@@ -88,7 +89,7 @@ export class ArticleController {
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page,
+    @Query() offset = pageSize * page
   ): Promise<{
     count: number;
     rows: ArticleAttr[];
@@ -96,7 +97,7 @@ export class ArticleController {
     const options: FindAndCountOptions<Article> = {
       attributes: [...ARTICLE_ATTRS],
       limit: pageSize,
-      offset: offset,
+      offset,
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f) },
     };
@@ -107,7 +108,7 @@ export class ArticleController {
   public async getArticleForCategoryAndSubcategoryAndTitle(
     @Path() category: string,
     @Path() subcategory: string,
-    @Path() title: string,
+    @Path() title: string
   ): Promise<ArticleAttributes> {
     const options: FindAndCountOptions<Article> = {
       where: {

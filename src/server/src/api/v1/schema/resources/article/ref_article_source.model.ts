@@ -1,36 +1,21 @@
 import {
   Column,
   DataType,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../../dated';
-
-export type ArticleSourceAttributes = DatedAttributes & {
-  articleId: number;
-  sourceId: number;
-};
-
-export type ArticleSourceCreationAttributes = DatedAttributes & {
-  articleId: number;
-  sourceId: number;
-};
+import {
+  RefArticleSourceAttributes,
+  RefArticleSourceCreationAttributes,
+} from './ref_article_source.types';
+import { BaseModel } from '../../base';
 
 @Table({
   modelName: '_ref_article_source',
   paranoid: true,
   timestamps: true,
 })
-export class ArticleSource<A extends ArticleSourceAttributes = ArticleSourceAttributes, B extends ArticleSourceCreationAttributes = ArticleSourceCreationAttributes> extends Model<A, B> implements ArticleSourceAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<ArticleSource>): Partial<ArticleSource> {
-    return defaults ?? {};
-  }
+export class RefArticleSource<A extends RefArticleSourceAttributes = RefArticleSourceAttributes, B extends RefArticleSourceCreationAttributes = RefArticleSourceCreationAttributes> extends BaseModel<A, B> implements RefArticleSourceAttributes {
     
   @Column({
     allowNull: false,
@@ -43,5 +28,5 @@ export class ArticleSource<A extends ArticleSourceAttributes = ArticleSourceAttr
     type: DataType.INTEGER,
   })
     sourceId: number;
-  
+
 }

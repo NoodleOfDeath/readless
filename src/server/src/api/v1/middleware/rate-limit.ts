@@ -44,7 +44,7 @@ function parseRateLimitString(limit: RateLimitString): Partial<RateLimitOptions>
 
 export const rateLimit = (
   opts: RateLimitString | Partial<RateLimitOptions> = DEFAULT_RATE_LIMIT,
-  redisClient: IORedis = new IORedis(process.env.REDIS_CONNECTION_STRING),
+  redisClient: IORedis = new IORedis(process.env.REDIS_CONNECTION_STRING)
 ) => {
   const options: Partial<RateLimitOptions> = typeof opts === 'string' ? parseRateLimitString(opts) : opts;
   const {

@@ -49,10 +49,8 @@ export default function TruncatedText({
       case 'middle':
         return `${children?.slice(
           0,
-          Math.floor(maxCharCount / 2),
-        )}...${children?.slice(
-          children.length - Math.floor(maxCharCount / 2),
-        )}`;
+          Math.floor(maxCharCount / 2)
+        )}...${children?.slice(children.length - Math.floor(maxCharCount / 2))}`;
       case 'end':
       default:
         return `${children?.slice(0, maxCharCount)}${(children?.length ?? 0) > maxCharCount ? '...' : ''}`;

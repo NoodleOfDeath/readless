@@ -18,7 +18,7 @@ createBullBoard({
       connection: redisClient() as any,
     }));
   }),
-  serverAdapter: serverAdapter,
+  serverAdapter,
 });
 
 router.use(serverAdapter.getRouter());

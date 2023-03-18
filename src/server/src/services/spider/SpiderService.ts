@@ -54,7 +54,7 @@ export class SpiderService extends BaseService {
     url: string,
     {
       api_key = process.env.WS_API_KEY, extract_rules, ...opts 
-    }: Partial<ScrapeOpts<T>> = {},
+    }: Partial<ScrapeOpts<T>> = {}
   ) {
     const params = encodeScrapeOpts({
       api_key,

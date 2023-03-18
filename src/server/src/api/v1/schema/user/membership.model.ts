@@ -1,11 +1,11 @@
 import {
   Column,
   DataType,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../dated';
+import { BaseModel } from '../base';
+import { DatedAttributes } from '../types';
 
 export type MembershipAttributes = DatedAttributes & {
   userId: number;
@@ -29,16 +29,8 @@ export type MembershipCreationAttributes = DatedAttributes & {
   timestamps: true,
 })
 export class Membership<A extends MembershipAttributes = MembershipAttributes, B extends MembershipCreationAttributes = MembershipCreationAttributes>
-  extends Model<A, B>
+  extends BaseModel<A, B>
   implements MembershipAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<Membership>): Partial<Membership> {
-    return defaults ?? {};
-  }
   
   @Column({
     allowNull: false,

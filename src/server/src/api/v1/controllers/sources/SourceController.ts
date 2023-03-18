@@ -8,11 +8,12 @@ import {
 } from 'tsoa';
 
 import {
+  FindAndCountOptions,
+  SOURCE_ATTRS,
   Source,
   SourceWithOutletAttr,
   SourceWithOutletName,
-} from '../../schema/models';
-import { FindAndCountOptions, SOURCE_ATTRS } from '../../schema/types';
+} from '../../schema';
 
 function applyFilter(filter?: string) {
   if (!filter || filter.replace(/\s/g, '').length === 0) {
@@ -44,7 +45,7 @@ export class SourceController {
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page,
+    @Query() offset = pageSize * page
   ): Promise<{
     count: number;
     rows: SourceWithOutletAttr[];
@@ -52,7 +53,7 @@ export class SourceController {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
-      offset: offset,
+      offset,
       order: [['createdAt', 'DESC']],
     };
     options.where = applyFilter(filter);
@@ -65,7 +66,7 @@ export class SourceController {
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page,
+    @Query() offset = pageSize * page
   ): Promise<{
     count: number;
     rows: SourceWithOutletAttr[];
@@ -73,7 +74,7 @@ export class SourceController {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
-      offset: offset,
+      offset,
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f) },
     };
@@ -87,7 +88,7 @@ export class SourceController {
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page,
+    @Query() offset = pageSize * page
   ): Promise<{
     count: number;
     rows: SourceWithOutletAttr[];
@@ -95,7 +96,7 @@ export class SourceController {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
-      offset: offset,
+      offset,
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f) },
     };
@@ -106,7 +107,7 @@ export class SourceController {
   public async getSourceForCategoryAndSubcategoryAndTitle(
     @Path() category: string,
     @Path() subcategory: string,
-    @Path() title: string,
+    @Path() title: string
   ): Promise<SourceWithOutletName> {
     const options: FindAndCountOptions<Source> = {
       where: {

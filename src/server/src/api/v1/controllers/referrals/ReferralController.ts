@@ -9,7 +9,7 @@ import {
   Referral,
   ReferralAttributes,
   ReferralCreationAttributes,
-} from '../../schema/models';
+} from '../../schema';
 
 @Route('/v1/referrals')
 @Tags('Referrals')

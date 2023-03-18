@@ -3,7 +3,7 @@ import { param, query } from 'express-validator';
 
 import { ArticleController } from '../../controllers';
 import { pagination, validate } from '../../middleware';
-import { ArticleAttr, ArticleAttributes } from '../../schema/models';
+import { ArticleAttr, ArticleAttributes } from '../../schema/types';
 
 const router = Router();
 
@@ -37,7 +37,7 @@ router.get(
           filter,
           pageSize,
           page,
-          offset,
+          offset
         );
       } else if (category) {
         response = await controller.getArticlesForCategory(category, filter, pageSize, page, offset);
@@ -49,7 +49,7 @@ router.get(
       console.error(e);
       res.status(500).end();
     }
-  },
+  }
 );
 
 export default router;

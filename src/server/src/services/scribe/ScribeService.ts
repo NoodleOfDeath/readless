@@ -4,7 +4,8 @@ import {
   Prompt,
   SpiderService,
 } from '../';
-import { ReadAndSummarizeSourcePayload, Source } from '../../api/v1/schema/models';
+import { Source } from '../../api/v1/schema/models';
+import { ReadAndSummarizeSourcePayload } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
@@ -15,7 +16,7 @@ export class ScribeService extends BaseService {
     { url }: ReadAndSummarizeSourcePayload,
     {
       onProgress, force, outletId, 
-    }: ReadAndSummarizeSourceOptions = {},
+    }: ReadAndSummarizeSourceOptions = {}
   ): Promise<Source> {
     if (!outletId) {
       throw new Error('no outlet id specified');
@@ -36,12 +37,12 @@ export class ScribeService extends BaseService {
     if (loot.filteredText.length > MAX_OPENAI_TOKEN_COUNT) {
       throw new Error('Article too long for OpenAI');
     }
-    const sourceInfo = Source.json({
+    const sourceInfo = Source.json<Source>({
       filteredText: loot.filteredText,
       originalTitle: loot.title,
       outletId,
       rawText: loot.text,
-      url: url,
+      url,
     });
     const prompts: Prompt[] = [
       {

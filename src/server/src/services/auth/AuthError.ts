@@ -35,7 +35,7 @@ export class AuthError extends Error implements AuthErrorOptions {
   
   constructor(
     errorKey: keyof typeof ERROR_MESSAGES, 
-    params?: typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'],
+    params?: typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params']
   ) {
     let message: string = ERROR_MESSAGES[errorKey].message;
     if (params) {

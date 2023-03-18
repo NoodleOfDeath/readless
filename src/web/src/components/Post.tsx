@@ -122,7 +122,7 @@ export default function Post({
   const timeAgo = React.useMemo(
     () =>
       formatDistance(new Date(source?.createdAt ?? 0), new Date(), { addSuffix: true }),
-    [source?.createdAt],
+    [source?.createdAt]
   );
 
   const icon = React.useMemo(() => {
@@ -168,12 +168,10 @@ export default function Post({
   
   const openMenu = React.useCallback(
     (open: boolean) =>
-      (
-        event:
+      (event:
           | React.KeyboardEvent<HTMLElement>
           | React.MouseEvent<HTMLElement>
-          | React.TouchEvent<HTMLElement>,
-      ) => {
+          | React.TouchEvent<HTMLElement>) => {
         if (!event) {
           setAnchorEl(null);
           setShowMenu(false);
@@ -205,7 +203,7 @@ export default function Post({
         setAnchorEl(open ? event?.currentTarget : null);
         setShowMenu(open);
       },
-    [menuRef],
+    [menuRef]
   );
 
   return (

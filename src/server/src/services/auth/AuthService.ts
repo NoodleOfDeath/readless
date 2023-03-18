@@ -1,75 +1,36 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import ms from 'ms';
-import { Op } from 'sequelize';
 import web3 from 'web3';
 
 import { AuthError } from './AuthError';
 import {
-  AliasOptions,
-  AliasProbe,
-  AuthenticationOptions,
+  AuthenticationRequest,
   AuthenticationResponse,
-  LoginOptions,
+  GenerateOTPRequest,
+  GenerateOTPResponse,
+  Jwt,
+  LoginRequest,
   LoginResponse,
-  LogoutOptions,
+  LogoutRequest,
   LogoutResponse,
-  RegistrationOptions,
+  RegistrationRequest,
   RegistrationResponse,
-  VerifyAliasOptions,
+  VERIFICATION_CODE_LENGTH,
+  VerifyAliasRequest,
   VerifyAliasResponse,
+  VerifyOTPRequest,
+  VerifyOTPResponse,
 } from './types';
 import {
   Alias,
+  AliasType,
   Credential,
   User,
-} from '../../api/v1/schema/models';
-import { AliasType } from '../../api/v1/schema/types';
+} from '../../api/v1/schema/';
 import { BaseService } from '../base';
 import { GoogleService } from '../google';
 import { MailService } from '../mail';
-
-const JWT_TOKEN_LIFETIME = '1d';
-const VERIFICATION_CODE_LENGTH = 10;
-
-type JwtPayloadOptions = {
-  userId: number;
-  scopes?: string[];
-  permissions?: {
-    resourceType: string;
-    resourceId: number;
-    access: string;
-  }[];
-}
-
-class JwtPayload {
-
-  userId: number;
-  scopes?: string[];
-  permissions?: {
-    resourceType: string;
-    resourceId: number;
-    access: string;
-  }[];
-  constructor({
-    userId,
-    scopes,
-    permissions,
-  }: JwtPayloadOptions) {
-    this.userId = userId;
-    this.scopes = scopes;
-    this.permissions = permissions;
-  }
-
-  toJSON() {
-    return {
-      permissions: this.permissions,
-      scopes: this.scopes,
-      userId: this.userId,
-    };
-  }
-
-}
 
 async function generateVerificationCode(): Promise<string> {
   const verificationCode = Math.random().toString(36).substring(2, 2 + VERIFICATION_CODE_LENGTH);
@@ -81,128 +42,34 @@ async function generateVerificationCode(): Promise<string> {
 
 export class AuthService extends BaseService {
 
-  public parseProbe({
-    email,
-    eth2Address,
-    username,
-    thirdParty,
-  }: Partial<AliasOptions>, 
-  other?: Partial<AliasProbe>,
-  ): AliasProbe {
-    const type = email
-      ? 'email': username
-        ? 'username'
-        : eth2Address
-          ? 'eth2Address'
-          : 'thirdParty';
-    const payload = email || username || eth2Address || thirdParty;
-    return {
-      payload,
-      type,
-      ...other,
-    };
-  }
-
-  public async resolveAlias(probe: AliasProbe): Promise<Alias> {
-    if (typeof probe.payload !== 'string') {
-      if (probe.payload.name === 'google') {
-        const google = new GoogleService();
-        const ticket = await google.verify(probe.payload.credential);
-        const {
-          email, email_verified: emailVerified, sub: thirdPartyId, 
-        } = ticket.getPayload();
-        if (!email) {
-          throw new AuthError('NO_THIRD_PARTY_ALIAS');
-        }
-        if (!emailVerified) {
-          throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
-        }
-        const alias = await this.resolveAlias({
-          ...probe,
-          payload: thirdPartyId,
-          type: `thirdParty/${probe.payload.name}`,
-        });
-        return alias;
-      }
-    } else {
-      return await Alias.findOne({ 
-        where: {
-          type: probe.type,
-          value: probe.payload,
-          verifiedAt: probe.skipVerification ? undefined : { [Op.ne]: null },
-        },
-      });
-    }
-  }
-
-  public async resolveUserByAlias(probe: AliasProbe | Alias) {
-    const alias =
-      probe instanceof Alias
-        ? probe
-        : (await this.resolveAlias(probe))?.toJSON();
-    if (alias) {
-      return {
-        alias,
-        user: await User.findOne({ where: { id: alias.userId } }),
-      };
-    } else if (!(probe instanceof Alias) && probe.failIfNotResolved) {
-      if (probe.type === 'thirdParty') {
-        throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
-      }
-      throw new AuthError('INVALID_PASSWORD');
-    }
-  }
-
-  public async resolveUser(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
-    const probe = this.parseProbe(opts, other);
-    return {
-      probe,
-      ...await this.resolveUserByAlias(probe),
-    };
-  }
-
-  public async resolveUserAsJson(opts: Partial<AliasOptions>, other?: Partial<AliasProbe>) {
-    const payload = await this.resolveUser(opts, other);
-    return {
-      ...payload,
-      user: payload?.user?.toJSON(),
-    };
-  }
-
-  public async login(opts: Partial<LoginOptions>): Promise<LoginResponse> {
-    const { probe, user } = await this.resolveUserAsJson(opts, { failIfNotResolved: true });
-    if (probe.type === 'eth2Address') {
+  public async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
+    const { payload, user } = await User.from(req, { failIfNotResolved: true });
+    if (payload.type === 'eth2Address') {
       // auth by eth2Address
       console.log(web3);
-    } else if (probe.type === 'thirdParty') {
+    } else if (payload.type === 'thirdParty') {
       // auth by thirdParty
     } else {
       // auth by password
-      const credential = (
-        await Credential.findOne({
-          where: {
-            type: 'password',
-            userId: user.id,
-          },
-        })
-      )?.toJSON();
+      const credential = await user.findCredential('password');
       if (!credential) {
         throw new AuthError('MISSING_PASSWORD');
       }
-      if (!bcrypt.compareSync(opts.password, credential.value)) {
+      if (!bcrypt.compareSync(req.password, credential.value)) {
         throw new AuthError('INVALID_PASSWORD');
       }
     }
     // user is authenticated, generate JWT
-    const token = jwt.sign(new JwtPayload({ userId: user.id }).toJSON(), process.env.JWT_SECRET, { expiresIn: JWT_TOKEN_LIFETIME });
+    const token = Jwt.Default(user.id);
+    const signedToken = jwt.sign(token, process.env.JWT_SECRET, { expiresIn: token.expiresIn });
     return {
-      jwt: token,
+      jwt: signedToken,
       userId: user.id,
     };
   }
 
-  public async register(opts: Partial<RegistrationOptions>): Promise<RegistrationResponse> {
-    const { probe, user } = await this.resolveUserAsJson(opts, { failIfNotResolved: false });
+  public async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
+    const { payload, user } = await User.from(req, { failIfNotResolved: false });
     let newAliasType: AliasType;
     let newAliasValue: string;
     let thirdPartyId: string;
@@ -211,10 +78,10 @@ export class AuthService extends BaseService {
     if (user) {
       throw new AuthError('DUPLICATE_USER');
     }
-    if (typeof probe.payload !== 'string') {
-      if (probe.payload.name === 'google') {
+    if (typeof payload.value !== 'string') {
+      if (payload.value.name === 'google') {
         const google = new GoogleService();
-        const ticket = await google.verify(probe.payload.credential);
+        const ticket = await google.verify(payload.value.credential);
         const { email, email_verified: emailVerified } = ticket.getPayload();
         thirdPartyId = ticket.getPayload().sub;
         if (!email) {
@@ -229,18 +96,18 @@ export class AuthService extends BaseService {
         verified = true;
       }
     } else {
-      newAliasType = probe.type;
-      newAliasValue = probe.payload;
+      newAliasType = payload.type;
+      newAliasValue = payload.value;
     }
     const newUser = new User();
     await newUser.save();
     if (!verified) {
       verificationCode = await generateVerificationCode();
     }
-    if (thirdPartyId && typeof probe.payload !== 'string') {
+    if (thirdPartyId && typeof payload.value !== 'string') {
       // bind third-party alias
       await Alias.create({
-        type: `thirdParty/${probe.payload.name}`,
+        type: `thirdParty/${payload.value.name}`,
         userId: newUser.id,
         value: thirdPartyId,
         verifiedAt: new Date(),
@@ -254,16 +121,16 @@ export class AuthService extends BaseService {
       verificationExpiresAt: verified ? undefined : new Date(Date.now() + ms('20m')),
       verifiedAt: verified ? new Date() : undefined,
     });
-    if (opts.password) {
+    if (req.password) {
       const newCredential = new Credential({
         type: 'password',
         userId: newUser.id,
-        value: bcrypt.hashSync(opts.password, 10),
+        value: bcrypt.hashSync(req.password, 10),
       });
       await newCredential.save();
     }
     if(verified) {
-      return await this.login(opts);
+      return await this.login(req);
     } else {
       const mailer = new MailService();
       mailer.sendMail({ to: newAliasValue }, 'verify', {
@@ -274,21 +141,28 @@ export class AuthService extends BaseService {
     }
   }
 
-  public async logout({ userId }: Partial<LogoutOptions>): Promise<LogoutResponse> {
+  public async logout({ userId }: Partial<LogoutRequest>): Promise<LogoutResponse> {
     await Credential.destroy({ where: { userId } });
     return { success: true };
   }
 
-  public async authenticate(opts: Partial<AuthenticationOptions>): Promise<AuthenticationResponse> {
-    const payload = jwt.verify(opts.jwt, process.env.JWT_SECRET) as JwtPayload;
-    if (!payload) {
+  public async authenticate(req: Partial<AuthenticationRequest>): Promise<AuthenticationResponse> {
+    const payload = jwt.verify(req.jwt, process.env.JWT_SECRET) as Jwt;
+    if (!payload || !payload.userId || payload.userId !== req.userId) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
     return { userId: payload.userId };
   }
+  
+  public async requestOTP(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
+    const { payload, user } = await User.from(req, { failIfNotResolved: true });
+    console.log(payload, user);
+    console.log(await user.email);
+    return { success: true };
+  }
 
-  public async verifyAlias(opts: Partial<VerifyAliasOptions>): Promise<VerifyAliasResponse> {
-    const alias = await Alias.findOne({ where: { verificationCode: opts.verificationCode } });
+  public async verifyAlias(req: Partial<VerifyAliasRequest>): Promise<VerifyAliasResponse> {
+    const alias = await Alias.findOne({ where: { verificationCode: req.verificationCode } });
     if (!alias) {
       throw new AuthError('UNKNOWN_ALIAS', { alias: 'user identifier' });
     } else if (alias.verificationExpiresAt < new Date()) {
@@ -297,14 +171,28 @@ export class AuthService extends BaseService {
     } else if (alias.verifiedAt) {
       throw new AuthError('STALE_VERIFICATION_CODE');
     }
-    await alias.update(
-      { 
-        verificationCode: null,
-        verificationExpiresAt: null,
-        verifiedAt: new Date(),
-      },
-    );
+    await alias.update({ 
+      verificationCode: null,
+      verificationExpiresAt: null,
+      verifiedAt: new Date(),
+    });
     return { success: true };
   }
 
+  public async verifyOTP(req: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
+    const { user } = await User.from(req, { failIfNotResolved: true });
+    const otp = await user.findCredential('otp');
+    if (!otp) {
+      throw new AuthError('INVALID_CREDENTIALS');
+    }
+    if (otp.expiresAt < new Date()) {
+      await otp.destroy();
+      throw new AuthError('EXPIRED_CREDENTIALS');
+    }
+    await otp.destroy();
+    const token = new Jwt({ userId: user.id });
+    const signedToken = jwt.sign(token, process.env.JWT_SECRET, { expiresIn: token.expiresIn });
+    return { jwt: signedToken, userId: user.id };
+  }
+  
 }

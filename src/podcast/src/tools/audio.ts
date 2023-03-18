@@ -33,13 +33,13 @@ function resolveOutputPath(
   outputDir?: string,
   overwrite = false,
   ext = p.parse(path).ext || '.wav',
-  count = 0,
+  count = 0
 ) {
   const prefix = p.basename(outputName || path, ext);
   const suffix = count > 0 ? `-${count}` : '';
   const newPath = p.join(
     outputDir || p.dirname(path),
-    [prefix, suffix, ext].join(''),
+    [prefix, suffix, ext].join('')
   );
   if (fs.existsSync(newPath) && !overwrite) {
     return resolveOutputPath(
@@ -48,7 +48,7 @@ function resolveOutputPath(
       outputDir,
       overwrite,
       ext,
-      count + 1,
+      count + 1
     );
   }
   return newPath;
@@ -64,6 +64,7 @@ export class AudioEditingService {
       ? parseInt(fs.readFileSync('.batch', { encoding: 'utf-8' }).toString())
       : 0;
   }
+
   set batchCount(count: number) {
     fs.writeFileSync('.batch', count.toString(), { encoding: 'utf-8' });
   }
@@ -100,10 +101,10 @@ export class AudioEditingService {
         path,
         outputName,
         this.outputDir,
-        overwrite,
+        overwrite
       ),
       clip,
-    }: Partial<AudioEditOptions> = {},
+    }: Partial<AudioEditOptions> = {}
   ): Promise<string> {
     try {
       const opts: string[] = [];
@@ -144,7 +145,7 @@ export class AudioEditingService {
           path,
           opts.outputName,
           this.outputDir,
-          opts.overwrite,
+          opts.overwrite
         );
       let fd = ffmpeg(path);
       for (const input of paths) {
@@ -159,7 +160,7 @@ export class AudioEditingService {
 
   async batchEdit(
     dir: string,
-    opts: Partial<AudioEditOptions> = {},
+    opts: Partial<AudioEditOptions> = {}
   ): Promise<string[]> {
     this.incrementBatchCount();
     const files = fs
@@ -173,14 +174,11 @@ export class AudioEditingService {
       })
       .sort((a, b) => a.stats.mtimeMs - b.stats.mtimeMs);
     try {
-      const outfiles = await Promise.all(
-        files.map((f, i) =>
-          this.edit(f.path, {
-            ...opts,
-            outputName: this.namingSchema(f.path, i),
-          }),
-        ),
-      );
+      const outfiles = await Promise.all(files.map((f, i) =>
+        this.edit(f.path, {
+          ...opts,
+          outputName: this.namingSchema(f.path, i),
+        })));
       return outfiles;
     } catch (e) {
       console.error(e);

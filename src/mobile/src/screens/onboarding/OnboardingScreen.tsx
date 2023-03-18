@@ -40,7 +40,7 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
     const translateX = interpolate(
       value,
       [-1, 0, 1],
-      [-window.width, 0, window.width],
+      [-window.width, 0, window.width]
     );
     return {
       transform: [{ rotateZ }, { translateX }],

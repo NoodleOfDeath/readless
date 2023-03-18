@@ -2,23 +2,11 @@ import {
   Column,
   DataType,
   Index,
-  Model,
   Table,
 } from 'sequelize-typescript';
 
-import { DatedAttributes } from '../dated';
-
-export type UserMetadataAttributes = DatedAttributes & {
-  userId: number;
-  key: string;
-  value: Record<string, unknown>;
-};
-
-export type UserMetadataCreationAttributes = DatedAttributes & {
-  userId: number;
-  key: string;
-  value: Record<string, unknown>;
-};
+import { UserMetadataAttributes, UserMetadataCreationAttributes } from './user_metadata.types';
+import { BaseModel } from '../base';
 
 @Table({
   modelName: 'user_metadata',
@@ -26,16 +14,8 @@ export type UserMetadataCreationAttributes = DatedAttributes & {
   timestamps: true,
 })
 export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttributes, B extends UserMetadataCreationAttributes = UserMetadataCreationAttributes>
-  extends Model<A, B>
+  extends BaseModel<A, B>
   implements UserMetadataAttributes {
-
-  static get empty() {
-    return this.json();
-  }
-
-  static json(defaults?: Partial<UserMetadata>): Partial<UserMetadata> {
-    return defaults ?? {};
-  }
   
   @Index({
     name: 'user_metadata_userId_key_unique_key',

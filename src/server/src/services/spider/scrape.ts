@@ -83,20 +83,16 @@ export type ScrapeOpts<T extends { [key: string]: ExtractRule }> = {
  * i.e. booleans are converted into 0s or 1s
  */
 export function encodeScrapeOpts<T>(opts: Partial<T>) {
-  return new URLSearchParams(
-    Object.fromEntries(
-      Object.entries(opts)
-        .filter(([_, value]) => !!value)
-        .map(([key, value]) => [
-          key,
-          typeof value === 'string'
-            ? value
-            : typeof value === 'boolean'
-              ? JSON.stringify(Number(value))
-              : JSON.stringify(value),
-        ]),
-    ),
-  );
+  return new URLSearchParams(Object.fromEntries(Object.entries(opts)
+    .filter(([_, value]) => !!value)
+    .map(([key, value]) => [
+      key,
+      typeof value === 'string'
+        ? value
+        : typeof value === 'boolean'
+          ? JSON.stringify(Number(value))
+          : JSON.stringify(value),
+    ])));
 }
 
 /**
@@ -115,9 +111,7 @@ export function mappedScrapeLoot<T extends { [key: string]: ExtractRule }>(data:
     ...data,
     /** collapses all properties listed in keys */
     collapsed<S extends string>(...keys: S[]) {
-      return Object.fromEntries(
-        Object.entries(data).map(([key, value]) => [key, keys.includes(key as S) ? value.join('\n') : value]),
-      ) as { [Key in keyof T]: Key extends S ? string : string[] };
+      return Object.fromEntries(Object.entries(data).map(([key, value]) => [key, keys.includes(key as S) ? value.join('\n') : value])) as { [Key in keyof T]: Key extends S ? string : string[] };
     },
   };
 }

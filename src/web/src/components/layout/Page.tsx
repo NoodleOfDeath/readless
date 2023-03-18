@@ -15,29 +15,25 @@ type Props = Omit<ContainerProps, 'left' | 'right' | 'center' | 'align'> & {
 };
 
 // eslint-disable-next-line react/display-name
-const StyledContainer = styled(
-  ({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    left, right, center, align, ...props 
-  }: ContainerProps & Props) => (
-    <Container { ...props } maxWidth={ false } />
-  ),
-)(
-  ({
-    theme,
-    left,
-    right,
-    center,
-    align = left ? 'left' : right ? 'right' : center ? 'center' : 'left',
-  }) => ({
-    alignItems: align,
-    alignSelf: align,
-    justifyContent: align,
-    marginTop: theme.spacing(5),
-    maxWidth: 1280,
-    textAlign: align,
-  }),
-);
+const StyledContainer = styled(({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  left, right, center, align, ...props 
+}: ContainerProps & Props) => (
+  <Container { ...props } maxWidth={ false } />
+))(({
+  theme,
+  left,
+  right,
+  center,
+  align = left ? 'left' : right ? 'right' : center ? 'center' : 'left',
+}) => ({
+  alignItems: align,
+  alignSelf: align,
+  justifyContent: align,
+  marginTop: theme.spacing(5),
+  maxWidth: 1280,
+  textAlign: align,
+}));
 
 export default function Page({
   children, title, ...other 

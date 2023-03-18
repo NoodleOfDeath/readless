@@ -7,8 +7,7 @@ export type VerifyEmailProps = EmailTemplateParams & {
 
 export class VerifyEmailTemplate extends EmailTemplate<VerifyEmailProps> {
 
-  constructor(
-  ) {
+  constructor() {
     super({
       body: html,
       subject: 'Verify your email',

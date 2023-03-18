@@ -37,7 +37,7 @@ export type QueueServiceOptions = QueueOptions & {
 
 export const redisClient = (
   connectionString = process.env.REDIS_CONNECTION_STRING,
-  { maxRetriesPerRequest = null, ...opts }: RedisOptions = {},
+  { maxRetriesPerRequest = null, ...opts }: RedisOptions = {}
 ) =>
   new IORedis(connectionString, {
     maxRetriesPerRequest,
@@ -65,7 +65,7 @@ export class QueueService extends BaseService {
     jobQueue: QueueProps<DataType, ReturnType, NameType>,
     jobName: string,
     payload: DataType,
-    options?: BaseJobOptions,
+    options?: BaseJobOptions
   ) {
     const queue =
       (this.queues[jobQueue.name] as Queue<DataType>) ??
@@ -77,9 +77,7 @@ export class QueueService extends BaseService {
     this.queues[jobQueue.name] = queue;
   }
 
-  getQueue<DataType, ReturnType, NameType extends string = string>(
-    jobQueue: QueueProps<DataType, ReturnType, NameType>,
-  ): Queue<DataType> {
+  getQueue<DataType, ReturnType, NameType extends string = string>(jobQueue: QueueProps<DataType, ReturnType, NameType>): Queue<DataType> {
     return (
       (this.queues[jobQueue.name] as Queue<DataType>) ??
       new Queue<DataType>(jobQueue.name, { connection: this.client, defaultJobOptions: this.defaultJobOptions })
@@ -103,7 +101,7 @@ export class Worker<DataType, ReturnType, NameType extends string = string> exte
   constructor(
     queueProps: QueueProps<DataType, ReturnType, NameType>,
     handler: (job: Job<DataType, ReturnType, NameType>) => Promise<ReturnType>,
-    options?: WorkerOptions,
+    options?: WorkerOptions
   ) {
     super(queueProps.name, handler, { ...options, connection: redisClient() });
     this.queueProps = queueProps;

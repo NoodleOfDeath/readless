@@ -18,10 +18,20 @@ module.exports = {
       },
     ],
     'brace-style': ['error', '1tbs'],
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'never',
+        imports: 'always-multiline',
+        objects: 'always-multiline',
+      },
+    ],
     'comma-spacing': ['error'],
     curly: ['error'],
     'function-call-argument-newline': ['error', 'consistent'],
+    'function-paren-newline': ['error', 'multiline-arguments'],
     'import-newlines/enforce': [
       'error',
       {
@@ -57,8 +67,14 @@ module.exports = {
     ],
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
+    'lines-between-class-members': [
+      'error',
+      'always',
+      { exceptAfterSingleLine: true },
+    ],
     'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
     'no-unused-vars': 'off',
+    'no-useless-rename': 'error',
     'object-curly-newline': [
       'error',
       {
@@ -81,6 +97,7 @@ module.exports = {
       },
     ],
     'object-curly-spacing': ['error', 'always'],
+    'object-shorthand': ['error', 'always'],
     'padded-blocks': ['error', { classes: 'always' }],
     quotes: ['error', 'single'],
     semi: ['error', 'always'],

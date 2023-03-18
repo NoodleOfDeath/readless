@@ -13,7 +13,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import API, { FeatureAttributes } from '@/api';
+import API from '@/api';
 import { ConsumptionMode } from '@/components/Post';
 import { loadTheme } from '@/theme';
 
@@ -32,8 +32,6 @@ export type SetSearchTextOptions = {
 };
 
 export type Session = {
-  enabledFeatures: Record<string, FeatureAttributes>,
-  pathIsEnabled: (path: string) => boolean,
   theme: Theme;
   preferences: Preferences;
   userData?: UserData;
@@ -61,8 +59,6 @@ export const NULL_SESSION: Session = {
   consumptionMode: 'concise',
   // getters
   displayMode: 'light',
-  enabledFeatures: {},
-  pathIsEnabled: () => false,
   preferences: {},
   searchOptions: [],
   searchText: '',
@@ -101,25 +97,20 @@ export function SessionContextProvider({ children }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
-  const [enabledFeatures, setEnabledFeatures] = React.useState<Record<string, FeatureAttributes>>({});
-  const [theme, setTheme] = React.useState(
-    loadTheme(prefersDarkMode ? 'dark' : 'light'),
-  );
+  const [theme, setTheme] = React.useState(loadTheme(prefersDarkMode ? 'dark' : 'light'));
   const [preferences, setPreferences] = React.useState<Preferences>({});
   const [userData, setUserData] = React.useState<UserData | undefined>();
 
   const { displayMode, consumptionMode } = React.useMemo(
     () => preferences,
-    [preferences],
+    [preferences]
   );
   const [searchText, setSearchText] = React.useState('');
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
 
   // Convenience function to set a preference
   const preferenceSetter = React.useCallback(<Key extends keyof Preferences>(key: Key) =>
-    (
-      value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key]),
-    ) => {
+    (value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
       setPreferences((preferences) => {
         const newPrefs = { ...preferences };
         if (!value) {
@@ -153,11 +144,6 @@ export function SessionContextProvider({ children }: Props) {
     } catch (e) {
       setUserData(undefined);
     }
-    API.getFeatures()
-      .then((response) => {
-        setEnabledFeatures(Object.fromEntries(response.data.map((feature) => [feature.name, feature])));
-      })
-      .catch(console.error);
   }, []);
 
   // Update theme when user preference changes
@@ -180,8 +166,6 @@ export function SessionContextProvider({ children }: Props) {
       path: '/',
     });
   }, [userData]);
-  
-  const pathIsEnabled = React.useCallback((path: string) => enabledFeatures[path]?.enabled === true, [enabledFeatures]);
   
   React.useEffect(() => {
     // record page visit
@@ -212,11 +196,6 @@ export function SessionContextProvider({ children }: Props) {
         return;
       }
       break;
-    case '/search':
-      if (!pathIsEnabled(location.pathname)) {
-        navigate('/');
-      }
-      break;
     case '/verify/alias': {
       const verificationCode = searchParams.get('v');
       if (!verificationCode) {
@@ -237,15 +216,13 @@ export function SessionContextProvider({ children }: Props) {
       break;
     }
     }
-  }, [pathIsEnabled, location, navigate, searchParams, userData]);
+  }, [location, navigate, searchParams, userData]);
 
   return (
     <SessionContext.Provider
       value={ {
         consumptionMode,
         displayMode,
-        enabledFeatures,
-        pathIsEnabled,
         preferences,
         searchOptions,
         searchText,
@@ -254,7 +231,7 @@ export function SessionContextProvider({ children }: Props) {
         setSearchOptions,
         setSearchText: (
           state,
-          { clearSearchParams }: SetSearchTextOptions = {},
+          { clearSearchParams }: SetSearchTextOptions = {}
         ) => {
           setSearchText(state);
           if (clearSearchParams) {
