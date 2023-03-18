@@ -10,6 +10,7 @@ class ErrorMessage<Params extends Record<string, string>> {
 }
 
 const ERROR_MESSAGES = {
+  BAD_REQUEST: new ErrorMessage('Bad request'),
   DUPLICATE_USER: new ErrorMessage('User already exists'),
   EXPIRED_CREDENTIALS: new ErrorMessage('Credential has expired'),
   EXPIRED_VERIFICATION_CODE: new ErrorMessage('Verification code has expired'),
@@ -24,6 +25,7 @@ const ERROR_MESSAGES = {
 
 type AuthErrorOptions = {
   code: number;
+  statusCode: number;
   message: string;
 }
 
@@ -31,11 +33,13 @@ export class AuthError extends Error implements AuthErrorOptions {
   
   errorKey: keyof typeof ERROR_MESSAGES;
   code: number;
+  statusCode: number;
   message: string;
   
   constructor(
-    errorKey: keyof typeof ERROR_MESSAGES, 
-    params?: typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params']
+    errorKey: keyof typeof ERROR_MESSAGES,
+    statusCodeOrParams: number | typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] = 500,
+    params: typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] = typeof statusCodeOrParams === 'number' ? undefined : statusCodeOrParams
   ) {
     let message: string = ERROR_MESSAGES[errorKey].message;
     if (params) {
@@ -45,7 +49,10 @@ export class AuthError extends Error implements AuthErrorOptions {
     }
     super(message);
     this.errorKey = errorKey;
-    this.code = Object.keys(ERROR_MESSAGES).indexOf(errorKey) + 1,
+    if (typeof statusCodeOrParams === 'number') {
+      this.statusCode = statusCodeOrParams;
+    }
+    this.code = Object.keys(ERROR_MESSAGES).indexOf(errorKey) + 1;
     this.message = message;
   }
   

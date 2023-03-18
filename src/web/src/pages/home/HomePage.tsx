@@ -39,7 +39,7 @@ export default function HomePage() {
           newsletterName,
         });
         setSuccess(true);
-      } catch(e) {
+      } catch (e) {
         console.error(e);
       }
     }

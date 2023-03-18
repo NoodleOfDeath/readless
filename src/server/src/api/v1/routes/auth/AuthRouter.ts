@@ -116,7 +116,7 @@ router.post(
     try {
       const response = await new AuthController().verifyAlias(req.body);
       res.json(response);
-    } catch(e) {
+    } catch (e) {
       if (e instanceof AuthError) {
         res.status(401).json(e);
       } else {

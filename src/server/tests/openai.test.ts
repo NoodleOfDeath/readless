@@ -19,7 +19,7 @@ describe('generates an image', () => {
     try {
       const resp = await service.createImage('Stock photo about environment');
       fs.writeFileSync('./url.html', `<a href="${resp.data.data[0].url}">fuck</a>`);
-    } catch(e) {
+    } catch (e) {
       console.log(e);
     }
     expect(true).toBe(true);

@@ -66,6 +66,7 @@ module.exports = {
       },
     ],
     indent: ['error', 2],
+    'keyword-spacing': ['error'],
     'linebreak-style': ['error', 'unix'],
     'lines-between-class-members': [
       'error',

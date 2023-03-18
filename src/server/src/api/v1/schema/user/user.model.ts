@@ -3,6 +3,7 @@ import {  Table } from 'sequelize-typescript';
 import { Alias } from './alias.model';
 import { AliasPayload, FindAliasOptions } from './alias.types';
 import { UserAttributes, UserCreationAttributes } from './user.types';
+import { AuthError } from '../../../../services';
 import { Credential } from '../auth/credential.model';
 import { CredentialType } from '../auth/credential.types';
 import { BaseModel } from '../base';
@@ -19,10 +20,16 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   /** Resolves a use from an alias request payload */
   public static async from(req: Partial<AliasPayload>, opts?: Partial<FindAliasOptions>) {
     const { alias, payload } = await Alias.from(req, opts);
+    if (!alias) {
+      if (opts?.failIfNotResolved) {
+        throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
+      }
+      return { alias, payload };
+    }
     return {
       alias, 
       payload, 
-      user: await User.findOne({ where: { id: alias.userId } }),
+      user: await User.findOne({ where: { id: alias.toJSON().userId } }),
     };
   }
   

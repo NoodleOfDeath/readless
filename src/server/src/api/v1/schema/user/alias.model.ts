@@ -73,8 +73,8 @@ export class Alias<
     verifiedAt: Date;
     
   public static parsePayload(payload: Partial<AliasPayload>): AliasPayload {
-    let type: AliasType;
-    let value: string | ThirdPartyAuth;
+    let type: AliasType = payload.type;
+    let value: string | ThirdPartyAuth = payload.value;
     Object.values(ALIAS_TYPES).forEach((aliasType) => {
       if (payload[aliasType]) {
         type = aliasType;
@@ -82,7 +82,6 @@ export class Alias<
       }
     });
     return {
-      ...payload,
       type,
       value,
     };
@@ -90,7 +89,7 @@ export class Alias<
     
   public static async from(req: Partial<AliasPayload>, opts: FindAliasOptions): Promise<{alias: Alias, payload: AliasPayload}> {
     const payload = Alias.parsePayload(req);
-    if (typeof payload.value !== 'string') {
+    if (payload.type === 'thirdParty' && typeof payload.value !== 'string') {
       if (payload.value.name === 'google') {
         const google = new GoogleService();
         const ticket = await google.verify(payload.value.credential);
@@ -104,7 +103,6 @@ export class Alias<
           throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
         }
         return await this.from({
-          ...payload,
           type: `thirdParty/${payload.value.name}`,
           value: thirdPartyId,
         }, opts);

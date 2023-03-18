@@ -47,7 +47,7 @@ export class AuthService extends BaseService {
     if (payload.type === 'eth2Address') {
       // auth by eth2Address
       console.log(web3);
-    } else if (payload.type === 'thirdParty') {
+    } else if (payload.type.startsWith('thirdParty/')) {
       // auth by thirdParty
     } else {
       // auth by password
@@ -60,11 +60,12 @@ export class AuthService extends BaseService {
       }
     }
     // user is authenticated, generate JWT
-    const token = Jwt.Default(user.id);
+    const userData = user.toJSON();
+    const token = Jwt.Default(userData.id);
     const signedToken = jwt.sign(token, process.env.JWT_SECRET, { expiresIn: token.expiresIn });
     return {
       jwt: signedToken,
-      userId: user.id,
+      userId: userData.id,
     };
   }
 
@@ -78,10 +79,10 @@ export class AuthService extends BaseService {
     if (user) {
       throw new AuthError('DUPLICATE_USER');
     }
-    if (typeof payload.value !== 'string') {
-      if (payload.value.name === 'google') {
+    if (req.thirdParty) {
+      if (req.thirdParty.name === 'google') {
         const google = new GoogleService();
-        const ticket = await google.verify(payload.value.credential);
+        const ticket = await google.verify(req.thirdParty.credential);
         const { email, email_verified: emailVerified } = ticket.getPayload();
         thirdPartyId = ticket.getPayload().sub;
         if (!email) {
@@ -95,19 +96,21 @@ export class AuthService extends BaseService {
         newAliasValue = email;
         verified = true;
       }
-    } else {
+    } else if (typeof payload.value === 'string') {
       newAliasType = payload.type;
       newAliasValue = payload.value;
+    } else {
+      throw new AuthError('BAD_REQUEST');
     }
     const newUser = new User();
     await newUser.save();
     if (!verified) {
       verificationCode = await generateVerificationCode();
     }
-    if (thirdPartyId && typeof payload.value !== 'string') {
+    if (thirdPartyId && req.thirdParty) {
       // bind third-party alias
       await Alias.create({
-        type: `thirdParty/${payload.value.name}`,
+        type: `thirdParty/${req.thirdParty.name}`,
         userId: newUser.id,
         value: thirdPartyId,
         verifiedAt: new Date(),
@@ -129,7 +132,7 @@ export class AuthService extends BaseService {
       });
       await newCredential.save();
     }
-    if(verified) {
+    if (verified) {
       return await this.login(req);
     } else {
       const mailer = new MailService();
