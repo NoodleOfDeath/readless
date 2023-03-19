@@ -192,8 +192,8 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/reset-password': () => {
-        if (!userData?.isLoggedIn) {
-          navigate('/login');
+        if (userData?.isLoggedIn) {
+          navigate('/');
           return;
         }
         if (!userData?.userId) {

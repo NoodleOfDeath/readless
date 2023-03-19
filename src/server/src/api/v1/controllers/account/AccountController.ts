@@ -3,6 +3,7 @@ import {
   Put,
   Response,
   Route,
+  SuccessResponse,
   Tags,
 } from 'tsoa';
 
@@ -16,6 +17,7 @@ import { MutateAccountRequest, MutateAccountResponse } from '../../../../service
 export class AccountController {
 
   @Put('/update')
+  @SuccessResponse(200, 'OK')
   public async updateAccount(@Body() body: Partial<MutateAccountRequest>): Promise<MutateAccountResponse> {
     return await new AccountService().mutateAccount(body);
   }

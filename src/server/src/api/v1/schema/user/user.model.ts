@@ -98,7 +98,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       value = rawValue;
     } else {
       value = rawValue.signed;
-      console.log('shit', rawValue.expiresIn, ms(rawValue.expiresIn), Date.now() * ms(rawValue.expiresIn));
       expiresAt = new Date(Date.now() + ms(rawValue.expiresIn));
     }
     if (type === 'password') {

@@ -216,11 +216,10 @@ export class AuthService extends BaseService {
     if (!otp) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
+    await otp.destroy();
     if (otp.expiresAt < new Date()) {
-      await otp.destroy();
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
-    await otp.destroy();
     const userData = user.toJSON();
     const token = Jwt.Account(userData.id);
     await user.createCredential('jwt', token);
