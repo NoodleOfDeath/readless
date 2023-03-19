@@ -199,8 +199,8 @@ export function SessionContextProvider({ children }: Props) {
       }
       break;
     case '/reset-password':
-      if (!userData?.isLoggedIn) {
-        navigate('/login');
+      if (userData?.isLoggedIn) {
+        navigate('/');
         return;
       }
       break;
