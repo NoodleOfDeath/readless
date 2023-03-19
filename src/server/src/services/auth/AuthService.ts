@@ -14,6 +14,7 @@ import {
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
+  OTP_LENGTH,
   RegistrationRequest,
   RegistrationResponse,
   VERIFICATION_CODE_LENGTH,
@@ -40,38 +41,23 @@ async function generateVerificationCode(): Promise<string> {
   return verificationCode;
 }
 
+async function generateOtp(): Promise<string> {
+  const value = Math.random().toString(36).substring(2, 2 + OTP_LENGTH);
+  if (await Credential.findOne({
+    where: {
+      type: 'otp',
+      value,
+    },
+  }) !== null) {
+    return generateOtp();
+  }
+  return value;
+}
+
 export class AuthService extends BaseService {
 
-  public async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
-    const { payload, user } = await User.from(req, { failIfNotResolved: true });
-    if (payload.type === 'eth2Address') {
-      // auth by eth2Address
-      console.log(web3);
-    } else if (payload.type.startsWith('thirdParty/')) {
-      // auth by thirdParty
-    } else {
-      // auth by password
-      const credential = await user.findCredential('password');
-      if (!credential) {
-        throw new AuthError('MISSING_PASSWORD');
-      }
-      const credentialData = credential.toJSON();
-      if (!bcrypt.compareSync(req.password, credentialData.value)) {
-        throw new AuthError('INVALID_PASSWORD');
-      }
-    }
-    // user is authenticated, generate JWT
-    const userData = user.toJSON();
-    const token = Jwt.Default(userData.id);
-    const signedToken = jwt.sign(token, process.env.JWT_SECRET, { expiresIn: token.expiresIn });
-    return {
-      jwt: signedToken,
-      userId: userData.id,
-    };
-  }
-
   public async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
-    const { payload, user } = await User.from(req, { failIfNotResolved: false });
+    const { payload, user } = await User.from(req, { ignoreIfNotResolved: true });
     let newAliasType: AliasType;
     let newAliasValue: string;
     let thirdPartyId: string;
@@ -110,44 +96,75 @@ export class AuthService extends BaseService {
     }
     if (thirdPartyId && req.thirdParty) {
       // bind third-party alias
-      await Alias.create({
-        type: `thirdParty/${req.thirdParty.name}`,
-        userId: newUser.id,
-        value: thirdPartyId,
-        verifiedAt: new Date(),
-      });
+      await newUser.createAlias(
+        `thirdParty/${req.thirdParty.name}`, 
+        thirdPartyId,
+        { verifiedAt: new Date() }
+      );
     }
-    await Alias.create({
-      type: newAliasType,
-      userId: newUser.id,
-      value: newAliasValue,
+    await newUser.createAlias(newAliasType, newAliasValue, {
       verificationCode,
       verificationExpiresAt: verified ? undefined : new Date(Date.now() + ms('20m')),
       verifiedAt: verified ? new Date() : undefined,
     });
     if (req.password) {
-      const newCredential = new Credential({
-        type: 'password',
-        userId: newUser.id,
-        value: bcrypt.hashSync(req.password, 10),
-      });
-      await newCredential.save();
+      await newUser.createCredential('password', req.password);
     }
     if (verified) {
       return await this.login(req);
     } else {
       const mailer = new MailService();
-      mailer.sendMail({ to: newAliasValue }, 'verify', {
+      mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
         email: newAliasValue,
         verificationCode,
       });
-      return { userId: newUser.id };
+      return { userId: newUser.toJSON().id };
     }
   }
 
-  public async logout({ userId }: Partial<LogoutRequest>): Promise<LogoutResponse> {
-    await Credential.destroy({ where: { userId } });
-    return { success: true };
+  public async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
+    const {
+      payload, jwt, user, 
+    } = await User.from(req);
+    if (jwt && !jwt.expired) {
+      throw new AuthError('ALREADY_LOGGED_IN');
+    }
+    if (payload.type === 'eth2Address') {
+      // auth by eth2Address
+      console.log(web3);
+    } else if (payload.type.startsWith('thirdParty/')) {
+      // auth by thirdParty
+    } else {
+      // auth by password
+      const credential = await user.findCredential('password');
+      if (!credential) {
+        throw new AuthError('MISSING_PASSWORD');
+      }
+      if (!bcrypt.compareSync(req.password, credential.toJSON().value)) {
+        throw new AuthError('INVALID_PASSWORD');
+      }
+    }
+    // user is authenticated, generate JWT
+    const userData = user.toJSON();
+    const token = Jwt.Default(userData.id);
+    await user.createCredential('jwt', token);
+    return {
+      jwt: token.signed,
+      userId: userData.id,
+    };
+  }
+
+  public async logout({ jwt, userId }: Partial<LogoutRequest>): Promise<LogoutResponse> {
+    let count = await Credential.destroy({ 
+      where: {
+        type: 'jwt',
+        value: jwt,
+      },
+    });
+    if (userId) {
+      count += await Credential.destroy({ where: { userId } });
+    }
+    return { count, success: true };
   }
 
   public async authenticate(req: Partial<AuthenticationRequest>): Promise<AuthenticationResponse> {
@@ -158,10 +175,20 @@ export class AuthService extends BaseService {
     return { userId: payload.userId };
   }
   
-  public async requestOTP(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
-    const { payload, user } = await User.from(req, { failIfNotResolved: true });
-    console.log(payload, user);
-    console.log(await user.email);
+  public async generateOtp(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
+    const { user } = await User.from(req);
+    const email = await user.findAlias('email');
+    if (!email) {
+      throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
+    }
+    const otp = await generateOtp();
+    await user.createCredential('otp', otp);
+    const emailData = email.toJSON();
+    const mailer = new MailService();
+    mailer.sendMail({ to: emailData.value }, 'resetPassword', {
+      email: emailData.value,
+      otp,
+    });
     return { success: true };
   }
 
@@ -183,8 +210,8 @@ export class AuthService extends BaseService {
     return { success: true };
   }
 
-  public async verifyOTP(req: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
-    const { user } = await User.from(req, { failIfNotResolved: true });
+  public async verifyOtp(req: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
+    const { user } = await User.from(req);
     const otp = await user.findCredential('otp');
     if (!otp) {
       throw new AuthError('INVALID_CREDENTIALS');
@@ -194,9 +221,10 @@ export class AuthService extends BaseService {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
     await otp.destroy();
-    const token = new Jwt({ userId: user.id });
-    const signedToken = jwt.sign(token, process.env.JWT_SECRET, { expiresIn: token.expiresIn });
-    return { jwt: signedToken, userId: user.id };
+    const userData = user.toJSON();
+    const token = Jwt.Account(userData.id);
+    await user.createCredential('jwt', token);
+    return { jwt: token.signed, userId: userData.id };
   }
   
 }

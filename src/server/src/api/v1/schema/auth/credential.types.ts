@@ -25,5 +25,5 @@ export type CredentialCreationAttributes = DatedAttributes & {
   userId: number;
   type: CredentialType;
   value: string;
-  expiresAt: Date;
+  expiresAt?: Date;
 };

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { param, query } from 'express-validator';
 
 import { SourceController } from '../../controllers';
-import { pagination, validate } from '../../middleware';
+import { paginationMiddleware, validationMiddleware } from '../../middleware';
 import { SourceAttr, SourceAttributes } from '../../schema/types';
 
 const router = Router();
@@ -13,8 +13,8 @@ router.get(
   param('subcategory').isString().optional(),
   param('title').isString().optional(),
   query('filter').isString().optional(),
-  ...pagination,
-  validate,
+  ...paginationMiddleware,
+  validationMiddleware,
   async (req, res) => {
     const {
       category, subcategory, title, 

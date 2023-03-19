@@ -4,7 +4,7 @@ const html = `
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Verify Your Email</title>
+    <title>{{title}}</title>
     <style>
       body {
         margin: 0;
@@ -53,17 +53,10 @@ const html = `
   </head>
   <body>
     <header>
-      <h1>theSkoop: Verify Your Email</h1>
+      <h1>{{header}}</h1>
     </header>
     <div class="container">
-      <p>
-        Thank you for signing up! To complete your registration, please click
-        the button below to verify your email address:
-      </p>
-      <p class="center">
-        <a href="https://{{domain}}/verify/alias?v={{verificationCode}}">Verify Email</a>
-      </p>
-      <p>If you did not create an account, please disregard this message.</p>
+      {{content}}
     </div>
   </body>
 </html>

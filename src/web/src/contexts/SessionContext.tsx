@@ -196,23 +196,47 @@ export function SessionContextProvider({ children }: Props) {
         return;
       }
       break;
-    case '/verify/alias': {
-      const verificationCode = searchParams.get('v');
-      if (!verificationCode) {
+    case '/reset-password': 
+      if (!userData?.userId) {
+        navigate('/login');
+        return;
+      }
+      break;
+    case '/verify': {
+      const verificationCode = searchParams.get('vc');
+      const otp = searchParams.get('otp');
+      if (!verificationCode && !otp) {
         navigate('/error');
         return;
       }
-      API.verifyAlias({ verificationCode }).then(({ error }) => {
-        if (error) {
-          navigate(`/error?error=${JSON.stringify(error)}`);
-          return;
-        }
-        navigate(`/success?${new URLSearchParams({
-          msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
-          r: '/login',
-          t: '3000',
-        }).toString()}`);
-      }).catch(console.error);
+      if (verificationCode) {
+        API.verifyAlias({ verificationCode }).then(({ error }) => {
+          if (error && error.code) {
+            navigate(`/error?error=${JSON.stringify(error)}`);
+            return;
+          }
+          navigate(`/success?${new URLSearchParams({
+            msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
+            r: '/login',
+            t: '3000',
+          }).toString()}`);
+        }).catch((e) => {
+          console.error(e);
+          navigate('/error');
+        });
+      } else if (otp) {
+        API.verifyOtp({ otp }).then(({ data, error }) => {
+          if (error && error.code) {
+            navigate(`/error?error=${JSON.stringify(error)}`);
+            return;
+          }
+          setUserData(data);
+          navigate('/reset-password');
+        }).catch((e) => {
+          console.error(e);
+          navigate('/error');
+        });
+      }
       break;
     }
     }

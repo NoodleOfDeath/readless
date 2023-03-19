@@ -5,7 +5,7 @@ import expressWinston from 'express-winston';
 import winston from 'winston';
 
 import v1router from './v1';
-import { rateLimit } from './v1/middleware';
+import { rateLimitMiddleware } from './v1/middleware';
 
 const app = express();
 
@@ -43,7 +43,7 @@ app.use(bodyParser.json({ limit: process.env.REQ_SIZE_LIMIT }));
 
 app.set('trust proxy', 1);
 
-app.use(rateLimit('120 per 1 min'));
+app.use(rateLimitMiddleware('120 per 1 min'));
 app.use('/v1', v1router);
 
 app.use('*', (_, res) => {

@@ -10,10 +10,12 @@ class ErrorMessage<Params extends Record<string, string>> {
 }
 
 const ERROR_MESSAGES = {
+  ALREADY_LOGGED_IN: new ErrorMessage('User is already logged in'),
   BAD_REQUEST: new ErrorMessage('Bad request'),
   DUPLICATE_USER: new ErrorMessage('User already exists'),
   EXPIRED_CREDENTIALS: new ErrorMessage('Credential has expired'),
   EXPIRED_VERIFICATION_CODE: new ErrorMessage('Verification code has expired'),
+  INSUFFICIENT_PERMISSIONS: new ErrorMessage('Insufficient permissions'),
   INVALID_CREDENTIALS: new ErrorMessage('Credential is invalid'),
   INVALID_PASSWORD: new ErrorMessage('Email or password is incorrect'),
   MISSING_PASSWORD: new ErrorMessage('User does not have a password set. Please use a third party login method or request OTP.'),
@@ -21,6 +23,7 @@ const ERROR_MESSAGES = {
   STALE_VERIFICATION_CODE: new ErrorMessage('That verification token has already been used'),
   THIRD_PARTY_ALIAS_NOT_VERIFIED: new ErrorMessage('Google account email is not verified'),
   UNKNOWN_ALIAS: new ErrorMessage<{alias: string}>('Unable to find a user with the specified {alias}'),
+  UNREFRESHABLE_JWT: new ErrorMessage('JWT is not refreshable'),
 };
 
 type AuthErrorOptions = {

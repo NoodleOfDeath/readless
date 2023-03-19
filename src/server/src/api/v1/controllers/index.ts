@@ -1,5 +1,6 @@
 export * from './auth';
 
+export * from './account';
 export * from './articles';
 export * from './sources';
 

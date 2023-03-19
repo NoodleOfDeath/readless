@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
 import {
   Column,
@@ -16,6 +17,8 @@ import {
   ThirdPartyAuth,
 } from './alias.types';
 import { AuthError, GoogleService } from '../../../../services';
+import { Jwt } from '../../../../services/types';
+import { Credential } from '../auth/credential.model';
 import { BaseModel } from '../base';
 
 @Table({
@@ -87,7 +90,7 @@ export class Alias<
     };
   }
     
-  public static async from(req: Partial<AliasPayload>, opts: FindAliasOptions): Promise<{alias: Alias, payload: AliasPayload}> {
+  public static async from(req: Partial<AliasPayload>, opts?: FindAliasOptions): Promise<{alias: Alias, payload: AliasPayload, jwt?: Jwt, otp?: Credential}> {
     const payload = Alias.parsePayload(req);
     if (payload.type === 'thirdParty' && typeof payload.value !== 'string') {
       if (payload.value.name === 'google') {
@@ -107,15 +110,44 @@ export class Alias<
           value: thirdPartyId,
         }, opts);
       }
+    } else if (payload.type === 'jwt' && typeof payload.value === 'string') {
+      const token = jwt.verify(payload.value, process.env.JWT_SECRET) as Jwt;
+      if (typeof token !== 'object') {
+        throw new AuthError('INVALID_CREDENTIALS');
+      }
+      const alias = await Alias.findOne({ where: { userId: token.userId } });
+      if (!alias && !opts?.ignoreIfNotResolved) {
+        throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
+      }
+      return {
+        alias, jwt: token, payload, 
+      };
+    } else if (payload.type === 'otp' && typeof payload.value === 'string') {
+      const otp = await Credential.findOne({
+        where: {
+          type: 'otp',
+          value: payload.value,
+        },
+      });
+      if (!otp) {
+        throw new AuthError('INVALID_CREDENTIALS');
+      }
+      const alias = await Alias.findOne({ where: { userId: otp.toJSON().userId } });
+      if (!alias && !opts?.ignoreIfNotResolved) {
+        throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
+      }
+      return {
+        alias, otp, payload, 
+      };
     } else {
       const alias = await Alias.findOne({ 
         where: {
           type: payload.type,
           value: payload.value,
-          verifiedAt: opts.skipVerification ? undefined : { [Op.ne]: null },
+          verifiedAt: opts?.skipVerification ? undefined : { [Op.ne]: null },
         },
       });
-      if (!alias && opts.failIfNotResolved) {
+      if (!alias && !opts?.ignoreIfNotResolved) {
         throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
       }
       return { alias, payload };

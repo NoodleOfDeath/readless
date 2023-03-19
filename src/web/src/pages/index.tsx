@@ -1,5 +1,8 @@
 import React from 'react';
 
+import ForgotPage from './forgot/ForgotPage';
+import ResetPasswordPage from './reset-password/ResetPasswordPage';
+
 import AboutPage from '@/pages/about/AboutPage';
 import ContemplatingPage from '@/pages/contemplating/ContemplatingPage';
 import Error404NotFoundPage from '@/pages/errors/Error404NotFoundPage';
@@ -13,17 +16,19 @@ import SuccessPage from '@/pages/success/SuccessPage';
 import TermsPage from '@/pages/terms/TermsPage';
 
 export const ROUTES: Record<string, React.ReactNode> = {
-  '/':              <HomePage />,
-  '/*':             <Error404NotFoundPage />,
-  '/about':         <AboutPage />,
-  '/error':         <ErrorPage />,
-  '/login':         <LoginPage />,
-  '/logout':        <ContemplatingPage />,
-  '/privacy':       <PrivacyPage />,
-  '/profile':       <ProfilePage />,
-  '/search':        <SearchPage />,
-  '/signup':        <LoginPage action={ 'signUp' } />,
-  '/success':       <SuccessPage />,
-  '/terms':         <TermsPage />,
-  '/verify/alias':  <ContemplatingPage />,
+  '/':                  <HomePage />,
+  '/*':                 <Error404NotFoundPage />,
+  '/about':             <AboutPage />,
+  '/error':             <ErrorPage />,
+  '/forgot':            <ForgotPage />,
+  '/login':             <LoginPage />,
+  '/logout':            <ContemplatingPage />,
+  '/privacy':           <PrivacyPage />,
+  '/profile':           <ProfilePage />,
+  '/reset-password':    <ResetPasswordPage />,
+  '/search':            <SearchPage />,
+  '/signup':            <LoginPage action={ 'signUp' } />,
+  '/success':           <SuccessPage />,
+  '/terms':             <TermsPage />,
+  '/verify':            <ContemplatingPage />,
 };

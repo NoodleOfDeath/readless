@@ -1,16 +1,17 @@
+import { Optional } from '../../../types';
 
-export type EmailTemplateParams = {
+export type MailTemplateParams = {
   domain: string;
   email: string;
 }
 
-export type EmailTemplateProps = {
+export type MailTemplateProps = {
   subject: string;
   body: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export abstract class EmailTemplate<Params extends EmailTemplateParams> implements EmailTemplateProps {
+export abstract class MailTemplate<Params extends MailTemplateParams> implements MailTemplateProps {
 
   subject: string;
   body: string;
@@ -19,7 +20,7 @@ export abstract class EmailTemplate<Params extends EmailTemplateParams> implemen
   constructor({ 
     subject, 
     body, 
-  }: EmailTemplateProps) {
+  }: MailTemplateProps) {
     this.subject = subject;
     this.body = body;
   }
@@ -27,10 +28,9 @@ export abstract class EmailTemplate<Params extends EmailTemplateParams> implemen
   render({
     domain = process.env.CORS_ORIGIN,
     ...rest
-  }: Omit<Params, 'domain'> & { domain?: string } = {} as Params) {
-    const params = { domain, ...rest };
+  }: Optional<Params, 'domain'> = {} as Params) {
     let html = this.body;
-    Object.entries(params ?? {}).forEach(([key, value]) => {
+    Object.entries({ domain, ...rest }).forEach(([key, value]) => {
       html = html.replaceAll(`{{${key}}}`, value);
     });
     return html;

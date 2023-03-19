@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
 import { NewsletterController } from '../../controllers';
-import { validate } from '../../middleware';
+import { validationMiddleware } from '../../middleware';
 
 const router = Router();
 
@@ -11,7 +11,7 @@ router.post(
   body('aliasType').isString(),
   body('alias').isString(),
   oneOf([body('newsletterId').isNumeric(), body('newsletterName').isString()]),
-  validate,
+  validationMiddleware,
   async (req, res) => {
     const {
       aliasType, alias, newsletterId, newsletterName, 
@@ -36,7 +36,7 @@ router.post(
   body('aliasType').isString(),
   body('alias').isString(),
   oneOf([body('newsletterId').isNumeric(), body('newsletterName').isString()]),
-  validate,
+  validationMiddleware,
   async (req, res) => {
     const {
       aliasType, alias, newsletterId, newsletterName, 

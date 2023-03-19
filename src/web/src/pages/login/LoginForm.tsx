@@ -4,6 +4,7 @@ import { mdiEmail, mdiLock } from '@mdi/js';
 import Icon from '@mdi/react';
 import {
   Button,
+  Link,
   Stack,
   TextField,
   Typography,
@@ -153,6 +154,11 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
             <Button type='submit' variant="contained">
               {action === 'logIn' ? 'Log In' : 'Sign Up'}
             </Button>
+            {action === 'logIn' && (
+              <Link onClick={ () => navigate('/forgot') }>
+                Forgot your password?
+              </Link>
+            )}
           </StyledStack>
         </form>
       ) : (

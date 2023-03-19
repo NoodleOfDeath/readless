@@ -14,6 +14,7 @@ export type ThirdPartyAuth = {
 export const ALIAS_TYPES = {
   email: 'email',
   eth2Address: 'eth2Address',
+  jwt: 'jwt',
   otp: 'otp',
   phone: 'phone',
   thirdParty: 'thirdParty',
@@ -32,7 +33,7 @@ export type AliasPayload = Partial<DestructuredAliasPayload> & {
 };
 
 export type FindAliasOptions = {
-  failIfNotResolved?: boolean;
+  ignoreIfNotResolved?: boolean;
   skipVerification?: boolean;
 }
 

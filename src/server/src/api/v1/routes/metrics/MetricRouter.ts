@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 
 import { MetricController } from '../../controllers';
-import { validate } from '../../middleware';
+import { validationMiddleware } from '../../middleware';
 
 const router = Router();
 
@@ -11,7 +11,7 @@ router.post(
   body('type').isString(),
   body('data').isObject(),
   body('userAgent').isString(),
-  validate,
+  validationMiddleware,
   async (req, res) => {
     const {
       type, data, userAgent, 

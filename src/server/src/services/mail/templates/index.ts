@@ -1,1 +1,2 @@
-export * from './verify';
+export * from './resetPassword';
+export * from './verifyEmail';

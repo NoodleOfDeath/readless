@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 
 import { ReferralController } from '../../controllers';
-import { validate } from '../../middleware';
+import { validationMiddleware } from '../../middleware';
 
 const router = Router();
 
@@ -14,7 +14,7 @@ router.post(
   body('referredById').isString().optional(),
   body('origin').isString().optional(),
   body('geolocation').isString().optional(),
-  validate,
+  validationMiddleware,
   async (req, res) => {
     const {
       referredById, origin, target, userAgent, geolocation, 

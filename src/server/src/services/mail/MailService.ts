@@ -1,12 +1,20 @@
 import { Transporter, createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-import { VerifyEmailTemplate } from './templates/verify/VerifyEmailTemplate';
+import {
+  ResetPasswordProps,
+  ResetPasswordTemplate,
+} from './templates/resetPassword/ResetPasswordTemplate';
+import { VerifyEmailProps, VerifyEmailTemplate } from './templates/verifyEmail/VerifyEmailTemplate';
+import { Optional } from '../../types';
 import { BaseService } from '../base';
 
 type MailServiceOptions = SMTPTransport.Options;
 
-const TEMPLATES = { verify: VerifyEmailTemplate } as const;
+const TEMPLATES = { 
+  resetPassword: ResetPasswordTemplate,
+  verifyEmail: VerifyEmailTemplate,
+} as const;
 
 export class MailService extends BaseService {
 
@@ -31,11 +39,11 @@ export class MailService extends BaseService {
   }
 
   async sendMail<
-    TemplateName extends keyof typeof TEMPLATES, 
+    TemplateName extends keyof typeof TEMPLATES,
   >(
     opts: SMTPTransport.Options,
-    templateName?: TemplateName, 
-    params?: Omit<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain'>
+    templateName?: TemplateName,
+    params?: Optional<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain'>
   ) {
     const options = {
       from: `<${process.env.MAIL_USER}> theSkoop`,
@@ -44,7 +52,11 @@ export class MailService extends BaseService {
     if (templateName) {
       const template = new TEMPLATES[templateName]();
       options.subject = template.subject;
-      options.html = template.render(params);
+      if (template instanceof VerifyEmailTemplate) {
+        options.html = template.render(params as VerifyEmailProps);
+      } else if (template instanceof ResetPasswordTemplate) {
+        options.html = template.render(params as ResetPasswordProps);
+      }
     }
     return await this.client.sendMail(options);
   }

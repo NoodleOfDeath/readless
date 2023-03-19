@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 
+import accountRouter from './routes/account';
 import articleRouter from './routes/articles';
 import authRouter from './routes/auth';
 import bullBoardRouter from './routes/bull-board';
@@ -15,6 +16,7 @@ const router = Router();
 async function main() {
   await DBService.init();
   router.use(express.static('public'));
+  router.use('/account', accountRouter);
   router.use('/articles', articleRouter);
   router.use('/auth', authRouter);
   router.use('/bull-board', bullBoardRouter);

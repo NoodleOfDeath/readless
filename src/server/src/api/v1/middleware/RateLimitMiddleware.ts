@@ -42,7 +42,7 @@ function parseRateLimitString(limit: RateLimitString): Partial<RateLimitOptions>
   return { rate };
 }
 
-export const rateLimit = (
+export const rateLimitMiddleware = (
   opts: RateLimitString | Partial<RateLimitOptions> = DEFAULT_RATE_LIMIT,
   redisClient: IORedis = new IORedis(process.env.REDIS_CONNECTION_STRING)
 ) => {
