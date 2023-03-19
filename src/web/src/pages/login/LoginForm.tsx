@@ -154,10 +154,20 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
             <Button type='submit' variant="contained">
               {action === 'logIn' ? 'Log In' : 'Sign Up'}
             </Button>
-            {action === 'logIn' && (
+            {action === 'logIn' ? (
               <Link onClick={ () => navigate('/forgot') }>
                 Forgot your password?
               </Link>
+            ): (
+              <Typography variant='body2'>
+                By signing up, you agree to our
+                {' '}
+                <Link href='/terms'>Terms of Service</Link>
+                {' '}
+                and
+                {' '}
+                <Link href='/privacy'>Privacy Policy</Link>
+              </Typography>
             )}
           </StyledStack>
         </form>
