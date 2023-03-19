@@ -15,6 +15,7 @@ import {
 
 import API from '@/api';
 import { ConsumptionMode } from '@/components/Post';
+import { AppPathName } from '@/pages';
 import { loadTheme } from '@/theme';
 
 export type Preferences = {
@@ -168,6 +169,77 @@ export function SessionContextProvider({ children }: Props) {
     });
   }, [userData]);
   
+  const pathActions = React.useMemo<Partial<Record<AppPathName, (() => void)>>>(() => {
+    return {
+      '/login': () => {
+        if (userData?.isLoggedIn) {
+          navigate('/');
+          return;
+        }
+      },
+      '/logout': () => {
+        API.logout({ ...userData })
+          .catch(console.error)
+          .finally(() => {
+            setUserData(undefined);
+            navigate('/login');
+          });
+      },
+      '/profile': () => {
+        if (!userData?.isLoggedIn) {
+          navigate('/login');
+          return;
+        }
+      },
+      '/reset-password': () => {
+        if (!userData?.isLoggedIn) {
+          navigate('/login');
+          return;
+        }
+        if (!userData?.userId) {
+          navigate('/login');
+          return;
+        }
+      },
+      '/verify': () => {
+        const verificationCode = searchParams.get('vc');
+        const otp = searchParams.get('otp');
+        if (!verificationCode && !otp) {
+          navigate('/error');
+          return;
+        }
+        if (verificationCode) {
+          API.verifyAlias({ verificationCode }).then(({ error }) => {
+            if (error && error.code) {
+              navigate(`/error?error=${JSON.stringify(error)}`);
+              return;
+            }
+            navigate(`/success?${new URLSearchParams({
+              msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
+              r: '/login',
+              t: '3000',
+            }).toString()}`);
+          }).catch((e) => {
+            console.error(e);
+            navigate('/error');
+          });
+        } else if (otp) {
+          API.verifyOtp({ otp }).then(({ data, error }) => {
+            if (error && error.code) {
+              navigate(`/error?error=${JSON.stringify(error)}`);
+              return;
+            }
+            setUserData(data);
+            navigate('/reset-password');
+          }).catch((e) => {
+            console.error(e);
+            navigate('/error');
+          });
+        }
+      },
+    };
+  }, [navigate, searchParams, userData]);
+  
   React.useEffect(() => {
     // record page visit
     API.recordMetric({
@@ -176,78 +248,9 @@ export function SessionContextProvider({ children }: Props) {
       userAgent: navigator.userAgent,
     })
       .catch(console.error);
-    // if path is not enabled redirect to home
-    switch (location.pathname) {
-    case '/login':
-      if (userData?.isLoggedIn) {
-        navigate('/');
-        return;
-      }
-      break;
-    case '/logout':
-      API.logout({ ...userData })
-        .catch(console.error)
-        .finally(() => {
-          setUserData(undefined);
-          navigate('/login');
-        });
-      break;
-    case '/profile':
-      if (!userData?.isLoggedIn) {
-        navigate('/login');
-        return;
-      }
-      break;
-    case '/reset-password':
-      if (userData?.isLoggedIn) {
-        navigate('/');
-        return;
-      }
-      break;
-      if (!userData?.userId) {
-        navigate('/login');
-        return;
-      }
-      break;
-    case '/verify': {
-      const verificationCode = searchParams.get('vc');
-      const otp = searchParams.get('otp');
-      if (!verificationCode && !otp) {
-        navigate('/error');
-        return;
-      }
-      if (verificationCode) {
-        API.verifyAlias({ verificationCode }).then(({ error }) => {
-          if (error && error.code) {
-            navigate(`/error?error=${JSON.stringify(error)}`);
-            return;
-          }
-          navigate(`/success?${new URLSearchParams({
-            msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
-            r: '/login',
-            t: '3000',
-          }).toString()}`);
-        }).catch((e) => {
-          console.error(e);
-          navigate('/error');
-        });
-      } else if (otp) {
-        API.verifyOtp({ otp }).then(({ data, error }) => {
-          if (error && error.code) {
-            navigate(`/error?error=${JSON.stringify(error)}`);
-            return;
-          }
-          setUserData(data);
-          navigate('/reset-password');
-        }).catch((e) => {
-          console.error(e);
-          navigate('/error');
-        });
-      }
-      break;
-    }
-    }
-  }, [location, navigate, searchParams, userData]);
+    const action = pathActions[location.pathname as AppPathName];
+    action?.();
+  }, [location, pathActions]);
 
   return (
     <SessionContext.Provider

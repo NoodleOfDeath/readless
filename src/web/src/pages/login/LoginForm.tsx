@@ -69,9 +69,9 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
       }
       if (userData.jwt) {
         setUserData({ 
+          isLoggedIn: true,
           jwt: userData.jwt,
           userId: userData.userId,
-          isLoggedIn: true,
         });
         navigate('/');
       } else {

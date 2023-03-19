@@ -43,12 +43,12 @@ export default function ResetPasswordPage() {
 
   React.useEffect(() => {
     if (success) {
-      setUserData(undefined)
+      setUserData(undefined);
       setTimeout(() => {
         navigate('/login');
       }, 3_000);
     }
-  }, [success, navigate]);
+  }, [navigate, success, setUserData]);
 
   return (
     <Page center title="Reset Password">

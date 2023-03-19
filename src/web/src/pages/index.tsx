@@ -32,3 +32,5 @@ export const ROUTES: Record<string, React.ReactNode> = {
   '/terms':             <TermsPage />,
   '/verify':            <ContemplatingPage />,
 };
+
+export type AppPathName = keyof typeof ROUTES;
