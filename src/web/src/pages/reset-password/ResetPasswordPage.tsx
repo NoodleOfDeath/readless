@@ -10,7 +10,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import API, { AuthError, PartialMutateAccountRequest } from '@/api';
+import API, { AuthError } from '@/api';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
 
@@ -25,12 +25,12 @@ export default function ResetPasswordPage() {
   const [error, setError] = React.useState<AuthError | null>(null);
   const [success, setSuccess] = React.useState(false);
 
-  const onSubmit = React.useCallback(async (values: PartialMutateAccountRequest) => {
-    if (!userData) {
+  const onSubmit = React.useCallback(async (values: { password?: string }) => {
+    if (!userData || !values.password) {
       return;
     }
     try {
-      const { error } = await API.updateAccount(values, { headers: { Authorization: `Bearer ${userData.jwt}` } });
+      const { error } = await API.updateAccount({ payload: { newPassword: values.password } }, { headers: { Authorization: `Bearer ${userData.jwt}` } });
       if (error) {
         setError(error);
         return;
