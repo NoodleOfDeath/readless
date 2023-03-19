@@ -105,7 +105,7 @@ export default function Header() {
       onClick({ navigate }) {
         navigate?.('/login');
       },
-      visible: () => !userData?.userId,
+      visible: () => !userData?.isLoggedIn,
     },
     {
       icon: mdiInformation,
@@ -114,14 +114,14 @@ export default function Header() {
       onClick({ navigate }) {
         navigate?.('/about');
       },
-      visible: () => !userData?.userId,
+      visible: () => !userData?.isLoggedIn,
     },
     {
       icon: mdiPodcast,
       id: 'Podcast',
       items: PODCAST_LINKS,
       label: 'Podcast',
-      visible: () => !userData?.userId,
+      visible: () => !userData?.isLoggedIn,
     },
     {
       icon: mdiAccount,
@@ -130,7 +130,7 @@ export default function Header() {
       onClick({ navigate }) {
         navigate?.('/profile');
       },
-      visible: () => !!userData?.userId,
+      visible: () => !!userData?.isLoggedIn,
     },
     {
       icon: mdiLogout,
@@ -139,7 +139,7 @@ export default function Header() {
       onClick({ navigate }) {
         navigate?.('/logout');
       },
-      visible: () => !!userData?.userId,
+      visible: () => !!userData?.isLoggedIn,
     },
     {
       content: <LightDarkModeButtons />,

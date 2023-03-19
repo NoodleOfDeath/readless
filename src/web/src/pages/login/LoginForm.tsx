@@ -48,7 +48,10 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
           setError(error);
           return;
         }
-        setUserData(userData);
+        setUserData({
+          ...userData,
+          isLoggedIn: true,
+        });
         navigate('/');
       } catch (error) {
         console.log(error);
@@ -68,6 +71,7 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
         setUserData({ 
           jwt: userData.jwt,
           userId: userData.userId,
+          isLoggedIn: true,
         });
         navigate('/');
       } else {

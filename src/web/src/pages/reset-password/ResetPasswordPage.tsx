@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
 
   const navigate = useNavigate();
   const { handleSubmit, register } = useForm();
-  const { userData } = React.useContext(SessionContext);
+  const { userData, setUserData } = React.useContext(SessionContext);
 
   const [error, setError] = React.useState<AuthError | null>(null);
   const [success, setSuccess] = React.useState(false);
@@ -43,6 +43,7 @@ export default function ResetPasswordPage() {
 
   React.useEffect(() => {
     if (success) {
+      setUserData(undefined)
       setTimeout(() => {
         navigate('/login');
       }, 3_000);

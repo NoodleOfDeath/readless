@@ -25,6 +25,7 @@ export type Preferences = {
 export type UserData = {
   userId: number;
   jwt: string;
+  isLoggedIn?: boolean;
 }
 
 export type SetSearchTextOptions = {
@@ -178,25 +179,31 @@ export function SessionContextProvider({ children }: Props) {
     // if path is not enabled redirect to home
     switch (location.pathname) {
     case '/login':
-      if (userData?.userId) {
+      if (userData?.isLoggedIn) {
         navigate('/');
         return;
       }
       break;
     case '/logout':
       API.logout({ ...userData })
-        .then(() => {
+        .catch(console.error)
+        .finally(() => {
           setUserData(undefined);
           navigate('/login');
-        }).catch(console.error);
+        });
       break;
     case '/profile':
-      if (!userData?.userId) {
+      if (!userData?.isLoggedIn) {
         navigate('/login');
         return;
       }
       break;
-    case '/reset-password': 
+    case '/reset-password':
+      if (!userData?.isLoggedIn) {
+        navigate('/login');
+        return;
+      }
+      break;
       if (!userData?.userId) {
         navigate('/login');
         return;
