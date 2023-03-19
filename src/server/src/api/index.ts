@@ -9,26 +9,26 @@ import { rateLimitMiddleware } from './v1/middleware';
 
 const app = express();
 
+const IGNORE_PATHS = [
+  '/v1/metrics',
+  '/v1/healthz',
+];
+
 app.use(expressWinston.logger({
-    
-  // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
-  colorize: false,
-    
-  // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
+  colorize: true,
   expressFormat: true,
-    
   format: winston.format.combine(winston.format.colorize(), winston.format.json()), 
-    
-  // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
-  ignoreRoute: () => {
+  ignoreRoute: (req) => {
+    if (IGNORE_PATHS.includes(req.path)) {
+      return true;
+    }
     return false;
-  }, 
-    
+  },
+  skip: (req, res) => {
+    return res.statusCode == 200;
+  },
   meta: true, 
-    
-  // optional: control whether you want to log the meta data about the request (default to true)
   msg: 'HTTP {{req.method}} {{req.url}}', 
-    
   transports: [new winston.transports.Console()], // optional: allows to skip some log messages based on request and/or response
 }));
 
