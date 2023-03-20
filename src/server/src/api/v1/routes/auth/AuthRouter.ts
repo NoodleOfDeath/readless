@@ -3,7 +3,7 @@ import { body, oneOf } from 'express-validator';
 
 import { AuthError } from './../../../../services';
 import { AuthController } from '../../controllers';
-import { validationMiddleware } from '../../middleware';
+import { authMiddleware, validationMiddleware } from '../../middleware';
 
 const router = Router();
 
@@ -65,12 +65,9 @@ router.post(
 
 router.post(
   '/logout',
+  authMiddleware,
   body('userId').isInt().optional(),
-  body('email').isEmail().optional(),
-  body('eth2address').isString().optional(),
-  body('username').isString().optional(),
-  body('thirdParty').isObject().optional(),
-  body('jwt').isString().optional(),
+  body('jwt').isObject().optional(),
   validationMiddleware,
   async (req, res) => {
     try {
