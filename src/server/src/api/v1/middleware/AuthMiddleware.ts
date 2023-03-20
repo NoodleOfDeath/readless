@@ -15,12 +15,12 @@ export const authMiddleware = (securityName: string, { required = false, scope =
         const [type, token] = req.headers.authorization.split(' ');
         if (type === 'Bearer') {
           try {
-            console.log('tits');
             const jwt = Jwt.from(token);
             if (required && !jwt.canAccess(scope)) {
               throw new AuthError('INSUFFICIENT_PERMISSIONS');
             }
             req.body.userId = jwt.userId;
+            req.body.token = jwt.signed;
             next();
           } catch (e) {
             throw new AuthError('INVALID_CREDENTIALS');
