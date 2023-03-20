@@ -178,7 +178,8 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/logout': () => {
-        API.logout({ ...userData }, { headers: { Authorization: `Bearer ${userData?.jwt ?? ''}` } })
+        const jwt = userData?.jwt ?? '';
+        API.logout({ ...userData }, { headers: { Authorization: `Bearer ${jwt}` } })
           .catch(console.error)
           .finally(() => {
             setUserData(undefined);

@@ -8,18 +8,18 @@ export class AccountService extends BaseService {
 
   public async mutateAccount(req: Partial<JwtBearing<MutateAccountRequest>>): Promise<MutateAccountResponse> {
     const { user } = await User.from(req);
-    if (typeof req.payload.newPassword === 'string') {
+    if (typeof req.payload?.newPassword === 'string') {
       if (req.jwt && !req.jwt.can('write', 'account')) {
         throw new AuthError('INSUFFICIENT_PERMISSIONS');
       }
       const password = await user.findCredential('password');
-      if (!password) {
-        throw new AuthError('INVALID_CREDENTIALS');
+      if (password) {
+        await password.destroy();
       }
-      await password.destroy();
       await user.createCredential('password', req.payload.newPassword);
+      return { success: true };
     }
-    return { success: true };
+    return { success: false };
   }
 
 }

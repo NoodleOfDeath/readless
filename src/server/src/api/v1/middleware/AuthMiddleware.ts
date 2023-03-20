@@ -21,6 +21,7 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
     } else {
       res.status(401).json({ error: 'Invalid or authorization header' });
     }
+  } else {
+    res.status(401).json({ error: 'Missing authorization header' });
   }
-  res.status(401).json({ error: 'Missing authorization header' });
 };
