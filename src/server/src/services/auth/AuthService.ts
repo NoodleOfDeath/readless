@@ -55,10 +55,10 @@ async function generateOtp(): Promise<string> {
 export class AuthService extends BaseService {
 
   public async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
-    const { payload, user } = await User.from(req, { ignoreIfNotResolved: true });
-    if (req.jwt) {
+    if (req.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
+    const { payload, user } = await User.from(req, { ignoreIfNotResolved: true });
     let newAliasType: AliasType;
     let newAliasValue: string;
     let thirdPartyId: string;
@@ -125,10 +125,10 @@ export class AuthService extends BaseService {
   }
 
   public async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
-    const { payload, user } = await User.from(req);
-    if (req.jwt) {
+    if (req.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
+    const { payload, user } = await User.from(req);
     if (payload.type === 'eth2Address') {
       // auth by eth2Address
       console.log(web3);
@@ -157,17 +157,20 @@ export class AuthService extends BaseService {
     };
   }
 
-  public async logout({ token, userId }: Partial<LogoutRequest>): Promise<LogoutResponse> {
+  public async logout({
+    token, userId, force, 
+  }: Partial<LogoutRequest>): Promise<LogoutResponse> {
     let count = 0;
     if (token) {
       count += await Credential.destroy({ 
         where: {
           type: 'jwt',
+          userId,
           value: Jwt.from(token).signed,
         },
       });
     }
-    if (userId) {
+    if (force) {
       count += await Credential.destroy({ where: { userId } });
     }
     return { count, success: true };

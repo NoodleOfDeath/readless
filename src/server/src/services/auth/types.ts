@@ -26,8 +26,9 @@ export type LoginResponse = {
 }
 
 export type LogoutRequest = {
-  userId?: number;
+  userId: number;
   token?: string;
+  force?: boolean;
 }
 
 export type LogoutResponse = {
