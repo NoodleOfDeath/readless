@@ -13,7 +13,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import API from '@/api';
+import API, { LoginResponse, headers } from '@/api';
 import { ConsumptionMode } from '@/components/Post';
 import { AppPathName } from '@/pages';
 import { loadTheme } from '@/theme';
@@ -21,12 +21,45 @@ import { loadTheme } from '@/theme';
 export type Preferences = {
   displayMode?: PaletteMode;
   consumptionMode?: ConsumptionMode;
-};
+}
 
-export type UserData = {
+export type UserDataProps = {
   userId: number;
-  jwt: string;
   isLoggedIn?: boolean;
+  tokens: LoginResponse['token'][];
+}
+
+export type UserDataParams = {
+  userId: number;
+  isLoggedIn?: boolean;
+  tokens: LoginResponse['token'] | LoginResponse['token'][];
+}
+
+export class UserData implements UserDataProps {
+
+  userId: number;
+  isLoggedIn?: boolean;
+  tokens: LoginResponse['token'][];
+
+  get credentials() {
+    if (this.tokens.length === 0) {
+      return undefined;
+    }
+    return this.tokens.sort((a, b) => b.priority - a.priority)[0];
+  }
+
+  get token() {
+    return this.credentials?.value;
+  }
+
+  constructor({
+    userId, tokens, isLoggedIn, 
+  }: UserDataParams) {
+    this.userId = userId;
+    this.tokens = Array.isArray(tokens) ? tokens : [tokens];
+    this.isLoggedIn = isLoggedIn;
+  }
+
 }
 
 export type SetSearchTextOptions = {
@@ -178,8 +211,7 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/logout': () => {
-        const jwt = userData?.jwt ?? '';
-        API.logout({ ...userData }, { headers: { Authorization: `Bearer ${jwt}` } })
+        API.logout({}, { headers: headers({ token: userData?.token }) })
           .catch(console.error)
           .finally(() => {
             setUserData(undefined);
@@ -230,7 +262,7 @@ export function SessionContextProvider({ children }: Props) {
               navigate(`/error?error=${JSON.stringify(error)}`);
               return;
             }
-            setUserData(data);
+            setUserData(new UserData({ ...data, tokens: [data.token] }));
             navigate('/reset-password');
           }).catch((e) => {
             console.error(e);

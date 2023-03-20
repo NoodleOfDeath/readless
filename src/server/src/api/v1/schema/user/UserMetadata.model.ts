@@ -5,7 +5,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { UserMetadataAttributes, UserMetadataCreationAttributes } from './user_metadata.types';
+import { UserMetadataAttributes, UserMetadataCreationAttributes } from './UserMetadata.types';
 import { BaseModel } from '../base';
 
 @Table({

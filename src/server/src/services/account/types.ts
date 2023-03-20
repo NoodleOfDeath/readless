@@ -1,10 +1,8 @@
-export type MutateAccountRequest = {
+export type UpdateCredentialRequest = {
   userId: number;
-  payload: {
-    [key: string]: string
-  }
+  password: string;
 }
 
-export type MutateAccountResponse = {
+export type UpdateCredentialResponse = {
   success: boolean;
 }

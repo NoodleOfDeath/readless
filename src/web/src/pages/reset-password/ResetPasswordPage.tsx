@@ -10,7 +10,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import API, { AuthError } from '@/api';
+import API, { AuthError, headers } from '@/api';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
 
@@ -30,7 +30,7 @@ export default function ResetPasswordPage() {
       return;
     }
     try {
-      const { error } = await API.updateAccount({ payload: { newPassword: values.password } }, { headers: { Authorization: `Bearer ${userData.jwt}` } });
+      const { error } = await API.updateCredential(values, { headers:headers({ token: userData?.token }) });
       if (error) {
         setError(error);
         return;

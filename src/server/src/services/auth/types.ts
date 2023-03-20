@@ -1,37 +1,38 @@
-import { DestructuredCredentialPayload } from '../../api/v1/schema/auth/credential.types';
-import { DestructuredAliasPayload  } from '../../api/v1/schema/user/alias.types';
+import { DestructuredCredentialPayload } from '../../api/v1/schema/auth/Credential.types';
+import { DestructuredAliasPayload  } from '../../api/v1/schema/user/Alias.types';
 
 export * from './jwt';
 
 export type RegistrationRequest = DestructuredAliasPayload & DestructuredCredentialPayload;
 export type RegistrationResponse = {
   userId: number;
-  jwt?: string;
+  token?: {
+    priority: number;
+    value: string;
+  };
 }
 
-export type LoginRequest = DestructuredAliasPayload & DestructuredCredentialPayload;
+export type LoginRequest = DestructuredAliasPayload & DestructuredCredentialPayload & {
+  requestedRole?: string;
+  requestedScope?: string[];
+}
 
 export type LoginResponse = {
   userId: number;
-  jwt: string;
+  token: {
+    priority: number;
+    value: string;
+  };
 }
 
-export type LogoutRequest = DestructuredCredentialPayload & {
-  userId?: number; 
+export type LogoutRequest = {
+  userId?: number;
+  token?: string;
 }
 
 export type LogoutResponse = {
   success: boolean;
   count: number;
-}
-
-export type AuthenticationRequest = {
-  userId: number;
-  jwt: string;
-};
-
-export type AuthenticationResponse = {
-  userId: number;
 }
 
 export type GenerateOTPRequest = Omit<DestructuredAliasPayload, 'otp'>;
@@ -51,7 +52,10 @@ export type VerifyAliasResponse = {
 export type VerifyOTPRequest = DestructuredAliasPayload;
 
 export type VerifyOTPResponse = {
-  jwt: string;
+  token: {
+    priority: number;
+    value: string;
+  };
   userId: number;
 }
 

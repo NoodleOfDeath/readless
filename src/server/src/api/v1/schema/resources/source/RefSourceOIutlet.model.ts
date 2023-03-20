@@ -7,7 +7,7 @@ import {
 import {
   RefSourceOutletAttributes,
   RefSourceOutletCreationAttributes,
-} from './ref_source_outlet.types';
+} from './RefSourceOutlet.types';
 import { BaseModel } from '../../base';
 
 @Table({

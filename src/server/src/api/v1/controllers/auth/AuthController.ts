@@ -8,7 +8,6 @@ import {
 } from 'tsoa';
 
 import { AuthError, AuthService } from '../../../../services';
-import { JwtBearing } from '../../../../services/types';
 import {
   GenerateOTPRequest,
   GenerateOTPResponse,
@@ -33,19 +32,19 @@ export class AuthController {
   @Post('/register')
   @SuccessResponse('201', 'Created')
   public async register(@Body() body: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
-    return await new AuthService().register(body as Partial<JwtBearing<RegistrationRequest>>);
+    return await new AuthService().register(body);
   }
 
   @Post('/login')
   @SuccessResponse('200', 'OK')
   public async login(@Body() body: Partial<LoginRequest>): Promise<LoginResponse> {
-    return await new AuthService().login(body as Partial<JwtBearing<LoginRequest>>);
+    return await new AuthService().login(body);
   }
 
   @Post('/logout')
   @SuccessResponse('204', 'No Content')
   public async logout(@Body() body: Partial<LogoutRequest>): Promise<LogoutResponse> {
-    return await new AuthService().logout(body as Partial<JwtBearing<LogoutRequest>>);
+    return await new AuthService().logout(body);
   }
   
   @Post('/otp')

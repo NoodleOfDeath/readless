@@ -7,7 +7,6 @@ import {
   GenerateOTPRequest,
   GenerateOTPResponse,
   Jwt,
-  JwtBearing,
   LoginRequest,
   LoginResponse,
   LogoutRequest,
@@ -27,12 +26,13 @@ import {
   Credential,
   User,
 } from '../../api/v1/schema/';
+import { randomString } from '../../utils';
 import { BaseService } from '../base';
 import { GoogleService } from '../google';
 import { MailService } from '../mail';
 
 async function generateVerificationCode(): Promise<string> {
-  const verificationCode = Math.random().toString(36).substring(2, 2 + VERIFICATION_CODE_LENGTH);
+  const verificationCode = randomString(VERIFICATION_CODE_LENGTH);
   if (await Alias.findOne({ where: { verificationCode } }) !== null) {
     return generateVerificationCode();
   }
@@ -40,7 +40,7 @@ async function generateVerificationCode(): Promise<string> {
 }
 
 async function generateOtp(): Promise<string> {
-  const value = Math.random().toString(36).substring(2, 2 + OTP_LENGTH);
+  const value = randomString(OTP_LENGTH);
   if (await Credential.findOne({
     where: {
       type: 'otp',
@@ -54,7 +54,7 @@ async function generateOtp(): Promise<string> {
 
 export class AuthService extends BaseService {
 
-  public async register(req: Partial<JwtBearing<RegistrationRequest>>): Promise<RegistrationResponse> {
+  public async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
     const { payload, user } = await User.from(req, { ignoreIfNotResolved: true });
     if (req.jwt) {
       throw new AuthError('ALREADY_LOGGED_IN');
@@ -108,6 +108,7 @@ export class AuthService extends BaseService {
       verificationExpiresAt: verified ? undefined : new Date(Date.now() + ms('20m')),
       verifiedAt: verified ? new Date() : undefined,
     });
+    await newUser.grantRole('standard');
     if (req.password) {
       await newUser.createCredential('password', req.password);
     }
@@ -123,7 +124,7 @@ export class AuthService extends BaseService {
     }
   }
 
-  public async login(req: Partial<JwtBearing<LoginRequest>>): Promise<LoginResponse> {
+  public async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
     const { payload, user } = await User.from(req);
     if (req.jwt) {
       throw new AuthError('ALREADY_LOGGED_IN');
@@ -145,21 +146,24 @@ export class AuthService extends BaseService {
     }
     // user is authenticated, generate JWT
     const userData = user.toJSON();
-    const token = Jwt.Default(userData.id);
+    const token = await Jwt.as(req.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
     return {
-      jwt: token.signed,
+      token: { 
+        priority: token.priority,
+        value: token.signed,
+      },
       userId: userData.id,
     };
   }
 
-  public async logout({ jwt, userId }: Partial<JwtBearing<LogoutRequest>>): Promise<LogoutResponse> {
+  public async logout({ token, userId }: Partial<LogoutRequest>): Promise<LogoutResponse> {
     let count = 0;
-    if (jwt) {
+    if (token) {
       count += await Credential.destroy({ 
         where: {
           type: 'jwt',
-          value: jwt.signed,
+          value: Jwt.from(token).signed,
         },
       });
     }
@@ -215,9 +219,9 @@ export class AuthService extends BaseService {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
     const userData = user.toJSON();
-    const token = Jwt.Account(userData.id);
+    const token = await Jwt.as('account', userData.id);
     await user.createCredential('jwt', token);
-    return { jwt: token.signed, userId: userData.id };
+    return { token: { priority: token.priority, value: token.signed }, userId: userData.id };
   }
   
 }

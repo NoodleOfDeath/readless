@@ -22,27 +22,28 @@ export type BulkResponse<T> = {
 
 // Model Types
 
-export * from './analytics/metric.types';
-export * from './resources/policy.types';
+export * from './analytics/Metric.types';
+export * from './resources/Policy.types';
 
-export * from './user/alias.types';
-export * from './user/user.types';
-export * from './user/user_metadata.types';
+export * from './user/Alias.types';
+export * from './user/User.types';
+export * from './user/UserMetadata.types';
 
-export * from './auth/credential.types';
+export * from './auth/Credential.types';
+export * from './auth/Role.types';
 
-export * from './newsletter/newsletter.types';
-export * from './newsletter/subscription.types';
-
-export * from './resources/interaction/interaction.types';
-export * from './resources/interaction/referral.types';
-
-export * from './resources/media/media.types';
+export * from './newsletter/Newsletter.types';
+export * from './newsletter/Subscription.types';
 
 export * from './resources/types';
-export * from './resources/post.types';
-export * from './resources/outlet/outlet.types';
-export * from './resources/source/source.types';
-export * from './resources/topic/topic.types';
-export * from './resources/article/article.types';
+
+export * from './resources/interaction/Interaction.types';
+export * from './resources/interaction/Referral.types';
+export * from './resources/media/Media.types';
+
+export * from './resources/Post.types';
+export * from './resources/outlet/Outlet.types';
+export * from './resources/source/Source.types';
+export * from './resources/topic/Topic.types';
+export * from './resources/article/Article.types';
 

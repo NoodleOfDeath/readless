@@ -13,6 +13,8 @@ on:
       - 'src/server/public/**'
       - 'src/server/src/api/**'
       - 'src/server/src/services/**'
+      - 'src/server/src/types/**'
+      - 'src/server/src/utils/**'
 
 concurrency:
   group: ${{ github.ref }}-api

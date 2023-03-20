@@ -19,8 +19,9 @@ import API, {
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
+  headers,
 } from '@/api';
-import { SessionContext } from '@/contexts';
+import { SessionContext, UserData } from '@/contexts';
 
 export type LoginFormProps = {
   action?: 'logIn' | 'signUp';
@@ -35,44 +36,45 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
   const {
     register, handleSubmit, formState: { errors }, 
   } = useForm();
-  const { setUserData } = React.useContext(SessionContext);
+  const { userData, setUserData } = React.useContext(SessionContext);
 
   const [error, setError] = React.useState<AuthError | undefined>(undefined);
   const [needsToVerifyAlias, setNeedsToVerifyAlias] = React.useState(false);
 
   const handleLogIn = React.useCallback(
-    async (data: PartialLoginRequest) => {
+    async (values: PartialLoginRequest) => {
       try {
-        const { data: userData, error } = await API.login(data);
+        const { data, error } = await API.login(values, { headers: headers({ token: userData?.token }) });
         if (error) {
           setError(error);
           return;
         }
-        setUserData({
-          ...userData,
+        setUserData(new UserData({
           isLoggedIn: true,
-        });
+          tokens: data.token,
+          userId: data.userId,
+        }));
         navigate('/');
       } catch (error) {
         console.log(error);
       }
     },
-    [navigate, setUserData]
+    [navigate, setUserData, userData]
   );
 
-  const handleSignUp = React.useCallback(async (data: PartialRegistrationRequest) => {
+  const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
     try {
-      const { data: userData, error } = await API.register(data);
+      const { data, error } = await API.register(values, { headers: headers({ token: userData?.token }) });
       if (error) {
         setError(error);
         return;
       }
-      if (userData.jwt) {
-        setUserData({ 
+      if (data.token) {
+        setUserData(new UserData({ 
           isLoggedIn: true,
-          jwt: userData.jwt,
-          userId: userData.userId,
-        });
+          tokens: data.token,
+          userId: data.userId,
+        }));
         navigate('/');
       } else {
         setNeedsToVerifyAlias(true);
@@ -80,7 +82,7 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
     } catch (error) {
       console.log(error);
     }
-  }, [navigate, setUserData]);
+  }, [navigate, setUserData, userData]);
 
   React.useEffect(() => {
     setError(undefined);

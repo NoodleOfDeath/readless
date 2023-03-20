@@ -1,5 +1,6 @@
 import {
   Body,
+  Header,
   Put,
   Response,
   Route,
@@ -7,9 +8,11 @@ import {
   Tags,
 } from 'tsoa';
 
+import {
+  UpdateCredentialRequest,
+  UpdateCredentialResponse,
+} from './../../../../services/account/types';
 import { AccountService, AuthError } from '../../../../services';
-import { JwtBearing } from '../../../../services/types';
-import { MutateAccountRequest, MutateAccountResponse } from '../../../../services/types';
 
 @Route('/v1/account')
 @Tags('Account')
@@ -17,10 +20,11 @@ import { MutateAccountRequest, MutateAccountResponse } from '../../../../service
 @Response<AuthError>(500, 'Internal Server Error')
 export class AccountController {
 
-  @Put('/update')
+  @Put('/update/credential')
+  @Header('Authorization')
   @SuccessResponse(200, 'OK')
-  public async updateAccount(@Body() body: Partial<MutateAccountRequest>): Promise<MutateAccountResponse> {
-    return await new AccountService().mutateAccount(body as Partial<JwtBearing<MutateAccountRequest>>);
+  public async updateCredential(@Body() body: Partial<UpdateCredentialRequest>): Promise<UpdateCredentialResponse> {
+    return await new AccountService().updateCredential(body as Partial<UpdateCredentialRequest>);
   }
   
 }

@@ -7,12 +7,12 @@ import { authMiddleware, validationMiddleware } from '../../middleware';
 const router = Router();
 
 router.put(
-  '/update', 
-  authMiddleware,
+  '/update/credential', 
+  authMiddleware('jwt', { required: true, scope: ['write:account'] }),
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = new AccountController().updateAccount(req.body);
+      const response = new AccountController().updateCredential(req.body);
       res.status(200).json(response);
     } catch (e) {
       if (e instanceof AuthError) {

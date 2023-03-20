@@ -7,7 +7,7 @@ import {
 import {
   RefSourceInteractionAttributes,
   RefSourceInteractionCreationAttributes,
-} from './ref_source_interaction.types';
+} from './RefSourceInteraction.types';
 import { BaseModel } from '../../base';
 
 @Table({

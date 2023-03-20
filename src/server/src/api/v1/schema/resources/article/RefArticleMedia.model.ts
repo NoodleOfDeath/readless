@@ -7,7 +7,7 @@ import {
 import {
   RefArticleMediaAttributes,
   RefArticleMediaCreationAttributes,
-} from './ref_article_media.types';
+} from './RefArticleMedia.types';
 import { BaseModel } from '../../base';
 
 @Table({

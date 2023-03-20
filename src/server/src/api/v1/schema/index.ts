@@ -15,6 +15,8 @@ import {
   RefSourceMedia,
   RefSourceTopic,
   RefTopicMedia,
+  RefUserRole,
+  Role,
   Source,
   Subscription,
   Topic,
@@ -30,6 +32,8 @@ export function makeAssociations() {
   // users
   User.hasMany(Alias, { foreignKey: 'userId' });
   User.hasMany(UserMetadata, { foreignKey: 'userId' });
+  User.hasMany(RefUserRole, { foreignKey: 'userId' });
+  RefUserRole.belongsTo(Role, { foreignKey: 'roleId' });
   // auth
   User.hasMany(Credential, { foreignKey: 'userId' });
   Credential.belongsTo(User, { foreignKey: 'userId' });

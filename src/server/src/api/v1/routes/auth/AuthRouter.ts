@@ -9,6 +9,7 @@ const router = Router();
 
 router.post(
   '/login',
+  authMiddleware('jwt'),
   oneOf([
     body('email').isEmail(),
     body('eth2address'),
@@ -37,6 +38,7 @@ router.post(
 
 router.post(
   '/register',
+  authMiddleware('jwt'),
   oneOf([
     body('email').isEmail(),
     body('eth2address'),
@@ -65,9 +67,8 @@ router.post(
 
 router.post(
   '/logout',
-  authMiddleware,
+  authMiddleware('jwt'),
   body('userId').isInt().optional(),
-  body('jwt').isObject().optional(),
   validationMiddleware,
   async (req, res) => {
     try {

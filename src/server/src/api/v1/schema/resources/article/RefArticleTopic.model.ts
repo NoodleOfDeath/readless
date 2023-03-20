@@ -7,7 +7,7 @@ import {
 import {
   RefArticleTopicAttributes,
   RefArticleTopicCreationAttributes,
-} from './ref_article_topic.types';
+} from './RefArticleTopic.types';
 import { BaseModel } from '../../base';
 
 @Table({

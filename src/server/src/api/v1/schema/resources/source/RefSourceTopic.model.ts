@@ -4,10 +4,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import {
-  RefSourceTopicAttributes,
-  RefSourceTopicCreationAttributes,
-} from './ref_source_topic.types';
+import { RefSourceTopicAttributes, RefSourceTopicCreationAttributes } from './RefSourceTopic.types';
 import { BaseModel } from '../../base';
 
 @Table({

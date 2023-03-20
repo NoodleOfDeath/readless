@@ -1,38 +1,40 @@
 // singleton models
-export * from './analytics/metric.model';
-export * from './resources/policy.model';
+export * from './analytics/Metric.model';
+export * from './resources/Policy.model';
 
 // user models
-export * from './user/user.model';
-export * from './user/alias.model';
-export * from './user/user_metadata.model';
+export * from './user/User.model';
+export * from './user/Alias.model';
+export * from './user/UserMetadata.model';
+export * from './user/RefUserRole.model';
 
 // auth models
-export * from './auth/credential.model';
+export * from './auth/Credential.model';
+export * from './auth/Role.model';
 
 // resource models
 
-export * from './newsletter/newsletter.model';
-export * from './newsletter/subscription.model';
+export * from './newsletter/Newsletter.model';
+export * from './newsletter/Subscription.model';
 
-export * from './resources/interaction/referral.model';
-export * from './resources/interaction/interaction.model';
+export * from './resources/interaction/Referral.model';
+export * from './resources/interaction/Interaction.model';
 
-export * from './resources/media/media.model';
+export * from './resources/media/Media.model';
 
-export * from './resources/outlet/outlet.model';
-export * from './resources/outlet/ref_outlet_media.model';
+export * from './resources/outlet/Outlet.model';
+export * from './resources/outlet/RefOutletMedia.model';
 
-export * from './resources/topic/topic.model';
-export * from './resources/topic/ref_topic_media.model';
+export * from './resources/topic/Topic.model';
+export * from './resources/topic/RefTopicMedia.model';
 
-export * from './resources/source/source.model';
-export * from './resources/source/ref_source_media.model';
-export * from './resources/source/ref_source_topic.model';
-export * from './resources/source/ref_source_interaction.model';
+export * from './resources/source/Source.model';
+export * from './resources/source/RefSourceMedia.model';
+export * from './resources/source/RefSourceTopic.model';
+export * from './resources/source/RefSourceInteraction.model';
 
-export * from './resources/article/article.model';
-export * from './resources/article/ref_article_media.model';
-export * from './resources/article/ref_article_topic.model';
-export * from './resources/article/ref_article_source.model';
-export * from './resources/article/ref_article_interaction.model';
+export * from './resources/article/Article.model';
+export * from './resources/article/RefArticleMedia.model';
+export * from './resources/article/RefArticleTopic.model';
+export * from './resources/article/RefArticleSource.model';
+export * from './resources/article/RefArticleInteraction.model';

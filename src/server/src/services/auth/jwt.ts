@@ -1,39 +1,27 @@
 import jwt from 'jsonwebtoken';
 import ms from 'ms';
 
-import { ResourceType } from './../../api/v1/schema/types';
 import { AuthError } from './AuthError';
 import { User } from '../../api/v1/schema';
 
-export type JwtScope = 'god' | 'default' | 'account' | `${ResourceType}.${number}`;
-export type JwtBaseAccess = 'read' | 'write' | 'delete';
-export type JwtAccess = JwtBaseAccess | `deny.${JwtBaseAccess}`;
+export type JwtBaseAccessOperation = '*' | 'read' | 'write' | 'delete';
+export type JwtAccessOperation = JwtBaseAccessOperation | `deny.${JwtBaseAccessOperation}`;
 
-export const JWT_LIFETIMES = {
-  account: '15m',
-  default: '1d',
-} as const;
-
-export const JWT_SCOPES = {
-  account: ['account'] as JwtScope[],
-  default: ['default'] as JwtScope[],
-} as const;
-
-export const JWT_REFERSH_AGE = ms('1d');
+export const JWT_REFERSH_THRESHOLD_MS = ms(process.env.JWT_REFERSH_THRESHOLD || '6h');
 
 export type JsonWebToken = {
   userId: number;
-  scope: JwtScope[];
-  access: JwtAccess[];
+  scope: string[];
+  priority: number;
   expiresIn: string;
-  refreshable?: boolean;
+  refreshable: boolean;
   signed: string;
 }
 
 export type JwtOptions = {
   userId: number;
-  scope?: JwtScope[];
-  access?: JwtAccess[];
+  scope?: string[];
+  priority: number;
   expiresIn?: string;
   refreshable?: boolean;
 };
@@ -41,41 +29,49 @@ export type JwtOptions = {
 export class Jwt implements JsonWebToken {
 
   userId: number;
-  scope: JwtScope[];
-  access: JwtAccess[];
+  scope: string[];
+  priority: number;
   expiresIn: string;
-  refreshable?: boolean;
+  refreshable = false;
   signed: string;
 
-  expired() {
+  get expired() {
     const { exp } = jwt.decode(this.signed) as { exp: number };
-    return exp < Date.now() / 1000;
+    return exp < Date.now() / 1_000;
   }
 
-  expiresSoon() {
+  get expiresSoon() {
     const { exp } = jwt.decode(this.signed) as { exp: number };
-    return exp < Date.now() / 1000 + 60 * 60 * 24;
+    return exp < (Date.now() + JWT_REFERSH_THRESHOLD_MS) / 1_000;
+  }
+
+  get scopedAccess() {
+    return this.scope.map((scope) => {
+      const [role, operation] = scope.split(':') as [string, JwtAccessOperation];
+      return {
+        operation,
+        role,
+      };
+    });
   }
   
-  static from(token: string) {
+  static from(token: string | JwtOptions) {
     return new Jwt(token);
   }
 
-  static Default(userId: number) {
+  static async as(role: string, userId: number) {
+    const user = await User.findOne({ where: { id: userId } });
+    const roles = await user.getRoles();
+    const defaults = roles[role];
+    if (!defaults) {
+      console.log('motherfucker');
+      throw new AuthError('INSUFFICIENT_PERMISSIONS');
+    }
     return new Jwt({
-      access: ['read', 'write'],
-      expiresIn: JWT_LIFETIMES.default,
-      refreshable: true,
-      scope: JWT_SCOPES.default,
-      userId,
-    });
-  }
-
-  static Account(userId: number) {
-    return new Jwt({
-      access: ['read', 'write'],
-      expiresIn: JWT_LIFETIMES.account,
-      scope: JWT_SCOPES.account,
+      expiresIn: defaults.lifetime,
+      priority: defaults.priority,
+      refreshable: defaults.refreshable,
+      scope: defaults.scope,
       userId,
     });
   }
@@ -86,16 +82,14 @@ export class Jwt implements JsonWebToken {
         const { 
           userId, 
           scope, 
-          access, 
           expiresIn, 
           refreshable,
         } = jwt.verify(opts, process.env.JWT_SECRET) as Jwt;
-        if (!userId || !scope || !access) {
+        if (!userId || !scope) {
           throw new AuthError('INVALID_CREDENTIALS');
         }
         this.userId = userId;
         this.scope = scope;
-        this.access = access;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
         this.signed = opts;
@@ -103,17 +97,14 @@ export class Jwt implements JsonWebToken {
         const {
           userId,
           scope = [],
-          access = [],
-          expiresIn = JWT_LIFETIMES.default,
+          expiresIn = '1d',
           refreshable,
         } = opts;
         this.userId = userId;
         this.scope = scope;
-        this.access = access;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
         this.signed = jwt.sign({
-          access,
           expiresIn,
           refreshable,
           scope,
@@ -125,14 +116,21 @@ export class Jwt implements JsonWebToken {
     }
   }
 
-  public can(access: JwtBaseAccess, scope: JwtScope) {
-    if (scope.includes('god')) {
-      return true;
-    }
-    if (this.access.includes(`deny.${access}`)) {
+  public canAccess(requestedScope: string | string[]) {
+    if (typeof requestedScope === 'string') {
+      const [requesetedRole, requestedOperation] = requestedScope.split(':') as [string, JwtBaseAccessOperation];
+      for (const { operation, role } of this.scopedAccess) {
+        if (operation === `deny.${requestedOperation}`) {
+          return false;
+        }
+        if ((role === requesetedRole || role === 'god') && (operation === requestedOperation || operation === '*')) {
+          return true;
+        }
+      }
       return false;
+    } else {
+      return requestedScope.every((scope) => this.canAccess(scope));
     }
-    return this.access.includes(access) && this.scope.includes(scope);
   }
 
   public async refresh() {
@@ -143,16 +141,24 @@ export class Jwt implements JsonWebToken {
     if (!user) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
-    const credential = await user.findCredential('jwt');
+    const credential = await user.findCredential('jwt', this.signed);
     if (!credential) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
+    if (credential.toJSON().expiresAt?.valueOf() < Date.now()) {
+      throw new AuthError('EXPIRED_CREDENTIALS');
+    }
     await credential.destroy();
-    const token = Jwt.Default(this.userId);
+    const token = new Jwt({
+      expiresIn: this.expiresIn,
+      priority: this.priority,
+      refreshable: true,
+      scope: this.scope,
+      userId: this.userId,
+    });
     await user.createCredential('jwt', token);
     return token;
   }
 
 }
 
-export type JwtBearing<T> = T & { jwt: Jwt }

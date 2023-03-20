@@ -7,7 +7,7 @@ import {
 import {
   RefArticleInteractionAttributes,
   RefArticleInteractionCreationAttributes,
-} from './ref_article_interaction.types';
+} from './RefArticleInteraction.types';
 import { BaseModel } from '../../base';
 
 @Table({

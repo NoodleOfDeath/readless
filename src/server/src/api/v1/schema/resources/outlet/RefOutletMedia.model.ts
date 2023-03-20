@@ -4,10 +4,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import {
-  RefOutletMediaAttributes,
-  RefOutletMediaCreationAttributes,
-} from './ref_outlet_media.types';
+import { RefOutletMediaAttributes, RefOutletMediaCreationAttributes } from './RefOutletMedia.types';
 import { BaseModel } from '../../base';
 
 @Table({
