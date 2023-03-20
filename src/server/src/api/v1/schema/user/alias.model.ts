@@ -138,6 +138,10 @@ export class Alias<
       }
       return { alias, payload };
     }
+    if (!opts?.ignoreIfNotResolved) {
+      throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
+    }
+    return { alias: null, payload };
   }
 
 }

@@ -138,12 +138,13 @@ export class AuthService extends BaseService {
       // auth by password
       const credential = await user.findCredential('password');
       if (!credential) {
-        throw new AuthError('MISSING_PASSWORD');
+        throw new AuthError('INVALID_PASSWORD');
       }
       if (!bcrypt.compareSync(req.password, credential.toJSON().value)) {
         throw new AuthError('INVALID_PASSWORD');
       }
     }
+    console.log('fuck');
     // user is authenticated, generate JWT
     const userData = user.toJSON();
     const token = await Jwt.as(req.requestedRole ?? 'standard', userData.id);
@@ -177,10 +178,13 @@ export class AuthService extends BaseService {
   }
   
   public async generateOtp(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
-    const { user } = await User.from(req);
+    const { user } = await User.from(req, { ignoreIfNotResolved: true });
+    if (!user) {
+      return { success: false };
+    }
     const email = await user.findAlias('email');
     if (!email) {
-      throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
+      return { success: false };
     }
     const otp = await generateOtp();
     await user.createCredential('otp', otp);

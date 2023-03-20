@@ -19,7 +19,7 @@ const ERROR_MESSAGES = {
   INVALID_CREDENTIALS: new ErrorMessage('Credential is invalid'),
   INVALID_PASSWORD: new ErrorMessage('Email or password is incorrect'),
   MISSING_AUTHORIZATION_HEADER: new ErrorMessage('Missing authorization header'),
-  MISSING_PASSWORD: new ErrorMessage('User does not have a password set. Please use a third party login method or request OTP.'),
+  MISSING_PASSWORD: new ErrorMessage('User does not have a password set. Please use a third party login method or request a password reset.'),
   NO_THIRD_PARTY_ALIAS: new ErrorMessage('Google account does not have an email address'),
   STALE_VERIFICATION_CODE: new ErrorMessage('That verification token has already been used'),
   THIRD_PARTY_ALIAS_NOT_VERIFIED: new ErrorMessage('Google account email is not verified'),

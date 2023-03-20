@@ -89,7 +89,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       where: {
         type,
         userId: this.id,
-        value,
+        value: value || '1=1',
       }, 
     });
   }
