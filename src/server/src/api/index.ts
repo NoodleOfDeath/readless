@@ -24,11 +24,11 @@ app.use(expressWinston.logger({
     }
     return false;
   },
+  meta: true,
+  msg: 'HTTP {{req.method}} {{req.url}}', 
   skip: (req, res) => {
     return res.statusCode == 200;
-  },
-  meta: true, 
-  msg: 'HTTP {{req.method}} {{req.url}}', 
+  }, 
   transports: [new winston.transports.Console()], // optional: allows to skip some log messages based on request and/or response
 }));
 

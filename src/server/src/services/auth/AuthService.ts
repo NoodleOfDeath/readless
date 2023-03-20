@@ -1,15 +1,13 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import ms from 'ms';
 import web3 from 'web3';
 
 import { AuthError } from './AuthError';
 import {
-  AuthenticationRequest,
-  AuthenticationResponse,
   GenerateOTPRequest,
   GenerateOTPResponse,
   Jwt,
+  JwtBearing,
   LoginRequest,
   LoginResponse,
   LogoutRequest,
@@ -56,8 +54,11 @@ async function generateOtp(): Promise<string> {
 
 export class AuthService extends BaseService {
 
-  public async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
+  public async register(req: Partial<JwtBearing<RegistrationRequest>>): Promise<RegistrationResponse> {
     const { payload, user } = await User.from(req, { ignoreIfNotResolved: true });
+    if (req.jwt) {
+      throw new AuthError('ALREADY_LOGGED_IN');
+    }
     let newAliasType: AliasType;
     let newAliasValue: string;
     let thirdPartyId: string;
@@ -122,11 +123,9 @@ export class AuthService extends BaseService {
     }
   }
 
-  public async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
-    const {
-      payload, jwt, user, 
-    } = await User.from(req);
-    if (jwt && !jwt.expired) {
+  public async login(req: Partial<JwtBearing<LoginRequest>>): Promise<LoginResponse> {
+    const { payload, user } = await User.from(req);
+    if (req.jwt) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
     if (payload.type === 'eth2Address') {
@@ -154,25 +153,20 @@ export class AuthService extends BaseService {
     };
   }
 
-  public async logout({ jwt, userId }: Partial<LogoutRequest>): Promise<LogoutResponse> {
-    let count = await Credential.destroy({ 
-      where: {
-        type: 'jwt',
-        value: jwt,
-      },
-    });
+  public async logout({ jwt, userId }: Partial<JwtBearing<LogoutRequest>>): Promise<LogoutResponse> {
+    let count = 0;
+    if (jwt) {
+      count += await Credential.destroy({ 
+        where: {
+          type: 'jwt',
+          value: jwt.signed,
+        },
+      });
+    }
     if (userId) {
       count += await Credential.destroy({ where: { userId } });
     }
     return { count, success: true };
-  }
-
-  public async authenticate(req: Partial<AuthenticationRequest>): Promise<AuthenticationResponse> {
-    const payload = jwt.verify(req.jwt, process.env.JWT_SECRET) as Jwt;
-    if (!payload || !payload.userId || payload.userId !== req.userId) {
-      throw new AuthError('INVALID_CREDENTIALS');
-    }
-    return { userId: payload.userId };
   }
   
   public async generateOtp(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {

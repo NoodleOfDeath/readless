@@ -21,16 +21,24 @@ export const JWT_SCOPES = {
 
 export const JWT_REFERSH_AGE = ms('1d');
 
+export type JsonWebToken = {
+  userId: number;
+  scope: JwtScope[];
+  access: JwtAccess[];
+  expiresIn: string;
+  refreshable?: boolean;
+  signed: string;
+}
+
 export type JwtOptions = {
   userId: number;
   scope?: JwtScope[];
   access?: JwtAccess[];
   expiresIn?: string;
   refreshable?: boolean;
-  autoSign?: boolean;
-}
+};
 
-export class Jwt {
+export class Jwt implements JsonWebToken {
 
   userId: number;
   scope: JwtScope[];
@@ -47,6 +55,10 @@ export class Jwt {
   expiresSoon() {
     const { exp } = jwt.decode(this.signed) as { exp: number };
     return exp < Date.now() / 1000 + 60 * 60 * 24;
+  }
+  
+  static from(token: string) {
+    return new Jwt(token);
   }
 
   static Default(userId: number) {
@@ -68,27 +80,48 @@ export class Jwt {
     });
   }
 
-  constructor({
-    userId,
-    scope: scopes = [],
-    access = [],
-    expiresIn = JWT_LIFETIMES.default,
-    refreshable,
-    autoSign = true,
-  }: JwtOptions) {
-    this.userId = userId;
-    this.scope = scopes;
-    this.access = access;
-    this.expiresIn = expiresIn;
-    this.refreshable = refreshable;
-    if (autoSign) {
-      this.signed = jwt.sign({
-        access,
-        expiresIn,
-        refreshable,
-        scopes,
-        userId,
-      }, process.env.JWT_SECRET, { expiresIn: this.expiresIn });
+  constructor(opts: string | JwtOptions) {
+    try {
+      if (typeof opts === 'string') {
+        const { 
+          userId, 
+          scope, 
+          access, 
+          expiresIn, 
+          refreshable,
+        } = jwt.verify(opts, process.env.JWT_SECRET) as Jwt;
+        if (!userId || !scope || !access) {
+          throw new AuthError('INVALID_CREDENTIALS');
+        }
+        this.userId = userId;
+        this.scope = scope;
+        this.access = access;
+        this.expiresIn = expiresIn;
+        this.refreshable = refreshable;
+        this.signed = opts;
+      } else {
+        const {
+          userId,
+          scope = [],
+          access = [],
+          expiresIn = JWT_LIFETIMES.default,
+          refreshable,
+        } = opts;
+        this.userId = userId;
+        this.scope = scope;
+        this.access = access;
+        this.expiresIn = expiresIn;
+        this.refreshable = refreshable;
+        this.signed = jwt.sign({
+          access,
+          expiresIn,
+          refreshable,
+          scope,
+          userId,
+        }, process.env.JWT_SECRET, { expiresIn: this.expiresIn });
+      } 
+    } catch (e) {
+      throw new AuthError('INVALID_CREDENTIALS');
     }
   }
 
@@ -121,3 +154,5 @@ export class Jwt {
   }
 
 }
+
+export type JwtBearing<T> = T & { jwt: Jwt }

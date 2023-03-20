@@ -12,7 +12,7 @@ import {
 } from './alias.types';
 import { UserAttributes, UserCreationAttributes } from './user.types';
 import { AuthError } from '../../../../services';
-import { Jwt } from '../../../../services/types';
+import { Jwt, JwtBearing } from '../../../../services/types';
 import { Credential } from '../auth/credential.model';
 import { CredentialCreationAttributes, CredentialType } from '../auth/credential.types';
 import { BaseModel } from '../base';
@@ -27,23 +27,32 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   implements UserAttributes {
 
   /** Resolves a user from an alias request/payload */
-  public static async from(req: Partial<AliasPayload>, opts?: Partial<FindAliasOptions>) {
-    const {
-      alias, jwt, otp, payload, 
-    } = await Alias.from(req, opts);
-    if (!alias) {
-      if (!opts?.ignoreIfNotResolved) {
-        throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
+  public static async from(req: Partial<JwtBearing<AliasPayload>>, opts?: Partial<FindAliasOptions>) {
+    if (req.jwt instanceof Jwt) {
+      const user = await User.findOne({ where: { id: req.jwt.userId } });
+      if (!user && !opts?.ignoreIfNotResolved) {
+        if (!opts?.ignoreIfNotResolved) {
+          throw new AuthError('INVALID_CREDENTIALS');
+        }
       }
-      return { alias, payload };
+      return { user };
+    } else {
+      const {
+        alias, otp, payload, 
+      } = await Alias.from(req, opts);
+      if (!alias) {
+        if (!opts?.ignoreIfNotResolved) {
+          throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
+        }
+        return { alias, payload };
+      }
+      return {
+        alias,
+        otp,
+        payload, 
+        user: await User.findOne({ where: { id: alias.toJSON().userId } }),
+      };
     }
-    return {
-      alias, 
-      jwt,
-      otp,
-      payload, 
-      user: await User.findOne({ where: { id: alias.toJSON().userId } }),
-    };
   }
   
   public async findAlias(type: AliasType) {

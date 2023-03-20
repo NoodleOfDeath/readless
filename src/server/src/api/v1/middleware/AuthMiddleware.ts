@@ -1,13 +1,15 @@
 import { RequestHandler } from 'express';
 
-import { AuthError, AuthService } from '../../../services';
+import { AuthError } from '../../../services';
+import { Jwt } from '../../../services/types';
 
 export const authMiddleware: RequestHandler = (req, res, next) => {
   if (req.headers.authorization) {
     const [type, token] = req.headers.authorization.split(' ');
     if (type === 'Bearer') {
       try {
-        new AuthService().authenticate({ jwt: token });
+        req.body.jwt = Jwt.from(token);
+        next();
       } catch (e) {
         if (e instanceof AuthError) {
           res.status(401).json(e);
@@ -15,11 +17,9 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
           console.log(e);
           res.status(500).end();
         }
-        return;
       }
-      next();
     } else {
-      res.status(401).json({ error: 'Invalid authorization header' });
+      res.status(401).json({ error: 'Invalid or authorization header' });
     }
   }
   res.status(401).json({ error: 'Missing authorization header' });

@@ -8,6 +8,7 @@ import {
 } from 'tsoa';
 
 import { AccountService, AuthError } from '../../../../services';
+import { JwtBearing } from '../../../../services/types';
 import { MutateAccountRequest, MutateAccountResponse } from '../../../../services/types';
 
 @Route('/v1/account')
@@ -19,7 +20,7 @@ export class AccountController {
   @Put('/update')
   @SuccessResponse(200, 'OK')
   public async updateAccount(@Body() body: Partial<MutateAccountRequest>): Promise<MutateAccountResponse> {
-    return await new AccountService().mutateAccount(body);
+    return await new AccountService().mutateAccount(body as Partial<JwtBearing<MutateAccountRequest>>);
   }
   
 }

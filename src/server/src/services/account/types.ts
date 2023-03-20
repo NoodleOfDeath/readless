@@ -1,7 +1,5 @@
-
 export type MutateAccountRequest = {
   userId: number;
-  jwt: string;
   payload: {
     [key: string]: string
   }

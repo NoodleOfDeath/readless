@@ -14,7 +14,6 @@ export type ThirdPartyAuth = {
 export const ALIAS_TYPES = {
   email: 'email',
   eth2Address: 'eth2Address',
-  jwt: 'jwt',
   otp: 'otp',
   phone: 'phone',
   thirdParty: 'thirdParty',

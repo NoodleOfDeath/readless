@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
 import {
   Column,
@@ -17,7 +16,6 @@ import {
   ThirdPartyAuth,
 } from './alias.types';
 import { AuthError, GoogleService } from '../../../../services';
-import { Jwt } from '../../../../services/types';
 import { Credential } from '../auth/credential.model';
 import { BaseModel } from '../base';
 
@@ -90,7 +88,7 @@ export class Alias<
     };
   }
     
-  public static async from(req: Partial<AliasPayload>, opts?: FindAliasOptions): Promise<{alias: Alias, payload: AliasPayload, jwt?: Jwt, otp?: Credential}> {
+  public static async from(req: Partial<AliasPayload>, opts?: FindAliasOptions): Promise<{alias: Alias, payload: AliasPayload, otp?: Credential}> {
     const payload = Alias.parsePayload(req);
     if (payload.type === 'thirdParty' && typeof payload.value !== 'string') {
       if (payload.value.name === 'google') {
@@ -110,18 +108,6 @@ export class Alias<
           value: thirdPartyId,
         }, opts);
       }
-    } else if (payload.type === 'jwt' && typeof payload.value === 'string') {
-      const token = jwt.verify(payload.value, process.env.JWT_SECRET) as Jwt;
-      if (typeof token !== 'object') {
-        throw new AuthError('INVALID_CREDENTIALS');
-      }
-      const alias = await Alias.findOne({ where: { userId: token.userId } });
-      if (!alias && !opts?.ignoreIfNotResolved) {
-        throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
-      }
-      return {
-        alias, jwt: token, payload, 
-      };
     } else if (payload.type === 'otp' && typeof payload.value === 'string') {
       const otp = await Credential.findOne({
         where: {

@@ -2,16 +2,14 @@ import { BaseService } from './../base';
 import { MutateAccountRequest, MutateAccountResponse } from './types';
 import { User } from '../../api/v1/schema';
 import { AuthError } from '../auth';
+import { JwtBearing } from '../auth/types';
 
 export class AccountService extends BaseService {
 
-  public async mutateAccount(req: Partial<MutateAccountRequest>): Promise<MutateAccountResponse> {
-    const { jwt, user } = await User.from(req);
-    if (!jwt) {
-      throw new AuthError('INVALID_CREDENTIALS');
-    }
+  public async mutateAccount(req: Partial<JwtBearing<MutateAccountRequest>>): Promise<MutateAccountResponse> {
+    const { user } = await User.from(req);
     if (typeof req.payload.newPassword === 'string') {
-      if (!jwt.can('write', 'account')) {
+      if (req.jwt && !req.jwt.can('write', 'account')) {
         throw new AuthError('INSUFFICIENT_PERMISSIONS');
       }
       const password = await user.findCredential('password');
