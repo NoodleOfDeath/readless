@@ -85,11 +85,19 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   public async findCredential(type: CredentialType, value?: string) {
+    if (value) {
+      return await Credential.findOne({
+        where: {
+          type,
+          userId: this.id,
+          value,
+        }, 
+      });
+    }
     return await Credential.findOne({
       where: {
         type,
         userId: this.id,
-        value: value || '1=1',
       }, 
     });
   }

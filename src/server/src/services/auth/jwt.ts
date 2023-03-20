@@ -64,7 +64,6 @@ export class Jwt implements JsonWebToken {
     const roles = await user.getRoles();
     const defaults = roles[role];
     if (!defaults) {
-      console.log('motherfucker');
       throw new AuthError('INSUFFICIENT_PERMISSIONS');
     }
     return new Jwt({

@@ -51,8 +51,7 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
         }
         setUserData(new UserData({
           isLoggedIn: true,
-          tokens: data.token,
-          userId: data.userId,
+          ...data,
         }));
         navigate('/');
       } catch (error) {
@@ -72,8 +71,7 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
       if (data.token) {
         setUserData(new UserData({ 
           isLoggedIn: true,
-          tokens: data.token,
-          userId: data.userId,
+          ...data,
         }));
         navigate('/');
       } else {

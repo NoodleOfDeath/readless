@@ -32,7 +32,8 @@ export type UserDataProps = {
 export type UserDataParams = {
   userId: number;
   isLoggedIn?: boolean;
-  tokens: LoginResponse['token'] | LoginResponse['token'][];
+  token?: LoginResponse['token'];
+  tokens?: LoginResponse['token'] | LoginResponse['token'][];
 }
 
 export class UserData implements UserDataProps {
@@ -53,7 +54,7 @@ export class UserData implements UserDataProps {
   }
 
   constructor({
-    userId, tokens, isLoggedIn, 
+    userId, token, tokens = token ? [token] : [], isLoggedIn, 
   }: UserDataParams) {
     this.userId = userId;
     this.tokens = Array.isArray(tokens) ? tokens : [tokens];
@@ -262,7 +263,7 @@ export function SessionContextProvider({ children }: Props) {
               navigate(`/error?error=${JSON.stringify(error)}`);
               return;
             }
-            setUserData(new UserData({ ...data, tokens: [data.token] }));
+            setUserData(new UserData(data));
             navigate('/reset-password');
           }).catch((e) => {
             console.error(e);

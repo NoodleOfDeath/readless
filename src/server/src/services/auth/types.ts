@@ -3,13 +3,15 @@ import { DestructuredAliasPayload  } from '../../api/v1/schema/user/Alias.types'
 
 export * from './jwt';
 
+export type JwtTokenResponse = {
+  priority: number;
+  value: string;
+}
+
 export type RegistrationRequest = DestructuredAliasPayload & DestructuredCredentialPayload;
 export type RegistrationResponse = {
   userId: number;
-  token?: {
-    priority: number;
-    value: string;
-  };
+  token?: JwtTokenResponse
 }
 
 export type LoginRequest = DestructuredAliasPayload & DestructuredCredentialPayload & {
@@ -19,10 +21,7 @@ export type LoginRequest = DestructuredAliasPayload & DestructuredCredentialPayl
 
 export type LoginResponse = {
   userId: number;
-  token: {
-    priority: number;
-    value: string;
-  };
+  token: JwtTokenResponse
 }
 
 export type LogoutRequest = {
@@ -53,10 +52,7 @@ export type VerifyAliasResponse = {
 export type VerifyOTPRequest = DestructuredAliasPayload;
 
 export type VerifyOTPResponse = {
-  token: {
-    priority: number;
-    value: string;
-  };
+  token: JwtTokenResponse
   userId: number;
 }
 

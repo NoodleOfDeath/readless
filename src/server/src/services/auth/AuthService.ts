@@ -116,7 +116,7 @@ export class AuthService extends BaseService {
       return await this.login(req);
     } else {
       const mailer = new MailService();
-      mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
+      await mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
         email: newAliasValue,
         verificationCode,
       });
@@ -144,7 +144,6 @@ export class AuthService extends BaseService {
         throw new AuthError('INVALID_PASSWORD');
       }
     }
-    console.log('fuck');
     // user is authenticated, generate JWT
     const userData = user.toJSON();
     const token = await Jwt.as(req.requestedRole ?? 'standard', userData.id);
@@ -190,7 +189,7 @@ export class AuthService extends BaseService {
     await user.createCredential('otp', otp);
     const emailData = email.toJSON();
     const mailer = new MailService();
-    mailer.sendMail({ to: emailData.value }, 'resetPassword', {
+    await mailer.sendMail({ to: emailData.value }, 'resetPassword', {
       email: emailData.value,
       otp,
     });
@@ -217,14 +216,14 @@ export class AuthService extends BaseService {
 
   public async verifyOtp(req: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
     const { user } = await User.from(req);
-    const otp = await user.findCredential('otp');
+    const otp = await user.findCredential('otp', req.otp);
     if (!otp) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
-    await otp.destroy();
-    if (otp.expiresAt < new Date()) {
+    if (otp.toJSON().expiresAt < new Date()) {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
+    await otp.destroy();
     const userData = user.toJSON();
     const token = await Jwt.as('account', userData.id);
     await user.createCredential('jwt', token);
