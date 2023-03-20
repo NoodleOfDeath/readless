@@ -5,7 +5,7 @@ export type TopicAttributes = DatedAttributes & {
   description: string;
 };
 
-export type TopicCreationAttributes = DatedAttributes & {
+export type TopicCreationAttributes = {
   name: string;
   description: string;
 };

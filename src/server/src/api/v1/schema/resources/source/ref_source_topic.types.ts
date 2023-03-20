@@ -5,7 +5,7 @@ export type RefSourceTopicAttributes = DatedAttributes & {
   topicId: number;
 };
 
-export type RefSourceTopicCreationAttributes = DatedAttributes & {
+export type RefSourceTopicCreationAttributes = {
   sourceId: number;
   topicId: number;
 };

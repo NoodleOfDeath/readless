@@ -10,4 +10,11 @@ export type MetricAttributes = DatedAttributes & {
   userAgent: string;
 };
 
-export type MetricCreationAttributes = MetricAttributes;
+export type MetricCreationAttributes = {
+  type: 'click' | 'nav';
+  data: Record<string, unknown>;
+  /** ip address(es) of actor */
+  referrer?: string[];
+  /** the user agent info of the consumer of this referral */
+  userAgent: string;
+};

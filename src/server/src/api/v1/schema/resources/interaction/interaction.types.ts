@@ -22,7 +22,7 @@ export type InteractionAttributes = DatedAttributes & {
   value?: string;
 };
 
-export type InteractionCreationAttributes = DatedAttributes & {
+export type InteractionCreationAttributes = {
   actorId: number;
   type: InteractionType;
   value?: string;

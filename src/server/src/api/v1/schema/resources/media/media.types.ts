@@ -7,7 +7,7 @@ export type MediaAttributes = DatedAttributes & {
   url: string;
 };
 
-export type MediaCreationAttributes = DatedAttributes & {
+export type MediaCreationAttributes = {
   type: string;
   url: string;
 };

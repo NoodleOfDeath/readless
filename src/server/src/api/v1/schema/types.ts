@@ -3,7 +3,7 @@ import { Hooks } from 'sequelize/types/hooks';
 import { Model } from 'sequelize-typescript';
 
 export type DatedAttributes = {
-  id?: number;
+  id: number;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;

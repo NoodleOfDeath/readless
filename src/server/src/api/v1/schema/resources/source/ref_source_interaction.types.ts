@@ -5,7 +5,7 @@ export type RefSourceInteractionAttributes = DatedAttributes & {
   interactionId: number;
 };
 
-export type RefSourceInteractionCreationAttributes = DatedAttributes & {
+export type RefSourceInteractionCreationAttributes = {
   sourceId: number;
   interactionId: number;
 };

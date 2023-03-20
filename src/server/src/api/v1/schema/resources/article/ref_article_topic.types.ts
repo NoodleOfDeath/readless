@@ -5,7 +5,7 @@ export type RefArticleTopicAttributes = DatedAttributes & {
   topicId: number;
 };
 
-export type RefArticleTopicCreationAttributes = DatedAttributes & {
+export type RefArticleTopicCreationAttributes = {
   articleId: number;
   topicId: number;
 };

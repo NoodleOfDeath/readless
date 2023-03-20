@@ -45,4 +45,11 @@ export type AliasAttributes = DatedAttributes & {
   verifiedAt?: Date;
 };
 
-export type AliasCreationAttributes = AliasAttributes;
+export type AliasCreationAttributes = {
+  userId: number;
+  type: AliasType;
+  value: string;
+  verificationCode?: string;
+  verificationExpiresAt?: Date;
+  verifiedAt?: Date;
+};

@@ -5,7 +5,7 @@ export type RefArticleInteractionAttributes = DatedAttributes & {
   interactionId: number;
 };
 
-export type RefArticleInteractionCreationAttributes = DatedAttributes & {
+export type RefArticleInteractionCreationAttributes = {
   articleId: number;
   interactionId: number;
 };

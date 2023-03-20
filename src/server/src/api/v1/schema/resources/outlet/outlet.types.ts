@@ -40,7 +40,7 @@ export type OutletAttributes = DatedAttributes & {
   fetchPolicy?: FetchPolicy;
 };
 
-export type OutletCreationAttributes = DatedAttributes & {
+export type OutletCreationAttributes = {
   name: string;
   siteMaps: SiteMap[];
   fetchPolicy?: FetchPolicy;

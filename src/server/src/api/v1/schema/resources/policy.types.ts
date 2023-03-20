@@ -5,7 +5,7 @@ export type PolicyAttributes = DatedAttributes & {
   content: string;
 };
 
-export type PolicyCreationAttributes = DatedAttributes & {
+export type PolicyCreationAttributes = {
   name: string;
   content: string;
 };

@@ -5,7 +5,7 @@ export type RefSourceOutletAttributes = DatedAttributes & {
   outletId: number;
 };
 
-export type RefSourceOutletCreationAttributes = DatedAttributes & {
+export type RefSourceOutletCreationAttributes = {
   sourceId: number;
   outletId: number;
 };

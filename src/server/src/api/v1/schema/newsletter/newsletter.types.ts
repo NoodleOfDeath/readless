@@ -6,7 +6,7 @@ export type NewsletterAttributes = DatedAttributes & {
   description: string;
 };
 
-export type NewsletterCreationAttributes = DatedAttributes & {
+export type NewsletterCreationAttributes = {
   name: string;
   description: string;
 };

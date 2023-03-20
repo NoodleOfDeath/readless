@@ -7,4 +7,9 @@ export type RequestAttributes = DatedAttributes & {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 }
 
-export type RequestCreationAttributes = RequestAttributes;
+export type RequestCreationAttributes = { 
+  remoteAddr: string;
+  referrer?: string;
+  path: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+}

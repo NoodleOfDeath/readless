@@ -6,7 +6,7 @@ export type UserMetadataAttributes = DatedAttributes & {
   value: Record<string, unknown>;
 };
 
-export type UserMetadataCreationAttributes = DatedAttributes & {
+export type UserMetadataCreationAttributes = {
   userId: number;
   key: string;
   value: Record<string, unknown>;

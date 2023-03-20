@@ -5,7 +5,7 @@ export type RefArticleMediaAttributes = DatedAttributes & {
   mediaId: number;
 };
 
-export type RefArticleMediaCreationAttributes = DatedAttributes & {
+export type RefArticleMediaCreationAttributes = {
   articleId: number;
   mediaId: number;
 };

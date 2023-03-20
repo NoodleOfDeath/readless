@@ -21,7 +21,7 @@ export type CredentialAttributes = DatedAttributes & {
   expiresAt: Date;
 };
 
-export type CredentialCreationAttributes = DatedAttributes & {
+export type CredentialCreationAttributes = {
   userId: number;
   type: CredentialType;
   value: string;

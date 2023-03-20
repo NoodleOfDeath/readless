@@ -13,7 +13,7 @@ export type PostAttributes = DatedAttributes & {
   imagePrompt: string;
 };
 
-export type PostCreationAttributes = DatedAttributes & {
+export type PostCreationAttributes = {
   text: string;
   abridged: string;
   summary: string;

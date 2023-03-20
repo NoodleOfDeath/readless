@@ -7,7 +7,7 @@ export type SubscriptionAttributes = DatedAttributes & {
   newsletterId: number;
 };
 
-export type SubscriptionCreationAttributes = DatedAttributes & {
+export type SubscriptionCreationAttributes = {
   aliasType: string;
   alias: string;
   newsletterId?: number;
