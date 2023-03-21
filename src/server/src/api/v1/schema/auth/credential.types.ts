@@ -10,9 +10,9 @@ export const CREDENTIAL_TYPES = {
 
 export type CredentialType = ValuesOfKeys<typeof CREDENTIAL_TYPES>;
 
-export type DestructuredCredentialPayload = {
+export type DestructuredCredentialPayload = Omit<{
   [key in CredentialType]: string;
-};
+}, 'jwt'>;
 
 export type CredentialAttributes = DatedAttributes & {
   userId: number; 

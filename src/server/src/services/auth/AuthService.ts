@@ -220,7 +220,7 @@ export class AuthService extends BaseService {
     if (!otp) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
-    if (otp.toJSON().expiresAt < new Date()) {
+    if (otp.toJSON().expiresAt.valueOf() < Date.now()) {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
     await otp.destroy();

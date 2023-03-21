@@ -85,11 +85,19 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   public async findCredential(type: CredentialType, value?: string) {
+    if (value) {
+      return await Credential.findOne({
+        where: {
+          type,
+          userId: this.id,
+          value,
+        }, 
+      });
+    }
     return await Credential.findOne({
       where: {
         type,
         userId: this.id,
-        value: value || '1=1',
       }, 
     });
   }
@@ -114,6 +122,8 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }
     if (type === 'password') {
       value = bcrypt.hashSync(value, process.env.PASSWORD_HASH_ROUNDS || 10);
+    } else if (type === 'otp') {
+      expiresAt = new Date(Date.now() + ms('15m'));
     }
     return await Credential.create({ 
       expiresAt,
