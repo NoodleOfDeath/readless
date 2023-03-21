@@ -30,7 +30,7 @@ export default function ResetPasswordPage() {
       return;
     }
     try {
-      const { error } = await API.updateCredential(values, { headers:headers({ token: userData?.token }) });
+      const { error } = await API.updateCredential(values, { headers: headers({ token: userData.token }) });
       if (error) {
         setError(error);
         return;

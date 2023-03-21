@@ -2,11 +2,11 @@ import { Api } from './gen/Api';
 
 export * from './gen/Api';
 
-type HeadersOptions = {
+type HeaderOptions = {
   token?: string;
 };
 
-export function headers({ token }: HeadersOptions = {}) {
+export function headers({ token }: HeaderOptions = {}) {
   const headers: Record<string, string> = {};
   if (token) {
     headers.Authorization = `Bearer ${token}`;

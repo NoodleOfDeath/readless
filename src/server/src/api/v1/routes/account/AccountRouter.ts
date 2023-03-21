@@ -8,7 +8,7 @@ const router = Router();
 
 router.put(
   '/update/credential', 
-  authMiddleware('jwt', { required: true, scope: ['write:account'] }),
+  authMiddleware('jwt', { required: true, scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {
     try {
