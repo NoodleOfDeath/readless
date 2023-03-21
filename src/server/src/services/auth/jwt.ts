@@ -13,6 +13,7 @@ export type JsonWebToken = {
   userId: number;
   scope: string[];
   priority: number;
+  createdAt: Date;
   expiresIn: string;
   refreshable: boolean;
   signed: string;
@@ -31,6 +32,7 @@ export class Jwt implements JsonWebToken {
   userId: number;
   scope: string[];
   priority: number;
+  createdAt: Date;
   expiresIn: string;
   refreshable = false;
   signed: string;
@@ -81,8 +83,9 @@ export class Jwt implements JsonWebToken {
         const { 
           userId, 
           scope, 
-          priority = 0,
-          expiresIn, 
+          priority,
+          createdAt,
+          expiresIn,
           refreshable,
         } = jwt.verify(opts, process.env.JWT_SECRET) as Jwt;
         if (!userId || !scope) {
@@ -91,6 +94,7 @@ export class Jwt implements JsonWebToken {
         this.userId = userId;
         this.scope = scope;
         this.priority = priority;
+        this.createdAt = createdAt;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
         this.signed = opts;
@@ -102,12 +106,15 @@ export class Jwt implements JsonWebToken {
           expiresIn = '1d',
           refreshable,
         } = opts;
+        const createdAt = new Date();
         this.userId = userId;
         this.scope = scope;
         this.priority = priority;
+        this.createdAt = createdAt;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
         this.signed = jwt.sign({
+          createdAt,
           expiresIn,
           priority,
           refreshable,
