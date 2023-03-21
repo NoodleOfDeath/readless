@@ -81,6 +81,7 @@ export class Jwt implements JsonWebToken {
         const { 
           userId, 
           scope, 
+          priority,
           expiresIn, 
           refreshable,
         } = jwt.verify(opts, process.env.JWT_SECRET) as Jwt;
@@ -89,6 +90,7 @@ export class Jwt implements JsonWebToken {
         }
         this.userId = userId;
         this.scope = scope;
+        this.priority = priority;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
         this.signed = opts;
@@ -96,15 +98,18 @@ export class Jwt implements JsonWebToken {
         const {
           userId,
           scope = [],
+          priority,
           expiresIn = '1d',
           refreshable,
         } = opts;
         this.userId = userId;
         this.scope = scope;
+        this.priority = priority;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
         this.signed = jwt.sign({
           expiresIn,
+          priority,
           refreshable,
           scope,
           userId,
