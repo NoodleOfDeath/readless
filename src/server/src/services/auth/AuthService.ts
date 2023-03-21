@@ -109,6 +109,7 @@ export class AuthService extends BaseService {
       verifiedAt: verified ? new Date() : undefined,
     });
     await newUser.grantRole('standard');
+    await newUser.grantRole('account');
     if (req.password) {
       await newUser.createCredential('password', req.password);
     }
@@ -116,7 +117,7 @@ export class AuthService extends BaseService {
       return await this.login(req);
     } else {
       const mailer = new MailService();
-      await mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
+      mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
         email: newAliasValue,
         verificationCode,
       });
@@ -186,10 +187,11 @@ export class AuthService extends BaseService {
       return { success: false };
     }
     const otp = await generateOtp();
+    await user.revokeCredential('otp');
     await user.createCredential('otp', otp);
     const emailData = email.toJSON();
     const mailer = new MailService();
-    await mailer.sendMail({ to: emailData.value }, 'resetPassword', {
+    mailer.sendMail({ to: emailData.value }, 'resetPassword', {
       email: emailData.value,
       otp,
     });

@@ -134,6 +134,24 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     });
   }
 
+  public async revokeCredential(type: CredentialType, value?: string) {
+    if (value) {
+      return await Credential.destroy({
+        where: {
+          type,
+          userId: this.id,
+          value,
+        },
+      });
+    }
+    return await Credential.destroy({
+      where: {
+        type,
+        userId: this.id,
+      },
+    });
+  }
+
   public async getRoles() {
     return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.id } })).map(async (role) => (await Role.findOne({ where: { id: role.toJSON().roleId } }))?.toJSON() ))).map((role) => [role.name, role]));
   }
