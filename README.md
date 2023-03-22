@@ -31,8 +31,8 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ### v1.2.0
 
-- [ ] User account registration/login + third-party login support
-- [ ] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
+- [x] User account registration/login + third-party login support
+- [-] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
 ### v1.3.0
 
