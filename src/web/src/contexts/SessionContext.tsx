@@ -23,20 +23,14 @@ export type Preferences = {
   consumptionMode?: ConsumptionMode;
 }
 
-export type UserDataProps = {
-  userId: number;
-  isLoggedIn?: boolean;
-  tokens: LoginResponse['token'][];
-}
-
-export type UserDataParams = {
+export type UserDataOptions = {
   userId: number;
   isLoggedIn?: boolean;
   token?: LoginResponse['token'];
   tokens?: LoginResponse['token'] | LoginResponse['token'][];
 }
 
-export class UserData implements UserDataProps {
+export class UserData {
 
   userId: number;
   isLoggedIn?: boolean;
@@ -54,8 +48,11 @@ export class UserData implements UserDataProps {
   }
 
   constructor({
-    userId, token, tokens = token ? [token] : [], isLoggedIn, 
-  }: UserDataParams) {
+    userId, 
+    token, 
+    tokens = token ? [token] : [],
+    isLoggedIn = false, 
+  }: UserDataOptions) {
     this.userId = userId;
     this.tokens = Array.isArray(tokens) ? tokens : [tokens];
     this.isLoggedIn = isLoggedIn;

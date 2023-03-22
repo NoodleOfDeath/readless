@@ -112,11 +112,4 @@ export class ArticleController {
     return await Article.findOne(options);
   }
 
-  @Post('/')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async writeArticleFromSources(@Body() sources: number[]): Promise<ArticleAttributes> {
-    // article creation is suppressed in the first release
-    return null;
-  }
-
 }
