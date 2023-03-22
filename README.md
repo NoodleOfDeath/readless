@@ -15,31 +15,35 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ## Roadmap
 
-### v1.0.0 (MVP and POC)
+### v1.0.0 - MVP and POC
 
 - [x] Automated summarization of news articles in various consumption lengths
 - [x] Basic MVP of web and mobile UI that can fetch results and view different length summaries
 - [x] Add newsletter on web app for users to receive email progress updates
 
-### v1.1.0 (User Accounts)
+### v1.1.0 - User Accounts
 
-- [x] User account registration/login + third-party login support
+- [x] User account registration
+- [x] Third-party login support
+- [x] Access token based login
+- [x] Role-Based Access Control (RBAC)
 - [ ] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
-### v1.2.0 (Interactions)
+### v1.2.0 - Interactions
 
 - [ ] Add support for interactions such as likes, dislikes, shares, reposts, and following other users
 - [ ] Add support for users to provide feedback about articles
 - [ ] Add support for users to flag articles as false, low-quality, etc.
 - [ ] Bounty/training/feedback program will play an important role in the loyalty and beta test programs
 
-### v1.3.0 (Notifications/Newletters)
+### v1.3.0 - Notifications/Newletters
 
 - [ ] Email notifications
 - [ ] Daily (eventually customizable) newsletters with headlines
 
-### v1.4.0 (Mobile App)
+### v1.4.0 - Mobile App
 
+- [x] MVP Project and POC
 - [ ] Onboarding carousel for mobile app
 - [ ] Onboarding guide for web app
 - [ ] Basic settings/preferences
@@ -49,7 +53,7 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 - [ ] Minor UI touch ups
 - [ ] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
 
-### v1.4.1
+### v1.4.1 - First Real (Beta) Release
 
 - [ ] First release to the app stores
 - [ ] Launch of referral and pre-loyalty programs
