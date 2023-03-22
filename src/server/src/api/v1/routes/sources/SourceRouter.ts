@@ -3,7 +3,7 @@ import { param, query } from 'express-validator';
 
 import { SourceController } from '../../controllers';
 import { paginationMiddleware, validationMiddleware } from '../../middleware';
-import { SourceAttr, SourceAttributes } from '../../schema/types';
+import { SourceAttrRaw, SourceAttributesRaw } from '../../schema/types';
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.get(
       filter, pageSize = 10, page = 0, offset = page * pageSize, 
     } = req.query;
     const controller = new SourceController();
-    let response: { count: number; rows: SourceAttr[] } | SourceAttributes = {
+    let response: { count: number; rows: SourceAttrRaw[] } | SourceAttributesRaw = {
       count: 0,
       rows: [],
     };

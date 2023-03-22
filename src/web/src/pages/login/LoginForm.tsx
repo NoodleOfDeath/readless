@@ -25,11 +25,11 @@ import { SessionContext, UserData } from '@/contexts';
 
 export type LoginFormProps = {
   action?: 'logIn' | 'signUp';
-}
+};
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
-const StyledIcon = styled(Icon)(({ theme }) => ({ marginRight:  theme.spacing(1) }));
+const StyledIcon = styled(Icon)(({ theme }) => ({ marginRight: theme.spacing(1) }));
 
 export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
   const navigate = useNavigate();

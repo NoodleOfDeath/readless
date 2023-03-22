@@ -21,14 +21,14 @@ import { loadTheme } from '@/theme';
 export type Preferences = {
   displayMode?: PaletteMode;
   consumptionMode?: ConsumptionMode;
-}
+};
 
 export type UserDataOptions = {
   userId: number;
   isLoggedIn?: boolean;
   token?: LoginResponse['token'];
   tokens?: LoginResponse['token'] | LoginResponse['token'][];
-}
+};
 
 export class UserData {
 

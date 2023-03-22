@@ -25,7 +25,7 @@ export type AliasType = ValuesOfKeys<typeof ALIAS_TYPES> | `thirdParty/${ThirdPa
 
 export type DestructuredAliasPayload = {
   [key in AliasType]: key extends 'thirdParty' ? ThirdPartyAuth : key extends 'userId' ? number : string;
-}
+};
 
 export type AliasPayload = Partial<DestructuredAliasPayload> & {
   type: AliasType;
@@ -35,7 +35,7 @@ export type AliasPayload = Partial<DestructuredAliasPayload> & {
 export type FindAliasOptions = {
   ignoreIfNotResolved?: boolean;
   skipVerification?: boolean;
-}
+};
 
 export type AliasAttributes = DatedAttributes & {
   userId: number;

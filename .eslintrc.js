@@ -7,7 +7,13 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   overrides: [],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'import', 'import-newlines', 'sort-keys-fix'],
+  plugins: [
+    '@babel',
+    '@typescript-eslint',
+    'import',
+    'import-newlines',
+    'sort-keys-fix',
+  ],
   rules: {
     '@typescript-eslint/no-unused-vars': [
       'warn', // or "error"
@@ -17,6 +23,7 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    '@typescript-eslint/semi': ['error', 'always'],
     'brace-style': ['error', '1tbs'],
     'comma-dangle': [
       'error',
@@ -66,6 +73,7 @@ module.exports = {
       },
     ],
     indent: ['error', 2],
+    'key-spacing': ['error', { mode: 'strict' }],
     'keyword-spacing': ['error'],
     'linebreak-style': ['error', 'unix'],
     'lines-between-class-members': [
@@ -73,7 +81,18 @@ module.exports = {
       'always',
       { exceptAfterSingleLine: true },
     ],
+    'no-multi-spaces': [
+      'error',
+      {
+        exceptions: {
+          ImportDeclaration: true,
+          Property: true,
+          VariableDecorator: true,
+        },
+      },
+    ],
     'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
+    'no-unexpected-multiline': 'error',
     'no-unused-vars': 'off',
     'no-useless-rename': 'error',
     'object-curly-newline': [
@@ -100,8 +119,9 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'object-shorthand': ['error', 'always'],
     'padded-blocks': ['error', { classes: 'always' }],
+    'quote-props': ['error', 'as-needed', { unnecessary: false }],
     quotes: ['error', 'single'],
-    semi: ['error', 'always'],
+    semi: 'off',
     'sort-imports': [
       'error',
       {

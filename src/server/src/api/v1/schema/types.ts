@@ -20,6 +20,14 @@ export type BulkResponse<T> = {
   rows: T[];
 };
 
+export class SchemaError extends Error {
+
+  constructor(message: string) {
+    super(message);
+  }
+
+}
+
 // Model Types
 
 export * from './analytics/Metric.types';
@@ -37,8 +45,8 @@ export * from './newsletter/Subscription.types';
 
 export * from './resources/types';
 
-export * from './resources/interaction/Interaction.types';
-export * from './resources/interaction/Referral.types';
+export * from './interaction/Interaction.types';
+export * from './interaction/Referral.types';
 export * from './resources/media/Media.types';
 
 export * from './resources/Post.types';

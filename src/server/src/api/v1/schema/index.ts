@@ -1,23 +1,22 @@
 import {
   Alias,
   Article,
+  ArticleInteraction,
   Credential,
-  Interaction,
   Media,
   Newsletter,
   Outlet,
-  RefArticleInteraction,
   RefArticleMedia,
   RefArticleSource,
   RefArticleTopic,
   RefOutletMedia,
-  RefSourceInteraction,
   RefSourceMedia,
   RefSourceTopic,
   RefTopicMedia,
   RefUserRole,
   Role,
   Source,
+  SourceInteraction,
   Subscription,
   Topic,
   User,
@@ -54,8 +53,7 @@ export function makeAssociations() {
   Source.belongsTo(Outlet, { foreignKey: 'outletId' });
   Source.hasOne(RefSourceTopic, { foreignKey: 'sourceId' });
   Topic.hasMany(RefSourceTopic, { foreignKey: 'topicId' });
-  Source.hasMany(RefSourceInteraction, { foreignKey: 'sourceId' });
-  RefSourceInteraction.belongsTo(Interaction, { foreignKey: 'interactionId' });
+  Source.hasMany(SourceInteraction, { foreignKey: 'targetId' });
   // articles
   Article.hasMany(RefArticleMedia, { foreignKey: 'articleId' });
   RefArticleMedia.belongsTo(Media, { foreignKey: 'mediaId' });
@@ -66,6 +64,5 @@ export function makeAssociations() {
   Source.belongsToMany(Article, {
     foreignKey: 'sourceId', otherKey: 'articleId', through: RefArticleSource, 
   });
-  Article.hasMany(RefArticleInteraction, { foreignKey: 'sourceId' });
-  RefArticleInteraction.belongsTo(Interaction, { foreignKey: 'interactionId' });
+  Article.hasMany(ArticleInteraction, { foreignKey: 'targetId' });
 }

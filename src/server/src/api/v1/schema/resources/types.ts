@@ -9,3 +9,8 @@ export const RESOURCE_TYPES = {
 } as const;
 
 export type ResourceType = ValuesOfKeys<typeof RESOURCE_TYPES>;
+
+export type ResourceSpecifier<Type extends ResourceType> = {
+  type: Type;
+  id: number;
+};

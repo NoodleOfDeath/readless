@@ -3,7 +3,7 @@ import { MailTemplate, MailTemplateParams } from '../base';
 
 export type VerifyEmailProps = MailTemplateParams & {
   verificationCode: string;
-}
+};
 
 export class VerifyEmailTemplate extends MailTemplate<VerifyEmailProps> {
 

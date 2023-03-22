@@ -3,12 +3,12 @@ import { Optional } from '../../../types';
 export type MailTemplateParams = {
   domain: string;
   email: string;
-}
+};
 
 export type MailTemplateProps = {
   subject: string;
   body: string;
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export abstract class MailTemplate<Params extends MailTemplateParams> implements MailTemplateProps {

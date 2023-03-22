@@ -17,7 +17,7 @@ export type JsonWebToken = {
   expiresIn: string;
   refreshable: boolean;
   signed: string;
-}
+};
 
 export type JwtOptions = {
   userId: number;

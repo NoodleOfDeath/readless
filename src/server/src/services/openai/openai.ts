@@ -9,7 +9,7 @@ export type OpenAIServiceInitProps = {
 export type CreateImageOptions = {
   n?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
   size?: '256x256' | '512x512' | '1024x1024';
-}
+};
 
 export class OpenAIService extends BaseService {
 

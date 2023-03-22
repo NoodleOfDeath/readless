@@ -24,7 +24,7 @@ export const loadTheme = (mode: PaletteMode = 'light') => {
                 'linear-gradient(to bottom, #FFFFFF, #FEFEFE, #F5F5F5)', 
               };
             } else {
-              return { background:'linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)' };
+              return { background: 'linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)' };
             }
           },
         },

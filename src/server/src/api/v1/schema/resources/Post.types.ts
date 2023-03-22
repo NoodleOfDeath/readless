@@ -1,4 +1,8 @@
-import { DatedAttributes } from '../types';
+import {
+  DatedAttributes,
+  InteractionAttributes,
+  InteractionType,
+} from '../types';
 
 export type Attr<Model, K extends keyof Model> = {
   [Key in K]: Model[Key];
@@ -33,6 +37,7 @@ export type TitledCategorizedPostAttributes = PostAttributes & {
   category: string;
   subcategory: string;
   tags: string[];
+  interactions: Record<InteractionType, InteractionAttributes[]>
 };
 
 export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {

@@ -5,8 +5,9 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { SourceCreationAttributes, SourceWithOutletName } from './Source.types';
-import { TitledCategorizedPost } from '../Post';
+import { SourceAttributes, SourceCreationAttributes } from './Source.types';
+import { SourceInteraction } from './SourceInteraction.model';
+import { TitledCategorizedPost } from '../Post.model';
 import { Outlet } from '../outlet/Outlet.model';
 
 @Table({
@@ -14,15 +15,13 @@ import { Outlet } from '../outlet/Outlet.model';
   paranoid: true,
   timestamps: true,
 })
-export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCreationAttributes> implements SourceWithOutletName {
+export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreationAttributes> implements SourceAttributes {
   
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
     outletId: number;
-  
-  outletName: string;
 
   @Column({
     allowNull: false,
@@ -48,6 +47,8 @@ export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCr
     type: DataType.STRING(1024),
   })
     originalTitle: string;
+
+  outletName: string;
   
   @AfterFind
   static async addOutletName(cursor?: Source | Source[]) {
@@ -63,6 +64,36 @@ export class Source extends TitledCategorizedPost<SourceWithOutletName, SourceCr
       const outlet = outlets.find((o) => o.id === source.toJSON().outletId);
       source.set('outletName', outlet?.toJSON().name ?? '', { raw: true });
     });
+  }
+
+  @AfterFind
+  static async addInteractions(cursor?: Source | Source[]) {
+    if (!cursor) {
+      return;
+    }
+    const sources = Array.isArray(cursor) ? cursor : [cursor];
+    const sourceIds = sources.map((source) => {
+      return source.toJSON().id;
+    });
+    const interactions = await SourceInteraction.findAll({ where: { targetId: sourceIds } });
+    sources.forEach((source) => {
+      const newInteractionMap = {
+        bookmark: [],
+        comment: [],
+        impression: [],
+        like: [],
+        share: [],
+        view: [],
+      };
+      interactions.forEach((interaction) => {
+        const interactionJson = interaction.toJSON();
+        if (interactionJson.targetId === source.id) {
+          newInteractionMap[interactionJson.type].push(interactionJson);
+        }
+      });
+      source.set('interactions', newInteractionMap, { raw: true });
+    });
+    
   }
 
 }

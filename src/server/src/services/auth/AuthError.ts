@@ -32,7 +32,7 @@ type AuthErrorOptions = {
   code: number;
   statusCode: number;
   message: string;
-}
+};
 
 export class AuthError extends Error implements AuthErrorOptions {
   

@@ -20,7 +20,7 @@ const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 const StyledAlternateCard = styled(StyledStack)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
-  color:  theme.palette.primary.contrastText,
+  color: theme.palette.primary.contrastText,
   height: '100%',
   justifyContent: 'space-evenly',
   padding: theme.spacing(2),

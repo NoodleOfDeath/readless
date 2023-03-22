@@ -1,7 +1,7 @@
 import { Table } from 'sequelize-typescript';
 
 import { ArticleAttributes, ArticleCreationAttributes } from './Article.types';
-import { TitledCategorizedPost } from '../Post';
+import { TitledCategorizedPost } from '../Post.model';
 
 @Table({
   modelName: 'article',

@@ -5,7 +5,7 @@ import {
 } from 'sequelize-typescript';
 
 import { ReferralAttributes, ReferralCreationAttributes } from './Referral.types';
-import { BaseModel } from '../../base';
+import { BaseModel } from '../base';
 
 @Table({
   modelName: 'referral',

@@ -1,12 +1,11 @@
 import 'dotenv/config';
-import jwt from 'jsonwebtoken';
-
 import {
   describe,
   expect,
   jest,
   test,
 } from '@jest/globals';
+import jwt from 'jsonwebtoken';
 
 jest.setTimeout(30_000);
 
@@ -14,9 +13,9 @@ describe('experiments with jwt', () => {
 
   test('jwt test', () => {
     const payload = () => ({
-      userId: 20,
-      priority: 10,
       expiresAt: new Date(),
+      priority: 10,
+      userId: 20,
     });
     try {
       const a = jwt.sign(payload(), process.env.JWT_SECRET, { expiresIn: '1d' });

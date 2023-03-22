@@ -5,7 +5,7 @@ import { BaseService } from '../base';
 type GoogleServiceOptions = {
   clientId?: string;
   clientSecret?: string;
-}
+};
 
 export class GoogleService extends BaseService {
 

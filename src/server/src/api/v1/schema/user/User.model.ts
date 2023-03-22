@@ -3,21 +3,33 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
-import { Alias } from './Alias.model';
+import { SchemaError } from './../types';
+import { AuthError } from '../../../../services';
+import { Jwt } from '../../../../services/types';
+import { BaseModel } from '../base';
+import { Interaction } from '../interaction/Interaction.model';
+import {
+  Alias,
+  ArticleInteraction,
+  Credential,
+  RefUserRole,
+  Role,
+  SourceInteraction,
+} from '../models';
 import {
   AliasCreationAttributes,
   AliasPayload,
   AliasType,
+  CredentialCreationAttributes,
+  CredentialType,
   FindAliasOptions,
-} from './Alias.types';
-import { RefUserRole } from './RefUserRole.model';
-import { UserAttributes, UserCreationAttributes } from './User.types';
-import { AuthError } from '../../../../services';
-import { Jwt } from '../../../../services/types';
-import { Credential } from '../auth/Credential.model';
-import { CredentialCreationAttributes, CredentialType } from '../auth/Credential.types';
-import { BaseModel } from '../base';
-import { Role } from '../models';
+  InteractionType,
+  InteractionValue,
+  ResourceSpecifier,
+  ResourceType,
+  UserAttributes,
+  UserCreationAttributes,
+} from '../types';
 
 @Table({
   modelName: 'user',
@@ -172,6 +184,28 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }
     const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.id } });
     return count;
+  } 
+  
+  public async interactWith<R extends ResourceType, T extends InteractionType>(resource: ResourceSpecifier<R>, type: T, value?: InteractionValue<T>) {
+    let interaction: Interaction;
+    if (resource.type === 'article') {
+      interaction = await ArticleInteraction.findOne({
+        where: {
+          targetId: resource.id, type, userId: this.id, 
+        }, 
+      });
+    } else
+    if (resource.type === 'source') {
+      interaction = await SourceInteraction.findOne({
+        where: {
+          targetId: resource.id, type, userId: this.id, 
+        }, 
+      });
+    }
+    if (!interaction) {
+      throw new SchemaError('Unknown interaction type');
+    }
+    return await interaction?.apply(value);
   }
 
 }

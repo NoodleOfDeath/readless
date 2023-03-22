@@ -1,7 +1,9 @@
 import { Op } from 'sequelize';
 import {
+  Body,
   Get,
   Path,
+  Post,
   Query,
   Route,
   Tags,
@@ -10,10 +12,14 @@ import {
 import {
   BulkResponse,
   FindAndCountOptions,
+  InteractionRequest,
+  InteractionResponse,
+  InteractionType,
   SOURCE_ATTRS,
   Source,
-  SourceWithOutletAttr,
-  SourceWithOutletName,
+  SourceAttr,
+  SourceAttributes,
+  User,
 } from '../../schema';
 
 function applyFilter(filter?: string) {
@@ -47,7 +53,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SourceWithOutletAttr>> {
+  ): Promise<BulkResponse<SourceAttr>> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
@@ -67,7 +73,7 @@ export class SourceController {
     @Query() offset = pageSize * page
   ): Promise<{
     count: number;
-    rows: SourceWithOutletAttr[];
+    rows: SourceAttr[];
   }> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
@@ -87,7 +93,7 @@ export class SourceController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SourceWithOutletAttr>> {
+  ): Promise<BulkResponse<SourceAttr>> {
     const options: FindAndCountOptions<Source> = {
       attributes: [...SOURCE_ATTRS],
       limit: pageSize,
@@ -103,7 +109,7 @@ export class SourceController {
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string
-  ): Promise<SourceWithOutletName> {
+  ): Promise<SourceAttributes> {
     const options: FindAndCountOptions<Source> = {
       where: {
         category,
@@ -112,6 +118,17 @@ export class SourceController {
       },
     };
     return await Source.findOne(options);
+  }
+  
+  @Post('/interact/:targetId/:type')
+  public async interactWithSource(
+    @Path() targetId: number,
+    @Path() type: InteractionType,
+    @Body() body: InteractionRequest
+  ): Promise<InteractionResponse> {
+    const { user } = await User.from(body);
+    console.log(user);
+    return { id: 0 };
   }
 
 }

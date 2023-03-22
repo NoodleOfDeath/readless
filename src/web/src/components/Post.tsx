@@ -22,7 +22,7 @@ import {
 import { formatDistance } from 'date-fns';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
-import { SourceWithOutletAttr, SourceWithOutletName } from '@/api';
+import { SourceAttr } from '@/api';
 import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
 import TruncatedText from '@/components/common/TruncatedText';
 
@@ -36,7 +36,7 @@ export const CONSUMPTION_MODES = [
 export type ConsumptionMode = (typeof CONSUMPTION_MODES)[number];
 
 type Props = {
-  source?: SourceWithOutletAttr | SourceWithOutletName;
+  source?: SourceAttr;
   consumptionMode?: ConsumptionMode;
   onChange?: (mode?: ConsumptionMode) => void;
 };
@@ -70,10 +70,10 @@ const StyledConsumptionModeContainer = styled(({
   theme, consumptionMode, mdAndUp, 
 }) => ({
   borderRadius: 8,
-  bottom: consumptionMode && !mdAndUp  ? theme.spacing(4) : undefined,
+  bottom: consumptionMode && !mdAndUp ? theme.spacing(4) : undefined,
   position: consumptionMode ? 'fixed' : 'relative',
-  right: consumptionMode && mdAndUp  ? theme.spacing(4) : undefined,
-  top: consumptionMode && mdAndUp  ? theme.spacing(10) : undefined,
+  right: consumptionMode && mdAndUp ? theme.spacing(4) : undefined,
+  top: consumptionMode && mdAndUp ? theme.spacing(10) : undefined,
 }));
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({

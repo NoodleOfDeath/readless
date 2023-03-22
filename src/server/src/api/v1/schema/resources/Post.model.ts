@@ -7,6 +7,7 @@ import {
   TitledCategorizedPostCreationAttributes,
 } from './Post.types';
 import { BaseModel } from '../base';
+import { InteractionAttributes, InteractionType } from '../types';
 
 export abstract class Post<
     A extends PostAttributes = PostAttributes,
@@ -55,9 +56,7 @@ export abstract class Post<
 
 export abstract class TitledCategorizedPost<
     A extends TitledCategorizedPostAttributes = TitledCategorizedPostAttributes,
-    B extends TitledCategorizedPostCreationAttributes = TitledCategorizedPostCreationAttributes,
-  >
-  extends Post<A, B>
+    B extends TitledCategorizedPostCreationAttributes = TitledCategorizedPostCreationAttributes> extends Post<A, B>
   implements TitledCategorizedPostAttributes {
 
   @Column({
@@ -83,5 +82,14 @@ export abstract class TitledCategorizedPost<
     type: DataType.ARRAY(DataType.STRING),
   })
     tags: string[];
+
+  interactions: { [key in InteractionType]: InteractionAttributes[] } = {
+    'bookmark': [],
+    'comment': [],
+    impression: [],
+    'like': [],
+    'share': [],
+    view: [],
+  };
 
 }

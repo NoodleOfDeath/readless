@@ -1,4 +1,4 @@
-import { DatedAttributes } from '../../types';
+import { DatedAttributes } from '../types';
 
 export type ReferralAttributes = DatedAttributes & {
   /** id of a user if ref link was created while logged in */

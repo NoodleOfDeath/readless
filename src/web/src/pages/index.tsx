@@ -16,21 +16,21 @@ import SuccessPage from '@/pages/success/SuccessPage';
 import TermsPage from '@/pages/terms/TermsPage';
 
 export const ROUTES: Record<string, React.ReactNode> = {
-  '/':                  <HomePage />,
-  '/*':                 <Error404NotFoundPage />,
-  '/about':             <AboutPage />,
-  '/error':             <ErrorPage />,
-  '/forgot':            <ForgotPage />,
-  '/login':             <LoginPage />,
-  '/logout':            <ContemplatingPage />,
-  '/privacy':           <PrivacyPage />,
-  '/profile':           <ProfilePage />,
-  '/reset-password':    <ResetPasswordPage />,
-  '/search':            <SearchPage />,
-  '/signup':            <LoginPage action={ 'signUp' } />,
-  '/success':           <SuccessPage />,
-  '/terms':             <TermsPage />,
-  '/verify':            <ContemplatingPage />,
+  '/': <HomePage />,
+  '/*': <Error404NotFoundPage />,
+  '/about': <AboutPage />,
+  '/error': <ErrorPage />,
+  '/forgot': <ForgotPage />,
+  '/login': <LoginPage />,
+  '/logout': <ContemplatingPage />,
+  '/privacy': <PrivacyPage />,
+  '/profile': <ProfilePage />,
+  '/reset-password': <ResetPasswordPage />,
+  '/search': <SearchPage />,
+  '/signup': <LoginPage action={ 'signUp' } />,
+  '/success': <SuccessPage />,
+  '/terms': <TermsPage />,
+  '/verify': <ContemplatingPage />,
 };
 
 export type AppPathName = keyof typeof ROUTES;

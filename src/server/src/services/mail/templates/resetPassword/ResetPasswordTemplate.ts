@@ -3,7 +3,7 @@ import { MailTemplate, MailTemplateParams } from '../base';
 
 export type ResetPasswordProps = MailTemplateParams & {
   otp: string;
-}
+};
 
 export class ResetPasswordTemplate extends MailTemplate<ResetPasswordProps> {
 

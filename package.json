@@ -29,6 +29,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/eslint-plugin": "^7.19.1",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.55.0",
     "eslint": "^8.0.1",
@@ -41,9 +42,11 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.0.0",
     "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "eslint-scope": "^7.1.1",
     "husky": "^8.0.3",
     "prettier": "^2.8.4",
-    "typescript": "*"
+    "typescript": "*",
+    "yarn": "^1.22.19"
   },
   "dependencies": {}
 }
