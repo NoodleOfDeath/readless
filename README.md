@@ -40,6 +40,8 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 - [ ] Email notifications
 - [ ] Daily (eventually customizable) newsletters with headlines
+- [ ] Subscription to topics, threads, and/or keywords
+- [ ] Advanced search/filters
 
 ### v1.4.0 - Mobile App
 
@@ -58,16 +60,22 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 - [ ] First release to the app stores
 - [ ] Launch of referral and pre-loyalty programs
 
-### v1.5.0
+### v1.5.0 - Advanced Interactions
 
 - [ ] Adding of comments and messaging support (hopefully will not be a heavy lift as moderation could be outsourced to ChatGPT)
-- [ ] Push notifications with Firebase
+- [ ] Adding of following users/friends (see the news articles your friends interact with in realtime)
 
-### v1.6.0
+### v1.6.0 - Advanced Notifications
+
+- [ ] Push notifications with Firebase
+- [ ] Text notifications
+- [ ] 2-factor authentication with text and/or authenticator applications
+
+### v2.0.0 - Enhanced Discover Page
 
 - [ ] Conversion of Discover page to match the trending style of "Following" and "For You" in the example of social media apps like Instagram and TikTok
 
-### v2.0.0
+### v2.1.0 - Cross-Comparative Article Generation
 
 - [ ] Cross-comparative comprehensive article generation that accounts for multiple sources writing about the same topic
 - [ ] Launch of Tier 1 premium membership program
