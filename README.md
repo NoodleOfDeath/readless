@@ -82,11 +82,11 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 - [ ] Adding of In-App subscriptions for premium members and content
 - [ ] Launching of loyalty and referral program
 
-### v2.1.0
+### v2.1.0 - Shit is getting realllllll
 
 - [ ] On-demand cross comparative summaries of articles by registered users (up to a free credit limit per month)
 
-### v3.0.0
+### v3.0.0 - Who the f**k knew we would make it this far?!
 
 - [ ] Launch of Tier 2 premium membership program
 - [ ] News coverage search and metrics for Tier 2 membership
@@ -96,7 +96,8 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 First add the `bin` directory to your executable `PATH`:
 
 ```bash
-theskoop $ export PATH=\$PATH:~/git/noodleofdeath/theskoop/bin
+theskoop $ export SKOOP_HOME=~/git/noodleofdeath/theskoop
+theskoop $ export PATH=\$PATH:\$SKOOP_HOME/bin
 ```
 
 ### Web Client
