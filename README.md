@@ -23,16 +23,16 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ### v1.1.0
 
+- [x] User account registration/login + third-party login support
+- [ ] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
+
+### v1.2.0
+
 - [ ] Onboarding carousel for mobile app
 - [ ] Onboarding guide for web app
 - [ ] Basic settings/preferences
 - [ ] Minor UI touch ups
 - [ ] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
-
-### v1.2.0
-
-- [x] User account registration/login + third-party login support
-- [ ] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
 ### v1.3.0
 
