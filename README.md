@@ -15,42 +15,51 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ## Roadmap
 
-### v1.0.0
+### v1.0.0 (MVP and POC)
 
 - [x] Automated summarization of news articles in various consumption lengths
 - [x] Basic MVP of web and mobile UI that can fetch results and view different length summaries
 - [x] Add newsletter on web app for users to receive email progress updates
 
-### v1.1.0
+### v1.1.0 (User Accounts)
 
 - [x] User account registration/login + third-party login support
 - [ ] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
-### v1.2.0
-
-- [ ] Onboarding carousel for mobile app
-- [ ] Onboarding guide for web app
-- [ ] Basic settings/preferences
-- [ ] Minor UI touch ups
-- [ ] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
-
-### v1.3.0
+### v1.2.0 (Interactions)
 
 - [ ] Add support for interactions such as likes, dislikes, shares, reposts, and following other users
 - [ ] Add support for users to provide feedback about articles
 - [ ] Add support for users to flag articles as false, low-quality, etc.
 - [ ] Bounty/training/feedback program will play an important role in the loyalty and beta test programs
 
-### v1.3.1
+### v1.3.0 (Notifications/Newletters)
+
+- [ ] Email notifications
+- [ ] Daily (eventually customizable) newsletters with headlines
+
+### v1.4.0 (Mobile App)
+
+- [ ] Onboarding carousel for mobile app
+- [ ] Onboarding guide for web app
+- [ ] Basic settings/preferences
+- [ ] Interactions
+- [ ] Profile page
+- [ ] Activity history
+- [ ] Minor UI touch ups
+- [ ] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
+
+### v1.4.1
 
 - [ ] First release to the app stores
 - [ ] Launch of referral and pre-loyalty programs
 
-### v1.4.0
+### v1.5.0
 
 - [ ] Adding of comments and messaging support (hopefully will not be a heavy lift as moderation could be outsourced to ChatGPT)
+- [ ] Push notifications with Firebase
 
-### v1.5.0
+### v1.6.0
 
 - [ ] Conversion of Discover page to match the trending style of "Following" and "For You" in the example of social media apps like Instagram and TikTok
 
