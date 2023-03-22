@@ -85,6 +85,7 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 ### v2.1.0 - Shit is getting realllllll
 
 - [ ] On-demand cross comparative summaries of articles by registered users (up to a free credit limit per month)
+- [ ] Audio options for listening to sources and articles using text-to-speech
 
 ### v3.0.0 - Who the f**k knew we would make it this far?!
 
