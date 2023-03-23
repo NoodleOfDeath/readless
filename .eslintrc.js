@@ -5,9 +5,29 @@ module.exports = {
     node: true,
   },
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
-  overrides: [],
+  overrides: [
+    {
+      files: ['*.md'],
+      processor: 'markdown/markdown',
+      rules: {
+        'no-undef': 'off',
+        // Add any other rules you want to disable for Markdown files
+      },
+    },
+    {
+      // 3. Optionally, customize the configuration ESLint uses for ```js
+      // fenced code blocks inside .md files.
+      files: ['**/*.md/*.js'],
+    },
+  ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'import', 'import-newlines', 'sort-keys-fix'],
+  plugins: [
+    'markdown',
+    '@typescript-eslint',
+    'import',
+    'import-newlines',
+    'sort-keys-fix',
+  ],
   rules: {
     '@typescript-eslint/no-unused-vars': [
       'warn', // or "error"

@@ -11,6 +11,7 @@ on:
       - 'k8s/worker-deploy.yaml'
       - 'src/server/package.json'
       - 'src/server/src/worker/**'
+      - 'src/server/src/services/**'
 
 concurrency:
   group: ${{ github.ref }}-worker

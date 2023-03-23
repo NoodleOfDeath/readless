@@ -11,6 +11,7 @@ on:
       - 'k8s/cron-deploy.yaml'
       - 'src/server/package.json'
       - 'src/server/src/cron/**'
+      - 'src/server/src/services/**'
 
 concurrency:
   group: ${{ github.ref }}-cron
