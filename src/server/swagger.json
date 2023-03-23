@@ -1,0 +1,2184 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"AuthError": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					},
+					"statusCode": {
+						"type": "number",
+						"format": "double"
+					},
+					"code": {
+						"type": "number",
+						"format": "double"
+					},
+					"errorKey": {
+						"type": "string",
+						"enum": [
+							"ALREADY_LOGGED_IN",
+							"BAD_REQUEST",
+							"DUPLICATE_USER",
+							"EXPIRED_CREDENTIALS",
+							"EXPIRED_VERIFICATION_CODE",
+							"INSUFFICIENT_PERMISSIONS",
+							"INVALID_CREDENTIALS",
+							"INVALID_PASSWORD",
+							"MISSING_AUTHORIZATION_HEADER",
+							"MISSING_PASSWORD",
+							"NO_THIRD_PARTY_ALIAS",
+							"STALE_VERIFICATION_CODE",
+							"THIRD_PARTY_ALIAS_NOT_VERIFIED",
+							"UNKNOWN_ALIAS",
+							"UNKNOWN_ROLE",
+							"UNREFRESHABLE_JWT"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"statusCode",
+					"code",
+					"errorKey"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"JwtTokenResponse": {
+				"properties": {
+					"value": {
+						"type": "string"
+					},
+					"priority": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"value",
+					"priority"
+				],
+				"type": "object"
+			},
+			"RegistrationResponse": {
+				"properties": {
+					"token": {
+						"$ref": "#/components/schemas/JwtTokenResponse"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object"
+			},
+			"ThirdParty": {
+				"type": "string",
+				"enum": [
+					"google"
+				],
+				"nullable": false
+			},
+			"ThirdPartyAuth": {
+				"properties": {
+					"credential": {
+						"type": "string"
+					},
+					"userId": {
+						"anyOf": [
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{
+								"type": "string"
+							}
+						]
+					},
+					"name": {
+						"$ref": "#/components/schemas/ThirdParty"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object"
+			},
+			"Partial_RegistrationRequest_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2Address": {
+						"type": "string"
+					},
+					"otp": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"username": {
+						"type": "string"
+					},
+					"thirdParty/google": {
+						"type": "string"
+					},
+					"eth2SignedMessage": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"LoginResponse": {
+				"properties": {
+					"token": {
+						"$ref": "#/components/schemas/JwtTokenResponse"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"token",
+					"userId"
+				],
+				"type": "object"
+			},
+			"Partial_LoginRequest_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2Address": {
+						"type": "string"
+					},
+					"otp": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"username": {
+						"type": "string"
+					},
+					"thirdParty/google": {
+						"type": "string"
+					},
+					"eth2SignedMessage": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"requestedRole": {
+						"type": "string"
+					},
+					"requestedScope": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"LogoutResponse": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"count",
+					"success"
+				],
+				"type": "object"
+			},
+			"Partial_LogoutRequest_": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"token": {
+						"type": "string"
+					},
+					"force": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"GenerateOTPResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object"
+			},
+			"Partial_GenerateOTPRequest_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2Address": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"username": {
+						"type": "string"
+					},
+					"thirdParty/google": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"VerifyAliasResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object"
+			},
+			"Partial_VerifyAliasRequest_": {
+				"properties": {
+					"verificationCode": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"VerifyOTPResponse": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"token": {
+						"$ref": "#/components/schemas/JwtTokenResponse"
+					}
+				},
+				"required": [
+					"userId",
+					"token"
+				],
+				"type": "object"
+			},
+			"Partial_VerifyOTPRequest_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"eth2Address": {
+						"type": "string"
+					},
+					"otp": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"thirdParty": {
+						"$ref": "#/components/schemas/ThirdPartyAuth"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"username": {
+						"type": "string"
+					},
+					"thirdParty/google": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"UpdateCredentialResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object"
+			},
+			"Partial_UpdateCredentialRequest_": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"Attr_ArticleAttributes.(typeofARTICLE_ATTRS)%5Bnumber%5D_": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"abridged": {
+						"type": "string"
+					},
+					"summary": {
+						"type": "string"
+					},
+					"shortSummary": {
+						"type": "string"
+					},
+					"bullets": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"subcategory": {
+						"type": "string"
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"abridged",
+					"summary",
+					"shortSummary",
+					"bullets",
+					"title",
+					"category",
+					"subcategory",
+					"tags"
+				],
+				"type": "object"
+			},
+			"ArticleAttr": {
+				"$ref": "#/components/schemas/Attr_ArticleAttributes.(typeofARTICLE_ATTRS)%5Bnumber%5D_"
+			},
+			"BulkResponse_ArticleAttr_": {
+				"properties": {
+					"rows": {
+						"items": {
+							"$ref": "#/components/schemas/ArticleAttr"
+						},
+						"type": "array"
+					},
+					"count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"rows",
+					"count"
+				],
+				"type": "object"
+			},
+			"DatedAttributes": {
+				"properties": {
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id"
+				],
+				"type": "object"
+			},
+			"PostAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"imagePrompt": {
+								"type": "string"
+							},
+							"bullets": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
+							"shortSummary": {
+								"type": "string"
+							},
+							"summary": {
+								"type": "string"
+							},
+							"abridged": {
+								"type": "string"
+							},
+							"text": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"imagePrompt",
+							"bullets",
+							"shortSummary",
+							"summary",
+							"abridged",
+							"text"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"ValuesOfKeys_typeofINTERACTION_TYPES_": {
+				"type": "string",
+				"enum": [
+					"bookmark",
+					"comment",
+					"impression",
+					"like",
+					"share",
+					"view"
+				]
+			},
+			"InteractionType": {
+				"$ref": "#/components/schemas/ValuesOfKeys_typeofINTERACTION_TYPES_"
+			},
+			"InteractionAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"value": {
+								"type": "string",
+								"description": "value associated with the interaction"
+							},
+							"type": {
+								"$ref": "#/components/schemas/InteractionType",
+								"description": "type of this interaction"
+							},
+							"targetId": {
+								"type": "number",
+								"format": "double",
+								"description": "id of the target of this interaction"
+							},
+							"userId": {
+								"type": "number",
+								"format": "double",
+								"description": "user that made this interaction *"
+							}
+						},
+						"required": [
+							"type",
+							"targetId",
+							"userId"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"Record_InteractionType.InteractionAttributes-Array_": {
+				"properties": {
+					"bookmark": {
+						"items": {
+							"$ref": "#/components/schemas/InteractionAttributes"
+						},
+						"type": "array"
+					},
+					"comment": {
+						"items": {
+							"$ref": "#/components/schemas/InteractionAttributes"
+						},
+						"type": "array"
+					},
+					"impression": {
+						"items": {
+							"$ref": "#/components/schemas/InteractionAttributes"
+						},
+						"type": "array"
+					},
+					"like": {
+						"items": {
+							"$ref": "#/components/schemas/InteractionAttributes"
+						},
+						"type": "array"
+					},
+					"share": {
+						"items": {
+							"$ref": "#/components/schemas/InteractionAttributes"
+						},
+						"type": "array"
+					},
+					"view": {
+						"items": {
+							"$ref": "#/components/schemas/InteractionAttributes"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"TitledCategorizedPostAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/PostAttributes"
+					},
+					{
+						"properties": {
+							"interactions": {
+								"$ref": "#/components/schemas/Record_InteractionType.InteractionAttributes-Array_"
+							},
+							"tags": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
+							"subcategory": {
+								"type": "string"
+							},
+							"category": {
+								"type": "string"
+							},
+							"title": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"interactions",
+							"tags",
+							"subcategory",
+							"category",
+							"title"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"ArticleAttributes": {
+				"$ref": "#/components/schemas/TitledCategorizedPostAttributes"
+			},
+			"Attr_Source.typeofSOURCE_ATTRS-at-number_": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"abridged": {
+						"type": "string"
+					},
+					"summary": {
+						"type": "string"
+					},
+					"shortSummary": {
+						"type": "string"
+					},
+					"bullets": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"createdAt": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{}
+						]
+					},
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"subcategory": {
+						"type": "string"
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"outletId": {
+						"type": "number",
+						"format": "double"
+					},
+					"url": {
+						"type": "string"
+					},
+					"originalTitle": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"abridged",
+					"summary",
+					"shortSummary",
+					"bullets",
+					"title",
+					"category",
+					"subcategory",
+					"tags",
+					"outletId",
+					"url",
+					"originalTitle"
+				],
+				"type": "object"
+			},
+			"SourceAttrRaw": {
+				"$ref": "#/components/schemas/Attr_Source.typeofSOURCE_ATTRS-at-number_"
+			},
+			"SourceAttr": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SourceAttrRaw"
+					},
+					{
+						"properties": {
+							"outletName": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"outletName"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"BulkResponse_SourceAttr_": {
+				"properties": {
+					"rows": {
+						"items": {
+							"$ref": "#/components/schemas/SourceAttr"
+						},
+						"type": "array"
+					},
+					"count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"rows",
+					"count"
+				],
+				"type": "object"
+			},
+			"SourceAttributesRaw": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/TitledCategorizedPostAttributes"
+					},
+					{
+						"properties": {
+							"originalTitle": {
+								"type": "string"
+							},
+							"filteredText": {
+								"type": "string"
+							},
+							"rawText": {
+								"type": "string"
+							},
+							"url": {
+								"type": "string"
+							},
+							"outletId": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"originalTitle",
+							"filteredText",
+							"rawText",
+							"url",
+							"outletId"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"SourceAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/SourceAttributesRaw"
+					},
+					{
+						"properties": {
+							"outletName": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"outletName"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"InteractionResponse": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id"
+				],
+				"type": "object"
+			},
+			"InteractionRequest": {
+				"properties": {
+					"value": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object"
+			},
+			"SubscriptionAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"newsletterId": {
+								"type": "number",
+								"format": "double"
+							},
+							"alias": {
+								"type": "string"
+							},
+							"aliasType": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"newsletterId",
+							"alias",
+							"aliasType"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"SubscriptionCreationAttributes": {
+				"properties": {
+					"newsletterName": {
+						"type": "string"
+					},
+					"newsletterId": {
+						"type": "number",
+						"format": "double"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"aliasType": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"alias",
+					"aliasType"
+				],
+				"type": "object"
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"MetricAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"userAgent": {
+								"type": "string",
+								"description": "the user agent info of the consumer of this referral"
+							},
+							"referrer": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array",
+								"description": "ip address(es) of actor"
+							},
+							"data": {
+								"$ref": "#/components/schemas/Record_string.unknown_"
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"click",
+									"nav"
+								]
+							}
+						},
+						"required": [
+							"userAgent",
+							"data",
+							"type"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"MetricCreationAttributes": {
+				"properties": {
+					"userAgent": {
+						"type": "string",
+						"description": "the user agent info of the consumer of this referral"
+					},
+					"referrer": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "ip address(es) of actor"
+					},
+					"data": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"click",
+							"nav"
+						]
+					}
+				},
+				"required": [
+					"userAgent",
+					"data",
+					"type"
+				],
+				"type": "object"
+			},
+			"PolicyAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"content": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"content",
+							"name"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"ReferralAttributes": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/DatedAttributes"
+					},
+					{
+						"properties": {
+							"geolocation": {
+								"type": "string",
+								"description": "geolocation of the referrer"
+							},
+							"userAgent": {
+								"type": "string",
+								"description": "the user agent info of the consumer of this referral"
+							},
+							"target": {
+								"type": "string",
+								"description": "the url path of the referral destination"
+							},
+							"origin": {
+								"type": "string",
+								"description": "the url path this referral was generated from"
+							},
+							"remoteAddr": {
+								"type": "string",
+								"description": "the IP address this referral was accessed from"
+							},
+							"referredById": {
+								"type": "number",
+								"format": "double",
+								"description": "id of a user if ref link was created while logged in"
+							}
+						},
+						"required": [
+							"userAgent",
+							"target",
+							"remoteAddr"
+						],
+						"type": "object"
+					}
+				]
+			},
+			"ReferralCreationAttributes": {
+				"properties": {
+					"geolocation": {
+						"type": "string",
+						"description": "geolocation of the referrer"
+					},
+					"userAgent": {
+						"type": "string",
+						"description": "the user agent info of the consumer of this referral"
+					},
+					"target": {
+						"type": "string",
+						"description": "the url path of the referral destination"
+					},
+					"origin": {
+						"type": "string",
+						"description": "the url path this referral was generated from"
+					},
+					"remoteAddr": {
+						"type": "string",
+						"description": "the IP address this referral was accessed from"
+					},
+					"referredById": {
+						"type": "number",
+						"format": "double",
+						"description": "id of a user if ref link was created while logged in"
+					}
+				},
+				"required": [
+					"userAgent",
+					"target",
+					"remoteAddr"
+				],
+				"type": "object"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "theskoop-api",
+		"version": "0.0.1",
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/v1/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RegistrationResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_RegistrationRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_LoginRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"204": {
+						"description": "No Content",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LogoutResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_LogoutRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/otp": {
+			"post": {
+				"operationId": "GenerateOTP",
+				"responses": {
+					"201": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GenerateOTPResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_GenerateOTPRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/verify/alias": {
+			"post": {
+				"operationId": "VerifyAlias",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VerifyAliasResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_VerifyAliasRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/verify/otp": {
+			"post": {
+				"operationId": "VerifyOTP",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VerifyOTPResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_VerifyOTPRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/account/update/credential": {
+			"put": {
+				"operationId": "UpdateCredential",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateCredentialResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Account"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_UpdateCredentialRequest_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/articles": {
+			"get": {
+				"operationId": "GetArticles",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BulkResponse_ArticleAttr_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/articles/{category}": {
+			"get": {
+				"operationId": "GetArticlesForCategory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BulkResponse_ArticleAttr_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/articles/{category}/{subcategory}": {
+			"get": {
+				"operationId": "GetArticlesForCategoryAndSubcategory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BulkResponse_ArticleAttr_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "subcategory",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/articles/{category}/{subcategory}/{title}": {
+			"get": {
+				"operationId": "GetArticleForCategoryAndSubcategoryAndTitle",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ArticleAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "subcategory",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "title",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/v1/sources": {
+			"get": {
+				"operationId": "GetSources",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BulkResponse_SourceAttr_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Sources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/sources/{category}": {
+			"get": {
+				"operationId": "GetSourcesForCategory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"rows": {
+											"items": {
+												"$ref": "#/components/schemas/SourceAttr"
+											},
+											"type": "array"
+										},
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"rows",
+										"count"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Sources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/sources/{category}/{subcategory}": {
+			"get": {
+				"operationId": "GetSourcesForCategoryAndSubcategory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BulkResponse_SourceAttr_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Sources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "subcategory",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/v1/sources/{category}/{subcategory}/{title}": {
+			"get": {
+				"operationId": "GetSourceForCategoryAndSubcategoryAndTitle",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SourceAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Sources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "subcategory",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "title",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/v1/sources/interact/{targetId}/{type}": {
+			"post": {
+				"operationId": "InteractWithSource",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InteractionResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Sources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "targetId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "path",
+						"name": "type",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/InteractionType"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InteractionRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/newsletter/subscribe": {
+			"post": {
+				"operationId": "SubscribeToNewsletter",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SubscriptionAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Newsletters"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubscriptionCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/newsletter/unsubscribe": {
+			"post": {
+				"operationId": "UnsubscribeFromNewsletter",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"Newsletters"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubscriptionCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/metrics": {
+			"post": {
+				"operationId": "RecordMetric",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MetricAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Metricss"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MetricCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/policies/privacy": {
+			"get": {
+				"operationId": "GetPrivacyPolicy",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PolicyAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Policies"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/v1/policies/terms": {
+			"get": {
+				"operationId": "GetTermsOfService",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PolicyAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Policies"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/v1/referrals": {
+			"post": {
+				"operationId": "RecordReferral",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ReferralAttributes"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Referrals"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReferralCreationAttributes"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

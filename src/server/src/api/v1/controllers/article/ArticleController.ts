@@ -1,9 +1,7 @@
 import { Op } from 'sequelize';
 import {
-  Body,
   Get,
   Path,
-  Post,
   Query,
   Route,
   Tags,

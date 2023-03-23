@@ -7,7 +7,7 @@ import {
   Outlet,
   SiteMapParams,
   Source,
-} from '../api/v1/schema/models';
+} from '../api/v1/schema';
 import {
   DBService,
   QUEUES,

@@ -127,7 +127,8 @@ export class SourceController {
     @Body() body: InteractionRequest
   ): Promise<InteractionResponse> {
     const { user } = await User.from(body);
-    console.log(user);
+    const { value } = body;
+    await user.interactWith({ id: targetId, type: 'source' }, type, value);
     return { id: 0 };
   }
 

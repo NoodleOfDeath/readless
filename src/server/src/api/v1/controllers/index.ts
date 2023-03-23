@@ -1,11 +1,10 @@
-export * from './auth';
-
 export * from './account';
-export * from './articles';
-export * from './sources';
+
+export * from './article';
+export * from './source';
 
 export * from './newsletter';
 
-export * from './metrics';
-export * from './policies';
-export * from './referrals';
+export * from './metric';
+export * from './policy';
+export * from './referral';
