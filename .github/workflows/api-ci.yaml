@@ -7,6 +7,7 @@ on:
       - dev
     paths:
       - '.github/workflows/api-ci.yaml'
+      - 'package.json'
       - 'Dockerfile.api'
       - 'k8s/api-deploy.yaml'
       - 'src/server/package.json'

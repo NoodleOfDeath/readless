@@ -7,6 +7,7 @@ on:
       - dev
     paths:
       - '.github/workflows/worker-ci.yaml'
+      - 'package.json'
       - 'Dockerfile.worker'
       - 'k8s/worker-deploy.yaml'
       - 'src/server/package.json'

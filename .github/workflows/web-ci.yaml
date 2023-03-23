@@ -7,6 +7,7 @@ on:
       - dev
     paths:
       - '.github/workflows/web-ci.yaml'
+      - 'package.json'
       - 'Dockerfile.web'
       - 'k8s/web-deploy.yaml'
       - 'src/web/package.json'

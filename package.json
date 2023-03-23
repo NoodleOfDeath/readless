@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "install": "yarn install:server && yarn install:web && yarn install:mobile",
+    "install:all": "yarn install:server && yarn install:web && yarn install:mobile",
     "install:server": "(cd src/server && yarn install)",
     "install:web": "(cd src/web && yarn install)",
     "install:mobile": "(cd src/mobile && yarn install)",
