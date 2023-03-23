@@ -29,7 +29,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/eslint-plugin": "^7.19.1",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.55.0",
     "eslint": "^8.0.1",

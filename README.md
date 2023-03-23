@@ -27,7 +27,8 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 - [x] Third-party login support
 - [x] Access token based login
 - [x] Role-Based Access Control (RBAC)
-- [ ] Improved pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
+- [x] Remove dependency on redis
+- [ ] Improve pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
 ### v1.2.0 - Interactions
 
@@ -87,7 +88,7 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 - [ ] On-demand cross comparative summaries of articles by registered users (up to a free credit limit per month)
 - [ ] Audio options for listening to sources and articles using text-to-speech
 
-### v3.0.0 - Who the f**k knew we would make it this far?!
+### v3.0.0 - Who the f\*\*k knew we would make it this far?!
 
 - [ ] Launch of Tier 2 premium membership program
 - [ ] News coverage search and metrics for Tier 2 membership
