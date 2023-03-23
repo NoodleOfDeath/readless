@@ -61,7 +61,9 @@ async function main() {
     limit: 200,
     path: '',
   }));
+
   app.use('/v1', v1router);
+  app.use(express.static('/v1/docs'));
   
   app.use('*', (_, res) => {
     res.status(404).json({ message: 'Bad Request' });

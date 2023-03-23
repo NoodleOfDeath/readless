@@ -1,4 +1,4 @@
-# theSkoop
+# theSkoop <!-- omit in toc -->
 
 [![Web Client CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/web-ci.yaml)
 [![Mobile Client CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/mobile-ci.yaml)
@@ -15,26 +15,25 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ## Table of Contents <!-- omit in toc -->
 
-- [theSkoop](#theskoop)
-  - [Roadmap](#roadmap)
-    - [v1.0.0 - MVP and POC](#v100---mvp-and-poc)
-    - [v1.1.0 - User Accounts](#v110---user-accounts)
-    - [v1.2.0 - Interactions](#v120---interactions)
-    - [v1.3.0 - Notifications/Newletters](#v130---notificationsnewletters)
-    - [v1.4.0 - Mobile App](#v140---mobile-app)
-    - [v1.4.1 - First Real (Beta) Release](#v141---first-real-beta-release)
-    - [v1.5.0 - Advanced Interactions](#v150---advanced-interactions)
-    - [v1.6.0 - Advanced Notifications](#v160---advanced-notifications)
-    - [v2.0.0 - Enhanced Discover Page](#v200---enhanced-discover-page)
-    - [v2.1.0 - Cross-Comparative Article Generation](#v210---cross-comparative-article-generation)
-    - [v2.1.0 - Shit is getting realllllll](#v210---shit-is-getting-realllllll)
-    - [v3.0.0 - Who the f\*\*k knew we would make it this far?!](#v300---who-the-fk-knew-we-would-make-it-this-far)
-  - [Develoment - Getting Started](#develoment---getting-started)
-    - [Web Client](#web-client)
-    - [Server API](#server-api)
-    - [Server Cron](#server-cron)
-    - [Server Worker](#server-worker)
-  - [Contribution](#contribution)
+- [Roadmap](#roadmap)
+  - [v1.0.0 - MVP and POC](#v100---mvp-and-poc)
+  - [v1.1.0 - User Accounts](#v110---user-accounts)
+  - [v1.2.0 - Interactions](#v120---interactions)
+  - [v1.3.0 - Notifications/Newletters](#v130---notificationsnewletters)
+  - [v1.4.0 - Mobile App](#v140---mobile-app)
+  - [v1.4.1 - First Real (Beta) Release](#v141---first-real-beta-release)
+  - [v1.5.0 - Advanced Interactions](#v150---advanced-interactions)
+  - [v1.6.0 - Advanced Notifications](#v160---advanced-notifications)
+  - [v2.0.0 - Enhanced Discover Page](#v200---enhanced-discover-page)
+  - [v2.1.0 - Cross-Comparative Article Generation](#v210---cross-comparative-article-generation)
+  - [v2.1.0 - Shit is getting realllllll](#v210---shit-is-getting-realllllll)
+  - [v3.0.0 - Who the f\*\*k knew we would make it this far?!](#v300---who-the-fk-knew-we-would-make-it-this-far)
+- [Develoment - Getting Started](#develoment---getting-started)
+  - [Web Client](#web-client)
+  - [Server API](#server-api)
+  - [Server Cron](#server-cron)
+  - [Server Worker](#server-worker)
+- [Contribution](#contribution)
 
 ## Roadmap
 
