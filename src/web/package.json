@@ -14,12 +14,6 @@
     "lint": "eslint .  --ext .ts,.tsx",
     "format": "eslint .  --ext .ts,.tsx --fix"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
