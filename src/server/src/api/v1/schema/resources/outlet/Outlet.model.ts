@@ -26,7 +26,8 @@ export class Outlet<
 
   static OUTLETS: Record<string, OutletCreationAttributes> = {
     abcnews: {
-      name: 'ABC News',
+      displayName: 'ABC News',
+      name: 'abc',
       siteMaps: [{
         attribute: 'href',
         params: [[
@@ -39,11 +40,12 @@ export class Outlet<
           'Technology',
         ]],
         selector: 'h2 a[class*=\'AnchorLink\']',
-        url: 'https:/www.abcnews.go.com/${1}',
+        url: 'https://abcnews.go.com/${1}',
       }],
     },
     bustle: {
-      name: 'Bustle',
+      displayName: 'Bustle',
+      name: 'bustle',
       siteMaps: [{ 
         attribute:'href', 
         'params': [[
@@ -61,7 +63,8 @@ export class Outlet<
       }],
     },
     cnbc: {
-      name: 'CNBC',
+      displayName: 'CNBC',
+      name: 'cnbc',
       siteMaps: [{
         attribute: 'href',
         selector: 'a[class=\'SiteMapArticleList-link\']',
@@ -69,7 +72,8 @@ export class Outlet<
       }],
     },
     cnn: {
-      name: 'CNN',
+      displayName: 'CNN',
+      name: 'cnn',
       siteMaps: [{
         selector: 'loc', 
         url: 'https://www.cnn.com/sitemaps/cnn/news.xml', 
@@ -77,14 +81,15 @@ export class Outlet<
       ],
     },
     huffpost: {
-      name: 'HuffPost',
+      displayName: 'HuffPost',
+      name: 'huffpost',
       siteMaps: [{
         attribute: 'href',
         params: [[
           'entertainment',
           'entertainment/arts',
           'impact/business',
-          'impage/green',
+          'impact/green',
           'section/health',
           'news',
           'news/topic/coronavirus',
@@ -95,7 +100,8 @@ export class Outlet<
       }],
     },
     politoco: {
-      name: 'Politico',
+      displayName: 'Politico',
+      name: 'politico',
       siteMaps: [{
         attribute: 'href',
         params: [[
@@ -109,7 +115,8 @@ export class Outlet<
       }],
     },
     wsj: {
-      name: 'The Wall Street Journal',
+      displayName: 'The Wall Street Journal',
+      name: 'wsj',
       siteMaps: [{
         attribute: 'href',
         params: [[
@@ -135,8 +142,8 @@ export class Outlet<
   };
 
   static async initOutlets() {
-    for (const outlet of Object.values(Outlet.OUTLETS)) {
-      await Outlet.upsert(outlet);
+    for (const outlet of Object.values(this.OUTLETS)) {
+      await this.upsert(outlet);
     }
   }
 
@@ -146,6 +153,12 @@ export class Outlet<
     unique: true,
   })
     name: string;
+
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+  })
+    displayName: string;
 
   @Column({
     allowNull: false,

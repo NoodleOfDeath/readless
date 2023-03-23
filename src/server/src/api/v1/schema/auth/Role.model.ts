@@ -19,7 +19,7 @@ export class Role<
   extends BaseModel<A, B>
   implements RoleAttributes {
 
-  static ROLES = {
+  static ROLES: Record<string, RoleCreationAttributes> = {
     account: {
       lifetime: '15m',
       name: 'account',
@@ -42,6 +42,12 @@ export class Role<
       scope: ['standard:read', 'standard:write'],
     },
   };
+  
+  static async initRoles() {
+    for (const role of Object.values(this.ROLES)) {
+      await this.upsert(role);
+    }
+  }
   
   @Column({
     allowNull: false,

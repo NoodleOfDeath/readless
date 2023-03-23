@@ -62,7 +62,7 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
     const outlets = await Outlet.findAll({ where: { id: outletIds } });
     sources.forEach((source) => {
       const outlet = outlets.find((o) => o.id === source.toJSON().outletId);
-      source.set('outletName', outlet?.toJSON().name ?? '', { raw: true });
+      source.set('outletName', outlet?.toJSON().displayName ?? '', { raw: true });
     });
   }
 

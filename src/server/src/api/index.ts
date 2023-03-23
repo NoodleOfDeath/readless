@@ -6,18 +6,18 @@ import winston from 'winston';
 
 import v1router from './v1';
 import { rateLimitMiddleware } from './v1/middleware';
-import { Outlet } from './v1/schema';
 import {
-  AccountService,
-  DBService,
-  QueueService,
-} from '../services';
+  Outlet,
+  Queue,
+  Role,
+} from './v1/schema';
+import { DBService } from '../services';
 
 async function main() {
   
   await DBService.initTables();
-  await QueueService.initQueues();
-  await AccountService.initRoles();
+  await Queue.initQueues();
+  await Role.initRoles();
   await Outlet.initOutlets();
   
   const app = express();

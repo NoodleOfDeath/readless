@@ -26,7 +26,6 @@ import {
   Alias,
   AliasType,
   Credential,
-  Role,
   User,
 } from '../../api/v1/schema/';
 import { randomString } from '../../utils';
@@ -56,12 +55,6 @@ async function generateOtp(): Promise<string> {
 }
 
 export class AccountService extends BaseService {
-
-  static async initRoles() {
-    for (const role of Object.values(Role.ROLES)) {
-      await Role.upsert(role);
-    }
-  }
 
   public static async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
     if (req.userId) {

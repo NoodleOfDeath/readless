@@ -1,3 +1,4 @@
+import ms from 'ms';
 import {
   Column,
   DataType,
@@ -14,7 +15,7 @@ import { BaseModel } from '../base';
   paranoid: true,
   timestamps: true,
 })
-export class Job<DataType extends Serializable, ReturnType extends Serializable, QueueName extends string = string, A extends JobAttributes<DataType, ReturnType, QueueName> = JobAttributes<DataType, ReturnType, QueueName>, B extends JobCreationAttributes<DataType, ReturnType, QueueName> = JobCreationAttributes<DataType, ReturnType, QueueName>>
+export class Job<DataType extends Serializable, ReturnType, QueueName extends string = string, A extends JobAttributes<DataType, ReturnType, QueueName> = JobAttributes<DataType, ReturnType, QueueName>, B extends JobCreationAttributes<DataType, ReturnType, QueueName> = JobCreationAttributes<DataType, ReturnType, QueueName>>
   extends BaseModel<A, B>
   implements JobAttributes<DataType, ReturnType, QueueName> {
     
@@ -46,20 +47,37 @@ export class Job<DataType extends Serializable, ReturnType extends Serializable,
   })
     data: DataType;
   
-  @Column({ type: DataType.JSON })
-    resp?: ReturnType;
-  
-  @Column({ type: DataType.JSON })
+  @Column({ type: DataType.DATE })
     startedAt?: Date;
   
-  @Column({ type: DataType.JSON })
+  @Column({ type: DataType.DATE })
     completedAt?: Date;
   
-  @Column({ type: DataType.JSON })
+  @Column({ type: DataType.DATE })
     failedAt?: Date;
+  
+  @Column({ type: DataType.TEXT })
+    failureReason?: string;
 
-  @Column({ type: DataType.JSON })
+  @Column({ type: DataType.DATE })
     delayedUntil?: Date;
+
+  async delay(byMs: number | string) {
+    const offset = typeof byMs === 'string' ? ms(byMs) : byMs;
+    this.set('delayedUntil', new Date(Date.now() + offset));
+    await this.save();
+  }
+
+  async moveToCompleted() {
+    this.set('completedAt', new Date());
+    await this.save();
+  }
+    
+  async moveToFailed(reason?: string | Error) {
+    this.set('failedAt', new Date());
+    this.set('failureReason', reason instanceof Error ? reason.message : reason);
+    await this.save();
+  }
 
 }
 

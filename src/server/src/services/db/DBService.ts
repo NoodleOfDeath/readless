@@ -26,8 +26,8 @@ export class DBService extends BaseService {
       models,
     });
     await this.sq.authenticate();
-    await this.sq.sync();
     makeAssociations();
+    await this.sq.sync();
   }
 
   static client() {

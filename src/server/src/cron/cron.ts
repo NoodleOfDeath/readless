@@ -1,18 +1,16 @@
 import axios from 'axios';
 import { load } from 'cheerio';
 import { CronJob } from 'cron';
+import ms from 'ms';
 import { Op } from 'sequelize';
 
 import {
   Outlet,
+  Queue,
   SiteMapParams,
   Source,
 } from '../api/v1/schema';
-import {
-  DBService,
-  QUEUES,
-  QueueService,
-} from '../services';
+import { DBService, QueueService } from '../services';
 
 async function main() {
   await DBService.initTables();
@@ -22,9 +20,6 @@ async function main() {
   pollForNews();
   cleanBadSources();
 }
-
-const DAY = 1000 * 60 * 60 * 24;
-const YEAR = DAY * 365;
 
 function generateDynamicUrls(
   url: string,
@@ -41,7 +36,7 @@ function generateDynamicUrls(
       const offset = Number($2 ?? 0) + Number($3 ?? 0);
       switch ($1) {
       case 'YYYY':
-        return new Date(Date.now() + offset * YEAR)
+        return new Date(Date.now() + offset * ms('1y'))
           .getFullYear()
           .toString();
       case 'M':
@@ -53,9 +48,9 @@ function generateDynamicUrls(
       case 'MMMM':
         return new Date(`2050-${((new Date().getMonth() + offset) % 12) + 1}-01`).toLocaleString('default', { month: 'long' });
       case 'D':
-        return new Date(Date.now() + offset * DAY).getDate().toString();
+        return new Date(Date.now() + offset * ms('1d')).getDate().toString();
       case 'DD':
-        return new Date(Date.now() + offset * DAY)
+        return new Date(Date.now() + offset * ms('1d'))
           .getDate()
           .toString()
           .padStart(2, '0');
@@ -77,16 +72,9 @@ async function pollForNews() {
   console.log('fetching news!');
   try {
     const { rows: outlets } = await Outlet.findAndCountAll();
-    const queue = new QueueService({
-      defaultJobOptions: {
-        lifo: true,
-        removeOnFail: true,
-      },
-    });
+    const queue = await QueueService.getQueue(Queue.QUEUES.siteMaps);
     for (const outlet of outlets) {
-      const {
-        id, name, siteMaps, 
-      } = outlet.toJSON();
+      const { name, siteMaps } = outlet.toJSON();
       console.log(`fetching sitemaps for ${name}`);
       if (siteMaps.length === 0) {
         continue;
@@ -122,15 +110,9 @@ async function pollForNews() {
               continue;
             }
             for (const url of urls) {
-              await queue.dispatch(
-                QUEUES.siteMaps,
+              await queue.add(
                 url,
-                {
-                  id,
-                  name,
-                  url,
-                },
-                { jobId: url }
+                { outlet: name, url }
               );
             }
           } catch (e) {

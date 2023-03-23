@@ -35,6 +35,7 @@ export type OutletAttributes = DatedAttributes & {
   /** name of this outlet */
   name: string;
   /** xml site maps for this outlet and selector for extracting urls */
+  displayName: string;
   siteMaps: SiteMap[];
   /** fetch policy for this outlet */
   fetchPolicy?: FetchPolicy;
@@ -42,6 +43,7 @@ export type OutletAttributes = DatedAttributes & {
 
 export type OutletCreationAttributes = {
   name: string;
+  displayName: string;
   siteMaps: SiteMap[];
   fetchPolicy?: FetchPolicy;
 };
