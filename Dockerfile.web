@@ -4,6 +4,9 @@ COPY src/server ./server
 WORKDIR /home/node/server
 RUN yarn install --non-interactive --immutable
 WORKDIR /home/node/app
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install --non-interactive --immutable
 COPY src/web/package.json ./
 COPY src/web/yarn.lock ./
 RUN yarn install --non-interactive --immutable
