@@ -15,7 +15,7 @@ import {
 } from '../services';
 
 async function main() {
-  await DBService.init();
+  await DBService.initTables();
   // poll for new current events every 30 min
   new CronJob('*/30 * * * *', () => pollForNews()).start();
   new CronJob('*/30 * * * *', () => cleanBadSources()).start();

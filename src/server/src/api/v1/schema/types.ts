@@ -31,6 +31,7 @@ export class SchemaError extends Error {
 // Model Types
 
 export * from './analytics/Metric.types';
+export * from './analytics/RateLimit.types';
 export * from './resources/Policy.types';
 
 export * from './user/Alias.types';
@@ -55,3 +56,5 @@ export * from './resources/source/Source.types';
 export * from './resources/topic/Topic.types';
 export * from './resources/article/Article.types';
 
+export * from './queue/Queue.types';
+export * from './queue/Job.types';

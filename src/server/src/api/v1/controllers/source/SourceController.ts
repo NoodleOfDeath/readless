@@ -43,8 +43,8 @@ function applyFilter(filter?: string) {
   };
 }
 
-@Route('/v1/sources')
-@Tags('Sources')
+@Route('/v1/source')
+@Tags('Source')
 export class SourceController {
 
   @Get('/')

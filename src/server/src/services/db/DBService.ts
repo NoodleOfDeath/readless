@@ -1,3 +1,4 @@
+import pg from 'pg';
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 
 import { makeAssociations } from '../../api/v1/schema';
@@ -11,31 +12,36 @@ export type DBServiceInitProps = {
 
 export class DBService extends BaseService {
 
-  sq: Sequelize;
+  static sq: Sequelize;
+  client: pg.Client;
 
-  constructor({
+  static async initTables({
     connectionString = process.env.PG_CONNECTION_STRING,
     models = [...Object.values(Models)],
   }: DBServiceInitProps = {}) {
-    super();
     this.sq = new Sequelize(connectionString, {
       dialect: 'postgres',
       dialectOptions: { ssl: { rejectUnauthorized: false } },
       logging: !!process.env.SQL_LOGGING,
       models,
     });
+    await this.sq.authenticate();
+    await this.sq.sync();
     makeAssociations();
   }
 
-  static async init() {
-    const db = new DBService();
-    await db.init();
-    return db;
+  static client() {
+    return new pg.Client({
+      connectionString: process.env.PG_CONNECTION_STRING,
+      ssl: { rejectUnauthorized: false },
+    });
   }
 
-  async init() {
-    await this.sq.authenticate();
-    await this.sq.sync();
+  static pool() {
+    return new pg.Pool({
+      connectionString: process.env.PG_CONNECTION_STRING,
+      ssl: { rejectUnauthorized: false },
+    });
   }
 
 }

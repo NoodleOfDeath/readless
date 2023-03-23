@@ -11,8 +11,8 @@ import {
   MetricCreationAttributes,
 } from '../../schema';
 
-@Route('/v1/metrics')
-@Tags('Metricss')
+@Route('/v1/metric')
+@Tags('Metric')
 export class MetricController {
 
   @Post('/')

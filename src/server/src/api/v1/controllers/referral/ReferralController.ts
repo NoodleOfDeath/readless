@@ -11,8 +11,8 @@ import {
   ReferralCreationAttributes,
 } from '../../schema';
 
-@Route('/v1/referrals')
-@Tags('Referrals')
+@Route('/v1/referral')
+@Tags('Referral')
 export class ReferralController {
 
   @Post('/')

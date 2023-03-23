@@ -6,8 +6,8 @@ import {
 
 import { Policy, PolicyAttributes } from '../../schema';
 
-@Route('/v1/policies')
-@Tags('Policies')
+@Route('/v1/policy')
+@Tags('Policy')
 export class PolicyController {
 
   @Get('/privacy')

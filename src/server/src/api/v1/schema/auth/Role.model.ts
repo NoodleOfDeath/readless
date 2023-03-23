@@ -1,7 +1,6 @@
 import {
   Column,
   DataType,
-  Index,
   Table,
 } from 'sequelize-typescript';
 
@@ -19,21 +18,41 @@ export class Role<
   >
   extends BaseModel<A, B>
   implements RoleAttributes {
+
+  static ROLES = {
+    account: {
+      lifetime: '15m',
+      name: 'account',
+      priority: 100,
+      refreshable: false,
+      scope: ['account:read', 'account:write'],
+    },
+    god: {
+      lifetime: '1d',
+      name: 'god',
+      priority: 9000,
+      refreshable: true,
+      scope: ['*'],
+    },
+    standard: {
+      lifetime: '1d',
+      name: 'standard',
+      priority: 0,
+      refreshable: true,
+      scope: ['standard:read', 'standard:write'],
+    },
+  };
   
-  @Index({
-    name: 'roles_name_unique_key',
-    unique: true,
-    where: { deletedAt: null },
-  })
   @Column({
     allowNull: false,
     type: DataType.STRING,
+    unique: true,
   })
     name: string;
 
   @Column({
     allowNull: false,
-    type: DataType.NUMBER,
+    type: DataType.INTEGER,
   })
     priority: number;
 

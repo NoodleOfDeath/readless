@@ -3,7 +3,11 @@ import { body, oneOf } from 'express-validator';
 
 import { AuthError } from '../../../../services';
 import { AccountController } from '../../controllers';
-import { authMiddleware, validationMiddleware } from '../../middleware';
+import {
+  authMiddleware,
+  rateLimitMiddleware,
+  validationMiddleware,
+} from '../../middleware';
 
 const router = Router();
 
@@ -141,6 +145,7 @@ router.post(
 
 router.put(
   '/update/credential', 
+  rateLimitMiddleware('10 per 15m'),
   authMiddleware('jwt', { required: true, scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {

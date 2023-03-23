@@ -1,110 +1,50 @@
 import {
-  BaseJobOptions,
-  Worker as BullMQWorker,
   Job,
   Queue,
-  QueueOptions,
-  WorkerOptions,
-} from 'bullmq';
-import IORedis, { RedisOptions } from 'ioredis';
-
+  QueueAttributes,
+} from '../../api/v1/schema';
+import { Serializable } from '../../types';
 import { BaseService } from '../base';
-
-/** Dummy class to make TS happy */
-// eslint-disable-next-line @typescript-eslint/ban-types
-export class QueueProps<DataType = {}, ReturnType = {}, NameType extends string = string> {
-
-  name: NameType;
-  data?: DataType;
-  resp?: ReturnType;
-  queueOptions?: QueueOptions;
-  jobOptions?: BaseJobOptions;
-  redisOptions?: RedisOptions;
-  constructor(name: NameType) {
-    this.name = name;
-  }
-
-}
-
-export type SiteMapJobData = { id: number; name: string; url: string; force?: boolean };
-
-export const QUEUES = { siteMaps: new QueueProps<SiteMapJobData>('siteMaps') } as const;
-
-export type QueueServiceOptions = QueueOptions & {
-  client: IORedis;
-  redisOptions: RedisOptions;
-};
-
-export const redisClient = (
-  connectionString = process.env.REDIS_CONNECTION_STRING,
-  { maxRetriesPerRequest = null, ...opts }: RedisOptions = {}
-) =>
-  new IORedis(connectionString, {
-    maxRetriesPerRequest,
-    tls: { rejectUnauthorized: false },
-    ...opts,
-  });
 
 export class QueueService extends BaseService {
 
-  defaultJobOptions: BaseJobOptions;
-  client: IORedis;
-  queues: { [key: string]: Queue } = {};
-
-  constructor({
-    defaultJobOptions,
-    redisOptions,
-    client = redisClient(undefined, redisOptions),
-  }: Partial<QueueServiceOptions> = {}) {
-    super();
-    this.defaultJobOptions = defaultJobOptions;
-    this.client = client;
+  static async initQueues() {
+    for (const queue of Object.values(Queue.QUEUES)) {
+      await Queue.upsert({ name: queue.name });
+    }
   }
 
-  async dispatch<DataType, ReturnType, NameType extends string = string>(
-    jobQueue: QueueProps<DataType, ReturnType, NameType>,
+  static async dispatch<DataType extends Serializable, ReturnType extends Serializable, QueueName extends string = string>(
+    jobQueue: QueueAttributes<DataType, ReturnType, QueueName>,
     jobName: string,
-    payload: DataType,
-    options?: BaseJobOptions
+    payload: DataType
   ) {
-    const queue =
-      (this.queues[jobQueue.name] as Queue<DataType>) ??
-      new Queue<DataType, ReturnType, NameType>(jobQueue.name, {
-        connection: this.client,
-        defaultJobOptions: this.defaultJobOptions,
-      });
-    await queue.add(jobName, payload, options);
-    this.queues[jobQueue.name] = queue;
+    const queue = await this.getQueue(jobQueue);
+    await queue.add(jobName, payload);
   }
 
-  getQueue<DataType, ReturnType, NameType extends string = string>(jobQueue: QueueProps<DataType, ReturnType, NameType>): Queue<DataType> {
-    return (
-      (this.queues[jobQueue.name] as Queue<DataType>) ??
-      new Queue<DataType>(jobQueue.name, { connection: this.client, defaultJobOptions: this.defaultJobOptions })
-    );
+  static async getQueue<DataType extends Serializable, ReturnType extends Serializable, NameType extends string = string>(jobQueue: QueueAttributes<DataType, ReturnType, NameType>) {
+    return await Queue.findOne({ where: { name: jobQueue.name } }) ??
+    await Queue.create({ name: jobQueue.name });
   }
 
 }
 
-export class Worker<DataType, ReturnType, NameType extends string = string> extends BullMQWorker<
-  DataType,
-  ReturnType,
-  NameType
-> {
+export class Worker<DataType extends Serializable, ReturnType extends Serializable, QueueName extends string = string> {
 
-  queueProps: QueueProps<DataType, ReturnType, NameType>;
+  queueProps: QueueAttributes<DataType, ReturnType, QueueName>;
+  handler: (job: Job<DataType, ReturnType, QueueName>) => Promise<ReturnType>;
 
   get queue() {
-    return new Queue<DataType, ReturnType, NameType>(this.queueProps.name, { connection: redisClient() });
+    return QueueService.getQueue(this.queueProps);
   }
 
   constructor(
-    queueProps: QueueProps<DataType, ReturnType, NameType>,
-    handler: (job: Job<DataType, ReturnType, NameType>) => Promise<ReturnType>,
-    options?: WorkerOptions
+    queueProps: QueueAttributes<DataType, ReturnType, QueueName>,
+    handler: (job: Job<DataType, ReturnType, QueueName>) => Promise<ReturnType>
   ) {
-    super(queueProps.name, handler, { ...options, connection: redisClient() });
     this.queueProps = queueProps;
+    this.handler = handler;
   }
 
 }

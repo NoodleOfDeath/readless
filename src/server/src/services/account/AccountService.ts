@@ -26,6 +26,7 @@ import {
   Alias,
   AliasType,
   Credential,
+  Role,
   User,
 } from '../../api/v1/schema/';
 import { randomString } from '../../utils';
@@ -56,7 +57,13 @@ async function generateOtp(): Promise<string> {
 
 export class AccountService extends BaseService {
 
-  public async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
+  static async initRoles() {
+    for (const role of Object.values(Role.ROLES)) {
+      await Role.upsert(role);
+    }
+  }
+
+  public static async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
     if (req.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
@@ -127,7 +134,7 @@ export class AccountService extends BaseService {
     }
   }
 
-  public async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
+  public static async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
     if (req.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
@@ -160,7 +167,7 @@ export class AccountService extends BaseService {
     };
   }
 
-  public async logout({
+  public static async logout({
     token, userId, force, 
   }: Partial<LogoutRequest>): Promise<LogoutResponse> {
     let count = 0;
@@ -179,7 +186,7 @@ export class AccountService extends BaseService {
     return { count, success: true };
   }
   
-  public async generateOtp(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
+  public static async generateOtp(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
     const { user } = await User.from(req, { ignoreIfNotResolved: true });
     if (!user) {
       return { success: false };
@@ -200,7 +207,7 @@ export class AccountService extends BaseService {
     return { success: true };
   }
 
-  public async verifyAlias(req: Partial<VerifyAliasRequest>): Promise<VerifyAliasResponse> {
+  public static async verifyAlias(req: Partial<VerifyAliasRequest>): Promise<VerifyAliasResponse> {
     const alias = await Alias.findOne({ where: { verificationCode: req.verificationCode } });
     if (!alias) {
       throw new AuthError('UNKNOWN_ALIAS', { alias: 'user identifier' });
@@ -218,7 +225,7 @@ export class AccountService extends BaseService {
     return { success: true };
   }
 
-  public async verifyOtp(req: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
+  public static async verifyOtp(req: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
     const { user } = await User.from(req);
     const otp = await user.findCredential('otp', req.otp);
     if (!otp) {
@@ -234,7 +241,7 @@ export class AccountService extends BaseService {
     return { token: { priority: token.priority, value: token.signed }, userId: userData.id };
   }
   
-  public async updateCredential(req: Partial<UpdateCredentialRequest>): Promise<UpdateCredentialResponse> {
+  public static async updateCredential(req: Partial<UpdateCredentialRequest>): Promise<UpdateCredentialResponse> {
     const { user } = await User.from(req);
     if (typeof req.password === 'string') {
       const password = await user.findCredential('password');

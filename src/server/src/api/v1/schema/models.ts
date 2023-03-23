@@ -1,5 +1,6 @@
 // singleton models
 export * from './analytics/Metric.model';
+export * from './analytics/RateLimit.model';
 export * from './resources/Policy.model';
 
 // user models
@@ -37,3 +38,7 @@ export * from './resources/article/ArticleInteraction.model';
 export * from './resources/article/RefArticleMedia.model';
 export * from './resources/article/RefArticleTopic.model';
 export * from './resources/article/RefArticleSource.model';
+
+// queues
+export * from './queue/Queue.model';
+export * from './queue/Job.model';

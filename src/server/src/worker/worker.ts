@@ -28,7 +28,7 @@ setInterval(() => {
 }, WORKER_FETCH_INTERVAL_MS);
 
 export async function main() {
-  await DBService.init();
+  await DBService.initTables();
   doWork();
 }
 

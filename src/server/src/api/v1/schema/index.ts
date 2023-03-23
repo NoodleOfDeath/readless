@@ -3,9 +3,11 @@ import {
   Article,
   ArticleInteraction,
   Credential,
+  Job,
   Media,
   Newsletter,
   Outlet,
+  Queue,
   RefArticleMedia,
   RefArticleSource,
   RefArticleTopic,
@@ -33,9 +35,11 @@ export function makeAssociations() {
   User.hasMany(UserMetadata, { foreignKey: 'userId' });
   User.hasMany(RefUserRole, { foreignKey: 'userId' });
   RefUserRole.belongsTo(Role, { foreignKey: 'roleId' });
+  
   // auth
   User.hasMany(Credential, { foreignKey: 'userId' });
   Credential.belongsTo(User, { foreignKey: 'userId' });
+  
   // newsletter
   Newsletter.hasMany(Subscription, { foreignKey: 'newsletterId' });
   Subscription.belongsTo(Newsletter, { foreignKey: 'newsletterId' });
@@ -45,7 +49,6 @@ export function makeAssociations() {
   // topics
   Topic.hasMany(RefTopicMedia, { foreignKey: 'topicId' });
   RefTopicMedia.belongsTo(Media, { foreignKey: 'mediaId' });
-  // interactions
   
   // sources
   Source.hasMany(RefSourceMedia, { foreignKey: 'sourceId' });
@@ -54,6 +57,7 @@ export function makeAssociations() {
   Source.hasOne(RefSourceTopic, { foreignKey: 'sourceId' });
   Topic.hasMany(RefSourceTopic, { foreignKey: 'topicId' });
   Source.hasMany(SourceInteraction, { foreignKey: 'targetId' });
+  
   // articles
   Article.hasMany(RefArticleMedia, { foreignKey: 'articleId' });
   RefArticleMedia.belongsTo(Media, { foreignKey: 'mediaId' });
@@ -65,4 +69,10 @@ export function makeAssociations() {
     foreignKey: 'sourceId', otherKey: 'articleId', through: RefArticleSource, 
   });
   Article.hasMany(ArticleInteraction, { foreignKey: 'targetId' });
+  
+  // queues
+  Queue.hasMany(Job, {
+    foreignKey: 'queue',
+    sourceKey: 'name',
+  });
 }

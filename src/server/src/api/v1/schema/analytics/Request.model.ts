@@ -15,7 +15,7 @@ import { BaseModel } from '../base';
 export class Request<A extends RequestAttributes = RequestAttributes, B extends RequestCreationAttributes = RequestCreationAttributes> extends BaseModel<A, B> implements RequestAttributes {
 
   @Column({ type: DataType.STRING(2083) })
-    remoteAddr: string[];
+    remoteAddr: string;
 
   @Column({ type: DataType.STRING(2083) })
     referrer?: string;

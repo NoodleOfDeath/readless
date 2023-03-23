@@ -9,7 +9,7 @@ import { Newsletter, Subscription } from '../../schema/models';
 import { SubscriptionAttributes, SubscriptionCreationAttributes } from '../../schema/types';
 
 @Route('/v1/newsletter')
-@Tags('Newsletters')
+@Tags('Newsletter')
 export class NewsletterController {
 
   @Post('/subscribe')

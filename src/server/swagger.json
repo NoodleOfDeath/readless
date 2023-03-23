@@ -1078,7 +1078,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/v1/auth/register": {
+		"/v1/account/register": {
 			"post": {
 				"operationId": "Register",
 				"responses": {
@@ -1114,9 +1114,13 @@
 					}
 				},
 				"tags": [
-					"Auth"
+					"Account"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1130,7 +1134,7 @@
 				}
 			}
 		},
-		"/v1/auth/login": {
+		"/v1/account/login": {
 			"post": {
 				"operationId": "Login",
 				"responses": {
@@ -1166,9 +1170,13 @@
 					}
 				},
 				"tags": [
-					"Auth"
+					"Account"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1182,7 +1190,7 @@
 				}
 			}
 		},
-		"/v1/auth/logout": {
+		"/v1/account/logout": {
 			"post": {
 				"operationId": "Logout",
 				"responses": {
@@ -1218,9 +1226,13 @@
 					}
 				},
 				"tags": [
-					"Auth"
+					"Account"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1234,7 +1246,7 @@
 				}
 			}
 		},
-		"/v1/auth/otp": {
+		"/v1/account/otp": {
 			"post": {
 				"operationId": "GenerateOTP",
 				"responses": {
@@ -1270,9 +1282,13 @@
 					}
 				},
 				"tags": [
-					"Auth"
+					"Account"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1286,7 +1302,7 @@
 				}
 			}
 		},
-		"/v1/auth/verify/alias": {
+		"/v1/account/verify/alias": {
 			"post": {
 				"operationId": "VerifyAlias",
 				"responses": {
@@ -1322,9 +1338,13 @@
 					}
 				},
 				"tags": [
-					"Auth"
+					"Account"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1338,7 +1358,7 @@
 				}
 			}
 		},
-		"/v1/auth/verify/otp": {
+		"/v1/account/verify/otp": {
 			"post": {
 				"operationId": "VerifyOTP",
 				"responses": {
@@ -1374,9 +1394,13 @@
 					}
 				},
 				"tags": [
-					"Auth"
+					"Account"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1428,7 +1452,13 @@
 				"tags": [
 					"Account"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"account:write"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1442,7 +1472,7 @@
 				}
 			}
 		},
-		"/v1/articles": {
+		"/v1/article": {
 			"get": {
 				"operationId": "GetArticles",
 				"responses": {
@@ -1458,7 +1488,7 @@
 					}
 				},
 				"tags": [
-					"Articles"
+					"Article"
 				],
 				"security": [],
 				"parameters": [
@@ -1502,7 +1532,7 @@
 				]
 			}
 		},
-		"/v1/articles/{category}": {
+		"/v1/article/{category}": {
 			"get": {
 				"operationId": "GetArticlesForCategory",
 				"responses": {
@@ -1518,7 +1548,7 @@
 					}
 				},
 				"tags": [
-					"Articles"
+					"Article"
 				],
 				"security": [],
 				"parameters": [
@@ -1570,7 +1600,7 @@
 				]
 			}
 		},
-		"/v1/articles/{category}/{subcategory}": {
+		"/v1/article/{category}/{subcategory}": {
 			"get": {
 				"operationId": "GetArticlesForCategoryAndSubcategory",
 				"responses": {
@@ -1586,7 +1616,7 @@
 					}
 				},
 				"tags": [
-					"Articles"
+					"Article"
 				],
 				"security": [],
 				"parameters": [
@@ -1646,7 +1676,7 @@
 				]
 			}
 		},
-		"/v1/articles/{category}/{subcategory}/{title}": {
+		"/v1/article/{category}/{subcategory}/{title}": {
 			"get": {
 				"operationId": "GetArticleForCategoryAndSubcategoryAndTitle",
 				"responses": {
@@ -1662,7 +1692,7 @@
 					}
 				},
 				"tags": [
-					"Articles"
+					"Article"
 				],
 				"security": [],
 				"parameters": [
@@ -1693,7 +1723,7 @@
 				]
 			}
 		},
-		"/v1/sources": {
+		"/v1/source": {
 			"get": {
 				"operationId": "GetSources",
 				"responses": {
@@ -1709,7 +1739,7 @@
 					}
 				},
 				"tags": [
-					"Sources"
+					"Source"
 				],
 				"security": [],
 				"parameters": [
@@ -1753,7 +1783,7 @@
 				]
 			}
 		},
-		"/v1/sources/{category}": {
+		"/v1/source/{category}": {
 			"get": {
 				"operationId": "GetSourcesForCategory",
 				"responses": {
@@ -1785,7 +1815,7 @@
 					}
 				},
 				"tags": [
-					"Sources"
+					"Source"
 				],
 				"security": [],
 				"parameters": [
@@ -1837,7 +1867,7 @@
 				]
 			}
 		},
-		"/v1/sources/{category}/{subcategory}": {
+		"/v1/source/{category}/{subcategory}": {
 			"get": {
 				"operationId": "GetSourcesForCategoryAndSubcategory",
 				"responses": {
@@ -1853,7 +1883,7 @@
 					}
 				},
 				"tags": [
-					"Sources"
+					"Source"
 				],
 				"security": [],
 				"parameters": [
@@ -1913,7 +1943,7 @@
 				]
 			}
 		},
-		"/v1/sources/{category}/{subcategory}/{title}": {
+		"/v1/source/{category}/{subcategory}/{title}": {
 			"get": {
 				"operationId": "GetSourceForCategoryAndSubcategoryAndTitle",
 				"responses": {
@@ -1929,7 +1959,7 @@
 					}
 				},
 				"tags": [
-					"Sources"
+					"Source"
 				],
 				"security": [],
 				"parameters": [
@@ -1960,7 +1990,7 @@
 				]
 			}
 		},
-		"/v1/sources/interact/{targetId}/{type}": {
+		"/v1/source/interact/{targetId}/{type}": {
 			"post": {
 				"operationId": "InteractWithSource",
 				"responses": {
@@ -1976,7 +2006,7 @@
 					}
 				},
 				"tags": [
-					"Sources"
+					"Source"
 				],
 				"security": [],
 				"parameters": [
@@ -2026,7 +2056,7 @@
 					}
 				},
 				"tags": [
-					"Newsletters"
+					"Newsletter"
 				],
 				"security": [],
 				"parameters": [],
@@ -2051,7 +2081,7 @@
 					}
 				},
 				"tags": [
-					"Newsletters"
+					"Newsletter"
 				],
 				"security": [],
 				"parameters": [],
@@ -2067,7 +2097,7 @@
 				}
 			}
 		},
-		"/v1/metrics": {
+		"/v1/metric": {
 			"post": {
 				"operationId": "RecordMetric",
 				"responses": {
@@ -2083,7 +2113,7 @@
 					}
 				},
 				"tags": [
-					"Metricss"
+					"Metric"
 				],
 				"security": [],
 				"parameters": [],
@@ -2099,7 +2129,7 @@
 				}
 			}
 		},
-		"/v1/policies/privacy": {
+		"/v1/policy/privacy": {
 			"get": {
 				"operationId": "GetPrivacyPolicy",
 				"responses": {
@@ -2115,13 +2145,13 @@
 					}
 				},
 				"tags": [
-					"Policies"
+					"Policy"
 				],
 				"security": [],
 				"parameters": []
 			}
 		},
-		"/v1/policies/terms": {
+		"/v1/policy/terms": {
 			"get": {
 				"operationId": "GetTermsOfService",
 				"responses": {
@@ -2137,13 +2167,13 @@
 					}
 				},
 				"tags": [
-					"Policies"
+					"Policy"
 				],
 				"security": [],
 				"parameters": []
 			}
 		},
-		"/v1/referrals": {
+		"/v1/referral": {
 			"post": {
 				"operationId": "RecordReferral",
 				"responses": {
@@ -2159,7 +2189,7 @@
 					}
 				},
 				"tags": [
-					"Referrals"
+					"Referral"
 				],
 				"security": [],
 				"parameters": [],

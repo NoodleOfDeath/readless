@@ -36,8 +36,8 @@ function applyFilter(filter?: string) {
   };
 }
 
-@Route('/v1/articles')
-@Tags('Articles')
+@Route('/v1/article')
+@Tags('Article')
 export class ArticleController {
 
   @Get('/')
