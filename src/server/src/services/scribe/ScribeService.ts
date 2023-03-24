@@ -1,31 +1,31 @@
-import { ReadAndSummarizeSourceOptions } from './types';
+import { ReadAndSummarizeExternalArticleOptions } from './types';
 import {
   ChatGPTService,
   Prompt,
   SpiderService,
 } from '../';
-import { Source } from '../../api/v1/schema/models';
-import { ReadAndSummarizeSourcePayload } from '../../api/v1/schema/types';
+import { Summary } from '../../api/v1/schema/models';
+import { ReadAndSummarizeExternalArticlePayload } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 
 export class ScribeService extends BaseService {
   
-  public async readAndSummarizeSource(
-    { url }: ReadAndSummarizeSourcePayload,
+  public async readAndSummarizeExternalArticle(
+    { url }: ReadAndSummarizeExternalArticlePayload,
     {
       onProgress, force, outletId, 
-    }: ReadAndSummarizeSourceOptions = {}
-  ): Promise<Source> {
+    }: ReadAndSummarizeExternalArticleOptions = {}
+  ): Promise<Summary> {
     if (!outletId) {
       throw new Error('no outlet id specified');
     }
     if (!force) {
-      const existingSource = await Source.findOne({ where: { url } });
-      if (existingSource) {
-        console.log(`Source already exists for ${url}`);
-        return existingSource;
+      const existingSummary = await Summary.findOne({ where: { url } });
+      if (existingSummary) {
+        console.log(`Summary already exists for ${url}`);
+        return existingSummary;
       }
     } else {
       console.log(`Forcing source rewrite for ${url}`);
@@ -37,7 +37,7 @@ export class ScribeService extends BaseService {
     if (loot.filteredText.length > MAX_OPENAI_TOKEN_COUNT) {
       throw new Error('Article too long for OpenAI');
     }
-    const sourceInfo = Source.json<Source>({
+    const sourceInfo = Summary.json<Summary>({
       filteredText: loot.filteredText,
       originalTitle: loot.title,
       outletId,
@@ -182,7 +182,7 @@ export class ScribeService extends BaseService {
       }
     }
     console.log(sourceInfo);
-    const source = new Source(sourceInfo);
+    const source = new Summary(sourceInfo);
     await source.save();
     await source.reload();
     if (onProgress) {

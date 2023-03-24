@@ -1,7 +1,7 @@
 export * from './account';
 
 export * from './article';
-export * from './source';
+export * from './summary';
 
 export * from './newsletter';
 

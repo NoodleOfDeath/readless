@@ -14,7 +14,7 @@ import {
 } from './Queue.types';
 import { Serializable } from '../../../../types';
 import { BaseModel } from '../base';
-import { Source } from '../resources/source/Source.model';
+import { Summary } from '../resources/summary/Summary.model';
 
 @Table({
   modelName: 'queue',
@@ -25,7 +25,7 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   extends BaseModel<A, B>
   implements QueueAttributes<DataType, ReturnType, QueueName> {
     
-  public static QUEUES = { siteMaps: new QueueSpecifier<SiteMapJobData, Source>('siteMaps') };
+  public static QUEUES = { siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps') };
   
   static async initQueues() {
     for (const queue of Object.values(this.QUEUES)) {

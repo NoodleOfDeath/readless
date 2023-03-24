@@ -33,7 +33,6 @@ export const rateLimitMiddleware = (
   const duration = typeof options.duration === 'string' ? ms(options.duration) : options.duration;
   return async (req, res, next) => {
     const path = options.path instanceof Function ? options.path(req) : options.path;
-    console.log(options.path, path);
     const key = path ? [req.ip, path].join(':') : req.ip;
     try {
       const limit = await RateLimit.findOne({ where: { key } });

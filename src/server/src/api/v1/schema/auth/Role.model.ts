@@ -23,7 +23,7 @@ export class Role<
     account: {
       lifetime: '15m',
       name: 'account',
-      priority: 100,
+      priority: 200,
       refreshable: false,
       scope: ['account:read', 'account:write'],
     },
@@ -40,6 +40,13 @@ export class Role<
       priority: 0,
       refreshable: true,
       scope: ['standard:read', 'standard:write'],
+    },
+    verified: {
+      lifetime: '1d',
+      name: 'verified',
+      priority: 20,
+      refreshable: true,
+      scope: ['standard:read', 'standard:write', 'verified:read', 'verified:write'],
     },
   };
   

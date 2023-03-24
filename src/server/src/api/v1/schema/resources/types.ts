@@ -5,7 +5,7 @@ export const RESOURCE_TYPES = {
   interaction: 'interaction',
   media: 'media',
   outlet: 'outlet',
-  source: 'source',
+  summary: 'summary',
 } as const;
 
 export type ResourceType = ValuesOfKeys<typeof RESOURCE_TYPES>;

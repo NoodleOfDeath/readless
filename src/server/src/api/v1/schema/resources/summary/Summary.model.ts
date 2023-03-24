@@ -5,17 +5,17 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { SourceAttributes, SourceCreationAttributes } from './Source.types';
-import { SourceInteraction } from './SourceInteraction.model';
+import { SummaryAttributes, SummaryCreationAttributes } from './Summary.types';
+import { SummaryInteraction } from './SummaryInteraction.model';
 import { TitledCategorizedPost } from '../Post.model';
 import { Outlet } from '../outlet/Outlet.model';
 
 @Table({
-  modelName: 'source',
+  modelName: 'summary',
   paranoid: true,
   timestamps: true,
 })
-export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreationAttributes> implements SourceAttributes {
+export class Summary extends TitledCategorizedPost<SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
   
   @Column({
     allowNull: false,
@@ -51,32 +51,32 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
   outletName: string;
   
   @AfterFind
-  static async addOutletName(cursor?: Source | Source[]) {
+  static async addOutletName(cursor?: Summary | Summary[]) {
     if (!cursor) {
       return;
     }
-    const sources = Array.isArray(cursor) ? cursor : [cursor];
-    const outletIds = sources.map((source) => {
-      return source.toJSON().outletId;
+    const summaries = Array.isArray(cursor) ? cursor : [cursor];
+    const outletIds = summaries.map((summary) => {
+      return summary.toJSON().outletId;
     });
     const outlets = await Outlet.findAll({ where: { id: outletIds } });
-    sources.forEach((source) => {
-      const outlet = outlets.find((o) => o.id === source.toJSON().outletId);
-      source.set('outletName', outlet?.toJSON().displayName ?? '', { raw: true });
+    summaries.forEach((summary) => {
+      const outlet = outlets.find((o) => o.id === summary.toJSON().outletId);
+      summary.set('outletName', outlet?.toJSON().displayName ?? '', { raw: true });
     });
   }
 
   @AfterFind
-  static async addInteractions(cursor?: Source | Source[]) {
+  static async addInteractions(cursor?: Summary | Summary[]) {
     if (!cursor) {
       return;
     }
-    const sources = Array.isArray(cursor) ? cursor : [cursor];
-    const sourceIds = sources.map((source) => {
-      return source.toJSON().id;
+    const summaries = Array.isArray(cursor) ? cursor : [cursor];
+    const summaryIds = summaries.map((summary) => {
+      return summary.toJSON().id;
     });
-    const interactions = await SourceInteraction.findAll({ where: { targetId: sourceIds } });
-    sources.forEach((source) => {
+    const interactions = await SummaryInteraction.findAll({ where: { targetId: summaryIds } });
+    summaries.forEach((summary) => {
       const newInteractionMap = {
         bookmark: [],
         comment: [],
@@ -87,11 +87,11 @@ export class Source extends TitledCategorizedPost<SourceAttributes, SourceCreati
       };
       interactions.forEach((interaction) => {
         const interactionJson = interaction.toJSON();
-        if (interactionJson.targetId === source.id) {
+        if (interactionJson.targetId === summary.id) {
           newInteractionMap[interactionJson.type].push(interactionJson);
         }
       });
-      source.set('interactions', newInteractionMap, { raw: true });
+      summary.set('interactions', newInteractionMap, { raw: true });
     });
     
   }

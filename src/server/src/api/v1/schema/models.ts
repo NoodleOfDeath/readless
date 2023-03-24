@@ -20,24 +20,24 @@ export * from './newsletter/Subscription.model';
 
 export * from './interaction/Referral.model';
 
-export * from './resources/media/Media.model';
-
 export * from './resources/outlet/Outlet.model';
-export * from './resources/outlet/RefOutletMedia.model';
+export * from './resources/outlet/OutletMedia.model';
 
 export * from './resources/topic/Topic.model';
-export * from './resources/topic/RefTopicMedia.model';
+export * from './resources/topic/TopicMedia.model';
 
-export * from './resources/source/Source.model';
-export * from './resources/source/SourceInteraction.model';
-export * from './resources/source/RefSourceMedia.model';
-export * from './resources/source/RefSourceTopic.model';
+export * from './resources/summary/Summary.model';
+export * from './resources/summary/SummaryMedia.model';
+export * from './resources/summary/SummaryInteraction.model';
+export * from './resources/summary/SummaryInteractionMedia.model';
+export * from './resources/summary/RefSummaryTopic.model';
 
 export * from './resources/article/Article.model';
+export * from './resources/article/ArticleMedia.model';
 export * from './resources/article/ArticleInteraction.model';
-export * from './resources/article/RefArticleMedia.model';
+export * from './resources/article/ArticleInteractionMedia.model';
 export * from './resources/article/RefArticleTopic.model';
-export * from './resources/article/RefArticleSource.model';
+export * from './resources/article/RefArticleSummary.model';
 
 // queues
 export * from './queue/Queue.model';

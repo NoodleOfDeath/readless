@@ -15,10 +15,10 @@ import {
   InteractionRequest,
   InteractionResponse,
   InteractionType,
-  SOURCE_ATTRS,
-  Source,
-  SourceAttr,
-  SourceAttributes,
+  SUMMARY_ATTRS,
+  Summary,
+  SummaryAttr,
+  SummaryAttributes,
   User,
 } from '../../schema';
 
@@ -43,29 +43,29 @@ function applyFilter(filter?: string) {
   };
 }
 
-@Route('/v1/source')
-@Tags('Source')
-export class SourceController {
+@Route('/v1/summary')
+@Tags('Summary')
+export class SummaryController {
 
   @Get('/')
-  public async getSources(
+  public async getSummaries(
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SourceAttr>> {
-    const options: FindAndCountOptions<Source> = {
-      attributes: [...SOURCE_ATTRS],
+  ): Promise<BulkResponse<SummaryAttr>> {
+    const options: FindAndCountOptions<Summary> = {
+      attributes: [...SUMMARY_ATTRS],
       limit: pageSize,
       offset,
       order: [['createdAt', 'DESC']],
     };
     options.where = applyFilter(filter);
-    return await Source.findAndCountAll(options);
+    return await Summary.findAndCountAll(options);
   }
 
   @Get('/:category/')
-  public async getSourcesForCategory(
+  public async getSummariesForCategory(
     @Path() category: string,
     @Query() filter?: string,
     @Query() pageSize = 10,
@@ -73,62 +73,62 @@ export class SourceController {
     @Query() offset = pageSize * page
   ): Promise<{
     count: number;
-    rows: SourceAttr[];
+    rows: SummaryAttr[];
   }> {
-    const options: FindAndCountOptions<Source> = {
-      attributes: [...SOURCE_ATTRS],
+    const options: FindAndCountOptions<Summary> = {
+      attributes: [...SUMMARY_ATTRS],
       limit: pageSize,
       offset,
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f) },
     };
-    return await Source.findAndCountAll(options);
+    return await Summary.findAndCountAll(options);
   }
 
   @Get('/:category/:subcategory')
-  public async getSourcesForCategoryAndSubcategory(
+  public async getSummariesForCategoryAndSubcategory(
     @Path() category: string,
     @Path() subcategory: string,
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SourceAttr>> {
-    const options: FindAndCountOptions<Source> = {
-      attributes: [...SOURCE_ATTRS],
+  ): Promise<BulkResponse<SummaryAttr>> {
+    const options: FindAndCountOptions<Summary> = {
+      attributes: [...SUMMARY_ATTRS],
       limit: pageSize,
       offset,
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f) },
     };
-    return await Source.findAndCountAll(options);
+    return await Summary.findAndCountAll(options);
   }
 
   @Get('/:category/:subcategory/:title')
-  public async getSourceForCategoryAndSubcategoryAndTitle(
+  public async getSummaryForCategoryAndSubcategoryAndTitle(
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string
-  ): Promise<SourceAttributes> {
-    const options: FindAndCountOptions<Source> = {
+  ): Promise<SummaryAttributes> {
+    const options: FindAndCountOptions<Summary> = {
       where: {
         category,
         subcategory,
         title,
       },
     };
-    return await Source.findOne(options);
+    return await Summary.findOne(options);
   }
   
   @Post('/interact/:targetId/:type')
-  public async interactWithSource(
+  public async interactWithSummary(
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<InteractionResponse> {
     const { user } = await User.from(body);
     const { value } = body;
-    await user.interactWith({ id: targetId, type: 'source' }, type, value);
+    await user.interactWith({ id: targetId, type: 'summary' }, type, value);
     return { id: 0 };
   }
 

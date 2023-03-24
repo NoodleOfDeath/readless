@@ -3,7 +3,7 @@ import ms from 'ms';
 import {
   Outlet,
   Queue,
-  Source,
+  Summary,
 } from '../api/v1/schema/models';
 import {
   DBService,
@@ -37,7 +37,7 @@ export async function main() {
 
 export async function doWork() {
   try {
-    // Worker that processes site maps and generates new sources
+    // Worker that processes site maps and generates new summaries
     for (let n = 0; n < WORKER_CONCURRENCY; n++) {
       await Worker.from(
         Queue.QUEUES.siteMaps,
@@ -49,7 +49,7 @@ export async function doWork() {
             const outlet = await Outlet.findOne({ where: { name: outletName } });
             if (!outlet) {
               console.log(`Outlet ${outletName} not found`);
-              await job.moveToFailed();
+              await job.moveToFailed(`Outlet ${outletName} not found`);
               return;
             }
             const outletData = outlet.toJSON();
@@ -60,27 +60,27 @@ export async function doWork() {
               return;
             }
             if (!force) {
-              const existingSource = await Source.findOne({
+              const existingSummary = await Summary.findOne({
                 attributes: ['id'],
                 where: { url },
               });
-              if (existingSource) {
-                console.log(`Source ${url} has already been processed. Use the force property to force a rewrite.`);
+              if (existingSummary) {
+                console.log(`Summary ${url} has already been processed. Use the force property to force a rewrite.`);
                 await job.moveToCompleted();
-                return existingSource;
+                return existingSummary;
               }
             }
-            fetchMap[outletData.name] = fetchMap[outletData.name] + 1;
+            fetchMap[outletData.name] = (fetchMap[outletData.name] ?? 0) + 1;
             const scribe = new ScribeService();
-            const source = await scribe.readAndSummarizeSource(
+            const summary = await scribe.readAndSummarizeExternalArticle(
               { url },
               { outletId: outletData.id }
             );
             await job.moveToCompleted();
-            return source;
+            return summary;
           } catch (e) {
             console.error(e);
-            await job.moveToFailed();
+            await job.moveToFailed(e);
           } finally {
             next();
           }

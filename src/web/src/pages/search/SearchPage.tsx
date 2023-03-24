@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 
-import API, { SourceAttr } from '@/api';
+import API, { SummaryAttr } from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
@@ -34,7 +34,7 @@ export default function SearchPage() {
   } = React.useContext(SessionContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
-  const [recentSources, setRecentSources] = React.useState<SourceAttr[]>([]);
+  const [recentSummaries, setRecentSummaries] = React.useState<SummaryAttr[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [pageSize] = React.useState<number>(10);
   const [page, setPage] = React.useState<number>(1);
@@ -45,8 +45,8 @@ export default function SearchPage() {
   const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
   const gridSize = React.useMemo(() => {
-    return mdAndUp ? (recentSources.length < 2 ? 12 : 6) : 12;
-  }, [recentSources, mdAndUp]);
+    return mdAndUp ? (recentSummaries.length < 2 ? 12 : 6) : 12;
+  }, [recentSummaries, mdAndUp]);
 
   React.useEffect(() => {
     if (searchParams.get('q')) {
@@ -55,22 +55,22 @@ export default function SearchPage() {
   }, [searchParams, setSearchText]);
 
   React.useEffect(() => {
-    setRecentSources([]);
+    setRecentSummaries([]);
     setPage(1);
     API
-      .getSources({
+      .getSummaries({
         filter: searchText,
         page: 0,
         pageSize,
       })
       .then((response) => {
         setTotalResults(response.data.count);
-        setRecentSources(response.data.rows);
+        setRecentSummaries(response.data.rows);
       })
       .catch((error) => {
         console.error(error);
         setTotalResults(0);
-        setRecentSources([]);
+        setRecentSummaries([]);
       })
       .finally(() => {
         setLoading(false);
@@ -85,7 +85,7 @@ export default function SearchPage() {
 
   const loadMore = () => {
     API
-      .getSources({
+      .getSummaries({
         filter: searchText,
         page,
         pageSize,
@@ -93,7 +93,7 @@ export default function SearchPage() {
       .then((response) => {
         if (response.data) {
           setTotalResults(response.data.count);
-          setRecentSources((prev) => [...prev, ...response.data.rows]);
+          setRecentSummaries((prev) => [...prev, ...response.data.rows]);
           setPage((prev) => prev + 1);
         }
       })
@@ -108,16 +108,16 @@ export default function SearchPage() {
         <Typography variant="h4">News that fits your schedule</Typography>
         <Filters />
         <StyledGrid container justifyContent="center" spacing={ 2 }>
-          {expandedPost === undefined ? recentSources.map((source, i) => (
-            <Grid key={ source.id } item xs={ gridSize }>
+          {expandedPost === undefined ? recentSummaries.map((summary, i) => (
+            <Grid key={ summary.id } item xs={ gridSize }>
               <Post 
-                source={ source }
+                summary={ summary }
                 onChange={ (mode) => expandPost(i, mode) } />
             </Grid>
           )) : (
             <Grid item xs={ 12 }>
               <Post
-                source={ recentSources[expandedPost] }
+                summary={ recentSummaries[expandedPost] }
                 onChange={ (mode) => expandPost(expandedPost, mode) }
                 consumptionMode={ consumptionMode } />
             </Grid>

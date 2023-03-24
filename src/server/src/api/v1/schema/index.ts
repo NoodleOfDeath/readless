@@ -2,25 +2,26 @@ import {
   Alias,
   Article,
   ArticleInteraction,
+  ArticleInteractionMedia,
+  ArticleMedia,
   Credential,
   Job,
-  Media,
   Newsletter,
   Outlet,
+  OutletMedia,
   Queue,
-  RefArticleMedia,
-  RefArticleSource,
+  RefArticleSummary,
   RefArticleTopic,
-  RefOutletMedia,
-  RefSourceMedia,
-  RefSourceTopic,
-  RefTopicMedia,
+  RefSummaryTopic,
   RefUserRole,
   Role,
-  Source,
-  SourceInteraction,
   Subscription,
+  Summary,
+  SummaryInteraction,
+  SummaryInteractionMedia,
+  SummaryMedia,
   Topic,
+  TopicMedia,
   User,
   UserMetadata,
 } from './models';
@@ -43,32 +44,32 @@ export function makeAssociations() {
   // newsletter
   Newsletter.hasMany(Subscription, { foreignKey: 'newsletterId' });
   Subscription.belongsTo(Newsletter, { foreignKey: 'newsletterId' });
+  
   // outlets
-  Outlet.hasMany(RefOutletMedia, { foreignKey: 'outletId' });
-  RefOutletMedia.belongsTo(Media, { foreignKey: 'mediaId' });
+  Outlet.hasMany(OutletMedia, { foreignKey: 'parentId' });
+  
   // topics
-  Topic.hasMany(RefTopicMedia, { foreignKey: 'topicId' });
-  RefTopicMedia.belongsTo(Media, { foreignKey: 'mediaId' });
+  Topic.hasMany(TopicMedia, { foreignKey: 'parentId' });
   
   // sources
-  Source.hasMany(RefSourceMedia, { foreignKey: 'sourceId' });
-  RefSourceMedia.belongsTo(Media, { foreignKey: 'mediaId' });
-  Source.belongsTo(Outlet, { foreignKey: 'outletId' });
-  Source.hasOne(RefSourceTopic, { foreignKey: 'sourceId' });
-  Topic.hasMany(RefSourceTopic, { foreignKey: 'topicId' });
-  Source.hasMany(SourceInteraction, { foreignKey: 'targetId' });
+  Summary.hasMany(SummaryMedia, { foreignKey: 'parentId' });
+  Summary.belongsTo(Outlet, { foreignKey: 'outletId' });
+  Summary.hasOne(RefSummaryTopic, { foreignKey: 'sourceId' });
+  Topic.hasMany(RefSummaryTopic, { foreignKey: 'topicId' });
+  Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
+  SummaryInteraction.hasMany(SummaryInteractionMedia, { foreignKey: 'parentId' });
   
   // articles
-  Article.hasMany(RefArticleMedia, { foreignKey: 'articleId' });
-  RefArticleMedia.belongsTo(Media, { foreignKey: 'mediaId' });
+  Article.hasMany(ArticleMedia, { foreignKey: 'parentId' });
   Article.hasOne(RefArticleTopic, { foreignKey: 'articleId' });
   Topic.hasMany(RefArticleTopic, { foreignKey: 'topicId' });
-  Article.hasMany(RefArticleSource, { foreignKey: 'articleId' });
-  Source.hasMany(RefArticleSource, { foreignKey: 'sourceId' });
-  Source.belongsToMany(Article, {
-    foreignKey: 'sourceId', otherKey: 'articleId', through: RefArticleSource, 
+  Article.hasMany(RefArticleSummary, { foreignKey: 'articleId' });
+  Summary.hasMany(RefArticleSummary, { foreignKey: 'sourceId' });
+  Summary.belongsToMany(Article, {
+    foreignKey: 'sourceId', otherKey: 'articleId', through: RefArticleSummary, 
   });
   Article.hasMany(ArticleInteraction, { foreignKey: 'targetId' });
+  ArticleInteraction.hasMany(ArticleInteractionMedia, { foreignKey: 'parentId' });
   
   // queues
   Queue.hasMany(Job, {

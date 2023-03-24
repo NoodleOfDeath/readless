@@ -8,7 +8,7 @@ import {
   Outlet,
   Queue,
   SiteMapParams,
-  Source,
+  Summary,
 } from '../api/v1/schema';
 import { DBService, QueueService } from '../services';
 
@@ -16,9 +16,9 @@ async function main() {
   await DBService.initTables();
   // poll for new current events every 30 min
   new CronJob('*/30 * * * *', () => pollForNews()).start();
-  new CronJob('*/30 * * * *', () => cleanBadSources()).start();
+  new CronJob('*/30 * * * *', () => cleanBadSummaries()).start();
   pollForNews();
-  cleanBadSources();
+  cleanBadSummaries();
 }
 
 function generateDynamicUrls(
@@ -127,10 +127,10 @@ async function pollForNews() {
   }
 }
 
-async function cleanBadSources() {
-  console.log('cleaning bad sources!');
+async function cleanBadSummaries() {
+  console.log('cleaning bad summaries!');
   try {
-    await Source.destroy({
+    await Summary.destroy({
       where: {
         [Op.or]: [
           { title: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },

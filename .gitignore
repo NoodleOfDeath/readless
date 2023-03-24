@@ -15,6 +15,7 @@
 
 # misc
 .DS_Store
+*.icloud
 id_rsa
 .env
 .env.local

@@ -1,11 +1,11 @@
 import { DatedAttributes } from '../../types';
 
-export type RefSourceTopicAttributes = DatedAttributes & {
+export type RefSummaryTopicAttributes = DatedAttributes & {
   sourceId: number;
   topicId: number;
 };
 
-export type RefSourceTopicCreationAttributes = {
+export type RefSummaryTopicCreationAttributes = {
   sourceId: number;
   topicId: number;
 };

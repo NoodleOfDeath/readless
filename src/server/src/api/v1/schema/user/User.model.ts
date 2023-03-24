@@ -14,7 +14,7 @@ import {
   Credential,
   RefUserRole,
   Role,
-  SourceInteraction,
+  SummaryInteraction,
 } from '../models';
 import {
   AliasCreationAttributes,
@@ -195,8 +195,8 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         }, 
       });
     } else
-    if (resource.type === 'source') {
-      interaction = await SourceInteraction.findOne({
+    if (resource.type === 'summary') {
+      interaction = await SummaryInteraction.findOne({
         where: {
           targetId: resource.id, type, userId: this.id, 
         }, 

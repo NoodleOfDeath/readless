@@ -1,1 +1,1 @@
-export { default } from './OpenApiRouter';
+export { default } from './SwaggerRouter';

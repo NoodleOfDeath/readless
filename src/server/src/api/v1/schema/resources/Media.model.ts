@@ -1,18 +1,13 @@
+import { Column, DataType } from 'sequelize-typescript';
+
 import {
-  Column,
-  DataType,
-  Table,
-} from 'sequelize-typescript';
+  MediaAttributes,
+  MediaCreationAttributes,
+  MediaType,
+} from './Media.types';
+import { BaseModel } from '../base';
 
-import { MediaAttributes, MediaCreationAttributes } from './Media.types';
-import { BaseModel } from '../../base';
-
-@Table({
-  modelName: 'media',
-  paranoid: true,
-  timestamps: true,
-})
-export class Media<
+export abstract class Media<
     A extends MediaAttributes = MediaAttributes,
     B extends MediaCreationAttributes = MediaCreationAttributes,
   >
@@ -23,8 +18,14 @@ export class Media<
     allowNull: false,
     type: DataType.STRING,
   })
-    type: string;
+    type: MediaType;
 
+  @Column({
+    allowNull: false,
+    type: DataType.INTEGER,
+  })
+    parentId: number;
+    
   @Column({
     allowNull: false,
     type: DataType.STRING(2083),

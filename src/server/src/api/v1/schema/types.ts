@@ -48,11 +48,11 @@ export * from './resources/types';
 
 export * from './interaction/Interaction.types';
 export * from './interaction/Referral.types';
-export * from './resources/media/Media.types';
 
+export * from './resources/Media.types';
 export * from './resources/Post.types';
 export * from './resources/outlet/Outlet.types';
-export * from './resources/source/Source.types';
+export * from './resources/summary/Summary.types';
 export * from './resources/topic/Topic.types';
 export * from './resources/article/Article.types';
 

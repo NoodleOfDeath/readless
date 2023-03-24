@@ -22,7 +22,7 @@ import {
 import { formatDistance } from 'date-fns';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
-import { SourceAttr } from '@/api';
+import { SummaryAttr } from '@/api';
 import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
 import TruncatedText from '@/components/common/TruncatedText';
 
@@ -36,7 +36,7 @@ export const CONSUMPTION_MODES = [
 export type ConsumptionMode = (typeof CONSUMPTION_MODES)[number];
 
 type Props = {
-  source?: SourceAttr;
+  summary?: SummaryAttr;
   consumptionMode?: ConsumptionMode;
   onChange?: (mode?: ConsumptionMode) => void;
 };
@@ -106,7 +106,7 @@ const StyledCategoryStack = styled(Stack)(() => ({
 const StyledMenuBox = styled(Box)(() => ({ width: 250 }));
 
 export default function Post({
-  source,
+  summary,
   consumptionMode,
   onChange,
 }: Props = {}) {
@@ -121,42 +121,42 @@ export default function Post({
 
   const timeAgo = React.useMemo(
     () =>
-      formatDistance(new Date(source?.createdAt ?? 0), new Date(), { addSuffix: true }),
-    [source?.createdAt]
+      formatDistance(new Date(summary?.createdAt ?? 0), new Date(), { addSuffix: true }),
+    [summary?.createdAt]
   );
 
   const icon = React.useMemo(() => {
     return (
       <StyledCategoryBox>
         <StyledCategoryStack>
-          <Typography variant="subtitle1">{source?.category}</Typography>
-          <Typography variant="subtitle2">{source?.subcategory}</Typography>
+          <Typography variant="subtitle1">{summary?.category}</Typography>
+          <Typography variant="subtitle2">{summary?.subcategory}</Typography>
         </StyledCategoryStack>
       </StyledCategoryBox>
     );
-  }, [source?.category, source?.subcategory]);
+  }, [summary?.category, summary?.subcategory]);
 
   const bottomRowDirection = React.useMemo(() => {
     return lgAndUp ? 'row' : 'column';
   }, [lgAndUp]);
 
   const content = React.useMemo(() => {
-    if (!source) {
+    if (!summary) {
       return null;
     }
     let text = '';
     switch (consumptionMode) {
     case 'bulleted':
-      text = source.bullets.join('\n');
+      text = summary.bullets.join('\n');
       break;
     case 'concise':
-      text = source.shortSummary;
+      text = summary.shortSummary;
       break;
     case 'casual':
-      text = source.summary;
+      text = summary.summary;
       break;
     case 'comprehensive':
-      text = source.abridged;
+      text = summary.abridged;
       break;
     default:
       text = '';
@@ -164,7 +164,7 @@ export default function Post({
     return (
       <ReactMarkdown>{text}</ReactMarkdown>
     );
-  }, [source, consumptionMode]);
+  }, [summary, consumptionMode]);
   
   const openMenu = React.useCallback(
     (open: boolean) =>
@@ -220,8 +220,8 @@ export default function Post({
             </StyledBackButton>
           )}
           <Stack spacing={ 1 }>
-            <Typography variant="subtitle1">{source?.outletName}</Typography>
-            <Typography variant="h6"><TruncatedText maxCharCount={ 120 }>{source?.title}</TruncatedText></Typography>
+            <Typography variant="subtitle1">{summary?.outletName}</Typography>
+            <Typography variant="h6"><TruncatedText maxCharCount={ 120 }>{summary?.title}</TruncatedText></Typography>
           </Stack>
           {!consumptionMode && (
             <StyledCardMedia>
@@ -261,11 +261,11 @@ export default function Post({
                 <MenuItem>
                   <Link
                     variant="caption"
-                    href={ source?.url }
+                    href={ summary?.url }
                     target="_blank"
                     color="inherit">
                     <Button>
-                      View Original Source
+                      View Original Summary
                     </Button>
                   </Link>
                 </MenuItem>
