@@ -1,22 +1,21 @@
-import { ReadAndSummarizeExternalArticleOptions } from './types';
+import { ReadAndSummarizeOptions, ReadAndSummarizePayload } from './types';
 import {
   ChatGPTService,
   Prompt,
   SpiderService,
 } from '../';
 import { Summary } from '../../api/v1/schema/models';
-import { ReadAndSummarizeExternalArticlePayload } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 
 export class ScribeService extends BaseService {
   
-  public async readAndSummarizeExternalArticle(
-    { url }: ReadAndSummarizeExternalArticlePayload,
+  public async readAndSummarize(
+    { url }: ReadAndSummarizePayload,
     {
       onProgress, force, outletId, 
-    }: ReadAndSummarizeExternalArticleOptions = {}
+    }: ReadAndSummarizeOptions = {}
   ): Promise<Summary> {
     if (!outletId) {
       throw new Error('no outlet id specified');
