@@ -3,10 +3,14 @@
 THIS=$(basename $0)
 
 usage() {
-  echo "Usage: $THIS [-t|--tail <lines>] [-h|--help] <pattern>"
-  echo "  -t|--tail <lines>  Number of lines to tail"
-  echo "  -h|--help          Show this help"
-  echo "  <pattern>          Pattern to match in deployment name"
+  echo "shorthand for 'kubectl logs -l app=...'"
+  echo "okay basically just lets you read your"
+  echo "damn pod logs with typing 359583 chars"
+  echo
+  echo "usage: $THIS [-t|--tail <lines>] [-h|--help] <container-name-pattern>"
+  echo "  -t|--tail <lines>  number of lines to tail"
+  echo "  -h|--help          show this help"
+  echo "  <pattern>          pattern to match in deployment name"
   exit 1
 }
 

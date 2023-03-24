@@ -3,9 +3,11 @@
 THIS=$(basename $0)
 
 usage() {
-  echo "Usage: $THIS [-h|--help] <pattern>"
-  echo "  -h|--help          Show this help"
-  echo "  <pattern>          Pattern to match in deployment name"
+  echo "shorthand for 'docker logs <container>'"
+  echo
+  echo "usage: $THIS [-h|--help] <pattern>"
+  echo "  -h|--help          show this help"
+  echo "  <pattern>          pattern to match in container name"
   exit 1
 }
 
