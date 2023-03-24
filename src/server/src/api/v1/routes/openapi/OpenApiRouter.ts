@@ -1,11 +1,9 @@
-import fs from 'fs';
-
 import { Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 
-const router = Router();
+import swaggerDocument from '../../../../../swagger.json' assert { type: 'json' };
 
-const swaggerDocument = JSON.parse(fs.readFileSync('swagger.json', { encoding: 'utf8' }));
+const router = Router();
 
 router.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
