@@ -3,6 +3,7 @@
 THIS=$(basename $0)
 
 usage() {
+  echo
   echo "shorthand for 'kubectl logs -l app=...'"
   echo "okay basically just lets you read your"
   echo "damn pod logs with typing 359583 chars"

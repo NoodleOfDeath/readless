@@ -8,6 +8,7 @@ if [[ -z "$SKOOP_ROOT" ]]; then
 fi
 
 usage() {
+  echo
   echo "shorthand for 'docker compose...' to launch"
   echo "skoop containers!"
   echo
