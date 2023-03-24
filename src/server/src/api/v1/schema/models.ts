@@ -1,7 +1,7 @@
 // singleton models
 export * from './analytics/Metric.model';
 export * from './analytics/RateLimit.model';
-export * from './resources/Policy.model';
+export * from './resources/Document.model';
 
 // user models
 export * from './user/User.model';

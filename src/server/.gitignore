@@ -15,7 +15,7 @@
 
 # misc
 .DS_Store
-/public/swagger.json
+swagger.json
 .env
 .env.local
 .env.development.local

@@ -32,7 +32,7 @@ export class SchemaError extends Error {
 
 export * from './analytics/Metric.types';
 export * from './analytics/RateLimit.types';
-export * from './resources/Policy.types';
+export * from './resources/Document.types';
 
 export * from './user/Alias.types';
 export * from './user/User.types';

@@ -4,20 +4,20 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { PolicyAttributes, PolicyCreationAttributes } from './Policy.types';
+import { DocumentAttributes, DocumentCreationAttributes } from './Document.types';
 import { BaseModel } from '../base';
 
 @Table({
-  modelName: 'policy',
+  modelName: 'document',
   paranoid: true,
   timestamps: true,
 })
-export class Policy<
-    A extends PolicyAttributes = PolicyAttributes,
-    B extends PolicyCreationAttributes = PolicyCreationAttributes,
+export class Document<
+    A extends DocumentAttributes = DocumentAttributes,
+    B extends DocumentCreationAttributes = DocumentCreationAttributes,
   >
   extends BaseModel<A, B>
-  implements PolicyAttributes {
+  implements DocumentAttributes {
 
   @Column({
     allowNull: false,

@@ -6,5 +6,5 @@ export * from './source';
 export * from './newsletter';
 
 export * from './metric';
-export * from './policy';
+export * from './document';
 export * from './referral';
