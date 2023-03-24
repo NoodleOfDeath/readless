@@ -117,11 +117,10 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 
 ## Develoment - Getting Started
 
-First add the `bin` directory to your executable `PATH`:
+First run the interactive setup script written by chatgpt!
 
 ```bash
-theskoop $ export SKOOP_HOME=~/git/noodleofdeath/theskoop
-theskoop $ export PATH=\$PATH:\$SKOOP_HOME/bin
+theskoop $ ./setup.sh
 ```
 
 ### Web Client
@@ -129,8 +128,7 @@ theskoop $ export PATH=\$PATH:\$SKOOP_HOME/bin
 [See the README](src/web/README.md)
 
 ```bash
-theskoop $ cat src/web/.env-example > src/web/.env
-theskoop $ compose web --local
+theskoop $ skoop web --local
 ```
 
 ### Server API
@@ -138,8 +136,7 @@ theskoop $ compose web --local
 [See the README](src/server/README.md)
 
 ```bash
-theskoop $ cat src/server/.env-example > src/server/.env
-theskoop $ compose api --local
+theskoop $ skoop api --local
 ```
 
 ### Server Cron
@@ -147,8 +144,7 @@ theskoop $ compose api --local
 [See the README](src/server/README.md)
 
 ```bash
-theskoop $ cat src/server/.env-example > src/server/.env
-theskoop $ compose cron --local
+theskoop $ skoop cron --local
 ```
 
 ### Server Worker
@@ -156,8 +152,7 @@ theskoop $ compose cron --local
 [See the README](src/server/README.md)
 
 ```bash
-theskoop $ cat src/server/.env-example > src/server/.env
-theskoop $ compose worker --local
+theskoop $ skoop worker --local
 ```
 
 ## Contribution

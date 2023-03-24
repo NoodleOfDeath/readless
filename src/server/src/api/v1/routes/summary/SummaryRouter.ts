@@ -1,8 +1,17 @@
 import { Router } from 'express';
-import { param, query } from 'express-validator';
+import {
+  body,
+  param,
+  query,
+} from 'express-validator';
 
 import { SummaryController } from '../../controllers';
-import { paginationMiddleware, validationMiddleware } from '../../middleware';
+import {
+  authMiddleware,
+  paginationMiddleware,
+  rateLimitMiddleware,
+  validationMiddleware,
+} from '../../middleware';
 import { SummaryAttrRaw, SummaryAttributesRaw } from '../../schema/types';
 
 const router = Router();
@@ -22,16 +31,15 @@ router.get(
     const {
       filter, pageSize = 10, page = 0, offset = page * pageSize, 
     } = req.query;
-    const controller = new SummaryController();
     let response: { count: number; rows: SummaryAttrRaw[] } | SummaryAttributesRaw = {
       count: 0,
       rows: [],
     };
     try {
       if (category && subcategory && title) {
-        response = await controller.getSummaryForCategoryAndSubcategoryAndTitle(category, subcategory, title);
+        response = await SummaryController.getSummaryForCategoryAndSubcategoryAndTitle(category, subcategory, title);
       } else if (category && subcategory) {
-        response = await controller.getSummariesForCategoryAndSubcategory(
+        response = await SummaryController.getSummariesForCategoryAndSubcategory(
           category,
           subcategory,
           filter,
@@ -40,11 +48,30 @@ router.get(
           offset
         );
       } else if (category) {
-        response = await controller.getSummariesForCategory(category, filter, pageSize, page, offset);
+        response = await SummaryController.getSummariesForCategory(category, filter, pageSize, page, offset);
       } else {
-        response = await controller.getSummaries(filter, pageSize, page, offset);
+        response = await SummaryController.getSummaries(filter, pageSize, page, offset);
       }
       res.json(response);
+    } catch (e) {
+      console.error(e);
+      res.status(500).end();
+    }
+  }
+);
+
+router.post(
+  '/interact/:targetId/:type',
+  rateLimitMiddleware('1 per 2s'),
+  authMiddleware('jwt', { required: true, scope: ['standard:write'] }),
+  param('targetId').isNumeric(),
+  param('type').isString(),
+  body('value').isString().optional(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const { targetId, type } = req.params;
+      await SummaryController.interactWithSummary(targetId, type, req.body);
     } catch (e) {
       console.error(e);
       res.status(500).end();

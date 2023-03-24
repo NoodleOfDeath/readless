@@ -6,7 +6,11 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { JobAttributes, JobCreationAttributes } from './Job.types';
+import {
+  JobAttributes,
+  JobCreationAttributes,
+  RetryPolicy,
+} from './Job.types';
 import { Serializable } from '../../../../types';
 import { BaseModel } from '../base';
 
@@ -47,6 +51,18 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
   })
     data: DataType;
   
+  @Column({
+    defaultValue: 0,
+    type: DataType.INTEGER,
+  })
+    attempts: number;
+    
+  @Column({
+    defaultValue: 'backoff',
+    type: DataType.STRING,
+  })
+    retryPolicy: RetryPolicy;
+    
   @Column({ type: DataType.DATE })
     startedAt?: Date;
   
@@ -69,11 +85,13 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
   }
 
   async moveToCompleted() {
+    this.set('attempts', this.toJSON().attempts + 1);
     this.set('completedAt', new Date());
     await this.save();
   }
     
   async moveToFailed(reason?: string | Error) {
+    this.set('attempts', this.toJSON().attempts + 1);
     this.set('failedAt', new Date());
     this.set('failureReason', reason instanceof Error ? reason.message : reason);
     await this.save();

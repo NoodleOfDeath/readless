@@ -1,11 +1,18 @@
 import { Serializable } from '../../../../types';
 import { DatedAttributes } from '../types';
 
+export type RetryPolicy = 
+ | 'aggressive'
+ | 'backoff'
+ | `${number}`;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type JobAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = DatedAttributes & {
   queue: QueueName;
   name: string;
   data: DataType;
+  attempts: number;
+  retryPolicy: RetryPolicy;
   startedAt?: Date;
   completedAt?: Date;
   failedAt?: Date;
@@ -18,6 +25,7 @@ export type JobCreationAttributes<DataType extends Serializable, ReturnType, Que
   queue: QueueName;
   name: string;
   data?: DataType;
+  retryPolicy?: RetryPolicy;
   failureReason?: string;
 };
 

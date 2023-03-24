@@ -2,7 +2,7 @@
 
 THIS=$(dirname "$0")
 
-if [ -z "$SKOOP_ROOT" ]; then
+if [[ -z "$SKOOP_ROOT" ]]; then
   echo "SKOOP_ROOT is not set"
   exit 1
 fi

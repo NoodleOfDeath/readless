@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { load } from 'cheerio';
-import { CronJob } from 'cron';
 import ms from 'ms';
 import { Op } from 'sequelize';
 
@@ -14,9 +13,7 @@ import { DBService, QueueService } from '../services';
 
 async function main() {
   await DBService.initTables();
-  // poll for new current events every 30 min
-  new CronJob('*/30 * * * *', () => pollForNews()).start();
-  new CronJob('*/30 * * * *', () => cleanBadSummaries()).start();
+  await Queue.initQueues();
   pollForNews();
   cleanBadSummaries();
 }
@@ -77,6 +74,7 @@ async function pollForNews() {
       const { name, siteMaps } = outlet.toJSON();
       console.log(`fetching sitemaps for ${name}`);
       if (siteMaps.length === 0) {
+        console.log('dafuq. no sitemaps?');
         continue;
       }
       for (const siteMap of siteMaps) {
@@ -124,6 +122,8 @@ async function pollForNews() {
     }
   } catch (e) {
     console.error(e);
+  } finally {
+    setTimeout(pollForNews, ms('30m'));
   }
 }
 
@@ -142,6 +142,8 @@ async function cleanBadSummaries() {
     });
   } catch (e) {
     console.error(e);
+  } finally {
+    setTimeout(cleanBadSummaries, ms('30m'));
   }
 }
 

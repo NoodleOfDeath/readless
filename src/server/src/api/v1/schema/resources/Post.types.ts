@@ -47,7 +47,7 @@ export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
   tags: string[];
 };
 
-export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category', 'subcategory', 'tags'] as const;
+export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category', 'subcategory', 'tags', 'interactions'] as const;
 /** light weight record for a source post */
 
 export type TitledCategorizedPostAttr = Attr<TitledCategorizedPostAttributes, typeof TITLED_CATEGORIZED_POST_ATTRS[number]>;

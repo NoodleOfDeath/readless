@@ -32,6 +32,3 @@ export const SUMMARY_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url
 export type SummaryAttrRaw = Attr<Summary, typeof SUMMARY_ATTRS[number]>;
 export type SummaryAttr = SummaryAttrRaw & { outletName: string };
 
-export type ReadAndSummarizeExternalArticlePayload = {
-  url: string;
-};

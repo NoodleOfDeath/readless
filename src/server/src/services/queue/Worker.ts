@@ -12,6 +12,7 @@ import { Serializable } from '../../types';
 export type WorkerOptions = {
   autostart?: boolean;
   fetchIntervalMs?: number;
+  retryFailedJobs?: string[];
 };
 
 export type WorkerState = 'idle' | 'processing' | 'stopped';
@@ -34,6 +35,10 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
   options: WorkerOptions;
 
   state: WorkerState = 'idle';
+  
+  get failureExprs() {
+    return (this.options.retryFailedJobs ?? []).map((e) => ({ [Op.iRegexp]: e }));
+  }
   
   static async from<DataType extends Serializable, ReturnType, QueueName extends string = string>(
     queueProps: QueueSpecifier<DataType, ReturnType, QueueName>,
@@ -81,12 +86,14 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
 
   async fetchJob() {
     const job = await Job.findOne({
-      order: [['createdAt', 'ASC']],
+      // lifo
+      order: [['createdAt', 'DESC']],
       where: {
         completedAt: null,
-        delayedUntil: { [Op.or]: [{ [Op.lt]: new Date() }, null] },
-        failedAt: null,
+        delayedUntil: { [Op.or]: [null, { [Op.lt]: new Date() }] },
         queue: this.queueProps.name,
+        [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...this.failureExprs] } },
+        ],
       },
     });
     return job as Job<DataType, ReturnType, QueueName>;

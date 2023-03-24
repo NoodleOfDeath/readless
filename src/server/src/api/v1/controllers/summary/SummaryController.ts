@@ -48,7 +48,7 @@ function applyFilter(filter?: string) {
 export class SummaryController {
 
   @Get('/')
-  public async getSummaries(
+  public static async getSummaries(
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
@@ -65,7 +65,7 @@ export class SummaryController {
   }
 
   @Get('/:category/')
-  public async getSummariesForCategory(
+  public static async getSummariesForCategory(
     @Path() category: string,
     @Query() filter?: string,
     @Query() pageSize = 10,
@@ -86,7 +86,7 @@ export class SummaryController {
   }
 
   @Get('/:category/:subcategory')
-  public async getSummariesForCategoryAndSubcategory(
+  public static async getSummariesForCategoryAndSubcategory(
     @Path() category: string,
     @Path() subcategory: string,
     @Query() filter?: string,
@@ -105,7 +105,7 @@ export class SummaryController {
   }
 
   @Get('/:category/:subcategory/:title')
-  public async getSummaryForCategoryAndSubcategoryAndTitle(
+  public static async getSummaryForCategoryAndSubcategoryAndTitle(
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string
@@ -121,7 +121,7 @@ export class SummaryController {
   }
   
   @Post('/interact/:targetId/:type')
-  public async interactWithSummary(
+  public static async interactWithSummary(
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
