@@ -4,7 +4,7 @@ THIS=$(basename $0)
 
 usage() {
   echo
-  echo "shorthand for 'docker logs <container>'"
+  echo "shorthand for 'docker logs <container>' but better"
   echo
   echo "usage: $THIS [-h|--help] <pattern>"
   echo "  -h|--help          show this help"
