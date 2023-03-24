@@ -1,6 +1,6 @@
 #!/bin/bash
 
-THIS=$(dirname "$0")
+THIS=$(basename $0)
 
 if [[ -z "$SKOOP_ROOT" ]]; then
   echo "SKOOP_ROOT is not set"
@@ -12,11 +12,17 @@ usage() {
   echo "shorthand for 'docker compose...' to launch"
   echo "skoop containers!"
   echo
-  echo "usage: $0 [options] <web | api | cron | work | worker>"
+  echo "usage: $THIS [options] <web | api | cron | work | worker>"
+  echo
+  echo "  -h | --help          show this help msg"
+  echo "  -e | --env-file      specify env file"
+  echo "  -d | --detach        detach"
+  echo "  -l | --local         run locally"
   exit 0
 }
 
 ARGS=()
+POSTOPTS=()
 ENV=
 LOCAL=
 DETACHED=
@@ -36,6 +42,9 @@ while [ $# -gt 0 ]; do
     ;;
   -l | --local)
     LOCAL=1
+    ;;
+  -d | --build)
+    POSTOPTS+=("$1")
     ;;
   *)
     ARGS+=("$1")
@@ -74,4 +83,4 @@ if [[ "$LOCAL" == "1" ]]; then
   MODULE="$MODULE-local"
 fi
 
-(cd $SKOOP_ROOT && docker compose --env-file $ENV up $MODULE ${ARGS[@]})
+(cd $SKOOP_ROOT && docker compose --env-file $ENV up $MODULE ${POSTOPTS[@]} ${ARGS[@]})
