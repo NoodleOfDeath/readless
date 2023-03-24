@@ -70,7 +70,7 @@ export async function doWork() {
                 return existingSource;
               }
             }
-            fetchMap[outlet.name] = fetchMap[outlet.name] + 1;
+            fetchMap[outletData.name] = fetchMap[outletData.name] + 1;
             const scribe = new ScribeService();
             const source = await scribe.readAndSummarizeSource(
               { url },
