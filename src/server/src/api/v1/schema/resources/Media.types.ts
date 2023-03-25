@@ -1,4 +1,3 @@
-import { ValuesOfKeys } from '../../../../types';
 import { DatedAttributes } from '../types';
 
 export const MEDIA_TYPES = {
@@ -8,7 +7,7 @@ export const MEDIA_TYPES = {
   video: 'video',
 } as const;
 
-export type MediaType = ValuesOfKeys<typeof MEDIA_TYPES>;
+export type MediaType = typeof MEDIA_TYPES[keyof typeof MEDIA_TYPES];
 
 export type MediaAttributes = DatedAttributes & {
   /** type of this media */

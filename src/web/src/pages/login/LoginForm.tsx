@@ -21,7 +21,7 @@ import API, {
   ThirdParty,
   headers,
 } from '@/api';
-import { SessionContext, UserData } from '@/contexts';
+import { SessionContext } from '@/contexts';
 
 export type LoginFormProps = {
   action?: 'logIn' | 'signUp';
@@ -44,16 +44,16 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
   const handleLogIn = React.useCallback(
     async (values: PartialLoginRequest) => {
       try {
-        const { data, error } = await API.login(values, { headers: headers({ token: userData?.token }) });
+        const { data, error } = await API.login(values, { headers: headers({ token: userData?.tokenString }) });
         if (error) {
           setError(error);
           return;
         }
-        setUserData(new UserData({
+        setUserData({
           isLoggedIn: true,
           ...data,
-        }));
-        navigate('/');
+        }, { updateCookie: true });
+        navigate('/search');
       } catch (error) {
         console.log(error);
       }
@@ -63,16 +63,16 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
 
   const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
     try {
-      const { data, error } = await API.register(values, { headers: headers({ token: userData?.token }) });
+      const { data, error } = await API.register(values, { headers: headers({ token: userData?.tokenString }) });
       if (error) {
         setError(error);
         return;
       }
       if (data.token) {
-        setUserData(new UserData({ 
+        setUserData({ 
           isLoggedIn: true,
           ...data,
-        }));
+        }, { updateCookie: true });
         navigate('/');
       } else {
         setNeedsToVerifyAlias(true);

@@ -1,4 +1,3 @@
-import { ValuesOfKeys } from '../../../../types';
 
 export const RESOURCE_TYPES = {
   article: 'article',
@@ -8,7 +7,7 @@ export const RESOURCE_TYPES = {
   summary: 'summary',
 } as const;
 
-export type ResourceType = ValuesOfKeys<typeof RESOURCE_TYPES>;
+export type ResourceType = typeof RESOURCE_TYPES[keyof typeof RESOURCE_TYPES];
 
 export type ResourceSpecifier<Type extends ResourceType> = {
   type: Type;

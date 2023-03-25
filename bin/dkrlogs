@@ -33,4 +33,15 @@ if [[ -z "$PATTERN" ]]; then
   usage
 fi
 
-docker logs $(docker ps | grep $PATTERN | grep '[a-zA-Z0-9-]*$' -o) -f
+PS=($(dkrps --name-only $PATTERN))
+
+if [[ "${#PS[@]}" -eq 0 ]]; then
+  echo "no containers found matching '$PATTERN'"
+  exit 1
+elif [[ "${#PS[@]}" -gt 1 ]]; then
+  echo "multiple containers found matching '$PATTERN'"
+  echo "please be more specific"
+  exit 2
+else
+  docker logs $(dkrps --name-only $PATTERN) -f
+fi

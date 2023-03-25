@@ -15,7 +15,7 @@ install_env() {
   if [[ -f ~/.zshrc ]]; then
     PAFFS+=("~/.zshrc")
   fi
-  if [[ ${#PAFFS[@]} -eq 0 ]]; then
+  if [[ "${#PAFFS[@]}" -eq 0 ]]; then
     echo
     echo "chatgpt: dafuq couldnt find you damn env files. you running windows or summmm?"
     exit 1
@@ -25,18 +25,18 @@ install_env() {
   N=1
   for P in "${PAFFS[@]}"; do
     echo "$N - $P"
-    ((N=N+1))
+    ((N = N + 1))
   done
   echo "oops - to skip"
   while true; do
     echo
-    echo "chatgpt: which one do you wanna write to?" 
+    echo "chatgpt: which one do you wanna write to?"
     read K
     if [[ $K =~ ^oop(s|th)?(ies?)?$ ]]; then
       echo
       echo "chatgpt: fuckin scrub. then why you say yes in the first place?"
       return
-    elif ! [[ $K =~ ^[0-9]+$ ]] || [[ $K -gt ${#PAFFS[@]} ]]; then
+    elif ! [[ $K =~ ^[0-9]+$ ]] || [[ $K -gt "${#PAFFS[@]}" ]]; then
       echo
       echo "chatgpt: brrrrrruh, how hard it be to choose an integer between 1 and ${#PAFFS[@]}"?
       echo "chatgpt: wanna try that again?"
@@ -45,20 +45,20 @@ install_env() {
       break
     fi
   done
-  PAFF=`eval echo ${PAFFS[$K-1]}`
+  PAFF=$(eval echo ${PAFFS[$K - 1]})
   echo
   echo "chatgpt: writing envs to $PAFF"
-  echo "export SKOOP_ROOT=`dirs -c && dirs`" >> $PAFF 
-  echo "export PATH=\$PATH:\$SKOOP_ROOT/bin" >> $PAFF
+  echo "export SKOOP_ROOT=$(dirs -c && dirs)" >>$PAFF
+  echo "export PATH=\$PATH:\$SKOOP_ROOT/bin" >>$PAFF
   source $PAFF
-  if [[ -z `echo $SKOOP_ROOT` ]]; then
+  if [[ -z "$SKOOP_ROOT" ]]; then
     echo
     echo "chatgpt: ahhh shiz wtf? env setup failed :("
-    ((E=E+1))
+    ((E = E + 1))
   else
     echo
     echo "chatgpt: env setup successfur muvvafuckah"
-    ((X=X+1))
+    ((X = X + 1))
   fi
 }
 
@@ -68,39 +68,39 @@ install_deps() {
   yarn install
   (cd src/web && yarn install)
   (cd src/server && yarn install)
-  ((X=X+1))
+  ((X = X + 1))
 }
 
 copy_dotenvs() {
   echo
   echo "chatgpt: copying dot env files"
   if [[ ! -f src/web/.env ]]; then
-    cat src/web/.env-example > src/web/.env
+    cat src/web/.env-example >src/web/.env
   else
     echo "chatgpt: web .env already exists not overwritin dat shiz"
   fi
   if [[ ! -f src/server/.env ]]; then
-    cat src/server/.env-example > src/server/.env
+    cat src/server/.env-example >src/server/.env
   else
     echo "chatgpt: server .env already exists, skippin dat jax"
   fi
-  ((X=X+1))
+  ((X = X + 1))
 }
 
-if [[ -z `echo which yarn` ]]; then
+if [[ -z $(echo which yarn) ]]; then
   echo
   echo "chatgpt: bruh dont even get me started. you dont have 'npm' installed? you call yourself a developer? come back when you got nodejs plz"
   exit 1
 fi
 
-if [[ -z `echo which docker` ]]; then
+if [[ -z $(echo which docker) ]]; then
   echo
   echo "chatgpt: dudeeee what happened to your dock? cant send not dock pics without 'docker' installed! come back when you're grown a dock!"
   exit 1
 fi
 
-if [[ -z `echo $SKOOP_ROOT` ]]; then
-  echo "chatgpt: yo gang, you need to set the skoop root. want me to just magically do that for ya? [y|n|hell yea|naaaaah fam]" 
+if [[ -z "$SKOOP_ROOT" ]]; then
+  echo "chatgpt: yo gang, you need to set the skoop root. want me to just magically do that for ya? [y|n|hell yea|naaaaah fam]"
   read HELL_YEA
   if [[ "$HELL_YEA" =~ ^y(es)?$ ]]; then
     echo
@@ -137,11 +137,11 @@ else
   echo "chatgpt: awww haaaaillll yea you's all setup broski"
 fi
 
-if [[ ! -z "$PAFF "]]; then
+if [[ ! -z "$PAFF" ]]; then
   echo
   echo "chatgpt: make sure to run 'source $PAFF'"
 fi
 
 echo
-echo "chatgpt: now try runnin the 'skoop' or 'dkrl' command!"
+echo "chatgpt: now try runnin the 'skoop' or 'dkrlogs' command!"
 echo

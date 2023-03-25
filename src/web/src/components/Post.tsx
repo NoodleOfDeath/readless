@@ -9,7 +9,6 @@ import {
 import Icon from '@mdi/react';
 import {
   Box,
-  BoxProps,
   Button,
   Card,
   CardMedia,
@@ -30,8 +29,8 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { SessionContext } from '../contexts';
 
 import API, {
+  InteractionResponse,
   InteractionType,
-  ValuesOfKeysTypeofINTERACTIONTYPES as InteractionTypes,
   SummaryAttr,
   headers,
 } from '@/api';
@@ -51,6 +50,7 @@ type Props = {
   summary?: SummaryAttr;
   consumptionMode?: ConsumptionMode;
   onChange?: (mode?: ConsumptionMode) => void;
+  onInteract?: (resp: InteractionResponse) => void;
 };
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -74,10 +74,7 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
   top: theme.spacing(10),
 }));
 
-// eslint-disable-next-line react/display-name
-const StyledConsumptionModeContainer = styled(({
-  consumptionMode, mdAndUp, ...props 
-}: BoxProps & Props & { mdAndUp: boolean }) => <Box { ...props } />)(({
+const StyledConsumptionModeContainer = styled(Box)<Props & { mdAndUp: boolean }>(({
   theme, consumptionMode, mdAndUp, 
 }) => ({
   borderRadius: 8,
@@ -119,6 +116,7 @@ export default function Post({
   summary,
   consumptionMode,
   onChange,
+  onInteract,
 }: Props = {}) {
 
   const { userData } = React.useContext(SessionContext);
@@ -150,16 +148,24 @@ export default function Post({
   );
 
   const interact = React.useCallback(
-    (type: InteractionType, value: string) => () => {
+    async (type: InteractionType, value: string) => {
       if (!summary) {
         return;
       }
       if (!userData) {
         return;
       }
-      API.interactWithSummary(summary.id ?? '', type, { userId: userData.userId, value }, { headers: headers({ token: userData.token }) });
+      console.log(userData);
+      const { data, error } = await API.interactWithSummary(summary.id ?? '', type, { userId: userData.userId, value }, { headers: headers({ token: userData.tokenString }) });
+      if (error) {
+        alert(error);
+        return;
+      }
+      if (data) {
+        onInteract?.(data);
+      }
     },
-    [summary, userData]
+    [onInteract, summary, userData]
   );
 
   const cardMediaStack = React.useMemo(() => {
@@ -173,10 +179,10 @@ export default function Post({
         </StyledCategoryBox>
         <Stack>
           <Stack direction="row">
-            <Button onClick={ interact(InteractionTypes.Like, '1') }>
+            <Button onClick={ () => interact(InteractionType.Like, '1') }>
               <Icon path={ mdiThumbUpOutline } size={ 1 } />
             </Button>
-            <Button onClick={ interact(InteractionTypes.Like, '-1') }>
+            <Button onClick={ () => interact(InteractionType.Like, '-1') }>
               <Icon path={ mdiThumbDownOutline } size={ 1 } />
             </Button>
           </Stack>

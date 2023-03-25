@@ -45,7 +45,7 @@ async function main() {
     transports: [new winston.transports.Console()], // optional: allows to skip some log messages based on request and/or response
   }));
   
-  app.use(cors({ origin: new RegExp(process.env.CORS_ORIGIN, 'i') }));
+  app.use(cors());
   
   app.use(bodyParser.urlencoded({
     extended: false,

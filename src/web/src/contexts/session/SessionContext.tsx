@@ -1,11 +1,6 @@
 import React from 'react';
 
-import {
-  PaletteMode,
-  Theme,
-  useMediaQuery,
-} from '@mui/material';
-import Cookies from 'js-cookie';
+import { useMediaQuery } from '@mui/material';
 import ms from 'ms';
 import {
   useLocation,
@@ -13,105 +8,25 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import API, { LoginResponse, headers } from '@/api';
-import { ConsumptionMode } from '@/components/Post';
+import {
+  clearCookie,
+  getCookie,
+  setCookie,
+} from './cookies';
+import {
+  NULL_SESSION,
+  Preferences,
+  SetSearchTextOptions,
+  SetSessionOptions,
+  UserData,
+  UserDataProps,
+} from './types';
+
+import API, { headers } from '@/api';
 import { AppPathName } from '@/pages';
 import { loadTheme } from '@/theme';
 
-export type Preferences = {
-  displayMode?: PaletteMode;
-  consumptionMode?: ConsumptionMode;
-};
-
-export type UserDataOptions = {
-  userId: number;
-  isLoggedIn?: boolean;
-  token?: LoginResponse['token'];
-  tokens?: LoginResponse['token'] | LoginResponse['token'][];
-};
-
-export class UserData {
-
-  userId: number;
-  isLoggedIn?: boolean;
-  tokens: LoginResponse['token'][];
-
-  get credentials() {
-    if (this.tokens.length === 0) {
-      return undefined;
-    }
-    return this.tokens.sort((a, b) => b.priority - a.priority)[0];
-  }
-
-  get token() {
-    return this.credentials?.value;
-  }
-
-  constructor({
-    userId, 
-    token, 
-    tokens = token ? [token] : [],
-    isLoggedIn = false, 
-  }: UserDataOptions) {
-    this.userId = userId;
-    this.tokens = Array.isArray(tokens) ? tokens : [tokens];
-    this.isLoggedIn = isLoggedIn;
-  }
-
-}
-
-export type SetSearchTextOptions = {
-  clearSearchParams?: boolean;
-};
-
-export type Session = {
-  theme: Theme;
-  preferences: Preferences;
-  userData?: UserData;
-  // getters
-  displayMode?: PaletteMode;
-  consumptionMode?: ConsumptionMode;
-  searchText: string;
-  searchOptions: string[];
-  // setters
-  setUserData: React.Dispatch<React.SetStateAction<UserData | undefined>>;
-  setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
-  setConsumptionMode: React.Dispatch<
-    React.SetStateAction<ConsumptionMode | undefined>
-  >;
-  setSearchText: (
-    state: React.SetStateAction<string>,
-    opts?: SetSearchTextOptions
-  ) => void;
-  setSearchOptions: React.Dispatch<React.SetStateAction<string[]>>;
-};
-
 type Props = React.PropsWithChildren;
-
-export const NULL_SESSION: Session = {
-  consumptionMode: 'concise',
-  // getters
-  displayMode: 'light',
-  preferences: {},
-  searchOptions: [],
-  searchText: '',
-  setConsumptionMode: () => {
-    /* placeholder function */
-  },
-  setDisplayMode: () => {
-    /* placeholder function */
-  },
-  setSearchOptions: () => {
-    /* placeholder function */
-  },
-  setSearchText: () => {
-    /* placeholder function */
-  },
-  setUserData: () => {
-    /* placeholder function */
-  },
-  theme: loadTheme(),
-};
 
 export const COOKIES = {
   preferences: 'preferences',
@@ -132,7 +47,31 @@ export function SessionContextProvider({ children }: Props) {
   
   const [theme, setTheme] = React.useState(loadTheme(prefersDarkMode ? 'dark' : 'light'));
   const [preferences, setPreferences] = React.useState<Preferences>({});
-  const [userData, setUserData] = React.useState<UserData | undefined>();
+  const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps | undefined>();
+
+  const userData = React.useMemo(() => userDataRaw ? new UserData(userDataRaw) : undefined, [userDataRaw]);
+
+  const setUserData = 
+  (state?: UserDataProps | ((prev?: UserDataProps) => UserDataProps | undefined), options?: SetSessionOptions) => {
+    if (!state) {
+      setUserDataRaw(undefined);
+      clearCookie(COOKIES.userData);
+      return;
+    }
+    setUserDataRaw((prev) => {
+      const newData = state instanceof Function ? state(prev) : new UserData(state);
+      if (!newData && options?.updateCookie) {
+        return (prev = undefined);
+      }
+      if (options?.updateCookie) {
+        setCookie(COOKIES.userData, JSON.stringify(newData), {
+          expires: DEFAULT_SESSION_DURATION_MS,
+          path: '/',
+        });
+      }
+      return (prev = newData);
+    });
+  };
 
   const { displayMode, consumptionMode } = React.useMemo(
     () => preferences,
@@ -166,16 +105,20 @@ export function SessionContextProvider({ children }: Props) {
   // Load cookies on mount
   React.useEffect(() => {
     try {
-      const prefs = JSON.parse(Cookies.get(COOKIES.preferences) || '{}');
+      const prefs = JSON.parse(getCookie(COOKIES.preferences) || '{}');
       setPreferences(prefs);
     } catch (e) {
       setPreferences({});
     }
+  }, []);
+
+  React.useEffect(() => {
     try {
-      const userData = JSON.parse(Cookies.get(COOKIES.userData) || '{}');
+      const userData = JSON.parse(getCookie(COOKIES.userData) || '{}');
+      console.log(userData);
       setUserData(userData);
     } catch (e) {
-      setUserData(undefined);
+      setUserData();
     }
   }, []);
 
@@ -186,19 +129,13 @@ export function SessionContextProvider({ children }: Props) {
 
   // Save preferences as cookie when they change
   React.useEffect(() => {
-    Cookies.set(COOKIES.preferences, JSON.stringify(preferences), {
+    setCookie(COOKIES.preferences, JSON.stringify(preferences), {
       expires: DEFAULT_SESSION_DURATION_MS,
       path: '/',
+      sameSite: 'None',
+      secure: true,
     });
   }, [preferences]);
-
-  // Save userData as a cookie it changes
-  React.useEffect(() => {
-    Cookies.set(COOKIES.userData, JSON.stringify(userData), {
-      expires: DEFAULT_SESSION_DURATION_MS,
-      path: '/',
-    });
-  }, [userData]);
   
   const pathActions = React.useMemo<Partial<Record<AppPathName, (() => void)>>>(() => {
     return {
@@ -209,10 +146,10 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/logout': () => {
-        API.logout({}, { headers: headers({ token: userData?.token }) })
+        API.logout({}, { headers: headers({ token: userData?.tokenString }) })
           .catch(console.error)
           .finally(() => {
-            setUserData(undefined);
+            setUserData();
             navigate('/login');
           });
       },
@@ -260,7 +197,7 @@ export function SessionContextProvider({ children }: Props) {
               navigate(`/error?error=${JSON.stringify(error)}`);
               return;
             }
-            setUserData(new UserData(data));
+            setUserData(data, { updateCookie: true });
             navigate('/reset-password');
           }).catch((e) => {
             console.error(e);
@@ -269,7 +206,7 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
     };
-  }, [navigate, searchParams, userData]);
+  }, [navigate, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId]);
   
   React.useEffect(() => {
     // record page visit
@@ -279,7 +216,7 @@ export function SessionContextProvider({ children }: Props) {
       userAgent: navigator.userAgent,
     })
       .catch(console.error);
-    const action = pathActions[location.pathname as AppPathName];
+    const action = pathActions[location.pathname];
     action?.();
   }, [location, pathActions]);
 

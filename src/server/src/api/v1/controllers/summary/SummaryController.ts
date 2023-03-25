@@ -6,6 +6,7 @@ import {
   Post,
   Query,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 
@@ -120,6 +121,7 @@ export class SummaryController {
     return await Summary.findOne(options);
   }
   
+  @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
     @Path() targetId: number,

@@ -1,4 +1,3 @@
-import { ValuesOfKeys } from '../../../../types';
 import { DatedAttributes } from '../types';
 
 export const INTERACTION_TYPES = {
@@ -10,7 +9,7 @@ export const INTERACTION_TYPES = {
   view: 'view',
 } as const;
 
-export type InteractionType = ValuesOfKeys<typeof INTERACTION_TYPES>;
+export type InteractionType = typeof INTERACTION_TYPES[keyof typeof INTERACTION_TYPES];
 
 export type InteractionValue<T extends InteractionType> = T extends 'like' ? (-1 | 0 | 1) : string;
 

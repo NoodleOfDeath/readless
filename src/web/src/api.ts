@@ -7,7 +7,7 @@ type HeaderOptions = {
 };
 
 export function headers({ token }: HeaderOptions = {}) {
-  const headers: Record<string, string> = {};
+  const headers: HeadersInit = {};
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }

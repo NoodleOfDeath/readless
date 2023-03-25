@@ -30,7 +30,7 @@ export default function ResetPasswordPage() {
       return;
     }
     try {
-      const { error } = await API.updateCredential(values, { headers: headers({ token: userData.token }) });
+      const { error } = await API.updateCredential(values, { headers: headers({ token: userData.tokenString }) });
       if (error) {
         setError(error);
         return;
@@ -44,7 +44,7 @@ export default function ResetPasswordPage() {
   React.useEffect(() => {
     if (success) {
       setTimeout(() => {
-        setUserData(undefined);
+        setUserData();
         navigate('/login');
       }, 3_000);
     }

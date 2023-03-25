@@ -1,0 +1,52 @@
+#!/bin/bash
+
+THIS=$(basename $0)
+
+usage() {
+  echo
+  echo "shorthand for 'docker kill <container>' but so much better"
+  echo
+  echo "usage: $THIS [options] <pattern>"
+  echo "simple and stupid the way it should be written"
+  echo
+  echo "  -a|--all           kill all containers"
+  echo "  -h|--help          show this help"
+  echo
+  exit 0
+}
+
+ARGS=()
+PATTERN=
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -a | --all)
+    docker ps -aq | xargs docker kill
+    exit 0
+    ;;
+  -h | --help)
+    usage
+    ;;
+  *)
+    ARGS+=("$1")
+    ;;
+  esac
+  shift
+done
+
+PATTERN="${ARGS[0]}"
+
+if [[ -z "$PATTERN" ]]; then
+  usage
+fi
+
+PS=($(dkrps --name-only $PATTERN))
+
+if [[ "${#PS[@]}" -eq 0 ]]; then
+  echo "no containers found matching '$PATTERN'"
+  exit 1
+elif [[ "${#PS[@]}" -gt 1 ]]; then
+  echo ${PS[@]} | xargs docker kill
+else
+  docker kill $(dkrps --name-only $PATTERN)
+fi

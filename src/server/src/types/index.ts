@@ -7,5 +7,3 @@ export type SerializableDict<K extends SerializableKey = SerializableKey, V exte
 export type Serializable = SerializablePrimative | SerializableDict;
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-
-export type ValuesOfKeys<T> = T[keyof T];

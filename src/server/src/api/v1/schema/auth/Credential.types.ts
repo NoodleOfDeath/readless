@@ -1,4 +1,3 @@
-import { ValuesOfKeys } from '../../../../types';
 import { DatedAttributes } from '../types';
 
 export const CREDENTIAL_TYPES = {
@@ -8,7 +7,7 @@ export const CREDENTIAL_TYPES = {
   password: 'password',
 } as const;
 
-export type CredentialType = ValuesOfKeys<typeof CREDENTIAL_TYPES>;
+export type CredentialType = typeof CREDENTIAL_TYPES[keyof typeof CREDENTIAL_TYPES];
 
 export type DestructuredCredentialPayload = Omit<{
   [key in CredentialType]: string;
