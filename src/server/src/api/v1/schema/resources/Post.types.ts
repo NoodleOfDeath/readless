@@ -37,7 +37,7 @@ export type TitledCategorizedPostAttributes = PostAttributes & {
   category: string;
   subcategory: string;
   tags: string[];
-  interactions: Record<InteractionType, InteractionAttributes[]>
+  interactions: Record<InteractionType, InteractionAttributes[]>;
 };
 
 export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
@@ -47,7 +47,9 @@ export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
   tags: string[];
 };
 
-export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category', 'subcategory', 'tags', 'interactions'] as const;
+export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category', 'subcategory', 'tags'] as const;
 /** light weight record for a source post */
 
-export type TitledCategorizedPostAttr = Attr<TitledCategorizedPostAttributes, typeof TITLED_CATEGORIZED_POST_ATTRS[number]>;
+export type TitledCategorizedPostAttr = Attr<TitledCategorizedPostAttributes, typeof TITLED_CATEGORIZED_POST_ATTRS[number]> & {
+  interactions: Record<InteractionType, InteractionAttributes[]>;
+};

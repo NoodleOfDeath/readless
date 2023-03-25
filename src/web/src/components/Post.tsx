@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { mdiChevronLeft, mdiDotsHorizontal } from '@mdi/js';
+import {
+  mdiChevronLeft,
+  mdiDotsHorizontal,
+  mdiThumbDownOutline,
+  mdiThumbUpOutline,
+} from '@mdi/js';
 import Icon from '@mdi/react';
 import {
   Box,
@@ -22,7 +27,14 @@ import {
 import { formatDistance } from 'date-fns';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
-import { SummaryAttr } from '@/api';
+import { SessionContext } from '../contexts';
+
+import API, {
+  InteractionType,
+  ValuesOfKeysTypeofINTERACTIONTYPES as InteractionTypes,
+  SummaryAttr,
+  headers,
+} from '@/api';
 import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
 import TruncatedText from '@/components/common/TruncatedText';
 
@@ -64,7 +76,6 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
 
 // eslint-disable-next-line react/display-name
 const StyledConsumptionModeContainer = styled(({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   consumptionMode, mdAndUp, ...props 
 }: BoxProps & Props & { mdAndUp: boolean }) => <Box { ...props } />)(({
   theme, consumptionMode, mdAndUp, 
@@ -78,7 +89,6 @@ const StyledConsumptionModeContainer = styled(({
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   borderRadius: 8,
-  height: 120,
   marginLeft: theme.spacing(2),
   width: 120,
 }));
@@ -111,6 +121,8 @@ export default function Post({
   onChange,
 }: Props = {}) {
 
+  const { userData } = React.useContext(SessionContext);
+
   const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
   const lgAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
 
@@ -124,17 +136,60 @@ export default function Post({
       formatDistance(new Date(summary?.createdAt ?? 0), new Date(), { addSuffix: true }),
     [summary?.createdAt]
   );
+  
+  const likeCount = React.useMemo(
+    () => 
+      summary?.interactions?.like?.filter((i) => parseInt(i.value ?? '0') > 0).length || 0
+    , [summary?.interactions?.like]
+  );
 
-  const icon = React.useMemo(() => {
+  const dislikeCount = React.useMemo(
+    () =>
+      summary?.interactions?.like?.filter((i) => parseInt(i.value ?? '0') < 0).length || 0
+    , [summary?.interactions?.like]
+  );
+
+  const interact = React.useCallback(
+    (type: InteractionType, value: string) => () => {
+      if (!summary) {
+        return;
+      }
+      if (!userData) {
+        return;
+      }
+      API.interactWithSummary(summary.id ?? '', type, { userId: userData.userId, value }, { headers: headers({ token: userData.token }) });
+    },
+    [summary, userData]
+  );
+
+  const cardMediaStack = React.useMemo(() => {
     return (
-      <StyledCategoryBox>
-        <StyledCategoryStack>
-          <Typography variant="subtitle1">{summary?.category}</Typography>
-          <Typography variant="subtitle2">{summary?.subcategory}</Typography>
-        </StyledCategoryStack>
-      </StyledCategoryBox>
+      <Stack spacing={ 2 }>
+        <StyledCategoryBox>
+          <StyledCategoryStack>
+            <Typography variant="subtitle1">{summary?.category}</Typography>
+            <Typography variant="subtitle2">{summary?.subcategory}</Typography>
+          </StyledCategoryStack>
+        </StyledCategoryBox>
+        <Stack>
+          <Stack direction="row">
+            <Button onClick={ interact(InteractionTypes.Like, '1') }>
+              <Icon path={ mdiThumbUpOutline } size={ 1 } />
+            </Button>
+            <Button onClick={ interact(InteractionTypes.Like, '-1') }>
+              <Icon path={ mdiThumbDownOutline } size={ 1 } />
+            </Button>
+          </Stack>
+          {(likeCount > 0 || dislikeCount > 0) && (
+            <Stack direction="row">
+              <Typography variant="subtitle2">{likeCount}</Typography>
+              <Typography variant="subtitle2">{dislikeCount}</Typography>
+            </Stack>
+          )}
+        </Stack>
+      </Stack>
     );
-  }, [summary?.category, summary?.subcategory]);
+  }, [dislikeCount, interact, likeCount, summary?.category, summary?.subcategory]);
 
   const bottomRowDirection = React.useMemo(() => {
     return lgAndUp ? 'row' : 'column';
@@ -225,7 +280,7 @@ export default function Post({
           </Stack>
           {!consumptionMode && (
             <StyledCardMedia>
-              {icon}  
+              {cardMediaStack}  
             </StyledCardMedia>
           )}
         </Stack>
