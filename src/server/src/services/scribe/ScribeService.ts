@@ -33,7 +33,7 @@ export class ScribeService extends BaseService {
     const spider = new SpiderService();
     const loot = await spider.loot(url);
     // create the prompt action map to be sent to chatgpt
-    if (loot.filteredText.length > MAX_OPENAI_TOKEN_COUNT) {
+    if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       throw new Error('Article too long for OpenAI');
     }
     const sourceInfo = Summary.json<Summary>({
