@@ -1,5 +1,6 @@
 import { Column, DataType } from 'sequelize-typescript';
 
+import { InteractionResponse } from './../interaction/Interaction.types';
 import {
   PostAttributes,
   PostCreationAttributes,
@@ -7,7 +8,6 @@ import {
   TitledCategorizedPostCreationAttributes,
 } from './Post.types';
 import { BaseModel } from '../base';
-import { InteractionAttributes, InteractionType } from '../types';
 
 export abstract class Post<
     A extends PostAttributes = PostAttributes,
@@ -26,7 +26,7 @@ export abstract class Post<
     allowNull: false,
     type: DataType.TEXT,
   })
-    abridged: string;
+    longSummary: string;
 
   @Column({
     allowNull: false,
@@ -51,6 +51,8 @@ export abstract class Post<
     type: DataType.TEXT,
   })
     imagePrompt: string;
+
+  interactions: InteractionResponse;
 
 }
 
@@ -82,14 +84,5 @@ export abstract class TitledCategorizedPost<
     type: DataType.ARRAY(DataType.STRING),
   })
     tags: string[];
-
-  interactions: { [key in InteractionType]: InteractionAttributes[] } = {
-    'bookmark': [],
-    'comment': [],
-    impression: [],
-    'like': [],
-    'share': [],
-    view: [],
-  };
 
 }

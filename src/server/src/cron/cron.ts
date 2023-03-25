@@ -88,7 +88,7 @@ async function pollForNews() {
             const { data } = await axios.get(queryUrl, { timeout: 10_000 });
             const $ = load(data);
             const cheerio = $(selector);
-            const urls = [...cheerio]
+            const urls = [...cheerio] 
               .map((e) => {
                 const href = (
                   attribute && $(e).attr(attribute)
@@ -135,7 +135,7 @@ async function cleanBadSummaries() {
         [Op.or]: [
           { title: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
           { title: { [Op.iRegexp]: '\\w{200,}' } },
-          { abridged: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
+          { longSummary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
           { summary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
         ],
       },

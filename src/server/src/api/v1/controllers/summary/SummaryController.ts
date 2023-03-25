@@ -18,8 +18,7 @@ import {
   InteractionType,
   SUMMARY_ATTRS,
   Summary,
-  SummaryAttr,
-  SummaryAttributes,
+  SummaryResponse,
   User,
 } from '../../schema';
 
@@ -54,7 +53,7 @@ export class SummaryController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SummaryAttr>> {
+  ): Promise<BulkResponse<SummaryResponse>> {
     const options: FindAndCountOptions<Summary> = {
       attributes: [...SUMMARY_ATTRS],
       limit: pageSize,
@@ -72,10 +71,7 @@ export class SummaryController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<{
-    count: number;
-    rows: SummaryAttr[];
-  }> {
+  ): Promise<BulkResponse<SummaryResponse>> {
     const options: FindAndCountOptions<Summary> = {
       attributes: [...SUMMARY_ATTRS],
       limit: pageSize,
@@ -94,7 +90,7 @@ export class SummaryController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SummaryAttr>> {
+  ): Promise<BulkResponse<SummaryResponse>> {
     const options: FindAndCountOptions<Summary> = {
       attributes: [...SUMMARY_ATTRS],
       limit: pageSize,
@@ -110,7 +106,7 @@ export class SummaryController {
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string
-  ): Promise<SummaryAttributes> {
+  ): Promise<SummaryResponse> {
     const options: FindAndCountOptions<Summary> = {
       where: {
         category,
@@ -130,8 +126,8 @@ export class SummaryController {
   ): Promise<InteractionResponse> {
     const { user } = await User.from(body);
     const { value } = body;
-    await user.interactWith({ id: targetId, type: 'summary' }, type, value);
-    return { id: 0 };
+    const resource = await user.interactWith({ id: targetId, type: 'summary' }, type, value);
+    return resource.interactions;
   }
 
 }

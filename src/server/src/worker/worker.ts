@@ -72,7 +72,7 @@ export async function doWork() {
             }
             fetchMap[outletData.name] = (fetchMap[outletData.name] ?? 0) + 1;
             const scribe = new ScribeService();
-            const summary = await scribe.readAndSummarizeExternalArticle(
+            const summary = await scribe.readAndSummarize(
               { url },
               { outletId: outletData.id }
             );

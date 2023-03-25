@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useMediaQuery } from '@mui/material';
-import ms from 'ms';
 import {
   useLocation,
   useNavigate,
@@ -33,9 +32,6 @@ export const COOKIES = {
   userData: 'userData',
 };
 
-// 2 days
-export const DEFAULT_SESSION_DURATION_MS = ms('2d');
-
 export const SessionContext = React.createContext(NULL_SESSION);
 
 export function SessionContextProvider({ children }: Props) {
@@ -64,10 +60,7 @@ export function SessionContextProvider({ children }: Props) {
         return (prev = undefined);
       }
       if (options?.updateCookie) {
-        setCookie(COOKIES.userData, JSON.stringify(newData), {
-          expires: DEFAULT_SESSION_DURATION_MS,
-          path: '/',
-        });
+        setCookie(COOKIES.userData, JSON.stringify(newData));
       }
       return (prev = newData);
     });
@@ -79,6 +72,10 @@ export function SessionContextProvider({ children }: Props) {
   );
   const [searchText, setSearchText] = React.useState('');
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
+  
+  const updatePreferences = React.useCallback(() => {
+    setCookie(COOKIES.preferences, JSON.stringify(preferences));
+  }, [preferences]);
 
   // Convenience function to set a preference
   const preferenceSetter = React.useCallback(<Key extends keyof Preferences>(key: Key) =>
@@ -93,7 +90,8 @@ export function SessionContextProvider({ children }: Props) {
         }
         return (preferences = newPrefs);
       });
-    }, []);
+      updatePreferences();
+    }, [updatePreferences]);
 
   const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
     return {
@@ -115,7 +113,6 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     try {
       const userData = JSON.parse(getCookie(COOKIES.userData) || '{}');
-      console.log(userData);
       setUserData(userData);
     } catch (e) {
       setUserData();
@@ -126,16 +123,6 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     setTheme(loadTheme(displayMode ?? (prefersDarkMode ? 'dark' : 'light')));
   }, [displayMode, prefersDarkMode]);
-
-  // Save preferences as cookie when they change
-  React.useEffect(() => {
-    setCookie(COOKIES.preferences, JSON.stringify(preferences), {
-      expires: DEFAULT_SESSION_DURATION_MS,
-      path: '/',
-      sameSite: 'None',
-      secure: true,
-    });
-  }, [preferences]);
   
   const pathActions = React.useMemo<Partial<Record<AppPathName, (() => void)>>>(() => {
     return {

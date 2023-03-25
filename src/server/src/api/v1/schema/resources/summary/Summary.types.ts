@@ -1,8 +1,5 @@
-import { Summary } from './Summary.model';
 import {
-  Attr,
   TITLED_CATEGORIZED_POST_ATTRS,
-  TitledCategorizedPostAttr,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from '../Post.types';
@@ -30,6 +27,4 @@ export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes 
 /** light weight record for a summary post */
 export const SUMMARY_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
 
-export type SummaryAttrRaw = Attr<Summary, typeof SUMMARY_ATTRS[number]>;
-export type SummaryAttr = SummaryAttrRaw & TitledCategorizedPostAttr & { outletName: string };
-
+export type SummaryResponse = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;

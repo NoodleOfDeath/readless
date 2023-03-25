@@ -9,12 +9,12 @@ import {
 
 import {
   ARTICLE_ATTRS,
-  Article,
   ArticleAttr,
   ArticleAttributes,
   BulkResponse,
   FindAndCountOptions,
 } from '../../schema';
+import { Article } from '../../schema/resources/article/Article.model';
 
 function applyFilter(filter?: string) {
   if (!filter || filter.replace(/\s/g, '').length === 0) {

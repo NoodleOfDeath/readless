@@ -93,7 +93,7 @@ export class ScribeService extends BaseService {
         ].join(' '),
       },
       {
-        action: (reply) => (sourceInfo.abridged = reply.text),
+        action: (reply) => (sourceInfo.longSummary = reply.text),
         catchFailure: (reply) => { 
           if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
             return new Error('Bad response from chatgpt');

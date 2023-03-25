@@ -3,15 +3,14 @@ import { DatedAttributes } from '../types';
 export const INTERACTION_TYPES = {
   bookmark: 'bookmark',
   comment: 'comment',
+  downvote: 'downvote',
   impression: 'impression',
-  like: 'like',
   share: 'share',
+  upvote: 'upvote',
   view: 'view',
 } as const;
 
 export type InteractionType = typeof INTERACTION_TYPES[keyof typeof INTERACTION_TYPES];
-
-export type InteractionValue<T extends InteractionType> = T extends 'like' ? (-1 | 0 | 1) : string;
 
 export type InteractionAttributes = DatedAttributes & {
   /** user that made this interaction **/
@@ -36,5 +35,5 @@ export type InteractionRequest = {
 };
 
 export type InteractionResponse = {
-  id: number;
+  [key in InteractionType]: number;
 };

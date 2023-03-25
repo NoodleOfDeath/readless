@@ -49,7 +49,7 @@ export class Summary extends TitledCategorizedPost<SummaryAttributes, SummaryCre
     originalTitle: string;
 
   outletName: string;
-  
+
   @AfterFind
   static async addOutletName(cursor?: Summary | Summary[]) {
     if (!cursor) {
@@ -77,21 +77,30 @@ export class Summary extends TitledCategorizedPost<SummaryAttributes, SummaryCre
     });
     const interactions = await SummaryInteraction.findAll({ where: { targetId: summaryIds } });
     summaries.forEach((summary) => {
-      const newInteractionMap = {
+      const interactionMap = {
         bookmark: [],
         comment: [],
+        downvote: [],
         impression: [],
-        like: [],
         share: [],
+        upvote: [],
         view: [],
       };
       interactions.forEach((interaction) => {
         const interactionJson = interaction.toJSON();
         if (interactionJson.targetId === summary.id) {
-          newInteractionMap[interactionJson.type].push(interactionJson);
+          interactionMap[interactionJson.type].push(interactionJson);
         }
       });
-      summary.set('interactions', newInteractionMap, { raw: true });
+      summary.set('interactions', {
+        bookmark: interactionMap.bookmark.length,
+        comment: interactionMap.comment.length,
+        downvote: interactionMap.downvote.length,
+        impression: interactionMap.impression.length,
+        share: interactionMap.share.length,
+        upvote: interactionMap.upvote.length,
+        view: interactionMap.view.length,
+      });
     });
     
   }

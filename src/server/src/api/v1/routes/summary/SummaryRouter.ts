@@ -5,6 +5,7 @@ import {
   query,
 } from 'express-validator';
 
+import { BulkResponse, SummaryResponse } from './../../schema/types';
 import { SummaryController } from '../../controllers';
 import {
   authMiddleware,
@@ -12,7 +13,6 @@ import {
   rateLimitMiddleware,
   validationMiddleware,
 } from '../../middleware';
-import { SummaryAttrRaw, SummaryAttributesRaw } from '../../schema/types';
 
 const router = Router();
 
@@ -31,7 +31,7 @@ router.get(
     const {
       filter, pageSize = 10, page = 0, offset = page * pageSize, 
     } = req.query;
-    let response: { count: number; rows: SummaryAttrRaw[] } | SummaryAttributesRaw = {
+    let response: BulkResponse<SummaryResponse> | SummaryResponse = {
       count: 0,
       rows: [],
     };

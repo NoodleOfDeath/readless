@@ -31,7 +31,7 @@ import { SessionContext } from '../contexts';
 import API, {
   InteractionResponse,
   InteractionType,
-  SummaryAttr,
+  SummaryResponse,
   headers,
 } from '@/api';
 import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
@@ -47,7 +47,7 @@ export const CONSUMPTION_MODES = [
 export type ConsumptionMode = (typeof CONSUMPTION_MODES)[number];
 
 type Props = {
-  summary?: SummaryAttr;
+  summary?: SummaryResponse;
   consumptionMode?: ConsumptionMode;
   onChange?: (mode?: ConsumptionMode) => void;
   onInteract?: (resp: InteractionResponse) => void;
@@ -135,20 +135,20 @@ export default function Post({
     [summary?.createdAt]
   );
   
-  const likeCount = React.useMemo(
+  const upvotes = React.useMemo(
     () => 
-      summary?.interactions?.like?.filter((i) => parseInt(i.value ?? '0') > 0).length || 0
-    , [summary?.interactions?.like]
+      summary?.interactions?.upvote ?? 0
+    , [summary?.interactions?.upvote]
   );
 
-  const dislikeCount = React.useMemo(
+  const downvotes = React.useMemo(
     () =>
-      summary?.interactions?.like?.filter((i) => parseInt(i.value ?? '0') < 0).length || 0
-    , [summary?.interactions?.like]
+      summary?.interactions?.downvote ?? 0
+    , [summary?.interactions?.downvote]
   );
 
   const interact = React.useCallback(
-    async (type: InteractionType, value: string) => {
+    async (type: InteractionType, value?: string) => {
       if (!summary) {
         return;
       }
@@ -179,23 +179,23 @@ export default function Post({
         </StyledCategoryBox>
         <Stack>
           <Stack direction="row">
-            <Button onClick={ () => interact(InteractionType.Like, '1') }>
+            <Button onClick={ () => interact(InteractionType.Upvote) }>
               <Icon path={ mdiThumbUpOutline } size={ 1 } />
             </Button>
-            <Button onClick={ () => interact(InteractionType.Like, '-1') }>
+            <Button onClick={ () => interact(InteractionType.Downvote) }>
               <Icon path={ mdiThumbDownOutline } size={ 1 } />
             </Button>
           </Stack>
-          {(likeCount > 0 || dislikeCount > 0) && (
+          {(upvotes > 0 || downvotes > 0) && (
             <Stack direction="row">
-              <Typography variant="subtitle2">{likeCount}</Typography>
-              <Typography variant="subtitle2">{dislikeCount}</Typography>
+              <Typography variant="subtitle2">{upvotes}</Typography>
+              <Typography variant="subtitle2">{downvotes}</Typography>
             </Stack>
           )}
         </Stack>
       </Stack>
     );
-  }, [dislikeCount, interact, likeCount, summary?.category, summary?.subcategory]);
+  }, [downvotes, interact, upvotes, summary?.category, summary?.subcategory]);
 
   const bottomRowDirection = React.useMemo(() => {
     return lgAndUp ? 'row' : 'column';
@@ -217,7 +217,7 @@ export default function Post({
       text = summary.summary;
       break;
     case 'comprehensive':
-      text = summary.abridged;
+      text = summary.longSummary;
       break;
     default:
       text = '';
@@ -326,7 +326,7 @@ export default function Post({
                     target="_blank"
                     color="inherit">
                     <Button>
-                      View Original Summary
+                      View Original Source
                     </Button>
                   </Link>
                 </MenuItem>

@@ -10,10 +10,10 @@ import { BaseModel } from '../base';
 import { Interaction } from '../interaction/Interaction.model';
 import {
   Alias,
-  ArticleInteraction,
   Credential,
   RefUserRole,
   Role,
+  Summary,
   SummaryInteraction,
 } from '../models';
 import {
@@ -24,7 +24,6 @@ import {
   CredentialType,
   FindAliasOptions,
   InteractionType,
-  InteractionValue,
   ResourceSpecifier,
   ResourceType,
   UserAttributes,
@@ -186,15 +185,8 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return count;
   } 
   
-  public async interactWith<R extends ResourceType, T extends InteractionType>(resource: ResourceSpecifier<R>, type: T, value?: InteractionValue<T>) {
+  public async interactWith<R extends ResourceType, T extends InteractionType>(resource: ResourceSpecifier<R>, type: T, value?: string) {
     let interaction: Interaction;
-    if (resource.type === 'article') {
-      interaction = await ArticleInteraction.findOne({
-        where: {
-          targetId: resource.id, type, userId: this.id, 
-        }, 
-      });
-    } else
     if (resource.type === 'summary') {
       interaction = await SummaryInteraction.findOne({
         where: {
@@ -205,7 +197,17 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!interaction) {
       throw new SchemaError('Unknown interaction type');
     }
-    return await interaction?.apply(value);
+    if (interaction.type === 'upvote' || interaction.type === 'downvote') {
+      if (interaction.value === value) {
+        await interaction.destroy();
+      }
+    }
+    interaction.value = value;
+    await interaction.save();
+    if (resource.type === 'summary') {
+      return Summary.findByPk(resource.id);
+    }
+    throw new SchemaError('Unknown interaction type');
   }
 
 }

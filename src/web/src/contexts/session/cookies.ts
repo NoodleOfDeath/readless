@@ -1,14 +1,25 @@
 import Cookies from 'js-cookie';
+import ms from 'ms';
 
-export function setCookie(name: string, value: string, options?: Cookies.CookieAttributes) {
-  Cookies.set(name, window.btoa(value), options);
+// 2 days
+export const DEFAULT_SESSION_DURATION_MS = ms('2d');
+export const DEFAULT_SESSION_PATH = '/';
+
+export function setCookie(name: string, value: string, {
+  expires = DEFAULT_SESSION_DURATION_MS,
+  path = DEFAULT_SESSION_PATH,
+  ...other
+}: Partial<Cookies.CookieAttributes> = {}) {
+  Cookies.set(name, window.btoa(value), {
+    expires, path, ...other, 
+  });
 }
 
 export function clearCookie(name: string, {
-  path = '/',
+  path = DEFAULT_SESSION_PATH,
   expires = 0,
   ...other
-}: Cookies.CookieAttributes = {}) {
+}: Partial<Cookies.CookieAttributes> = {}) {
   Cookies.remove(name, {
     expires, path, ...other,
   });
