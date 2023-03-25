@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 
-import API, { SummaryAttr } from '@/api';
+import API, { SummaryResponse } from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
@@ -34,7 +34,7 @@ export default function SearchPage() {
   } = React.useContext(SessionContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
-  const [recentSummaries, setRecentSummaries] = React.useState<SummaryAttr[]>([]);
+  const [recentSummaries, setRecentSummaries] = React.useState<SummaryResponse[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [pageSize] = React.useState<number>(10);
   const [page, setPage] = React.useState<number>(1);
