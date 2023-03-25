@@ -7,7 +7,8 @@ import {
   MenuItem,
   styled,
 } from '@mui/material';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+
+import { useRouter } from '@/next/router';
 
 export type NavigationItemProps = {
   id: string;
@@ -16,7 +17,7 @@ export type NavigationItemProps = {
   icon?: string;
   content?: React.ReactNode;
   items?: NavigationItemProps[];
-  onClick?: (options: { navigate?: NavigateFunction }) => void;
+  onClick?: (options: { router?: ReturnType<typeof useRouter> }) => void;
 };
 
 const StyledMenuItemButton = styled(Button)(({ theme }) => ({
@@ -32,7 +33,7 @@ export default function NavigationItem({
   items,
   onClick,
 }: NavigationItemProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -45,9 +46,9 @@ export default function NavigationItem({
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      onClick ? onClick({ navigate }) : setAnchorEl(event.currentTarget);
+      onClick ? onClick({ router }) : setAnchorEl(event.currentTarget);
     },
-    [navigate, onClick]
+    [router, onClick]
   );
 
   return (
@@ -77,7 +78,7 @@ export default function NavigationItem({
           {filteredItems.map((item) => (
             <MenuItem key={ item.id }>
               <StyledMenuItemButton
-                onClick={ () => item.onClick?.({ navigate }) }
+                onClick={ () => item.onClick?.({ router }) }
                 startIcon={ item.icon && <Icon path={ item.icon } size={ 1 } /> }>
                 {item.label}
               </StyledMenuItemButton>

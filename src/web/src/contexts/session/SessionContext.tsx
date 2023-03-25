@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { useMediaQuery } from '@mui/material';
 import {
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
+  CssBaseline,
+  ThemeProvider,
+  useMediaQuery,
+} from '@mui/material';
 
 import {
   clearCookie,
@@ -22,7 +21,7 @@ import {
 } from './types';
 
 import API, { headers } from '@/api';
-import { AppPathName } from '@/pages';
+import { useRouter } from '@/next/router';
 import { loadTheme } from '@/theme';
 
 type Props = React.PropsWithChildren;
@@ -36,9 +35,9 @@ export const SessionContext = React.createContext(NULL_SESSION);
 
 export function SessionContextProvider({ children }: Props) {
   
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const { searchParams, setSearchParams } = React.useMemo(() => router, [router]);
+
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
   const [theme, setTheme] = React.useState(loadTheme(prefersDarkMode ? 'dark' : 'light'));
@@ -124,11 +123,11 @@ export function SessionContextProvider({ children }: Props) {
     setTheme(loadTheme(displayMode ?? (prefersDarkMode ? 'dark' : 'light')));
   }, [displayMode, prefersDarkMode]);
   
-  const pathActions = React.useMemo<Partial<Record<AppPathName, (() => void)>>>(() => {
+  const pathActions = React.useMemo<Partial<Record<string, (() => void)>>>(() => {
     return {
       '/login': () => {
         if (userData?.isLoggedIn) {
-          navigate('/');
+          router.push('/');
           return;
         }
       },
@@ -137,75 +136,75 @@ export function SessionContextProvider({ children }: Props) {
           .catch(console.error)
           .finally(() => {
             setUserData();
-            navigate('/login');
+            router.push('/login');
           });
       },
       '/profile': () => {
         if (!userData?.isLoggedIn) {
-          navigate('/login');
+          router.push('/login');
           return;
         }
       },
       '/reset-password': () => {
         if (userData?.isLoggedIn) {
-          navigate('/');
+          router.push('/');
           return;
         }
         if (!userData?.userId) {
-          navigate('/login');
+          router.push('/login');
           return;
         }
       },
       '/verify': () => {
-        const verificationCode = searchParams.get('vc');
-        const otp = searchParams.get('otp');
+        const verificationCode = JSON.stringify(searchParams['vc']);
+        const otp = JSON.stringify(searchParams['otp']);
         if (!verificationCode && !otp) {
-          navigate('/error');
+          router.push('/error');
           return;
         }
         if (verificationCode) {
           API.verifyAlias({ verificationCode }).then(({ error }) => {
             if (error && error.code) {
-              navigate(`/error?error=${JSON.stringify(error)}`);
+              router.push(`/error?error=${JSON.stringify(error)}`);
               return;
             }
-            navigate(`/success?${new URLSearchParams({
+            router.push(`/success?${new URLSearchParams({
               msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
               r: '/login',
               t: '3000',
             }).toString()}`);
           }).catch((e) => {
             console.error(e);
-            navigate('/error');
+            router.push('/error');
           });
         } else if (otp) {
           API.verifyOtp({ otp }).then(({ data, error }) => {
             if (error && error.code) {
-              navigate(`/error?error=${JSON.stringify(error)}`);
+              router.push(`/error?error=${JSON.stringify(error)}`);
               return;
             }
             setUserData(data, { updateCookie: true });
-            navigate('/reset-password');
+            router.push('/reset-password');
           }).catch((e) => {
             console.error(e);
-            navigate('/error');
+            router.push('/error');
           });
         }
       },
     };
-  }, [navigate, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId]);
+  }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId]);
   
   React.useEffect(() => {
     // record page visit
     API.recordMetric({
-      data: { path: location },
+      data: { path: router.pathname },
       type: 'nav',
       userAgent: navigator.userAgent,
     })
       .catch(console.error);
-    const action = pathActions[location.pathname];
+    const action = pathActions[router.pathname];
     action?.();
-  }, [location, pathActions]);
+  }, [pathActions, router.pathname]);
 
   return (
     <SessionContext.Provider
@@ -231,7 +230,10 @@ export function SessionContextProvider({ children }: Props) {
         theme,
         userData,
       } }>
-      {children}
+      <ThemeProvider theme={ theme }>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
     </SessionContext.Provider>
   );
 }

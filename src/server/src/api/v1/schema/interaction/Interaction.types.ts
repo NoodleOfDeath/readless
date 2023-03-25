@@ -24,7 +24,8 @@ export type InteractionAttributes = DatedAttributes & {
 };
 
 export type InteractionCreationAttributes = {
-  actorId: number;
+  userId: number;
+  targetId: number;
   type: InteractionType;
   value?: string;
 };

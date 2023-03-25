@@ -155,10 +155,9 @@ export default function Post({
       if (!userData) {
         return;
       }
-      console.log(userData);
-      const { data, error } = await API.interactWithSummary(summary.id ?? '', type, { userId: userData.userId, value }, { headers: headers({ token: userData.tokenString }) });
+      const { data, error } = await API.interactWithSummary(summary.id, type, { userId: userData.userId, value }, { headers: headers({ token: userData.tokenString }) });
       if (error) {
-        alert(error);
+        console.log(error);
         return;
       }
       if (data) {

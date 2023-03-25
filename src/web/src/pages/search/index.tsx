@@ -10,7 +10,7 @@ import {
   styled,
   useMediaQuery,
 } from '@mui/material';
-import { useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 import API, { SummaryResponse } from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
@@ -26,7 +26,7 @@ const StyledGrid = styled(Grid)(() => ({
 }));
 
 export default function SearchPage() {
-  const [searchParams] = useSearchParams();
+  const { query: searchParams } = useRouter();
 
   const { 
     searchText, 
@@ -42,15 +42,15 @@ export default function SearchPage() {
   const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
   const [consumptionMode, setConsumptionMode] = React.useState<ConsumptionMode|undefined>();
 
-  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+  const mdAndUp = useMediaQuery((theme: Theme) => theme?.breakpoints.up('md'));
 
   const gridSize = React.useMemo(() => {
     return mdAndUp ? (recentSummaries.length < 2 ? 12 : 6) : 12;
   }, [recentSummaries, mdAndUp]);
 
   React.useEffect(() => {
-    if (searchParams.get('q')) {
-      setSearchText(searchParams.get('q') || '');
+    if (searchParams['q']) {
+      setSearchText(JSON.stringify(searchParams['q']) || '');
     }
   }, [searchParams, setSearchText]);
 

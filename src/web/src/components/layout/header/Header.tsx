@@ -23,13 +23,13 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
 import Logo from '@/components/Logo';
 import LightDarkModeButtons from '@/components/layout/header/LightDarkModeButtons';
 import NavigationItem, { NavigationItemProps } from '@/components/layout/header/NavigationItem';
 import { PODCAST_LINKS } from '@/config/PodcastLinks';
 import { SessionContext } from '@/contexts';
+import { useRouter } from '@/next/router';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   margin: 'auto',
@@ -48,7 +48,7 @@ const StyledBox = styled(Box)(() => ({ width: 250 }));
 
 export default function Header() {
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const { userData } = React.useContext(SessionContext);
 
   const [open, setOpen] = React.useState(false);
@@ -93,8 +93,8 @@ export default function Header() {
       icon: mdiHome,
       id: 'Home',
       label: 'Home',
-      onClick({ navigate }) {
-        navigate?.('/');
+      onClick({ router }) {
+        router?.push('/');
       },
       visible: true,
     },
@@ -102,8 +102,8 @@ export default function Header() {
       icon: mdiLogin,
       id: 'Login',
       label: 'Login',
-      onClick({ navigate }) {
-        navigate?.('/login');
+      onClick({ router }) {
+        router?.push('/login');
       },
       visible: () => !userData?.isLoggedIn,
     },
@@ -111,8 +111,8 @@ export default function Header() {
       icon: mdiInformation,
       id: 'About',
       label: 'About',
-      onClick({ navigate }) {
-        navigate?.('/about');
+      onClick({ router }) {
+        router?.push('/about');
       },
       visible: () => !userData?.isLoggedIn,
     },
@@ -127,8 +127,8 @@ export default function Header() {
       icon: mdiAccount,
       id: 'Profile',
       label: 'Profile',
-      onClick({ navigate }) {
-        navigate?.('/profile');
+      onClick({ router }) {
+        router?.push('/profile');
       },
       visible: () => !!userData?.isLoggedIn,
     },
@@ -136,8 +136,8 @@ export default function Header() {
       icon: mdiLogout,
       id: 'Logout',
       label: 'Logout',
-      onClick({ navigate }) {
-        navigate?.('/logout');
+      onClick({ router }) {
+        router?.push('/logout');
       },
       visible: () => !!userData?.isLoggedIn,
     },
@@ -151,11 +151,11 @@ export default function Header() {
   return (
     <AppBar position="sticky">
       <StyledToolbar>
-        <IconButton onClick={ () => navigate('/') }>
+        <IconButton onClick={ () => router.push('/') }>
           <Logo />
         </IconButton>
         <StyledHeaderTitle elevation={ 0 }>
-          <Typography onClick={ () => navigate('/') } component="h4">
+          <Typography onClick={ () => router.push('/') } component="h4">
             theSkoop
           </Typography>
         </StyledHeaderTitle>

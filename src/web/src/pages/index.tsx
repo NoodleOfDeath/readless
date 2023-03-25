@@ -1,36 +1,27 @@
 import React from 'react';
 
-import ForgotPage from './forgot/ForgotPage';
-import ResetPasswordPage from './reset-password/ResetPasswordPage';
+import { Stack, styled } from '@mui/material';
+import { useRouter } from 'next/router';
 
-import AboutPage from '@/pages/about/AboutPage';
-import ContemplatingPage from '@/pages/contemplating/ContemplatingPage';
-import Error404NotFoundPage from '@/pages/errors/Error404NotFoundPage';
-import ErrorPage from '@/pages/errors/ErrorPage';
-import HomePage from '@/pages/home/HomePage';
-import LoginPage from '@/pages/login/LoginPage';
-import PrivacyPage from '@/pages/privacy/PrivacyPage';
-import ProfilePage from '@/pages/profile/ProfilePage';
-import SearchPage from '@/pages/search/SearchPage';
-import SuccessPage from '@/pages/success/SuccessPage';
-import TermsPage from '@/pages/terms/TermsPage';
+import Page from '@/components/layout/Page';
 
-export const ROUTES: Record<string, React.ReactNode> = {
-  '/': <HomePage />,
-  '/*': <Error404NotFoundPage />,
-  '/about': <AboutPage />,
-  '/error': <ErrorPage />,
-  '/forgot': <ForgotPage />,
-  '/login': <LoginPage />,
-  '/logout': <ContemplatingPage />,
-  '/privacy': <PrivacyPage />,
-  '/profile': <ProfilePage />,
-  '/reset-password': <ResetPasswordPage />,
-  '/search': <SearchPage />,
-  '/signup': <LoginPage action={ 'signUp' } />,
-  '/success': <SuccessPage />,
-  '/terms': <TermsPage />,
-  '/verify': <ContemplatingPage />,
-};
+const StyledStack = styled(Stack)(() => ({
+  alignContent: 'center',
+  alignItems: 'center',
+}));
 
-export type AppPathName = keyof typeof ROUTES;
+export default function Index() {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    router.push('/search');
+  }, [router]);
+
+  return (
+    <Page center title="theSkoop">
+      <StyledStack spacing={ 2 }>
+        Home
+      </StyledStack>
+    </Page>
+  );
+}

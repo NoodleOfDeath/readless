@@ -194,16 +194,20 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         }, 
       });
     }
-    if (!interaction) {
-      throw new SchemaError('Unknown interaction type');
-    }
-    if (interaction.type === 'upvote' || interaction.type === 'downvote') {
-      if (interaction.value === value) {
-        await interaction.destroy();
+    if (interaction) {
+      if (interaction.type === 'upvote' || interaction.type === 'downvote') {
+        if (interaction.value === value) {
+          await interaction.destroy();
+        }
+      } 
+      await interaction.save();
+    } else {
+      if (resource.type === 'summary') {
+        await SummaryInteraction.create({
+          targetId: resource.id, type, userId: this.id, value,
+        });
       }
     }
-    interaction.value = value;
-    await interaction.save();
     if (resource.type === 'summary') {
       return Summary.findByPk(resource.id);
     }
