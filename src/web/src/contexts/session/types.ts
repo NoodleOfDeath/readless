@@ -27,7 +27,7 @@ function tokenIsNotExpired(tokenString: string) {
   if (!token || typeof token === 'string' || !token.exp) {
     return false;
   }
-  return token.exp < Date.now() / 1_000;
+  return token.exp > Date.now() / 1_000;
 }
 
 export class UserData implements UserDataProps {
