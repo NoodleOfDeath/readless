@@ -41,7 +41,7 @@ function applyFilter(filter?: string) {
 export class ArticleController {
 
   @Get('/')
-  public async getArticles(
+  public static async getArticles(
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
@@ -58,7 +58,7 @@ export class ArticleController {
   }
 
   @Get('/:category/')
-  public async getArticlesForCategory(
+  public static async getArticlesForCategory(
     @Path() category: string,
     @Query() filter?: string,
     @Query() pageSize = 10,
@@ -76,7 +76,7 @@ export class ArticleController {
   }
 
   @Get('/:category/:subcategory')
-  public async getArticlesForCategoryAndSubcategory(
+  public static async getArticlesForCategoryAndSubcategory(
     @Path() category: string,
     @Path() subcategory: string,
     @Query() filter?: string,
@@ -95,7 +95,7 @@ export class ArticleController {
   }
 
   @Get('/:category/:subcategory/:title')
-  public async getArticleForCategoryAndSubcategoryAndTitle(
+  public static async getArticleForCategoryAndSubcategoryAndTitle(
     @Path() category: string,
     @Path() subcategory: string,
     @Path() title: string

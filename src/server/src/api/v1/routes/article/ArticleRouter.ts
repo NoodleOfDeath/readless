@@ -22,7 +22,7 @@ router.get(
     const {
       filter, pageSize = 10, page = 0, offset = 0, 
     } = req.query;
-    const controller = new ArticleController();
+    const controller = new ArticleController;
     let response: { count: number; rows: ArticleAttr[] } | ArticleAttributes = {
       count: 0,
       rows: [],

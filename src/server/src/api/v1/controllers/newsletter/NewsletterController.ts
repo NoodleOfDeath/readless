@@ -13,7 +13,7 @@ import { SubscriptionAttributes, SubscriptionCreationAttributes } from '../../sc
 export class NewsletterController {
 
   @Post('/subscribe')
-  async subscribeToNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<SubscriptionAttributes> {
+  public static async subscribeToNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<SubscriptionAttributes> {
     const {
       aliasType, alias, newsletterName, 
     } = data;
@@ -41,7 +41,7 @@ export class NewsletterController {
   }
   
   @Post('/unsubscribe')
-  async unsubscribeFromNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<void> {
+  public static async unsubscribeFromNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<void> {
     const {
       aliasType, alias, newsletterName, 
     } = data;

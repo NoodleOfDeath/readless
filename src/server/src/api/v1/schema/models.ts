@@ -1,7 +1,6 @@
 // singleton models
 export * from './analytics/Metric.model';
 export * from './analytics/RateLimit.model';
-export * from './resources/Document.model';
 
 // user models
 export * from './user/User.model';
@@ -17,8 +16,6 @@ export * from './auth/Role.model';
 
 export * from './newsletter/Newsletter.model';
 export * from './newsletter/Subscription.model';
-
-export * from './interaction/Referral.model';
 
 export * from './resources/outlet/Outlet.model';
 export * from './resources/outlet/OutletMedia.model';

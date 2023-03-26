@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
 import { NewsletterController } from '../../controllers';
-import { validationMiddleware } from '../../middleware';
+import { internalErrorHandler, validationMiddleware } from '../../middleware';
 
 const router = Router();
 
@@ -17,16 +17,15 @@ router.post(
       aliasType, alias, newsletterId, newsletterName, 
     } = req.body;
     try {
-      await new NewsletterController().subscribeToNewsletter({
+      await NewsletterController.subscribeToNewsletter({
         alias,
         aliasType,
         newsletterId,
         newsletterName,
       });
-      res.status(204).send('OK');
+      return res.status(204).send('OK');
     } catch (e) {
-      console.error(e);
-      res.status(500).end();
+      internalErrorHandler(res, e);
     }
   }
 );
@@ -42,16 +41,15 @@ router.post(
       aliasType, alias, newsletterId, newsletterName, 
     } = req.body;
     try {
-      await new NewsletterController().unsubscribeFromNewsletter({
+      await NewsletterController.unsubscribeFromNewsletter({
         alias,
         aliasType,
         newsletterId,
         newsletterName,
       });
-      res.status(204).send('OK');
+      return res.status(204).send('OK');
     } catch (e) {
-      console.error(e);
-      res.status(500).end();
+      internalErrorHandler(res, e);
     }
   }
 );

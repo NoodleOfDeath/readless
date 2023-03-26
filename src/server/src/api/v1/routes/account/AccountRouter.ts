@@ -5,6 +5,7 @@ import { AuthError } from '../../../../services';
 import { AccountController } from '../../controllers';
 import {
   authMiddleware,
+  internalErrorHandler,
   rateLimitMiddleware,
   validationMiddleware,
 } from '../../middleware';
@@ -13,7 +14,6 @@ const router = Router();
 
 router.post(
   '/register',
-  authMiddleware('jwt'),
   oneOf([
     body('email').isEmail(),
     body('eth2address'),
@@ -27,22 +27,19 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await new AccountController().register(req.body);
-      res.status(201).json(response);
+      const response = await AccountController.register(req.body);
+      return res.status(201).json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-      } else {
-        console.log(e);
-        res.status(500).end();
+        return res.status(401).json(e);
       }
+      internalErrorHandler(res, e);
     }
   }
 );
 
 router.post(
   '/login',
-  authMiddleware('jwt'),
   oneOf([
     body('email').isEmail(),
     body('eth2address'),
@@ -56,35 +53,30 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await new AccountController().login(req.body);
-      res.json(response);
+      const response = await AccountController.login(req.body);
+      return res.json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-      } else {
-        console.log(e);
-        res.status(500).end();
+        return res.status(401).json(e);
       }
+      internalErrorHandler(res, e);
     }
   }
 );
 
 router.post(
   '/logout',
-  authMiddleware('jwt'),
-  body('userId').isInt().optional(),
+  body('userId').optional(),
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await new AccountController().logout(req.body);
-      res.status(204).json(response);
+      const response = await AccountController.logout(req.body);
+      return res.status(204).json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-      } else {
-        console.log(e);
-        res.status(500).end();
+        return res.status(401).json(e);
       }
+      internalErrorHandler(res, e);
     }
   }
 );
@@ -94,15 +86,13 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await new AccountController().generateOTP(req.body);
-      res.json(response);
+      const response = await AccountController.generateOTP(req.body);
+      return res.json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-      } else {
-        console.log(e);
-        res.status(500).end();
+        return res.status(401).json(e);
       }
+      internalErrorHandler(res, e);
     }
   }
 );
@@ -112,15 +102,13 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await new AccountController().verifyAlias(req.body);
-      res.json(response);
+      const response = await AccountController.verifyAlias(req.body);
+      return res.json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-      } else {
-        console.log(e);
-        res.status(500).end();
+        return res.status(401).json(e);
       }
+      internalErrorHandler(res, e);
     }
   }
 );
@@ -130,15 +118,13 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await new AccountController().verifyOTP(req.body);
-      res.json(response);
+      const response = await AccountController.verifyOTP(req.body);
+      return res.json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-      } else {
-        console.log(e);
-        res.status(500).end();
+        return res.status(401).json(e);
       }
+      internalErrorHandler(res, e);
     }
   }
 );
@@ -150,15 +136,13 @@ router.put(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = new AccountController().updateCredential(req.body);
-      res.status(200).json(response);
+      const response = await AccountController.updateCredential(req.body);
+      return res.status(200).json(response);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-        return;
+        return res.status(401).json(e);
       }
-      console.error(e);
-      res.status(500).json(e);
+      internalErrorHandler(res, e);
     }
   }
 );

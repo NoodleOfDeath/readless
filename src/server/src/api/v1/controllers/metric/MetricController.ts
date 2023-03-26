@@ -16,15 +16,8 @@ import {
 export class MetricController {
 
   @Post('/')
-  async recordMetric(@Body() data: MetricCreationAttributes): Promise<MetricAttributes> {
-    try {
-      const metric = new Metric(data);
-      await metric.save();
-      await metric.reload();
-      return metric;
-    } catch (e) {
-      console.error(e);
-    }
+  public static async recordMetric(@Body() data: MetricCreationAttributes): Promise<MetricAttributes> {
+    return await Metric.create(data);
   }
 
 }

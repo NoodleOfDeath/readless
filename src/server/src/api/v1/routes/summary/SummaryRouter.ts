@@ -10,6 +10,7 @@ import { AuthError } from '../../../../services';
 import { SummaryController } from '../../controllers';
 import {
   authMiddleware,
+  internalErrorHandler,
   paginationMiddleware,
   rateLimitMiddleware,
   validationMiddleware,
@@ -56,10 +57,9 @@ router.get(
       } else {
         response = await SummaryController.getSummaries(userId, filter, pageSize, page, offset);
       }
-      res.json(response);
+      return res.json(response);
     } catch (e) {
-      console.error(e);
-      res.status(500).end();
+      internalErrorHandler(res, e);
     }
   }
 );
@@ -76,14 +76,12 @@ router.post(
     try {
       const { targetId, type } = req.params;
       const interactions = await SummaryController.interactWithSummary(targetId, type, req.body);
-      res.json(interactions);
+      return res.json(interactions);
     } catch (e) {
       if (e instanceof AuthError) {
-        res.status(401).json(e);
-        return;
+        return res.status(401).json(e);
       }
-      console.error(e);
-      res.status(500).end();
+      internalErrorHandler(res, e);
     }
   }
 );

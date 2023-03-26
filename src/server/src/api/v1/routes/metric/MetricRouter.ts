@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 
 import { MetricController } from '../../controllers';
-import { validationMiddleware } from '../../middleware';
+import { internalErrorHandler, validationMiddleware } from '../../middleware';
 
 const router = Router();
 
@@ -13,20 +13,14 @@ router.post(
   body('userAgent').isString(),
   validationMiddleware,
   async (req, res) => {
-    const {
-      type, data, userAgent, 
-    } = req.body;
     try {
-      await new MetricController().recordMetric({
-        data,
+      await MetricController.recordMetric({
+        ...req.body,
         referrer: req.ips,
-        type,
-        userAgent,
       });
-      res.status(200).send('OK');
+      return res.status(200).send('OK');
     } catch (e) {
-      console.error(e);
-      res.status(500).end();
+      internalErrorHandler(res, e);
     }
   }
 );

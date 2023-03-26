@@ -32,7 +32,6 @@ export class SchemaError extends Error {
 
 export * from './analytics/Metric.types';
 export * from './analytics/RateLimit.types';
-export * from './resources/Document.types';
 
 export * from './user/Alias.types';
 export * from './user/User.types';
@@ -44,11 +43,9 @@ export * from './auth/Role.types';
 export * from './newsletter/Newsletter.types';
 export * from './newsletter/Subscription.types';
 
-export * from './resources/types';
-
 export * from './interaction/Interaction.types';
-export * from './interaction/Referral.types';
 
+export * from './resources/types';
 export * from './resources/Media.types';
 export * from './resources/Post.types';
 export * from './resources/outlet/Outlet.types';
