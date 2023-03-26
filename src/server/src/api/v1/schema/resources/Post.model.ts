@@ -1,6 +1,5 @@
 import { Column, DataType } from 'sequelize-typescript';
 
-import { InteractionResponse } from './../interaction/Interaction.types';
 import {
   PostAttributes,
   PostCreationAttributes,
@@ -8,8 +7,11 @@ import {
   TitledCategorizedPostCreationAttributes,
 } from './Post.types';
 import { BaseModel } from '../base';
+import { Interaction } from '../interaction/Interaction.model';
+import { InteractionResponse, InteractionType } from '../interaction/Interaction.types';
 
 export abstract class Post<
+    I extends Interaction,
     A extends PostAttributes = PostAttributes,
     B extends PostCreationAttributes = PostCreationAttributes,
   >
@@ -53,12 +55,15 @@ export abstract class Post<
     imagePrompt: string;
 
   interactions: InteractionResponse;
+  
+  abstract getInteractions(userId?: number, type?: InteractionType | InteractionType[]): Promise<I[] | undefined>;
 
 }
 
 export abstract class TitledCategorizedPost<
+    I extends Interaction,
     A extends TitledCategorizedPostAttributes = TitledCategorizedPostAttributes,
-    B extends TitledCategorizedPostCreationAttributes = TitledCategorizedPostCreationAttributes> extends Post<A, B>
+    B extends TitledCategorizedPostCreationAttributes = TitledCategorizedPostCreationAttributes> extends Post<I, A, B>
   implements TitledCategorizedPostAttributes {
 
   @Column({

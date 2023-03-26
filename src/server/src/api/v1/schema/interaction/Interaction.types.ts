@@ -35,6 +35,15 @@ export type InteractionRequest = {
   value?: string;
 };
 
+export type InteractionUserVote = 'up' | 'down';
+
 export type InteractionResponse = {
-  [key in InteractionType]: number;
+  bookmark: number;
+  comment: number;
+  downvote: number;
+  impression: number;
+  share: number;
+  upvote: number;
+  uservote?: InteractionUserVote;
+  view: number;
 };

@@ -21,6 +21,8 @@ export const authMiddleware = (securityName: string, { required = false, scope =
             }
             req.body.userId = jwt.userId;
             req.body.token = jwt.signed;
+            req.query.userId = String(jwt.userId);
+            req.query.token = jwt.signed;
             next();
           } catch (e) {
             throw new AuthError('INVALID_CREDENTIALS');

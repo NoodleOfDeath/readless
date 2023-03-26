@@ -11,7 +11,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import API, { SummaryResponse } from '@/api';
+import API, { SummaryResponse, headers } from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
 import Filters from '@/components/search/Filters';
@@ -31,6 +31,7 @@ export default function SearchPage() {
   const { 
     searchText, 
     setSearchText,
+    userData,
   } = React.useContext(SessionContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
@@ -62,7 +63,7 @@ export default function SearchPage() {
         filter: searchText,
         page: 0,
         pageSize,
-      })
+      }, { headers: headers({ token: userData?.tokenString }) })
       .then((response) => {
         setTotalResults(response.data.count);
         setRecentSummaries(response.data.rows);
@@ -76,20 +77,20 @@ export default function SearchPage() {
         setLoading(false);
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
+  }, [searchText, userData]);
 
   const expandPost = React.useCallback((id?: number, mode?: ConsumptionMode) => {
     setExpandedPost(mode ? id : undefined);
     setConsumptionMode(mode);
   }, []);
 
-  const loadMore = () => {
+  const loadMore = React.useCallback(() => {
     API
       .getSummaries({
         filter: searchText,
         page,
         pageSize,
-      })
+      }, { headers: headers({ token: userData?.tokenString }) })
       .then((response) => {
         if (response.data) {
           setTotalResults(response.data.count);
@@ -100,7 +101,7 @@ export default function SearchPage() {
       .catch((error) => {
         console.error(error);
       });
-  };
+  }, [page, pageSize, searchText, userData]);
   
   const setPostInteractions = React.useCallback((i: number, interactions: InteractionResponse) => {
     console.log('interactions updated for post', i, interactions);

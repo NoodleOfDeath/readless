@@ -214,7 +214,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       } else {
         await createInteraction();
       }
-      return await Summary.findByPk(resource.id);
+      const summary = await Summary.findByPk(resource.id);
+      await summary.addUserInteractions(this.toJSON().id);
+      return summary;
     } else {
       throw new SchemaError('Unknown interaction type');
     }

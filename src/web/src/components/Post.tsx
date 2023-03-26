@@ -3,7 +3,9 @@ import React from 'react';
 import {
   mdiChevronLeft,
   mdiDotsHorizontal,
+  mdiThumbDown,
   mdiThumbDownOutline,
+  mdiThumbUp,
   mdiThumbUpOutline,
 } from '@mdi/js';
 import Icon from '@mdi/react';
@@ -31,6 +33,7 @@ import { SessionContext } from '../contexts';
 import API, {
   InteractionResponse,
   InteractionType,
+  InteractionUserVote,
   SummaryResponse,
   headers,
 } from '@/api';
@@ -156,6 +159,7 @@ export default function Post({
         return;
       }
       if (!userData) {
+        alert('Messy Dialog Telling User They Must Log In or Download the App to Vote on Articles! (we can log this as tech debt for now, we good to ship to prod. lmfao sikeeeee)');
         return;
       }
       const { data, error } = await API.interactWithSummary(summary.id, type, { userId: userData.userId, value }, { headers: headers({ token: userData.tokenString }) });
@@ -182,7 +186,7 @@ export default function Post({
         <Stack>
           <Stack direction="row" spacing={ 1 }>
             <Button onClick={ () => interact(InteractionType.Upvote) }>
-              <Icon path={ mdiThumbUpOutline } size={ 1 } />
+              <Icon path={ summary?.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
             </Button>
             <Stack direction="row" onClick={ () => setShowSplitVotes(!showSplitVotes) }>
               {showSplitVotes ? (
@@ -198,13 +202,13 @@ export default function Post({
               )}
             </Stack>
             <Button onClick={ () => interact(InteractionType.Downvote) }>
-              <Icon path={ mdiThumbDownOutline } size={ 1 } />
+              <Icon path={ summary?.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
             </Button>
           </Stack>
         </Stack>
       </Stack>
     );
-  }, [downvotes, interact, upvotes, summary?.category, summary?.subcategory]);
+  }, [downvotes, interact, upvotes, showSplitVotes, votes, summary?.category, summary?.subcategory, summary?.uservote]);
 
   const bottomRowDirection = React.useMemo(() => {
     return lgAndUp ? 'row' : 'column';

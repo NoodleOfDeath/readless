@@ -19,6 +19,7 @@ const router = Router();
 
 router.get(
   '/:category?/:subcategory?/:title?',
+  authMiddleware('jwt'),
   param('category').isString().optional(),
   param('subcategory').isString().optional(),
   param('title').isString().optional(),
@@ -30,8 +31,9 @@ router.get(
       category, subcategory, title, 
     } = req.params;
     const {
-      filter, pageSize = 10, page = 0, offset = page * pageSize, 
+      filter, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
     } = req.query;
+    const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
     let response: BulkResponse<SummaryResponse> | SummaryResponse = {
       count: 0,
       rows: [],
@@ -43,15 +45,16 @@ router.get(
         response = await SummaryController.getSummariesForCategoryAndSubcategory(
           category,
           subcategory,
+          userId,
           filter,
           pageSize,
           page,
           offset
         );
       } else if (category) {
-        response = await SummaryController.getSummariesForCategory(category, filter, pageSize, page, offset);
+        response = await SummaryController.getSummariesForCategory(category, userId, filter, pageSize, page, offset);
       } else {
-        response = await SummaryController.getSummaries(filter, pageSize, page, offset);
+        response = await SummaryController.getSummaries(userId, filter, pageSize, page, offset);
       }
       res.json(response);
     } catch (e) {

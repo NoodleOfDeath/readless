@@ -7,6 +7,7 @@ import {
 
 import { SummaryAttributes, SummaryCreationAttributes } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
+import { InteractionType } from '../../interaction/Interaction.types';
 import { TitledCategorizedPost } from '../Post.model';
 import { Outlet } from '../outlet/Outlet.model';
 
@@ -15,7 +16,7 @@ import { Outlet } from '../outlet/Outlet.model';
   paranoid: true,
   timestamps: true,
 })
-export class Summary extends TitledCategorizedPost<SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
+export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
   
   @Column({
     allowNull: false,
@@ -49,6 +50,26 @@ export class Summary extends TitledCategorizedPost<SummaryAttributes, SummaryCre
     originalTitle: string;
 
   outletName: string;
+  
+  async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
+    if (userId && type) {
+      return await SummaryInteraction.findAll({
+        where: {
+          targetId: this.toJSON().id, type, userId, 
+        },
+      });
+    } else if (userId) {
+      return await SummaryInteraction.findAll({ where: { targetId: this.toJSON().id, userId } });
+    }
+    return await SummaryInteraction.findAll({ where: { targetId: this.toJSON().id } });
+  }
+  
+  async addUserInteractions(userId: number) {
+    const uservotes = await this.getInteractions(userId, ['downvote', 'upvote']);
+    const interactions = this.toJSON().interactions;
+    interactions.uservote = uservotes.some((v) => v.toJSON().type === 'downvote') ? 'down' : uservotes.some((v) => v.toJSON().type === 'upvote') ? 'up' : undefined;
+    this.set('interactions', interactions, { raw: true });
+  }
 
   @AfterFind
   static async addOutletName(cursor?: Summary | Summary[]) {

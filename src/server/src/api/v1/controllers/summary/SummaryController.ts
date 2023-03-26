@@ -49,6 +49,7 @@ export class SummaryController {
 
   @Get('/')
   public static async getSummaries(
+    @Query() userId?: number,
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
@@ -61,12 +62,17 @@ export class SummaryController {
       order: [['createdAt', 'DESC']],
     };
     options.where = applyFilter(filter);
-    return await Summary.findAndCountAll(options);
+    const summaries = await Summary.findAndCountAll(options);
+    if (userId) {
+      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
+    }
+    return summaries;
   }
 
   @Get('/:category/')
   public static async getSummariesForCategory(
     @Path() category: string,
+    @Query() userId?: number,
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
@@ -79,13 +85,18 @@ export class SummaryController {
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f) },
     };
-    return await Summary.findAndCountAll(options);
+    const summaries = await Summary.findAndCountAll(options);
+    if (userId) {
+      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
+    }
+    return summaries;
   }
 
   @Get('/:category/:subcategory')
   public static async getSummariesForCategoryAndSubcategory(
     @Path() category: string,
     @Path() subcategory: string,
+    @Query() userId?: number,
     @Query() filter?: string,
     @Query() pageSize = 10,
     @Query() page = 0,
@@ -98,14 +109,19 @@ export class SummaryController {
       order: [['createdAt', 'DESC']],
       where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f) },
     };
-    return await Summary.findAndCountAll(options);
+    const summaries = await Summary.findAndCountAll(options);
+    if (userId) {
+      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
+    }
+    return summaries;
   }
 
   @Get('/:category/:subcategory/:title')
   public static async getSummaryForCategoryAndSubcategoryAndTitle(
     @Path() category: string,
     @Path() subcategory: string,
-    @Path() title: string
+    @Path() title: string,
+    @Query() userId?: number
   ): Promise<SummaryResponse> {
     const options: FindAndCountOptions<Summary> = {
       where: {
@@ -114,7 +130,11 @@ export class SummaryController {
         title,
       },
     };
-    return await Summary.findOne(options);
+    const summary = await Summary.findOne(options);
+    if (userId) {
+      await summary.addUserInteractions(userId);
+    }
+    return summary;
   }
   
   @Security('jwt')
