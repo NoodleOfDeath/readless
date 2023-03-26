@@ -34,8 +34,8 @@ import API, {
   SummaryResponse,
   headers,
 } from '@/api';
-import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
 import TruncatedText from '@/components/common/TruncatedText';
+import ConsumptionModeSelector from '@/components/search/ConsumptionModeSelector';
 
 export const CONSUMPTION_MODES = [
   'bulleted',

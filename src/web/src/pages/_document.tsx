@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ServerStyleSheets } from '@mui/styles';
 import Document, {
+  Head,
   Html,
   Main,
   NextScript,
@@ -12,12 +13,11 @@ export default class SkoopDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <head>
+        <Head>
           <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
           <link rel="stylesheet" href="/index.css" />
-        </head>
+        </Head>
         <body>
           <Main />
           <NextScript />

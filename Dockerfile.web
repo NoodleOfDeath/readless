@@ -15,7 +15,7 @@ FROM base as pre-build
 COPY src/web/src ./src
 COPY src/web/public ./public
 COPY src/web/tsconfig.json ./
-COPY src/web/config-overrides.js ./
+COPY src/web/next-env.d.ts ./
 RUN yarn swagger
 
 FROM pre-build as build

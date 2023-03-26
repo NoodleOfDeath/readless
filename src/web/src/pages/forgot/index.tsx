@@ -8,16 +8,16 @@ import {
   styled,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import API, { AuthError, PartialGenerateOTPRequest } from '@/api';
 import Page from '@/components/layout/Page';
+import { useRouter } from '@/next/router';
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 export default function ForgotPage() {
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const { handleSubmit, register } = useForm();
 
   const [error, setError] = React.useState<AuthError | null>(null);
@@ -51,14 +51,17 @@ export default function ForgotPage() {
                 {error.message}
               </Typography>
             )}
-            <Button onClick={ () => navigate('/login') }>Back to Login</Button>
+            <Button onClick={ () => router.push('/login') }>Back to Login</Button>
           </StyledStack>
         </form>
       )
         : (
-          <Typography variant='body2'>
-            If an account with that email exists, you should receive an email shortly with a link to reset your password.
-          </Typography>
+          <StyledStack spacing={ 2 }>
+            <Typography variant='body2'>
+              If an account with that email exists, you should receive an email shortly with a link to reset your password.
+            </Typography>
+            <Button onClick={ () => router.push('/login') }>Back to Login</Button>
+          </StyledStack>
         )}
     </Page>
   );
