@@ -8,17 +8,17 @@ import {
   styled,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import API, { AuthError, headers } from '@/api';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
+import { useRouter } from '@/next/router';
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 export default function ResetPasswordPage() {
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const { handleSubmit, register } = useForm();
   const { userData, setUserData } = React.useContext(SessionContext);
 
@@ -45,10 +45,10 @@ export default function ResetPasswordPage() {
     if (success) {
       setTimeout(() => {
         setUserData();
-        navigate('/login');
+        router.push('/login');
       }, 3_000);
     }
-  }, [navigate, success, setUserData]);
+  }, [router, success, setUserData]);
 
   return (
     <Page center title="Reset Password">
@@ -71,7 +71,7 @@ export default function ResetPasswordPage() {
       ) : (
         <Typography variant='body2'>
           Your password has been reset. You will be redirected to the login page in 3 seconds or you can click the button below.
-          <Button variant='contained' onClick={ () => navigate('/login') }>Back to Login</Button>
+          <Button variant='contained' onClick={ () => router.push('/login') }>Back to Login</Button>
         </Typography>
       )}
     </Page>

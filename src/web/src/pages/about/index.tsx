@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
-import RoadMap from './RoadMap';
+import RoadMap from '@/components/about/RoadMap';
 
 import Page from '@/components/layout/Page';
 

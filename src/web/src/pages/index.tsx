@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { Stack, styled } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import Page from '@/components/layout/Page';
+import { useRouter } from '@/next/router';
 
 const StyledStack = styled(Stack)(() => ({
   alignContent: 'center',

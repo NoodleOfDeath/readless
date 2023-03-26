@@ -39,7 +39,7 @@ function App(props: PropTypes.InferProps<typeof App.propTypes>) {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <SessionContextProvider>
-        <GoogleOAuthProvider clientId={ process.env.GOOGLE_CLIENT_ID as string }>
+        <GoogleOAuthProvider clientId={ process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string }>
           <StyledAppContainer>
             <Header />
             <StyledAppContent>

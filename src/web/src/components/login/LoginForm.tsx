@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from '@/next/router';
 
 import API, {
   AuthError,
@@ -31,8 +31,8 @@ const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 const StyledIcon = styled(Icon)(({ theme }) => ({ marginRight: theme.spacing(1) }));
 
-export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
-  const navigate = useNavigate();
+export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
+  const router = useRouter();
   const {
     register, handleSubmit, formState: { errors }, 
   } = useForm();
@@ -53,12 +53,12 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        navigate('/search');
+        router.push('/search');
       } catch (error) {
         console.log(error);
       }
     },
-    [navigate, setUserData, userData]
+    [router, setUserData, userData]
   );
 
   const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
@@ -73,14 +73,14 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        navigate('/');
+        router.push('/');
       } else {
         setNeedsToVerifyAlias(true);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [navigate, setUserData, userData]);
+  }, [router, setUserData, userData]);
 
   React.useEffect(() => {
     setError(undefined);
@@ -159,7 +159,7 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
               {action === 'logIn' ? 'Log In' : 'Sign Up'}
             </Button>
             {action === 'logIn' ? (
-              <Link onClick={ () => navigate('/forgot') }>
+              <Link onClick={ () => router.push('/forgot') }>
                 Forgot your password?
               </Link>
             ): (
@@ -179,7 +179,7 @@ export default function LoginPage({ action = 'logIn' }: LoginFormProps = {}) {
         <StyledStack spacing={ 1 }>
           <Typography variant='body2'>Please check your inbox to verify your email.</Typography>
           {' '}
-          <Button variant="contained" onClick={ () => navigate('/login') }>Log In Here</Button>
+          <Button variant="contained" onClick={ () => router.push('/login') }>Log In Here</Button>
         </StyledStack>
       )}
     </StyledStack>

@@ -14,6 +14,8 @@ export function headers({ token }: HeaderOptions = {}) {
   return headers;
 }
 
-const API = new Api({ baseUrl: process.env.API_ENDPOINT }).v1;
+console.log('wtf', process.env.NEXT_PUBLIC_API_ENDPOINT);
+
+const API = new Api({ baseUrl: process.env.NEXT_PUBLIC_API_ENDPOINT }).v1;
 
 export default API;

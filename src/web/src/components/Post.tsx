@@ -34,7 +34,7 @@ import API, {
   SummaryResponse,
   headers,
 } from '@/api';
-import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
+import ConsumptionModeSelector from '@/components/search/ConsumptionModeSelector';
 import TruncatedText from '@/components/common/TruncatedText';
 
 export const CONSUMPTION_MODES = [

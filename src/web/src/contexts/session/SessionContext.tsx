@@ -72,7 +72,7 @@ export function SessionContextProvider({ children }: Props) {
   const [searchText, setSearchText] = React.useState('');
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
   
-  const updatePreferences = React.useCallback(() => {
+  React.useEffect(() => {
     setCookie(COOKIES.preferences, JSON.stringify(preferences));
   }, [preferences]);
 
@@ -89,8 +89,7 @@ export function SessionContextProvider({ children }: Props) {
         }
         return (preferences = newPrefs);
       });
-      updatePreferences();
-    }, [updatePreferences]);
+    }, []);
 
   const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
     return {

@@ -10,13 +10,13 @@ import {
   styled,
   useMediaQuery,
 } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import API, { SummaryResponse } from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
-import Filters from '@/pages/search/Filters';
+import { useRouter } from '@/next/router';
+import Filters from '@/components/search/Filters';
 
 const StyledGrid = styled(Grid)(() => ({
   alignItems: 'center',
@@ -26,7 +26,7 @@ const StyledGrid = styled(Grid)(() => ({
 }));
 
 export default function SearchPage() {
-  const { query: searchParams } = useRouter();
+  const { searchParams } = useRouter();
 
   const { 
     searchText, 
@@ -42,7 +42,7 @@ export default function SearchPage() {
   const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
   const [consumptionMode, setConsumptionMode] = React.useState<ConsumptionMode|undefined>();
 
-  const mdAndUp = useMediaQuery((theme: Theme) => theme?.breakpoints.up('md'));
+  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
   const gridSize = React.useMemo(() => {
     return mdAndUp ? (recentSummaries.length < 2 ? 12 : 6) : 12;

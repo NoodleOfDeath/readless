@@ -7,10 +7,10 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from '@/next/router';
 
 import Page from '@/components/layout/Page';
-import LoginForm, { LoginFormProps } from '@/pages/login/LoginForm';
+import LoginForm, { LoginFormProps } from '@/components/login/LoginForm';
 
 type Props = LoginFormProps;
 
@@ -27,7 +27,7 @@ const StyledAlternateCard = styled(StyledStack)(({ theme }) => ({
 }));
 
 export default function LoginPage({ action = 'logIn' }: Props = {}) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const alternateCard = React.useMemo(() => {
     return (
@@ -36,13 +36,13 @@ export default function LoginPage({ action = 'logIn' }: Props = {}) {
           <Typography variant='body2'>
             {action === 'logIn' ? 'Need an account?' : 'Already have an account?'}
           </Typography>
-          <Button variant="contained" color="secondary" onClick={ () => navigate(action === 'logIn' ? '/signup' : '/login') }>
+          <Button variant="contained" color="secondary" onClick={ () => router.push(action === 'logIn' ? '/signup' : '/login') }>
             {action === 'logIn' ? 'Sign Up Here' : 'Log In Here'}
           </Button>
         </StyledStack>
       </StyledAlternateCard>
     );
-  }, [action, navigate]);
+  }, [action, router]);
 
   return (
     <Page title={ action === 'logIn' ? 'Log In' : 'Sign Up' }>

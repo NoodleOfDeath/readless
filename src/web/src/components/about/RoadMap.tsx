@@ -14,7 +14,7 @@ import {
 import { Typography } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
-import { MILESTONES } from '@/pages/about/milestones';
+import { MILESTONES } from './milestones';
 
 export default function RoadMap() {
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Stack, styled } from '@mui/material';
 
-import SearchBar from '@/pages/search/SearchBar';
+import SearchBar from './SearchBar';
 
 const StyledStack = styled(Stack)(() => ({
   alignItems: 'center',
