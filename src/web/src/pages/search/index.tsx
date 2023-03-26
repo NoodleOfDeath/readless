@@ -11,7 +11,11 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import API, { SummaryResponse, headers } from '@/api';
+import API, {
+  InteractionResponse,
+  SummaryResponse,
+  headers,
+} from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
 import Filters from '@/components/search/Filters';
