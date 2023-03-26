@@ -186,7 +186,7 @@ export default function Post({
         <Stack>
           <Stack direction="row" spacing={ 1 }>
             <Button onClick={ () => interact(InteractionType.Upvote) }>
-              <Icon path={ summary?.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
+              <Icon path={ summary?.interactions.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
             </Button>
             <Stack direction="row" onClick={ () => setShowSplitVotes(!showSplitVotes) }>
               {showSplitVotes ? (
@@ -202,13 +202,13 @@ export default function Post({
               )}
             </Stack>
             <Button onClick={ () => interact(InteractionType.Downvote) }>
-              <Icon path={ summary?.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
+              <Icon path={ summary?.interactions.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
             </Button>
           </Stack>
         </Stack>
       </Stack>
     );
-  }, [downvotes, interact, upvotes, showSplitVotes, votes, summary?.category, summary?.subcategory, summary?.uservote]);
+  }, [downvotes, interact, upvotes, showSplitVotes, votes, summary?.category, summary?.subcategory, summary?.interactions.uservote]);
 
   const bottomRowDirection = React.useMemo(() => {
     return lgAndUp ? 'row' : 'column';
