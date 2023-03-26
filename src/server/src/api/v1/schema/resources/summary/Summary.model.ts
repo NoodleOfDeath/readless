@@ -92,7 +92,7 @@ export class Summary extends TitledCategorizedPost<SummaryAttributes, SummaryCre
           interactionMap[interactionJson.type].push(interactionJson);
         }
       });
-      summary.set('interactions', {
+      const summaryInteractions = {
         bookmark: interactionMap.bookmark.length,
         comment: interactionMap.comment.length,
         downvote: interactionMap.downvote.length,
@@ -100,7 +100,8 @@ export class Summary extends TitledCategorizedPost<SummaryAttributes, SummaryCre
         share: interactionMap.share.length,
         upvote: interactionMap.upvote.length,
         view: interactionMap.view.length,
-      });
+      };
+      summary.set('interactions', summaryInteractions, { raw: true });
     });
     
   }

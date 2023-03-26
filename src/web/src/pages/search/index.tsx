@@ -101,6 +101,15 @@ export default function SearchPage() {
         console.error(error);
       });
   };
+  
+  const setPostInteractions = React.useCallback((i: number, interactions: InteractionResponse) => {
+    console.log('interactions updated for post', i, interactions);
+    setRecentSummaries((prev) => {
+      const newPosts = [...prev];
+      newPosts[i].interactions = interactions;
+      return (prev = newPosts);
+    });
+  }, []);
 
   return (
     <Page center>
@@ -112,14 +121,16 @@ export default function SearchPage() {
             <Grid key={ summary.id } item xs={ gridSize }>
               <Post 
                 summary={ summary }
-                onChange={ (mode) => expandPost(i, mode) } />
+                onChange={ (mode) => expandPost(i, mode) } 
+                onInteract={ (interactions) => setPostInteractions(i, interactions) } />
             </Grid>
           )) : (
             <Grid item xs={ 12 }>
               <Post
                 summary={ recentSummaries[expandedPost] }
                 onChange={ (mode) => expandPost(expandedPost, mode) }
-                consumptionMode={ consumptionMode } />
+                consumptionMode={ consumptionMode } 
+                onInteract={ (interactions) => setPostInteractions(expandedPost, interactions) } />
             </Grid>
           )}
           {loading && <CircularProgress size={ 10 } variant="indeterminate" />}

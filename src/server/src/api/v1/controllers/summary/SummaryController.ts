@@ -127,7 +127,7 @@ export class SummaryController {
     const { user } = await User.from(body);
     const { value } = body;
     const resource = await user.interactWith({ id: targetId, type: 'summary' }, type, value);
-    return resource.interactions;
+    return resource.toJSON().interactions;
   }
 
 }

@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import ms from 'ms';
 
 // 2 days
-export const DEFAULT_SESSION_DURATION_MS = ms('2d');
+export const DEFAULT_SESSION_DURATION_MS = ms('1d');
 export const DEFAULT_SESSION_PATH = '/';
 
 export function setCookie(name: string, value: string, {

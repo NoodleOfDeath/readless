@@ -7,7 +7,6 @@ import { SchemaError } from './../types';
 import { AuthError } from '../../../../services';
 import { Jwt } from '../../../../services/types';
 import { BaseModel } from '../base';
-import { Interaction } from '../interaction/Interaction.model';
 import {
   Alias,
   Credential,
@@ -72,7 +71,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Alias.findOne({ 
       where: {
         type,
-        userId: this.id,
+        userId: this.toJSON().id,
       },
     });
   }
@@ -81,7 +80,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Alias.findAll({ 
       where: {
         type: { [Op.in]: [type, ...other] },
-        userId: this.id,
+        userId: this.toJSON().id,
       },
     });
   }
@@ -89,7 +88,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public async createAlias(type: AliasType, value: string, attr: Omit<AliasCreationAttributes, 'type' | 'userId' | 'value'>) {
     return await Alias.create({
       type,
-      userId: this.id,
+      userId: this.toJSON().id,
       value,
       ...attr,
     });
@@ -100,7 +99,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       return await Credential.findOne({
         where: {
           type,
-          userId: this.id,
+          userId: this.toJSON().id,
           value,
         }, 
       });
@@ -108,7 +107,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.findOne({
       where: {
         type,
-        userId: this.id,
+        userId: this.toJSON().id,
       }, 
     });
   }
@@ -117,7 +116,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.findAll({
       where: {
         type: { [Op.in]: [type, ...other] },
-        userId: this.id,
+        userId: this.toJSON().id,
       }, 
     });
   }
@@ -139,7 +138,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.create({ 
       expiresAt,
       type,
-      userId: this.id,
+      userId: this.toJSON().id,
       value,
       ...attr,
     });
@@ -150,7 +149,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       return await Credential.destroy({
         where: {
           type,
-          userId: this.id,
+          userId: this.toJSON().id,
           value,
         },
       });
@@ -158,13 +157,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.destroy({
       where: {
         type,
-        userId: this.id,
+        userId: this.toJSON().id,
       },
     });
   }
 
   public async getRoles() {
-    return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.id } })).map(async (role) => (await Role.findOne({ where: { id: role.toJSON().roleId } }))?.toJSON() ))).map((role) => [role.name, role]));
+    return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.toJSON().id } })).map(async (role) => (await Role.findOne({ where: { id: role.toJSON().roleId } }))?.toJSON() ))).map((role) => [role.name, role]));
   }
 
   public async grantRole(role: string) {
@@ -172,7 +171,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!roleModel) {
       throw new AuthError('BAD_REQUEST');
     }
-    await RefUserRole.create({ roleId: roleModel.id, userId: this.id });
+    await RefUserRole.create({ roleId: roleModel.id, userId: this.toJSON().id });
     return roleModel;
   }
 
@@ -181,37 +180,44 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!roleModel) {
       throw new AuthError('BAD_REQUEST');
     }
-    const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.id } });
+    const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.toJSON().id } });
     return count;
   } 
   
-  public async interactWith<R extends ResourceType, T extends InteractionType>(resource: ResourceSpecifier<R>, type: T, value?: string) {
-    let interaction: Interaction;
+  public async interactWith<R extends ResourceType>(resource: ResourceSpecifier<R>, type: InteractionType, value?: string) {
     if (resource.type === 'summary') {
-      interaction = await SummaryInteraction.findOne({
+      let searchType = [type];
+      if (type === 'downvote' || type === 'upvote') {
+        searchType = ['downvote', 'upvote'];
+      }
+      const interaction = await SummaryInteraction.findOne({
         where: {
-          targetId: resource.id, type, userId: this.id, 
+          targetId: resource.id, type: searchType, userId: this.toJSON().id,
         }, 
       });
-    }
-    if (interaction) {
-      if (interaction.type === 'upvote' || interaction.type === 'downvote') {
-        if (interaction.value === value) {
-          await interaction.destroy();
-        }
-      } 
-      await interaction.save();
-    } else {
-      if (resource.type === 'summary') {
+      const createInteraction = async () => {
         await SummaryInteraction.create({
-          targetId: resource.id, type, userId: this.id, value,
+          targetId: resource.id, type, userId: this.toJSON().id, value,
         });
+      };
+      if (interaction) {
+        if (type === 'downvote' || type === 'upvote') {
+          await SummaryInteraction.destroy({
+            where: {
+              targetId: resource.id, type: ['downvote', 'upvote'], userId: this.toJSON().id, 
+            },
+          });
+          if (interaction.toJSON().type !== type) {
+            await createInteraction();
+          }
+        }
+      } else {
+        await createInteraction();
       }
+      return await Summary.findByPk(resource.id);
+    } else {
+      throw new SchemaError('Unknown interaction type');
     }
-    if (resource.type === 'summary') {
-      return Summary.findByPk(resource.id);
-    }
-    throw new SchemaError('Unknown interaction type');
   }
 
 }

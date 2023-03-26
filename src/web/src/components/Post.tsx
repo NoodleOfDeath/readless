@@ -56,7 +56,7 @@ type Props = {
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'left',
-  minWidth: 200,
+  minWidth: 250,
   padding: theme.spacing(2),
   textAlign: 'left',
 }));
@@ -87,7 +87,7 @@ const StyledConsumptionModeContainer = styled(Box)<Props & { mdAndUp: boolean }>
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   borderRadius: 8,
   marginLeft: theme.spacing(2),
-  width: 120,
+  width: 150,
 }));
 
 const StyledCategoryBox = styled(Box)(({ theme }) => ({
@@ -98,7 +98,7 @@ const StyledCategoryBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   height: 120,
   justifyContent: 'center',
-  width: 120,
+  width: 150,
 }));
 
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
@@ -126,6 +126,7 @@ export default function Post({
 
   const [showMenu, setShowMenu] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [showSplitVotes, setShowSplitVotes] = React.useState(false);
 
   const menuRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -146,6 +147,8 @@ export default function Post({
       summary?.interactions?.downvote ?? 0
     , [summary?.interactions?.downvote]
   );
+  
+  const votes = React.useMemo(() => upvotes - downvotes, [downvotes, upvotes]);
 
   const interact = React.useCallback(
     async (type: InteractionType, value?: string) => {
@@ -177,20 +180,27 @@ export default function Post({
           </StyledCategoryStack>
         </StyledCategoryBox>
         <Stack>
-          <Stack direction="row">
+          <Stack direction="row" spacing={ 1 }>
             <Button onClick={ () => interact(InteractionType.Upvote) }>
               <Icon path={ mdiThumbUpOutline } size={ 1 } />
             </Button>
+            <Stack direction="row" onClick={ () => setShowSplitVotes(!showSplitVotes) }>
+              {showSplitVotes ? (
+                <Stack direction="row" spacing={ 1 }>
+                  <Typography variant="subtitle2">{upvotes}</Typography>
+                  <Typography variant="subtitle2">
+                    -
+                    {downvotes}
+                  </Typography>
+                </Stack>
+              ) : (
+                <Typography variant="subtitle1">{votes}</Typography>
+              )}
+            </Stack>
             <Button onClick={ () => interact(InteractionType.Downvote) }>
               <Icon path={ mdiThumbDownOutline } size={ 1 } />
             </Button>
           </Stack>
-          {(upvotes > 0 || downvotes > 0) && (
-            <Stack direction="row">
-              <Typography variant="subtitle2">{upvotes}</Typography>
-              <Typography variant="subtitle2">{downvotes}</Typography>
-            </Stack>
-          )}
         </Stack>
       </Stack>
     );
