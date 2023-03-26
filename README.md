@@ -56,7 +56,7 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 ### v1.2.0 - Interactions
 
 - [x] Add support for interactions (v1) such as upvotes and downvotes (backend)
-- [ ] upvote/downvote interactions front ent support
+- [x] upvote/downvote interactions front ent support
 - [ ] Add support for users to provide feedback about articles
 - [ ] Add support for users to flag articles as false, low-quality, etc.
 - [ ] Bounty/training/feedback program will play an important role in the loyalty and beta test programs
