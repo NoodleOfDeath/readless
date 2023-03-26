@@ -14,9 +14,9 @@ import {
 import API, { SummaryResponse } from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
+import Filters from '@/components/search/Filters';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
-import Filters from '@/components/search/Filters';
 
 const StyledGrid = styled(Grid)(() => ({
   alignItems: 'center',

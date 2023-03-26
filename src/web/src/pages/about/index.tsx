@@ -9,7 +9,6 @@ import {
 import ReactMarkdown from 'react-markdown';
 
 import RoadMap from '@/components/about/RoadMap';
-
 import Page from '@/components/layout/Page';
 
 export default function AboutPage() {

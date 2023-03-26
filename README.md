@@ -50,11 +50,13 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 - [x] Access token based login
 - [x] Role-Based Access Control (RBAC)
 - [x] Remove dependency on redis
+- [x] Refactor to static web pages with Next.js for SEO
 - [ ] Improve pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
 ### v1.2.0 - Interactions
 
-- [ ] Add support for interactions such as likes, dislikes, shares, reposts, and following other users
+- [x] Add support for interactions (v1) such as upvotes and downvotes (backend)
+- [ ] upvote/downvote interactions front ent support
 - [ ] Add support for users to provide feedback about articles
 - [ ] Add support for users to flag articles as false, low-quality, etc.
 - [ ] Bounty/training/feedback program will play an important role in the loyalty and beta test programs

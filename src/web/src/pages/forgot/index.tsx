@@ -8,10 +8,10 @@ import {
   styled,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useRouter } from '@/next/router';
 
 import API, { AuthError, PartialGenerateOTPRequest } from '@/api';
 import Page from '@/components/layout/Page';
+import { useRouter } from '@/next/router';
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 

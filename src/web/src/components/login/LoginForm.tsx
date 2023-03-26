@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
 import { useForm } from 'react-hook-form';
-import { useRouter } from '@/next/router';
 
 import API, {
   AuthError,
@@ -22,6 +21,7 @@ import API, {
   headers,
 } from '@/api';
 import { SessionContext } from '@/contexts';
+import { useRouter } from '@/next/router';
 
 export type LoginFormProps = {
   action?: 'logIn' | 'signUp';
