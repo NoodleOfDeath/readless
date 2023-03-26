@@ -37,6 +37,7 @@ export type InteractionRequest = {
 
 export type InteractionUserVote = 'up' | 'down';
 
+// uh this type exists? forcing rebuild
 export type InteractionResponse = {
   bookmark: number;
   comment: number;
