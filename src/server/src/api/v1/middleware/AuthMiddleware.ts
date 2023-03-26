@@ -19,10 +19,17 @@ export const authMiddleware = (securityName: string, { required = false, scope =
             if (required && !jwt.canAccess(scope)) {
               throw new AuthError('INSUFFICIENT_PERMISSIONS');
             }
-            req.body.userId = jwt.userId;
-            req.body.token = jwt.signed;
-            req.query.userId = String(jwt.userId);
-            req.query.token = jwt.signed;
+            const { expired, refreshed } = await jwt.validate(true);
+            if (!expired) {
+              req.body.userId = jwt.userId;
+              req.body.token = jwt.signed;
+              req.query.userId = String(jwt.userId);
+              req.query.token = jwt.signed;
+            }
+            if (refreshed) {
+              req.body.refreshedToken = refreshed.signed;
+              req.query.refreshedToken = refreshed.signed;
+            }
             next();
           } catch (e) {
             throw new AuthError('INVALID_CREDENTIALS');

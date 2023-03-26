@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import ms from 'ms';
 
 import { AuthError } from './AuthError';
-import { User } from '../../api/v1/schema';
+import { Credential, User } from '../../api/v1/schema';
 
 export type JwtBaseAccessOperation = '*' | 'read' | 'write' | 'delete';
 export type JwtAccessOperation = JwtBaseAccessOperation | `deny.${JwtBaseAccessOperation}`;
@@ -29,7 +29,7 @@ export type JwtOptions = {
 
 export class Jwt implements JsonWebToken {
 
-  userId: number;
+  userId: number; 
   scope: string[];
   priority: number;
   createdAt: Date;
@@ -143,12 +143,45 @@ export class Jwt implements JsonWebToken {
       return requestedScope.every((scope) => this.canAccess(scope));
     }
   }
+  
+  public async validate(refresh?: boolean) {
+    let expired = false;
+    let refreshed: Jwt;
+    if (this.expired) {
+      expired = true;
+      await Credential.destroy({
+        where: {
+          type: 'jwt',
+          userId: this.userId,
+          value: this.signed,
+        },
+      });
+    } 
+    const credential = await Credential.findOne({
+      where: {
+        type: 'jwt',
+        userId: this.userId,
+        value: this.signed,
+      },
+    });
+    if (!credential || credential.toJSON().expiresAt < new Date()) {
+      expired = true;
+      await credential?.destroy();
+    }
+    if (refresh && !expired && this.refreshable && this.expiresSoon) {
+      refreshed = await this.refresh();
+    }
+    return {
+      expired,
+      refreshed,
+    };
+  }
 
   public async refresh() {
     if (!this.refreshable) {
       throw new AuthError('UNREFRESHABLE_JWT');
     }
-    const user = await User.findByPk(this.userId);
+    const user = await User.findOne({ where: { id: this.userId } });
     if (!user) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
@@ -156,7 +189,7 @@ export class Jwt implements JsonWebToken {
     if (!credential) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
-    if (credential.toJSON().expiresAt?.valueOf() < Date.now()) {
+    if (credential.toJSON().expiresAt < new Date()) {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
     await credential.destroy();

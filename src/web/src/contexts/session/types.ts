@@ -1,5 +1,6 @@
 import { Theme } from '@emotion/react';
 import { PaletteMode } from '@mui/material';
+import jwt from 'jsonwebtoken';
 
 import { LoginResponse } from '@/api';
 import { ConsumptionMode } from '@/components/Post';
@@ -20,6 +21,14 @@ export type UserDataProps = {
 export type SetSessionOptions = {
   updateCookie?: boolean;
 };
+
+function tokenIsNotExpired(tokenString: string) {
+  const token = jwt.decode(tokenString);
+  if (!token || typeof token === 'string' || !token.exp) {
+    return false;
+  }
+  return token.exp < Date.now() / 1_000;
+}
 
 export class UserData implements UserDataProps {
 
@@ -45,7 +54,7 @@ export class UserData implements UserDataProps {
     isLoggedIn = false, 
   }: UserDataProps) {
     this.userId = userId;
-    this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).sort((a, b) => b.priority - a.priority);
+    this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => tokenIsNotExpired(t.value)).sort((a, b) => b.priority - a.priority);
     this.isLoggedIn = isLoggedIn;
   }
 

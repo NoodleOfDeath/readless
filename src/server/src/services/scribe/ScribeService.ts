@@ -51,7 +51,7 @@ export class ScribeService extends BaseService {
             return new Error('Title too long');
           }
         },
-        text: `Please read the following article and provide a single sentence summary using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
+        text: `Please summarize the following in a single sentence using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
       },
       {
         action: (reply) => {
