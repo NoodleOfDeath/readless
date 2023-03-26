@@ -169,7 +169,7 @@ export class AccountService extends BaseService {
         where: {
           type: 'jwt',
           userId,
-          value: Jwt.from(token).signed,
+          value: token,
         },
       });
     }

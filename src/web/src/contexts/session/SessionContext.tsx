@@ -55,7 +55,8 @@ export function SessionContextProvider({ children }: Props) {
     }
     setUserDataRaw((prev) => {
       const newData = state instanceof Function ? state(prev) : new UserData(state);
-      if (!newData && options?.updateCookie) {
+      if (!newData) {
+        clearCookie(COOKIES.userData);
         return (prev = undefined);
       }
       if (options?.updateCookie) {
