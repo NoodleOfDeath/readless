@@ -126,7 +126,7 @@ export function SessionContextProvider({ children }: Props) {
   const pathActions = React.useMemo<Partial<Record<string, (() => void)>>>(() => {
     return {
       '/login': () => {
-        if (userData?.isLoggedIn && userData?.token) {
+        if (userData?.isLoggedIn && userData?.tokenString) {
           router.push('/');
           return;
         }
@@ -140,13 +140,13 @@ export function SessionContextProvider({ children }: Props) {
           });
       },
       '/profile': () => {
-        if (!userData?.isLoggedIn || !userData?.token) {
+        if (!userData?.isLoggedIn || !userData?.tokenString) {
           router.push('/login');
           return;
         }
       },
       '/reset-password': () => {
-        if (userData?.isLoggedIn && userData?.token) {
+        if (userData?.isLoggedIn && userData?.tokenString) {
           router.push('/');
           return;
         }
