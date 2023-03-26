@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
-import RoadMap from '@/components/about/RoadMap';
 import Page from '@/components/layout/Page';
 import text from '@/documents/about';
 
@@ -22,7 +21,6 @@ export default function AboutPage() {
             <ReactMarkdown>
               {text}
             </ReactMarkdown>
-            <RoadMap />
           </Stack>
         </CardContent>
       </Card>

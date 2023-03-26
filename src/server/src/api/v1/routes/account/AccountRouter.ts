@@ -66,7 +66,7 @@ router.post(
 
 router.post(
   '/logout',
-  body('userId').optional(),
+  body('force').isBoolean().optional(),
   validationMiddleware,
   async (req, res) => {
     try {
