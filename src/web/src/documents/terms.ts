@@ -1,5 +1,6 @@
 // @eslint-disable
-const data = `
+const data = 
+`
 # Terms of Service
 
 By using our web application, you agree to the following terms and

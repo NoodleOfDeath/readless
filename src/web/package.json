@@ -1,36 +1,16 @@
 {
   "name": "theskoop-web",
-  "version": "0.2.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow yarn",
     "dev": "nodemon -x 'next dev -p 6969'",
-    "start": "next start",
     "build": "next build && next export -o build",
     "test": "jest",
     "eject": "next eject",
     "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen",
-    "swagger": "(cd ../server && yarn swagger) && cp ../server/swagger.json ./swagger.json && yarn gen",
+    "tsoa": "(cd ../server && yarn tsoa) && cp ../server/swagger.json ./swagger.json && yarn gen",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "eslint . --ext .ts,.tsx --fix"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -66,10 +46,8 @@
     "@types/node": "^16.18.14",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
-    "dotenv-webpack": "^8.0.1",
     "next": "^13.2.4",
     "nodemon": "^2.0.21",
-    "terser-webpack-plugin": "^5.3.6",
     "typescript": "^4.9.5"
   }
 }
