@@ -21,6 +21,7 @@ const StyledContainer = styled('div')<Props>(({
   alignItems: align,
   alignSelf: align,
   justifyContent: align,
+  margin: 'auto',
   maxWidth: 1280,
   padding: theme.spacing(4),
   textAlign: align,
@@ -29,11 +30,6 @@ const StyledContainer = styled('div')<Props>(({
 export default function Page({
   children, title, ...other 
 }: Props) {
-  React.useEffect(() => {
-    if (title) {
-      document.title = title;
-    }
-  }, [title]);
   return (
     <StyledContainer { ...other }>
       {children}
