@@ -18,7 +18,6 @@ import API, {
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
-  headers,
 } from '@/api';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
@@ -36,51 +35,54 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
   const {
     register, handleSubmit, formState: { errors }, 
   } = useForm();
-  const { userData, setUserData } = React.useContext(SessionContext);
+  const {
+    userData, setUserData, withHeaders, 
+  } = React.useContext(SessionContext);
 
   const [error, setError] = React.useState<AuthError | undefined>(undefined);
   const [needsToVerifyAlias, setNeedsToVerifyAlias] = React.useState(false);
 
   const handleLogIn = React.useCallback(
-    async (values: PartialLoginRequest) => {
-      try {
-        const { data, error } = await API.login(values, { headers: headers({ token: userData?.tokenString }) });
+    (values: PartialLoginRequest) => {
+      withHeaders(API.login)(values)
+        .then(({ data, error }) => {
+          if (error) {
+            setError(error);
+            return;
+          }
+          setUserData({
+            isLoggedIn: true,
+            ...data,
+          }, { updateCookie: true });
+          router.push('/search');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    [router, setUserData, userData, withHeaders]
+  );
+
+  const handleSignUp = React.useCallback((values: PartialRegistrationRequest) => {
+    withHeaders(API.register)(values)
+      .then(({ data, error }) => {
         if (error) {
           setError(error);
           return;
         }
-        setUserData({
-          isLoggedIn: true,
-          ...data,
-        }, { updateCookie: true });
-        router.push('/search');
-      } catch (error) {
+        if (data.token) {
+          setUserData({ 
+            isLoggedIn: true,
+            ...data,
+          }, { updateCookie: true });
+          router.push('/');
+        } else {
+          setNeedsToVerifyAlias(true);
+        }
+      }).catch((error) => {
         console.log(error);
-      }
-    },
-    [router, setUserData, userData]
-  );
-
-  const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
-    try {
-      const { data, error } = await API.register(values, { headers: headers({ token: userData?.tokenString }) });
-      if (error) {
-        setError(error);
-        return;
-      }
-      if (data.token) {
-        setUserData({ 
-          isLoggedIn: true,
-          ...data,
-        }, { updateCookie: true });
-        router.push('/');
-      } else {
-        setNeedsToVerifyAlias(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [router, setUserData, userData]);
+      });
+  }, [router, setUserData, userData, withHeaders]);
 
   React.useEffect(() => {
     setError(undefined);
