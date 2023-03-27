@@ -143,7 +143,7 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/logout': () => {
-        withHeaders(API.logout).then(console.log).catch(console.error).finally(() => {
+        withHeaders(API.logout)({}).then(console.log).catch(console.error).finally(() => {
           setUserData();
           router.push('/login');
         });
