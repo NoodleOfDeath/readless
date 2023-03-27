@@ -96,10 +96,7 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     const summaryIds = summaries.map((summary) => {
       return summary.toJSON().id;
     });
-    const interactions = await SummaryInteraction.findAll({ 
-      group: ['userId'], 
-      where: { targetId: summaryIds },
-    });
+    const interactions = await SummaryInteraction.findAll({ where: { targetId: summaryIds } });
     summaries.forEach((summary) => {
       const interactionMap = {
         bookmark: [],
