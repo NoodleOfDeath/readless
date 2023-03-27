@@ -58,6 +58,7 @@ export class UserData implements UserDataProps {
 
 // Headers
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
 
 // Context

@@ -100,6 +100,7 @@ export function SessionContextProvider({ children }: Props) {
     };
   }, [preferenceSetter]);
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
     if (!userData?.tokenString) {
       return (...args: T) => fn(...args, {});
@@ -138,45 +139,43 @@ export function SessionContextProvider({ children }: Props) {
     return {
       '/login': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          router.push('/');
-          return;
+          return router.push('/');
         }
       },
-      '/logout': () => {
-        withHeaders(API.logout)({}).then(console.log).catch(console.error).finally(() => {
+      '/logout': async () => {
+        try {
+          await withHeaders(API.logout)({});
+        } catch (e) {
+          console.error(e);
+        } finally {
           setUserData();
           router.push('/login');
-        });
+        }
       },
       '/profile': () => {
         if (!userData?.isLoggedIn || !userData?.tokenString) {
-          router.push('/login');
-          return;
+          return router.push('/login');
         }
       },
       '/reset-password': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          router.push('/');
-          return;
+          return router.push('/');
         }
         if (!userData?.userId) {
-          router.push('/login');
-          return;
+          return router.push('/login');
         }
       },
       '/verify': async () => {
-        const verificationCode = JSON.stringify(searchParams['vc']);
-        const otp = JSON.stringify(searchParams['otp']);
+        const verificationCode = typeof searchParams['verificationCode'] === 'string' ? searchParams['verificationCode'] : undefined;
+        const otp = typeof searchParams['otp'] === 'string' ? searchParams['otp'] : undefined;
         if (!verificationCode && !otp) {
-          router.push('/error');
-          return;
+          return router.push('/error');
         }
         if (verificationCode) {
           try {
             const { error } = await withHeaders(API.verifyAlias)({ verificationCode });
             if (error && error.code) {
-              router.push(`/error?error=${JSON.stringify(error)}`);
-              return;
+              return router.push(`/error?error=${JSON.stringify(error)}`);
             }
             router.push(`/success?${new URLSearchParams({
               msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
@@ -185,20 +184,18 @@ export function SessionContextProvider({ children }: Props) {
             }).toString()}`);
           } catch (e) {
             console.error(e);
-            router.push('/error');
+            return router.push('/error');
           }
         } else if (otp) {
           try {
-            const { data, error } = await withHeaders(API.verifyOtp)({ otp });
+            const { error } = await withHeaders(API.verifyOtp)({ otp });
             if (error && error.code) {
-              router.push(`/error?error=${JSON.stringify(error)}`);
-              return;
+              return router.push(`/error?error=${JSON.stringify(error)}`);
             }
-            setUserData(data, { updateCookie: true });
-            router.push('/reset-password');
+            return router.push('/reset-password');
           } catch (e) {
             console.error(e);
-            router.push('/error');
+            return router.push('/error');
           }
         }
       },

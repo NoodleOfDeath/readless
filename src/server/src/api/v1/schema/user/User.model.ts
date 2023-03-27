@@ -3,9 +3,8 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
-import { SchemaError } from './../types';
-import { AuthError } from '../../../../services';
 import { Jwt } from '../../../../services/types';
+import { AuthError, SchemaError } from '../../middleware';
 import { BaseModel } from '../base';
 import {
   Alias,

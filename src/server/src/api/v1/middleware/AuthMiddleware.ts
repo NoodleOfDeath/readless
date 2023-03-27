@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { AuthError } from '../../../services';
+import { AuthError } from './internal-errors';
 import { Jwt } from '../../../services/types';
 
 type AuthMiddlewareOptions = {

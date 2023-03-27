@@ -15,7 +15,8 @@ import {
   FindAliasOptions,
   ThirdPartyAuth,
 } from './Alias.types';
-import { AuthError, GoogleService } from '../../../../services';
+import { GoogleService } from '../../../../services';
+import { AuthError } from '../../middleware';
 import { Credential } from '../auth/Credential.model';
 import { BaseModel } from '../base';
 

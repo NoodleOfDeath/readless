@@ -85,20 +85,21 @@ export default function SearchPage() {
   }, []);
 
   const loadMore = React.useCallback(async () => {
-    withHeaders(API
-      .getSummaries)({
-      filter: searchText,
-      page,
-      pageSize,
-    })
-      .then(({ data, error }) => {
-        if (data) {
-          setTotalResults(data.count);
-          setRecentSummaries((prev) => [...prev, ...data.rows]);
-          setPage((prev) => prev + 1);
-        }
-      })
-      .catch(console.error);
+    try {
+      const { data } = await withHeaders(API
+        .getSummaries)({
+        filter: searchText,
+        page,
+        pageSize,
+      });
+      if (data) {
+        setTotalResults(data.count);
+        setRecentSummaries((prev) => [...prev, ...data.rows]);
+        setPage((prev) => prev + 1);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }, [page, pageSize, searchText, withHeaders]);
   
   const setPostInteractions = React.useCallback((i: number, interactions: InteractionResponse) => {
