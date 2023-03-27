@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import API, { AuthError } from '@/api';
+import API, { InternalError } from '@/api';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
     userData, setUserData, withHeaders, 
   } = React.useContext(SessionContext);
 
-  const [error, setError] = React.useState<AuthError | null>(null);
+  const [error, setError] = React.useState<InternalError | null>(null);
   const [success, setSuccess] = React.useState(false);
 
   const onSubmit = React.useCallback(async (values: { password?: string }) => {

@@ -14,7 +14,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useForm } from 'react-hook-form';
 
 import API, {
-  AuthError,
+  InternalError,
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
@@ -37,7 +37,7 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
   } = useForm();
   const { setUserData, withHeaders } = React.useContext(SessionContext);
 
-  const [error, setError] = React.useState<AuthError | undefined>(undefined);
+  const [error, setError] = React.useState<InternalError | undefined>(undefined);
   const [needsToVerifyAlias, setNeedsToVerifyAlias] = React.useState(false);
 
   const handleLogIn = React.useCallback(

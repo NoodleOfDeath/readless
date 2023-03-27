@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import API, { AuthError, PartialGenerateOTPRequest } from '@/api';
+import API, { InternalError, PartialGenerateOTPRequest } from '@/api';
 import Page from '@/components/layout/Page';
 import { useRouter } from '@/next/router';
 
@@ -20,7 +20,7 @@ export default function ForgotPage() {
   const router = useRouter();
   const { handleSubmit, register } = useForm();
 
-  const [error, setError] = React.useState<AuthError | null>(null);
+  const [error, setError] = React.useState<InternalError | null>(null);
   const [success, setSuccess] = React.useState(false);
 
   const onSubmit = React.useCallback(async (values: PartialGenerateOTPRequest) => {
