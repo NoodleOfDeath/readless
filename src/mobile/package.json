@@ -10,8 +10,8 @@
     "test": "jest",
     "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/gen --no-client",
     "swagger": "(cd ../server && yarn swagger) && cp ../server/public/swagger.json . && yarn gen",
-    "lint": "eslint .  --ext .ts,.tsx",
-    "format": "eslint .  --ext .ts,.tsx --fix"
+    "lint": "eslint .  --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint .  --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.7",

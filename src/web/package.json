@@ -9,8 +9,8 @@
     "eject": "next eject",
     "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen",
     "tsoa": "(cd ../server && yarn tsoa) && cp ../server/swagger.json ./swagger.json && yarn gen",
-    "lint": "eslint . --ext .ts,.tsx",
-    "format": "eslint . --ext .ts,.tsx --fix"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
