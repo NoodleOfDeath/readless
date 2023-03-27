@@ -153,7 +153,7 @@ export default function Post({
   const votes = React.useMemo(() => upvotes - downvotes, [downvotes, upvotes]);
 
   const interact = React.useCallback(
-    (type: InteractionType, value?: string) => {
+    (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
       if (!summary) {
         return;
       }
@@ -161,7 +161,9 @@ export default function Post({
         alert('Messy Dialog Telling User They Must Log In or Download the App to Vote on Articles! (we can log this as tech debt for now, we good to ship to prod. lmfao sikeeeee)');
         return;
       }
-      withHeaders(API.interactWithSummary)(summary.id, type, { userId: userData.userId, value })
+      withHeaders(API.interactWithSummary)(summary.id, type, {
+        content, metadata, userId: userData.userId, 
+      })
         .then(({ data, error }) => {
           if (error) {
             console.log(error);
@@ -190,7 +192,7 @@ export default function Post({
             <Button onClick={ () => interact(InteractionType.Upvote) }>
               <Icon path={ summary?.interactions.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
             </Button>
-            <Stack direction="row" onClick={ () => setShowSplitVotes(!showSplitVotes) }>
+            <Stack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
               {showSplitVotes ? (
                 <Stack direction="row" spacing={ 1 }>
                   <Typography variant="subtitle2">{upvotes}</Typography>

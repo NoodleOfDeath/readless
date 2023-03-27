@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
 import { Jwt } from '../../../../services/types';
-import { AuthError, SchemaError } from '../../middleware';
+import { AuthError } from '../../middleware';
 import { BaseModel } from '../base';
 import {
   Alias,
@@ -22,8 +22,6 @@ import {
   CredentialType,
   FindAliasOptions,
   InteractionType,
-  ResourceSpecifier,
-  ResourceType,
   UserAttributes,
   UserCreationAttributes,
 } from '../types';
@@ -181,44 +179,44 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }
     const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.toJSON().id } });
     return count;
-  } 
+  }
   
-  public async interactWith<R extends ResourceType>(resource: ResourceSpecifier<R>, type: InteractionType, value?: string) {
-    if (resource.type === 'summary') {
+  public async interactWithSummary(targetId: number, type: InteractionType, content?: string, metadata?: Record<string, unknown>) {
+    const createInteraction = async () => {
+      await SummaryInteraction.create({
+        content, metadata, targetId, type, userId: this.toJSON().id,
+      });
+    };
+    const destroy = !['comment', 'impression', 'share', 'view'].includes(type);
+    if (destroy) {
       let searchType = [type];
       if (type === 'downvote' || type === 'upvote') {
         searchType = ['downvote', 'upvote'];
       }
       const interaction = await SummaryInteraction.findOne({
         where: {
-          targetId: resource.id, type: searchType, userId: this.toJSON().id,
+          targetId, type: searchType, userId: this.toJSON().id,
         }, 
       });
-      const createInteraction = async () => {
-        await SummaryInteraction.create({
-          targetId: resource.id, type, userId: this.toJSON().id, value,
-        });
-      };
       if (interaction) {
-        if (type === 'downvote' || type === 'upvote') {
-          await SummaryInteraction.destroy({
-            where: {
-              targetId: resource.id, type: ['downvote', 'upvote'], userId: this.toJSON().id, 
-            },
-          });
-          if (interaction.toJSON().type !== type) {
-            await createInteraction();
-          }
+        await SummaryInteraction.destroy({
+          where: {
+            targetId, type: searchType, userId: this.toJSON().id, 
+          },
+        });
+        const create = ((type === 'downvote' || type === 'upvote') && interaction.toJSON().type !== type) || type === 'view';
+        if (create) {
+          await createInteraction();
         }
       } else {
         await createInteraction();
       }
-      const summary = await Summary.findByPk(resource.id);
-      await summary.addUserInteractions(this.toJSON().id);
-      return summary;
     } else {
-      throw new SchemaError('Unknown interaction type');
+      await createInteraction();
     }
+    const summary = await Summary.findByPk(targetId);
+    await summary.addUserInteractions(this.toJSON().id);
+    return summary;
   }
 
 }

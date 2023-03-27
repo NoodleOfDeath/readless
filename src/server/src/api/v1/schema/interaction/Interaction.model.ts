@@ -14,8 +14,6 @@ export abstract class Interaction<
   extends BaseModel<A, B>
   implements InteractionAttributes {
 
-  actorId: number;
-
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
@@ -35,6 +33,9 @@ export abstract class Interaction<
     type: InteractionType;
 
   @Column({ type: DataType.TEXT })
-    value?: string;
+    content?: string;
+    
+  @Column({ type: DataType.JSON })
+    metadata?: Record<string, unknown>;
 
 }

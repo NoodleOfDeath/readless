@@ -20,19 +20,22 @@ export type InteractionAttributes = DatedAttributes & {
   /** type of this interaction */
   type: InteractionType;
   /** value associated with the interaction */
-  value?: string;
+  content?: string;
+  metadata?: Record<string, unknown>;
 };
 
 export type InteractionCreationAttributes = {
   userId: number;
   targetId: number;
   type: InteractionType;
-  value?: string;
+  content?: string;
+  metadata?: Record<string, unknown>;
 };
 
 export type InteractionRequest = {
   userId: number;
-  value?: string;
+  content?: string;
+  metadata?: Record<string, unknown>;
 };
 
 export type InteractionUserVote = 'up' | 'down';
