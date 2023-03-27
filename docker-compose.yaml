@@ -6,7 +6,7 @@ services:
     env_file:
       - src/web/.env
     ports:
-      - "$PORT:$PORT"
+      - "80:80"
 
   web-local:
     build:
@@ -33,7 +33,7 @@ services:
     env_file:
       - src/server/.env
     ports:
-      - "$PORT:$PORT"
+      - "80:80"
 
   api-local:
     build:
