@@ -12,13 +12,13 @@ import {
   ContainerProps,
   Divider,
   Grid,
-  Link,
   Stack,
   Theme,
   Typography,
   styled,
   useMediaQuery,
 } from '@mui/material';
+import Link from 'next/link';
 
 const LINKS = [
   {

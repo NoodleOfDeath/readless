@@ -31,7 +31,6 @@ export default function SearchPage() {
   const { 
     searchText, 
     setSearchText,
-    userData,
     withHeaders,
   } = React.useContext(SessionContext);
 
