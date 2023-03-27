@@ -72,7 +72,7 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        router.push('/');
+        router.push('/search');
       } else {
         setNeedsToVerifyAlias(true);
       }
@@ -161,7 +161,7 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
               <Link onClick={ () => router.push('/forgot') }>
                 Forgot your password?
               </Link>
-            ): (
+            ) : (
               <Typography variant='body2'>
                 By signing up, you agree to our
                 {' '}

@@ -1,7 +1,6 @@
 // @eslint-disable
 const data = 
-`
-# Terms of Service
+`# Terms of Service
 
 By using our web application, you agree to the following terms and
 conditions: 
@@ -20,6 +19,5 @@ guarantee that our web application will be uninterrupted or error-free, or that 
 - Indemnification: You agree to indemnify, defend, and hold us harmless from and against any and all claims, damages, losses, liabilities, costs, and expenses
 (including reasonable attorneys&apos; fees) arising out of or in connection with your use of our web application. 
 - Changes to terms: We may update these terms and conditions from time to time, and we encourage you to review them periodically. Your continued use of our web application after any changes to these terms and conditions will constitute your acceptance of such changes. 
-- Governing law: These terms and conditions shall be governed by and construed in accordance with the laws of Delaware, United States. Any disputes arising out of or in connection with these terms and conditions shall be resolved in the courts of Delaware, United States.
-`;
+- Governing law: These terms and conditions shall be governed by and construed in accordance with the laws of Delaware, United States. Any disputes arising out of or in connection with these terms and conditions shall be resolved in the courts of Delaware, United States.`;
 export default data;

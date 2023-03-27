@@ -108,7 +108,6 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     try {
       const prefs = JSON.parse(getCookie(COOKIES.preferences) || '{}');
-      console.log('shit', prefs);
       setPreferences(prefs);
     } catch (e) {
       setPreferences({});
@@ -133,7 +132,7 @@ export function SessionContextProvider({ children }: Props) {
     return {
       '/login': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          return router.push('/');
+          return router.push('/search');
         }
       },
       '/logout': async () => {
@@ -148,15 +147,15 @@ export function SessionContextProvider({ children }: Props) {
       },
       '/profile': () => {
         if (!userData?.isLoggedIn || !userData?.tokenString) {
-          return router.push('/login');
+          return router.push('/logout');
         }
       },
       '/reset-password': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          return router.push('/');
+          return router.push('/search');
         }
         if (!userData?.userId) {
-          return router.push('/login');
+          return router.push('/logout');
         }
       },
       '/verify': async () => {
