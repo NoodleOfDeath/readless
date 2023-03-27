@@ -12,6 +12,7 @@ on:
       - 'k8s/web-deploy.yaml'
       - 'src/web/package.json'
       - 'src/web/public/**'
+      - 'src/web/nginx.conf'
       - 'src/web/src/**'
       - 'src/server/src/api/**'
 
