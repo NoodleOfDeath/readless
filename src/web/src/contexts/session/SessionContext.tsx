@@ -12,6 +12,7 @@ import {
   setCookie,
 } from './cookies';
 import {
+  FunctionWithRequestParams,
   NULL_SESSION,
   Preferences,
   SetSearchTextOptions,
@@ -20,7 +21,7 @@ import {
   UserDataProps,
 } from './types';
 
-import API, { headers } from '@/api';
+import API from '@/api';
 import { useRouter } from '@/next/router';
 import { loadTheme } from '@/theme';
 
@@ -98,6 +99,16 @@ export function SessionContextProvider({ children }: Props) {
       setDisplayMode: preferenceSetter('displayMode'),
     };
   }, [preferenceSetter]);
+  
+  const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
+    if (!userData?.tokenString) {
+      return (...args: T) => fn(...args, {});
+    }
+    return (...args: T) => {
+      const requestParams = { headers: { Authorization: `Bearer ${userData.tokenString}` } };
+      return fn(...args, requestParams);
+    };
+  }, [userData?.tokenString]);
 
   // Load cookies on mount
   React.useEffect(() => {
@@ -132,12 +143,10 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/logout': () => {
-        API.logout({}, { headers: headers({ token: userData?.tokenString }) })
-          .catch(console.error)
-          .finally(() => {
-            setUserData();
-            router.push('/login');
-          });
+        withHeaders(API.logout).then(console.log).catch(console.error).finally(() => {
+          setUserData();
+          router.push('/login');
+        });
       },
       '/profile': () => {
         if (!userData?.isLoggedIn || !userData?.tokenString) {
@@ -155,7 +164,7 @@ export function SessionContextProvider({ children }: Props) {
           return;
         }
       },
-      '/verify': () => {
+      '/verify': async () => {
         const verificationCode = JSON.stringify(searchParams['vc']);
         const otp = JSON.stringify(searchParams['otp']);
         if (!verificationCode && !otp) {
@@ -163,7 +172,8 @@ export function SessionContextProvider({ children }: Props) {
           return;
         }
         if (verificationCode) {
-          API.verifyAlias({ verificationCode }).then(({ error }) => {
+          try {
+            const { error } = await withHeaders(API.verifyAlias)({ verificationCode });
             if (error && error.code) {
               router.push(`/error?error=${JSON.stringify(error)}`);
               return;
@@ -173,38 +183,38 @@ export function SessionContextProvider({ children }: Props) {
               r: '/login',
               t: '3000',
             }).toString()}`);
-          }).catch((e) => {
+          } catch (e) {
             console.error(e);
             router.push('/error');
-          });
+          }
         } else if (otp) {
-          API.verifyOtp({ otp }).then(({ data, error }) => {
+          try {
+            const { data, error } = await withHeaders(API.verifyOtp)({ otp });
             if (error && error.code) {
               router.push(`/error?error=${JSON.stringify(error)}`);
               return;
             }
             setUserData(data, { updateCookie: true });
             router.push('/reset-password');
-          }).catch((e) => {
+          } catch (e) {
             console.error(e);
             router.push('/error');
-          });
+          }
         }
       },
     };
-  }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId]);
+  }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId, withHeaders]);
   
   React.useEffect(() => {
     // record page visit
-    API.recordMetric({
+    withHeaders(API.recordMetric)({
       data: { path: router.pathname },
       type: 'nav',
       userAgent: navigator.userAgent,
-    })
-      .catch(console.error);
+    }).catch(console.error);
     const action = pathActions[router.pathname];
     action?.();
-  }, [pathActions, router.pathname]);
+  }, [pathActions, router.pathname, withHeaders]);
 
   return (
     <SessionContext.Provider
@@ -229,6 +239,7 @@ export function SessionContextProvider({ children }: Props) {
         setUserData,
         theme,
         userData,
+        withHeaders,
       } }>
       <ThemeProvider theme={ theme }>
         <CssBaseline />

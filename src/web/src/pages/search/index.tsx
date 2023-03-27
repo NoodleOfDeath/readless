@@ -11,11 +11,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import API, {
-  InteractionResponse,
-  SummaryResponse,
-  headers,
-} from '@/api';
+import API, { InteractionResponse, SummaryResponse } from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
 import Filters from '@/components/search/Filters';
@@ -36,6 +32,7 @@ export default function SearchPage() {
     searchText, 
     setSearchText,
     userData,
+    withHeaders,
   } = React.useContext(SessionContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
@@ -62,12 +59,12 @@ export default function SearchPage() {
   React.useEffect(() => {
     setRecentSummaries([]);
     setPage(1);
-    API
-      .getSummaries({
-        filter: searchText,
-        page: 0,
-        pageSize,
-      }, { headers: headers({ token: userData?.tokenString }) })
+    withHeaders(API
+      .getSummaries)({
+      filter: searchText,
+      page: 0,
+      pageSize,
+    })
       .then((response) => {
         setTotalResults(response.data.count);
         setRecentSummaries(response.data.rows);
@@ -81,34 +78,31 @@ export default function SearchPage() {
         setLoading(false);
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText, userData]);
+  }, [searchText, withHeaders]);
 
   const expandPost = React.useCallback((id?: number, mode?: ConsumptionMode) => {
     setExpandedPost(mode ? id : undefined);
     setConsumptionMode(mode);
   }, []);
 
-  const loadMore = React.useCallback(() => {
-    API
-      .getSummaries({
-        filter: searchText,
-        page,
-        pageSize,
-      }, { headers: headers({ token: userData?.tokenString }) })
-      .then((response) => {
-        if (response.data) {
-          setTotalResults(response.data.count);
-          setRecentSummaries((prev) => [...prev, ...response.data.rows]);
+  const loadMore = React.useCallback(async () => {
+    withHeaders(API
+      .getSummaries)({
+      filter: searchText,
+      page,
+      pageSize,
+    })
+      .then(({ data, error }) => {
+        if (data) {
+          setTotalResults(data.count);
+          setRecentSummaries((prev) => [...prev, ...data.rows]);
           setPage((prev) => prev + 1);
         }
       })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [page, pageSize, searchText, userData]);
+      .catch(console.error);
+  }, [page, pageSize, searchText, withHeaders]);
   
   const setPostInteractions = React.useCallback((i: number, interactions: InteractionResponse) => {
-    console.log('interactions updated for post', i, interactions);
     setRecentSummaries((prev) => {
       const newPosts = [...prev];
       newPosts[i].interactions = interactions;
