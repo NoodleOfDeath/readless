@@ -1,13 +1,14 @@
-import React from "react";
-import { Pressable } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useTheme } from "../components/theme";
+import React from 'react';
+import { Pressable } from 'react-native';
 
-import AudioScreen from "./audio/AudioScreen";
-import DiscoverScreen from "./discover/DiscoverScreen";
-import NotificationsScreen from "./notifications/NotificationsScreen";
-import ProfileScreen from "./profile/ProfileScreen";
-import SkoopScreen from "./skoop/SkoopScreen";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import AudioScreen from './audio/AudioScreen';
+import DiscoverScreen from './discover/DiscoverScreen';
+import NotificationsScreen from './notifications/NotificationsScreen';
+import ProfileScreen from './profile/ProfileScreen';
+import SkoopScreen from './skoop/SkoopScreen';
+import { useTheme } from '../components/theme';
 
 type ScreenProps = {
   name: string;
@@ -24,36 +25,37 @@ type ScreenProps = {
 
 export const SCREENS: ScreenProps[] = [
   {
-    name: "Discover",
     component: DiscoverScreen,
-    icon: "fire",
+    icon: 'fire',
+    name: 'Discover',
   },
   {
-    name: "Skoop+",
     component: SkoopScreen,
-    icon: "silverware-spoon",
+    icon: 'silverware-spoon',
+    name: 'Skoop+',
   },
   {
-    name: "Audio",
     component: AudioScreen,
-    icon: "headphones",
+    icon: 'headphones',
+    name: 'Audio',
   },
   {
-    name: "Notifications",
     component: NotificationsScreen,
-    icon: "bell",
+    icon: 'bell',
+    name: 'Notifications',
   },
   {
-    name: "Profile",
     component: ProfileScreen,
-    icon: "account",
     headerRight: () => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const theme = useTheme();
       return (
-        <Pressable style={theme.components.buttonPadded}>
-          <Icon name="menu" size={32} color={theme.components.button.color} />
+        <Pressable style={ theme.components.buttonPadded }>
+          <Icon name="menu" size={ 32 } color={ theme.components.button.color } />
         </Pressable>
       );
     },
+    icon: 'account',
+    name: 'Profile',
   },
 ];

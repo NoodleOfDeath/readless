@@ -1,6 +1,7 @@
-import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import p from 'path';
+
+import ffmpeg from 'fluent-ffmpeg';
 
 type AudioEditorOptions = {
   watchDir: string;
@@ -18,7 +19,9 @@ type AudioEditOptions = {
 function ffprobeSync(path: string): Promise<ffmpeg.FfprobeData> {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(path, (err, metadata) => {
-      if (err) return reject(err);
+      if (err) {
+        return reject(err);
+      }
       resolve(metadata);
     });
   });
@@ -52,6 +55,7 @@ function resolveOutputPath(
 }
 
 export class AudioEditingService {
+
   watchDir: string;
   outputDir: string;
 
@@ -60,6 +64,7 @@ export class AudioEditingService {
       ? parseInt(fs.readFileSync('.batch', { encoding: 'utf-8' }).toString())
       : 0;
   }
+
   set batchCount(count: number) {
     fs.writeFileSync('.batch', count.toString(), { encoding: 'utf-8' });
   }
@@ -169,17 +174,15 @@ export class AudioEditingService {
       })
       .sort((a, b) => a.stats.mtimeMs - b.stats.mtimeMs);
     try {
-      const outfiles = await Promise.all(
-        files.map((f, i) =>
-          this.edit(f.path, {
-            ...opts,
-            outputName: this.namingSchema(f.path, i),
-          })
-        )
-      );
+      const outfiles = await Promise.all(files.map((f, i) =>
+        this.edit(f.path, {
+          ...opts,
+          outputName: this.namingSchema(f.path, i),
+        })));
       return outfiles;
     } catch (e) {
       console.error(e);
     }
   }
+
 }

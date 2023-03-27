@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node
 
 import fs from 'fs';
+
 import { parse } from 'node-html-parser';
 
 const news = fs.readFileSync('./news.xml', 'utf8');

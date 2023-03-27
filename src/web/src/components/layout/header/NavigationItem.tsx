@@ -1,21 +1,29 @@
-import { Button, Menu, MenuItem, styled } from "@mui/material";
-import { Icon } from "@mdi/react";
-import React from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import React from 'react';
+
+import { Icon } from '@mdi/react';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  styled,
+} from '@mui/material';
+
+import { useRouter } from '@/next/router';
 
 export type NavigationItemProps = {
   id: string;
+  visible?: boolean| (() => boolean);
   label?: string;
   icon?: string;
   content?: React.ReactNode;
   items?: NavigationItemProps[];
-  onClick?: (options: { navigate?: NavigateFunction }) => void;
+  onClick?: (options: { router?: ReturnType<typeof useRouter> }) => void;
 };
 
 const StyledMenuItemButton = styled(Button)(({ theme }) => ({
-  width: "100%",
+  justifyContent: 'flex-start',
   padding: theme.spacing(1, 2),
-  justifyContent: "flex-start",
+  width: '100%',
 }));
 
 export default function NavigationItem({
@@ -25,10 +33,12 @@ export default function NavigationItem({
   items,
   onClick,
 }: NavigationItemProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
+  
+  const filteredItems = React.useMemo(() => items?.filter((item) => item.visible instanceof Function ? item.visible() : item.visible), [items]);
 
   const handleClose = React.useCallback(() => {
     setAnchorEl(null);
@@ -36,45 +46,40 @@ export default function NavigationItem({
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      onClick ? onClick({ navigate }) : setAnchorEl(event.currentTarget);
+      onClick ? onClick({ router }) : setAnchorEl(event.currentTarget);
     },
-    [navigate, onClick]
+    [router, onClick]
   );
 
   return (
     <MenuItem>
-      {(onClick || (items && items.length > 0)) && (
+      {(onClick || (filteredItems && filteredItems.length > 0)) && (
         <StyledMenuItemButton
-          onClick={handleClick}
-          startIcon={icon && <Icon path={icon} size={1} />}
-        >
+          onClick={ handleClick }
+          startIcon={ icon && <Icon path={ icon } size={ 1 } /> }>
           {label}
         </StyledMenuItemButton>
       )}
-      {content && <>{content}</>}
-      {items && items.length > 0 && (
+      {content && <React.Fragment>{content}</React.Fragment>}
+      {filteredItems && filteredItems.length > 0 && (
         <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
-          {items.map((item) => (
-            <MenuItem key={item.id}>
+          anchorEl={ anchorEl }
+          open={ open }
+          onClose={ handleClose }
+          MenuListProps={ { 'aria-labelledby': 'basic-button' } }
+          anchorOrigin={ {
+            horizontal: 'left',
+            vertical: 'bottom',
+          } }
+          transformOrigin={ {
+            horizontal: 'right',
+            vertical: 'bottom',
+          } }>
+          {filteredItems.map((item) => (
+            <MenuItem key={ item.id }>
               <StyledMenuItemButton
-                onClick={() => item.onClick?.({ navigate })}
-                startIcon={item.icon && <Icon path={item.icon} size={1} />}
-              >
+                onClick={ () => item.onClick?.({ router }) }
+                startIcon={ item.icon && <Icon path={ item.icon } size={ 1 } /> }>
                 {item.label}
               </StyledMenuItemButton>
             </MenuItem>

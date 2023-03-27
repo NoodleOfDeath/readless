@@ -1,1 +1,2 @@
-export * from './queue';
+export * from './QueueService';
+export * from './Worker';

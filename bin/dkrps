@@ -1,0 +1,46 @@
+#!/bin/bash
+
+THIS=$(basename $0)
+
+usage() {
+  echo
+  echo "shorthand for 'docker ps <pattern>' but gets the name of the container"
+  echo
+  echo "usage: $THIS [-h|--help] <pattern>"
+  echo "  -h|--help          show this help"
+  echo "  -n|--name-only     show container name only"
+  echo "  <pattern>          pattern to match in container name"
+  exit 1
+}
+
+ARGS=()
+PATTERN=
+NAME_ONLY=
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -h | --help)
+    usage
+    ;;
+  -n | --name-only)
+    NAME_ONLY=1
+    ;;
+  *)
+    ARGS+=("$1")
+    ;;
+  esac
+  shift
+done
+
+PATTERN="${ARGS[0]}"
+
+if [[ -z "$PATTERN" ]]; then
+  docker ps
+else
+  # gets the last string of the row that matches
+  if [[ $NAME_ONLY -gt 0 ]]; then
+    docker ps | grep $PATTERN | grep '\b[a-zA-Z0-9-]\+$' -o
+  else
+    docker ps | grep $PATTERN
+  fi
+fi

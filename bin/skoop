@@ -1,0 +1,86 @@
+#!/bin/bash
+
+THIS=$(basename $0)
+
+if [[ -z "$SKOOP_ROOT" ]]; then
+  echo "SKOOP_ROOT is not set"
+  exit 1
+fi
+
+usage() {
+  echo
+  echo "shorthand for 'docker compose...' to launch"
+  echo "skoop containers!"
+  echo
+  echo "usage: $THIS [options] <web | api | cron | work | worker>"
+  echo
+  echo "  -h | --help          show this help msg"
+  echo "  -e | --env-file      specify env file"
+  echo "  -d | --detach        detach"
+  echo "  -l | --local         run locally"
+  exit 0
+}
+
+ARGS=()
+POSTOPTS=()
+ENV=
+LOCAL=
+DETACHED=
+MODULE=
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -e=* | --env-file=*)
+    ENV="${1#*=}"
+    ;;
+  -e | --env-file)
+    ENV="$2"
+    shift
+    ;;
+  -h | --help)
+    usage
+    ;;
+  -l | --local)
+    LOCAL=1
+    ;;
+  -d | --build)
+    POSTOPTS+=("$1")
+    ;;
+  *)
+    ARGS+=("$1")
+    ;;
+  esac
+  shift
+done
+
+MODULE=${ARGS[0]}
+ARGS=("${ARGS[@]:1}")
+
+if [ -z "$MODULE" ]; then
+  echo "Module name is required"
+  usage
+fi
+
+case "$MODULE" in
+web)
+  ENV=src/web/.env
+  ;;
+api | cron)
+  ENV=src/server/.env
+  ;;
+work | worker)
+  MODULE="worker"
+  ENV=src/server/.env
+  ;;
+*)
+  echo "Invalid module name"
+  usage
+  ;;
+esac
+
+if [[ "$LOCAL" == "1" ]]; then
+  echo "Running locally"
+  MODULE="$MODULE-local"
+fi
+
+(cd $SKOOP_ROOT && docker compose --env-file $ENV up $MODULE ${POSTOPTS[@]} ${ARGS[@]})

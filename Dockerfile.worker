@@ -1,18 +1,19 @@
 FROM node:19.3.0 as base
-RUN npm install -g pnpm
 WORKDIR /home/node/app
 COPY src/server/package.json ./
+COPY src/server/yarn.lock ./
 COPY src/server/src ./src
-RUN pnpm install
+RUN yarn install --non-interactive --immutable
 
 FROM base as pre-build
 COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 
 FROM pre-build as build
-RUN pnpm build:worker
+ENV NODE_ENV=production
+RUN yarn build:worker
 # tiktoken hack 🙄
-RUN cp $(for f in node_modules/.pnpm/@dqbd+tiktoken*; do echo $f; done | sort -r | xargs | awk '{print $1}')/node_modules/@dqbd/tiktoken/dist/node/_tiktoken_bg.wasm ./dist
+RUN cp node_modules/@dqbd/tiktoken/dist/node/_tiktoken_bg.wasm ./dist
 
 FROM build as worker
-CMD pnpm start:worker
+CMD yarn start:worker

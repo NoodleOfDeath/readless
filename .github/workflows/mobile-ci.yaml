@@ -6,12 +6,13 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/mobile-ci.yaml"
-      - "k8s/mobile-deploy.yaml"
-      - "src/mobile/package.json"
-      - "src/mobile/public/**"
-      - "src/mobile/src/**"
-      - "src/server/api/**"
+      - '.github/workflows/mobile-ci.yaml'
+      - 'package.json'
+      - 'k8s/mobile-deploy.yaml'
+      - 'src/mobile/package.json'
+      - 'src/mobile/public/**'
+      - 'src/mobile/src/**'
+      - 'src/server/api/**'
 
 concurrency:
   group: ${{ github.ref }}-mobile
@@ -37,9 +38,9 @@ jobs:
         with:
           ssh-key: ${{ secrets.GIT_SSH_KEY }}
           submodules: recursive
-      - name: Install pnpm
+      - name: Install yarn
         run: |
-          npm install -g pnpm
+          npm install -g yarn
       - name: Pod Install
         run: |
           cd src/mobile \
@@ -47,7 +48,7 @@ jobs:
       - name: Build
         run: |
           cd src/mobile \
-          pnpm build
+          yarn build
 
   deploy-mobile:
     needs: build-mobile

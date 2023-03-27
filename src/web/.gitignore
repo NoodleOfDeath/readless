@@ -7,9 +7,10 @@
 /coverage
 
 # production
-src/api
+src/gen
 /build
 /dist
+.next
 *.db
 *.pem
 

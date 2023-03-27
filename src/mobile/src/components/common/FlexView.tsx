@@ -1,11 +1,10 @@
-import React from "react";
-import LinearGradient, {
-  LinearGradientProps,
-} from "react-native-linear-gradient";
+import React from 'react';
 
-import { useTheme } from "../theme";
+import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient';
 
-type Props = Omit<LinearGradientProps, "colors" | "style"> & {
+import { useTheme } from '../theme';
+
+type Props = Omit<LinearGradientProps, 'colors' | 'style'> & {
   row?: boolean;
   col?: boolean;
   m?: number;
@@ -19,7 +18,7 @@ type Props = Omit<LinearGradientProps, "colors" | "style"> & {
   pl?: number;
   pr?: number;
   colors?: string[];
-  style?: React.ComponentProps<typeof LinearGradient>["style"] & {
+  style?: React.ComponentProps<typeof LinearGradient>['style'] & {
     background?: string | string[];
   };
 };
@@ -28,7 +27,7 @@ export default function FlexView({
   children,
   row,
   col,
-  colors = ["transparent", "transparent"],
+  colors = ['transparent', 'transparent'],
   m,
   mt = m,
   mb = m,
@@ -52,28 +51,42 @@ export default function FlexView({
   const viewStyle = React.useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
-    attrs.push(
-      row
-        ? theme.components.flexRow
-        : col
+    attrs.push(row
+      ? theme.components.flexRow
+      : col
         ? theme.components.flexCol
-        : undefined
-    );
-    if (mt) attrs.push({ marginTop: mt });
-    if (mb) attrs.push({ marginBottom: mb });
-    if (ml) attrs.push({ marginLeft: ml });
-    if (mr) attrs.push({ marginRight: mr });
-    if (pt) attrs.push({ paddingTop: pt });
-    if (pb) attrs.push({ paddingBottom: pb });
-    if (pl) attrs.push({ paddingLeft: pl });
-    if (pr) attrs.push({ paddingRight: pr });
+        : undefined);
+    if (mt) {
+      attrs.push({ marginTop: mt });
+    }
+    if (mb) {
+      attrs.push({ marginBottom: mb });
+    }
+    if (ml) {
+      attrs.push({ marginLeft: ml });
+    }
+    if (mr) {
+      attrs.push({ marginRight: mr });
+    }
+    if (pt) {
+      attrs.push({ paddingTop: pt });
+    }
+    if (pb) {
+      attrs.push({ paddingBottom: pb });
+    }
+    if (pl) {
+      attrs.push({ paddingLeft: pl });
+    }
+    if (pr) {
+      attrs.push({ paddingRight: pr });
+    }
     return attrs
       .filter(Boolean)
       .flat()
       .reduce((acc, attr) => ({ ...acc, ...attr }), style ?? {});
-  }, [row, col, mt, mb, ml, mr, pt, pb, pl, pr, style]);
+  }, [row, theme.components.flexRow, theme.components.flexCol, col, mt, mb, ml, mr, pt, pb, pl, pr, style]);
   return (
-    <LinearGradient colors={colors} {...{ ...props, style: viewStyle }}>
+    <LinearGradient colors={ colors } { ...{ ...props, style: viewStyle } }>
       {children}
     </LinearGradient>
   );

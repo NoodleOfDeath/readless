@@ -6,11 +6,13 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/cron-ci.yaml"
-      - "Dockerfile.cron"
-      - "k8s/cron-deploy.yaml"
-      - "src/server/package.json"
-      - "src/server/src/cron/**"
+      - '.github/workflows/cron-ci.yaml'
+      - 'package.json'
+      - 'Dockerfile.cron'
+      - 'k8s/cron-deploy.yaml'
+      - 'src/server/package.json'
+      - 'src/server/src/cron/**'
+      - 'src/server/src/services/**'
 
 concurrency:
   group: ${{ github.ref }}-cron
@@ -23,7 +25,7 @@ env:
 jobs:
   build-cron:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~cron') }}
+    if: ${{ !contains(github.event.head_commit.message, '~cron') && !contains(github.event.head_commit.message, '~skip') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description
@@ -51,7 +53,6 @@ jobs:
   deploy-cron:
     needs: build-cron
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~cron') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}

@@ -6,11 +6,13 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/worker-ci.yaml"
-      - "Dockerfile.worker"
-      - "k8s/worker-deploy.yaml"
-      - "src/server/package.json"
-      - "src/server/src/worker/**"
+      - '.github/workflows/worker-ci.yaml'
+      - 'package.json'
+      - 'Dockerfile.worker'
+      - 'k8s/worker-deploy.yaml'
+      - 'src/server/package.json'
+      - 'src/server/src/worker/**'
+      - 'src/server/src/services/**'
 
 concurrency:
   group: ${{ github.ref }}-worker
@@ -23,7 +25,7 @@ env:
 jobs:
   build-worker:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~worker') }}
+    if: ${{ !contains(github.event.head_commit.message, '~worker') && !contains(github.event.head_commit.message, '~skip')}}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description
@@ -51,12 +53,9 @@ jobs:
   deploy-worker:
     needs: build-worker
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~worker') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
-      WORKER_FETCH_RATE_LIMIT: ${{ vars.WORKER_FETCH_RATE_LIMIT }}
-      WORKER_FETCH_INTERVAL_MS: ${{ vars.WORKER_FETCH_INTERVAL_MS }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
       K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
@@ -69,6 +68,8 @@ jobs:
       RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
       REDIS_CONNECTION_STRING: ${{ secrets.REDIS_CONNECTION_STRING }}
       WORKER_CONCURRENCY: ${{ vars.WORKER_CONCURRENCY }}
+      WORKER_FETCH_RATE_LIMIT: ${{ vars.WORKER_FETCH_RATE_LIMIT }}
+      WORKER_FETCH_INTERVAL_MS: ${{ vars.WORKER_FETCH_INTERVAL_MS }}
       WS_API_KEY: ${{ secrets.WS_API_KEY }}
     steps:
       - name: Print Job Description

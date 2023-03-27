@@ -6,12 +6,16 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/api-ci.yaml"
-      - "Dockerfile.api"
-      - "k8s/api-deploy.yaml"
-      - "src/server/package.json"
-      - "src/server/public/**"
-      - "src/server/src/api/**"
+      - '.github/workflows/api-ci.yaml'
+      - 'package.json'
+      - 'Dockerfile.api'
+      - 'k8s/api-deploy.yaml'
+      - 'src/server/package.json'
+      - 'src/server/public/**'
+      - 'src/server/src/api/**'
+      - 'src/server/src/services/**'
+      - 'src/server/src/types/**'
+      - 'src/server/src/utils/**'
 
 concurrency:
   group: ${{ github.ref }}-api
@@ -24,7 +28,7 @@ env:
 jobs:
   build-api:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~api') }}
+    if: ${{ !contains(github.event.head_commit.message, '~api') && !contains(github.event.head_commit.message, '~skip') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description
@@ -52,22 +56,26 @@ jobs:
   deploy-api:
     needs: build-api
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~api') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
+      GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
       K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
       K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
       K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
       K8S_REPLICA_COUNT_API: ${{ vars.K8S_REPLICA_COUNT_API }}
+      MAIL_HOST: ${{ vars.MAIL_HOST }}
+      MAIL_PASS: ${{ secrets.MAIL_PASS }}
+      MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_USER: ${{ secrets.MAIL_USER }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PORT: ${{ vars.PORT }}
       RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
-      REDIS_CONNECTION_STRING: ${{ secrets.REDIS_CONNECTION_STRING }}
-      WS_API_KEY: ${{ secrets.WS_API_KEY }}
     steps:
       - name: Print Job Description
         run: |

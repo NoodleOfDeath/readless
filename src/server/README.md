@@ -8,7 +8,7 @@ This is the backend API, CronJob manager (responsible for periodically seeking a
 
 ## Getting Started - TL;DR Style (aka Docker)
 
-If you want to skip the workspace setup process, you can run the local docker image via docker compose (hot reloads will be slightly slower than using `pnpm dev`):
+If you want to skip the workspace setup process, you can run the local docker image via docker compose (hot reloads will be slightly slower than using `yarn dev`):
 
 ```bash
 src/server $ cat .env-example > .env
@@ -22,7 +22,7 @@ src/server $ docker compose up worker-local
 First make sure you already have NPM and PNPM installed.
 
 ```bash
-npm i -g pnpm
+npm i -g yarn
 ```
 
 This project also is fully ESM so make sure your node version is >= 18.
@@ -30,11 +30,11 @@ This project also is fully ESM so make sure your node version is >= 18.
 ```bash
 ~ $ git clone git@github.com:NoodleOfDeath/theskoop.git
 ~ $ cd theskoop/src/server
-src/server $ pnpm install
+src/server $ yarn install
 src/server $ cat .env-example > .env
-src/server $ pnpm dev:api
-src/server $ pnpm dev:cron
-src/server $ pnpm dev:worker
+src/server $ yarn dev:api
+src/server $ yarn dev:cron
+src/server $ yarn dev:worker
 ```
 
 ## Contribution

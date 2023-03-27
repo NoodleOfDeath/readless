@@ -1,6 +1,8 @@
-import TruncatedText from "@/components/common/TruncatedText";
-import React from "react";
-import ReactCookieConsent from "react-cookie-consent";
+import React from 'react';
+
+import ReactCookieConsent from 'react-cookie-consent';
+
+import TruncatedText from '@/components/common/TruncatedText';
 
 export default function CookieConsent() {
   return (
@@ -8,10 +10,9 @@ export default function CookieConsent() {
       location="bottom"
       buttonText="Accept"
       cookieName="cookieConsent"
-      style={{ background: "#2B373B" }}
-      buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
-      expires={150}
-    >
+      style={ { background: '#2B373B' } }
+      buttonStyle={ { color: '#4e503b', fontSize: '13px' } }
+      expires={ 150 }>
       <TruncatedText showLessText="(show less)">
         We use cookies on our website to enhance your user experience and ensure
         the website&apos;s functionality. By using our website, you agree to the

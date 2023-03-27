@@ -1,6 +1,13 @@
+import { Attributes, FindAndCountOptions as SequelizeFindAndCountOptions } from 'sequelize';
 import { Hooks } from 'sequelize/types/hooks';
 import { Model } from 'sequelize-typescript';
-import { Attributes, FindAndCountOptions as SequelizeFindAndCountOptions } from 'sequelize';
+
+export type DatedAttributes = {
+  id: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FindAndCountOptions<T extends Model<any, any> | Hooks<Model<any, any>, any, any>> = Omit<
@@ -8,36 +15,43 @@ export type FindAndCountOptions<T extends Model<any, any> | Hooks<Model<any, any
   'groups'
 >;
 
-export type Attr<Model, K extends keyof Model> = {
-  [Key in K]: Model[Key];
+export type BulkResponse<T> = {
+  count: number;
+  rows: T[];
 };
 
-/** light weight record for a post */
-export const POST_ATTRS = ['id', 'abridged', 'summary', 'shortSummary', 'bullets', 'createdAt'] as const;
-/** light weight record for a post with title, category, subcategory, and tags */
-export const TITLED_CATEGORIZED_POST_ATTRS = [...POST_ATTRS, 'title', 'category', 'subcategory', 'tags'] as const;
-/** light weight record for a source post */
-export const SOURCE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
-/** light weight record for an article post */
-export const ARTICLE_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS] as const;
+export class SchemaError extends Error {
 
-export const RESOURCE_TYPES = {
-  article: 'article',
-  interaction: 'interaction',
-  media: 'media',
-  outlet: 'outlet',
-  source: 'source',
-} as const;
-export type ResourceType = keyof typeof RESOURCE_TYPES;
+  constructor(message: string) {
+    super(message);
+  }
 
-export const INTERACTION_TYPES = {
-  like: 'like',
-  dislike: 'dislike',
-  bookmark: 'bookmark',
-  share: 'share',
-  comment: 'comment',
-  view: 'view',
-} as const;
+}
 
-export type InteractionType = keyof typeof INTERACTION_TYPES;
+// Model Types
 
+export * from './analytics/Metric.types';
+export * from './analytics/RateLimit.types';
+
+export * from './user/Alias.types';
+export * from './user/User.types';
+export * from './user/UserMetadata.types';
+
+export * from './auth/Credential.types';
+export * from './auth/Role.types';
+
+export * from './newsletter/Newsletter.types';
+export * from './newsletter/Subscription.types';
+
+export * from './interaction/Interaction.types';
+
+export * from './resources/types';
+export * from './resources/Media.types';
+export * from './resources/Post.types';
+export * from './resources/outlet/Outlet.types';
+export * from './resources/summary/Summary.types';
+export * from './resources/topic/Topic.types';
+export * from './resources/article/Article.types';
+
+export * from './queue/Queue.types';
+export * from './queue/Job.types';

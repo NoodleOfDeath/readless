@@ -1,29 +1,55 @@
-export * from './feature.model';
+import {
+  Alias,
+  Credential,
+  Job,
+  Newsletter,
+  Outlet,
+  OutletMedia,
+  Queue,
+  RefSummaryTopic,
+  RefUserRole,
+  Role,
+  Subscription,
+  Summary,
+  SummaryInteraction,
+  SummaryInteractionMedia,
+  SummaryMedia,
+  User,
+  UserMetadata,
+} from './models';
 
-export * from './media.model';
-export * from './outlet.model';
-export * from './topic.model';
+export * from './models';
+export * from './types';
 
-export * from './source.model';
-export * from './source_media.model';
-export * from './source_topic.model';
+export function makeAssociations() {
 
-export * from './article.model';
-export * from './article_media.model';
-export * from './article_source.model';
-export * from './article_topic.model';
-
-export * from './newsletter.model';
-export * from './subscription.model';
-
-// export * from './access.model';
-export * from './alias.model';
-// export * from './credential.model';
-// export * from './interaction.model';
-// export * from './membership.model';
-// export * from './role.model';
-export * from './user.model';
-
-export * from './metric.model';
-export * from './policy.model';
-export * from './referral.model';
+  // users
+  User.hasMany(Alias, { foreignKey: 'userId' });
+  User.hasMany(UserMetadata, { foreignKey: 'userId' });
+  User.hasMany(RefUserRole, { foreignKey: 'userId' });
+  RefUserRole.belongsTo(Role, { foreignKey: 'roleId' });
+  
+  // auth
+  User.hasMany(Credential, { foreignKey: 'userId' });
+  Credential.belongsTo(User, { foreignKey: 'userId' });
+  
+  // newsletter
+  Newsletter.hasMany(Subscription, { foreignKey: 'newsletterId' });
+  Subscription.belongsTo(Newsletter, { foreignKey: 'newsletterId' });
+  
+  // outlets
+  Outlet.hasMany(OutletMedia, { foreignKey: 'parentId' });
+  
+  // sources
+  Summary.hasMany(SummaryMedia, { foreignKey: 'parentId' });
+  Summary.belongsTo(Outlet, { foreignKey: 'outletId' });
+  Summary.hasOne(RefSummaryTopic, { foreignKey: 'sourceId' });
+  Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
+  SummaryInteraction.hasMany(SummaryInteractionMedia, { foreignKey: 'parentId' });
+  
+  // queues
+  Queue.hasMany(Job, {
+    foreignKey: 'queue',
+    sourceKey: 'name',
+  });
+}

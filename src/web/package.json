@@ -3,14 +3,16 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "start": "react-app-rewired start",
-    "dev": "nodemon -x 'react-app-rewired start'",
-    "build": "react-app-rewired build",
+    "preinstall": "npx only-allow yarn",
+    "dev": "nodemon -x 'next dev -p 6969'",
+    "start": "next start",
+    "build": "next build && next export -o build",
     "test": "jest",
-    "eject": "react-app-rewired eject",
-    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/gen",
-    "swagger": "(cd ../server && pnpm swagger) && cp ../server/public/swagger.json ./swagger.json && pnpm gen"
+    "eject": "next eject",
+    "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen",
+    "swagger": "(cd ../server && yarn swagger) && cp ../server/swagger.json ./swagger.json && yarn gen",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "eslint . --ext .ts,.tsx --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -37,18 +39,22 @@
     "@mdi/react": "^1.6.1",
     "@mui/lab": "5.0.0-alpha.120",
     "@mui/material": "^5.11.11",
+    "@mui/styles": "^5.11.13",
     "@paypal/react-paypal-js": "^7.8.2",
+    "@react-oauth/google": "^0.8.0",
     "date-fns": "^2.29.3",
     "js-cookie": "^3.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "ms": "^2.1.3",
     "react": "^18.2.0",
     "react-cookie-consent": "^8.0.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.4",
     "react-markdown": "^8.0.5",
-    "react-router-dom": "^6.8.2",
     "react-scripts": "5.0.1",
     "react-share": "^4.4.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "web3": "^1.8.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -56,13 +62,14 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/js-cookie": "^3.0.3",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^16.18.14",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "dotenv-webpack": "^8.0.1",
+    "next": "^13.2.4",
     "nodemon": "^2.0.21",
-    "react-app-rewired": "^2.2.1",
     "terser-webpack-plugin": "^5.3.6",
-    "typescript": "*"
+    "typescript": "^4.9.5"
   }
 }

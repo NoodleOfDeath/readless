@@ -1,18 +1,24 @@
-import { Body, Post, Route, Tags } from 'tsoa';
-import { Newsletter, Subscription, SubscriptionAttributes, SubscriptionCreationAttributes } from '../../schema';
+import {
+  Body,
+  Post,
+  Route,
+  Tags,
+} from 'tsoa';
+
+import { Newsletter, Subscription } from '../../schema/models';
+import { SubscriptionAttributes, SubscriptionCreationAttributes } from '../../schema/types';
 
 @Route('/v1/newsletter')
-@Tags('Newsletters')
+@Tags('Newsletter')
 export class NewsletterController {
+
   @Post('/subscribe')
-  async subscribeToNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<SubscriptionAttributes> {
-    const { aliasType, alias, newsletterName } = data;
+  public static async subscribeToNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<SubscriptionAttributes> {
+    const {
+      aliasType, alias, newsletterName, 
+    } = data;
     if (newsletterName) {
-      const newsletter = (await Newsletter.findOne({
-        where: {
-          name: newsletterName,
-        }
-      }))?.toJSON();
+      const newsletter = (await Newsletter.findOne({ where: { name: newsletterName } }))?.toJSON();
       if (newsletter) {
         data.newsletterId = newsletter.id;
       }
@@ -20,13 +26,14 @@ export class NewsletterController {
     }
     const existingSubs = await Subscription.findAll(({
       where: {
-        aliasType,
         alias,
+        aliasType,
         newsletterId: data.newsletterId,
-      }
+      },
     }));
-    if (existingSubs.length > 0) 
+    if (existingSubs.length > 0) {
       return existingSubs[0];
+    }
     const subscription = new Subscription(data);
     await subscription.save();
     await subscription.reload();
@@ -34,14 +41,12 @@ export class NewsletterController {
   }
   
   @Post('/unsubscribe')
-  async unsubscribeFromNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<void> {
-    const { aliasType, alias, newsletterName } = data;
+  public static async unsubscribeFromNewsletter(@Body() data: SubscriptionCreationAttributes): Promise<void> {
+    const {
+      aliasType, alias, newsletterName, 
+    } = data;
     if (newsletterName) {
-      const newsletter = (await Newsletter.findOne({
-        where: {
-          name: newsletterName,
-        }
-      }))?.toJSON();
+      const newsletter = (await Newsletter.findOne({ where: { name: newsletterName } }))?.toJSON();
       if (newsletter) {
         data.newsletterId = newsletter.id;
       }
@@ -49,16 +54,16 @@ export class NewsletterController {
     }
     const existingSubs = await Subscription.findAll(({
       where: {
-        aliasType,
         alias,
+        aliasType,
         newsletterId: data.newsletterId,
-      }
+      },
     }));
     if (existingSubs) {
-      for (const sub of existingSubs)
+      for (const sub of existingSubs) {
         await sub.destroy();
+      }
     }
   }
-  
   
 }

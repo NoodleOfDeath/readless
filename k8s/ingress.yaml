@@ -1,0 +1,187 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: theskoop-web
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - www.theskoop.ai
+      secretName: tls-www.theskoop.ai
+  rules:
+    - host: www.theskoop.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: theskoop-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: theskoop-web-redirect
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: |
+      https://www.theskoop.ai/$1
+spec:
+  tls:
+    - hosts:
+        - theskoop.ai
+      secretName: tls-theskoop.ai
+  rules:
+    - host: theskoop.ai
+    - http:
+        paths:
+          - path: /(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: http-svc
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: theskoop-api
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - api.theskoop.ai
+      secretName: tls-api.theskoop.ai
+  rules:
+    - host: api.theskoop.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: theskoop-api-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: theskoop-api-bull-board
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # type of authentication
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+spec:
+  tls:
+    - hosts:
+        - api.theskoop.ai
+      secretName: tls-api.theskoop.ai
+  rules:
+    - host: api.theskoop.ai
+      http:
+        paths:
+          - path: /v1/bull-board
+            pathType: Prefix
+            backend:
+              service:
+                name: theskoop-api-prod
+                port:
+                  number: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: theskoop-web-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: dev-auth
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+spec:
+  tls:
+    - hosts:
+        - dev.theskoop.ai
+      secretName: tls-dev.theskoop.ai
+  rules:
+    - host: dev.theskoop.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: theskoop-web-dev
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: theskoop-api-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - api.dev.theskoop.ai
+      secretName: tls-api.dev.theskoop.ai
+  rules:
+    - host: api.dev.theskoop.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: theskoop-api-dev
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: theskoop-api-bull-board-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # type of authentication
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+spec:
+  tls:
+    - hosts:
+        - api.dev.theskoop.ai
+      secretName: tls-api.theskoop.ai
+  rules:
+    - host: api.dev.theskoop.ai
+      http:
+        paths:
+          - path: /v1/bull-board
+            pathType: Prefix
+            backend:
+              service:
+                name: theskoop-api-dev
+                port:
+                  number: 80

@@ -1,32 +1,31 @@
-import React from "react";
-import { SearchBar } from "react-native-elements";
-import axios from "axios";
-import { Button, useColorScheme } from "react-native";
-import { RouteProp } from "@react-navigation/native";
+import React from 'react';
+import { Button, useColorScheme } from 'react-native';
 
-import { API_BASE_URL } from "@env";
+import { API_BASE_URL } from '@env';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import axios from 'axios';
+import { SearchBar } from 'react-native-elements';
 
-import { SourceWithOutletAttr } from "../../api/Api";
-
-import FlexView from "../../components/common/FlexView";
-import Post from "../../components/post/Post";
-import SafeScrollView from "../../components/common/SafeScrollView";
-import { useTheme } from "../../components/theme";
-import { ConsumptionMode } from "../../components/post/ConsumptionModeSelector";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "./types";
+import { SourceWithOutletAttr } from '../../api/Api';
+import FlexView from '../../components/common/FlexView';
+import SafeScrollView from '../../components/common/SafeScrollView';
+import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
+import Post from '../../components/post/Post';
+import { useTheme } from '../../components/theme';
+import { RootParamList } from '../../types';
 
 type Props = {
-  route: RouteProp<RootStackParamList, "Home">;
-  navigation: NativeStackNavigationProp<RootStackParamList, "Home">;
+  route: RouteProp<RootParamList['Discover'], 'Home'>;
+  navigation: NativeStackNavigationProp<RootParamList['Discover'], 'Home'>;
 };
 
 export default function ResultsView({ navigation }: Props) {
-  const isLightMode = useColorScheme() === "light";
+  const isLightMode = useColorScheme() === 'light';
   const theme = useTheme({
     searchBar: {
+      background: isLightMode ? '#fff' : '#8B0000',
       marginBottom: 10,
-      background: isLightMode ? "#fff" : "#8B0000",
     },
   });
 
@@ -38,10 +37,7 @@ export default function ResultsView({ navigation }: Props) {
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
-  const [searchText, setSearchText] = React.useState("");
-
-  const [selectedPost, setSelectedPost] = React.useState(-1);
-  const [mode, setMode] = React.useState<ConsumptionMode | undefined>();
+  const [searchText, setSearchText] = React.useState('');
 
   const load = (pageSize: number, page: number, searchText: string) => {
     setLoading(true);
@@ -51,14 +47,16 @@ export default function ResultsView({ navigation }: Props) {
     axios
       .get(`${API_BASE_URL}/v1/sources`, {
         params: {
-          pageSize,
-          page,
           filter: searchText,
+          page,
+          pageSize,
         },
       })
       .then((response) => {
         setRecentSources((prev) => {
-          if (page === 0) return response.data.rows;
+          if (page === 0) {
+            return response.data.rows;
+          }
           return [...prev, ...response.data.rows];
         });
         setTotalSourceCount(response.data.count);
@@ -79,6 +77,7 @@ export default function ResultsView({ navigation }: Props) {
     load(pageSize, 0, searchText);
   }, [pageSize, searchText]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => onMount(), [pageSize, searchText]);
 
   const loadMore = React.useCallback(() => {
@@ -87,50 +86,42 @@ export default function ResultsView({ navigation }: Props) {
 
   const onExpandPost = React.useCallback(
     (index: number, mode?: ConsumptionMode) => {
-      setMode(mode);
-      setSelectedPost(mode !== undefined ? index : -1);
-      navigation?.navigate("Post", {
-        source: recentSources[index],
+      navigation?.navigate('Post', {
         initialMode: mode,
+        source: recentSources[index],
       });
     },
-    [recentSources]
+    [navigation, recentSources]
   );
 
   return (
-    <>
-      <FlexView style={theme.searchBar}>
+    <React.Fragment>
+      <FlexView style={ theme.searchBar }>
         <SearchBar
           placeholder="What's cooking in theSkoop?..."
-          lightTheme={isLightMode}
-          onChangeText={(text) => {
-            setSearchText(text);
-            return 0;
-          }}
-          value={searchText}
-        />
+          lightTheme={ isLightMode }
+          onChangeText={ (text) => 
+            setSearchText(text) }
+          value={ searchText } />
       </FlexView>
       <SafeScrollView
-        refreshing={loading}
-        onRefresh={() => load(pageSize, 0, searchText)}
-      >
+        refreshing={ loading }
+        onRefresh={ () => load(pageSize, 0, searchText) }>
         <FlexView>
           {recentSources.map((source, i) => (
             <Post
-              key={source.id}
-              source={source}
-              onChange={(mode) => onExpandPost(i, mode)}
-            />
+              key={ source.id }
+              source={ source }
+              onChange={ (mode) => onExpandPost(i, mode) } />
           ))}
           {!loading && totalSourceCount > recentSources.length && (
             <Button
               title="Load More"
-              color={theme.components.button.color}
-              onPress={loadMore}
-            />
+              color={ theme.components.button.color }
+              onPress={ loadMore } />
           )}
         </FlexView>
       </SafeScrollView>
-    </>
+    </React.Fragment>
   );
 }
