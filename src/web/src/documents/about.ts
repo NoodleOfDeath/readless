@@ -10,8 +10,8 @@ theSkoop is the 🗞️ app for people who:
 - are too busy
 - are tired of clickbait
 - are tired of ads
-- are tired of invasive notification
-- or all of the above!
+- are tired of invasive notifications
+- or, all of the above!
 
 ## What about theSkoop is so different?
 
