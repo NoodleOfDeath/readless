@@ -22,7 +22,6 @@ const StyledContainer = styled('div')<Props>(({
   alignSelf: align,
   justifyContent: align,
   margin: 'auto',
-  maxWidth: 1280,
   padding: theme.spacing(4),
   textAlign: align,
 }));
