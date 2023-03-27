@@ -73,13 +73,9 @@ export function SessionContextProvider({ children }: Props) {
   );
   const [searchText, setSearchText] = React.useState('');
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
-  
-  React.useEffect(() => {
-    setCookie(COOKIES.preferences, JSON.stringify(preferences));
-  }, [preferences]);
 
   // Convenience function to set a preference
-  const preferenceSetter = React.useCallback(<Key extends keyof Preferences>(key: Key) =>
+  const preferenceSetter = <Key extends keyof Preferences>(key: Key) =>
     (value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
       setPreferences((preferences) => {
         const newPrefs = { ...preferences };
@@ -89,16 +85,13 @@ export function SessionContextProvider({ children }: Props) {
           newPrefs[key] =
             value instanceof Function ? value(preferences[key]) : value;
         }
+        setCookie(COOKIES.preferences, JSON.stringify(newPrefs));
         return (preferences = newPrefs);
       });
-    }, []);
-
-  const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
-    return {
-      setConsumptionMode: preferenceSetter('consumptionMode'),
-      setDisplayMode: preferenceSetter('displayMode'),
     };
-  }, [preferenceSetter]);
+
+  const setConsumptionMode = preferenceSetter('consumptionMode');
+  const setDisplayMode = preferenceSetter('displayMode');
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
@@ -115,6 +108,7 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     try {
       const prefs = JSON.parse(getCookie(COOKIES.preferences) || '{}');
+      console.log('shit', prefs);
       setPreferences(prefs);
     } catch (e) {
       setPreferences({});
