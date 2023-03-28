@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon -x 'next dev -p 6969'",
-    "build": "next build && next export -o build",
+    "build": "yarn format && next build && next export -o build",
     "test": "jest",
     "eject": "next eject",
     "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen",

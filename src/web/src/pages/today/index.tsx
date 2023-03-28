@@ -7,5 +7,5 @@ export default function TodayPage() {
     <Page>
       Today&apos; Headlines
     </Page>
-  )
+  );
 }
