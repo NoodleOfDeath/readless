@@ -2,8 +2,8 @@ import React from 'react';
 
 import { useRouter as useNextRouter } from  'next/router';
 
-type RouterProps = ReturnType<typeof useNextRouter> & {
-  searchParams: ReturnType<typeof useNextRouter>['query'];
+type RouterProps = ReturnType<typeof withRouter> & {
+  searchParams: URLSearchParams;
   setSearchParams: (params: Record<string, string>) => void;
 };
 
@@ -25,7 +25,7 @@ export function useRouter(): RouterProps {
 
   return {
     ...router,
-    searchParams: React.useMemo(() => router.query, [router.query]),
+    searchParams: React.useMemo(() => new URLSearchParams(router.asPath.split('?')[1]), [router.asPath]),
     setSearchParams,
   };
 }

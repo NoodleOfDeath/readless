@@ -58,7 +58,7 @@ type Props = {
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'left',
-  minWidth: 250,
+  minWidth: 200,
   padding: theme.spacing(2),
   textAlign: 'left',
 }));
@@ -106,9 +106,9 @@ const StyledCategoryBox = styled(Box)(({ theme }) => ({
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
 
 const StyledCategoryStack = styled(Stack)(() => ({
-  JustifyContent: 'center',
   alignItems: 'center',
   display: 'flex',
+  justifyContent: 'center',
   textAlign: 'center',
 }));
 
@@ -194,13 +194,13 @@ export default function Post({
             </Button>
             <Stack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
               {showSplitVotes ? (
-                <Stack direction="row" spacing={ 1 }>
+                <React.Fragment>
                   <Typography variant="subtitle2">{upvotes}</Typography>
                   <Typography variant="subtitle2">
                     -
                     {downvotes}
                   </Typography>
-                </Stack>
+                </React.Fragment>
               ) : (
                 <Typography variant="subtitle1">{votes}</Typography>
               )}

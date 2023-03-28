@@ -7,9 +7,9 @@ export default function SuccessPage() {
   const router = useRouter();
   const { searchParams } = router;
   
-  const message = React.useMemo(() => JSON.stringify(searchParams['msg']), [searchParams]);
-  const timeout = React.useMemo(() => Number(JSON.stringify(searchParams['t']) || 0), [searchParams]);
-  const redirect = React.useMemo(() => JSON.stringify(searchParams['r']), [searchParams]);
+  const message = React.useMemo(() => searchParams.get('msg'), [searchParams]);
+  const timeout = React.useMemo(() => Number(searchParams.get('t') || 0), [searchParams]);
+  const redirect = React.useMemo(() => searchParams.get('r'), [searchParams]);
   
   React.useEffect(() => {
     if (redirect) {

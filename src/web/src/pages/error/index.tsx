@@ -7,7 +7,7 @@ import { useRouter } from '@/next/router';
 
 export default function ErrorPage() {
   const { searchParams } = useRouter();
-  const rawError = JSON.stringify(searchParams['error']);
+  const rawError = JSON.stringify(searchParams.get('error'));
   const error = React.useMemo(() => {
     try {
       return JSON.parse(rawError || '');
