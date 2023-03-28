@@ -1,3 +1,5 @@
+import { InternalError } from './InternalError';
+
 class ErrorMessage<Params extends Record<string, string>> {
 
   message: string;
@@ -34,7 +36,7 @@ type AuthErrorOptions = {
   message: string;
 };
 
-export class AuthError extends Error implements AuthErrorOptions {
+export class AuthError extends InternalError implements AuthErrorOptions {
   
   errorKey: keyof typeof ERROR_MESSAGES;
   code: number;

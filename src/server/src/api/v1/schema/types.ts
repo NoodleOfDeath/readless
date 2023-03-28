@@ -20,14 +20,6 @@ export type BulkResponse<T> = {
   rows: T[];
 };
 
-export class SchemaError extends Error {
-
-  constructor(message: string) {
-    super(message);
-  }
-
-}
-
 // Model Types
 
 export * from './analytics/Metric.types';

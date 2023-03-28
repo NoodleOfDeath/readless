@@ -12,7 +12,7 @@ COPY src/server/tsconfig.build.json ./
 FROM pre-build as build
 # swagger.json file
 COPY src/server/tsoa.config.json ./
-RUN yarn swagger
+RUN yarn tsoa
 ENV NODE_ENV=production
 RUN yarn build:api
 # tiktoken hack 🙄

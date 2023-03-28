@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import ms from 'ms';
 
-import { AuthError } from './AuthError';
+import { AuthError } from '../../api/v1/middleware';
 import { Credential, User } from '../../api/v1/schema';
 
 export type JwtBaseAccessOperation = '*' | 'read' | 'write' | 'delete';

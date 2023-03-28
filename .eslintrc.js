@@ -58,7 +58,7 @@ module.exports = {
       {
         items: 2,
         'max-len': 100,
-        semi: false,
+        semi: true,
       },
     ],
     'import/order': [

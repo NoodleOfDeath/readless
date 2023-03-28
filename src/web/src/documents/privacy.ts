@@ -1,7 +1,6 @@
 // @eslint-disable
 const data = 
-`
-# Privacy Policy
+`# Privacy Policy
 
 Effective date: February 28, 2023
 
@@ -39,6 +38,5 @@ behavior, and providing customer support.
 
 8. Changes to this Privacy Policy: We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the updated Privacy Policy on our App.
 
-9. Contact us: If you have any questions or concerns about this Privacy Policy or our App&apos;s privacy practices, please contact us at [privacy@theskoop.ai](mailto:privacy@theskoop.ai).
-`;
+9. Contact us: If you have any questions or concerns about this Privacy Policy or our App&apos;s privacy practices, please contact us at [privacy@theskoop.ai](mailto:privacy@theskoop.ai).`;
 export default data;

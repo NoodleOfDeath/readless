@@ -1,5 +1,5 @@
 {
-  "name": "theskoop-api",
+  "name": "theskoop-server",
   "version": "0.0.1",
   "type": "module",
   "export": "dist/index.cjs",
@@ -10,15 +10,6 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "bugs": {
-    "url": "https://github.com/noodleofdeath/theskoop/issues",
-    "email": "github@noodleofdeath.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/noodleofdeath/theskoop.git"
-  },
-  "homepage": "https://github.com/noodleofdeath/theskoop",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "start:api": "node dist/serve-api.cjs",
@@ -31,9 +22,9 @@
     "build:cron": "rimraf dist/serve-cron.cjs && esbuild ./src/cron --bundle --platform=node --outfile=./dist/serve-cron.cjs",
     "build:worker": "rimraf dist/serve-worker.cjs && esbuild ./src/worker --bundle --platform=node --outfile=./dist/serve-worker.cjs",
     "test": "jest",
-    "swagger": "tsoa spec -c tsoa.config.json",
-    "lint": "eslint .  --ext .ts,.tsx",
-    "format": "eslint .  --ext .ts,.tsx --fix"
+    "tsoa": "tsoa spec -c tsoa.config.json",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.282.0",

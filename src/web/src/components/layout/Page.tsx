@@ -1,26 +1,17 @@
 import React from 'react';
 
-import {
-  Container,
-  ContainerProps,
-  styled,
-} from '@mui/material';
+import { styled } from '@mui/material';
 
-type Props = Omit<ContainerProps, 'left' | 'right' | 'center' | 'align'> & {
+type Props = React.PropsWithChildren<{
   title?: string;
   left?: boolean;
   right?: boolean;
   center?: boolean;
   align?: 'left' | 'right' | 'center';
-};
+}>;
 
 // eslint-disable-next-line react/display-name
-const StyledContainer = styled(({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  left, right, center, align, ...props 
-}: ContainerProps & Props) => (
-  <Container { ...props } maxWidth={ false } />
-))(({
+const StyledContainer = styled('div')<Props>(({
   theme,
   left,
   right,
@@ -30,19 +21,16 @@ const StyledContainer = styled(({
   alignItems: align,
   alignSelf: align,
   justifyContent: align,
-  marginTop: theme.spacing(5),
+  margin: 'auto',
   maxWidth: 1280,
+  padding: theme.spacing(4),
   textAlign: align,
+  width: 'inherit',
 }));
 
 export default function Page({
   children, title, ...other 
 }: Props) {
-  React.useEffect(() => {
-    if (title) {
-      document.title = title;
-    }
-  }, [title]);
   return (
     <StyledContainer { ...other }>
       {children}

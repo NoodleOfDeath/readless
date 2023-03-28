@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import API, { AuthError, headers } from '@/api';
+import API, { InternalError } from '@/api';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
@@ -20,26 +20,29 @@ export default function ResetPasswordPage() {
 
   const router = useRouter();
   const { handleSubmit, register } = useForm();
-  const { userData, setUserData } = React.useContext(SessionContext);
+  const {
+    userData, setUserData, withHeaders, 
+  } = React.useContext(SessionContext);
 
-  const [error, setError] = React.useState<AuthError | null>(null);
+  const [error, setError] = React.useState<InternalError | null>(null);
   const [success, setSuccess] = React.useState(false);
 
   const onSubmit = React.useCallback(async (values: { password?: string }) => {
     if (!userData || !values.password) {
       return;
     }
-    try {
-      const { error } = await API.updateCredential(values, { headers: headers({ token: userData.tokenString }) });
-      if (error) {
-        setError(error);
-        return;
-      }
-      setSuccess(true);
-    } catch (e) {
-      console.error(e);
-    }
-  }, [userData]);
+    withHeaders(API.updateCredential)(values)
+      .then(({ error }) => {
+        if (error) {
+          setError(error);
+          return;
+        }
+        setSuccess(true);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }, [userData, withHeaders]);
 
   React.useEffect(() => {
     if (success) {

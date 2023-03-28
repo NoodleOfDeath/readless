@@ -6,7 +6,6 @@ import {
 } from 'express-validator';
 
 import { BulkResponse, SummaryResponse } from './../../schema/types';
-import { AuthError } from '../../../../services';
 import { SummaryController } from '../../controllers';
 import {
   authMiddleware,
@@ -78,9 +77,6 @@ router.post(
       const interactions = await SummaryController.interactWithSummary(targetId, type, req.body);
       return res.json(interactions);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
       internalErrorHandler(res, e);
     }
   }

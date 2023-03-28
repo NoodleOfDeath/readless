@@ -12,6 +12,7 @@ import {
   setCookie,
 } from './cookies';
 import {
+  FunctionWithRequestParams,
   NULL_SESSION,
   Preferences,
   SetSearchTextOptions,
@@ -20,7 +21,7 @@ import {
   UserDataProps,
 } from './types';
 
-import API, { headers } from '@/api';
+import API from '@/api';
 import { useRouter } from '@/next/router';
 import { loadTheme } from '@/theme';
 
@@ -72,13 +73,9 @@ export function SessionContextProvider({ children }: Props) {
   );
   const [searchText, setSearchText] = React.useState('');
   const [searchOptions, setSearchOptions] = React.useState<string[]>([]);
-  
-  React.useEffect(() => {
-    setCookie(COOKIES.preferences, JSON.stringify(preferences));
-  }, [preferences]);
 
   // Convenience function to set a preference
-  const preferenceSetter = React.useCallback(<Key extends keyof Preferences>(key: Key) =>
+  const preferenceSetter = <Key extends keyof Preferences>(key: Key) =>
     (value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
       setPreferences((preferences) => {
         const newPrefs = { ...preferences };
@@ -88,16 +85,24 @@ export function SessionContextProvider({ children }: Props) {
           newPrefs[key] =
             value instanceof Function ? value(preferences[key]) : value;
         }
+        setCookie(COOKIES.preferences, JSON.stringify(newPrefs));
         return (preferences = newPrefs);
       });
-    }, []);
-
-  const { setDisplayMode, setConsumptionMode } = React.useMemo(() => {
-    return {
-      setConsumptionMode: preferenceSetter('consumptionMode'),
-      setDisplayMode: preferenceSetter('displayMode'),
     };
-  }, [preferenceSetter]);
+
+  const setConsumptionMode = preferenceSetter('consumptionMode');
+  const setDisplayMode = preferenceSetter('displayMode');
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
+    if (!userData?.tokenString) {
+      return (...args: T) => fn(...args, {});
+    }
+    return (...args: T) => {
+      const requestParams = { headers: { Authorization: `Bearer ${userData.tokenString}` } };
+      return fn(...args, requestParams);
+    };
+  }, [userData?.tokenString]);
 
   // Load cookies on mount
   React.useEffect(() => {
@@ -127,84 +132,79 @@ export function SessionContextProvider({ children }: Props) {
     return {
       '/login': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          router.push('/');
-          return;
+          return router.push('/search');
         }
       },
-      '/logout': () => {
-        API.logout({}, { headers: headers({ token: userData?.tokenString }) })
-          .catch(console.error)
-          .finally(() => {
-            setUserData();
-            router.push('/login');
-          });
+      '/logout': async () => {
+        try {
+          await withHeaders(API.logout)({});
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setUserData();
+          router.push('/login');
+        }
       },
       '/profile': () => {
         if (!userData?.isLoggedIn || !userData?.tokenString) {
-          router.push('/login');
-          return;
+          return router.push('/logout');
         }
       },
       '/reset-password': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          router.push('/');
-          return;
+          return router.push('/search');
         }
         if (!userData?.userId) {
-          router.push('/login');
-          return;
+          return router.push('/logout');
         }
       },
-      '/verify': () => {
-        const verificationCode = JSON.stringify(searchParams['vc']);
-        const otp = JSON.stringify(searchParams['otp']);
+      '/verify': async () => {
+        const verificationCode = typeof searchParams['verificationCode'] === 'string' ? searchParams['verificationCode'] : undefined;
+        const otp = typeof searchParams['otp'] === 'string' ? searchParams['otp'] : undefined;
         if (!verificationCode && !otp) {
-          router.push('/error');
-          return;
+          return router.push('/error');
         }
         if (verificationCode) {
-          API.verifyAlias({ verificationCode }).then(({ error }) => {
+          try {
+            const { error } = await withHeaders(API.verifyAlias)({ verificationCode });
             if (error && error.code) {
-              router.push(`/error?error=${JSON.stringify(error)}`);
-              return;
+              return router.push(`/error?error=${JSON.stringify(error)}`);
             }
             router.push(`/success?${new URLSearchParams({
               msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
               r: '/login',
               t: '3000',
             }).toString()}`);
-          }).catch((e) => {
+          } catch (e) {
             console.error(e);
-            router.push('/error');
-          });
+            return router.push('/error');
+          }
         } else if (otp) {
-          API.verifyOtp({ otp }).then(({ data, error }) => {
+          try {
+            const { error } = await withHeaders(API.verifyOtp)({ otp });
             if (error && error.code) {
-              router.push(`/error?error=${JSON.stringify(error)}`);
-              return;
+              return router.push(`/error?error=${JSON.stringify(error)}`);
             }
-            setUserData(data, { updateCookie: true });
-            router.push('/reset-password');
-          }).catch((e) => {
+            return router.push('/reset-password');
+          } catch (e) {
             console.error(e);
-            router.push('/error');
-          });
+            return router.push('/error');
+          }
         }
       },
     };
-  }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId]);
+  }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId, withHeaders]);
   
   React.useEffect(() => {
     // record page visit
-    API.recordMetric({
+    withHeaders(API.recordMetric)({
       data: { path: router.pathname },
       type: 'nav',
       userAgent: navigator.userAgent,
-    })
-      .catch(console.error);
+    }).catch(console.error);
     const action = pathActions[router.pathname];
     action?.();
-  }, [pathActions, router.pathname]);
+  }, [pathActions, router.pathname, withHeaders]);
 
   return (
     <SessionContext.Provider
@@ -229,6 +229,7 @@ export function SessionContextProvider({ children }: Props) {
         setUserData,
         theme,
         userData,
+        withHeaders,
       } }>
       <ThemeProvider theme={ theme }>
         <CssBaseline />

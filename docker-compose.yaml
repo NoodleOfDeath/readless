@@ -6,7 +6,7 @@ services:
     env_file:
       - src/web/.env
     ports:
-      - "$PORT:$PORT"
+      - "80:80"
 
   web-local:
     build:
@@ -17,8 +17,14 @@ services:
     ports:
       - "$PORT:$PORT"
     volumes:
-      - ./src/web:/home/node/app
+      - ./src/web/.env:/home/node/app/.env
+      - ./src/web/.eslint:/home/node/app/.eslint
+      - ./src/web/nodemon.json:/home/node/app/nodmeon.json
+      - ./src/web/next-env.d.ts:/home/node/app/next-env.d.ts
+      - ./src/web/package.json:/home/node/app/package.json
       - ./src/web/node_modules:/home/node/app/node_modules
+      - ./src/web/public:/home/node/app/public
+      - ./src/web/src:/home/node/app/src
 
   api:
     build:
@@ -27,7 +33,7 @@ services:
     env_file:
       - src/server/.env
     ports:
-      - "$PORT:$PORT"
+      - "80:80"
 
   api-local:
     build:

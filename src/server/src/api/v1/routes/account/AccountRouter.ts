@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
-import { AuthError } from '../../../../services';
 import { AccountController } from '../../controllers';
 import {
   authMiddleware,
@@ -30,10 +29,7 @@ router.post(
       const response = await AccountController.register(req.body);
       return res.status(201).json(response);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
-      internalErrorHandler(res, e);
+      return internalErrorHandler(res, e);
     }
   }
 );
@@ -56,10 +52,7 @@ router.post(
       const response = await AccountController.login(req.body);
       return res.json(response);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
-      internalErrorHandler(res, e);
+      return internalErrorHandler(res, e);
     }
   }
 );
@@ -73,10 +66,7 @@ router.post(
       const response = await AccountController.logout(req.body);
       return res.status(204).json(response);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
-      internalErrorHandler(res, e);
+      return internalErrorHandler(res, e);
     }
   }
 );
@@ -89,10 +79,7 @@ router.post(
       const response = await AccountController.generateOTP(req.body);
       return res.json(response);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
-      internalErrorHandler(res, e);
+      return internalErrorHandler(res, e);
     }
   }
 );
@@ -105,26 +92,22 @@ router.post(
       const response = await AccountController.verifyAlias(req.body);
       return res.json(response);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
-      internalErrorHandler(res, e);
+      return internalErrorHandler(res, e);
     }
   }
 );
 
 router.post(
   '/verify/otp',
+  body('otp').isString(),
   validationMiddleware,
   async (req, res) => {
     try {
+      console.log(req.body);
       const response = await AccountController.verifyOTP(req.body);
       return res.json(response);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
-      internalErrorHandler(res, e);
+      return internalErrorHandler(res, e);
     }
   }
 );
@@ -139,10 +122,7 @@ router.put(
       const response = await AccountController.updateCredential(req.body);
       return res.status(200).json(response);
     } catch (e) {
-      if (e instanceof AuthError) {
-        return res.status(401).json(e);
-      }
-      internalErrorHandler(res, e);
+      return internalErrorHandler(res, e);
     }
   }
 );

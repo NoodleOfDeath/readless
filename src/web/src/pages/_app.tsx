@@ -14,7 +14,6 @@ const StyledAppContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  margin: -10px;
 `;
 
 const StyledAppContent = styled(Box)`

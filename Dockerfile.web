@@ -1,8 +1,8 @@
 FROM node:19.3.0 as base
+RUN npm i -g tsoa
+
 WORKDIR /home/node
 COPY src/server ./server
-WORKDIR /home/node/server
-RUN yarn install --non-interactive --immutable
 WORKDIR /home/node/app
 COPY package.json ./
 COPY yarn.lock ./
@@ -16,7 +16,8 @@ COPY src/web/src ./src
 COPY src/web/public ./public
 COPY src/web/tsconfig.json ./
 COPY src/web/next-env.d.ts ./
-RUN yarn swagger
+COPY src/web/next.config.js ./
+RUN yarn tsoa
 
 FROM pre-build as build
 ARG NEXT_PUBLIC_API_ENDPOINT

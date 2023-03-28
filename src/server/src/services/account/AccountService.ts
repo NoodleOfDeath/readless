@@ -2,7 +2,6 @@ import bcrypt from 'bcryptjs';
 import ms from 'ms';
 import web3 from 'web3';
 
-import { AuthError } from './AuthError';
 import {
   GenerateOTPRequest,
   GenerateOTPResponse,
@@ -22,6 +21,7 @@ import {
   VerifyOTPRequest,
   VerifyOTPResponse,
 } from './types';
+import { AuthError } from '../../api/v1/middleware/internal-errors/AuthError';
 import {
   Alias,
   AliasType,
@@ -35,7 +35,7 @@ import { MailService } from '../mail';
 
 async function generateVerificationCode(): Promise<string> {
   const verificationCode = randomString(VERIFICATION_CODE_LENGTH);
-  if (await Alias.findOne({ where: { verificationCode } }) !== null) {
+  if ((await Alias.findOne({ where: { verificationCode } })) !== null) {
     return generateVerificationCode();
   }
   return verificationCode;
@@ -43,12 +43,14 @@ async function generateVerificationCode(): Promise<string> {
 
 async function generateOtp(): Promise<string> {
   const value = randomString(OTP_LENGTH);
-  if (await Credential.findOne({
-    where: {
-      type: 'otp',
-      value,
-    },
-  }) !== null) {
+  if (
+    (await Credential.findOne({
+      where: {
+        type: 'otp',
+        value,
+      },
+    })) !== null
+  ) {
     return generateOtp();
   }
   return value;
@@ -56,7 +58,9 @@ async function generateOtp(): Promise<string> {
 
 export class AccountService extends BaseService {
 
-  public static async register(req: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
+  public static async register(
+    req: Partial<RegistrationRequest>
+  ): Promise<RegistrationResponse> {
     if (req.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
@@ -100,14 +104,16 @@ export class AccountService extends BaseService {
     if (thirdPartyId && req.thirdParty) {
       // bind third-party alias
       await newUser.createAlias(
-        `thirdParty/${req.thirdParty.name}`, 
+        `thirdParty/${req.thirdParty.name}`,
         thirdPartyId,
         { verifiedAt: new Date() }
       );
     }
     await newUser.createAlias(newAliasType, newAliasValue, {
       verificationCode,
-      verificationExpiresAt: verified ? undefined : new Date(Date.now() + ms('20m')),
+      verificationExpiresAt: verified
+        ? undefined
+        : new Date(Date.now() + ms('20m')),
       verifiedAt: verified ? new Date() : undefined,
     });
     await newUser.grantRole('standard');
@@ -119,7 +125,7 @@ export class AccountService extends BaseService {
       return await this.login(req);
     } else {
       const mailer = new MailService();
-      mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
+      await mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
         email: newAliasValue,
         verificationCode,
       });
@@ -127,7 +133,9 @@ export class AccountService extends BaseService {
     }
   }
 
-  public static async login(req: Partial<LoginRequest>): Promise<LoginResponse> {
+  public static async login(
+    req: Partial<LoginRequest>
+  ): Promise<LoginResponse> {
     if (req.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
@@ -152,7 +160,7 @@ export class AccountService extends BaseService {
     const token = await Jwt.as(req.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
     return {
-      token: { 
+      token: {
         priority: token.priority,
         value: token.signed,
       },
@@ -161,11 +169,13 @@ export class AccountService extends BaseService {
   }
 
   public static async logout({
-    token, userId, force, 
+    token,
+    userId,
+    force,
   }: Partial<LogoutRequest>): Promise<LogoutResponse> {
     let count = 0;
     if (token) {
-      count += await Credential.destroy({ 
+      count += await Credential.destroy({
         where: {
           type: 'jwt',
           userId,
@@ -178,8 +188,10 @@ export class AccountService extends BaseService {
     }
     return { count, success: true };
   }
-  
-  public static async generateOtp(req: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
+
+  public static async generateOtp(
+    req: Partial<GenerateOTPRequest>
+  ): Promise<GenerateOTPResponse> {
     const { user } = await User.from(req, { ignoreIfNotResolved: true });
     if (!user) {
       return { success: false };
@@ -193,14 +205,16 @@ export class AccountService extends BaseService {
     await user.createCredential('otp', otp);
     const emailData = email.toJSON();
     const mailer = new MailService();
-    mailer.sendMail({ to: emailData.value }, 'resetPassword', {
+    await mailer.sendMail({ to: emailData.value }, 'resetPassword', {
       email: emailData.value,
       otp,
     });
     return { success: true };
   }
 
-  public static async verifyAlias(req: Partial<VerifyAliasRequest>): Promise<VerifyAliasResponse> {
+  public static async verifyAlias(
+    req: Partial<VerifyAliasRequest>
+  ): Promise<VerifyAliasResponse> {
     const alias = await Alias.findOne({ where: { verificationCode: req.verificationCode } });
     if (!alias) {
       throw new AuthError('UNKNOWN_ALIAS', { alias: 'user identifier' });
@@ -210,7 +224,7 @@ export class AccountService extends BaseService {
     } else if (alias.verifiedAt) {
       throw new AuthError('STALE_VERIFICATION_CODE');
     }
-    await alias.update({ 
+    await alias.update({
       verificationCode: null,
       verificationExpiresAt: null,
       verifiedAt: new Date(),
@@ -218,7 +232,9 @@ export class AccountService extends BaseService {
     return { success: true };
   }
 
-  public static async verifyOtp(req: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
+  public static async verifyOtp(
+    req: Partial<VerifyOTPRequest>
+  ): Promise<VerifyOTPResponse> {
     const { user } = await User.from(req);
     const otp = await user.findCredential('otp', req.otp);
     if (!otp) {
@@ -231,10 +247,15 @@ export class AccountService extends BaseService {
     const userData = user.toJSON();
     const token = await Jwt.as('account', userData.id);
     await user.createCredential('jwt', token);
-    return { token: { priority: token.priority, value: token.signed }, userId: userData.id };
+    return {
+      token: { priority: token.priority, value: token.signed },
+      userId: userData.id,
+    };
   }
-  
-  public static async updateCredential(req: Partial<UpdateCredentialRequest>): Promise<UpdateCredentialResponse> {
+
+  public static async updateCredential(
+    req: Partial<UpdateCredentialRequest>
+  ): Promise<UpdateCredentialResponse> {
     const { user } = await User.from(req);
     if (typeof req.password === 'string') {
       const password = await user.findCredential('password');
@@ -246,5 +267,5 @@ export class AccountService extends BaseService {
     }
     return { success: false };
   }
-  
+
 }

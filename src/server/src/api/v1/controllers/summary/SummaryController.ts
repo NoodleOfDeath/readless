@@ -5,11 +5,14 @@ import {
   Path,
   Post,
   Query,
+  Response,
   Route,
   Security,
+  SuccessResponse,
   Tags,
 } from 'tsoa';
 
+import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
   FindAndCountOptions,
@@ -45,6 +48,12 @@ function applyFilter(filter?: string) {
 
 @Route('/v1/summary')
 @Tags('Summary')
+@Security('jwt')
+@SuccessResponse(200, 'OK')
+@SuccessResponse(201, 'Created')
+@SuccessResponse(204, 'No Content')
+@Response<AuthError>(401, 'Unauthorized')
+@Response<InternalError>(500, 'Internal Error')
 export class SummaryController {
 
   @Get('/')
@@ -137,7 +146,7 @@ export class SummaryController {
     return summary;
   }
   
-  @Security('jwt')
+  @Security('jwt', ['standard:write'])
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
     @Path() targetId: number,
@@ -145,8 +154,8 @@ export class SummaryController {
     @Body() body: InteractionRequest
   ): Promise<InteractionResponse> {
     const { user } = await User.from(body);
-    const { value } = body;
-    const resource = await user.interactWith({ id: targetId, type: 'summary' }, type, value);
+    const { content, metadata } = body;
+    const resource = await user.interactWithSummary(targetId, type, content, metadata);
     return resource.toJSON().interactions;
   }
 

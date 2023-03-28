@@ -14,11 +14,10 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useForm } from 'react-hook-form';
 
 import API, {
-  AuthError,
+  InternalError,
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
-  headers,
 } from '@/api';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
@@ -36,15 +35,15 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
   const {
     register, handleSubmit, formState: { errors }, 
   } = useForm();
-  const { userData, setUserData } = React.useContext(SessionContext);
+  const { setUserData, withHeaders } = React.useContext(SessionContext);
 
-  const [error, setError] = React.useState<AuthError | undefined>(undefined);
+  const [error, setError] = React.useState<InternalError | undefined>(undefined);
   const [needsToVerifyAlias, setNeedsToVerifyAlias] = React.useState(false);
 
   const handleLogIn = React.useCallback(
     async (values: PartialLoginRequest) => {
       try {
-        const { data, error } = await API.login(values, { headers: headers({ token: userData?.tokenString }) });
+        const { data, error } = await withHeaders(API.login)(values);
         if (error) {
           setError(error);
           return;
@@ -54,16 +53,16 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
           ...data,
         }, { updateCookie: true });
         router.push('/search');
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        console.log(e);
       }
     },
-    [router, setUserData, userData]
+    [router, setUserData, withHeaders]
   );
 
   const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
     try {
-      const { data, error } = await API.register(values, { headers: headers({ token: userData?.tokenString }) });
+      const { data, error } = await withHeaders(API.register)(values);
       if (error) {
         setError(error);
         return;
@@ -73,14 +72,14 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        router.push('/');
+        router.push('/search');
       } else {
         setNeedsToVerifyAlias(true);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [router, setUserData, userData]);
+  }, [router, setUserData, withHeaders]);
 
   React.useEffect(() => {
     setError(undefined);
@@ -162,7 +161,7 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
               <Link onClick={ () => router.push('/forgot') }>
                 Forgot your password?
               </Link>
-            ): (
+            ) : (
               <Typography variant='body2'>
                 By signing up, you agree to our
                 {' '}

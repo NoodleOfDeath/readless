@@ -12,10 +12,10 @@ FROM base as pre-build
 COPY src/web/src ./src
 COPY src/web/public ./public
 COPY src/web/tsconfig.json ./
-COPY src/web/config-overrides.js ./
 COPY src/web/nodemon.json ./
-COPY src/web/.env ./
-RUN yarn swagger
+COPY src/web/next-env.d.ts ./
+COPY src/web/next.config.js ./
+RUN yarn tsoa
 
 FROM pre-build as dev
 CMD yarn dev
