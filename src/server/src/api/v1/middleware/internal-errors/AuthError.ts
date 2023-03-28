@@ -39,7 +39,6 @@ type AuthErrorOptions = {
 export class AuthError extends InternalError implements AuthErrorOptions {
   
   errorKey: keyof typeof ERROR_MESSAGES;
-  code: number;
   statusCode: number;
   message: string;
   

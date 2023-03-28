@@ -159,8 +159,8 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/verify': async () => {
-        const verificationCode = typeof searchParams['verificationCode'] === 'string' ? searchParams['verificationCode'] : undefined;
-        const otp = typeof searchParams['otp'] === 'string' ? searchParams['otp'] : undefined;
+        const verificationCode = searchParams.get('verificationCode');
+        const otp = searchParams.get('otp');
         if (!verificationCode && !otp) {
           return router.push('/error');
         }
@@ -195,7 +195,7 @@ export function SessionContextProvider({ children }: Props) {
     };
   }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId, withHeaders]);
   
-  React.useEffect(() => {
+  const onPathChange = React.useCallback(() => {
     // record page visit
     withHeaders(API.recordMetric)({
       data: { path: router.pathname },
@@ -205,7 +205,9 @@ export function SessionContextProvider({ children }: Props) {
     const action = pathActions[router.pathname];
     action?.();
   }, [pathActions, router.pathname, withHeaders]);
-
+  
+  React.useEffect(() => onPathChange(), [router.pathname]);
+  
   return (
     <SessionContext.Provider
       value={ {
