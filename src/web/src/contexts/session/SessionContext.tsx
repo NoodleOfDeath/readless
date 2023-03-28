@@ -132,7 +132,7 @@ export function SessionContextProvider({ children }: Props) {
     return {
       '/login': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          return router.push('/search');
+          return router.push('/live');
         }
       },
       '/logout': async () => {
@@ -152,7 +152,7 @@ export function SessionContextProvider({ children }: Props) {
       },
       '/reset-password': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          return router.push('/search');
+          return router.push('/live');
         }
         if (!userData?.userId) {
           return router.push('/logout');
