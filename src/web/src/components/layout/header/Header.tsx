@@ -131,7 +131,7 @@ export default function Header() {
       onClick({ router }) {
         router.push('/live');
       },
-      visible: () => userData?.isLoggedIn,
+      visible: () => !!userData?.isLoggedIn,
     },
     {
       icon: mdiAccount,
