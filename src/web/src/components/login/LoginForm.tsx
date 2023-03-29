@@ -52,7 +52,7 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        router.push('/search');
+        router.push('/live');
       } catch (e) {
         console.log(e);
       }
@@ -72,7 +72,7 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        router.push('/search');
+        router.push('/live');
       } else {
         setNeedsToVerifyAlias(true);
       }
