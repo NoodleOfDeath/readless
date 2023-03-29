@@ -117,7 +117,7 @@ export default function SearchPage() {
   );
 
   const expandPost = React.useCallback(async (index?: number, mode?: ConsumptionMode) => {
-    if (mode) {
+    if (index !== undefined && mode) {
       await interactWithPost(index, InteractionType.View, undefined, { consumptionMode: mode });
     }
     setExpandedPost(mode ? index : undefined);
@@ -161,7 +161,7 @@ export default function SearchPage() {
                 summary={ recentSummaries[expandedPost] }
                 onChange={ (mode) => expandPost(expandedPost, mode) }
                 consumptionMode={ consumptionMode } 
-                onInteract={ (interactions) => setPostInteractions(expandedPost, interactions) } />
+                onInteract={ (type, content, metadata) => interactWithPost(expandedPost, type, content, metadata) } />
             </Grid>
           )}
           {loading && <CircularProgress size={ 10 } variant="indeterminate" />}

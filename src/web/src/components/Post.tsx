@@ -158,7 +158,7 @@ export default function Post({
         </StyledCategoryBox>
         <Stack>
           <Stack direction="row" spacing={ 1 }>
-            <Button onClick={ () => onInteract(InteractionType.Upvote) }>
+            <Button onClick={ () => onInteract?.(InteractionType.Upvote) }>
               <Icon path={ summary?.interactions.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
             </Button>
             <StyledCenteredStack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
@@ -174,7 +174,7 @@ export default function Post({
                 <Typography variant="subtitle1">{votes}</Typography>
               )}
             </StyledCenteredStack>
-            <Button onClick={ () => onInteract(InteractionType.Downvote) }>
+            <Button onClick={ () => onInteract?.(InteractionType.Downvote) }>
               <Icon path={ summary?.interactions.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
             </Button>
           </Stack>

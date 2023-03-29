@@ -69,6 +69,9 @@ export function SessionContextProvider({ children }: Props) {
   
   const addUserToken = (token: LoginResponse['token']) => {
     setUserData((prev) => {
+      if (!prev) {
+        return;
+      }
       const newState = new UserData(prev);
       newState.addToken(token);
       return (prev = newState);
