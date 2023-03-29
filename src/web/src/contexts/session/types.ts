@@ -53,6 +53,10 @@ export class UserData implements UserDataProps {
     this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => !UserData.tokenHasExpired(t.value)).sort((a, b) => b.priority - a.priority);
     this.isLoggedIn = isLoggedIn;
   }
+  
+  addToken(token: LoginResponse['token']) {
+    this.tokens = [...this.tokens, token].filter((t) => !UserData.tokenHasExpired(t.value)).sort((a, b) => b.priority - a.priority);
+  }
 
 }
 
@@ -82,6 +86,7 @@ export type Session = {
   searchOptions: string[];
   // setters
   setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SetSessionOptions) => void;
+  addUserToken: (token: LoginResponse['token']) => void;
   setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
   setConsumptionMode: React.Dispatch<
     React.SetStateAction<ConsumptionMode | undefined>
@@ -96,6 +101,10 @@ export type Session = {
 };
 
 export const NULL_SESSION: Session = {
+  addUserToken: () => {
+    /* placeholder function */
+  },
+  
   consumptionMode: 'concise',
   // getters
   displayMode: 'light',
