@@ -129,7 +129,7 @@ export default function Header() {
       id: 'News',
       label: 'Live News',
       onClick({ router }) {
-        router.push('/live');
+        router?.push('/live');
       },
       visible: () => !!userData?.isLoggedIn,
     },

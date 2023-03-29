@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useRouter as useNextRouter } from  'next/router';
 
-type RouterProps = ReturnType<typeof withRouter> & {
+type RouterProps = ReturnType<typeof useNextRouter> & {
   searchParams: URLSearchParams;
   setSearchParams: (params: Record<string, string>) => void;
 };
