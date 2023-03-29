@@ -11,7 +11,11 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import API, { InteractionResponse, SummaryResponse } from '@/api';
+import API, {
+  InteractionResponse,
+  InteractionType,
+  SummaryResponse,
+} from '@/api';
 import Post, { ConsumptionMode } from '@/components/Post';
 import Page from '@/components/layout/Page';
 import Filters from '@/components/search/Filters';
@@ -31,6 +35,7 @@ export default function SearchPage() {
   const { 
     searchText, 
     setSearchText,
+    userData,
     withHeaders,
   } = React.useContext(SessionContext);
 
@@ -78,11 +83,46 @@ export default function SearchPage() {
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, withHeaders]);
+  
+  const setPostInteractions = (i: number, interactions: InteractionResponse) => {
+    setRecentSummaries((prev) => {
+      const newPosts = [...prev];
+      newPosts[i].interactions = interactions;
+      return (prev = newPosts);
+    });
+  };
+  
+  const interactWithPost = React.useCallback(
+    async (index: number, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+      if (!userData) {
+        alert('Messy Dialog Telling User They Must Log In or Download the App to Vote on Articles! (we can log this as tech debt for now, we good to ship to prod. lmfao sikeeeee)');
+        return;
+      }
+      try {
+        const { data, error } = await withHeaders(API.interactWithSummary)(recentSummaries[index].id, type, {
+          content, metadata, userId: userData.userId,
+        });
+        if (error) {
+          console.log(error);
+          return;
+        }
+        if (data) {
+          setPostInteractions(index, data);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [recentSummaries, userData, withHeaders]
+  );
 
-  const expandPost = React.useCallback((id?: number, mode?: ConsumptionMode) => {
-    setExpandedPost(mode ? id : undefined);
+  const expandPost = React.useCallback(async (index?: number, mode?: ConsumptionMode) => {
+    if (mode) {
+      await interactWithPost(index, InteractionType.View, undefined, { consumptionMode: mode });
+    }
+    setExpandedPost(mode ? index : undefined);
     setConsumptionMode(mode);
-  }, []);
+  }, [interactWithPost]);
 
   const loadMore = React.useCallback(async () => {
     try {
@@ -101,14 +141,6 @@ export default function SearchPage() {
       console.error(e);
     }
   }, [page, pageSize, searchText, withHeaders]);
-  
-  const setPostInteractions = React.useCallback((i: number, interactions: InteractionResponse) => {
-    setRecentSummaries((prev) => {
-      const newPosts = [...prev];
-      newPosts[i].interactions = interactions;
-      return (prev = newPosts);
-    });
-  }, []);
 
   return (
     <Page center>
@@ -121,7 +153,7 @@ export default function SearchPage() {
               <Post 
                 summary={ summary }
                 onChange={ (mode) => expandPost(i, mode) } 
-                onInteract={ (interactions) => setPostInteractions(i, interactions) } />
+                onInteract={ (type, content, metadata) => interactWithPost(i, type, content, metadata) } />
             </Grid>
           )) : (
             <Grid item xs={ 12 }>

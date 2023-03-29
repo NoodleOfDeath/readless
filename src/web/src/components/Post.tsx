@@ -28,16 +28,13 @@ import {
 import { formatDistance } from 'date-fns';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
-import { SessionContext } from '../contexts';
-
-import API, {
-  InteractionResponse,
+import {
   InteractionType,
   InteractionUserVote,
   SummaryResponse,
 } from '@/api';
+import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
 import TruncatedText from '@/components/common/TruncatedText';
-import ConsumptionModeSelector from '@/components/search/ConsumptionModeSelector';
 
 export const CONSUMPTION_MODES = [
   'bulleted',
@@ -52,7 +49,7 @@ type Props = {
   summary?: SummaryResponse;
   consumptionMode?: ConsumptionMode;
   onChange?: (mode?: ConsumptionMode) => void;
-  onInteract?: (resp: InteractionResponse) => void;
+  onInteract?: (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -105,7 +102,7 @@ const StyledCategoryBox = styled(Box)(({ theme }) => ({
 
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
 
-const StyledCategoryStack = styled(Stack)(() => ({
+const StyledCenteredStack = styled(Stack)(() => ({
   alignItems: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -120,8 +117,6 @@ export default function Post({
   onChange,
   onInteract,
 }: Props = {}) {
-
-  const { userData, withHeaders } = React.useContext(SessionContext);
 
   const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
   const lgAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
@@ -152,47 +147,21 @@ export default function Post({
   
   const votes = React.useMemo(() => upvotes - downvotes, [downvotes, upvotes]);
 
-  const interact = React.useCallback(
-    (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
-      if (!summary) {
-        return;
-      }
-      if (!userData) {
-        alert('Messy Dialog Telling User They Must Log In or Download the App to Vote on Articles! (we can log this as tech debt for now, we good to ship to prod. lmfao sikeeeee)');
-        return;
-      }
-      withHeaders(API.interactWithSummary)(summary.id, type, {
-        content, metadata, userId: userData.userId, 
-      })
-        .then(({ data, error }) => {
-          if (error) {
-            console.log(error);
-            return;
-          }
-          if (data) {
-            onInteract?.(data);
-          }
-        })
-        .catch((e) => console.log(e));
-    },
-    [onInteract, summary, userData, withHeaders]
-  );
-
   const cardMediaStack = React.useMemo(() => {
     return (
       <Stack spacing={ 2 }>
         <StyledCategoryBox>
-          <StyledCategoryStack>
+          <StyledCenteredStack>
             <Typography variant="subtitle1">{summary?.category}</Typography>
             <Typography variant="subtitle2">{summary?.subcategory}</Typography>
-          </StyledCategoryStack>
+          </StyledCenteredStack>
         </StyledCategoryBox>
         <Stack>
           <Stack direction="row" spacing={ 1 }>
-            <Button onClick={ () => interact(InteractionType.Upvote) }>
+            <Button onClick={ () => onInteract(InteractionType.Upvote) }>
               <Icon path={ summary?.interactions.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
             </Button>
-            <Stack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
+            <StyledCenteredStack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
               {showSplitVotes ? (
                 <React.Fragment>
                   <Typography variant="subtitle2">{upvotes}</Typography>
@@ -204,15 +173,15 @@ export default function Post({
               ) : (
                 <Typography variant="subtitle1">{votes}</Typography>
               )}
-            </Stack>
-            <Button onClick={ () => interact(InteractionType.Downvote) }>
+            </StyledCenteredStack>
+            <Button onClick={ () => onInteract(InteractionType.Downvote) }>
               <Icon path={ summary?.interactions.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
             </Button>
           </Stack>
         </Stack>
       </Stack>
     );
-  }, [downvotes, interact, upvotes, showSplitVotes, votes, summary?.category, summary?.subcategory, summary?.interactions.uservote]);
+  }, [downvotes, onInteract, upvotes, showSplitVotes, votes, summary?.category, summary?.subcategory, summary?.interactions.uservote]);
 
   const bottomRowDirection = React.useMemo(() => {
     return lgAndUp ? 'row' : 'column';

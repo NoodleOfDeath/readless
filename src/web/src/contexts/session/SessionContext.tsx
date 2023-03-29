@@ -21,7 +21,7 @@ import {
   UserDataProps,
 } from './types';
 
-import API from '@/api';
+import API, { LoginResponse } from '@/api';
 import { useRouter } from '@/next/router';
 import { loadTheme } from '@/theme';
 
@@ -64,6 +64,14 @@ export function SessionContextProvider({ children }: Props) {
         setCookie(COOKIES.userData, JSON.stringify(newData));
       }
       return (prev = newData);
+    });
+  };
+  
+  const addUserToken = (token: LoginResponse['token']) => {
+    setUserData((prev) => {
+      const newState = new UserData(prev);
+      newState.addToken(token);
+      return (prev = newState);
     });
   };
 
@@ -212,6 +220,7 @@ export function SessionContextProvider({ children }: Props) {
   return (
     <SessionContext.Provider
       value={ {
+        addUserToken,
         consumptionMode,
         displayMode,
         preferences,
