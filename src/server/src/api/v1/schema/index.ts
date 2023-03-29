@@ -16,6 +16,7 @@ import {
   SummaryMedia,
   User,
   UserMetadata,
+  Worker,
 } from './models';
 
 export * from './models';
@@ -51,5 +52,15 @@ export function makeAssociations() {
   Queue.hasMany(Job, {
     foreignKey: 'queue',
     sourceKey: 'name',
+  });
+  Queue.hasMany(Worker, {
+    foreignKey: 'queue',
+    sourceKey: 'name',
+  });
+  Worker.hasMany(Job, {
+    foreignKey:{
+      allowNull: true,
+      name: 'lockedBy',
+    },
   });
 }

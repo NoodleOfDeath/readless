@@ -4,12 +4,9 @@ import {
   Outlet,
   Queue,
   Summary,
-} from '../api/v1/schema/models';
-import {
-  DBService,
-  ScribeService,
   Worker,
-} from '../services';
+} from '../api/v1/schema/models';
+import { DBService, ScribeService } from '../services';
 
 /** Fetch rate per interval */
 const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 1; // 1 for dev and testing

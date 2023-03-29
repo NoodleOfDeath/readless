@@ -9,7 +9,7 @@ import {
   SiteMapParams,
   Summary,
 } from '../api/v1/schema';
-import { DBService, QueueService } from '../services';
+import { DBService } from '../services';
 
 async function main() {
   await DBService.initTables();
@@ -69,7 +69,7 @@ async function pollForNews() {
   console.log('fetching news!');
   try {
     const { rows: outlets } = await Outlet.findAndCountAll();
-    const queue = await QueueService.getQueue(Queue.QUEUES.siteMaps);
+    const queue = await Queue.from(Queue.QUEUES.siteMaps);
     for (const outlet of outlets) {
       const { name, siteMaps } = outlet.toJSON();
       console.log(`fetching sitemaps for ${name}`);
