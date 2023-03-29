@@ -91,6 +91,7 @@ export type Session = {
     opts?: SetSearchTextOptions
   ) => void;
   setSearchOptions: React.Dispatch<React.SetStateAction<string[]>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
 

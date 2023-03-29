@@ -28,8 +28,8 @@ import { loadTheme } from '@/theme';
 type Props = React.PropsWithChildren;
 
 export const COOKIES = {
-  preferences: 'preferences',
-  userData: 'userData',
+  preferences: 'prfrncs'.split('').reverse().join(''),
+  userData: 'usrdt'.split('').reverse().join(''),
 };
 
 export const SessionContext = React.createContext(NULL_SESSION);
@@ -173,7 +173,7 @@ export function SessionContextProvider({ children }: Props) {
             router.push(`/success?${new URLSearchParams({
               msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
               r: '/login',
-              t: '3000',
+              t: '5000',
             }).toString()}`);
           } catch (e) {
             console.error(e);
@@ -193,7 +193,7 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
     };
-  }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId, withHeaders]);
+  }, [router, searchParams, userData, withHeaders]);
   
   const onPathChange = React.useCallback(() => {
     // record page visit
@@ -207,7 +207,7 @@ export function SessionContextProvider({ children }: Props) {
   }, [pathActions, router.pathname, withHeaders]);
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => onPathChange(), [router.pathname]);
+  React.useEffect(() => onPathChange(), [router.pathname, userData]);
   
   return (
     <SessionContext.Provider
