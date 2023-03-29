@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { styled } from '@mui/material';
+import Head from 'next/head';
 
 type Props = React.PropsWithChildren<{
   title?: string;
@@ -8,6 +9,7 @@ type Props = React.PropsWithChildren<{
   right?: boolean;
   center?: boolean;
   align?: 'left' | 'right' | 'center';
+  headTags?: React.ReactNode[];
 }>;
 
 // eslint-disable-next-line react/display-name
@@ -29,10 +31,14 @@ const StyledContainer = styled('div')<Props>(({
 }));
 
 export default function Page({
-  children, title, ...other 
+  // eslint-disable-next-line react/jsx-key
+  children, title, headTags = [<title>{title}</title>], ...other 
 }: Props) {
   return (
     <StyledContainer { ...other }>
+      <Head>
+        {headTags.map((tag, i) => (<React.Fragment key={ i }>{tag}</React.Fragment>))}
+      </Head>
       {children}
     </StyledContainer>
   );
