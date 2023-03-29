@@ -200,8 +200,8 @@ export class AccountService extends BaseService {
     if (!email) {
       return { success: false };
     }
-    const otp = await generateOtp();
     await user.revokeCredential('otp');
+    const otp = await generateOtp();
     await user.createCredential('otp', otp);
     const emailData = email.toJSON();
     const mailer = new MailService();

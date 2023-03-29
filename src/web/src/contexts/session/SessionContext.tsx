@@ -28,8 +28,8 @@ import { loadTheme } from '@/theme';
 type Props = React.PropsWithChildren;
 
 export const COOKIES = {
-  preferences: 'prfrncs'.split('').reverse().join(''),
-  userData: 'usrdt'.split('').reverse().join(''),
+  preferences: 'preferences',
+  userData: 'userData',
 };
 
 export const SessionContext = React.createContext(NULL_SESSION);
@@ -173,7 +173,7 @@ export function SessionContextProvider({ children }: Props) {
             router.push(`/success?${new URLSearchParams({
               msg: 'Your email has been successfully verfied. Redirecting you to the login in page...',
               r: '/login',
-              t: '5000',
+              t: '3000',
             }).toString()}`);
           } catch (e) {
             console.error(e);
@@ -181,10 +181,11 @@ export function SessionContextProvider({ children }: Props) {
           }
         } else if (otp) {
           try {
-            const { error } = await withHeaders(API.verifyOtp)({ otp });
+            const { data, error } = await withHeaders(API.verifyOtp)({ otp });
             if (error && error.code) {
               return router.push(`/error?error=${JSON.stringify(error)}`);
             }
+            setUserData(data, { updateCookie: true });
             return router.push('/reset-password');
           } catch (e) {
             console.error(e);
@@ -193,7 +194,7 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
     };
-  }, [router, searchParams, userData, withHeaders]);
+  }, [router, searchParams, userData?.isLoggedIn, userData?.tokenString, userData?.userId, withHeaders]);
   
   const onPathChange = React.useCallback(() => {
     // record page visit
@@ -206,8 +207,7 @@ export function SessionContextProvider({ children }: Props) {
     action?.();
   }, [pathActions, router.pathname, withHeaders]);
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => onPathChange(), [router.pathname, userData]);
+  React.useEffect(() => onPathChange(), [router.pathname]);
   
   return (
     <SessionContext.Provider
