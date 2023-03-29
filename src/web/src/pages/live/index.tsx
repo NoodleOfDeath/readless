@@ -50,8 +50,8 @@ export default function SearchPage() {
   }, [recentSummaries, mdAndUp]);
 
   React.useEffect(() => {
-    if (searchParams['q']) {
-      setSearchText(JSON.stringify(searchParams['q']) || '');
+    if (searchParams.get('q')) {
+      setSearchText(JSON.stringify(searchParams.get('q')) || '');
     }
   }, [searchParams, setSearchText]);
 

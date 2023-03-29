@@ -129,7 +129,7 @@ export default function Header() {
       id: 'News',
       label: 'Live News',
       onClick({ router }) {
-        router.push('/live');
+        router?.push('/live');
       },
       visible: () => !!userData?.isLoggedIn,
     },
@@ -191,7 +191,7 @@ export default function Header() {
             onTouchMove={ openMenu(false) }
             ref={ menuRef }>
             <List>
-              {NAVIGATION_ITEMS.filter((item) => item.visible instanceof Function ? item.visible() : item.visible).map((item, i) => (
+              {NAVIGATION_ITEMS.filter((item) => item.visible instanceof Function ? item.visible() : item.visible === true).map((item, i) => (
                 <React.Fragment key={ item.id }>
                   <NavigationItem { ...item } />
                   {i < NAVIGATION_ITEMS.length - 1 && (
