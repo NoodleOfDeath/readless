@@ -10,7 +10,7 @@ const StyledStack = styled(Stack)(() => ({
   margin: 'auto',
   maxWidth: 1280,
   textAlign: 'center',
-  width: 'inherit',
+  width: '100%',
 }));
 
 export default function Filters() {

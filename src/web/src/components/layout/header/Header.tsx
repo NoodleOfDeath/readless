@@ -25,6 +25,8 @@ import {
   styled,
 } from '@mui/material';
 
+import LoginDialog from '../../login/LoginDialog';
+
 import Logo from '@/components/Logo';
 import LightDarkModeButtons from '@/components/layout/header/LightDarkModeButtons';
 import NavigationItem, { NavigationItemProps } from '@/components/layout/header/NavigationItem';
@@ -56,6 +58,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const menuRef = React.useRef<HTMLDivElement>(null);
+  const [showLogin, setShowLogin] = React.useState(false);
 
   const openMenu = React.useCallback(
     (open: boolean) =>
@@ -103,8 +106,8 @@ export default function Header() {
       icon: mdiLogin,
       id: 'Login',
       label: 'Login',
-      onClick({ router }) {
-        router?.push('/login');
+      onClick() {
+        setShowLogin(true);
       },
       visible: () => !userData?.isLoggedIn,
     },
@@ -129,7 +132,7 @@ export default function Header() {
       id: 'News',
       label: 'Live News',
       onClick({ router }) {
-        router?.push('/live');
+        router?.push('/');
       },
       visible: () => !!userData?.isLoggedIn,
     },
@@ -203,6 +206,7 @@ export default function Header() {
           </StyledBox>
         </Menu>
       </StyledToolbar>
+      <LoginDialog open={ showLogin } onClose={ () => setShowLogin(false) } />
     </AppBar>
   );
 }

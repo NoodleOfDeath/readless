@@ -6,7 +6,7 @@ import {
   styled,
 } from '@mui/material';
 
-import { CONSUMPTION_MODES, ConsumptionMode } from '@/components/Post';
+import { CONSUMPTION_MODES, ConsumptionMode } from '@/components/Summary';
 
 type Props = {
   consumptionMode?: string;

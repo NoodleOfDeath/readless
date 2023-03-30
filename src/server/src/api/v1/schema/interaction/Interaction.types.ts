@@ -14,7 +14,9 @@ export type InteractionType = typeof INTERACTION_TYPES[keyof typeof INTERACTION_
 
 export type InteractionAttributes = DatedAttributes & {
   /** user that made this interaction **/
-  userId: number;
+  userId?: number;
+  /** ip address of the user that made this interaction */
+  remoteAddr?: string;
   /** id of the target of this interaction */
   targetId: number;
   /** type of this interaction */
@@ -25,7 +27,8 @@ export type InteractionAttributes = DatedAttributes & {
 };
 
 export type InteractionCreationAttributes = {
-  userId: number;
+  userId?: number;
+  remoteAddr?: string;
   targetId: number;
   type: InteractionType;
   content?: string;
@@ -33,7 +36,8 @@ export type InteractionCreationAttributes = {
 };
 
 export type InteractionRequest = {
-  userId: number;
+  userId?: number;
+  remoteAddr?: string;
   content?: string;
   metadata?: Record<string, unknown>;
 };

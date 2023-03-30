@@ -182,10 +182,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return count;
   }
   
-  public async interactWithSummary(targetId: number, type: InteractionType, content?: string, metadata?: Record<string, unknown>) {
+  public async interactWithSummary(targetId: number, type: InteractionType, remoteAddr?: string, content?: string, metadata?: Record<string, unknown>) {
     const createInteraction = async () => {
       await SummaryInteraction.create({
-        content, metadata, targetId, type, userId: this.toJSON().id,
+        content, metadata, remoteAddr, targetId, type, userId: this.toJSON().id,
       });
     };
     const destroy = !['comment', 'impression', 'share', 'view'].includes(type);

@@ -4,17 +4,18 @@ import { mdiEmail, mdiLock } from '@mdi/js';
 import Icon from '@mdi/react';
 import {
   Button,
-  Link,
   Stack,
   TextField,
   Typography,
   styled,
 } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
 import API, {
   InternalError,
+  PartialGenerateOTPRequest,
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
@@ -23,22 +24,23 @@ import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
 
 export type LoginFormProps = {
-  action?: 'logIn' | 'signUp';
+  defaultAction?: 'logIn' | 'signUp' | 'forgotPassword';
 };
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 const StyledIcon = styled(Icon)(({ theme }) => ({ marginRight: theme.spacing(1) }));
 
-export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
+export default function LoginForm({ defaultAction = 'logIn' }: LoginFormProps = {}) {
   const router = useRouter();
   const {
     register, handleSubmit, formState: { errors }, 
   } = useForm();
   const { setUserData, withHeaders } = React.useContext(SessionContext);
 
+  const [action, setAction] = React.useState(defaultAction);
   const [error, setError] = React.useState<InternalError | undefined>(undefined);
-  const [needsToVerifyAlias, setNeedsToVerifyAlias] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
 
   const handleLogIn = React.useCallback(
     async (values: PartialLoginRequest) => {
@@ -52,7 +54,7 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        router.push('/live');
+        router.push('/');
       } catch (e) {
         console.log(e);
       }
@@ -72,96 +74,110 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
-        router.push('/live');
+        router.push('/');
       } else {
-        setNeedsToVerifyAlias(true);
+        setSuccess(true);
       }
     } catch (error) {
       console.log(error);
     }
   }, [router, setUserData, withHeaders]);
 
-  React.useEffect(() => {
-    setError(undefined);
-    setNeedsToVerifyAlias(false); 
-  }, [action]);
+  const handleForgotPassword = React.useCallback(async (values: PartialGenerateOTPRequest) => {
+    try {
+      const { error } = await API.generateOtp(values);
+      if (error) {
+        setError(error);
+        return;
+      }
+      setSuccess(true);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
-  return (
-    <StyledStack spacing={ 2 }>
-      {!needsToVerifyAlias ? (
-        <form onSubmit={ handleSubmit(action === 'logIn' ? handleLogIn : handleSignUp) }>
-          <StyledStack spacing={ 2 }>
-            <GoogleLogin
-              onSuccess={ (credentialResponse) => {
-                action === 'logIn' ? handleLogIn({
-                  thirdParty: {
-                    credential: credentialResponse.credential,
-                    name: ThirdParty.Google,
-                  },
-                }) : handleSignUp({
-                  thirdParty: {
-                    credential: credentialResponse.credential,
-                    name: ThirdParty.Google,
-                  },
-                });
-              } }
-              onError={ () => {
-                console.log('Login Failed');
-              } }
-              useOneTap />
-            <Typography variant='body2'>or</Typography>
-            <TextField
-              label='Email'
-              placeholder='Email'
-              InputProps={ { startAdornment: <StyledIcon path={ mdiEmail } size={ 1 } /> } }
-              required
-              { ...register('email', {
-                pattern: {
-                  message: 'invalid email address',
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+  const logInSignUpForm = React.useMemo(() => {
+    return (
+      <form onSubmit={ handleSubmit(action === 'logIn' ? handleLogIn : handleSignUp) }>
+        <StyledStack spacing={ 2 }>
+          <GoogleLogin
+            onSuccess={ (credentialResponse) => {
+              action === 'logIn' ? handleLogIn({
+                thirdParty: {
+                  credential: credentialResponse.credential,
+                  name: ThirdParty.Google,
                 },
-                required: true,
-              }) } />
+              }) : handleSignUp({
+                thirdParty: {
+                  credential: credentialResponse.credential,
+                  name: ThirdParty.Google,
+                },
+              });
+            } }
+            onError={ () => {
+              console.log('Login Failed');
+            } }
+            useOneTap />
+          <Typography variant='body2'>or</Typography>
+          <TextField
+            label='Email'
+            placeholder='Email'
+            InputProps={ { startAdornment: <StyledIcon path={ mdiEmail } size={ 1 } /> } }
+            required
+            { ...register('email', {
+              pattern: {
+                message: 'invalid email address',
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              },
+              required: true,
+            }) } />
+          <TextField
+            type='password'
+            label='Password'
+            placeholder='Password'
+            InputProps={ { startAdornment: <StyledIcon path={ mdiLock } size={ 1 } /> } }
+            required
+            { ...register('password', {
+              required: true,
+              validate: (value) => value.length >= 8 || 'Password must be at least 8 characters',
+            }) } />
+          {action === 'signUp' && (
             <TextField
               type='password'
-              label='Password'
-              placeholder='Password'
+              label='Confirm Password'
+              placeholder='Confirm Password'
               InputProps={ { startAdornment: <StyledIcon path={ mdiLock } size={ 1 } /> } }
               required
-              { ...register('password', {
+              { ...register('confirmPassword', {
                 required: true,
-                validate: (value) => value.length >= 8 || 'Password must be at least 8 characters',
+                validate: (value, formState) => value === formState.password || 'Passwords do not match',
               }) } />
-            {action === 'signUp' && (
-              <TextField
-                type='password'
-                label='Confirm Password'
-                placeholder='Confirm Password'
-                InputProps={ { startAdornment: <StyledIcon path={ mdiLock } size={ 1 } /> } }
-                required
-                { ...register('confirmPassword', {
-                  required: true,
-                  validate: (value, formState) => value === formState.password || 'Passwords do not match',
-                }) } />
-            )}
-            {error && (
-              <Typography variant='body2' color='error'>
-                {error.message}
-              </Typography>
-            )}
-            {errors && Object.entries(errors).map(([field, error]) => (
-              <Typography key={ field } variant='body2' color='error'>
-                {typeof error?.message === 'string' ? error.message : ''}
-              </Typography>
-            ))}
-            <Button type='submit' variant="contained">
-              {action === 'logIn' ? 'Log In' : 'Sign Up'}
-            </Button>
-            {action === 'logIn' ? (
-              <Link onClick={ () => router.push('/forgot') }>
+          )}
+          {error && (
+            <Typography variant='body2' color='error'>
+              {error.message}
+            </Typography>
+          )}
+          {errors && Object.entries(errors).map(([field, error]) => (
+            <Typography key={ field } variant='body2' color='error'>
+              {typeof error?.message === 'string' ? error.message : ''}
+            </Typography>
+          ))}
+          <Button type='submit' variant="contained">
+            {action === 'logIn' ? 'Log In' : 'Sign Up'}
+          </Button>
+          {action === 'logIn' ? (
+            <StyledStack spacing={ 1 }>
+              <Button size="small" onClick={ () => setAction('forgotPassword') }>
                 Forgot your password?
-              </Link>
-            ) : (
+              </Button>
+              Don&apos;t have an account? 
+              <Button size="small" variant="contained" onClick={ () => setAction('signUp') }>
+                Sign up here.
+              </Button>
+            </StyledStack>
+          ) : (
+            <StyledStack spacing={ 1 }>
               <Typography variant='body2'>
                 By signing up, you agree to our
                 {' '}
@@ -171,16 +187,58 @@ export default function LoginForm({ action = 'logIn' }: LoginFormProps = {}) {
                 {' '}
                 <Link href='/privacy'>Privacy Policy</Link>
               </Typography>
-            )}
-          </StyledStack>
-        </form>
-      ) : (
-        <StyledStack spacing={ 1 }>
-          <Typography variant='body2'>Please check your inbox to verify your email.</Typography>
-          {' '}
-          <Button variant="contained" onClick={ () => router.push('/login') }>Log In Here</Button>
+              Already have an account? 
+              <Button size="small" variant="contained" onClick={ () => setAction('logIn') }>
+                Log in here.
+              </Button>
+            </StyledStack>
+          )}
         </StyledStack>
-      )}
+      </form>
+    );
+  }, [action, errors, error, handleLogIn, handleSignUp, handleSubmit, register]);
+
+  const forgotPasswordForm = React.useMemo(() => {
+    return (
+      <form onSubmit={ handleSubmit(handleForgotPassword) }>
+        <StyledStack spacing={ 2 }>
+          <TextField type="email" placeholder="Email" required { ...register('email') } />
+          <Button type="submit" variant="contained">
+            Send Password Reset Email
+          </Button>
+          {error && (
+            <Typography variant='body2' color='error'>
+              {error.message}
+            </Typography>
+          )}
+          <Button onClick={ () => setAction('logIn') }>Back to Login</Button>
+        </StyledStack>
+      </form>
+    );
+  }, [error, handleSubmit, handleForgotPassword, register]);
+
+  React.useEffect(() => {
+    setError(undefined);
+    setSuccess(false); 
+  }, [action]);
+
+  return (
+    <StyledStack spacing={ 2 }>
+      {!success ? (action === 'forgotPassword' ? forgotPasswordForm : logInSignUpForm) :
+        action === 'forgotPassword' ? (
+          <StyledStack spacing={ 2 }>
+            <Typography variant='body2'>
+              If an account with that email exists, you should receive an email shortly with a link to reset your password.
+            </Typography>
+            <Button onClick={ () => setAction('logIn') }>Back to Login</Button>
+          </StyledStack>
+        ) : (
+          <StyledStack spacing={ 1 }>
+            <Typography variant='body2'>Please check your inbox to verify your email.</Typography>
+            {' '}
+            <Button variant="contained" onClick={ () => setAction('logIn') }>Log In Here</Button>
+          </StyledStack>
+        )}
     </StyledStack>
   );
 }

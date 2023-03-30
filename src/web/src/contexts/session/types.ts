@@ -3,7 +3,7 @@ import { PaletteMode } from '@mui/material';
 import jwt from 'jsonwebtoken';
 
 import { LoginResponse, RequestParams } from '@/api';
-import { ConsumptionMode } from '@/components/Post';
+import { ConsumptionMode } from '@/components/Summary';
 import { loadTheme } from '@/theme';
 
 export type Preferences = {
@@ -33,6 +33,10 @@ export class UserData implements UserDataProps {
 
   get tokenString() {
     return this.token?.value;
+  }
+
+  get expired() {
+    return this.tokens.length > 0 && this.tokens.every((t) => UserData.tokenHasExpired(t.value));
   }
   
   static tokenHasExpired(tokenString: string) {

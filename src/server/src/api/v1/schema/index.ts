@@ -41,12 +41,19 @@ export function makeAssociations() {
   // outlets
   Outlet.hasMany(OutletMedia, { foreignKey: 'parentId' });
   
-  // sources
+  // summaries
   Summary.hasMany(SummaryMedia, { foreignKey: 'parentId' });
   Summary.belongsTo(Outlet, { foreignKey: 'outletId' });
   Summary.hasOne(RefSummaryTopic, { foreignKey: 'sourceId' });
   Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
+
   SummaryInteraction.hasMany(SummaryInteractionMedia, { foreignKey: 'parentId' });
+  SummaryInteraction.belongsTo(User, {
+    foreignKey: {
+      allowNull: true,
+      name: 'userId',
+    },
+  });
   
   // queues
   Queue.hasMany(Job, {
