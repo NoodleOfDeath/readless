@@ -257,7 +257,7 @@ export default function Summary({
   return (
     <StyledCard>
       <StyledStack spacing={ 2 }>
-        <Stack direction="row">
+        <Stack direction={ mdAndUp ? 'column' : 'row' }>
           {consumptionMode !== undefined && (
             <StyledBackButton
               onClick={ () => onChange?.() }

@@ -25,13 +25,14 @@ import { useRouter } from '@/next/router';
 
 export type LoginFormProps = {
   defaultAction?: 'logIn' | 'signUp' | 'forgotPassword';
+  onSuccessfulLogin?: () => void;
 };
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 const StyledIcon = styled(Icon)(({ theme }) => ({ marginRight: theme.spacing(1) }));
 
-export default function LoginForm({ defaultAction = 'logIn' }: LoginFormProps = {}) {
+export default function LoginForm({ defaultAction = 'logIn', onSuccessfulLogin }: LoginFormProps = {}) {
   const router = useRouter();
   const {
     register, handleSubmit, formState: { errors }, 
@@ -54,12 +55,14 @@ export default function LoginForm({ defaultAction = 'logIn' }: LoginFormProps = 
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
+        onSuccessfulLogin?.();
         router.push('/');
+
       } catch (e) {
         console.log(e);
       }
     },
-    [router, setUserData, withHeaders]
+    [onSuccessfulLogin, router, setUserData, withHeaders]
   );
 
   const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
@@ -74,6 +77,7 @@ export default function LoginForm({ defaultAction = 'logIn' }: LoginFormProps = 
           isLoggedIn: true,
           ...data,
         }, { updateCookie: true });
+        onSuccessfulLogin?.();
         router.push('/');
       } else {
         setSuccess(true);
@@ -81,7 +85,7 @@ export default function LoginForm({ defaultAction = 'logIn' }: LoginFormProps = 
     } catch (error) {
       console.log(error);
     }
-  }, [router, setUserData, withHeaders]);
+  }, [onSuccessfulLogin, router, setUserData, withHeaders]);
 
   const handleForgotPassword = React.useCallback(async (values: PartialGenerateOTPRequest) => {
     try {

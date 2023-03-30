@@ -15,12 +15,13 @@ import LoginForm from './LoginForm';
 type LoginDialogProps = DialogProps & {
   defaultAction?: 'logIn' | 'signUp';
   message?: string;
+  onSuccessfulLogin?: () => void;
 };
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 export default function LoginDialog({
-  defaultAction = 'logIn', message, ...dialogProps 
+  defaultAction = 'logIn', message, onSuccessfulLogin, ...dialogProps
 }: LoginDialogProps) {
 
   return (
@@ -32,7 +33,7 @@ export default function LoginDialog({
       <DialogContent>
         <StyledStack spacing={ 2 }>
           {message && <Alert severity="info">{message}</Alert>}
-          <LoginForm defaultAction={ defaultAction } />
+          <LoginForm defaultAction={ defaultAction } onSuccessfulLogin={ onSuccessfulLogin } />
         </StyledStack>
       </DialogContent>
     </Dialog>

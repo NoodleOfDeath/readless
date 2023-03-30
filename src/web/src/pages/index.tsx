@@ -5,7 +5,6 @@ import {
   CircularProgress,
   Stack,
   Typography,
-  styled,
 } from '@mui/material';
 
 import LoginDialog from '../components/login/LoginDialog';
@@ -15,30 +14,11 @@ import API, {
   InteractionType,
   SummaryResponse,
 } from '@/api';
-import FancyScroll, { FadeAndShrink } from '@/components/FancyScroll';
 import Summary, { ConsumptionMode } from '@/components/Summary';
 import Page from '@/components/layout/Page';
 import Filters from '@/components/search/Filters';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
-
-const StyledFancyScroll = styled(FancyScroll)(() => ({
-  '& > div': {
-    transition: 'width 0.1s, opacity 0.1s',
-    width: '100%',
-  },
-  alignItems: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  height: 'calc(100vh - 320px)',
-  overflow: 'auto',
-  width: '100%',
-}));
-
-const StyledSummary = styled(Summary)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  marginTop: theme.spacing(2),
-}));
 
 export default function SearchPage() {
   const { searchParams } = useRouter();
@@ -59,7 +39,7 @@ export default function SearchPage() {
   const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
   const [consumptionMode, setConsumptionMode] = React.useState<ConsumptionMode|undefined>();
 
-  const [showDialog, setShowDialog] = React.useState<boolean>(false);
+  const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (searchParams.get('q')) {
@@ -113,7 +93,7 @@ export default function SearchPage() {
   const interactWithSummary = React.useCallback(
     async (index: number, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
       if (!userData?.isLoggedIn) {
-        setShowDialog(true);
+        setShowLoginDialog(true);
         return;
       }
       try {
@@ -169,13 +149,13 @@ export default function SearchPage() {
       <Stack spacing={ 2 }>
         {expandedPost === undefined && (
           <React.Fragment>
-            <Typography variant="h4">News that fits your schedule</Typography>
+            <Typography variant="h4">just news. no clickbait</Typography>
             <Filters />
             <Stack>
               {recentSummaries.length === 0 && (
                 <Typography variant="h6">No results found</Typography>
               )}
-              {recentSummaries.length > 0 && (
+              {searchText && searchText.trim().length > 0 && recentSummaries.length > 0 && (
                 <Typography variant="h6">
                   {totalResults}
                   {' '}
@@ -185,28 +165,28 @@ export default function SearchPage() {
             </Stack>
           </React.Fragment>
         )}
-        <StyledFancyScroll transform={ FadeAndShrink() }>
+        <Stack spacing={ 2 }>
           {expandedPost === undefined ? 
             recentSummaries.map((summary, i) => (
-              <StyledSummary 
+              <Summary 
                 key={ summary.id } 
                 summary={ summary }
                 onChange={ (mode) => expandPost(i, mode) } 
                 onInteract={ (type, content, metadata) => interactWithSummary(i, type, content, metadata) } />
             )) : (
-              <StyledSummary
+              <Summary
                 summary={ recentSummaries[expandedPost] }
                 onChange={ (mode) => expandPost(expandedPost, mode) }
                 consumptionMode={ consumptionMode } 
                 onInteract={ (type, content, metadata) => interactWithSummary(expandedPost, type, content, metadata) } />
             )}
-        </StyledFancyScroll>
+        </Stack>
         {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
         {expandedPost === undefined && totalResults > pageSize * page && (
           <Button onClick={ () => loadMore() }>Load More</Button>
         )}
       </Stack>
-      <LoginDialog defaultAction="logIn" message={ 'To prevent bad actors from compromising the integrity of our data and infrastrcture, please either log in, sign up, or download the mobile application to interact with posts' } open={ showDialog } onClose={ () => setShowDialog(false) } />
+      <LoginDialog defaultAction="logIn" message={ 'To prevent bad actors from compromising the integrity of our data and infrastrcture, please either log in, sign up, or download the mobile application to interact with posts' } open={ showLoginDialog } onClose={ () => setShowLoginDialog(false) } onSuccessfulLogin={ () => setShowLoginDialog(false) } />
     </Page>
   );
 }
