@@ -134,6 +134,12 @@ export function SessionContextProvider({ children }: Props) {
     }
   }, []);
 
+  React.useEffect(() => {
+    if (userData?.expired === true) {
+      router.push('/logout');
+    }
+  }, [userData?.expired, router]);
+
   // Update theme when user preference changes
   React.useEffect(() => {
     setTheme(loadTheme(displayMode ?? (prefersDarkMode ? 'dark' : 'light')));
@@ -143,7 +149,7 @@ export function SessionContextProvider({ children }: Props) {
     return {
       '/login': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          return router.push('/live');
+          return router.push('/');
         }
       },
       '/logout': async () => {
@@ -163,7 +169,7 @@ export function SessionContextProvider({ children }: Props) {
       },
       '/reset-password': () => {
         if (userData?.isLoggedIn && userData?.tokenString) {
-          return router.push('/live');
+          return router.push('/');
         }
         if (!userData?.userId) {
           return router.push('/logout');
@@ -218,7 +224,8 @@ export function SessionContextProvider({ children }: Props) {
     action?.();
   }, [pathActions, router.pathname, withHeaders]);
   
-  React.useEffect(() => onPathChange(), [router.pathname]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => onPathChange(), [userData, router.pathname]);
   
   return (
     <SessionContext.Provider

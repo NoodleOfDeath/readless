@@ -12,6 +12,7 @@ import {
   Tags,
 } from 'tsoa';
 
+import { SummaryInteraction } from './../../schema/resources/summary/SummaryInteraction.model';
 import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
@@ -145,6 +146,25 @@ export class SummaryController {
     }
     return summary;
   }
+
+  @Security('jwt')
+  @Post('/interact/:targetId/view')
+  public static async recordSummaryView(
+    @Path() targetId: number,
+    @Body() body: InteractionRequest
+  ): Promise<InteractionResponse> {
+    const {
+      content, metadata, remoteAddr, 
+    } = body;
+    const interaction = await SummaryInteraction.create({
+      content, metadata, remoteAddr, targetId, type: 'view',
+    });
+    if (!interaction) {
+      throw new InternalError('Failed to create interaction');
+    }
+    const resource = await Summary.findByPk(targetId);
+    return resource.toJSON().interactions;
+  }
   
   @Security('jwt', ['standard:write'])
   @Post('/interact/:targetId/:type')
@@ -154,8 +174,10 @@ export class SummaryController {
     @Body() body: InteractionRequest
   ): Promise<InteractionResponse> {
     const { user } = await User.from(body);
-    const { content, metadata } = body;
-    const resource = await user.interactWithSummary(targetId, type, content, metadata);
+    const {
+      content, metadata, remoteAddr, 
+    } = body;
+    const resource = await user.interactWithSummary(targetId, type, remoteAddr, content, metadata);
     return resource.toJSON().interactions;
   }
 

@@ -14,11 +14,11 @@ export abstract class Interaction<
   extends BaseModel<A, B>
   implements InteractionAttributes {
 
-  @Column({
-    allowNull: false,
-    type: DataType.INTEGER,
-  })
-    userId: number;
+  @Column({ type: DataType.INTEGER })
+    userId?: number;
+
+  @Column({ type: DataType.STRING(2083) })
+    remoteAddr?: string;
 
   @Column({
     allowNull: false,

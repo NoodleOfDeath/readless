@@ -64,6 +64,24 @@ router.get(
 );
 
 router.post(
+  '/interact/:targetId/view',
+  rateLimitMiddleware('1 per 2s'),
+  param('targetId').isNumeric(),
+  body('value').isString().optional(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const { targetId } = req.params;
+      req.body.remoteAddr = req.ip;
+      const interactions = await SummaryController.recordSummaryView(targetId, req.body);
+      return res.json(interactions);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.post(
   '/interact/:targetId/:type',
   rateLimitMiddleware('1 per 2s'),
   authMiddleware('jwt', { required: true, scope: ['standard:write'] }),
@@ -74,6 +92,7 @@ router.post(
   async (req, res) => {
     try {
       const { targetId, type } = req.params;
+      req.body.remoteAddr = req.ip;
       const interactions = await SummaryController.interactWithSummary(targetId, type, req.body);
       return res.json(interactions);
     } catch (e) {

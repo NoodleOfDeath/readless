@@ -40,7 +40,7 @@ export default function SearchBar() {
       renderInput={ (params) => (
         <TextField
           { ...params }
-          label="What's the skoop?"
+          label="Gimme the skoop"
           onChange={ (event) => setSearchText(event.currentTarget.value) } />
       ) } />
   );

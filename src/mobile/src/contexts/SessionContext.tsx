@@ -2,6 +2,8 @@ import React from 'react';
 
 import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 
+import { UserData, UserDataProps } from './types';
+
 export type SessionContextType = {
   tabControllerScreenOptions: BottomTabNavigationOptions;
   setTabControllerScreenOptions: React.Dispatch<
@@ -20,6 +22,8 @@ export default function SessionContextProvider({ children }: React.PropsWithChil
   const [tabControllerScreenOptions, setTabControllerScreenOptions] =
     React.useState<BottomTabNavigationOptions>({});
 
+  const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps | undefined>(); 
+    
   return (
     <SessionContext.Provider
       value={ {

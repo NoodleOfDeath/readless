@@ -11,8 +11,9 @@ export type JobAttributes<DataType extends Serializable, ReturnType, QueueName e
   queue: QueueName;
   name: string;
   data: DataType;
-  attempts: number;
   retryPolicy: RetryPolicy;
+  attempts: number;
+  lockedBy?: number;
   startedAt?: Date;
   completedAt?: Date;
   failedAt?: Date;
@@ -26,7 +27,6 @@ export type JobCreationAttributes<DataType extends Serializable, ReturnType, Que
   name: string;
   data?: DataType;
   retryPolicy?: RetryPolicy;
-  failureReason?: string;
 };
 
 export type SiteMapJobData = {

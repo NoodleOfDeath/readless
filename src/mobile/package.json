@@ -8,10 +8,10 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/gen --no-client",
-    "swagger": "(cd ../server && yarn swagger) && cp ../server/public/swagger.json . && yarn gen",
-    "lint": "eslint .  --ext .js,.jsx,.ts,.tsx",
-    "format": "eslint .  --ext .js,.jsx,.ts,.tsx --fix"
+    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/api --axios",
+    "tsoa": "(cd ../server && yarn tsoa) && cp ../server/swagger.json . && yarn gen",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -23,6 +23,7 @@
     "expo": "^48.0.6",
     "expo-constants": "^14.2.1",
     "expo-modules-core": "^1.2.4",
+    "jsonwebtoken": "^9.0.0",
     "react": "18.2.0",
     "react-native": "0.71.3",
     "react-native-elements": "^3.4.3",
@@ -43,6 +44,7 @@
     "@tsconfig/react-native": "^2.0.3",
     "@types/debounce": "^1.2.1",
     "@types/jest": "^29.2.1",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.14.6",
     "@types/react": "^18.0.24",
     "@types/react-native-vector-icons": "^6.4.13",

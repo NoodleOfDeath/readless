@@ -50,18 +50,21 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     type: DataType.JSON,
   })
     data: DataType;
-  
-  @Column({
-    defaultValue: 0,
-    type: DataType.INTEGER,
-  })
-    attempts: number;
     
   @Column({
     defaultValue: 'backoff',
     type: DataType.STRING,
   })
     retryPolicy: RetryPolicy;
+  
+  @Column({
+    defaultValue: 0,
+    type: DataType.INTEGER,
+  })
+    attempts: number;
+  
+  @Column({ type: DataType.INTEGER })
+    lockedBy?: number;
     
   @Column({ type: DataType.DATE })
     startedAt?: Date;

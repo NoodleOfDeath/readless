@@ -29,3 +29,4 @@ export * from './resources/summary/RefSummaryTopic.model';
 // queues
 export * from './queue/Queue.model';
 export * from './queue/Job.model';
+export * from './queue/Worker.model';

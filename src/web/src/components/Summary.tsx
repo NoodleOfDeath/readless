@@ -56,6 +56,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'left',
   minWidth: 200,
+  overflow: 'visible',
   padding: theme.spacing(2),
   textAlign: 'left',
 }));
@@ -73,7 +74,7 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
   top: theme.spacing(10),
 }));
 
-const StyledConsumptionModeContainer = styled(Box)<Props & { mdAndUp: boolean }>(({
+const StyledConsumptionModeContainer = styled(Box)<Partial<Props & { mdAndUp: boolean }>>(({
   theme, consumptionMode, mdAndUp, 
 }) => ({
   borderRadius: 8,
@@ -111,7 +112,7 @@ const StyledCenteredStack = styled(Stack)(() => ({
 
 const StyledMenuBox = styled(Box)(() => ({ width: 250 }));
 
-export default function Post({
+export default function Summary({
   summary,
   consumptionMode,
   onChange,
@@ -266,7 +267,7 @@ export default function Post({
               Back to Results
             </StyledBackButton>
           )}
-          <Stack spacing={ 1 }>
+          <Stack spacing={ 1 } flexGrow={ 1 }>
             <Typography variant="subtitle1">{summary?.outletName}</Typography>
             <Typography variant="h6"><TruncatedText maxCharCount={ 120 }>{summary?.title}</TruncatedText></Typography>
           </Stack>

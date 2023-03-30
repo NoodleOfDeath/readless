@@ -33,6 +33,10 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     }
   }
   
+  static async from<DataType extends Serializable = Serializable, ReturnType = Serializable, QueueName extends string = string>(queueProps: QueueSpecifier<DataType, ReturnType, QueueName>) {
+    return await Queue.findOne({ where: { name: queueProps.name } });
+  }
+  
   @Column({
     allowNull: false,
     type: DataType.STRING,

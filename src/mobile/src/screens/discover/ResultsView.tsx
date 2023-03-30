@@ -1,13 +1,12 @@
 import React from 'react';
 import { Button, useColorScheme } from 'react-native';
 
-import { API_BASE_URL } from '@env';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { SearchBar } from 'react-native-elements';
 
-import { SourceWithOutletAttr } from '../../api/Api';
+import { API, SummaryResponse } from '../../api';
 import FlexView from '../../components/common/FlexView';
 import SafeScrollView from '../../components/common/SafeScrollView';
 import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
@@ -30,8 +29,8 @@ export default function ResultsView({ navigation }: Props) {
   });
 
   const [loading, setLoading] = React.useState(false);
-  const [recentSources, setRecentSources] = React.useState<
-    SourceWithOutletAttr[]
+  const [recentSummaries, setRecentSummaries] = React.useState<
+    SummaryResponse[]
   >([]);
   const [totalSourceCount, setTotalSourceCount] = React.useState(0);
 
@@ -42,18 +41,17 @@ export default function ResultsView({ navigation }: Props) {
   const load = (pageSize: number, page: number, searchText: string) => {
     setLoading(true);
     if (page === 0) {
-      setRecentSources([]);
+      setRecentSummaries([]);
     }
-    axios
-      .get(`${API_BASE_URL}/v1/sources`, {
-        params: {
-          filter: searchText,
-          page,
-          pageSize,
-        },
-      })
+    API.getSummaries({
+      params: {
+        filter: searchText,
+        page,
+        pageSize,
+      },
+    })
       .then((response) => {
-        setRecentSources((prev) => {
+        setRecentSummaries((prev) => {
           if (page === 0) {
             return response.data.rows;
           }
@@ -64,7 +62,7 @@ export default function ResultsView({ navigation }: Props) {
       })
       .catch((e) => {
         console.error(e);
-        setRecentSources([]);
+        setRecentSummaries([]);
         setTotalSourceCount(0);
       })
       .finally(() => {
@@ -88,10 +86,10 @@ export default function ResultsView({ navigation }: Props) {
     (index: number, mode?: ConsumptionMode) => {
       navigation?.navigate('Post', {
         initialMode: mode,
-        source: recentSources[index],
+        summary: recentSummaries[index],
       });
     },
-    [navigation, recentSources]
+    [navigation, recentSummaries]
   );
 
   return (
@@ -108,13 +106,13 @@ export default function ResultsView({ navigation }: Props) {
         refreshing={ loading }
         onRefresh={ () => load(pageSize, 0, searchText) }>
         <FlexView>
-          {recentSources.map((source, i) => (
+          {recentSummaries.map((summary, i) => (
             <Post
-              key={ source.id }
-              source={ source }
+              key={ summary.id }
+              summary={ summary }
               onChange={ (mode) => onExpandPost(i, mode) } />
           ))}
-          {!loading && totalSourceCount > recentSources.length && (
+          {!loading && totalSourceCount > recentSummaries.length && (
             <Button
               title="Load More"
               color={ theme.components.button.color }
