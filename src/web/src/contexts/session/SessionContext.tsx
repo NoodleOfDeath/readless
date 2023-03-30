@@ -218,7 +218,8 @@ export function SessionContextProvider({ children }: Props) {
     action?.();
   }, [pathActions, router.pathname, withHeaders]);
   
-  React.useEffect(() => onPathChange(), [router.pathname]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => onPathChange(), [userData, router.pathname]);
   
   return (
     <SessionContext.Provider

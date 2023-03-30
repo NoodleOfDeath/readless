@@ -47,11 +47,11 @@ export class ScribeService extends BaseService {
       {
         action: (reply) => (sourceInfo.title = reply.text),
         catchFailure: (reply) => { 
-          if (reply.text.length > 120) {
+          if (reply.text.length > 150) {
             return new Error('Title too long');
           }
         },
-        text: `Please summarize the following in a single sentence using no more than 120 characters:\n\n${sourceInfo.filteredText}`,
+        text: `Please summarize the following in a single sentence using no more than 150 characters:\n\n${sourceInfo.filteredText}`,
       },
       {
         action: (reply) => {

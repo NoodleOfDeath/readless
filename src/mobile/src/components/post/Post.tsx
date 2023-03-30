@@ -9,20 +9,20 @@ import { formatDistance } from 'date-fns';
 import { Divider } from 'react-native-elements';
 
 import ConsumptionModeSelector, { ConsumptionMode } from './ConsumptionModeSelector';
-import { SourceWithOutletAttr } from '../../api/Api';
+import { SummaryResponse } from '../../api';
 import FlexView from '../common/FlexView';
 import Menu from '../common/Menu';
 import { useTheme } from '../theme';
 
 type Props = {
-  source: SourceWithOutletAttr;
+  summary: SummaryResponse;
   tickIntervalMs?: number;
   mode?: ConsumptionMode;
   onChange?: (mode?: ConsumptionMode) => void;
 };
 
 export default function Post({
-  source,
+  summary,
   tickIntervalMs = 60_000,
   mode,
   onChange,
@@ -32,19 +32,19 @@ export default function Post({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const timeAgo = React.useMemo(() => {
-    return formatDistance(new Date(source.createdAt), lastTick, { addSuffix: true });
-  }, [source.createdAt, lastTick]);
+    return formatDistance(new Date(summary.createdAt), lastTick, { addSuffix: true });
+  }, [summary.createdAt, lastTick]);
 
   const options = React.useMemo(() => {
     return [
       {
-        label: 'View original source',
+        label: 'View original summary',
         onPress: async () => {
-          await Linking.openURL(source.url);
+          await Linking.openURL(summary.url);
         },
       },
     ];
-  }, [source.url]);
+  }, [summary.url]);
 
   // pdate time ago every `tickIntervalMs` milliseconds
   React.useEffect(() => {
@@ -55,28 +55,28 @@ export default function Post({
   }, [tickIntervalMs]);
 
   const content = React.useMemo(() => {
-    if (!mode || !source) {
+    if (!mode || !summary) {
       return null;
     }
     switch (mode) {
     case 'keyPoints':
-      return source.bullets.join('\n');
+      return summary.bullets.join('\n');
     case 'concise':
-      return source.shortSummary;
+      return summary.shortSummary;
     case 'casual':
-      return source.summary;
+      return summary.summary;
     case 'comprehensive':
-      return source.abridged;
+      return summary.longSummary;
     default:
       return null;
     }
-  }, [mode, source]);
+  }, [mode, summary]);
 
   return (
     <FlexView style={ theme.components.card }>
-      <Text style={ theme.typography.subtitle1 }>{source.outletName.trim()}</Text>
+      <Text style={ theme.typography.subtitle1 }>{summary.outletName.trim()}</Text>
       <Pressable onPress={ () => onChange?.('casual') }>
-        <Text style={ theme.typography.title1 }>{source.title.trim()}</Text>
+        <Text style={ theme.typography.title1 }>{summary.title.trim()}</Text>
       </Pressable>
       <Divider orientation="horizontal" style={ theme.components.divider } />
       <FlexView row>
