@@ -52,6 +52,8 @@ spec:
               value: '$PORT'
             - name: RECAPTCHA_SECRET_KEY
               value: '$RECAPTCHA_SECRET_KEY'
+            - name: SSL
+              value: '$SSL'
           livenessProbe:
             httpGet:
               path: /v1/healthz
