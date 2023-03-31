@@ -13,6 +13,7 @@ import {
   Box,
   Button,
   Card,
+  CardContent,
   CardMedia,
   Divider,
   Link,
@@ -24,6 +25,7 @@ import {
   Typography,
   styled,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { formatDistance } from 'date-fns';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
@@ -33,22 +35,22 @@ import {
   InteractionUserVote,
   SummaryResponse,
 } from '@/api';
-import ConsumptionModeSelector from '@/components/ConsumptionModeSelector';
+import ServingSizeSelector from '@/components/ServingSizeSelector';
 import TruncatedText from '@/components/common/TruncatedText';
 
-export const CONSUMPTION_MODES = [
-  'bulleted',
+export const SERVING_SIZES = [
+  'bullets',
   'concise',
   'casual',
-  'comprehensive',
+  'detailed',
 ] as const;
 
-export type ConsumptionMode = (typeof CONSUMPTION_MODES)[number];
+export type ServingSize = (typeof SERVING_SIZES)[number];
 
 type Props = {
   summary?: SummaryResponse;
-  consumptionMode?: ConsumptionMode;
-  onChange?: (mode?: ConsumptionMode) => void;
+  servingSize?: ServingSize;
+  onChange?: (mode?: ServingSize) => void;
   onInteract?: (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
 
@@ -57,7 +59,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   justifyContent: 'left',
   minWidth: 200,
   overflow: 'visible',
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   textAlign: 'left',
 }));
 
@@ -74,20 +76,18 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
   top: theme.spacing(10),
 }));
 
-const StyledConsumptionModeContainer = styled(Box)<Partial<Props & { mdAndUp: boolean }>>(({
-  theme, consumptionMode, mdAndUp, 
-}) => ({
+const StyledServingSizeContainer = styled(Box)<Partial<Props>>(({ theme, servingSize }) => ({
   borderRadius: 8,
-  bottom: consumptionMode && !mdAndUp ? theme.spacing(4) : undefined,
-  position: consumptionMode ? 'fixed' : 'relative',
-  right: consumptionMode && mdAndUp ? theme.spacing(4) : undefined,
-  top: consumptionMode && mdAndUp ? theme.spacing(10) : undefined,
+  bottom: servingSize && !theme.breakpoints.up('md') ? theme.spacing(4) : undefined,
+  position: servingSize ? 'fixed' : 'relative',
+  right: servingSize && theme.breakpoints.up('md') ? theme.spacing(4) : undefined,
+  top: servingSize && theme.breakpoints.up('md') ? theme.spacing(10) : undefined,
 }));
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   borderRadius: 8,
   marginLeft: theme.spacing(2),
-  width: 150,
+  width: 120,
 }));
 
 const StyledCategoryBox = styled(Box)(({ theme }) => ({
@@ -96,9 +96,14 @@ const StyledCategoryBox = styled(Box)(({ theme }) => ({
   borderRadius: 8,
   color: theme.palette.primary.contrastText,
   display: 'flex',
-  height: 120,
-  justifyContent: 'center',
-  width: 150,
+  height: 150,
+  justifyContent: 'center', 
+  width: 120,
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  marginTop: theme.spacing(2),
 }));
 
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
@@ -114,13 +119,14 @@ const StyledMenuBox = styled(Box)(() => ({ width: 250 }));
 
 export default function Summary({
   summary,
-  consumptionMode,
+  servingSize,
   onChange,
   onInteract,
 }: Props = {}) {
 
-  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-  const lgAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+  const theme = useTheme();
+  
+  const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const [showMenu, setShowMenu] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -147,53 +153,56 @@ export default function Summary({
   );
   
   const votes = React.useMemo(() => upvotes - downvotes, [downvotes, upvotes]);
+  
+  const interactionButtons = React.useMemo(() => {
+    return (
+      <Stack direction="row" spacing={ 1 }>
+        <Button onClick={ () => onInteract?.(InteractionType.Upvote) }>
+          <Icon path={ summary?.interactions.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
+        </Button>
+        <StyledCenteredStack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
+          {showSplitVotes ? (
+            <React.Fragment>
+              <Typography variant="subtitle2">{upvotes}</Typography>
+              <Typography variant="subtitle2">
+                -
+                {downvotes}
+              </Typography>
+            </React.Fragment>
+          ) : (
+            <Typography variant="subtitle1">{votes}</Typography>
+          )}
+        </StyledCenteredStack>
+        <Button onClick={ () => onInteract?.(InteractionType.Downvote) }>
+          <Icon path={ summary?.interactions.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
+        </Button>
+      </Stack>
+    );
+  }, [downvotes, onInteract, upvotes, showSplitVotes, votes, summary?.interactions.uservote]);
 
   const cardMediaStack = React.useMemo(() => {
     return (
-      <Stack spacing={ 2 }>
+      <StyledCenteredStack direction='column' spacing={ 2 }>
         <StyledCategoryBox>
           <StyledCenteredStack>
             <Typography variant="subtitle1">{summary?.category}</Typography>
             <Typography variant="subtitle2">{summary?.subcategory}</Typography>
           </StyledCenteredStack>
         </StyledCategoryBox>
-        <Stack>
-          <Stack direction="row" spacing={ 1 }>
-            <Button onClick={ () => onInteract?.(InteractionType.Upvote) }>
-              <Icon path={ summary?.interactions.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
-            </Button>
-            <StyledCenteredStack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
-              {showSplitVotes ? (
-                <React.Fragment>
-                  <Typography variant="subtitle2">{upvotes}</Typography>
-                  <Typography variant="subtitle2">
-                    -
-                    {downvotes}
-                  </Typography>
-                </React.Fragment>
-              ) : (
-                <Typography variant="subtitle1">{votes}</Typography>
-              )}
-            </StyledCenteredStack>
-            <Button onClick={ () => onInteract?.(InteractionType.Downvote) }>
-              <Icon path={ summary?.interactions.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
-            </Button>
-          </Stack>
-        </Stack>
-      </Stack>
+      </StyledCenteredStack>
     );
-  }, [downvotes, onInteract, upvotes, showSplitVotes, votes, summary?.category, summary?.subcategory, summary?.interactions.uservote]);
+  }, [summary?.category, summary?.subcategory, mdAndDown, interactionButtons]);
 
   const bottomRowDirection = React.useMemo(() => {
-    return lgAndUp ? 'row' : 'column';
-  }, [lgAndUp]);
+    return mdAndDown ? 'column' : 'row';
+  }, [mdAndDown]);
 
   const content = React.useMemo(() => {
     if (!summary) {
       return null;
     }
     let text = '';
-    switch (consumptionMode) {
+    switch (servingSize) {
     case 'bulleted':
       text = summary.bullets.join('\n');
       break;
@@ -203,7 +212,7 @@ export default function Summary({
     case 'casual':
       text = summary.summary;
       break;
-    case 'comprehensive':
+    case 'detailed':
       text = summary.longSummary;
       break;
     default:
@@ -212,7 +221,7 @@ export default function Summary({
     return (
       <ReactMarkdown>{text}</ReactMarkdown>
     );
-  }, [summary, consumptionMode]);
+  }, [summary, servingSize]);
   
   const openMenu = React.useCallback(
     (open: boolean) =>
@@ -256,34 +265,36 @@ export default function Summary({
 
   return (
     <StyledCard>
-      <StyledStack spacing={ 2 }>
-        <Stack direction={ mdAndUp ? 'column' : 'row' }>
-          {consumptionMode !== undefined && (
-            <StyledBackButton
-              onClick={ () => onChange?.() }
-              startIcon={
-                <Icon path={ mdiChevronLeft } size={ 2 } /> 
-              }>
-              Back to Results
-            </StyledBackButton>
-          )}
-          <Stack spacing={ 1 } flexGrow={ 1 }>
+      {servingSize !== undefined && (
+        <StyledBackButton
+          onClick={ () => onChange?.() }
+          startIcon={
+            <Icon path={ mdiChevronLeft } size={ 2 } /> 
+          }>
+          Back to Results
+        </StyledBackButton>
+      )}
+      <StyledStack>
+        <StyledStack direction='row' spacing={ 2 }>
+          <Stack flexGrow={ 1 }>
             <Typography variant="subtitle1">{summary?.outletName}</Typography>
             <Typography variant="h6"><TruncatedText maxCharCount={ 120 }>{summary?.title}</TruncatedText></Typography>
           </Stack>
-          {!consumptionMode && (
-            <StyledCardMedia>
-              {cardMediaStack}  
-            </StyledCardMedia>
-          )}
-        </Stack>
-        <Divider variant="fullWidth" />
+          <StyledCardMedia>
+            {cardMediaStack}  
+          </StyledCardMedia>
+        </StyledStack>
+        <StyledDivider variant="fullWidth" />
         <Stack direction={ bottomRowDirection } spacing={ 1 }>
-          <Typography variant="subtitle2">{timeAgo}</Typography>
+          <Stack direction='row' sx={ { lineHeight: '4rem' } }>
+            <Typography variant="subtitle2">{timeAgo}</Typography>
+            <Box flexGrow={ 1 } />
+            {interactionButtons}
+          </Stack>
           <Box flexGrow={ 1 } />
-          <StyledConsumptionModeContainer consumptionMode={ consumptionMode } mdAndUp={ mdAndUp }>
-            <ConsumptionModeSelector consumptionMode={ consumptionMode } onChange={ (mode) => onChange?.(mode) } />
-          </StyledConsumptionModeContainer>
+          <StyledServingSizeContainer servingSize={ servingSize }>
+            <ServingSizeSelector servingSize={ servingSize } onChange={ (size) => onChange?.(size) } />
+          </StyledServingSizeContainer>
           <Button onClick={ openMenu(true) }>
             <Icon path={ mdiDotsHorizontal } size={ 1 } />
           </Button>
@@ -321,7 +332,7 @@ export default function Summary({
             </StyledMenuBox>
           </Menu>
         </Stack>
-        {consumptionMode !== undefined && <React.Fragment>{content}</React.Fragment>}
+        {servingSize !== undefined && <CardContent>{content}</CardContent>}
       </StyledStack>
     </StyledCard>
   );

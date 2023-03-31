@@ -3,6 +3,15 @@ import { PaletteMode, createTheme } from '@mui/material';
 export const loadTheme = (mode: PaletteMode = 'light') => {
   const lightMode = mode === 'light';
   return createTheme({
+    breakpoints: {
+      values: {
+        lg: 900,
+        md: 600,
+        sm: 400,
+        xl: 1200,
+        xs: 0,
+      },
+    },
     components: {
       MuiButton: {
         styleOverrides: {

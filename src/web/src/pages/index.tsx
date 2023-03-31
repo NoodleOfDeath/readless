@@ -14,7 +14,7 @@ import API, {
   InteractionType,
   SummaryResponse,
 } from '@/api';
-import Summary, { ConsumptionMode } from '@/components/Summary';
+import Summary, { ServingSize } from '@/components/Summary';
 import Page from '@/components/layout/Page';
 import Filters from '@/components/search/Filters';
 import { SessionContext } from '@/contexts';
@@ -37,7 +37,7 @@ export default function SearchPage() {
   const [page, setPage] = React.useState<number>(1);
 
   const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
-  const [consumptionMode, setConsumptionMode] = React.useState<ConsumptionMode|undefined>();
+  const [servingSize, setServingSize] = React.useState<ServingSize|undefined>();
 
   const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
 
@@ -114,16 +114,16 @@ export default function SearchPage() {
     [recentSummaries, userData, withHeaders]
   );
 
-  const expandPost = React.useCallback(async (index?: number, mode?: ConsumptionMode) => {
-    if (index !== undefined && mode) {
+  const expandPost = React.useCallback(async (index?: number, servingSize?: ServingSize) => {
+    if (index !== undefined && servingSize) {
       try {
-        await recordSummaryView(index, undefined, { consumptionMode: mode });
+        await recordSummaryView(index, undefined, { servingSize });
       } catch (e) {
         console.error(e);
       }
     }
-    setExpandedPost(mode ? index : undefined);
-    setConsumptionMode(mode);
+    setExpandedPost(servingSize ? index : undefined);
+    setServingSize(servingSize);
   }, [recordSummaryView]);
 
   const loadMore = React.useCallback(async () => {
@@ -171,13 +171,13 @@ export default function SearchPage() {
               <Summary 
                 key={ summary.id } 
                 summary={ summary }
-                onChange={ (mode) => expandPost(i, mode) } 
+                onChange={ (servingSize) => expandPost(i, servingSize) } 
                 onInteract={ (type, content, metadata) => interactWithSummary(i, type, content, metadata) } />
             )) : (
               <Summary
                 summary={ recentSummaries[expandedPost] }
-                onChange={ (mode) => expandPost(expandedPost, mode) }
-                consumptionMode={ consumptionMode } 
+                onChange={ (servingSize) => expandPost(expandedPost, servingSize) }
+                servingSize={ servingSize } 
                 onInteract={ (type, content, metadata) => interactWithSummary(expandedPost, type, content, metadata) } />
             )}
         </Stack>
