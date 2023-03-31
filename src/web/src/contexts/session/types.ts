@@ -3,12 +3,12 @@ import { PaletteMode } from '@mui/material';
 import jwt from 'jsonwebtoken';
 
 import { LoginResponse, RequestParams } from '@/api';
-import { ConsumptionMode } from '@/components/Summary';
+import { ServingSize } from '@/components/Summary';
 import { loadTheme } from '@/theme';
 
 export type Preferences = {
   displayMode?: PaletteMode;
-  consumptionMode?: ConsumptionMode;
+  servingSize?: ServingSize;
 };
 
 export type UserDataProps = {
@@ -85,15 +85,15 @@ export type Session = {
   userData?: UserData;
   // getters
   displayMode?: PaletteMode;
-  consumptionMode?: ConsumptionMode;
+  servingSize?: ServingSize;
   searchText: string;
   searchOptions: string[];
   // setters
   setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SetSessionOptions) => void;
   addUserToken: (token: LoginResponse['token']) => void;
   setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
-  setConsumptionMode: React.Dispatch<
-    React.SetStateAction<ConsumptionMode | undefined>
+  setServingSize: React.Dispatch<
+    React.SetStateAction<ServingSize | undefined>
   >;
   setSearchText: (
     state: React.SetStateAction<string>,
@@ -109,15 +109,13 @@ export const NULL_SESSION: Session = {
     /* placeholder function */
   },
   
-  consumptionMode: 'concise',
   // getters
   displayMode: 'light',
+  
   preferences: {},
   searchOptions: [],
   searchText: '',
-  setConsumptionMode: () => {
-    /* placeholder function */
-  },
+  servingSize: 'concise',
   setDisplayMode: () => {
     /* placeholder function */
   },
@@ -125,6 +123,9 @@ export const NULL_SESSION: Session = {
     /* placeholder function */
   },
   setSearchText: () => {
+    /* placeholder function */
+  },
+  setServingSize: () => {
     /* placeholder function */
   },
   setUserData: () => {
