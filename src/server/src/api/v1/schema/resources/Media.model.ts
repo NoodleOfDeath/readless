@@ -18,18 +18,18 @@ export abstract class Media<
     allowNull: false,
     type: DataType.STRING,
   })
-    type: MediaType;
+  declare type: MediaType;
 
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
-    parentId: number;
+  declare parentId: number;
     
   @Column({
     allowNull: false,
     type: DataType.STRING(2083),
   })
-    url: string;
+  declare url: string;
 
 }

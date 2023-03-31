@@ -28,7 +28,7 @@ export class Credential<
     allowNull: false,
     type: DataType.INTEGER,
   })
-    userId: number;
+  declare userId: number;
   
   @Index({
     name: 'credentials_type_value_unique_key',
@@ -39,7 +39,7 @@ export class Credential<
     allowNull: false,
     type: DataType.STRING,
   })
-    type: CredentialType;
+  declare type: CredentialType;
 
   @Index({
     name: 'credentials_type_value_unique_key',
@@ -50,9 +50,9 @@ export class Credential<
     allowNull: false,
     type: DataType.TEXT,
   })
-    value: string;
+  declare value: string;
 
   @Column({ type: DataType.DATE })
-    expiresAt: Date;
+  declare expiresAt: Date;
 
 }

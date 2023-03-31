@@ -20,30 +20,30 @@ export class Membership<A extends MembershipAttributes = MembershipAttributes, B
     allowNull: false,
     type: DataType.NUMBER,
   })
-    userId: number;
+  declare userId: number;
   
   @Column({
     allowNull: false,
     type: DataType.DATE,
   })
-    renewsOn: Date;
+  declare renewsOn: Date;
   
   @Column({
     allowNull: false,
     type: DataType.NUMBER,
   })
-    tier: number;
+  declare tier: number;
   
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-    platform: string;
+  declare platform: string;
   
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-    platformUUID: string;
+  declare platformUUID: string;
   
 }

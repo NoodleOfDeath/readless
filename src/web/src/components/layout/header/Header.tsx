@@ -7,7 +7,6 @@ import {
   mdiLogin,
   mdiLogout,
   mdiMenu,
-  mdiNewspaperVariantOutline,
   mdiPodcast,
 } from '@mdi/js';
 import { Icon } from '@mdi/react';
@@ -128,15 +127,6 @@ export default function Header() {
       visible: () => !userData?.isLoggedIn,
     },
     {
-      icon: mdiNewspaperVariantOutline,
-      id: 'News',
-      label: 'Live News',
-      onClick({ router }) {
-        router?.push('/');
-      },
-      visible: () => !!userData?.isLoggedIn,
-    },
-    {
       icon: mdiAccount,
       id: 'Profile',
       label: 'Profile',
@@ -169,7 +159,7 @@ export default function Header() {
         </IconButton>
         <StyledHeaderTitle elevation={ 0 }>
           <Typography onClick={ () => router.push('/') } component="h4">
-            theSkoop
+            ReadLess
           </Typography>
         </StyledHeaderTitle>
         <Button onClick={ openMenu(true) }>

@@ -78,10 +78,11 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
 
 const StyledServingSizeContainer = styled(Box)<Partial<Props>>(({ theme, servingSize }) => ({
   borderRadius: 8,
-  bottom: servingSize && !theme.breakpoints.up('md') ? theme.spacing(4) : undefined,
+  bottom: servingSize && theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
+  left: servingSize && theme.breakpoints.down('md') ? '50%' : undefined,
   position: servingSize ? 'fixed' : 'relative',
-  right: servingSize && theme.breakpoints.up('md') ? theme.spacing(4) : undefined,
-  top: servingSize && theme.breakpoints.up('md') ? theme.spacing(10) : undefined,
+  right: servingSize && !theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
+  top: servingSize && !theme.breakpoints.down('md') ? theme.spacing(10) : undefined,
 }));
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({

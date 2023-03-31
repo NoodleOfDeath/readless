@@ -36,7 +36,7 @@ export class Alias<
     allowNull: false,
     type: DataType.INTEGER,
   })
-    userId: number;
+  declare userId: number;
   
   @Index({
     name: 'aliases_type_value_unique_key',
@@ -47,7 +47,7 @@ export class Alias<
     allowNull: false,
     type: DataType.STRING,
   })
-    type: AliasType;
+  declare type: AliasType;
   
   @Index({
     name: 'aliases_type_value_unique_key',
@@ -58,7 +58,7 @@ export class Alias<
     allowNull: false,
     type: DataType.STRING(2083),
   })
-    value: string;
+  declare value: string;
 
   @Index({
     name: 'aliases_verificationCode_unique_key',
@@ -66,13 +66,13 @@ export class Alias<
     where: { deletedAt: null },
   })
   @Column({ type: DataType.STRING })
-    verificationCode: string;
+  declare verificationCode: string;
     
   @Column({ type: DataType.DATE })
-    verificationExpiresAt: Date;
+  declare verificationExpiresAt: Date;
 
   @Column({ type: DataType.DATE })
-    verifiedAt: Date;
+  declare verifiedAt: Date;
     
   public static parsePayload(payload: Partial<AliasPayload>): AliasPayload {
     let type: AliasType = payload.type;

@@ -30,13 +30,13 @@ behavior, and providing customer support.
 
 4. Cookies and similar technologies: We may use cookies and similar technologies to collect information about your use of our App and to improve and personalize your user experience.
 
-5. Your choices: You may opt-out of receiving marketing communications from us at any time by clicking the &quot;unsubscribe&quot; link in our emails or by contacting us at [idontwant@theskoop.ai](mailto:idontwant@theskoop.ai). You may also disable cookies in your browser settings, although this may impact your user experience on our App.
+5. Your choices: You may opt-out of receiving marketing communications from us at any time by clicking the &quot;unsubscribe&quot; link in our emails or by contacting us at [idontwant@readless.ai](mailto:idontwant@readless.ai). You may also disable cookies in your browser settings, although this may impact your user experience on our App.
 
 6. Data retention and security: We retain your personal information only for as long as necessary to fulfill the purposes for which it was collected and to comply with legal obligations. We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure.
 
-7. Children&apos;s privacy: Our App is not directed to children under the age of 13, and we do not knowingly collect personal information from children under the age of 13. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us at [privacy@theskoop.ai](mailto:privacy@theskoop.ai).
+7. Children&apos;s privacy: Our App is not directed to children under the age of 13, and we do not knowingly collect personal information from children under the age of 13. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us at [privacy@readless.ai](mailto:privacy@readless.ai).
 
 8. Changes to this Privacy Policy: We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the updated Privacy Policy on our App.
 
-9. Contact us: If you have any questions or concerns about this Privacy Policy or our App&apos;s privacy practices, please contact us at [privacy@theskoop.ai](mailto:privacy@theskoop.ai).`;
+9. Contact us: If you have any questions or concerns about this Privacy Policy or our App&apos;s privacy practices, please contact us at [privacy@readless.ai](mailto:privacy@readless.ai).`;
 export default data;

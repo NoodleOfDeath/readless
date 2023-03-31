@@ -21,12 +21,12 @@ export class RefArticleSummary<A extends RefArticleSummaryAttributes = RefArticl
     allowNull: false,
     type: DataType.INTEGER,
   })
-    articleId: number;
+  declare articleId: number;
   
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
-    sourceId: number;
+  declare sourceId: number;
 
 }

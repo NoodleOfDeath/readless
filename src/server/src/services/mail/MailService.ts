@@ -46,7 +46,7 @@ export class MailService extends BaseService {
     params?: Optional<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain'>
   ) {
     const options = {
-      from: `<${process.env.MAIL_USER}> theSkoop`,
+      from: `<${process.env.MAIL_USER}> ReadLess`,
       ...opts,
     };
     if (templateName) {

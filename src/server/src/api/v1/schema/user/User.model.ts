@@ -163,6 +163,23 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public async getRoles() {
     return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.toJSON().id } })).map(async (role) => (await Role.findOne({ where: { id: role.toJSON().roleId } }))?.toJSON() ))).map((role) => [role.name, role]));
   }
+  
+  public async highestRole() {
+    const roles = Object.values(await this.getRoles());
+    if (roles.length === 0) {
+      return undefined;
+    }
+    return roles.sort((a, b) => b.priority - a.priority)[0];
+  }
+  
+  public async hasRole(role: string) {
+    return (await this.getRoles())[role] !== undefined;
+  }
+  
+  public async hasScope(scope: string, ...other: string[]) {
+    const roles = await this.getRoles();
+    return [scope, ...other].every((scope) => Object.values(roles).some((role) => role.scope.includes(scope)));
+  }
 
   public async grantRole(role: string) {
     const roleModel = await Role.findOne({ where: { name: role } });
@@ -180,6 +197,20 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }
     const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.toJSON().id } });
     return count;
+  }
+  
+  public async destroySummary(targetId: number) {
+    if (this.hasRole('god')) {
+      await Summary.destroy({ where: { id: targetId } });
+    }
+    throw new AuthError('INSUFFICIENT_PERMISSIONS');
+  }
+  
+  public async restoreSummary(targetId: number) {
+    if (this.hasRole('god')) {
+      await Summary.restore({ where: { id: targetId } });
+    }
+    throw new AuthError('INSUFFICIENT_PERMISSIONS');
   }
   
   public async interactWithSummary(targetId: number, type: InteractionType, remoteAddr?: string, content?: string, metadata?: Record<string, unknown>) {

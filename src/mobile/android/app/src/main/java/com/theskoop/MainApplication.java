@@ -1,4 +1,4 @@
-package com.theskoop;
+package com.readless;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

@@ -1,4 +1,4 @@
-package com.theskoop;
+package com.readless;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

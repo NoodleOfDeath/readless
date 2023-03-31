@@ -18,9 +18,9 @@ console.log(args);
 let target = 'http://localhost:6970';
 
 if (args.dev) {
-  target = 'https://api.dev.theskoop.ai';
+  target = 'https://api.dev.readless.ai';
 } else if (args.prod) {
-  target = 'https://api.theskoop.ai';
+  target = 'https://api.readless.ai';
 }
 
 async function main() {

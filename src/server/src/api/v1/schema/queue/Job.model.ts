@@ -32,7 +32,7 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     allowNull: false,
     type: DataType.STRING,
   })
-    queue: QueueName;
+  declare queue: QueueName;
   
   @Index({
     name: 'jobs_queue_name_unique_key',
@@ -43,57 +43,67 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     allowNull: false,
     type: DataType.STRING,
   })
-    name: string;
+  declare name: string;
   
   @Column({
     allowNull: false,
     type: DataType.JSON,
   })
-    data: DataType;
+  declare data: DataType;
     
   @Column({
     defaultValue: 'backoff',
     type: DataType.STRING,
   })
-    retryPolicy: RetryPolicy;
+  declare retryPolicy: RetryPolicy;
   
   @Column({
     defaultValue: 0,
     type: DataType.INTEGER,
   })
-    attempts: number;
+  declare attempts: number;
   
   @Column({ type: DataType.INTEGER })
-    lockedBy?: number;
+  declare lockedBy?: number;
     
   @Column({ type: DataType.DATE })
-    startedAt?: Date;
+  declare startedAt?: Date;
   
   @Column({ type: DataType.DATE })
-    completedAt?: Date;
+  declare completedAt?: Date;
   
   @Column({ type: DataType.DATE })
-    failedAt?: Date;
+  declare failedAt?: Date;
   
   @Column({ type: DataType.TEXT })
-    failureReason?: string;
+  declare failureReason?: string;
 
   @Column({ type: DataType.DATE })
-    delayedUntil?: Date;
+  declare delayedUntil?: Date;
 
   async delay(byMs: number | string) {
     const offset = typeof byMs === 'string' ? ms(byMs) : byMs;
     this.set('delayedUntil', new Date(Date.now() + offset));
     await this.save();
   }
+  
+  async begin(pid: number) {
+    this.set('lockedBy', pid);
+    this.set('attempts', this.toJSON().attempts + 1);
+    this.set('startedAt', new Date());
+    this.set('failedAt', null);
+    this.set('failureReason', null);
+    this.save();
+  }
 
   async moveToCompleted() {
-    this.set('attempts', this.toJSON().attempts + 1);
     this.set('completedAt', new Date());
     await this.save();
   }
     
   async moveToFailed(reason?: string | Error) {
+    this.set('lockedBy', null);
+    this.set('startedAt', null);
     this.set('attempts', this.toJSON().attempts + 1);
     this.set('failedAt', new Date());
     this.set('failureReason', reason instanceof Error ? reason.message : reason);

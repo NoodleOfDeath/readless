@@ -21,12 +21,12 @@ export class RefSummaryTopic<A extends RefSummaryTopicAttributes = RefSummaryTop
     allowNull: false,
     type: DataType.INTEGER,
   })
-    sourceId: number;
+  declare sourceId: number;
   
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
-    topicId: number;
+  declare topicId: number;
 
 }

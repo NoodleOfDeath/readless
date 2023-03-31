@@ -46,7 +46,7 @@ export default function NewsletterForm() {
 
   return (
     <React.Fragment>
-      <h1>theSkoop is currently in alpha test phase!</h1>
+      <h1>ReadLess is currently in alpha test phase!</h1>
       {!success ? (
         <React.Fragment>
           <p>If you would like to be notified when this service is released to the public you may submit your email address below!</p>

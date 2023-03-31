@@ -70,7 +70,7 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
                     color: 'black',
                     fontSize: 30,
                   } }>
-                  welcome to theSkoop!
+                  welcome to ReadLess!
                 </Text>
                 {index >= 4 && (
                   <Button onPress={ () => onClose?.() } title="Get Started" />

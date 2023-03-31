@@ -122,6 +122,7 @@ export class AccountService extends BaseService {
       await newUser.createCredential('password', req.password);
     }
     if (verified) {
+      await newUser.grantRole('verified');
       return await this.login(req);
     } else {
       const mailer = new MailService();

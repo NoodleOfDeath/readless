@@ -15,27 +15,27 @@ export abstract class Interaction<
   implements InteractionAttributes {
 
   @Column({ type: DataType.INTEGER })
-    userId?: number;
+  declare userId?: number;
 
   @Column({ type: DataType.STRING(2083) })
-    remoteAddr?: string;
+  declare remoteAddr?: string;
 
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
-    targetId: number;
+  declare targetId: number;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-    type: InteractionType;
+  declare type: InteractionType;
 
   @Column({ type: DataType.TEXT })
-    content?: string;
+  declare content?: string;
     
   @Column({ type: DataType.JSON })
-    metadata?: Record<string, unknown>;
+  declare metadata?: Record<string, unknown>;
 
 }

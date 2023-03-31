@@ -14,7 +14,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
     label: 'Apple Podcasts',
     onClick: () =>
       window.open(
-        'https://podcasts.apple.com/us/podcast/theskoop/id1671374300',
+        'https://podcasts.apple.com/us/podcast/readless/id1671374300',
         '_blank'
       ),
     visible: true,
@@ -25,7 +25,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
     label: 'Amazon Music',
     onClick: () =>
       window.open(
-        'https://music.amazon.com/podcasts/0a765ea8-0b43-4862-9b21-57af667298b0/theskoop',
+        'https://music.amazon.com/podcasts/0a765ea8-0b43-4862-9b21-57af667298b0/readless',
         '_blank'
       ),
     visible: true,
@@ -47,7 +47,7 @@ export const PODCAST_LINKS: NavigationItemProps[] = [
     label: 'iHeartRadio',
     onClick: () =>
       window.open(
-        'https://www.iheart.com/podcast/269-theskoop-108727878?&autoplay=true',
+        'https://www.iheart.com/podcast/269-readless-108727878?&autoplay=true',
         '_blank'
       ),
     visible: true,

@@ -101,4 +101,38 @@ router.post(
   }
 );
 
+router.delete(
+  '/:targetId',
+  rateLimitMiddleware('1 per 2s'),
+  authMiddleware('jwt', { required: true, scope: ['god:*'] }),
+  param('targetId').isNumeric(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const { targetId } = req.params;
+      const response = await SummaryController.destroySummary(targetId, req.body);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.patch(
+  '/restore/:targetId',
+  rateLimitMiddleware('1 per 2s'),
+  authMiddleware('jwt', { required: true, scope: ['god:*'] }),
+  param('targetId').isNumeric(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const { targetId } = req.params;
+      const response = await SummaryController.restoreSummary(targetId, req.body);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
 export default router;

@@ -2,15 +2,15 @@
 
 THIS=$(basename $0)
 
-if [[ -z "$SKOOP_ROOT" ]]; then
-  echo "SKOOP_ROOT is not set"
+if [[ -z "$READ_LESS_ROOT" ]]; then
+  echo "READ_LESS_ROOT is not set"
   exit 1
 fi
 
 usage() {
   echo
   echo "shorthand for 'docker compose...' to launch"
-  echo "skoop containers!"
+  echo "rlctl containers!"
   echo
   echo "usage: $THIS [options] <web | api | cron | work | worker>"
   echo
@@ -83,4 +83,4 @@ if [[ "$LOCAL" == "1" ]]; then
   MODULE="$MODULE-local"
 fi
 
-(cd $SKOOP_ROOT && docker compose --env-file $ENV up $MODULE ${POSTOPTS[@]} ${ARGS[@]})
+(cd $READ_LESS_ROOT && docker compose --env-file $ENV up $MODULE ${POSTOPTS[@]} ${ARGS[@]})

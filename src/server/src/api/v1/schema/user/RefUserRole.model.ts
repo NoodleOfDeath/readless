@@ -18,12 +18,12 @@ export class RefUserRole<A extends RefUserRoleAttributes = RefUserRoleAttributes
     allowNull: false,
     type: DataType.INTEGER,
   })
-    userId: number;
+  declare userId: number;
   
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
-    roleId: number;
+  declare roleId: number;
 
 }

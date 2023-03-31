@@ -19,7 +19,7 @@ export const authMiddleware = (securityName: string, { required = false, scope =
             if (required && !jwt.canAccess(scope)) {
               throw new AuthError('INSUFFICIENT_PERMISSIONS');
             }
-            const { expired, refreshed } = await jwt.validate(true);
+            const { expired, refreshed } = await jwt.validate(false);
             if (!expired) {
               req.body.userId = jwt.userId;
               req.body.token = jwt.signed;

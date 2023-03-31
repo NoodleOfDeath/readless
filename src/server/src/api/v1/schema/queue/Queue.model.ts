@@ -42,13 +42,13 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     type: DataType.STRING,
     unique: true,
   })
-    name: QueueName;
+  declare name: QueueName;
     
   @Column({
     defaultValue: 'active',
     type: DataType.STRING,
   })
-    state: QueueState;
+  declare state: QueueState;
 
   data?: DataType;
   resp?: ReturnType;

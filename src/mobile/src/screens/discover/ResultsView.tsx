@@ -96,7 +96,7 @@ export default function ResultsView({ navigation }: Props) {
     <React.Fragment>
       <FlexView style={ theme.searchBar }>
         <SearchBar
-          placeholder="What's cooking in theSkoop?..."
+          placeholder="What's cooking in ReadLess?..."
           lightTheme={ isLightMode }
           onChangeText={ (text) => 
             setSearchText(text) }

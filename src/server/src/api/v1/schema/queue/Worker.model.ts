@@ -1,3 +1,5 @@
+import { networkInterfaces } from 'os';
+
 import ms from 'ms';
 import { Op } from 'sequelize';
 import {
@@ -18,6 +20,26 @@ import {
 import { Serializable } from '../../../../types';
 import { BaseModel } from '../base';
 
+const RETIRE_IF_NO_RESPONSE_IN_MS = ms('10m');
+
+function getHost() {
+  const nets = networkInterfaces();
+  const results: Record<string, string[]> = {};
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4;
+      if (net.family === familyV4Value && !net.internal) {
+        const addresses = results[name] ?? [];
+        addresses.push(net.address);
+        results[name] = addresses;
+      }
+    }
+  }
+  return results;
+}
+
+const HOST = JSON.stringify(getHost());
+
 @Table({
   modelName: 'worker',
   paranoid: true,
@@ -33,24 +55,27 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     allowNull: false,
     type: DataType.STRING,
   })
-    queue: QueueName;
+  declare queue: QueueName;
+  
+  @Column({ type: DataType.STRING })
+  declare host?: string;
     
   @Column({ type: DataType.JSON })
-    options: WorkerOptions;
+  declare options: WorkerOptions;
     
   @Column({
     allowNull: false,
     defaultValue: 'idle',
     type: DataType.STRING,
   })
-    state: WorkerState = 'idle';
+  declare state: WorkerState;
     
   @Column({
     allowNull: false,
     defaultValue: new Date(),
     type: DataType.DATE,
   })
-    lastUpdateAt: Date;
+  declare lastUpdateAt: Date;
     
   activeQueue: Queue<DataType, ReturnType, QueueName>;
   queueProps: QueueSpecifier<DataType, ReturnType, QueueName>;
@@ -74,6 +99,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
       throw new Error(`missing queue?! ${queueProps.name}`);
     }
     const worker = await Worker.create({
+      host: HOST,
       options: { autostart, fetchIntervalMs },
       queue: queueProps.name,
     });
@@ -119,7 +145,9 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
       where: {
         completedAt: null,
         delayedUntil: { [Op.or]: [null, { [Op.lt]: new Date() }] },
+        lockedBy: null,
         queue: this.queueProps.name,
+        startedAt: null,
         [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...this.failureExprs] } },
         ],
       },
@@ -131,10 +159,17 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     if (this.state === 'stopped') {
       return;
     }
+    await this.ping();
+    // check up on other workers
+    await Worker.update({
+      deletedAt: new Date(),
+      state: 'retired',
+    }, { where: { lastUpdateAt: { [Op.lt]: new Date(Date.now() - RETIRE_IF_NO_RESPONSE_IN_MS) } } });
     const job = await this.fetchJob();
     if (job) {
       console.log(`Processing job ${job.id} for queue "${this.queueProps.name}"`);
       await this.ping();
+      await job.begin(this.toJSON().id);
       await this.handler(job, () => this.process());
       await this.ping();
       console.log(`Finished processing job ${job.id} for queue "${this.queueProps.name}"`);

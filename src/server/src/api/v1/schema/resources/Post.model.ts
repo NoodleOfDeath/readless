@@ -22,37 +22,37 @@ export abstract class Post<
     allowNull: false,
     type: DataType.TEXT,
   })
-    text: string;
+  declare text: string;
 
   @Column({
     allowNull: false,
     type: DataType.TEXT,
   })
-    longSummary: string;
+  declare longSummary: string;
 
   @Column({
     allowNull: false,
     type: DataType.TEXT,
   })
-    summary: string;
+  declare summary: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING(1024),
   })
-    shortSummary: string;
+  declare shortSummary: string;
 
   @Column({
     defaultValue: [],
     type: DataType.ARRAY(DataType.STRING(1024)),
   })
-    bullets: string[];
+  declare bullets: string[];
   
   @Column({
     allowNull: false,
     type: DataType.TEXT,
   })
-    imagePrompt: string;
+  declare imagePrompt: string;
 
   interactions: InteractionResponse;
   
@@ -70,24 +70,24 @@ export abstract class TitledCategorizedPost<
     allowNull: false,
     type: DataType.STRING(1024),
   })
-    title: string;
+  declare title: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-    category: string;
+  declare category: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-    subcategory: string;
+  declare subcategory: string;
 
   @Column({
     defaultValue: [],
     type: DataType.ARRAY(DataType.STRING),
   })
-    tags: string[];
+  declare tags: string[];
 
 }

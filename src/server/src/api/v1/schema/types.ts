@@ -20,6 +20,10 @@ export type BulkResponse<T> = {
   rows: T[];
 };
 
+export type DestroyResponse = {
+  success: boolean;
+};
+
 // Model Types
 
 export * from './analytics/Metric.types';

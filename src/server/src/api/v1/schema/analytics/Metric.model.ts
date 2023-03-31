@@ -24,15 +24,15 @@ export class Metric extends BaseModel<MetricAttributes, MetricAttributes> implem
     allowNull: false,
     type: DataType.JSON,
   })
-    data: Record<string, unknown>;
+  declare data: Record<string, unknown>;
     
   @Column({ type: DataType.ARRAY(DataType.STRING) })
-    referrer?: string[];
+  declare referrer?: string[];
 
   @Column({
     allowNull: false,
     type: DataType.TEXT,
   })
-    userAgent: string;
+  declare userAgent: string;
 
 }

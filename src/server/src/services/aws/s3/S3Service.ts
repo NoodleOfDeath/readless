@@ -22,7 +22,7 @@ export class S3Service extends BaseService {
   s3Client: S3Client;
 
   constructor({
-    endpoint = 'https://theskoop.nyc3.digitaloceanspaces.com',
+    endpoint = 'https://readless.nyc3.digitaloceanspaces.com',
     forcePathStyle = false,
     region = 'nyc3',
     credentials = {
