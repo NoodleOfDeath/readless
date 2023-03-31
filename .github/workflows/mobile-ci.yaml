@@ -6,13 +6,13 @@ on:
       - main
       - dev
     paths:
-      - '.github/workflows/mobile-ci.yaml'
-      - 'package.json'
-      - 'k8s/mobile-deploy.yaml'
-      - 'src/mobile/package.json'
-      - 'src/mobile/public/**'
-      - 'src/mobile/src/**'
-      - 'src/server/api/**'
+      - ".github/workflows/mobile-ci.yaml"
+      - "package.json"
+      - "k8s/mobile-deploy.yaml"
+      - "src/mobile/package.json"
+      - "src/mobile/public/**"
+      - "src/mobile/src/**"
+      - "src/server/api/**"
 
 concurrency:
   group: ${{ github.ref }}-mobile
@@ -28,7 +28,6 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       API_ENDPOINT: ${{ vars.API_ENDPOINT }}
-      GENERATE_SOURCEMAP: ${{ vars.GENERATE_SOURCEMAP }}
     steps:
       - name: Print Job Description
         run: |
@@ -53,7 +52,6 @@ jobs:
   deploy-mobile:
     needs: build-mobile
     runs-on: macos-latest
-    if: ${{ contains(github.event.head_commit.message, '#mobile') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description

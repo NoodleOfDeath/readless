@@ -21,7 +21,6 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Theme,
   Typography,
   styled,
   useMediaQuery,
@@ -109,6 +108,8 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
 
+const StyledPaddedStack = styled(Stack)(({ theme }) => ({ padding: theme.spacing(2) }));
+
 const StyledCenteredStack = styled(Stack)(() => ({
   alignItems: 'center',
   display: 'flex',
@@ -128,6 +129,10 @@ export default function Summary({
   const theme = useTheme();
   
   const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const bottomRowDirection = React.useMemo(() => {
+    return mdAndDown ? 'column' : 'row';
+  }, [mdAndDown]);
 
   const [showMenu, setShowMenu] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -154,6 +159,19 @@ export default function Summary({
   );
   
   const votes = React.useMemo(() => upvotes - downvotes, [downvotes, upvotes]);
+
+  const cardMediaStack = React.useMemo(() => {
+    return (
+      <StyledCenteredStack direction='column' spacing={ 2 }>
+        <StyledCategoryBox>
+          <StyledCenteredStack>
+            <Typography variant="subtitle1">{summary?.category}</Typography>
+            <Typography variant="subtitle2">{summary?.subcategory}</Typography>
+          </StyledCenteredStack>
+        </StyledCategoryBox>
+      </StyledCenteredStack>
+    );
+  }, [summary?.category, summary?.subcategory]);
   
   const interactionButtons = React.useMemo(() => {
     return (
@@ -180,23 +198,6 @@ export default function Summary({
       </Stack>
     );
   }, [downvotes, onInteract, upvotes, showSplitVotes, votes, summary?.interactions.uservote]);
-
-  const cardMediaStack = React.useMemo(() => {
-    return (
-      <StyledCenteredStack direction='column' spacing={ 2 }>
-        <StyledCategoryBox>
-          <StyledCenteredStack>
-            <Typography variant="subtitle1">{summary?.category}</Typography>
-            <Typography variant="subtitle2">{summary?.subcategory}</Typography>
-          </StyledCenteredStack>
-        </StyledCategoryBox>
-      </StyledCenteredStack>
-    );
-  }, [summary?.category, summary?.subcategory, mdAndDown, interactionButtons]);
-
-  const bottomRowDirection = React.useMemo(() => {
-    return mdAndDown ? 'column' : 'row';
-  }, [mdAndDown]);
 
   const content = React.useMemo(() => {
     if (!summary) {
@@ -277,10 +278,12 @@ export default function Summary({
       )}
       <StyledStack>
         <StyledStack direction='row' spacing={ 2 }>
-          <Stack flexGrow={ 1 }>
+          <StyledPaddedStack flexGrow={ 1 }>
             <Typography variant="subtitle1">{summary?.outletName}</Typography>
-            <Typography variant="h6"><TruncatedText maxCharCount={ 120 }>{summary?.title}</TruncatedText></Typography>
-          </Stack>
+            <Typography variant="h6">
+              <TruncatedText maxCharCount={ 200 }>{summary?.title}</TruncatedText>
+            </Typography>
+          </StyledPaddedStack>
           <StyledCardMedia>
             {cardMediaStack}  
           </StyledCardMedia>
