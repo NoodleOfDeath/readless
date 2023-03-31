@@ -8,13 +8,13 @@ import {
 
 import { SessionContext } from '@/contexts';
 
-const StyledAutocomplete = styled(Autocomplete)(() => ({
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   alignItems: 'center',
   alignSelf: 'center',
   margin: 'auto',
   maxWidth: 1280,
+  minWidth: theme.breakpoints.down('sm') ? 320 : 500,
   textAlign: 'center',
-  width: '100%',
 }));
 
 export default function SearchBar() {
@@ -40,7 +40,7 @@ export default function SearchBar() {
       renderInput={ (params) => (
         <TextField
           { ...params }
-          label="Gimme the rlctl"
+          label="show me something worth reading..."
           onChange={ (event) => setSearchText(event.currentTarget.value) } />
       ) } />
   );

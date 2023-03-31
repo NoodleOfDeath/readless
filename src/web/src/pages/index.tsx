@@ -7,15 +7,15 @@ import {
   Typography,
 } from '@mui/material';
 
-import LoginDialog from '../components/login/LoginDialog';
-
 import API, {
   InteractionResponse,
   InteractionType,
   SummaryResponse,
 } from '@/api';
 import Summary, { ServingSize } from '@/components/Summary';
+import JustNewsHeader from '@/components/layout/JustNewsHeader';
 import Page from '@/components/layout/Page';
+import LoginDialog from '@/components/login/LoginDialog';
 import Filters from '@/components/search/Filters';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
@@ -149,7 +149,7 @@ export default function SearchPage() {
       <Stack spacing={ 2 }>
         {expandedPost === undefined && (
           <React.Fragment>
-            <Typography variant="h4">just news. no clickbait</Typography>
+            <JustNewsHeader />
             <Filters />
             <Stack>
               {recentSummaries.length === 0 && (
