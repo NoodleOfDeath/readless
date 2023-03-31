@@ -12,7 +12,7 @@ on:
       - 'k8s/worker-deploy.yaml'
       - 'src/server/package.json'
       - 'src/server/src/worker/**'
-      - 'src/server/src/services/**'
+      - 'src/server/src/api/v1/schema/**'
 
 concurrency:
   group: ${{ github.ref }}-worker
