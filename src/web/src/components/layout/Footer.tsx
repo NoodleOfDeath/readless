@@ -81,7 +81,7 @@ export default function Footer() {
             {' '}
             {new Date().getFullYear()}
             {' '}
-            ReadLess
+            readless
           </Typography>
           <Box flexGrow={ 1 } />
           <Stack direction={ mdAndUp ? 'row' : 'column' } spacing={ 2 }>

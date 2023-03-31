@@ -43,10 +43,10 @@ export class MailService extends BaseService {
   >(
     opts: SMTPTransport.Options,
     templateName?: TemplateName,
-    params?: Optional<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain'>
+    params?: Optional<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain' | 'ssl'>
   ) {
     const options = {
-      from: `<${process.env.MAIL_USER}> ReadLess`,
+      from: `<${process.env.MAIL_USER}> ReadLess - Reply Blackhole"`,
       ...opts,
     };
     if (templateName) {
