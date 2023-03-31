@@ -78,7 +78,7 @@ export function SessionContextProvider({ children }: Props) {
     });
   };
 
-  const { displayMode, consumptionMode } = React.useMemo(
+  const { displayMode, servingSize } = React.useMemo(
     () => preferences,
     [preferences]
   );
@@ -101,7 +101,7 @@ export function SessionContextProvider({ children }: Props) {
       });
     };
 
-  const setConsumptionMode = preferenceSetter('consumptionMode');
+  const setServingSize = preferenceSetter('servingSize');
   const setDisplayMode = preferenceSetter('displayMode');
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -231,12 +231,11 @@ export function SessionContextProvider({ children }: Props) {
     <SessionContext.Provider
       value={ {
         addUserToken,
-        consumptionMode,
         displayMode,
         preferences,
         searchOptions,
         searchText,
-        setConsumptionMode,
+        servingSize,
         setDisplayMode,
         setSearchOptions,
         setSearchText: (
@@ -248,6 +247,7 @@ export function SessionContextProvider({ children }: Props) {
             setSearchParams({});
           }
         },
+        setServingSize,
         setUserData,
         theme,
         userData,
