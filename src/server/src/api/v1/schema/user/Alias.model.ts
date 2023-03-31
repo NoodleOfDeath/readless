@@ -127,13 +127,23 @@ export class Alias<
         alias, otp, payload, 
       };
     } else if (typeof payload.value === 'string') {
-      const alias = await Alias.findOne({ 
-        where: {
-          type: payload.type,
-          value: payload.value,
-          verifiedAt: opts?.skipVerification ? undefined : { [Op.ne]: null },
-        },
-      });
+      let alias: Alias;
+      if (opts?.skipVerification) {
+        alias = await Alias.findOne({
+          where: {
+            type: payload.type,
+            value: payload.value,
+          },
+        });
+      } else {
+        alias = await Alias.findOne({ 
+          where: {
+            type: payload.type,
+            value: payload.value,
+            verifiedAt: { [Op.ne]: null },
+          },
+        });
+      }
       if (!alias && !opts?.ignoreIfNotResolved) {
         throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
       }

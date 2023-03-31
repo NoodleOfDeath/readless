@@ -140,7 +140,12 @@ export class AccountService extends BaseService {
     if (req.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
-    const { payload, user } = await User.from(req);
+    const {
+      alias, payload, user, 
+    } = await User.from(req);
+    if (!alias.toJSON().verifiedAt) {
+      throw new AuthError('ALIAS_UNVERIFIED');
+    }
     if (payload.type === 'eth2Address') {
       // auth by eth2Address
       console.log(web3);
