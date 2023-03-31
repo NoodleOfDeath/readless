@@ -21,5 +21,5 @@ export const linkingOptions: LinkingOptions<RootParamList> = {
       Settings: { path: 'settings' },
     },
   },
-  prefixes: ['https://www.theskoop.ai', 'https://theskoop.ai', 'skoop://'],
+  prefixes: ['https://www.readless.ai', 'https://readless.ai', 'rlctl://'],
 };

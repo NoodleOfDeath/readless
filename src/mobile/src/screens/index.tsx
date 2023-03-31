@@ -7,7 +7,7 @@ import AudioScreen from './audio/AudioScreen';
 import DiscoverScreen from './discover/DiscoverScreen';
 import NotificationsScreen from './notifications/NotificationsScreen';
 import ProfileScreen from './profile/ProfileScreen';
-import SkoopScreen from './skoop/SkoopScreen';
+import SkoopScreen from './rlctl/SkoopScreen';
 import { useTheme } from '../components/theme';
 
 type ScreenProps = {

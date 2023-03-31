@@ -1,43 +1,43 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: theskoop-web
+  name: readless-web
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
   tls:
     - hosts:
-        - www.theskoop.ai
-      secretName: tls-www.theskoop.ai
+        - www.readless.ai
+      secretName: tls-www.readless.ai
   rules:
-    - host: www.theskoop.ai
+    - host: www.readless.ai
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: theskoop-web-prod
+                name: readless-web-prod
                 port:
                   number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: theskoop-web-redirect
+  name: readless-web-redirect
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: |
-      https://www.theskoop.ai/$1
+      https://www.readless.ai/$1
 spec:
   tls:
     - hosts:
-        - theskoop.ai
-      secretName: tls-theskoop.ai
+        - readless.ai
+      secretName: tls-readless.ai
   rules:
-    - host: theskoop.ai
+    - host: readless.ai
     - http:
         paths:
           - path: /(.*)
@@ -51,7 +51,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: theskoop-web-login
+  name: readless-web-login
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -63,48 +63,48 @@ metadata:
 spec:
   tls:
     - hosts:
-        - www.theskoop.ai
-      secretName: tls-dev.theskoop.ai
+        - www.readless.ai
+      secretName: tls-dev.readless.ai
   rules:
-    - host: www.theskoop.ai
+    - host: www.readless.ai
       http:
         paths:
           - path: /(login|signup)
             pathType: Prefix
             backend:
               service:
-                name: theskoop-web-dev
+                name: readless-web-dev
                 port:
                   number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: theskoop-api
+  name: readless-api
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
   tls:
     - hosts:
-        - api.theskoop.ai
-      secretName: tls-api.theskoop.ai
+        - api.readless.ai
+      secretName: tls-api.readless.ai
   rules:
-    - host: api.theskoop.ai
+    - host: api.readless.ai
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: theskoop-api-prod
+                name: readless-api-prod
                 port:
                   number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: theskoop-web-dev
+  name: readless-web-dev
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -116,41 +116,41 @@ metadata:
 spec:
   tls:
     - hosts:
-        - dev.theskoop.ai
-      secretName: tls-dev.theskoop.ai
+        - dev.readless.ai
+      secretName: tls-dev.readless.ai
   rules:
-    - host: dev.theskoop.ai
+    - host: dev.readless.ai
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: theskoop-web-dev
+                name: readless-web-dev
                 port:
                   number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: theskoop-api-dev
+  name: readless-api-dev
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
   tls:
     - hosts:
-        - api.dev.theskoop.ai
-      secretName: tls-api.dev.theskoop.ai
+        - api.dev.readless.ai
+      secretName: tls-api.dev.readless.ai
   rules:
-    - host: api.dev.theskoop.ai
+    - host: api.dev.readless.ai
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: theskoop-api-dev
+                name: readless-api-dev
                 port:
                   number: 80
                   

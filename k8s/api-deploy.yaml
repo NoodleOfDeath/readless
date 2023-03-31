@@ -26,6 +26,8 @@ spec:
               memory: '$K8S_MEMORY_LIMITS'
               cpu: '$K8S_CPU_LIMITS'
           env:
+            - name: BASE_DOMAIN
+              value: '$BASE_DOMAIN'
             - name: CORS_ORIGIN
               value: '$CORS_ORIGIN'
             - name: GOOGLE_CLIENT_ID

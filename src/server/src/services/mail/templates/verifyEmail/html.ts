@@ -53,7 +53,7 @@ const html = `
   </head>
   <body>
     <header>
-      <h1>theSkoop: Verify Your Email</h1>
+      <h1>ReadLess: Verify Your Email</h1>
     </header>
     <div class="container">
       <p>

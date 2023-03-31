@@ -29,7 +29,7 @@
       "type": "image/png"
     }
   ],
-  "name": "theSkoop",
+  "name": "ReadLess",
   "screenshots": [
     {
       "src": "screenshot1.png",
@@ -49,17 +49,17 @@
   ],
   "share_target": {},
   "shortcuts": [],
-  "short_name": "theSkoop",
-  "start_url": "https://theskoop.ai/?utm_source=homescreen&utm_medium=shortcut",
+  "short_name": "ReadLess",
+  "start_url": "https://readless.ai/?utm_source=homescreen&utm_medium=shortcut",
   "theme_color": "#8b0000",
   "scope": "/",
-  "android_package_name": "ai.theskoop.android",
+  "android_package_name": "ai.readless.android",
   "prefer_related_applications": true,
   "related_applications": [
     {
-      "id": "ai.theskoop.android",
+      "id": "ai.readless.android",
       "platform": "chromeos_play",
-      "url": "https://play.google.com/store/apps/details?id=ai.theskoop.android"
+      "url": "https://play.google.com/store/apps/details?id=ai.readless.android"
     }
   ],
   "launch_handler": {

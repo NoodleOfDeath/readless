@@ -48,10 +48,10 @@ install_env() {
   PAFF=$(eval echo ${PAFFS[$K - 1]})
   echo
   echo "chatgpt: writing envs to $PAFF"
-  echo "export SKOOP_ROOT=$(dirs -c && dirs)" >>$PAFF
-  echo "export PATH=\$PATH:\$SKOOP_ROOT/bin" >>$PAFF
+  echo "export READ_LESS_ROOT=$(dirs -c && dirs)" >>$PAFF
+  echo "export PATH=\$PATH:\$READ_LESS_ROOT/bin" >>$PAFF
   source $PAFF
-  if [[ -z "$SKOOP_ROOT" ]]; then
+  if [[ -z "$READ_LESS_ROOT" ]]; then
     echo
     echo "chatgpt: ahhh shiz wtf? env setup failed :("
     ((E = E + 1))
@@ -99,8 +99,8 @@ if [[ -z $(echo which docker) ]]; then
   exit 1
 fi
 
-if [[ -z "$SKOOP_ROOT" ]]; then
-  echo "chatgpt: yo gang, you need to set the skoop root. want me to just magically do that for ya? [y|n|hell yea|naaaaah fam]"
+if [[ -z "$READ_LESS_ROOT" ]]; then
+  echo "chatgpt: yo gang, you need to set the rlctl root. want me to just magically do that for ya? [y|n|hell yea|naaaaah fam]"
   read HELL_YEA
   if [[ "$HELL_YEA" =~ ^y(es)?$ ]]; then
     echo
@@ -143,5 +143,5 @@ if [[ ! -z "$PAFF" ]]; then
 fi
 
 echo
-echo "chatgpt: now try runnin the 'skoop' or 'dkrlogs' command!"
+echo "chatgpt: now try runnin the 'rlctl' or 'dkrlogs' command!"
 echo

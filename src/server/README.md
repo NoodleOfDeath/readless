@@ -1,8 +1,8 @@
 # TheSkoop Backend
 
-[![API CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/api-ci.yaml)
-[![Cron CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml)
-[![Worker CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml)
+[![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
+[![Cron CI](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml)
+[![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
 This is the backend API, CronJob manager (responsible for periodically seeking and queuing jobs) and Worker containers (responsible for processing jobs) for the TheSkoop project
 
@@ -28,8 +28,8 @@ npm i -g yarn
 This project also is fully ESM so make sure your node version is >= 18.
 
 ```bash
-~ $ git clone git@github.com:NoodleOfDeath/theskoop.git
-~ $ cd theskoop/src/server
+~ $ git clone git@github.com:NoodleOfDeath/readless.git
+~ $ cd readless/src/server
 src/server $ yarn install
 src/server $ cat .env-example > .env
 src/server $ yarn dev:api

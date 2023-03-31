@@ -159,7 +159,7 @@ export default function Header() {
         </IconButton>
         <StyledHeaderTitle elevation={ 0 }>
           <Typography onClick={ () => router.push('/') } component="h4">
-            theSkoop
+            ReadLess
           </Typography>
         </StyledHeaderTitle>
         <Button onClick={ openMenu(true) }>

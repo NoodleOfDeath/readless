@@ -1,17 +1,17 @@
-# theSkoop <!-- omit in toc -->
+# ReadLess <!-- omit in toc -->
 
-[![Web Client CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/web-ci.yaml)
-[![Mobile Client CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/mobile-ci.yaml)
+[![Web Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml)
+[![Mobile Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml)
 
-[![API CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/api-ci.yaml)
-[![Cron CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/cron-ci.yaml)
-[![Worker CI](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/theskoop/actions/workflows/worker-ci.yaml)
+[![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
+[![Cron CI](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml)
+[![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
-theSkoop is the model for a fully automated user content-driven podcast and news outlet pipeline that is powered by ChatGPT!
+ReadLess is the model for a fully automated user content-driven podcast and news outlet pipeline that is powered by ChatGPT!
 
-Dev/Staging: [https://dev.theskoop.ai](https://dev.theskoop.ai)
+Dev/Staging: [https://dev.readless.ai](https://dev.readless.ai)
 
-Production: [https://theskoop.ai](https://theskoop.ai)
+Production: [https://readless.ai](https://readless.ai)
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -122,7 +122,7 @@ Production: [https://theskoop.ai](https://theskoop.ai)
 First run the interactive setup script written by chatgpt!
 
 ```bash
-theskoop $ ./setup.sh
+readless $ ./setup.sh
 ```
 
 ### Web Client
@@ -130,7 +130,7 @@ theskoop $ ./setup.sh
 [See the README](src/web/README.md)
 
 ```bash
-theskoop $ skoop web --local
+readless $ rlctl web --local
 ```
 
 ### Server API
@@ -138,7 +138,7 @@ theskoop $ skoop web --local
 [See the README](src/server/README.md)
 
 ```bash
-theskoop $ skoop api --local
+readless $ rlctl api --local
 ```
 
 ### Server Cron
@@ -146,7 +146,7 @@ theskoop $ skoop api --local
 [See the README](src/server/README.md)
 
 ```bash
-theskoop $ skoop cron --local
+readless $ rlctl cron --local
 ```
 
 ### Server Worker
@@ -154,7 +154,7 @@ theskoop $ skoop cron --local
 [See the README](src/server/README.md)
 
 ```bash
-theskoop $ skoop worker --local
+readless $ rlctl worker --local
 ```
 
 ## Contribution
