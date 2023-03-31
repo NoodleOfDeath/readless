@@ -176,7 +176,7 @@ export function SessionContextProvider({ children }: Props) {
         }
       },
       '/verify': async () => {
-        const verificationCode = searchParams.get('verificationCode');
+        const verificationCode = searchParams.get('vc');
         const otp = searchParams.get('otp');
         if (!verificationCode && !otp) {
           return router.push('/error');
