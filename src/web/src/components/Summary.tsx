@@ -203,7 +203,7 @@ export default function Summary({
     }
     let text = '';
     switch (servingSize) {
-    case 'bulleted':
+    case 'bullets':
       text = summary.bullets.join('\n');
       break;
     case 'concise':
