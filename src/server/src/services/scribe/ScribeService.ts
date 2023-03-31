@@ -46,12 +46,12 @@ export class ScribeService extends BaseService {
     const prompts: Prompt[] = [
       {
         handleReply: (reply) => { 
-          if (reply.text.length > 150) {
+          if (reply.text.length > 200) {
             throw new Error('Title too long');
           }
           newSummary.title = reply.text;
         },
-        text: `Please summarize the following in a single sentence using no more than 150 characters:\n\n${newSummary.filteredText}`,
+        text: `Please summarize the take away message if the following article in a single sentence using no more than 150 characters:\n\n${newSummary.filteredText}`,
       },
       {
         handleReply: (reply) => {
