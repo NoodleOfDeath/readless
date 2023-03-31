@@ -6,6 +6,8 @@ export type RoleAttributes = DatedAttributes & {
   lifetime: string;
   refreshable: boolean;
   scope: string[];
+  requiresElevation: boolean;
+  defaultsTo: string;
 };
 
 export type RoleCreationAttributes = {
@@ -14,4 +16,6 @@ export type RoleCreationAttributes = {
   lifetime: string;
   refreshable: boolean;
   scope: string[];
+  requiresElevation?: boolean;
+  defaultsTo?: string;
 };

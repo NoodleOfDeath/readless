@@ -1,7 +1,9 @@
 import { Op } from 'sequelize';
 import {
   Body,
+  Delete,
   Get,
+  Patch,
   Path,
   Post,
   Query,
@@ -13,9 +15,11 @@ import {
 } from 'tsoa';
 
 import { SummaryInteraction } from './../../schema/resources/summary/SummaryInteraction.model';
+import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
+  DestroyResponse,
   FindAndCountOptions,
   InteractionRequest,
   InteractionResponse,
@@ -179,6 +183,28 @@ export class SummaryController {
     } = body;
     const resource = await user.interactWithSummary(targetId, type, remoteAddr, content, metadata);
     return resource.toJSON().interactions;
+  }
+  
+  @Security('jwt', ['god:*'])
+  @Delete('/:targetId')
+  public static async destroySummary(
+    @Path() targetId: number,
+    @Body() body: PayloadWithUserId
+  ): Promise<DestroyResponse> {
+    const { user } = await User.from(body);
+    await user.destroySummary(targetId);
+    return { success: true };
+  }
+  
+  @Security('jwt', ['god:*'])
+  @Patch('/restore/:targetId')
+  public static async restoreSummary(
+    @Path() targetId: number,
+    @Body() body: PayloadWithUserId
+  ): Promise<DestroyResponse> {
+    const { user } = await User.from(body);
+    await user.restoreSummary(targetId);
+    return { success: true };
   }
 
 }

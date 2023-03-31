@@ -25,13 +25,15 @@ export class Role<
       name: 'account',
       priority: 200,
       refreshable: false,
+      requiresElevation: true,
       scope: ['account:read', 'account:write'],
     },
     god: {
-      lifetime: '1d',
+      lifetime: '2m',
       name: 'god',
       priority: 9000,
       refreshable: true,
+      requiresElevation: true,
       scope: ['*'],
     },
     standard: {
@@ -86,5 +88,19 @@ export class Role<
     type: DataType.ARRAY(DataType.STRING),
   })
     scope: string[];
+
+  @Column({
+    allowNull: false,
+    defaultValue: false,
+    type: DataType.BOOLEAN,
+  })
+    requiresElevation: boolean;
+
+  @Column({
+    allowNull: false,
+    defaultValue: 'standard',
+    type: DataType.STRING,
+  })
+    defaultsTo: string;
 
 }

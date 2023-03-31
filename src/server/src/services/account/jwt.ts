@@ -25,6 +25,7 @@ export type JwtOptions = {
   priority?: number;
   expiresIn?: string;
   refreshable?: boolean;
+  defaultsTo?: string;
 };
 
 export class Jwt implements JsonWebToken {
@@ -35,6 +36,7 @@ export class Jwt implements JsonWebToken {
   createdAt: Date;
   expiresIn: string;
   refreshable = false;
+  defaultsTo: string;
   signed: string;
 
   get expired() {
@@ -64,15 +66,16 @@ export class Jwt implements JsonWebToken {
   static async as(role: string, userId: number) {
     const user = await User.findOne({ where: { id: userId } });
     const roles = await user.getRoles();
-    const defaults = roles[role];
-    if (!defaults) {
+    const rbac = roles[role];
+    if (!rbac) {
       throw new AuthError('INSUFFICIENT_PERMISSIONS');
     }
     return new Jwt({
-      expiresIn: defaults.lifetime,
-      priority: defaults.priority,
-      refreshable: defaults.refreshable,
-      scope: defaults.scope,
+      defaultsTo: rbac.defaultsTo,
+      expiresIn: rbac.lifetime,
+      priority: rbac.priority,
+      refreshable: rbac.refreshable,
+      scope: rbac.scope,
       userId,
     });
   }
@@ -87,6 +90,7 @@ export class Jwt implements JsonWebToken {
           createdAt,
           expiresIn,
           refreshable,
+          defaultsTo,
         } = jwt.verify(opts, process.env.JWT_SECRET) as Jwt;
         if (!userId || !scope) {
           throw new AuthError('INVALID_CREDENTIALS');
@@ -97,6 +101,7 @@ export class Jwt implements JsonWebToken {
         this.createdAt = createdAt;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
+        this.defaultsTo = defaultsTo;
         this.signed = opts;
       } else {
         const {
@@ -105,6 +110,7 @@ export class Jwt implements JsonWebToken {
           priority = 0,
           expiresIn = '1d',
           refreshable,
+          defaultsTo = 'standard',
         } = opts;
         const createdAt = new Date();
         this.userId = userId;
@@ -113,8 +119,10 @@ export class Jwt implements JsonWebToken {
         this.createdAt = createdAt;
         this.expiresIn = expiresIn;
         this.refreshable = refreshable;
+        this.defaultsTo = defaultsTo;
         this.signed = jwt.sign({
           createdAt,
+          defaultsTo,
           expiresIn,
           priority,
           refreshable,
@@ -178,9 +186,6 @@ export class Jwt implements JsonWebToken {
   }
 
   public async refresh() {
-    if (!this.refreshable) {
-      throw new AuthError('UNREFRESHABLE_JWT');
-    }
     const user = await User.findOne({ where: { id: this.userId } });
     if (!user) {
       throw new AuthError('INVALID_CREDENTIALS');
@@ -193,13 +198,18 @@ export class Jwt implements JsonWebToken {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
     await credential.destroy();
-    const token = new Jwt({
-      expiresIn: this.expiresIn,
-      priority: this.priority,
-      refreshable: true,
-      scope: this.scope,
-      userId: this.userId,
-    });
+    let token: Jwt;
+    if (!this.refreshable) {
+      token = await Jwt.as(this.defaultsTo, this.userId);
+    } else {
+      token = new Jwt({
+        expiresIn: this.expiresIn,
+        priority: this.priority,
+        refreshable: true,
+        scope: this.scope,
+        userId: this.userId,
+      });
+    }
     await user.createCredential('jwt', token);
     return token;
   }

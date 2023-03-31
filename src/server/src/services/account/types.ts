@@ -8,7 +8,12 @@ export type JwtTokenResponse = {
   value: string;
 };
 
+export type PayloadWithUserId = {
+  userId: number;
+};
+
 export type RegistrationRequest = DestructuredAliasPayload & DestructuredCredentialPayload;
+
 export type RegistrationResponse = {
   userId: number;
   token?: JwtTokenResponse
