@@ -86,14 +86,24 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     this.set('delayedUntil', new Date(Date.now() + offset));
     await this.save();
   }
+  
+  async begin(pid: number) {
+    this.set('lockedBy', pid);
+    this.set('attempts', this.toJSON().attempts + 1);
+    this.set('startedAt', new Date());
+    this.set('failedAt', null);
+    this.set('failureReason', null);
+    this.save();
+  }
 
   async moveToCompleted() {
-    this.set('attempts', this.toJSON().attempts + 1);
     this.set('completedAt', new Date());
     await this.save();
   }
     
   async moveToFailed(reason?: string | Error) {
+    this.set('lockedBy', null);
+    this.set('startedAt', null);
     this.set('attempts', this.toJSON().attempts + 1);
     this.set('failedAt', new Date());
     this.set('failureReason', reason instanceof Error ? reason.message : reason);

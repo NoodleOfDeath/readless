@@ -7,7 +7,6 @@ import {
   mdiLogin,
   mdiLogout,
   mdiMenu,
-  mdiNewspaperVariantOutline,
   mdiPodcast,
 } from '@mdi/js';
 import { Icon } from '@mdi/react';
@@ -126,15 +125,6 @@ export default function Header() {
       items: PODCAST_LINKS,
       label: 'Podcast',
       visible: () => !userData?.isLoggedIn,
-    },
-    {
-      icon: mdiNewspaperVariantOutline,
-      id: 'News',
-      label: 'Live News',
-      onClick({ router }) {
-        router?.push('/');
-      },
-      visible: () => !!userData?.isLoggedIn,
     },
     {
       icon: mdiAccount,

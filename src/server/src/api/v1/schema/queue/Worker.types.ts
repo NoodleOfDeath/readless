@@ -5,7 +5,7 @@ import { QueueSpecifier } from './Queue.types';
 import { Serializable } from '../../../../types';
 import { DatedAttributes } from '../types';
 
-export type WorkerState = 'idle' | 'processing' | 'stopped';
+export type WorkerState = 'idle' | 'processing' | 'stopped' | 'retired';
 
 export type WorkerOptions = {
   autostart?: boolean;
@@ -16,6 +16,7 @@ export type WorkerOptions = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type WorkerAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = DatedAttributes & {
   queue: QueueName;
+  host?: string;
   options: WorkerOptions;
   state: WorkerState;
   lastUpdateAt: Date;
@@ -24,6 +25,7 @@ export type WorkerAttributes<DataType extends Serializable, ReturnType, QueueNam
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type WorkerCreationAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = {
   queue: QueueName;
+  host?: string;
   options?: WorkerOptions;
   state?: WorkerState;
   lastUpdateAt?: Date;
