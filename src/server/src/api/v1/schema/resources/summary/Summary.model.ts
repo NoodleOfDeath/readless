@@ -22,32 +22,32 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     allowNull: false,
     type: DataType.INTEGER,
   })
-    outletId: number;
+  declare outletId: number;
 
   @Column({
     allowNull: false,
     type: DataType.STRING(2083),
     unique: true,
   })
-    url: string;
+  declare url: string;
 
   @Column({
     allowNull: false,
     type: DataType.TEXT,
   })
-    rawText: string;
+  declare rawText: string;
 
   @Column({
     allowNull: false,
     type: DataType.TEXT,
   })
-    filteredText: string;
+  declare filteredText: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING(1024),
   })
-    originalTitle: string;
+  declare originalTitle: string;
 
   outletName: string;
   

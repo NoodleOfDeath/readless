@@ -63,44 +63,44 @@ export class Role<
     type: DataType.STRING,
     unique: true,
   })
-    name: string;
+  declare name: string;
 
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
-    priority: number;
+  declare priority: number;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-    lifetime: string;
+  declare lifetime: string;
     
   @Column({
     allowNull: false,
     type: DataType.BOOLEAN,
   })
-    refreshable: boolean;
+  declare refreshable: boolean;
   
   @Column({
     allowNull: false,
     type: DataType.ARRAY(DataType.STRING),
   })
-    scope: string[];
+  declare scope: string[];
 
   @Column({
     allowNull: false,
     defaultValue: false,
     type: DataType.BOOLEAN,
   })
-    requiresElevation: boolean;
+  declare requiresElevation: boolean;
 
   @Column({
     allowNull: false,
     defaultValue: 'standard',
     type: DataType.STRING,
   })
-    defaultsTo: string;
+  declare defaultsTo: string;
 
 }

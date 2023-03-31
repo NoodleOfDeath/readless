@@ -55,27 +55,27 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     allowNull: false,
     type: DataType.STRING,
   })
-    queue: QueueName;
+  declare queue: QueueName;
   
   @Column({ type: DataType.STRING })
-    host?: string;
+  declare host?: string;
     
   @Column({ type: DataType.JSON })
-    options: WorkerOptions;
+  declare options: WorkerOptions;
     
   @Column({
     allowNull: false,
     defaultValue: 'idle',
     type: DataType.STRING,
   })
-    state: WorkerState = 'idle';
+  declare state: WorkerState;
     
   @Column({
     allowNull: false,
     defaultValue: new Date(),
     type: DataType.DATE,
   })
-    lastUpdateAt: Date;
+  declare lastUpdateAt: Date;
     
   activeQueue: Queue<DataType, ReturnType, QueueName>;
   queueProps: QueueSpecifier<DataType, ReturnType, QueueName>;

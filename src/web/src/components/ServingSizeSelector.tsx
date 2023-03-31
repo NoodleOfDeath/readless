@@ -25,6 +25,7 @@ const StyledButtonGroup = styled(Grid)(({ theme }) => ({
   justifyContent: 'center',
   margin: theme.spacing(1),
   overflow: 'hidden',
+  width: 'inherit',
 }));
 
 const StyledButton = styled(Button)<{ selected: boolean }>(({ theme, selected }) => ({

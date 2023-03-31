@@ -171,21 +171,21 @@ export class Outlet<
     type: DataType.STRING,
     unique: true,
   })
-    name: string;
+  declare name: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-    displayName: string;
+  declare displayName: string;
 
   @Column({
     allowNull: false,
     type: DataType.ARRAY(DataType.JSON),
   })
-    siteMaps: SiteMap[];
+  declare siteMaps: SiteMap[];
 
   @Column({ type: DataType.JSON })
-    fetchPolicy: FetchPolicy;
+  declare fetchPolicy: FetchPolicy;
 
 }

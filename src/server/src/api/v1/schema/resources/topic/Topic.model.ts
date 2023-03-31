@@ -20,12 +20,12 @@ export class Topic<A extends TopicAttributes = TopicAttributes, B extends TopicC
     allowNull: false,
     type: DataType.STRING,
   })
-    name: string;
+  declare name: string;
   
   @Column({
     allowNull: false,
     type: DataType.TEXT,
   })
-    description: string;
+  declare description: string;
 
 }

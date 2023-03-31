@@ -21,12 +21,12 @@ export class RefArticleTopic<A extends RefArticleTopicAttributes = RefArticleTop
     allowNull: false,
     type: DataType.INTEGER,
   })
-    articleId: number;
+  declare articleId: number;
   
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
-    topicId: number;
+  declare topicId: number;
 
 }

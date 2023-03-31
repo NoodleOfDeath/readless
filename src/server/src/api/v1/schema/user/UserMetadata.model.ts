@@ -26,7 +26,7 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     allowNull: false,
     type: DataType.INTEGER,
   })
-    userId: number;
+  declare userId: number;
   
   @Index({
     name: 'user_metadata_userId_key_unique_key',
@@ -37,7 +37,7 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     allowNull: false,
     type: DataType.STRING,
   })
-    key: string;
+  declare key: string;
     
   @Column({
     allowNull: false,

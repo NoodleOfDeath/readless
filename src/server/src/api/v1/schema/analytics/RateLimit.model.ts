@@ -19,24 +19,24 @@ export class RateLimit<A extends RateLimitAttributes = RateLimitAttributes, B ex
     type: DataType.STRING(2083), 
     unique: true, 
   })
-    key: string;
+  declare key: string;
 
   @Column({ 
     defaultValue: 0, 
     type: DataType.INTEGER, 
   })
-    points: number;
+  declare points: number;
 
   @Column({ 
     allowNull: false, 
     type: DataType.INTEGER,
   })
-    limit: number;
+  declare limit: number;
 
   @Column({
     allowNull: false,
     type: DataType.DATE,
   })
-    expiresAt: Date;
+  declare expiresAt: Date;
 
 }
