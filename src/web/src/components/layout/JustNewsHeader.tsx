@@ -14,7 +14,7 @@ const QUIPS: Quip[] = [
     title: 'no clickbait.',
   },
   {
-    subtitle: 'just news',
+    subtitle: 'just news.',
     title: 'no ads.',
   },
   {
