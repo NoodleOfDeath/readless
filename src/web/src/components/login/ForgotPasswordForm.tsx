@@ -33,7 +33,6 @@ export default function ForgotPasswordForm({
   const [error, setError] = React.useState<InternalError | undefined>();
   
   const handleForgotPassword = React.useCallback(async (values: PartialGenerateOTPRequest) => {
-    alert(JSON.stringify(values));
     try {
       const { error } = await withHeaders(API.generateOtp)(values);
       if (error) {
