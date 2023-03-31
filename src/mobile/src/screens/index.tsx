@@ -3,11 +3,9 @@ import { Pressable } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import AudioScreen from './audio/AudioScreen';
 import DiscoverScreen from './discover/DiscoverScreen';
 import NotificationsScreen from './notifications/NotificationsScreen';
 import ProfileScreen from './profile/ProfileScreen';
-import SkoopScreen from './rlctl/SkoopScreen';
 import { useTheme } from '../components/theme';
 
 type ScreenProps = {
@@ -16,11 +14,11 @@ type ScreenProps = {
   icon: string;
   headerRight?:
     | ((props: {
-        tintColor?: string | undefined;
-        pressColor?: string | undefined;
-        pressOpacity?: number | undefined;
+        tintColor?: string;
+        pressColor?: string;
+        pressOpacity?: number;
       }) => React.ReactNode)
-    | undefined;
+    ;
 };
 
 export const SCREENS: ScreenProps[] = [
@@ -28,16 +26,6 @@ export const SCREENS: ScreenProps[] = [
     component: DiscoverScreen,
     icon: 'fire',
     name: 'Discover',
-  },
-  {
-    component: SkoopScreen,
-    icon: 'silverware-spoon',
-    name: 'Skoop+',
-  },
-  {
-    component: AudioScreen,
-    icon: 'headphones',
-    name: 'Audio',
   },
   {
     component: NotificationsScreen,
