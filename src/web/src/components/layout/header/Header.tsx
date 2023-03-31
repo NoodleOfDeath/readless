@@ -58,7 +58,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const menuRef = React.useRef<HTMLDivElement>(null);
-  const [showLogin, setShowLogin] = React.useState(false);
+  const [showLoginDialog, setShowLoginDialog] = React.useState(false);
 
   const openMenu = React.useCallback(
     (open: boolean) =>
@@ -107,7 +107,7 @@ export default function Header() {
       id: 'Login',
       label: 'Login',
       onClick() {
-        setShowLogin(true);
+        setShowLoginDialog(true);
       },
       visible: () => !userData?.isLoggedIn,
     },
@@ -206,7 +206,7 @@ export default function Header() {
           </StyledBox>
         </Menu>
       </StyledToolbar>
-      <LoginDialog open={ showLogin } onClose={ () => setShowLogin(false) } />
+      <LoginDialog open={ showLoginDialog } onClose={ () => setShowLoginDialog(false) } onSuccessfulLogin={ () => setShowLoginDialog(false) } />
     </AppBar>
   );
 }
