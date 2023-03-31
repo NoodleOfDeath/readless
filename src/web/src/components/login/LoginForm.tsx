@@ -15,11 +15,11 @@ import { useForm } from 'react-hook-form';
 
 import API, {
   InternalError,
-  PartialGenerateOTPRequest,
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
 } from '@/api';
+import ForgotPasswordForm from '@/components/login/ForgotPasswordForm';
 import { SessionContext } from '@/contexts';
 import { useRouter } from '@/next/router';
 
@@ -59,7 +59,7 @@ export default function LoginForm({ defaultAction = 'logIn', onSuccessfulLogin }
         router.push('/');
 
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     },
     [onSuccessfulLogin, router, setUserData, withHeaders]
@@ -83,22 +83,9 @@ export default function LoginForm({ defaultAction = 'logIn', onSuccessfulLogin }
         setSuccess(true);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }, [onSuccessfulLogin, router, setUserData, withHeaders]);
-
-  const handleForgotPassword = React.useCallback(async (values: PartialGenerateOTPRequest) => {
-    try {
-      const { error } = await API.generateOtp(values);
-      if (error) {
-        setError(error);
-        return;
-      }
-      setSuccess(true);
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
 
   const logInSignUpForm = React.useMemo(() => {
     return (
@@ -202,25 +189,6 @@ export default function LoginForm({ defaultAction = 'logIn', onSuccessfulLogin }
     );
   }, [action, errors, error, handleLogIn, handleSignUp, handleSubmit, register]);
 
-  const forgotPasswordForm = React.useMemo(() => {
-    return (
-      <form onSubmit={ handleSubmit(handleForgotPassword) }>
-        <StyledStack spacing={ 2 }>
-          <TextField type="email" placeholder="Email" required { ...register('email') } />
-          <Button type="submit" variant="contained">
-            Send Password Reset Email
-          </Button>
-          {error && (
-            <Typography variant='body2' color='error'>
-              {error.message}
-            </Typography>
-          )}
-          <Button onClick={ () => setAction('logIn') }>Back to Login</Button>
-        </StyledStack>
-      </form>
-    );
-  }, [error, handleSubmit, handleForgotPassword, register]);
-
   React.useEffect(() => {
     setError(undefined);
     setSuccess(false); 
@@ -228,7 +196,11 @@ export default function LoginForm({ defaultAction = 'logIn', onSuccessfulLogin }
 
   return (
     <StyledStack spacing={ 2 }>
-      {!success ? (action === 'forgotPassword' ? forgotPasswordForm : logInSignUpForm) :
+      {!success ? (action === 'forgotPassword' ? (
+        <ForgotPasswordForm 
+          onSuccess={ () => setSuccess(true) }
+          backToLogin={ () => setAction('logIn') } />
+      ) : logInSignUpForm) :
         action === 'forgotPassword' ? (
           <StyledStack spacing={ 2 }>
             <Typography variant='body2'>

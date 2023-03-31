@@ -12,6 +12,7 @@ class ErrorMessage<Params extends Record<string, string>> {
 }
 
 const ERROR_MESSAGES = {
+  ALIAS_UNVERIFIED: new ErrorMessage<{ alias: string; }>('Please verify this {alias} before logging in'),
   ALREADY_LOGGED_IN: new ErrorMessage('User is already logged in'),
   BAD_REQUEST: new ErrorMessage('Bad request'),
   DUPLICATE_USER: new ErrorMessage('User already exists'),
