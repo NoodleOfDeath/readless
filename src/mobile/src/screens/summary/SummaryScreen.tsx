@@ -3,42 +3,42 @@ import React from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { ReadingFormat } from '../../api';
 import FlexView from '../../components/common/FlexView';
 import SafeScrollView from '../../components/common/SafeScrollView';
-import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
-import Summary from '../../components/post/Post';
+import Summary from '../../components/post/Summary';
 import { SessionContext } from '../../contexts/SessionContext';
 import { RootParamList } from '../../types';
 
 type Props = {
-  route: RouteProp<RootParamList['Discover'], 'Post'>;
-  navigation: NativeStackNavigationProp<RootParamList['Discover'], 'Post'>;
+  route: RouteProp<RootParamList['Discover'], 'Summary'>;
+  navigation: NativeStackNavigationProp<RootParamList['Discover'], 'Summary'>;
 };
 
-export default function PostScreen({
-  route: { params: { source, initialMode } },
+export default function SummaryScreen({
+  route: { params: { summary, format: initialFormat } },
   navigation,
 }: Props) {
   const { setTabControllerScreenOptions } = React.useContext(SessionContext);
 
-  const [mode, setMode] = React.useState<ConsumptionMode | undefined>(initialMode);
+  const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
 
   React.useEffect(() => {
-    navigation.setOptions({ headerTitle: source?.title });
+    navigation.setOptions({ headerTitle: summary?.title });
     setTabControllerScreenOptions((prev) => ({
       ...prev,
       headerShown: false,
     }));
-  }, [navigation, setTabControllerScreenOptions, source]);
+  }, [navigation, setTabControllerScreenOptions, summary]);
 
   return (
     <SafeScrollView>
       <FlexView mt={ 10 }>
-        {source && (
+        {summary && (
           <Summary
-            source={ source }
-            mode={ mode }
-            onChange={ (mode) => setMode(mode) } />
+            summary={ summary }
+            format={ format }
+            onChange={ (format) => setFormat(format) } />
         )}
       </FlexView>
     </SafeScrollView>

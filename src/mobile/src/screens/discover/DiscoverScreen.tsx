@@ -15,7 +15,7 @@ export default function HomeScreen() {
         component={ ResultsView }
         options={ { headerShown: false } } />
       <Stack.Screen
-        name="Post"
+        name="Summary"
         component={ SummaryScreen }
         options={ { headerShown: true } } />
     </Stack.Navigator>

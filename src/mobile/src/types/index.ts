@@ -1,14 +1,13 @@
 import { LinkingOptions } from '@react-navigation/native';
 
-import { SourceWithOutletAttr } from '../api/Api';
-import { ConsumptionMode } from '../components/post/ConsumptionModeSelector';
+import { ReadingFormat, SummaryResponse } from '../api';
 
 export type RootParamList = {
   Discover: {
     Home: undefined;
-    Post: {
-      source?: SourceWithOutletAttr;
-      initialMode?: ConsumptionMode;
+    Summary: {
+      summary?: SummaryResponse;
+      format?: ReadingFormat;
     };
   };
   Settings: undefined;

@@ -34,42 +34,47 @@ export default function ResultsView({ navigation }: Props) {
   const [recentSummaries, setRecentSummaries] = React.useState<
     SummaryResponse[]
   >([]);
-  const [totalSourceCount, setTotalSourceCount] = React.useState(0);
+  const [totalResultCount, setTotalResultCount] = React.useState(0);
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
 
-  const load = (pageSize: number, page: number, searchText: string) => {
+  const load = async (pageSize: number, page: number, searchText: string) => {
     setLoading(true);
     if (page === 0) {
       setRecentSummaries([]);
     }
-    API.getSummaries({
-      params: {
-        filter: searchText,
-        page,
-        pageSize,
-      },
-    })
-      .then((response) => {
-        setRecentSummaries((prev) => {
-          if (page === 0) {
-            return response.data.rows;
-          }
-          return [...prev, ...response.data.rows];
-        });
-        setTotalSourceCount(response.data.count);
-        setPage((prev) => prev + 1);
-      })
-      .catch((e) => {
-        console.error(e);
-        setRecentSummaries([]);
-        setTotalSourceCount(0);
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      const { data, error } = await API.getSummaries({
+        params: {
+          filter: searchText,
+          page,
+          pageSize,
+        },
       });
+      if (error) {
+        console.log(error);
+        return;
+      }
+      if (!data) {
+        return;
+      }
+      setRecentSummaries((prev) => {
+        if (page === 0) {
+          return (prev = data.rows);
+        }
+        return (prev = [...prev, ...data.rows]);
+      });
+      setTotalResultCount(data.count);
+      setPage((prev) => prev + 1);
+    } catch (e) {
+      console.error(e);
+      setRecentSummaries([]);
+      setTotalResultCount(0);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onMount = React.useCallback(() => {
@@ -80,14 +85,14 @@ export default function ResultsView({ navigation }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => onMount(), [pageSize, searchText]);
 
-  const loadMore = React.useCallback(() => {
-    load(pageSize, page + 1, searchText);
+  const loadMore = React.useCallback(async () => {
+    await load(pageSize, page + 1, searchText);
   }, [pageSize, page, searchText]);
 
   const onExpandPost = React.useCallback(
-    (index: number, size?: ServingSize) => {
+    (index: number, format?: ReadingFormat) => {
       navigation?.navigate('Summary', {
-        initialSize: size,
+        format,
         summary: recentSummaries[index],
       });
     },
@@ -98,7 +103,7 @@ export default function ResultsView({ navigation }: Props) {
     <React.Fragment>
       <FlexView style={ theme.searchBar }>
         <SearchBar
-          placeholder="What's cooking in ReadLess?..."
+          placeholder="show me something worth reading..."
           lightTheme={ isLightMode }
           onChangeText={ (text) => 
             setSearchText(text) }
@@ -112,9 +117,9 @@ export default function ResultsView({ navigation }: Props) {
             <Summary
               key={ summary.id }
               summary={ summary }
-              onChange={ (size) => onExpandPost(i, size) } />
+              onChange={ (format) => onExpandPost(i, format) } />
           ))}
-          {!loading && totalSourceCount > recentSummaries.length && (
+          {!loading && totalResultCount > recentSummaries.length && (
             <Button
               title="Load More"
               color={ theme.components.button.color }
