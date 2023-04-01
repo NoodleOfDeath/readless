@@ -2,13 +2,16 @@ import { Theme } from '@emotion/react';
 import { PaletteMode } from '@mui/material';
 import jwt from 'jsonwebtoken';
 
-import { LoginResponse, RequestParams } from '@/api';
-import { ServingSize } from '@/components/Summary';
+import {
+  LoginResponse,
+  ReadingFormat,
+  RequestParams,
+} from '@/api';
 import { loadTheme } from '@/theme';
 
 export type Preferences = {
   displayMode?: PaletteMode;
-  servingSize?: ServingSize;
+  preferredReadingFormat?: ReadingFormat;
 };
 
 export type UserDataProps = {
@@ -81,25 +84,31 @@ export type SetSearchTextOptions = {
 
 export type Session = {
   theme: Theme;
-  preferences: Preferences;
-  userData?: UserData;
-  // getters
-  displayMode?: PaletteMode;
-  servingSize?: ServingSize;
+  // app ui state
+  showLoginDialog: boolean;
+  setShowLoginDialog: (state: React.SetStateAction<boolean>, deferredAction?: () => void) => void;
+  // search text
   searchText: string;
-  searchOptions: string[];
-  // setters
-  setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SetSessionOptions) => void;
-  addUserToken: (token: LoginResponse['token']) => void;
-  setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
-  setServingSize: React.Dispatch<
-    React.SetStateAction<ServingSize | undefined>
-  >;
   setSearchText: (
     state: React.SetStateAction<string>,
     opts?: SetSearchTextOptions
   ) => void;
+  searchOptions: string[];
   setSearchOptions: React.Dispatch<React.SetStateAction<string[]>>;
+  // session state
+  userData?: UserData;
+  setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SetSessionOptions) => void;
+  addUserToken: (token: LoginResponse['token']) => void;
+  // preferences
+  preferences: Preferences;
+  // getters
+  displayMode?: PaletteMode;
+  setDisplayMode: React.Dispatch<React.SetStateAction<PaletteMode | undefined>>;
+  preferredReadingFormat?: ReadingFormat;
+  setPreferredReadingFormat: React.Dispatch<
+    React.SetStateAction<ReadingFormat | undefined>
+  >;
+  // session hooks
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
@@ -108,15 +117,15 @@ export const NULL_SESSION: Session = {
   addUserToken: () => {
     /* placeholder function */
   },
-  
-  // getters
   displayMode: 'light',
-  
   preferences: {},
+  preferredReadingFormat: ReadingFormat.Concise,
   searchOptions: [],
   searchText: '',
-  servingSize: 'concise',
   setDisplayMode: () => {
+    /* placeholder function */
+  },
+  setPreferredReadingFormat: () => {
     /* placeholder function */
   },
   setSearchOptions: () => {
@@ -125,12 +134,13 @@ export const NULL_SESSION: Session = {
   setSearchText: () => {
     /* placeholder function */
   },
-  setServingSize: () => {
+  setShowLoginDialog: () => {
     /* placeholder function */
   },
   setUserData: () => {
     /* placeholder function */
   },
+  showLoginDialog: false,
   theme: loadTheme(),
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };

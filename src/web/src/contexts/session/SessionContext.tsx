@@ -22,6 +22,7 @@ import {
 } from './types';
 
 import API, { LoginResponse } from '@/api';
+import LoginDialog from '@/components/login/LoginDialog';
 import { useRouter } from '@/next/router';
 import { loadTheme } from '@/theme';
 
@@ -42,6 +43,20 @@ export function SessionContextProvider({ children }: Props) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
   const [theme, setTheme] = React.useState(loadTheme(prefersDarkMode ? 'dark' : 'light'));
+  const [showLoginDialogRaw, setShowLoginDialogRaw] = React.useState(false);
+
+  const setShowLoginDialog = (show: React.SetStateAction<boolean>, deferredAction?: () =>void) => {
+    setShowLoginDialogRaw((prev) => {
+      const result = show instanceof Function ? show(prev) : show;
+      if (result) {
+        setDeferredAction(() => deferredAction);
+      }
+      return result;
+    });
+  };
+
+  const [deferredAction, setDeferredAction] = React.useState<() => void | undefined>();
+
   const [preferences, setPreferences] = React.useState<Preferences>({});
   const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps | undefined>();
 
@@ -78,7 +93,7 @@ export function SessionContextProvider({ children }: Props) {
     });
   };
 
-  const { displayMode, servingSize } = React.useMemo(
+  const { displayMode, preferredReadingFormat } = React.useMemo(
     () => preferences,
     [preferences]
   );
@@ -101,7 +116,7 @@ export function SessionContextProvider({ children }: Props) {
       });
     };
 
-  const setServingSize = preferenceSetter('servingSize');
+  const setPreferredReadingFormat = preferenceSetter('preferredReadingFormat');
   const setDisplayMode = preferenceSetter('displayMode');
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -233,10 +248,11 @@ export function SessionContextProvider({ children }: Props) {
         addUserToken,
         displayMode,
         preferences,
+        preferredReadingFormat,
         searchOptions,
         searchText,
-        servingSize,
         setDisplayMode,
+        setPreferredReadingFormat,
         setSearchOptions,
         setSearchText: (
           state,
@@ -247,8 +263,9 @@ export function SessionContextProvider({ children }: Props) {
             setSearchParams({});
           }
         },
-        setServingSize,
+        setShowLoginDialog,
         setUserData,
+        showLoginDialog: showLoginDialogRaw,
         theme,
         userData,
         withHeaders,
@@ -256,6 +273,13 @@ export function SessionContextProvider({ children }: Props) {
       <ThemeProvider theme={ theme }>
         <CssBaseline />
         {children}
+        <LoginDialog 
+          defaultAction="logIn" 
+          deferredAction={ deferredAction }
+          alert='PLEASE_LOG_IN' 
+          open={ showLoginDialogRaw } 
+          onClose={ () => setShowLoginDialogRaw(false) } 
+          onSuccess={ () => setShowLoginDialogRaw(false) } />
       </ThemeProvider>
     </SessionContext.Provider>
   );

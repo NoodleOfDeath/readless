@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   mdiAccount,
+  mdiClose,
   mdiHome,
   mdiInformation,
   mdiLogin,
@@ -13,7 +14,6 @@ import { Icon } from '@mdi/react';
 import {
   AppBar,
   Box,
-  Button,
   Divider,
   IconButton,
   List,
@@ -22,8 +22,6 @@ import {
   Toolbar,
   styled,
 } from '@mui/material';
-
-import LoginDialog from '../../login/LoginDialog';
 
 import Logo from '@/components/Logo';
 import Footer from '@/components/layout/Footer';
@@ -53,12 +51,11 @@ const StyledBox = styled(Box)(() => ({
 export default function Header() {
 
   const router = useRouter();
-  const { userData } = React.useContext(SessionContext);
+  const { setShowLoginDialog, userData } = React.useContext(SessionContext);
 
   const [open, setOpen] = React.useState(false);
 
   const menuRef = React.useRef<HTMLDivElement>(null);
-  const [showLoginDialog, setShowLoginDialog] = React.useState(false);
 
   const openMenu = React.useCallback(
     (open: boolean) =>
@@ -95,7 +92,7 @@ export default function Header() {
       icon: mdiHome,
       id: 'Home',
       label: 'Home',
-      onClick({ router }) {
+      onClick() {
         router?.push('/');
       },
       visible: true,
@@ -113,7 +110,7 @@ export default function Header() {
       icon: mdiInformation,
       id: 'About',
       label: 'About',
-      onClick({ router }) {
+      onClick() {
         router?.push('/about');
       },
       visible: () => !userData?.isLoggedIn,
@@ -129,7 +126,7 @@ export default function Header() {
       icon: mdiAccount,
       id: 'Profile',
       label: 'Profile',
-      onClick({ router }) {
+      onClick() {
         router?.push('/profile');
       },
       visible: () => !!userData?.isLoggedIn,
@@ -138,7 +135,7 @@ export default function Header() {
       icon: mdiLogout,
       id: 'Logout',
       label: 'Logout',
-      onClick({ router }) {
+      onClick() {
         router?.push('/logout');
       },
       visible: () => !!userData?.isLoggedIn,
@@ -148,7 +145,7 @@ export default function Header() {
       id: 'LightDarkModeButtons',
       visible: true,
     },
-  ], [userData]);
+  ], [router, setShowLoginDialog, userData?.isLoggedIn]);
 
   return (
     <AppBar position="sticky">
@@ -158,9 +155,9 @@ export default function Header() {
             <Logo variant='compact' />
           </IconButton>
         </StyledHeaderTitle>
-        <Button onClick={ openMenu(true) }>
+        <IconButton onClick={ () => setOpen(true) }>
           <Icon path={ mdiMenu } size={ 1 } />
-        </Button>
+        </IconButton>
         <SwipeableDrawer
           anchor="top"
           open={ open }
@@ -172,10 +169,17 @@ export default function Header() {
             onKeyDown={ openMenu(false) }
             onTouchMove={ openMenu(false) }
             ref={ menuRef }>
+            <IconButton onClick={ () => setOpen(false) }>
+              <Icon path={ mdiClose } size={ 1 } />
+            </IconButton>
             <List>
               {NAVIGATION_ITEMS.filter((item) => item.visible instanceof Function ? item.visible() : item.visible === true).map((item, i) => (
                 <React.Fragment key={ item.id }>
-                  <NavigationItem { ...item } />
+                  <NavigationItem
+                    { ...item }
+                    onClick={ () => {
+                      setOpen(false); item.onClick?.();
+                    } } />
                   {i < NAVIGATION_ITEMS.length - 1 && (
                     <Divider orientation="horizontal" />
                   )}
@@ -186,7 +190,6 @@ export default function Header() {
           </StyledBox>
         </SwipeableDrawer>
       </StyledToolbar>
-      <LoginDialog open={ showLoginDialog } onClose={ () => setShowLoginDialog(false) } onSuccessfulLogin={ () => setShowLoginDialog(false) } />
     </AppBar>
   );
 }

@@ -13,12 +13,17 @@ import {
   styled,
 } from '@mui/material';
 
-import LoginForm from './LoginForm';
+import LoginForm, { LoginFormProps } from './LoginForm';
 
-type LoginDialogProps = DialogProps & {
-  defaultAction?: 'logIn' | 'signUp';
+export const LOGIN_ALERTS = {
+  LOGGED_IN: 'You are already logged in.',
+  LOGGED_OUT: 'You have been logged out.',
+  PLEASE_LOG_IN: 'Please log in to continue.',
+} as const;
+
+type LoginDialogProps = DialogProps & LoginFormProps & {
+  alert?: keyof typeof LOGIN_ALERTS;
   message?: string;
-  onSuccessfulLogin?: () => void;
 };
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
@@ -31,8 +36,18 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 export default function LoginDialog({
-  defaultAction = 'logIn', message, onSuccessfulLogin, ...dialogProps
+  defaultAction = 'logIn', 
+  alert, 
+  message = alert ? LOGIN_ALERTS[alert] : undefined,
+  onSuccess,
+  deferredAction,
+  ...dialogProps
 }: LoginDialogProps) {
+
+  const handleSuccess = React.useCallback(() => {
+    onSuccess?.();
+    deferredAction?.();
+  }, [deferredAction, onSuccess]);
 
   return (
     <Dialog
@@ -41,12 +56,12 @@ export default function LoginDialog({
       aria-describedby="login-dialog-description">
       <DialogTitle id="login-dialog-title">{defaultAction === 'logIn' ? 'Log In' : 'Sign Up'}</DialogTitle>
       <DialogContent>
-        <StyledCloseButton onClick={ onSuccessfulLogin }>
+        <StyledCloseButton onClick={ handleSuccess }>
           <Icon path={ mdiClose } size={ 1 } color="inherit" />
         </StyledCloseButton>
         <StyledStack spacing={ 2 }>
           {message && <Alert severity="info">{message}</Alert>}
-          <LoginForm defaultAction={ defaultAction } onSuccessfulLogin={ onSuccessfulLogin } />
+          <LoginForm defaultAction={ defaultAction } onSuccess={ handleSuccess } />
         </StyledStack>
       </DialogContent>
     </Dialog>

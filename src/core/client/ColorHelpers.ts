@@ -5,17 +5,19 @@ class Color {
   b: number;
   
   constructor(r: number, g: number, b: number) {
-    this.set(r, g, b);
+    this.r = Color.clamp(r);
+    this.g = Color.clamp(g);
+    this.b = Color.clamp(b);
+  }
+
+  set(r: number, g: number, b: number) {
+    this.r = Color.clamp(r);
+    this.g = Color.clamp(g);
+    this.b = Color.clamp(b);
   }
   
   toString() {
     return `rgb(${Math.round(this.r)}, ${Math.round(this.g)}, ${Math.round(this.b)})`;
-  }
-
-  set(r: number, g: number, b: number) {
-    this.r = this.clamp(r);
-    this.g = this.clamp(g);
-    this.b = this.clamp(b);
   }
 
   hueRotate(angle = 0) {
@@ -78,9 +80,9 @@ class Color {
   }
 
   multiply(matrix: number[]) {
-    const newR = this.clamp(this.r * matrix[0] + this.g * matrix[1] + this.b * matrix[2]);
-    const newG = this.clamp(this.r * matrix[3] + this.g * matrix[4] + this.b * matrix[5]);
-    const newB = this.clamp(this.r * matrix[6] + this.g * matrix[7] + this.b * matrix[8]);
+    const newR = Color.clamp(this.r * matrix[0] + this.g * matrix[1] + this.b * matrix[2]);
+    const newG = Color.clamp(this.r * matrix[3] + this.g * matrix[4] + this.b * matrix[5]);
+    const newB = Color.clamp(this.r * matrix[6] + this.g * matrix[7] + this.b * matrix[8]);
     this.r = newR;
     this.g = newG;
     this.b = newB;
@@ -95,15 +97,15 @@ class Color {
   }
 
   linear(slope = 1, intercept = 0) {
-    this.r = this.clamp(this.r * slope + intercept * 255);
-    this.g = this.clamp(this.g * slope + intercept * 255);
-    this.b = this.clamp(this.b * slope + intercept * 255);
+    this.r = Color.clamp(this.r * slope + intercept * 255);
+    this.g = Color.clamp(this.g * slope + intercept * 255);
+    this.b = Color.clamp(this.b * slope + intercept * 255);
   }
 
   invert(value = 1) {
-    this.r = this.clamp((value + this.r / 255 * (1 - 2 * value)) * 255);
-    this.g = this.clamp((value + this.g / 255 * (1 - 2 * value)) * 255);
-    this.b = this.clamp((value + this.b / 255 * (1 - 2 * value)) * 255);
+    this.r = Color.clamp((value + this.r / 255 * (1 - 2 * value)) * 255);
+    this.g = Color.clamp((value + this.g / 255 * (1 - 2 * value)) * 255);
+    this.b = Color.clamp((value + this.b / 255 * (1 - 2 * value)) * 255);
   }
 
   hsl() {
@@ -113,7 +115,9 @@ class Color {
     const b = this.b / 255;
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
+    let h = (max + min) / 2;
+    let s = h;
+    const l = h;
 
     if (max === min) {
       h = s = 0;
@@ -143,7 +147,7 @@ class Color {
     };
   }
 
-  clamp(value: number) {
+  static clamp(value: number) {
     if (value > 255) {
       value = 255;
     } else if (value < 0) {
@@ -155,6 +159,10 @@ class Color {
 }
 
 class Solver {
+
+  target: Color;
+  targetHSL: { h: number, l: number, s: number };
+  reusedColor: Color;
 
   constructor(target: Color) {
     this.target = target;
@@ -176,7 +184,7 @@ class Solver {
     const c = 15;
     const a = [60, 180, 18000, 600, 1.2, 1.2];
 
-    let best = { loss: Infinity };
+    let best: ReturnType<typeof this.spsa> = { loss: Infinity, values: [] };
     for (let i = 0; best.loss > 25 && i < 3; i++) {
       const initial = [50, 20, 3750, 50, 100, 100];
       const result = this.spsa(A, a, c, initial, 1000);
@@ -195,11 +203,11 @@ class Solver {
     return this.spsa(A, a, c, wide.values, 500);
   }
 
-  spsa(A: number, a: number, c: number, values: number[], iters: number[]) {
+  spsa(A: number, a: number[], c: number, values: number[], iters: number) {
     const alpha = 1;
     const gamma = 0.16666666666666666;
 
-    let best = null;
+    let best: number[] = [];
     let bestLoss = Infinity;
     const deltas = new Array(6);
     const highArgs = new Array(6);
@@ -226,7 +234,7 @@ class Solver {
         bestLoss = loss;
       }
     }
-    return { loss: bestLoss, values: best };
+    return { loss: bestLoss, values: best ?? [] };
 
     function fix(value: number, idx: number) {
       let max = 100;
@@ -275,7 +283,7 @@ class Solver {
   }
 
   css(filters: number[]) {
-    function fmt(idx, multiplier = 1) {
+    function fmt(idx: number, multiplier = 1) {
       return Math.round(filters[idx] * multiplier);
     }
     return `invert(${fmt(0)}%) sepia(${fmt(1)}%) saturate(${fmt(2)}%) hue-rotate(${fmt(3, 3.6)}deg) brightness(${fmt(4)}%) contrast(${fmt(5)}%)`;
@@ -299,22 +307,11 @@ export function hexToRgb(hex: string) {
 
 export function hexToFilter(hex: string) {
   const rgb = hexToRgb(hex);
-  if (rgb.length !== 3) {
+  if (!rgb || rgb.length !== 3) {
     throw new Error('Invalid format!');
   }
   const color = new Color(rgb[0], rgb[1], rgb[2]);
   const solver = new Solver(color);
   const result = solver.solve();
-  let lossMsg;
-  if (result.loss < 1) {
-    lossMsg = 'This is a perfect result.';
-  } else if (result.loss < 5) {
-    lossMsg = 'The is close enough.';
-  } else if (result.loss < 15) {
-    lossMsg = 'The color is somewhat off. Consider running it again.';
-  } else {
-    lossMsg = 'The color is extremely off. Run it again!';
-  }
-  console.log(lossMsg);
   return result.filter;
 }

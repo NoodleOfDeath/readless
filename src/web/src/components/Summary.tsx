@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   mdiChevronLeft,
-  mdiDotsHorizontal,
   mdiThumbDown,
   mdiThumbDownOutline,
   mdiThumbUp,
@@ -17,9 +16,6 @@ import {
   CardMedia,
   Divider,
   Link,
-  List,
-  Menu,
-  MenuItem,
   Stack,
   Typography,
   styled,
@@ -54,6 +50,13 @@ const StyledCard = styled(Card)(({ theme }) => ({
   textAlign: 'left',
 }));
 
+const StyledTitle = styled(Typography)(() => ({
+  '&:hover': { textDecoration: 'underline' },
+  cursor: 'pointer',
+  fontWeight: 600,
+  textDecoration: 'none',
+}));
+
 const StyledBackButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
   border: theme.palette.secondary.main,
@@ -70,9 +73,8 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
 const StyledReadingFormatContainer = styled(Box)<Partial<Props>>(({ theme, format }) => ({
   borderRadius: 8,
   bottom: format && theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
-  left: format && theme.breakpoints.down('md') ? '50%' : undefined,
   position: format ? 'fixed' : 'relative',
-  right: format && !theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
+  right: format ? theme.spacing(4) : undefined,
   top: format && !theme.breakpoints.down('md') ? theme.spacing(10) : undefined,
 }));
 
@@ -94,6 +96,8 @@ const StyledCategoryBox = styled(Stack)(({ theme }) => ({
   width: theme.breakpoints.down('md') ? '100%' : 120,
 }));
 
+const StyledLink = styled(Link)(({ theme }) => ({ color: theme.palette.primary.contrastText }));
+
 const StyledDivider = styled(Divider)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   marginTop: theme.spacing(2),
@@ -107,8 +111,6 @@ const StyledCenteredStack = styled(Stack)(() => ({
   justifyContent: 'center',
   textAlign: 'center',
 }));
-
-const StyledMenuBox = styled(Box)(() => ({ width: 250 }));
 
 export default function Summary({
   summary,
@@ -125,11 +127,7 @@ export default function Summary({
     return mdAndDown ? 'column' : 'row';
   }, [mdAndDown]);
 
-  const [showMenu, setShowMenu] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [showSplitVotes, setShowSplitVotes] = React.useState(false);
-
-  const menuRef = React.useRef<HTMLDivElement | null>(null);
 
   const timeAgo = React.useMemo(
     () =>
@@ -211,46 +209,6 @@ export default function Summary({
       <ReactMarkdown>{text}</ReactMarkdown>
     );
   }, [summary, format]);
-  
-  const openMenu = React.useCallback(
-    (open: boolean) =>
-      (event:
-          | React.KeyboardEvent<HTMLElement>
-          | React.MouseEvent<HTMLElement>
-          | React.TouchEvent<HTMLElement>) => {
-        if (!event) {
-          setAnchorEl(null);
-          setShowMenu(false);
-          return;
-        }
-        if (
-          event.type === 'keydown' &&
-          ((event as React.KeyboardEvent).key === 'Tab' ||
-            (event as React.KeyboardEvent).key === 'Shift')
-        ) {
-          return;
-        } else if (event.type === 'click') {
-          if (
-            menuRef.current &&
-            menuRef.current.contains(event.currentTarget)
-          ) {
-            return;
-          }
-          event.stopPropagation();
-        } else if (event.type === 'touchmove') {
-          if (
-            menuRef.current &&
-            menuRef.current.contains(event.currentTarget)
-          ) {
-            return;
-          }
-          event.stopPropagation();
-        }
-        setAnchorEl(open ? event?.currentTarget : null);
-        setShowMenu(open);
-      },
-    [menuRef]
-  );
 
   return (
     <StyledCard>
@@ -271,10 +229,20 @@ export default function Summary({
                 {cardMediaStack}
               </StyledCardMedia>
             )}
-            <Typography variant="subtitle1">{summary?.outletName}</Typography>
-            <Typography variant="h6">
+            <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
+              <Typography variant="subtitle1">{summary?.outletName}</Typography>
+              <Box flexGrow={ 1 } />
+              <StyledLink
+                variant="subtitle1"
+                href={ summary?.url }
+                target="_blank"
+                color="inherit">
+                View Original Source
+              </StyledLink>
+            </Stack>
+            <StyledTitle variant="h6" onClick={ () => onChange?.(ReadingFormat.Concise) }>
               <TruncatedText maxCharCount={ 200 }>{summary?.title}</TruncatedText>
-            </Typography>
+            </StyledTitle>
           </StyledStack>
           {!mdAndDown && (
             <StyledCardMedia>
@@ -292,42 +260,6 @@ export default function Summary({
           <StyledReadingFormatContainer format={ format }>
             <ReadingFormatSelector onChange={ (newFormat) => onChange?.(newFormat) } />
           </StyledReadingFormatContainer>
-          <Button onClick={ openMenu(true) }>
-            <Icon path={ mdiDotsHorizontal } size={ 1 } />
-          </Button>
-          <Menu
-            open={ showMenu }
-            anchorEl={ anchorEl }
-            onClose={ openMenu(false) }
-            anchorOrigin={ {
-              horizontal: 'right',
-              vertical: 'top',
-            } }
-            transformOrigin={ {
-              horizontal: 'right',
-              vertical: 'top',
-            } }>
-            <StyledMenuBox
-              role="presentation"
-              onClick={ openMenu(false) }
-              onKeyDown={ openMenu(false) }
-              onTouchMove={ openMenu(false) }
-              ref={ menuRef }>
-              <List>
-                <MenuItem>
-                  <Link
-                    variant="caption"
-                    href={ summary?.url }
-                    target="_blank"
-                    color="inherit">
-                    <Button>
-                      View Original Source
-                    </Button>
-                  </Link>
-                </MenuItem>
-              </List>
-            </StyledMenuBox>
-          </Menu>
         </Stack>
         {format !== undefined && <CardContent>{content}</CardContent>}
       </StyledStack>

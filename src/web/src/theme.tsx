@@ -6,7 +6,7 @@ export const loadTheme = (mode: PaletteMode = 'light') => {
     breakpoints: {
       values: {
         lg: 900,
-        md: 600,
+        md: 750,
         sm: 400,
         xl: 1200,
         xs: 0,

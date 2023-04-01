@@ -15,7 +15,6 @@ import API, {
 import Logo from '@/components/Logo';
 import Summary from '@/components/Summary';
 import Page from '@/components/layout/Page';
-import LoginDialog from '@/components/login/LoginDialog';
 import Filters from '@/components/search/Filters';
 import { SessionContext } from '@/contexts';
 import { useSummaryClient } from '@/hooks';
@@ -39,8 +38,6 @@ export default function SearchPage() {
 
   const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
   const [readingFormat, setReadingFormat] = React.useState<ReadingFormat|undefined>();
-
-  const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (searchParams.get('q')) {
@@ -83,7 +80,12 @@ export default function SearchPage() {
   const expandPost = React.useCallback(async (index?: number, readingFormat?: ReadingFormat) => {
     if (index !== undefined && readingFormat) {
       try {
-        await recordSummaryView(recentSummaries[index], undefined, { readingFormat }, (interactions) => setPostInteractions(index, interactions) );
+        await recordSummaryView(
+          recentSummaries[index], 
+          undefined,
+          { readingFormat },
+          (interactions) => setPostInteractions(index, interactions) 
+        );
       } catch (e) {
         console.error(e);
       }
@@ -138,13 +140,29 @@ export default function SearchPage() {
                 key={ summary.id } 
                 summary={ summary }
                 onChange={ (newFormat) => expandPost(i, newFormat) } 
-                onInteract={ (type, content, metadata) => interactWithSummary(recentSummaries[i], type, content, metadata, (interactions) => setPostInteractions(i, interactions) ) } />
+                onInteract={ 
+                  (type, content, metadata) => interactWithSummary(
+                    recentSummaries[i], 
+                    type, 
+                    content, 
+                    metadata,
+                    (interactions) => setPostInteractions(i, interactions) 
+                  ) 
+                } />
             )) : (
               <Summary
                 summary={ recentSummaries[expandedPost] }
                 onChange={ (newFormat) => expandPost(expandedPost, newFormat) }
                 format={ readingFormat } 
-                onInteract={ (type, content, metadata) => interactWithSummary(recentSummaries[expandedPost], type, content, metadata, (interactions) => setPostInteractions(expandedPost, interactions) ) } />
+                onInteract={ 
+                  (type, content, metadata) => interactWithSummary(
+                    recentSummaries[expandedPost], 
+                    type, 
+                    content, 
+                    metadata, 
+                    (interactions) => setPostInteractions(expandedPost, interactions) 
+                  ) 
+                } />
             )}
         </Stack>
         {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
@@ -152,7 +170,6 @@ export default function SearchPage() {
           <Button onClick={ () => loadMore() }>Load More</Button>
         )}
       </Stack>
-      <LoginDialog defaultAction="logIn" message={ 'To prevent bad actors from compromising the integrity of our data and infrastrcture, please either log in, sign up, or download the mobile application to interact with posts' } open={ showLoginDialog } onClose={ () => setShowLoginDialog(false) } onSuccessfulLogin={ () => setShowLoginDialog(false) } />
     </Page>
   );
 }
