@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   mdiAccount,
+  mdiClose,
   mdiHome,
   mdiInformation,
   mdiLogin,
@@ -13,20 +14,17 @@ import { Icon } from '@mdi/react';
 import {
   AppBar,
   Box,
-  Button,
   Divider,
   IconButton,
   List,
-  Menu,
   Paper,
+  SwipeableDrawer,
   Toolbar,
-  Typography,
   styled,
 } from '@mui/material';
 
-import LoginDialog from '../../login/LoginDialog';
-
 import Logo from '@/components/Logo';
+import Footer from '@/components/layout/Footer';
 import LightDarkModeButtons from '@/components/layout/header/LightDarkModeButtons';
 import NavigationItem, { NavigationItemProps } from '@/components/layout/header/NavigationItem';
 import { PODCAST_LINKS } from '@/config/PodcastLinks';
@@ -46,18 +44,18 @@ const StyledHeaderTitle = styled(Paper)(() => ({
   flexGrow: 1,
 }));
 
-const StyledBox = styled(Box)(() => ({ width: 250 }));
+const StyledBox = styled(Box)(() => ({
+  margin: 'auto', maxWidth: 1280, width : '100%', 
+})); 
 
 export default function Header() {
 
   const router = useRouter();
-  const { userData } = React.useContext(SessionContext);
+  const { setShowLoginDialog, userData } = React.useContext(SessionContext);
 
   const [open, setOpen] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const menuRef = React.useRef<HTMLDivElement>(null);
-  const [showLoginDialog, setShowLoginDialog] = React.useState(false);
 
   const openMenu = React.useCallback(
     (open: boolean) =>
@@ -66,7 +64,6 @@ export default function Header() {
           | React.MouseEvent<HTMLElement>
           | React.TouchEvent<HTMLElement>) => {
         if (!event) {
-          setAnchorEl(null);
           setOpen(false);
           return;
         }
@@ -85,7 +82,6 @@ export default function Header() {
           }
           event.stopPropagation();
         }
-        setAnchorEl(open ? event?.currentTarget : null);
         setOpen(open);
       },
     [menuRef]
@@ -96,7 +92,7 @@ export default function Header() {
       icon: mdiHome,
       id: 'Home',
       label: 'Home',
-      onClick({ router }) {
+      onClick() {
         router?.push('/');
       },
       visible: true,
@@ -114,7 +110,7 @@ export default function Header() {
       icon: mdiInformation,
       id: 'About',
       label: 'About',
-      onClick({ router }) {
+      onClick() {
         router?.push('/about');
       },
       visible: () => !userData?.isLoggedIn,
@@ -130,7 +126,7 @@ export default function Header() {
       icon: mdiAccount,
       id: 'Profile',
       label: 'Profile',
-      onClick({ router }) {
+      onClick() {
         router?.push('/profile');
       },
       visible: () => !!userData?.isLoggedIn,
@@ -139,7 +135,7 @@ export default function Header() {
       icon: mdiLogout,
       id: 'Logout',
       label: 'Logout',
-      onClick({ router }) {
+      onClick() {
         router?.push('/logout');
       },
       visible: () => !!userData?.isLoggedIn,
@@ -149,54 +145,51 @@ export default function Header() {
       id: 'LightDarkModeButtons',
       visible: true,
     },
-  ], [userData]);
+  ], [router, setShowLoginDialog, userData?.isLoggedIn]);
 
   return (
     <AppBar position="sticky">
       <StyledToolbar>
-        <IconButton onClick={ () => router.push('/') }>
-          <Logo />
-        </IconButton>
         <StyledHeaderTitle elevation={ 0 }>
-          <Typography onClick={ () => router.push('/') } component="h4">
-            readless
-          </Typography>
+          <IconButton onClick={ () => router.push('/') }>
+            <Logo variant='compact' />
+          </IconButton>
         </StyledHeaderTitle>
-        <Button onClick={ openMenu(true) }>
+        <IconButton onClick={ () => setOpen(true) }>
           <Icon path={ mdiMenu } size={ 1 } />
-        </Button>
-        <Menu
+        </IconButton>
+        <SwipeableDrawer
+          anchor="top"
           open={ open }
-          anchorEl={ anchorEl }
-          onClose={ openMenu(false) }
-          anchorOrigin={ {
-            horizontal: 'right',
-            vertical: 'top',
-          } }
-          transformOrigin={ {
-            horizontal: 'right',
-            vertical: 'top',
-          } }>
+          onOpen={ openMenu(true) }
+          onClose={ openMenu(false) }>
           <StyledBox
             role="presentation"
             onClick={ openMenu(false) }
             onKeyDown={ openMenu(false) }
             onTouchMove={ openMenu(false) }
             ref={ menuRef }>
+            <IconButton onClick={ () => setOpen(false) }>
+              <Icon path={ mdiClose } size={ 1 } />
+            </IconButton>
             <List>
               {NAVIGATION_ITEMS.filter((item) => item.visible instanceof Function ? item.visible() : item.visible === true).map((item, i) => (
                 <React.Fragment key={ item.id }>
-                  <NavigationItem { ...item } />
+                  <NavigationItem
+                    { ...item }
+                    onClick={ () => {
+                      setOpen(false); item.onClick?.();
+                    } } />
                   {i < NAVIGATION_ITEMS.length - 1 && (
                     <Divider orientation="horizontal" />
                   )}
                 </React.Fragment>
               ))}
             </List>
+            <Footer />
           </StyledBox>
-        </Menu>
+        </SwipeableDrawer>
       </StyledToolbar>
-      <LoginDialog open={ showLoginDialog } onClose={ () => setShowLoginDialog(false) } onSuccessfulLogin={ () => setShowLoginDialog(false) } />
     </AppBar>
   );
 }

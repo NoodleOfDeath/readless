@@ -3,14 +3,16 @@ import { Button, useColorScheme } from 'react-native';
 
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import axios from 'axios';
 import { SearchBar } from 'react-native-elements';
 
-import { API, SummaryResponse } from '../../api';
+import {
+  API,
+  ReadingFormat,
+  SummaryResponse,
+} from '../../api';
 import FlexView from '../../components/common/FlexView';
 import SafeScrollView from '../../components/common/SafeScrollView';
-import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
-import Post from '../../components/post/Post';
+import Summary from '../../components/post/Summary';
 import { useTheme } from '../../components/theme';
 import { RootParamList } from '../../types';
 
@@ -83,9 +85,9 @@ export default function ResultsView({ navigation }: Props) {
   }, [pageSize, page, searchText]);
 
   const onExpandPost = React.useCallback(
-    (index: number, mode?: ConsumptionMode) => {
-      navigation?.navigate('Post', {
-        initialMode: mode,
+    (index: number, size?: ServingSize) => {
+      navigation?.navigate('Summary', {
+        initialSize: size,
         summary: recentSummaries[index],
       });
     },
@@ -107,10 +109,10 @@ export default function ResultsView({ navigation }: Props) {
         onRefresh={ () => load(pageSize, 0, searchText) }>
         <FlexView>
           {recentSummaries.map((summary, i) => (
-            <Post
+            <Summary
               key={ summary.id }
               summary={ summary }
-              onChange={ (mode) => onExpandPost(i, mode) } />
+              onChange={ (size) => onExpandPost(i, size) } />
           ))}
           {!loading && totalSourceCount > recentSummaries.length && (
             <Button

@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "postinstall": "yarn cp:core",
+    "cp:core": "cp -R ../core/client/* ./src/core",
     "dev": "nodemon -x 'next dev -p 6969'",
     "build": "next build && next export -o build",
     "test": "jest",

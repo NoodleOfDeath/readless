@@ -21,6 +21,7 @@ export * from './resources/outlet/Outlet.model';
 export * from './resources/outlet/OutletMedia.model';
 
 export * from './resources/summary/Summary.model';
+export * from './resources/summary/SummaryContent.model';
 export * from './resources/summary/SummaryMedia.model';
 export * from './resources/summary/SummaryInteraction.model';
 export * from './resources/summary/SummaryInteractionMedia.model';

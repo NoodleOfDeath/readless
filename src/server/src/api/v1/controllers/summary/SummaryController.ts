@@ -14,6 +14,7 @@ import {
   Tags,
 } from 'tsoa';
 
+import { ReadingFormat } from './../../schema/resources/PostContent.types';
 import { SummaryInteraction } from './../../schema/resources/summary/SummaryInteraction.model';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
@@ -24,8 +25,9 @@ import {
   InteractionRequest,
   InteractionResponse,
   InteractionType,
-  SUMMARY_ATTRS,
   Summary,
+  SummaryContent,
+  SummaryContentAttributes,
   SummaryResponse,
   User,
 } from '../../schema';
@@ -39,7 +41,7 @@ function applyFilter(filter?: string) {
       { title: { [Op.iRegexp]: filter } },
       { originalTitle: { [Op.iRegexp]: filter } },
       { text: { [Op.iRegexp]: filter } },
-      { abridged: { [Op.iRegexp]: filter } },
+      { longSummary: { [Op.iRegexp]: filter } },
       { summary: { [Op.iRegexp]: filter } },
       { shortSummary: { [Op.iRegexp]: filter } },
       { bullets: { [Op.contains]: [filter] } },
@@ -61,6 +63,7 @@ function applyFilter(filter?: string) {
 @Response<InternalError>(500, 'Internal Error')
 export class SummaryController {
 
+  @Security('jwt')
   @Get('/')
   public static async getSummaries(
     @Query() userId?: number,
@@ -70,7 +73,7 @@ export class SummaryController {
     @Query() offset = pageSize * page
   ): Promise<BulkResponse<SummaryResponse>> {
     const options: FindAndCountOptions<Summary> = {
-      attributes: [...SUMMARY_ATTRS],
+      attributes: { exclude: ['filteredText', 'rawText'] },
       limit: pageSize,
       offset,
       order: [['createdAt', 'DESC']],
@@ -83,7 +86,35 @@ export class SummaryController {
     return summaries;
   }
 
-  @Get('/:category/')
+  @Security('jwt')
+  @Get('/:summaryId')
+  public static async getSummary(
+    @Path() summaryId: number,
+    @Query() userId?: number
+  ): Promise<SummaryResponse> {
+    const summary = await Summary.findOne({ where: { id: summaryId } });
+    if (userId) {
+      await summary?.addUserInteractions(userId);
+    }
+    return summary;
+  }
+
+  @Security('jwt')
+  @Get('/:summaryId/:format')
+  public static async getContentForSummary(
+    @Path() summaryId: number,
+    @Path() format: ReadingFormat 
+  ): Promise<SummaryContentAttributes> {
+    const summary = await SummaryContent.findOne({
+      where: {
+        format,
+        parentId: summaryId,
+      },
+    });
+    return summary;
+  }
+
+  @Get('/in/:category')
   public static async getSummariesForCategory(
     @Path() category: string,
     @Query() userId?: number,
@@ -93,7 +124,6 @@ export class SummaryController {
     @Query() offset = pageSize * page
   ): Promise<BulkResponse<SummaryResponse>> {
     const options: FindAndCountOptions<Summary> = {
-      attributes: [...SUMMARY_ATTRS],
       limit: pageSize,
       offset,
       order: [['createdAt', 'DESC']],
@@ -106,7 +136,7 @@ export class SummaryController {
     return summaries;
   }
 
-  @Get('/:category/:subcategory')
+  @Get('/in/:category/:subcategory')
   public static async getSummariesForCategoryAndSubcategory(
     @Path() category: string,
     @Path() subcategory: string,
@@ -117,7 +147,7 @@ export class SummaryController {
     @Query() offset = pageSize * page
   ): Promise<BulkResponse<SummaryResponse>> {
     const options: FindAndCountOptions<Summary> = {
-      attributes: [...SUMMARY_ATTRS],
+      attributes: { exclude: ['filteredText', 'rawText'] },
       limit: pageSize,
       offset,
       order: [['createdAt', 'DESC']],
@@ -128,27 +158,6 @@ export class SummaryController {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
     }
     return summaries;
-  }
-
-  @Get('/:category/:subcategory/:title')
-  public static async getSummaryForCategoryAndSubcategoryAndTitle(
-    @Path() category: string,
-    @Path() subcategory: string,
-    @Path() title: string,
-    @Query() userId?: number
-  ): Promise<SummaryResponse> {
-    const options: FindAndCountOptions<Summary> = {
-      where: {
-        category,
-        subcategory,
-        title,
-      },
-    };
-    const summary = await Summary.findOne(options);
-    if (userId) {
-      await summary.addUserInteractions(userId);
-    }
-    return summary;
   }
 
   @Security('jwt')

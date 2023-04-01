@@ -42,12 +42,17 @@ export * from './newsletter/Subscription.types';
 export * from './interaction/Interaction.types';
 
 export * from './resources/types';
+
 export * from './resources/Media.types';
 export * from './resources/Post.types';
 export * from './resources/outlet/Outlet.types';
+
 export * from './resources/summary/Summary.types';
-export * from './resources/topic/Topic.types';
+export * from './resources/summary/SummaryContent.types';
+
 export * from './resources/article/Article.types';
+
+export * from './resources/topic/Topic.types';
 
 export * from './queue/Queue.types';
 export * from './queue/Job.types';

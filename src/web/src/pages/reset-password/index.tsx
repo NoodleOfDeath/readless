@@ -59,8 +59,19 @@ export default function ResetPasswordPage() {
       {!success ? (
         <form onSubmit={ handleSubmit(onSubmit) }>
           <StyledStack spacing={ 2 }>
-            <TextField type="password" placeholder="New Password" required { ...register('password') } />
-            <TextField type="password" placeholder="Confirm New Password" required { ...register('confirmPassword') } />
+            <TextField
+              type="password"
+              placeholder="New Password"
+              required
+              { ...register('password', {
+                required: true, 
+                validate: (value) => value.length >= 8 || 'Password must be at least 8 characters', 
+              }) } />
+            <TextField
+              type="password"
+              placeholder="Confirm New Password"
+              required
+              { ...register('confirmPassword', { validate: (value, formState) => value === formState.password || 'Passwords do not match' }) } />
             <Button type="submit" variant="contained">
               Reset Password
             </Button>

@@ -24,7 +24,7 @@ function applyFilter(filter?: string) {
     [Op.or]: [
       { title: { [Op.iRegexp]: filter } },
       { text: { [Op.iRegexp]: filter } },
-      { abridged: { [Op.iRegexp]: filter } },
+      { longSummary: { [Op.iRegexp]: filter } },
       { summary: { [Op.iRegexp]: filter } },
       { shortSummary: { [Op.iRegexp]: filter } },
       { bullets: { [Op.contains]: [filter] } },
@@ -36,7 +36,7 @@ function applyFilter(filter?: string) {
   };
 }
 
-@Route('/v1/article')
+@Route('/v1/article') 
 @Tags('Article')
 export class ArticleController {
 

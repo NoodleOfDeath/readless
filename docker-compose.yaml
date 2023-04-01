@@ -25,6 +25,7 @@ services:
       - ./src/web/node_modules:/home/node/app/node_modules
       - ./src/web/public:/home/node/app/public
       - ./src/web/src:/home/node/app/src
+      - ./src/core/client:/home/node/app/src/core
 
   api:
     build:

@@ -8,6 +8,7 @@
 
 # production
 src/gen
+src/core
 /build
 /dist
 .next

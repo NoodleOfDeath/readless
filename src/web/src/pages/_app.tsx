@@ -6,7 +6,6 @@ import Head from 'next/head';
 import PropTypes from 'prop-types';
 
 import CookieConsent from '@/components/layout/CookieConsent';
-import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/header/Header';
 import { SessionContextProvider } from '@/contexts';
 
@@ -44,7 +43,6 @@ function App(props: PropTypes.InferProps<typeof App.propTypes>) {
             <StyledAppContent>
               <Component { ...pageProps } />
             </StyledAppContent>
-            <Footer />
             <CookieConsent />
           </StyledAppContainer>
         </GoogleOAuthProvider>

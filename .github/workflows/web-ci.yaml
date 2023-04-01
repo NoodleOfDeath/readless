@@ -14,7 +14,9 @@ on:
       - 'src/web/public/**'
       - 'src/web/nginx.conf'
       - 'src/web/src/**'
+      - 'src/core/client/**'
       - 'src/server/src/api/**'
+      
 
 concurrency:
   group: ${{ github.ref }}-web

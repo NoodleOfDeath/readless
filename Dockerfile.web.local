@@ -1,21 +1,31 @@
 FROM node:19.3.0 as base
+
+# install required cli tools
+RUN npm i -g tsoa
+
+# copy dependency projects
 WORKDIR /home/node
 COPY src/server ./server
-WORKDIR /home/node/server
-RUN yarn install --non-interactive --immutable
-WORKDIR /home/node/app
-COPY src/web/package.json ./
-COPY src/web/yarn.lock ./
-RUN yarn install --non-interactive --immutable
+COPY src/utils ./utils
 
-FROM base as pre-build
+# copy project resources
+WORKDIR /home/node/app
 COPY src/web/src ./src
 COPY src/web/public ./public
 COPY src/web/tsconfig.json ./
 COPY src/web/nodemon.json ./
 COPY src/web/next-env.d.ts ./
 COPY src/web/next.config.js ./
+COPY src/web/package.json ./
+COPY src/web/yarn.lock ./
+
+# generate code
 RUN yarn tsoa
 
-FROM pre-build as dev
+# run yarn installation
+FROM base as install
+RUN yarn install --non-interactive --immutable
+
+# launch container
+FROM install as dev
 CMD yarn dev
