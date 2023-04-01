@@ -10,14 +10,14 @@ export function useTheme<T extends {}>(other: T = {} as T) {
         // containers
         button: {
           alignItems: 'center',
-          color: '#8B0000',
+          color: '#f5af40',
           fontFamily: 'Lato',
           justifyContent: 'center',
         },
         buttonBlock: {
           alignItems: 'center',
           backgroundColor: isLightMode ? '#fff' : '#000',
-          color: '#8B0000',
+          color: '#f5af40',
           fontFamily: 'Lato',
           justifyContent: 'center',
           padding: 10,
@@ -32,13 +32,13 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           alignItems: 'center',
           backgroundColor: isLightMode ? '#fff' : '#000',
           borderColor: isLightMode ? '#ccc' : '#333',
-          color: '#8B0000',
+          color: '#f5af40',
           fontFamily: 'Lato',
           justifyContent: 'center',
         },
         buttonPadded: {
           alignItems: 'center',
-          color: '#8B0000',
+          color: '#f5af40',
           fontFamily: 'Lato',
           justifyContent: 'center',
           padding: 10,
@@ -166,8 +166,8 @@ export function useTheme<T extends {}>(other: T = {} as T) {
       background: isLightMode ? '#FFFFFF' : '#1E1E1E',
       border: isLightMode ? '#bdbdbd' : '#757575',
       card: isLightMode ? '#FFFFFF' : '#1E1E1E',
-      notification: '#8B0000',
-      primary: '#8B0000',
+      notification: '#f5af40',
+      primary: '#f5af40',
       text: isLightMode ? '#212121' : '#FFFFFF',
     },
   };

@@ -12,6 +12,7 @@ on:
       - "src/mobile/package.json"
       - "src/mobile/public/**"
       - "src/mobile/src/**"
+      - 'src/core/client/**'
       - "src/server/api/**"
 
 concurrency:

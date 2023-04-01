@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 12.4/' ios/Pods/Pods.xcodeproj/project.pbxproj",
+    "postinstall": "sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 12.4/' ios/Pods/Pods.xcodeproj/project.pbxproj && yarn cp:core",
+    "cp:core": "cp -R ../core/client/* ./src/core",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
@@ -26,6 +27,7 @@
     "jsonwebtoken": "^9.0.0",
     "react": "18.2.0",
     "react-native": "0.71.3",
+    "react-native-device-info": "^10.5.1",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-linear-gradient": "^2.6.2",

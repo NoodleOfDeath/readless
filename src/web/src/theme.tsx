@@ -49,9 +49,9 @@ export const loadTheme = (mode: PaletteMode = 'light') => {
       primary: {
         dark: '#440000',
         light: '#aa2424',
-        main: '#8B0000',
+        main: '#8b0000',
       },
-      secondary: { main: '#1E88E5' },
+      secondary: { main: '#e8b61e' },
       text: {
         disabled: lightMode ? '#bdbdbd' : '#757575',
         primary: lightMode ? '#212121' : '#FFFFFF',

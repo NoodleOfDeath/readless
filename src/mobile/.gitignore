@@ -39,7 +39,8 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
-src/api/Api.ts
+src/api
+src/utils
 swagger.json
 
 # fastlane

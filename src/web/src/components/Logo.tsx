@@ -2,20 +2,30 @@ import React from 'react';
 
 import { Paper, styled } from '@mui/material';
 
-const StyledIcon = styled(Paper)(() => ({
+import { hexToFilter } from '@/core';
+
+const StyledIcon = styled(Paper)(({ theme }) => ({
   background: 'transparent',
-  filter:
-    'invert(15%) sepia(45%) saturate(4372%) hue-rotate(347deg) brightness(91%) contrast(122%)',
+  filter: hexToFilter(theme.palette.primary.main),
 }));
 
 type Props = {
+  big?: boolean;
   height?: number;
+  small?: boolean;
+  variant?: 'compact';
 };
 
-export default function Logo({ height = 40 }: Props = {}) {
+export default function Logo({ 
+  big,
+  small,
+  height = big ? 60 : small ? 30 : 40,
+  variant,
+}: Props = {}) {
+  const img = React.useMemo(() => variant === 'compact' ? '/logo-compact.svg' : '/logo.svg', [variant]);
   return (
     <StyledIcon elevation={ 0 }>
-      <img src="/logo.svg" alt="logo" height={ height } />
+      <img src={ img } alt="logo" height={ height } />
     </StyledIcon>
   );
 }

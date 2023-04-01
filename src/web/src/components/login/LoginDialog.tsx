@@ -24,6 +24,7 @@ type LoginDialogProps = DialogProps & {
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
 const StyledCloseButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.primary.contrastText,
   position: 'fixed',
   right: theme.spacing(2),
   top: theme.spacing(2),
@@ -41,7 +42,7 @@ export default function LoginDialog({
       <DialogTitle id="login-dialog-title">{defaultAction === 'logIn' ? 'Log In' : 'Sign Up'}</DialogTitle>
       <DialogContent>
         <StyledCloseButton onClick={ onSuccessfulLogin }>
-          <Icon path={ mdiClose } size={ 1 } />
+          <Icon path={ mdiClose } size={ 1 } color="inherit" />
         </StyledCloseButton>
         <StyledStack spacing={ 2 }>
           {message && <Alert severity="info">{message}</Alert>}

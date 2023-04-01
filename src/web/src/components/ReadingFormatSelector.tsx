@@ -8,11 +8,10 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { ServingSize } from '@/components/Summary';
+import { ReadingFormat } from '@/api';
 
 type Props = {
-  servingSize?: string;
-  onChange?: (servingSize: ServingSize) => void;
+  onChange?: (format: ReadingFormat) => void;
 };
 
 const StyledButtonGroup = styled(Grid)(({ theme }) => ({
@@ -28,7 +27,7 @@ const StyledButtonGroup = styled(Grid)(({ theme }) => ({
   width: 'inherit',
 }));
 
-const StyledButton = styled(Button)<{ selected: boolean }>(({ theme, selected }) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   '&.Mui-selected': {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
@@ -44,38 +43,37 @@ const StyledButton = styled(Button)<{ selected: boolean }>(({ theme, selected })
   width: '100%',
 })); 
 
-export default function ServingSizeSelector({
-  servingSize,
-  onChange,
-}: Props = {}) {
+export default function ReadingFormatSelector({ onChange }: Props = {}) {
     
   const theme = useTheme();
   const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
     
-  const ServingButton = React.useCallback((size: ServingSize) => {
+  const ServingButton = React.useCallback((buttonFormat: ReadingFormat) => {
     return (
       <StyledButton
         variant="outlined"
-        onClick={ () => onChange?.(size) }
-        selected={ servingSize === size }>
-        {size}
+        onClick={ () => onChange?.(buttonFormat) }>
+        {buttonFormat}
       </StyledButton>
     );
-  }, [onChange, servingSize]);
+  }, [onChange]);
   
   return (
     <StyledButtonGroup container>
-      <Grid item xs={ mdAndDown ? 4 : 3 }>
-        {ServingButton('bullets')}
+      <Grid item xs={ mdAndDown ? 4 : 2 }>
+        {ServingButton(ReadingFormat.Bullets)}
       </Grid>
-      <Grid item xs={ mdAndDown ? 4 : 3 }>
-        {ServingButton('concise')}
+      <Grid item xs={ mdAndDown ? 4 : 2 }>
+        {ServingButton(ReadingFormat.Concise)}
       </Grid>
-      <Grid item xs={ mdAndDown ? 4 : 3 }>
-        {ServingButton('casual')}
+      <Grid item xs={ mdAndDown ? 4 : 2 }>
+        {ServingButton(ReadingFormat.Casual)}
       </Grid>
-      <Grid item xs={ mdAndDown ? 12 : 3 }>
-        {ServingButton('detailed')}
+      <Grid item xs={ mdAndDown ? 6 : 2 }>
+        {ServingButton(ReadingFormat.Detailed)}
+      </Grid>
+      <Grid item xs={ mdAndDown ? 6 : 2 }>
+        {ServingButton(ReadingFormat.InDepth)}
       </Grid>
     </StyledButtonGroup>
   );

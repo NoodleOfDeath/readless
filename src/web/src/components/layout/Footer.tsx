@@ -13,10 +13,10 @@ import {
   Divider,
   Grid,
   Stack,
-  Theme,
   Typography,
   styled,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import Link from 'next/link';
 
@@ -70,7 +70,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 export default function Footer() {
-  const mdAndUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+  const theme = useTheme();
+  const smAndDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <StyledFooter>
@@ -81,10 +82,10 @@ export default function Footer() {
             {' '}
             {new Date().getFullYear()}
             {' '}
-            readless
+            Read &lt; Less
           </Typography>
           <Box flexGrow={ 1 } />
-          <Stack direction={ mdAndUp ? 'row' : 'column' } spacing={ 2 }>
+          <Stack direction={ smAndDown ? 'row' : 'column' } spacing={ 2 }>
             <Typography>Follow us on</Typography>
             <Stack direction="row" spacing={ 1 }>
               <Icon path={ mdiFacebook } size={ 1 } />

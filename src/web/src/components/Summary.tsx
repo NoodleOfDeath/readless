@@ -32,24 +32,16 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import {
   InteractionType,
   InteractionUserVote,
+  ReadingFormat,
   SummaryResponse,
 } from '@/api';
-import ServingSizeSelector from '@/components/ServingSizeSelector';
+import ReadingFormatSelector from '@/components/ReadingFormatSelector';
 import TruncatedText from '@/components/common/TruncatedText';
-
-export const SERVING_SIZES = [
-  'bullets',
-  'concise',
-  'casual',
-  'detailed',
-] as const;
-
-export type ServingSize = (typeof SERVING_SIZES)[number];
 
 type Props = {
   summary?: SummaryResponse;
-  servingSize?: ServingSize;
-  onChange?: (mode?: ServingSize) => void;
+  format?: ReadingFormat;
+  onChange?: (mode?: ReadingFormat) => void;
   onInteract?: (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
 
@@ -58,7 +50,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   justifyContent: 'left',
   minWidth: 200,
   overflow: 'visible',
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   textAlign: 'left',
 }));
 
@@ -75,30 +67,31 @@ const StyledBackButton = styled(Button)(({ theme }) => ({
   top: theme.spacing(10),
 }));
 
-const StyledServingSizeContainer = styled(Box)<Partial<Props>>(({ theme, servingSize }) => ({
+const StyledReadingFormatContainer = styled(Box)<Partial<Props>>(({ theme, format }) => ({
   borderRadius: 8,
-  bottom: servingSize && theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
-  left: servingSize && theme.breakpoints.down('md') ? '50%' : undefined,
-  position: servingSize ? 'fixed' : 'relative',
-  right: servingSize && !theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
-  top: servingSize && !theme.breakpoints.down('md') ? theme.spacing(10) : undefined,
+  bottom: format && theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
+  left: format && theme.breakpoints.down('md') ? '50%' : undefined,
+  position: format ? 'fixed' : 'relative',
+  right: format && !theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
+  top: format && !theme.breakpoints.down('md') ? theme.spacing(10) : undefined,
 }));
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   borderRadius: 8,
-  marginLeft: theme.spacing(2),
-  width: 120,
+  marginBottom: theme.breakpoints.down('md') ? theme.spacing(2) : 0,
+  marginLeft: theme.breakpoints.down('md') ? 0 : theme.spacing(2),
+  width: theme.breakpoints.down('md') ? '100%' : 120,
 }));
 
-const StyledCategoryBox = styled(Box)(({ theme }) => ({
+const StyledCategoryBox = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
   background: theme.palette.primary.main,
   borderRadius: 8,
   color: theme.palette.primary.contrastText,
   display: 'flex',
-  height: 150,
+  height: theme.breakpoints.down('md') ? '100%' : 'auto',
   justifyContent: 'center', 
-  width: 120,
+  width: theme.breakpoints.down('md') ? '100%' : 120,
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -107,8 +100,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
-
-const StyledPaddedStack = styled(Stack)(({ theme }) => ({ padding: theme.spacing(2) }));
 
 const StyledCenteredStack = styled(Stack)(() => ({
   alignItems: 'center',
@@ -121,7 +112,7 @@ const StyledMenuBox = styled(Box)(() => ({ width: 250 }));
 
 export default function Summary({
   summary,
-  servingSize,
+  format,
   onChange,
   onInteract,
 }: Props = {}) {
@@ -162,14 +153,10 @@ export default function Summary({
 
   const cardMediaStack = React.useMemo(() => {
     return (
-      <StyledCenteredStack direction='column' spacing={ 2 }>
-        <StyledCategoryBox>
-          <StyledCenteredStack>
-            <Typography variant="subtitle1">{summary?.category}</Typography>
-            <Typography variant="subtitle2">{summary?.subcategory}</Typography>
-          </StyledCenteredStack>
-        </StyledCategoryBox>
-      </StyledCenteredStack>
+      <StyledCategoryBox>
+        <Typography variant="subtitle1">{summary?.category}</Typography>
+        <Typography variant="subtitle2">{summary?.subcategory}</Typography>
+      </StyledCategoryBox>
     );
   }, [summary?.category, summary?.subcategory]);
   
@@ -204,7 +191,7 @@ export default function Summary({
       return null;
     }
     let text = '';
-    switch (servingSize) {
+    switch (format) {
     case 'bullets':
       text = summary.bullets.join('\n');
       break;
@@ -218,12 +205,12 @@ export default function Summary({
       text = summary.longSummary;
       break;
     default:
-      text = '';
+      text = summary.text;
     }
     return (
       <ReactMarkdown>{text}</ReactMarkdown>
     );
-  }, [summary, servingSize]);
+  }, [summary, format]);
   
   const openMenu = React.useCallback(
     (open: boolean) =>
@@ -267,7 +254,7 @@ export default function Summary({
 
   return (
     <StyledCard>
-      {servingSize !== undefined && (
+      {format !== undefined && (
         <StyledBackButton
           onClick={ () => onChange?.() }
           startIcon={
@@ -278,27 +265,33 @@ export default function Summary({
       )}
       <StyledStack>
         <StyledStack direction='row' spacing={ 2 }>
-          <StyledPaddedStack flexGrow={ 1 }>
+          <StyledStack flexGrow={ 1 }>
+            {mdAndDown && (
+              <StyledCardMedia>
+                {cardMediaStack}
+              </StyledCardMedia>
+            )}
             <Typography variant="subtitle1">{summary?.outletName}</Typography>
             <Typography variant="h6">
               <TruncatedText maxCharCount={ 200 }>{summary?.title}</TruncatedText>
             </Typography>
-          </StyledPaddedStack>
-          <StyledCardMedia>
-            {cardMediaStack}  
-          </StyledCardMedia>
+          </StyledStack>
+          {!mdAndDown && (
+            <StyledCardMedia>
+              {cardMediaStack}  
+            </StyledCardMedia>
+          )}
         </StyledStack>
         <StyledDivider variant="fullWidth" />
         <Stack direction={ bottomRowDirection } spacing={ 1 }>
-          <Stack direction='row' sx={ { lineHeight: '4rem' } }>
+          <Stack direction='row' flexGrow={ 1 }>
             <Typography variant="subtitle2">{timeAgo}</Typography>
             <Box flexGrow={ 1 } />
             {interactionButtons}
           </Stack>
-          <Box flexGrow={ 1 } />
-          <StyledServingSizeContainer servingSize={ servingSize }>
-            <ServingSizeSelector servingSize={ servingSize } onChange={ (size) => onChange?.(size) } />
-          </StyledServingSizeContainer>
+          <StyledReadingFormatContainer format={ format }>
+            <ReadingFormatSelector onChange={ (newFormat) => onChange?.(newFormat) } />
+          </StyledReadingFormatContainer>
           <Button onClick={ openMenu(true) }>
             <Icon path={ mdiDotsHorizontal } size={ 1 } />
           </Button>
@@ -336,7 +329,7 @@ export default function Summary({
             </StyledMenuBox>
           </Menu>
         </Stack>
-        {servingSize !== undefined && <CardContent>{content}</CardContent>}
+        {format !== undefined && <CardContent>{content}</CardContent>}
       </StyledStack>
     </StyledCard>
   );

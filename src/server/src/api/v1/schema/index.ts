@@ -11,6 +11,7 @@ import {
   Role,
   Subscription,
   Summary,
+  SummaryContent,
   SummaryInteraction,
   SummaryInteractionMedia,
   SummaryMedia,
@@ -46,6 +47,7 @@ export function makeAssociations() {
   Summary.belongsTo(Outlet, { foreignKey: 'outletId' });
   Summary.hasOne(RefSummaryTopic, { foreignKey: 'sourceId' });
   Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
+  Summary.hasMany(SummaryContent, { foreignKey: 'parentId' });
 
   SummaryInteraction.hasMany(SummaryInteractionMedia, { foreignKey: 'parentId' });
   SummaryInteraction.belongsTo(User, {
