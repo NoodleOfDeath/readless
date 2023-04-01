@@ -6,7 +6,7 @@ RUN npm i -g tsoa
 # copy dependency projects
 WORKDIR /home/node
 COPY src/server ./server
-COPY src/utils ./utils
+COPY src/core ./core
 
 # copy project resources
 WORKDIR /home/node/app
