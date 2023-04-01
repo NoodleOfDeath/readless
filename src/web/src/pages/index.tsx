@@ -8,10 +8,17 @@ import JustNewsHeader from '@/components/layout/JustNewsHeader';
 import Page from '@/components/layout/Page';
 import { SessionContext } from '@/contexts';
 import { useSummaryClient } from '@/hooks';
+import { useRouter } from '@/next/router';
 
 export default function SearchPage() {
   const { interactWithSummary } = useSummaryClient();
   const { setShowLoginDialog } = React.useContext(SessionContext);
+
+  const router = useRouter();
+
+  React.useEffect(() => {
+    router.push('/search');
+  }, [router]);
 
   const [currentSummary, setCurrentSummary] = React.useState<SummaryResponse | undefined>(undefined);
 
