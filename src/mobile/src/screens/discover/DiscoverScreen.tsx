@@ -3,9 +3,8 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import ResultsView from './ResultsView';
-
-import SummaryScreen from '@/screens/summary/SummaryScreen';
-import { RootParamList } from '@/types';
+import { RootParamList } from '../../types';
+import SummaryScreen from '../summary/SummaryScreen';
 
 export default function HomeScreen() {
   const Stack = createNativeStackNavigator<RootParamList['Discover']>();

@@ -662,7 +662,7 @@
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ReadLess;
+				INFOPLIST_KEY_CFBundleDisplayName = "Read<Less";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -692,7 +692,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = ReadLess/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ReadLess;
+				INFOPLIST_KEY_CFBundleDisplayName = "Read<Less";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

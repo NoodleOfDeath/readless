@@ -3,14 +3,16 @@ import { Button, useColorScheme } from 'react-native';
 
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import axios from 'axios';
 import { SearchBar } from 'react-native-elements';
 
-import { API, SummaryResponse } from '../../api';
+import {
+  API,
+  ReadingFormat,
+  SummaryResponse,
+} from '../../api';
 import FlexView from '../../components/common/FlexView';
 import SafeScrollView from '../../components/common/SafeScrollView';
-import { ServingSize } from '../../components/summary/ServingSizeSelector';
-import Summary from '../../components/summary/Summary';
+import Summary from '../../components/post/Summary';
 import { useTheme } from '../../components/theme';
 import { RootParamList } from '../../types';
 

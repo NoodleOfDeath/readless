@@ -8,7 +8,7 @@ import {
 import { formatDistance } from 'date-fns';
 import { Divider } from 'react-native-elements';
 
-import ConsumptionModeSelector, { ConsumptionMode } from './ConsumptionModeSelector';
+import ReadingFormtelector, { ConsumptionMode } from './ReadingFormatSelector';
 import { SummaryResponse } from '../../api';
 import FlexView from '../common/FlexView';
 import Menu from '../common/Menu';
@@ -21,7 +21,7 @@ type Props = {
   onChange?: (mode?: ConsumptionMode) => void;
 };
 
-export default function Post({
+export default function Summary({
   summary,
   tickIntervalMs = 60_000,
   mode,
@@ -84,7 +84,7 @@ export default function Post({
         <Menu icon="dots-horizontal" options={ options } />
       </FlexView>
       <FlexView mt={ 2 }>
-        <ConsumptionModeSelector mode={ mode } onChange={ onChange } />
+        <ReadingFormtelector mode={ mode } onChange={ onChange } />
         <FlexView mt={ 4 }>
           {content && <Text style={ theme.typography.body1 }>{content}</Text>}
         </FlexView>

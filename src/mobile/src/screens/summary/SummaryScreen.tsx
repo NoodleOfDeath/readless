@@ -6,7 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import FlexView from '../../components/common/FlexView';
 import SafeScrollView from '../../components/common/SafeScrollView';
 import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
-import Post from '../../components/post/Post';
+import Summary from '../../components/post/Post';
 import { SessionContext } from '../../contexts/SessionContext';
 import { RootParamList } from '../../types';
 
@@ -35,7 +35,7 @@ export default function PostScreen({
     <SafeScrollView>
       <FlexView mt={ 10 }>
         {source && (
-          <Post
+          <Summary
             source={ source }
             mode={ mode }
             onChange={ (mode) => setMode(mode) } />

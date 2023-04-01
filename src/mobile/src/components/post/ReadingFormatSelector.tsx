@@ -21,7 +21,7 @@ type Props = {
   onChange?: (mode?: ConsumptionMode) => void;
 };
 
-export default function ConsumptionModeSelector({
+export default function ReadingFormtelector({
   mode,
   onChange,
 }: Props = {}) {
