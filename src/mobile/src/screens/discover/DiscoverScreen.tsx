@@ -3,8 +3,9 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import ResultsView from './ResultsView';
-import { RootParamList } from '../../types';
-import PostScreen from '../post/PostScreen';
+
+import SummaryScreen from '@/screens/summary/SummaryScreen';
+import { RootParamList } from '@/types';
 
 export default function HomeScreen() {
   const Stack = createNativeStackNavigator<RootParamList['Discover']>();
@@ -16,7 +17,7 @@ export default function HomeScreen() {
         options={ { headerShown: false } } />
       <Stack.Screen
         name="Post"
-        component={ PostScreen }
+        component={ SummaryScreen }
         options={ { headerShown: true } } />
     </Stack.Navigator>
   );

@@ -11,6 +11,7 @@ COPY src/core ./core
 # copy project resources
 WORKDIR /home/node/app
 COPY src/web/src ./src
+RUN mkdir -p ./src/core
 COPY src/web/public ./public
 COPY src/web/tsconfig.json ./
 COPY src/web/next-env.d.ts ./
