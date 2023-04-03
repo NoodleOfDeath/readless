@@ -8,11 +8,11 @@ import {
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
+import WhatsNewCard from './WhatsNewCard';
+
 import { FlexView } from '~/components';
 import { window } from '~/constants';
 import { useTheme } from '~/hooks';
-
-import WhatsNewCard from './WhatsNewCard';
 
 type Props = {
   onClose?: () => void;
