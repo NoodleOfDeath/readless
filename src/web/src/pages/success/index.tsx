@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Page from '@/components/layout/Page';
-import { useRouter } from '@/next/router';
+import Page from '~/components/layout/Page';
+import { useRouter } from '~/next/router';
 
 export default function SuccessPage() {
   const router = useRouter();

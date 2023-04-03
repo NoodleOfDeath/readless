@@ -1,11 +1,8 @@
 import React from 'react';
-import { Pressable, Text } from 'react-native';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import { ReadingFormat } from '../../api';
-import FlexView from '../common/FlexView';
-import { useTheme } from '../theme';
+import { ReadingFormat } from '~/api';
+import { Button, FlexView } from '~/components';
+import { useTheme } from '~/hooks';
 
 type Props = {
   format?: ReadingFormat;
@@ -20,44 +17,37 @@ const FORMAT_ICONS = {
   [ReadingFormat.InDepth]: 'text-box-multiple',
 } as const;
 
-export default function ReadingFormatSelector({
+export function ReadingFormatSelector({
   format,
   onChange,
 }: Props = {}) {
   const theme = useTheme();
-
-  const selectedIndex = React.useMemo(() => {
-    return Object.keys(FORMAT_ICONS).indexOf(format);
-  }, [format]);
-
-  const Icon = React.useCallback((newFormat: ReadingFormat, row = 0) => {
-    const textStyle = {
-      ...theme.components.button,
-      ...(format === newFormat ? theme.components.buttonSelected : {}),
-    };
+  const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
     return (
-      <Pressable width={ row === 0 ? '33.33%' : '50%' } style={ { ...theme.components.buttonPadded, ...(format === newFormat ? theme.components.buttonSelected : {}) } } onPress={ () => onChange?.(newFormat) }>
-        <FlexView row>
-          <MaterialCommunityIcons
-            name={ FORMAT_ICONS[newFormat] }
-            size={ 24 }
-            style={ textStyle } />
-          <Text style={ { ...textStyle, ...theme.components.buttonText } }>{newFormat}</Text>
-        </FlexView>
-      </Pressable>
+      <Button
+        outlined
+        row
+        center
+        p={ 8 }
+        icon={ FORMAT_ICONS[newFormat] }
+        width={ row === 0 ? '33.33%' : '50%' }
+        selected={ format === newFormat } 
+        onPress={ () => onChange?.(newFormat) }>
+        {newFormat}
+      </Button>
     );
   }, [format, onChange]);
 
   return (
-    <FlexView style={ theme.components.buttonGroup }>
+    <FlexView outlined style={ theme.components.buttonGroup }>
       <FlexView row style={ theme.components.buttonGroupRow }>
-        {Icon(ReadingFormat.Concise)}
-        {Icon(ReadingFormat.Bullets)}
-        {Icon(ReadingFormat.Casual)}
+        {makeButton(ReadingFormat.Concise)}
+        {makeButton(ReadingFormat.Bullets)}
+        {makeButton(ReadingFormat.Casual)}
       </FlexView>
       <FlexView row style={ theme.components.buttonGroupRow }>
-        {Icon(ReadingFormat.Detailed, 1)}
-        {Icon(ReadingFormat.InDepth, 1)}
+        {makeButton(ReadingFormat.Detailed, 1)}
+        {makeButton(ReadingFormat.InDepth, 1)}
       </FlexView>
     </FlexView>
   );

@@ -12,7 +12,7 @@ import {
   styled,
 } from '@mui/material';
 
-import { SessionContext } from '@/contexts';
+import { SessionContext } from '~/contexts';
 
 const StyledButtonGroup = styled(ButtonGroup)`
   display: flex;

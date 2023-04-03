@@ -1,20 +1,29 @@
 import React from 'react';
 
-import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { Input } from 'react-native-elements';
 
-import FlexView from '../../components/common/FlexView';
+import { Button, FlexView } from '~/components';
+import { useLoginClient } from '~/hooks';
 
-export default function LoginForm() {
+export function LoginForm() {
+
+  const { handleLogIn } = useLoginClient();
+
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const handleLogInPress = React.useCallback(() => {
+    handleLogIn({
+      email,
+      password,
+    });
+  }, [email, handleLogIn, password]);
   
   return (
-    <FlexView>
-      <GoogleSigninButton
-        style={ { height: 48, width: 192 } }
-        size={ GoogleSigninButton.Size.Wide }
-        color={ GoogleSigninButton.Color.Dark }
-        onPress={ this._signIn }
-        disabled={ this.state.isSigninInProgress } />
-      ;
+    <FlexView p={ 16 } col>
+      <Input label="Email" value={ email } onChange={ (e) => setEmail(e.nativeEvent.text) } />
+      <Input label="Password" secureTextEntry value={ password } onChange={ (e) => setPassword(e.nativeEvent.text) } />
+      <Button onPress={ () => handleLogInPress() }>Log In</Button>
     </FlexView>
   );
 }

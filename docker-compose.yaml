@@ -18,7 +18,7 @@ services:
       - "$PORT:$PORT"
     volumes:
       - ./src/web/.env:/home/node/app/.env
-      - ./src/web/.eslint:/home/node/app/.eslint
+      - ./src/web/.eslintrc.js:/home/node/app/.eslintrc:js
       - ./src/web/nodemon.json:/home/node/app/nodmeon.json
       - ./src/web/next-env.d.ts:/home/node/app/next-env.d.ts
       - ./src/web/package.json:/home/node/app/package.json
@@ -27,6 +27,24 @@ services:
       - ./src/web/src:/home/node/app/src
       - ./src/core/client:/home/node/app/src/core
 
+  mobile-local:
+    build:
+      context: .
+      dockerfile: Dockerfile.mobile.local
+    env_file:
+      - src/mobile/.env
+    ports:
+      - "$PORT:$PORT"
+    volumes:
+      - ./src/mobile/.env:/home/node/app/.env
+      - ./src/mobile/.eslintrc.js:/home/node/app/.eslintrc.js
+      - ./src/mobile/next-env.d.ts:/home/node/app/next-env.d.ts
+      - ./src/mobile/package.json:/home/node/app/package.json
+      - ./src/mobile/node_modules:/home/node/app/node_modules
+      - ./src/mobile/public:/home/node/app/public
+      - ./src/mobile/src:/home/node/app/src
+      - ./src/core/client:/home/node/app/src/core
+      
   api:
     build:
       context: .

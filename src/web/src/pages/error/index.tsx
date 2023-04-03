@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Stack, Typography } from '@mui/material';
 
-import Page from '@/components/layout/Page';
-import { useRouter } from '@/next/router';
+import Page from '~/components/layout/Page';
+import { useRouter } from '~/next/router';
 
 export default function ErrorPage() {
   const { searchParams } = useRouter();

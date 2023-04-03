@@ -6,8 +6,8 @@ import {
   LoginResponse,
   ReadingFormat,
   RequestParams,
-} from '@/api';
-import { loadTheme } from '@/theme';
+} from '~/api';
+import { loadTheme } from '~/theme';
 
 export type Preferences = {
   displayMode?: PaletteMode;

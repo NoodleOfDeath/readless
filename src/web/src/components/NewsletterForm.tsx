@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { FieldValues, useForm } from 'react-hook-form'; 
 
-import API from '@/api';
+import API from '~/api';
 
 const StyledStack = styled(Stack)(() => ({
   alignContent: 'center',

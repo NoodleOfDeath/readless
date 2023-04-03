@@ -30,9 +30,9 @@ import {
   InteractionUserVote,
   ReadingFormat,
   SummaryResponse,
-} from '@/api';
-import ReadingFormatSelector from '@/components/ReadingFormatSelector';
-import TruncatedText from '@/components/common/TruncatedText';
+} from '~/api';
+import ReadingFormatSelector from '~/components/ReadingFormatSelector';
+import TruncatedText from '~/components/common/TruncatedText';
 
 type Props = {
   summary?: SummaryResponse;

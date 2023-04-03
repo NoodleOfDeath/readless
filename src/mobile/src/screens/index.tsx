@@ -1,25 +1,16 @@
-import React from 'react';
-import { Pressable } from 'react-native';
+export * from './discover/DiscoverScreen';
+export * from './notifications/NotificationsScreen';
+export * from './profile/ProfileScreen';
+export * from './search/SearchScreen';
+export * from './summary/SummaryScreen';
+export * from './whats-new/WhatsNewScreen';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+export * from './types';
 
-import DiscoverScreen from './discover/DiscoverScreen';
-import NotificationsScreen from './notifications/NotificationsScreen';
-import ProfileScreen from './profile/ProfileScreen';
-import { useTheme } from '../components/theme';
-
-type ScreenProps = {
-  name: string;
-  component: React.ComponentType;
-  icon: string;
-  headerRight?:
-    | ((props: {
-        tintColor?: string;
-        pressColor?: string;
-        pressOpacity?: number;
-      }) => React.ReactNode)
-    ;
-};
+import { DiscoverScreen } from './discover/DiscoverScreen';
+import { NotificationsScreen } from './notifications/NotificationsScreen';
+import { ProfileScreen } from './profile/ProfileScreen';
+import { ScreenProps } from './types';
 
 export const SCREENS: ScreenProps[] = [
   {
@@ -34,15 +25,6 @@ export const SCREENS: ScreenProps[] = [
   },
   {
     component: ProfileScreen,
-    headerRight: () => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const theme = useTheme();
-      return (
-        <Pressable style={ theme.components.buttonPadded }>
-          <Icon name="menu" size={ 32 } color={ theme.components.button.color } />
-        </Pressable>
-      );
-    },
     icon: 'account',
     name: 'Profile',
   },

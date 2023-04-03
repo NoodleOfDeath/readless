@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Paper, styled } from '@mui/material';
 
-import { hexToFilter } from '@/core';
+import { hexToFilter } from '~/core';
 
 const StyledIcon = styled(Paper)(({ theme }) => ({
   background: 'transparent',

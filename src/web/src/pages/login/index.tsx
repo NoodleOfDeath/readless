@@ -2,7 +2,7 @@ import React from 'react';
 
 import Page from '../../components/layout/Page';
 
-import LoginForm, { LoginFormProps } from '@/components/login/LoginForm';
+import LoginForm, { LoginFormProps } from '~/components/login/LoginForm';
 
 type Props = LoginFormProps;
 

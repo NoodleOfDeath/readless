@@ -1,34 +1,40 @@
 import React from 'react';
-import {
-  Linking,
-  Pressable,
-  Text,
-} from 'react-native';
+import { Linking, Pressable } from 'react-native';
 
 import { formatDistance } from 'date-fns';
-import { Divider } from 'react-native-elements';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import ReadingFormatSelector from './ReadingFormatSelector';
-import { ReadingFormat, SummaryResponse } from '../../api';
-import FlexView from '../common/FlexView';
-import Menu from '../common/Menu';
-import { useTheme } from '../theme';
+import { 
+  InteractionType,
+  ReadingFormat, 
+  SummaryResponse,
+} from '~/api';
+import {
+  Button,
+  Divider,
+  FlexView,
+  ReadingFormatSelector,
+  Text,
+} from '~/components';
+import { SessionContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 
 type Props = {
   summary: SummaryResponse;
   tickIntervalMs?: number;
   format?: ReadingFormat;
   onChange?: (format?: ReadingFormat) => void;
+  onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
 
-export default function Summary({
+export function Summary({
   summary,
   tickIntervalMs = 60_000,
   format,
   onChange,
+  onInteract,
 }: Props) {
   const theme = useTheme();
+  const { preferredReadingFormat } = React.useContext(SessionContext);
 
   const [lastTick, setLastTick] = React.useState(new Date());
 
@@ -49,7 +55,7 @@ export default function Summary({
 
   const content = React.useMemo(() => {
     if (!format || !summary) {
-      return null;
+      return;
     }
     switch (format) {
     case 'bullets':
@@ -66,48 +72,42 @@ export default function Summary({
   }, [format, summary]);
   
   const votes = React.useMemo(() => {
-    return (summary.interactions.upvotes ?? 0) - (summary.interactions.downvotes ?? 0);
+    return (summary.interactions.upvote ?? 0) - (summary.interactions.downvote ?? 0);
   }, [summary.interactions]);
-
+  
   return (
     <FlexView style={ theme.components.card }>
       <FlexView style={ theme.components.category }>
-        <Text style={ theme.components.categoryText }>{summary.category}</Text>
-        <Text style={ theme.components.categoryText }>{summary.subcategory}</Text>
+        <Text center color='contrastText'>{summary.category}</Text>
+        <Text center color='contrastText'>{summary.subcategory}</Text>
       </FlexView>
       <FlexView row>
-        <Text style={ theme.typography.subtitle1 }>{summary.outletName.trim()}</Text>
-        <Text style={ theme.typography.subtitle1 } onPress={ () => Linking.openURL(summary.url) }>View original source</Text>
+        <Text variant='subtitle1'>{summary.outletName.trim()}</Text>
+        <Button onPress={ () => Linking.openURL(summary.url) }><Text variant='subtitle1'>View original source</Text></Button>
       </FlexView>
-      <Pressable onPress={ () => onChange?.(ReadingFormat.Concise) }>
-        <Text style={ theme.typography.title1 }>{summary.title.trim()}</Text>
+      <Pressable onPress={ () => onChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+        <Text variant='title1'>{summary.title.trim()}</Text>
       </Pressable>
-      <Divider orientation="horizontal" style={ theme.components.divider } />
+      <Divider horizontal />
       <FlexView row>
         <FlexView row>
-          <Text style={ theme.typography.subtitle2 }>{timeAgo}</Text>
+          <Text variant='subtitle2'>{timeAgo}</Text>
         </FlexView>
         <FlexView row />
         <FlexView row>
-          <Pressable style={ theme.components.button }>
-            <MaterialCommunityIcons
-              name={ summary.interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
-              size={ 24 }
-              style={ theme.components.button } />
-          </Pressable>
-          <Text style={ theme.typography.subtitle2 }>{votes}</Text>
-          <Pressable style={ theme.components.button }>
-            <MaterialCommunityIcons
-              name={ summary.interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
-              size={ 24 }
-              style={ theme.components.button } />
-          </Pressable>
+          <Button
+            icon={ summary.interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
+            onPress={ () => onInteract?.(InteractionType.Upvote) } />
+          <Text variant='subtitle2'>{String(votes)}</Text>
+          <Button 
+            icon={ summary.interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
+            onPress={ () => onInteract?.(InteractionType.Downvote) } />
         </FlexView>
       </FlexView>
       <FlexView mt={ 2 }>
         <ReadingFormatSelector format={ format } onChange={ onChange } />
         <FlexView mt={ 4 }>
-          {content && <Text style={ theme.typography.body1 }>{content}</Text>}
+          {content && <Text variant='body1'>{content}</Text>}
         </FlexView>
       </FlexView>
     </FlexView>

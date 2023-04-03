@@ -1,7 +1,11 @@
 import React from 'react';
 
-import SafeScrollView from '../../components/common/SafeScrollView';
+import { FlexView, SafeScrollView } from '~/components';
 
-export default function NotificationsScreen() {
-  return <SafeScrollView></SafeScrollView>;
+export function NotificationsScreen() {
+  return (
+    <SafeScrollView>
+      <FlexView />
+    </SafeScrollView>
+  );
 }

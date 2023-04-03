@@ -23,13 +23,13 @@ import {
   styled,
 } from '@mui/material';
 
-import Logo from '@/components/Logo';
-import Footer from '@/components/layout/Footer';
-import LightDarkModeButtons from '@/components/layout/header/LightDarkModeButtons';
-import NavigationItem, { NavigationItemProps } from '@/components/layout/header/NavigationItem';
-import { PODCAST_LINKS } from '@/config/PodcastLinks';
-import { SessionContext } from '@/contexts';
-import { useRouter } from '@/next/router';
+import Logo from '~/components/Logo';
+import Footer from '~/components/layout/Footer';
+import LightDarkModeButtons from '~/components/layout/header/LightDarkModeButtons';
+import NavigationItem, { NavigationItemProps } from '~/components/layout/header/NavigationItem';
+import { PODCAST_LINKS } from '~/config/PodcastLinks';
+import { SessionContext } from '~/contexts';
+import { useRouter } from '~/next/router';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   margin: 'auto',

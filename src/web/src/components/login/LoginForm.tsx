@@ -18,10 +18,10 @@ import API, {
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
-} from '@/api';
-import ForgotPasswordForm from '@/components/login/ForgotPasswordForm';
-import { SessionContext } from '@/contexts';
-import { useRouter } from '@/next/router';
+} from '~/api';
+import ForgotPasswordForm from '~/components/login/ForgotPasswordForm';
+import { SessionContext } from '~/contexts';
+import { useRouter } from '~/next/router';
 
 export type LoginFormProps = {
   defaultAction?: 'logIn' | 'signUp' | 'forgotPassword';

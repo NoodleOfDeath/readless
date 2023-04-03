@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import API, { InternalError, PartialGenerateOTPRequest } from '@/api';
-import { SessionContext } from '@/contexts';
+import API, { InternalError, PartialGenerateOTPRequest } from '~/api';
+import { SessionContext } from '~/contexts';
 
 type Props = {
   onSuccess?: () => void;

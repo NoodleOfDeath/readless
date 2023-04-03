@@ -2,20 +2,22 @@ import React from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ResultsView from './ResultsView';
-import { RootParamList } from '../../types';
-import SummaryScreen from '../summary/SummaryScreen';
+import { 
+  RootParamList,
+  SearchScreen,
+  SummaryScreen,
+} from '~/screens';
 
-export default function HomeScreen() {
-  const Stack = createNativeStackNavigator<RootParamList['Discover']>();
+export function DiscoverScreen() {
+  const Stack = createNativeStackNavigator<RootParamList['discover']>();
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator initialRouteName="search">
       <Stack.Screen
-        name="Home"
-        component={ ResultsView }
+        name="search"
+        component={ SearchScreen }
         options={ { headerShown: false } } />
       <Stack.Screen
-        name="Summary"
+        name="summary"
         component={ SummaryScreen }
         options={ { headerShown: true } } />
     </Stack.Navigator>

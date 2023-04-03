@@ -5,9 +5,9 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Head from 'next/head';
 import PropTypes from 'prop-types';
 
-import CookieConsent from '@/components/layout/CookieConsent';
-import Header from '@/components/layout/header/Header';
-import { SessionContextProvider } from '@/contexts';
+import CookieConsent from '~/components/layout/CookieConsent';
+import Header from '~/components/layout/header/Header';
+import { SessionContextProvider } from '~/contexts';
 
 const StyledAppContainer = styled(Box)`
   display: flex;
@@ -44,7 +44,7 @@ function App(props: PropTypes.InferProps<typeof App.propTypes>) {
               <Component { ...pageProps } />
             </StyledAppContent>
             <CookieConsent />
-            </StyledAppContainer>
+          </StyledAppContainer>
         </SessionContextProvider>
       </GoogleOAuthProvider>
     </React.Fragment>

@@ -4,14 +4,14 @@
  *
  * @format
  */
-
+ 
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
-        experimentalImportSupport: false,
+        experimentalImportSupport: true,
         inlineRequires: true,
       },
     }),
   },
-};
+}

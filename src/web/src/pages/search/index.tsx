@@ -11,14 +11,14 @@ import API, {
   InteractionResponse,
   ReadingFormat,
   SummaryResponse,
-} from '@/api';
-import Logo from '@/components/Logo';
-import Summary from '@/components/Summary';
-import Page from '@/components/layout/Page';
-import Filters from '@/components/search/Filters';
-import { SessionContext } from '@/contexts';
-import { useSummaryClient } from '@/hooks';
-import { useRouter } from '@/next/router';
+} from '~/api';
+import Logo from '~/components/Logo';
+import Summary from '~/components/Summary';
+import Page from '~/components/layout/Page';
+import Filters from '~/components/search/Filters';
+import { SessionContext } from '~/contexts';
+import { useSummaryClient } from '~/hooks';
+import { useRouter } from '~/next/router';
 
 export default function SearchPage() {
   const { searchParams } = useRouter();

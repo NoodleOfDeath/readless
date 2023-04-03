@@ -3,33 +3,35 @@ import React from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { ReadingFormat } from '../../api';
-import FlexView from '../../components/common/FlexView';
-import SafeScrollView from '../../components/common/SafeScrollView';
-import Summary from '../../components/post/Summary';
-import { SessionContext } from '../../contexts/SessionContext';
-import { RootParamList } from '../../types';
+import { ReadingFormat } from '~/api';
+import {
+  FlexView,
+  SafeScrollView,
+  Summary,
+} from '~/components';
+import { AppStateContext } from '~/contexts';
+import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['Discover'], 'Summary'>;
-  navigation: NativeStackNavigationProp<RootParamList['Discover'], 'Summary'>;
+  route: RouteProp<RootParamList['discover'], 'summary'>;
+  navigation: NativeStackNavigationProp<RootParamList['discover'], 'summary'>;
 };
 
-export default function SummaryScreen({
+export function SummaryScreen({
   route: { params: { summary, format: initialFormat } },
   navigation,
 }: Props) {
-  const { setTabControllerScreenOptions } = React.useContext(SessionContext);
+  const { setScreenOptions } = React.useContext(AppStateContext);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
 
   React.useEffect(() => {
     navigation.setOptions({ headerTitle: summary?.title });
-    setTabControllerScreenOptions((prev) => ({
+    setScreenOptions((prev) => ({
       ...prev,
       headerShown: false,
     }));
-  }, [navigation, setTabControllerScreenOptions, summary]);
+  }, [navigation, setScreenOptions, summary]);
 
   return (
     <SafeScrollView>
