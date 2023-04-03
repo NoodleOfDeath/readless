@@ -34,20 +34,15 @@ export const authMiddleware = (securityName: string, { required = false, scope =
           } catch (e) {
             if (required) {
               throw new AuthError('INVALID_CREDENTIALS');
-            } else {
-              next()
             }
           }
         } else if (required) {
           throw new AuthError('INVALID_CREDENTIALS');
-        } else {
-          next();
         }
       } else if (required) {
         throw new AuthError('MISSING_AUTHORIZATION_HEADER');
-      } else {
-        next();
       }
+      next();
     }
   } catch (e) {
     if (e instanceof AuthError) {
