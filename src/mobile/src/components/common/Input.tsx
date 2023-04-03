@@ -8,5 +8,5 @@ export type InputProps = RNInputProps;
 
 export function Input(props: InputProps) {
   const theme = useTheme();
-  return <RNInput {...props} style={ theme.components.input } />
+  return <RNInput { ...props } style={ theme.components.input } />;
 }

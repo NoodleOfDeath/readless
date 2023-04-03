@@ -6,10 +6,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import {
-  SetSearchTextOptions,
-  SetSessionOptions,
-} from './types';
+import { SetSearchTextOptions, SetSessionOptions } from './types';
 
 import LoginDialog from '~/components/login/LoginDialog';
 import { SessionContext } from '~/contexts';
