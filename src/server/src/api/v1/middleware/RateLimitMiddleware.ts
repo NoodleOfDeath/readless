@@ -2,6 +2,7 @@ import { Request, RequestHandler } from 'express';
 import ms from 'ms';
 
 import { RateLimit } from '../schema';
+import { internalErrorHandler } from './internal-errors';
 
 export type Duration = `${number}${'ms'|'s'|'m'|'h'|'d'|'w'|'M'|'y'}`;
 export type RateLimitString = `${number}${'/'|'every'|'per'}${Duration}`;
@@ -60,8 +61,7 @@ export const rateLimitMiddleware = (
       }
       next();
     } catch (e) {
-      console.log(e);
-      res.status(500).end();
+      internalErrorHandler(res, e);
     }
   };
 
