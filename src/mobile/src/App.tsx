@@ -6,13 +6,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { AppStateContextProvider } from '~/contexts';
 import { useTheme } from '~/hooks';
-import { NAVIGATION_LINKING_OPTIONS, SCREENS } from '~/screens';
-import { WhatsNewScreen } from '~/screens';
+import { NAVIGATION_LINKING_OPTIONS, WhatsNewScreen } from '~/screens';
+import { TABS } from '~/tabs';
 
 export default function App() {
   const theme = useTheme();
   const Tab = createBottomTabNavigator();
-  const [showWhatsNew, setShowWhatsNew] = React.useState(true);
+  const [showWhatsNew, setShowWhatsNew] = React.useState(false);
   return (
     <AppStateContextProvider>
       <NavigationContainer
@@ -25,9 +25,9 @@ export default function App() {
           <WhatsNewScreen onClose={ () => setShowWhatsNew(false) } />
         ) : (
           <Tab.Navigator
-            initialRouteName="Discover"
+            initialRouteName="search"
             screenOptions={ { headerShown: true } }>
-            {SCREENS.map((screen) => (
+            {TABS.map((screen) => (
               <Tab.Screen
                 key={ screen.name }
                 name={ screen.name }

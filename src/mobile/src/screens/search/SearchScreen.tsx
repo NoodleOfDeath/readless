@@ -20,8 +20,8 @@ import { useSummaryClient, useTheme } from '~/hooks';
 import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['discover'], 'search'>;
-  navigation: NativeStackNavigationProp<RootParamList['discover'], 'search'>;
+  route: RouteProp<RootParamList['search'], 'search'>;
+  navigation: NativeStackNavigationProp<RootParamList['search'], 'search'>;
 };
 
 export function SearchScreen({ navigation }: Props) {
@@ -114,14 +114,20 @@ export function SearchScreen({ navigation }: Props) {
   };
   
   const handleInteraction = React.useCallback(async (summary: SummaryResponse, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
-    await interactWithSummary(
+    const { data, error } = await interactWithSummary(
       summary, 
       interaction,
       content,
-      metadata,
-      (interactions) => updateInteractions(summary, interactions),
-      (error) => console.log(error)
+      metadata
     );
+    if (error) {
+      console.log(error);
+      return;
+    }
+    if (!data) {
+      return;
+    }
+    updateInteractions(summary, data);
   }, [interactWithSummary]);
 
   return (

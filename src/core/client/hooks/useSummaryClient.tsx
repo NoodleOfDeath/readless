@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   API,
-  InteractionResponse,
   InteractionType,
   SummaryResponse,
 } from '~/api';
@@ -22,36 +21,29 @@ export function useSummaryClient() {
     });
   }, [withHeaders]);
 
-  const recordSummaryView = React.useCallback(async (summary: SummaryResponse, content?: string, metadata?: Record<string, unknown>, callback?: (interactions: InteractionResponse) => void, onFailure?: (error?: Error) => void) => {
+  const recordSummaryView = React.useCallback(async (summary: SummaryResponse, content?: string, metadata?: Record<string, unknown>) => {
     const { data, error } = await withHeaders(API.recordSummaryView)(summary.id, { content, metadata });
     if (error) {
-      console.error(error);
-      onFailure?.(error);
-      return;
+      return { error };
     }
     if (data) {
-      callback?.(data);
+      return { data };
     }
   }, [withHeaders]);
   
   const interactWithSummary = React.useCallback(
-    async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>, callback?: (interactions: InteractionResponse) => void, onFailure?: (error?: Error) => void) => {
+    async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
       if (!userData?.isLoggedIn) {
-        onFailure?.(new Error('User is not logged in'));
-        return;
+        return { error: new Error('Not Logged In') };
       }
       try {
         const { data, error } = await withHeaders(API.interactWithSummary)(summary.id, type, {
           content, metadata, userId: userData.userId,
         });
         if (error) {
-          console.error(error);
-          onFailure?.(error);
-          return;
+          return { error };
         }
-        if (data) {
-          callback?.(data);
-        }
+        return { data };
       } catch (e) {
         console.error(e);
       }

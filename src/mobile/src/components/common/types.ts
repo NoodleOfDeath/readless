@@ -5,7 +5,7 @@ export type Directionable = {
   row?: boolean;
 };
 
-export type Stylable = 
+export type Stylable<Style extends ViewStyle = ViewStyle> = 
   Directionable & {
   center?: boolean;
   left?: boolean;
@@ -23,5 +23,5 @@ export type Stylable =
   outlined?: boolean;
   contained?: boolean;
   width?: number | string;
-  style?: ViewStyle;
+  style?: Style;
 };

@@ -57,6 +57,7 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           flexGrow: 1,
           justifyContent: 'space-between',
         }, 
+        input: { color: isLightMode ? '#000' : '#fff' },
         outlined: {
           borderColor: '#8b0000',
           borderWidth: 1,

@@ -12,41 +12,33 @@ export function useLoginClient() {
   const { setUserData, withHeaders } = React.useContext(SessionContext);
 
   const handleLogIn = React.useCallback(
-    async (values: PartialLoginRequest, onSuccess?: () => void, onFailure?: (error: Error) => void) => {
-      try {
-        const { data, error } = await withHeaders(API.login)(values);
-        if (error) {
-          onFailure?.(error);
-          return;
-        }
-        setUserData({
-          isLoggedIn: true,
-          ...data,
-        }, { updateCookie: true });
-        onSuccess?.();
-      } catch (e) {
-        console.error(e);
+    async (values: PartialLoginRequest) => {
+      const response = await withHeaders(API.login)(values);
+      const { data, error } = response;
+      if (error) {
+        return response;
       }
+      setUserData({
+        isLoggedIn: true,
+        ...data,
+      }, { updateCookie: true });
+      return response;
     },
     [setUserData, withHeaders]
   );
 
   const handleSignUp = React.useCallback(
-    async (values: PartialRegistrationRequest, onSuccess?: () => void, onFailure?: (error: Error) => void) => {
-      try {
-        const { data, error } = await withHeaders(API.register)(values);
-        if (error) {
-          onFailure?.(error);
-          return;
-        }
-        setUserData({
-          isLoggedIn: true,
-          ...data,
-        }, { updateCookie: true });
-        onSuccess?.();
-      } catch (e) {
-        console.error(e);
+    async (values: PartialRegistrationRequest) => {
+      const response = await withHeaders(API.register)(values);
+      const { data, error } = response;
+      if (error) {
+        return response;
       }
+      setUserData({
+        isLoggedIn: true,
+        ...data,
+      }, { updateCookie: true });
+      return response;
     },
     [setUserData, withHeaders]
   );

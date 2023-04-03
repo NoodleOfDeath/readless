@@ -60,6 +60,21 @@ router.get(
 );
 
 router.get(
+  '/pop',
+  rateLimitMiddleware('5 per 10s'),
+  ...paginationMiddleware,
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await SummaryController.getPopularSummaries();
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
   '/:summaryId/:format',
   rateLimitMiddleware('5 per 10s'),
   param('summaryId').isNumeric(),

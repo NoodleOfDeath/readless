@@ -4,6 +4,7 @@ import { Linking, Pressable } from 'react-native';
 import { formatDistance } from 'date-fns';
 
 import { 
+  InteractionResponse,
   InteractionType,
   ReadingFormat, 
   SummaryResponse,
@@ -12,6 +13,7 @@ import {
   Button,
   Divider,
   FlexView,
+  Icon,
   ReadingFormatSelector,
   Text,
 } from '~/components';
@@ -22,6 +24,7 @@ type Props = {
   summary: SummaryResponse;
   tickIntervalMs?: number;
   format?: ReadingFormat;
+  realtimeInteractions?: InteractionResponse;
   onChange?: (format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
@@ -30,6 +33,7 @@ export function Summary({
   summary,
   tickIntervalMs = 60_000,
   format,
+  realtimeInteractions,
   onChange,
   onInteract,
 }: Props) {
@@ -37,6 +41,8 @@ export function Summary({
   const { preferredReadingFormat } = React.useContext(SessionContext);
 
   const [lastTick, setLastTick] = React.useState(new Date());
+
+  const interactions = React.useMemo(() => realtimeInteractions ?? summary.interactions, [realtimeInteractions, summary.interactions]);
 
   const timeAgo = React.useMemo(() => {
     if (!summary.createdAt) {
@@ -72,14 +78,23 @@ export function Summary({
   }, [format, summary]);
   
   const votes = React.useMemo(() => {
-    return (summary.interactions.upvote ?? 0) - (summary.interactions.downvote ?? 0);
-  }, [summary.interactions]);
+    return (interactions.upvote ?? 0) - (interactions.downvote ?? 0);
+  }, [interactions]);
   
   return (
     <FlexView style={ theme.components.card }>
-      <FlexView style={ theme.components.category }>
-        <Text center color='contrastText'>{summary.category}</Text>
-        <Text center color='contrastText'>{summary.subcategory}</Text>
+      <FlexView row style={ theme.components.category }>
+        <FlexView>
+          <Text color='contrastText'>{summary.category}</Text>
+          <Text color='contrastText'>{summary.subcategory}</Text>
+        </FlexView>
+        <FlexView row />
+        <FlexView row right>
+          <Icon name="eye" color={ theme.colors.contrastText } />
+          <FlexView pl={ 8 } pr={ 8 }>
+            <Text color='contrastText'>{String(interactions.view)}</Text>
+          </FlexView>
+        </FlexView>
       </FlexView>
       <FlexView row>
         <Text variant='subtitle1'>{summary.outletName.trim()}</Text>
@@ -96,11 +111,11 @@ export function Summary({
         <FlexView row />
         <FlexView row>
           <Button
-            icon={ summary.interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
+            icon={ interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
             onPress={ () => onInteract?.(InteractionType.Upvote) } />
           <Text variant='subtitle2'>{String(votes)}</Text>
           <Button 
-            icon={ summary.interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
+            icon={ interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
             onPress={ () => onInteract?.(InteractionType.Downvote) } />
         </FlexView>
       </FlexView>
