@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { AuthError } from './internal-errors';
+import { AuthError, internalErrorHandler } from './internal-errors';
 import { Jwt } from '../../../services/types';
 
 type AuthMiddlewareOptions = {
@@ -30,7 +30,6 @@ export const authMiddleware = (securityName: string, { required = false, scope =
               req.body.refreshedToken = refreshed.signed;
               req.query.refreshedToken = refreshed.signed;
             }
-            next();
           } catch (e) {
             if (required) {
               throw new AuthError('INVALID_CREDENTIALS');
@@ -45,11 +44,6 @@ export const authMiddleware = (securityName: string, { required = false, scope =
       next();
     }
   } catch (e) {
-    if (e instanceof AuthError) {
-      res.status(401).json(e);
-      return;
-    }
-    console.error(e);
-    res.status(500).json(e);
+    internalErrorHandler(res, e);
   }
 };
