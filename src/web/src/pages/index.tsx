@@ -2,13 +2,13 @@ import React from 'react';
 
 import { Stack } from '@mui/material';
 
-import { InteractionResponse, SummaryResponse } from '@/api';
-import Summary from '@/components/Summary';
-import JustNewsHeader from '@/components/layout/JustNewsHeader';
-import Page from '@/components/layout/Page';
-import { SessionContext } from '@/contexts';
-import { useSummaryClient } from '@/hooks';
-import { useRouter } from '@/next/router';
+import { InteractionResponse, SummaryResponse } from '~/api';
+import Summary from '~/components/Summary';
+import JustNewsHeader from '~/components/layout/JustNewsHeader';
+import Page from '~/components/layout/Page';
+import { SessionContext } from '~/contexts';
+import { useSummaryClient } from '~/hooks';
+import { useRouter } from '~/next/router';
 
 export default function SearchPage() {
   const { interactWithSummary } = useSummaryClient();

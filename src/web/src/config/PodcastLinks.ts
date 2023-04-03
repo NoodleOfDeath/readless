@@ -4,8 +4,8 @@ import {
   mdiSpotify,
 } from '@mdi/js';
 
-import { NavigationItemProps } from '@/components/layout/header/NavigationItem';
-import iheart from '@/icons/iheart';
+import { NavigationItemProps } from '~/components/layout/header/NavigationItem';
+import iheart from '~/icons/iheart';
 
 export const PODCAST_LINKS: NavigationItemProps[] = [
   {

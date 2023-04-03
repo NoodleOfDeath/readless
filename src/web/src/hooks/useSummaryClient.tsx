@@ -4,8 +4,8 @@ import API, {
   InteractionResponse,
   InteractionType,
   SummaryResponse,
-} from '@/api';
-import { SessionContext } from '@/contexts';
+} from '~/api';
+import { SessionContext } from '~/contexts';
 
 export function useSummaryClient() {
 

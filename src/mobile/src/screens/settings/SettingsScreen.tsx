@@ -1,7 +1,11 @@
 import React from 'react';
 
-import SafeScrollView from '../../components/common/SafeScrollView';
+import { FlexView, SafeScrollView } from '~/components';
 
-export default function SettingsScreen() {
-  return <SafeScrollView></SafeScrollView>;
+export function SettingsScreen() {
+  return (
+    <SafeScrollView>
+      <FlexView row />
+    </SafeScrollView>
+  );
 }

@@ -6,15 +6,15 @@ import {
   ScrollViewProps,
 } from 'react-native';
 
-import FlexView from './FlexView';
-import { useTheme } from '../theme';
+import { FlexView } from '~/components';
+import { useTheme } from '~/hooks';
 
-type Props = ScrollViewProps & {
+export type SafeScrollViewProps = ScrollViewProps & {
   refreshing?: boolean;
   onRefresh?: () => void;
 };
 
-export default function SafeScrollView({
+export function SafeScrollView({
   children,
   refreshing = false,
   onRefresh,
@@ -22,7 +22,7 @@ export default function SafeScrollView({
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
   ...props
-}: Props) {
+}: SafeScrollViewProps) {
   const theme = useTheme();
   return (
     <SafeAreaView style={ theme.components.flexCol }>

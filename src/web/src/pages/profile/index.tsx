@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Card, CardContent } from '@mui/material';
 
-import Page from '@/components/layout/Page';
-import { SessionContext } from '@/contexts';
+import Page from '~/components/layout/Page';
+import { SessionContext } from '~/contexts';
 
 export default function ProfilePage() {
   const { userData } = React.useContext(SessionContext);

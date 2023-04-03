@@ -16,7 +16,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { ReadingFormat } from '@/api';
+import { ReadingFormat } from '~/api';
 
 type Props = {
   onChange?: (format: ReadingFormat) => void;

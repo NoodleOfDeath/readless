@@ -9,10 +9,10 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import API, { InternalError } from '@/api';
-import Page from '@/components/layout/Page';
-import { SessionContext } from '@/contexts';
-import { useRouter } from '@/next/router';
+import API, { InternalError } from '~/api';
+import Page from '~/components/layout/Page';
+import { SessionContext } from '~/contexts';
+import { useRouter } from '~/next/router';
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 

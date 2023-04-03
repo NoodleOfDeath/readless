@@ -1,7 +1,15 @@
 import React from 'react';
 
-import SafeScrollView from '../../components/common/SafeScrollView';
+import { LoginForm } from './LoginForm';
 
-export default function ProfileScreen() {
-  return <SafeScrollView></SafeScrollView>;
+import { FlexView, SafeScrollView } from '~/components';
+
+export function ProfileScreen() {
+  return (
+    <SafeScrollView>
+      <FlexView p={ 16 } col>
+        <LoginForm />
+      </FlexView>
+    </SafeScrollView>
+  );
 }

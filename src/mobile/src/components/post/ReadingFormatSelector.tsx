@@ -1,65 +1,54 @@
 import React from 'react';
 
-import { ButtonGroup } from 'react-native-elements';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import { useTheme } from '../theme';
-
-export const CONSUMPTION_MODES = {
-  casual: 'view-list',
-  comparative: 'view-column',
-  comprehensive: 'view-stream',
-  concise: 'view-headline',
-  keyPoints: 'format-list-bulleted',
-} as const;
-
-export type ConsumptionMode = keyof typeof CONSUMPTION_MODES;
-export const CONSUMPTION_MODE_NAMES = Object.keys(CONSUMPTION_MODES) as ConsumptionMode[];
+import { ReadingFormat } from '~/api';
+import { Button, FlexView } from '~/components';
+import { useTheme } from '~/hooks';
 
 type Props = {
-  mode?: ConsumptionMode;
-  onChange?: (mode?: ConsumptionMode) => void;
+  format?: ReadingFormat;
+  onChange?: (mode?: ReadingFormat) => void;
 };
 
-export default function ReadingFormtelector({
-  mode,
+const FORMAT_ICONS = {
+  [ReadingFormat.Concise]: 'text-short',
+  [ReadingFormat.Bullets]: 'format-list-bulleted',
+  [ReadingFormat.Casual]: 'text-long',
+  [ReadingFormat.Detailed]: 'text-box',
+  [ReadingFormat.InDepth]: 'text-box-multiple',
+} as const;
+
+export function ReadingFormatSelector({
+  format,
   onChange,
 }: Props = {}) {
   const theme = useTheme();
-
-  const selectedIndex = React.useMemo(() => {
-    if (!mode) {
-      return undefined;
-    }
-    return CONSUMPTION_MODE_NAMES.indexOf(mode);
-  }, [mode]);
-
-  const handlePress = React.useCallback(
-    (index: number) => {
-      if (index === CONSUMPTION_MODE_NAMES.length - 1) {
-        return;
-      }
-      onChange?.(CONSUMPTION_MODE_NAMES[index]);
-    },
-    [onChange]
-  );
+  const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
+    return (
+      <Button
+        outlined
+        row
+        center
+        p={ 8 }
+        icon={ FORMAT_ICONS[newFormat] }
+        width={ row === 0 ? '33.33%' : '50%' }
+        selected={ format === newFormat } 
+        onPress={ () => onChange?.(newFormat) }>
+        {newFormat}
+      </Button>
+    );
+  }, [format, onChange]);
 
   return (
-    <ButtonGroup
-      onPress={ handlePress }
-      selectedIndex={ selectedIndex }
-      buttons={ Object.values(CONSUMPTION_MODES).map((icon, i) => (
-        <MaterialCommunityIcons
-          key={ i }
-          disabled={ i === CONSUMPTION_MODE_NAMES.length - 1 }
-          name={ icon }
-          size={ 24 }
-          style={
-            i === CONSUMPTION_MODE_NAMES.length - 1
-              ? theme.components.buttonDisabled
-              : theme.components.button
-          } />
-      )) }
-      containerStyle={ theme.components.buttonGroup } />
+    <FlexView outlined style={ theme.components.buttonGroup }>
+      <FlexView row style={ theme.components.buttonGroupRow }>
+        {makeButton(ReadingFormat.Concise)}
+        {makeButton(ReadingFormat.Bullets)}
+        {makeButton(ReadingFormat.Casual)}
+      </FlexView>
+      <FlexView row style={ theme.components.buttonGroupRow }>
+        {makeButton(ReadingFormat.Detailed, 1)}
+        {makeButton(ReadingFormat.InDepth, 1)}
+      </FlexView>
+    </FlexView>
   );
 }

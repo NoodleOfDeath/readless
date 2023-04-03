@@ -3,42 +3,44 @@ import React from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import FlexView from '../../components/common/FlexView';
-import SafeScrollView from '../../components/common/SafeScrollView';
-import { ConsumptionMode } from '../../components/post/ConsumptionModeSelector';
-import Summary from '../../components/post/Post';
-import { SessionContext } from '../../contexts/SessionContext';
-import { RootParamList } from '../../types';
+import { ReadingFormat } from '~/api';
+import {
+  FlexView,
+  SafeScrollView,
+  Summary,
+} from '~/components';
+import { AppStateContext } from '~/contexts';
+import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['Discover'], 'Post'>;
-  navigation: NativeStackNavigationProp<RootParamList['Discover'], 'Post'>;
+  route: RouteProp<RootParamList['discover'], 'summary'>;
+  navigation: NativeStackNavigationProp<RootParamList['discover'], 'summary'>;
 };
 
-export default function PostScreen({
-  route: { params: { source, initialMode } },
+export function SummaryScreen({
+  route: { params: { summary, format: initialFormat } },
   navigation,
 }: Props) {
-  const { setTabControllerScreenOptions } = React.useContext(SessionContext);
+  const { setScreenOptions } = React.useContext(AppStateContext);
 
-  const [mode, setMode] = React.useState<ConsumptionMode | undefined>(initialMode);
+  const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
 
   React.useEffect(() => {
-    navigation.setOptions({ headerTitle: source?.title });
-    setTabControllerScreenOptions((prev) => ({
+    navigation.setOptions({ headerTitle: summary?.title });
+    setScreenOptions((prev) => ({
       ...prev,
       headerShown: false,
     }));
-  }, [navigation, setTabControllerScreenOptions, source]);
+  }, [navigation, setScreenOptions, summary]);
 
   return (
     <SafeScrollView>
       <FlexView mt={ 10 }>
-        {source && (
+        {summary && (
           <Summary
-            source={ source }
-            mode={ mode }
-            onChange={ (mode) => setMode(mode) } />
+            summary={ summary }
+            format={ format }
+            onChange={ (format) => setFormat(format) } />
         )}
       </FlexView>
     </SafeScrollView>

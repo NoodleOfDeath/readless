@@ -8,10 +8,11 @@ import {
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
-import OnboardingCard from './OnboardingCard';
-import FlexView from '../../components/common/FlexView';
-import { useTheme } from '../../components/theme';
-import { window } from '../../constants';
+import WhatsNewCard from './WhatsNewCard';
+
+import { FlexView } from '~/components';
+import { window } from '~/constants';
+import { useTheme } from '~/hooks';
 
 type Props = {
   onClose?: () => void;
@@ -21,7 +22,7 @@ const scale = 0.85;
 const PAGE_WIDTH = window.width * scale;
 const PAGE_HEIGHT = window.height * scale;
 
-export default function OnboardingScreen({ onClose }: Props = {}) {
+export function WhatsNewScreen({ onClose }: Props = {}) {
   const theme = useTheme({
     container: {
       backgroundColor: '#fff',
@@ -60,10 +61,10 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
         } }
         width={ PAGE_WIDTH }
         height={ PAGE_HEIGHT }
-        data={ [...new Array(6).keys()] }
+        data={ [...new Array(2).keys()] }
         renderItem={ ({ index }) => {
           return (
-            <OnboardingCard key={ index }>
+            <WhatsNewCard key={ index }>
               <View style={ theme.container }>
                 <Text
                   style={ {
@@ -72,11 +73,9 @@ export default function OnboardingScreen({ onClose }: Props = {}) {
                   } }>
                   welcome to ReadLess!
                 </Text>
-                {index >= 4 && (
-                  <Button onPress={ () => onClose?.() } title="Get Started" />
-                )}
+                <Button onPress={ () => onClose?.() } title="Get Started" />
               </View>
-            </OnboardingCard>
+            </WhatsNewCard>
           );
         } }
         customAnimation={ animationStyle } />

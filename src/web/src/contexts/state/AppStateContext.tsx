@@ -21,10 +21,10 @@ import {
   UserDataProps,
 } from './types';
 
-import API, { LoginResponse } from '@/api';
-import LoginDialog from '@/components/login/LoginDialog';
-import { useRouter } from '@/next/router';
-import { loadTheme } from '@/theme';
+import API, { LoginResponse } from '~/api';
+import LoginDialog from '~/components/login/LoginDialog';
+import { useRouter } from '~/next/router';
+import { loadTheme } from '~/theme';
 
 type Props = React.PropsWithChildren;
 

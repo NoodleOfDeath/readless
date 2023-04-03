@@ -24,7 +24,7 @@
     "removeComments": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
+      "~/*": [
         "src/*"
       ]
     },
