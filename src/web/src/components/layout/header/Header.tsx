@@ -28,8 +28,8 @@ import Footer from '~/components/layout/Footer';
 import LightDarkModeButtons from '~/components/layout/header/LightDarkModeButtons';
 import NavigationItem, { NavigationItemProps } from '~/components/layout/header/NavigationItem';
 import { PODCAST_LINKS } from '~/config/PodcastLinks';
-import { SessionContext } from '~/contexts';
-import { useRouter } from '~/next/router';
+import { AppStateContext, SessionContext } from '~/contexts';
+import { useRouter } from '~/hooks';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   margin: 'auto',
@@ -51,7 +51,8 @@ const StyledBox = styled(Box)(() => ({
 export default function Header() {
 
   const router = useRouter();
-  const { setShowLoginDialog, userData } = React.useContext(SessionContext);
+  const { userData } = React.useContext(SessionContext);
+  const { setShowLoginDialog } = React.useContext(AppStateContext);
 
   const [open, setOpen] = React.useState(false);
 
@@ -129,7 +130,7 @@ export default function Header() {
       onClick() {
         router?.push('/profile');
       },
-      visible: () => !!userData?.isLoggedIn,
+      visible: () => false, //!!userData?.isLoggedIn,
     },
     {
       icon: mdiLogout,

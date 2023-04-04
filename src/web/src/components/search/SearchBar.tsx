@@ -2,11 +2,13 @@ import React from 'react';
 
 import {
   Autocomplete,
+  AutocompleteChangeReason,
   TextField,
   styled,
 } from '@mui/material';
 
-import { SessionContext } from '~/contexts';
+import { AppStateContext } from '~/contexts';
+import { useRouter } from '~/hooks';
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   alignItems: 'center',
@@ -19,29 +21,37 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
 
 export default function SearchBar() {
   const {
-    searchText, searchOptions, setSearchText, 
+    searchText, searchSuggestions, setSearchText, 
   } =
-    React.useContext(SessionContext);
+    React.useContext(AppStateContext);
+  const { setSearchParams } = useRouter();
 
   const computedOptions = React.useMemo(
-    () => [...searchOptions, searchText],
-    [searchOptions, searchText]
+    () => [...searchSuggestions, searchText],
+    [searchSuggestions, searchText]
   );
+
+  const handleChange = React.useCallback((event: React.SyntheticEvent<Element, Event>, value?: unknown, reason?: AutocompleteChangeReason) => {
+    console.log(event);
+    if (reason === 'clear') {
+      setSearchText('');
+      setSearchParams({ q: '' });
+    } else {
+      setSearchText(value as string);
+    }
+  }, [setSearchParams, setSearchText]);
 
   return (
     <StyledAutocomplete
       disablePortal
       value={ searchText }
-      onChange={ (_, value, reason) =>
-        reason === 'clear'
-          ? setSearchText('', { clearSearchParams: true })
-          : setSearchText(value as string) }
+      onChange={ handleChange }
       options={ computedOptions }
       renderInput={ (params) => (
         <TextField
           { ...params }
           label="show me something worth reading..."
-          onChange={ (event) => setSearchText(event.currentTarget.value) } />
+          onChange={ (event) => handleChange(event, event.currentTarget.value) } />
       ) } />
   );
 }

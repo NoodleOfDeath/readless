@@ -100,6 +100,28 @@ export class SummaryController {
   }
 
   @Security('jwt')
+  @Get('/pop')
+  public static async getPopularSummaries(
+    @Query() userId?: number,
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page
+  ): Promise<BulkResponse<SummaryResponse>> {
+    // #TODO: Implement this
+    const options: FindAndCountOptions<Summary> = {
+      attributes: { exclude: ['filteredText', 'rawText'] },
+      limit: pageSize,
+      offset,
+      order: [['likes', 'DESC']],
+    };
+    const summaries = await Summary.findAndCountAll(options);
+    if (userId) {
+      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
+    }
+    return summaries;
+  }
+
+  @Security('jwt')
   @Get('/:summaryId/:format')
   public static async getContentForSummary(
     @Path() summaryId: number,

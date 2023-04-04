@@ -7,8 +7,8 @@ import {
   setCookie,
 } from './cookies';
 import {
+  DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
-  NULL_SESSION,
   Preferences,
   SessionSetOptions,
 } from './types';
@@ -24,12 +24,12 @@ export const COOKIES = {
   userData: 'userData',
 };
 
-export const SessionContext = React.createContext(NULL_SESSION);
+export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
 
 export function SessionContextProvider({ children, logout }: Props) {
 
   const [preferences, setPreferences] = React.useState<Preferences>({});
-  const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps | undefined>();
+  const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps>();
 
   const userData = React.useMemo(() => userDataRaw ? new UserData(userDataRaw) : undefined, [userDataRaw]);
 
@@ -120,6 +120,7 @@ export function SessionContextProvider({ children, logout }: Props) {
 
   React.useEffect(() => {
     if (userData?.expired === true) {
+      setUserData();
       logout?.();
     }
   }, [userData?.expired, logout]);

@@ -2,17 +2,20 @@ import React from 'react';
 
 import { Stack } from '@mui/material';
 
-import { InteractionResponse, SummaryResponse } from '~/api';
+import {
+  InteractionResponse,
+  InteractionType,
+  SummaryResponse,
+} from '~/api';
 import Summary from '~/components/Summary';
 import JustNewsHeader from '~/components/layout/JustNewsHeader';
 import Page from '~/components/layout/Page';
-import { SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/hooks';
-import { useRouter } from '~/next/router';
+import { AppStateContext } from '~/contexts';
+import { useRouter, useSummaryClient } from '~/hooks';
 
 export default function SearchPage() {
   const { interactWithSummary } = useSummaryClient();
-  const { setShowLoginDialog } = React.useContext(SessionContext);
+  const { setShowLoginDialog } = React.useContext(AppStateContext);
 
   const router = useRouter();
 
@@ -20,7 +23,7 @@ export default function SearchPage() {
     router.push('/search');
   }, [router]);
 
-  const [currentSummary, setCurrentSummary] = React.useState<SummaryResponse | undefined>(undefined);
+  const [currentSummary, setCurrentSummary] = React.useState<SummaryResponse>();
 
   const updateInteractions = (interactions: InteractionResponse) => {
     setCurrentSummary((prev) => {
@@ -33,6 +36,17 @@ export default function SearchPage() {
     });
   };
 
+  const handleInteraction = React.useCallback(async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+    const { data, error } = await interactWithSummary(summary, type, content, metadata);
+    if (error && error.name === 'NOT_LOGGED_IN') {
+      setShowLoginDialog(true);
+      return;
+    }
+    if (data) {
+      updateInteractions(data);
+    }
+  }, [interactWithSummary, setShowLoginDialog]);
+
   return (
     <Page center title="Read &lt; Less">
       <Stack>
@@ -40,7 +54,7 @@ export default function SearchPage() {
         {currentSummary && (
           <Summary
             summary={ currentSummary }
-            onInteract={ (type, content, metadata) => interactWithSummary(currentSummary, type, content, metadata, (interactions) => updateInteractions(interactions)) } />
+            onInteract={ (...args) => handleInteraction(currentSummary, ...args) } />
         )}
       </Stack>
     </Page>

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { FieldValues, useForm } from 'react-hook-form'; 
 
-import API from '~/api';
+import { API } from '~/api';
 
 const StyledStack = styled(Stack)(() => ({
   alignContent: 'center',
@@ -70,7 +70,7 @@ export default function NewsletterForm() {
           </form>
         </React.Fragment>
       ) : (
-        <React.Fragment>You&apos; been added to the newsletter!</React.Fragment>
+        <React.Fragment>You&apos;ve been added to the newsletter!</React.Fragment>
       )}
     </React.Fragment>
   );

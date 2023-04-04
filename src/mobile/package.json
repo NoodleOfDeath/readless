@@ -9,7 +9,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/gen && if [[ ! -d ./src/core ]]; then mkdir -p ./src/core; fi && cp ../core/client/* ./src/core",
+    "gen": "npx swagger-typescript-api -p ./swagger.json -o ./src/gen && yarn cp:core",
+    "cp:core": "if [[ ! -d ./src/core ]]; then mkdir -p ./src/core; fi && cp -rf ../core/client/* ./src/core",
     "tsoa": "(cd ../server && yarn tsoa) && cp ../server/swagger.json . && yarn gen",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"

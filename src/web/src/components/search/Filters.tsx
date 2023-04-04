@@ -13,6 +13,7 @@ const StyledStack = styled(Stack)(() => ({
   width: '100%',
 }));
 
+// TODO: Add category filters
 export default function Filters() {
   return (
     <StyledStack>

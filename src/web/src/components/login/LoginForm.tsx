@@ -13,15 +13,14 @@ import { GoogleLogin } from '@react-oauth/google';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
-import API, {
+import {
   InternalError,
   PartialLoginRequest,
   PartialRegistrationRequest,
   ThirdParty,
 } from '~/api';
 import ForgotPasswordForm from '~/components/login/ForgotPasswordForm';
-import { SessionContext } from '~/contexts';
-import { useRouter } from '~/next/router';
+import { useLoginClient, useRouter } from '~/hooks';
 
 export type LoginFormProps = {
   defaultAction?: 'logIn' | 'signUp' | 'forgotPassword';
@@ -40,62 +39,46 @@ export default function LoginForm({
   const {
     register, handleSubmit, formState: { errors }, 
   } = useForm();
-  const { setUserData, withHeaders } = React.useContext(SessionContext);
+  const { logIn, register: signUp } = useLoginClient();
 
   const [action, setAction] = React.useState(defaultAction);
-  const [error, setError] = React.useState<InternalError | undefined>(undefined);
+  const [error, setError] = React.useState<InternalError|string>();
   const [success, setSuccess] = React.useState(false);
 
   const handleLogIn = React.useCallback(
     async (values: PartialLoginRequest) => {
-      try {
-        const { data, error } = await withHeaders(API.login)(values);
-        if (error) {
-          setError(error);
-          return;
-        }
-        setUserData({
-          isLoggedIn: true,
-          ...data,
-        }, { updateCookie: true });
-        if (onSuccess) {
-          onSuccess();
-          deferredAction?.();
-        } else {
-          router.push('/');
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [deferredAction, onSuccess, router, setUserData, withHeaders]
-  );
-
-  const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
-    try {
-      const { data, error } = await withHeaders(API.register)(values);
+      const { error } = await logIn(values);
       if (error) {
         setError(error);
         return;
       }
-      if (data.token) {
-        setUserData({ 
-          isLoggedIn: true,
-          ...data,
-        }, { updateCookie: true });
-        if (onSuccess) {
-          onSuccess();
-          deferredAction?.();
-        } else {
-          router.push('/');
-        }
+      if (onSuccess) {
+        onSuccess();
+        deferredAction?.();
       } else {
-        setSuccess(true);
+        router.push('/');
       }
-    } catch (error) {
-      console.error(error);
+    },
+    [deferredAction, logIn, onSuccess, router]
+  );
+
+  const handleSignUp = React.useCallback(async (values: PartialRegistrationRequest) => {
+    const { data, error } = await signUp(values);
+    if (error) {
+      setError(error);
+      return;
     }
-  }, [deferredAction, onSuccess, router, setUserData, withHeaders]);
+    if (data?.token) {
+      if (onSuccess) {
+        onSuccess();
+        deferredAction?.();
+      } else {
+        router.push('/');
+      }
+    } else {
+      setSuccess(true);
+    }
+  }, [deferredAction, onSuccess, signUp, router]);
 
   const logInSignUpForm = React.useMemo(() => {
     return (
@@ -156,7 +139,7 @@ export default function LoginForm({
           )}
           {error && (
             <Typography variant='body2' color='error'>
-              {error.message}
+              {typeof error === 'string' ? error : error.message}
             </Typography>
           )}
           {errors && Object.entries(errors).map(([field, error]) => (

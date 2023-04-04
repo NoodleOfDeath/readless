@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import CookieConsent from '~/components/layout/CookieConsent';
 import Header from '~/components/layout/header/Header';
-import { SessionContextProvider } from '~/contexts';
+import { AppStateContextProvider, SessionContextProvider } from '~/contexts';
 
 const StyledAppContainer = styled(Box)`
   display: flex;
@@ -33,18 +33,20 @@ function App(props: PropTypes.InferProps<typeof App.propTypes>) {
   return (
     <React.Fragment>
       <Head>
-        <title>ReadLess</title>
+        <title>Read &apos; Less</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <GoogleOAuthProvider clientId={ process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string }>
         <SessionContextProvider>
-          <StyledAppContainer>
-            <Header />
-            <StyledAppContent>
-              <Component { ...pageProps } />
-            </StyledAppContent>
-            <CookieConsent />
-          </StyledAppContainer>
+          <AppStateContextProvider>
+            <StyledAppContainer>
+              <Header />
+              <StyledAppContent>
+                <Component { ...pageProps } />
+              </StyledAppContent>
+              <CookieConsent />
+            </StyledAppContainer>
+          </AppStateContextProvider>
         </SessionContextProvider>
       </GoogleOAuthProvider>
     </React.Fragment>

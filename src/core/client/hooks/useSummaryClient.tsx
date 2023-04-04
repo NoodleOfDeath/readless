@@ -1,12 +1,13 @@
 import React from 'react';
 
+import { ClientError } from './types';
+import { SessionContext } from '../contexts';
+
 import {
   API,
-  InteractionResponse,
   InteractionType,
   SummaryResponse,
 } from '~/api';
-import { SessionContext } from '~/contexts';
 
 export function useSummaryClient() {
 
@@ -17,46 +18,37 @@ export function useSummaryClient() {
     page = 0,
     pageSize = 10,
   }) => {
-    return await withHeaders(API.getSummaries)({
-      filter, page, pageSize, 
-    });
+    try {
+      return await withHeaders(API.getSummaries)({
+        filter, page, pageSize, 
+      });
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
   }, [withHeaders]);
 
-  const recordSummaryView = React.useCallback(async (summary: SummaryResponse, content?: string, metadata?: Record<string, unknown>, callback?: (interactions: InteractionResponse) => void, onFailure?: (error?: Error) => void) => {
-    const { data, error } = await withHeaders(API.recordSummaryView)(summary.id, { content, metadata });
-    if (error) {
-      console.error(error);
-      onFailure?.(error);
-      return;
-    }
-    if (data) {
-      callback?.(data);
+  const recordSummaryView = React.useCallback(async (summary: SummaryResponse, content?: string, metadata?: Record<string, unknown>) => {
+    try {
+      return await withHeaders(API.recordSummaryView)(summary.id, { content, metadata });
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
   }, [withHeaders]);
   
   const interactWithSummary = React.useCallback(
-    async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>, callback?: (interactions: InteractionResponse) => void, onFailure?: (error?: Error) => void) => {
-      if (!userData?.isLoggedIn) {
-        onFailure?.(new Error('User is not logged in'));
-        return;
+    async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+      if (!userData || !userData.isLoggedIn) {
+        return { error: new ClientError('NOT_LOGGED_IN') };
       }
       try {
-        const { data, error } = await withHeaders(API.interactWithSummary)(summary.id, type, {
+        return await withHeaders(API.interactWithSummary)(summary.id, type, {
           content, metadata, userId: userData.userId,
         });
-        if (error) {
-          console.error(error);
-          onFailure?.(error);
-          return;
-        }
-        if (data) {
-          callback?.(data);
-        }
       } catch (e) {
-        console.error(e);
+        return { data: undefined, error: new ClientError('UNKNOWN', e) };
       }
     },
-    [userData?.isLoggedIn, userData?.userId, withHeaders]
+    [userData, withHeaders]
   );
 
   return {

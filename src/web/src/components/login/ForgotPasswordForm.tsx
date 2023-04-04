@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import API, { InternalError, PartialGenerateOTPRequest } from '~/api';
-import { SessionContext } from '~/contexts';
+import { InternalError, PartialGenerateOTPRequest } from '~/api';
+import { useLoginClient } from '~/hooks';
 
 type Props = {
   onSuccess?: () => void;
@@ -28,13 +28,13 @@ export default function ForgotPasswordForm({
   backToLogin,
 }: Props) {
   const { register, handleSubmit } = useForm();
-  const { withHeaders } = React.useContext(SessionContext);
+  const { requestPasswordReset } = useLoginClient();
   
-  const [error, setError] = React.useState<InternalError | undefined>();
+  const [error, setError] = React.useState<InternalError>();
   
   const handleForgotPassword = React.useCallback(async (values: PartialGenerateOTPRequest) => {
     try {
-      const { error } = await withHeaders(API.generateOtp)(values);
+      const { error } = await requestPasswordReset(values);
       if (error) {
         setError(error);
         return;
@@ -43,7 +43,7 @@ export default function ForgotPasswordForm({
     } catch (e) {
       console.error(e);
     }
-  }, [onSuccess, withHeaders]);
+  }, [onSuccess, requestPasswordReset]);
   
   return (
     <form onSubmit={ handleSubmit(handleForgotPassword) }>

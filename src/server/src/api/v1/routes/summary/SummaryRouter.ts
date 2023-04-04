@@ -19,7 +19,7 @@ const router = Router();
 
 router.get(
   '/',
-  rateLimitMiddleware('5 per 10s'),
+  rateLimitMiddleware('25 per 3s'),
   query('filter').isString().optional(),
   ...paginationMiddleware,
   validationMiddleware,
@@ -52,6 +52,21 @@ router.get(
       const { summaryId } = req.params;
       const { userId } = req.query;
       const response = await SummaryController.getSummary(summaryId, userId);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
+  '/pop',
+  rateLimitMiddleware('5 per 10s'),
+  ...paginationMiddleware,
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await SummaryController.getPopularSummaries();
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

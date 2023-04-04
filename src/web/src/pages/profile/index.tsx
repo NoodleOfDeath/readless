@@ -7,15 +7,17 @@ import { SessionContext } from '~/contexts';
 
 export default function ProfilePage() {
   const { userData } = React.useContext(SessionContext);
-
+  React.useEffect(() => {
+    if (!userData) {
+      window.location.href = '/login';
+    }
+  }, [userData]);
   return (
     <Page left title="Profile">
       <Card>
         <CardContent>
           <h4>Profile</h4>
-          User Id: 
-          {' '}
-          {String(userData?.userId)}
+          Coming soon!
         </CardContent>
       </Card>
     </Page>

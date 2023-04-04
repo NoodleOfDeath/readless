@@ -1,14 +1,13 @@
 import React from 'react';
-import { Text as RNText } from 'react-native';
+import { Text as RNText, TextStyle } from 'react-native';
 
 import { Stylable } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type TextProps = Stylable & {
-  children?: string;
+export type TextProps = Stylable<TextStyle> & React.PropsWithChildren<{
   color?: keyof ReturnType<typeof useTheme>['colors'] | string;
   variant?: keyof ReturnType<typeof useTheme>['typography'];
-};
+}>;
 
 export function Text({
   children,

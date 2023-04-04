@@ -42,7 +42,7 @@ export type SessionContextType = {
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
 
-export const NULL_SESSION: SessionContextType = {
+export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   addUserToken: () => {
     /* placeholder function */
   },
