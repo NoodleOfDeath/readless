@@ -9,9 +9,9 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
-  FlexView,
   SafeScrollView,
   Summary,
+  View,
 } from '~/components';
 import { AppStateContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
@@ -23,49 +23,52 @@ type Props = {
 };
 
 export function SummaryScreen({
-  route: { params: { summary, format: initialFormat } },
+  route: { params: { summary, initialFormat } },
   navigation,
 }: Props) {
-  const { setScreenOptions } = React.useContext(AppStateContext);
+  const {
+    setScreenOptions, setShowLoginDialog, setLoginDialogProps, 
+  } = React.useContext(AppStateContext);
   const { interactWithSummary, recordSummaryView } = useSummaryClient();
 
-  const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const [interactions, setInteractions] = React.useState<InteractionResponse | undefined>(summary?.interactions);
+  const [format, setFormat] = React.useState(initialFormat);
+  const [interactions, setInteractions] = React.useState<InteractionResponse>(summary.interactions);
 
   React.useEffect(() => {
-    navigation.setOptions({ headerTitle: summary?.title });
+    navigation.setOptions({ headerTitle: summary.title });
     setScreenOptions((prev) => ({
       ...prev,
       headerShown: false,
     }));
   }, [navigation, setScreenOptions, summary]);
   
-  const handleFormatChange = React.useCallback(async (format?: ReadingFormat) => {
-    if (!summary || !format || format === initialFormat) {
+  const handleFormatChange = React.useCallback(async (newFormat?: ReadingFormat) => {
+    if (!newFormat || newFormat === format) {
       return;
     }
-    await recordSummaryView(summary, undefined, { format });
-    setFormat(format);
-  }, [initialFormat, recordSummaryView, summary]);
+    recordSummaryView(summary, undefined, { format: newFormat });
+    setFormat(newFormat);
+  }, [format, recordSummaryView, summary]);
   
   const onInteract = React.useCallback(async (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
-    if (!summary) {
-      return;
-    }
     const { data, error } = await interactWithSummary(summary, interaction, content, metadata);
     if (error) {
       console.log(error);
+      if (error.name === 'NOT_LOGGED_IN') {
+        setShowLoginDialog(true);
+        setLoginDialogProps({ alert: 'Please log in to continue' });
+      }
       return;
     }
     if (!data) {
       return;
     }
     setInteractions(data);
-  }, [interactWithSummary, summary]);
+  }, [interactWithSummary, setLoginDialogProps, setShowLoginDialog, summary]);
 
   return (
     <SafeScrollView>
-      <FlexView mt={ 10 }>
+      <View mt={ 10 }>
         {summary && (
           <Summary
             summary={ summary }
@@ -74,7 +77,7 @@ export function SummaryScreen({
             onInteract={ onInteract }
             realtimeInteractions={ interactions } />
         )}
-      </FlexView>
+      </View>
     </SafeScrollView>
   );
 }

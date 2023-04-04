@@ -8,8 +8,8 @@ export type RootParamList = {
   discover: {
     home: undefined;
     summary: {
-      format?: ReadingFormat;
-      summary?: SummaryResponse;
+      initialFormat: ReadingFormat;
+      summary: SummaryResponse;
     };
   };
   notifications: {
@@ -25,8 +25,8 @@ export type RootParamList = {
   search: {
     search: undefined;
     summary: {
-      format?: ReadingFormat;
-      summary?: SummaryResponse;
+      initialFormat: ReadingFormat;
+      summary: SummaryResponse;
     };
   };
 };

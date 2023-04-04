@@ -21,7 +21,9 @@ export type Stylable<Style extends ViewStyle = ViewStyle> =
   pl?: number;
   pr?: number;
   outlined?: boolean;
+  selectable?: boolean;
   contained?: boolean;
   width?: number | string;
+  rounded?: boolean;
   style?: Style;
 };

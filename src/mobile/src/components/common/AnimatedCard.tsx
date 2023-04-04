@@ -1,5 +1,5 @@
 import React from 'react';
-import type {
+import {
   StyleProp,
   ViewProps,
   ViewStyle,
@@ -12,7 +12,7 @@ type Props = AnimateProps<ViewProps> & {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function OnboardingCard({
+export function AnimatedCard({
   style = { flex: 1 },
   testID,
   children,

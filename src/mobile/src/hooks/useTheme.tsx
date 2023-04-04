@@ -6,6 +6,7 @@ export function useTheme<T extends {}>(other: T = {} as T) {
   return {
     colors: {
       contrastText: '#fff',
+      error: '#f44336',
       primary: '#8b0000',
       text: isLightMode ? '#000' : '#fff',
     },
@@ -15,7 +16,6 @@ export function useTheme<T extends {}>(other: T = {} as T) {
         // containers
         buttonGroup: {
           backgroundColor: isLightMode ? '#fff' : '#000',
-          borderRadius: 8,
           marginTop: 8,
           overflow: 'hidden',
           width: '100%',
@@ -27,8 +27,7 @@ export function useTheme<T extends {}>(other: T = {} as T) {
         },
         buttonText: { padding: 4 },
         card: {
-          backgroundColor: isLightMode ? '#F5F5F5' : '#111',
-          borderRadius: 8,
+          backgroundColor: isLightMode ? '#eee' : '#111',
           marginBottom: 8,
           marginLeft: 16,
           marginRight: 16,
@@ -36,9 +35,24 @@ export function useTheme<T extends {}>(other: T = {} as T) {
         },
         category: {
           backgroundColor: '#8b0000',
-          borderRadius: 8,
           marginBottom: 8,
           padding: 8,
+        },
+        dialog: {
+          backgroundColor: isLightMode ? '#eee' : '#111',
+          borderColor: '#8b0000',
+          borderRadius: 8,
+          borderWidth: 3,
+          minHeight: '60%',
+          minWidth: '70%',
+        },
+        dialogBackdrop: {
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          height: '100%',
+          justifyContent: 'center',
+          position: 'absolute',
+          width: '100%',
         },
         divider: {
           height: StyleSheet.hairlineWidth,
@@ -60,12 +74,9 @@ export function useTheme<T extends {}>(other: T = {} as T) {
         input: { color: isLightMode ? '#000' : '#fff' },
         outlined: {
           borderColor: '#8b0000',
-          borderWidth: 1,
+          borderWidth: 2,
         },
-        screen: {
-          flex: 1,
-          height: '100%',
-        },
+        rounded: { borderRadius: 8 },
         searchBar: {
           backgroundColor: isLightMode ? '#fff' : '#000',
           borderRadius: 8,

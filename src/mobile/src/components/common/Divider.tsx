@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider as RNDivider, DividerProps as RNDividerProps } from 'react-native-elements';
+import { Divider as RNDivider, DividerProps as RNDividerProps } from '@rneui/base';
 
 import { useTheme } from '~/hooks';
 

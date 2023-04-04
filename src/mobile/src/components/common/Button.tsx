@@ -1,15 +1,15 @@
 import React from 'react';
-import { Pressable, PressableProps } from 'react-native';
+import { GestureResponderEvent, PressableProps } from 'react-native';
 
 import { 
-  FlexView,
-  FlexViewProps,
   Icon,
   Text,
+  View,
+  ViewProps,
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type ButtonProps = PressableProps & FlexViewProps & {
+export type ButtonProps = PressableProps & ViewProps & {
   icon?: React.ReactNode;
   iconSize?: number;
   small?: boolean;
@@ -39,13 +39,19 @@ export function Button({
   
   const theme = useTheme();
   const style = useStyles(pressableProps);
+  const [isPressed, setIsPressed] = React.useState(false);
   
-  const buttonStyle = React.useMemo(() => ({
-    ...style,
-    ...(selected ? theme.components.buttonSelected : undefined),
-  }), [style, selected, theme]);
+  const buttonStyle = React.useMemo(
+    () => ({
+      ...style,
+      ...(selected || isPressed) && pressableProps.selectable ? theme.components.buttonSelected : undefined,
+    })
+    , [isPressed, pressableProps.selectable, style, selected, theme]
+  );
   
-  const textColor = React.useMemo(() => selected ? theme.colors.contrastText : theme.colors.primary, [selected, theme]);
+  const textColor = React.useMemo(() => {
+    return (selected || isPressed) && pressableProps.selectable ? theme.colors.contrastText : theme.colors.primary; 
+  }, [isPressed, pressableProps.selectable, selected, theme]);
   
   const iconComponent = React.useMemo(() => {
     if (!icon) {
@@ -62,12 +68,21 @@ export function Button({
     return icon;
   }, [icon, iconSize, textColor]);
 
+  const handlePress = React.useCallback((e: GestureResponderEvent) => {
+    setIsPressed(true);
+    setTimeout(() => setIsPressed(false), 100);
+    pressableProps.onPress?.(e);
+  }, [pressableProps]);
+
+  const handlePressOut = React.useCallback((e: GestureResponderEvent) => {
+    setIsPressed(false);
+    pressableProps.onPressOut?.(e);
+  }, [pressableProps]);
+
   return (
-    <Pressable { ...pressableProps }>
-      <FlexView style={ buttonStyle }> 
-        {iconComponent && <FlexView mr={ children ? 8 : 0 }>{ iconComponent }</FlexView>}
-        {children &&<Text color={ textColor } style={ { fontSize } }>{ children }</Text>}
-      </FlexView>
-    </Pressable>
+    <View pressable { ...pressableProps } onPress={ handlePress } onPressOut={ handlePressOut } style={ buttonStyle }> 
+      {iconComponent && <View mr={ children ? 8 : 0 }>{ iconComponent }</View>}
+      {children &&<Text color={ textColor } style={ { fontSize } }>{ children }</Text>}
+    </View>
   );
 }

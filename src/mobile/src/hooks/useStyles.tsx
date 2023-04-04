@@ -22,6 +22,7 @@ export function useStyles({
   outlined,
   contained,
   width,
+  rounded,
   style,
 }: Stylable) {
   const theme = useTheme();
@@ -31,6 +32,7 @@ export function useStyles({
   const alignment = React.useMemo(() => {
     if (center) {
       return {
+        alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
       };
@@ -70,6 +72,9 @@ export function useStyles({
     attrs.push(alignment);
     attrs.push(appearance);
     attrs.push({ width });
+    if (rounded) {
+      attrs.push(theme.components.rounded);
+    }
     if (mt) {
       attrs.push({ marginTop: mt });
     }
@@ -98,6 +103,6 @@ export function useStyles({
       .filter(Boolean)
       .flat()
       .reduce((acc, attr) => ({ ...acc, ...attr }), newStyle);
-  }, [alignment, appearance, col, mt, mb, ml, mr, newStyle, pt, pb, pl, pr, row, theme.components.flexRow, theme.components.flexCol, width]);
+  }, [row, theme.components.flexRow, theme.components.flexCol, theme.components.rounded, col, alignment, appearance, width, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
   return viewStyle;
 }

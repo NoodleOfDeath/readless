@@ -2,7 +2,7 @@ import React from 'react';
 
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { SearchBar } from 'react-native-elements';
+import { SearchBar } from '@rneui/base';
 
 import {
   InteractionResponse,
@@ -12,10 +12,11 @@ import {
 } from '~/api';
 import {
   Button,
-  FlexView,
   SafeScrollView,
   Summary,
+  View,
 } from '~/components';
+import { AppStateContext, SessionContext } from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { RootParamList } from '~/screens';
 
@@ -25,6 +26,8 @@ type Props = {
 };
 
 export function SearchScreen({ navigation }: Props) {
+  const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
+  const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
   const {
     getSummaries, recordSummaryView, interactWithSummary, 
   } = useSummaryClient();
@@ -89,20 +92,20 @@ export function SearchScreen({ navigation }: Props) {
 
   const onExpandPost = React.useCallback(
     async (summary: SummaryResponse, format?: ReadingFormat) => {
-      await recordSummaryView(summary);
+      recordSummaryView(summary, undefined, { format });
       navigation?.navigate('summary', {
-        format,
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
         summary,
       });
     },
-    [navigation, recordSummaryView]
+    [navigation, preferredReadingFormat, recordSummaryView]
   );
 
   const updateInteractions = (summary: SummaryResponse, interactions: InteractionResponse) => {
     setRecentSummaries((prev) => {
       const newSummaries = [...prev];
       const index = newSummaries.findIndex((s) => s.id === summary.id);
-      if (index === -1) {
+      if (index < 0) {
         return (prev = newSummaries);
       }
       newSummaries[index] = {
@@ -122,28 +125,32 @@ export function SearchScreen({ navigation }: Props) {
     );
     if (error) {
       console.log(error);
+      if (error.name === 'NOT_LOGGED_IN') {
+        setShowLoginDialog(true);
+        setLoginDialogProps({ alert: 'Please log in to continue' });
+      }
       return;
     }
     if (!data) {
       return;
     }
     updateInteractions(summary, data);
-  }, [interactWithSummary]);
+  }, [interactWithSummary, setLoginDialogProps, setShowLoginDialog]);
 
   return (
     <React.Fragment>
-      <FlexView style={ theme.components.searchBar }>
+      <View style={ theme.components.searchBar }>
         <SearchBar
           placeholder="show me something worth reading..."
           lightTheme={ theme.isLightMode }
-          onChangeText={ (text) => 
-            setSearchText(text) }
+          onChangeText={ ((text) => 
+            setSearchText(text)) }
           value={ searchText } />
-      </FlexView>
+      </View>
       <SafeScrollView
         refreshing={ loading }
         onRefresh={ () => load(pageSize, 0, searchText) }>
-        <FlexView>
+        <View>
           {recentSummaries.map((summary) => (
             <Summary
               key={ summary.id }
@@ -152,11 +159,13 @@ export function SearchScreen({ navigation }: Props) {
               onInteract={ (...e) => handleInteraction(summary, ...e) } />
           ))}
           {!loading && totalResultCount > recentSummaries.length && (
-            <Button onPress={ loadMore }>
-              Load More
-            </Button>
+            <View row center p={ 16 } pb={ 24 }>
+              <Button onPress={ loadMore }>
+                Load More
+              </Button>
+            </View>
           )}
-        </FlexView>
+        </View>
       </SafeScrollView>
     </React.Fragment>
   );

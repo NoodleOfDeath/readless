@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ReadingFormat } from '~/api';
-import { Button, FlexView } from '~/components';
+import { Button, View } from '~/components';
 import { useTheme } from '~/hooks';
 
 type Props = {
@@ -25,6 +25,7 @@ export function ReadingFormatSelector({
   const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
     return (
       <Button
+        selectable
         outlined
         row
         center
@@ -39,16 +40,16 @@ export function ReadingFormatSelector({
   }, [format, onChange]);
 
   return (
-    <FlexView outlined style={ theme.components.buttonGroup }>
-      <FlexView row style={ theme.components.buttonGroupRow }>
+    <View rounded outlined style={ theme.components.buttonGroup }>
+      <View row style={ theme.components.buttonGroupRow }>
         {makeButton(ReadingFormat.Concise)}
         {makeButton(ReadingFormat.Bullets)}
         {makeButton(ReadingFormat.Casual)}
-      </FlexView>
-      <FlexView row style={ theme.components.buttonGroupRow }>
+      </View>
+      <View row style={ theme.components.buttonGroupRow }>
         {makeButton(ReadingFormat.Detailed, 1)}
         {makeButton(ReadingFormat.InDepth, 1)}
-      </FlexView>
-    </FlexView>
+      </View>
+    </View>
   );
 }
