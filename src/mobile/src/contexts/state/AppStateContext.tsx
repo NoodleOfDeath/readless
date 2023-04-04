@@ -26,6 +26,11 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
 
   const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
 
+  const handleReleaseNotesClose = React.useCallback(() => {
+    setShowReleaseNotes(false);
+    setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
+  }, [setPreference]);
+
   const handleLoginSuccess = React.useCallback((action: LoginAction) => {
     if (action === 'logIn') {
       setShowLoginDialog(false);
@@ -57,7 +62,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
       showLoginDialog,
     } }>
       {children}
-      {showReleaseNotes && <ReleaseNotesScreen onClose={ () => setShowReleaseNotes(false) } />}
+      {showReleaseNotes && <ReleaseNotesScreen onClose={ () => handleReleaseNotesClose() } />}
       <LoginDialog 
         visible={ showLoginDialog }
         onClose={ () => setShowLoginDialog(false) }
