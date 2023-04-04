@@ -10,6 +10,7 @@ export type ColorMode = 'light' | 'dark';
 
 export type Preferences = {
   displayMode?: ColorMode;
+  lastReleaseNotesDate?: string;
   preferredReadingFormat?: ReadingFormat;
 };
 
@@ -25,19 +26,14 @@ export type SessionSetOptions = {
 };
 
 export type SessionContextType = {
+  // user data
   userData?: UserData;
   setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SessionSetOptions) => void;
   addUserToken: (token: LoginResponse['token']) => void;
   // preferences
   preferences: Preferences;
-  // getters
-  displayMode?: ColorMode;
-  setDisplayMode: React.Dispatch<React.SetStateAction<'light' | 'dark' | undefined>>;
-  preferredReadingFormat?: ReadingFormat;
-  setPreferredReadingFormat: React.Dispatch<
-    React.SetStateAction<ReadingFormat | undefined>
-  >;
-  // session hooks
+  setPreference(key: keyof Preferences, value: Preferences[keyof Preferences]): void;
+  // header hooks
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
@@ -46,13 +42,8 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   addUserToken: () => {
     /* placeholder function */
   },
-  displayMode: 'light',
   preferences: {},
-  preferredReadingFormat: ReadingFormat.Concise,
-  setDisplayMode: () => {
-    /* placeholder function */
-  },
-  setPreferredReadingFormat: () => {
+  setPreference: () => {
     /* placeholder function */
   },
   setUserData: () => {

@@ -15,9 +15,7 @@ import {
 
 import { LoginResponse } from '~/api';
 
-type Props = React.PropsWithChildren<{
-  logout?: () => void;
-}>;
+type Props = React.PropsWithChildren;
 
 export const COOKIES = {
   preferences: 'preferences',
@@ -26,7 +24,7 @@ export const COOKIES = {
 
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
 
-export function SessionContextProvider({ children, logout }: Props) {
+export function SessionContextProvider({ children }: Props) {
 
   const [preferences, setPreferences] = React.useState<Preferences>({});
   const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps>();
@@ -64,30 +62,22 @@ export function SessionContextProvider({ children, logout }: Props) {
     });
   };
 
-  const { displayMode, preferredReadingFormat } = React.useMemo(
-    () => preferences,
-    [preferences]
-  );
-
   // Convenience function to set a preference
-  const preferenceSetter = <Key extends keyof Preferences>(key: Key) =>
+  const setPreference = <Key extends keyof Preferences>(key: Key) =>
     (value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
-      setPreferences((preferences) => {
-        const newPrefs = { ...preferences };
+      setPreferences((prev) => {
+        const newPrefs = { ...prev };
         if (!value) {
           delete newPrefs[key];
         } else {
           newPrefs[key] =
-            value instanceof Function ? value(preferences[key]) : value;
+            value instanceof Function ? value(prev[key]) : value;
         }
         setCookie(COOKIES.preferences, JSON.stringify(newPrefs));
-        return (preferences = newPrefs);
+        return (prev = newPrefs);
       });
     };
 
-  const setPreferredReadingFormat = preferenceSetter('preferredReadingFormat');
-  const setDisplayMode = preferenceSetter('displayMode');
-  
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
     if (!userData?.tokenString) {
@@ -121,19 +111,15 @@ export function SessionContextProvider({ children, logout }: Props) {
   React.useEffect(() => {
     if (userData?.expired === true) {
       setUserData();
-      logout?.();
     }
-  }, [userData?.expired, logout]);
+  }, [userData?.expired]);
   
   return (
     <SessionContext.Provider
       value={ {
         addUserToken,
-        displayMode,
         preferences,
-        preferredReadingFormat,
-        setDisplayMode,
-        setPreferredReadingFormat,
+        setPreference,
         setUserData,
         userData,
         withHeaders,
