@@ -19,7 +19,7 @@ const router = Router();
 
 router.get(
   '/',
-  rateLimitMiddleware('5 per 10s'),
+  rateLimitMiddleware('25 per 3s'),
   query('filter').isString().optional(),
   ...paginationMiddleware,
   validationMiddleware,

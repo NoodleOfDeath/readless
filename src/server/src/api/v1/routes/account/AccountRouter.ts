@@ -103,7 +103,6 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      console.log(req.body);
       const response = await AccountController.verifyOTP(req.body);
       return res.json(response);
     } catch (e) {

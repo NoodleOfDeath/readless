@@ -1,8 +1,8 @@
 import { Request, RequestHandler } from 'express';
 import ms from 'ms';
 
-import { RateLimit } from '../schema';
 import { internalErrorHandler } from './internal-errors';
+import { RateLimit } from '../schema';
 
 export type Duration = `${number}${'ms'|'s'|'m'|'h'|'d'|'w'|'M'|'y'}`;
 export type RateLimitString = `${number}${'/'|'every'|'per'}${Duration}`;
