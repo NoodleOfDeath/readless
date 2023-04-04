@@ -10,7 +10,8 @@ import {
 import { useStyles, useTheme } from '~/hooks';
 
 export type ButtonProps = PressableProps & ViewProps & {
-  icon?: React.ReactNode;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
   iconSize?: number;
   small?: boolean;
   big?: boolean;
@@ -27,7 +28,8 @@ export const BUTTON_SIZES = {
 
 export function Button({
   children,
-  icon,
+  startIcon,
+  endIcon,
   small,
   big,
   size = small ? 'small' : big ? 'big' : 'normal',
@@ -50,23 +52,38 @@ export function Button({
   );
   
   const textColor = React.useMemo(() => {
-    return (selected || isPressed) && pressableProps.selectable ? theme.colors.contrastText : theme.colors.primary; 
-  }, [isPressed, pressableProps.selectable, selected, theme]);
+    return ((selected || isPressed) && pressableProps.selectable) ? theme.colors.contrastText : (pressableProps.color ?? theme.colors.primary); 
+  }, [isPressed, pressableProps.selectable, selected, pressableProps.color, theme]);
   
-  const iconComponent = React.useMemo(() => {
-    if (!icon) {
-      return;
+  const startIconComponent = React.useMemo(() => {
+    if (!startIcon) {
+      return; 
     }
-    if (typeof icon === 'string') {
+    if (typeof startIcon === 'string') {
       return (
         <Icon 
-          name={ icon } 
+          name={ startIcon } 
           size={ iconSize } 
           color={ textColor } />
       );
     }
-    return icon;
-  }, [icon, iconSize, textColor]);
+    return startIcon;
+  }, [startIcon, iconSize, textColor]);
+  
+  const endIconComponent = React.useMemo(() => {
+    if (!endIcon) {
+      return;
+    }
+    if (typeof endIcon === 'string') {
+      return (
+        <Icon 
+          name={ endIcon } 
+          size={ iconSize } 
+          color={ textColor } />
+      );
+    }
+    return endIcon;
+  }, [endIcon, iconSize, textColor]);
 
   const handlePress = React.useCallback((e: GestureResponderEvent) => {
     setIsPressed(true);
@@ -81,8 +98,9 @@ export function Button({
 
   return (
     <View pressable { ...pressableProps } onPress={ handlePress } onPressOut={ handlePressOut } style={ buttonStyle }> 
-      {iconComponent && <View mr={ children ? 8 : 0 }>{ iconComponent }</View>}
-      {children &&<Text color={ textColor } style={ { fontSize } }>{ children }</Text>}
+      {startIconComponent && <View mr={ children ? 8 : 0 }>{ startIconComponent }</View>}
+      {children && <Text color={ textColor } style={ { fontSize } }>{ children }</Text>}
+      {endIconComponent && <View ml={ children ? 8 : 0 }>{ endIconComponent }</View>}
     </View>
   );
 }

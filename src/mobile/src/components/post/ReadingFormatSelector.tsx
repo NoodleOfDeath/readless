@@ -29,8 +29,12 @@ export function ReadingFormatSelector({
         outlined
         row
         center
+        alignCenter
+        justifyCenter
+        color={ 'primary' }
+        fontSize={ 16 }
         p={ 8 }
-        icon={ FORMAT_ICONS[newFormat] }
+        startIcon={ FORMAT_ICONS[newFormat] }
         width={ row === 0 ? '33.33%' : '50%' }
         selected={ format === newFormat } 
         onPress={ () => onChange?.(newFormat) }>

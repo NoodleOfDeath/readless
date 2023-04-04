@@ -4,105 +4,169 @@ import { Stylable } from '~/components';
 import { useTheme } from '~/hooks';
 
 export function useStyles({
-  col,
-  row,
+  // dimensions
+  width,
+  height,
+  // text styles
+  color,
   center,
   left,
   right,
+  fontSize,
+  bold,
+  italic,
+  // flex styles
+  col,
+  row,
+  alignCenter,
+  alignEnd,
+  alignStart,
+  justifyCenter,
+  justifyEnd,
+  justifyStart,
+  justifySpaced,
+  // margin
   m,
-  mt = m,
-  mb = m,
-  ml = m,
-  mr = m,
+  mh = m,
+  mv = m,
+  mt = mv,
+  mb = mv,
+  ml = mh,
+  mr = mh,
+  // padding
   p,
-  pt = p,
-  pb = p,
-  pl = p,
-  pr = p,
+  ph = p,
+  pv = p,
+  pt = pv,
+  pb = pv,
+  pl = ph,
+  pr = ph,
+  // appearance
+  bg,
   outlined,
   contained,
-  width,
   rounded,
+  // selectable,
+  // other
   style,
 }: Stylable) {
   const theme = useTheme();
   
   const newStyle = React.useMemo(() => ({ ...style }), [style]);
   
-  const alignment = React.useMemo(() => {
+  const textAlign = React.useMemo(() => {
     if (center) {
-      return {
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-      };
+      return { textAlign: 'center' };
     } 
     if (right) {
-      return {
-        justifyContent: 'flex-end',
-        textAlign: 'right',
-      };
+      return { textAlign: 'right' };
     }
     if (left) {
-      return {
-        justifyContent: 'flex-start',
-        textAlign: 'left',
-      };
+      return { textAlign: 'left' };
     }
-    return { textAlign: 'left' };
   }, [center, left, right]);
+
+  const fontAppearance = React.useMemo(() => {
+    if (bold) {
+      return { fontWeight: 'bold' };
+    }
+    if (italic) {
+      return { fontStyle: 'italic' };
+    }
+  }, [bold, italic]);
+
+  const alignItems = React.useMemo(() => {
+    if (alignCenter) {
+      return { alignItems: 'center' };
+    }
+    if (alignStart) {
+      return { alignItems: 'flex-start' };
+    }
+    if (alignEnd) {
+      return { alignItems: 'flex-end' };
+    }
+  }, [alignCenter, alignEnd, alignStart]);
+
+  const justifyContent = React.useMemo(() => {
+    if (justifyCenter) {
+      return { justifyContent: 'center' };
+    }
+    if (justifyStart) {
+      return { justifyContent: 'flex-start' };
+    }
+    if (justifyEnd) {
+      return { justifyContent: 'flex-end' };
+    }
+    if (justifySpaced) {
+      return { justifyContent: 'space-between' };
+    }
+  }, [justifyCenter, justifyEnd, justifySpaced, justifyStart]);
   
   const appearance = React.useMemo(() => {
-    if (outlined) {
+    if (outlined === true) {
       return theme.components.outlined;
+    } else
+    if (typeof outlined === 'string') {
+      return { borderColor: outlined, borderWidth: 1 };
+    } else
+    if (typeof outlined === 'number') {
+      return { borderColor: theme.colors.primary, borderWidth: outlined };
+    } else
+    if (Array.isArray(outlined) && outlined.length === 2 && typeof outlined[0] === 'string' && typeof outlined[1] === 'number') {
+      return {
+        borderColor: outlined[0],
+        borderWidth: outlined[1],
+      };
     } else
     if (contained) {
       return theme.components.buttonSelected;
-    }
+    } 
   }, [outlined, contained, theme]);
   
   const viewStyle = React.useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
-    attrs.push(row
-      ? theme.components.flexRow
-      : col
-        ? theme.components.flexCol
-        : undefined);
-    attrs.push(alignment);
+    attrs.push(row? theme.components.flexRow : undefined);
+    attrs.push(col ? theme.components.flexCol : undefined);
+    attrs.push(textAlign);
+    attrs.push(fontAppearance);
+    attrs.push(alignItems);
+    attrs.push(justifyContent);
     attrs.push(appearance);
-    attrs.push({ width });
-    if (rounded) {
-      attrs.push(theme.components.rounded);
-    }
-    if (mt) {
-      attrs.push({ marginTop: mt });
-    }
-    if (mb) {
-      attrs.push({ marginBottom: mb });
-    }
-    if (ml) {
-      attrs.push({ marginLeft: ml });
-    }
-    if (mr) {
-      attrs.push({ marginRight: mr });
-    }
-    if (pt) {
-      attrs.push({ paddingTop: pt });
-    }
-    if (pb) {
-      attrs.push({ paddingBottom: pb });
-    }
-    if (pl) {
-      attrs.push({ paddingLeft: pl });
-    }
-    if (pr) {
-      attrs.push({ paddingRight: pr });
-    }
-    return attrs
-      .filter(Boolean)
-      .flat()
-      .reduce((acc, attr) => ({ ...acc, ...attr }), newStyle);
-  }, [row, theme.components.flexRow, theme.components.flexCol, theme.components.rounded, col, alignment, appearance, width, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
+    attrs.push(color ? { color }: undefined);
+    attrs.push(width ? { width }: undefined);
+    attrs.push(height ? { height }: undefined);
+    attrs.push(fontSize ? { fontSize }: undefined);
+    attrs.push(bg ? { backgroundColor: bg } : undefined);
+    attrs.push(rounded ? theme.components.rounded : undefined);
+    attrs.push(mt ? { marginTop: mt } : undefined);
+    attrs.push(mb ? { marginBottom: mb } : undefined);
+    attrs.push(ml ? { marginLeft: ml } : undefined);
+    attrs.push(mr ? { marginRight: mr } : undefined);
+    attrs.push(pt ? { paddingTop: pt } : undefined);
+    attrs.push(pb ? { paddingBottom: pb } : undefined);
+    attrs.push(pl ? { paddingLeft: pl } : undefined);
+    attrs.push(pr ? { paddingRight: pr } : undefined);
+    return attrs.filter(Boolean).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
+  }, [
+    width,
+    height,
+    color,
+    fontSize,
+    fontAppearance,
+    row, 
+    col, 
+    textAlign,
+    alignItems,
+    justifyContent,
+    mt, mb, ml, mr, 
+    pt, pb, pl, pr, 
+    bg,
+    rounded, 
+    appearance, 
+    theme.components.flexRow, 
+    theme.components.flexCol,
+    theme.components.rounded, 
+    newStyle]);
   return viewStyle;
 }

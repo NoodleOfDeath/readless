@@ -90,31 +90,39 @@ export function Summary({
         </View>
         <View row />
       </View>
-      <View row>
+      <View row justifySpaced>
         <Text variant='subtitle1'>{summary.outletName.trim()}</Text>
-        <Button onPress={ () => Linking.openURL(summary.url) }><Text variant='subtitle1'>View original source</Text></Button>
+        <Button onPress={ () => Linking.openURL(summary.url) } pv={ 2 }>
+          <Text variant='subtitle1'>View original source</Text>
+        </Button>
       </View>
       <Pressable onPress={ () => onChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
         <Text variant='title1'>{summary.title.trim()}</Text>
       </Pressable>
       <Divider horizontal />
-      <View row>
+      <View row justifySpaced>
         <View row>
           <Text variant='subtitle2'>{timeAgo}</Text>
         </View>
-        <View row />
-        <View row>
+        <View row justifySpaced>
           <View>
             <Text variant='subtitle2'>{String(interactions.view)}</Text>
           </View>
-          <Icon name="eye" />
+          <Icon
+            name="eye"
+            color={ 'primary' }
+            mh={ 8 } />
           <Button
-            icon={ interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
-            onPress={ () => onInteract?.(InteractionType.Upvote) } />
+            color={ 'primary' }
+            startIcon={ interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
+            onPress={ () => onInteract?.(InteractionType.Upvote) }
+            mh={ 8 } />
           <Text variant='subtitle2'>{String(votes)}</Text>
           <Button 
-            icon={ interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
-            onPress={ () => onInteract?.(InteractionType.Downvote) } />
+            color={ 'primary' }
+            startIcon={ interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
+            onPress={ () => onInteract?.(InteractionType.Downvote) }
+            mh={ 8 } />
         </View>
       </View>
       <View mt={ 2 }>

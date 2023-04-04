@@ -39,7 +39,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   }, [showLoginDialog]);
 
   React.useEffect(() => {
-    if (new Date(lastReleaseNotesDate) < new Date()) {
+    if (!lastReleaseNotesDate || new Date(lastReleaseNotesDate) < new Date()) {
       setShowReleaseNotes(true);
       setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
     }
@@ -57,7 +57,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
       showLoginDialog,
     } }>
       {children}
-      {showReleaseNotes && <ReleaseNotesScreen />}
+      {showReleaseNotes && <ReleaseNotesScreen onClose={ () => setShowReleaseNotes(false) } />}
       <LoginDialog 
         visible={ showLoginDialog }
         onClose={ () => setShowLoginDialog(false) }

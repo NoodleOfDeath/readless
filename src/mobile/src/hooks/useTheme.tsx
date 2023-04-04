@@ -9,6 +9,7 @@ export function useTheme<T extends {}>(other: T = {} as T) {
       error: '#f44336',
       primary: '#8b0000',
       text: isLightMode ? '#000' : '#fff',
+      textDark: '#000',
     },
     isLightMode,
     ...StyleSheet.create({
@@ -63,13 +64,11 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           flex: 1,
           flexDirection: 'column',
           flexGrow: 1,
-          justifyContent: 'space-between',
         },
         flexRow: {
           flex: 1,
           flexDirection: 'row',
           flexGrow: 1,
-          justifyContent: 'space-between',
         }, 
         input: { color: isLightMode ? '#000' : '#fff' },
         outlined: {
@@ -88,6 +87,7 @@ export function useTheme<T extends {}>(other: T = {} as T) {
       },
       typography: {
         // typographies
+        base: { fontFamily: 'Lato' },
         body1: {
           fontFamily: 'Lato',
           fontSize: 16, // normal
@@ -100,10 +100,7 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           fontFamily: 'Lato',
           fontSize: 13,
         },
-        code: {
-          fontFamily: 'DM Mono',
-          fontSize: 16, // normal
-        },
+        code: { fontFamily: 'DM Mono' },
         subtitle1: {
           fontFamily: 'Lato',
           fontSize: 16,

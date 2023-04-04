@@ -6,6 +6,9 @@ import Carousel from 'react-native-reanimated-carousel';
 import {
   AnimatedCard,
   Button,
+  Code,
+  Icon,
+  Strong,
   Text,
   View,
 } from '~/components';
@@ -28,12 +31,12 @@ type CardData = {
 export function ReleaseNotesScreen({ onClose }: Props = {}) {
   const theme = useTheme({
     container: {
-      backgroundColor: '#fff',
-      borderColor: 'red',
+      backgroundColor: '#8b0000',
+      borderColor: '#fff',
       borderRadius: 8,
-      borderWidth: 1,
+      borderWidth: 5,
       flex: 1,
-      fontFamily: 'Lato',
+      padding: 32,
     },
   });
 
@@ -54,29 +57,77 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
 
   const CARD_DATA: CardData[] = React.useMemo(() => [{
     content: (
-      <View col center>
-        <Text>
-          As a Beta tester I would love to hear your feedback! The first official version release of this app will be very minimal (aka much like this build), but I hope to add A LOT more features in the future including the ability to follow categories, topics, and authors so you do not have to search through ALL of the news.
+      <View col justifyCenter>
+        <Text fontSize={ 32 }>
+          Welcome -
         </Text>
-      </View>     ),
+        <Text right fontSize={ 32 } mb={ 8 }>Beta tester!</Text>
+        <View outlined={ ['#fff', 2] } rounded p={ 8 } bg='red' mb={ 8 }>
+          <Strong center fontSize={ 26 }>
+            TL;DR
+          </Strong>
+          <Text center fontSize={ 20 }>
+            Don&apos;t expect much... yet!
+          </Text>
+        </View>
+        <Text fontSize={ 18 } mv={ 8 }>
+          As the first official version release of this app, it will be very minimal, but I hope to add A LOT more features in the future including the ability to follow categories, topics, and authors so you do not have to search through ALL of the news.
+        </Text>
+        <View alignEnd>
+          <Icon name='arrow-right' size={ 40 } color='contrastText' />
+        </View>
+      </View>
+    ),
     title: 'Welcome to Read &apos; Less',   
   },
   {
     content: (
-      <View col center>
-        <Text>
-          This build also points to the the dev environment. When verifying your email, you will need to also provide a username and password to access the dev environment. The username is &apos;dev&apos; and the password is &apos;readless&#24;&#24;!&apos;. This will be changed to a more user-friendly experience in the future.
+      <View col justifyCenter>
+        <Text fontSize={ 32 }>
+          Beta Environment
         </Text>
+        <Text right fontSize={ 22 } mb={ 8 }>
+          Super Secure Login Deets
+        </Text>
+        <View outlined={ ['#fff', 2] } rounded p={ 8 } bg='red' mb={ 8 }>
+          <Strong center fontSize={ 26 }>
+            TL;DR
+          </Strong>
+          <View alignCenter>
+            <Code fontSize={ 20 }>username: dev</Code>
+            <Code fontSize={ 20 }>password: dev</Code>
+          </View>
+        </View>
+        <Text fontSize={ 20 } mv={ 8 }>
+          This build also points to the the dev environment. So if you decide you want to sign up, when verifying your email, you will need to also provide a username and password to access the dev environment.
+        </Text>
+        <View alignEnd>
+          <Icon name='arrow-right' size={ 40 } color='contrastText' />
+        </View>
       </View>),
   },
   {
     content: (
-      <View col center>
-        <Text>
-          I hope you enjoy the app and please let me know if you have any questions or feedback. Also, this carousel will be replaced with a more user-friendly onboarding experience.
+      <View col justifyCenter>
+        <Text fontSize={ 32 } mb={ 8 }>
+          What&apos;s Next?
         </Text>
-        <Button onPress={ () => onClose?.() }>
-          Letapos;s Get Started!
+        <View outlined={ ['#fff', 2] } rounded p={ 8 } bg='red' mb={ 8 }>
+          <Strong center fontSize={ 26 }>
+            TL;DR
+          </Strong>
+          <Text center fontSize={ 22 }>
+            Use this app to READ LESS and LIVE MORE!
+          </Text>
+        </View>
+        <Text fontSize={ 18 } mv={ 8 }>
+          Honestly, huge thanks to all of you for volunteering to be a beta tester! Who knows where this app will go, but I hope you enjoy it and it you stay up to date with the latest news! You can look forward to the following:
+        </Text>
+        <Button onPress={ () => onClose?.() } fontSize={ 40 } color={ '#fff' }>
+          Let&apos;s Freakin&apos; Goooo!
+          <View alignEnd>
+            <Icon name='arrow-right' size={ 40 } color='contrastText' />
+          </View>
         </Button>
       </View>
     ),
@@ -84,7 +135,7 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
   ] as CardData[], [onClose]);
 
   return (
-    <View>
+    <View bg={ 'rgba(255,80,80,0.3)' }>
       <Carousel
         loop={ false }
         style={ {
