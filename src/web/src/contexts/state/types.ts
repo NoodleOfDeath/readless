@@ -1,42 +1,34 @@
-import { Theme } from '@emotion/react';
+import { Theme } from '@mui/material';
 
-// Context
+import { loadTheme } from '~/theme';
 
-export type SetSessionOptions = {
-  updateCookie?: boolean;
-};
-
-export type SetSearchTextOptions = {
-  clearSearchParams?: boolean;
-};
-
-export type AppStateContext = {
-  theme: Theme;
-  // app ui state
+export type AppStateContextType = {
+  deferredAction?: () => void;
+  setDeferredAction: React.Dispatch<React.SetStateAction<(() => void | undefined) | undefined>>;
+  setShowLoginDialog: React.Dispatch<React.SetStateAction<boolean>>;
   showLoginDialog: boolean;
-  setShowLoginDialog: (state: React.SetStateAction<boolean>, deferredAction?: () => void) => void;
-  // search text
   searchText: string;
-  setSearchText: (
-    state: React.SetStateAction<string>,
-    opts?: SetSearchTextOptions
-  ) => void;
-  searchOptions: string[];
-  setSearchOptions: React.Dispatch<React.SetStateAction<string[]>>;
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+  searchSuggestions: string[];
+  setSearchSuggestions: React.Dispatch<React.SetStateAction<string[]>>;
+  theme: Theme;
 };
 
-export const NULL_SESSION: Session = {
-  searchOptions: [],
+export const DEFAULT_APP_STATE_CONTEXT: AppStateContextType = {
+  searchSuggestions: [],
   searchText: '',
-  setSearchOptions: () => {
-    /* placeholder function */
+  setDeferredAction: () => {
+    /** placeholder */
+  },
+  setSearchSuggestions: () => {
+    /** placeholder */
   },
   setSearchText: () => {
-    /* placeholder function */
+    /** placeholder */
   },
   setShowLoginDialog: () => {
-    /* placeholder function */
+    /** placeholder */
   },
   showLoginDialog: false,
-  theme: loadTheme(),
+  theme: loadTheme('light'),
 };

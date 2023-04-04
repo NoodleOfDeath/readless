@@ -9,10 +9,9 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import API, { InternalError } from '~/api';
+import { InternalError, PartialUpdateCredentialRequest } from '~/api';
 import Page from '~/components/layout/Page';
-import { SessionContext } from '~/contexts';
-import { useRouter } from '~/next/router';
+import { useLoginClient, useRouter } from '~/hooks';
 
 const StyledStack = styled(Stack)(() => ({ alignItems: 'center' }));
 
@@ -20,38 +19,28 @@ export default function ResetPasswordPage() {
 
   const router = useRouter();
   const { handleSubmit, register } = useForm();
-  const {
-    userData, setUserData, withHeaders, 
-  } = React.useContext(SessionContext);
+  const { updateCredential, logOut } = useLoginClient();
 
-  const [error, setError] = React.useState<InternalError | null>(null);
+  const [formError, setFormError] = React.useState<InternalError | string>();
   const [success, setSuccess] = React.useState(false);
 
-  const onSubmit = React.useCallback(async (values: { password?: string }) => {
-    if (!userData || !values.password) {
+  const onSubmit = React.useCallback(async (values: PartialUpdateCredentialRequest) => {
+    const { error } = await updateCredential(values);
+    if (error) {
+      setFormError(error);
       return;
     }
-    withHeaders(API.updateCredential)(values)
-      .then(({ error }) => {
-        if (error) {
-          setError(error);
-          return;
-        }
-        setSuccess(true);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, [userData, withHeaders]);
+    setSuccess(true);
+  }, [updateCredential]);
 
   React.useEffect(() => {
     if (success) {
       setTimeout(() => {
-        setUserData();
+        logOut();
         router.push('/login');
-      }, 3_000);
+      }, 5_000);
     }
-  }, [router, success, setUserData]);
+  }, [router, success, logOut]);
 
   return (
     <Page center title="Reset Password">
@@ -75,18 +64,20 @@ export default function ResetPasswordPage() {
             <Button type="submit" variant="contained">
               Reset Password
             </Button>
-            {error && (
+            {formError && (
               <Typography variant='body2' color='error'>
-                {error.message}
+                {typeof formError === 'string' ? formError : formError.message}
               </Typography>
             )}
           </StyledStack>
         </form>
       ) : (
-        <Typography variant='body2'>
-          Your password has been reset. You will be redirected to the login page in 3 seconds or you can click the button below.
+        <StyledStack>
+          <Typography variant='body2'>
+            Your password has been reset. You will be redirected to the login page in 5 seconds or you can click the button below.
+          </Typography>
           <Button variant='contained' onClick={ () => router.push('/login') }>Back to Login</Button>
-        </Typography>
+        </StyledStack>
       )}
     </Page>
   );

@@ -7,8 +7,9 @@ import {
   Typography,
 } from '@mui/material';
 
-import API, {
+import {
   InteractionResponse,
+  InteractionType,
   ReadingFormat,
   SummaryResponse,
 } from '~/api';
@@ -16,19 +17,15 @@ import Logo from '~/components/Logo';
 import Summary from '~/components/Summary';
 import Page from '~/components/layout/Page';
 import Filters from '~/components/search/Filters';
-import { SessionContext } from '~/contexts';
+import { AppStateContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
-import { useRouter } from '~/next/router';
 
 export default function SearchPage() {
-  const { searchParams } = useRouter();
-  const { recordSummaryView, interactWithSummary } = useSummaryClient();
+  const {
+    getSummaries, recordSummaryView, interactWithSummary, 
+  } = useSummaryClient();
 
-  const { 
-    searchText, 
-    setSearchText,
-    withHeaders,
-  } = React.useContext(SessionContext);
+  const { searchText } = React.useContext(AppStateContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
   const [recentSummaries, setRecentSummaries] = React.useState<SummaryResponse[]>([]);
@@ -36,68 +33,12 @@ export default function SearchPage() {
   const [pageSize] = React.useState<number>(10);
   const [page, setPage] = React.useState<number>(1);
 
-  const [expandedPost, setExpandedPost] = React.useState<number|undefined>();
-  const [readingFormat, setReadingFormat] = React.useState<ReadingFormat|undefined>();
+  const [expandedPost, setExpandedPost] = React.useState<number>();
+  const [readingFormat, setReadingFormat] = React.useState<ReadingFormat>();
 
-  React.useEffect(() => {
-    if (searchParams.get('q')) {
-      setSearchText(JSON.stringify(searchParams.get('q')) || '');
-    }
-  }, [searchParams, setSearchText]);
-
-  React.useEffect(() => {
-    setRecentSummaries([]);
-    setPage(1);
-    withHeaders(API
-      .getSummaries)({
-      filter: searchText,
-      page: 0,
-      pageSize,
-    })
-      .then((response) => {
-        setTotalResults(response.data.count);
-        setRecentSummaries(response.data.rows);
-      })
-      .catch((error) => {
-        console.error(error);
-        setTotalResults(0);
-        setRecentSummaries([]);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText, withHeaders]);
-  
-  const setPostInteractions = (i: number, interactions: InteractionResponse) => {
-    setRecentSummaries((prev) => {
-      const newPosts = [...prev];
-      newPosts[i].interactions = interactions;
-      return (prev = newPosts);
-    });
-  };
-
-  const expandPost = React.useCallback(async (index?: number, readingFormat?: ReadingFormat) => {
-    if (index !== undefined && readingFormat) {
-      try {
-        await recordSummaryView(
-          recentSummaries[index], 
-          undefined,
-          { readingFormat },
-          (interactions) => setPostInteractions(index, interactions) 
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    setExpandedPost(readingFormat ? index : undefined);
-    setReadingFormat(readingFormat);
-  }, [recordSummaryView, recentSummaries]);
-
-  const loadMore = React.useCallback(async () => {
+  const load = React.useCallback(async () => {
     try {
-      const { data } = await withHeaders(API
-        .getSummaries)({
+      const { data } = await getSummaries({
         filter: searchText,
         page,
         pageSize,
@@ -109,8 +50,58 @@ export default function SearchPage() {
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);
     }
-  }, [page, pageSize, searchText, withHeaders]);
+  }, [page, pageSize, searchText, getSummaries]);
+
+  React.useEffect(() => {
+    setPage(0);
+    setLoading(true);
+    setRecentSummaries([]);
+    load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchText]);
+  
+  const setPostInteractions = (i: number, interactions: InteractionResponse) => {
+    setRecentSummaries((prev) => {
+      const newPosts = [...prev];
+      newPosts[i].interactions = interactions;
+      return (prev = newPosts);
+    });
+  };
+
+  const handleInteraction = React.useCallback(async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+    const { data, error } = await interactWithSummary(summary, type, content, metadata );
+    if (error) {
+      console.error(error);
+    }
+    if (data) {
+      setPostInteractions(recentSummaries.findIndex((s) => s.id === summary.id), data);
+    }
+  }, [interactWithSummary, recentSummaries]);
+
+  const expandPost = React.useCallback(async (index?: number, readingFormat?: ReadingFormat) => {
+    if (index !== undefined && readingFormat) {
+      try {
+        const { data, error } = await recordSummaryView(
+          recentSummaries[index], 
+          undefined,
+          { readingFormat }
+        );
+        if (error) {
+          console.error(error);
+        }
+        if (data) {
+          setPostInteractions(index, data);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    setExpandedPost(readingFormat ? index : undefined);
+    setReadingFormat(readingFormat);
+  }, [recordSummaryView, recentSummaries]);
 
   return (
     <Page center title="Read &lt; Less | Search">
@@ -141,13 +132,7 @@ export default function SearchPage() {
                 summary={ summary }
                 onChange={ (newFormat) => expandPost(i, newFormat) } 
                 onInteract={ 
-                  (type, content, metadata) => interactWithSummary(
-                    recentSummaries[i], 
-                    type, 
-                    content, 
-                    metadata,
-                    (interactions) => setPostInteractions(i, interactions) 
-                  ) 
+                  (type, content, metadata) => handleInteraction(summary, type, content, metadata) 
                 } />
             )) : (
               <Summary
@@ -155,19 +140,13 @@ export default function SearchPage() {
                 onChange={ (newFormat) => expandPost(expandedPost, newFormat) }
                 format={ readingFormat } 
                 onInteract={ 
-                  (type, content, metadata) => interactWithSummary(
-                    recentSummaries[expandedPost], 
-                    type, 
-                    content, 
-                    metadata, 
-                    (interactions) => setPostInteractions(expandedPost, interactions) 
-                  ) 
+                  (type, content, metadata) => handleInteraction(recentSummaries[expandedPost], type, content, metadata) 
                 } />
             )}
         </Stack>
         {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
         {expandedPost === undefined && totalResults > pageSize * page && (
-          <Button onClick={ () => loadMore() }>Load More</Button>
+          <Button onClick={ () => load() }>Load More</Button>
         )}
       </Stack>
     </Page>

@@ -31,7 +31,6 @@ export default function JustNewsHeader() {
   
   const [quipIndex, setQuipIndex] = React.useState(0);
   const [quip, setQuip] = React.useState(QUIPS[quipIndex]);
-  const [exiting, setExiting] = React.useState<boolean | undefined>();
   
   const nextQuip = () => {
     setQuipIndex((prev) => (prev + 1) % QUIPS.length);
