@@ -6,6 +6,7 @@ export * from './jwt';
 export type JwtTokenResponse = {
   priority: number;
   value: string;
+  expiresAt: number;
 };
 
 export type PayloadWithUserId = {
