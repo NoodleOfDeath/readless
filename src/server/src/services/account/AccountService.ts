@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import ms from 'ms';
+import { Op } from 'sequelize';
 import web3 from 'web3';
 
 import {
@@ -166,10 +167,7 @@ export class AccountService extends BaseService {
     const token = await Jwt.as(req.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
     return {
-      token: {
-        priority: token.priority,
-        value: token.signed,
-      },
+      token: token.serialized,
       userId: userData.id,
     };
   }
@@ -221,7 +219,12 @@ export class AccountService extends BaseService {
   public static async verifyAlias(
     req: Partial<VerifyAliasRequest>
   ): Promise<VerifyAliasResponse> {
-    const alias = await Alias.findOne({ where: { verificationCode: req.verificationCode } });
+    const alias = await Alias.findOne({ 
+      where: { 
+        verificationCode: req.verificationCode,
+        verifiedAt: { [Op.ne] : null },
+      }, 
+    });
     if (!alias) {
       throw new AuthError('UNKNOWN_ALIAS', { alias: 'user identifier' });
     } else if (alias.verificationExpiresAt < new Date()) {
@@ -254,7 +257,7 @@ export class AccountService extends BaseService {
     const token = await Jwt.as('account', userData.id);
     await user.createCredential('jwt', token);
     return {
-      token: { priority: token.priority, value: token.signed },
+      token: token.serialized,
       userId: userData.id,
     };
   }

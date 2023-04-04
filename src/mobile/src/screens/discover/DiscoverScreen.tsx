@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { FlexView, SafeScrollView } from '~/components';
+import { SafeScrollView, View } from '~/components';
+import { AppStateContext } from '~/contexts';
 
 export function DiscoverScreen() {
   return (
     <SafeScrollView>
-      <FlexView row />
+      <View row />
     </SafeScrollView>
   );
 }

@@ -18,7 +18,7 @@ export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
 
 export function AppStateContextProvider({ children }: Props) {
   
-  const { displayMode } = React.useContext(SessionContext);
+  const { preferences: { displayMode } } = React.useContext(SessionContext);
   
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   

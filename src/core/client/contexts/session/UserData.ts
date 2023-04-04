@@ -1,19 +1,17 @@
-import jwt from 'jsonwebtoken';
-
-import { LoginResponse } from '~/api';
+import { JwtTokenResponse } from '~/api';
 
 export type UserDataProps = {
   userId: number;
   isLoggedIn?: boolean;
-  token?: LoginResponse['token'];
-  tokens?: LoginResponse['token'] | LoginResponse['token'][];
+  token?: JwtTokenResponse;
+  tokens?: JwtTokenResponse | JwtTokenResponse[];
 };
 
 export class UserData implements UserDataProps {
 
   userId: number;
   isLoggedIn?: boolean;
-  tokens: LoginResponse['token'][];
+  tokens: JwtTokenResponse[];
 
   get token() {
     if (this.tokens.length === 0) {
@@ -27,15 +25,11 @@ export class UserData implements UserDataProps {
   }
 
   get expired() {
-    return this.tokens.length > 0 && this.tokens.every((t) => UserData.tokenHasExpired(t.value));
+    return this.tokens.length > 0 && this.tokens.every((t) => UserData.tokenHasExpired(t));
   }
   
-  static tokenHasExpired(tokenString: string) {
-    const token = jwt.decode(tokenString);
-    if (!token || typeof token === 'string' || !token.exp) {
-      return true;
-    }
-    return token.exp < Date.now() / 1_000;
+  static tokenHasExpired(token: JwtTokenResponse) {
+    return token.expiresAt < Date.now();
   }
 
   constructor({
@@ -45,12 +39,12 @@ export class UserData implements UserDataProps {
     isLoggedIn = false, 
   }: UserDataProps) {
     this.userId = userId;
-    this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => !UserData.tokenHasExpired(t.value)).sort((a, b) => b.priority - a.priority);
+    this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
     this.isLoggedIn = isLoggedIn;
   }
   
-  addToken(token: LoginResponse['token']) {
-    this.tokens = [...this.tokens, token].filter((t) => !UserData.tokenHasExpired(t.value)).sort((a, b) => b.priority - a.priority);
+  addToken(token: JwtTokenResponse) {
+    this.tokens = [...this.tokens, token].filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
   }
 
 }

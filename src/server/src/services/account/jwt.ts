@@ -39,6 +39,14 @@ export class Jwt implements JsonWebToken {
   defaultsTo: string;
   signed: string;
 
+  get serialized() {
+    return {
+      expiresAt: new Date(this.createdAt.getTime() + ms(this.expiresIn)).valueOf(),
+      priority: this.priority,
+      value: this.signed,
+    };
+  }
+
   get expired() {
     const { exp } = jwt.decode(this.signed) as { exp: number };
     return exp < Date.now() / 1_000;

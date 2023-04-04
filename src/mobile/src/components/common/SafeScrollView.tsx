@@ -1,15 +1,15 @@
 import React from 'react';
+import { RefreshControl, SafeAreaView } from 'react-native';
+
 import {
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  ScrollViewProps,
-} from 'react-native';
+  KeyboardAwareScrollView,
+  KeyboardAwareScrollViewProps,
+} from 'react-native-keyboard-aware-scroll-view';
 
-import { FlexView } from '~/components';
-import { useTheme } from '~/hooks';
+import { Stylable, View } from '~/components';
+import { useStyles, useTheme } from '~/hooks';
 
-export type SafeScrollViewProps = ScrollViewProps & {
+export type SafeScrollViewProps = KeyboardAwareScrollViewProps & {
   refreshing?: boolean;
   onRefresh?: () => void;
 };
@@ -24,11 +24,12 @@ export function SafeScrollView({
   ...props
 }: SafeScrollViewProps) {
   const theme = useTheme();
+  const style = useStyles(props as Stylable);
   return (
     <SafeAreaView style={ theme.components.flexCol }>
-      <ScrollView refreshControl={ refreshControl } { ...props }>
-        <FlexView style={ theme.components.screen }>{children}</FlexView>
-      </ScrollView>
+      <KeyboardAwareScrollView refreshControl={ refreshControl } { ...props }>
+        <View style={ style }>{children}</View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

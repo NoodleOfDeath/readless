@@ -44,23 +44,23 @@ const StyledButton = styled(Button)<{ selected: boolean }>`
 export default function LightDarkModeButtons() {
   const {
     preferences: { displayMode },
-    setDisplayMode,
+    setPreference,
   } = React.useContext(SessionContext);
 
   return (
     <StyledButtonGroup variant="outlined" aria-label="outlined button group">
       <StyledButton
-        onClick={ () => setDisplayMode('light') }
+        onClick={ () => setPreference('displayMode', 'light') }
         selected={ displayMode === 'light' }>
         <Icon path={ mdiWeatherSunny } size={ 1 } />
       </StyledButton>
       <StyledButton
-        onClick={ () => setDisplayMode(undefined) }
+        onClick={ () => setPreference('displayMode', undefined) }
         selected={ displayMode === undefined }>
         <Icon path={ mdiThemeLightDark } size={ 1 } />
       </StyledButton>
       <StyledButton
-        onClick={ () => setDisplayMode('dark') }
+        onClick={ () => setPreference('displayMode', 'dark') }
         selected={ displayMode === 'dark' }>
         <Icon path={ mdiWeatherNight } size={ 1 } />
       </StyledButton>

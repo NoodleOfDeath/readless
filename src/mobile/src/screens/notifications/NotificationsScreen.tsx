@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { FlexView, SafeScrollView } from '~/components';
+import { SafeScrollView, View } from '~/components';
 
 export function NotificationsScreen() {
   return (
     <SafeScrollView>
-      <FlexView />
+      <View />
     </SafeScrollView>
   );
 }
