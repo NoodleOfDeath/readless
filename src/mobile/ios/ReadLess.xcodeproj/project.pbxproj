@@ -40,6 +40,7 @@
 		0125BD5729D791ED00EAC61C /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3729D791EC00EAC61C /* Lato-ThinItalic.ttf */; };
 		0125BD5829D791ED00EAC61C /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */; };
 		0125BD5929D791ED00EAC61C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
+		01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 01BC567B29DCF36700C69F9A /* main.jsbundle */; };
 		07A1D8E328E1A8A03D5EA3A8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */; };
 		0C80B921A6F3F58F76C31292 /* libPods-ReadLess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
@@ -97,6 +98,7 @@
 		0125BD3729D791EC00EAC61C /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
 		0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		01BC567B29DCF36700C69F9A /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ReadLess/main.jsbundle; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReadLess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReadLess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReadLess/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ReadLess/AppDelegate.mm; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 		13B07FAE1A68108700A75B9A /* ReadLess */ = {
 			isa = PBXGroup;
 			children = (
+				01BC567B29DCF36700C69F9A /* main.jsbundle */,
 				0125BD1929D791EC00EAC61C /* Fonts */,
 				0125BD1829D791EC00EAC61C /* ReadLess.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -392,6 +395,7 @@
 				0125BD5529D791ED00EAC61C /* Lato-BoldItalic.ttf in Resources */,
 				0125BD4929D791ED00EAC61C /* Foundation.ttf in Resources */,
 				0125BD4B29D791ED00EAC61C /* FontAwesome5_Solid.ttf in Resources */,
+				01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */,
 				0125BD4529D791ED00EAC61C /* AntDesign.ttf in Resources */,
 				0125BD3F29D791ED00EAC61C /* Lato-Thin.ttf in Resources */,
 				0125BD3A29D791ED00EAC61C /* Fontisto.ttf in Resources */,
@@ -434,7 +438,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+			shellScript = "export NODE_BINARY=node\nset -e\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
 		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -665,7 +669,7 @@
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Read<Less";
+				INFOPLIST_KEY_CFBundleDisplayName = "Read < Less";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -695,7 +699,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = ReadLess/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Read<Less";
+				INFOPLIST_KEY_CFBundleDisplayName = "Read < Less";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

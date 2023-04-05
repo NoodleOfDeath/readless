@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image } from 'react-native';
 
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
@@ -73,8 +74,10 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
         <Text fontSize={ 18 } mv={ 8 }>
           As the first official version release of this app, it will be very minimal, but I hope to add A LOT more features in the future including the ability to follow categories, topics, and authors so you do not have to search through ALL of the news.
         </Text>
-        <View alignEnd>
-          <Icon name='arrow-right' size={ 40 } color='contrastText' />
+        <View alignEnd mt={ 16 }>
+          <Text fontSize={ 18 }>Swipe right!</Text>
+          <Icon name='arrow-right' size={ 40 } color='contrastText' mv={ 8 } />
+          <Text fontSize={ 18 }>...or well swipe from the right to the left to continue</Text>
         </View>
       </View>
     ),
@@ -102,7 +105,8 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
           This build also points to the the dev environment. So if you decide you want to sign up, when verifying your email, you will need to also provide a username and password to access the dev environment.
         </Text>
         <View alignEnd>
-          <Icon name='arrow-right' size={ 40 } color='contrastText' />
+          <Icon name='arrow-right' size={ 40 } color='contrastText' mv={ 8 } />
+          <Text fontSize={ 22 }>This doesn&apos;t count as a swipe left!</Text>
         </View>
       </View>),
   },
@@ -121,14 +125,14 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
           </Text>
         </View>
         <Text fontSize={ 18 } mv={ 8 }>
-          Honestly, huge thanks to all of you for volunteering to be a beta tester! Who knows where this app will go, but I hope you enjoy it and it you stay up to date with the latest news! You can look forward to the following:
+          Honestly, huge thanks to all of you for volunteering to be a beta tester! Who knows where this app will go, but I hope you enjoy it and it will help you stay up to date with the latest news! 
         </Text>
-        <Button onPress={ () => onClose?.() } fontSize={ 40 } color={ '#fff' }>
-          Let&apos;s Freakin&apos; Goooo!
-          <View alignEnd>
-            <Icon name='arrow-right' size={ 40 } color='contrastText' />
-          </View>
-        </Button>
+        <View alignEnd>
+          <Button onPress={ () => onClose?.() } fontSize={ 40 } color={ '#fff' }>
+            <Text right fontSize={ 40 }>Let&apos;s Freakin&apos; Goooo!</Text>
+          </Button>
+          <Icon name='arrow-right' size={ 40 } color='contrastText' />
+        </View>
       </View>
     ),
   },
@@ -151,6 +155,9 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
           return (
             <AnimatedCard key={ index }>
               <View style={ theme.container }>
+                <View center>
+                  <Image source={ { uri: 'Logo' } } style={ { height: 80, width: 180 } } />
+                </View>
                 { CARD_DATA[index].content }
               </View>
             </AnimatedCard>
