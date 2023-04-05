@@ -26,7 +26,7 @@ function getHost() {
   const nets = networkInterfaces();
   const results: Record<string, string[]> = {};
   for (const name of Object.keys(nets)) {
-    for (const net of nets[name]) {
+    for (const net of nets[name] ?? []) {
       const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4;
       if (net.family === familyV4Value && !net.internal) {
         const addresses = results[name] ?? [];
