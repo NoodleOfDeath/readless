@@ -129,9 +129,9 @@ export function LoginForm({
           <Text center variant="title1">{action === 'logIn' ? 'Log In' : action === 'signUp' ? 'Sign Up' : 'Forgot Password'}</Text>
         </View>
         {alert && (
-          <View row center mb={ 16 }>
-            <Icon name="information" mr={ 8 } />
-            <Text>{alert}</Text>
+          <View row justifyCenter mb={ 16 }>
+            <Icon name="information" color="primary" mr={ 8 } />
+            <Text variant="subtitle1">{alert}</Text>
           </View>
         )}
         {loading && <ActivityIndicator />}
@@ -155,7 +155,7 @@ export function LoginForm({
                 value={ confirmPassword }
                 onChange={ (e) => setConfirmPassword(e.nativeEvent.text) } />
             )}
-            <View col center mb={ 16 }>
+            <View col alignCenter mb={ 16 }>
               {action === 'logIn' && (
                 <Button
                   selectable
@@ -193,7 +193,7 @@ export function LoginForm({
                 </View>
               )}
             </View>
-            <View col center>
+            <View col alignCenter>
               {action === 'logIn' && (
                 <React.Fragment>
                   <Button onPress={ () => setAction('forgotPassword') }>Forgot your password?</Button>
@@ -243,7 +243,7 @@ export function LoginForm({
           </React.Fragment>
         )}
         {(success || action === 'forgotPassword') && (
-          <View col center mt={ 8 }>
+          <View col alignCenter mt={ 8 }>
             <Button onPress={ () => setAction('logIn') }>Back to Login</Button>
           </View>
         )}

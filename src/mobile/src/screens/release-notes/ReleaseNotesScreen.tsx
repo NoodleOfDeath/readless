@@ -1,12 +1,11 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Animated, Image } from 'react-native';
 
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
 import {
   AnimatedCard,
-  Button,
   Code,
   Icon,
   Strong,
@@ -17,7 +16,7 @@ import { window } from '~/constants';
 import { useTheme } from '~/hooks';
 
 type Props = {
-  onClose?: () => void;
+  onClose: () => void;
 };
 
 const scale = 0.85;
@@ -40,6 +39,8 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
       padding: 32,
     },
   });
+  
+  const opacityValue = React.useRef(new Animated.Value(1)).current;
 
   const animationStyle = React.useCallback((value: number) => {
     'worklet';
@@ -55,6 +56,15 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
       zIndex,
     };
   }, []);
+  
+  const dismiss = React.useCallback(() => {
+    Animated.timing(opacityValue, {
+      duration: 300,
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(() => onClose(), 300);
+  }, [onClose, opacityValue]);
 
   const CARD_DATA: CardData[] = React.useMemo(() => [{
     content: (
@@ -128,18 +138,18 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
           Honestly, huge thanks to all of you for volunteering to be a beta tester! Who knows where this app will go, but I hope you enjoy it and it will help you stay up to date with the latest news! 
         </Text>
         <View alignEnd>
-          <Button onPress={ () => onClose?.() } fontSize={ 40 } color={ '#fff' }>
-            <Text right fontSize={ 40 }>Let&apos;s Freakin&apos; Goooo!</Text>
-          </Button>
+          <Text right fontSize={ 40 }>Let&apos;s Freakin&apos; Goooo!</Text>
           <Icon name='arrow-right' size={ 40 } color='contrastText' />
         </View>
       </View>
     ),
-  },
+  }, {
+    content: <></>
+  }
   ] as CardData[], [onClose]);
 
   return (
-    <View bg={ 'rgba(255,80,80,0.3)' }>
+    <Animated.View style={ { backgroundColor: 'rgba(255, 80, 80, 0.3)', opacity: opacityValue } }>
       <Carousel
         loop={ false }
         style={ {
@@ -151,19 +161,22 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
         width={ PAGE_WIDTH }
         height={ PAGE_HEIGHT }
         data={ CARD_DATA }
+        onProgressChange={(_, a) => a + 1.1 >= CARD_DATA.length && dismiss()}
         renderItem={ ({ index }) => {
           return (
             <AnimatedCard key={ index }>
-              <View style={ theme.container }>
-                <View center>
-                  <Image source={ { uri: 'Logo' } } style={ { height: 80, width: 180 } } />
+              {index + 1 < CARD_DATA.length && (
+                <View style={ theme.container }>
+                  <View center>
+                    <Image source={ { uri: 'Logo' } } style={ { height: 80, width: 180 } } />
+                  </View>
+                  { CARD_DATA[index].content }
                 </View>
-                { CARD_DATA[index].content }
-              </View>
+              )}
             </AnimatedCard>
           );
         } }
         customAnimation={ animationStyle } />
-    </View>
+    </Animated.View>
   );
 }
