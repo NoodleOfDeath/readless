@@ -107,7 +107,6 @@ export function SearchScreen({
   React.useEffect(() => onMount(), [pageSize, prefilter, searchText]);
 
   const loadMore = React.useCallback(async () => {
-    console.log('fuck', prefilter);
     await load(pageSize, page + 1, prefilter ?? searchText);
   }, [load, pageSize, page, prefilter, searchText]);
 
@@ -172,7 +171,7 @@ export function SearchScreen({
       )}
       <SafeScrollView
         refreshing={ loading }
-        onRefresh={ () => load(pageSize, 0, searchText) }>
+        onRefresh={ () => load(pageSize, 0, prefilter ?? searchText) }>
         <View>
           {recentSummaries.map((summary) => (
             <Summary

@@ -136,7 +136,7 @@ export class ScribeService extends BaseService {
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
-        text: 'Please select a best category for this article from the following choices: Animals, Art, Artificial Intelligence, Books, Business, Conservation, Controversy, Crime, Cryptocurrency, Culture, Disasters, Economics, Education, Energy, Entertainment, Environment, Ethics, Fashion, Food, Finance, Gaming, Geopolitics, Health, Healthcare, History, Home Improvement, Inspiration, Journalism, Labor, Legal, Lifestyle, Medicine, Mental Health, Music, Parenting, Pets, Philosophy, Politics, Pop Culture, Productivity, Real Estate, Religion, Royalty, Scandal, Science, Shopping, Social Media, Space, Sports, Technology, Television, Transportation, Tragedy, Travel, U.S. News, World News, Worklife, or Other',
+        text: 'Please select a best category for this article from the following choices: Art, Artificial Intelligence, Books, Business, Conservation, Controversy, Crime, Cryptocurrency, Culture, Disasters, Economics, Education, Energy, Entertainment, Environment, Ethics, Fashion, Food, Finance, Gaming, Geopolitics, Health, Healthcare, History, Home Improvement, Inspiration, Journalism, Labor, Legal, Lifestyle, Medicine, Mental Health, Music, Parenting, Pets, Philosophy, Politics, Pop Culture, Productivity, Real Estate, Religion, Royalty, Scandal, Science, Shopping, Social Media, Space, Sports, Technology, Television, Transportation, Tragedy, Travel, U.S. News, Wildlife, World News, Other',
       },
       {
         handleReply: (reply) => { 

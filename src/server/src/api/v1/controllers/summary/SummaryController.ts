@@ -40,7 +40,7 @@ function applyFilter(filter?: string) {
   if (/(\w+):(\w+)/.test(filter)) {
     const [key, value] = filter.split(':');
     if (/cat(egory)?/i.test(key)) {
-      return { category: { [Op.iRegexp]: value } };
+      return { category: value } };
     }
   }
   return {
