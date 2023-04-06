@@ -28,45 +28,8 @@ type CardData = {
   content?: React.ReactNode;
 };
 
-export function ReleaseNotesScreen({ onClose }: Props = {}) {
-  const theme = useTheme({
-    container: {
-      backgroundColor: '#8b0000',
-      borderColor: '#fff',
-      borderRadius: 8,
-      borderWidth: 5,
-      flex: 1,
-      padding: 32,
-    },
-  });
-  
-  const opacityValue = React.useRef(new Animated.Value(1)).current;
-
-  const animationStyle = React.useCallback((value: number) => {
-    'worklet';
-    const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
-    const rotateZ = `${interpolate(value, [-5, 0, 5], [-35, 0, 35])}deg`;
-    const translateX = interpolate(
-      value,
-      [-1, 0, 1],
-      [-window.width, 0, window.width]
-    );
-    return {
-      transform: [{ rotateZ }, { translateX }],
-      zIndex,
-    };
-  }, []);
-  
-  const dismiss = React.useCallback(() => {
-    Animated.timing(opacityValue, {
-      duration: 300,
-      toValue: 0,
-      useNativeDriver: true,
-    }).start();
-    setTimeout(() => onClose(), 300);
-  }, [onClose, opacityValue]);
-
-  const CARD_DATA: CardData[] = React.useMemo(() => [{
+const CARD_DATA: CardData[] = [
+  {
     content: (
       <View col justifyCenter>
         <Text fontSize={ 32 }>
@@ -143,10 +106,46 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
         </View>
       </View>
     ),
-  }, {
-    content: <></>
-  }
-  ] as CardData[], [onClose]);
+  }, { content: <React.Fragment></React.Fragment> },
+];
+
+export function ReleaseNotesScreen({ onClose }: Props) {
+  const theme = useTheme({
+    container: {
+      backgroundColor: '#8b0000',
+      borderColor: '#fff',
+      borderRadius: 8,
+      borderWidth: 5,
+      flex: 1,
+      padding: 32,
+    },
+  });
+  
+  const opacityValue = React.useRef(new Animated.Value(1)).current;
+
+  const animationStyle = React.useCallback((value: number) => {
+    'worklet';
+    const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+    const rotateZ = `${interpolate(value, [-5, 0, 5], [-35, 0, 35])}deg`;
+    const translateX = interpolate(
+      value,
+      [-1, 0, 1],
+      [-window.width, 0, window.width]
+    );
+    return {
+      transform: [{ rotateZ }, { translateX }],
+      zIndex,
+    };
+  }, []);
+  
+  const dismiss = React.useCallback(() => {
+    Animated.timing(opacityValue, {
+      duration: 300,
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(() => onClose(), 300);
+  }, [onClose, opacityValue]);
 
   return (
     <Animated.View style={ { backgroundColor: 'rgba(255, 80, 80, 0.3)', opacity: opacityValue } }>
@@ -161,7 +160,7 @@ export function ReleaseNotesScreen({ onClose }: Props = {}) {
         width={ PAGE_WIDTH }
         height={ PAGE_HEIGHT }
         data={ CARD_DATA }
-        onProgressChange={(_, a) => a + 1.1 >= CARD_DATA.length && dismiss()}
+        onProgressChange={ (_, a) => a + 1.1 >= CARD_DATA.length && dismiss() }
         renderItem={ ({ index }) => {
           return (
             <AnimatedCard key={ index }>

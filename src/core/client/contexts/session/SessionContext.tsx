@@ -2,18 +2,18 @@ import React from 'react';
 
 import { UserData, UserDataProps } from './UserData';
 import {
-  clearCookie,
-  getCookie,
-  setCookie,
-} from './cookies';
-import {
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
   Preferences,
   SessionSetOptions,
 } from './types';
 
-import { LoginResponse } from '~/api';
+import { JwtTokenResponse } from '~/api';
+import {
+  clearCookie,
+  getCookie,
+  setCookie,
+} from '~/utils';
 
 type Props = React.PropsWithChildren;
 
@@ -25,6 +25,12 @@ export const COOKIES = {
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
 
 export function SessionContextProvider({ children }: Props) {
+  
+  const [readyFlags, setReadyFlags] = React.useState({
+    preferences: false,
+    userData: false,
+  });
+  const ready = React.useMemo(() => Object.values(readyFlags).every((flag) => flag), [readyFlags]);
 
   const [preferences, setPreferences] = React.useState<Preferences>({});
   const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps>();
@@ -35,23 +41,26 @@ export function SessionContextProvider({ children }: Props) {
   (state?: UserDataProps | ((prev?: UserDataProps) => UserDataProps | undefined), options?: SessionSetOptions) => {
     if (!state) {
       setUserDataRaw(undefined);
-      clearCookie(COOKIES.userData);
+      clearCookie(COOKIES.userData)
+        .catch(console.error);
       return;
     }
     setUserDataRaw((prev) => {
       const newData = state instanceof Function ? state(prev) : new UserData(state);
       if (!newData) {
-        clearCookie(COOKIES.userData);
+        clearCookie(COOKIES.userData)
+          .catch(console.error);
         return (prev = undefined);
       }
       if (options?.updateCookie) {
-        setCookie(COOKIES.userData, JSON.stringify(newData));
+        setCookie(COOKIES.userData, JSON.stringify(newData))
+          .catch(console.error);
       }
       return (prev = newData);
     });
   };
   
-  const addUserToken = (token: LoginResponse['token']) => {
+  const addUserToken = (token: JwtTokenResponse) => {
     setUserData((prev) => {
       if (!prev) {
         return;
@@ -63,20 +72,21 @@ export function SessionContextProvider({ children }: Props) {
   };
 
   // Convenience function to set a preference
-  const setPreference = <Key extends keyof Preferences>(key: Key) =>
-    (value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
-      setPreferences((prev) => {
-        const newPrefs = { ...prev };
-        if (!value) {
-          delete newPrefs[key];
-        } else {
-          newPrefs[key] =
+  const setPreference = <Key extends keyof Preferences>(key: Key, value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
+    console.log('setting prefs');
+    setPreferences((prev) => {
+      const newPrefs = { ...prev };
+      if (!value) {
+        delete newPrefs[key];
+      } else {
+        newPrefs[key] =
             value instanceof Function ? value(prev[key]) : value;
-        }
-        setCookie(COOKIES.preferences, JSON.stringify(newPrefs));
-        return (prev = newPrefs);
-      });
-    };
+      }
+      setCookie(COOKIES.preferences, JSON.stringify(newPrefs))
+        .catch(console.error);
+      return (prev = newPrefs);
+    });
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
@@ -91,21 +101,26 @@ export function SessionContextProvider({ children }: Props) {
 
   // Load cookies on mount
   React.useEffect(() => {
-    try {
-      const prefs = JSON.parse(getCookie(COOKIES.preferences) || '{}');
-      setPreferences(prefs);
-    } catch (e) {
-      setPreferences({});
-    }
+    getCookie(COOKIES.preferences)
+      .then((cookie) => { 
+        setPreferences(JSON.parse(cookie ?? '{}'));
+        setReadyFlags((prev) => ({ ...prev, preferences: true }));
+      })
+      .catch((e) => {
+        console.error(e);
+        setPreferences({});
+      });
   }, []);
 
   React.useEffect(() => {
-    try {
-      const userData = JSON.parse(getCookie(COOKIES.userData) || '{}');
-      setUserData(userData);
-    } catch (e) {
-      setUserData();
-    }
+    getCookie(COOKIES.userData)
+      .then((cookie) => { 
+        setUserData(JSON.parse(cookie ?? '{}'));
+        setReadyFlags((prev) => ({ ...prev, userData: true }));
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }, []);
 
   React.useEffect(() => {
@@ -119,6 +134,7 @@ export function SessionContextProvider({ children }: Props) {
       value={ {
         addUserToken,
         preferences,
+        ready,
         setPreference,
         setUserData,
         userData,

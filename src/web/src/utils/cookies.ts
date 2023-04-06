@@ -6,27 +6,28 @@ import ms from 'ms';
 export const DEFAULT_SESSION_DURATION_MS = ms('1d');
 export const DEFAULT_SESSION_PATH = '/';
 
-export function setCookie(name: string, value: string, {
+export const setCookie = async (name: string, value: string, {
   expires = DEFAULT_SESSION_DURATION_MS,
   path = DEFAULT_SESSION_PATH,
   ...other
-}: Partial<Cookies.CookieAttributes> = {}) {
+}: Partial<Cookies.CookieAttributes> = {}) => {
   Cookies.set(name, btoa(value), {
     expires, path, ...other, 
   });
-}
-
-export function clearCookie(name: string, {
+};
+  
+export const clearCookie = async (name: string, {
   path = DEFAULT_SESSION_PATH,
   expires = 0,
   ...other
-}: Partial<Cookies.CookieAttributes> = {}) {
+}: Partial<Cookies.CookieAttributes> = {}) => {
   Cookies.remove(name, {
     expires, path, ...other,
   });
-}
-
-export function getCookie(name: string) {
+};
+  
+export const getCookie = async (name: string) => {
   const value = Cookies.get(name);
   return value ? atob(value) : undefined;
-}
+};
+  

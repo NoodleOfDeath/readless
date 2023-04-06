@@ -83,12 +83,15 @@ export function Summary({
   
   return (
     <View rounded style={ theme.components.card }>
-      <View row rounded style={ theme.components.category }>
+      <View row justifySpaced rounded style={ theme.components.category }>
         <View>
           <Text color='contrastText'>{summary.category}</Text>
           <Text color='contrastText'>{summary.subcategory}</Text>
         </View>
         <View row />
+        <View>
+          <Button startIcon={ 'bookmark-outline' } color="contrastText" />
+        </View>
       </View>
       <View row justifySpaced>
         <Text variant='subtitle1'>{summary.outletName.trim()}</Text>

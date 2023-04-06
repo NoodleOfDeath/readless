@@ -12,6 +12,13 @@ export type RootParamList = {
       summary: SummaryResponse;
     };
   };
+  news: {
+    home: undefined;
+    summary: {
+      initialFormat: ReadingFormat;
+      summary: SummaryResponse;
+    };
+  };
   notifications: {
     notifications: undefined;
   };
@@ -29,15 +36,24 @@ export type RootParamList = {
       summary: SummaryResponse;
     };
   };
+  yourStuff: {
+    home: undefined;
+    summary: {
+      initialFormat: ReadingFormat;
+      summary: SummaryResponse;
+    };
+  };
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   config: {
     screens: {
       discover: { path: 'discover' },
+      news: { path: 'news' },
       notifications: { path: 'notifications' },
       profile: { path: 'profile' },
       search: { path: 'search' },
+      yourStuff: { path: 'yourStuff' },
     },
   },
   prefixes: [
