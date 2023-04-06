@@ -51,7 +51,7 @@ export class ScribeService extends BaseService {
           }
           newSummary.title = reply.text;
         },
-        text: `Please summarize the take away message if the following article in a single sentence using no more than 150 characters:\n\n${newSummary.filteredText}`,
+        text: `Please summarize the general take away message of the following article in a single sentence using no more than 150 characters:\n\n${newSummary.filteredText}`,
       },
       {
         handleReply: (reply) => {
@@ -64,7 +64,7 @@ export class ScribeService extends BaseService {
             .split(',')
             .map((bullet) => bullet.trim());
         },
-        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each for this article',
+        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article',
       },
       {
         handleReply: (reply) => { 
@@ -74,7 +74,7 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please summarize the same article in one sentence using no more than 255 characters.',
+          'Please summarize the same article in two sentences and no more than 300 characters',
           'Please do not use phrases like "the article".',
         ].join(' '),
       },
@@ -110,7 +110,7 @@ export class ScribeService extends BaseService {
           newSummary.text = reply.text;
         },
         text: [
-          'Please summarize the same article using between 600 and 1500 words.',
+          'Please summarize the same article using between 600 and 1000 words.',
           'Please do not use phrases like "the article".',
         ].join(' '),
       },
@@ -136,7 +136,7 @@ export class ScribeService extends BaseService {
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
-        text: 'Please provide a one word category for this article',
+        text: 'Please select a best category for this article from the following choices: Art, AI, Business, Cooking, Economics, Entertainment, Home Improvement, Gaming, Lifestyle, Music, Politics, Productivity, Religion, Science, Social Media, Sports, Technology, U.S. News, World News, Other',
       },
       {
         handleReply: (reply) => { 
@@ -147,7 +147,7 @@ export class ScribeService extends BaseService {
             .replace(/^subcategory:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
-        text: 'Please provide a one word subcategory for this article',
+        text: `Please provide a one word subcategory for this article under the category '${newSummary.category}'`,
       },
       {
         handleReply: (reply) => {
