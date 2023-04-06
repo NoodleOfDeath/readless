@@ -29,12 +29,10 @@ type OptionProps = React.PropsWithChildren<{
 
 export function SettingsScreen({ navigation }: Props) {
   const {
-    preferences: {
-      preferredReadingFormat
-    }, 
+    preferences: { preferredReadingFormat }, 
     setPreference,
     userData,
-    } = React.useContext(SessionContext);
+  } = React.useContext(SessionContext);
   const { setShowLoginDialog } = React.useContext(AppStateContext);
   const { logOut } = useLoginClient();
   
@@ -53,27 +51,27 @@ export function SettingsScreen({ navigation }: Props) {
   
   const options: OptionProps[] = React.useMemo(() => {
     return [
-     {
-       id: 'reading-format',
-       label: 'Preferred Reading Format',
-       children: 
-         <ReadingFormatSelector 
-          format={ preferredReadingFormat }
-          onChange={ handleReadingFormatChange } />,
-     },
-     {
-       id: 'login',
-       label: 'Log In',
-       onPress: () => setShowLoginDialog(true),
-       visible: userData?.isLoggedIn !== true,
+      {
+        children: 
+  <ReadingFormatSelector 
+    format={ preferredReadingFormat }
+    onChange={ handleReadingFormatChange } />,
+        id: 'reading-format',
+        label: 'Preferred Reading Format',
       },
-     {
-       id: 'logout',
-       label: 'Log Out',
-       onPress: () => handleLogout(),
-       visible: userData?.isLoggedIn === true,
-     },
-    ]
+      {
+        id: 'login',
+        label: 'Log In',
+        onPress: () => setShowLoginDialog(true),
+        visible: userData?.isLoggedIn !== true,
+      },
+      {
+        id: 'logout',
+        label: 'Log Out',
+        onPress: () => handleLogout(),
+        visible: userData?.isLoggedIn === true,
+      },
+    ];
   }, [
     handleLogout,
     handleReadingFormatChange,
@@ -84,7 +82,7 @@ export function SettingsScreen({ navigation }: Props) {
     <SafeScrollView>
       <View p={ 32 }>
         {options.filter((o) => o.visible !== false).map((option) => (
-          <View col key={option.id} p={ 8 } mv={ 4 }>
+          <View col key={ option.id } p={ 8 } mv={ 4 }>
             {!option.onPress && (
               <Text>{option.label}</Text>
             )}

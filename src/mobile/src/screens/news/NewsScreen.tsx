@@ -47,17 +47,15 @@ export function NewsScreen({ navigation }: Props) {
   }, [loadCategories]);
 
   const selectCategory = React.useCallback((category: string) => {
-    const payload = {
-      prefilter: `category:${category}`,
-    };
+    const payload = { prefilter: `category:${category}` };
     console.log(payload);
     navigation.navigate('category', payload);
   }, [navigation]);
 
   return (
     <SafeScrollView
-     refreshing={ loading }
-     onRefresh={ () => loadCategories() }>
+      refreshing={ loading }
+      onRefresh={ () => loadCategories() }>
       <View col p={ 32 }>
         {categories.map((category) => (
           <View 
@@ -68,7 +66,7 @@ export function NewsScreen({ navigation }: Props) {
             rounded
             p={ 8 }
             mv={ 4 }
-            key={ category.category } >
+            key={ category.category }>
             <Button row onPress={ () => selectCategory(category.category) }>
               {category.category}
             </Button>

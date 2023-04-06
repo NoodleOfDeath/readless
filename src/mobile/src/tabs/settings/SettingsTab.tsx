@@ -3,7 +3,7 @@ import React from 'react';
 import { RouteProp, TabNavigationState } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { SettingsScreen, RootParamList } from '~/screens';
+import { RootParamList, SettingsScreen } from '~/screens';
 
 type Props = {
   route: RouteProp<RootParamList, 'settings'>;

@@ -47,7 +47,7 @@ export default function NavigationController() {
           component: SettingsTab,
           icon: 'cog',
           name: 'Settings',
-        }
+        },
       ];
       return tabs;
     }
