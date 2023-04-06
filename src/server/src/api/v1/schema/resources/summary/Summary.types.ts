@@ -28,3 +28,4 @@ export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes 
 export const SUMMARY_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
 
 export type SummaryResponse = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
+export type SummaryCategory = Pick<SummaryResponse, 'category'>;

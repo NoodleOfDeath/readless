@@ -6,14 +6,14 @@ on:
       - main
       - dev
     paths:
-      - '.github/workflows/worker-ci.yaml'
-      - 'package.json'
-      - 'Dockerfile.worker'
-      - 'k8s/worker-deploy.yaml'
-      - 'src/server/package.json'
-      - 'src/server/src/worker/**'
-      - 'src/server/src/services/**'
-      - 'src/server/src/api/v1/schema/**'
+      - ".github/workflows/worker-ci.yaml"
+      - "package.json"
+      - "Dockerfile.worker"
+      - "k8s/worker-deploy.yaml"
+      - "src/server/package.json"
+      - "src/server/src/worker/**"
+      - "src/server/src/services/**"
+      - "src/server/src/api/v1/schema/**"
 
 concurrency:
   group: ${{ github.ref }}-worker
@@ -45,7 +45,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to doctl
-        run: doctl registry login --expiry-seconds 180
+        run: doctl registry login --expiry-seconds 600
       - name: Tag Docker Image
         run: docker tag $IMAGE:latest $REGISTRY/$IMAGE:latest
       - name: Push Docker Image

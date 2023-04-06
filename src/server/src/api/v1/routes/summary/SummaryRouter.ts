@@ -42,7 +42,7 @@ router.get(
 );
 
 router.get(
-  '/:summaryId',
+  '/id/:summaryId',
   rateLimitMiddleware('5 per 10s'),
   param('summaryId').isNumeric(),
   param('format').isString(),
@@ -60,22 +60,7 @@ router.get(
 );
 
 router.get(
-  '/pop',
-  rateLimitMiddleware('5 per 10s'),
-  ...paginationMiddleware,
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const response = await SummaryController.getPopularSummaries();
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.get(
-  '/:summaryId/:format',
+  '/id/:summaryId/:format',
   rateLimitMiddleware('5 per 10s'),
   param('summaryId').isNumeric(),
   param('format').isString(),
@@ -92,36 +77,17 @@ router.get(
 );
 
 router.get(
-  '/in/:category?/:subcategory?',
-  param('category').isString().optional(),
-  param('subcategory').isString().optional(),
+  '/category',
   query('filter').isString().optional(),
-  ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
-    const { category, subcategory } = req.params;
-    const {
-      filter, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
-    } = req.query;
+    const { filter, userId: userIdStr } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-    let response: BulkResponse<SummaryResponse> | SummaryResponse = {
-      count: 0,
-      rows: [],
-    };
     try {
-      if (category && subcategory) {
-        response = await SummaryController.getSummariesForCategoryAndSubcategory(
-          category,
-          subcategory,
-          userId,
-          filter,
-          pageSize,
-          page,
-          offset
-        );
-      } else if (category) {
-        response = await SummaryController.getSummariesForCategory(category, userId, filter, pageSize, page, offset);
-      }
+      const response = await SummaryController.getSummaryCategories(
+        userId,
+        filter
+      );
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

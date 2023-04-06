@@ -5,9 +5,20 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": [ "./src/*" ]
+      "~/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["index.ts", "src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules", "metro.config.js", "jest.config.js", "react-native.config.js"]
+  "include": [
+    "index.js",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "metro.config.js",
+    "jest.config.js",
+    "react-native.config.js"
+  ]
 }

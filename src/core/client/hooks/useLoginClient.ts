@@ -38,17 +38,18 @@ export function useLoginClient() {
   );
 
   const logOut = React.useCallback(async () => {
+    console.log('jesus fucking christ');
     try {
       const response = await withHeaders(API.logout)({});
       const { error } = response;
       if (error) {
         return response;
       }
-      setUserData();
       return response;
     } catch (e) {
-      setUserData();
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    } finally {
+      setUserData();
     }
   }, [setUserData, withHeaders]);
 

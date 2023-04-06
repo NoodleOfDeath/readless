@@ -83,7 +83,7 @@ export function Summary({
   
   return (
     <View rounded style={ theme.components.card }>
-      <View row rounded style={ theme.components.category }>
+      <View row justifySpaced rounded style={ theme.components.category }>
         <View>
           <Text color='contrastText'>{summary.category}</Text>
           <Text color='contrastText'>{summary.subcategory}</Text>

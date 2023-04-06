@@ -53,7 +53,7 @@ export function SummaryScreen({
   const onInteract = React.useCallback(async (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
     const { data, error } = await interactWithSummary(summary, interaction, content, metadata);
     if (error) {
-      console.log(error);
+      console.error(error);
       if (error.name === 'NOT_LOGGED_IN') {
         setShowLoginDialog(true);
         setLoginDialogProps({ alert: 'Please log in to continue' });

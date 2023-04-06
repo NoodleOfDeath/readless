@@ -16,7 +16,9 @@ export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
 
 export function AppStateContextProvider({ children }: React.PropsWithChildren) {
 
-  const { preferences: { lastReleaseNotesDate }, setPreference } = React.useContext(SessionContext);
+  const {
+    ready, preferences, setPreference, 
+  } = React.useContext(SessionContext);
 
   const [screenOptions, setScreenOptions] =
     React.useState<BottomTabNavigationOptions>({});
@@ -27,8 +29,8 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
 
   const handleReleaseNotesClose = React.useCallback(() => {
+    setPreference('lastReleaseNotesDate', String(new Date().valueOf()));
     setShowReleaseNotes(false);
-    setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
   }, [setPreference]);
 
   const handleLoginSuccess = React.useCallback((action: LoginAction) => {
@@ -44,11 +46,14 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   }, [showLoginDialog]);
 
   React.useEffect(() => {
-    if (!lastReleaseNotesDate || new Date(lastReleaseNotesDate) < new Date()) {
+    if (!ready) {
+      return;
+    }
+    if (!preferences.lastReleaseNotesDate || new Date(preferences.lastReleaseNotesDate) < new Date('2023-04-04')) {
       setShowReleaseNotes(true);
       setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
     }
-  }, [lastReleaseNotesDate, setPreference]);
+  }, [ready, preferences.lastReleaseNotesDate, setPreference]);
   
   return (
     <AppStateContext.Provider value={ {

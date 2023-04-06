@@ -26,6 +26,7 @@ export type SessionSetOptions = {
 };
 
 export type SessionContextType = {
+  ready?: boolean;
   // user data
   userData?: UserData;
   setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SessionSetOptions) => void;

@@ -21,17 +21,36 @@ import { useSummaryClient, useTheme } from '~/hooks';
 import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['search'], 'search'>;
-  navigation: NativeStackNavigationProp<RootParamList['search'], 'search'>;
+  route: RouteProp<RootParamList['news' | 'search'], 'default' | 'category'>;
+  navigation: NativeStackNavigationProp<RootParamList['news' | 'search'], 'default' | 'category'>;
 };
 
-export function SearchScreen({ navigation }: Props) {
-  const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
+export function SearchScreen({ 
+  route,
+  navigation,
+}: Props) {
+  const { 
+    setShowLoginDialog, 
+    setLoginDialogProps,
+    setScreenOptions,
+  } = React.useContext(AppStateContext);
   const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
   const {
     getSummaries, recordSummaryView, interactWithSummary, 
   } = useSummaryClient();
   const theme = useTheme();
+  
+  const prefilter = React.useMemo(() => route?.params?.prefilter, [route]);
+  
+  React.useEffect(() => {
+    if (prefilter) {
+      navigation.setOptions({ headerTitle: prefilter });
+      setScreenOptions((prev) => ({
+        ...prev,
+        headerShown: false,
+      }));
+    }
+  }, [prefilter, navigation, setScreenOptions]);
 
   const [loading, setLoading] = React.useState(false);
   const [recentSummaries, setRecentSummaries] = React.useState<
@@ -44,6 +63,7 @@ export function SearchScreen({ navigation }: Props) {
   const [searchText, setSearchText] = React.useState('');
 
   const load = React.useCallback(async (pageSize: number, page: number, searchText: string) => {
+    console.log(searchText);
     setLoading(true);
     if (page === 0) {
       setRecentSummaries([]);
@@ -55,7 +75,7 @@ export function SearchScreen({ navigation }: Props) {
         pageSize,
       });
       if (error) {
-        console.log(error);
+        console.error(error);
         return;
       }
       if (!data) {
@@ -80,15 +100,16 @@ export function SearchScreen({ navigation }: Props) {
 
   const onMount = React.useCallback(() => {
     setPage(0);
-    load(pageSize, 0, searchText);
-  }, [load, pageSize, searchText]);
+    load(pageSize, 0, prefilter ?? searchText);
+  }, [load, pageSize, prefilter, searchText]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => onMount(), [pageSize, searchText]);
+  React.useEffect(() => onMount(), [pageSize, prefilter, searchText]);
 
   const loadMore = React.useCallback(async () => {
-    await load(pageSize, page + 1, searchText);
-  }, [load, pageSize, page, searchText]);
+    console.log('fuck', prefilter);
+    await load(pageSize, page + 1, prefilter ?? searchText);
+  }, [load, pageSize, page, prefilter, searchText]);
 
   const onExpandPost = React.useCallback(
     async (summary: SummaryResponse, format?: ReadingFormat) => {
@@ -124,7 +145,7 @@ export function SearchScreen({ navigation }: Props) {
       metadata
     );
     if (error) {
-      console.log(error);
+      console.error(error);
       if (error.name === 'NOT_LOGGED_IN') {
         setShowLoginDialog(true);
         setLoginDialogProps({ alert: 'Please log in to continue' });
@@ -139,14 +160,16 @@ export function SearchScreen({ navigation }: Props) {
 
   return (
     <React.Fragment>
-      <View style={ theme.components.searchBar }>
-        <SearchBar
-          placeholder="show me something worth reading..."
-          lightTheme={ theme.isLightMode }
-          onChangeText={ ((text) => 
-            setSearchText(text)) }
-          value={ searchText } />
-      </View>
+      {!prefilter && (
+        <View style={ theme.components.searchBar }>
+          <SearchBar
+            placeholder="show me something worth reading..."
+            lightTheme={ theme.isLightMode }
+            onChangeText={ ((text) => 
+              setSearchText(text)) }
+            value={ searchText } />
+        </View>
+      )}
       <SafeScrollView
         refreshing={ loading }
         onRefresh={ () => load(pageSize, 0, searchText) }>

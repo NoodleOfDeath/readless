@@ -6,13 +6,13 @@ on:
       - main
       - dev
     paths:
-      - '.github/workflows/cron-ci.yaml'
-      - 'package.json'
-      - 'Dockerfile.cron'
-      - 'k8s/cron-deploy.yaml'
-      - 'src/server/package.json'
-      - 'src/server/src/cron/**'
-      - 'src/server/src/services/**'
+      - ".github/workflows/cron-ci.yaml"
+      - "package.json"
+      - "Dockerfile.cron"
+      - "k8s/cron-deploy.yaml"
+      - "src/server/package.json"
+      - "src/server/src/cron/**"
+      - "src/server/src/services/**"
 
 concurrency:
   group: ${{ github.ref }}-cron
@@ -44,7 +44,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to doctl
-        run: doctl registry login --expiry-seconds 180
+        run: doctl registry login --expiry-seconds 600
       - name: Tag Docker Image
         run: docker tag $IMAGE:latest $REGISTRY/$IMAGE:latest
       - name: Push Docker Image

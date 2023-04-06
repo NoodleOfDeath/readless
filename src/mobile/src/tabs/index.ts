@@ -1,27 +1,5 @@
 export * from './discover/DiscoverTab';
-export * from './profile/ProfileTab';
+export * from './news/NewsTab';
 export * from './search/SearchTab';
-
-import { DiscoverTab } from './discover/DiscoverTab';
-import { ProfileTab } from './profile/ProfileTab';
-import { SearchTab } from './search/SearchTab';
-
-import { ScreenProps } from '~/screens';
-
-export const TABS: ScreenProps[] = [
-  // {
-  //   component: DiscoverTab,
-  //   icon: 'fire',
-  //   name: 'Discover',
-  // },
-  {
-    component: SearchTab,
-    icon: 'magnify',
-    name: 'Search',
-  },
-  // {
-  //   component: ProfileTab,
-  //   icon: 'account',
-  //   name: 'Profile',
-  // },
-];
+export * from './settings/SettingsTab';
+export * from './your-stuff/YourStuffTab';

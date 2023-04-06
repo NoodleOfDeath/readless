@@ -6,17 +6,16 @@ on:
       - main
       - dev
     paths:
-      - '.github/workflows/web-ci.yaml'
-      - 'package.json'
-      - 'Dockerfile.web'
-      - 'k8s/web-deploy.yaml'
-      - 'src/web/package.json'
-      - 'src/web/public/**'
-      - 'src/web/nginx.conf'
-      - 'src/web/src/**'
-      - 'src/core/client/**'
-      - 'src/server/src/api/**'
-      
+      - ".github/workflows/web-ci.yaml"
+      - "package.json"
+      - "Dockerfile.web"
+      - "k8s/web-deploy.yaml"
+      - "src/web/package.json"
+      - "src/web/public/**"
+      - "src/web/nginx.conf"
+      - "src/web/src/**"
+      - "src/core/client/**"
+      - "src/server/src/api/**"
 
 concurrency:
   group: ${{ github.ref }}-web
@@ -55,7 +54,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to doctl
-        run: doctl registry login --expiry-seconds 180
+        run: doctl registry login --expiry-seconds 600
       - name: Tag Docker Image
         run: docker tag $IMAGE:latest $REGISTRY/$IMAGE:latest
       - name: Push Docker Image

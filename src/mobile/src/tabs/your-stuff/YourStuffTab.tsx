@@ -4,17 +4,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { 
   RootParamList,
-  SearchScreen,
   SummaryScreen,
+  YourStuffScreen,
 } from '~/screens';
 
-export function SearchTab() {
-  const Stack = createNativeStackNavigator<RootParamList['search']>();
+export function YourStuffTab() {
+  const Stack = createNativeStackNavigator<RootParamList['yourStuff']>();
   return (
     <Stack.Navigator initialRouteName="default">
       <Stack.Screen
         name="default"
-        component={ SearchScreen }
+        component={ YourStuffScreen }
         options={ { headerShown: false } } />
       <Stack.Screen
         name="summary"
