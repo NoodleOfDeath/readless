@@ -3,6 +3,7 @@ import { NewsTab } from './news/NewsTab';
 import { ProfileTab } from './profile/ProfileTab';
 import { SearchTab } from './search/SearchTab';
 import { YourStuffTab } from './your-stuff/YourStuffTab';
+
 import { ScreenProps } from '~/screens';
 
 export const TABS: ScreenProps[] = [

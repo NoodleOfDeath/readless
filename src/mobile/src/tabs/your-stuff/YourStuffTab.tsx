@@ -3,9 +3,9 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { 
-  YourStuffScreen,
   RootParamList,
   SummaryScreen,
+  YourStuffScreen,
 } from '~/screens';
 
 export function YourStuffTab() {
