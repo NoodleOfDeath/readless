@@ -89,9 +89,6 @@ export function Summary({
           <Text color='contrastText'>{summary.subcategory}</Text>
         </View>
         <View row />
-        <View>
-          <Button startIcon={ 'bookmark-outline' } color="contrastText" />
-        </View>
       </View>
       <View row justifySpaced>
         <Text variant='subtitle1'>{summary.outletName.trim()}</Text>

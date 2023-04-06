@@ -11,9 +11,9 @@ import {
 export function YourStuffTab() {
   const Stack = createNativeStackNavigator<RootParamList['yourStuff']>();
   return (
-    <Stack.Navigator initialRouteName="home">
+    <Stack.Navigator initialRouteName="default">
       <Stack.Screen
-        name="home"
+        name="default"
         component={ YourStuffScreen }
         options={ { headerShown: false } } />
       <Stack.Screen

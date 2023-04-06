@@ -6,6 +6,7 @@ import { useTheme } from '~/hooks';
 
 type Props = {
   format?: ReadingFormat;
+  preferredFormat?: ReadingFormat;
   onChange?: (mode?: ReadingFormat) => void;
 };
 
@@ -19,6 +20,7 @@ const FORMAT_ICONS = {
 
 export function ReadingFormatSelector({
   format,
+  preferredFormat,
   onChange,
 }: Props = {}) {
   const theme = useTheme();
@@ -36,7 +38,7 @@ export function ReadingFormatSelector({
         p={ 8 }
         startIcon={ FORMAT_ICONS[newFormat] }
         width={ row === 0 ? '33.33%' : '50%' }
-        selected={ format === newFormat } 
+        selected={ format === newFormat }
         onPress={ () => onChange?.(newFormat) }>
         {newFormat}
       </Button>

@@ -11,9 +11,9 @@ import {
 export function SearchTab() {
   const Stack = createNativeStackNavigator<RootParamList['search']>();
   return (
-    <Stack.Navigator initialRouteName="search">
+    <Stack.Navigator initialRouteName="default">
       <Stack.Screen
-        name="search"
+        name="default"
         component={ SearchScreen }
         options={ { headerShown: false } } />
       <Stack.Screen

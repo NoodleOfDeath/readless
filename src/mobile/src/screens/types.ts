@@ -6,38 +6,35 @@ import { ReadingFormat, SummaryResponse } from '~/api';
 
 export type RootParamList = {
   discover: {
-    home: undefined;
+    default: undefined;
     summary: {
       initialFormat: ReadingFormat;
       summary: SummaryResponse;
     };
   };
   news: {
-    home: undefined;
+    default: undefined;
+    category: {
+      prefilter?: string,
+    },
     summary: {
       initialFormat: ReadingFormat;
       summary: SummaryResponse;
     };
   };
-  notifications: {
-    notifications: undefined;
-  };
-  profile: {
-    login: undefined;
-    signup: undefined;
-    profile: undefined;
-    account: undefined;
-    settings: undefined;
-  }
   search: {
-    search: undefined;
+    default: undefined;
+    prefilter?: string;
     summary: {
       initialFormat: ReadingFormat;
       summary: SummaryResponse;
     };
   };
+  settings: {
+    default: undefined;
+  }
   yourStuff: {
-    home: undefined;
+    default: undefined;
     summary: {
       initialFormat: ReadingFormat;
       summary: SummaryResponse;
@@ -50,9 +47,8 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
     screens: {
       discover: { path: 'discover' },
       news: { path: 'news' },
-      notifications: { path: 'notifications' },
-      profile: { path: 'profile' },
       search: { path: 'search' },
+      settings: { path: 'settings' },
       yourStuff: { path: 'yourStuff' },
     },
   },

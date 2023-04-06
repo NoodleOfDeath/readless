@@ -11,9 +11,9 @@ import {
 export function DiscoverTab() {
   const Stack = createNativeStackNavigator<RootParamList['discover']>();
   return (
-    <Stack.Navigator initialRouteName="home">
+    <Stack.Navigator initialRouteName="default">
       <Stack.Screen
-        name="home"
+        name="default"
         component={ DiscoverScreen }
         options={ { headerShown: false } } />
       <Stack.Screen

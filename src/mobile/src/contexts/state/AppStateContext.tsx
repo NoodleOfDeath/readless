@@ -29,7 +29,6 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
 
   const handleReleaseNotesClose = React.useCallback(() => {
-    console.log('what the actual fuck');
     setPreference('lastReleaseNotesDate', String(new Date().valueOf()));
     setShowReleaseNotes(false);
   }, [setPreference]);

@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 import {
   Body,
   Delete,
@@ -26,6 +26,7 @@ import {
   InteractionResponse,
   InteractionType,
   Summary,
+  SummaryCategory,
   SummaryContent,
   SummaryContentAttributes,
   SummaryResponse,
@@ -35,6 +36,12 @@ import {
 function applyFilter(filter?: string) {
   if (!filter || filter.replace(/\s/g, '').length === 0) {
     return undefined;
+  }
+  if (/(\w+):(\w+)/.test(filter)) {
+    const [key, value] = filter.split(':');
+    if (/cat(egory)?/i.test(key)) {
+      return { category: { [Op.iRegexp]: value } };
+    }
   }
   return {
     [Op.or]: [
@@ -63,7 +70,6 @@ function applyFilter(filter?: string) {
 @Response<InternalError>(500, 'Internal Error')
 export class SummaryController {
 
-  @Security('jwt')
   @Get('/')
   public static async getSummaries(
     @Query() userId?: number,
@@ -86,8 +92,7 @@ export class SummaryController {
     return summaries;
   }
 
-  @Security('jwt')
-  @Get('/:summaryId')
+  @Get('/id/:summaryId')
   public static async getSummary(
     @Path() summaryId: number,
     @Query() userId?: number
@@ -99,30 +104,7 @@ export class SummaryController {
     return summary;
   }
 
-  @Security('jwt')
-  @Get('/pop')
-  public static async getPopularSummaries(
-    @Query() userId?: number,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SummaryResponse>> {
-    // #TODO: Implement this
-    const options: FindAndCountOptions<Summary> = {
-      attributes: { exclude: ['filteredText', 'rawText'] },
-      limit: pageSize,
-      offset,
-      order: [['likes', 'DESC']],
-    };
-    const summaries = await Summary.findAndCountAll(options);
-    if (userId) {
-      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
-    }
-    return summaries;
-  }
-
-  @Security('jwt')
-  @Get('/:summaryId/:format')
+  @Get('/id/:summaryId/:format')
   public static async getContentForSummary(
     @Path() summaryId: number,
     @Path() format: ReadingFormat 
@@ -136,53 +118,23 @@ export class SummaryController {
     return summary;
   }
 
-  @Get('/in/:category')
-  public static async getSummariesForCategory(
-    @Path() category: string,
+  @Get('/category')
+  public static async getSummaryCategories(
     @Query() userId?: number,
-    @Query() filter?: string,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SummaryResponse>> {
-    const options: FindAndCountOptions<Summary> = {
-      limit: pageSize,
-      offset,
-      order: [['createdAt', 'DESC']],
-      where: { [Op.and]: [{ category }, applyFilter(filter)].filter((f) => !!f) },
+    @Query() filter?: string
+  ): Promise<BulkResponse<SummaryCategory>> {
+    const options: FindOptions<Summary> = {
+      attributes: ['category'],
+      group: ['category'],
+      order: [['category', 'ASC']],
     };
-    const summaries = await Summary.findAndCountAll(options);
-    if (userId) {
-      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
+    if (filter) {
+      options.where = applyFilter(filter);
     }
-    return summaries;
+    const summaries = await Summary.findAll(options);
+    return { count: summaries.length, rows: summaries.map((row) => ({ category: row.category })) };
   }
 
-  @Get('/in/:category/:subcategory')
-  public static async getSummariesForCategoryAndSubcategory(
-    @Path() category: string,
-    @Path() subcategory: string,
-    @Query() userId?: number,
-    @Query() filter?: string,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SummaryResponse>> {
-    const options: FindAndCountOptions<Summary> = {
-      attributes: { exclude: ['filteredText', 'rawText'] },
-      limit: pageSize,
-      offset,
-      order: [['createdAt', 'DESC']],
-      where: { [Op.and]: [{ category }, { subcategory }, applyFilter(filter)].filter((f) => !!f) },
-    };
-    const summaries = await Summary.findAndCountAll(options);
-    if (userId) {
-      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
-    }
-    return summaries;
-  }
-
-  @Security('jwt')
   @Post('/interact/:targetId/view')
   public static async recordSummaryView(
     @Path() targetId: number,

@@ -27,6 +27,14 @@ export function useSummaryClient() {
     }
   }, [withHeaders]);
 
+  const getSummaryCategories = React.useCallback(async () => {
+    try {
+      return await withHeaders(API.getSummaryCategories)();
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+
   const recordSummaryView = React.useCallback(async (summary: SummaryResponse, content?: string, metadata?: Record<string, unknown>) => {
     try {
       return await withHeaders(API.recordSummaryView)(summary.id, { content, metadata });
@@ -53,6 +61,7 @@ export function useSummaryClient() {
 
   return {
     getSummaries,
+    getSummaryCategories,
     interactWithSummary,
     recordSummaryView,
   };
