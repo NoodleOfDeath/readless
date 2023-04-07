@@ -126,7 +126,7 @@ export function SearchScreen({
     await load(pageSize, page + 1, prefilter ?? searchText);
   }, [load, pageSize, page, prefilter, searchText]);
 
-  const onExpandPost = React.useCallback(
+  const handleFormatChange = React.useCallback(
     async (summary: SummaryResponse, format?: ReadingFormat) => {
       recordSummaryView(summary, undefined, { format });
       navigation?.navigate('summary', {
@@ -208,7 +208,7 @@ export function SearchScreen({
               summary={ summary }
               forceCompact={ compactMode }
               bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
-              onFormatChange={ (format) => onExpandPost(summary, format) }
+              onFormatChange={ (format) => handleFormatChange(summary, format) }
               onInteract={ (...e) => handleInteraction(summary, ...e) } />
           ))}
           {!loading && totalResultCount > recentSummaries.length && (

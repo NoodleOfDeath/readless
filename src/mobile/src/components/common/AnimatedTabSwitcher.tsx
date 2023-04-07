@@ -14,7 +14,7 @@ type Props = {
   children: React.ReactNode | React.ReactNode[];
 };
 
-export default function AnimatedTabBar({ children }: Props) {
+export default function AnimatedTabSwitcher({ children }: Props) {
 
   const [active, setActive] = React.useState(false);
   const translateX = React.useRef(new Animated.Value(0)).current;

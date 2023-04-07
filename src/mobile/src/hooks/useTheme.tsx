@@ -8,6 +8,7 @@ const makeTheme = (isLightMode: boolean) => {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
+      invertText: isLightMode ? '#fff' : '#000',
       primary: '#8b0000',
       text: isLightMode ? '#000' : '#fff',
       textDark: '#000',

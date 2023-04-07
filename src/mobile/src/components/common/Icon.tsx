@@ -15,7 +15,7 @@ export function Icon({
   const style = useStyles(other);
   return (
     <View style={ style }>
-      <MCIcon size={ size } color={ theme.colors.primary ?? Object.keys(theme.colors).includes(color as string) ? theme.colors[color] : undefined } { ...other } />
+      <MCIcon size={ size } color={ Object.keys(theme.colors).includes(color as string) ? theme.colors[color] : theme.colors.text } { ...other } />
     </View>
   );
 }

@@ -52,7 +52,7 @@ export function Button({
   );
   
   const textColor = React.useMemo(() => {
-    return ((selected || isPressed) && pressableProps.selectable) ? theme.colors.contrastText : (pressableProps.color ?? theme.colors.primary); 
+    return ((selected || isPressed) && pressableProps.selectable) ? theme.colors.text : (pressableProps.color ?? theme.colors.primary); 
   }, [isPressed, pressableProps.selectable, selected, pressableProps.color, theme]);
   
   const startIconComponent = React.useMemo(() => {

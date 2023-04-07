@@ -1,8 +1,14 @@
 import React from 'react';
 
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import { RootParamList } from '../types';
+
 import {
   InteractionResponse,
   InteractionType,
+  ReadingFormat,
   SummaryResponse,
 } from '~/api';
 import { 
@@ -12,7 +18,6 @@ import {
   Text,
   View,
 } from '~/components';
-import AnimatedTabBar from '~/components/common/AnimatedTabBar';
 import {
   AppStateContext,
   SessionContext,
@@ -21,13 +26,22 @@ import {
 } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 
-export function MyStuffScreen() {
+type Props = {
+  route: 
+    | RouteProp<RootParamList['myStuffTab'], 'default'>
+  navigation: 
+    | NativeStackNavigationProp<RootParamList['myStuffTab'], 'default'>;
+};
+
+export function MyStuffScreen({ navigation }: Props) {
   
   const { 
-    preferences: { bookmarks },
+    preferences: {
+      bookmarks, compactMode, preferredReadingFormat, 
+    },
     setPreference,
   } = React.useContext(SessionContext);
-  const { interactWithSummary } = useSummaryClient();
+  const { interactWithSummary, recordSummaryView } = useSummaryClient();
   const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
   
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<Record<string, SummaryBookmark[]>>({});
@@ -35,8 +49,8 @@ export function MyStuffScreen() {
   React.useEffect(() => {
     const m: Record<string, SummaryBookmark[]> = {};
     Object.entries(bookmarks ?? {})
-      .filter(([_, v]) => v instanceof SummaryBookmark).forEach(([_, v]) => {
-        const k = v.createdAt.toDateString();
+      .filter(([k, v]) => /^summary:\d+$/i.test(k) && v !== null).forEach(([_, v]) => {
+        const k = new Date(v.createdAt).toDateString();
         if (!m[k]) {
           m[k] = [];
         }
@@ -48,6 +62,17 @@ export function MyStuffScreen() {
   const clearBookmarks = React.useCallback(() => {
     setPreference('bookmarks', {});
   }, [setPreference]);
+
+  const handleFormatChange = React.useCallback(
+    async (summary: SummaryResponse, format?: ReadingFormat) => {
+      recordSummaryView(summary, undefined, { format });
+      navigation?.navigate('summary', {
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
+        summary,
+      });
+    },
+    [navigation, preferredReadingFormat, recordSummaryView]
+  );
 
   const updateInteractions = React.useCallback((summary: SummaryResponse, interactions: InteractionResponse) => {
     setPreference('bookmarks', (prev) => {
@@ -107,26 +132,26 @@ export function MyStuffScreen() {
           onPress={ () => clearBookmarks() }>
           Clear Bookmarks
         </Button>
-        <AnimatedTabBar>
-          <View>
-            <Text fontSize={ 16 } p={ 8 }>Bookmarked Articles</Text>
-            {Object.entries(bookmarkedSummaries).map(([date, bookmarks]) => {
-              return (
-                <View col key={ date }>
-                  <Text right p={ 8 }>{ new Date(date).toDateString() }</Text>
-                  {bookmarks.map(({ summary }) => (
-                    <Summary 
-                      key={ summary.id } 
-                      summary={ summary }
-                      onInteract={ (...args) => handleInteraction(summary, ...args) }
-                      bookmarked
-                      forceCollapse />
-                  ))}
-                </View>
-              );
-            })}
-          </View>
-        </AnimatedTabBar>
+        <View>
+          <Text fontSize={ 16 } p={ 8 }>Bookmarked Articles</Text>
+          {Object.entries(bookmarkedSummaries).map(([date, bookmarks]) => {
+            return (
+              <View col key={ date }>
+                <Text right p={ 8 }>{ new Date(date).toDateString() }</Text>
+                {bookmarks.map(({ summary }) => (
+                  <Summary 
+                    key={ summary.id } 
+                    summary={ summary }
+                    bookmarked
+                    forceCompact={ compactMode }
+                    forceCollapse
+                    onFormatChange={ (format) => handleFormatChange(summary, format) }
+                    onInteract={ (...args) => handleInteraction(summary, ...args) } />
+                ))}
+              </View>
+            );
+          })}
+        </View>
       </View>
     </SafeScrollView>
   );

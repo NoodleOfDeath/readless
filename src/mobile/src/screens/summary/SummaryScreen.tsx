@@ -70,7 +70,7 @@ export function SummaryScreen({
       setPreference('bookmarks', (prev) => {
         const bookmarks = { ...prev };
         const key: SummaryBookmarkKey = `summary:${summary.id}`;
-        if (bookmarks[key] || (!(bookmarks[key] instanceof SummaryBookmark))) {
+        if (bookmarks[key]) {
           delete bookmarks[key];
         } else {
           bookmarks[key] = new SummaryBookmark(summary);

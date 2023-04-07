@@ -144,6 +144,7 @@ export function Summary({
               big
               startIcon={ collapsed ? 'chevron-left' : 'chevron-down' }
               onPress={ () => toggleCollapse() }
+              color={ theme.colors.text }
               ml={ 8 } />
           </View>
         )}
