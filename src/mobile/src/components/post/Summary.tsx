@@ -18,7 +18,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
-import { useTheme } from '~/hooks';
+import { CATEGORY_ICONS, useTheme } from '~/hooks';
 
 type Props = {
   summary: SummaryResponse;
@@ -86,9 +86,9 @@ export function Summary({
   return (
     <View rounded style={ theme.components.card }>
       <View row justifySpaced rounded style={ theme.components.category }>
-        <View col>
+        <View row alignCenter>
+          <Icon name={ CATEGORY_ICONS[summary.category] } color="contrastText" mr={ 8 } />
           <Text color='contrastText'>{summary.category}</Text>
-          <Text color='contrastText'>{summary.subcategory}</Text>
         </View>
         <View row />
         <View right alignEnd>

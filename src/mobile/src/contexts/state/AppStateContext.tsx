@@ -17,7 +17,9 @@ export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
 export function AppStateContextProvider({ children }: React.PropsWithChildren) {
 
   const {
-    ready, preferences, setPreference, 
+    ready, 
+    preferences: { lastReleaseNotesDate }, 
+    setPreference, 
   } = React.useContext(SessionContext);
 
   const [screenOptions, setScreenOptions] =
@@ -49,11 +51,11 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     if (!ready) {
       return;
     }
-    if (!preferences.lastReleaseNotesDate || new Date(preferences.lastReleaseNotesDate) < new Date('2023-04-04')) {
+    if (!lastReleaseNotesDate || new Date(lastReleaseNotesDate) < new Date('2023-04-04')) {
       setShowReleaseNotes(true);
       setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
     }
-  }, [ready, preferences.lastReleaseNotesDate, setPreference]);
+  }, [ready, lastReleaseNotesDate, setPreference]);
   
   return (
     <AppStateContext.Provider value={ {

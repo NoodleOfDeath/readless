@@ -6,10 +6,15 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { InternalError, SummaryCategory } from '~/api';
 import {
   Button,
+  Icon,
   SafeScrollView,
   View,
 } from '~/components';
-import { ClientError, useSummaryClient } from '~/hooks';
+import {
+  CATEGORY_ICONS,
+  ClientError,
+  useSummaryClient,
+} from '~/hooks';
 import { RootParamList } from '~/screens';
 
 type Props = {
@@ -47,9 +52,7 @@ export function NewsScreen({ navigation }: Props) {
   }, [loadCategories]);
 
   const selectCategory = React.useCallback((category: string) => {
-    const payload = { prefilter: `category:${category}` };
-    console.log(payload);
-    navigation.navigate('category', payload);
+    navigation.navigate('category', { prefilter: `category:${category}` });
   }, [navigation]);
 
   return (
@@ -57,21 +60,23 @@ export function NewsScreen({ navigation }: Props) {
       refreshing={ loading }
       onRefresh={ () => loadCategories() }>
       <View col p={ 32 }>
-        {categories.map((category) => (
+        {categories.map(({ category }) => (
           <View 
             row
             alignCenter
             justifySpaced
-            key={ category.category }>
+            key={ category }>
             <Button 
               row
               selectable
+              alignCenter
               outlined
               rounded
+              startIcon={ CATEGORY_ICONS[category] }
               p={ 8 }
               mv={ 4 }
-              onPress={ () => selectCategory(category.category) }>
-              {category.category}
+              onPress={ () => selectCategory(category) }>
+              {category}
             </Button>
           </View>
         ))}

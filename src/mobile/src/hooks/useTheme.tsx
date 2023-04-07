@@ -1,8 +1,9 @@
+import React from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function useTheme<T extends {}>(other: T = {} as T) {
-  const isLightMode = useColorScheme() === 'light';
+import { SessionContext } from '~/contexts';
+
+const makeTheme = (isLightMode: boolean) => {
   return {
     colors: {
       contrastText: '#fff',
@@ -43,7 +44,7 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           backgroundColor: isLightMode ? '#eee' : '#111',
           borderColor: '#8b0000',
           borderRadius: 8,
-          borderWidth: 3,
+          borderWidth: 5,
           minHeight: '60%',
           minWidth: '70%',
         },
@@ -140,15 +141,88 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           fontWeight: 'bold',
         },
       },
-      ...other,
-    } as const),
+    }),
     navContainerColors: {
-      background: isLightMode ? '#FFFFFF' : '#1E1E1E',
+      background: isLightMode ? '#fff' : '#1e1e1e',
       border: isLightMode ? '#bdbdbd' : '#757575',
-      card: isLightMode ? '#FFFFFF' : '#1E1E1E',
+      card: isLightMode ? '#fff' : '#1e1e1e',
       notification: '#8b0000',
       primary: '#8b0000',
-      text: isLightMode ? '#212121' : '#FFFFFF',
+      text: isLightMode ? '#212121' : '#fff',
     },
   };
+};
+
+const LIGHT_THEME = makeTheme(true);
+const DARK_THEME = makeTheme(false);
+
+export const CATEGORY_ICONS = {
+  Art: 'palette',
+  'Artificial Intelligence': 'brain',
+  Automotive: 'car',
+  Books: 'book-open-variant',
+  Business: 'domain',
+  Crime: 'police-badge',
+  Cryptocurrency: 'bitcoin',
+  Culture: 'cannabis',
+  Disasters: 'weather-tornado',
+  Economics: 'cash',
+  Education: 'school',
+  Energy: 'barrel',
+  Entertainment: 'popcorn',
+  Environment: 'sprout',
+  Fashion: 'shoe-heel',
+  Finance: 'currency-usd',
+  Food: 'food',
+  Gaming: 'controller-classic',
+  Geopolitics: 'handshake',
+  Health: 'weight-lifter',
+  Healthcare: 'medical-bag',
+  History: 'pillar',
+  'Home Improvement': 'home-heart',
+  Inspiration: 'lightbulb-on',
+  Journalism: 'feather',
+  Labor: 'briefcase',
+  Legal: 'gavel',
+  Lifestyle: 'shoe-sneaker',
+  Media: 'account-group',
+  Medicine: 'needle',
+  Music: 'music',
+  Obituary: 'grave-stone',
+  Other: 'progress-question',
+  Pandemic: 'virus',
+  Parenting: 'human-male-child',
+  Pets: 'dog',
+  Philosophy: 'head-dots-horizontal',
+  Politics: 'bank-outline',
+  'Pop Culture': 'bullhorn',
+  Productivity: 'tools',
+  'Real Estate': 'home-group',
+  Religion: 'cross',
+  Robotics: 'robot-industrial',
+  Royalty: 'crown',
+  Scandal: 'alert',
+  Science: 'flask',
+  Shopping: 'shopping',
+  Space: 'space-station',
+  Sports: 'basketball',
+  Technology: 'chip',
+  Television: 'television-classic',
+  Tragedy: 'drama-masks',
+  Transportation: 'bike',
+  Travel: 'airplane',
+  'U.S. News': 'star-circle',
+  Weather: 'weather-partly-cloudy',
+  Wildlife: 'rabbit',
+  'World News': 'earth',
+};
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function useTheme() {
+  const { preferences: { displayMode } } = React.useContext(SessionContext);
+
+  const colorScheme = useColorScheme();
+  
+  return (displayMode ?? colorScheme) === 'light' ? LIGHT_THEME : DARK_THEME;
+  
 }

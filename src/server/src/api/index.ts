@@ -7,6 +7,7 @@ import winston from 'winston';
 import v1router from './v1';
 import { authMiddleware, rateLimitMiddleware } from './v1/middleware';
 import {
+  Category,
   Outlet,
   Queue,
   Role,
@@ -18,6 +19,7 @@ async function main() {
   await DBService.initTables();
   await Queue.initQueues();
   await Role.initRoles();
+  await Category.initCategories();
   await Outlet.initOutlets();
   
   const app = express();
@@ -40,7 +42,7 @@ async function main() {
     meta: true,
     msg: 'HTTP {{req.method}} {{req.url}}', 
     skip: (req, res) => {
-      return res.statusCode == 200;
+      return false;
     }, 
     transports: [new winston.transports.Console()], // optional: allows to skip some log messages based on request and/or response
   }));

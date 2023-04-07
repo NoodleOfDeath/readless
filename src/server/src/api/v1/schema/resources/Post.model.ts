@@ -3,6 +3,7 @@ import { Column, DataType } from 'sequelize-typescript';
 import {
   PostAttributes,
   PostCreationAttributes,
+  READING_FORMATS,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from './Post.types';
@@ -55,6 +56,8 @@ export abstract class Post<
   declare imagePrompt: string;
 
   interactions: InteractionResponse;
+  
+  formats = Object.values(READING_FORMATS);
   
   abstract getInteractions(userId?: number, type?: InteractionType | InteractionType[]): Promise<I[] | undefined>;
 

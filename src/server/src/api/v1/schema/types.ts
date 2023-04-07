@@ -41,18 +41,20 @@ export * from './newsletter/Subscription.types';
 
 export * from './interaction/Interaction.types';
 
-export * from './resources/types';
-
 export * from './resources/Media.types';
 export * from './resources/Post.types';
+
+export * from './resources/topic/Category.types';
+export * from './resources/topic/CategoryMedia.types';
+
 export * from './resources/outlet/Outlet.types';
+export * from './resources/outlet/OutletMedia.types';
 
 export * from './resources/summary/Summary.types';
-export * from './resources/summary/SummaryContent.types';
+export * from './resources/summary/SummaryMedia.types';
 
 export * from './resources/article/Article.types';
-
-export * from './resources/topic/Topic.types';
+export * from './resources/article/ArticleMedia.types';
 
 export * from './queue/Queue.types';
 export * from './queue/Job.types';

@@ -17,15 +17,16 @@ export * from './auth/Role.model';
 export * from './newsletter/Newsletter.model';
 export * from './newsletter/Subscription.model';
 
+export * from './resources/topic/Category.model';
+export * from './resources/topic/CategoryMedia.model';
+
 export * from './resources/outlet/Outlet.model';
 export * from './resources/outlet/OutletMedia.model';
 
 export * from './resources/summary/Summary.model';
-export * from './resources/summary/SummaryContent.model';
 export * from './resources/summary/SummaryMedia.model';
 export * from './resources/summary/SummaryInteraction.model';
 export * from './resources/summary/SummaryInteractionMedia.model';
-export * from './resources/summary/RefSummaryTopic.model';
 
 // queues
 export * from './queue/Queue.model';

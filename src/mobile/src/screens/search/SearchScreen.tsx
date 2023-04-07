@@ -144,7 +144,11 @@ export function SearchScreen({
       setPreference('bookmarks', (prev) => {
         const bookmarks = { ...prev };
         const key = ['summary', summary.id].join(':');
-        bookmarks[key] = !bookmarks[key];
+        if (bookmarks[key]) {
+          delete bookmarks[key];
+        } else {
+          bookmarks[key] = summary;
+        }
         return (prev = bookmarks);
       });
       return;

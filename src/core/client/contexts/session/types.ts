@@ -4,6 +4,7 @@ import {
   LoginResponse,
   ReadingFormat,
   RequestParams,
+  SummaryResponse,
 } from '~/api';
 
 export type ColorMode = 'light' | 'dark';
@@ -12,7 +13,9 @@ export type Preferences = {
   displayMode?: ColorMode;
   lastReleaseNotesDate?: string;
   preferredReadingFormat?: ReadingFormat;
-  bookmarks?: { [key: string]: boolean };
+  bookmarks?: { 
+    [key in `${'summmary'}:${number}`]: key extends `summary:${number}` ? SummaryResponse : never
+  };
 };
 
 // Headers
