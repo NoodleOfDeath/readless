@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { Icon } from '~/components';
-import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS, ScreenProps } from '~/screens';
 import {
@@ -14,45 +13,37 @@ import {
   SettingsTab,
 } from '~/tabs';
 
+const TABS: ScreenProps[] = [
+  // {
+  //   component: DiscoverTab,
+  //   icon: 'fire',
+  //   name: 'Discover',
+  // },
+  {
+    component: NewsTab,
+    icon: 'newspaper',
+    name: 'News',
+  },
+  {
+    component: MyStuffTab,
+    icon: 'bookmark-multiple',
+    name: 'My Stuff',
+  },
+  {
+    component: SearchTab,
+    icon: 'magnify',
+    name: 'Search',
+  },
+  {
+    component: SettingsTab,
+    icon: 'cog',
+    name: 'Settings',
+  },
+];
+
 export default function NavigationController() {
   const theme = useTheme();
-  const { userData } = React.useContext(SessionContext);
-
   const Tab = createBottomTabNavigator();
-  
-  const tabs: ScreenProps[] = React.useMemo(
-    () => {
-      const tabs = [
-        // {
-        //   component: DiscoverTab,
-        //   icon: 'fire',
-        //   name: 'Discover',
-        // },
-        {
-          component: NewsTab,
-          icon: 'newspaper',
-          name: 'News',
-        },
-        {
-          component: MyStuffTab,
-          icon: 'bookmark-multiple',
-          name: 'My Stuff',
-        },
-        {
-          component: SearchTab,
-          icon: 'magnify',
-          name: 'Search',
-        },
-        {
-          component: SettingsTab,
-          icon: 'cog',
-          name: 'Settings',
-        },
-      ];
-      return tabs;
-    }
-    , []
-  );
 
   return (
     <NavigationContainer
@@ -64,7 +55,7 @@ export default function NavigationController() {
       <Tab.Navigator
         initialRouteName="search"
         screenOptions={ { headerShown: true } }>
-        {tabs.map((screen) => (
+        {TABS.map((screen) => (
           <Tab.Screen
             key={ screen.name }
             name={ screen.name }

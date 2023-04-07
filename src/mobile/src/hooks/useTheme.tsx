@@ -1,8 +1,9 @@
+import React from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function useTheme<T extends {}>(other: T = {} as T) {
-  const isLightMode = useColorScheme() === 'light';
+import { SessionContext } from '~/contexts';
+
+const makeTheme = (isLightMode: boolean) => {
   return {
     colors: {
       contrastText: '#fff',
@@ -140,15 +141,27 @@ export function useTheme<T extends {}>(other: T = {} as T) {
           fontWeight: 'bold',
         },
       },
-      ...other,
-    } as const),
+    }),
     navContainerColors: {
-      background: isLightMode ? '#FFFFFF' : '#1E1E1E',
+      background: isLightMode ? '#fff' : '#1e1e1e',
       border: isLightMode ? '#bdbdbd' : '#757575',
-      card: isLightMode ? '#FFFFFF' : '#1E1E1E',
+      card: isLightMode ? '#fff' : '#1e1e1e',
       notification: '#8b0000',
       primary: '#8b0000',
-      text: isLightMode ? '#212121' : '#FFFFFF',
+      text: isLightMode ? '#212121' : '#fff',
     },
   };
+};
+
+const LIGHT_THEME = makeTheme(true);
+const DARK_THEME = makeTheme(false);
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function useTheme() {
+  const { preferences: { displayMode } } = React.useContext(SessionContext);
+  
+  const colorScheme = useColorScheme();
+  
+  return (displayMode ?? colorScheme) === 'light' ? LIGHT_THEME : DARK_THEME;
+  
 }
