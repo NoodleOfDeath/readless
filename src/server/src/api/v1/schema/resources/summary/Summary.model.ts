@@ -52,7 +52,7 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
   declare originalTitle: string;
 
   outletName: string;
-  categoryAttributes: CategoryAttributes;
+  categoryAttributes?: CategoryAttributes;
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {
@@ -99,7 +99,7 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     const categoryNames = summaries.map((summary) => {
       return summary.toJSON().category;
     });
-    const categories = await Category.findAll({ where: { id: categoryNames } });
+    const categories = await Category.findAll({ where: { name: categoryNames } });
     summaries.forEach((summary) => {
       const category = categories.find((c) => c.name === summary.toJSON().category);
       summary.set('categoryAttributes', category?.toJSON(), { raw: true });

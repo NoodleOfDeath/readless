@@ -15,7 +15,7 @@ export type SummaryAttributesRaw = TitledCategorizedPostAttributes & {
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
   outletName: string,
-  categoryAttributes?: CategoryAttributes;
+  categoryAttributes?: Pick<CategoryAttributes, 'name' | 'icon'>;
 };
 
 export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes & {
