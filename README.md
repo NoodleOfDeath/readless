@@ -19,10 +19,10 @@ Production: [https://readless.ai](https://readless.ai)
   - [v1.0.0 - MVP and POC](#v100---mvp-and-poc)
   - [v1.1.0 - User Accounts](#v110---user-accounts)
   - [v1.2.0 - Interactions](#v120---interactions)
-  - [v1.3.0 - Notifications/Newletters](#v130---notificationsnewletters)
-  - [v1.4.0 - Mobile App](#v140---mobile-app)
-  - [v1.4.1 - First Real (Beta) Release](#v141---first-real-beta-release)
-  - [v1.5.0 - Advanced Interactions](#v150---advanced-interactions)
+  - [v1.3.0 - Mobile App](#v130---mobile-app)
+  - [v1.3.1 - First Real (Beta) Release](#v131---first-real-beta-release)
+  - [v1.4.0 - Advanced Interactions](#v140---advanced-interactions)
+  - [v1.5.0 - Notifications/Newletters](#v150---notificationsnewletters)
   - [v1.6.0 - Advanced Notifications](#v160---advanced-notifications)
   - [v2.0.0 - Enhanced Discover Page](#v200---enhanced-discover-page)
   - [v2.1.0 - Cross-Comparative Article Generation](#v210---cross-comparative-article-generation)
@@ -51,44 +51,52 @@ Production: [https://readless.ai](https://readless.ai)
 - [x] Role-Based Access Control (RBAC)
 - [x] Remove dependency on redis
 - [x] Refactor to static web pages with Next.js for SEO
-- [ ] Improve pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
+- [x] Improve pipelines/webscraping backend article generation (not noticeable other than fewer garbage articles that say "Okay, I'll try to be better" or something)
 
 ### v1.2.0 - Interactions
 
 - [x] Add support for interactions (v1) such as upvotes and downvotes (backend)
 - [x] upvote/downvote interactions front ent support
+- [x] Record views and reading format
 - [ ] Add support for users to provide feedback about articles
 - [ ] Add support for users to flag articles as false, low-quality, etc.
-- [ ] Bounty/training/feedback program will play an important role in the loyalty and beta test programs
+- [x] (I alread record the metrics to implement this eventually) Bounty/training/feedback program will play an important role in the loyalty and beta test programs (eventually moderation)
 
-### v1.3.0 - Notifications/Newletters
-
-- [ ] Email notifications
-- [ ] Daily (eventually customizable) newsletters with headlines
-- [ ] Subscription to topics, threads, and/or keywords
-- [ ] Advanced search/filters
-
-### v1.4.0 - Mobile App
+### v1.3.0 - Mobile App
 
 - [x] MVP Project and POC
-- [ ] Onboarding carousel for mobile app
-- [ ] Onboarding guide for web app
-- [ ] Basic settings/preferences
-- [ ] Interactions
-- [ ] Profile page
-- [ ] Activity history
-- [ ] Minor UI touch ups
-- [ ] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
+- [ ] Advanced search/filters
+  - [x] By category
+  - [ ] By outlet
+  - [ ] By relevance of wildcards
+  - [ ] By tags
+- [ ] Onboarding guide for mobile app
+- [x] Basic settings/preferences
+- [x] Interactions
+- [ ] Modify Account Page 
+- [x] User login/signup
+- [x] Activity history
+- [x] Minor UI touch ups
+- [x] Offline bookmarking
+- [x] Categories
+- [ ] Following of categories on (My Stuff Screen)
+- [x] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
 
-### v1.4.1 - First Real (Beta) Release
+### v1.3.1 - First Real (Beta) Release
 
 - [ ] First release to the app stores
-- [ ] Launch of referral and pre-loyalty programs
+- [ ] Announcement of referral and pre-loyalty programs
 
-### v1.5.0 - Advanced Interactions
+### v1.4.0 - Advanced Interactions
 
 - [ ] Adding of comments and messaging support (hopefully will not be a heavy lift as moderation could be outsourced to ChatGPT)
 - [ ] Adding of following users/friends (see the news articles your friends interact with in realtime)
+
+### v1.5.0 - Notifications/Newletters
+
+- [ ] Email notifications?
+- [ ] Daily (eventually customizable) newsletters with headlines?
+- [ ] Subscription to topics, threads, and/or keywords?
 
 ### v1.6.0 - Advanced Notifications
 
