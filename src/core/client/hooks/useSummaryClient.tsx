@@ -15,36 +15,19 @@ export function useSummaryClient() {
   
   const getSummaries = React.useCallback(async ({
     filter = '',
+    ids = [],
     page = 0,
     pageSize = 10,
   }) => {
     try {
       return await withHeaders(API.getSummaries)({
-        filter, page, pageSize, 
+        filter, ids, page, pageSize, 
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
   }, [withHeaders]);
   
-  const getSummariesById = React.useCallback(async (ids: number[], { page = 0, pageSize = 10 } = {}) => {
-    try {
-      return await withHeaders(API.getSummariesById)({
-        ids, page, pageSize, 
-      });
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
-  }, [withHeaders]);
-
-  const getSummaryCategories = React.useCallback(async () => {
-    try {
-      return await withHeaders(API.getSummaryCategories)();
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
-  }, [withHeaders]);
-
   const recordSummaryView = React.useCallback(async (summary: SummaryResponse, content?: string, metadata?: Record<string, unknown>) => {
     try {
       return await withHeaders(API.recordSummaryView)(summary.id, { content, metadata });
@@ -71,8 +54,6 @@ export function useSummaryClient() {
 
   return {
     getSummaries,
-    getSummariesById,
-    getSummaryCategories,
     interactWithSummary,
     recordSummaryView,
   };

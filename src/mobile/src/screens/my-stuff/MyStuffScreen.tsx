@@ -19,53 +19,23 @@ export function MyStuffScreen() {
   } = React.useContext(SessionContext);
   const { getSummariesById } = useSummaryClient();
   
-  console.log(getSummariesById);
-  
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<SummaryResponse[]>([]);
   const [pageSize, setPageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
   
   const [loading, setLoading] = React.useState(true);
   
-  const summaryIds = React.useMemo(() => {
+  const summaries = React.useMemo(() => {
     return Object.entries(bookmarks)
-      .filter(([k, v]) => /^summary:\d+$/.test(k) && v === true)
-      .map(([k]) => Number.parseInt(k.split(':')[1]));
+      .filter(([k, v]) => /^summary:\d+$/.test(k) && v != null);
   });
-  
-  const loadBookmarks = React.useCallback(async (page = 0, pageSize = 10) => {
-    if (page === 0) {
-      setBookmarkedSummaries([]);
-    }
-    const { data, error } = await getSummariesById(summaryIds, {
-      page,
-      pageSize,
-    });
-    if (error) {
-      console.error(error);
-      setLoading(false);
-      return;
-    }
-    if (!data) {
-      setLoading(false);
-      return;
-    }
-    setBookmarkedSummaries((prev) => [...prev, ...data.rows]);
-    setLoading(false);
-  }, [bookmarks, page, pageSize]);
-  
-  React.useEffect(() => {
-    loadBookmarks();
-  }, [bookmarks]);
   
   const clearBookmarks = React.useCallback(() => {
     setPreference('bookmarks', {});
   }, [setPreference]);
   
   return (
-    <SafeScrollView
-      refreshing={ loading }
-      onRefresh={ () => loadBookmarks(0) }>
+    <SafeScrollView>
       <View col p={ 32 }>
         <Button 
           rounded
@@ -77,13 +47,9 @@ export function MyStuffScreen() {
           Clear Bookmarks
         </Button>
         <View>
-          {bookmarkedSummaries.map((summary) => {
+          {summaries.map((summary) => {
             return (
-              <Text 
-                key={ summary.id }
-                mv={ 8 }>
-                {summary.title}
-              </Text>
+              <Text key={ summary.id }>summ</Text>
             );
           })}
         </View>
