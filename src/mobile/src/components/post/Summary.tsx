@@ -18,7 +18,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
-import { CATEGORY_ICONS, useTheme } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 type Props = {
   summary: SummaryResponse;
@@ -26,7 +26,11 @@ type Props = {
   format?: ReadingFormat;
   realtimeInteractions?: InteractionResponse;
   bookmarked?: boolean;
-  onChange?: (format?: ReadingFormat) => void;
+  collapsible?: boolean;
+  forceCompact?: boolean;
+  forceCollapse?: boolean;
+  onFormatChange?: (format?: ReadingFormat) => void;
+  onCollapse?: (collapsed: boolean) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
 
@@ -35,8 +39,12 @@ export function Summary({
   tickIntervalMs = 60_000,
   format,
   realtimeInteractions,
+  collapsible = true,
   bookmarked,
-  onChange,
+  forceCompact,
+  forceCollapse,
+  onFormatChange,
+  onCollapse,
   onInteract,
 }: Props) {
   const theme = useTheme();
@@ -44,6 +52,8 @@ export function Summary({
 
   const [lastTick, setLastTick] = React.useState(new Date());
 
+  const [compact, setCompact] = React.useState(forceCompact);
+  const [collapsed, setCollapsed] = React.useState(forceCollapse);
   const interactions = React.useMemo(() => realtimeInteractions ?? summary.interactions, [realtimeInteractions, summary.interactions]);
 
   const timeAgo = React.useMemo(() => {
@@ -82,69 +92,111 @@ export function Summary({
   const votes = React.useMemo(() => {
     return (interactions.upvote ?? 0) - (interactions.downvote ?? 0);
   }, [interactions]);
+
+  React.useEffect(() => {
+    setCompact(forceCompact);
+  }, [forceCompact]);
+
+  React.useEffect(() => {
+    setCollapsed(forceCollapse);
+  }, [forceCollapse]);
+
+  const toggleCollapse = React.useCallback(() => {
+    setCollapsed((prev) => {
+      onCollapse?.(!prev);
+      return !prev;
+    });
+  }, [onCollapse]);
   
   return (
     <View rounded style={ theme.components.card }>
-      <View row justifySpaced rounded style={ theme.components.category }>
-        <View row alignCenter>
-          <Icon name={ CATEGORY_ICONS[summary.category] } color="contrastText" mr={ 8 } />
-          <Text color='contrastText'>{summary.category}</Text>
+      <View row alignCenter>
+        <View row justifySpaced rounded style={ theme.components.category }>
+          {collapsed ? (
+            <Pressable onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+              <Text fontSize={ 16 } color="contrastText">{summary.title.trim()}</Text>
+            </Pressable>
+          ) : (
+            <React.Fragment>
+              <View row alignCenter>
+                {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
+                <Text color='contrastText'>{summary.category}</Text>
+              </View>
+              <View row />
+              <View right alignEnd>
+                <Button 
+                  row
+                  alignCenter
+                  small
+                  right
+                  startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+                  color="contrastText"
+                  onPress={ () => onInteract?.(InteractionType.Bookmark) }>
+                  Read Later
+                </Button>
+              </View>
+            </React.Fragment>
+          )}
         </View>
-        <View row />
-        <View right alignEnd>
-          <Button 
-            row
-            alignCenter
-            small
-            right
-            startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-            color="contrastText"
-            onPress={ () => onInteract?.(InteractionType.Bookmark) }>
-            Read Later
-          </Button>
-        </View>
-      </View>
-      <View row justifySpaced>
-        <Text variant='subtitle1'>{summary.outletName.trim()}</Text>
-        <Button onPress={ () => Linking.openURL(summary.url) } pv={ 2 }>
-          <Text variant='subtitle1' underline>View original source</Text>
-        </Button>
-      </View>
-      <Pressable onPress={ () => onChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
-        <Text variant='title1'>{summary.title.trim()}</Text>
-      </Pressable>
-      <Divider horizontal />
-      <View row justifySpaced>
-        <View row>
-          <Text variant='subtitle2'>{timeAgo}</Text>
-        </View>
-        <View row justifySpaced>
-          <View>
-            <Text variant='subtitle2'>{String(interactions.view)}</Text>
+        {collapsible && (
+          <View alignCenter>
+            <Button 
+              big
+              startIcon={ collapsed ? 'chevron-left' : 'chevron-down' }
+              onPress={ () => toggleCollapse() }
+              color={ theme.colors.text }
+              ml={ 8 } />
           </View>
-          <Icon
-            name="eye"
-            color={ 'primary' }
-            mh={ 8 } />
-          <Button
-            color={ 'primary' }
-            startIcon={ interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
-            onPress={ () => onInteract?.(InteractionType.Upvote) }
-            mh={ 8 } />
-          <Text variant='subtitle2'>{String(votes)}</Text>
-          <Button 
-            color={ 'primary' }
-            startIcon={ interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
-            onPress={ () => onInteract?.(InteractionType.Downvote) }
-            mh={ 8 } />
-        </View>
+        )}
       </View>
-      <View mt={ 2 }>
-        <ReadingFormatSelector format={ format } onChange={ onChange } />
-        <View mt={ 4 }>
-          {content && <Text variant='body1'>{content}</Text>}
-        </View>
-      </View>
+      {!collapsed && (
+        <React.Fragment>
+          <View row justifySpaced>
+            <Text variant='subtitle1'>{summary.outletName.trim()}</Text>
+            <Button onPress={ () => Linking.openURL(summary.url) } pv={ 2 }>
+              <Text variant='subtitle1' underline>View original source</Text>
+            </Button>
+          </View>
+          <Pressable onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+            <Text variant={ compact ? 'subtitle2' : 'title1' }>{summary.title.trim()}</Text>
+          </Pressable>
+          <Divider horizontal />
+          <View row justifySpaced>
+            <View row>
+              <Text variant='subtitle2'>{timeAgo}</Text>
+            </View>
+            <View row justifySpaced>
+              <View>
+                <Text variant='subtitle2'>{String(interactions.view)}</Text>
+              </View>
+              <Icon
+                name="eye"
+                color={ 'primary' }
+                mh={ 8 } />
+              <Button
+                color={ 'primary' }
+                startIcon={ interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
+                onPress={ () => onInteract?.(InteractionType.Upvote) }
+                mh={ 8 } />
+              <Text variant='subtitle2'>{String(votes)}</Text>
+              <Button 
+                color={ 'primary' }
+                startIcon={ interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
+                onPress={ () => onInteract?.(InteractionType.Downvote) }
+                mh={ 8 } />
+            </View>
+          </View>
+          <View mt={ 2 }>
+            <ReadingFormatSelector 
+              format={ format } 
+              compact={ compact }
+              onChange={ onFormatChange } />
+            <View mt={ 4 }>
+              {content && <Text variant='body1'>{content}</Text>}
+            </View>
+          </View>
+        </React.Fragment>
+      )}
     </View>
   );
 }

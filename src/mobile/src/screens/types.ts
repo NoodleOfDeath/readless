@@ -5,16 +5,17 @@ import { LinkingOptions } from '@react-navigation/native';
 import { ReadingFormat, SummaryResponse } from '~/api';
 
 export type RootParamList = {
-  discover: {
+  // Tabs
+  discoverTab: {
     default: undefined;
     summary: {
       initialFormat: ReadingFormat;
       summary: SummaryResponse;
     };
   };
-  myStuff: {
+  newsTab: {
     default: undefined;
-    category: {
+    search: {
       prefilter?: string,
     },
     summary: {
@@ -22,9 +23,9 @@ export type RootParamList = {
       summary: SummaryResponse;
     };
   };
-  news: {
+  myStuffTab: {
     default: undefined;
-    category: {
+    search: {
       prefilter?: string,
     },
     summary: {
@@ -32,27 +33,38 @@ export type RootParamList = {
       summary: SummaryResponse;
     };
   };
-  search: {
+  searchTab: {
     default: undefined;
+    search: {
+      prefilter?: string;
+    };
+    summary: {
+      initialFormat: ReadingFormat;
+      summary: SummaryResponse;
+    };
+  };
+  settingsTab: {
+    default: undefined;
+  }
+
+  // Screens
+  searchScreen: {
     prefilter?: string;
-    summary: {
-      initialFormat: ReadingFormat;
-      summary: SummaryResponse;
-    };
   };
-  settings: {
-    default: undefined;
+  summaryScreen: {
+    initialFormat: ReadingFormat;
+    summary: SummaryResponse;
   }
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   config: {
     screens: {
-      discover: { path: 'discover' },
-      myStuff: { path: 'myStuff' },
-      news: { path: 'news' },
-      search: { path: 'search' },
-      settings: { path: 'settings' },
+      discoverTab: { path: 'discover' },
+      myStuffTab: { path: 'myStuff' },
+      newsTab: { path: 'news' },
+      searchTab: { path: 'search' },
+      settingsTab: { path: 'settings' },
     },
   },
   prefixes: [
@@ -74,3 +86,5 @@ export type ScreenProps = {
       }) => React.ReactNode)
     ;
 };
+
+export type Tab = 'discoverTab' | 'newsTab' | 'myStuffTab' | 'searchTab' | 'settingsTab';

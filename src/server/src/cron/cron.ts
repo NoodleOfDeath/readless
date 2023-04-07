@@ -14,6 +14,7 @@ import { DBService } from '../services';
 async function main() {
   await DBService.initTables();
   await Queue.initQueues();
+  await Outlet.initOutlets();
   pollForNews();
   cleanBadSummaries();
 }

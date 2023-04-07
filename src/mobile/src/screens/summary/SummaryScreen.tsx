@@ -13,13 +13,24 @@ import {
   Summary,
   View,
 } from '~/components';
-import { AppStateContext, SessionContext } from '~/contexts';
+import {
+  AppStateContext,
+  SessionContext,
+  SummaryBookmark,
+  SummaryBookmarkKey,
+} from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['discover' | 'search'], 'summary'>;
-  navigation: NativeStackNavigationProp<RootParamList['discover' | 'search'], 'summary'>;
+  route: 
+    | RouteProp<RootParamList['myStuffTab'], 'summary'>
+    | RouteProp<RootParamList['newsTab'], 'summary'>
+    | RouteProp<RootParamList['searchTab'], 'summary'>;
+  navigation: 
+    | NativeStackNavigationProp<RootParamList['myStuffTab'], 'summary'>
+    | NativeStackNavigationProp<RootParamList['newsTab'], 'summary'>
+    | NativeStackNavigationProp<RootParamList['searchTab'], 'summary'>;
 };
 
 export function SummaryScreen({
@@ -58,8 +69,12 @@ export function SummaryScreen({
     if (interaction === InteractionType.Bookmark) {
       setPreference('bookmarks', (prev) => {
         const bookmarks = { ...prev };
-        const key = ['summary', summary.id].join(':');
-        bookmarks[key] = !bookmarks[key];
+        const key: SummaryBookmarkKey = `summary:${summary.id}`;
+        if (bookmarks[key]) {
+          delete bookmarks[key];
+        } else {
+          bookmarks[key] = new SummaryBookmark(summary);
+        }
         return (prev = bookmarks);
       });
       return;
@@ -77,7 +92,7 @@ export function SummaryScreen({
       return;
     }
     setInteractions(data);
-  }, [interactWithSummary, setLoginDialogProps, setShowLoginDialog, summary]);
+  }, [interactWithSummary, setLoginDialogProps, setPreference, setShowLoginDialog, summary]);
 
   return (
     <SafeScrollView>
@@ -86,8 +101,10 @@ export function SummaryScreen({
           <Summary
             summary={ summary }
             format={ format }
+            collapsible={ false }
+            forceCompact={ false }
             bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
-            onChange={ (format) => handleFormatChange(format) }
+            onFormatChange={ (format) => handleFormatChange(format) }
             onInteract={ onInteract }
             realtimeInteractions={ interactions } />
         )}

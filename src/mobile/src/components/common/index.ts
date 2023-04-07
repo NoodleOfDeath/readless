@@ -1,5 +1,6 @@
 export * from './types';
 export * from './AnimatedCard';
+export * from './AnimatedTabSwitcher';
 export * from './Button';
 export * from './Dialog';
 export * from './Divider';

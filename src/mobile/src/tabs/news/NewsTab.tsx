@@ -10,7 +10,7 @@ import {
 } from '~/screens';
 
 export function NewsTab() {
-  const Stack = createNativeStackNavigator<RootParamList['news']>();
+  const Stack = createNativeStackNavigator<RootParamList['newsTab']>();
   return (
     <Stack.Navigator initialRouteName="default">
       <Stack.Screen
@@ -18,7 +18,7 @@ export function NewsTab() {
         component={ NewsScreen }
         options={ { headerShown: false } } />
       <Stack.Screen
-        name="category"
+        name="search"
         component={ SearchScreen }
         options={ { headerShown: false } } />
       <Stack.Screen

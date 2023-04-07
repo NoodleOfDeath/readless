@@ -93,7 +93,6 @@ export class SummaryController {
     if (appliedFilter) {
       options.where = appliedFilter;
     }
-    console.log(options);
     const summaries = await Summary.findAndCountAll(options);
     if (userId) {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));

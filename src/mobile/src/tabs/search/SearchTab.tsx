@@ -2,14 +2,14 @@ import React from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { 
+import {
   RootParamList,
   SearchScreen,
   SummaryScreen,
 } from '~/screens';
 
 export function SearchTab() {
-  const Stack = createNativeStackNavigator<RootParamList['search']>();
+  const Stack = createNativeStackNavigator<RootParamList['searchTab']>();
   return (
     <Stack.Navigator initialRouteName="default">
       <Stack.Screen
@@ -19,7 +19,7 @@ export function SearchTab() {
       <Stack.Screen
         name="summary"
         component={ SummaryScreen }
-        options={ { headerShown: true } } />
+        options={ { headerShown: false } } />
     </Stack.Navigator>
   );
 }

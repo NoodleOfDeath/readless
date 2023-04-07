@@ -16,13 +16,24 @@ import {
   Summary,
   View,
 } from '~/components';
-import { AppStateContext, SessionContext } from '~/contexts';
+import {
+  AppStateContext,
+  SessionContext,
+  SummaryBookmark,
+  SummaryBookmarkKey,
+} from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['news' | 'search'], 'default' | 'category'>;
-  navigation: NativeStackNavigationProp<RootParamList['news' | 'search'], 'default' | 'category'>;
+  route: 
+  | RouteProp<RootParamList['myStuffTab'], 'search'> 
+  | RouteProp<RootParamList['newsTab'], 'search'> 
+  | RouteProp<RootParamList['searchTab'], 'default'>;
+  navigation: 
+  | NativeStackNavigationProp<RootParamList['myStuffTab'], 'search'>
+  | NativeStackNavigationProp<RootParamList['newsTab'], 'search'> 
+  | NativeStackNavigationProp<RootParamList['searchTab'], 'default'>
 };
 
 export function SearchScreen({ 
@@ -35,7 +46,9 @@ export function SearchScreen({
     setScreenOptions,
   } = React.useContext(AppStateContext);
   const { 
-    preferences: { bookmarks, preferredReadingFormat },
+    preferences: {
+      bookmarks, compactMode, preferredReadingFormat, 
+    },
     setPreference,
   } = React.useContext(SessionContext);
   const {
@@ -47,7 +60,7 @@ export function SearchScreen({
   
   React.useEffect(() => {
     if (prefilter) {
-      navigation.setOptions({ headerTitle: prefilter });
+      navigation?.setOptions({ headerTitle: prefilter });
       setScreenOptions((prev) => ({
         ...prev,
         headerShown: false,
@@ -66,17 +79,17 @@ export function SearchScreen({
   const [searchText, setSearchText] = React.useState('');
 
   const load = React.useCallback(async (pageSize: number, page: number, searchText: string) => {
-    console.log(searchText);
     setLoading(true);
     if (page === 0) {
       setRecentSummaries([]);
     }
     try {
-      const { data, error } = await getSummaries({
-        filter: searchText,
+      const { data, error } = await getSummaries(
+        searchText,
+        undefined,
         page,
-        pageSize,
-      });
+        pageSize
+      );
       if (error) {
         console.error(error);
         return;
@@ -113,7 +126,7 @@ export function SearchScreen({
     await load(pageSize, page + 1, prefilter ?? searchText);
   }, [load, pageSize, page, prefilter, searchText]);
 
-  const onExpandPost = React.useCallback(
+  const handleFormatChange = React.useCallback(
     async (summary: SummaryResponse, format?: ReadingFormat) => {
       recordSummaryView(summary, undefined, { format });
       navigation?.navigate('summary', {
@@ -143,11 +156,11 @@ export function SearchScreen({
     if (interaction === InteractionType.Bookmark) {
       setPreference('bookmarks', (prev) => {
         const bookmarks = { ...prev };
-        const key = ['summary', summary.id].join(':');
+        const key: SummaryBookmarkKey = `summary:${summary.id}`;
         if (bookmarks[key]) {
           delete bookmarks[key];
         } else {
-          bookmarks[key] = summary;
+          bookmarks[key] = new SummaryBookmark(summary);
         }
         return (prev = bookmarks);
       });
@@ -193,8 +206,9 @@ export function SearchScreen({
             <Summary
               key={ summary.id }
               summary={ summary }
+              forceCompact={ compactMode }
               bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
-              onChange={ (format) => onExpandPost(summary, format) }
+              onFormatChange={ (format) => handleFormatChange(summary, format) }
               onInteract={ (...e) => handleInteraction(summary, ...e) } />
           ))}
           {!loading && totalResultCount > recentSummaries.length && (

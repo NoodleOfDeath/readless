@@ -3,36 +3,31 @@ import React from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { InternalError, SummaryCategory } from '~/api';
+import { CategoryAttributes, InternalError } from '~/api';
 import {
   Button,
-  Icon,
   SafeScrollView,
   View,
 } from '~/components';
-import {
-  CATEGORY_ICONS,
-  ClientError,
-  useSummaryClient,
-} from '~/hooks';
+import { ClientError, useCategoryClient } from '~/hooks';
 import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['news'], 'default'>;
-  navigation: NativeStackNavigationProp<RootParamList['news'], 'default'>;
+  route?: RouteProp<RootParamList['newsTab'], 'default'>;
+  navigation?: NativeStackNavigationProp<RootParamList['newsTab'], 'default'>;
 };
 
 export function NewsScreen({ navigation }: Props) {
 
-  const { getSummaryCategories } = useSummaryClient();
+  const { getCategories } = useCategoryClient();
   
   const [loading, setLoading] = React.useState(true);
-  const [categories, setCategories] = React.useState<SummaryCategory[]>([]);
-  const [error, setError] = React.useState<InternalError | undefined>();
+  const [categories, setCategories] = React.useState<CategoryAttributes[]>([]);
+  const [error, setError] = React.useState<InternalError>();
 
   const loadCategories = React.useCallback(async () => {
-    setError();
-    const { data, error } = await getSummaryCategories();
+    setError(undefined);
+    const { data, error } = await getCategories();
     if (error) {
       setError(error);
       setLoading(false);
@@ -45,14 +40,14 @@ export function NewsScreen({ navigation }: Props) {
     }
     setCategories(data.rows);
     setLoading(false);
-  }, [getSummaryCategories]);
+  }, [getCategories]);
 
   React.useEffect(() => {
     loadCategories();
   }, [loadCategories]);
 
   const selectCategory = React.useCallback((category: string) => {
-    navigation.navigate('category', { prefilter: `category:${category}` });
+    navigation?.navigate('search', { prefilter: `category:${category}` });
   }, [navigation]);
 
   return (
@@ -60,23 +55,23 @@ export function NewsScreen({ navigation }: Props) {
       refreshing={ loading }
       onRefresh={ () => loadCategories() }>
       <View col p={ 32 }>
-        {categories.map(({ category }) => (
+        {categories.map(({ name, icon }) => (
           <View 
             row
             alignCenter
             justifySpaced
-            key={ category }>
+            key={ name }>
             <Button 
               row
               selectable
               alignCenter
               outlined
               rounded
-              startIcon={ CATEGORY_ICONS[category] }
+              startIcon={ icon }
               p={ 8 }
               mv={ 4 }
-              onPress={ () => selectCategory(category) }>
-              {category}
+              onPress={ () => selectCategory(name) }>
+              {name}
             </Button>
           </View>
         ))}

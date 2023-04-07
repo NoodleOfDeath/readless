@@ -1,4 +1,5 @@
 import React from 'react';
+import { Switch } from 'react-native';
 
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -11,13 +12,17 @@ import {
   Text,
   View,
 } from '~/components';
-import { AppStateContext, SessionContext } from '~/contexts';
+import {
+  AppStateContext,
+  ColorMode,
+  SessionContext,
+} from '~/contexts';
 import { useLoginClient } from '~/hooks';
 import { RootParamList } from '~/screens';
 
 type Props = {
-  route: RouteProp<RootParamList['account'], 'default'>;
-  navigation: NativeStackNavigationProp<RootParamList['account'], 'default'>;
+  route: RouteProp<RootParamList['settingsTab'], 'default'>;
+  navigation: NativeStackNavigationProp<RootParamList['settingsTab'], 'default'>;
 };
 
 type OptionProps = React.PropsWithChildren<{
@@ -29,7 +34,8 @@ type OptionProps = React.PropsWithChildren<{
 
 export function SettingsScreen({ navigation }: Props) {
   const {
-    preferences: { 
+    preferences: {
+      compactMode, 
       displayMode,
       preferredReadingFormat,
     }, 
@@ -39,7 +45,7 @@ export function SettingsScreen({ navigation }: Props) {
   const { setShowLoginDialog } = React.useContext(AppStateContext);
   const { logOut } = useLoginClient();
   
-  const handleDisplayModeChange = React.useCallback((newDisplayMode) => {
+  const handleDisplayModeChange = React.useCallback((newDisplayMode?: ColorMode) => {
     if (displayMode === newDisplayMode) {
       setPreference('displayMode', undefined);
       return;
@@ -54,10 +60,18 @@ export function SettingsScreen({ navigation }: Props) {
     }
     setPreference('preferredReadingFormat', newFormat);
   }, [preferredReadingFormat, setPreference]);
+
+  const handleCompactModeChange = React.useCallback((newCompactMode?: boolean) => {
+    if (compactMode === newCompactMode) {
+      setPreference('compactMode', undefined);
+      return;
+    }
+    setPreference('compactMode', newCompactMode);
+  }, [compactMode, setPreference]);
   
   const handleLogout = React.useCallback(async () => {
     await logOut();
-    navigation.getParent()?.navigate('News');
+    navigation.getParent()?.navigate('newsTab');
   }, [logOut, navigation]);
   
   const options: OptionProps[] = React.useMemo(() => {
@@ -94,12 +108,25 @@ export function SettingsScreen({ navigation }: Props) {
         id: 'display-mode',
       },
       {
-        children: 
-  <ReadingFormatSelector 
-    format={ preferredReadingFormat }
-    onChange={ handleReadingFormatChange } />,
+        children: (
+          <ReadingFormatSelector 
+            format={ preferredReadingFormat }
+            compact={ compactMode === true }
+            onChange={ handleReadingFormatChange } />
+        ),
         id: 'reading-format',
         label: 'Preferred Reading Format',
+      },
+      {
+        children: (
+          <View justifyCenter row>
+            <Switch
+              value={ compactMode === true }
+              onValueChange={ handleCompactModeChange } />
+          </View>
+        ),
+        id: 'compact-mode',
+        label: 'Compact Mode',
       },
       {
         id: 'login',
@@ -114,11 +141,7 @@ export function SettingsScreen({ navigation }: Props) {
         visible: userData?.isLoggedIn === true,
       },
     ];
-  }, [
-    handleLogout,
-    handleReadingFormatChange,
-    userData,
-  ]);
+  }, [compactMode, displayMode, handleCompactModeChange, handleDisplayModeChange, handleLogout, handleReadingFormatChange, preferredReadingFormat, setShowLoginDialog, userData?.isLoggedIn]);
   
   return (
     <SafeScrollView>
