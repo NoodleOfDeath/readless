@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body } from 'express-validator';
+import { query } from 'express-validator';
 
 import { CategoryController } from '../../controllers';
 import { 
@@ -10,9 +10,9 @@ import {
 
 const router = Router();
 
-router.post(
+router.get(
   '/',
-  body('filter').isString().optional(),
+  query('filter').isString().optional(),
   ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
