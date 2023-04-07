@@ -10,6 +10,8 @@ import { SummaryInteraction } from './SummaryInteraction.model';
 import { InteractionType } from '../../interaction/Interaction.types';
 import { TitledCategorizedPost } from '../Post.model';
 import { Outlet } from '../outlet/Outlet.model';
+import { Category } from '../topic/Category.model';
+import { CategoryAttributes } from '../topic/Category.types';
 
 @Table({
   modelName: 'summary',
@@ -50,6 +52,7 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
   declare originalTitle: string;
 
   outletName: string;
+  categoryAttributes: CategoryAttributes;
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {
@@ -84,6 +87,22 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     summaries.forEach((summary) => {
       const outlet = outlets.find((o) => o.id === summary.toJSON().outletId);
       summary.set('outletName', outlet?.toJSON().displayName ?? '', { raw: true });
+    });
+  }
+
+  @AfterFind
+  static async addCategory(cursor?: Summary | Summary[]) {
+    if (!cursor) {
+      return;
+    }
+    const summaries = Array.isArray(cursor) ? cursor : [cursor];
+    const categoryNames = summaries.map((summary) => {
+      return summary.toJSON().category;
+    });
+    const categories = await Category.findAll({ where: { id: categoryNames } });
+    summaries.forEach((summary) => {
+      const category = categories.find((c) => c.name === summary.toJSON().category);
+      summary.set('categoryAttributes', category?.toJSON(), { raw: true });
     });
   }
 
