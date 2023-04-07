@@ -5,7 +5,6 @@ import {
   query,
 } from 'express-validator';
 
-import { BulkResponse, SummaryResponse } from './../../schema/types';
 import { SummaryController } from '../../controllers';
 import {
   authMiddleware,
@@ -21,78 +20,19 @@ router.get(
   '/',
   rateLimitMiddleware('25 per 3s'),
   query('filter').isString().optional(),
+  query('ids').optional(),
   ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     const {
-      filter, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
+      filter, ids, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-    let response: BulkResponse<SummaryResponse> | SummaryResponse = {
-      count: 0,
-      rows: [],
-    };
     try {
-      response = await SummaryController.getSummaries(userId, filter, pageSize, page, offset);
+      const response = await SummaryController.getSummaries(userId, filter, ids, pageSize, page, offset);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);
-    }
-  }
-);
-
-router.get(
-  '/id',
-  rateLimitMiddleware('5 per 10s'),
-  query('ids'),
-  ...paginationMiddleware,
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const {
-        ids, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
-      } = req.query;
-      const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-      const response = await SummaryController.getSummariesById(ids, userId, pageSize, page, offset);
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.get(
-  '/id/:summaryId/:format',
-  rateLimitMiddleware('5 per 10s'),
-  param('summaryId').isNumeric(),
-  param('format').isString(),
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const { summaryId, format } = req.params;
-      const response = await SummaryController.getContentForSummary(summaryId, format);
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.get(
-  '/category',
-  query('filter').isString().optional(),
-  validationMiddleware,
-  async (req, res) => {
-    const { filter, userId: userIdStr } = req.query;
-    const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-    try {
-      const response = await SummaryController.getSummaryCategories(
-        userId,
-        filter
-      );
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
     }
   }
 );

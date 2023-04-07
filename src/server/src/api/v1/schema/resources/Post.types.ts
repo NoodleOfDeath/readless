@@ -5,6 +5,26 @@ export type Attr<Model, K extends keyof Model> = {
   [Key in K]: Model[Key];
 };
 
+export const RESOURCE_TYPES = {
+  article: 'article',
+  interaction: 'interaction',
+  media: 'media',
+  outlet: 'outlet',
+  summary: 'summary',
+} as const;
+
+export type ResourceType = typeof RESOURCE_TYPES[keyof typeof RESOURCE_TYPES];
+
+export const READING_FORMATS = {
+  bullets: 'bullets',
+  casual: 'casual',
+  concise: 'concise',
+  detailed: 'detailed',
+  inDepth: 'in-depth',
+} as const;
+
+export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS];
+
 export type PostAttributes = DatedAttributes & {
   text: string;
   longSummary: string;
@@ -13,6 +33,7 @@ export type PostAttributes = DatedAttributes & {
   bullets: string[];
   imagePrompt: string;
   interactions: InteractionResponse;
+  formats: ReadingFormat[];
 };
 
 export type PostCreationAttributes = {

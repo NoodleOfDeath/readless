@@ -1,17 +1,17 @@
 import {
   Alias,
+  Category,
+  CategoryMedia,
   Credential,
   Job,
   Newsletter,
   Outlet,
   OutletMedia,
   Queue,
-  RefSummaryTopic,
   RefUserRole,
   Role,
   Subscription,
   Summary,
-  SummaryContent,
   SummaryInteraction,
   SummaryInteractionMedia,
   SummaryMedia,
@@ -39,15 +39,21 @@ export function makeAssociations() {
   Newsletter.hasMany(Subscription, { foreignKey: 'newsletterId' });
   Subscription.belongsTo(Newsletter, { foreignKey: 'newsletterId' });
   
+  // categories
+  Category.hasMany(CategoryMedia, { foreignKey: 'parentId' });
+  
   // outlets
   Outlet.hasMany(OutletMedia, { foreignKey: 'parentId' });
   
   // summaries
   Summary.hasMany(SummaryMedia, { foreignKey: 'parentId' });
+  Summary.belongsTo(Category, {
+    as: 'summaryCategory',
+    foreignKey: 'category',
+    targetKey: 'name',
+  });
   Summary.belongsTo(Outlet, { foreignKey: 'outletId' });
-  Summary.hasOne(RefSummaryTopic, { foreignKey: 'sourceId' });
   Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
-  Summary.hasMany(SummaryContent, { foreignKey: 'parentId' });
 
   SummaryInteraction.hasMany(SummaryInteractionMedia, { foreignKey: 'parentId' });
   SummaryInteraction.belongsTo(User, {

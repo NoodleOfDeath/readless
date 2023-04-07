@@ -1,4 +1,4 @@
-import { FindOptions, Op } from 'sequelize';
+import { Op } from 'sequelize';
 import {
   Body,
   Delete,
@@ -14,8 +14,6 @@ import {
   Tags,
 } from 'tsoa';
 
-import { ReadingFormat } from './../../schema/resources/PostContent.types';
-import { SummaryInteraction } from './../../schema/resources/summary/SummaryInteraction.model';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
@@ -26,38 +24,38 @@ import {
   InteractionResponse,
   InteractionType,
   Summary,
-  SummaryCategory,
-  SummaryContent,
-  SummaryContentAttributes,
   SummaryResponse,
   User,
 } from '../../schema';
+import { SummaryInteraction } from '../../schema/resources/summary/SummaryInteraction.model';
 
-function applyFilter(filter?: string) {
-  if (!filter || filter.replace(/\s/g, '').length === 0) {
-    return undefined;
+function applyFilter(filter?: string, ids?: number[]) {
+  const [q, prefix, prefixValue, q2] = /([^:]+)(?::(\w+)(?:\s+(.*))?)?/.exec(filter);
+  let query = q;
+  const where: FindAndCountOptions<Summary>['where'] = {};
+  if (/cat(egory)?/i.test(prefix)) {
+    where.category = prefixValue;
+    query = q2;
   }
-  if (/(\w+):(\w+)/.test(filter)) {
-    const [key, value] = filter.split(':');
-    if (/cat(egory)?/i.test(key)) {
-      return { category: value };
+  if (query) {
+    const queries = query.split(' ');
+    where[Op.or] = [];
+    for (const query of queries) {
+      where[Op.or].push({
+        [Op.or]: {
+          bullets: { [Op.contains] : [query] },
+          longSummary: { [Op.iRegexp] : query },
+          shortSummary: { [Op.iRegexp] : query },
+          summary: { [Op.iRegexp] : query },
+          tags: { [Op.contains] : [query] },
+          text: { [Op.iRegexp] : query },
+          title: { [Op.iRegexp] : query },
+          url: { [Op.iRegexp] : query },
+        },
+      });
     }
   }
-  return {
-    [Op.or]: [
-      { title: { [Op.iRegexp]: filter } },
-      { originalTitle: { [Op.iRegexp]: filter } },
-      { text: { [Op.iRegexp]: filter } },
-      { longSummary: { [Op.iRegexp]: filter } },
-      { summary: { [Op.iRegexp]: filter } },
-      { shortSummary: { [Op.iRegexp]: filter } },
-      { bullets: { [Op.contains]: [filter] } },
-      { category: { [Op.iRegexp]: filter } },
-      { subcategory: { [Op.iRegexp]: filter } },
-      { tags: { [Op.contains]: [filter] } },
-      { url: { [Op.iRegexp]: filter } },
-    ],
-  };
+  return where;
 }
 
 @Route('/v1/summary')
@@ -74,6 +72,7 @@ export class SummaryController {
   public static async getSummaries(
     @Query() userId?: number,
     @Query() filter?: string,
+    @Query() ids?: number[],
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
@@ -84,67 +83,17 @@ export class SummaryController {
       offset,
       order: [['createdAt', 'DESC']],
     };
-    options.where = applyFilter(filter);
+    const appliedFilter = applyFilter(filter, ids);
+    if (appliedFilter) {
+      options.where = appliedFilter;
+    }
     const summaries = await Summary.findAndCountAll(options);
     if (userId) {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
     }
     return summaries;
   }
-
-  @Get('/id')
-  public static async getSummariesById(
-    @Query() ids: number[],
-    @Query() userId?: number,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SummaryResponse>> {
-    const options: FindAndCountOptions<Summary> = {
-      attributes: { exclude: ['filteredText', 'rawText'] },
-      limit: pageSize,
-      offset,
-      order: [['createdAt', 'DESC']],
-    };
-    options.where = { id: ids };
-    const summaries = await Summary.findAndCountAll(options);
-    if (userId) {
-      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
-    }
-    return summaries;
-  }
-
-  @Get('/id/:summaryId/:format')
-  public static async getContentForSummary(
-    @Path() summaryId: number,
-    @Path() format: ReadingFormat 
-  ): Promise<SummaryContentAttributes> {
-    const summary = await SummaryContent.findOne({
-      where: {
-        format,
-        parentId: summaryId,
-      },
-    });
-    return summary;
-  }
-
-  @Get('/category')
-  public static async getSummaryCategories(
-    @Query() userId?: number,
-    @Query() filter?: string
-  ): Promise<BulkResponse<SummaryCategory>> {
-    const options: FindOptions<Summary> = {
-      attributes: ['category'],
-      group: ['category'],
-      order: [['category', 'ASC']],
-    };
-    if (filter) {
-      options.where = applyFilter(filter);
-    }
-    const summaries = await Summary.findAll(options);
-    return { count: summaries.length, rows: summaries.map((row) => ({ category: row.category })) };
-  }
-
+  
   @Post('/interact/:targetId/view')
   public static async recordSummaryView(
     @Path() targetId: number,
