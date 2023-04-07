@@ -3,6 +3,7 @@ import {
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from '../Post.types';
+import { CategoryAttributes } from '../topic/Category.types';
 
 export type SummaryAttributesRaw = TitledCategorizedPostAttributes & {
   outletId: number;
@@ -14,6 +15,7 @@ export type SummaryAttributesRaw = TitledCategorizedPostAttributes & {
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
   outletName: string,
+  categoryAttributes?: CategoryAttributes;
 };
 
 export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes & {
@@ -28,4 +30,3 @@ export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes 
 export const SUMMARY_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
 
 export type SummaryResponse = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
-export type SummaryCategory = Pick<SummaryResponse, 'category'>;

@@ -30,12 +30,18 @@ import {
 import { SummaryInteraction } from '../../schema/resources/summary/SummaryInteraction.model';
 
 function applyFilter(filter?: string, ids?: number[]) {
+  if (!filter || /\S+/.test(filter) === false) {
+    return undefined;
+  }
   const [q, prefix, prefixValue, q2] = /([^:]+)(?::(\w+)(?:\s+(.*))?)?/.exec(filter);
   let query = q;
   const where: FindAndCountOptions<Summary>['where'] = {};
   if (/cat(egory)?/i.test(prefix)) {
     where.category = prefixValue;
     query = q2;
+  }
+  if (ids) {
+    where.id = ids;
   }
   if (query) {
     const queries = query.split(' ');
@@ -87,6 +93,7 @@ export class SummaryController {
     if (appliedFilter) {
       options.where = appliedFilter;
     }
+    console.log(options);
     const summaries = await Summary.findAndCountAll(options);
     if (userId) {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
