@@ -34,7 +34,10 @@ export function SearchScreen({
     setLoginDialogProps,
     setScreenOptions,
   } = React.useContext(AppStateContext);
-  const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
+  const { 
+    preferences: { bookmarks, preferredReadingFormat },
+    setPreference,
+  } = React.useContext(SessionContext);
   const {
     getSummaries, recordSummaryView, interactWithSummary, 
   } = useSummaryClient();
@@ -137,6 +140,15 @@ export function SearchScreen({
   };
   
   const handleInteraction = React.useCallback(async (summary: SummaryResponse, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+    if (interaction === InteractionType.Bookmark) {
+      setPreference('bookmarks', (prev) => {
+        const bookmarks = { ...prev };
+        const key = ['summary', summary.id].join(':');
+        bookmarks[key] = !bookmarks[key];
+        return (prev = bookmarks);
+      });
+      return;
+    }
     const { data, error } = await interactWithSummary(
       summary, 
       interaction,
@@ -155,7 +167,7 @@ export function SearchScreen({
       return;
     }
     updateInteractions(summary, data);
-  }, [interactWithSummary, setLoginDialogProps, setShowLoginDialog]);
+  }, [interactWithSummary, setLoginDialogProps, setShowLoginDialog, setPreference]);
 
   return (
     <React.Fragment>
@@ -177,12 +189,18 @@ export function SearchScreen({
             <Summary
               key={ summary.id }
               summary={ summary }
+              bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
               onChange={ (format) => onExpandPost(summary, format) }
               onInteract={ (...e) => handleInteraction(summary, ...e) } />
           ))}
           {!loading && totalResultCount > recentSummaries.length && (
-            <View row center p={ 16 } pb={ 24 }>
-              <Button onPress={ loadMore }>
+            <View row justifyCenter p={ 16 } pb={ 24 }>
+              <Button 
+                outlined
+                rounded
+                p={ 8 }
+                selectable
+                onPress={ loadMore }>
                 Load More
               </Button>
             </View>

@@ -22,6 +22,7 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   fontSize?: number;
   bold?: boolean;
   italic?: boolean;
+  underline?: boolean;
   // margins
   m?: number;
   mh?: number;

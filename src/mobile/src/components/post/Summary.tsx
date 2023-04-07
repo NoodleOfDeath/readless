@@ -25,6 +25,7 @@ type Props = {
   tickIntervalMs?: number;
   format?: ReadingFormat;
   realtimeInteractions?: InteractionResponse;
+  bookmarked?: boolean;
   onChange?: (format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
@@ -34,6 +35,7 @@ export function Summary({
   tickIntervalMs = 60_000,
   format,
   realtimeInteractions,
+  bookmarked,
   onChange,
   onInteract,
 }: Props) {
@@ -84,16 +86,28 @@ export function Summary({
   return (
     <View rounded style={ theme.components.card }>
       <View row justifySpaced rounded style={ theme.components.category }>
-        <View>
+        <View col>
           <Text color='contrastText'>{summary.category}</Text>
           <Text color='contrastText'>{summary.subcategory}</Text>
         </View>
         <View row />
+        <View right alignEnd>
+          <Button 
+            row
+            alignCenter
+            small
+            right
+            startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+            color="contrastText"
+            onPress={ () => onInteract?.(InteractionType.Bookmark) }>
+            Read Later
+          </Button>
+        </View>
       </View>
       <View row justifySpaced>
         <Text variant='subtitle1'>{summary.outletName.trim()}</Text>
         <Button onPress={ () => Linking.openURL(summary.url) } pv={ 2 }>
-          <Text variant='subtitle1'>View original source</Text>
+          <Text variant='subtitle1' underline>View original source</Text>
         </Button>
       </View>
       <Pressable onPress={ () => onChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>

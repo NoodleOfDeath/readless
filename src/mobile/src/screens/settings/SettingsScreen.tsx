@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { ReadingFormat } from '~/api';
 import { 
-  Button, 
+  Button,
   ReadingFormatSelector,
   SafeScrollView, 
   Text,
@@ -29,12 +29,23 @@ type OptionProps = React.PropsWithChildren<{
 
 export function SettingsScreen({ navigation }: Props) {
   const {
-    preferences: { preferredReadingFormat }, 
+    preferences: { 
+      displayMode,
+      preferredReadingFormat,
+    }, 
     setPreference,
     userData,
   } = React.useContext(SessionContext);
   const { setShowLoginDialog } = React.useContext(AppStateContext);
   const { logOut } = useLoginClient();
+  
+  const handleDisplayModeChange = React.useCallback((newDisplayMode) => {
+    if (displayMode === newDisplayMode) {
+      setPreference('displayMode', undefined);
+      return;
+    }
+    setPreference('displayMode', newDisplayMode);
+  }, [displayMode, setPreference]);
   
   const handleReadingFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (preferredReadingFormat === newFormat) {
@@ -51,6 +62,37 @@ export function SettingsScreen({ navigation }: Props) {
   
   const options: OptionProps[] = React.useMemo(() => {
     return [
+      {
+        children: (
+          <View justifyCenter row>
+            <Button
+              startIcon="weather-sunny"
+              fontSize={ 40 }
+              selectable
+              outlined
+              p={ 8 }
+              selected={ displayMode === 'light' }
+              onPress={ () => handleDisplayModeChange('light') } />
+            <Button
+              startIcon="theme-light-dark"
+              fontSize={ 40 }
+              selectable
+              outlined
+              p={ 8 }
+              selected={ displayMode === undefined }
+              onPress={ () => handleDisplayModeChange() } />
+            <Button
+              startIcon="weather-night"
+              fontSize={ 40 }
+              selectable
+              outlined
+              p={ 8 }
+              selected={ displayMode === 'dark' }
+              onPress={ () => handleDisplayModeChange('dark') } />
+          </View>
+        ),
+        id: 'display-mode',
+      },
       {
         children: 
   <ReadingFormatSelector 

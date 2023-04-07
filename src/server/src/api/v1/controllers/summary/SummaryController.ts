@@ -92,16 +92,26 @@ export class SummaryController {
     return summaries;
   }
 
-  @Get('/id/:summaryId')
-  public static async getSummary(
-    @Path() summaryId: number,
-    @Query() userId?: number
-  ): Promise<SummaryResponse> {
-    const summary = await Summary.findOne({ where: { id: summaryId } });
+  @Get('/id')
+  public static async getSummariesById(
+    @Query() ids: number[],
+    @Query() userId?: number,
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page
+  ): Promise<BulkResponse<SummaryResponse>> {
+    const options: FindAndCountOptions<Summary> = {
+      attributes: { exclude: ['filteredText', 'rawText'] },
+      limit: pageSize,
+      offset,
+      order: [['createdAt', 'DESC']],
+    };
+    options.where = { id: ids };
+    const summaries = await Summary.findAndCountAll(options);
     if (userId) {
-      await summary?.addUserInteractions(userId);
+      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
     }
-    return summary;
+    return summaries;
   }
 
   @Get('/id/:summaryId/:format')

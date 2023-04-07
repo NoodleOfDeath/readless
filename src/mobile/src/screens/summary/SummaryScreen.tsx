@@ -13,7 +13,7 @@ import {
   Summary,
   View,
 } from '~/components';
-import { AppStateContext } from '~/contexts';
+import { AppStateContext, SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { RootParamList } from '~/screens';
 
@@ -29,6 +29,10 @@ export function SummaryScreen({
   const {
     setScreenOptions, setShowLoginDialog, setLoginDialogProps, 
   } = React.useContext(AppStateContext);
+  const { 
+    preferences: { bookmarks },
+    setPreference,
+  } = React.useContext(SessionContext);
   const { interactWithSummary, recordSummaryView } = useSummaryClient();
 
   const [format, setFormat] = React.useState(initialFormat);
@@ -51,6 +55,15 @@ export function SummaryScreen({
   }, [format, recordSummaryView, summary]);
   
   const onInteract = React.useCallback(async (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+    if (interaction === InteractionType.Bookmark) {
+      setPreference('bookmarks', (prev) => {
+        const bookmarks = { ...prev };
+        const key = ['summary', summary.id].join(':');
+        bookmarks[key] = !bookmarks[key];
+        return (prev = bookmarks);
+      });
+      return;
+    }
     const { data, error } = await interactWithSummary(summary, interaction, content, metadata);
     if (error) {
       console.error(error);
@@ -73,6 +86,7 @@ export function SummaryScreen({
           <Summary
             summary={ summary }
             format={ format }
+            bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
             onChange={ (format) => handleFormatChange(format) }
             onInteract={ onInteract }
             realtimeInteractions={ interactions } />

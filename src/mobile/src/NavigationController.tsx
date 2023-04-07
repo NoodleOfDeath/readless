@@ -8,10 +8,10 @@ import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS, ScreenProps } from '~/screens';
 import {
+  MyStuffTab,
   NewsTab,
   SearchTab,
   SettingsTab,
-  YourStuffTab,
 } from '~/tabs';
 
 export default function NavigationController() {
@@ -33,11 +33,11 @@ export default function NavigationController() {
           icon: 'newspaper',
           name: 'News',
         },
-        // {
-        //   component: YourStuffTab,
-        //   icon: 'bookmark-multiple',
-        //   name: 'Your Stuff',
-        // },
+        {
+          component: MyStuffTab,
+          icon: 'bookmark-multiple',
+          name: 'My Stuff',
+        },
         {
           component: SearchTab,
           icon: 'magnify',

@@ -42,16 +42,18 @@ router.get(
 );
 
 router.get(
-  '/id/:summaryId',
+  '/id',
   rateLimitMiddleware('5 per 10s'),
-  param('summaryId').isNumeric(),
-  param('format').isString(),
+  query('ids'),
+  ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     try {
-      const { summaryId } = req.params;
-      const { userId } = req.query;
-      const response = await SummaryController.getSummary(summaryId, userId);
+      const {
+        ids, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
+      } = req.query;
+      const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
+      const response = await SummaryController.getSummariesById(ids, userId, pageSize, page, offset);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);
