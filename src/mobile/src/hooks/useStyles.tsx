@@ -15,6 +15,7 @@ export function useStyles({
   fontSize,
   bold,
   italic,
+  underline,
   // flex styles
   col,
   row,
@@ -67,13 +68,18 @@ export function useStyles({
   }, [center, left, right]);
 
   const fontAppearance = React.useMemo(() => {
+    const styles: any[] = [];
     if (bold) {
-      return { fontWeight: 'bold' };
+      styles.push({ fontWeight: 'bold' });
     }
     if (italic) {
-      return { fontStyle: 'italic' };
+      styles.push({ fontStyle: 'italic' });
     }
-  }, [bold, italic]);
+    if (underline) {
+      styles.push({ textDecorationLine: 'underline' });
+    }
+    return styles.reduce((cur, n) => ({ ...cur, ...n }), {});
+  }, [bold, italic, underline]);
 
   const alignItems = React.useMemo(() => {
     if (alignCenter) {

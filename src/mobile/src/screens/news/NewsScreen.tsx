@@ -62,12 +62,15 @@ export function NewsScreen({ navigation }: Props) {
             row
             alignCenter
             justifySpaced
-            outlined
-            rounded
-            p={ 8 }
-            mv={ 4 }
             key={ category.category }>
-            <Button row onPress={ () => selectCategory(category.category) }>
+            <Button 
+              row
+              selectable
+              outlined
+              rounded
+              p={ 8 }
+              mv={ 4 }
+              onPress={ () => selectCategory(category.category) }>
               {category.category}
             </Button>
           </View>

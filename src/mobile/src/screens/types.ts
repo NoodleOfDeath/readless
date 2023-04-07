@@ -12,6 +12,16 @@ export type RootParamList = {
       summary: SummaryResponse;
     };
   };
+  myStuff: {
+    default: undefined;
+    category: {
+      prefilter?: string,
+    },
+    summary: {
+      initialFormat: ReadingFormat;
+      summary: SummaryResponse;
+    };
+  };
   news: {
     default: undefined;
     category: {
@@ -33,23 +43,16 @@ export type RootParamList = {
   settings: {
     default: undefined;
   }
-  yourStuff: {
-    default: undefined;
-    summary: {
-      initialFormat: ReadingFormat;
-      summary: SummaryResponse;
-    };
-  };
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   config: {
     screens: {
       discover: { path: 'discover' },
+      myStuff: { path: 'myStuff' },
       news: { path: 'news' },
       search: { path: 'search' },
       settings: { path: 'settings' },
-      yourStuff: { path: 'yourStuff' },
     },
   },
   prefixes: [

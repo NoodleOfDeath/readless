@@ -12,6 +12,7 @@ export type Preferences = {
   displayMode?: ColorMode;
   lastReleaseNotesDate?: string;
   preferredReadingFormat?: ReadingFormat;
+  bookmarks?: { [key: string]: boolean };
 };
 
 // Headers
