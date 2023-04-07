@@ -13,12 +13,12 @@ export function useSummaryClient() {
 
   const { userData, withHeaders } = React.useContext(SessionContext);
   
-  const getSummaries = React.useCallback(async ({
-    filter = '',
-    ids = [],
+  const getSummaries = React.useCallback(async (
+    filter?: string,
+    ids?: number[],
     page = 0,
-    pageSize = 10,
-  }) => {
+    pageSize = 10
+  ) => {
     try {
       return await withHeaders(API.getSummaries)({
         filter, ids, page, pageSize, 

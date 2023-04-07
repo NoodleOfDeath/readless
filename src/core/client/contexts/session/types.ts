@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { UserData, UserDataProps } from './UserData';
 
 import {
@@ -9,12 +11,34 @@ import {
 
 export type ColorMode = 'light' | 'dark';
 
+export type SummaryBookmarkKey = `${'summary'}:${number}`;
+
+export class SummaryBookmark {
+
+  summary: SummaryResponse;
+  createdAt: Date;
+
+  get serialized() {
+    return {
+      createdAt: this.createdAt,
+      summary: this.summary,
+    };
+  }
+
+  constructor(summary: SummaryResponse) {
+    this.summary = summary;
+    this.createdAt = new Date();
+  }
+
+}
+
 export type Preferences = {
   displayMode?: ColorMode;
   lastReleaseNotesDate?: string;
   preferredReadingFormat?: ReadingFormat;
+  compactMode?: boolean;
   bookmarks?: { 
-    [key in `${'summmary'}:${number}`]: key extends `summary:${number}` ? SummaryResponse : never
+    [key in SummaryBookmarkKey]: key extends SummaryBookmarkKey ? SummaryBookmark : never
   };
 };
 
@@ -37,7 +61,7 @@ export type SessionContextType = {
   addUserToken: (token: LoginResponse['token']) => void;
   // preferences
   preferences: Preferences;
-  setPreference(key: keyof Preferences, value: Preferences[keyof Preferences]): void;
+  setPreference<Key extends keyof Preferences>(key: Key, value: React.SetStateAction<Preferences[Key]>): void;
   // header hooks
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);

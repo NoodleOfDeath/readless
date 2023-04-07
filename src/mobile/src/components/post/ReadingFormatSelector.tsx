@@ -7,6 +7,7 @@ import { useTheme } from '~/hooks';
 type Props = {
   format?: ReadingFormat;
   preferredFormat?: ReadingFormat;
+  compact?: boolean;
   onChange?: (mode?: ReadingFormat) => void;
 };
 
@@ -21,6 +22,7 @@ const FORMAT_ICONS = {
 export function ReadingFormatSelector({
   format,
   preferredFormat,
+  compact, 
   onChange,
 }: Props = {}) {
   const theme = useTheme();
@@ -40,22 +42,32 @@ export function ReadingFormatSelector({
         width={ row === 0 ? '33.33%' : '50%' }
         selected={ format === newFormat }
         onPress={ () => onChange?.(newFormat) }>
-        {newFormat}
+        {!compact && newFormat}
       </Button>
     );
-  }, [format, onChange]);
+  }, [compact, format, onChange]);
 
   return (
-    <View rounded outlined style={ theme.components.buttonGroup }>
-      <View row style={ theme.components.buttonGroupRow }>
+    compact ? (
+      <View row rounded outlined style={ theme.components.buttonGroup }>
         {makeButton(ReadingFormat.Concise)}
         {makeButton(ReadingFormat.Bullets)}
         {makeButton(ReadingFormat.Casual)}
+        {makeButton(ReadingFormat.Detailed)}
+        {makeButton(ReadingFormat.InDepth)}
       </View>
-      <View row style={ theme.components.buttonGroupRow }>
-        {makeButton(ReadingFormat.Detailed, 1)}
-        {makeButton(ReadingFormat.InDepth, 1)}
+    ) : (  
+      <View rounded outlined style={ theme.components.buttonGroup }>
+        <View row style={ theme.components.buttonGroupRow }>
+          {makeButton(ReadingFormat.Concise)}
+          {makeButton(ReadingFormat.Bullets)}
+          {makeButton(ReadingFormat.Casual)}
+        </View>
+        <View row style={ theme.components.buttonGroupRow }>
+          {makeButton(ReadingFormat.Detailed, 1)}
+          {makeButton(ReadingFormat.InDepth, 1)}
+        </View>
       </View>
-    </View>
+    )
   );
 }
