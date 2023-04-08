@@ -38,8 +38,10 @@ function applyFilter(filter?: string, ids?: number[]) {
   const where: FindAndCountOptions<Summary>['where'] = {};
   if (/cat(egory)?/i.test(prefix)) {
     const category = `%${prefixValue.replace(/-([a-z])/gi, ($0, $1) => ` ${$1}` )}%`;
-    console.log(category);
     where.category = { [Op.iLike]: category };
+    query = q2;
+  } else if (/outlet|source/i.test(prefix)) {
+    where.outletId = prefixValue;
     query = q2;
   }
   if (ids) {
