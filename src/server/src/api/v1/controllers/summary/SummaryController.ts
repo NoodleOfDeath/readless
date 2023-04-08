@@ -33,7 +33,7 @@ function applyFilter(filter?: string, ids?: number[]) {
   if (!filter || /\S+/.test(filter) === false) {
     return undefined;
   }
-  const [q, prefix, prefixValue, q2] = /([^:]+)(?::([\w-]+)(?:\s+(.*))?)?/.exec(filter);
+  const [q, prefix, prefixValue, q2] = /([^:]+)(?::([\w-.]+)(?:\s+(.*))?)?/.exec(filter);
   let query = q;
   const where: FindAndCountOptions<Summary>['where'] = {};
   if (/cat(egory)?/i.test(prefix)) {
