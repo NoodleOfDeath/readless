@@ -1,62 +1,45 @@
 import React from 'react';
 
-import { LinkingOptions } from '@react-navigation/native';
+import {
+  LinkingOptions,
+  RouteProp,
+  TabNavigationState,
+} from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { ReadingFormat, SummaryResponse } from '~/api';
 
+export type TabParams = {
+  default: undefined;
+};
+
+export type StackableTabParams = TabParams & {
+  search: {
+    prefilter?: string,
+    title?: string,
+  },
+  summary: {
+    initialFormat: ReadingFormat;
+    summary: SummaryResponse;
+  };
+};
+
 export type RootParamList = {
   // Tabs
-  myStuffTab: {
-    default: undefined;
-    search: {
-      prefilter?: string,
-    },
-    summary: {
-      initialFormat: ReadingFormat;
-      summary: SummaryResponse;
-    };
-  };
-  realtimeTab: {
-    default: undefined;
-    search: {
-      prefilter?: string;
-    };
-    summary: {
-      initialFormat: ReadingFormat;
-      summary: SummaryResponse;
-    };
-  };
-  newsTab: {
-    default: undefined;
-    search: {
-      prefilter?: string,
-    },
-    summary: {
-      initialFormat: ReadingFormat;
-      summary: SummaryResponse;
-    };
-  };
+  myStuffTab: StackableTabParams;
+  realtimeTab: StackableTabParams;
+  sectionsTab: StackableTabParams;
   settingsTab: {
     default: undefined;
   };
-
-  // Screens
-  searchScreen: {
-    prefilter?: string;
-  };
-  summaryScreen: {
-    initialFormat: ReadingFormat;
-    summary: SummaryResponse;
-  }
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   config: {
     screens: {
-      discoverTab: { path: 'discover' },
       myStuffTab: { path: 'my-stuff' },
-      newsTab: { path: 'news' },
       realtimeTab: { path: 'hot-off-press' },
+      sectionsTab: { path: 'sections' },
       settingsTab: { path: 'settings' },
     },
   },
@@ -67,10 +50,10 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   ],
 };
 
-export type ScreenProps = {
-  name: string;
-  component: React.ComponentType;
-  icon: string;
+export type ScreenProps<Path extends keyof StackableTabParams = keyof StackableTabParams, C extends React.ComponentType = React.ComponentType> = {
+  name: Path;
+  component: C;
+  icon?: string;
   headerRight?:
     | ((props: {
         tintColor?: string;
@@ -78,5 +61,11 @@ export type ScreenProps = {
         pressOpacity?: number;
       }) => React.ReactNode)
     ;
+  route: RouteProp<StackableTabParams, Path> 
+  navigation: NativeStackNavigationProp<StackableTabParams, Path>
 };
 
+export type TabProps = {
+  route: RouteProp<StackableTabParams>;
+  navigation: TabNavigationState<RootParamList>;
+};

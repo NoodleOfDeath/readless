@@ -1,15 +1,12 @@
 import React from 'react';
 
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
 import {
   InteractionResponse,
   InteractionType,
   ReadingFormat,
 } from '~/api';
 import {
-  SafeScrollView,
+  Screen,
   Summary,
   View,
 } from '~/components';
@@ -20,26 +17,13 @@ import {
   SummaryBookmarkKey,
 } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
-import { RootParamList } from '~/screens';
-
-type Props = {
-  route: 
-    | RouteProp<RootParamList['myStuffTab'], 'summary'>
-    | RouteProp<RootParamList['newsTab'], 'summary'>
-    | RouteProp<RootParamList['realtimeTab'], 'summary'>;
-  navigation: 
-    | NativeStackNavigationProp<RootParamList['myStuffTab'], 'summary'>
-    | NativeStackNavigationProp<RootParamList['newsTab'], 'summary'>
-    | NativeStackNavigationProp<RootParamList['realtimeTab'], 'summary'>;
-};
+import { ScreenProps } from '~/screens';
 
 export function SummaryScreen({
   route: { params: { summary, initialFormat } },
   navigation,
-}: Props) {
-  const {
-    setScreenOptions, setShowLoginDialog, setLoginDialogProps, 
-  } = React.useContext(AppStateContext);
+}: ScreenProps<'summary'>) {
+  const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
   const { 
     preferences: { bookmarks },
     setPreference,
@@ -50,12 +34,8 @@ export function SummaryScreen({
   const [interactions, setInteractions] = React.useState<InteractionResponse>(summary.interactions);
 
   React.useEffect(() => {
-    navigation.setOptions({ headerTitle: summary.title });
-    setScreenOptions((prev) => ({
-      ...prev,
-      headerShown: false,
-    }));
-  }, [navigation, setScreenOptions, summary]);
+    navigation.setOptions({ headerShown: true, headerTitle: summary.title });
+  }, [navigation, summary]);
   
   const handleFormatChange = React.useCallback(async (newFormat?: ReadingFormat) => {
     if (!newFormat || newFormat === format) {
@@ -99,7 +79,7 @@ export function SummaryScreen({
   }, [interactWithSummary, setLoginDialogProps, setPreference, setShowLoginDialog, summary]);
 
   return (
-    <SafeScrollView>
+    <Screen>
       <View mt={ 10 }>
         {summary && (
           <Summary
@@ -114,6 +94,6 @@ export function SummaryScreen({
             realtimeInteractions={ interactions } />
         )}
       </View>
-    </SafeScrollView>
+    </Screen>
   );
 }

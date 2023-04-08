@@ -1,14 +1,11 @@
 import React from 'react';
 import { Switch } from 'react-native';
 
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
 import { ReadingFormat } from '~/api';
 import { 
   Button,
   ReadingFormatSelector,
-  SafeScrollView, 
+  Screen, 
   Text,
   View,
 } from '~/components';
@@ -18,12 +15,7 @@ import {
   SessionContext,
 } from '~/contexts';
 import { useLoginClient } from '~/hooks';
-import { RootParamList } from '~/screens';
-
-type Props = {
-  route: RouteProp<RootParamList['settingsTab'], 'default'>;
-  navigation: NativeStackNavigationProp<RootParamList['settingsTab'], 'default'>;
-};
+import { ScreenProps } from '~/screens';
 
 type OptionProps = React.PropsWithChildren<{
   id: string;
@@ -32,7 +24,7 @@ type OptionProps = React.PropsWithChildren<{
   visible?: boolean;
 }>;
 
-export function SettingsScreen({ navigation }: Props) {
+export function SettingsScreen({ navigation }: ScreenProps<'default'>) {
   const {
     preferences: {
       compactMode, 
@@ -111,6 +103,7 @@ export function SettingsScreen({ navigation }: Props) {
         children: (
           <ReadingFormatSelector 
             format={ preferredReadingFormat }
+            preferredFormat={ preferredReadingFormat }
             compact={ compactMode === true }
             onChange={ handleReadingFormatChange } />
         ),
@@ -128,23 +121,23 @@ export function SettingsScreen({ navigation }: Props) {
         id: 'compact-mode',
         label: 'Compact Mode',
       },
-      {
-        id: 'login',
-        label: 'Log In',
-        onPress: () => setShowLoginDialog(true),
-        visible: userData?.isLoggedIn !== true,
-      },
-      {
-        id: 'logout',
-        label: 'Log Out',
-        onPress: () => handleLogout(),
-        visible: userData?.isLoggedIn === true,
-      },
+      // {
+      //   id: 'login',
+      //   label: 'Log In',
+      //   onPress: () => setShowLoginDialog(true),
+      //   visible: userData?.isLoggedIn !== true,
+      // },
+      // {
+      //   id: 'logout',
+      //   label: 'Log Out',
+      //   onPress: () => handleLogout(),
+      //   visible: userData?.isLoggedIn === true,
+      // },
     ];
   }, [compactMode, displayMode, handleCompactModeChange, handleDisplayModeChange, handleLogout, handleReadingFormatChange, preferredReadingFormat, setShowLoginDialog, userData?.isLoggedIn]);
   
   return (
-    <SafeScrollView>
+    <Screen>
       <View p={ 32 }>
         {options.filter((o) => o.visible !== false).map((option) => (
           <View col key={ option.id } p={ 8 } mv={ 4 }>
@@ -165,6 +158,6 @@ export function SettingsScreen({ navigation }: Props) {
           </View>
         ))}
       </View>
-    </SafeScrollView>
+    </Screen>
   );
 }

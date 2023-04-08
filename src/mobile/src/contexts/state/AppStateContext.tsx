@@ -1,8 +1,6 @@
 import React from 'react';
 import { Image, Platform } from 'react-native';
 
-import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
-
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
 
 import {
@@ -13,9 +11,9 @@ import {
   Text,
   View,
 } from '~/components';
+import { ReleaseNotesDialog } from '~/components';
 import { SessionContext } from '~/core/contexts';
 import { useTheme } from '~/hooks';
-import { ReleaseNotesScreen } from '~/screens';
 
 export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
 
@@ -28,8 +26,6 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   } = React.useContext(SessionContext);
   const { isLightMode } = useTheme();
 
-  const [screenOptions, setScreenOptions] =
-    React.useState<BottomTabNavigationOptions>({});
   const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
   const [loginDialogProps, setLoginDialogProps] = React.useState<LoginDialogProps>();
   const [deferredAction, setDeferredAction] = React.useState<() => void>();
@@ -211,15 +207,13 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     <AppStateContext.Provider value={ {
       deferredAction,
       loginDialogProps,
-      screenOptions,
       setDeferredAction,
       setLoginDialogProps,
-      setScreenOptions,
       setShowLoginDialog,
       showLoginDialog,
     } }>
       {children}
-      {showReleaseNotes && <ReleaseNotesScreen data={ releaseNotesData } onClose={ () => handleReleaseNotesClose() } />}
+      {showReleaseNotes && <ReleaseNotesDialog data={ releaseNotesData } onClose={ () => handleReleaseNotesClose() } />}
       <LoginDialog 
         visible={ showLoginDialog }
         onClose={ () => setShowLoginDialog(false) }

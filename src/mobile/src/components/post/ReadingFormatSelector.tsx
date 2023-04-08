@@ -21,7 +21,7 @@ const FORMAT_ICONS = {
 
 export function ReadingFormatSelector({
   format,
-  preferredFormat,
+  preferredFormat = ReadingFormat.Concise,
   compact, 
   onChange,
 }: Props = {}) {
@@ -41,11 +41,12 @@ export function ReadingFormatSelector({
         startIcon={ FORMAT_ICONS[newFormat] }
         width={ row === 0 ? '33.33%' : '50%' }
         selected={ format === newFormat }
+        bg={ newFormat === preferredFormat ? '#aaaaee' : undefined }
         onPress={ () => onChange?.(newFormat) }>
         {!compact && newFormat}
       </Button>
     );
-  }, [compact, format, onChange]);
+  }, [compact, format, preferredFormat, onChange]);
 
   return (
     compact ? (

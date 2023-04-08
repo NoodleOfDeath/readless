@@ -1,10 +1,5 @@
 import React from 'react';
 
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import { RootParamList } from '../types';
-
 import {
   InteractionResponse,
   InteractionType,
@@ -13,7 +8,7 @@ import {
 } from '~/api';
 import { 
   Button,
-  SafeScrollView,
+  Screen,
   Summary,
   Text,
   View,
@@ -25,15 +20,9 @@ import {
   SummaryBookmarkKey,
 } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
+import { ScreenProps } from '~/screens';
 
-type Props = {
-  route: 
-    | RouteProp<RootParamList['myStuffTab'], 'default'>
-  navigation: 
-    | NativeStackNavigationProp<RootParamList['myStuffTab'], 'default'>;
-};
-
-export function MyStuffScreen({ navigation }: Props) {
+export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   
   const { 
     preferences: {
@@ -125,13 +114,13 @@ export function MyStuffScreen({ navigation }: Props) {
   }, [interactWithSummary, updateInteractions, setPreference, setShowLoginDialog, setLoginDialogProps]);
   
   return (
-    <SafeScrollView>
-      <View col p={ 8 }>
+    <Screen>
+      <View col>
         <Button 
           rounded
           selectable
           p={ 8 }
-          mb={ 8 }
+          m={ 8 }
           center
           onPress={ () => clearBookmarks() }>
           Clear Bookmarks
@@ -158,6 +147,6 @@ export function MyStuffScreen({ navigation }: Props) {
           })}
         </View>
       </View>
-    </SafeScrollView>
+    </Screen>
   );
 }

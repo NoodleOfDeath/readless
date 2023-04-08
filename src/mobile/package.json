@@ -34,6 +34,7 @@
     "react-native": "0.71.3",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-motion": "^1.0.5",
     "react-native-reanimated": "^3.0.2",
     "react-native-reanimated-carousel": "^3.3.0",
     "react-native-safe-area-context": "^4.5.0",

@@ -44,10 +44,18 @@ export function Button({
   const [isPressed, setIsPressed] = React.useState(false);
   
   const buttonStyle = React.useMemo(
-    () => ({
-      ...style,
-      ...(selected || isPressed) && pressableProps.selectable ? theme.components.buttonSelected : undefined,
-    })
+    () => {
+      let buttonStyle = { ...style };
+      if (pressableProps.selectable) {
+        if (selected || isPressed) {
+          buttonStyle = {
+            ...buttonStyle,
+            ...theme.components.buttonSelected,
+          };
+        }
+      }
+      return buttonStyle;
+    }
     , [isPressed, pressableProps.selectable, style, selected, theme]
   );
   
