@@ -38,25 +38,18 @@ export const rateLimitMiddleware = (
     try {
       const limit = await RateLimit.findOne({ where: { key } });
       if (limit) {
-        const data = limit.toJSON();
-        if (data.expiresAt < new Date()) {
-          await limit.update({
-            expiresAt: new Date(Date.now() + duration),
-            limit: options.limit,
-            points: 0,
-          });
-          return next();
+        if (await limit.isSaturated()) {
+          res.status(429).send('Too many requests');
+          return;
         }
-        if (data.points >= options.limit) {
-          return res.status(429).send('Too many requests');
-        }
-        await limit.update({ limit: options.limit, points: data.points + 1 });
+        await limit.advance();
       } else {
         await RateLimit.create({
           expiresAt: new Date(Date.now() + duration),
           key,
           limit: options.limit,
           points: 0,
+          window: duration,
         });
       }
       next();

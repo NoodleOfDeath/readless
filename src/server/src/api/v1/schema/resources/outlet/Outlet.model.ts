@@ -1,3 +1,4 @@
+import ms from 'ms';
 import {
   Column,
   DataType,
@@ -10,7 +11,13 @@ import {
   OutletCreationAttributes,
   SiteMap,
 } from './Outlet.types';
+import { RateLimit } from '../../analytics/RateLimit.model';
 import { BaseModel } from '../../base';
+
+const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 1; // 1 for dev and testing
+const WORKER_FETCH_INTERVAL_MS = process.env.WORKER_FETCH_INTERVAL_MS
+  ? Number(process.env.WORKER_FETCH_INTERVAL_MS)
+  : ms('1d');
 
 @Table({
   modelName: 'outlet',
@@ -82,11 +89,11 @@ export class Outlet<
           'lifestyle',
           'news',
           'guides',
-          'guides/tech'
+          'guides/tech',
         ]],
         selector: 'a[class*="tout-title-link"]',
         url: 'https://www.businessinsider.com/${1}',
-        }],
+      }],
     },
     bustle: {
       displayName: 'Bustle',
@@ -298,8 +305,22 @@ export class Outlet<
     type: DataType.ARRAY(DataType.JSON),
   })
   declare siteMaps: SiteMap[];
-
+  
   @Column({ type: DataType.JSON })
   declare fetchPolicy: FetchPolicy;
+  
+  async getRateLimit() {
+    const key = ['//outlet', this.id, this.name].join('§§');
+    let limit = await RateLimit.findOne({ where: { key } });
+    if (!limit) {
+      limit = await RateLimit.create({
+        expiresAt: new Date(Date.now() + WORKER_FETCH_INTERVAL_MS),
+        key,
+        limit: WORKER_FETCH_RATE_LIMIT,
+        window: WORKER_FETCH_INTERVAL_MS,
+      });
+    }
+    return limit;
+  }
 
 }
