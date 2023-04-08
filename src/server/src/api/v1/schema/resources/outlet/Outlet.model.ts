@@ -43,6 +43,51 @@ export class Outlet<
         url: 'https://abcnews.go.com/${1}',
       }],
     },
+    barrons: {
+      displayName: 'Barron\'s',
+      name: 'barrons',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="headline-link"]',
+        url: 'https://www.barrons.com/real-time',
+      }],
+    },
+    bbc: {
+      displayName: 'BBC',
+      name: 'bbc',
+      siteMaps: [{
+        attribute: 'href',
+        params: [[
+          '',
+          'culture',
+          'culture/music',
+          'future',
+          'news',
+          'reel',
+          'sport',
+          'travel',
+          'worklife',
+        ]],
+        selector: 'a[class*="media__link"],a[class*="link__overlay__link"],a[class*="item__title"]',
+        url: 'https://www.bbc.com/${1}',
+      }],
+    },
+    businessInsider: {
+      displayName: 'Business Insider',
+      name: 'business-insider',
+      siteMaps: [{
+        attribute: 'href',
+        params: [[
+          '',
+          'lifestyle',
+          'news',
+          'guides',
+          'guides/tech'
+        ]],
+        selector: 'a[class*="tout-title-link"]',
+        url: 'https://www.businessinsider.com/${1}',
+        }],
+    },
     bustle: {
       displayName: 'Bustle',
       name: 'bustle',
