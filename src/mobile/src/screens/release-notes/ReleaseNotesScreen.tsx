@@ -1,17 +1,11 @@
 import React from 'react';
-import { Animated, Image } from 'react-native';
+import { Animated } from 'react-native';
 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
-import {
-  AnimatedCard,
-  Code,
-  Icon,
-  Strong,
-  Text,
-  View,
-} from '~/components';
+import { AnimatedCard, View } from '~/components';
 import { window } from '~/constants';
 
 export type CardData = {
@@ -68,30 +62,32 @@ export function ReleaseNotesScreen({ data, onClose }: Props) {
     <Animated.View style={ {
       backgroundColor: 'rgba(50, 50, 50, 0.7)', opacity: opacityValue, position: 'absolute', 
     } }>
-      <Carousel
-        loop={ false }
-        style={ {
-          alignItems: 'center',
-          height: window.height,
-          justifyContent: 'center',
-          width: window.width,
-        } }
-        width={ PAGE_WIDTH }
-        height={ PAGE_HEIGHT }
-        data={ data }
-        onProgressChange={ (_, a) => a + 1.1 >= data.length && dismiss() }
-        renderItem={ ({ index }) => {
-          return (
-            <AnimatedCard key={ index }>
-              {index + 1 < data.length && (
-                <View style={ style }>
-                  { data[index].content }
-                </View>
-              )}
-            </AnimatedCard>
-          );
-        } }
-        customAnimation={ animationStyle } />
+      <GestureHandlerRootView>
+        <Carousel
+          loop={ false }
+          style={ {
+            alignItems: 'center',
+            height: window.height,
+            justifyContent: 'center',
+            width: window.width,
+          } }
+          width={ PAGE_WIDTH }
+          height={ PAGE_HEIGHT }
+          data={ data }
+          onProgressChange={ (_, a) => a + 1.1 >= data.length && dismiss() }
+          renderItem={ ({ index }) => {
+            return (
+              <AnimatedCard key={ index }>
+                {index + 1 < data.length && (
+                  <View style={ style }>
+                    { data[index].content }
+                  </View>
+                )}
+              </AnimatedCard>
+            );
+          } }
+          customAnimation={ animationStyle } />
+      </GestureHandlerRootView>
     </Animated.View>
   );
 }

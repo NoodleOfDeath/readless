@@ -6,8 +6,21 @@ import { ReadingFormat, SummaryResponse } from '~/api';
 
 export type RootParamList = {
   // Tabs
-  discoverTab: {
+  myStuffTab: {
     default: undefined;
+    search: {
+      prefilter?: string,
+    },
+    summary: {
+      initialFormat: ReadingFormat;
+      summary: SummaryResponse;
+    };
+  };
+  realtimeTab: {
+    default: undefined;
+    search: {
+      prefilter?: string;
+    };
     summary: {
       initialFormat: ReadingFormat;
       summary: SummaryResponse;
@@ -23,29 +36,9 @@ export type RootParamList = {
       summary: SummaryResponse;
     };
   };
-  myStuffTab: {
-    default: undefined;
-    search: {
-      prefilter?: string,
-    },
-    summary: {
-      initialFormat: ReadingFormat;
-      summary: SummaryResponse;
-    };
-  };
-  searchTab: {
-    default: undefined;
-    search: {
-      prefilter?: string;
-    };
-    summary: {
-      initialFormat: ReadingFormat;
-      summary: SummaryResponse;
-    };
-  };
   settingsTab: {
     default: undefined;
-  }
+  };
 
   // Screens
   searchScreen: {
@@ -61,9 +54,9 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   config: {
     screens: {
       discoverTab: { path: 'discover' },
-      myStuffTab: { path: 'myStuff' },
+      myStuffTab: { path: 'my-stuff' },
       newsTab: { path: 'news' },
-      searchTab: { path: 'search' },
+      realtimeTab: { path: 'hot-off-press' },
       settingsTab: { path: 'settings' },
     },
   },
@@ -87,4 +80,3 @@ export type ScreenProps = {
     ;
 };
 
-export type Tab = 'discoverTab' | 'newsTab' | 'myStuffTab' | 'searchTab' | 'settingsTab';

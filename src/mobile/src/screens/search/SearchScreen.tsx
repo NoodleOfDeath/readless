@@ -29,7 +29,7 @@ type Props = {
   route: 
   | RouteProp<RootParamList['myStuffTab'], 'search'> 
   | RouteProp<RootParamList['newsTab'], 'search'> 
-  | RouteProp<RootParamList['searchTab'], 'default'>;
+  | RouteProp<RootParamList['realtimeTab'], 'default'>;
   navigation: 
   | NativeStackNavigationProp<RootParamList['myStuffTab'], 'search'>
   | NativeStackNavigationProp<RootParamList['newsTab'], 'search'> 
@@ -76,7 +76,7 @@ export function SearchScreen({
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
-  const [searchText, setSearchText] = React.useState('');
+  const [searchText, setSearchText] = React.useState(route?.params?.prefilter ?? '');
 
   const load = React.useCallback(async (pageSize: number, page: number, searchText: string) => {
     setLoading(true);
@@ -129,13 +129,20 @@ export function SearchScreen({
   const handleFormatChange = React.useCallback(
     async (summary: SummaryResponse, format?: ReadingFormat) => {
       recordSummaryView(summary, undefined, { format });
-      navigation?.navigate('summary', {
+      navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
         summary,
       });
     },
     [navigation, preferredReadingFormat, recordSummaryView]
   );
+  
+  const handleReferSearch = React.useCallback((newPrefilter: string) => {
+    if (prefilter === newPrefilter) {
+      return;
+    }
+    navigation?.push('search', { prefilter: newPrefilter });
+  }, [navigation]);
 
   const updateInteractions = (summary: SummaryResponse, interactions: InteractionResponse) => {
     setRecentSummaries((prev) => {
@@ -209,6 +216,7 @@ export function SearchScreen({
               forceCompact={ compactMode }
               bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
               onFormatChange={ (format) => handleFormatChange(summary, format) }
+              onReferSearch={ handleReferSearch }
               onInteract={ (...e) => handleInteraction(summary, ...e) } />
           ))}
           {!loading && totalResultCount > recentSummaries.length && (

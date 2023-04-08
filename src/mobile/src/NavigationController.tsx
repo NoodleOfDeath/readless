@@ -9,7 +9,7 @@ import { NAVIGATION_LINKING_OPTIONS, ScreenProps } from '~/screens';
 import {
   MyStuffTab,
   NewsTab,
-  SearchTab,
+  RealtimeTab,
   SettingsTab,
 } from '~/tabs';
 
@@ -20,9 +20,9 @@ const TABS: ScreenProps[] = [
   //   name: 'Discover',
   // },
   {
-    component: NewsTab,
-    icon: 'newspaper',
-    name: 'News',
+    component: RealtimeTab,
+    icon: 'fire',
+    name: 'Hot off Press',
   },
   {
     component: MyStuffTab,
@@ -30,9 +30,9 @@ const TABS: ScreenProps[] = [
     name: 'My Stuff',
   },
   {
-    component: SearchTab,
-    icon: 'magnify',
-    name: 'Search',
+    component: NewsTab,
+    icon: 'newspaper',
+    name: 'Sections',
   },
   {
     component: SettingsTab,
@@ -53,7 +53,7 @@ export default function NavigationController() {
       } }
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <Tab.Navigator
-        initialRouteName="search"
+        initialRouteName="realtimeTab"
         screenOptions={ { headerShown: true } }>
         {TABS.map((screen) => (
           <Tab.Screen

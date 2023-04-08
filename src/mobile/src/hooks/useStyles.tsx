@@ -68,6 +68,7 @@ export function useStyles({
   }, [center, left, right]);
 
   const fontAppearance = React.useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const styles: any[] = [];
     if (bold) {
       styles.push({ fontWeight: 'bold' });

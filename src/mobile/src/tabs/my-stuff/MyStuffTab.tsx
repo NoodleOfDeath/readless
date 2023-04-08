@@ -10,7 +10,7 @@ import {
 } from '~/screens';
 
 export function MyStuffTab() {
-  const Stack = createNativeStackNavigator<RootParamList['yourStuff']>();
+  const Stack = createNativeStackNavigator<RootParamList['myStuffTab']>();
   return (
     <Stack.Navigator initialRouteName="default">
       <Stack.Screen
@@ -18,7 +18,7 @@ export function MyStuffTab() {
         component={ MyStuffScreen }
         options={ { headerShown: false } } />
       <Stack.Screen
-        name="category"
+        name="search"
         component={ SearchScreen }
         options={ { headerShown: false } } />
       <Stack.Screen
