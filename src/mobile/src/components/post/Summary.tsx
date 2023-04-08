@@ -30,6 +30,7 @@ type Props = {
   forceCompact?: boolean;
   forceCollapse?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
+  onReferSearch?: (prefilter: string) => void;
   onCollapse?: (collapsed: boolean) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
@@ -44,6 +45,7 @@ export function Summary({
   forceCompact,
   forceCollapse,
   onFormatChange,
+  onReferSearch,
   onCollapse,
   onInteract,
 }: Props) {
@@ -118,7 +120,10 @@ export function Summary({
             </Pressable>
           ) : (
             <React.Fragment>
-              <View row alignCenter>
+              <View 
+                row
+                alignCenter
+                onPress={ () => onReferSearch?.(`category:${summary.category.replace(/\s/g, '.') }`) }>
                 {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
                 <Text color='contrastText'>{summary.category}</Text>
               </View>
@@ -152,13 +157,18 @@ export function Summary({
       {!collapsed && (
         <React.Fragment>
           <View row justifySpaced>
-            <Text variant='subtitle1'>{summary.outletName.trim()}</Text>
+            <Button 
+              onPress={ () => onReferSearch?.(`outlet:${summary.outletId}`) }>
+              <Text variant='subtitle1' underline>
+                {summary.outletName.trim()}
+              </Text>
+            </Button>
             <Button onPress={ () => Linking.openURL(summary.url) } pv={ 2 }>
               <Text variant='subtitle1' underline>View original source</Text>
             </Button>
           </View>
           <Pressable onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
-            <Text variant={ compact ? 'subtitle2' : 'title1' }>{summary.title.trim()}</Text>
+            <Text variant={ compact ? 'subtitle2' : 'title2' }>{summary.title.trim()}</Text>
           </Pressable>
           <Divider horizontal />
           <View row justifySpaced>

@@ -8,12 +8,12 @@ import {
   SummaryScreen,
 } from '~/screens';
 
-export function SearchTab() {
-  const Stack = createNativeStackNavigator<RootParamList['searchTab']>();
+export function RealtimeTab() {
+  const Stack = createNativeStackNavigator<RootParamList['realtimeTab']>();
   return (
-    <Stack.Navigator initialRouteName="default">
+    <Stack.Navigator initialRouteName="search">
       <Stack.Screen
-        name="default"
+        name="search"
         component={ SearchScreen }
         options={ { headerShown: false } } />
       <Stack.Screen

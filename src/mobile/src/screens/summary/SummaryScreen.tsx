@@ -26,7 +26,7 @@ type Props = {
   route: 
     | RouteProp<RootParamList['myStuffTab'], 'summary'>
     | RouteProp<RootParamList['newsTab'], 'summary'>
-    | RouteProp<RootParamList['searchTab'], 'summary'>;
+    | RouteProp<RootParamList['realtimeTab'], 'summary'>;
   navigation: 
     | NativeStackNavigationProp<RootParamList['myStuffTab'], 'summary'>
     | NativeStackNavigationProp<RootParamList['newsTab'], 'summary'>
@@ -64,6 +64,10 @@ export function SummaryScreen({
     recordSummaryView(summary, undefined, { format: newFormat });
     setFormat(newFormat);
   }, [format, recordSummaryView, summary]);
+  
+  const handleReferSearch = React.useCallback((prefilter: string) => {
+    navigation?.push('search', { prefilter });
+  }, [navigation]);
   
   const onInteract = React.useCallback(async (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
     if (interaction === InteractionType.Bookmark) {
@@ -105,6 +109,7 @@ export function SummaryScreen({
             forceCompact={ false }
             bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
             onFormatChange={ (format) => handleFormatChange(format) }
+            onReferSearch={ handleReferSearch }
             onInteract={ onInteract }
             realtimeInteractions={ interactions } />
         )}

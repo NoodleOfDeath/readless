@@ -66,13 +66,17 @@ export function MyStuffScreen({ navigation }: Props) {
   const handleFormatChange = React.useCallback(
     async (summary: SummaryResponse, format?: ReadingFormat) => {
       recordSummaryView(summary, undefined, { format });
-      navigation?.navigate('summary', {
+      navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
         summary,
       });
     },
     [navigation, preferredReadingFormat, recordSummaryView]
   );
+  
+  const handleReferSearch = React.useCallback((prefilter: string) => {
+    navigation?.push('search', { prefilter });
+  }, [navigation]);
 
   const updateInteractions = React.useCallback((summary: SummaryResponse, interactions: InteractionResponse) => {
     setPreference('bookmarks', (prev) => {
@@ -146,6 +150,7 @@ export function MyStuffScreen({ navigation }: Props) {
                     forceCompact={ compactMode }
                     forceCollapse
                     onFormatChange={ (format) => handleFormatChange(summary, format) }
+                    onReferSearch={ handleReferSearch }
                     onInteract={ (...args) => handleInteraction(summary, ...args) } />
                 ))}
               </View>
