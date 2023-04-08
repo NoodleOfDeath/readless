@@ -33,11 +33,13 @@ function applyFilter(filter?: string, ids?: number[]) {
   if (!filter || /\S+/.test(filter) === false) {
     return undefined;
   }
-  const [q, prefix, prefixValue, q2] = /([^:]+)(?::(\w+)(?:\s+(.*))?)?/.exec(filter);
+  const [q, prefix, prefixValue, q2] = /([^:]+)(?::([\w-]+)(?:\s+(.*))?)?/.exec(filter);
   let query = q;
   const where: FindAndCountOptions<Summary>['where'] = {};
   if (/cat(egory)?/i.test(prefix)) {
-    where.category = prefixValue;
+    const category = `%${prefixValue.replace(/-([a-z])/gi, ($0, $1) => ` ${$1}` )}%`;
+    console.log(category);
+    where.category = { [Op.iLike]: category };
     query = q2;
   }
   if (ids) {
@@ -50,13 +52,13 @@ function applyFilter(filter?: string, ids?: number[]) {
       where[Op.or].push({
         [Op.or]: {
           bullets: { [Op.contains] : [query] },
-          longSummary: { [Op.iRegexp] : query },
-          shortSummary: { [Op.iRegexp] : query },
-          summary: { [Op.iRegexp] : query },
+          longSummary: { [Op.iLike] : `%${query}%` },
+          shortSummary: { [Op.iLike] : `%${query}%` },
+          summary: { [Op.iLike] : `%${query}%` },
           tags: { [Op.contains] : [query] },
-          text: { [Op.iRegexp] : query },
-          title: { [Op.iRegexp] : query },
-          url: { [Op.iRegexp] : query },
+          text: { [Op.iLike] : `%${query}%` },
+          title: { [Op.iLike] : `%${query}%` },
+          url: { [Op.iLike] : `%${query}%` },
         },
       });
     }
