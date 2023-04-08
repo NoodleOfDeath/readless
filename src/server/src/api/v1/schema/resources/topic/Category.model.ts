@@ -63,7 +63,6 @@ export class Category<
     Religion: { icon: 'cross', name: 'Religion' },
     Robotics: { icon: 'robot-industrial', name: 'Robotics' },
     Royalty: { icon: 'crown', name: 'Royalty' },
-    Scandal: { icon: 'alert', name: 'Scandal' },
     Science: { icon: 'flask', name: 'Science' },
     Shopping: { icon: 'shopping', name: 'Shopping' },
     Space: { icon: 'space-station', name: 'Space' },

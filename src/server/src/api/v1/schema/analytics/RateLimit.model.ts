@@ -32,11 +32,35 @@ export class RateLimit<A extends RateLimitAttributes = RateLimitAttributes, B ex
     type: DataType.INTEGER,
   })
   declare limit: number;
+  
+  @Column({
+    allowNull: false,
+    type: DataType.INTEGER,
+  })
+  declare window: number;
 
   @Column({
     allowNull: false,
     type: DataType.DATE,
   })
   declare expiresAt: Date;
+  
+  async isSaturated() {
+    await this.flush();
+    return this.points >= this.limit;
+  }
+  
+  async flush() {
+    if (this.expiresAt < new Date()) {
+      this.set('points', 0);
+      this.set('expiresAt', new Date(Date.now() + this.window));
+    }
+    return await this.save();
+  }
+  
+  async advance(offset = 1) {
+    this.set('points', this.points + offset);
+    return await this.save();
+  }
 
 }

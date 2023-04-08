@@ -4,19 +4,31 @@ import {
   Prompt,
   SpiderService,
 } from '../';
-import { Summary } from '../../api/v1/schema/models';
+import { Category, Summary } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
+const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
 export class ScribeService extends BaseService {
   
-  public async readAndSummarize(
+  static categories: string[] = [];
+  
+  public static async init() {
+    await Category.initCategories();
+    const categories = await Category.findAll();
+    this.categories = categories.map((category) => category.name);
+  }
+  
+  public static async readAndSummarize(
     { url }: ReadAndSummarizePayload,
     {
       onProgress, force, outletId, 
     }: ReadAndSummarizeOptions = {}
   ): Promise<Summary> {
+    if (this.categories.length === 0) {
+      await this.init();
+    }
     if (!outletId) {
       throw new Error('no outlet id specified');
     }
@@ -55,22 +67,16 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: (reply) => {
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.bullets = reply.text
             .replace(/^bullets:\s*/i, '')
             .replace(/\.$/, '')
             .split(',')
             .map((bullet) => bullet.trim());
         },
-        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article',
+        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol',
       },
       {
         handleReply: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.shortSummary = reply.text;
         },
         text: [
@@ -80,9 +86,6 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.summary = reply.text;
         },
         text: [
@@ -92,9 +95,6 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.longSummary = reply.text;
         },
         text: [
@@ -104,9 +104,6 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.text = reply.text;
         },
         text: [
@@ -116,9 +113,6 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: (reply) => {
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.tags = reply.text
             .replace(/^tags:\s*/i, '')
             .replace(/\.$/, '')
@@ -129,20 +123,14 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.category = reply.text
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
-        text: 'Please select a best category for this article from the following choices: Art, Artificial Intelligence, Books, Business, Controversy, Crime, Cryptocurrency, Culture, Disasters, Economics, Education, Energy, Entertainment, Environment, Ethics, Fashion, Food, Finance, Gaming, Geopolitics, Health, Healthcare, History, Home Improvement, Inspiration, Labor, Legal, Lifestyle, Mental Health, Music, Parenting, Pets, Philosophy, Politics, Pop Culture, Productivity, Real Estate, Religion, Royalty, Science, Shopping, Social Media, Space, Sports, Technology, Television, Transportation, Tragedy, Travel, U.S. News, Wildlife, World News, Other',
+        text: `Please select a best category for this article from the following choices: ${this.categories.join(' ')}`,
       },
       {
         handleReply: (reply) => { 
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.subcategory = reply.text
             .replace(/^subcategory:\s*/i, '')
             .replace(/\.$/, '').trim();
@@ -151,9 +139,6 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: (reply) => {
-          if (/^[\s\n]*(?:i'm sorry|sign\s?up)/i.test(reply.text)) {
-            throw new Error('Bad response from chatgpt');
-          }
           newSummary.imagePrompt = reply.text;
         },
         text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
@@ -165,6 +150,9 @@ export class ScribeService extends BaseService {
     for (let n = 0; n < prompts.length; n++) {
       const prompt = prompts[n];
       const reply = await chatgpt.send(prompt.text);
+      if (BAD_RESPONSE_EXPR.test(reply.text)) {
+        throw new Error('Bad response from chatgpt');
+      }
       console.log(reply);
       prompt.handleReply(reply);
       if (onProgress) {

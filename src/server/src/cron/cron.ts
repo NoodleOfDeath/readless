@@ -2,12 +2,13 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import ms from 'ms';
 import { Op } from 'sequelize';
+import UserAgent from 'user-agents';
 
 import {
   Outlet,
   Queue,
   SiteMapParams,
-  Summary,
+  Worker,
 } from '../api/v1/schema';
 import { DBService } from '../services';
 
@@ -16,7 +17,7 @@ async function main() {
   await Queue.initQueues();
   await Outlet.initOutlets();
   pollForNews();
-  cleanBadSummaries();
+  cleanUpDeadWorkers();
 }
 
 function generateDynamicUrls(
@@ -86,7 +87,13 @@ async function pollForNews() {
         for (const queryUrl of queryUrls) {
           console.log(`fetching ${queryUrl} from ${name}...`);
           try {
-            const { data } = await axios.get(queryUrl, { timeout: 10_000 });
+            const { data } = await axios.get(queryUrl, {
+              headers: { 
+                Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'User-Agent': new UserAgent().random().toString(),
+              }, 
+              timeout: 10_000,
+            });
             const $ = load(data);
             const cheerio = $(selector);
             const urls = [...cheerio] 
@@ -128,23 +135,19 @@ async function pollForNews() {
   }
 }
 
-async function cleanBadSummaries() {
-  console.log('cleaning bad summaries!');
+const RETIRE_IF_NO_RESPONSE_IN_MS = ms('10m');
+
+async function cleanUpDeadWorkers() {
   try {
-    await Summary.destroy({
-      where: {
-        [Op.or]: [
-          { title: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
-          { title: { [Op.iRegexp]: '\\w{200,}' } },
-          { longSummary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
-          { summary: { [Op.iRegexp]: '^i\'m (?:sorry|apologize|sign\\s?up)' } },
-        ],
-      },
-    });
+    // check up on dead workers
+    await Worker.update({
+      deletedAt: new Date(),
+      state: 'retired',
+    }, { where: { lastUpdateAt: { [Op.lt]: new Date(Date.now() - RETIRE_IF_NO_RESPONSE_IN_MS) } } });
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(cleanBadSummaries, ms('30m'));
+    setTimeout(cleanUpDeadWorkers, ms('2m'));
   }
 }
 

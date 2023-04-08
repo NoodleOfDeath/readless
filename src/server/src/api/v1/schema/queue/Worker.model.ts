@@ -18,9 +18,8 @@ import {
   WorkerState,
 } from './Worker.types';
 import { Serializable } from '../../../../types';
+import { RateLimit } from '../analytics/RateLimit.model';
 import { BaseModel } from '../base';
-
-const RETIRE_IF_NO_RESPONSE_IN_MS = ms('10m');
 
 function getHost() {
   const nets = networkInterfaces();
@@ -83,7 +82,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
   handler: (job: Job<DataType, ReturnType, QueueName>, next: (() => void)) => Promise<ReturnType>;
   
   get failureExprs() {
-    return (this.toJSON().options.retryFailedJobs ?? []).map((e) => ({ [Op.iRegexp]: e }));
+    return (this.options.retryFailedJobs ?? []).map((e) => ({ [Op.iRegexp]: e }));
   }
   
   static async from<DataType extends Serializable, ReturnType, QueueName extends string = string>(
@@ -109,7 +108,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     worker.activeQueue = queue;
     worker.queueProps = queueProps;
     worker.handler = handler;
-    if (worker.toJSON().options.autostart) {
+    if (worker.options.autostart) {
       await worker.start();
     }
     return worker;
@@ -137,6 +136,10 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     await this.setState('stopped');
     await this.save();
   }
+  
+  async getRateLimit(key: string) {
+    return await RateLimit.findOne({ where: { key } });
+  }
 
   async fetchJob() {
     const job = await Job.findOne({
@@ -160,22 +163,17 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
       return;
     }
     await this.ping();
-    // check up on other workers
-    await Worker.update({
-      deletedAt: new Date(),
-      state: 'retired',
-    }, { where: { lastUpdateAt: { [Op.lt]: new Date(Date.now() - RETIRE_IF_NO_RESPONSE_IN_MS) } } });
     const job = await this.fetchJob();
     if (job) {
       console.log(`Processing job ${job.id} for queue "${this.queueProps.name}"`);
       await this.ping();
-      await job.begin(this.toJSON().id);
+      await job.begin(this.id);
       await this.handler(job, () => this.process());
       await this.ping();
       console.log(`Finished processing job ${job.id} for queue "${this.queueProps.name}"`);
     } else {
       await this.setState('idle');
-      setTimeout(() => this.process(), this.toJSON().options.fetchIntervalMs);
+      setTimeout(() => this.process(), this.options.fetchIntervalMs);
     }
   }
 
