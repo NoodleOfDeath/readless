@@ -165,6 +165,6 @@ export function useTheme() {
 
   const colorScheme = useColorScheme();
   
-  return (displayMode ?? colorScheme) === 'light' ? LIGHT_THEME : DARK_THEME;
+  return ((displayMode ?? colorScheme) === 'light') ? LIGHT_THEME : DARK_THEME;
   
 }

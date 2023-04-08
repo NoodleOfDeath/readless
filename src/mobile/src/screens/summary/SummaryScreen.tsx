@@ -30,7 +30,7 @@ type Props = {
   navigation: 
     | NativeStackNavigationProp<RootParamList['myStuffTab'], 'summary'>
     | NativeStackNavigationProp<RootParamList['newsTab'], 'summary'>
-    | NativeStackNavigationProp<RootParamList['searchTab'], 'summary'>;
+    | NativeStackNavigationProp<RootParamList['realtimeTab'], 'summary'>;
 };
 
 export function SummaryScreen({

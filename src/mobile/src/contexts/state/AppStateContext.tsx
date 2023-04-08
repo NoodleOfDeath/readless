@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, Platform } from 'react-native';
 
 import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 
@@ -62,6 +62,13 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
       setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
     }
   }, [ready, lastReleaseNotesDate, setPreference]);
+
+  const transformAsset = (asset: string, ext = 'jpg') => {
+    if (Platform.OS === 'ios') {
+      return asset;
+    }
+    return `asset:/images/${asset}.${ext}`;
+  };
   
   const releaseNotesData = React.useMemo(() => [
     {
@@ -75,7 +82,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
           </Text>
           <View alignCenter justifyCenter mv={ 8 }>
             <Image 
-              source={ { uri: !isLightMode ? 'GuideReadingFormatDark' : 'GuideReadingFormatLight' } } 
+              source={ { uri: transformAsset(!isLightMode ? 'GuideReadingFormatDark' : 'GuideReadingFormatLight') } } 
               style={ { aspectRatio: 1, width: '80%' } } />
           </View>
           <Text
@@ -106,7 +113,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
           </Text>
           <View alignCenter justifyCenter mv={ 8 }>
             <Image 
-              source={ { uri: !isLightMode ? 'GuideBookmarkDark' : 'GuideBookmarkLight' } } 
+              source={ { uri: transformAsset(!isLightMode ? 'GuideBookmarkDark' : 'GuideBookmarkLight') } } 
               style={ { aspectRatio: 1, width: '80%' } } />
           </View>
           <Text
@@ -138,7 +145,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
           </Text>
           <View alignCenter justifyCenter mv={ 8 }>
             <Image 
-              source={ { uri: !isLightMode ? 'GuideViewSourceDark' : 'GuideViewSourceLight' } } 
+              source={ { uri: transformAsset(!isLightMode ? 'GuideViewSourceDark' : 'GuideViewSourceLight') } } 
               style={ { aspectRatio: 4/3, width: '80%' } } />
           </View>
           <Text
@@ -146,7 +153,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
             fontSize={ 24 }
             color='contrastText'
             mb={ 8 }>
-            It is important to always DYOR
+            It is important to always DYOR. Original sources are always included.
           </Text>
           <Text
             center

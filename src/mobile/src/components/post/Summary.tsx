@@ -128,12 +128,11 @@ export function Summary({
                 <Text color='contrastText'>{summary.category}</Text>
               </View>
               <View row />
-              <View right alignEnd>
+              <View alignEnd>
                 <Button 
                   row
                   alignCenter
                   small
-                  right
                   startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
                   color="contrastText"
                   onPress={ () => onInteract?.(InteractionType.Bookmark) }>
@@ -163,7 +162,7 @@ export function Summary({
                 {summary.outletName.trim()}
               </Text>
             </Button>
-            <Button onPress={ () => Linking.openURL(summary.url) } pv={ 2 }>
+            <Button onPress={ () => Linking.openURL(summary.url) }>
               <Text variant='subtitle1' underline>View original source</Text>
             </Button>
           </View>
