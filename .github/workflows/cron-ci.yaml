@@ -13,6 +13,7 @@ on:
       - "src/server/package.json"
       - "src/server/src/cron/**"
       - "src/server/src/services/**"
+      - "src/server/src/api/v1/schema/**"
 
 concurrency:
   group: ${{ github.ref }}-cron
