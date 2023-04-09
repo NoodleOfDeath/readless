@@ -38,7 +38,6 @@ export function useLoginClient() {
   );
 
   const logOut = React.useCallback(async () => {
-    console.log('jesus fucking christ');
     try {
       const response = await withHeaders(API.logout)({});
       const { error } = response;

@@ -6,7 +6,7 @@ import { SessionContext } from '../contexts';
 import {
   API,
   InteractionType,
-  SummaryResponse,
+  PublicSummaryAttributes,
 } from '~/api';
 
 export function useSummaryClient() {
@@ -28,7 +28,7 @@ export function useSummaryClient() {
     }
   }, [withHeaders]);
   
-  const recordSummaryView = React.useCallback(async (summary: SummaryResponse, content?: string, metadata?: Record<string, unknown>) => {
+  const recordSummaryView = React.useCallback(async (summary: PublicSummaryAttributes, content?: string, metadata?: Record<string, unknown>) => {
     try {
       return await withHeaders(API.recordSummaryView)(summary.id, { content, metadata });
     } catch (e) {
@@ -37,7 +37,7 @@ export function useSummaryClient() {
   }, [withHeaders]);
   
   const interactWithSummary = React.useCallback(
-    async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+    async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
       if (!userData || !userData.isLoggedIn) {
         return { error: new ClientError('NOT_LOGGED_IN') };
       }

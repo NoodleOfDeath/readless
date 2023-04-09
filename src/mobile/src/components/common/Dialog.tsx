@@ -22,7 +22,7 @@ export function Dialog({
   const theme = useTheme();
   
   const opacityValue = React.useRef(new Animated.Value(0)).current;
-  const refContent = React.useRef<typeof View>(null);
+  const refContent = React.useRef<View | Animated.LegacyRef<View>>(null);
   const [layout, setLayout] = React.useState<LayoutRectangle>();
   
   const handlePress = React.useCallback((event: GestureResponderEvent) => {
@@ -39,8 +39,7 @@ export function Dialog({
   }, [onClose, layout]);
   
   React.useEffect(() => {
-    Animated.timing(opacityValue, {
-      duration: 200,
+    Animated.spring(opacityValue, {
       toValue: visible ? 1 : 0,
       useNativeDriver: true,
     }).start();

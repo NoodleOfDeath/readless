@@ -1,6 +1,8 @@
 import React from 'react';
 import { Image, Platform } from 'react-native';
 
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
 
 import {
@@ -8,12 +10,14 @@ import {
   LoginAction,
   LoginDialog,
   LoginDialogProps,
+  NotFollowingDialog,
+  ReleaseNotesDialog,
   Text,
   View,
 } from '~/components';
-import { ReleaseNotesDialog } from '~/components';
 import { SessionContext } from '~/core/contexts';
 import { useTheme } from '~/hooks';
+import { StackableTabParams } from '~/screens';
 
 export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
 
@@ -28,9 +32,10 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
 
   const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
   const [loginDialogProps, setLoginDialogProps] = React.useState<LoginDialogProps>();
+  const [showNotFollowingDialog, setShowNotFollowingDialog] = React.useState<boolean>(false);
   const [deferredAction, setDeferredAction] = React.useState<() => void>();
-
   const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
+  const [navigation, setNavigation] = React.useState<NativeStackNavigationProp<StackableTabParams, 'default'>>();
 
   const handleReleaseNotesClose = React.useCallback(() => {
     setPreference('lastReleaseNotesDate', String(new Date().valueOf()));
@@ -207,13 +212,21 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     <AppStateContext.Provider value={ {
       deferredAction,
       loginDialogProps,
+      navigation,
       setDeferredAction,
       setLoginDialogProps,
+      setNavigation,
       setShowLoginDialog,
+      setShowNotFollowingDialog,
       showLoginDialog,
+      showNotFollowingDialog,
     } }>
       {children}
       {showReleaseNotes && <ReleaseNotesDialog data={ releaseNotesData } onClose={ () => handleReleaseNotesClose() } />}
+      <NotFollowingDialog
+        visible={ showNotFollowingDialog }
+        navigation={ navigation }
+        onClose={ () => setShowNotFollowingDialog(false) } />
       <LoginDialog 
         visible={ showLoginDialog }
         onClose={ () => setShowLoginDialog(false) }

@@ -5,7 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Icon } from '~/components';
-import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 import {
   MyStuffScreen,
@@ -81,23 +80,6 @@ const TABS = [
 
 export default function NavigationController() {
   const theme = useTheme();
-  const {
-    preferences: {
-      bookmarkedCategories,
-      bookmarkedOutlets,
-    },
-    ready,
-  } = React.useContext(SessionContext);
-  
-  const initialRouteName = React.useMemo(() => {
-    const categoryCount = Object.values(bookmarkedCategories ?? {}).length;
-    const outletCount = Object.values(bookmarkedOutlets ?? {}).length;
-    if (categoryCount + outletCount > 0) {
-      return 'My Stuff';
-    }
-    return 'Hot of Press';
-  }, [bookmarkedCategories, bookmarkedOutlets]);
-  
   const Tab = createBottomTabNavigator();
   
   return (
@@ -107,8 +89,7 @@ export default function NavigationController() {
         dark: !theme.isLightMode,
       } }
       linking={ NAVIGATION_LINKING_OPTIONS }>
-      <Tab.Navigator
-        initialRouteName={ initialRouteName }>
+      <Tab.Navigator>
         {TABS.map((tab) => (
           <Tab.Screen
             key={ tab.name }

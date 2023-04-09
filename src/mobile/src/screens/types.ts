@@ -16,7 +16,6 @@ export type TabParams = {
 export type StackableTabParams = TabParams & {
   search: {
     prefilter?: string,
-    title?: string,
   },
   summary: {
     initialFormat: ReadingFormat;

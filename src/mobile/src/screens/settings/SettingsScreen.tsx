@@ -10,12 +10,7 @@ import {
   Text,
   View,
 } from '~/components';
-import {
-  AppStateContext,
-  ColorMode,
-  SessionContext,
-} from '~/contexts';
-import { useLoginClient } from '~/hooks';
+import { ColorMode, SessionContext } from '~/contexts';
 import { ScreenProps } from '~/screens';
 
 type OptionProps = React.PropsWithChildren<{
@@ -25,7 +20,7 @@ type OptionProps = React.PropsWithChildren<{
   visible?: boolean;
 }>;
 
-export function SettingsScreen({ navigation }: ScreenProps<'default'>) {
+export function SettingsScreen(_: ScreenProps<'default'>) {
   const {
     preferences: {
       compactMode, 
@@ -33,10 +28,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'default'>) {
       preferredReadingFormat,
     }, 
     setPreference,
-    userData,
   } = React.useContext(SessionContext);
-  const { setShowLoginDialog } = React.useContext(AppStateContext);
-  const { logOut } = useLoginClient();
   
   const handleDisplayModeChange = React.useCallback((newDisplayMode?: ColorMode) => {
     if (displayMode === newDisplayMode) {
@@ -61,11 +53,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'default'>) {
     }
     setPreference('compactMode', newCompactMode);
   }, [compactMode, setPreference]);
-  
-  const handleLogout = React.useCallback(async () => {
-    await logOut();
-    navigation.getParent()?.navigate('newsTab');
-  }, [logOut, navigation]);
   
   const options: OptionProps[] = React.useMemo(() => {
     return [
@@ -122,25 +109,13 @@ export function SettingsScreen({ navigation }: ScreenProps<'default'>) {
         id: 'compact-mode',
         label: 'Compact Mode',
       },
-      // {
-      //   id: 'login',
-      //   label: 'Log In',
-      //   onPress: () => setShowLoginDialog(true),
-      //   visible: userData?.isLoggedIn !== true,
-      // },
-      // {
-      //   id: 'logout',
-      //   label: 'Log Out',
-      //   onPress: () => handleLogout(),
-      //   visible: userData?.isLoggedIn === true,
-      // },
     ];
-  }, [compactMode, displayMode, handleCompactModeChange, handleDisplayModeChange, handleLogout, handleReadingFormatChange, preferredReadingFormat, setShowLoginDialog, userData?.isLoggedIn]);
+  }, [compactMode, displayMode, handleCompactModeChange, handleDisplayModeChange, handleReadingFormatChange, preferredReadingFormat]);
   
   return (
     <Screen>
       <View>
-        <TabSwitcher>
+        <TabSwitcher titles={ ['Preferences'] }>
           <View>
             {options.filter((o) => o.visible !== false).map((option) => (
               <View col key={ option.id } p={ 8 } mv={ 4 }>

@@ -3,9 +3,9 @@ import React from 'react';
 import { CheckBox } from '@rneui/base';
 
 import {
-  CategoryAttributes,
   InternalError,
-  OutletAttributes,
+  PublicCategoryAttributes,
+  PublicOutletAttributes,
 } from '~/api';
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { Bookmark, SessionContext } from '~/contexts';
 import { ClientError, useCategoryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
@@ -32,8 +32,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   const [loading, setLoading] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState(0);
 
-  const [categories, setCategories] = React.useState<CategoryAttributes[]>([]);
-  const [outlets, setOutlets] = React.useState<OutletAttributes[]>([]);
+  const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
+  const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
   const [_, setError] = React.useState<InternalError>();
   
   const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
@@ -41,7 +41,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   
   const titles = React.useMemo(() => [
     `Categories (${categoryCount}/${categories.length})`,
-    `Outlets (${outletCount}/${outlets.length})`,
+    `News Sources (${outletCount}/${outlets.length})`,
   ], [categories, categoryCount, outlets, outletCount]);
 
   const loadCategories = React.useCallback(async () => {
@@ -83,19 +83,19 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
     loadOutlets();
   }, [loadCategories, loadOutlets]);
 
-  const selectCategory = React.useCallback((category: CategoryAttributes) => {
-    navigation?.navigate('search', { prefilter: `category:${category.name}` });
+  const selectCategory = React.useCallback((category: PublicCategoryAttributes) => {
+    navigation?.navigate('search', { prefilter: `cat:${category.name.toLowerCase().replace(/\s/g, '-')}` });
   }, [navigation]);
 
-  const selectOutlet = React.useCallback((outlet: OutletAttributes) => {
-    navigation?.navigate('search', { prefilter: `outlet:${outlet.id}`, title: `outlet:${outlet.displayName}` });
+  const selectOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
+    navigation?.navigate('search', { prefilter: `src:${outlet.name}` });
   }, [navigation]);
   
-  const followCategory = React.useCallback((category: CategoryAttributes) => {
+  const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
     setPreference('bookmarkedCategories', (prev) => {
       const state = { ...prev };
       if (!state[category.name]) {
-        state[category.name] = category;
+        state[category.name] = new Bookmark(category);
       } else {
         delete state[category.name];
       }
@@ -103,11 +103,11 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
     });
   }, [setPreference]);
   
-  const followOutlet = React.useCallback((outlet: OutletAttributes) => {
+  const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
     setPreference('bookmarkedOutlets', (prev) => {
       const state = { ...prev };
       if (!state[outlet.name]) {
-        state[outlet.name] = outlet;
+        state[outlet.name] = new Bookmark(outlet);
       } else {
         delete state[outlet.name];
       }
@@ -169,7 +169,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                 </Button>
                 <CheckBox
                   checked={ Boolean(bookmarkedCategories?.[category.name]) }
-                  onPress={ () => followCategory(category) } />
+                  onPress={ () => followCategory(category) }
+                  containerStyle={ { backgroundColor: 'transparent' } } />
               </View>
             ))}
           </View>
@@ -217,7 +218,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                 </Button>
                 <CheckBox
                   checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
-                  onPress={ () => followOutlet(outlet) } />
+                  onPress={ () => followOutlet(outlet) }
+                  containerStyle={ { backgroundColor: 'transparent' } } />
               </View>
             ))}
           </View>

@@ -5,7 +5,7 @@ import { Stack } from '@mui/material';
 import {
   InteractionResponse,
   InteractionType,
-  SummaryResponse,
+  PublicSummaryAttributes,
 } from '~/api';
 import Summary from '~/components/Summary';
 import JustNewsHeader from '~/components/layout/JustNewsHeader';
@@ -23,7 +23,7 @@ export default function SearchPage() {
     router.push('/search');
   }, [router]);
 
-  const [currentSummary, setCurrentSummary] = React.useState<SummaryResponse>();
+  const [currentSummary, setCurrentSummary] = React.useState<PublicSummaryAttributes>();
 
   const updateInteractions = (interactions: InteractionResponse) => {
     setCurrentSummary((prev) => {
@@ -36,7 +36,7 @@ export default function SearchPage() {
     });
   };
 
-  const handleInteraction = React.useCallback(async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+  const handleInteraction = React.useCallback(async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
     const { data, error } = await interactWithSummary(summary, type, content, metadata);
     if (error && error.name === 'NOT_LOGGED_IN') {
       setShowLoginDialog(true);

@@ -46,7 +46,7 @@ export type PostCreationAttributes = {
 };
 
 /** light weight record for a post */
-export const PUBLIC_POST_ATTRIBUTES = ['id', 'longSummary', 'summary', 'shortSummary', 'bullets', 'createdAt'] as const;
+export const PUBLIC_POST_ATTRIBUTES = ['id', 'longSummary', 'summary', 'shortSummary', 'text', 'bullets', 'createdAt'] as const;
 /** light weight record for a post with title, category, subcategory, and tags */
 
 export type TitledCategorizedPostAttributes = PostAttributes & {
