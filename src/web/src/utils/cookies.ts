@@ -1,4 +1,3 @@
-import { decode as atob, encode as btoa } from 'js-base64';
 import Cookies from 'js-cookie';
 import ms from 'ms';
 
@@ -11,7 +10,7 @@ export const setCookie = async (name: string, value: string, {
   path = DEFAULT_SESSION_PATH,
   ...other
 }: Partial<Cookies.CookieAttributes> = {}) => {
-  Cookies.set(name, btoa(value), {
+  Cookies.set(name, window.btoa(value), {
     expires, path, ...other, 
   });
 };
@@ -28,6 +27,6 @@ export const clearCookie = async (name: string, {
   
 export const getCookie = async (name: string) => {
   const value = Cookies.get(name);
-  return value ? atob(value) : undefined;
+  return value ? window.atob(value) : undefined;
 };
   

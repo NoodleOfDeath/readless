@@ -38,11 +38,12 @@ export default function SearchPage() {
 
   const load = React.useCallback(async () => {
     try {
-      const { data } = await getSummaries({
-        filter: searchText,
+      const { data } = await getSummaries(
+        searchText,
+        undefined,
         page,
-        pageSize,
-      });
+        pageSize
+      );
       if (data) {
         setTotalResults(data.count);
         setRecentSummaries((prev) => [...prev, ...data.rows]);
