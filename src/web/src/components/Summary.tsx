@@ -37,6 +37,7 @@ import TruncatedText from '~/components/common/TruncatedText';
 type Props = {
   summary?: PublicSummaryAttributes;
   format?: ReadingFormat;
+  tickIntervalMs?: number;
   onChange?: (mode?: ReadingFormat) => void;
   onInteract?: (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
@@ -115,6 +116,7 @@ const StyledCenteredStack = styled(Stack)(() => ({
 export default function Summary({
   summary,
   format,
+  tickIntervalMs = 60_000,
   onChange,
   onInteract,
 }: Props = {}) {
@@ -122,6 +124,8 @@ export default function Summary({
   const theme = useTheme();
   
   const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const [lastTick, setLastTick] = React.useState(new Date());
 
   const bottomRowDirection = React.useMemo(() => {
     return mdAndDown ? 'column' : 'row';
@@ -131,9 +135,17 @@ export default function Summary({
 
   const timeAgo = React.useMemo(
     () =>
-      formatDistance(new Date(summary?.createdAt ?? 0), new Date(), { addSuffix: true }),
-    [summary?.createdAt]
+      formatDistance(new Date(summary?.createdAt ?? 0), lastTick, { addSuffix: true }),
+    [summary?.createdAt, lastTick]
   );
+
+  // update time ago every `tickIntervalMs` milliseconds
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setLastTick(new Date());
+    }, tickIntervalMs);
+    return () => clearInterval(interval);
+  }, [tickIntervalMs]);
   
   const upvotes = React.useMemo(
     () => 

@@ -46,7 +46,7 @@ export default function SearchPage() {
       );
       if (data) {
         setTotalResults(data.count);
-        setRecentSummaries((prev) => [...prev, ...data.rows]);
+        setRecentSummaries((prev) => [...prev, ...data.rows.filter((s) => !prev.some((p) => p.id === s.id))]);
         setPage((prev) => prev + 1);
       }
     } catch (e) {
@@ -61,7 +61,7 @@ export default function SearchPage() {
     setLoading(true);
     setRecentSummaries([]);
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
   
   const setPostInteractions = (i: number, interactions: InteractionResponse) => {
