@@ -7,7 +7,7 @@ import { InternalError } from '~/api';
 import {
   Button,
   Icon,
-  SafeScrollView,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -124,7 +124,7 @@ export function LoginForm({
   
   return (
     <View p={ 16 } row>
-      <SafeScrollView>
+      <ScrollView>
         <View mb={ 16 }>
           <Text center variant="title1">{action === 'logIn' ? 'Log In' : action === 'signUp' ? 'Sign Up' : 'Forgot Password'}</Text>
         </View>
@@ -247,7 +247,7 @@ export function LoginForm({
             <Button onPress={ () => setAction('logIn') }>Back to Login</Button>
           </View>
         )}
-      </SafeScrollView>
+      </ScrollView>
     </View>
   );
 }

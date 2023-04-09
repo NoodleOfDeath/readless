@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SearchBar } from '@rneui/base';
 
 import {
@@ -12,7 +10,7 @@ import {
 } from '~/api';
 import {
   Button,
-  SafeScrollView,
+  Screen,
   Summary,
   View,
 } from '~/components';
@@ -23,27 +21,15 @@ import {
   SummaryBookmarkKey,
 } from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
-import { RootParamList } from '~/screens';
-
-type Props = {
-  route: 
-  | RouteProp<RootParamList['myStuffTab'], 'search'> 
-  | RouteProp<RootParamList['newsTab'], 'search'> 
-  | RouteProp<RootParamList['realtimeTab'], 'default'>;
-  navigation: 
-  | NativeStackNavigationProp<RootParamList['myStuffTab'], 'search'>
-  | NativeStackNavigationProp<RootParamList['newsTab'], 'search'> 
-  | NativeStackNavigationProp<RootParamList['searchTab'], 'default'>
-};
+import { ScreenProps } from '~/screens';
 
 export function SearchScreen({ 
   route,
   navigation,
-}: Props) {
+}: ScreenProps<'search'>) {
   const { 
     setShowLoginDialog, 
     setLoginDialogProps,
-    setScreenOptions,
   } = React.useContext(AppStateContext);
   const { 
     preferences: {
@@ -57,16 +43,11 @@ export function SearchScreen({
   const theme = useTheme();
   
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route]);
+  const title = React.useMemo(() => route?.params?.title, [route]);
   
   React.useEffect(() => {
-    if (prefilter) {
-      navigation?.setOptions({ headerTitle: prefilter });
-      setScreenOptions((prev) => ({
-        ...prev,
-        headerShown: false,
-      }));
-    }
-  }, [prefilter, navigation, setScreenOptions]);
+    navigation.setOptions({ headerShown: false });
+  }, [prefilter, navigation]);
 
   const [loading, setLoading] = React.useState(false);
   const [recentSummaries, setRecentSummaries] = React.useState<
@@ -117,7 +98,10 @@ export function SearchScreen({
   const onMount = React.useCallback(() => {
     setPage(0);
     load(pageSize, 0, prefilter ?? searchText);
-  }, [load, pageSize, prefilter, searchText]);
+    if (prefilter) {
+      navigation?.setOptions({ headerShown: true, headerTitle: title ?? prefilter });
+    }
+  }, [load, navigation, pageSize, prefilter, searchText, title]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => onMount(), [pageSize, prefilter, searchText]);
@@ -142,7 +126,7 @@ export function SearchScreen({
       return;
     }
     navigation?.push('search', { prefilter: newPrefilter });
-  }, [navigation]);
+  }, [navigation, prefilter]);
 
   const updateInteractions = (summary: SummaryResponse, interactions: InteractionResponse) => {
     setRecentSummaries((prev) => {
@@ -205,7 +189,7 @@ export function SearchScreen({
             value={ searchText } />
         </View>
       )}
-      <SafeScrollView
+      <Screen
         refreshing={ loading }
         onRefresh={ () => load(pageSize, 0, prefilter ?? searchText) }>
         <View>
@@ -232,7 +216,7 @@ export function SearchScreen({
             </View>
           )}
         </View>
-      </SafeScrollView>
+      </Screen>
     </React.Fragment>
   );
 }

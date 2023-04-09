@@ -2,40 +2,77 @@ import React from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Icon } from '~/components';
 import { useTheme } from '~/hooks';
-import { NAVIGATION_LINKING_OPTIONS, ScreenProps } from '~/screens';
 import {
-  MyStuffTab,
-  NewsTab,
-  RealtimeTab,
-  SettingsTab,
-} from '~/tabs';
+  MyStuffScreen,
+  NAVIGATION_LINKING_OPTIONS,
+  SearchScreen,
+  SectionsScreen,
+  SettingsScreen,
+  SummaryScreen,
+} from '~/screens';
+import { StackableTabParams } from '~/screens';
 
-const TABS: ScreenProps[] = [
-  // {
-  //   component: DiscoverTab,
-  //   icon: 'fire',
-  //   name: 'Discover',
-  // },
+export function TabViewController(
+  tabs: { [key in keyof StackableTabParams]?: React.ComponentType }, 
+  initialRouteName: keyof StackableTabParams = 'default'
+) {
+  const Controller = () => {
+    const Stack = createNativeStackNavigator<StackableTabParams>();
+    return (
+      <Stack.Navigator initialRouteName={ initialRouteName }>
+        {Object.entries(tabs).map(([name, component]) => (
+          <Stack.Screen
+            key={ name }
+            name={ name as keyof StackableTabParams }
+            component={ component }
+            options={ { headerShown: false } } />
+        ))}
+      </Stack.Navigator>
+    );
+  };
+  return Controller;
+}
+
+const TABS = [
   {
-    component: RealtimeTab,
+    component: TabViewController(
+      {
+        default: SearchScreen, 
+        search: SearchScreen, 
+        summary: SummaryScreen,
+      }
+    ),
     icon: 'fire',
     name: 'Hot off Press',
   },
   {
-    component: MyStuffTab,
+    component: TabViewController(
+      {
+        default: MyStuffScreen, 
+        search: SearchScreen, 
+        summary: SummaryScreen,
+      }
+    ),
     icon: 'bookmark-multiple',
     name: 'My Stuff',
   },
   {
-    component: NewsTab,
+    component: TabViewController(
+      {
+        default: SectionsScreen, 
+        search: SearchScreen, 
+        summary: SummaryScreen,
+      }
+    ),
     icon: 'newspaper',
     name: 'Sections',
   },
   {
-    component: SettingsTab,
+    component: TabViewController({ default: SettingsScreen }),
     icon: 'cog',
     name: 'Settings',
   },
@@ -44,7 +81,6 @@ const TABS: ScreenProps[] = [
 export default function NavigationController() {
   const theme = useTheme();
   const Tab = createBottomTabNavigator();
-
   return (
     <NavigationContainer
       theme={ { 
@@ -53,17 +89,15 @@ export default function NavigationController() {
       } }
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <Tab.Navigator
-        initialRouteName="realtimeTab"
-        screenOptions={ { headerShown: true } }>
-        {TABS.map((screen) => (
+        initialRouteName="realtimeTab">
+        {TABS.map((tab) => (
           <Tab.Screen
-            key={ screen.name }
-            name={ screen.name }
-            component={ screen.component }
+            key={ tab.name }
+            name={ tab.name }
+            component={ tab.component }
             options={ {
-              headerRight: screen.headerRight,
               tabBarIcon: (props) => (
-                <Icon name={ screen.icon } { ...props } color="primary" />
+                <Icon name={ tab.icon } { ...props } color="primary" />
               ),
             } } />
         ))}

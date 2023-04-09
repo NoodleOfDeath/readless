@@ -1,10 +1,6 @@
-import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
-
 import { LoginDialogProps } from '~/components';
 
 export type AppStateContextType = {
-  screenOptions: BottomTabNavigationOptions;
-  setScreenOptions: React.Dispatch<React.SetStateAction<BottomTabNavigationOptions>>;
   showLoginDialog?: boolean;
   setShowLoginDialog: React.Dispatch<React.SetStateAction<boolean>>;
   loginDialogProps?: LoginDialogProps;
@@ -14,14 +10,10 @@ export type AppStateContextType = {
 };
 
 export const DEFAULT_APP_STATE_CONTEXT: AppStateContextType = {
-  screenOptions: { headerShown: true },
   setDeferredAction: () => {
     /** placeholder */
   },
   setLoginDialogProps: () => {
-    /** placeholder */
-  },
-  setScreenOptions: () => {
     /** placeholder */
   },
   setShowLoginDialog: () => {

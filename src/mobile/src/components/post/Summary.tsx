@@ -174,7 +174,7 @@ export function Summary({
             <View row>
               <Text variant='subtitle2'>{timeAgo}</Text>
             </View>
-            <View row justifySpaced>
+            <View row justifyEnd>
               <View>
                 <Text variant='subtitle2'>{String(interactions.view)}</Text>
               </View>
@@ -182,7 +182,7 @@ export function Summary({
                 name="eye"
                 color={ 'primary' }
                 mh={ 8 } />
-              <Button
+              {/* <Button
                 color={ 'primary' }
                 startIcon={ interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
                 onPress={ () => onInteract?.(InteractionType.Upvote) }
@@ -192,12 +192,13 @@ export function Summary({
                 color={ 'primary' }
                 startIcon={ interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
                 onPress={ () => onInteract?.(InteractionType.Downvote) }
-                mh={ 8 } />
+                mh={ 8 } /> */}
             </View>
           </View>
           <View mt={ 2 }>
             <ReadingFormatSelector 
               format={ format } 
+              preferredFormat={ preferredReadingFormat }
               compact={ compact }
               onChange={ onFormatChange } />
             <View mt={ 4 }>

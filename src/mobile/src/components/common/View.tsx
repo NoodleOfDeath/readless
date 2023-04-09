@@ -10,6 +10,7 @@ import { Stylable } from '~/components';
 import { useStyles } from '~/hooks';
 
 export type ViewProps = React.PropsWithChildren<TouchableHighlightProps & RNViewProps & Stylable> & {
+  title?: string;
   pressable?: boolean;
 };
 
