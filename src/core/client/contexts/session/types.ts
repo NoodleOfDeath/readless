@@ -3,12 +3,12 @@ import React from 'react';
 import { UserData, UserDataProps } from './UserData';
 
 import {
-  CategoryAttributes,
   LoginResponse,
-  OutletAttributes,
+  PublicCategoryAttributes,
+  PublicOutletAttributes,
+  PublicSummaryAttributes,
   ReadingFormat,
   RequestParams,
-  SummaryResponse,
 } from '~/api';
 
 export type ColorMode = 'light' | 'dark';
@@ -21,7 +21,7 @@ export class Bookmark<T> {
   get serialized() {
     return {
       createdAt: this.createdAt,
-      summary: this.summary,
+      item: this.item,
     };
   }
 
@@ -37,9 +37,10 @@ export type Preferences = {
   lastReleaseNotesDate?: string;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
-  bookmarkedSummaries?: { [number]: Bookmark<SummaryResponse> };
-  bookmarkedCategories?: { [string]: Bookmark<CategoryAttributes> };
-  bookmarkedOutlets?: { [string]: Bookmark<OutletAttributes> };
+  bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
+  bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
+  bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
+  showOnlyBookmarkedNews?: boolean;
 };
 
 // Headers

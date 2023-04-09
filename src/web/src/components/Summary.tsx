@@ -28,14 +28,14 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import {
   InteractionType,
   InteractionUserVote,
+  PublicSummaryAttributes,
   ReadingFormat,
-  SummaryResponse,
 } from '~/api';
 import ReadingFormatSelector from '~/components/ReadingFormatSelector';
 import TruncatedText from '~/components/common/TruncatedText';
 
 type Props = {
-  summary?: SummaryResponse;
+  summary?: PublicSummaryAttributes;
   format?: ReadingFormat;
   onChange?: (mode?: ReadingFormat) => void;
   onInteract?: (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;

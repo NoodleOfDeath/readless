@@ -10,8 +10,8 @@ import {
 import {
   InteractionResponse,
   InteractionType,
+  PublicSummaryAttributes,
   ReadingFormat,
-  SummaryResponse,
 } from '~/api';
 import Logo from '~/components/Logo';
 import Summary from '~/components/Summary';
@@ -28,7 +28,7 @@ export default function SearchPage() {
   const { searchText } = React.useContext(AppStateContext);
 
   const [totalResults, setTotalResults] = React.useState<number>(0);
-  const [recentSummaries, setRecentSummaries] = React.useState<SummaryResponse[]>([]);
+  const [recentSummaries, setRecentSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [pageSize] = React.useState<number>(10);
   const [page, setPage] = React.useState<number>(1);
@@ -71,7 +71,7 @@ export default function SearchPage() {
     });
   };
 
-  const handleInteraction = React.useCallback(async (summary: SummaryResponse, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+  const handleInteraction = React.useCallback(async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
     const { data, error } = await interactWithSummary(summary, type, content, metadata );
     if (error) {
       console.error(error);

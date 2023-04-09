@@ -41,16 +41,14 @@ const makeTheme = (lightMode: boolean) => {
           padding: 8,
         },
         dialog: {
-          backgroundColor: lightMode ? '#eee' : '#111',
+          backgroundColor: lightMode ? '#ddd' : '#111',
           borderColor: '#8b0000',
           borderRadius: 8,
           borderWidth: 5,
-          minHeight: '60%',
-          minWidth: '70%',
         },
         dialogBackdrop: {
           alignItems: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backgroundColor: lightMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)',
           height: '100%',
           justifyContent: 'center',
           position: 'absolute',

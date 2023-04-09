@@ -1,6 +1,7 @@
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 
-import { SearchBar } from '@rneui/base';
+import { SearchBar, Switch } from '@rneui/base';
 
 import {
   InteractionResponse,
@@ -12,6 +13,7 @@ import {
   Button,
   Screen,
   Summary,
+  Text,
   View,
 } from '~/components';
 import {
@@ -27,14 +29,19 @@ export function SearchScreen({
   navigation,
 }: ScreenProps<'search'>) {
   const { 
+    setShowNotFollowingDialog,
     setShowLoginDialog, 
     setLoginDialogProps,
+    setNavigation,
   } = React.useContext(AppStateContext);
   const { 
     preferences: {
+      bookmarkedCategories,
+      bookmarkedOutlets,
       bookmarkedSummaries, 
       compactMode, 
       preferredReadingFormat, 
+      showOnlyBookmarkedNews,
     },
     setPreference,
   } = React.useContext(SessionContext);
@@ -43,8 +50,16 @@ export function SearchScreen({
   } = useSummaryClient();
   const theme = useTheme();
   
-  const prefilter = React.useMemo(() => route?.params?.prefilter, [route]);
-  const title = React.useMemo(() => route?.params?.title, [route]);
+  const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter ?? '');
+  
+  React.useEffect(() => {
+    setPrefilter(route?.params?.prefilter);
+    if (route?.params?.prefilter) {
+      setSearchText(`${route.params?.prefilter} `);
+    } else {
+      setSearchText('');
+    }
+  }, [route]);
   
   React.useEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -60,14 +75,20 @@ export function SearchScreen({
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState(route?.params?.prefilter ?? '');
 
-  const load = React.useCallback(async (pageSize: number, page: number, searchText: string) => {
+  const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
+  const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
+
+  const followFilter = React.useMemo(() => [`cat:${Object.values(bookmarkedCategories ?? {}).map((c) => c.item.name.toLowerCase().replace(/\s/g, '-')).join(',')}`, `src:${Object.values(bookmarkedOutlets ?? {}).map((o) => o.item.name).join(',')}`].join(' '), [bookmarkedCategories, bookmarkedOutlets]);
+
+  const load = React.useCallback(async (pageSize: number, page: number) => {
     setLoading(true);
     if (page === 0) {
       setRecentSummaries([]);
     }
+    const filter = prefilter ?? showOnlyBookmarkedNews ? [followFilter, searchText].join(' ') : searchText;
     try {
       const { data, error } = await getSummaries(
-        searchText,
+        filter,
         undefined,
         page,
         pageSize
@@ -94,22 +115,31 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [getSummaries]);
+  }, [showOnlyBookmarkedNews, followFilter, searchText, prefilter, getSummaries]);
 
   const onMount = React.useCallback(() => {
     setPage(0);
-    load(pageSize, 0, prefilter ?? searchText);
+    load(pageSize, 0);
     if (prefilter) {
-      navigation?.setOptions({ headerShown: true, headerTitle: title ?? prefilter });
+      navigation?.setOptions({ headerShown: true, headerTitle: prefilter });
     }
-  }, [load, navigation, pageSize, prefilter, searchText, title]);
+  }, [load, navigation, pageSize, prefilter]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => onMount(), [pageSize, prefilter, searchText]);
+  React.useEffect(() => onMount(), [pageSize, prefilter, searchText, showOnlyBookmarkedNews, bookmarkedOutlets, bookmarkedCategories]);
 
   const loadMore = React.useCallback(async () => {
-    await load(pageSize, page + 1, prefilter ?? searchText);
-  }, [load, pageSize, page, prefilter, searchText]);
+    await load(pageSize, page + 1);
+  }, [load, pageSize, page]);
+
+  const setShowOnlyBookmarkedNews = React.useCallback((value: boolean) => {
+    if (value && categoryCount + outletCount === 0) {
+      setNavigation(navigation);
+      setShowNotFollowingDialog(true);
+      return;
+    }
+    setPreference('showOnlyBookmarkedNews', value);
+  }, [categoryCount, navigation, outletCount, setNavigation, setPreference, setShowNotFollowingDialog]);
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
@@ -180,19 +210,41 @@ export function SearchScreen({
   return (
     <React.Fragment>
       {!prefilter && (
-        <View style={ theme.components.searchBar }>
-          <SearchBar
-            placeholder="show me something worth reading..."
-            lightTheme={ theme.isLightMode }
-            onChangeText={ ((text) => 
-              setSearchText(text)) }
-            value={ searchText } />
-        </View>
+        <React.Fragment>
+          <View style={ theme.components.searchBar }>
+            <SearchBar
+              placeholder="show me something worth reading..."
+              lightTheme={ theme.isLightMode }
+              onChangeText={ ((text) => 
+                setSearchText(text)) }
+              value={ searchText } />
+          </View>
+          <View height={ 48 } p={ 16 }>
+            <View row alignCenter>
+              <Text mr={ 4 }>News you follow</Text>
+              <Switch 
+                color={ theme.colors.primary } 
+                value={ !showOnlyBookmarkedNews }
+                onChange={ () => setShowOnlyBookmarkedNews(!showOnlyBookmarkedNews) } />
+              <Text ml={ 4 }>All News</Text>
+            </View>
+          </View>
+        </React.Fragment>
       )}
       <Screen
         refreshing={ loading }
-        onRefresh={ () => load(pageSize, 0, prefilter ?? searchText) }>
+        onRefresh={ () => load(pageSize, 0) }>
         <View col>
+          {loading && recentSummaries.length === 0 && (
+            <View row justifyCenter p={ 16 }>
+              <ActivityIndicator size="large" />
+            </View>
+          )}
+          {!loading && showOnlyBookmarkedNews && recentSummaries.length === 0 && (
+            <View row justifyCenter p={ 16 }>
+              <Text fontSize={ 20 }>It seems your filters are too specific. You may want to consider adding more categories and new sources to your follow list.</Text>
+            </View>
+          )}
           {recentSummaries.map((summary) => (
             <Summary
               key={ summary.id }

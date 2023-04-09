@@ -114,11 +114,11 @@ export function Summary({
               <View 
                 row
                 alignCenter
-                onPress={ () => onReferSearch?.(`category:${summary.category.replace(/\s/g, '-') }`) }>
+                onPress={ () => onReferSearch?.(`cat:${summary.category.toLowerCase().replace(/\s/g, '-') }`) }>
                 {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
                 <Text color='contrastText'>{summary.category}</Text>
               </View>
-              <View row />
+              <View row /> 
               <View alignEnd>
                 <Button 
                   row
@@ -148,7 +148,7 @@ export function Summary({
         <React.Fragment>
           <View row justifySpaced>
             <Button 
-              onPress={ () => onReferSearch?.(`outlet:${summary.outletAttributes?.name}`) }>
+              onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
               <Text variant='subtitle1' underline>
                 {summary.outletAttributes?.displayName.trim()}
               </Text>

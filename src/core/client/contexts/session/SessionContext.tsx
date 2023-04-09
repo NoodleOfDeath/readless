@@ -73,7 +73,6 @@ export function SessionContextProvider({ children }: Props) {
 
   // Convenience function to set a preference
   const setPreference = <Key extends keyof Preferences>(key: Key, value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
-    console.log('setting prefs');
     setPreferences((prev) => {
       const newPrefs = { ...prev };
       if (!value) {
