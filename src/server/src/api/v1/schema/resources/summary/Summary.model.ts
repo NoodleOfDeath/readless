@@ -58,19 +58,19 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     if (userId && type) {
       return await SummaryInteraction.findAll({
         where: {
-          targetId: this.toJSON().id, type, userId, 
+          targetId: this.id, type, userId, 
         },
       });
     } else if (userId) {
-      return await SummaryInteraction.findAll({ where: { targetId: this.toJSON().id, userId } });
+      return await SummaryInteraction.findAll({ where: { targetId: this.id, userId } });
     }
-    return await SummaryInteraction.findAll({ where: { targetId: this.toJSON().id } });
+    return await SummaryInteraction.findAll({ where: { targetId: this.id } });
   }
   
   async addUserInteractions(userId: number) {
     const uservotes = await this.getInteractions(userId, ['downvote', 'upvote']);
-    const interactions = this.toJSON().interactions;
-    interactions.uservote = uservotes.some((v) => v.toJSON().type === 'downvote') ? 'down' : uservotes.some((v) => v.toJSON().type === 'upvote') ? 'up' : undefined;
+    const interactions = this.interactions;
+    interactions.uservote = uservotes.some((v) => v.type === 'downvote') ? 'down' : uservotes.some((v) => v.type === 'upvote') ? 'up' : undefined;
     this.set('interactions', interactions, { raw: true });
   }
 
@@ -81,12 +81,12 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     }
     const summaries = Array.isArray(cursor) ? cursor : [cursor];
     const outletIds = summaries.map((summary) => {
-      return summary.toJSON().outletId;
+      return summary.outletId;
     });
     const outlets = await Outlet.findAll({ where: { id: outletIds } });
     summaries.forEach((summary) => {
-      const outlet = outlets.find((o) => o.id === summary.toJSON().outletId);
-      summary.set('outletName', outlet?.toJSON().displayName ?? '', { raw: true });
+      const outlet = outlets.find((o) => o.id === summary.outletId);
+      summary.set('outletName', outlet?.displayName ?? '', { raw: true });
     });
   }
 
@@ -96,12 +96,10 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
       return;
     }
     const summaries = Array.isArray(cursor) ? cursor : [cursor];
-    const categoryNames = summaries.map((summary) => {
-      return summary.toJSON().category;
-    });
+    const categoryNames = summaries.map((summary) => summary.category);
     const categories = await Category.findAll({ where: { name: categoryNames } });
     summaries.forEach((summary) => {
-      const category = categories.find((c) => c.name === summary.toJSON().category);
+      const category = categories.find((c) => c.name === summary.category);
       summary.set('categoryAttributes', category?.toJSON(), { raw: true });
     });
   }
@@ -113,36 +111,35 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     }
     const summaries = Array.isArray(cursor) ? cursor : [cursor];
     const summaryIds = summaries.map((summary) => {
-      return summary.toJSON().id;
+      return summary.id;
     });
     const interactions = await SummaryInteraction.findAll({ where: { targetId: summaryIds } });
-    summaries.forEach((summary) => {
+    for (const summary of summaries) {
       const interactionMap = {
         bookmark: [],
         comment: [],
         downvote: [],
-        impression: [],
+        read: [],
         share: [],
         upvote: [],
         view: [],
       };
       interactions.forEach((interaction) => {
-        const interactionJson = interaction.toJSON();
-        if (interactionJson.targetId === summary.id) {
-          interactionMap[interactionJson.type].push(interactionJson);
+        if (interaction.targetId === summary.id) {
+          interactionMap[interaction.type].push(interaction);
         }
       });
       const summaryInteractions = {
         bookmark: interactionMap.bookmark.length,
         comment: interactionMap.comment.length,
         downvote: interactionMap.downvote.length,
-        impression: interactionMap.impression.length,
+        read: interactionMap.read.length,
         share: interactionMap.share.length,
         upvote: interactionMap.upvote.length,
-        view: interactionMap.view.length,
+        view: interactionMap.view.length + 1,
       };
       summary.set('interactions', summaryInteractions, { raw: true });
-    });
+    }
     
   }
 
