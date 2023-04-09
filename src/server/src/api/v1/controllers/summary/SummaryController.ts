@@ -31,10 +31,7 @@ import {
 } from '../../schema';
 
 function parsePrefilter(prefilter: string) {
-  return {
-    [Op.or]: prefilter
-      .replace(/-([a-z])/gi, (_, $1) => ` ${$1}`).split(',').map((c) => ({ [Op.iLike]: `%${c}%` })), 
-  };
+  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
 }
 
 function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids?: number[]) {
@@ -52,15 +49,14 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids
     if (matches) {
       for (const match of matches) {
         const [_, prefix, prefixValues] = match;
-        const pf = parsePrefilter(prefixValues);
         if (/cat(egory)?/i.test(prefix)) {
-          where.category = pf;
+          where.category = parsePrefilter(prefixValues.replace(/-([a-z])/gi, (_, $1) => ` ${$1}`));
           query = q;
         }
         if (/outlet|source|src/i.test(prefix)) {
           newOptions.include = [{
             model: Outlet,
-            where: { name: pf },
+            where: { name: parsePrefilter(prefixValues) },
           }];
           query = q;
         }
