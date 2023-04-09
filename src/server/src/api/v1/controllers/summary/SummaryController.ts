@@ -23,26 +23,49 @@ import {
   InteractionRequest,
   InteractionResponse,
   InteractionType,
+  Outlet,
   PublicSummaryAttributes,
   Summary,
   SummaryInteraction,
   User,
 } from '../../schema';
 
-function applyFilter(filter?: string, ids?: number[]) {
+function parsePrefilter(prefilter: string) {
+  return {
+    [Op.or]: prefilter
+      .replace(/-([a-z])/gi, (_, $1) => ` ${$1}`).split(',').map((c) => ({ [Op.iLike]: `%${c}%` })), 
+  };
+}
+
+function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids?: number[]) {
+  const newOptions = { ...options };
   if (!filter || /\S+/.test(filter) === false) {
-    return undefined;
+    return newOptions;
   }
-  const [q, prefix, prefixValue, q2] = /([^:]+)(?::([\w-.]+)(?:\s+(.*))?)?/.exec(filter);
-  let query = q;
   const where: FindAndCountOptions<Summary>['where'] = {};
-  if (/cat(egory)?/i.test(prefix)) {
-    const category = `%${prefixValue.replace(/-([a-z])/gi, ($0, $1) => ` ${$1}` )}%`;
-    where.category = { [Op.iLike]: category };
-    query = q2;
-  } else if (/outlet|source/i.test(prefix)) {
-    where.outletId = prefixValue;
-    query = q2;
+  const splitExpr = /\s*((?:[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))*)(.*)/i;
+  const [$0, prefilter, q] = splitExpr.exec(filter);
+  let query = $0;
+  if (prefilter) {
+    const expr = /([\w]+):([-\w.]*(?:,[-\w.]*)*)/gi;
+    const matches = prefilter.matchAll(expr);
+    if (matches) {
+      for (const match of matches) {
+        const [_, prefix, prefixValues] = match;
+        const pf = parsePrefilter(prefixValues);
+        if (/cat(egory)?/i.test(prefix)) {
+          where.category = pf;
+          query = q;
+        }
+        if (/outlet|source|src/i.test(prefix)) {
+          newOptions.include = [{
+            model: Outlet,
+            where: { name: pf },
+          }];
+          query = q;
+        }
+      }
+    }
   }
   if (ids) {
     where.id = ids;
@@ -65,7 +88,8 @@ function applyFilter(filter?: string, ids?: number[]) {
       });
     }
   }
-  return where;
+  newOptions.where = where;
+  return newOptions;
 }
 
 @Route('/v1/summary')
@@ -92,11 +116,8 @@ export class SummaryController {
       offset,
       order: [['createdAt', 'DESC']],
     };
-    const appliedFilter = applyFilter(filter, ids);
-    if (appliedFilter) {
-      options.where = appliedFilter;
-    }
-    const summaries = await Summary.scope('public').findAndCountAll(options);
+    const filteredOptions = applyFilter(options, filter, ids);
+    const summaries = await Summary.scope('public').findAndCountAll(filteredOptions);
     await Promise.all(summaries.rows.map(async (row) => await SummaryInteraction.create({
       targetId: row.id,
       type: 'view',

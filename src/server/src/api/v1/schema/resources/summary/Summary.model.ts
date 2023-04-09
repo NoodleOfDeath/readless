@@ -93,7 +93,6 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     summaries.forEach((summary) => {
       const outlet = outlets.find((o) => o.id === summary.outletId);
       summary.set('outletAttributes', outlet?.toJSON(), { raw: true });
-      summary.set('outletName', outlet?.displayName ?? '', { raw: true });
     });
   }
 

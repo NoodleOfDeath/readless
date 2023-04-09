@@ -15,7 +15,6 @@ export type SummaryAttributesRaw = TitledCategorizedPostAttributes & {
 };
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
-  outletName: string,
   outletAttributes?: PublicOutletAttributes,
   categoryAttributes?: PublicCategoryAttributes,
 };
