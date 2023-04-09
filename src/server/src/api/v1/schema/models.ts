@@ -1,6 +1,7 @@
 // singleton models
 export * from './analytics/Metric.model';
 export * from './analytics/RateLimit.model';
+export * from './analytics/Status.model'; 
 
 // user models
 export * from './user/User.model';

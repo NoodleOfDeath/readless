@@ -64,7 +64,7 @@ export function Summary({
     return formatDistance(new Date(summary.createdAt), lastTick, { addSuffix: true });
   }, [summary.createdAt, lastTick]);
 
-  // pdate time ago every `tickIntervalMs` milliseconds
+  // update time ago every `tickIntervalMs` milliseconds
   React.useEffect(() => {
     const interval = setInterval(() => {
       setLastTick(new Date());

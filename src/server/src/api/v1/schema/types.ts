@@ -28,6 +28,7 @@ export type DestroyResponse = {
 
 export * from './analytics/Metric.types';
 export * from './analytics/RateLimit.types';
+export * from './analytics/Status.types';
 
 export * from './user/Alias.types';
 export * from './user/User.types';
