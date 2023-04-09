@@ -5,8 +5,8 @@ import { SearchBar } from '@rneui/base';
 import {
   InteractionResponse,
   InteractionType,
+  PublicSummaryAttributes,
   ReadingFormat,
-  SummaryResponse,
 } from '~/api';
 import {
   Button,
@@ -16,9 +16,8 @@ import {
 } from '~/components';
 import {
   AppStateContext,
+  Bookmark,
   SessionContext,
-  SummaryBookmark,
-  SummaryBookmarkKey,
 } from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
@@ -33,7 +32,9 @@ export function SearchScreen({
   } = React.useContext(AppStateContext);
   const { 
     preferences: {
-      bookmarks, compactMode, preferredReadingFormat, 
+      bookmarkedSummaries, 
+      compactMode, 
+      preferredReadingFormat, 
     },
     setPreference,
   } = React.useContext(SessionContext);
@@ -51,7 +52,7 @@ export function SearchScreen({
 
   const [loading, setLoading] = React.useState(false);
   const [recentSummaries, setRecentSummaries] = React.useState<
-    SummaryResponse[]
+    PublicSummaryAttributes[]
   >([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
 
@@ -111,7 +112,7 @@ export function SearchScreen({
   }, [load, pageSize, page, prefilter, searchText]);
 
   const handleFormatChange = React.useCallback(
-    async (summary: SummaryResponse, format?: ReadingFormat) => {
+    async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
       recordSummaryView(summary, undefined, { format });
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
@@ -128,7 +129,7 @@ export function SearchScreen({
     navigation?.push('search', { prefilter: newPrefilter });
   }, [navigation, prefilter]);
 
-  const updateInteractions = (summary: SummaryResponse, interactions: InteractionResponse) => {
+  const updateInteractions = (summary: PublicSummaryAttributes, interactions: InteractionResponse) => {
     setRecentSummaries((prev) => {
       const newSummaries = [...prev];
       const index = newSummaries.findIndex((s) => s.id === summary.id);
@@ -143,15 +144,14 @@ export function SearchScreen({
     });
   };
   
-  const handleInteraction = React.useCallback(async (summary: SummaryResponse, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+  const handleInteraction = React.useCallback(async (summary: PublicSummaryAttributes, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
     if (interaction === InteractionType.Bookmark) {
-      setPreference('bookmarks', (prev) => {
+      setPreference('bookmarkedSummaries', (prev) => {
         const bookmarks = { ...prev };
-        const key: SummaryBookmarkKey = `summary:${summary.id}`;
-        if (bookmarks[key]) {
-          delete bookmarks[key];
+        if (bookmarks[summary.id]) {
+          delete bookmarks[summary.id];
         } else {
-          bookmarks[key] = new SummaryBookmark(summary);
+          bookmarks[summary.id] = new Bookmark(summary);
         }
         return (prev = bookmarks);
       });
@@ -192,13 +192,13 @@ export function SearchScreen({
       <Screen
         refreshing={ loading }
         onRefresh={ () => load(pageSize, 0, prefilter ?? searchText) }>
-        <View>
+        <View col>
           {recentSummaries.map((summary) => (
             <Summary
               key={ summary.id }
               summary={ summary }
-              forceCompact={ compactMode }
-              bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
+              compact={ compactMode }
+              bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
               onFormatChange={ (format) => handleFormatChange(summary, format) }
               onReferSearch={ handleReferSearch }
               onInteract={ (...e) => handleInteraction(summary, ...e) } />

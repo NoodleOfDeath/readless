@@ -41,7 +41,7 @@ export function TabSwitcher({
   }, [onTabChange, translateX, views.length]);
 
   return (
-    <View style={ { flex: 1 } }>
+    <Animated.View style={ { flex: 1 } }>
       <View
         style={ {
           marginLeft: 'auto',
@@ -103,7 +103,7 @@ export function TabSwitcher({
           </Animated.View>
         </ScrollView>
       </View>
-    </View>
+    </Animated.View>
   );
 
 }

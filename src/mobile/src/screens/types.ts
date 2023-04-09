@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { ReadingFormat, SummaryResponse } from '~/api';
+import { PublicSummaryAttributes, ReadingFormat } from '~/api';
 
 export type TabParams = {
   default: undefined;
@@ -20,7 +20,7 @@ export type StackableTabParams = TabParams & {
   },
   summary: {
     initialFormat: ReadingFormat;
-    summary: SummaryResponse;
+    summary: PublicSummaryAttributes;
   };
 };
 

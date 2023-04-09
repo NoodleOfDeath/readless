@@ -6,8 +6,8 @@ import { formatDistance } from 'date-fns';
 import { 
   InteractionResponse,
   InteractionType,
-  ReadingFormat, 
-  SummaryResponse,
+  PublicSummaryAttributes, 
+  ReadingFormat,
 } from '~/api';
 import {
   Button,
@@ -21,13 +21,13 @@ import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
 type Props = {
-  summary: SummaryResponse;
+  summary: PublicSummaryAttributes;
   tickIntervalMs?: number;
   format?: ReadingFormat;
   realtimeInteractions?: InteractionResponse;
   bookmarked?: boolean;
   collapsible?: boolean;
-  forceCompact?: boolean;
+  compact?: boolean;
   forceCollapse?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
@@ -42,7 +42,7 @@ export function Summary({
   realtimeInteractions,
   collapsible = true,
   bookmarked,
-  forceCompact,
+  compact,
   forceCollapse,
   onFormatChange,
   onReferSearch,
@@ -54,7 +54,6 @@ export function Summary({
 
   const [lastTick, setLastTick] = React.useState(new Date());
 
-  const [compact, setCompact] = React.useState(forceCompact);
   const [collapsed, setCollapsed] = React.useState(forceCollapse);
   const interactions = React.useMemo(() => realtimeInteractions ?? summary.interactions, [realtimeInteractions, summary.interactions]);
 
@@ -90,14 +89,6 @@ export function Summary({
       return summary.text;
     }
   }, [format, summary]);
-  
-  const votes = React.useMemo(() => {
-    return (interactions.upvote ?? 0) - (interactions.downvote ?? 0);
-  }, [interactions]);
-
-  React.useEffect(() => {
-    setCompact(forceCompact);
-  }, [forceCompact]);
 
   React.useEffect(() => {
     setCollapsed(forceCollapse);
@@ -157,9 +148,9 @@ export function Summary({
         <React.Fragment>
           <View row justifySpaced>
             <Button 
-              onPress={ () => onReferSearch?.(`outlet:${summary.outletId}`) }>
+              onPress={ () => onReferSearch?.(`outlet:${summary.outletAttributes?.name}`) }>
               <Text variant='subtitle1' underline>
-                {summary.outletName.trim()}
+                {summary.outletAttributes?.displayName.trim()}
               </Text>
             </Button>
             <Button onPress={ () => Linking.openURL(summary.url) }>
@@ -182,17 +173,6 @@ export function Summary({
                 name="eye"
                 color={ 'primary' }
                 mh={ 8 } />
-              {/* <Button
-                color={ 'primary' }
-                startIcon={ interactions.uservote === 'up' ? 'thumb-up' : 'thumb-up-outline' }
-                onPress={ () => onInteract?.(InteractionType.Upvote) }
-                mh={ 8 } />
-              <Text variant='subtitle2'>{String(votes)}</Text>
-              <Button 
-                color={ 'primary' }
-                startIcon={ interactions.uservote === 'down' ? 'thumb-down' : 'thumb-down-outline' }
-                onPress={ () => onInteract?.(InteractionType.Downvote) }
-                mh={ 8 } /> */}
             </View>
           </View>
           <View mt={ 2 }>

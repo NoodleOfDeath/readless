@@ -3,21 +3,21 @@ import { StyleSheet, useColorScheme } from 'react-native';
 
 import { SessionContext } from '~/contexts';
 
-const makeTheme = (isLightMode: boolean) => {
+const makeTheme = (lightMode: boolean) => {
   return {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
-      invertText: isLightMode ? '#fff' : '#000',
+      invertText: lightMode ? '#fff' : '#000',
       primary: '#8b0000',
-      text: isLightMode ? '#000' : '#fff',
+      text: lightMode ? '#000' : '#fff',
       textDark: '#000',
     },
     components: {
       // containers
       ...StyleSheet.create({
         buttonGroup: {
-          backgroundColor: isLightMode ? '#fff' : '#000',
+          backgroundColor: lightMode ? '#fff' : '#000',
           marginTop: 8,
           overflow: 'hidden',
           width: '100%',
@@ -29,7 +29,7 @@ const makeTheme = (isLightMode: boolean) => {
         },
         buttonText: { padding: 4 },
         card: {
-          backgroundColor: isLightMode ? '#eee' : '#111',
+          backgroundColor: lightMode ? '#eee' : '#111',
           marginBottom: 8,
           marginLeft: 16,
           marginRight: 16,
@@ -41,7 +41,7 @@ const makeTheme = (isLightMode: boolean) => {
           padding: 8,
         },
         dialog: {
-          backgroundColor: isLightMode ? '#eee' : '#111',
+          backgroundColor: lightMode ? '#eee' : '#111',
           borderColor: '#8b0000',
           borderRadius: 8,
           borderWidth: 5,
@@ -71,14 +71,14 @@ const makeTheme = (isLightMode: boolean) => {
           flexDirection: 'row',
           flexGrow: 1,
         }, 
-        input: { color: isLightMode ? '#000' : '#fff' },
+        input: { color: lightMode ? '#000' : '#fff' },
         outlined: {
           borderColor: '#8b0000',
           borderWidth: 2,
         },
         rounded: { borderRadius: 8 },
         searchBar: {
-          backgroundColor: isLightMode ? '#fff' : '#000',
+          backgroundColor: lightMode ? '#fff' : '#000',
           borderRadius: 8,
           marginBottom: 8,
           marginTop: 8,
@@ -87,14 +87,14 @@ const makeTheme = (isLightMode: boolean) => {
         },
       }),
     },
-    isLightMode,   
+    isLightMode: lightMode,   
     navContainerColors: {
-      background: isLightMode ? '#fff' : '#1e1e1e',
-      border: isLightMode ? '#bdbdbd' : '#757575',
-      card: isLightMode ? '#fff' : '#1e1e1e',
+      background: lightMode ? '#fff' : '#1e1e1e',
+      border: lightMode ? '#bdbdbd' : '#757575',
+      card: lightMode ? '#fff' : '#1e1e1e',
       notification: '#8b0000',
       primary: '#8b0000',
-      text: isLightMode ? '#212121' : '#fff',
+      text: lightMode ? '#212121' : '#fff',
     },
     typography: {
       ...StyleSheet.create({
