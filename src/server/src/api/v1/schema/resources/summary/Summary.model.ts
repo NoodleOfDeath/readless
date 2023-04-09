@@ -2,10 +2,15 @@ import {
   AfterFind,
   Column,
   DataType,
+  Scopes,
   Table,
 } from 'sequelize-typescript';
 
-import { SummaryAttributes, SummaryCreationAttributes } from './Summary.types';
+import { 
+  PUBLIC_SUMMARY_ATTRIBUTES,
+  SummaryAttributes,
+  SummaryCreationAttributes,
+} from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { InteractionType } from '../../interaction/Interaction.types';
 import { TitledCategorizedPost } from '../Post.model';
@@ -13,6 +18,7 @@ import { Outlet } from '../outlet/Outlet.model';
 import { Category } from '../topic/Category.model';
 import { CategoryAttributes } from '../topic/Category.types';
 
+@Scopes(() => ({ public: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] } }))
 @Table({
   modelName: 'summary',
   paranoid: true,
@@ -75,7 +81,7 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
   }
 
   @AfterFind
-  static async addOutletName(cursor?: Summary | Summary[]) {
+  static async addOutlet(cursor?: Summary | Summary[]) {
     if (!cursor) {
       return;
     }
@@ -83,9 +89,10 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     const outletIds = summaries.map((summary) => {
       return summary.outletId;
     });
-    const outlets = await Outlet.findAll({ where: { id: outletIds } });
+    const outlets = await Outlet.scope('public').findAll({ where: { id: outletIds } });
     summaries.forEach((summary) => {
       const outlet = outlets.find((o) => o.id === summary.outletId);
+      summary.set('outletAttributes', outlet?.toJSON(), { raw: true });
       summary.set('outletName', outlet?.displayName ?? '', { raw: true });
     });
   }
@@ -97,7 +104,7 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     }
     const summaries = Array.isArray(cursor) ? cursor : [cursor];
     const categoryNames = summaries.map((summary) => summary.category);
-    const categories = await Category.findAll({ where: { name: categoryNames } });
+    const categories = await Category.scope('public').findAll({ where: { name: categoryNames } });
     summaries.forEach((summary) => {
       const category = categories.find((c) => c.name === summary.category);
       summary.set('categoryAttributes', category?.toJSON(), { raw: true });

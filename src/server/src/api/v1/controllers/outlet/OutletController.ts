@@ -13,7 +13,8 @@ import {
   BulkResponse,
   FindAndCountOptions,
   Outlet,
-  OutletAttributes,
+  PUBLIC_OUTLET_ATTRIBUTES,
+  PublicOutletAttributes,
 } from '../../schema';
 
 @Route('/v1/outlet')
@@ -30,9 +31,12 @@ export class OutletController {
   public static async getOutlets(
     @Query() userId?: number,
     @Query() filter?: string
-  ): Promise<BulkResponse<OutletAttributes>> {
-    const options: FindAndCountOptions<Outlet> = { order: [['name', 'ASC']] };
-    const outlets = await Outlet.findAndCountAll(options);
+  ): Promise<BulkResponse<PublicOutletAttributes>> {
+    const options: FindAndCountOptions<Outlet> = { 
+      attributes: [...PUBLIC_OUTLET_ATTRIBUTES],
+      order: [['name', 'ASC']],
+    };
+    const outlets = await Outlet.scope('public').findAndCountAll(options);
     return outlets;
   }
   

@@ -1,9 +1,10 @@
 import {
-  TITLED_CATEGORIZED_POST_ATTRS,
+  PUBLIC_TITLED_CATEGORIZED_POST_ATTRIBUTES,
   TitledCategorizedPostAttributes,
   TitledCategorizedPostCreationAttributes,
 } from '../Post.types';
-import { CategoryAttributes } from '../topic/Category.types';
+import { PublicOutletAttributes } from '../outlet/Outlet.types';
+import { PublicCategoryAttributes } from '../topic/Category.types';
 
 export type SummaryAttributesRaw = TitledCategorizedPostAttributes & {
   outletId: number;
@@ -15,7 +16,8 @@ export type SummaryAttributesRaw = TitledCategorizedPostAttributes & {
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
   outletName: string,
-  categoryAttributes?: Pick<CategoryAttributes, 'name' | 'icon'>;
+  outletAttributes?: PublicOutletAttributes,
+  categoryAttributes?: PublicCategoryAttributes,
 };
 
 export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes & {
@@ -27,6 +29,6 @@ export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes 
 };
 
 /** light weight record for a summary post */
-export const SUMMARY_ATTRS = [...TITLED_CATEGORIZED_POST_ATTRS, 'outletId', 'url', 'originalTitle'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_TITLED_CATEGORIZED_POST_ATTRIBUTES, 'outletId', 'url', 'originalTitle'] as const;
 
-export type SummaryResponse = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
+export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;

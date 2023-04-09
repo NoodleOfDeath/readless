@@ -2,6 +2,7 @@ import ms from 'ms';
 import {
   Column,
   DataType,
+  Scopes,
   Table,
 } from 'sequelize-typescript';
 
@@ -9,6 +10,7 @@ import {
   FetchPolicy,
   OutletAttributes,
   OutletCreationAttributes,
+  PUBLIC_OUTLET_ATTRIBUTES,
   SiteMap,
 } from './Outlet.types';
 import { RateLimit } from '../../analytics/RateLimit.model';
@@ -19,6 +21,7 @@ const WORKER_FETCH_INTERVAL_MS = process.env.WORKER_FETCH_INTERVAL_MS
   ? Number(process.env.WORKER_FETCH_INTERVAL_MS)
   : ms('1d');
 
+@Scopes(() => ({ public: { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] } }))
 @Table({
   modelName: 'outlet',
   paranoid: true,

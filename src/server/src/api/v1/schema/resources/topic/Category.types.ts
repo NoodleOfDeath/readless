@@ -11,3 +11,10 @@ export type CategoryCreationAttributes = {
   name: string;
   icon: string;
 };
+
+export const PUBLIC_CATEGORY_ATTRIBUTES = ['name', 'icon'] as const;
+
+export type PublicCategoryAttributes = {
+  name: string;
+  icon: string;
+};

@@ -23,9 +23,9 @@ import {
   InteractionRequest,
   InteractionResponse,
   InteractionType,
+  PublicSummaryAttributes,
   Summary,
   SummaryInteraction,
-  SummaryResponse,
   User,
 } from '../../schema';
 
@@ -86,9 +86,8 @@ export class SummaryController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkResponse<SummaryResponse>> {
+  ): Promise<BulkResponse<PublicSummaryAttributes>> {
     const options: FindAndCountOptions<Summary> = {
-      attributes: { exclude: ['filteredText', 'rawText'] },
       limit: pageSize,
       offset,
       order: [['createdAt', 'DESC']],
@@ -97,7 +96,7 @@ export class SummaryController {
     if (appliedFilter) {
       options.where = appliedFilter;
     }
-    const summaries = await Summary.findAndCountAll(options);
+    const summaries = await Summary.scope('public').findAndCountAll(options);
     await Promise.all(summaries.rows.map(async (row) => await SummaryInteraction.create({
       targetId: row.id,
       type: 'view',
@@ -122,8 +121,8 @@ export class SummaryController {
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
     }
-    const resource = await Summary.findByPk(targetId);
-    return resource.toJSON().interactions;
+    const resource = await Summary.scope('public').findByPk(targetId);
+    return resource.interactions;
   }
   
   @Security('jwt', ['standard:write'])
@@ -138,7 +137,7 @@ export class SummaryController {
       content, metadata, remoteAddr, 
     } = body;
     const resource = await user.interactWithSummary(targetId, type, remoteAddr, content, metadata);
-    return resource.toJSON().interactions;
+    return resource.interactions;
   }
   
   @Security('jwt', ['god:*'])
