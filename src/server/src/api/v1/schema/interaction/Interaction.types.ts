@@ -4,7 +4,7 @@ export const INTERACTION_TYPES = {
   bookmark: 'bookmark',
   comment: 'comment',
   downvote: 'downvote',
-  impression: 'impression',
+  read: 'read',
   share: 'share',
   upvote: 'upvote',
   view: 'view',
@@ -47,9 +47,10 @@ export type InteractionUserVote = 'up' | 'down';
 // uh this type exists? forcing rebuild
 export type InteractionResponse = {
   bookmark: number;
+  userBookmarked?: boolean;
   comment: number;
   downvote: number;
-  impression: number;
+  read: number;
   share: number;
   upvote: number;
   uservote?: InteractionUserVote;

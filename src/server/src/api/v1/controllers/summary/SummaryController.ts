@@ -24,10 +24,10 @@ import {
   InteractionResponse,
   InteractionType,
   Summary,
+  SummaryInteraction,
   SummaryResponse,
   User,
 } from '../../schema';
-import { SummaryInteraction } from '../../schema/resources/summary/SummaryInteraction.model';
 
 function applyFilter(filter?: string, ids?: number[]) {
   if (!filter || /\S+/.test(filter) === false) {
@@ -98,6 +98,10 @@ export class SummaryController {
       options.where = appliedFilter;
     }
     const summaries = await Summary.findAndCountAll(options);
+    await Promise.all(summaries.rows.map(async (row) => await SummaryInteraction.create({
+      targetId: row.id,
+      type: 'view',
+    })));
     if (userId) {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
     }
