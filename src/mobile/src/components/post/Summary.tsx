@@ -78,7 +78,7 @@ export function Summary({
     }
     switch (format) {
     case 'bullets':
-      return summary.bullets.join('').replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
+      return summary.bullets.join('\n');
     case 'concise':
       return summary.shortSummary;
     case 'casual':
@@ -182,7 +182,7 @@ export function Summary({
               compact={ compact }
               onChange={ onFormatChange } />
             <View mt={ 4 }>
-              {content && <Text variant='body1'>{content}</Text>}
+              {content && <Text variant='body1' mt={ 4 }>{content}</Text>}
             </View>
           </View>
         </React.Fragment>
