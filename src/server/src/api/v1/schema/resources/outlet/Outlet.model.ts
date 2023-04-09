@@ -50,6 +50,15 @@ export class Outlet<
         url: 'https://abcnews.go.com/${1}',
       }],
     },
+    arsTechnica: {
+      displayName: 'ars technica',
+      name: 'ars-technica',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.arstechnica.com',
+      }],
+    },
     barrons: {
       displayName: 'Barron\'s',
       name: 'barrons',
@@ -150,12 +159,21 @@ export class Outlet<
       }],
     },
     coindesk: {
-      displayName: 'CoinDesk ',
+      displayName: 'CoinDesk',
       name: 'coindesk',
       siteMaps: [{
         attribute: 'href',
         selector: 'div[class*="most-read-article"] a',
         url: 'https://www.coindesk.com',
+      }],
+    },
+    cryptoglobe: {
+      displayName: 'Cryptoglobe',
+      name: 'cryptoglobe',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="u-link"]',
+        url: 'https://www.cryptoglobe.com',
       }],
     },
     csis: {
@@ -184,6 +202,15 @@ export class Outlet<
         url: 'https://www.csis.org/topics/${1}',
       }],
     },
+    ew: {
+      displayName: 'Entertainment Weekly',
+      name: 'ew',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="entityTout"] a',
+        url: 'https://www.ew.com',
+      }],
+    },
     forbes: {
       displayName: 'Forbes',
       name: 'forbes',
@@ -206,6 +233,15 @@ export class Outlet<
         attribute: 'href',
         selector: 'a[class*="titleLink"]',
         url: 'https://www.fortune.com',
+      }],
+    },
+    foxnews: {
+      displayName: 'Fox News',
+      name: 'foxnews',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.foxnews.com',
       }],
     },
     ft: {
@@ -270,6 +306,15 @@ export class Outlet<
         url: 'https://www.huffpost.com/${1}',
       }],
     },
+    inverse: {
+      displayName: 'Inverse',
+      name: 'inverse',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[href*="/gaming"],a[href*="/science"],a[href*="/tech"],a[href*="entertainment"]',
+        url: 'https://www.coindesk.com',
+      }],
+    },
     ksl: {
       displayName: 'KSL',
       name: 'ksl',
@@ -302,6 +347,15 @@ export class Outlet<
         ]],
         selector: 'a[href*="/article"]',
         url: 'https://www.mashable.com/${1}',
+      }],
+    },
+    nationalgeographic: {
+      displayName: 'National Geographic',
+      name: 'national-geographic',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="AnchorLink"]',
+        url: 'https://www.nationalgeographic.com',
       }],
     },
     nbcnews: {
@@ -346,6 +400,15 @@ export class Outlet<
         url: 'https://www.politico.com/${1}',
       }],
     },
+    popularMechanics: {
+      displayName: 'Popular Mechanics ',
+      name: 'popular-mechanics',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[href*="/technology"],a[href*="/science"],a[href*="/space"]',
+        url: 'https://www.popularmechanics.com',
+      }],
+    },
     reuters: {
       displayName: 'Reuters',
       name: 'reuters',
@@ -364,6 +427,15 @@ export class Outlet<
         url: 'https://www.reuters.com/${1}',
       }],
     },
+    rollingStone: {
+      displayName: 'Rolling Stone',
+      name: 'rolling-stone',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="c-title"]',
+        url: 'https://www.rollingstone.com',
+      }],
+    },
     space: {
       displayName: 'Space',
       name: 'space',
@@ -371,6 +443,24 @@ export class Outlet<
         attribute: 'href',
         selector: 'a[class*="article-link"]',
         url: 'https://www.space.com',
+      }],
+    },
+    sundayTimes: {
+      displayName: 'The Sunday Times ',
+      name: 'sunday-times',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="Item-content"] a',
+        url: 'https://www.thetimes.co.uk',
+      }],
+    },
+    vox: {
+      displayName: 'Vox',
+      name: 'voz',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="c-newspaper"] a',
+        url: 'https://www.vox.com',
       }],
     },
     wired: {
