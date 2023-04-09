@@ -79,6 +79,15 @@ export class Outlet<
         url: 'https://www.bbc.com/${1}',
       }],
     },
+    billboard: {
+      displayName: 'billboard',
+      name: 'billboard',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="c-title"]',
+        url: 'https://www.billboard.com',
+      }],
+    },
     businessInsider: {
       displayName: 'Business Insider',
       name: 'business-insider',
@@ -114,6 +123,15 @@ export class Outlet<
         url: 'https://www.bustle.com/archive/${MMMM}/${YYYY}/${1}', 
       }],
     },
+    buzzfeed: {
+      displayName: 'BuzzFeed',
+      name: 'buzzfeed',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="feedItem"] a',
+        url: 'https://www.buzzfeed.com',
+      }],
+    },
     cnbc: {
       displayName: 'CNBC',
       name: 'cnbc',
@@ -129,8 +147,16 @@ export class Outlet<
       siteMaps: [{
         selector: 'loc', 
         url: 'https://www.cnn.com/sitemaps/cnn/news.xml', 
-      },
-      ],
+      }],
+    },
+    coindesk: {
+      displayName: 'CoinDesk ',
+      name: 'coindesk',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="most-read-article"] a',
+        url: 'https://www.coindesk.com',
+      }],
     },
     csis: {
       displayName: 'CSIS',
@@ -158,6 +184,30 @@ export class Outlet<
         url: 'https://www.csis.org/topics/${1}',
       }],
     },
+    forbes: {
+      displayName: 'Forbes',
+      name: 'forbes',
+      siteMaps: [{
+        attribute: 'href',
+        params: [[
+          '',
+          'business',
+          'lifestyle',
+          'real-estate',
+        ]],
+        selector: 'a[class*="headlink"]',
+        url: 'https://www.forbes.com/${1}',
+      }],
+    },
+    fortune: {
+      displayName: 'Fortune',
+      name: 'fortune',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="titleLink"]',
+        url: 'https://www.fortune.com',
+      }],
+    },
     ft: {
       displayName: 'Financial Times',
       name: 'ft',
@@ -183,6 +233,24 @@ export class Outlet<
         url: 'https://www.ft.com/${1}',
       }],
     },
+    guardian: {
+      displayName: 'The Guardian',
+      name: 'guardian',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="js-headline-text"]',
+        url: 'https://www.theguardian.com',
+      }],
+    },
+    hill: {
+      displayName: 'The Hill',
+      name: 'thehill',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="featured-cards"] a',
+        url: 'https://www.thehill.com',
+      }],
+    },
     huffpost: {
       displayName: 'HuffPost',
       name: 'huffpost',
@@ -202,6 +270,67 @@ export class Outlet<
         url: 'https://www.huffpost.com/${1}',
       }],
     },
+    ksl: {
+      displayName: 'KSL',
+      name: 'ksl',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="headling"] a',
+        url: 'https://www.ksl.com',
+      }],
+    },
+    latimes: {
+      displayName: 'Los Angelos Times',
+      name: 'latimes',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'h1[class*="promo-title"] a,h2[class*="promo-title"] a',
+        url: 'https://www.latimes.com',
+      }],
+    },
+    mashable: {
+      displayName: 'Mashable',
+      name: 'mashable',
+      siteMaps: [{
+        attribute: 'href',
+        params: [[
+          '',
+          'enterainment',
+          'life',
+          'science',
+          'tech',
+        ]],
+        selector: 'a[href*="/article"]',
+        url: 'https://www.mashable.com/${1}',
+      }],
+    },
+    nbcnews: {
+      displayName: 'NBC News',
+      name: 'nbcnews',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="tease-card"] a',
+        url: 'https://www.nbcnews.com',
+      }],
+    },
+    newsweek: {
+      displayName: 'Newsweek',
+      name: 'newsweek',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="news-title"] a',
+        url: 'https://www.newsweek.com',
+      }],
+    },
+    people: {
+      displayName: 'People',
+      name: 'people',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="entityTout"] a',
+        url: 'https://www.people.com',
+      }],
+    },
     politoco: {
       displayName: 'Politico',
       name: 'politico',
@@ -213,7 +342,7 @@ export class Outlet<
           'section/magazine',
           'white-house',
         ]],
-        selector: 'article header h3 a[href=*="https://www.politico.com/news"]',
+        selector: 'article header h3 a[href*="https://www.politico.com/news"]',
         url: 'https://www.politico.com/${1}',
       }],
     },
@@ -233,6 +362,15 @@ export class Outlet<
         ]],
         selector: 'a[class*="text__heading_"]',
         url: 'https://www.reuters.com/${1}',
+      }],
+    },
+    space: {
+      displayName: 'Space',
+      name: 'space',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="article-link"]',
+        url: 'https://www.space.com',
       }],
     },
     wired: {
