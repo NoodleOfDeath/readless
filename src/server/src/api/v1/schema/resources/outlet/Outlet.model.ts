@@ -50,6 +50,15 @@ export class Outlet<
         url: 'https://abcnews.go.com/${1}',
       }],
     },
+    aei: {
+      displayName: 'AEI',
+      name: 'aei',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="hero__post"] a',
+        url: 'https://www.aei.org',
+      }],
+    },
     arsTechnica: {
       displayName: 'ars technica',
       name: 'ars-technica',
@@ -202,6 +211,24 @@ export class Outlet<
         url: 'https://www.csis.org/topics/${1}',
       }],
     },
+    defenseOne: {
+      displayName: 'Defense One',
+      name: 'defense-one',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="river-item-hed"],a[class*="skybox-link"]',
+        url: 'https://www.defenseone.com',
+      }],
+    },
+    espn: {
+      displayName: 'ESPN',
+      name: 'espn',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'ul[class*="headlineStack"] li a',
+        url: 'https://www.espn.com',
+      }],
+    },
     ew: {
       displayName: 'Entertainment Weekly',
       name: 'ew',
@@ -224,6 +251,15 @@ export class Outlet<
         ]],
         selector: 'a[class*="headlink"]',
         url: 'https://www.forbes.com/${1}',
+      }],
+    },
+    foreignPolicy: {
+      displayName: 'Foreign Policy',
+      name: 'foreign-policy',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="hed-heading"]',
+        url: 'https://www.foreignpolicy.com',
       }],
     },
     fortune: {
@@ -271,7 +307,7 @@ export class Outlet<
     },
     guardian: {
       displayName: 'The Guardian',
-      name: 'guardian',
+      name: 'theguardian',
       siteMaps: [{
         attribute: 'href',
         selector: 'a[class*="js-headline-text"]',
@@ -331,6 +367,15 @@ export class Outlet<
         attribute: 'href',
         selector: 'h1[class*="promo-title"] a,h2[class*="promo-title"] a',
         url: 'https://www.latimes.com',
+      }],
+    },
+    lifewire: {
+      displayName: 'Lifewire',
+      name: 'lifewire',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'div[class*="news-latest__article"] a',
+        url: 'https://www.lifewire.com',
       }],
     },
     mashable: {
@@ -456,11 +501,20 @@ export class Outlet<
     },
     vox: {
       displayName: 'Vox',
-      name: 'voz',
+      name: 'vox',
       siteMaps: [{
         attribute: 'href',
         selector: 'div[class*="c-newspaper"] a',
         url: 'https://www.vox.com',
+      }],
+    },
+    wilsonCentee: {
+      displayName: 'Wilson Center',
+      name: 'wilson-center',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="teaser"],a[class*="home-hero-event"]',
+        url: 'https://www.wilsoncenter.org',
       }],
     },
     wired: {
