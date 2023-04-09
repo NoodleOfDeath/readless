@@ -79,7 +79,7 @@ export function Summary({
     }
     switch (format) {
     case 'bullets':
-      return summary.bullets.join('\n');
+      return summary.bullets.join('').replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
     case 'concise':
       return summary.shortSummary;
     case 'casual':
@@ -123,7 +123,7 @@ export function Summary({
               <View 
                 row
                 alignCenter
-                onPress={ () => onReferSearch?.(`category:${summary.category.replace(/\s/g, '.') }`) }>
+                onPress={ () => onReferSearch?.(`category:${summary.category.replace(/\s/g, '-') }`) }>
                 {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
                 <Text color='contrastText'>{summary.category}</Text>
               </View>

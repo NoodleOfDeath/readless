@@ -41,7 +41,7 @@ export function ReadingFormatSelector({
         startIcon={ FORMAT_ICONS[newFormat] }
         width={ row === 0 ? '33.33%' : '50%' }
         selected={ format === newFormat }
-        bg={ newFormat === preferredFormat ? '#aaaaee' : undefined }
+        bg={ newFormat === preferredFormat ? '#aaaacc' : undefined }
         onPress={ () => onChange?.(newFormat) }>
         {!compact && newFormat}
       </Button>

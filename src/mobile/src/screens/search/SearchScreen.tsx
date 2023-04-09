@@ -82,7 +82,7 @@ export function SearchScreen({
         if (page === 0) {
           return (prev = data.rows);
         }
-        return (prev = [...prev, ...data.rows]);
+        return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
       });
       setTotalResultCount(data.count);
       setPage((prev) => prev + 1);
