@@ -230,7 +230,7 @@ export default function Summary({
               </StyledCardMedia>
             )}
             <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
-              <Typography variant="subtitle1">{summary?.outletName}</Typography>
+              <Typography variant="subtitle1">{summary?.outletAttributes?.displayName}</Typography>
               <Box flexGrow={ 1 } />
               <StyledLink
                 variant="subtitle1"
