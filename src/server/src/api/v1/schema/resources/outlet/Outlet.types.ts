@@ -47,3 +47,11 @@ export type OutletCreationAttributes = {
   siteMaps: SiteMap[];
   fetchPolicy?: FetchPolicy;
 };
+
+export const PUBLIC_OUTLET_ATTRIBUTES = ['id', 'name', 'displayName'] as const;
+
+export type PublicOutletAttributes = {
+  id: number;
+  name: string;
+  displayName: string;
+};

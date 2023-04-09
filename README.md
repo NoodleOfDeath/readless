@@ -9,9 +9,11 @@
 
 ReadLess is the model for a fully automated user content-driven podcast and news outlet pipeline that is powered by ChatGPT!
 
-Dev/Staging: [https://dev.readless.ai](https://dev.readless.ai)
-
-Production: [https://readless.ai](https://readless.ai)
+- Dev/Staging (web): [https://dev.readless.ai](https://dev.readless.ai)
+  - user: `dev`, pass: `dev`
+- Production (web): [https://readless.ai](https://readless.ai)
+- Production (ios): [https://apps.apple.com/us/app/read-less-news/id6447275859](https://apps.apple.com/us/app/read-less-news/id6447275859)
+- Production (android): Awaiting app store review
 
 ## Table of Contents <!-- omit in toc -->
 

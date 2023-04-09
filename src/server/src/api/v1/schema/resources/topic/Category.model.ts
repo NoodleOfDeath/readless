@@ -1,12 +1,18 @@
 import { 
   Column,
   DataType,
+  Scopes,
   Table,
 } from 'sequelize-typescript';
 
-import { CategoryAttributes, CategoryCreationAttributes } from './Category.types';
+import { 
+  CategoryAttributes, 
+  CategoryCreationAttributes,
+  PUBLIC_CATEGORY_ATTRIBUTES,
+} from './Category.types';
 import { BaseModel } from '../../base';
 
+@Scopes(() => ({ public: { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES] } }))
 @Table({
   modelName: 'category',
   paranoid: true,

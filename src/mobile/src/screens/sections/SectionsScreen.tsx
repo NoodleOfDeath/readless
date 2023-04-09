@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { CheckBox } from '@rneui/base';
+
 import {
   CategoryAttributes,
   InternalError,
@@ -9,14 +11,23 @@ import {
   Button,
   Screen,
   TabSwitcher,
+  Text,
   View,
 } from '~/components';
+import { SessionContext } from '~/contexts';
 import { ClientError, useCategoryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
 
   const { getCategories, getOutlets } = useCategoryClient();
+  const {
+    preferences: {
+      bookmarkedCategories,
+      bookmarkedOutlets,
+    },
+    setPreference,
+  } = React.useContext(SessionContext);
   
   const [loading, setLoading] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState(0);
@@ -24,6 +35,14 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   const [categories, setCategories] = React.useState<CategoryAttributes[]>([]);
   const [outlets, setOutlets] = React.useState<OutletAttributes[]>([]);
   const [_, setError] = React.useState<InternalError>();
+  
+  const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
+  const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
+  
+  const titles = React.useMemo(() => [
+    `Categories (${categoryCount}/${categories.length})`,
+    `Outlets (${outletCount}/${outlets.length})`,
+  ], [categories, categoryCount, outlets, outletCount]);
 
   const loadCategories = React.useCallback(async () => {
     setError(undefined);
@@ -71,17 +90,65 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   const selectOutlet = React.useCallback((outlet: OutletAttributes) => {
     navigation?.navigate('search', { prefilter: `outlet:${outlet.id}`, title: `outlet:${outlet.displayName}` });
   }, [navigation]);
+  
+  const followCategory = React.useCallback((category: CategoryAttributes) => {
+    setPreference('bookmarkedCategories', (prev) => {
+      const state = { ...prev };
+      if (!state[category.name]) {
+        state[category.name] = category;
+      } else {
+        delete state[category.name];
+      }
+      return (prev = state);
+    });
+  }, [setPreference]);
+  
+  const followOutlet = React.useCallback((outlet: OutletAttributes) => {
+    setPreference('bookmarkedOutlets', (prev) => {
+      const state = { ...prev };
+      if (!state[outlet.name]) {
+        state[outlet.name] = outlet;
+      } else {
+        delete state[outlet.name];
+      }
+      return (prev = state);
+    });
+  }, [setPreference]);
 
   return (
     <Screen
       refreshing={ loading }
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
-      <View col p={ 16 }>
+      <View col>
         <TabSwitcher 
           activeTab={ activeTab }
           onTabChange={ setActiveTab }
-          titles={ ['Categories', 'News Sources'] }>
-          <View col>
+          titles={ titles }>
+          <View col height='100%'>
+            <View row>
+              <View row>
+                <Text 
+                  left 
+                  variant='subtitle1'>
+                  Category
+                </Text>
+              </View>
+              <View>
+                <Text 
+                  left
+                  variant='subtitle1'>
+                  Follow 
+                  {' '}
+                  {categoryCount > 0 && (
+                    <React.Fragment>
+                      (
+                      {categoryCount}
+                      )
+                    </React.Fragment>
+                  )}
+                </Text>
+              </View>
+            </View>
             {categories.map((category) => (
               <View 
                 row
@@ -100,10 +167,37 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                   onPress={ () => selectCategory(category) }>
                   {category.name}
                 </Button>
+                <CheckBox
+                  checked={ Boolean(bookmarkedCategories?.[category.name]) }
+                  onPress={ () => followCategory(category) } />
               </View>
             ))}
           </View>
           <View col>
+            <View row>
+              <View row>
+                <Text 
+                  left
+                  variant='subtitle1'>
+                  News Source
+                </Text>
+              </View>
+              <View>
+                <Text
+                  left
+                  variant='subtitle1'>
+                  Follow 
+                  {' '}
+                  {outletCount > 0 && (
+                    <React.Fragment>
+                      (
+                      {outletCount}
+                      )
+                    </React.Fragment>
+                  )}
+                </Text>
+              </View>
+            </View>
             {outlets.map((outlet) => (
               <View 
                 row
@@ -121,6 +215,9 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                   onPress={ () => selectOutlet(outlet) }>
                   {outlet.displayName}
                 </Button>
+                <CheckBox
+                  checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
+                  onPress={ () => followOutlet(outlet) } />
               </View>
             ))}
           </View>

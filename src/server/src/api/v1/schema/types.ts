@@ -53,9 +53,6 @@ export * from './resources/outlet/OutletMedia.types';
 export * from './resources/summary/Summary.types';
 export * from './resources/summary/SummaryMedia.types';
 
-export * from './resources/article/Article.types';
-export * from './resources/article/ArticleMedia.types';
-
 export * from './queue/Queue.types';
 export * from './queue/Job.types';
 export * from './queue/Worker.types';

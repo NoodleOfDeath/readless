@@ -3,7 +3,9 @@ import React from 'react';
 import { UserData, UserDataProps } from './UserData';
 
 import {
+  CategoryAttributes,
   LoginResponse,
+  OutletAttributes,
   ReadingFormat,
   RequestParams,
   SummaryResponse,
@@ -11,13 +13,11 @@ import {
 
 export type ColorMode = 'light' | 'dark';
 
-export type SummaryBookmarkKey = `${'summary'}:${number}`;
+export class Bookmark<T> {
 
-export class SummaryBookmark {
-
-  summary: SummaryResponse;
+  item: T;
   createdAt: Date;
-
+  
   get serialized() {
     return {
       createdAt: this.createdAt,
@@ -25,8 +25,8 @@ export class SummaryBookmark {
     };
   }
 
-  constructor(summary: SummaryResponse) {
-    this.summary = summary;
+  constructor(item: T) {
+    this.item = item;
     this.createdAt = new Date();
   }
 
@@ -37,9 +37,9 @@ export type Preferences = {
   lastReleaseNotesDate?: string;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
-  bookmarks?: { 
-    [key in SummaryBookmarkKey]: key extends SummaryBookmarkKey ? SummaryBookmark : never
-  };
+  bookmarkedSummaries?: { [number]: Bookmark<SummaryResponse> };
+  bookmarkedCategories?: { [string]: Bookmark<CategoryAttributes> };
+  bookmarkedOutlets?: { [string]: Bookmark<OutletAttributes> };
 };
 
 // Headers

@@ -3,21 +3,22 @@ import React from 'react';
 import {
   InteractionResponse,
   InteractionType,
+  PublicSummaryAttributes,
   ReadingFormat,
-  SummaryResponse,
 } from '~/api';
 import { 
   Button,
   Screen,
   Summary,
+  TabSwitcher,
   Text,
   View,
 } from '~/components';
+import { window } from '~/constants';
 import {
   AppStateContext,
+  Bookmark,
   SessionContext,
-  SummaryBookmark,
-  SummaryBookmarkKey,
 } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
@@ -26,34 +27,28 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   
   const { 
     preferences: {
-      bookmarks, compactMode, preferredReadingFormat, 
+      bookmarkedCategories,
+      bookmarkedOutlets,
+      bookmarkedSummaries,
+      compactMode, 
+      preferredReadingFormat, 
     },
     setPreference,
   } = React.useContext(SessionContext);
   const { interactWithSummary, recordSummaryView } = useSummaryClient();
   const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
   
-  const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<Record<string, SummaryBookmark[]>>({});
+  const [activeTab, setActiveTab] = React.useState(0);
   
-  React.useEffect(() => {
-    const m: Record<string, SummaryBookmark[]> = {};
-    Object.entries(bookmarks ?? {})
-      .filter(([k, v]) => /^summary:\d+$/i.test(k) && v !== null).forEach(([_, v]) => {
-        const k = new Date(v.createdAt).toDateString();
-        if (!m[k]) {
-          m[k] = [];
-        }
-        m[k].push(v);
-      });
-    setBookmarkedSummaries(m);
-  }, [bookmarks]);
+  const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
+  const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
   
-  const clearBookmarks = React.useCallback(() => {
-    setPreference('bookmarks', {});
+  const clearBookmarkedSummaries = React.useCallback(() => {
+    setPreference('bookmarkedSummaries', {});
   }, [setPreference]);
 
   const handleFormatChange = React.useCallback(
-    async (summary: SummaryResponse, format?: ReadingFormat) => {
+    async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
       recordSummaryView(summary, undefined, { format });
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
@@ -67,27 +62,25 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
     navigation?.push('search', { prefilter });
   }, [navigation]);
 
-  const updateInteractions = React.useCallback((summary: SummaryResponse, interactions: InteractionResponse) => {
-    setPreference('bookmarks', (prev) => {
+  const updateInteractions = React.useCallback((summary: PublicSummaryAttributes, interactions: InteractionResponse) => {
+    setPreference('bookmarkedSummaries', (prev) => {
       const newBookmarks = { ...prev };
-      const key: SummaryBookmarkKey = `summary:${summary.id}`;
-      if (!newBookmarks[key]) {
+      if (!newBookmarks[summary.id]) {
         return (prev = newBookmarks);
       }
-      newBookmarks[key].summary.interactions = interactions;
+      newBookmarks[summary.id].summary.interactions = interactions;
       return (prev = newBookmarks);
     });
   }, [setPreference]);
   
-  const handleInteraction = React.useCallback(async (summary: SummaryResponse, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+  const handleInteraction = React.useCallback(async (summary: PublicSummaryAttributes, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
     if (interaction === InteractionType.Bookmark) {
-      setPreference('bookmarks', (prev) => {
+      setPreference('bookmarkedSummaries', (prev) => {
         const bookmarks = { ...prev };
-        const key: SummaryBookmarkKey = `summary:${summary.id}`;
-        if (bookmarks[key]) {
-          delete bookmarks[key];
+        if (bookmarks[summary.id]) {
+          delete bookmarks[summary.id];
         } else {
-          bookmarks[key] = new SummaryBookmark(summary);
+          bookmarks[summary.id] = new Bookmark(summary);
         }
         return (prev = bookmarks);
       });
@@ -116,36 +109,71 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   return (
     <Screen>
       <View col>
-        <Button 
-          rounded
-          selectable
-          p={ 8 }
-          m={ 8 }
-          center
-          onPress={ () => clearBookmarks() }>
-          Clear Bookmarks
-        </Button>
-        <View>
-          <Text fontSize={ 16 } p={ 8 }>Bookmarked Articles</Text>
-          {Object.entries(bookmarkedSummaries).map(([date, bookmarks]) => {
-            return (
-              <View col key={ date }>
-                <Text right p={ 8 }>{ new Date(date).toDateString() }</Text>
-                {bookmarks.map(({ summary }) => (
-                  <Summary 
-                    key={ summary.id } 
-                    summary={ summary }
+        <TabSwitcher
+          activeTab={ activeTab }
+          onTabChange={ setActiveTab }
+          titles={ ['Following', 'Bookmarks'] }>
+          <View>
+            {categoryCount + outletCount === 0 ? (
+              <View>
+                <Text 
+                  center
+                  fontSize={ 20 }
+                  mb={ 8 }>
+                  Looks like you are not following any categories or news sources.
+                </Text>
+                <View alignCenter justifyCenter>
+                  <Button 
+                    center
+                    outlined 
+                    rounded
+                    p={ 8 }
+                    mb={ 8 }
+                    onPress={ () => navigation?.getParent()?.jumpTo('Sections') }>
+                    Go to the Sections tab
+                  </Button>
+                </View>
+                <Text 
+                  center
+                  fontSize={ 20 }
+                  mb={ 8 }>
+                  to custom select the categories and sources you would only like to see then come back here!
+                </Text>
+              </View>
+            ) : (
+              <View>
+                <Text>{JSON.stringify(bookmarkedCategories)}</Text>
+                <Text>{JSON.stringify(bookmarkedOutlets)}</Text>
+              </View>
+            )}
+          </View>
+          <View>
+            <Button 
+              rounded
+              small
+              selectable
+              p={ 8 }
+              m={ 8 }
+              center
+              onPress={ () => clearBookmarkedSummaries() }>
+              Clear Bookmarks
+            </Button>
+            {Object.entries(bookmarkedSummaries ?? {}).map(([id, bookmark]) => {
+              return (
+                <View col key={ id }>
+                  <Summary
+                    summary={ bookmark.item }
                     bookmarked
                     forceCompact={ compactMode }
                     forceCollapse
-                    onFormatChange={ (format) => handleFormatChange(summary, format) }
+                    onFormatChange={ (format) => handleFormatChange(bookmark.item, format) }
                     onReferSearch={ handleReferSearch }
-                    onInteract={ (...args) => handleInteraction(summary, ...args) } />
-                ))}
-              </View>
-            );
-          })}
-        </View>
+                    onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
+                </View>
+              );
+            })}
+          </View>
+        </TabSwitcher>
       </View>
     </Screen>
   );

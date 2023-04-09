@@ -12,9 +12,8 @@ import {
 } from '~/components';
 import {
   AppStateContext,
+  Bookmark,
   SessionContext,
-  SummaryBookmark,
-  SummaryBookmarkKey,
 } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
@@ -25,7 +24,7 @@ export function SummaryScreen({
 }: ScreenProps<'summary'>) {
   const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
   const { 
-    preferences: { bookmarks },
+    preferences: { bookmarkedSummaries },
     setPreference,
   } = React.useContext(SessionContext);
   const { interactWithSummary, recordSummaryView } = useSummaryClient();
@@ -51,13 +50,12 @@ export function SummaryScreen({
   
   const onInteract = React.useCallback(async (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
     if (interaction === InteractionType.Bookmark) {
-      setPreference('bookmarks', (prev) => {
+      setPreference('bookmarkedSummaries', (prev) => {
         const bookmarks = { ...prev };
-        const key: SummaryBookmarkKey = `summary:${summary.id}`;
-        if (bookmarks[key]) {
-          delete bookmarks[key];
+        if (bookmarks[summary.id]) {
+          delete bookmarks[summary.id];
         } else {
-          bookmarks[key] = new SummaryBookmark(summary);
+          bookmarks[summary.id] = new Bookmark(summary);
         }
         return (prev = bookmarks);
       });
@@ -86,8 +84,7 @@ export function SummaryScreen({
             summary={ summary }
             format={ format }
             collapsible={ false }
-            forceCompact={ false }
-            bookmarked={ Boolean(bookmarks?.[`summary:${summary.id}`]) }
+            bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(format) }
             onReferSearch={ handleReferSearch }
             onInteract={ onInteract }

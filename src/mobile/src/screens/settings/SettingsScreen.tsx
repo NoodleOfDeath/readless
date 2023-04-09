@@ -6,6 +6,7 @@ import {
   Button,
   ReadingFormatSelector,
   Screen, 
+  TabSwitcher,
   Text,
   View,
 } from '~/components';
@@ -138,25 +139,29 @@ export function SettingsScreen({ navigation }: ScreenProps<'default'>) {
   
   return (
     <Screen>
-      <View p={ 32 }>
-        {options.filter((o) => o.visible !== false).map((option) => (
-          <View col key={ option.id } p={ 8 } mv={ 4 }>
-            {!option.onPress && (
-              <Text>{option.label}</Text>
-            )}
-            {option.onPress && (
-              <Button
-                p={ 8 }
-                rounded
-                selectable
-                outlined 
-                onPress={ option.onPress }>
-                {option.label}
-              </Button>
-            )}
-            {option.children}
+      <View>
+        <TabSwitcher>
+          <View>
+            {options.filter((o) => o.visible !== false).map((option) => (
+              <View col key={ option.id } p={ 8 } mv={ 4 }>
+                {!option.onPress && (
+                  <Text>{option.label}</Text>
+                )}
+                {option.onPress && (
+                  <Button
+                    p={ 8 }
+                    rounded
+                    selectable
+                    outlined 
+                    onPress={ option.onPress }>
+                    {option.label}
+                  </Button>
+                )}
+                {option.children}
+              </View>
+            ))}
           </View>
-        ))}
+        </TabSwitcher>
       </View>
     </Screen>
   );
