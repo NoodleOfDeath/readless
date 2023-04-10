@@ -59,10 +59,6 @@ export function Button({
     , [isPressed, pressableProps.selectable, style, selected, theme]
   );
   
-  const textColor = React.useMemo(() => {
-    return ((selected || isPressed) && pressableProps.selectable) ? theme.colors.text : (pressableProps.color ?? theme.colors.primary); 
-  }, [isPressed, pressableProps.selectable, selected, pressableProps.color, theme]);
-  
   const startIconComponent = React.useMemo(() => {
     if (!startIcon) {
       return; 
@@ -72,11 +68,11 @@ export function Button({
         <Icon 
           name={ startIcon } 
           size={ iconSize } 
-          color={ textColor } />
+          color={ buttonStyle.color } />
       );
     }
     return startIcon;
-  }, [startIcon, iconSize, textColor]);
+  }, [startIcon, iconSize, buttonStyle.color]);
   
   const endIconComponent = React.useMemo(() => {
     if (!endIcon) {
@@ -87,11 +83,11 @@ export function Button({
         <Icon 
           name={ endIcon } 
           size={ iconSize } 
-          color={ textColor } />
+          color={ buttonStyle.color } />
       );
     }
     return endIcon;
-  }, [endIcon, iconSize, textColor]);
+  }, [endIcon, iconSize, buttonStyle.color]);
 
   const handlePress = React.useCallback((e: GestureResponderEvent) => {
     setIsPressed(true);
@@ -107,7 +103,7 @@ export function Button({
   return (
     <View pressable { ...pressableProps } onPress={ handlePress } onPressOut={ handlePressOut } style={ buttonStyle }> 
       {startIconComponent && <View mr={ children ? 8 : 0 }>{ startIconComponent }</View>}
-      {children && <Text color={ textColor } style={ { fontSize } }>{ children }</Text>}
+      {children && <Text color={ buttonStyle.color } style={ { fontSize } }>{ children }</Text>}
       {endIconComponent && <View ml={ children ? 8 : 0 }>{ endIconComponent }</View>}
     </View>
   );
