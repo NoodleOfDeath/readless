@@ -49,13 +49,14 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids
     if (matches) {
       for (const match of matches) {
         const [_, prefix, prefixValues] = match;
+        const pf = parsePrefilter(prefixValues);
         if (/cat(egory)?/i.test(prefix)) {
-          where.category = parsePrefilter(prefixValues.replace(/-([a-z])/gi, (_, $1) => ` ${$1}`));
+          where.category = pf;
         }
         if (/outlet|source|src/i.test(prefix)) {
           newOptions.include = [{
             model: Outlet,
-            where: { name: parsePrefilter(prefixValues) },
+            where: { name: pf },
           }];
         }
       }
