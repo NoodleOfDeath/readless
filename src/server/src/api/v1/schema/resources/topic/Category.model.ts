@@ -25,63 +25,180 @@ export class Category<
   implements CategoryAttributes {
   
   public static CATEGORIES: Record<string, CategoryCreationAttributes> = {
-    Art: { icon: 'palette', name: 'Art' },
-    'Artificial Intelligence': { icon: 'brain', name: 'Artificial Intelligence' },
-    Automotive: { icon: 'car', name: 'Automotive' },
-    Books: { icon: 'book-open-variant', name: 'Books' },
-    Business: { icon: 'domain', name: 'Business' },
-    Crime: { icon: 'police-badge', name: 'Crime' },
-    Cryptocurrency: { icon: 'bitcoin', name: 'Cryptocurrency' },
-    Culture: { icon: 'cannabis', name: 'Culture' },
-    Disasters: { icon: 'weather-tornado', name: 'Disasters' },
-    Economics: { icon: 'cash', name: 'Economics' },
-    Education: { icon: 'school', name: 'Education' },
-    Energy: { icon: 'barrel', name: 'Energy' },
-    Entertainment: { icon: 'popcorn', name: 'Entertainment' },
-    Environment: { icon: 'sprout', name: 'Environment' },
-    Fashion: { icon: 'shoe-heel', name: 'Fashion' },
-    Finance: { icon: 'currency-usd', name: 'Finance' },
-    Food: { icon: 'food', name: 'Food' },
-    Gaming: { icon: 'controller-classic', name: 'Gaming' },
-    Geopolitics: { icon: 'handshake', name: 'Geopolitics' },
-    Health: { icon: 'weight-lifter', name: 'Health' },
-    Healthcare: { icon: 'medical-bag', name: 'Healthcare' },
-    History: { icon: 'pillar', name: 'History' },
-    'Home Improvement': { icon: 'home-heart', name: 'Home Improvement' },
-    Inspiration: { icon: 'lightbulb-on', name: 'Inspiration' },
-    Journalism: { icon: 'feather', name: 'Journalism' },
-    Labor: { icon: 'briefcase', name: 'Labor' },
-    Legal: { icon: 'gavel', name: 'Legal' },
-    Lifestyle: { icon: 'shoe-sneaker', name: 'Lifestyle' },
-    Media: { icon: 'account-group', name: 'Media' },
-    Medicine: { icon: 'needle', name: 'Medicine' },
-    Music: { icon: 'music', name: 'Music' },
-    Obituary: { icon: 'grave-stone', name: 'Obituary' },
-    Other: { icon: 'progress-question', name: 'Other' },
-    Pandemic: { icon: 'virus', name: 'Pandemic' },
-    Parenting: { icon: 'human-male-child', name: 'Parenting' },
-    Pets: { icon: 'dog', name: 'Pets' },
-    Philosophy: { icon: 'head-dots-horizontal', name: 'Philosophy' },
-    Politics: { icon: 'bank-outline', name: 'Politics' },
-    'Pop Culture': { icon: 'bullhorn', name: 'Pop Culture' },
-    Productivity: { icon: 'tools', name: 'Productivity' },
-    'Real Estate': { icon: 'home-group', name: 'Real Estate' },
-    Religion: { icon: 'cross', name: 'Religion' },
-    Robotics: { icon: 'robot-industrial', name: 'Robotics' },
-    Royalty: { icon: 'crown', name: 'Royalty' },
-    Science: { icon: 'flask', name: 'Science' },
-    Shopping: { icon: 'shopping', name: 'Shopping' },
-    Space: { icon: 'space-station', name: 'Space' },
-    Sports: { icon: 'basketball', name: 'Sports' },
-    Technology: { icon: 'chip', name: 'Technology' },
-    Television: { icon: 'television-classic', name: 'Television' },
-    Tragedy: { icon: 'drama-masks', name: 'Tragedy' },
-    Transportation: { icon: 'bike', name: 'Transportation' },
-    Travel: { icon: 'airplane', name: 'Travel' },
-    'U.S. News': { icon: 'star-circle', name: 'U.S. News' },
-    Weather: { icon: 'weather-partly-cloudy', name: 'Weather' },
-    Wildlife: { icon: 'rabbit', name: 'Wildlife' },
-    'World News': { icon: 'earth', name: 'World News' },
+    art: {
+      displayName: 'Art', icon: 'palette', name: 'art', 
+    },
+    'artificial-intelligence': {
+      displayName: 'Artificial Intelligence', icon: 'brain', name: 'artificial-intelligence', 
+    },
+    automotive: {
+      displayName: 'Automotive', icon: 'car', name: 'automotive', 
+    },
+    books: {
+      displayName: 'Books', icon: 'book-open-variant', name: 'books', 
+    },
+    business: {
+      displayName: 'Business', icon: 'domain', name: 'business', 
+    },
+    crime: {
+      displayName: 'Crime', icon: 'police-badge', name: 'crime', 
+    },
+    cryptocurrency: {
+      displayName: 'Cryptocurrency', icon: 'bitcoin', name: 'cryptocurrency', 
+    },
+    culture: {
+      displayName: 'Culture', icon: 'cannabis', name: 'culture', 
+    },
+    disasters: {
+      displayName: 'Disasters', icon: 'weather-tornado', name: 'disasters', 
+    },
+    economics: {
+      displayName: 'Economics', icon: 'cash', name: 'economics', 
+    },
+    education: {
+      displayName: 'Education', icon: 'school', name: 'education', 
+    },
+    energy: {
+      displayName: 'Energy', icon: 'barrel', name: 'energy', 
+    },
+    entertainment: {
+      displayName: 'Entertainment', icon: 'popcorn', name: 'entertainment', 
+    },
+    environment: {
+      displayName: 'Environment', icon: 'sprout', name: 'environment', 
+    },
+    fashion: {
+      displayName: 'Fashion', icon: 'shoe-heel', name: 'fashion', 
+    },
+    finance: {
+      displayName: 'Finance', icon: 'currency-usd', name: 'finance', 
+    },
+    food: {
+      displayName: 'Food', icon: 'food', name: 'food', 
+    },
+    gaming: {
+      displayName: 'Gaming', icon: 'controller-classic', name: 'gaming', 
+    },
+    geopolitics: {
+      displayName: 'Geopolitics', icon: 'handshake', name: 'geopolitics', 
+    },
+    health: {
+      displayName: 'Health', icon: 'weight-lifter', name: 'health', 
+    },
+    healthcare: {
+      displayName: 'Healthcare', icon: 'medical-bag', name: 'healthcare', 
+    },
+    history: {
+      displayName: 'History', icon: 'pillar', name: 'history', 
+    },
+    'home-improvement': {
+      displayName: 'Home Improvement', icon: 'home-heart', name: 'home-improvement', 
+    },
+    inspiration: {
+      displayName: 'Inspiration', icon: 'lightbulb-on', name: 'inspiration', 
+    },
+    journalism: {
+      displayName: 'Journalism', icon: 'feather', name: 'journalism', 
+    },
+    labor: {
+      displayName: 'Labor', icon: 'briefcase', name: 'labor', 
+    },
+    legal: {
+      displayName: 'Legal', icon: 'gavel', name: 'legal', 
+    },
+    lgbtq: {
+      displayName: 'LGBTQ', icon: 'looks', name: 'lgbtq', 
+    },
+    lifestyle: {
+      displayName: 'Lifestyle', icon: 'shoe-sneaker', name: 'lifestyle', 
+    },
+    media: {
+      displayName: 'Media', icon: 'account-group', name: 'media', 
+    },
+    medicine: {
+      displayName: 'Medicine', icon: 'needle', name: 'medicine', 
+    },
+    music: {
+      displayName: 'Music', icon: 'music', name: 'music', 
+    },
+    obituary: {
+      displayName: 'Obituary', icon: 'grave-stone', name: 'obituary', 
+    },
+    other: {
+      displayName: 'Other', icon: 'progress-question', name: 'other', 
+    },
+    pandemic: {
+      displayName: 'Pandemic', icon: 'virus', name: 'pandemic', 
+    },
+    parenting: {
+      displayName: 'Parenting', icon: 'human-male-child', name: 'parenting', 
+    },
+    pets: {
+      displayName: 'Pets', icon: 'dog', name: 'pets', 
+    },
+    philosophy: {
+      displayName: 'Philosophy', icon: 'head-dots-horizontal', name: 'philosophy', 
+    },
+    politics: {
+      displayName: 'Politics', icon: 'bank-outline', name: 'politics', 
+    },
+    'pop-culture': {
+      displayName: 'Pop Culture', icon: 'bullhorn', name: 'pop-culture', 
+    },
+    productivity: {
+      displayName: 'Productivity', icon: 'tools', name: 'productivity', 
+    },
+    'real-estate': {
+      displayName: 'Real Estate', icon: 'home-group', name: 'real-estate', 
+    },
+    religion: {
+      displayName: 'Religion', icon: 'cross', name: 'religion', 
+    },
+    robotics: {
+      displayName: 'Robotics', icon: 'robot-industrial', name: 'robotics', 
+    },
+    royalty: {
+      displayName: 'Royalty', icon: 'crown', name: 'royalty', 
+    },
+    science: {
+      displayName: 'Science', icon: 'flask', name: 'science', 
+    },
+    shopping: {
+      displayName: 'Shopping', icon: 'shopping', name: 'shopping', 
+    },
+    space: {
+      displayName: 'Space', icon: 'space-station', name: 'space', 
+    },
+    sports: {
+      displayName: 'Sports', icon: 'basketball', name: 'sports', 
+    },
+    technology: {
+      displayName: 'Technology', icon: 'chip', name: 'technology', 
+    },
+    television: {
+      displayName: 'Television', icon: 'television-classic', name: 'television', 
+    },
+    tragedy: {
+      displayName: 'Tragedy', icon: 'drama-masks', name: 'tragedy', 
+    },
+    transportation: {
+      displayName: 'Transportation', icon: 'bike', name: 'transportation', 
+    },
+    travel: {
+      displayName: 'Travel', icon: 'airplane', name: 'travel', 
+    },
+    'usnews': {
+      displayName: 'U.S. News', icon: 'star-circle', name: 'usnews', 
+    },
+    weather: {
+      displayName: 'Weather', icon: 'weather-partly-cloudy', name: 'weather', 
+    },
+    wildlife: {
+      displayName: 'Wildlife', icon: 'rabbit', name: 'wildlife', 
+    },
+    'world-news': {
+      displayName: 'World News', icon: 'earth', name: 'world-news', 
+    },
   };
   
   public static async initCategories() {
@@ -96,6 +213,12 @@ export class Category<
     unique: true,
   })
   declare name: string;
+  
+  @Column({ 
+    allowNull: false,
+    type: DataType.STRING,
+  })
+  declare displayName: string;
     
   @Column({
     allowNull: false,

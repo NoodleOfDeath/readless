@@ -42,7 +42,7 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids
   const where: FindAndCountOptions<Summary>['where'] = {};
   const splitExpr = /\s*((?:[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))*)(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
-  let query = q ?? '';
+  const query = q ?? '';
   if (prefilter) {
     const expr = /([\w]+):([-\w.]*(?:,[-\w.]*)*)/gi;
     const matches = prefilter.matchAll(expr);
@@ -51,14 +51,12 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids
         const [_, prefix, prefixValues] = match;
         if (/cat(egory)?/i.test(prefix)) {
           where.category = parsePrefilter(prefixValues.replace(/-([a-z])/gi, (_, $1) => ` ${$1}`));
-          query = q;
         }
         if (/outlet|source|src/i.test(prefix)) {
           newOptions.include = [{
             model: Outlet,
             where: { name: parsePrefilter(prefixValues) },
           }];
-          query = q;
         }
       }
     }

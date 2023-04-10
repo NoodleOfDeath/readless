@@ -4,21 +4,21 @@ export type CategoryAttributes = DatedAttributes & {
   /** type of this category */
   name: string;
   /** display name of this category */
-  // displayName: string;
+  displayName: string;
   /** mdi icon for this string **/
   icon: string;
 };
 
 export type CategoryCreationAttributes = {
   name: string;
-  // displayName: string;
+  displayName: string;
   icon: string;
 };
 
-export const PUBLIC_CATEGORY_ATTRIBUTES = ['name', 'icon'] as const;
+export const PUBLIC_CATEGORY_ATTRIBUTES = ['name', 'displayName', 'icon'] as const;
 
 export type PublicCategoryAttributes = {
   name: string;
-  // displayName: string;
+  displayName: string;
   icon: string;
 };
