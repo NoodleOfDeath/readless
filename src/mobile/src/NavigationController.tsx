@@ -12,9 +12,9 @@ import {
   SearchScreen,
   SectionsScreen,
   SettingsScreen,
+  StackableTabParams,
   SummaryScreen,
 } from '~/screens';
-import { StackableTabParams } from '~/screens';
 
 export function TabViewController(
   tabs: { [key in keyof StackableTabParams]?: React.ComponentType }, 

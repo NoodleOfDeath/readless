@@ -92,6 +92,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   }, [navigation]);
   
   const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
+    let categoryCount = 0;
     setPreference('bookmarkedCategories', (prev) => {
       const state = { ...prev };
       if (!state[category.name]) {
@@ -99,11 +100,14 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
       } else {
         delete state[category.name];
       }
+      categoryCount = Object.values(state).length;
       return (prev = state);
     });
-  }, [setPreference]);
+    setPreference('showOnlyBookmarkedNews', categoryCount + outletCount > 0);
+  }, [outletCount, setPreference]);
   
   const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
+    let outletCount = 0;
     setPreference('bookmarkedOutlets', (prev) => {
       const state = { ...prev };
       if (!state[outlet.name]) {
@@ -111,9 +115,16 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
       } else {
         delete state[outlet.name];
       }
+      outletCount = Object.values(state).length;
       return (prev = state);
     });
-  }, [setPreference]);
+    setPreference('showOnlyBookmarkedNews', categoryCount + outletCount > 0);
+  }, [categoryCount, setPreference]);
+  
+  const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' |'bookmarkedOutlets') => {
+    setPreference(key, {});
+    setPreference('showOnlyBookmarkedNews', categoryCount + outletCount > 0);
+  }, [categoryCount, outletCount, setPreference]);
 
   return (
     <Screen
@@ -136,7 +147,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
               <View>
                 <Button 
                   left
-                  onPress={ ()=> setPreference('bookmarkedCategories', {}) }>
+                  onPress={ () => clearBookmarks('bookmarkedCategories') }>
                   Follow 
                   {' '}
                   {categoryCount > 0 && (
@@ -186,7 +197,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
               <View>
                 <Button
                   left
-                  onPress={ ()=> setPreference('bookmarkedOutlets', {}) }>
+                  onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
                   Follow 
                   {' '}
                   {outletCount > 0 && (

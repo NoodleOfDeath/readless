@@ -687,6 +687,10 @@
 				PRODUCT_NAME = ReadLess;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../node_modules/ReadLess/ios",
+					"$(inherited)",
+				);
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -717,6 +721,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios;
 				PRODUCT_NAME = ReadLess;
 				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../node_modules/ReadLess/ios",
+					"$(inherited)",
+				);
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

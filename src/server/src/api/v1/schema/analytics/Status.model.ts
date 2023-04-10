@@ -18,7 +18,6 @@ export class Status extends BaseModel<StatusAttributes, StatusAttributes> implem
   @Column({
     allowNull: false,
     type: DataType.STRING,
-    unique: true,
   })
   declare name: string;
 

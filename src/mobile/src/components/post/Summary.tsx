@@ -173,6 +173,11 @@ export function Summary({
                 name="eye"
                 color={ 'primary' }
                 mh={ 8 } />
+              <Button
+                startIcon='share'
+                fontSize={ 24 }
+                color='primary'
+                onPress={ () => onInteract?.(InteractionType.Share) } />
             </View>
           </View>
           <View mt={ 2 }>

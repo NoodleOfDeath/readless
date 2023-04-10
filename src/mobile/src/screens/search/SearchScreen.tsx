@@ -1,6 +1,7 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Share } from 'react-native';
 
+import { BASE_DOMAIN } from '@env';
 import { SearchBar, Switch } from '@rneui/base';
 
 import {
@@ -12,7 +13,6 @@ import {
 import {
   Button,
   Screen,
-  ScrollView,
   Summary,
   Text,
   View,
@@ -54,7 +54,7 @@ export function SearchScreen({
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter ?? '');
   
   React.useEffect(() => {
-    setPrefilter(route?.params?.prefilter);
+    setPrefilter(route?.params?.prefilter ?? '');
     if (route?.params?.prefilter) {
       setSearchText(`${route.params?.prefilter} `);
     } else {
@@ -79,14 +79,19 @@ export function SearchScreen({
   const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
   const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
 
-  const followFilter = React.useMemo(() => [`cat:${Object.values(bookmarkedCategories ?? {}).map((c) => c.item.name.toLowerCase().replace(/\s/g, '-')).join(',')}`, `src:${Object.values(bookmarkedOutlets ?? {}).map((o) => o.item.name).join(',')}`].join(' '), [bookmarkedCategories, bookmarkedOutlets]);
+  const followFilter = React.useMemo(() => 
+    [`cat:${Object.values(bookmarkedCategories ?? {})
+      .map((c) => c.item.name.toLowerCase().replace(/\s/g, '-')).join(',')}`, 
+    `src:${Object.values(bookmarkedOutlets ?? {})
+      .map((o) => o.item.name).join(',')}`]
+      .join(' '), [bookmarkedCategories, bookmarkedOutlets]);
 
   const load = React.useCallback(async (pageSize: number, page: number) => {
     setLoading(true);
     if (page === 0) {
       setRecentSummaries([]);
     }
-    const filter = prefilter ?? showOnlyBookmarkedNews ? [followFilter, searchText].join(' ') : searchText;
+    const filter = prefilter || showOnlyBookmarkedNews ? [followFilter, searchText].join(' ') : searchText;
     try {
       const { data, error } = await getSummaries(
         filter,
@@ -116,7 +121,8 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [showOnlyBookmarkedNews, followFilter, searchText, prefilter, getSummaries]);
+  }, [showOnlyBookmarkedNews, followFilter, 
+    searchText, prefilter, getSummaries]);
 
   const onMount = React.useCallback(() => {
     setPage(0);
@@ -127,7 +133,11 @@ export function SearchScreen({
   }, [load, navigation, pageSize, prefilter]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => onMount(), [pageSize, prefilter, searchText, showOnlyBookmarkedNews, bookmarkedOutlets, bookmarkedCategories]);
+  React.useEffect(
+    () => onMount(), 
+    [pageSize, prefilter, searchText, showOnlyBookmarkedNews, 
+      bookmarkedOutlets, bookmarkedCategories, onMount]
+  );
 
   const loadMore = React.useCallback(async () => {
     await load(pageSize, page + 1);
@@ -140,7 +150,8 @@ export function SearchScreen({
       return;
     }
     setPreference('showOnlyBookmarkedNews', value);
-  }, [categoryCount, navigation, outletCount, setNavigation, setPreference, setShowNotFollowingDialog]);
+  }, [categoryCount, navigation, outletCount,
+    setNavigation, setPreference, setShowNotFollowingDialog]);
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
@@ -175,7 +186,13 @@ export function SearchScreen({
     });
   };
   
-  const handleInteraction = React.useCallback(async (summary: PublicSummaryAttributes, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+  const handleInteraction = React.useCallback(async (
+    summary: 
+    PublicSummaryAttributes, 
+    interaction: InteractionType, 
+    content?: string, 
+    metadata?: Record<string, unknown>
+  ) => {
     if (interaction === InteractionType.Bookmark) {
       setPreference('bookmarkedSummaries', (prev) => {
         const bookmarks = { ...prev };
@@ -186,6 +203,10 @@ export function SearchScreen({
         }
         return (prev = bookmarks);
       });
+      return;
+    } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
+      const shareUrl = `${BASE_DOMAIN}/s/${summary.categoryAttributes.name}/${summary.id}`;
+      await Share.share({ url: shareUrl });
       return;
     }
     const { data, error } = await interactWithSummary(
@@ -234,51 +255,49 @@ export function SearchScreen({
           </View>
         </React.Fragment>
       )}
-      <ScrollView>
-        <View col>
-          {loading && recentSummaries.length === 0 && (
-            <View row justifyCenter p={ 16 }>
-              <ActivityIndicator size="large" />
-            </View>
-          )}
-          {!loading && showOnlyBookmarkedNews && recentSummaries.length === 0 && (
-            <View col justifyCenter p={ 16 }>
-              <Text fontSize={ 20 } pb={ 8 }>It seems your filters are too specific. You may want to consider adding more categories and new sources to your follow list.</Text>
-              <Button 
-                alignCenter
-                rounded 
-                outlined 
-                p={ 8 }
-                selectable
-                onPress={ () => navigation?.getParent()?.navigate('Sections') }>
-                Go to Sections
-              </Button>
-            </View>
-          )}
-          {recentSummaries.map((summary) => (
-            <Summary
-              key={ summary.id }
-              summary={ summary }
-              compact={ compactMode }
-              bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
-              onFormatChange={ (format) => handleFormatChange(summary, format) }
-              onReferSearch={ handleReferSearch }
-              onInteract={ (...e) => handleInteraction(summary, ...e) } />
-          ))}
-          {!loading && totalResultCount > recentSummaries.length && (
-            <View row justifyCenter p={ 16 } pb={ 24 }>
-              <Button 
-                outlined
-                rounded
-                p={ 8 }
-                selectable
-                onPress={ loadMore }>
-                Load More
-              </Button>
-            </View>
-          )}
-        </View>
-      </ScrollView>
+      <View col>
+        {loading && recentSummaries.length === 0 && (
+          <View row justifyCenter p={ 16 }>
+            <ActivityIndicator size="large" />
+          </View>
+        )}
+        {!loading && showOnlyBookmarkedNews && recentSummaries.length === 0 && (
+          <View col justifyCenter p={ 16 }>
+            <Text fontSize={ 20 } pb={ 8 }>It seems your filters are too specific. You may want to consider adding more categories and new sources to your follow list.</Text>
+            <Button 
+              alignCenter
+              rounded 
+              outlined 
+              p={ 8 }
+              selectable
+              onPress={ () => navigation?.getParent()?.navigate('Sections') }>
+              Go to Sections
+            </Button>
+          </View>
+        )}
+        {recentSummaries.map((summary) => (
+          <Summary
+            key={ summary.id }
+            summary={ summary }
+            compact={ compactMode }
+            bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
+            onFormatChange={ (format) => handleFormatChange(summary, format) }
+            onReferSearch={ handleReferSearch }
+            onInteract={ (...e) => handleInteraction(summary, ...e) } />
+        ))}
+        {!loading && totalResultCount > recentSummaries.length && (
+          <View row justifyCenter p={ 16 } pb={ 24 }>
+            <Button 
+              outlined
+              rounded
+              p={ 8 }
+              selectable
+              onPress={ loadMore }>
+              Load More
+            </Button>
+          </View>
+        )}
+      </View>
     </Screen>
   );
 }
