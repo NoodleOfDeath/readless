@@ -8,13 +8,14 @@ import Document, {
   NextScript,
 } from 'next/document';
 
-export default class SkoopDocument extends Document {
+export default class ReadLessDocument extends Document {
 
   render() {
     return (
       <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
+          <meta name="apple-itunes-app" content={ `app-id=${process.env.NEXT_PUBLIC_APPLE_APP_ID}` } />
           <link rel="icon" href="/favicon.ico" />
           <link rel="stylesheet" href="/index.css" />
         </Head>
@@ -28,7 +29,7 @@ export default class SkoopDocument extends Document {
 
 }
 
-SkoopDocument.getInitialProps = async (ctx) => {
+ReadLessDocument.getInitialProps = async (ctx) => {
 
   // Render app and page and get the context of the page with collected side effects.
   const sheets = new ServerStyleSheets();
