@@ -139,7 +139,7 @@ export default function SearchPage() {
               <Summary
                 summary={ recentSummaries[expandedPost] }
                 onChange={ (newFormat) => expandPost(expandedPost, newFormat) }
-                format={ readingFormat } 
+                initialFormat={ readingFormat } 
                 onInteract={ 
                   (type, content, metadata) => handleInteraction(recentSummaries[expandedPost], type, content, metadata) 
                 } />

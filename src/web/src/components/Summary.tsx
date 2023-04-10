@@ -1,11 +1,10 @@
 import React from 'react';
 
 import {
+  mdiBookmarkBoxOutline,
   mdiChevronLeft,
-  mdiThumbDown,
-  mdiThumbDownOutline,
-  mdiThumbUp,
-  mdiThumbUpOutline,
+  mdiEye,
+  mdiShare,
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import {
@@ -13,30 +12,27 @@ import {
   Button,
   Card,
   CardContent,
-  CardMedia,
   Divider,
   Link,
   Stack,
   Typography,
   styled,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 import { formatDistance } from 'date-fns';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 import {
   InteractionType,
-  InteractionUserVote,
   PublicSummaryAttributes,
   ReadingFormat,
 } from '~/api';
 import ReadingFormatSelector from '~/components/ReadingFormatSelector';
 import TruncatedText from '~/components/common/TruncatedText';
+import { SessionContext } from '~/contexts';
 
 type Props = {
-  summary?: PublicSummaryAttributes;
-  format?: ReadingFormat;
+  summary: PublicSummaryAttributes;
+  initialFormat?: ReadingFormat;
   tickIntervalMs?: number;
   onChange?: (mode?: ReadingFormat) => void;
   onInteract?: (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
@@ -58,20 +54,23 @@ const StyledTitle = styled(Typography)(() => ({
   textDecoration: 'none',
 }));
 
-const StyledBackButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
   border: theme.palette.secondary.main,
   borderRadius: 20,
   color: theme.palette.primary.contrastText,
   height: 40,
+  paddingRight: theme.spacing(5),
+}));
+
+const StyledBackButton = styled(StyledButton)(({ theme }) => ({
   left: theme.spacing(2),
   opacity: 0.8,
-  paddingRight: theme.spacing(5),
   position: 'fixed',
   top: theme.spacing(10),
 }));
 
-const StyledReadingFormatContainer = styled(Box)<Partial<Props>>(({ theme, format }) => ({
+const StyledReadingFormatContainer = styled(Box)<Partial<Props>>(({ theme, initialFormat: format }) => ({
   borderRadius: 8,
   bottom: format && theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
   position: format ? 'fixed' : 'relative',
@@ -79,64 +78,40 @@ const StyledReadingFormatContainer = styled(Box)<Partial<Props>>(({ theme, forma
   top: format && !theme.breakpoints.down('md') ? theme.spacing(10) : undefined,
 }));
 
-const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
-  borderRadius: 8,
-  marginBottom: theme.breakpoints.down('md') ? theme.spacing(2) : 0,
-  marginLeft: theme.breakpoints.down('md') ? 0 : theme.spacing(2),
-  width: theme.breakpoints.down('md') ? '100%' : 120,
-}));
-
 const StyledCategoryBox = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
   background: theme.palette.primary.main,
   borderRadius: 8,
   color: theme.palette.primary.contrastText,
-  display: 'flex',
-  height: theme.breakpoints.down('md') ? '100%' : 'auto',
-  justifyContent: 'center', 
-  width: theme.breakpoints.down('md') ? '100%' : 120,
+  justifyContent: 'space-between',
+  marginBottom: theme.spacing(1),
+  padding: theme.spacing(1),
+  width: '100%',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({ color: theme.palette.primary.contrastText }));
 
-const StyledDivider = styled(Divider)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  marginTop: theme.spacing(2),
-}));
+const StyledDivider = styled(Divider)(({ theme }) => ({ marginTop: theme.spacing(1) }));
 
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
 
-const StyledCenteredStack = styled(Stack)(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  textAlign: 'center',
-}));
-
 export default function Summary({
   summary,
-  format,
+  initialFormat,
   tickIntervalMs = 60_000,
   onChange,
   onInteract,
-}: Props = {}) {
+}: Props) {
 
-  const theme = useTheme();
-  
-  const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
+  const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
 
+  const [format, setFormat] = React.useState(initialFormat ?? preferredReadingFormat ?? ReadingFormat.Concise);
   const [lastTick, setLastTick] = React.useState(new Date());
-
-  const bottomRowDirection = React.useMemo(() => {
-    return mdAndDown ? 'column' : 'row';
-  }, [mdAndDown]);
-
-  const [showSplitVotes, setShowSplitVotes] = React.useState(false);
 
   const timeAgo = React.useMemo(
     () =>
-      formatDistance(new Date(summary?.createdAt ?? 0), lastTick, { addSuffix: true }),
-    [summary?.createdAt, lastTick]
+      formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true }),
+    [summary.createdAt, lastTick]
   );
 
   // update time ago every `tickIntervalMs` milliseconds
@@ -146,55 +121,6 @@ export default function Summary({
     }, tickIntervalMs);
     return () => clearInterval(interval);
   }, [tickIntervalMs]);
-  
-  const upvotes = React.useMemo(
-    () => 
-      summary?.interactions?.upvote ?? 0
-    , [summary?.interactions?.upvote]
-  );
-
-  const downvotes = React.useMemo(
-    () =>
-      summary?.interactions?.downvote ?? 0
-    , [summary?.interactions?.downvote]
-  );
-  
-  const votes = React.useMemo(() => upvotes - downvotes, [downvotes, upvotes]);
-
-  const cardMediaStack = React.useMemo(() => {
-    return (
-      <StyledCategoryBox>
-        <Typography variant="subtitle1">{summary?.category}</Typography>
-        <Typography variant="subtitle2">{summary?.subcategory}</Typography>
-      </StyledCategoryBox>
-    );
-  }, [summary?.category, summary?.subcategory]);
-  
-  const interactionButtons = React.useMemo(() => {
-    return (
-      <Stack direction="row" spacing={ 1 }>
-        <Button onClick={ () => onInteract?.(InteractionType.Upvote) }>
-          <Icon path={ summary?.interactions.uservote === InteractionUserVote.Up ? mdiThumbUp : mdiThumbUpOutline } size={ 1 } />
-        </Button>
-        <StyledCenteredStack onClick={ () => setShowSplitVotes(!showSplitVotes) }>
-          {showSplitVotes ? (
-            <React.Fragment>
-              <Typography variant="subtitle2">{upvotes}</Typography>
-              <Typography variant="subtitle2">
-                -
-                {downvotes}
-              </Typography>
-            </React.Fragment>
-          ) : (
-            <Typography variant="subtitle1">{votes}</Typography>
-          )}
-        </StyledCenteredStack>
-        <Button onClick={ () => onInteract?.(InteractionType.Downvote) }>
-          <Icon path={ summary?.interactions.uservote === InteractionUserVote.Down ? mdiThumbDown : mdiThumbDownOutline } size={ 1 } />
-        </Button>
-      </Stack>
-    );
-  }, [downvotes, onInteract, upvotes, showSplitVotes, votes, summary?.interactions.uservote]);
 
   const content = React.useMemo(() => {
     if (!summary) {
@@ -222,9 +148,17 @@ export default function Summary({
     );
   }, [summary, format]);
 
+  const handleFormatChange = React.useCallback(
+    (newFormat: ReadingFormat) => {
+      setFormat(newFormat);
+      onChange?.(newFormat);
+    },
+    [onChange]
+  );
+
   return (
     <StyledCard>
-      {format !== undefined && (
+      {initialFormat !== undefined && (
         <StyledBackButton
           onClick={ () => onChange?.() }
           startIcon={
@@ -236,44 +170,47 @@ export default function Summary({
       <StyledStack>
         <StyledStack direction='row' spacing={ 2 }>
           <StyledStack flexGrow={ 1 }>
-            {mdAndDown && (
-              <StyledCardMedia>
-                {cardMediaStack}
-              </StyledCardMedia>
-            )}
+            <StyledCategoryBox direction="row" spacing={ 1 }>
+              <Typography variant="subtitle1">{summary.categoryAttributes?.displayName ?? 'category'}</Typography>
+              <Box flexGrow={ 1 } />
+              <StyledButton 
+                startIcon={ <Icon path={ mdiBookmarkBoxOutline } size={ 1 } /> } 
+                onClick={ () => onInteract?.(InteractionType.Bookmark) }>
+                Read Later
+              </StyledButton>
+            </StyledCategoryBox>
             <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
-              <Typography variant="subtitle1">{summary?.outletAttributes?.displayName}</Typography>
+              <Typography variant="subtitle1">{summary.outletAttributes?.displayName}</Typography>
               <Box flexGrow={ 1 } />
               <StyledLink
                 variant="subtitle1"
-                href={ summary?.url }
+                href={ summary.url }
                 target="_blank"
                 color="inherit">
                 View Original Source
               </StyledLink>
             </Stack>
-            <StyledTitle variant="h6" onClick={ () => onChange?.(ReadingFormat.Concise) }>
-              <TruncatedText maxCharCount={ 200 }>{summary?.title}</TruncatedText>
+            <StyledTitle variant="h6" onClick={ () => onChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+              <TruncatedText maxCharCount={ 200 }>{summary.title}</TruncatedText>
             </StyledTitle>
           </StyledStack>
-          {!mdAndDown && (
-            <StyledCardMedia>
-              {cardMediaStack}  
-            </StyledCardMedia>
-          )}
         </StyledStack>
         <StyledDivider variant="fullWidth" />
-        <Stack direction={ bottomRowDirection } spacing={ 1 }>
-          <Stack direction='row' flexGrow={ 1 }>
+        <Stack direction='column' spacing={ 1 }>
+          <Stack direction='row' flexGrow={ 1 } alignItems="center">
             <Typography variant="subtitle2">{timeAgo}</Typography>
             <Box flexGrow={ 1 } />
-            {interactionButtons}
+            <Stack direction='row' spacing={ 1 } alignItems="center">
+              <Typography variant="subtitle2">{ summary.interactions.view ?? '...' }</Typography>
+              <Icon path={ mdiEye } size={ 1 } />
+              <Button startIcon={ <Icon path={ mdiShare } size={ 1 } /> } />
+            </Stack>
           </Stack>
-          <StyledReadingFormatContainer format={ format }>
-            <ReadingFormatSelector onChange={ (newFormat) => onChange?.(newFormat) } />
+          <StyledReadingFormatContainer initialFormat={ initialFormat }>
+            <ReadingFormatSelector onChange={ (newFormat) => handleFormatChange(newFormat) } />
           </StyledReadingFormatContainer>
         </Stack>
-        {format !== undefined && <CardContent>{content}</CardContent>}
+        {initialFormat !== undefined && <CardContent>{content}</CardContent>}
       </StyledStack>
     </StyledCard>
   );
