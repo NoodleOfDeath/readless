@@ -159,6 +159,8 @@ export class ScribeService extends BaseService {
         onProgress((n + 1) / prompts.length);
       }
     }
+    const category = await Category.findOne({ where: { displayName: newSummary.category } });
+    newSummary.category = category.name;
     console.log('Created new summary from', url, newSummary.title);
     const summary = await Summary.create(newSummary);
     return summary;

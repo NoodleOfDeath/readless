@@ -36,6 +36,7 @@ export type OutletAttributes = DatedAttributes & {
   name: string;
   /** xml site maps for this outlet and selector for extracting urls */
   displayName: string;
+  description?: string;
   siteMaps: SiteMap[];
   /** fetch policy for this outlet */
   fetchPolicy?: FetchPolicy;
@@ -44,14 +45,21 @@ export type OutletAttributes = DatedAttributes & {
 export type OutletCreationAttributes = {
   name: string;
   displayName: string;
+  description?: string;
   siteMaps: SiteMap[];
   fetchPolicy?: FetchPolicy;
 };
 
-export const PUBLIC_OUTLET_ATTRIBUTES = ['id', 'name', 'displayName'] as const;
+export const PUBLIC_OUTLET_ATTRIBUTES = [
+  'id',
+  'name',
+  'displayName',
+  'description',
+] as const;
 
 export type PublicOutletAttributes = {
   id: number;
   name: string;
   displayName: string;
+  description?: string;
 };
