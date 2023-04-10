@@ -40,8 +40,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
   
   const titles = React.useMemo(() => [
-    `Categories (${categoryCount}/${categories.length})`,
-    `News Sources (${outletCount}/${outlets.length})`,
+    `Categories (${categoryCount === 0 ? categories.length : categoryCount}/${categories.length})`,
+    `News Sources (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`,
   ], [categories, categoryCount, outlets, outletCount]);
 
   const loadCategories = React.useCallback(async () => {
@@ -129,14 +129,14 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
               <View row>
                 <Text 
                   left 
-                  variant='subtitle1'>
+                  variant='title2'>
                   Category
                 </Text>
               </View>
               <View>
-                <Text 
+                <Button 
                   left
-                  variant='subtitle1'>
+                  onPress={ ()=> setPreference('bookmarkedCategories', {}) }>
                   Follow 
                   {' '}
                   {categoryCount > 0 && (
@@ -146,7 +146,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                       )
                     </React.Fragment>
                   )}
-                </Text>
+                </Button>
               </View>
             </View>
             {categories.map((category) => (
@@ -165,7 +165,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                   p={ 8 }
                   mv={ 4 }
                   onPress={ () => selectCategory(category) }>
-                  {category.name}
+                  {category.displayName}
                 </Button>
                 <CheckBox
                   checked={ Boolean(bookmarkedCategories?.[category.name]) }
@@ -179,14 +179,14 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
               <View row>
                 <Text 
                   left
-                  variant='subtitle1'>
+                  variant='title2'>
                   News Source
                 </Text>
               </View>
               <View>
-                <Text
+                <Button
                   left
-                  variant='subtitle1'>
+                  onPress={ ()=> setPreference('bookmarkedOutlets', {}) }>
                   Follow 
                   {' '}
                   {outletCount > 0 && (
@@ -196,7 +196,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                       )
                     </React.Fragment>
                   )}
-                </Text>
+                </Button>
               </View>
             </View>
             {outlets.map((outlet) => (

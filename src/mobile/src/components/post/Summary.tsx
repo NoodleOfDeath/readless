@@ -114,9 +114,9 @@ export function Summary({
               <View 
                 row
                 alignCenter
-                onPress={ () => onReferSearch?.(`cat:${summary.category.toLowerCase().replace(/\s/g, '-') }`) }>
+                onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
                 {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
-                <Text color='contrastText'>{summary.category}</Text>
+                <Text color='contrastText'>{summary.categoryAttributes?.displayName}</Text>
               </View>
               <View row /> 
               <View alignEnd>
