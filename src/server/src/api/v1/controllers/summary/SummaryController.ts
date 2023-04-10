@@ -40,7 +40,7 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids
     return newOptions;
   }
   const where: FindAndCountOptions<Summary>['where'] = {};
-  const splitExpr = /\s*((?:[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))*)(.*)/i;
+  const splitExpr = /\s*((?:[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+[\w]+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
   const query = q ?? '';
   if (prefilter) {

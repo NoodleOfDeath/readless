@@ -12,6 +12,7 @@ import {
 import {
   Button,
   Screen,
+  ScrollView,
   Summary,
   Text,
   View,
@@ -208,7 +209,9 @@ export function SearchScreen({
   }, [interactWithSummary, setLoginDialogProps, setShowLoginDialog, setPreference]);
 
   return (
-    <React.Fragment>
+    <Screen
+      refreshing={ loading }
+      onRefresh={ () => load(pageSize, 0) }>
       {!prefilter && (
         <React.Fragment>
           <View style={ theme.components.searchBar }>
@@ -231,9 +234,7 @@ export function SearchScreen({
           </View>
         </React.Fragment>
       )}
-      <Screen
-        refreshing={ loading }
-        onRefresh={ () => load(pageSize, 0) }>
+      <ScrollView>
         <View col>
           {loading && recentSummaries.length === 0 && (
             <View row justifyCenter p={ 16 }>
@@ -241,8 +242,17 @@ export function SearchScreen({
             </View>
           )}
           {!loading && showOnlyBookmarkedNews && recentSummaries.length === 0 && (
-            <View row justifyCenter p={ 16 }>
-              <Text fontSize={ 20 }>It seems your filters are too specific. You may want to consider adding more categories and new sources to your follow list.</Text>
+            <View col justifyCenter p={ 16 }>
+              <Text fontSize={ 20 } pb={ 8 }>It seems your filters are too specific. You may want to consider adding more categories and new sources to your follow list.</Text>
+              <Button 
+                alignCenter
+                rounded 
+                outlined 
+                p={ 8 }
+                selectable
+                onPress={ () => navigation?.getParent()?.navigate('Sections') }>
+                Go to Sections
+              </Button>
             </View>
           )}
           {recentSummaries.map((summary) => (
@@ -268,7 +278,7 @@ export function SearchScreen({
             </View>
           )}
         </View>
-      </Screen>
-    </React.Fragment>
+      </ScrollView>
+    </Screen>
   );
 }
