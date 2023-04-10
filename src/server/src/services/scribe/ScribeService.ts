@@ -17,7 +17,7 @@ export class ScribeService extends BaseService {
   public static async init() {
     await Category.initCategories();
     const categories = await Category.findAll();
-    this.categories = categories.map((category) => category.name);
+    this.categories = categories.map((c) => c.displayName);
   }
   
   public static async readAndSummarize(
@@ -44,7 +44,7 @@ export class ScribeService extends BaseService {
     // fetch web content with the spider
     const spider = new SpiderService();
     const loot = await spider.loot(url);
-    // create the prompt handleReply map to be sent to chatgpt
+    // create the prompt onReply map to be sent to chatgpt
     if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       throw new Error('Article too long for OpenAI');
     }
@@ -57,16 +57,19 @@ export class ScribeService extends BaseService {
     });
     const prompts: Prompt[] = [
       {
-        handleReply: (reply) => { 
+        onReply: (reply) => { 
           if (reply.text.length > 200) {
-            throw new Error('Title too long');
+            throw new Error(['Title too long'].join('\n'));
           }
           newSummary.title = reply.text;
         },
-        text: `Please summarize the general take away message of the following article in a single sentence using no more than 150 characters:\n\n${newSummary.filteredText}`,
+        text: [
+          'Please summarize the general take away message of the following article in a single sentence using no more than 150 characters:\n\n', 
+          newSummary.filteredText,
+        ].join(''),
       },
       {
-        handleReply: (reply) => {
+        onReply: (reply) => {
           newSummary.bullets = reply.text
             .replace(/^bullets:\s*/i, '')
             .replace(/\.$/, '')
@@ -76,43 +79,31 @@ export class ScribeService extends BaseService {
         text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol',
       },
       {
-        handleReply: (reply) => { 
+        onReply: (reply) => { 
           newSummary.shortSummary = reply.text;
         },
-        text: [
-          'Please summarize the same article in two sentences and no more than 300 characters',
-          'Please do not use phrases like "the article".',
-        ].join(' '),
+        text: 'Please provide a two sentence summary using no more than 300 characters',
       },
       {
-        handleReply: (reply) => { 
+        onReply: (reply) => { 
           newSummary.summary = reply.text;
         },
-        text: [
-          'Please summarize the same article using between 100 and 200 words.',
-          'Please do not use phrases like "the article".',
-        ].join(' '),
+        text: 'Please provide a 100 to 200 word summary',
       },
       {
-        handleReply: (reply) => { 
+        onReply: (reply) => { 
           newSummary.longSummary = reply.text;
         },
-        text: [
-          'Please summarize the same article using between 300 and 600 words.',
-          'Please do not use phrases like "the article".',
-        ].join(' '),
+        text: 'Please provide a 250 to 350 word summary',
       },
       {
-        handleReply: (reply) => { 
+        onReply: (reply) => { 
           newSummary.text = reply.text;
         },
-        text: [
-          'Please summarize the same article using between 600 and 1000 words.',
-          'Please do not use phrases like "the article".',
-        ].join(' '),
+        text: 'Please provide a 400 to 500 word summary',
       },
       {
-        handleReply: (reply) => {
+        onReply: (reply) => {
           newSummary.tags = reply.text
             .replace(/^tags:\s*/i, '')
             .replace(/\.$/, '')
@@ -122,7 +113,7 @@ export class ScribeService extends BaseService {
         text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
       },
       {
-        handleReply: (reply) => { 
+        onReply: (reply) => { 
           newSummary.category = reply.text
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
@@ -130,7 +121,7 @@ export class ScribeService extends BaseService {
         text: `Please select a best category for this article from the following choices: ${this.categories.join(' ')}`,
       },
       {
-        handleReply: (reply) => { 
+        onReply: (reply) => { 
           newSummary.subcategory = reply.text
             .replace(/^subcategory:\s*/i, '')
             .replace(/\.$/, '').trim();
@@ -138,7 +129,7 @@ export class ScribeService extends BaseService {
         text: `Please provide a one word subcategory for this article under the category '${newSummary.category}'`,
       },
       {
-        handleReply: (reply) => {
+        onReply: (reply) => {
           newSummary.imagePrompt = reply.text;
         },
         text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
@@ -151,10 +142,10 @@ export class ScribeService extends BaseService {
       const prompt = prompts[n];
       const reply = await chatgpt.send(prompt.text);
       if (BAD_RESPONSE_EXPR.test(reply.text)) {
-        throw new Error('Bad response from chatgpt');
+        throw new Error(['Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
       }
       console.log(reply);
-      prompt.handleReply(reply);
+      prompt.onReply(reply);
       if (onProgress) {
         onProgress((n + 1) / prompts.length);
       }
