@@ -12,8 +12,6 @@ import {
   Button,
   Stack,
   styled,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 
 import { ReadingFormat } from '~/api';
@@ -56,9 +54,6 @@ const FORMAT_ICONS: Record<ReadingFormat, string> = {
 
 export default function ReadingFormatSelector({ onChange }: Props = {}) {
     
-  const theme = useTheme();
-  const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
-    
   const ReadingFormatButton = React.useCallback((buttonFormat: ReadingFormat) => {
     return (
       <StyledButton
@@ -72,27 +67,15 @@ export default function ReadingFormatSelector({ onChange }: Props = {}) {
   
   return (
     <StyledStack>
-      {mdAndDown ? (
-        <React.Fragment>
-          <Stack direction="row">
-            {ReadingFormatButton(ReadingFormat.Concise)}
-            {ReadingFormatButton(ReadingFormat.Bullets)}
-            {ReadingFormatButton(ReadingFormat.Casual)}
-          </Stack>
-          <Stack direction="row">
-            {ReadingFormatButton(ReadingFormat.Detailed)}
-            {ReadingFormatButton(ReadingFormat.InDepth)}
-          </Stack>
-        </React.Fragment>
-      ) : (
-        <Stack direction="row">
-          {ReadingFormatButton(ReadingFormat.Concise)}
-          {ReadingFormatButton(ReadingFormat.Bullets)}
-          {ReadingFormatButton(ReadingFormat.Casual)}
-          {ReadingFormatButton(ReadingFormat.Detailed)}
-          {ReadingFormatButton(ReadingFormat.InDepth)}
-        </Stack>
-      )}
+      <Stack direction="row">
+        {ReadingFormatButton(ReadingFormat.Concise)}
+        {ReadingFormatButton(ReadingFormat.Bullets)}
+        {ReadingFormatButton(ReadingFormat.Casual)}
+      </Stack>
+      <Stack direction="row">
+        {ReadingFormatButton(ReadingFormat.Detailed)}
+        {ReadingFormatButton(ReadingFormat.InDepth)}
+      </Stack>
     </StyledStack>
   );
 }
