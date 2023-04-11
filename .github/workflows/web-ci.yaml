@@ -58,7 +58,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to doctl
-        run: doctl registry login --expiry-seconds 600
+        run: doctl registry login --expiry-seconds 1200
       - name: Tag Docker Image
         run: docker tag $IMAGE:latest $REGISTRY/$IMAGE:latest
       - name: Push Docker Image
@@ -90,7 +90,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Add kubectl cert
-        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 1200 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
         run: envsubst < $GITHUB_WORKSPACE/k8s/web-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
