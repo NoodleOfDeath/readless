@@ -60,6 +60,21 @@ export function SummaryScreen({
         return (prev = bookmarks);
       });
       return;
+    } else if (interaction === InteractionType.Favorite) {
+      setPreference('favoritedSummaries', (prev) => {
+        const favorites = { ...prev };
+        if (favorites[summary.id]) {
+          delete favorites[summary.id];
+        } else {
+          favorites[summary.id] = new Bookmark(summary);
+        }
+        return (prev = favorites);
+      });
+      return;
+    } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
+      const shareUrl = `${BASE_DOMAIN}/read/?s=${summary.id}`;
+      await Share.share({ url: shareUrl });
+      return;
     }
     const { data, error } = await interactWithSummary(summary, interaction, content, metadata);
     if (error) {

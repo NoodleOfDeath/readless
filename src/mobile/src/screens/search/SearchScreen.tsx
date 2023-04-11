@@ -217,7 +217,7 @@ export function SearchScreen({
       });
       return;
     } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
-      const shareUrl = `${BASE_DOMAIN}/s/${summary.categoryAttributes.name}/${summary.id}`;
+      const shareUrl = `${BASE_DOMAIN}/read/?s=${summary.id}`;
       await Share.share({ url: shareUrl });
       return;
     }

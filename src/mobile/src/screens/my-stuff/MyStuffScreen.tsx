@@ -84,7 +84,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
       return;
     } else
     if (interaction === InteractionType.Favorite) {
-      setPreference('bookmarkedSummaries', (prev) => {
+      setPreference('favoritedSummaries', (prev) => {
         const bookmarks = { ...prev };
         if (bookmarks[summary.id]) {
           delete bookmarks[summary.id];
@@ -94,8 +94,9 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
         return (prev = bookmarks);
       });
       return;
-    } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
-      const shareUrl = `${BASE_DOMAIN}/s/${summary.categoryAttributes.name}/${summary.id}`;
+    } else
+    if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
+      const shareUrl = `${BASE_DOMAIN}/read/?s=${summary.id}`;
       await Share.share({ url: shareUrl });
       return;
     }
@@ -159,6 +160,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                       <Summary
                         summary={ bookmark.item }
                         bookmarked
+                        favorited={ Boolean(favoritedSummaries[bookmark.item.id]) }
                         compact={ compactMode }
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, format) }
                         onReferSearch={ handleReferSearch }
@@ -191,6 +193,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                     <View col key={ id }>
                       <Summary
                         summary={ bookmark.item }
+                        bookmarked={ Boolean(bookmarkedSummaries[bookmark.item.id]) }
                         favorited
                         compact={ compactMode }
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, format) }
