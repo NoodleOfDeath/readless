@@ -149,7 +149,7 @@ export class SummaryController {
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<InteractionResponse> {
-    const { user } = await User.from(body);
+    const { user } = await User.from(body, { ignoreIfNotResolved: true });
     const {
       content, metadata, remoteAddr, 
     } = body;
