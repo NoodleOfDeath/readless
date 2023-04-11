@@ -190,7 +190,7 @@ export default function Summary({
                 View Original Source
               </StyledLink>
             </Stack>
-            <StyledTitle variant="h6" onClick={ () => onChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+            <StyledTitle variant="h6" onClick={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
               <TruncatedText maxCharCount={ 200 }>{summary.title}</TruncatedText>
             </StyledTitle>
           </StyledStack>

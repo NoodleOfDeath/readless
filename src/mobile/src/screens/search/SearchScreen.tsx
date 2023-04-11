@@ -1,11 +1,9 @@
 import React from 'react';
-import { ActivityIndicator, Share } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
-import { BASE_DOMAIN } from '@env';
 import { SearchBar, Switch } from '@rneui/base';
 
 import {
-  InteractionResponse,
   InteractionType,
   PublicSummaryAttributes,
   ReadingFormat,
@@ -17,11 +15,7 @@ import {
   Text,
   View,
 } from '~/components';
-import {
-  AppStateContext,
-  Bookmark,
-  SessionContext,
-} from '~/contexts';
+import { AppStateContext, SessionContext } from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
@@ -31,8 +25,6 @@ export function SearchScreen({
 }: ScreenProps<'search'>) {
   const { 
     setShowNotFollowingDialog,
-    setShowLoginDialog, 
-    setLoginDialogProps,
     setNavigation,
   } = React.useContext(AppStateContext);
   const { 
@@ -47,9 +39,7 @@ export function SearchScreen({
     },
     setPreference,
   } = React.useContext(SessionContext);
-  const {
-    getSummaries, recordSummaryView, interactWithSummary, 
-  } = useSummaryClient();
+  const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter ?? '');
@@ -156,13 +146,20 @@ export function SearchScreen({
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
-      recordSummaryView(summary, undefined, { format });
+      const { data: interactions, error } = await handleInteraction(summary, InteractionType.View, undefined, { format });
+      if (error) {
+        console.error(error);
+        return;
+      }
+      if (interactions) {
+        setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
+      }
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
         summary,
       });
     },
-    [navigation, preferredReadingFormat, recordSummaryView]
+    [handleInteraction, navigation, preferredReadingFormat]
   );
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
@@ -171,75 +168,6 @@ export function SearchScreen({
     }
     navigation?.push('search', { prefilter: newPrefilter });
   }, [navigation, prefilter]);
-
-  const updateInteractions = (summary: PublicSummaryAttributes, interactions: InteractionResponse) => {
-    setRecentSummaries((prev) => {
-      const newSummaries = [...prev];
-      const index = newSummaries.findIndex((s) => s.id === summary.id);
-      if (index < 0) {
-        return (prev = newSummaries);
-      }
-      newSummaries[index] = {
-        ...newSummaries[index],
-        interactions,
-      };
-      return (prev = newSummaries);
-    });
-  };
-  
-  const handleInteraction = React.useCallback(async (
-    summary: 
-    PublicSummaryAttributes, 
-    interaction: InteractionType, 
-    content?: string, 
-    metadata?: Record<string, unknown>
-  ) => {
-    if (interaction === InteractionType.Bookmark) {
-      setPreference('bookmarkedSummaries', (prev) => {
-        const bookmarks = { ...prev };
-        if (bookmarks[summary.id]) {
-          delete bookmarks[summary.id];
-        } else {
-          bookmarks[summary.id] = new Bookmark(summary);
-        }
-        return (prev = bookmarks);
-      });
-      return;
-    } else if (interaction === InteractionType.Favorite) {
-      setPreference('favoritedSummaries', (prev) => {
-        const favorites = { ...prev };
-        if (favorites[summary.id]) {
-          delete favorites[summary.id];
-        } else {
-          favorites[summary.id] = new Bookmark(summary);
-        }
-        return (prev = favorites);
-      });
-      return;
-    } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
-      const shareUrl = `${BASE_DOMAIN}/read/?s=${summary.id}`;
-      await Share.share({ url: shareUrl });
-      return;
-    }
-    const { data, error } = await interactWithSummary(
-      summary, 
-      interaction,
-      content,
-      metadata
-    );
-    if (error) {
-      console.error(error);
-      if (error.name === 'NOT_LOGGED_IN') {
-        setShowLoginDialog(true);
-        setLoginDialogProps({ alert: 'Please log in to continue' });
-      }
-      return;
-    }
-    if (!data) {
-      return;
-    }
-    updateInteractions(summary, data);
-  }, [interactWithSummary, setLoginDialogProps, setShowLoginDialog, setPreference]);
 
   return (
     <Screen
@@ -275,7 +203,7 @@ export function SearchScreen({
         )}
         {!loading && showOnlyBookmarkedNews && recentSummaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
-            <Text fontSize={ 20 } pb={ 8 }>It seems your filters are too specific. You may want to consider adding more categories and new sources to your follow list.</Text>
+            <Text fontSize={ 20 } pb={ 8 }>It seems your filters are too specific. You may want to consider adding more categories and/or news sources to your follow list.</Text>
             <Button 
               alignCenter
               rounded 
@@ -295,8 +223,8 @@ export function SearchScreen({
             bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
             favorited={ Boolean(favoritedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(summary, format) }
-            onReferSearch={ handleReferSearch }
-            onInteract={ (...e) => handleInteraction(summary, ...e) } />
+            onInteract={ (...e) => handleInteraction(summary, ...e) }
+            onReferSearch={ handleReferSearch } />
         ))}
         {!loading && totalResultCount > recentSummaries.length && (
           <View row justifyCenter p={ 16 } pb={ 24 }>
