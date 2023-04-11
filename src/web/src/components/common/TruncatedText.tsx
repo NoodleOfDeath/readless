@@ -30,14 +30,11 @@ export default function TruncatedText({
   showLessText,
   truncateStart,
   truncateMiddle,
-  truncateEnd,
   variant = truncateStart
     ? 'start'
     : truncateMiddle
       ? 'middle'
-      : truncateEnd
-        ? 'end'
-        : 'end',
+      : 'end',
 }: Props = {}) {
   const [isTruncated, setIsTruncated] = React.useState(true);
 

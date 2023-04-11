@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { BASE_DOMAIN } from '@env';
-
 import { ClientError } from './types';
 import { Bookmark, SessionContext } from '../contexts';
 
@@ -15,7 +13,7 @@ import { Share } from '~/utils';
 export function useSummaryClient() {
 
   const {
-    setPreference, userData, withHeaders, 
+    setPreference, userData, withHeaders, env,
   } = React.useContext(SessionContext);
   
   const getSummaries = React.useCallback(async (
@@ -84,8 +82,8 @@ export function useSummaryClient() {
         return (prev = favorites);
       });
     } else if (interaction === InteractionType.Share) {
-      const message = `${summary.title} ${BASE_DOMAIN}/read/?s=${summary.id}`;
-      const url = `${BASE_DOMAIN}/read/?s=${summary.id}`;
+      const message = `${summary.title} ${env.BASE_DOMAIN}/read/?s=${summary.id}`;
+      const url = `${env.BASE_DOMAIN}/read/?s=${summary.id}`;
       payload.value = url;
       const response = await interactWithSummary(summary, interaction, content, payload);
       await Share.share({ message, url });
@@ -96,7 +94,7 @@ export function useSummaryClient() {
       return { data: undefined, error: new ClientError('UNKNOWN') };
     }
     return await interactWithSummary(summary, interaction, content, payload);
-  }, [interactWithSummary, setPreference]);
+  }, [env.BASE_DOMAIN, interactWithSummary, setPreference]);
 
   return {
     getSummaries,
