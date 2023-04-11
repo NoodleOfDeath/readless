@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Platform } from 'react-native';
 
-import ENV from '@env';
+import { API_ENDPOINT, BASE_DOMAIN } from '@env';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
@@ -56,19 +56,24 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     }
   }, [showLoginDialog]);
 
-  React.useEffect(() => {
-    if (!ready) {
-      return;
-    }
+  const onMount = React.useCallback(() => {
+    setEnv({
+      API_ENDPOINT,
+      BASE_DOMAIN,
+    });
     if (!lastReleaseNotesDate) {
       setShowReleaseNotes(true);
       setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
     }
-  }, [ready, lastReleaseNotesDate, setPreference]);
+  }, [lastReleaseNotesDate, setEnv, setPreference]);
 
   React.useEffect(() => {
-    setEnv(ENV);
-  }, [setEnv]);
+    if (!ready) {
+      return;
+    }
+    onMount();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready]);
 
   const transformAsset = (asset: string, ext = 'jpg') => {
     if (Platform.OS === 'ios') {
