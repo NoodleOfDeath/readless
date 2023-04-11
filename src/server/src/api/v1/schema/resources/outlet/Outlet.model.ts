@@ -568,6 +568,24 @@ export class Outlet<
         url: 'https://www.usnews.com',
       }],
     },
+    'venture-beat': {
+      displayName: 'Venture Beat',
+      name: 'venture-beat',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.venturebeat.com',
+      }],
+    },
+    vice: {
+      displayName: 'Vice',
+      name: 'vice',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="vice-card-hed__link"]',
+        url: 'https://www.vice.com',
+      }],
+    },
     vox: {
       displayName: 'Vox',
       name: 'vox',
