@@ -1,4 +1,7 @@
 import React from 'react';
+import { Share } from 'react-native';
+
+import { BASE_DOMAIN } from '@env';
 
 import {
   InteractionResponse,
@@ -26,6 +29,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   const { 
     preferences: {
       bookmarkedSummaries,
+      favoritedSummaries,
       compactMode, 
       preferredReadingFormat, 
     },
@@ -78,6 +82,22 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
         return (prev = bookmarks);
       });
       return;
+    } else
+    if (interaction === InteractionType.Favorite) {
+      setPreference('bookmarkedSummaries', (prev) => {
+        const bookmarks = { ...prev };
+        if (bookmarks[summary.id]) {
+          delete bookmarks[summary.id];
+        } else {
+          bookmarks[summary.id] = new Bookmark(summary);
+        }
+        return (prev = bookmarks);
+      });
+      return;
+    } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
+      const shareUrl = `${BASE_DOMAIN}/s/${summary.categoryAttributes.name}/${summary.id}`;
+      await Share.share({ url: shareUrl });
+      return;
     }
     const { data, error } = await interactWithSummary(
       summary, 
@@ -105,7 +125,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
         <TabSwitcher
           activeTab={ activeTab }
           onTabChange={ setActiveTab }
-          titles={ ['Bookmarks'] }>
+          titles={ ['Bookmarks', 'Favorites'] }>
           <View>
             {Object.entries(bookmarkedSummaries ?? {}).length === 0 ? (
               <View justifyCenter alignCenter>
@@ -140,7 +160,39 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                         summary={ bookmark.item }
                         bookmarked
                         compact={ compactMode }
-                        forceCollapse
+                        onFormatChange={ (format) => handleFormatChange(bookmark.item, format) }
+                        onReferSearch={ handleReferSearch }
+                        onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+          <View>
+            {Object.entries(favoritedSummaries ?? {}).length === 0 ? (
+              <View justifyCenter alignCenter>
+                <Button
+                  rounded
+                  outlined
+                  small
+                  selectable
+                  p={ 8 }
+                  m={ 8 }
+                  center
+                  onPress={ () => navigation?.getParent()?.navigate('search') }>
+                  Search for Articles
+                </Button>
+              </View>
+            ) : (
+              <View>
+                {Object.entries(favoritedSummaries ?? {}).map(([id, bookmark]) => {
+                  return (
+                    <View col key={ id }>
+                      <Summary
+                        summary={ bookmark.item }
+                        favorited
+                        compact={ compactMode }
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />

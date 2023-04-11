@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { formatDistance } from 'date-fns';
 
@@ -18,7 +18,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
-import { useTheme } from '~/hooks';
+import { useInAppBrowser, useTheme } from '~/hooks';
 
 type Props = {
   summary: PublicSummaryAttributes;
@@ -26,6 +26,7 @@ type Props = {
   format?: ReadingFormat;
   realtimeInteractions?: InteractionResponse;
   bookmarked?: boolean;
+  favorited?: boolean;
   collapsible?: boolean;
   compact?: boolean;
   forceCollapse?: boolean;
@@ -42,6 +43,7 @@ export function Summary({
   realtimeInteractions,
   collapsible = true,
   bookmarked,
+  favorited,
   compact,
   forceCollapse,
   onFormatChange,
@@ -50,6 +52,7 @@ export function Summary({
   onInteract,
 }: Props) {
   const theme = useTheme();
+  const { openURL } = useInAppBrowser();
   const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
 
   const [lastTick, setLastTick] = React.useState(new Date());
@@ -153,7 +156,7 @@ export function Summary({
                 {summary.outletAttributes?.displayName.trim()}
               </Text>
             </Button>
-            <Button onPress={ () => Linking.openURL(summary.url) }>
+            <Button onPress={ () => openURL(summary.url) }>
               <Text variant='subtitle1' underline>View original source</Text>
             </Button>
           </View>
@@ -173,6 +176,12 @@ export function Summary({
                 name="eye"
                 color={ 'primary' }
                 mh={ 8 } />
+              <Button
+                startIcon={ favorited ? 'heart' : 'heart-outline' }
+                fontSize={ 24 }
+                mh={ 8 }
+                color='primary'
+                onPress={ () => onInteract?.(InteractionType.Favorite) } />
               <Button
                 startIcon='share'
                 fontSize={ 24 }

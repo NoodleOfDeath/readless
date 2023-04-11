@@ -40,6 +40,7 @@ export function SearchScreen({
       bookmarkedCategories,
       bookmarkedOutlets,
       bookmarkedSummaries, 
+      favoritedSummaries,
       compactMode, 
       preferredReadingFormat, 
       showOnlyBookmarkedNews,
@@ -204,6 +205,17 @@ export function SearchScreen({
         return (prev = bookmarks);
       });
       return;
+    } else if (interaction === InteractionType.Favorite) {
+      setPreference('favoritedSummaries', (prev) => {
+        const favorites = { ...prev };
+        if (favorites[summary.id]) {
+          delete favorites[summary.id];
+        } else {
+          favorites[summary.id] = new Bookmark(summary);
+        }
+        return (prev = favorites);
+      });
+      return;
     } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
       const shareUrl = `${BASE_DOMAIN}/s/${summary.categoryAttributes.name}/${summary.id}`;
       await Share.share({ url: shareUrl });
@@ -281,6 +293,7 @@ export function SearchScreen({
             summary={ summary }
             compact={ compactMode }
             bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
+            favorited={ Boolean(favoritedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(summary, format) }
             onReferSearch={ handleReferSearch }
             onInteract={ (...e) => handleInteraction(summary, ...e) } />

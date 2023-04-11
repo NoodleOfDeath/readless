@@ -38,6 +38,7 @@ export type Preferences = {
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
+  favoritedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
   bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
   showOnlyBookmarkedNews?: boolean;
