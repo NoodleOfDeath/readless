@@ -6,10 +6,14 @@ import {
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-aware-scroll-view';
 
-import { Stylable, View } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import {
+  Stylable,
+  View,
+  ViewProps,
+} from '~/components';
+import { useStyles } from '~/hooks';
 
-export type ScrollViewProps = KeyboardAwareScrollViewProps & {
+export type ScrollViewProps = ViewProps & KeyboardAwareScrollViewProps & {
   refreshing?: boolean;
   onRefresh?: () => void;
 };
@@ -23,7 +27,6 @@ export function ScrollView({
   ),
   ...props
 }: ScrollViewProps) {
-  const theme = useTheme();
   const style = useStyles(props as Stylable);
   return (
     <KeyboardAwareScrollView refreshControl={ refreshControl } { ...props }>

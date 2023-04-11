@@ -9,3 +9,5 @@ export * from './summary';
 export * from './newsletter';
 
 export * from './metric';
+
+export * from './version';

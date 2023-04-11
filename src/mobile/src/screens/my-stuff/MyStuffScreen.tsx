@@ -37,7 +37,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, interaction: InteractionType, format?: ReadingFormat) => {
-      const { data: interactions, error } = await handleInteraction(summary, InteractionType.View, undefined, { format });
+      const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         return;
       }
@@ -78,7 +78,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   
   return (
     <Screen>
-      <View col>
+      <View col mh={ 16 }>
         <TabSwitcher
           activeTab={ activeTab }
           onTabChange={ setActiveTab }

@@ -1,5 +1,6 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { PublicSummaryAttributes } from '~/api';
 import { LoginDialogProps } from '~/components';
 import { StackableTabParams } from '~/screens';
 
@@ -10,6 +11,10 @@ export type AppStateContextType = {
   setLoginDialogProps: React.Dispatch<React.SetStateAction<LoginDialogProps | undefined>>;
   showNotFollowingDialog?: boolean;
   setShowNotFollowingDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  showFeedbackDialog?: boolean;
+  setShowFeedbackDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  feedbackSubject?: PublicSummaryAttributes;
+  setFeedbackSubject: React.Dispatch<React.SetStateAction<PublicSummaryAttributes | undefined>>;
   deferredAction?: () => void;
   setDeferredAction: React.Dispatch<React.SetStateAction<(() => void) | undefined>>;
   navigation?: NativeStackNavigationProp<StackableTabParams, keyof StackableTabParams>;
@@ -17,7 +22,11 @@ export type AppStateContextType = {
 };
 
 export const DEFAULT_APP_STATE_CONTEXT: AppStateContextType = {
+  feedbackSubject: undefined,
   setDeferredAction: () => {
+    /** placeholder */
+  },
+  setFeedbackSubject: () => {
     /** placeholder */
   },
   setLoginDialogProps: () => {
@@ -26,12 +35,16 @@ export const DEFAULT_APP_STATE_CONTEXT: AppStateContextType = {
   setNavigation: () => {
     /** placeholder */
   },
+  setShowFeedbackDialog: () => {
+    /** placeholder */
+  },
   setShowLoginDialog: () => {
     /** placeholder */
   },
   setShowNotFollowingDialog: () => {
     /** placeholder */
   },
+  showFeedbackDialog: false,
   showLoginDialog: false,
   showNotFollowingDialog: false,
 };

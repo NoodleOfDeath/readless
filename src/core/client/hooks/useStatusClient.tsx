@@ -8,6 +8,14 @@ import { API } from '~/api';
 export function useStatusClient() {
 
   const { withHeaders } = React.useContext(SessionContext);
+
+  const getReleases = React.useCallback(async () => {
+    try {
+      return await withHeaders(API.getReleases)();
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
   
   const getStatus = React.useCallback(async (name: string) => {
     try {
@@ -26,6 +34,7 @@ export function useStatusClient() {
   }, [withHeaders]);
 
   return {
+    getReleases,
     getStatus,
     getStatuses,
   };

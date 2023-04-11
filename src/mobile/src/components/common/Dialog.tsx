@@ -7,9 +7,10 @@ import {
   View,
 } from 'react-native';
 
+import { ViewProps } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type DialogProps = React.PropsWithChildren<{
+export type DialogProps = ViewProps & React.PropsWithChildren<{
   visible?: boolean;
   onClose?: () => void;
 }>;
@@ -18,6 +19,7 @@ export function Dialog({
   children,
   visible,
   onClose,
+  ...other
 }: DialogProps) {
   const theme = useTheme();
   
@@ -52,6 +54,7 @@ export function Dialog({
           style={ theme.components.dialogBackdrop }
           onPress={ handlePress }>
           <Animated.View
+            { ...other }
             ref={ refContent }
             onLayout={ (e) => setLayout(e.nativeEvent.layout) }
             style={ [theme.components.dialog, { opacity: opacityValue } ] }>

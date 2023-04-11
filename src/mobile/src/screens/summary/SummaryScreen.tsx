@@ -32,7 +32,7 @@ export function SummaryScreen({
     if (!newFormat || newFormat === format) {
       return;
     }
-    const { data: interactions, error } = await handleInteraction(summary, InteractionType.View, undefined, { format: newFormat });
+    const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
     if (error) {
       return;
     }

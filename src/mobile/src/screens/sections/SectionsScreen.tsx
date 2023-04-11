@@ -130,7 +130,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
     <Screen
       refreshing={ loading }
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
-      <View col>
+      <View col mh={ 16 }>
         <TabSwitcher 
           activeTab={ activeTab }
           onTabChange={ setActiveTab }

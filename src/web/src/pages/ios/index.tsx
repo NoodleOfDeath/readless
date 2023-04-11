@@ -1,17 +1,14 @@
 import React from 'react';
 
 import Page from '~/components/layout/Page';
-import { useRouter } from '~/hooks';
 
-export default function IosRedirect() {
-  const router = useRouter();
-
+export default function IosDownload() {
   React.useEffect(() => {
-    router.push('https://apps.apple.com/us/app/read-less-news/id6447275859');
-  }, [router]);
+    window.open('https://apps.apple.com/us/app/read-less-news/id6447275859');
+  }, []);
   return (
     <Page>
-      Redirecting to the iOS app...
+      Redirecting to the Apple App Store
     </Page>
   );
 }

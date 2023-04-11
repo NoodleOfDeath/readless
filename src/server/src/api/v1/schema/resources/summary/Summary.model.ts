@@ -132,7 +132,7 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
         view: [],
       };
       interactions.forEach((interaction) => {
-        if (interaction.targetId === summary.id) {
+        if (interaction.targetId === summary.id && interaction.type in interactionMap) {
           interactionMap[interaction.type].push(interaction);
         }
       });

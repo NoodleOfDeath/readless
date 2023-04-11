@@ -5,6 +5,7 @@ export const INTERACTION_TYPES = {
   comment: 'comment',
   downvote: 'downvote',
   favorite: 'favorite',
+  feedback: 'feedback',
   read: 'read',
   share: 'share',
   upvote: 'upvote',
@@ -50,7 +51,7 @@ export type InteractionResponse = {
   bookmark: number;
   userBookmarked?: boolean;
   favorite: number;
-  userFavorite?: boolean;
+  userFavorited?: boolean;
   comment: number;
   downvote: number;
   read: number;

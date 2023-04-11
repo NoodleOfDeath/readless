@@ -31,8 +31,6 @@ const makeTheme = (lightMode: boolean) => {
         card: {
           backgroundColor: lightMode ? '#eee' : '#111',
           marginBottom: 8,
-          marginLeft: 16,
-          marginRight: 16,
           padding: 16,
         },
         category: {

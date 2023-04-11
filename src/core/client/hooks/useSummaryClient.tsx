@@ -56,7 +56,8 @@ export function useSummaryClient() {
     summary: PublicSummaryAttributes, 
     interaction: InteractionType, 
     content?: string, 
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
+    alternateAction?: () => void
   ) => {
     const payload: Record<string, unknown> = { ...metadata, content };
     if (interaction === InteractionType.Bookmark) {
@@ -81,6 +82,13 @@ export function useSummaryClient() {
         }
         return (prev = favorites);
       });
+    } else if (interaction === InteractionType.Read) {
+      // pass
+      const response = await interactWithSummary(summary, interaction, content, payload);
+      if (alternateAction) {
+        alternateAction?.();
+      }
+      return response;
     } else if (interaction === InteractionType.Share) {
       const message = `${summary.title} ${env.BASE_DOMAIN}/read/?s=${summary.id}`;
       const url = `${env.BASE_DOMAIN}/read/?s=${summary.id}`;

@@ -1,4 +1,6 @@
 // singleton models
+export * from './version/Release.model';
+
 export * from './analytics/Metric.model';
 export * from './analytics/RateLimit.model';
 export * from './analytics/Status.model'; 

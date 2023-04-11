@@ -26,6 +26,8 @@ export type DestroyResponse = {
 
 // Model Types
 
+export * from './version/Release.types';
+
 export * from './analytics/Metric.types';
 export * from './analytics/RateLimit.types';
 export * from './analytics/Status.types';
