@@ -142,7 +142,7 @@ export class SummaryController {
     return resource.interactions;
   }
   
-  @Security('jwt', ['standard:write'])
+  @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
     @Path() targetId: number,
@@ -153,7 +153,16 @@ export class SummaryController {
     const {
       content, metadata, remoteAddr, 
     } = body;
-    const resource = await user.interactWithSummary(targetId, type, remoteAddr, content, metadata);
+    const interaction = await SummaryInteraction.create({
+      content, metadata, remoteAddr, targetId, type, userId: user?.id,
+    });
+    if (!interaction) {
+      throw new InternalError('Failed to create interaction');
+    }
+    const resource = await Summary.scope('public').findByPk(targetId);
+    if (user) {
+      await resource.addUserInteractions(user.id);
+    }
     return resource.interactions;
   }
   

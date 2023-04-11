@@ -58,7 +58,6 @@ router.post(
 router.post(
   '/interact/:targetId/:type',
   rateLimitMiddleware('1 per 2s'),
-  authMiddleware('jwt', { required: true, scope: ['standard:write'] }),
   param('targetId').isNumeric(),
   param('type').isString(),
   body('value').isString().optional(),
