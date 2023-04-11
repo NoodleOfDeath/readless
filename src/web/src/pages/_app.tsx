@@ -74,7 +74,7 @@ function App(props: PropTypes.InferProps<typeof App.propTypes>) {
   return (
     <React.Fragment>
       <Head>
-        <title>Read &apos; Less</title>
+        <title>Read &lt; Less</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <GoogleOAuthProvider clientId={ process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string }>

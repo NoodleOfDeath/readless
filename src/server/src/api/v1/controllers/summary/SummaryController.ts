@@ -34,7 +34,7 @@ function parsePrefilter(prefilter: string) {
   return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
 }
 
-function applyFilter(options: FindAndCountOptions<Summary>, filter: string = '', ids: number[] = []) {
+function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: number[] = []) {
   const newOptions = { ...options };
   if (!filter && ids.length === 0) {
     return newOptions;
