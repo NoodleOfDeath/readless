@@ -124,24 +124,6 @@ export class SummaryController {
     return summaries;
   }
   
-  @Post('/interact/:targetId/view')
-  public static async recordSummaryView(
-    @Path() targetId: number,
-    @Body() body: InteractionRequest
-  ): Promise<InteractionResponse> {
-    const {
-      content, metadata, remoteAddr, 
-    } = body;
-    const interaction = await SummaryInteraction.create({
-      content, metadata, remoteAddr, targetId, type: 'view',
-    });
-    if (!interaction) {
-      throw new InternalError('Failed to create interaction');
-    }
-    const resource = await Summary.scope('public').findByPk(targetId);
-    return resource.interactions;
-  }
-  
   @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
@@ -163,7 +145,7 @@ export class SummaryController {
     if (user) {
       await resource.addUserInteractions(user.id);
     }
-    return resource.interactions;
+    return resource.toJSON().interactions;
   }
   
   @Security('jwt', ['god:*'])

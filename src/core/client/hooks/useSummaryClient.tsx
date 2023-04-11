@@ -1,5 +1,4 @@
 import React from 'react';
-import { Share } from 'react-native';
 
 import { BASE_DOMAIN } from '@env';
 
@@ -11,6 +10,7 @@ import {
   InteractionType,
   PublicSummaryAttributes,
 } from '~/api';
+import { Share } from '~/utils';
 
 export function useSummaryClient() {
 
@@ -43,12 +43,9 @@ export function useSummaryClient() {
   
   const interactWithSummary = React.useCallback(
     async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
-      if (!userData || !userData.isLoggedIn) {
-        return { error: new ClientError('NOT_LOGGED_IN') };
-      }
       try {
         return await withHeaders(API.interactWithSummary)(summary.id, type, {
-          content, metadata, userId: userData.userId,
+          content, metadata, userId: userData?.userId,
         });
       } catch (e) {
         return { data: undefined, error: new ClientError('UNKNOWN', e) };
@@ -90,13 +87,15 @@ export function useSummaryClient() {
       const message = `${summary.title} ${BASE_DOMAIN}/read/?s=${summary.id}`;
       const url = `${BASE_DOMAIN}/read/?s=${summary.id}`;
       payload.value = url;
+      const response = await interactWithSummary(summary, interaction, content, payload);
       await Share.share({ message, url });
+      return response;
     } else if (interaction === InteractionType.View) {
       // pass
     } else {
       return { data: undefined, error: new ClientError('UNKNOWN') };
     }
-    return await interactWithSummary(summary, interaction, [payload, content].join(' || '), metadata);
+    return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, setPreference]);
 
   return {
