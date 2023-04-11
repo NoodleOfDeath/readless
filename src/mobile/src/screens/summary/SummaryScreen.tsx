@@ -1,4 +1,7 @@
 import React from 'react';
+import { Share } from 'react-native';
+
+import { BASE_DOMAIN } from '@env';
 
 import {
   InteractionResponse,
@@ -24,7 +27,7 @@ export function SummaryScreen({
 }: ScreenProps<'summary'>) {
   const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
   const { 
-    preferences: { bookmarkedSummaries },
+    preferences: { bookmarkedSummaries, favoritedSummaries },
     setPreference,
   } = React.useContext(SessionContext);
   const { interactWithSummary, recordSummaryView } = useSummaryClient();
@@ -100,6 +103,7 @@ export function SummaryScreen({
             format={ format }
             collapsible={ false }
             bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
+            favorited={ Boolean(favoritedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(format) }
             onReferSearch={ handleReferSearch }
             onInteract={ onInteract }
