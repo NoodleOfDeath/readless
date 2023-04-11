@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { CircularProgress } from '@mui/material';
+import Head from 'next/head';
 
 import { PublicSummaryAttributes } from '~/api';
 import Summary from '~/components/Summary';
@@ -14,8 +15,7 @@ export default function SummaryPage() {
   
   const [loading, setLoading] = React.useState(true);
   const [summary, setSummary] = React.useState<PublicSummaryAttributes | undefined>(undefined);
-  const category = React.useMemo(() => searchParams.get('category'), [searchParams]);
-  const id = React.useMemo(() => parseInt(searchParams.get('id') ?? '-1'), [searchParams]);
+  const id = React.useMemo(() => parseInt(searchParams.get('s') ?? '-1'), [searchParams]);
   
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -26,17 +26,15 @@ export default function SummaryPage() {
     } 
     if (data) {
       const summary = data.rows.find((s) => s.id === id);
-      if (summary) {
-        if (summary.category !== category) {
-          replace(`/s/${summary.category}/${id}`);
-          return;
-        }
-        setSummary(summary);
-        document.title = summary.title;
+      if (!summary) {
+        replace('/404');
+        return;
       }
+      setSummary(summary);
+      document.title = summary.title;
     }
     setLoading(false);
-  }, [category, getSummaries, id, replace]);
+  }, [getSummaries, id, replace]);
 
   React.useEffect(() => {
     load();
@@ -44,6 +42,9 @@ export default function SummaryPage() {
   
   return (
     <Page>
+      <Head>
+        <title>Read &apos; Less</title>
+      </Head>
       {loading ? <CircularProgress variant="indeterminate" /> : summary && <Summary summary={ summary } /> }
     </Page>
   );
