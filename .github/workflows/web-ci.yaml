@@ -32,6 +32,8 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       NEXT_PUBLIC_API_ENDPOINT: ${{ vars.NEXT_PUBLIC_API_ENDPOINT }}
+      NEXT_PUBLIC_APPLE_APP_ID: ${{ vars.NEXT_PUBLIC_APPLE_APP_ID }}
+      NEXT_PUBLIC_BASE_URL: ${{ vars.NEXT_PUBLIC_BASE_URL }}
       NEXT_PUBLIC_GENERATE_SOURCEMAP: ${{ vars.NEXT_PUBLIC_GENERATE_SOURCEMAP }}
       NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
     steps:
@@ -47,6 +49,8 @@ jobs:
         run: |
           docker build . --file Dockerfile.web --tag $IMAGE:latest \
             --build-arg NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT \
+            --build-arg NEXT_PUBLIC_APPLE_APP_ID=$NEXT_PUBLIC_APPLE_APP_ID \
+            --build-arg NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
             --build-arg NEXT_PUBLIC_GENERATE_SOURCEMAP=$NEXT_PUBLIC_GENERATE_SOURCEMAP \
             --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
       - name: Install doctl
@@ -54,7 +58,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to doctl
-        run: doctl registry login --expiry-seconds 600
+        run: doctl registry login --expiry-seconds 1200
       - name: Tag Docker Image
         run: docker tag $IMAGE:latest $REGISTRY/$IMAGE:latest
       - name: Push Docker Image
@@ -86,7 +90,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Add kubectl cert
-        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 1200 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
         run: envsubst < $GITHUB_WORKSPACE/k8s/web-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
