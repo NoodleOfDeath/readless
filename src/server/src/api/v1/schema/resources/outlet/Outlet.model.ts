@@ -261,6 +261,11 @@ export class Outlet<
         url: 'https://www.developer-tech.com',
       }],
     },
+    economist: {
+      displayName: 'The Economist (Coming Soon)',
+      name: 'economist',
+      siteMaps: [],
+    },
     espn: {
       displayName: 'ESPN',
       name: 'espn',
@@ -360,6 +365,15 @@ export class Outlet<
         url: 'https://www.coindesk.com',
       }],
     },
+    kotaku: {
+      displayName: 'Kotaku',
+      name: 'kotaku',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.kotaku.com',
+      }],
+    },
     ksl: {
       displayName: 'KSL',
       name: 'ksl',
@@ -431,6 +445,11 @@ export class Outlet<
         selector: 'a[class*="SummaryItem"]',
         url: 'https://www.newyorker.com',
       }],
+    },
+    nytimes: {
+      displayName: 'New York Times (Coming Soon)',
+      name: 'nytimes',
+      siteMaps: [],
     },
     out: {
       displayName: 'Out',
@@ -557,6 +576,11 @@ export class Outlet<
         selector: 'div[class*="c-newspaper"] a',
         url: 'https://www.vox.com',
       }],
+    },
+    'washington-post': {
+      displayName: 'The Washington Post (Coming Soon)',
+      name: 'washington-post',
+      siteMaps: [],
     },
     'wilson-center': {
       displayName: 'Wilson Center',
