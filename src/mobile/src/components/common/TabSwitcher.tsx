@@ -42,13 +42,8 @@ export function TabSwitcher({
 
   return (
     <Animated.View style={ { flex: 1 } }>
-      <View
-        style={ {
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          width: '90%',
-        } }>
-        <View
+      <View>
+        <View 
           row
           outlined
           rounded

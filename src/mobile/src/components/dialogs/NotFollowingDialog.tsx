@@ -16,12 +16,11 @@ export type NotFollowingDialogProps = DialogProps & {
 };
 
 export function NotFollowingDialog({
-  onClose,
   navigation,
   ...dialogProps
 }: NotFollowingDialogProps) {
   return (
-    <Dialog onClose={ onClose } { ...dialogProps }>
+    <Dialog { ...dialogProps }>
       <View width="70%" p={ 16 }>
         <Text 
           center
@@ -38,7 +37,7 @@ export function NotFollowingDialog({
             p={ 8 }
             mb={ 8 }
             onPress={ () => { 
-              onClose?.();
+              dialogProps.onClose?.();
               setTimeout(() => navigation?.getParent()?.navigate('Sections'), 500);
             } }>
             Go to the Sections tab

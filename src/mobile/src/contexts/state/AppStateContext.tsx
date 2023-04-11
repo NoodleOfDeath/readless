@@ -6,7 +6,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
 
+import { PublicSummaryAttributes } from '~/api';
 import {
+  FeedBackDialog,
   Icon,
   LoginAction,
   LoginDialog,
@@ -17,7 +19,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/core/contexts';
-import { useTheme } from '~/hooks';
+import { useStatusClient, useTheme } from '~/hooks';
 import { StackableTabParams } from '~/screens';
 
 export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
@@ -31,10 +33,13 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     setPreference, 
   } = React.useContext(SessionContext);
   const { isLightMode } = useTheme();
+  const { getReleases } = useStatusClient();
 
   const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
   const [loginDialogProps, setLoginDialogProps] = React.useState<LoginDialogProps>();
   const [showNotFollowingDialog, setShowNotFollowingDialog] = React.useState<boolean>(false);
+  const [showFeedbackDialog, setShowFeedbackDialog] = React.useState<boolean>(false);
+  const [feedbackSubject, setFeedbackSubject] = React.useState<PublicSummaryAttributes>();
   const [deferredAction, setDeferredAction] = React.useState<() => void>();
   const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
   const [navigation, setNavigation] = React.useState<NativeStackNavigationProp<StackableTabParams, keyof StackableTabParams>>();
@@ -56,16 +61,24 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     }
   }, [showLoginDialog]);
 
-  const onMount = React.useCallback(() => {
+  const onMount = React.useCallback(async () => {
     setEnv({
       API_ENDPOINT,
       BASE_DOMAIN,
     });
-    if (!lastReleaseNotesDate) {
-      setShowReleaseNotes(true);
-      setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
+    const { data, error } = await getReleases();
+    if (error) {
+      console.error(error);
+    } else if (data) {
+      const releases = data.rows
+        .filter((release) => release.platform === Platform.OS)
+        .sort((a, b) => new Date(a.createdAt ?? 0).valueOf() - new Date(b.createdAt ?? 0).valueOf());
+      if (!lastReleaseNotesDate || (releases.length > 0 && new Date(lastReleaseNotesDate).valueOf() < new Date(releases[releases.length - 1].createdAt ?? 0).valueOf())) {
+        setShowReleaseNotes(true);
+        setPreference('lastReleaseNotesDate', releases.length > 0 ? new Date(releases[releases.length - 1].createdAt ?? Date.now()).valueOf().toString() : String(new Date().valueOf()));
+      }
     }
-  }, [lastReleaseNotesDate, setEnv, setPreference]);
+  }, [getReleases, lastReleaseNotesDate, setEnv, setPreference]);
 
   React.useEffect(() => {
     if (!ready) {
@@ -222,13 +235,17 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   return (
     <AppStateContext.Provider value={ {
       deferredAction,
+      feedbackSubject,
       loginDialogProps,
       navigation,
       setDeferredAction,
+      setFeedbackSubject,
       setLoginDialogProps,
       setNavigation,
+      setShowFeedbackDialog,
       setShowLoginDialog,
       setShowNotFollowingDialog,
+      showFeedbackDialog,
       showLoginDialog,
       showNotFollowingDialog,
     } }>
@@ -238,6 +255,12 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
         visible={ showNotFollowingDialog }
         navigation={ navigation }
         onClose={ () => setShowNotFollowingDialog(false) } />
+      {feedbackSubject && (
+        <FeedBackDialog
+          summary={ feedbackSubject }
+          visible={ showFeedbackDialog }
+          onClose={ () => setShowFeedbackDialog(false) } />
+      )}
       <LoginDialog 
         visible={ showLoginDialog }
         onClose={ () => setShowLoginDialog(false) }

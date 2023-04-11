@@ -146,7 +146,7 @@ export function SearchScreen({
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
-      const { data: interactions, error } = await handleInteraction(summary, InteractionType.View, undefined, { format });
+      const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         console.error(error);
         return;
@@ -195,7 +195,7 @@ export function SearchScreen({
           </View>
         </React.Fragment>
       )}
-      <View col>
+      <View col mh={ 16 }>
         {loading && recentSummaries.length === 0 && (
           <View row justifyCenter p={ 16 }>
             <ActivityIndicator size="large" />

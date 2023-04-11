@@ -66,7 +66,7 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: nu
     }
   }
   if (query && query.length > 0) {
-    const subqueries = query.split(' ');
+    const subqueries = query.replace(/\s\s+/g, ' ').split(' ');
     where[Op.or] = [];
     for (const subquery of subqueries) {
       where[Op.or].push({
@@ -84,7 +84,6 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: nu
     }
   }
   newOptions.where = where;
-  console.log(newOptions);
   return newOptions;
 }
 

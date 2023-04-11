@@ -96,7 +96,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             onChange={ handleReadingFormatChange } />
         ),
         id: 'reading-format',
-        label: 'Preferred Reading Format',
+        label: 'Preferred Reading Format on Open',
       },
       {
         children: (
@@ -114,7 +114,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
   
   return (
     <Screen>
-      <View>
+      <View mh={ 16 }>
         <TabSwitcher titles={ ['Preferences'] }>
           <View>
             {options.filter((o) => o.visible !== false).map((option) => (

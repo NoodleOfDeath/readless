@@ -17,7 +17,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { AppStateContext, SessionContext } from '~/contexts';
 import { useInAppBrowser, useTheme } from '~/hooks';
 
 type Props = {
@@ -33,7 +33,7 @@ type Props = {
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
   onCollapse?: (collapsed: boolean) => void;
-  onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
+  onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
 };
 
 export function Summary({
@@ -51,9 +51,10 @@ export function Summary({
   onCollapse,
   onInteract,
 }: Props) {
-  const theme = useTheme();
   const { openURL } = useInAppBrowser();
+  const theme = useTheme();
   const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
+  const { setShowFeedbackDialog, setFeedbackSubject } = React.useContext(AppStateContext);
 
   const [lastTick, setLastTick] = React.useState(new Date());
 
@@ -156,7 +157,7 @@ export function Summary({
                 {summary.outletAttributes?.displayName.trim()}
               </Text>
             </Button>
-            <Button onPress={ () => openURL(summary.url) }>
+            <Button onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
               <Text variant='subtitle1' underline>View original source</Text>
             </Button>
           </View>
@@ -165,10 +166,22 @@ export function Summary({
           </Pressable>
           <Divider horizontal />
           <View row justifySpaced>
-            <View row>
+            <View col>
               <Text variant='subtitle2'>{timeAgo}</Text>
+              <Button
+                row
+                alignCenter
+                startIcon="emoticon-sad"
+                fontSize={ 14 }
+                color='primary'
+                onPress={ () => onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
+                  setShowFeedbackDialog(true);
+                  setFeedbackSubject(summary);
+                }) }>
+                This doesn&apos;t seem right
+              </Button>
             </View>
-            <View row justifyEnd>
+            <View row justifyEnd alignCenter>
               <View>
                 <Text variant='subtitle2'>{String(interactions.view)}</Text>
               </View>

@@ -8,6 +8,7 @@ import openapiRouter from './routes/openapi';
 import outletRouter from './routes/outlet';
 import statusRouter from './routes/status';
 import summaryRouter from './routes/summary';
+import versionRouter from './routes/version';
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.use('/openapi', openapiRouter);
 router.use('/outlet', outletRouter);
 router.use('/status', statusRouter);
 router.use('/summary', summaryRouter);
+router.use('/version', versionRouter);
 router.get('/healthz', (_, res) => res.send('OK'));
 
 export default router;
