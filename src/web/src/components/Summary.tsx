@@ -210,7 +210,7 @@ export default function Summary({
             <ReadingFormatSelector onChange={ (newFormat) => handleFormatChange(newFormat) } />
           </StyledReadingFormatContainer>
         </Stack>
-        {initialFormat !== undefined && <CardContent>{content}</CardContent>}
+        {format !== undefined && <CardContent>{content}</CardContent>}
       </StyledStack>
     </StyledCard>
   );
