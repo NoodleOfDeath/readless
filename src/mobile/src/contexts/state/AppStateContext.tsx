@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Platform } from 'react-native';
 
+import { API_ENDPOINT, BASE_DOMAIN } from '@env';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
@@ -26,6 +27,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   const {
     ready, 
     preferences: { lastReleaseNotesDate }, 
+    setEnv,
     setPreference, 
   } = React.useContext(SessionContext);
   const { isLightMode } = useTheme();
@@ -35,7 +37,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   const [showNotFollowingDialog, setShowNotFollowingDialog] = React.useState<boolean>(false);
   const [deferredAction, setDeferredAction] = React.useState<() => void>();
   const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
-  const [navigation, setNavigation] = React.useState<NativeStackNavigationProp<StackableTabParams, 'default'>>();
+  const [navigation, setNavigation] = React.useState<NativeStackNavigationProp<StackableTabParams, keyof StackableTabParams>>();
 
   const handleReleaseNotesClose = React.useCallback(() => {
     setPreference('lastReleaseNotesDate', String(new Date().valueOf()));
@@ -54,15 +56,24 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     }
   }, [showLoginDialog]);
 
-  React.useEffect(() => {
-    if (!ready) {
-      return;
-    }
+  const onMount = React.useCallback(() => {
+    setEnv({
+      API_ENDPOINT,
+      BASE_DOMAIN,
+    });
     if (!lastReleaseNotesDate) {
       setShowReleaseNotes(true);
       setPreference('lastReleaseNotesDate', new Date().valueOf().toString());
     }
-  }, [ready, lastReleaseNotesDate, setPreference]);
+  }, [lastReleaseNotesDate, setEnv, setPreference]);
+
+  React.useEffect(() => {
+    if (!ready) {
+      return;
+    }
+    onMount();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready]);
 
   const transformAsset = (asset: string, ext = 'jpg') => {
     if (Platform.OS === 'ios') {

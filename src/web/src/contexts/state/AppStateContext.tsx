@@ -9,7 +9,7 @@ import {
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
 
 import LoginDialog from '~/components/login/LoginDialog';
-import { SessionContext } from '~/contexts';
+import { Environment, SessionContext } from '~/contexts';
 import { loadTheme } from '~/theme';
 
 type Props = React.PropsWithChildren;
@@ -18,12 +18,12 @@ export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
 
 export function AppStateContextProvider({ children }: Props) {
   
-  const { preferences: { displayMode } } = React.useContext(SessionContext);
+  const { preferences: { displayMode }, setEnv } = React.useContext(SessionContext);
   
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
   const [theme, setTheme] = React.useState(loadTheme(prefersDarkMode ? 'dark' : 'light'));
-  const [deferredAction, setDeferredAction] = React.useState<() => void | undefined>();
+  const [deferredAction, setDeferredAction] = React.useState<() => void>();
   const [showLoginDialog, setShowLoginDialog] = React.useState(false);
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchSuggestions, setSearchSuggestions] = React.useState<string[]>([]);
@@ -33,6 +33,10 @@ export function AppStateContextProvider({ children }: Props) {
     setTheme(loadTheme(displayMode ?? (prefersDarkMode ? 'dark' : 'light')));
   }, [displayMode, prefersDarkMode]);
   
+  React.useEffect(() => {
+    setEnv(process.env as Environment);
+  }, [setEnv]);
+
   return (
     <AppStateContext.Provider
       value={ {

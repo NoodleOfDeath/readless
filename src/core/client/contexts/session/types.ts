@@ -32,6 +32,11 @@ export class Bookmark<T> {
 
 }
 
+export type Environment = {
+  API_ENDPOINT: string;
+  BASE_DOMAIN: string;
+};
+
 export type Preferences = {
   displayMode?: ColorMode;
   lastReleaseNotesDate?: string;
@@ -59,6 +64,8 @@ export type SessionContextType = {
   ready?: boolean;
   // user data
   userData?: UserData;
+  env: Environment;
+  setEnv: (env: Environment) => void;
   setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SessionSetOptions) => void;
   addUserToken: (token: LoginResponse['token']) => void;
   // preferences
@@ -73,7 +80,9 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   addUserToken: () => {
     /* placeholder function */
   },
+  env: { API_ENDPOINT: '', BASE_DOMAIN: '' },
   preferences: {},
+  setEnv: () => { /* placeholder function */ },
   setPreference: () => {
     /* placeholder function */
   },

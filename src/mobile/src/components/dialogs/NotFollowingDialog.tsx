@@ -12,7 +12,7 @@ import {
 import { StackableTabParams } from '~/screens';
 
 export type NotFollowingDialogProps = DialogProps & {
-  navigation?: NativeStackNavigationProp<StackableTabParams, 'default'>;
+  navigation?: NativeStackNavigationProp<StackableTabParams, keyof StackableTabParams>;
 };
 
 export function NotFollowingDialog({
