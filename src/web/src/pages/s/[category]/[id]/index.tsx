@@ -32,6 +32,7 @@ export default function SummaryPage() {
           return;
         }
         setSummary(summary);
+        document.title = summary.title;
       }
     }
     setLoading(false);

@@ -113,7 +113,7 @@ export class Category<
       displayName: 'Lifestyle', icon: 'shoe-sneaker', name: 'lifestyle', 
     },
     media: {
-      displayName: 'Media', icon: 'account-group', name: 'media', 
+      displayName: 'Media', icon: 'newspaper', name: 'media',
     },
     medicine: {
       displayName: 'Medicine', icon: 'needle', name: 'medicine', 
@@ -148,6 +148,9 @@ export class Category<
     productivity: {
       displayName: 'Productivity', icon: 'tools', name: 'productivity', 
     },
+    programming: {
+      displayName: 'Programming', icon: 'code-tags', name: 'programming',
+    },
     'real-estate': {
       displayName: 'Real Estate', icon: 'home-group', name: 'real-estate', 
     },
@@ -165,6 +168,9 @@ export class Category<
     },
     shopping: {
       displayName: 'Shopping', icon: 'shopping', name: 'shopping', 
+    },
+    'social-media': {
+      displayName: 'Social Media', icon: 'twitter', name: 'social-media',
     },
     space: {
       displayName: 'Space', icon: 'space-station', name: 'space', 
