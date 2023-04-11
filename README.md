@@ -67,12 +67,12 @@ ReadLess is the model for a fully automated user content-driven podcast and news
 ### v1.3.0 - Mobile App
 
 - [x] MVP Project and POC
-- [ ] Advanced search/filters
+- [x] Advanced search/filters
   - [x] By category
-  - [ ] By outlet
-  - [ ] By relevance of wildcards
-  - [ ] By tags
-- [ ] Onboarding guide for mobile app
+  - [x] By outlet
+  - [x] By relevance of wildcards
+  - [x] By tags
+- [x] Onboarding guide for mobile app
 - [x] Basic settings/preferences
 - [x] Interactions
 - [ ] Modify Account Page 
@@ -81,16 +81,20 @@ ReadLess is the model for a fully automated user content-driven podcast and news
 - [x] Minor UI touch ups
 - [x] Offline bookmarking
 - [x] Categories
-- [ ] Following of categories on (My Stuff Screen)
+- [x] Following of categories on (My Stuff Screen)
 - [x] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
 
 ### v1.3.1 - First Real (Beta) Release
 
-- [ ] First release to the app stores
+- [x] First release to the app stores
 - [ ] Announcement of referral and pre-loyalty programs
 
 ### v1.4.0 - Advanced Interactions
 
+- [x] Bookmarking and Favorites
+- [x] Sharing of articles
+- [x] Display mobile app banner on web app
+- [x] Update web app manifests to have graphics
 - [ ] Adding of comments and messaging support (hopefully will not be a heavy lift as moderation could be outsourced to ChatGPT)
 - [ ] Adding of following users/friends (see the news articles your friends interact with in realtime)
 

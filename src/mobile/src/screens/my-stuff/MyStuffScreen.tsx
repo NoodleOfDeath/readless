@@ -1,10 +1,6 @@
 import React from 'react';
-import { Share } from 'react-native';
-
-import { BASE_DOMAIN } from '@env';
 
 import {
-  InteractionResponse,
   InteractionType,
   PublicSummaryAttributes,
   ReadingFormat,
@@ -16,11 +12,7 @@ import {
   TabSwitcher,
   View,
 } from '~/components';
-import {
-  AppStateContext,
-  Bookmark,
-  SessionContext,
-} from '~/contexts';
+import { Bookmark, SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
@@ -35,8 +27,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
     },
     setPreference,
   } = React.useContext(SessionContext);
-  const { interactWithSummary, recordSummaryView } = useSummaryClient();
-  const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
+  const { handleInteraction } = useSummaryClient();
   
   const [activeTab, setActiveTab] = React.useState(0);
   
@@ -45,80 +36,45 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   }, [setPreference]);
 
   const handleFormatChange = React.useCallback(
-    async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
-      recordSummaryView(summary, undefined, { format });
+    async (summary: PublicSummaryAttributes, interaction: InteractionType, format?: ReadingFormat) => {
+      const { data: interactions, error } = await handleInteraction(summary, InteractionType.View, undefined, { format });
+      if (error) {
+        return;
+      }
+      if (interactions) {
+        if (interaction === InteractionType.Bookmark) {
+          setPreference('bookmarkedSummaries', (prev) => {
+            const bookmarks = { ...prev };
+            if (bookmarks[summary.id]) {
+              delete bookmarks[summary.id];
+            } else {
+              bookmarks[summary.id] = new Bookmark({ ...summary, interactions });
+            }
+            return bookmarks;
+          });
+        } else if (interaction === InteractionType.Favorite) {
+          setPreference('favoritedSummaries', (prev) => {
+            const favorites = { ...prev };
+            if (favorites[summary.id]) {
+              delete favorites[summary.id];
+            } else {
+              favorites[summary.id] = new Bookmark({ ...summary, interactions });
+            }
+            return favorites;
+          });
+        }
+      }
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
         summary,
       });
     },
-    [navigation, preferredReadingFormat, recordSummaryView]
+    [handleInteraction, navigation, preferredReadingFormat, setPreference]
   );
   
   const handleReferSearch = React.useCallback((prefilter: string) => {
     navigation?.push('search', { prefilter });
   }, [navigation]);
-
-  const updateInteractions = React.useCallback((summary: PublicSummaryAttributes, interactions: InteractionResponse) => {
-    setPreference('bookmarkedSummaries', (prev) => {
-      const newBookmarks = { ...prev };
-      if (!newBookmarks[summary.id]) {
-        return (prev = newBookmarks);
-      }
-      newBookmarks[summary.id].item.interactions = interactions;
-      return (prev = newBookmarks);
-    });
-  }, [setPreference]);
-  
-  const handleInteraction = React.useCallback(async (summary: PublicSummaryAttributes, interaction: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
-    if (interaction === InteractionType.Bookmark) {
-      setPreference('bookmarkedSummaries', (prev) => {
-        const bookmarks = { ...prev };
-        if (bookmarks[summary.id]) {
-          delete bookmarks[summary.id];
-        } else {
-          bookmarks[summary.id] = new Bookmark(summary);
-        }
-        return (prev = bookmarks);
-      });
-      return;
-    } else
-    if (interaction === InteractionType.Favorite) {
-      setPreference('favoritedSummaries', (prev) => {
-        const bookmarks = { ...prev };
-        if (bookmarks[summary.id]) {
-          delete bookmarks[summary.id];
-        } else {
-          bookmarks[summary.id] = new Bookmark(summary);
-        }
-        return (prev = bookmarks);
-      });
-      return;
-    } else
-    if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
-      const shareUrl = `${BASE_DOMAIN}/read/?s=${summary.id}`;
-      await Share.share({ url: shareUrl });
-      return;
-    }
-    const { data, error } = await interactWithSummary(
-      summary, 
-      interaction,
-      content,
-      metadata
-    );
-    if (error) {
-      console.error(error);
-      if (error.name === 'NOT_LOGGED_IN') {
-        setShowLoginDialog(true);
-        setLoginDialogProps({ alert: 'Please log in to continue' });
-      }
-      return;
-    }
-    if (!data) {
-      return;
-    }
-    updateInteractions(summary, data);
-  }, [interactWithSummary, updateInteractions, setPreference, setShowLoginDialog, setLoginDialogProps]);
   
   return (
     <Screen>
@@ -160,9 +116,9 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                       <Summary
                         summary={ bookmark.item }
                         bookmarked
-                        favorited={ Boolean(favoritedSummaries[bookmark.item.id]) }
+                        favorited={ Boolean(favoritedSummaries?.[bookmark.item.id]) }
                         compact={ compactMode }
-                        onFormatChange={ (format) => handleFormatChange(bookmark.item, format) }
+                        onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Bookmark, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
                     </View>
@@ -193,10 +149,10 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                     <View col key={ id }>
                       <Summary
                         summary={ bookmark.item }
-                        bookmarked={ Boolean(bookmarkedSummaries[bookmark.item.id]) }
+                        bookmarked={ Boolean(bookmarkedSummaries?.[bookmark.item.id]) }
                         favorited
                         compact={ compactMode }
-                        onFormatChange={ (format) => handleFormatChange(bookmark.item, format) }
+                        onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Favorite, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
                     </View>

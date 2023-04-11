@@ -124,37 +124,28 @@ export class SummaryController {
     return summaries;
   }
   
-  @Post('/interact/:targetId/view')
-  public static async recordSummaryView(
-    @Path() targetId: number,
-    @Body() body: InteractionRequest
-  ): Promise<InteractionResponse> {
-    const {
-      content, metadata, remoteAddr, 
-    } = body;
-    const interaction = await SummaryInteraction.create({
-      content, metadata, remoteAddr, targetId, type: 'view',
-    });
-    if (!interaction) {
-      throw new InternalError('Failed to create interaction');
-    }
-    const resource = await Summary.scope('public').findByPk(targetId);
-    return resource.interactions;
-  }
-  
-  @Security('jwt', ['standard:write'])
+  @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<InteractionResponse> {
-    const { user } = await User.from(body);
+    const { user } = await User.from(body, { ignoreIfNotResolved: true });
     const {
       content, metadata, remoteAddr, 
     } = body;
-    const resource = await user.interactWithSummary(targetId, type, remoteAddr, content, metadata);
-    return resource.interactions;
+    const interaction = await SummaryInteraction.create({
+      content, metadata, remoteAddr, targetId, type, userId: user?.id,
+    });
+    if (!interaction) {
+      throw new InternalError('Failed to create interaction');
+    }
+    const resource = await Summary.scope('public').findByPk(targetId);
+    if (user) {
+      await resource.addUserInteractions(user.id);
+    }
+    return resource.toJSON().interactions;
   }
   
   @Security('jwt', ['god:*'])
