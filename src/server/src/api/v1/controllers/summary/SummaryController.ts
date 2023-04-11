@@ -34,12 +34,15 @@ function parsePrefilter(prefilter: string) {
   return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
 }
 
-function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids?: number[]) {
+function applyFilter(options: FindAndCountOptions<Summary>, filter: string = '', ids: number[] = []) {
   const newOptions = { ...options };
-  if (!filter || /\S+/.test(filter) === false) {
+  if (!filter && ids.length === 0) {
     return newOptions;
   }
   const where: FindAndCountOptions<Summary>['where'] = {};
+  if (ids.length > 0) {
+    where.id = ids;
+  }
   const splitExpr = /\s*((?:\w+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+\w+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
   const query = q ?? '';
@@ -62,28 +65,26 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter?: string, ids
       }
     }
   }
-  if (ids) {
-    where.id = ids;
-  }
-  if (query) {
-    const queries = query.split(' ');
+  if (query && query.length > 0) {
+    const subqueries = query.split(' ');
     where[Op.or] = [];
-    for (const query of queries) {
+    for (const subquery of subqueries) {
       where[Op.or].push({
         [Op.or]: {
-          bullets: { [Op.contains] : [query] },
-          longSummary: { [Op.iLike] : `%${query}%` },
-          shortSummary: { [Op.iLike] : `%${query}%` },
-          summary: { [Op.iLike] : `%${query}%` },
-          tags: { [Op.contains] : [query] },
-          text: { [Op.iLike] : `%${query}%` },
-          title: { [Op.iLike] : `%${query}%` },
-          url: { [Op.iLike] : `%${query}%` },
+          bullets: { [Op.contains] : [subquery] },
+          longSummary: { [Op.iLike] : `%${subquery}%` },
+          shortSummary: { [Op.iLike] : `%${subquery}%` },
+          summary: { [Op.iLike] : `%${subquery}%` },
+          tags: { [Op.contains] : [subquery] },
+          text: { [Op.iLike] : `%${subquery}%` },
+          title: { [Op.iLike] : `%${subquery}%` },
+          url: { [Op.iLike] : `%${subquery}%` },
         },
       });
     }
   }
   newOptions.where = where;
+  console.log(newOptions);
   return newOptions;
 }
 

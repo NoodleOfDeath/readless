@@ -1,4 +1,7 @@
 import React from 'react';
+import { Share } from 'react-native';
+
+import { BASE_DOMAIN } from '@env';
 
 import {
   InteractionResponse,
@@ -24,7 +27,7 @@ export function SummaryScreen({
 }: ScreenProps<'summary'>) {
   const { setShowLoginDialog, setLoginDialogProps } = React.useContext(AppStateContext);
   const { 
-    preferences: { bookmarkedSummaries },
+    preferences: { bookmarkedSummaries, favoritedSummaries },
     setPreference,
   } = React.useContext(SessionContext);
   const { interactWithSummary, recordSummaryView } = useSummaryClient();
@@ -60,6 +63,21 @@ export function SummaryScreen({
         return (prev = bookmarks);
       });
       return;
+    } else if (interaction === InteractionType.Favorite) {
+      setPreference('favoritedSummaries', (prev) => {
+        const favorites = { ...prev };
+        if (favorites[summary.id]) {
+          delete favorites[summary.id];
+        } else {
+          favorites[summary.id] = new Bookmark(summary);
+        }
+        return (prev = favorites);
+      });
+      return;
+    } else if (interaction === InteractionType.Share && summary.categoryAttributes?.name) {
+      const shareUrl = `${BASE_DOMAIN}/read/?s=${summary.id}`;
+      await Share.share({ url: shareUrl });
+      return;
     }
     const { data, error } = await interactWithSummary(summary, interaction, content, metadata);
     if (error) {
@@ -85,6 +103,7 @@ export function SummaryScreen({
             format={ format }
             collapsible={ false }
             bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
+            favorited={ Boolean(favoritedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(format) }
             onReferSearch={ handleReferSearch }
             onInteract={ onInteract }
