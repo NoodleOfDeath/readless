@@ -1,7 +1,6 @@
 import React from 'react';
 import { Image, Platform } from 'react-native';
 
-import { API_ENDPOINT, BASE_DOMAIN } from '@env';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
@@ -29,7 +28,6 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   const {
     ready, 
     preferences: { lastReleaseNotesDate }, 
-    setEnv,
     setPreference, 
   } = React.useContext(SessionContext);
   const { isLightMode } = useTheme();
@@ -62,10 +60,6 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   }, [showLoginDialog]);
 
   const onMount = React.useCallback(async () => {
-    setEnv({
-      API_ENDPOINT,
-      BASE_DOMAIN,
-    });
     const { data, error } = await getReleases();
     if (error) {
       console.error(error);
@@ -78,7 +72,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
         setPreference('lastReleaseNotesDate', releases.length > 0 ? new Date(releases[releases.length - 1].createdAt ?? Date.now()).valueOf().toString() : String(new Date().valueOf()));
       }
     }
-  }, [getReleases, lastReleaseNotesDate, setEnv, setPreference]);
+  }, [getReleases, lastReleaseNotesDate, setPreference]);
 
   React.useEffect(() => {
     if (!ready) {

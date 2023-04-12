@@ -32,7 +32,6 @@ export default function SearchBar() {
   );
 
   const handleChange = React.useCallback((event: React.SyntheticEvent<Element, Event>, value?: unknown, reason?: AutocompleteChangeReason) => {
-    console.log(event);
     if (reason === 'clear') {
       setSearchText('');
       setSearchParams({ q: '' });

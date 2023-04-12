@@ -33,7 +33,6 @@ export function SessionContextProvider({ children }: Props) {
   });
   const ready = React.useMemo(() => Object.values(readyFlags).every((flag) => flag), [readyFlags]);
 
-  const [env, setEnv] = React.useState({ API_ENDPOINT: '', BASE_DOMAIN: '' } as Environment);
   const [preferences, setPreferences] = React.useState<Preferences>({});
   const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps>();
 
@@ -134,10 +133,8 @@ export function SessionContextProvider({ children }: Props) {
     <SessionContext.Provider
       value={ {
         addUserToken,
-        env,
         preferences,
         ready,
-        setEnv,
         setPreference,
         setUserData,
         userData,

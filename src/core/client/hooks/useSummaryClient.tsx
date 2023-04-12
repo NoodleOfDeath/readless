@@ -8,12 +8,11 @@ import {
   InteractionType,
   PublicSummaryAttributes,
 } from '~/api';
-import { Share } from '~/utils';
 
 export function useSummaryClient() {
 
   const {
-    setPreference, userData, withHeaders, env,
+    setPreference, userData, withHeaders,
   } = React.useContext(SessionContext);
   
   const getSummaries = React.useCallback(async (
@@ -57,7 +56,7 @@ export function useSummaryClient() {
     interaction: InteractionType, 
     content?: string, 
     metadata?: Record<string, unknown>,
-    alternateAction?: () => void
+    alternateAction?: (() => Promise<void>) | (() => void)
   ) => {
     const payload: Record<string, unknown> = { ...metadata, content };
     if (interaction === InteractionType.Bookmark) {
@@ -82,27 +81,22 @@ export function useSummaryClient() {
         }
         return (prev = favorites);
       });
-    } else if (interaction === InteractionType.Read) {
+    } else if (interaction === InteractionType.Feedback) {
+      await alternateAction?.();
+      return { data: undefined, error: undefined };
+    } else if (interaction === InteractionType.Read || interaction === InteractionType.Share || interaction === InteractionType.View) {
       // pass
-      const response = await interactWithSummary(summary, interaction, content, payload);
-      if (alternateAction) {
-        alternateAction?.();
+      try {
+        await alternateAction?.();
+      } catch (e) {
+        console.error(e);
       }
-      return response;
-    } else if (interaction === InteractionType.Share) {
-      const message = `${summary.title} ${env.BASE_DOMAIN}/read/?s=${summary.id}`;
-      const url = `${env.BASE_DOMAIN}/read/?s=${summary.id}`;
-      payload.value = url;
-      const response = await interactWithSummary(summary, interaction, content, payload);
-      await Share.share({ message, url });
-      return response;
-    } else if (interaction === InteractionType.View) {
-      // pass
+      return { data: undefined, error: new ClientError('UNKNOWN') };
     } else {
       return { data: undefined, error: new ClientError('UNKNOWN') };
     }
     return await interactWithSummary(summary, interaction, content, payload);
-  }, [env.BASE_DOMAIN, interactWithSummary, setPreference]);
+  }, [interactWithSummary, setPreference]);
 
   return {
     getSummaries,

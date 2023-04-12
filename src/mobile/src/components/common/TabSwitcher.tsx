@@ -81,7 +81,6 @@ export function TabSwitcher({
                 flex: 1,
                 justifyContent: 'center',
               } }
-              onLayout={ (event) => console.log(event.nativeEvent.layout.x) }
               onPress={ () => {
                 handleSlide(i);
               } }>
