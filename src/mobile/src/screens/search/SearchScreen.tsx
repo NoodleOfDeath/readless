@@ -149,9 +149,7 @@ export function SearchScreen({
       const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         console.error(error);
-        return;
-      }
-      if (interactions) {
+      } else if (interactions) {
         setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
       }
       navigation?.push('summary', {

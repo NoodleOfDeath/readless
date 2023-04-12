@@ -134,10 +134,7 @@ export function Summary({
   const handleStandardShare = React.useCallback(async () => {
     try {
       const url = `${BASE_DOMAIN}/read/?s=${summary.id}`;
-      const message = [
-        summary.title, 
-        url,
-      ].join('\n\n');
+      const message = summary.title;
       onInteract?.(InteractionType.Share, undefined, { message, url }, async () => {
         await Share.open({ 
           message,

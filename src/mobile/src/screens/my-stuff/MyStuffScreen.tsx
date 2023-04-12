@@ -40,7 +40,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
       const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         return;
-      }
+      } else
       if (interactions) {
         if (interaction === InteractionType.Bookmark) {
           setPreference('bookmarkedSummaries', (prev) => {

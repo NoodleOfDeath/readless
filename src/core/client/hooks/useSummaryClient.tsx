@@ -91,7 +91,6 @@ export function useSummaryClient() {
       } catch (e) {
         console.error(e);
       }
-      return { data: undefined, error: new ClientError('UNKNOWN') };
     } else {
       return { data: undefined, error: new ClientError('UNKNOWN') };
     }

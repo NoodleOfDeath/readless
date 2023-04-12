@@ -34,8 +34,8 @@ export function SummaryScreen({
     }
     const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
     if (error) {
-      return;
-    }
+      console.error(error);
+    } else
     if (interactions) {
       setInteractions(interactions);
     }
@@ -48,7 +48,7 @@ export function SummaryScreen({
 
   return (
     <Screen>
-      <View mt={ 10 }>
+      <View mt={ 10 } mh={ 16 }>
         {summary && (
           <Summary
             summary={ summary }
