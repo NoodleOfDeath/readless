@@ -16,7 +16,7 @@ import {
   ReleaseAttributes,
 } from '../../schema';
 
-@Route('/v1/release')
+@Route('/v1/version')
 @Tags('Release')
 @Security('jwt')
 @SuccessResponse(200, 'OK')
@@ -25,7 +25,7 @@ import {
 @Response<InternalError>(500, 'Internal Error')
 export class VersionController {
   
-  @Get('/')
+  @Get('/releases')
   public static async getReleases(
     @Query() userId?: number,
     @Query() filter?: string

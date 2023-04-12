@@ -7,7 +7,7 @@ import { internalErrorHandler, validationMiddleware } from '../../middleware';
 const router = Router();
 
 router.get(
-  '/',
+  '/releases',
   query('filter').isString().optional(),
   validationMiddleware,
   async (req, res) => {
