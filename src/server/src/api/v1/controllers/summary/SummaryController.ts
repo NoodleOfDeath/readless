@@ -14,6 +14,7 @@ import {
   Tags,
 } from 'tsoa';
 
+import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
@@ -139,6 +140,14 @@ export class SummaryController {
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
+    }
+    if (type === 'feedback') {
+      await new MailService().sendMail({
+        from: 'user@readless.ai',
+        subject: 'Feedback',
+        text: [content, JSON.stringify(metadata)].join('\n\n'),
+        to: 'feedback@readless.ai',
+      });
     }
     const resource = await Summary.scope('public').findByPk(targetId);
     if (user) {

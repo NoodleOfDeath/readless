@@ -27,16 +27,38 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
   const [success, setSuccess] = React.useState<boolean>(false);
 
   const checkboxes = [
-    { label: 'I actually found this summary helpful', value: 'helpful' },
+    { label: 'This is in the wrong category', value: 'wrong-category' },
     { label: 'This summary is inaccurate', value: 'inaccrurate' },
     { label: 'This summary is offensive', value: 'offensive' },
     { label: 'This summary is spam', value: 'spam' },
-    { label: 'This summary is still very clickbait', value: 'clickbait' },
     { label: 'This summary is too long', value: 'too long' },
     { label: 'This summary is too short', value: 'too short' },
     { label: 'This summary is not about news', value: 'irrelevant' },
+    { label: 'I actually found this summary helpful', value: 'helpful' },
     { label: 'Other', value: 'other' },
   ];
+
+  const onSubmit = React.useCallback(() => {
+    if (selectedValues.length === 0) {
+      return;
+    }
+    handleInteraction(summary, InteractionType.Feedback, otherValue, { issues: selectedValues });
+    setSelectedValues([]);
+    setOtherValue('');
+    setSuccess(true);
+  }, [selectedValues, otherValue, handleInteraction, summary]);
+
+  React.useEffect(() => {
+    if (otherValue.length > 0) {
+      if (!selectedValues.includes('other')) {
+        setSelectedValues([...selectedValues, 'other']);
+      }
+    } else {
+      if (selectedValues.includes('other')) {
+        setSelectedValues(selectedValues.filter(value => value !== 'other'));
+      }
+    }
+  }, [otherValue, selectedValues]);
 
   return (
     <Dialog { ...dialogProps } height="50%" p={ 16 } row>
@@ -59,7 +81,6 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
                   <Text>{ checkbox.label }</Text>
                 </View>
               ))}
-              <Text>Any other comments?</Text>
               <TextInput value={ otherValue } onChange={ (e) => setOtherValue(e.nativeEvent.text) } />
               <Button
                 row
@@ -68,12 +89,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
                 justifyCenter 
                 selectable
                 p={ 8 }
-                onPress={ () => {
-                  handleInteraction(summary, InteractionType.Feedback, otherValue, { issues: selectedValues });
-                  setSelectedValues([]);
-                  setOtherValue('');
-                  setSuccess(true);
-                } }>
+                onPress={ onSubmit }>
                 Submit Feedback
               </Button>
             </View>
