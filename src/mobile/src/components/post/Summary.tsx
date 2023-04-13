@@ -146,6 +146,7 @@ export function Summary({
   }, [onInteract, readText]);
   
   const handleStandardShare = React.useCallback(async () => {
+    setOpenSocials(false);
     try {
       const url = `${BASE_DOMAIN}/read/?s=${summary.id}`;
       const message = summary.title;
@@ -161,6 +162,7 @@ export function Summary({
   }, [onInteract, summary]);
   
   const handleSocialShare = React.useCallback(async (social: Social) => {
+    setOpenSocials(false);
     try {
       const url = await viewshot.current?.capture?.();
       const message = [

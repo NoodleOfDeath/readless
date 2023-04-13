@@ -47,7 +47,7 @@
 		01F6EA6829E6FA3C00F51BBA /* watchOS_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F6EA6729E6FA3C00F51BBA /* watchOS_Watch_AppTests.swift */; };
 		01F6EA7229E6FA3C00F51BBA /* watchOS_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F6EA7129E6FA3C00F51BBA /* watchOS_Watch_AppUITests.swift */; };
 		01F6EA7429E6FA3C00F51BBA /* watchOS_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F6EA7329E6FA3C00F51BBA /* watchOS_Watch_AppUITestsLaunchTests.swift */; };
-		01F6EA7729E6FA3C00F51BBA /* watchOS Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 01F6EA5429E6FA3900F51BBA /* watchOS Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		01F6EA7729E6FA3C00F51BBA /* Read Less.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 01F6EA5429E6FA3900F51BBA /* Read Less.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		01F6EA8329E6FB0100F51BBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01F6EA8229E6FB0100F51BBA /* Assets.xcassets */; };
 		07A1D8E328E1A8A03D5EA3A8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */; };
 		0C80B921A6F3F58F76C31292 /* libPods-ReadLess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */; };
@@ -97,7 +97,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				01F6EA7729E6FA3C00F51BBA /* watchOS Watch App.app in Embed Watch Content */,
+				01F6EA7729E6FA3C00F51BBA /* Read Less.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,7 +142,7 @@
 		0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		01BC567B29DCF36700C69F9A /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ReadLess/main.jsbundle; sourceTree = "<group>"; };
-		01F6EA5429E6FA3900F51BBA /* watchOS Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "watchOS Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		01F6EA5429E6FA3900F51BBA /* Read Less.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Read Less.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		01F6EA5629E6FA3A00F51BBA /* watchOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = watchOSApp.swift; sourceTree = "<group>"; };
 		01F6EA5829E6FA3A00F51BBA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		01F6EA5D29E6FA3B00F51BBA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -377,7 +377,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* ReadLess.app */,
 				00E356EE1AD99517003FC87E /* ReadLessTests.xctest */,
-				01F6EA5429E6FA3900F51BBA /* watchOS Watch App.app */,
+				01F6EA5429E6FA3900F51BBA /* Read Less.app */,
 				01F6EA6329E6FA3C00F51BBA /* watchOS Watch AppTests.xctest */,
 				01F6EA6D29E6FA3C00F51BBA /* watchOS Watch AppUITests.xctest */,
 			);
@@ -442,7 +442,7 @@
 			);
 			name = "watchOS Watch App";
 			productName = "watchOS Watch App";
-			productReference = 01F6EA5429E6FA3900F51BBA /* watchOS Watch App.app */;
+			productReference = 01F6EA5429E6FA3900F51BBA /* Read Less.app */;
 			productType = "com.apple.product-type.application";
 		};
 		01F6EA6229E6FA3C00F51BBA /* watchOS Watch AppTests */ = {
@@ -928,7 +928,6 @@
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = watchOS;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ai.readless.ios;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -940,7 +939,7 @@
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Read Less";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -972,7 +971,6 @@
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = watchOS;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ai.readless.ios;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -983,7 +981,7 @@
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Read Less";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1134,11 +1132,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Read < Less";
+				INFOPLIST_KEY_CFBundleDisplayName = "Read Less";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1171,10 +1169,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = ReadLess/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Read < Less";
+				INFOPLIST_KEY_CFBundleDisplayName = "Read Less";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

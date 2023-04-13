@@ -1,12 +1,16 @@
 import React from 'react';
 
-import { Icon, Button, ViewProps } from '~/components';
+import {
+  Button,
+  Icon,
+  ViewProps,
+} from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type CheckboxProps = RNPCheckboxProps & {
-  checked?: Boolean;
+  checked?: boolean;
   onPress?: () => void;
-}
+};
 
 export function Checkbox({
   checked,
@@ -24,12 +28,11 @@ export function Checkbox({
       mh={ 8 }
       style={ style }
       onPress={ onPress }
-      { ...other }
-      >
+      { ...other }>
       {checked && (
         <Icon name='check' color={ theme.colors.primary } />
       )}
     </Button>
-  )
+  );
 }
 

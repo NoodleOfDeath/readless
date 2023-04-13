@@ -145,6 +145,15 @@ export class Outlet<
         url: 'https://www.bleepingcomputer.com',
       }],
     },
+    bloomberg: {
+      displayName: 'Bloomberg',
+      name: 'bloomberg',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.bloomberg.com',
+      }],
+    },
     'business-insider': {
       displayName: 'Business Insider',
       name: 'business-insider',
@@ -275,6 +284,15 @@ export class Outlet<
       name: 'economist',
       siteMaps: [],
     },
+    enews: {
+      displayName: 'E! News',
+      name: 'enews',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[class*="widget__title"]',
+        url: 'https://www.eonline.com',
+      }],
+    },
     espn: {
       displayName: 'ESPN',
       name: 'espn',
@@ -282,6 +300,15 @@ export class Outlet<
         attribute: 'href',
         selector: 'ul[class*="headlineStack"] li a',
         url: 'https://www.espn.com',
+      }],
+    },
+    essence: {
+      displayName: 'Essence',
+      name: 'essence',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.essence.com',
       }],
     },
     ew: {
@@ -336,6 +363,15 @@ export class Outlet<
         attribute: 'href',
         selector: 'a[class*="js-teaser-heading-link"]',
         url: 'https://www.ft.com',
+      }],
+    },
+    gizmodo: {
+      displayName: 'Gizmodo',
+      name: 'gizmodo',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.gizmodo.com',
       }],
     },
     guardian: {
@@ -419,6 +455,15 @@ export class Outlet<
         url: 'https://www.mashable.com',
       }],
     },
+    'mens-health': {
+      displayName: 'Men\'s Health',
+      name: 'mens-health',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[href*="/fitness"],a[href*="/health"],a[href*="/style"],a[href*="/grooming"]',
+        url: 'https://www.menshealth.com',
+      }],
+    },
     'national-geographic': {
       displayName: 'National Geographic',
       name: 'national-geographic',
@@ -453,6 +498,15 @@ export class Outlet<
         attribute: 'href',
         selector: 'a[class*="SummaryItem"]',
         url: 'https://www.newyorker.com',
+      }],
+    },
+    npr: {
+      displayName: 'NPR',
+      name: 'npr',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.npr.org',
       }],
     },
     nytimes: {
@@ -550,13 +604,31 @@ export class Outlet<
         url: 'https://www.space.com',
       }],
     },
-    sundayTimes: {
+    'sunday-times': {
       displayName: 'The Sunday Times ',
       name: 'sunday-times',
       siteMaps: [{
         attribute: 'href',
         selector: 'div[class*="Item-content"] a',
         url: 'https://www.thetimes.co.uk',
+      }],
+    },
+    telegraph: {
+      displayName: 'The Telegraph',
+      name: 'telegraph',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.telegraph.co.uk',
+      }],
+    },
+    thestreet: {
+      displayName: 'The Street',
+      name: 'thestreet',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'phoenix-card[role*="article"] a',
+        url: 'https://www.thestreet.com',
       }],
     },
     time: {
@@ -566,6 +638,15 @@ export class Outlet<
         attribute: 'href',
         selector: 'article a',
         url: 'https://www.time.com',
+      }],
+    },
+    usatoday: {
+      displayName: 'USA Today',
+      name: 'usatoday',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'a[href*="/story"]',
+        url: 'https://www.usatoday.com',
       }],
     },
     usnews: {
