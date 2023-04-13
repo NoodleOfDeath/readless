@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Divider as RNDivider, DividerProps as RNDividerProps } from 'react-native-paper';
 
 import { useTheme } from '~/hooks';

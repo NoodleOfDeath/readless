@@ -27,7 +27,7 @@ export function Text({
     color: Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color,
     textAlign,
     ...otherStyles,
-    fontSize: (otherStyles.fontSize ?? 20) * textScale
+    fontSize: (otherStyles.fontSize ?? 20) * textScale,
   }), [color, otherStyles, textAlign, textScale, theme, variant]);
   
   return (
