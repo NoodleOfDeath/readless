@@ -1,67 +1,52 @@
 import React from 'react';
 import {
-  Animated,
-  GestureResponderEvent,
-  LayoutRectangle,
   Pressable,
-  View,
+  SafeAreaView,
 } from 'react-native';
+import { Dialog as RNDialog, Portal,Provider } from 'react-native-paper';
 
-import { ViewProps } from '~/components';
-import { useTheme } from '~/hooks';
+import { View, ViewProps } from '~/components';
+import { useStyles, useTheme } from '~/hooks';
 
 export type DialogProps = ViewProps & React.PropsWithChildren<{
   visible?: boolean;
   onClose?: () => void;
+  title?: string;
+  actions?: React.ReactNode | React.ReactNode[];
 }>;
 
 export function Dialog({
   children,
   visible,
   onClose,
+  title,
+  actions,
   ...other
 }: DialogProps) {
   const theme = useTheme();
+  const style = useStyles(other);
   
-  const opacityValue = React.useRef(new Animated.Value(0)).current;
-  const refContent = React.useRef<View | Animated.LegacyRef<View>>(null);
-  const [layout, setLayout] = React.useState<LayoutRectangle>();
-  
-  const handlePress = React.useCallback((event: GestureResponderEvent) => {
-    const { pageX, pageY } = event.nativeEvent;
-    if (
-      layout &&
-      pageX >= layout.x &&
-      pageX <= layout.x + layout.width &&
-      pageY >= layout.y &&
-      pageY <= layout.y + layout.height) {
-      return;
-    }
-    onClose?.();
-  }, [onClose, layout]);
-  
-  React.useEffect(() => {
-    Animated.spring(opacityValue, {
-      toValue: visible ? 1 : 0,
-      useNativeDriver: true,
-    }).start();
-  }, [visible, opacityValue]);
+  const dialogActions = React.useMemo(() => actions && (Array.isArray(actions) ? actions : [actions]).map((a, i) => ({ ...a, key: i})), [actions]);
   
   return (
-    <React.Fragment>
-      {visible && (
-        <Pressable
-          style={ theme.components.dialogBackdrop }
-          onPress={ handlePress }>
-          <Animated.View
-            { ...other }
-            ref={ refContent }
-            onLayout={ (e) => setLayout(e.nativeEvent.layout) }
-            style={ [theme.components.dialog, { opacity: opacityValue } ] }>
-            {children}
-          </Animated.View>
-        </Pressable>
+    <RNDialog 
+      visible={ visible }
+      onDismiss={ () => onClose?.() }
+      style={ theme.components.dialog }
+      >
+        {title && (
+          <RNDialog.Title style={ { color: theme.colors.text } }>{title}</RNDialog.Title>
+        )}
+      <RNDialog.Content>
+        <View>
+          {children}
+        </View>
+      </RNDialog.Content>
+      {dialogActions && dialogActions.length > 0 && (
+        <RNDialog.Actions>
+          {actions}
+        </RNDialog.Actions>
       )}
-    </React.Fragment>
+    </RNDialog>
   );
 }

@@ -14,13 +14,15 @@ import { useTheme } from '~/hooks';
 
 type Props = {
   titles?: React.ReactNode[];
-  children: React.ReactNode | React.ReactNode[];
+  tabHeight?: number;
+  children?: React.ReactNode | React.ReactNode[];
   activeTab?: number;
   onTabChange?: (tab: number) => void;
 };
 
 export function TabSwitcher({
   activeTab = 0,
+  tabHeight,
   children,
   onTabChange,
   titles, 
@@ -34,11 +36,14 @@ export function TabSwitcher({
 
   const handleSlide = React.useCallback((tab: number) => {
     Animated.spring(translateX, {
-      toValue: tab * (100 / views.length),
+      toValue: tab * (100 / (titles?.length ?? 1)),
       useNativeDriver: true,
     }).start();
-    onTabChange?.(tab);
-  }, [onTabChange, translateX, views.length]);
+  }, [translateX, titles?.length]);
+  
+  React.useEffect(() => {
+    handleSlide(activeTab);
+  }, [activeTab, handleSlide]);
 
   return (
     <Animated.View style={ { flex: 1 } }>
@@ -47,8 +52,8 @@ export function TabSwitcher({
           row
           outlined
           rounded
-          mv={ 20 }
-          height={ 36 }
+          mv={ 16 }
+          height={ tabHeight ?? 36 }
           onLayout={ (event) => setSwitcherLayout(event.nativeEvent.layout) }>
           <Animated.View
             style={ {
@@ -62,13 +67,13 @@ export function TabSwitcher({
                 {
                   translateX: translateX.interpolate({
                     inputRange: [0, 100],
-                    outputRange: [0, (switcherLayout?.width || 0) - views.length - 1],
+                    outputRange: [0, (switcherLayout?.width || 0) - (titles?.length ?? 1) - 1],
                   }),
                 },
               ],
-              width: `${100 / views.length}%`,
+              width: `${100 / (titles?.length ?? 1)}%`,
             } } />
-          {views.map((view, i) => (
+          {titles?.map((title, i) => (
             <TouchableOpacity
               key={ i }
               style={ {
@@ -82,18 +87,18 @@ export function TabSwitcher({
                 justifyContent: 'center',
               } }
               onPress={ () => {
-                handleSlide(i);
+                onTabChange?.(i);
               } }>
               <Text
                 style={ { color: activeTab === i ? theme.colors.contrastText : theme.colors.primary } }>
-                {titles && titles.length > i ? titles[i] : `Tab ${i + 1}`}
+                {title}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
         <ScrollView>
           <Animated.View>
-            {views[activeTab]}
+            {activeTab < views.length && views[activeTab]}
           </Animated.View>
         </ScrollView>
       </View>

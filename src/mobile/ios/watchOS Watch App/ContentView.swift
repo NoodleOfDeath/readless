@@ -12,7 +12,7 @@ public class Summary {
 }
 
 class State: ObservableObject {
-  @Published interval var summaries = [Summary]()
+  @Published internal var summaries = [Summary]()
 }
 
 struct ContentView: View {

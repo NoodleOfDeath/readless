@@ -1,5 +1,7 @@
 export * from './types';
 
+export * from './home/HomeScreen';
+export * from './media/MediaScreen';
 export * from './my-stuff/MyStuffScreen';
 export * from './search/SearchScreen';
 export * from './sections/SectionsScreen';

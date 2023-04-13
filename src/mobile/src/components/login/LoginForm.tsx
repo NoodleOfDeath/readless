@@ -123,7 +123,7 @@ export function LoginForm({
   }, [action, email, password, confirmPassword]);
   
   return (
-    <View p={ 16 } row>
+    <View row>
       <ScrollView>
         <View mb={ 16 }>
           <Text center variant="title1">{action === 'logIn' ? 'Log In' : action === 'signUp' ? 'Sign Up' : 'Forgot Password'}</Text>

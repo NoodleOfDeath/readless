@@ -44,14 +44,6 @@ const makeTheme = (lightMode: boolean) => {
           borderRadius: 8,
           borderWidth: 5,
         },
-        dialogBackdrop: {
-          alignItems: 'center',
-          backgroundColor: lightMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)',
-          height: '100%',
-          justifyContent: 'center',
-          position: 'absolute',
-          width: '100%',
-        },
         divider: {
           height: StyleSheet.hairlineWidth,
           marginBottom: 6,
@@ -67,7 +59,10 @@ const makeTheme = (lightMode: boolean) => {
           flexDirection: 'row',
           flexGrow: 1,
         }, 
-        input: { color: lightMode ? '#000' : '#fff' },
+        input: { 
+          backgroundColor: lightMode ? '#ddd' : '#111',
+          color: lightMode ? '#000' : '#fff',
+        },
         outlined: {
           borderColor: '#8b0000',
           borderWidth: 2,

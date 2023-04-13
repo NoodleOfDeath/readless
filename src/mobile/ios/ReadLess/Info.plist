@@ -24,6 +24,16 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.news</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>readless</string>
+		<string>whatsapp</string>
+		<string>mailto</string>
+		<string>instagram</string>
+		<string>instagram-stories</string>
+		<string>fb</string>
+		<string>facebook-stories</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -78,6 +88,12 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -92,15 +108,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>readless</string>
-		<string>whatsapp</string>
-		<string>mailto</string>
-		<string>instagram</string>
-		<string>instagram-stories</string>
-		<string>fb</string>
-		<string>facebook-stories</string>
-	</array>
 </dict>
 </plist>

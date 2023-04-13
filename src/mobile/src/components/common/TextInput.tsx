@@ -1,14 +1,13 @@
 import React from 'react';
 import { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 
-import { Input, InputProps } from '@rneui/base';
+import { TextInput as RNPTextInput, TextInputProps as RNPTextInputProps } from 'react-native-paper';
 
 import { View, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type TextInputProps = InputProps & ViewProps & {
-  label?: string;
-};
+export type TextInputProps = RNPTextInputProps & ViewProps;
+
 export type InputEvent = NativeSyntheticEvent<TextInputKeyPressEventData>;
 
 export function TextInput(props: TextInputProps) {
@@ -16,7 +15,10 @@ export function TextInput(props: TextInputProps) {
   const style = useStyles(props);
   return (
     <View style={ style }>
-      <Input { ...props } style={ [theme.components.input, style.color ? { color: style.color } : {} ] } />
+      <RNPTextInput
+        mode='outlined'
+        { ...props } 
+        style={ [theme.components.input, style.color ? { color: style.color } : {} ] } />
     </View>
   );
 }

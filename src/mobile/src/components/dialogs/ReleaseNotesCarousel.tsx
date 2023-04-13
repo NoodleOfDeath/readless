@@ -22,7 +22,7 @@ const scale = 0.75;
 const PAGE_WIDTH = window.width * scale;
 const PAGE_HEIGHT = window.height * scale;
 
-export function ReleaseNotesDialog({ data, onClose }: Props) {
+export function ReleaseNotesCarousel({ data, onClose }: Props) {
   
   const style = {
     backgroundColor: '#8b0000',

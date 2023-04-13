@@ -2,12 +2,12 @@ import React from 'react';
 
 import { ReadingFormat } from '~/api';
 import { Button, View } from '~/components';
+import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
 type Props = {
   format?: ReadingFormat;
   preferredFormat?: ReadingFormat;
-  compact?: boolean;
   onChange?: (mode?: ReadingFormat) => void;
 };
 
@@ -21,11 +21,11 @@ const FORMAT_ICONS = {
 
 export function ReadingFormatSelector({
   format,
-  preferredFormat = ReadingFormat.Concise,
-  compact, 
+  preferredFormat = ReadingFormat.Concise, 
   onChange,
 }: Props = {}) {
   const theme = useTheme();
+  const { preferences: { compactMode } } = React.useContext(SessionContext);
   const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
     return (
       <Button
@@ -36,6 +36,7 @@ export function ReadingFormatSelector({
         alignCenter
         justifyCenter
         color={ 'primary' }
+        spacing={ 8 }
         fontSize={ 16 }
         p={ 8 }
         startIcon={ FORMAT_ICONS[newFormat] }
@@ -43,13 +44,13 @@ export function ReadingFormatSelector({
         selected={ format === newFormat }
         bg={ newFormat === preferredFormat ? '#aaaacc' : undefined }
         onPress={ () => onChange?.(newFormat) }>
-        {!compact && newFormat}
+        {!compactMode && newFormat}
       </Button>
     );
-  }, [compact, format, preferredFormat, onChange]);
+  }, [compactMode, format, preferredFormat, onChange]);
 
   return (
-    compact ? (
+    compactMode ? (
       <View row rounded outlined style={ theme.components.buttonGroup }>
         {makeButton(ReadingFormat.Concise)}
         {makeButton(ReadingFormat.Bullets)}

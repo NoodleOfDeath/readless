@@ -3,7 +3,6 @@ import React from 'react';
 import { UserData, UserDataProps } from './UserData';
 import {
   DEFAULT_SESSION_CONTEXT,
-  Environment,
   FunctionWithRequestParams,
   Preferences,
   SessionSetOptions,

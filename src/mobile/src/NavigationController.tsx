@@ -7,27 +7,30 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Icon } from '~/components';
 import { useTheme } from '~/hooks';
 import {
+  HomeScreen,
   MyStuffScreen,
   NAVIGATION_LINKING_OPTIONS,
+  ScreenComponentType,
   SearchScreen,
   SectionsScreen,
   SettingsScreen,
   StackableTabParams,
   SummaryScreen,
+  TabParams,
 } from '~/screens';
 
-export function TabViewController(
-  tabs: { [key in keyof StackableTabParams]?: React.ComponentType }, 
-  initialRouteName: keyof StackableTabParams = 'default'
+export function TabViewController<T extends TabParams = TabParams>(
+  tabs: { [key in keyof T]: ScreenComponentType<T, keyof T> }, 
+  initialRouteName?: Extract<keyof T, string>
 ) {
   const Controller = () => {
-    const Stack = createNativeStackNavigator<StackableTabParams>();
+    const Stack = createNativeStackNavigator<T>();
     return (
       <Stack.Navigator initialRouteName={ initialRouteName }>
         {Object.entries(tabs).map(([name, component]) => (
           <Stack.Screen
             key={ name }
-            name={ name as keyof StackableTabParams }
+            name={ name as keyof T }
             component={ component }
             options={ { headerShown: false } } />
         ))}
@@ -39,9 +42,9 @@ export function TabViewController(
 
 const TABS = [
   {
-    component: TabViewController(
+    component: TabViewController<StackableTabParams>(
       {
-        default: SearchScreen, 
+        default: HomeScreen, 
         search: SearchScreen, 
         summary: SummaryScreen,
       }
@@ -50,7 +53,7 @@ const TABS = [
     name: 'Hot off Press',
   },
   {
-    component: TabViewController(
+    component: TabViewController<StackableTabParams>(
       {
         default: MyStuffScreen, 
         search: SearchScreen, 
@@ -61,7 +64,7 @@ const TABS = [
     name: 'My Stuff',
   },
   {
-    component: TabViewController(
+    component: TabViewController<StackableTabParams>(
       {
         default: SectionsScreen, 
         search: SearchScreen, 

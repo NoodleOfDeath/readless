@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { CheckBox } from '@rneui/base';
-
 import {
   InternalError,
   PublicCategoryAttributes,
@@ -9,6 +7,7 @@ import {
 } from '~/api';
 import {
   Button,
+  Checkbox,
   Screen,
   TabSwitcher,
   Text,
@@ -92,7 +91,6 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   }, [navigation]);
   
   const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    let categoryCount = 0;
     setPreference('bookmarkedCategories', (prev) => {
       const state = { ...prev };
       if (!state[category.name]) {
@@ -100,14 +98,11 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
       } else {
         delete state[category.name];
       }
-      categoryCount = Object.values(state).length;
       return (prev = state);
     });
-    setPreference('showOnlyBookmarkedNews', categoryCount + outletCount > 0);
-  }, [outletCount, setPreference]);
+  }, [setPreference]);
   
   const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    let outletCount = 0;
     setPreference('bookmarkedOutlets', (prev) => {
       const state = { ...prev };
       if (!state[outlet.name]) {
@@ -115,22 +110,19 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
       } else {
         delete state[outlet.name];
       }
-      outletCount = Object.values(state).length;
       return (prev = state);
     });
-    setPreference('showOnlyBookmarkedNews', categoryCount + outletCount > 0);
-  }, [categoryCount, setPreference]);
+  }, [setPreference]);
   
-  const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' |'bookmarkedOutlets') => {
+  const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' | 'bookmarkedOutlets') => {
     setPreference(key, {});
-    setPreference('showOnlyBookmarkedNews', categoryCount + outletCount > 0);
-  }, [categoryCount, outletCount, setPreference]);
+  }, [setPreference]);
 
   return (
     <Screen
       refreshing={ loading }
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
-      <View col mh={ 16 }>
+      <View col mh={ 16 } mb={ 16 }>
         <TabSwitcher 
           activeTab={ activeTab }
           onTabChange={ setActiveTab }
@@ -172,13 +164,14 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                   alignCenter
                   outlined
                   rounded
+                  spacing={ 8 }
                   startIcon={ category.icon }
                   p={ 8 }
                   mv={ 4 }
                   onPress={ () => selectCategory(category) }>
                   {category.displayName}
                 </Button>
-                <CheckBox
+                <Checkbox
                   checked={ Boolean(bookmarkedCategories?.[category.name]) }
                   onPress={ () => followCategory(category) }
                   containerStyle={ { backgroundColor: 'transparent' } } />
@@ -227,7 +220,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                   onPress={ () => selectOutlet(outlet) }>
                   {outlet.displayName}
                 </Button>
-                <CheckBox
+                <Checkbox
                   checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
                   onPress={ () => followOutlet(outlet) }
                   containerStyle={ { backgroundColor: 'transparent' } } />
