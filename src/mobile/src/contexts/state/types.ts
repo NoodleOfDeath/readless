@@ -9,8 +9,6 @@ export type AppStateContextType = {
   setShowLoginDialog: React.Dispatch<React.SetStateAction<boolean>>;
   loginDialogProps?: LoginDialogProps;
   setLoginDialogProps: React.Dispatch<React.SetStateAction<LoginDialogProps | undefined>>;
-  showNotFollowingDialog?: boolean;
-  setShowNotFollowingDialog: React.Dispatch<React.SetStateAction<boolean>>;
   showFeedbackDialog?: boolean;
   setShowFeedbackDialog: React.Dispatch<React.SetStateAction<boolean>>;
   feedbackSubject?: PublicSummaryAttributes;
@@ -41,10 +39,6 @@ export const DEFAULT_APP_STATE_CONTEXT: AppStateContextType = {
   setShowLoginDialog: () => {
     /** placeholder */
   },
-  setShowNotFollowingDialog: () => {
-    /** placeholder */
-  },
   showFeedbackDialog: false,
   showLoginDialog: false,
-  showNotFollowingDialog: false,
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 
-import { SearchBar, Switch } from '@rneui/base';
+import { Searchbar } from 'react-native-paper';
 
 import {
   InteractionType,
@@ -15,46 +15,37 @@ import {
   Text,
   View,
 } from '~/components';
-import { AppStateContext, SessionContext } from '~/contexts';
+import { SessionContext } from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
+import { lengthOf } from '~/utils';
 
 export function SearchScreen({ 
   route,
   navigation,
 }: ScreenProps<'search'>) {
   const { 
-    setShowNotFollowingDialog,
-    setNavigation,
-  } = React.useContext(AppStateContext);
-  const { 
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
       bookmarkedSummaries, 
-      favoritedSummaries,
-      compactMode, 
-      preferredReadingFormat, 
-      showOnlyBookmarkedNews,
+      favoritedSummaries, 
+      preferredReadingFormat,
     },
-    setPreference,
   } = React.useContext(SessionContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter ?? '');
   
+  const onlyCustomNews = React.useMemo(() => Boolean(route?.params?.onlyCustomNews), [route]);
+  
   React.useEffect(() => {
     setPrefilter(route?.params?.prefilter ?? '');
-    if (route?.params?.prefilter) {
-      setSearchText(`${route.params?.prefilter} `);
-    } else {
-      setSearchText('');
-    }
   }, [route]);
   
   React.useEffect(() => {
-    navigation.setOptions({ headerShown: false });
+    navigation?.setOptions({ headerShown: false });
   }, [prefilter, navigation]);
 
   const [loading, setLoading] = React.useState(false);
@@ -65,24 +56,39 @@ export function SearchScreen({
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
-  const [searchText, setSearchText] = React.useState(route?.params?.prefilter ?? '');
+  const [searchText, setSearchText] = React.useState('');
 
-  const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
-  const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
+  const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
 
-  const followFilter = React.useMemo(() => 
-    [`cat:${Object.values(bookmarkedCategories ?? {})
+  const followFilter = React.useMemo(() => {
+    if (categoryOutletCount === 0) {
+      return '';
+    }
+    return [`cat:${Object.values(bookmarkedCategories ?? {})
       .map((c) => c.item.name.toLowerCase().replace(/\s/g, '-')).join(',')}`, 
     `src:${Object.values(bookmarkedOutlets ?? {})
       .map((o) => o.item.name).join(',')}`]
-      .join(' '), [bookmarkedCategories, bookmarkedOutlets]);
+      .join(' ');
+  }, [categoryOutletCount, bookmarkedCategories, bookmarkedOutlets]);
+  
+  const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
   const load = React.useCallback(async (pageSize: number, page: number) => {
     setLoading(true);
     if (page === 0) {
       setRecentSummaries([]);
     }
-    const filter = prefilter || showOnlyBookmarkedNews ? [followFilter, searchText].join(' ') : searchText;
+    if (onlyCustomNews && !followFilter) {
+      setLoading(false);
+      return;
+    }
+    let filter = searchText;
+    if (prefilter) {
+      filter = [prefilter, searchText].join(' ');
+    } else if (onlyCustomNews) {
+      filter = [followFilter, searchText].join(' ');
+    }
+    console.log(filter);
     try {
       const { data, error } = await getSummaries(
         filter,
@@ -112,7 +118,7 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [showOnlyBookmarkedNews, followFilter, 
+  }, [onlyCustomNews, followFilter, 
     searchText, prefilter, getSummaries]);
 
   const onMount = React.useCallback(() => {
@@ -126,7 +132,7 @@ export function SearchScreen({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(
     () => onMount(), 
-    [pageSize, prefilter, searchText, showOnlyBookmarkedNews, 
+    [pageSize, prefilter, searchText, onlyCustomNews, 
       bookmarkedOutlets, bookmarkedCategories, onMount]
   );
 
@@ -134,24 +140,12 @@ export function SearchScreen({
     await load(pageSize, page + 1);
   }, [load, pageSize, page]);
 
-  const setShowOnlyBookmarkedNews = React.useCallback((value: boolean) => {
-    if (value && categoryCount + outletCount === 0) {
-      setNavigation(navigation);
-      setShowNotFollowingDialog(true);
-      return;
-    }
-    setPreference('showOnlyBookmarkedNews', value);
-  }, [categoryCount, navigation, outletCount,
-    setNavigation, setPreference, setShowNotFollowingDialog]);
-
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
       const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         console.error(error);
-        return;
-      }
-      if (interactions) {
+      } else if (interactions) {
         setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
       }
       navigation?.push('summary', {
@@ -173,35 +167,22 @@ export function SearchScreen({
     <Screen
       refreshing={ loading }
       onRefresh={ () => load(pageSize, 0) }>
-      {!prefilter && (
-        <React.Fragment>
+      <View col mh={ 16 }>
+        {!prefilter && (
           <View style={ theme.components.searchBar }>
-            <SearchBar
+            <Searchbar
               placeholder="show me something worth reading..."
-              lightTheme={ theme.isLightMode }
               onChangeText={ ((text) => 
                 setSearchText(text)) }
               value={ searchText } />
           </View>
-          <View height={ 48 } p={ 16 }>
-            <View row alignCenter>
-              <Text mr={ 4 }>News you follow</Text>
-              <Switch 
-                color={ theme.colors.primary } 
-                value={ !showOnlyBookmarkedNews }
-                onChange={ () => setShowOnlyBookmarkedNews(!showOnlyBookmarkedNews) } />
-              <Text ml={ 4 }>All News</Text>
-            </View>
-          </View>
-        </React.Fragment>
-      )}
-      <View col mh={ 16 }>
+        )}
         {loading && recentSummaries.length === 0 && (
           <View row justifyCenter p={ 16 }>
             <ActivityIndicator size="large" />
           </View>
         )}
-        {!loading && showOnlyBookmarkedNews && recentSummaries.length === 0 && (
+        {!loading && onlyCustomNews && recentSummaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text fontSize={ 20 } pb={ 8 }>
               It seems your filters are too specific. You may want to consider 
@@ -222,14 +203,13 @@ export function SearchScreen({
           <Summary
             key={ summary.id }
             summary={ summary }
-            compact={ compactMode }
             bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
             favorited={ Boolean(favoritedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(summary, format) }
             onInteract={ (...e) => handleInteraction(summary, ...e) }
             onReferSearch={ handleReferSearch } />
         ))}
-        {!loading && totalResultCount > recentSummaries.length && (
+        {!loading && !noResults && totalResultCount > recentSummaries.length && (
           <View row justifyCenter p={ 16 } pb={ 24 }>
             <Button 
               outlined

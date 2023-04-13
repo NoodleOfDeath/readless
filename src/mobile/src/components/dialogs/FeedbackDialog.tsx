@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { CheckBox } from '@rneui/base';
-
 import { InteractionType, PublicSummaryAttributes } from '~/api';
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogProps,
   ScrollView,
@@ -35,7 +34,6 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
     { label: 'This summary is too short', value: 'too short' },
     { label: 'This summary is not about news', value: 'irrelevant' },
     { label: 'I actually found this summary helpful', value: 'helpful' },
-    { label: 'Other', value: 'other' },
   ];
 
   const onSubmit = React.useCallback(() => {
@@ -48,28 +46,46 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
     setSuccess(true);
   }, [selectedValues, otherValue, handleInteraction, summary]);
 
-  React.useEffect(() => {
-    if (otherValue.length > 0) {
-      if (!selectedValues.includes('other')) {
-        setSelectedValues([...selectedValues, 'other']);
-      }
-    } else {
-      if (selectedValues.includes('other')) {
-        setSelectedValues(selectedValues.filter(value => value !== 'other'));
-      }
-    }
-  }, [otherValue, selectedValues]);
-
   return (
-    <Dialog { ...dialogProps } height="50%" p={ 16 } row>
+    <Dialog
+      title="Feedback"
+      actions={
+        success ? (
+          <Button
+            row
+            rounded
+            outlined
+            justifyCenter
+            selectable
+            p={ 8 }
+            onPress={ () => {
+              setSuccess(false);
+              dialogProps.onClose?.();
+            } }>
+            Close
+          </Button>
+        ) : (
+          <Button
+            row
+            rounded
+            outlined
+            justifyCenter 
+            selectable
+            p={ 8 }
+            onPress={ onSubmit }>
+            Submit Feedback
+          </Button>
+        )
+      }
+      { ...dialogProps }>
       <ScrollView p={ 8 }>
         <React.Fragment>
           {!success ? (
-            <View col justifyCenter>
+            <View justifyCenter>
               {checkboxes.map((checkbox, index) => (
                 <View key={ index } row alignCenter>
-                  <CheckBox
-                    containerStyle={ { backgroundColor: 'transparent', padding: 0 } }
+                  <Checkbox
+                    mb={ 4 }
                     checked={ selectedValues.includes(checkbox.value) }
                     onPress={ () => {
                       if (selectedValues.includes(checkbox.value)) {
@@ -81,35 +97,15 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
                   <Text>{ checkbox.label }</Text>
                 </View>
               ))}
-              <TextInput value={ otherValue } onChange={ (e) => setOtherValue(e.nativeEvent.text) } />
-              <Button
-                row
-                rounded
-                outlined
-                justifyCenter 
-                selectable
-                p={ 8 }
-                onPress={ onSubmit }>
-                Submit Feedback
-              </Button>
+              <TextInput 
+                placeholder='Something else...'
+                value={ otherValue } 
+                onChange={ (e) => setOtherValue(e.nativeEvent.text) } />
             </View>
           ) : (
-            <View col justifyCenter alignCenter>
-              <Text>Thank you for your feedback!</Text>
-              <Button
-                row
-                rounded
-                outlined
-                justifyCenter
-                selectable
-                p={ 8 }
-                onPress={ () => {
-                  setSuccess(false);
-                  dialogProps.onClose?.();
-                } }>
-                Close
-              </Button>
-            </View>
+            <Text>
+              Thank you for your feedback!
+            </Text>
           )}
         </React.Fragment>
       </ScrollView>

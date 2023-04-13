@@ -11,7 +11,7 @@ import {
   RequestParams,
 } from '~/api';
 
-export type ColorMode = 'light' | 'dark';
+export type ColorMode = 'light' | 'dark' | 'system';
 
 export class Bookmark<T> {
 
@@ -37,6 +37,7 @@ export type Preferences = {
   lastReleaseNotesDate?: string;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
+  textScale?: number;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };

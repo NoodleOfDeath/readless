@@ -1,24 +1,93 @@
 import React from 'react';
 
+import { RouteProp } from '@react-navigation/native';
+
 import {
   Screen,
   TabSwitcher,
   View,
 } from '~/components';
-import { ScreenProps } from '~/screens';
+import { SessionContext } from '~/contexts';
+import {
+  ScreenProps,
+  SearchScreen,
+  StackableTabParams,
+} from '~/screens';
+import { lengthOf } from '~/utils';
 
-export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
+const routes: RouteProp<StackableTabParams, 'search'>[] = [
+  {
+    key: 'search',
+    name: 'search',
+    params: { onlyCustomNews: false },
+  },
+  {
+    key: 'customSearch',
+    name: 'search',
+    params: { onlyCustomNews: true },
+  },
+];
+
+export function HomeScreen({ navigation } : ScreenProps<'search'>) {
+  
+  const {
+    preferences: {
+      bookmarkedCategories,
+      bookmarkedOutlets,
+    },
+    ready,
+  } = React.useContext(SessionContext);
   
   const [activeTab, setActiveTab] = React.useState(0);
+  const [mounted, setMounted] = React.useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+  
+  const onMount = React.useCallback(() => {
+    if (mounted) {
+      return;
+    }
+    setActiveTab(lengthOf(bookmarkedCategories, bookmarkedOutlets) > 0 ? 1 : 0);
+    setMounted(true);
+  }, [mounted, bookmarkedCategories, bookmarkedOutlets]);
+  
+  React.useEffect(() => {
+    if (!ready) {
+      return;
+    }
+    onMount();
+  }, [ready, onMount]);
+  
+  const onTabChange = React.useCallback((tab: number) => {
+    setActiveTab(tab);
+  }, []);
+  
+  const refresh = () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 100);
+  };
   
   return (
-    <Screen>
+    <Screen 
+      onRefresh={ () => refresh() }>
       <View col mh={ 16 }>
         <TabSwitcher
           activeTab={ activeTab }
-          onTabChange={ setActiveTab }
-          titles={ ['All News', 'Your News'] }>
-          
+          onTabChange={ onTabChange }
+          titles={ ['All News', 'My News'] }>
+          <View mh={ -16 }>
+            {!refreshing && (
+              <SearchScreen 
+                route={ routes[0] }
+                navigation={ navigation } />
+            )}
+          </View>
+          <View mh={ -16 }>
+            {!refreshing && (
+              <SearchScreen 
+                route={ routes[1] }
+                navigation={ navigation } />
+            )}
+          </View>
         </TabSwitcher>
       </View>
     </Screen>

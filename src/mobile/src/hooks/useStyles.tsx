@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Stylable } from '~/components';
+import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
 export function useStyles({
@@ -53,6 +54,7 @@ export function useStyles({
 }: Stylable) {
   const theme = useTheme();
   
+  const { preferences: { textScale } } = React.useContext(SessionContext);
   const newStyle = React.useMemo(() => ({ ...style }), [style]);
   
   const textAlign = React.useMemo(() => {
@@ -129,8 +131,9 @@ export function useStyles({
       return theme.components.buttonSelected;
     } 
   }, [outlined, contained, theme]);
-  
+
   const viewStyle = React.useMemo(() => {
+    const scale = ((((textScale ?? 1) - 1) / 2) + 1);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
     attrs.push(row? theme.components.flexRow : undefined);
@@ -146,16 +149,17 @@ export function useStyles({
     attrs.push(fontSize ? { fontSize }: undefined);
     attrs.push(bg ? { backgroundColor: bg } : undefined);
     attrs.push(rounded ? theme.components.rounded : undefined);
-    attrs.push(mt ? { marginTop: mt } : undefined);
-    attrs.push(mb ? { marginBottom: mb } : undefined);
-    attrs.push(ml ? { marginLeft: ml } : undefined);
-    attrs.push(mr ? { marginRight: mr } : undefined);
-    attrs.push(pt ? { paddingTop: pt } : undefined);
-    attrs.push(pb ? { paddingBottom: pb } : undefined);
-    attrs.push(pl ? { paddingLeft: pl } : undefined);
-    attrs.push(pr ? { paddingRight: pr } : undefined);
+    attrs.push(mt ? { marginTop: mt * scale } : undefined);
+    attrs.push(mb ? { marginBottom: mb * scale } : undefined);
+    attrs.push(ml ? { marginLeft: ml * scale } : undefined);
+    attrs.push(mr ? { marginRight: mr * scale } : undefined);
+    attrs.push(pt ? { paddingTop: pt * scale } : undefined);
+    attrs.push(pb ? { paddingBottom: pb * scale } : undefined);
+    attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
+    attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter(Boolean).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
   }, [
+    textScale,
     width,
     height,
     color,

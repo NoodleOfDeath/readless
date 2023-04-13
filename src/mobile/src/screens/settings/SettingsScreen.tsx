@@ -4,6 +4,7 @@ import { Switch } from 'react-native';
 import { ReadingFormat } from '~/api';
 import { 
   Button,
+  Icon,
   ReadingFormatSelector,
   Screen, 
   TabSwitcher,
@@ -20,24 +21,37 @@ type OptionProps = React.PropsWithChildren<{
   visible?: boolean;
 }>;
 
+const displayModes = ['light', 'system', 'dark'] as ColorMode[];
+const textScales = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
+  label: `${(s).toFixed(1)}x`,
+  value: s,
+}));
+
 export function SettingsScreen(_: ScreenProps<'default'>) {
   const {
     preferences: {
-      compactMode, 
+      textScale, 
+      compactMode,
       displayMode,
       preferredReadingFormat,
     }, 
     setPreference,
   } = React.useContext(SessionContext);
   
-  const handleDisplayModeChange = React.useCallback((newDisplayMode?: ColorMode) => {
+  const [activeDisplayMode, setActiveDisplayMode] = React.useState(displayModes.indexOf(displayMode ?? 'system'));
+  const [activeTextScale, setActiveTextScale] = React.useState(textScales.findIndex((s) => s.value == (textScale ?? 1)));
+  
+  const handleDisplayModeChange = React.useCallback((index: number) => {
+    const newDisplayMode = displayModes[index];
     if (displayMode === newDisplayMode) {
+      setActiveDisplayMode(1);
       setPreference('displayMode', undefined);
       return;
     }
+    setActiveDisplayMode(index);
     setPreference('displayMode', newDisplayMode);
   }, [displayMode, setPreference]);
-  
+
   const handleReadingFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (preferredReadingFormat === newFormat) {
       setPreference('preferredReadingFormat', undefined);
@@ -45,54 +59,66 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     }
     setPreference('preferredReadingFormat', newFormat);
   }, [preferredReadingFormat, setPreference]);
-
-  const handleCompactModeChange = React.useCallback((newCompactMode?: boolean) => {
-    if (compactMode === newCompactMode) {
-      setPreference('compactMode', undefined);
+  
+  const handleTextScaleChange = React.useCallback((index: number) => {
+    const newTextScale = textScales[index];
+    if (textScale === newTextScale.value) {
+      setActiveTextScale(textScales.findIndex((s) => s.value == 1));
+      setPreference('textScale', undefined);
       return;
     }
-    setPreference('compactMode', newCompactMode);
-  }, [compactMode, setPreference]);
+    setActiveTextScale(index);
+    setPreference('textScale', newTextScale.value);
+  }, [textScale, setPreference]);
   
   const options: OptionProps[] = React.useMemo(() => {
     return [
       {
         children: (
-          <View justifyCenter row>
-            <Button
-              startIcon="weather-sunny"
-              fontSize={ 40 }
-              selectable
-              outlined
-              p={ 8 }
-              selected={ displayMode === 'light' }
-              onPress={ () => handleDisplayModeChange('light') } />
-            <Button
-              startIcon="theme-light-dark"
-              fontSize={ 40 }
-              selectable
-              outlined
-              p={ 8 }
-              selected={ displayMode === undefined }
-              onPress={ () => handleDisplayModeChange() } />
-            <Button
-              startIcon="weather-night"
-              fontSize={ 40 }
-              selectable
-              outlined
-              p={ 8 }
-              selected={ displayMode === 'dark' }
-              onPress={ () => handleDisplayModeChange('dark') } />
+          <View justifyCenter>
+            <TabSwitcher
+              activeTab={ activeDisplayMode }
+              tabHeight={ 100 * (textScale ?? 1) } 
+              onTabChange={ handleDisplayModeChange }
+              titles={ [
+                <View
+                  key="light"
+                  alignCenter
+                  justifyCenter>
+                  <Icon name="weather-sunny" fontSize={ 40 } />
+                  <Text center fontSize={ 16 }>
+                    Light
+                  </Text>
+                </View>,
+                <View
+                  key="system"
+                  alignCenter
+                  justifyCenter>
+                  <Icon name="theme-light-dark" fontSize={ 40 } />
+                  <Text center fontSize={ 16 }>
+                    System
+                  </Text>
+                </View>,
+                <View
+                  key="dark"
+                  alignCenter
+                  justifyCenter>
+                  <Icon name="weather-night" fontSize={ 40 } />
+                  <Text center fontSize={ 16 }>
+                    Dark
+                  </Text>
+                </View>,
+              ] } />
           </View>
         ),
         id: 'display-mode',
+        label: 'Color Scheme',
       },
       {
         children: (
           <ReadingFormatSelector 
             format={ preferredReadingFormat }
             preferredFormat={ preferredReadingFormat }
-            compact={ compactMode === true }
             onChange={ handleReadingFormatChange } />
         ),
         id: 'reading-format',
@@ -100,17 +126,25 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       },
       {
         children: (
-          <View justifyCenter row>
-            <Switch
-              value={ compactMode === true }
-              onValueChange={ handleCompactModeChange } />
+          <Switch value={ compactMode } onValueChange={ (newValue) => setPreference('compactMode', newValue) } />
+        ),
+        id: 'compact-reading-format',
+        label: 'Compact Reading Format Selector',
+      },
+      {
+        children: (
+          <View justifyCenter>
+            <TabSwitcher
+              activeTab={ activeTextScale }
+              onTabChange={ handleTextScaleChange }
+              titles={ textScales.map((s) => s.label) } />
           </View>
         ),
-        id: 'compact-mode',
-        label: 'Compact Mode',
+        id: 'text-scale',
+        label: 'Text Scale',
       },
     ];
-  }, [compactMode, displayMode, handleCompactModeChange, handleDisplayModeChange, handleReadingFormatChange, preferredReadingFormat]);
+  }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, setPreference]);
   
   return (
     <Screen>
@@ -118,9 +152,9 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         <TabSwitcher titles={ ['Preferences'] }>
           <View>
             {options.filter((o) => o.visible !== false).map((option) => (
-              <View col key={ option.id } p={ 8 } mv={ 4 }>
+              <View col key={ option.id } p={ 4 } mv={ 4 }>
                 {!option.onPress && (
-                  <Text>{option.label}</Text>
+                  <Text mb={ 4 }>{option.label}</Text>
                 )}
                 {option.onPress && (
                   <Button

@@ -13,7 +13,7 @@
   "include": [
     "index.js",
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
   ],
   "exclude": [
     "node_modules",

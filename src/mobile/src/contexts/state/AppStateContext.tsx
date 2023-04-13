@@ -2,8 +2,10 @@ import React from 'react';
 import { Image, Platform } from 'react-native';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Portal, Provider } from 'react-native-paper';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
+import { MediaContextProvider } from '../media';
 
 import { PublicSummaryAttributes } from '~/api';
 import {
@@ -12,8 +14,7 @@ import {
   LoginAction,
   LoginDialog,
   LoginDialogProps,
-  NotFollowingDialog,
-  ReleaseNotesDialog,
+  ReleaseNotesCarousel,
   Text,
   View,
 } from '~/components';
@@ -35,7 +36,6 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
 
   const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
   const [loginDialogProps, setLoginDialogProps] = React.useState<LoginDialogProps>();
-  const [showNotFollowingDialog, setShowNotFollowingDialog] = React.useState<boolean>(false);
   const [showFeedbackDialog, setShowFeedbackDialog] = React.useState<boolean>(false);
   const [feedbackSubject, setFeedbackSubject] = React.useState<PublicSummaryAttributes>();
   const [deferredAction, setDeferredAction] = React.useState<() => void>();
@@ -238,28 +238,32 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
       setNavigation,
       setShowFeedbackDialog,
       setShowLoginDialog,
-      setShowNotFollowingDialog,
       showFeedbackDialog,
       showLoginDialog,
-      showNotFollowingDialog,
     } }>
-      {children}
-      {showReleaseNotes && <ReleaseNotesDialog data={ releaseNotesData } onClose={ () => handleReleaseNotesClose() } />}
-      <NotFollowingDialog
-        visible={ showNotFollowingDialog }
-        navigation={ navigation }
-        onClose={ () => setShowNotFollowingDialog(false) } />
-      {feedbackSubject && (
-        <FeedBackDialog
-          summary={ feedbackSubject }
-          visible={ showFeedbackDialog }
-          onClose={ () => setShowFeedbackDialog(false) } />
-      )}
-      <LoginDialog 
-        visible={ showLoginDialog }
-        onClose={ () => setShowLoginDialog(false) }
-        onSuccess={ (action) => handleLoginSuccess(action) }
-        { ...loginDialogProps } />
+      <Provider>
+        <MediaContextProvider>
+          {children}
+          {showReleaseNotes && (
+            <ReleaseNotesCarousel 
+              data={ releaseNotesData } 
+              onClose={ () => handleReleaseNotesClose() } />
+          )}
+          <Portal>
+            {feedbackSubject && (
+              <FeedBackDialog
+                summary={ feedbackSubject }
+                visible={ showFeedbackDialog }
+                onClose={ () => setShowFeedbackDialog(false) } />
+            )}
+            <LoginDialog 
+              visible={ showLoginDialog }
+              onClose={ () => setShowLoginDialog(false) }
+              onSuccess={ (action) => handleLoginSuccess(action) }
+              { ...loginDialogProps } />
+          </Portal>
+        </MediaContextProvider>
+      </Provider>
     </AppStateContext.Provider>
   );
 }

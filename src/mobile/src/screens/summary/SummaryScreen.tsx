@@ -15,27 +15,29 @@ import { useSummaryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 export function SummaryScreen({
-  route: { params: { summary, initialFormat } },
+  route,
   navigation,
 }: ScreenProps<'summary'>) {
   const { preferences: { bookmarkedSummaries, favoritedSummaries } } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
 
-  const [format, setFormat] = React.useState(initialFormat);
-  const [interactions, setInteractions] = React.useState<InteractionResponse>(summary.interactions);
+  const [format, setFormat] = React.useState(route?.params?.initialFormat);
+  const [interactions, setInteractions] = React.useState<InteractionResponse | undefined>(route?.params?.summary.interactions);
+
+  const summary = React.useMemo(() => route?.params?.summary, [route]);
 
   React.useEffect(() => {
-    navigation.setOptions({ headerShown: true, headerTitle: summary.title });
+    navigation?.setOptions({ headerShown: true, headerTitle: summary?.title });
   }, [navigation, summary]);
   
   const handleFormatChange = React.useCallback(async (newFormat?: ReadingFormat) => {
-    if (!newFormat || newFormat === format) {
+    if (!summary || !newFormat || newFormat === format) {
       return;
     }
     const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
     if (error) {
-      return;
-    }
+      console.error(error);
+    } 
     if (interactions) {
       setInteractions(interactions);
     }
@@ -48,7 +50,7 @@ export function SummaryScreen({
 
   return (
     <Screen>
-      <View mt={ 10 }>
+      <View mt={ 10 } mh={ 16 }>
         {summary && (
           <Summary
             summary={ summary }

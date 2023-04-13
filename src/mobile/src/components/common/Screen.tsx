@@ -31,7 +31,7 @@ export function Screen({
   const style = useStyles(props as Stylable);
   return (
     <React.Fragment>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
       <SafeAreaView style={ theme.components.flexCol }>
         <KeyboardAwareScrollView refreshControl={ refreshControl } { ...props }>
           <View style={ style }>{children}</View>

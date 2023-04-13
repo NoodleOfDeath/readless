@@ -22,7 +22,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
     preferences: {
       bookmarkedSummaries,
       favoritedSummaries,
-      compactMode, 
       preferredReadingFormat, 
     },
     setPreference,
@@ -39,28 +38,30 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
     async (summary: PublicSummaryAttributes, interaction: InteractionType, format?: ReadingFormat) => {
       const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
-        return;
+        console.error(error);
       }
       if (interactions) {
-        if (interaction === InteractionType.Bookmark) {
+        if (activeTab === 0) {
           setPreference('bookmarkedSummaries', (prev) => {
             const bookmarks = { ...prev };
             if (bookmarks[summary.id]) {
-              delete bookmarks[summary.id];
-            } else {
-              bookmarks[summary.id] = new Bookmark({ ...summary, interactions });
+              bookmarks[summary.id] = new Bookmark({
+                ...bookmarks[summary.id].item,
+                interactions,
+              });
             }
-            return bookmarks;
+            return (prev = bookmarks);
           });
-        } else if (interaction === InteractionType.Favorite) {
+        } else if (activeTab === 1) {
           setPreference('favoritedSummaries', (prev) => {
-            const favorites = { ...prev };
-            if (favorites[summary.id]) {
-              delete favorites[summary.id];
-            } else {
-              favorites[summary.id] = new Bookmark({ ...summary, interactions });
+            const bookmarks = { ...prev };
+            if (bookmarks[summary.id]) {
+              bookmarks[summary.id] = new Bookmark({
+                ...bookmarks[summary.id].item,
+                interactions,
+              });
             }
-            return favorites;
+            return (prev = bookmarks);
           });
         }
       }
@@ -69,7 +70,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
         summary,
       });
     },
-    [handleInteraction, navigation, preferredReadingFormat, setPreference]
+    [activeTab, handleInteraction, navigation, preferredReadingFormat, setPreference]
   );
   
   const handleReferSearch = React.useCallback((prefilter: string) => {
@@ -117,8 +118,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                         summary={ bookmark.item }
                         bookmarked
                         favorited={ Boolean(favoritedSummaries?.[bookmark.item.id]) }
-                        compact={ compactMode }
-                        onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Bookmark, format) }
+                        onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
                     </View>
@@ -151,7 +151,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                         summary={ bookmark.item }
                         bookmarked={ Boolean(bookmarkedSummaries?.[bookmark.item.id]) }
                         favorited
-                        compact={ compactMode }
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Favorite, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />

@@ -12,6 +12,7 @@ import { useStyles, useTheme } from '~/hooks';
 export type ButtonProps = PressableProps & ViewProps & {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
+  spacing?: number;
   iconSize?: number;
   small?: boolean;
   big?: boolean;
@@ -30,6 +31,7 @@ export function Button({
   children,
   startIcon,
   endIcon,
+  spacing = 0,
   small,
   big,
   size = small ? 'small' : big ? 'big' : 'normal',
@@ -102,9 +104,9 @@ export function Button({
 
   return (
     <View pressable { ...pressableProps } onPress={ handlePress } onPressOut={ handlePressOut } style={ buttonStyle }> 
-      {startIconComponent && <View mr={ children ? 8 : 0 }>{ startIconComponent }</View>}
+      {startIconComponent && <View mr={ pressableProps.row ? spacing : 0 } mb={ pressableProps.row ? 0 : spacing }>{ startIconComponent }</View>}
       {children && <Text color={ buttonStyle.color } style={ { fontSize } }>{ children }</Text>}
-      {endIconComponent && <View ml={ children ? 8 : 0 }>{ endIconComponent }</View>}
+      {endIconComponent && <View ml={ pressableProps.row ? spacing : 0 } mt={ pressableProps.row ? 0 : spacing }>{ endIconComponent }</View>}
     </View>
   );
 }

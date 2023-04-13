@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   LinkingOptions,
+  ParamListBase,
   RouteProp,
   TabNavigationState,
 } from '@react-navigation/native';
@@ -16,6 +17,7 @@ export type TabParams = {
 export type StackableTabParams = TabParams & {
   search: {
     prefilter?: string,
+    onlyCustomNews?: boolean;
   },
   summary: {
     initialFormat: ReadingFormat;
@@ -49,9 +51,21 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   ],
 };
 
+export type ScreenComponentType<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList
+> =
+  | React.ComponentType<{
+      route: RouteProp<ParamList, RouteName>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      navigation: any;
+    }>
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  | React.ComponentType<{}>;
+
 export type ScreenProps<Path extends keyof StackableTabParams = keyof StackableTabParams, C extends React.ComponentType = React.ComponentType> = {
-  name: Path;
-  component: C;
+  name?: Path;
+  component?: C;
   icon?: string;
   headerRight?:
     | ((props: {
@@ -60,8 +74,8 @@ export type ScreenProps<Path extends keyof StackableTabParams = keyof StackableT
         pressOpacity?: number;
       }) => React.ReactNode)
     ;
-  route: RouteProp<StackableTabParams, Path> 
-  navigation: NativeStackNavigationProp<StackableTabParams, Path>
+  route?: RouteProp<StackableTabParams, Path> 
+  navigation?: NativeStackNavigationProp<StackableTabParams, Path>
 };
 
 export type TabProps = {

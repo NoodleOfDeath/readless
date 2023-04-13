@@ -89,6 +89,15 @@ export class Outlet<
         url: 'https://www.arstechnica.com',
       }],
     },
+    atlantic: {
+      displayName: 'The Atlantic',
+      name: 'atlantic',
+      siteMaps: [{
+        attribute: 'href',
+        selector: 'article a',
+        url: 'https://www.theatlantic.com',
+      }],
+    },
     barrons: {
       displayName: 'Barron\'s',
       name: 'barrons',
