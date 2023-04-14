@@ -154,7 +154,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             p={ 8 }
             onPress={ handleResetRemovedContent }
             fontSize={ 24 }>
-            Reset Content Marked Offense/Spam (
+            Reset Content Marked Offensive/Spam (
             {Object.values(removedSummaries ?? {}).length}
             )
           </Button>

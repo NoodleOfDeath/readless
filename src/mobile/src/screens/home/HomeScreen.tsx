@@ -41,6 +41,13 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   const [activeTab, setActiveTab] = React.useState(0);
   const [mounted, setMounted] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [lastFollowCount, setLastFollowCount] = React.useState(0);
+  
+  const followCountChanged = React.useMemo(() => {
+    const count = lengthOf(bookmarkedCategories, bookmarkedOutlets);
+    console.log(lastFollowCount, count);
+    return lastFollowCount !== count;
+  }, [bookmarkedCategories, bookmarkedOutlets, lastFollowCount]);
   
   const refresh = () => {
     setRefreshing(true);
@@ -48,20 +55,20 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   };
   
   const onMount = React.useCallback(() => {
-    if (mounted) {
-      return;
-    }
-    navigation?.addListener('focus', refresh);
-    setActiveTab(lengthOf(bookmarkedCategories, bookmarkedOutlets) > 0 ? 1 : 0);
+    const lastFollowCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
+    setLastFollowCount(lastFollowCount);
+    setActiveTab(lastFollowCount > 0 ? 1 : 0);
+    navigation?.addListener('focus',
+      refresh);
     setMounted(true);
-  }, [mounted, navigation, bookmarkedCategories, bookmarkedOutlets]);
+  }, [bookmarkedCategories, bookmarkedOutlets, navigation]);
   
   React.useEffect(() => {
-    if (!ready) {
+    if (!ready || mounted) {
       return;
     }
     onMount();
-  }, [ready, onMount]);
+  }, [ready, onMount, mounted]);
   
   const onTabChange = React.useCallback((tab: number) => {
     setActiveTab(tab);
