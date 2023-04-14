@@ -132,8 +132,7 @@ export function SearchScreen({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(
     () => onMount(), 
-    [pageSize, prefilter, searchText, onlyCustomNews, 
-      bookmarkedOutlets, bookmarkedCategories, onMount]
+    [pageSize, prefilter, searchText]
   );
 
   const loadMore = React.useCallback(async () => {

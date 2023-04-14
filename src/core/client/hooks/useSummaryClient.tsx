@@ -2,13 +2,13 @@ import React from 'react';
 
 import { ClientError } from './types';
 import { Bookmark, SessionContext } from '../contexts';
-import { getUserAgent } from '~/utils';
 
 import {
   API,
   InteractionType,
   PublicSummaryAttributes,
 } from '~/api';
+import { getUserAgent } from '~/utils';
 
 export function useSummaryClient() {
 
@@ -62,7 +62,7 @@ export function useSummaryClient() {
     const payload: Record<string, unknown> = { 
       ...metadata, 
       content,
-      userAgent: getUserAgent()
+      userAgent: getUserAgent(),
     };
     if (interaction === InteractionType.Bookmark) {
       setPreference('bookmarkedSummaries', (prev) => {

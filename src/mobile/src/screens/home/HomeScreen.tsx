@@ -42,13 +42,19 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   const [mounted, setMounted] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   
+  const refresh = () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 100);
+  };
+  
   const onMount = React.useCallback(() => {
     if (mounted) {
       return;
     }
+    navigation?.addListener('focus', refresh);
     setActiveTab(lengthOf(bookmarkedCategories, bookmarkedOutlets) > 0 ? 1 : 0);
     setMounted(true);
-  }, [mounted, bookmarkedCategories, bookmarkedOutlets]);
+  }, [mounted, navigation, bookmarkedCategories, bookmarkedOutlets]);
   
   React.useEffect(() => {
     if (!ready) {
@@ -59,12 +65,8 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   
   const onTabChange = React.useCallback((tab: number) => {
     setActiveTab(tab);
+    refresh();
   }, []);
-  
-  const refresh = () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 100);
-  };
   
   return (
     <Screen 
