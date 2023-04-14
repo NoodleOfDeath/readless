@@ -34,6 +34,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       compactMode,
       displayMode,
       preferredReadingFormat,
+      removedSummaries,
     }, 
     setPreference,
   } = React.useContext(SessionContext);
@@ -70,6 +71,8 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     setActiveTextScale(index);
     setPreference('textScale', newTextScale.value);
   }, [textScale, setPreference]);
+  
+  const handleResetRemovedContent = React.useCallback(() => setPreference('removedSummaries', {}), [setPreference]);
   
   const options: OptionProps[] = React.useMemo(() => {
     return [
@@ -142,6 +145,22 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         ),
         id: 'text-scale',
         label: 'Text Scale',
+      },
+      {
+        children: (
+          <Button
+            outlined
+            rounded
+            p={ 8 }
+            onPress={ handleResetRemovedContent }
+            fontSize={ 24 }>
+            Reset Content Marked Offense/Spam (
+            {Object.values(removedSummaries ?? {}).length}
+            )
+          </Button>
+        ),
+        id: 'reset-removed-summaries',
+        label: 'Reset Removed Content',
       },
     ];
   }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, setPreference]);

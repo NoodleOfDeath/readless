@@ -8,6 +8,7 @@ export * from './Icon';
 export * from './View';
 export * from './Screen';
 export * from './ScrollView';
+export * from './Snackbar';
 export * from './TabSwitcher';
 export * from './Text';
 export * from './TextInput';

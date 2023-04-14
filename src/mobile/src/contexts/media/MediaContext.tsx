@@ -21,6 +21,7 @@ export function MediaContextProvider({ children }: Props) {
   const [speechRate, setSpeechRate] = React.useState(0.5);
   const [speechPitch, setSpeechPitch] = React.useState(1);
   const [speechVolume, setSpeechVolume] = React.useState(1);
+  const [firstResponder, setFirstResponder] = React.useState('');
   
   const initTts = React.useCallback(async () => {
     const voices = await Tts.voices();
@@ -32,11 +33,10 @@ export function MediaContextProvider({ children }: Props) {
       } catch (err) {
         //Samsung S9 has always this error:
         //"Language is not supported"
-        console.log('setDefaultLanguage error ', err);
+        console.error('setDefaultLanguage error ', err);
       }
       setVoices(availableVoices);
       const defaultVoice = voices?.findIndex((v) => /Aaron/i.test(v.name)) ?? 0;
-      console.log(defaultVoice);
       setSelectedVoice(defaultVoice);
       setTtsStatus('ready');
     } else {
@@ -76,22 +76,26 @@ export function MediaContextProvider({ children }: Props) {
     };
   }, [initTts, speechPitch, speechRate]);
 
-  const readText = React.useCallback(async (text: string) => {
+  const readText = React.useCallback(async (text: string, firstResponder: string) => {
+    setFirstResponder(firstResponder);
     Tts.stop();
     Tts.speak(text);
   }, []);
 
-  const cancel = React.useCallback(async () => {
+  const cancelTts = React.useCallback(async () => {
+    setFirstResponder('');
     Tts.stop();
   }, []);
   
   return (
     <MediaContext.Provider value={ {
-      cancel,
+      cancelTts,
       deviceLanguage,
+      firstResponder,
       readText,
       selectedVoice: voices[selectedVoiceIndex],
       selectedVoiceIndex,
+      setFirstResponder,
       setSelectedVoice,
       setSpeechPitch,
       setSpeechRate,

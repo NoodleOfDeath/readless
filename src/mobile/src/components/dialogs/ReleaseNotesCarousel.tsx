@@ -5,7 +5,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
-import { AnimatedCard, View } from '~/components';
+import {
+  AnimatedCard,
+  ScrollView,
+  View,
+} from '~/components';
 import { window } from '~/constants';
 
 export type CardData = {
@@ -79,9 +83,13 @@ export function ReleaseNotesCarousel({ data, onClose }: Props) {
             return (
               <AnimatedCard key={ index }>
                 {index + 1 < data.length && (
-                  <View style={ style }>
-                    { data[index].content }
-                  </View>
+                  <ScrollView
+                    contentInsetAdjustmentBehavior="automatic"
+                    style={ { height: '100%' } }>
+                    <View style={ style }>
+                      {data[index].content}
+                    </View>
+                  </ScrollView>
                 )}
               </AnimatedCard>
             );

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ClientError } from './types';
 import { Bookmark, SessionContext } from '../contexts';
+import { getUserAgent } from '~/utils';
 
 import {
   API,
@@ -58,7 +59,11 @@ export function useSummaryClient() {
     metadata?: Record<string, unknown>,
     alternateAction?: (() => Promise<void>) | (() => void)
   ) => {
-    const payload: Record<string, unknown> = { ...metadata, content };
+    const payload: Record<string, unknown> = { 
+      ...metadata, 
+      content,
+      userAgent: getUserAgent()
+    };
     if (interaction === InteractionType.Bookmark) {
       setPreference('bookmarkedSummaries', (prev) => {
         const bookmarks = { ...prev };

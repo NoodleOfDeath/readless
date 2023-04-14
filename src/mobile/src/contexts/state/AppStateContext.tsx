@@ -5,7 +5,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Portal, Provider } from 'react-native-paper';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
-import { MediaContextProvider } from '../media';
 
 import { PublicSummaryAttributes } from '~/api';
 import {
@@ -18,6 +17,8 @@ import {
   Text,
   View,
 } from '~/components';
+import { MediaContextProvider } from '~/contexts/media';
+import { ToastContextProvider } from '~/contexts/toast';
 import { SessionContext } from '~/core/contexts';
 import { useStatusClient, useTheme } from '~/hooks';
 import { StackableTabParams } from '~/screens';
@@ -243,25 +244,27 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
     } }>
       <Provider>
         <MediaContextProvider>
-          {children}
-          {showReleaseNotes && (
-            <ReleaseNotesCarousel 
-              data={ releaseNotesData } 
-              onClose={ () => handleReleaseNotesClose() } />
-          )}
-          <Portal>
-            {feedbackSubject && (
-              <FeedBackDialog
-                summary={ feedbackSubject }
-                visible={ showFeedbackDialog }
-                onClose={ () => setShowFeedbackDialog(false) } />
+          <ToastContextProvider>
+            {children}
+            {showReleaseNotes && (
+              <ReleaseNotesCarousel 
+                data={ releaseNotesData } 
+                onClose={ () => handleReleaseNotesClose() } />
             )}
-            <LoginDialog 
-              visible={ showLoginDialog }
-              onClose={ () => setShowLoginDialog(false) }
-              onSuccess={ (action) => handleLoginSuccess(action) }
-              { ...loginDialogProps } />
-          </Portal>
+            <Portal>
+              {feedbackSubject && (
+                <FeedBackDialog
+                  summary={ feedbackSubject }
+                  visible={ showFeedbackDialog }
+                  onClose={ () => setShowFeedbackDialog(false) } />
+              )}
+              <LoginDialog 
+                visible={ showLoginDialog }
+                onClose={ () => setShowLoginDialog(false) }
+                onSuccess={ (action) => handleLoginSuccess(action) }
+                { ...loginDialogProps } />
+            </Portal>
+          </ToastContextProvider>
         </MediaContextProvider>
       </Provider>
     </AppStateContext.Provider>

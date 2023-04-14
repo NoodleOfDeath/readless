@@ -30,6 +30,7 @@ export function SearchScreen({
       bookmarkedOutlets,
       bookmarkedSummaries, 
       favoritedSummaries, 
+      removedSummaries,
       preferredReadingFormat,
     },
   } = React.useContext(SessionContext);
@@ -88,7 +89,6 @@ export function SearchScreen({
     } else if (onlyCustomNews) {
       filter = [followFilter, searchText].join(' ');
     }
-    console.log(filter);
     try {
       const { data, error } = await getSummaries(
         filter,
@@ -105,9 +105,9 @@ export function SearchScreen({
       }
       setRecentSummaries((prev) => {
         if (page === 0) {
-          return (prev = data.rows);
+          return (prev = data.rows.filter((r) => !(r.id in (removedSummaries ?? {}))));
         }
-        return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
+        return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id) && !(r.id in (removedSummaries ?? {})))]);
       });
       setTotalResultCount(data.count);
       setPage((prev) => prev + 1);
@@ -119,7 +119,7 @@ export function SearchScreen({
       setLoading(false);
     }
   }, [onlyCustomNews, followFilter, 
-    searchText, prefilter, getSummaries]);
+    searchText, prefilter, getSummaries, removedSummaries]);
 
   const onMount = React.useCallback(() => {
     setPage(0);
