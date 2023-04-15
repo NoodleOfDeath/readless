@@ -19,17 +19,18 @@ const router = Router();
 router.get(
   '/',
   rateLimitMiddleware('25 per 3s'),
+  query('scope').isString().matches(/^(?:conservative|public)$/).optional(),
   query('filter').isString().optional(),
   query('ids').optional(),
   ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     const {
-      filter, ids, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
+      scope, filter, ids, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
     try {
-      const response = await SummaryController.getSummaries(userId, filter, ids, pageSize, page, offset);
+      const response = await SummaryController.getSummaries(userId, scope, filter, ids, pageSize, page, offset);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);

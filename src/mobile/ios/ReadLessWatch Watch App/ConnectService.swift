@@ -41,7 +41,7 @@ class ConnectService: ObservableObject {
   }
   
   func fetch() async throws {
-    guard let url = URL(string: "https://api.readless.ai/v1/summary") else {
+    guard let url = URL(string: "https://api.readless.ai/v1/summary?scope=conservative") else {
       return
     }
     self.loading = true

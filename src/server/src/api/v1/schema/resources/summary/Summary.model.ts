@@ -8,6 +8,7 @@ import {
 
 import { 
   PUBLIC_SUMMARY_ATTRIBUTES,
+  PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
   SummaryAttributes,
   SummaryCreationAttributes,
 } from './Summary.types';
@@ -18,7 +19,10 @@ import { Outlet } from '../outlet/Outlet.model';
 import { Category } from '../topic/Category.model';
 import { CategoryAttributes } from '../topic/Category.types';
 
-@Scopes(() => ({ public: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] } }))
+@Scopes(() => ({ 
+  conservative: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE] },
+  public: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] },
+}))
 @Table({
   modelName: 'summary',
   paranoid: true,
