@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "UD23CMJ5W5.ai.readless.ios",
+        "paths": [
+          "/",
+          "/read/*"
+        ]
+      }
+    ]
+  }
+}
