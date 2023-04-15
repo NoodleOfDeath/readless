@@ -22,10 +22,10 @@ export default function Logo({
   height = big ? 60 : small ? 30 : 40,
   variant,
 }: Props = {}) {
-  const img = React.useMemo(() => variant === 'compact' ? '/logo-compact.svg' : '/logo.svg', [variant]);
+  const src = React.useMemo(() => variant === 'compact' ? '/logo-compact.svg' : '/logo.svg', [variant]);
   return (
-    <StyledIcon elevation={ 0 }>
-      <img src={ img } alt="logo" height={ height } />
+    <StyledIcon>
+      <img src={ src } alt="logo" height={ height } />
     </StyledIcon>
   );
 }

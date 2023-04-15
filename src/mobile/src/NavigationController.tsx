@@ -84,7 +84,6 @@ const TABS = [
 export default function NavigationController() {
   const theme = useTheme();
   const Tab = createBottomTabNavigator();
-  
   return (
     <NavigationContainer
       theme={ { 

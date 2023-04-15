@@ -11,6 +11,7 @@ import {
   TextInput,
   View,
 } from '~/components';
+import { Bookmark, SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 
 export type FeedBackDialogProps = DialogProps & {
@@ -18,12 +19,15 @@ export type FeedBackDialogProps = DialogProps & {
 };
 
 export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps) {
+  
+  const { setPreference } = React.useContext(SessionContext);
 
   const { handleInteraction } = useSummaryClient();
 
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
-  const [otherValue, setOtherValue] = React.useState<string>('');
-  const [success, setSuccess] = React.useState<boolean>(false);
+  const [otherValue, setOtherValue] = React.useState('');
+  const [success, setSuccess] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState('Thank you for your feedback!');
 
   const checkboxes = [
     { label: 'This is in the wrong category', value: 'wrong-category' },
@@ -35,17 +39,42 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
     { label: 'This summary is not about news', value: 'irrelevant' },
     { label: 'I actually found this summary helpful', value: 'helpful' },
   ];
+  
+  const handleCheckboxPress = React.useCallback((checkbox: typeof checkboxes[number]) => {
+    {
+      if (selectedValues.includes(checkbox.value)) {
+        setSelectedValues(selectedValues.filter(value => value !== checkbox.value));
+      } else {
+        setSelectedValues([...selectedValues, checkbox.value]);
+      }
+    }
+  }, [selectedValues]);
 
   const onSubmit = React.useCallback(() => {
     if (selectedValues.length === 0) {
       return;
     }
+    if (
+      selectedValues.includes('offensive') ||
+      selectedValues.includes('spam')
+    ) {
+      setPreference('removedSummaries', (prev) => {
+        const summaries = { ...prev };
+        if (summaries[summary.id]) {
+          delete summaries[summary.id];
+        } else {
+          summaries[summary.id] = new Bookmark(summary);
+        }
+        return (prev = summaries);
+      });
+      setSuccessMessage('Sorry this was offensive/spammy. The post will no longer be shown for you.');
+    }
     handleInteraction(summary, InteractionType.Feedback, otherValue, { issues: selectedValues });
     setSelectedValues([]);
     setOtherValue('');
     setSuccess(true);
-  }, [selectedValues, otherValue, handleInteraction, summary]);
-
+  }, [selectedValues, otherValue, handleInteraction, summary, setPreference]);
+  
   return (
     <Dialog
       title="Feedback"
@@ -59,8 +88,9 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
             selectable
             p={ 8 }
             onPress={ () => {
-              setSuccess(false);
               dialogProps.onClose?.();
+              setSuccess(false);
+              setSuccessMessage('Thank you for your feedback!');
             } }>
             Close
           </Button>
@@ -87,14 +117,8 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
                   <Checkbox
                     mb={ 4 }
                     checked={ selectedValues.includes(checkbox.value) }
-                    onPress={ () => {
-                      if (selectedValues.includes(checkbox.value)) {
-                        setSelectedValues(selectedValues.filter(value => value !== checkbox.value));
-                      } else {
-                        setSelectedValues([...selectedValues, checkbox.value]);
-                      }
-                    } } />
-                  <Text>{ checkbox.label }</Text>
+                    onPress={ () => handleCheckboxPress(checkbox) } />
+                  <Button onPress={ () => handleCheckboxPress(checkbox) }>{ checkbox.label }</Button>
                 </View>
               ))}
               <TextInput 
@@ -104,7 +128,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
             </View>
           ) : (
             <Text>
-              Thank you for your feedback!
+              {successMessage}
             </Text>
           )}
         </React.Fragment>

@@ -3,6 +3,7 @@ import { DatedAttributes } from '../types';
 export const INTERACTION_TYPES = {
   bookmark: 'bookmark',
   comment: 'comment',
+  copy: 'copy',
   downvote: 'downvote',
   favorite: 'favorite',
   feedback: 'feedback',

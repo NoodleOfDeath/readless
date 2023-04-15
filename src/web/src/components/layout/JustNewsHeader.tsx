@@ -45,8 +45,8 @@ export default function JustNewsHeader() {
   
   return (
     <Stack>
-      <Typography variant='h4' color='primary'>{quip.title}</Typography>
-      <Typography variant="h4">{quip.subtitle}</Typography>
+      <Typography variant='h3' color='primary'>{quip.title}</Typography>
+      <Typography variant="h3">{quip.subtitle}</Typography>
     </Stack>
   );
   

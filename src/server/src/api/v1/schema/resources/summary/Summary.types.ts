@@ -29,5 +29,6 @@ export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes 
 
 /** light weight record for a summary post */
 export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_TITLED_CATEGORIZED_POST_ATTRIBUTES, 'outletId', 'url', 'originalTitle'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = ['id', 'url', 'title', 'createdAt'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;

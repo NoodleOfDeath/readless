@@ -21,7 +21,7 @@ export type StackableTabParams = TabParams & {
   },
   summary: {
     initialFormat: ReadingFormat;
-    summary: PublicSummaryAttributes;
+    summary: PublicSummaryAttributes | number;
   };
 };
 

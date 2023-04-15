@@ -5,6 +5,7 @@
     ".env",
     ".eslintrc",
     "config-overrides.js",
+    "next.config.js",
     "nodemon.json",
     "package.json",
     "public/*",

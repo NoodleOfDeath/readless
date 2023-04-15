@@ -102,7 +102,8 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     getCookie(COOKIES.preferences)
       .then((cookie) => { 
-        setPreferences(JSON.parse(cookie ?? '{}'));
+        const prefs = JSON.parse(cookie ?? '{}');
+        setPreferences(prefs);
         setReadyFlags((prev) => ({ ...prev, preferences: true }));
       })
       .catch((e) => {

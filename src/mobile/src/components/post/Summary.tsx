@@ -1,7 +1,8 @@
 import React from 'react';
-import { Platform, Pressable } from 'react-native';
+import { Platform } from 'react-native';
 
 import { BASE_DOMAIN } from '@env';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { formatDistance } from 'date-fns';
 import RNFS from 'react-native-fs';
 import Share, { Social } from 'react-native-share';
@@ -10,7 +11,7 @@ import ViewShot from 'react-native-view-shot';
 import { 
   InteractionResponse,
   InteractionType,
-  PublicSummaryAttributes, 
+  PublicSummaryAttributes,
   ReadingFormat,
 } from '~/api';
 import {
@@ -21,9 +22,14 @@ import {
   Text,
   View,
 } from '~/components';
-import { AppStateContext, SessionContext } from '~/contexts';
-import { MediaContext } from '~/contexts/media';
+import {
+  AppStateContext,
+  MediaContext,
+  SessionContext,
+  ToastContext,
+} from '~/contexts';
 import { useInAppBrowser, useTheme } from '~/hooks';
+import { SummaryUtils } from '~/utils';
 
 type Props = {
   summary: PublicSummaryAttributes;
@@ -78,7 +84,10 @@ export function Summary({
   const theme = useTheme();
   const { preferences: { preferredReadingFormat, textScale } } = React.useContext(SessionContext);
   const { setShowFeedbackDialog, setFeedbackSubject } = React.useContext(AppStateContext);
-  const { readText } = React.useContext(MediaContext);
+  const {
+    firstResponder, readText, cancelTts, 
+  } = React.useContext(MediaContext);
+  const toast = React.useContext(ToastContext);
   
   const viewshot = React.useRef<ViewShot | null>(null);
 
@@ -87,7 +96,8 @@ export function Summary({
   const [collapsed, setCollapsed] = React.useState(forceCollapse);
   const [openSocials, setOpenSocials] = React.useState(false);
   const interactions = React.useMemo(() => realtimeInteractions ?? summary.interactions, [realtimeInteractions, summary.interactions]);
-  const [_, setPlayingAudio] = React.useState(false);
+  
+  const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
 
   const timeAgo = React.useMemo(() => {
     if (!summary.createdAt) {
@@ -134,23 +144,37 @@ export function Summary({
   }, [onCollapse]);
 
   const handlePlayAudio = React.useCallback(async (text: string) => {
-    setPlayingAudio(true);
+    if (firstResponder) {
+      cancelTts();
+      if (firstResponder === ['summary', summary.id].join('-')) {
+        return;
+      }
+    }
     onInteract?.(InteractionType.Listen, text);
     try {
-      await readText(text);
+      await readText(text, ['summary', summary.id].join('-'));
     } catch (e) {
       console.error(e);
-    } finally {
-      setPlayingAudio(false);
     }
-  }, [onInteract, readText]);
+  }, [cancelTts, onInteract, firstResponder, readText, summary]);
+
+  const handleCopyToClipboard = React.useCallback(async (content: string, message: string) => {
+    setOpenSocials(false);
+    try {
+      Clipboard.setString(content);
+      onInteract?.(InteractionType.Copy, content);
+      toast.alert(<Text>{message}</Text>);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [onInteract, toast]);
   
   const handleStandardShare = React.useCallback(async () => {
     setOpenSocials(false);
     try {
       const url = `${BASE_DOMAIN}/read/?s=${summary.id}`;
       const message = summary.title;
-      onInteract?.(InteractionType.Share, undefined, { message, url }, async () => {
+      onInteract?.(InteractionType.Share, 'standard', { message, url }, async () => {
         await Share.open({ 
           message,
           url,
@@ -169,7 +193,9 @@ export function Summary({
         summary.title, 
         url,
       ].join('\n\n');
-      onInteract?.(InteractionType.Share, undefined, { message, url }, async () => {
+      onInteract?.(InteractionType.Share, 'social', {
+        message, social, url, 
+      }, async () => {
         if (!url) {
           return;
         }
@@ -178,7 +204,7 @@ export function Summary({
           appId: SocialAppIds[social],
           backgroundBottomColor: '#fefefe',
           backgroundTopColor: '#906df4',
-          message: `${summary.title} ${BASE_DOMAIN}/read/?s=${summary.id}`,
+          message: `${summary.title} ${SummaryUtils.shareableLink(summary, BASE_DOMAIN)}`,
           social,
           stickerImage: `data:image/png;base64,${base64ImageUrl}`,
           url,
@@ -206,11 +232,11 @@ export function Summary({
     <ViewShot ref={ viewshot }>
       <View rounded style={ theme.components.card }>
         <View row alignCenter>
-          <View row justifySpaced rounded style={ theme.components.category }>
+          <View row rounded style={ theme.components.category }>
             {collapsed ? (
-              <Pressable onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+              <View onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
                 <Text fontSize={ 16 } color="contrastText">{summary.title.trim()}</Text>
-              </Pressable>
+              </View>
             ) : (
               <React.Fragment>
                 <View 
@@ -220,10 +246,9 @@ export function Summary({
                   {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
                   <Text color='contrastText'>{summary.categoryAttributes?.displayName}</Text>
                 </View>
-                <View row /> 
                 <View row alignCenter justifyEnd>
                   <Button
-                    startIcon='volume-source'
+                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
                     onPress={ () => handlePlayAudio(summary.title) }
                     color={ 'contrastText' }
                     mr={ 8 } />
@@ -267,9 +292,9 @@ export function Summary({
                 <Text right fontSize={ 18 } underline>View original source</Text>
               </Button>
             </View>
-            <Pressable onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+            <View onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
               <Text fontSize={ 20 }>{summary.title.trim()}</Text>
-            </Pressable>
+            </View>
             <Divider horizontal />
             <View row={ (textScale ?? 1) <= 1 } col={ (textScale ?? 1) > 1 } justifySpaced alignCenter>
               <View col alignCenter={ (textScale ?? 1) > 1 } justifyCenter>
@@ -316,6 +341,18 @@ export function Summary({
                     onPress={ () => setOpenSocials(false) }>
                     <View style={ socialContent }>
                       <Button
+                        startIcon='link-variant'
+                        fontSize={ 24 }
+                        mv={ 4 }
+                        color='primary'
+                        onPress={ () => handleCopyToClipboard(content ?? SummaryUtils.shareableLink(summary, BASE_DOMAIN, format), `Copied "${SummaryUtils.shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`) } />
+                      <Button
+                        startIcon='content-copy'
+                        fontSize={ 24 }
+                        mv={ 4 }
+                        color='primary'
+                        onPress={ () => handleCopyToClipboard(content ?? summary.title, `Summary ${format ?? 'title'} copied to clipboard`) } />
+                      <Button
                         startIcon='export-variant'
                         fontSize={ 24 }
                         mv={ 4 }
@@ -347,9 +384,8 @@ export function Summary({
               {content && (
                 <View row alignCenter justifyStart>
                   <Button
-                    startIcon='volume-source'
+                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
                     onPress={ () => handlePlayAudio(content) }
-                    color="contrastText"
                     mr={ 8 } />
                 </View>
               )}

@@ -1,6 +1,7 @@
 import { InternalError } from '~/api';
 
 export const CLIENT_ERRORS = {
+  NOT_FOUND: 'NOT_FOUND',
   NOT_LOGGED_IN: 'NOT_LOGGED_IN',
   UNKNOWN: 'UNKNOWN ERROR',
 } as const;

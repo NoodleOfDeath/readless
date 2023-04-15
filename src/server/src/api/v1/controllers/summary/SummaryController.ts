@@ -101,6 +101,7 @@ export class SummaryController {
   @Get('/')
   public static async getSummaries(
     @Query() userId?: number,
+    @Query() scope = 'public',
     @Query() filter?: string,
     @Query() ids?: number[],
     @Query() pageSize = 10,
@@ -113,12 +114,12 @@ export class SummaryController {
       order: [['createdAt', 'DESC']],
     };
     const filteredOptions = applyFilter(options, filter, ids);
-    const summaries = await Summary.scope('public').findAndCountAll(filteredOptions);
+    const summaries = await Summary.scope(scope).findAndCountAll(filteredOptions);
     await Promise.all(summaries.rows.map(async (row) => await SummaryInteraction.create({
       targetId: row.id,
       type: 'view',
     })));
-    if (userId) {
+    if (userId && scope === 'public') {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
     }
     return summaries;

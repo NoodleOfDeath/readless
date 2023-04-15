@@ -5,7 +5,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Portal, Provider } from 'react-native-paper';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
-import { MediaContextProvider } from '../media';
 
 import { PublicSummaryAttributes } from '~/api';
 import {
@@ -242,27 +241,25 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
       showLoginDialog,
     } }>
       <Provider>
-        <MediaContextProvider>
-          {children}
-          {showReleaseNotes && (
-            <ReleaseNotesCarousel 
-              data={ releaseNotesData } 
-              onClose={ () => handleReleaseNotesClose() } />
+        {children}
+        {showReleaseNotes && (
+          <ReleaseNotesCarousel 
+            data={ releaseNotesData } 
+            onClose={ () => handleReleaseNotesClose() } />
+        )}
+        <Portal>
+          {feedbackSubject && (
+            <FeedBackDialog
+              summary={ feedbackSubject }
+              visible={ showFeedbackDialog }
+              onClose={ () => setShowFeedbackDialog(false) } />
           )}
-          <Portal>
-            {feedbackSubject && (
-              <FeedBackDialog
-                summary={ feedbackSubject }
-                visible={ showFeedbackDialog }
-                onClose={ () => setShowFeedbackDialog(false) } />
-            )}
-            <LoginDialog 
-              visible={ showLoginDialog }
-              onClose={ () => setShowLoginDialog(false) }
-              onSuccess={ (action) => handleLoginSuccess(action) }
-              { ...loginDialogProps } />
-          </Portal>
-        </MediaContextProvider>
+          <LoginDialog 
+            visible={ showLoginDialog }
+            onClose={ () => setShowLoginDialog(false) }
+            onSuccess={ (action) => handleLoginSuccess(action) }
+            { ...loginDialogProps } />
+        </Portal>
       </Provider>
     </AppStateContext.Provider>
   );

@@ -1,1 +1,7 @@
-module.exports = { trailingSlash: true };
+module.exports = {
+  compiler: {
+    // Enables the styled-components SWC transform
+    styledComponents: true,
+  },
+  trailingSlash: true,
+};

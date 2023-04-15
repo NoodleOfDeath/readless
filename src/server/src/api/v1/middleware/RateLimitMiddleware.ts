@@ -1,7 +1,7 @@
 import { Request, RequestHandler } from 'express';
 import ms from 'ms';
 
-import { internalErrorHandler } from './internal-errors';
+import { AuthError, internalErrorHandler } from './internal-errors';
 import { RateLimit } from '../schema';
 
 export type Duration = `${number}${'ms'|'s'|'m'|'h'|'d'|'w'|'M'|'y'}`;
@@ -39,7 +39,7 @@ export const rateLimitMiddleware = (
       const limit = await RateLimit.findOne({ where: { key } });
       if (limit) {
         if (await limit.isSaturated()) {
-          res.status(429).send('Too many requests');
+          res.status(429).json(new AuthError('TOO_MANY_REQUESTS'));
           return;
         }
         await limit.advance();

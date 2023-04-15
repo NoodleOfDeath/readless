@@ -8,6 +8,7 @@ import {
   InteractionType,
   PublicSummaryAttributes,
 } from '~/api';
+import { getUserAgent } from '~/utils';
 
 export function useSummaryClient() {
 
@@ -32,7 +33,14 @@ export function useSummaryClient() {
 
   const getSummary = React.useCallback(async (id: number) => {
     try {
-      return await getSummaries(undefined, [id], 0, 1);
+      const { data, error } = await getSummaries(undefined, [id], 0, 1);
+      if (error) {
+        return { data: undefined, error };
+      }
+      if (data) {
+        return { data: data.rows[0], error: undefined };
+      }
+      return { data: undefined, error: new ClientError('NOT_FOUND') };
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
@@ -58,7 +66,11 @@ export function useSummaryClient() {
     metadata?: Record<string, unknown>,
     alternateAction?: (() => Promise<void>) | (() => void)
   ) => {
-    const payload: Record<string, unknown> = { ...metadata, content };
+    const payload: Record<string, unknown> = { 
+      ...metadata, 
+      content,
+      userAgent: getUserAgent(),
+    };
     if (interaction === InteractionType.Bookmark) {
       setPreference('bookmarkedSummaries', (prev) => {
         const bookmarks = { ...prev };

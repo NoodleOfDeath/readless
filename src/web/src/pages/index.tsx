@@ -1,61 +1,67 @@
 import React from 'react';
 
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 
-import {
-  InteractionResponse,
-  InteractionType,
-  PublicSummaryAttributes,
-} from '~/api';
-import Summary from '~/components/Summary';
 import JustNewsHeader from '~/components/layout/JustNewsHeader';
 import Page from '~/components/layout/Page';
-import { AppStateContext } from '~/contexts';
-import { useRouter, useSummaryClient } from '~/hooks';
 
-export default function SearchPage() {
-  const { interactWithSummary } = useSummaryClient();
-  const { setShowLoginDialog } = React.useContext(AppStateContext);
+export default function HomePage() {
 
-  const router = useRouter();
+  // const { getSummaries } = useSummaryClient();
 
-  React.useEffect(() => {
-    router.push('/search');
-  }, [router]);
+  // const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
+  // const [totalCount, setTotalCount] = React.useState(0);
 
-  const [currentSummary, setCurrentSummary] = React.useState<PublicSummaryAttributes>();
+  // const load = React.useCallback(async () => {
+  //   const { data: summaries, error } = await getSummaries();
+  //   if (error || !summaries) {
+  //     console.error(error);
+  //     return;
+  //   }
+  //   setSummaries(summaries.rows);
+  //   setTotalCount(summaries.count);
+  // }, [getSummaries]);
 
-  const updateInteractions = (interactions: InteractionResponse) => {
-    setCurrentSummary((prev) => {
-      if (!prev) {
-        return (prev = undefined);
-      }
-      const newSummary = { ...prev };
-      newSummary.interactions = interactions;
-      return (prev = newSummary);
-    });
-  };
-
-  const handleInteraction = React.useCallback(async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
-    const { data, error } = await interactWithSummary(summary, type, content, metadata);
-    if (error && error.name === 'NOT_LOGGED_IN') {
-      setShowLoginDialog(true);
-      return;
-    }
-    if (data) {
-      updateInteractions(data);
-    }
-  }, [interactWithSummary, setShowLoginDialog]);
+  // React.useEffect(() => {
+  //   load();
+  // }, [load]);
 
   return (
     <Page center title="Read &lt; Less">
-      <Stack>
+      <Stack spacing={ 2 }>
         <JustNewsHeader />
-        {currentSummary && (
-          <Summary
-            summary={ currentSummary }
-            onInteract={ (...args) => handleInteraction(currentSummary, ...args) } />
-        )}
+        <Typography variant="h6">Read Less is a news summarization service that helps you read more in less time</Typography>
+        <Typography variant="h6">Download the app for iOS or Android</Typography>
+        <Stack direction="row" spacing={ 2 }>
+          <a
+            href="https://apps.apple.com/us/app/read-less-news/id6447275859?itsct=apps_box_badge&amp;itscg=30200"
+            target="_blank"
+            style={ {
+              borderRadius: 13, display: 'inline-block', height: 100, overflow: 'hidden', width: 340,
+            } }
+            rel="noreferrer">
+            <img
+              src="/apple-download-black.svg"
+              alt="Download on the App Store"
+              style={ {
+                borderRadius: 13, height: 100, width: 340, 
+              } } />
+          </a>
+          <a
+            href="https://play.google.com/store/apps/details?id=com.readless"
+            target="_blank"
+            style={ {
+              borderRadius: 13, display: 'inline-block', height: 100, overflow: 'hidden', width: 340,
+            } }
+            rel="noreferrer">
+            <img
+              src="/google-play-badge.png"
+              alt="Get it on Google Play"
+              style={ {
+                borderRadius: 13, height: 100, width: 340, 
+              } } />
+          </a>
+        </Stack>
       </Stack>
     </Page>
   );

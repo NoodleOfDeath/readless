@@ -26,6 +26,7 @@ const ERROR_MESSAGES = {
   NO_THIRD_PARTY_ALIAS: new ErrorMessage('Google account does not have an email address'),
   STALE_VERIFICATION_CODE: new ErrorMessage('That verification token has already been used'),
   THIRD_PARTY_ALIAS_NOT_VERIFIED: new ErrorMessage('Google account email is not verified'),
+  TOO_MANY_REQUESTS: new ErrorMessage('Too many requests'),
   UNKNOWN_ALIAS: new ErrorMessage<{alias: string}>('Unable to find a user with the specified {alias}'),
   UNKNOWN_ROLE: new ErrorMessage<{role: string}>('Unknown role: {role}'),
   UNREFRESHABLE_JWT: new ErrorMessage('JWT is not refreshable'),
