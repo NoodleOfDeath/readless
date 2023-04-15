@@ -1,30 +1,19 @@
 import React from 'react';
 
-import { Stack, Typography } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
 import JustNewsHeader from '~/components/layout/JustNewsHeader';
 import Page from '~/components/layout/Page';
 
 export default function HomePage() {
 
-  // const { getSummaries } = useSummaryClient();
-
-  // const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
-  // const [totalCount, setTotalCount] = React.useState(0);
-
-  // const load = React.useCallback(async () => {
-  //   const { data: summaries, error } = await getSummaries();
-  //   if (error || !summaries) {
-  //     console.error(error);
-  //     return;
-  //   }
-  //   setSummaries(summaries.rows);
-  //   setTotalCount(summaries.count);
-  // }, [getSummaries]);
-
-  // React.useEffect(() => {
-  //   load();
-  // }, [load]);
+  const theme = useTheme();
+  const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Page center title="Read &lt; Less">
@@ -32,7 +21,7 @@ export default function HomePage() {
         <JustNewsHeader />
         <Typography variant="h6">Read Less is a news summarization service that helps you read more in less time</Typography>
         <Typography variant="h6">Download the app for iOS or Android</Typography>
-        <Stack direction="row" spacing={ 2 }>
+        <Stack direction={ mdAndDown ? 'column' : 'row' } spacing={ 2 } alignItems="center">
           <a
             href="https://apps.apple.com/us/app/read-less-news/id6447275859?itsct=apps_box_badge&amp;itscg=30200"
             target="_blank"
