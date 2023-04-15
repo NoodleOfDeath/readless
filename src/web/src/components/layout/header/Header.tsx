@@ -1,12 +1,8 @@
 import React from 'react';
 
 import {
-  mdiAccount,
   mdiClose,
   mdiHome,
-  mdiInformation,
-  mdiLogin,
-  mdiLogout,
   mdiMenu,
 } from '@mdi/js';
 import { Icon } from '@mdi/react';
@@ -31,7 +27,6 @@ import Logo from '~/components/Logo';
 import Footer from '~/components/layout/Footer';
 import LightDarkModeButtons from '~/components/layout/header/LightDarkModeButtons';
 import NavigationItem, { NavigationItemProps } from '~/components/layout/header/NavigationItem';
-import { AppStateContext, SessionContext } from '~/contexts';
 import { useRouter } from '~/hooks';
 
 const StyledDownloadBanner = styled(Card)(({ theme }) => ({
@@ -70,8 +65,6 @@ const StyledBox = styled(Box)(() => ({
 export default function Header() {
 
   const router = useRouter();
-  const { userData } = React.useContext(SessionContext);
-  const { setShowLoginDialog } = React.useContext(AppStateContext);
 
   const [downloadMobileApp, setDownloadMobileApp] = React.useState('');
   const [open, setOpen] = React.useState(false);
@@ -119,47 +112,11 @@ export default function Header() {
       visible: true,
     },
     {
-      icon: mdiLogin,
-      id: 'Login',
-      label: 'Login',
-      onClick() {
-        setShowLoginDialog(true);
-      },
-      visible: () => !userData?.isLoggedIn,
-    },
-    {
-      icon: mdiInformation,
-      id: 'About',
-      label: 'About',
-      onClick() {
-        router?.push('/about');
-      },
-      visible: () => !userData?.isLoggedIn,
-    },
-    {
-      icon: mdiAccount,
-      id: 'Profile',
-      label: 'Profile',
-      onClick() {
-        router?.push('/profile');
-      },
-      visible: () => false, //!!userData?.isLoggedIn,
-    },
-    {
-      icon: mdiLogout,
-      id: 'Logout',
-      label: 'Logout',
-      onClick() {
-        router?.push('/logout');
-      },
-      visible: () => !!userData?.isLoggedIn,
-    },
-    {
       content: <LightDarkModeButtons />,
       id: 'LightDarkModeButtons',
       visible: true,
     },
-  ], [router, setShowLoginDialog, userData?.isLoggedIn]);
+  ], [router]);
 
   React.useEffect(() => {
     const isIos = [

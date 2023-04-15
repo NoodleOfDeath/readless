@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   mdiBookmarkBoxOutline,
-  mdiChevronLeft,
   mdiEye,
   mdiShare,
 } from '@mdi/js';
@@ -61,21 +60,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   height: 40,
   paddingRight: theme.spacing(5),
-}));
-
-const StyledBackButton = styled(StyledButton)(({ theme }) => ({
-  left: theme.spacing(2),
-  opacity: 0.8,
-  position: 'fixed',
-  top: theme.spacing(10),
-}));
-
-const StyledReadingFormatContainer = styled(Box)<Partial<Props>>(({ theme, initialFormat: format }) => ({
-  borderRadius: 8,
-  bottom: format && theme.breakpoints.down('md') ? theme.spacing(4) : undefined,
-  position: format ? 'fixed' : 'relative',
-  right: format ? theme.spacing(4) : undefined,
-  top: format && !theme.breakpoints.down('md') ? theme.spacing(10) : undefined,
 }));
 
 const StyledCategoryBox = styled(Stack)(({ theme }) => ({
@@ -158,15 +142,6 @@ export default function Summary({
 
   return (
     <StyledCard>
-      {initialFormat !== undefined && (
-        <StyledBackButton
-          onClick={ () => onChange?.() }
-          startIcon={
-            <Icon path={ mdiChevronLeft } size={ 2 } /> 
-          }>
-          Back to Results
-        </StyledBackButton>
-      )}
       <StyledStack>
         <StyledStack direction='row' spacing={ 2 }>
           <StyledStack flexGrow={ 1 }>
@@ -206,9 +181,7 @@ export default function Summary({
               <Button startIcon={ <Icon path={ mdiShare } size={ 1 } /> } />
             </Stack>
           </Stack>
-          <StyledReadingFormatContainer initialFormat={ initialFormat }>
-            <ReadingFormatSelector onChange={ (newFormat) => handleFormatChange(newFormat) } />
-          </StyledReadingFormatContainer>
+          <ReadingFormatSelector onChange={ (newFormat) => handleFormatChange(newFormat) } />
         </Stack>
         {format !== undefined && <CardContent>{content}</CardContent>}
       </StyledStack>
