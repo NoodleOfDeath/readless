@@ -172,12 +172,19 @@ export function Summary({
   const handleStandardShare = React.useCallback(async () => {
     setOpenSocials(false);
     try {
-      const url = `${BASE_DOMAIN}/read/?s=${summary.id}`;
+      const url = SummaryUtils.shareableLink(summary, BASE_DOMAIN);
+      const urls = [url];
+      const imageUrl = await viewshot.current?.capture?.();
+      const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
+      if (base64ImageUrl) {
+        urls.push(base64ImageUrl);
+      }
       const message = summary.title;
       onInteract?.(InteractionType.Share, 'standard', { message, url }, async () => {
         await Share.open({ 
           message,
           url,
+          urls,
         });
       });
     } catch (e) {
@@ -193,20 +200,18 @@ export function Summary({
         summary.title, 
         url,
       ].join('\n\n');
-      onInteract?.(InteractionType.Share, 'social', {
-        message, social, url, 
-      }, async () => {
+      onInteract?.(InteractionType.Share, 'social', { message, social }, async () => {
         if (!url) {
           return;
         }
-        const base64ImageUrl = await RNFS.readFile(url, 'base64');
+        const base64ImageUrl = `data:image/png;base64,${await RNFS.readFile(url, 'base64')}`;
         await Share.shareSingle({ 
           appId: SocialAppIds[social],
           backgroundBottomColor: '#fefefe',
           backgroundTopColor: '#906df4',
           message: `${summary.title} ${SummaryUtils.shareableLink(summary, BASE_DOMAIN)}`,
           social,
-          stickerImage: `data:image/png;base64,${base64ImageUrl}`,
+          stickerImage: base64ImageUrl,
           url,
         });
       });

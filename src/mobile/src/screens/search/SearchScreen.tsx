@@ -2,7 +2,11 @@ import React from 'react';
 
 import { Searchbar } from 'react-native-paper';
 
-import { InteractionType, ReadingFormat } from '~/api';
+import {
+  InteractionType,
+  PublicSummaryAttributes,
+  ReadingFormat,
+} from '~/api';
 import {
   ActivityIndicator,
   Button,
@@ -11,12 +15,8 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
-import {
-  PublicSummary,
-  useSummaryClient,
-  useTheme,
-} from '~/hooks';
+import { SessionContext, ToastContext } from '~/contexts';
+import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 import { lengthOf } from '~/utils';
 
@@ -34,6 +34,7 @@ export function SearchScreen({
       preferredReadingFormat,
     },
   } = React.useContext(SessionContext);
+  const toast = React.useContext(ToastContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
@@ -50,9 +51,7 @@ export function SearchScreen({
   }, [prefilter, navigation]);
 
   const [loading, setLoading] = React.useState(false);
-  const [recentSummaries, setRecentSummaries] = React.useState<
-  PublicSummary[]
-  >([]);
+  const [recentSummaries, setRecentSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
 
   const [pageSize] = React.useState(10);
@@ -98,6 +97,7 @@ export function SearchScreen({
       );
       if (error) {
         console.error(error);
+        toast.alert(error.message);
         return;
       }
       if (!data) {
@@ -113,6 +113,7 @@ export function SearchScreen({
       setPage((prev) => prev + 1);
     } catch (e) {
       console.error(e);
+      toast.alert(String(e));
       setRecentSummaries([]);
       setTotalResultCount(0);
     } finally {
@@ -125,6 +126,7 @@ export function SearchScreen({
     prefilter, 
     getSummaries, 
     removedSummaries,
+    toast,
   ]);
 
   const onMount = React.useCallback(() => {
@@ -147,19 +149,20 @@ export function SearchScreen({
   }, [load, pageSize, page]);
 
   const handleFormatChange = React.useCallback(
-    async (summary: PublicSummary, format?: ReadingFormat) => {
+    async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
       const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         console.error(error);
+        toast.alert(error.message);
       } else if (interactions) {
-        setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? s.set('interactions', interactions) : s));
+        setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
       }
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
         summary,
       });
     },
-    [handleInteraction, navigation, preferredReadingFormat]
+    [handleInteraction, navigation, preferredReadingFormat, toast]
   );
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-  @ObservedObject var service: ConnectService
+  @ObservedObject private var service: ConnectService = ConnectService()
   
   @Environment(\.colorScheme) private var colorScheme
   @State var selectedSummary: PublicSummaryAttributes?
@@ -48,7 +48,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentView(service: ConnectService())
-      .preferredColorScheme(.dark)
+    ContentView().preferredColorScheme(.dark)
   }
 }

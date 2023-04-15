@@ -45,8 +45,10 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
     },
   },
   prefixes: [
-    'https://www.readless.ai', 
+    '/',
+    'https://dev.readless.ai',
     'https://readless.ai', 
+    'https://www.readless.ai', 
     'readless://',
   ],
 };

@@ -11,7 +11,7 @@ import SwiftUI
 struct ReadLessWatch_Watch_AppApp: App {
     var body: some Scene {
       WindowGroup {
-        ContentView(service: ConnectService())
+        ContentView()
       }
     }
 }
