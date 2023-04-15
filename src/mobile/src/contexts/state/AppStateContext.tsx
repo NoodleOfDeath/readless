@@ -17,8 +17,6 @@ import {
   Text,
   View,
 } from '~/components';
-import { MediaContextProvider } from '~/contexts/media';
-import { ToastContextProvider } from '~/contexts/toast';
 import { SessionContext } from '~/core/contexts';
 import { useStatusClient, useTheme } from '~/hooks';
 import { StackableTabParams } from '~/screens';
@@ -243,29 +241,25 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
       showLoginDialog,
     } }>
       <Provider>
-        <MediaContextProvider>
-          <ToastContextProvider>
-            {children}
-            {showReleaseNotes && (
-              <ReleaseNotesCarousel 
-                data={ releaseNotesData } 
-                onClose={ () => handleReleaseNotesClose() } />
-            )}
-            <Portal>
-              {feedbackSubject && (
-                <FeedBackDialog
-                  summary={ feedbackSubject }
-                  visible={ showFeedbackDialog }
-                  onClose={ () => setShowFeedbackDialog(false) } />
-              )}
-              <LoginDialog 
-                visible={ showLoginDialog }
-                onClose={ () => setShowLoginDialog(false) }
-                onSuccess={ (action) => handleLoginSuccess(action) }
-                { ...loginDialogProps } />
-            </Portal>
-          </ToastContextProvider>
-        </MediaContextProvider>
+        {children}
+        {showReleaseNotes && (
+          <ReleaseNotesCarousel 
+            data={ releaseNotesData } 
+            onClose={ () => handleReleaseNotesClose() } />
+        )}
+        <Portal>
+          {feedbackSubject && (
+            <FeedBackDialog
+              summary={ feedbackSubject }
+              visible={ showFeedbackDialog }
+              onClose={ () => setShowFeedbackDialog(false) } />
+          )}
+          <LoginDialog 
+            visible={ showLoginDialog }
+            onClose={ () => setShowLoginDialog(false) }
+            onSuccess={ (action) => handleLoginSuccess(action) }
+            { ...loginDialogProps } />
+        </Portal>
       </Provider>
     </AppStateContext.Provider>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Linking } from 'react-native';
 
 import { RouteProp } from '@react-navigation/native';
 
@@ -13,7 +14,7 @@ import {
   SearchScreen,
   StackableTabParams,
 } from '~/screens';
-import { lengthOf } from '~/utils';
+import { SummaryUtils, lengthOf } from '~/utils';
 
 const routes: RouteProp<StackableTabParams, 'search'>[] = [
   {
@@ -30,6 +31,36 @@ const routes: RouteProp<StackableTabParams, 'search'>[] = [
 
 export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   
+  const router = React.useCallback(({ url }: { url: string }) => {
+    // https://www.readless.ai/read/?s=4070
+    // readless://read/?s=4070
+    const [path, query] = url.split('?');
+    const expr = /^(?:readless|https?):\/\/(?:(?:www\.)?readless\.ai\/)?(\w+)\/?/;
+    const [, route] = path.match(expr) ?? [];
+    const params: Record<string, string> = {};
+    if (query) {
+      query.split('&').forEach((pair) => {
+        const [key, value] = pair.split('=');
+        params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+      });
+    }
+    const summary = Number.parseInt(params['s'] ?? '0');
+    if (!summary) {
+      return;
+    }
+    const initialFormat = SummaryUtils.format(params['f']);
+    if (route === 'read' && summary) {
+      navigation?.navigate('summary', { initialFormat, summary });
+    }
+  }, [navigation]);
+
+  React.useEffect(() => {
+    Linking.addEventListener('url', router);
+    return () => {
+      Linking.removeAllListeners('url');
+    };
+  }, [router]);
+  
   const {
     preferences: {
       bookmarkedCategories,
@@ -41,13 +72,6 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   const [activeTab, setActiveTab] = React.useState(0);
   const [mounted, setMounted] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [lastFollowCount, setLastFollowCount] = React.useState(0);
-  
-  const followCountChanged = React.useMemo(() => {
-    const count = lengthOf(bookmarkedCategories, bookmarkedOutlets);
-    console.log(lastFollowCount, count);
-    return lastFollowCount !== count;
-  }, [bookmarkedCategories, bookmarkedOutlets, lastFollowCount]);
   
   const refresh = () => {
     setRefreshing(true);
@@ -55,13 +79,10 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   };
   
   const onMount = React.useCallback(() => {
-    const lastFollowCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
-    setLastFollowCount(lastFollowCount);
-    setActiveTab(lastFollowCount > 0 ? 1 : 0);
-    navigation?.addListener('focus',
-      refresh);
+    const followCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
+    setActiveTab(followCount > 0 ? 1 : 0);
     setMounted(true);
-  }, [bookmarkedCategories, bookmarkedOutlets, navigation]);
+  }, [bookmarkedCategories, bookmarkedOutlets]);
   
   React.useEffect(() => {
     if (!ready || mounted) {

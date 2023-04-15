@@ -11,7 +11,7 @@ import AnyCodable
 #endif
 
 public enum Platform: String, Codable, CaseIterable {
-    case android = "android"
-    case ios = "ios"
-    case webComma = "web,"
+  case android = "android"
+  case ios = "ios"
+  case web = "web"
 }

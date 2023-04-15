@@ -38,6 +38,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/semi': ['error', 'always'],
+    'array-bracket-newline': ['error', 'consistent'],
     'brace-style': ['error', '1tbs'],
     'comma-dangle': [
       'error',

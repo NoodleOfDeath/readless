@@ -12,29 +12,29 @@ import AnyCodable
 
 public struct PublicCategoryAttributes: Codable, Hashable {
 
-    public var icon: String
-    public var displayName: String
-    public var name: String
+  public var name: String
+  public var displayName: String
+  public var icon: String
 
-    public init(icon: String, displayName: String, name: String) {
-        self.icon = icon
-        self.displayName = displayName
-        self.name = name
-    }
+  public init(name: String, displayName: String, icon: String) {
+    self.name = name
+    self.displayName = displayName
+    self.icon = icon
+  }
 
-    public enum CodingKeys: String, CodingKey, CaseIterable {
-        case icon
-        case displayName
-        case name
-    }
+  public enum CodingKeys: String, CodingKey, CaseIterable {
+    case name
+    case displayName
+    case icon
+  }
 
-    // Encodable protocol methods
+  // Encodable protocol methods
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(icon, forKey: .icon)
-        try container.encode(displayName, forKey: .displayName)
-        try container.encode(name, forKey: .name)
-    }
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(name, forKey: .name)
+    try container.encode(displayName, forKey: .displayName)
+    try container.encode(icon, forKey: .icon)
+  }
 }
 

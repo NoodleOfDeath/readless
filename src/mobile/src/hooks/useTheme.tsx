@@ -49,6 +49,11 @@ const makeTheme = (lightMode: boolean) => {
           marginBottom: 6,
           marginTop: 6,
         },
+        fab: {
+          bottom: 64,
+          position: 'absolute',
+          right: 32,
+        },
         flexCol: {
           flex: 1,
           flexDirection: 'column',

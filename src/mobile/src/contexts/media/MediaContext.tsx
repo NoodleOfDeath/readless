@@ -1,6 +1,7 @@
 
 import React from 'react';
 
+import { Portal } from 'react-native-paper';
 import Tts, { Voice } from 'react-native-tts';
 
 import {
@@ -8,6 +9,8 @@ import {
   TtsStatus,
   deviceLanguage,
 } from './types';
+
+import { FAB } from '~/components';
 
 export const MediaContext = React.createContext(DEFAULT_MEDIA_CONTEXT);
 
@@ -109,6 +112,13 @@ export function MediaContextProvider({ children }: Props) {
       voices,
     } }>
       {children}
+      {firstResponder && (
+        <Portal>
+          <FAB 
+            icon='stop'
+            visible />
+        </Portal>
+      )}
     </MediaContext.Provider>
   );
 }

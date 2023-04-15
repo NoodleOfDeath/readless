@@ -12,33 +12,33 @@ import AnyCodable
 
 public struct PublicOutletAttributes: Codable, Hashable {
 
-    public var description: String?
-    public var displayName: String
-    public var name: String
-    public var id: Double
+  public var id: Int
+  public var name: String
+  public var displayName: String
+  public var description: String?
 
-    public init(description: String? = nil, displayName: String, name: String, id: Double) {
-        self.description = description
-        self.displayName = displayName
-        self.name = name
-        self.id = id
-    }
+  public init(id: Int, name: String, displayName: String, description: String? = nil) {
+    self.id = id
+    self.name = name
+    self.description = description
+    self.displayName = displayName
+  }
 
-    public enum CodingKeys: String, CodingKey, CaseIterable {
-        case description
-        case displayName
-        case name
-        case id
-    }
+  public enum CodingKeys: String, CodingKey, CaseIterable {
+    case id
+    case name
+    case displayName
+    case description
+  }
 
-    // Encodable protocol methods
+  // Encodable protocol methods
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(description, forKey: .description)
-        try container.encode(displayName, forKey: .displayName)
-        try container.encode(name, forKey: .name)
-        try container.encode(id, forKey: .id)
-    }
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(id, forKey: .id)
+    try container.encode(name, forKey: .name)
+    try container.encode(displayName, forKey: .displayName)
+    try container.encodeIfPresent(description, forKey: .description)
+  }
 }
 

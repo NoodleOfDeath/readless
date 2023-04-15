@@ -1,6 +1,8 @@
-import { PaletteMode, createTheme } from '@mui/material';
+import { createTheme } from '@mui/material';
 
-export const loadTheme = (mode: PaletteMode = 'light') => {
+import { ColorMode } from './contexts';
+
+export const loadTheme = (mode: ColorMode = 'light') => {
   const lightMode = mode === 'light';
   return createTheme({
     breakpoints: {

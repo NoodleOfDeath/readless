@@ -178,6 +178,7 @@ export function useStyles({
     theme.components.flexRow, 
     theme.components.flexCol,
     theme.components.rounded, 
-    newStyle]);
+    newStyle,
+  ]);
   return viewStyle;
 }

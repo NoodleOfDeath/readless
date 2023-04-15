@@ -11,7 +11,7 @@ import ViewShot from 'react-native-view-shot';
 import { 
   InteractionResponse,
   InteractionType,
-  PublicSummaryAttributes, 
+  PublicSummaryAttributes,
   ReadingFormat,
 } from '~/api';
 import {
@@ -29,6 +29,7 @@ import {
   ToastContext,
 } from '~/contexts';
 import { useInAppBrowser, useTheme } from '~/hooks';
+import { SummaryUtils } from '~/utils';
 
 type Props = {
   summary: PublicSummaryAttributes;
@@ -84,7 +85,7 @@ export function Summary({
   const { preferences: { preferredReadingFormat, textScale } } = React.useContext(SessionContext);
   const { setShowFeedbackDialog, setFeedbackSubject } = React.useContext(AppStateContext);
   const {
-    firstResponder, readText, ttsStatus, cancelTts, 
+    firstResponder, readText, cancelTts, 
   } = React.useContext(MediaContext);
   const toast = React.useContext(ToastContext);
   
@@ -157,12 +158,12 @@ export function Summary({
     }
   }, [cancelTts, onInteract, firstResponder, readText, summary]);
 
-  const handleCopyToClipboard = React.useCallback(async (content: string) => {
+  const handleCopyToClipboard = React.useCallback(async (content: string, message: string) => {
     setOpenSocials(false);
     try {
       Clipboard.setString(content);
       onInteract?.(InteractionType.Copy, content);
-      toast.alert(<Text>Copied to clipboard</Text>);
+      toast.alert(<Text>{message}</Text>);
     } catch (e) {
       console.error(e);
     }
@@ -173,7 +174,7 @@ export function Summary({
     try {
       const url = `${BASE_DOMAIN}/read/?s=${summary.id}`;
       const message = summary.title;
-      onInteract?.(InteractionType.Share, undefined, { message, url }, async () => {
+      onInteract?.(InteractionType.Share, 'standard', { message, url }, async () => {
         await Share.open({ 
           message,
           url,
@@ -192,7 +193,9 @@ export function Summary({
         summary.title, 
         url,
       ].join('\n\n');
-      onInteract?.(InteractionType.Share, undefined, { message, url }, async () => {
+      onInteract?.(InteractionType.Share, 'social', {
+        message, social, url, 
+      }, async () => {
         if (!url) {
           return;
         }
@@ -201,7 +204,7 @@ export function Summary({
           appId: SocialAppIds[social],
           backgroundBottomColor: '#fefefe',
           backgroundTopColor: '#906df4',
-          message: `${summary.title} ${BASE_DOMAIN}/read/?s=${summary.id}`,
+          message: `${summary.title} ${SummaryUtils.shareableLink(summary, BASE_DOMAIN)}`,
           social,
           stickerImage: `data:image/png;base64,${base64ImageUrl}`,
           url,
@@ -338,11 +341,17 @@ export function Summary({
                     onPress={ () => setOpenSocials(false) }>
                     <View style={ socialContent }>
                       <Button
+                        startIcon='link-variant'
+                        fontSize={ 24 }
+                        mv={ 4 }
+                        color='primary'
+                        onPress={ () => handleCopyToClipboard(content ?? SummaryUtils.shareableLink(summary, BASE_DOMAIN, format), `Copied "${SummaryUtils.shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`) } />
+                      <Button
                         startIcon='content-copy'
                         fontSize={ 24 }
                         mv={ 4 }
                         color='primary'
-                        onPress={ () => handleCopyToClipboard(content ?? summary.title) } />
+                        onPress={ () => handleCopyToClipboard(content ?? summary.title, `Summary ${format ?? 'title'} copied to clipboard`) } />
                       <Button
                         startIcon='export-variant'
                         fontSize={ 24 }

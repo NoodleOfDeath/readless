@@ -151,8 +151,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
         lockedBy: null,
         queue: this.queueProps.name,
         startedAt: null,
-        [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...this.failureExprs] } },
-        ],
+        [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...this.failureExprs] } }],
       },
     });
     return job as Job<DataType, ReturnType, QueueName>;

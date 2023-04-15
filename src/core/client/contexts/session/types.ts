@@ -11,7 +11,7 @@ import {
   RequestParams,
 } from '~/api';
 
-export type ColorMode = 'light' | 'dark' | 'system';
+export type ColorMode = 'light' | 'dark';
 
 export class Bookmark<T> {
 

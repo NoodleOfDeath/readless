@@ -11,9 +11,9 @@ import AnyCodable
 #endif
 
 public enum ReadingFormat: String, Codable, CaseIterable {
-    case bullets = "bullets"
-    case casual = "casual"
-    case concise = "concise"
-    case detailed = "detailed"
-    case inDepth = "in-depth"
+  case bullets = "bullets"
+  case casual = "casual"
+  case concise = "concise"
+  case detailed = "detailed"
+  case inDepth = "in-depth"
 }

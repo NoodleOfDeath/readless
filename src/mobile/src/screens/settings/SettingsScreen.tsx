@@ -21,7 +21,7 @@ type OptionProps = React.PropsWithChildren<{
   visible?: boolean;
 }>;
 
-const displayModes = ['light', 'system', 'dark'] as ColorMode[];
+const displayModes = ['light', undefined, 'dark'] as ColorMode[];
 const textScales = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
@@ -163,7 +163,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Reset Removed Content',
       },
     ];
-  }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, setPreference]);
+  }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, handleResetRemovedContent, removedSummaries, setPreference]);
   
   return (
     <Screen>

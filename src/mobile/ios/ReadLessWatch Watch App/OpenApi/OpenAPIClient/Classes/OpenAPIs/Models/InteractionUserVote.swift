@@ -11,6 +11,6 @@ import AnyCodable
 #endif
 
 public enum InteractionUserVote: String, Codable, CaseIterable {
-    case up = "up"
-    case down = "down"
+  case up = "up"
+  case down = "down"
 }

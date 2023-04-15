@@ -1,14 +1,10 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
 
+import { InteractionType, ReadingFormat } from '~/api';
 import {
-  InteractionType,
-  PublicSummaryAttributes,
-  ReadingFormat,
-} from '~/api';
-import {
+  ActivityIndicator,
   Button,
   Screen,
   Summary,
@@ -16,7 +12,11 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
-import { useSummaryClient, useTheme } from '~/hooks';
+import {
+  PublicSummary,
+  useSummaryClient,
+  useTheme,
+} from '~/hooks';
 import { ScreenProps } from '~/screens';
 import { lengthOf } from '~/utils';
 
@@ -51,7 +51,7 @@ export function SearchScreen({
 
   const [loading, setLoading] = React.useState(false);
   const [recentSummaries, setRecentSummaries] = React.useState<
-    PublicSummaryAttributes[]
+  PublicSummary[]
   >([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
 
@@ -118,8 +118,14 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [onlyCustomNews, followFilter, 
-    searchText, prefilter, getSummaries, removedSummaries]);
+  }, [
+    onlyCustomNews, 
+    followFilter, 
+    searchText, 
+    prefilter, 
+    getSummaries, 
+    removedSummaries,
+  ]);
 
   const onMount = React.useCallback(() => {
     setPage(0);
@@ -132,6 +138,7 @@ export function SearchScreen({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(
     () => onMount(), 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pageSize, prefilter, searchText]
   );
 
@@ -140,12 +147,12 @@ export function SearchScreen({
   }, [load, pageSize, page]);
 
   const handleFormatChange = React.useCallback(
-    async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
+    async (summary: PublicSummary, format?: ReadingFormat) => {
       const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         console.error(error);
       } else if (interactions) {
-        setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
+        setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? s.set('interactions', interactions) : s));
       }
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
@@ -177,7 +184,7 @@ export function SearchScreen({
           </View>
         )}
         {loading && recentSummaries.length === 0 && (
-          <View row justifyCenter p={ 16 }>
+          <View justifyCenter p={ 16 }>
             <ActivityIndicator size="large" />
           </View>
         )}
