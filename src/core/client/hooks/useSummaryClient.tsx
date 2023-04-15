@@ -33,11 +33,14 @@ export function useSummaryClient() {
 
   const getSummary = React.useCallback(async (id: number) => {
     try {
-      const response = await getSummaries(undefined, [id], 0, 1);
-      if (response.error) {
-        return response;
+      const { data, error } = await getSummaries(undefined, [id], 0, 1);
+      if (error) {
+        return { data: undefined, error };
       }
-      return { data: response.data?.rows[0], error: undefined };
+      if (data) {
+        return { data: data.rows[0], error: undefined };
+      }
+      return { data: undefined, error: new ClientError('NOT_FOUND') };
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }

@@ -32,7 +32,9 @@ const routes: RouteProp<StackableTabParams, 'search'>[] = [
 export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   
   const router = React.useCallback(({ url }: { url: string }) => {
-    // https://www.readless.ai/read/?s=4070
+    // http://mac.local:6969/read/?s=150&f=casual
+    // https://dev.readless.ai/read/?s=150&f=casual
+    // https://www.readless.ai/read/?s=4070&f=bullets
     // readless://read/?s=4070
     const [path, query] = url.split('?');
     const expr = /^(?:readless|https?):\/\/(?:(?:www\.)?readless\.ai\/)?(\w+)\/?/;
