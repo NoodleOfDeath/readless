@@ -44,6 +44,7 @@ export type Preferences = {
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
   bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
   removedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
+  readSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   showOnlyBookmarkedNews?: boolean;
 };
 

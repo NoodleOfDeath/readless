@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import CookieConsent from '~/components/layout/CookieConsent';
 import Header from '~/components/layout/header/Header';
-import { AppStateContextProvider, SessionContextProvider } from '~/contexts';
+import { DialogContextProvider, SessionContextProvider } from '~/contexts';
 
 const StyledAppContainer = styled(Box)`
   display: flex;
@@ -40,7 +40,7 @@ function App(props: PropTypes.InferProps<typeof App.propTypes>) {
       </Head>
       <GoogleOAuthProvider clientId={ process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string }>
         <SessionContextProvider>
-          <AppStateContextProvider>
+          <DialogContextProvider>
             <StyledAppContainer>
               <Header />
               <StyledAppContent>
@@ -48,7 +48,7 @@ function App(props: PropTypes.InferProps<typeof App.propTypes>) {
               </StyledAppContent>
               <CookieConsent />
             </StyledAppContainer>
-          </AppStateContextProvider>
+          </DialogContextProvider>
         </SessionContextProvider>
       </GoogleOAuthProvider>
     </React.Fragment>

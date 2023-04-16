@@ -2,7 +2,7 @@ import { Theme } from '@mui/material';
 
 import { loadTheme } from '~/theme';
 
-export type AppStateContextType = {
+export type DialogContextType = {
   deferredAction?: () => void;
   setDeferredAction: React.Dispatch<React.SetStateAction<(() => void | undefined) | undefined>>;
   setShowLoginDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,7 +14,7 @@ export type AppStateContextType = {
   theme: Theme;
 };
 
-export const DEFAULT_APP_STATE_CONTEXT: AppStateContextType = {
+export const DEFAULT_DIALOG_CONTEXT: DialogContextType = {
   searchSuggestions: [],
   searchText: '',
   setDeferredAction: () => {

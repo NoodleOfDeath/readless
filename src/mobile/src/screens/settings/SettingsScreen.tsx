@@ -35,6 +35,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       displayMode,
       preferredReadingFormat,
       removedSummaries,
+      readSummaries,
     }, 
     setPreference,
   } = React.useContext(SessionContext);
@@ -71,8 +72,6 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     setActiveTextScale(index);
     setPreference('textScale', newTextScale.value);
   }, [textScale, setPreference]);
-  
-  const handleResetRemovedContent = React.useCallback(() => setPreference('removedSummaries', {}), [setPreference]);
   
   const options: OptionProps[] = React.useMemo(() => {
     return [
@@ -152,7 +151,23 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             outlined
             rounded
             p={ 8 }
-            onPress={ handleResetRemovedContent }
+            onPress={ () => setPreference('readSummaries', {}) }
+            h5>
+            Reset Read Articles to Unread (
+            {Object.values(readSummaries ?? {}).length}
+            )
+          </Button>
+        ),
+        id: 'reset-read-summaries',
+        label: 'Reset Read Content',
+      },
+      {
+        children: (
+          <Button
+            outlined
+            rounded
+            p={ 8 }
+            onPress={ () => setPreference('removedSummaries', {}) }
             h5>
             Reset Content Marked Offensive/Spam (
             {Object.values(removedSummaries ?? {}).length}
@@ -163,7 +178,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Reset Removed Content',
       },
     ];
-  }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, handleResetRemovedContent, removedSummaries, setPreference]);
+  }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference]);
   
   return (
     <Screen>

@@ -28,8 +28,6 @@ export function SearchScreen({
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
-      bookmarkedSummaries, 
-      favoritedSummaries, 
       removedSummaries,
       preferredReadingFormat,
     },
@@ -50,8 +48,9 @@ export function SearchScreen({
     navigation?.setOptions({ headerShown: false });
   }, [prefilter, navigation]);
 
+  const [mounted, setMounted] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [recentSummaries, setRecentSummaries] = React.useState<PublicSummaryAttributes[]>([]);
+  const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
 
   const [pageSize] = React.useState(10);
@@ -76,7 +75,7 @@ export function SearchScreen({
   const load = React.useCallback(async (pageSize: number, page: number) => {
     setLoading(true);
     if (page === 0) {
-      setRecentSummaries([]);
+      setSummaries([]);
     }
     if (onlyCustomNews && !followFilter) {
       setLoading(false);
@@ -103,7 +102,7 @@ export function SearchScreen({
       if (!data) {
         return;
       }
-      setRecentSummaries((prev) => {
+      setSummaries((prev) => {
         if (page === 0) {
           return (prev = data.rows.filter((r) => !(r.id in (removedSummaries ?? {}))));
         }
@@ -114,7 +113,7 @@ export function SearchScreen({
     } catch (e) {
       console.error(e);
       toast.alert(String(e));
-      setRecentSummaries([]);
+      setSummaries([]);
       setTotalResultCount(0);
     } finally {
       setLoading(false);
@@ -137,16 +136,25 @@ export function SearchScreen({
     }
   }, [load, navigation, pageSize, prefilter]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(
-    () => onMount(), 
+    () => {
+      if (mounted) {
+        return;
+      }
+      onMount();
+      setMounted(true);
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pageSize, prefilter, searchText]
+    [mounted, pageSize, prefilter, searchText]
   );
 
   const loadMore = React.useCallback(async () => {
     await load(pageSize, page + 1);
   }, [load, pageSize, page]);
+
+  React.useEffect(() => {
+    setSummaries((prev) => prev.filter((s) => !(s.id in (removedSummaries ?? {}))));
+  }, [removedSummaries]);
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
@@ -155,7 +163,7 @@ export function SearchScreen({
         console.error(error);
         toast.alert(error.message);
       } else if (interactions) {
-        setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
+        setSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
       }
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
@@ -186,12 +194,12 @@ export function SearchScreen({
               value={ searchText } />
           </View>
         )}
-        {loading && recentSummaries.length === 0 && (
+        {loading && summaries.length === 0 && (
           <View justifyCenter p={ 16 }>
             <ActivityIndicator size="large" />
           </View>
         )}
-        {!loading && onlyCustomNews && recentSummaries.length === 0 && (
+        {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>
               It seems your filters are too specific. You may want to consider 
@@ -208,17 +216,15 @@ export function SearchScreen({
             </Button>
           </View>
         )}
-        {recentSummaries.map((summary) => (
+        {summaries.map((summary) => (
           <Summary
             key={ summary.id }
             summary={ summary }
-            bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
-            favorited={ Boolean(favoritedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(summary, format) }
             onInteract={ (...e) => handleInteraction(summary, ...e) }
             onReferSearch={ handleReferSearch } />
         ))}
-        {!loading && !noResults && totalResultCount > recentSummaries.length && (
+        {!loading && !noResults && totalResultCount > summaries.length && (
           <View row justifyCenter p={ 16 } pb={ 24 }>
             <Button 
               outlined

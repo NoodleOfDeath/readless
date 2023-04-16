@@ -47,16 +47,16 @@ export function Button({
   
   const buttonStyle = React.useMemo(
     () => {
-      let buttonStyle = { ...style };
+      let newStyle = { ...style };
       if (pressableProps.selectable) {
         if (selected || isPressed) {
-          buttonStyle = {
-            ...buttonStyle,
+          newStyle = {
+            ...newStyle,
             ...theme.components.buttonSelected,
           };
         }
       }
-      return buttonStyle;
+      return newStyle;
     }
     , [isPressed, pressableProps.selectable, style, selected, theme]
   );

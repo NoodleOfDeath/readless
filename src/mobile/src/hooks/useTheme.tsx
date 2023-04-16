@@ -51,7 +51,7 @@ const makeTheme = (lightMode: boolean) => {
           marginTop: 6,
         },
         fab: {
-          bottom: 64,
+          bottom: 96,
           position: 'absolute',
           right: 32,
         },

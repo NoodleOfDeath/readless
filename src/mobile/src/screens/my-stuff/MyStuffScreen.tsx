@@ -116,8 +116,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                     <View col key={ id }>
                       <Summary
                         summary={ bookmark.item }
-                        bookmarked
-                        favorited={ Boolean(favoritedSummaries?.[bookmark.item.id]) }
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
@@ -149,8 +147,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                     <View col key={ id }>
                       <Summary
                         summary={ bookmark.item }
-                        bookmarked={ Boolean(bookmarkedSummaries?.[bookmark.item.id]) }
-                        favorited
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Favorite, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />

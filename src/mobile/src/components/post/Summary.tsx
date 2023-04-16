@@ -5,6 +5,7 @@ import { BASE_DOMAIN } from '@env';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { formatDistance } from 'date-fns';
 import RNFS from 'react-native-fs';
+import { Swipeable } from 'react-native-gesture-handler';
 import Share, { Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
@@ -23,7 +24,8 @@ import {
   View,
 } from '~/components';
 import {
-  AppStateContext,
+  Bookmark,
+  DialogContext,
   MediaContext,
   SessionContext,
   ToastContext,
@@ -34,7 +36,7 @@ import { SummaryUtils } from '~/utils';
 type Props = {
   summary: PublicSummaryAttributes;
   tickIntervalMs?: number;
-  format?: ReadingFormat;
+  initialFormat?: ReadingFormat;
   realtimeInteractions?: InteractionResponse;
   bookmarked?: boolean;
   favorited?: boolean;
@@ -69,11 +71,9 @@ const SocialAppIds: Record<Social, string> = {
 export function Summary({
   summary,
   tickIntervalMs = 60_000,
-  format,
+  initialFormat,
   realtimeInteractions,
   collapsible = true,
-  bookmarked,
-  favorited,
   forceCollapse,
   onFormatChange,
   onReferSearch,
@@ -82,8 +82,12 @@ export function Summary({
 }: Props) {
   const { openURL } = useInAppBrowser();
   const theme = useTheme();
-  const { preferences: { preferredReadingFormat, textScale } } = React.useContext(SessionContext);
-  const { setShowFeedbackDialog, setFeedbackSubject } = React.useContext(AppStateContext);
+  const {
+    preferences: {
+      preferredReadingFormat, bookmarkedSummaries, favoritedSummaries, readSummaries, textScale, 
+    }, setPreference, 
+  } = React.useContext(SessionContext);
+  const { setShowFeedbackDialog, setFeedbackSubject } = React.useContext(DialogContext);
   const {
     firstResponder, readText, cancelTts, 
   } = React.useContext(MediaContext);
@@ -93,9 +97,14 @@ export function Summary({
 
   const [lastTick, setLastTick] = React.useState(new Date());
 
+  const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
+  const interactions = React.useMemo(() => realtimeInteractions ?? summary.interactions, [realtimeInteractions, summary.interactions]);
   const [collapsed, setCollapsed] = React.useState(forceCollapse);
   const [openSocials, setOpenSocials] = React.useState(false);
-  const interactions = React.useMemo(() => realtimeInteractions ?? summary.interactions, [realtimeInteractions, summary.interactions]);
+
+  const isRead = React.useMemo(() => Boolean(readSummaries?.[summary.id]) && !openSocials && !initialFormat, [initialFormat, openSocials, readSummaries, summary.id]);
+  const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
+  const favorited = React.useMemo(() => Boolean(favoritedSummaries?.[summary.id]), [favoritedSummaries, summary]);
   
   const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
 
@@ -142,6 +151,20 @@ export function Summary({
       return !prev;
     });
   }, [onCollapse]);
+
+  const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
+    onFormatChange?.(newFormat);
+    setTimeout(() => {
+      setPreference('readSummaries', (prev) => ({
+        ...prev,
+        [summary.id]: new Bookmark(summary),
+      }));
+    }, 1000);
+    if (!initialFormat) {
+      return;
+    }
+    setFormat(newFormat);
+  }, [initialFormat, onFormatChange, setPreference, summary]);
 
   const handlePlayAudio = React.useCallback(async (text: string) => {
     if (firstResponder) {
@@ -232,175 +255,250 @@ export function Summary({
     padding: 8,
     position: 'absolute',
   } as const), [theme]);
+
+  const renderLeftActions = React.useCallback(() => {
+    const onPress = () => setPreference('readSummaries', (prev) => {
+      const newBookmarks = { ...prev };
+      if (isRead) {
+        delete newBookmarks[summary.id];
+      } else {
+        newBookmarks[summary.id] = new Bookmark(summary);
+      }
+      return (prev = newBookmarks);
+    });
+    return (
+      <View 
+        rounded
+        justifyCenter>
+        <View col p={ 8 } mb={ 8 }>
+          <Button
+            col
+            alignCenter
+            justifyCenter
+            rounded
+            bg={ theme.colors.primary }
+            color="white"
+            mv={ 4 }
+            p={ 16 }
+            startIcon={ isRead ? 'email-mark-as-unread' : 'read' }
+            onPress={ onPress }>
+            {isRead ? 'Mark as Unread' : 'Mark as Read'}
+          </Button>
+        </View>
+      </View>
+    );
+  }, [isRead, setPreference, summary, theme.colors.primary]);
+  
+  const renderRightActions = React.useCallback(() => {
+    const hide = () => {
+      onInteract?.(InteractionType.Feedback, 'hide', undefined, () => {
+        setPreference('removedSummaries', (prev) => ({
+          ...prev,
+          [summary.id]: new Bookmark(summary),
+        }));
+      });
+    };
+    const report = () => { 
+      onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
+        setShowFeedbackDialog(true);
+        setFeedbackSubject(summary);
+      });
+    };
+    return (
+      <View 
+        rounded
+        justifyCenter>
+        <View col p={ 8 } mb={ 8 }>
+          <Button
+            col
+            alignCenter
+            justifyCenter
+            rounded
+            bg={ theme.colors.primary }
+            mv={ 4 }
+            p={ 16 }
+            color="white"
+            startIcon={ 'eye-off' }
+            onPress={ hide }>
+            Hide
+          </Button>
+          <Button
+            col
+            alignCenter
+            justifyCenter
+            rounded
+            bg={ theme.colors.primary }
+            color="white"
+            mv={ 4 }
+            p={ 16 }
+            startIcon={ 'bug' }
+            onPress={ report }>
+            Report a Bug
+          </Button>
+        </View>
+      </View>
+    );
+  }, [theme.colors.primary, onInteract, setShowFeedbackDialog, setFeedbackSubject, summary, setPreference]);
   
   return (
     <ViewShot ref={ viewshot }>
-      <View rounded style={ theme.components.card }>
-        <View row alignCenter>
-          <View row rounded style={ theme.components.category }>
-            {collapsed ? (
-              <View onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
-                <Text body1 color="contrastText">{summary.title.trim()}</Text>
-              </View>
-            ) : (
-              <React.Fragment>
-                <View 
-                  row
-                  alignCenter
-                  onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
-                  {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
-                  <Text color='contrastText'>{summary.categoryAttributes?.displayName}</Text>
+      <Swipeable 
+        renderLeftActions={ renderLeftActions }
+        renderRightActions={ renderRightActions }>
+        <View rounded style={ theme.components.card }>
+          <View row alignCenter>
+            <View row rounded style={ theme.components.category }>
+              {collapsed ? (
+                <View onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
+                  <Text inactive={ isRead } body1 color="contrastText">{summary.title.trim()}</Text>
                 </View>
-                <View row alignCenter justifyEnd>
-                  <Button
-                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                    onPress={ () => handlePlayAudio(summary.title) }
-                    color={ 'contrastText' }
-                    mr={ 8 } />
-                </View>
-                <View alignEnd>
-                  <Button 
+              ) : (
+                <React.Fragment>
+                  <View 
                     row
                     alignCenter
-                    small
-                    startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-                    color="contrastText"
-                    onPress={ () => onInteract?.(InteractionType.Bookmark) }>
-                    Read Later
-                  </Button>
-                </View>
-              </React.Fragment>
+                    onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
+                    {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
+                    <Text color='contrastText'>{summary.categoryAttributes?.displayName}</Text>
+                  </View>
+                  <View row alignCenter justifyEnd>
+                    <Button
+                      startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                      onPress={ () => handlePlayAudio(summary.title) }
+                      color={ 'contrastText' }
+                      mr={ 8 } />
+                  </View>
+                  <View alignEnd>
+                    <Button 
+                      row
+                      alignCenter
+                      small
+                      startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+                      color="contrastText"
+                      onPress={ () => onInteract?.(InteractionType.Bookmark) }>
+                      Read Later
+                    </Button>
+                  </View>
+                </React.Fragment>
+              )}
+            </View>
+            {collapsible && (
+              <View alignCenter>
+                <Button 
+                  big
+                  startIcon={ collapsed ? 'chevron-left' : 'chevron-down' }
+                  onPress={ () => toggleCollapse() }
+                  color={ theme.colors.text }
+                  ml={ 8 } />
+              </View>
             )}
           </View>
-          {collapsible && (
-            <View alignCenter>
-              <Button 
-                big
-                startIcon={ collapsed ? 'chevron-left' : 'chevron-down' }
-                onPress={ () => toggleCollapse() }
-                color={ theme.colors.text }
-                ml={ 8 } />
-            </View>
-          )}
-        </View>
-        {!collapsed && (
-          <React.Fragment>
-            <View row justifySpaced alignCenter>
-              <Button 
-                onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-                <Text underline subtitle2>
-                  {summary.outletAttributes?.displayName.trim()}
-                </Text>
-              </Button>
-              <Button 
-                onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-                <Text right subtitle2 underline>View original source</Text>
-              </Button>
-            </View>
-            <View onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
-              <Text subtitle1>{summary.title.trim()}</Text>
-            </View>
-            <Divider />
-            <View row={ (textScale ?? 1) <= 1 } col={ (textScale ?? 1) > 1 } justifySpaced alignCenter>
-              <View col alignCenter={ (textScale ?? 1) > 1 } justifyCenter>
-                <Text body1>{timeAgo}</Text>
-                <Button
-                  row
-                  alignCenter
-                  startIcon="emoticon-sad"
-                  body1
-                  spacing={ 4 }
-                  color='primary'
-                  onPress={ () => onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
-                    setShowFeedbackDialog(true);
-                    setFeedbackSubject(summary);
-                  }) }>
-                  This doesn&apos;t seem right
+          {!collapsed && (
+            <React.Fragment>
+              <View row justifySpaced alignCenter>
+                <Button 
+                  onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
+                  <Text underline subtitle2>
+                    {summary.outletAttributes?.displayName.trim()}
+                  </Text>
+                </Button>
+                <Button 
+                  onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
+                  <Text right subtitle2 underline>View original source</Text>
                 </Button>
               </View>
-              <View row alignCenter justifyEnd={ (textScale ?? 1) <= 1 }>
-                <View>
-                  <Text body1>{String(interactions.view)}</Text>
+              <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
+                <Text inactive={ isRead } subtitle1>{summary.title.trim()}</Text>
+              </View>
+              <Divider />
+              <View row={ (textScale ?? 1) <= 1 } col={ (textScale ?? 1) > 1 } justifySpaced alignCenter>
+                <View col alignCenter={ (textScale ?? 1) > 1 } justifyCenter>
+                  <Text body1>{timeAgo}</Text>
                 </View>
-                <Icon
-                  name="eye"
-                  color={ 'primary' }
-                  mh={ 4 } />
-                <Button
-                  startIcon={ favorited ? 'heart' : 'heart-outline' }
-                  h5
-                  mh={ 4 }
-                  color='primary'
-                  onPress={ () => onInteract?.(InteractionType.Favorite) } />
-                <View>
+                <View row alignCenter justifyEnd={ (textScale ?? 1) <= 1 }>
+                  <View>
+                    <Text body1>{String(interactions.view)}</Text>
+                  </View>
+                  <Icon
+                    name="eye"
+                    color={ 'primary' }
+                    mh={ 4 } />
                   <Button
+                    startIcon={ favorited ? 'heart' : 'heart-outline' }
                     h5
                     mh={ 4 }
                     color='primary'
-                    onPress={ () => setOpenSocials(!openSocials) }
-                    startIcon='share' />
-                </View>
-                {openSocials && (
-                  <View
-                    style={ socialContainer }
-                    onPress={ () => setOpenSocials(false) }>
-                    <View style={ socialContent }>
-                      <Button
-                        startIcon='link-variant'
-                        h5
-                        mv={ 4 }
-                        color='primary'
-                        onPress={ () => handleCopyToClipboard(content ?? SummaryUtils.shareableLink(summary, BASE_DOMAIN, format), `Copied "${SummaryUtils.shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`) } />
-                      <Button
-                        startIcon='content-copy'
-                        h5
-                        mv={ 4 }
-                        color='primary'
-                        onPress={ () => handleCopyToClipboard(content ?? summary.title, `Summary ${format ?? 'title'} copied to clipboard`) } />
-                      <Button
-                        startIcon='export-variant'
-                        h5
-                        mv={ 4 }
-                        color='primary'
-                        onPress={ () => handleStandardShare() } />
-                      <Button
-                        startIcon='instagram'
-                        h5
-                        mv={ 4 }
-                        color='primary'
-                        onPress={ () => handleSocialShare(Social.InstagramStories) } />
-                      <Button
-                        startIcon='twitter'
-                        h5
-                        mv={ 4 }
-                        color='primary'
-                        onPress={ () => handleSocialShare(Social.Twitter) } />
+                    onPress={ () => onInteract?.(InteractionType.Favorite) } />
+                  <View>
+                    <Button
+                      h5
+                      mh={ 4 }
+                      color='primary'
+                      onPress={ () => setOpenSocials(!openSocials) }
+                      startIcon='share' />
+                  </View>
+                  {openSocials && (
+                    <View
+                      style={ socialContainer }
+                      onPress={ () => setOpenSocials(false) }>
+                      <View style={ socialContent }>
+                        <Button
+                          startIcon='link-variant'
+                          h5
+                          mv={ 4 }
+                          color='primary'
+                          onPress={ () => handleCopyToClipboard(content ?? SummaryUtils.shareableLink(summary, BASE_DOMAIN, format), `Copied "${SummaryUtils.shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`) } />
+                        <Button
+                          startIcon='content-copy'
+                          h5
+                          mv={ 4 }
+                          color='primary'
+                          onPress={ () => handleCopyToClipboard(content ?? summary.title, `Summary ${format ?? 'title'} copied to clipboard`) } />
+                        <Button
+                          startIcon='export-variant'
+                          h5
+                          mv={ 4 }
+                          color='primary'
+                          onPress={ () => handleStandardShare() } />
+                        <Button
+                          startIcon='instagram'
+                          h5
+                          mv={ 4 }
+                          color='primary'
+                          onPress={ () => handleSocialShare(Social.InstagramStories) } />
+                        <Button
+                          startIcon='twitter'
+                          h5
+                          mv={ 4 }
+                          color='primary'
+                          onPress={ () => handleSocialShare(Social.Twitter) } />
+                      </View>
                     </View>
+                  )}
+                </View>
+              </View>
+              <View mt={ 2 }>
+                <ReadingFormatSelector 
+                  format={ format } 
+                  preferredFormat={ preferredReadingFormat }
+                  onChange={ handleFormatChange } />
+                <Divider />
+                {content && (
+                  <View row alignCenter justifyStart>
+                    <Button
+                      startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                      onPress={ () => handlePlayAudio(content) }
+                      mr={ 8 } />
                   </View>
                 )}
-              </View>
-            </View>
-            <View mt={ 2 }>
-              <ReadingFormatSelector 
-                format={ format } 
-                preferredFormat={ preferredReadingFormat }
-                onChange={ onFormatChange } />
-              <Divider />
-              {content && (
-                <View row alignCenter justifyStart>
-                  <Button
-                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                    onPress={ () => handlePlayAudio(content) }
-                    mr={ 8 } />
+                <View mt={ 4 }>
+                  {content && <Text subtitle1 mt={ 4 }>{content}</Text>}
                 </View>
-              )}
-              <View mt={ 4 }>
-                {content && <Text subtitle1 mt={ 4 }>{content}</Text>}
               </View>
-            </View>
-          </React.Fragment>
-        )}
-      </View>
+            </React.Fragment>
+          )}
+        </View>
+      </Swipeable>
     </ViewShot>
   );
 }

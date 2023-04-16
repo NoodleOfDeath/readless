@@ -36,6 +36,7 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   italic?: boolean;
   underline?: boolean;
   code?: boolean;
+  inactive?: boolean;
   // margins
   m?: number;
   mh?: number;
@@ -55,6 +56,7 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   // appearance
   bg?: string;
   outlined?: boolean | string | number | [string, number];
+  opacity?: number;
   selectable?: boolean;
   contained?: boolean;
   rounded?: boolean;

@@ -11,7 +11,7 @@ export type TextProps = Stylable<TextStyle> & React.PropsWithChildren<{
 
 export function Text({
   children,
-  color,
+  color = 'text',
   ...styleProps
 }: TextProps) {
   
@@ -22,7 +22,7 @@ export function Text({
   
   const style = React.useMemo(() => ({
     ...theme.components.text,
-    color: color && Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color,
+    color: color && (Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color),
     textAlign,
     ...otherStyles,
     fontSize: (styleProps.fontSize ?? otherStyles.fontSize ?? 14) * textScale,

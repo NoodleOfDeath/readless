@@ -2,7 +2,7 @@ import React from 'react';
 
 import NavigationController from '~/NavigationController';
 import {
-  AppStateContextProvider,
+  DialogContextProvider,
   MediaContextProvider,
   SessionContextProvider,
   ToastContextProvider,
@@ -11,13 +11,13 @@ import {
 export default function App() {
   return (
     <SessionContextProvider>
-      <AppStateContextProvider>
+      <DialogContextProvider>
         <MediaContextProvider>
           <ToastContextProvider>
             <NavigationController />
           </ToastContextProvider>
         </MediaContextProvider>
-      </AppStateContextProvider>
+      </DialogContextProvider>
     </SessionContextProvider>
   );
 }

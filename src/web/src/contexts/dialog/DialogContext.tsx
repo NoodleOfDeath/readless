@@ -6,7 +6,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import { DEFAULT_APP_STATE_CONTEXT } from './types';
+import { DEFAULT_DIALOG_CONTEXT } from './types';
 
 import LoginDialog from '~/components/login/LoginDialog';
 import { SessionContext } from '~/contexts';
@@ -14,9 +14,9 @@ import { loadTheme } from '~/theme';
 
 type Props = React.PropsWithChildren;
 
-export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
+export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
 
-export function AppStateContextProvider({ children }: Props) {
+export function DialogContextProvider({ children }: Props) {
   
   const { preferences: { displayMode } } = React.useContext(SessionContext);
   
@@ -34,7 +34,7 @@ export function AppStateContextProvider({ children }: Props) {
   }, [displayMode, prefersDarkMode]);
 
   return (
-    <AppStateContext.Provider
+    <DialogContext.Provider
       value={ {
         deferredAction,
         searchSuggestions,
@@ -57,6 +57,6 @@ export function AppStateContextProvider({ children }: Props) {
           onClose={ () => setShowLoginDialog(false) } 
           onSuccess={ () => setShowLoginDialog(false) } />
       </ThemeProvider>
-    </AppStateContext.Provider>
+    </DialogContext.Provider>
   );
 }

@@ -39,10 +39,10 @@ struct ContentView: View {
             }
           }
           .padding(EdgeInsets(top: 10.0, leading: 0, bottom: 0, trailing: 0))
-          .onAppear(perform: self.service.fetchSync)
         )
     }
     .navigationViewStyle(.stack)
+    .onAppear(perform: self.service.fetchSync)
   }
 }
 

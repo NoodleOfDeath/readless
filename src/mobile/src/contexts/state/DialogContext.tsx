@@ -4,7 +4,7 @@ import { Linking, Platform } from 'react-native';
 import { Portal, Provider } from 'react-native-paper';
 import VersionCheck from 'react-native-version-check';
 
-import { DEFAULT_APP_STATE_CONTEXT } from './types';
+import { DEFAULT_DIALOG_CONTEXT } from './types';
 
 import { PublicSummaryAttributes, ReleaseAttributes } from '~/api';
 import {
@@ -17,9 +17,9 @@ import {
 import { SessionContext } from '~/core/contexts';
 import { useStatusClient } from '~/hooks';
 
-export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
+export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
 
-export function AppStateContextProvider({ children }: React.PropsWithChildren) {
+export function DialogContextProvider({ children }: React.PropsWithChildren) {
 
   const {
     ready, 
@@ -48,7 +48,7 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
         .filter((release) => release.platform === Platform.OS)
         .map((release) => [release.version, release])) as Record<string, ReleaseAttributes>;
       const newReleases = Object.entries(onServerReleases)
-        .filter(([version]) => !(releases ?? {})[version] && VersionCheck.getCurrentVersion() >= version)
+        .filter(([version]) => !(releases ?? {})[version] && VersionCheck.getCurrentVersion() < version)
         .map(([, release]) => release);
       if (newReleases.length > 0) {
         if (newReleases.some((release) => release.options?.updateRequired === true)) {
@@ -73,20 +73,24 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
   }, [ready]);
   
   return (
-    <AppStateContext.Provider value={ {
+    <DialogContext.Provider value={ {
       feedbackSubject,
+      releaseNotes,
       setFeedbackSubject,
+      setReleaseNotes,
       setShowFeedbackDialog,
+      setShowReleaseNotes,
       showFeedbackDialog,
+      showReleaseNotes,
     } }>
       <Provider>
         {children}
-        {ready && showReleaseNotes && releaseNotes.length > 0 && (
-          <ReleaseNotesCarousel 
-            data={ releaseNotes } 
-            onClose={ () => handleReleaseNotesClose() } />
-        )}
         <Portal>
+          {ready && showReleaseNotes && releaseNotes.length > 0 && (
+            <ReleaseNotesCarousel 
+              data={ releaseNotes } 
+              onClose={ () => handleReleaseNotesClose() } />
+          )}
           {updateRequired && (
             <Dialog
               visible
@@ -118,6 +122,6 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
           )}
         </Portal>
       </Provider>
-    </AppStateContext.Provider>
+    </DialogContext.Provider>
   );
 }

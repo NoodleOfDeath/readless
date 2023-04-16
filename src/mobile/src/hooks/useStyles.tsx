@@ -58,6 +58,7 @@ export function useStyles({
   pr = ph,
   // appearance
   bg,
+  opacity,
   outlined,
   contained,
   rounded,
@@ -145,8 +146,11 @@ export function useStyles({
     } else
     if (contained) {
       return theme.components.buttonSelected;
-    } 
-  }, [outlined, contained, theme]);
+    }
+    if (opacity) {
+      return { opacity };
+    }
+  }, [opacity, outlined, contained, theme]);
 
   const viewStyle = React.useMemo(() => {
     const scale = ((((textScale ?? 1) - 1) / 2) + 1);

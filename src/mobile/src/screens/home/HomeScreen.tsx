@@ -97,8 +97,7 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   }, []);
   
   return (
-    <Screen 
-      onRefresh={ () => refresh() }>
+    <Screen onRefresh={ () => refresh() }>
       <View col mh={ 16 }>
         <TabSwitcher
           activeTab={ activeTab }

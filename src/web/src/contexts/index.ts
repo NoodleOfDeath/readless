@@ -1,2 +1,2 @@
-export * from './state/AppStateContext';
+export * from './dialog/DialogContext';
 export * from '~/core/contexts';

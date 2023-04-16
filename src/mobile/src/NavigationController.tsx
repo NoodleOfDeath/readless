@@ -3,8 +3,11 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Badge } from 'react-native-paper';
 
-import { Icon } from '~/components';
+import { Preferences, SessionContext } from './contexts';
+
+import { Icon, View } from '~/components';
 import { useTheme } from '~/hooks';
 import {
   HomeScreen,
@@ -40,7 +43,14 @@ export function TabViewController<T extends TabParams = TabParams>(
   return Controller;
 }
 
-const TABS = [
+type TabProps = {
+  component: ReturnType<typeof TabViewController>;
+  icon: string;
+  name: string;
+  badge?: (preferences: Preferences) => number;
+};
+
+const TABS: TabProps[] = [
   {
     component: TabViewController<StackableTabParams>(
       {
@@ -53,6 +63,7 @@ const TABS = [
     name: 'Hot off Press',
   },
   {
+    badge: (preferences) => Object.keys(preferences.bookmarkedSummaries ?? {}).filter((summary) => !(summary in (preferences.readSummaries ?? {}))).length ?? 0,
     component: TabViewController<StackableTabParams>(
       {
         default: MyStuffScreen, 
@@ -84,6 +95,9 @@ const TABS = [
 export default function NavigationController() {
   const theme = useTheme();
   const Tab = createBottomTabNavigator();
+
+  const { preferences } = React.useContext(SessionContext);
+
   return (
     <NavigationContainer
       theme={ { 
@@ -98,9 +112,21 @@ export default function NavigationController() {
             name={ tab.name }
             component={ tab.component }
             options={ {
-              tabBarIcon: (props) => (
-                <Icon name={ tab.icon } { ...props } color="primary" />
-              ),
+              tabBarIcon: (props) => {
+                const badge = tab.badge ? tab.badge(preferences) : 0;
+                return (
+                  <View>
+                    {badge > 0 && (
+                      <Badge style={ {
+                        position: 'absolute', right: 0, top: 0, zIndex: 1,
+                      } }>
+                        {badge}
+                      </Badge>
+                    )}
+                    <Icon name={ tab.icon } { ...props } color="primary" />
+                  </View>
+                );
+              },
             } } />
         ))}
       </Tab.Navigator>
