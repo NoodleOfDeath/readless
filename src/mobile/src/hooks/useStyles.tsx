@@ -8,15 +8,28 @@ export function useStyles({
   // dimensions
   width,
   height,
+  // typographies
+  caption,
+  subtitle1,
+  subtitle2,
+  body1,
+  body2,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
   // text styles
   color,
   center,
   left,
   right,
-  fontSize,
+  fontSize = h1 ? 36 : h2 ? 32 : h3 ? 28 : h4 ? 26 : h5 ? 24 : h6 ? 22 : caption ? 12 : subtitle1 ? 20 : subtitle2 ? 18 : body1 ? 16 : body2 ? 15 : 16,
   bold,
   italic,
   underline,
+  code,
   // flex styles
   col,
   row,
@@ -81,8 +94,11 @@ export function useStyles({
     if (underline) {
       styles.push({ textDecorationLine: 'underline' });
     }
+    if (code) {
+      styles.push({ fontFamily: 'monospace' });
+    }
     return styles.reduce((cur, n) => ({ ...cur, ...n }), {});
-  }, [bold, italic, underline]);
+  }, [bold, italic, underline, code]);
 
   const alignItems = React.useMemo(() => {
     if (alignCenter) {

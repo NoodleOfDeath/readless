@@ -130,9 +130,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
           <View col height='100%'>
             <View row>
               <View row>
-                <Text 
-                  left 
-                  variant='title2'>
+                <Text left>
                   Category
                 </Text>
               </View>
@@ -181,9 +179,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
           <View col>
             <View row>
               <View row>
-                <Text 
-                  left
-                  variant='title2'>
+                <Text left>
                   News Source
                 </Text>
               </View>

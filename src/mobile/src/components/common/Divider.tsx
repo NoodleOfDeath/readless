@@ -4,18 +4,11 @@ import { Divider as RNDivider, DividerProps as RNDividerProps } from 'react-nati
 
 import { useTheme } from '~/hooks';
 
-export type DividerProps = RNDividerProps & {
-  horizontal?: boolean;
-  vertical?: boolean;
-};
+export type DividerProps = RNDividerProps;
 
-export function Divider({
-  horizontal,
-  vertical = !horizontal,
-  ...dividerProps
-}: DividerProps = {}) {
+export function Divider({ ...dividerProps }: DividerProps = {}) {
   const theme = useTheme();
   return (
-    <RNDivider { ...dividerProps } orientation={ vertical ? 'vertical' : 'horizontal' } style={ theme.components.divider } />
+    <RNDivider { ...dividerProps } style={ theme.components.divider } />
   );
 }

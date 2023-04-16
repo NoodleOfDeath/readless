@@ -8,14 +8,20 @@ export const PLATFORMS = {
 
 export type Platform = typeof PLATFORMS[keyof typeof PLATFORMS];
 
+export type ReleaseOptions = {
+  updateRequired?: boolean;
+};
+
 export type ReleaseAttributes = DatedAttributes & {
   platform: Platform;
   version: string;
-  description?: string;
+  description: string;
+  options?: ReleaseOptions;
 };
 
 export type ReleaseCreationAttributes = {
   platform: Platform;
   version: string;
-  description?: string;
+  description: string;
+  options?: ReleaseOptions;
 };

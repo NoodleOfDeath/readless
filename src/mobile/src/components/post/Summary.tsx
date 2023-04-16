@@ -240,7 +240,7 @@ export function Summary({
           <View row rounded style={ theme.components.category }>
             {collapsed ? (
               <View onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
-                <Text fontSize={ 16 } color="contrastText">{summary.title.trim()}</Text>
+                <Text body1 color="contrastText">{summary.title.trim()}</Text>
               </View>
             ) : (
               <React.Fragment>
@@ -288,27 +288,27 @@ export function Summary({
             <View row justifySpaced alignCenter>
               <Button 
                 onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-                <Text underline fontSize={ 18 }>
+                <Text underline subtitle2>
                   {summary.outletAttributes?.displayName.trim()}
                 </Text>
               </Button>
               <Button 
                 onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-                <Text right fontSize={ 18 } underline>View original source</Text>
+                <Text right subtitle2 underline>View original source</Text>
               </Button>
             </View>
             <View onPress={ () => onFormatChange?.(preferredReadingFormat ?? ReadingFormat.Concise) }>
-              <Text fontSize={ 20 }>{summary.title.trim()}</Text>
+              <Text subtitle1>{summary.title.trim()}</Text>
             </View>
-            <Divider horizontal />
+            <Divider />
             <View row={ (textScale ?? 1) <= 1 } col={ (textScale ?? 1) > 1 } justifySpaced alignCenter>
               <View col alignCenter={ (textScale ?? 1) > 1 } justifyCenter>
-                <Text fontSize={ 16 }>{timeAgo}</Text>
+                <Text body1>{timeAgo}</Text>
                 <Button
                   row
                   alignCenter
                   startIcon="emoticon-sad"
-                  fontSize={ 16 }
+                  body1
                   spacing={ 4 }
                   color='primary'
                   onPress={ () => onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
@@ -320,7 +320,7 @@ export function Summary({
               </View>
               <View row alignCenter justifyEnd={ (textScale ?? 1) <= 1 }>
                 <View>
-                  <Text fontSize={ 16 }>{String(interactions.view)}</Text>
+                  <Text body1>{String(interactions.view)}</Text>
                 </View>
                 <Icon
                   name="eye"
@@ -328,13 +328,13 @@ export function Summary({
                   mh={ 4 } />
                 <Button
                   startIcon={ favorited ? 'heart' : 'heart-outline' }
-                  fontSize={ 24 }
+                  h5
                   mh={ 4 }
                   color='primary'
                   onPress={ () => onInteract?.(InteractionType.Favorite) } />
                 <View>
                   <Button
-                    fontSize={ 24 }
+                    h5
                     mh={ 4 }
                     color='primary'
                     onPress={ () => setOpenSocials(!openSocials) }
@@ -347,31 +347,31 @@ export function Summary({
                     <View style={ socialContent }>
                       <Button
                         startIcon='link-variant'
-                        fontSize={ 24 }
+                        h5
                         mv={ 4 }
                         color='primary'
                         onPress={ () => handleCopyToClipboard(content ?? SummaryUtils.shareableLink(summary, BASE_DOMAIN, format), `Copied "${SummaryUtils.shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`) } />
                       <Button
                         startIcon='content-copy'
-                        fontSize={ 24 }
+                        h5
                         mv={ 4 }
                         color='primary'
                         onPress={ () => handleCopyToClipboard(content ?? summary.title, `Summary ${format ?? 'title'} copied to clipboard`) } />
                       <Button
                         startIcon='export-variant'
-                        fontSize={ 24 }
+                        h5
                         mv={ 4 }
                         color='primary'
                         onPress={ () => handleStandardShare() } />
                       <Button
                         startIcon='instagram'
-                        fontSize={ 24 }
+                        h5
                         mv={ 4 }
                         color='primary'
                         onPress={ () => handleSocialShare(Social.InstagramStories) } />
                       <Button
                         startIcon='twitter'
-                        fontSize={ 24 }
+                        h5
                         mv={ 4 }
                         color='primary'
                         onPress={ () => handleSocialShare(Social.Twitter) } />
@@ -385,7 +385,7 @@ export function Summary({
                 format={ format } 
                 preferredFormat={ preferredReadingFormat }
                 onChange={ onFormatChange } />
-              <Divider horizontal />
+              <Divider />
               {content && (
                 <View row alignCenter justifyStart>
                   <Button
@@ -395,7 +395,7 @@ export function Summary({
                 </View>
               )}
               <View mt={ 4 }>
-                {content && <Text fontSize={ 20 } mt={ 4 }>{content}</Text>}
+                {content && <Text subtitle1 mt={ 4 }>{content}</Text>}
               </View>
             </View>
           </React.Fragment>

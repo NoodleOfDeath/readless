@@ -127,12 +127,12 @@ export function LoginForm({
     <View row>
       <ScrollView>
         <View mb={ 16 }>
-          <Text center variant="title1">{action === 'logIn' ? 'Log In' : action === 'signUp' ? 'Sign Up' : 'Forgot Password'}</Text>
+          <Text center>{action === 'logIn' ? 'Log In' : action === 'signUp' ? 'Sign Up' : 'Forgot Password'}</Text>
         </View>
         {alert && (
           <View row justifyCenter mb={ 16 }>
             <Icon name="information" color="primary" mr={ 8 } />
-            <Text variant="subtitle1">{alert}</Text>
+            <Text>{alert}</Text>
           </View>
         )}
         {loading && <ActivityIndicator />}
@@ -190,7 +190,7 @@ export function LoginForm({
               {formError && (
                 <View row center m={ 8 }>
                   <Icon name="alert-circle" color="error" mr={ 8 } />
-                  <Text variant="subtitle2" color="error">{typeof formError === 'string' ? formError : formError.message}</Text>
+                  <Text color="error">{typeof formError === 'string' ? formError : formError.message}</Text>
                 </View>
               )}
             </View>

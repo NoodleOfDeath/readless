@@ -1,25 +1,21 @@
 import React from 'react';
-import { Image, Platform } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Portal, Provider } from 'react-native-paper';
+import VersionCheck from 'react-native-version-check';
 
 import { DEFAULT_APP_STATE_CONTEXT } from './types';
 
-import { PublicSummaryAttributes } from '~/api';
+import { PublicSummaryAttributes, ReleaseAttributes } from '~/api';
 import {
+  Button,
+  Dialog,
   FeedBackDialog,
-  Icon,
-  LoginAction,
-  LoginDialog,
-  LoginDialogProps,
   ReleaseNotesCarousel,
   Text,
-  View,
 } from '~/components';
 import { SessionContext } from '~/core/contexts';
-import { useStatusClient, useTheme } from '~/hooks';
-import { StackableTabParams } from '~/screens';
+import { useStatusClient } from '~/hooks';
 
 export const AppStateContext = React.createContext(DEFAULT_APP_STATE_CONTEXT);
 
@@ -27,238 +23,99 @@ export function AppStateContextProvider({ children }: React.PropsWithChildren) {
 
   const {
     ready, 
-    preferences: { lastReleaseNotesDate }, 
+    preferences: { releases }, 
     setPreference, 
   } = React.useContext(SessionContext);
-  const { isLightMode } = useTheme();
   const { getReleases } = useStatusClient();
 
-  const [showLoginDialog, setShowLoginDialog] = React.useState<boolean>(false);
-  const [loginDialogProps, setLoginDialogProps] = React.useState<LoginDialogProps>();
   const [showFeedbackDialog, setShowFeedbackDialog] = React.useState<boolean>(false);
   const [feedbackSubject, setFeedbackSubject] = React.useState<PublicSummaryAttributes>();
-  const [deferredAction, setDeferredAction] = React.useState<() => void>();
   const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
-  const [navigation, setNavigation] = React.useState<NativeStackNavigationProp<StackableTabParams, keyof StackableTabParams>>();
+  const [releaseNotes, setReleaseNotes] = React.useState<ReleaseAttributes[]>([]);
+  const [updateRequired, setUpdateRequired] = React.useState<boolean>(false);
 
   const handleReleaseNotesClose = React.useCallback(() => {
-    setPreference('lastReleaseNotesDate', String(new Date().valueOf()));
+    setPreference('releases', (prev) => ({ ...prev }));
     setShowReleaseNotes(false);
   }, [setPreference]);
-
-  const handleLoginSuccess = React.useCallback((action: LoginAction) => {
-    if (action === 'logIn') {
-      setShowLoginDialog(false);
-    }
-  }, []);
-  
-  React.useEffect(() => {
-    if (!showLoginDialog) {
-      setLoginDialogProps(undefined);
-    }
-  }, [showLoginDialog]);
 
   const onMount = React.useCallback(async () => {
     const { data, error } = await getReleases();
     if (error) {
       console.error(error);
     } else if (data) {
-      const releases = data.rows
+      const onServerReleases = Object.fromEntries(data.rows
         .filter((release) => release.platform === Platform.OS)
-        .sort((a, b) => new Date(a.createdAt ?? 0).valueOf() - new Date(b.createdAt ?? 0).valueOf());
-      if (!lastReleaseNotesDate || (releases.length > 0 && new Date(lastReleaseNotesDate).valueOf() < new Date(releases[releases.length - 1].createdAt ?? 0).valueOf())) {
+        .map((release) => [release.version, release])) as Record<string, ReleaseAttributes>;
+      const newReleases = Object.entries(onServerReleases)
+        .filter(([version]) => !(releases ?? {})[version] && VersionCheck.getCurrentVersion() >= version)
+        .map(([, release]) => release);
+      if (newReleases.length > 0) {
+        if (newReleases.some((release) => release.options?.updateRequired === true)) {
+          console.log('Force update required');
+          setUpdateRequired(true);
+          return;
+        }
+        setReleaseNotes(newReleases);
         setShowReleaseNotes(true);
-        setPreference('lastReleaseNotesDate', releases.length > 0 ? new Date(releases[releases.length - 1].createdAt ?? Date.now()).valueOf().toString() : String(new Date().valueOf()));
+        setPreference('releases', onServerReleases);
       }
     }
-  }, [getReleases, lastReleaseNotesDate, setPreference]);
+  }, [getReleases, releases, setPreference]);
 
   React.useEffect(() => {
     if (!ready) {
       return;
     }
     onMount();
+    setShowReleaseNotes(true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready]);
-
-  const transformAsset = (asset: string, ext = 'jpg') => {
-    if (Platform.OS === 'ios') {
-      return asset;
-    }
-    return `asset:/images/${asset}.${ext}`;
-  };
-  
-  const releaseNotesData = React.useMemo(() => [
-    {
-      content: (
-        <View col justifyCenter>
-          <Text 
-            center
-            fontSize={ 24 }
-            color='contrastText'>
-            Read Less uses generative AI to summarize news into shorter formats!
-          </Text>
-          <View alignCenter justifyCenter mv={ 8 }>
-            <Image 
-              source={ { uri: transformAsset(!isLightMode ? 'GuideReadingFormatDark' : 'GuideReadingFormatLight') } } 
-              style={ { aspectRatio: 1, width: '80%' } } />
-          </View>
-          <Text
-            center
-            fontSize={ 24 }
-            color='contrastText'
-            mb={ 16 }>
-            You can set your preferred reading format in settings
-          </Text>
-          <Text
-            center
-            fontSize={ 20 }
-            color='contrastText'>
-            Swipe this card to continue
-            <Icon name='arrow-right' color='contrastText' fontSize={ 24 } />
-          </Text>
-        </View>
-      ),
-    },
-    {
-      content: (
-        <View col justifyCenter>
-          <Text 
-            center
-            fontSize={ 24 }
-            color='contrastText'>
-            No time to read now?
-          </Text>
-          <View alignCenter justifyCenter mv={ 8 }>
-            <Image 
-              source={ { uri: transformAsset(!isLightMode ? 'GuideBookmarkDark' : 'GuideBookmarkLight') } } 
-              style={ { aspectRatio: 1, width: '80%' } } />
-          </View>
-          <Text
-            center
-            fontSize={ 24 }
-            color='contrastText'
-            mb={ 16 }>
-            Bookmark it, then read offline 
-            under &apos;My Stuff&apos;
-          </Text>
-          <Text
-            center
-            fontSize={ 20 }
-            color='contrastText'>
-            I promise, only 2 more cards...
-            <Icon name='arrow-right' color='contrastText' fontSize={ 24 } />
-          </Text>
-        </View>
-      ),
-    },
-    {
-      content: (
-        <View col justifyCenter>
-          <Text 
-            center
-            fontSize={ 24 }
-            color='contrastText'>
-            A.I. is not infallible.
-          </Text>
-          <View alignCenter justifyCenter mv={ 8 }>
-            <Image 
-              source={ { uri: transformAsset(!isLightMode ? 'GuideViewSourceDark' : 'GuideViewSourceLight') } } 
-              style={ { aspectRatio: 4/3, width: '80%' } } />
-          </View>
-          <Text
-            center
-            fontSize={ 24 }
-            color='contrastText'
-            mb={ 8 }>
-            It is important to always DYOR. Original sources are always included.
-          </Text>
-          <Text
-            center
-            color='contrastText'
-            mb={ 16 }>
-            (but if we can help you avoid clickbait that&apos;s a plus!)
-          </Text>
-          <Text
-            center
-            fontSize={ 20 }
-            color='contrastText'>
-            Just one more!
-            <Icon name='arrow-right' color='contrastText' fontSize={ 24 } />
-          </Text>
-        </View>
-      ),
-    },
-    {
-      content: (
-        <View col justifyCenter>
-          <Text 
-            center
-            fontSize={ 24 }
-            color='contrastText'>
-            As a totally free app, we hope you can be patient with updates!
-          </Text>
-          <Text
-            center
-            fontSize={ 24 }
-            color='contrastText'
-            mb={ 8 }>
-            We welcome any feedback! You can email your ideas to
-          </Text>
-          <Text
-            center
-            fontSize={ 24 }
-            color='#aaaaff'
-            mb={ 16 }>
-            feedback@readless.ai
-          </Text>
-          <Text
-            center
-            fontSize={ 20 }
-            color='contrastText'>
-            Last one!
-            <Icon name='arrow-right' color='contrastText' fontSize={ 24 } />
-          </Text>
-        </View>
-      ),
-    },
-    { content: <div></div> },
-  ], [isLightMode]);
   
   return (
     <AppStateContext.Provider value={ {
-      deferredAction,
       feedbackSubject,
-      loginDialogProps,
-      navigation,
-      setDeferredAction,
       setFeedbackSubject,
-      setLoginDialogProps,
-      setNavigation,
       setShowFeedbackDialog,
-      setShowLoginDialog,
       showFeedbackDialog,
-      showLoginDialog,
     } }>
       <Provider>
         {children}
-        {showReleaseNotes && (
+        {ready && showReleaseNotes && releaseNotes.length > 0 && (
           <ReleaseNotesCarousel 
-            data={ releaseNotesData } 
+            data={ releaseNotes } 
             onClose={ () => handleReleaseNotesClose() } />
         )}
         <Portal>
+          {updateRequired && (
+            <Dialog
+              visible
+              title="Update Required"
+              actions={ [
+                <Button
+                  p={ 8 }
+                  outlined
+                  rounded
+                  key='update'
+                  onPress={ () => {
+                    if (Platform.OS === 'ios') {
+                      Linking.openURL('https://apps.apple.com/us/app/read-less-news/id6447275859?itsct=apps_box_badge&itscg=30200');
+                    } else if (Platform.OS === 'android') {
+                      Linking.openURL('https://play.google.com/store/apps/details?id=com.readless');
+                    }
+                  } }>
+                  Update Now
+                </Button>,
+              ] }>
+              <Text>Sorry for being obnoxious and forcing you to update the app!</Text>
+            </Dialog>
+          )}
           {feedbackSubject && (
             <FeedBackDialog
               summary={ feedbackSubject }
               visible={ showFeedbackDialog }
               onClose={ () => setShowFeedbackDialog(false) } />
           )}
-          <LoginDialog 
-            visible={ showLoginDialog }
-            onClose={ () => setShowLoginDialog(false) }
-            onSuccess={ (action) => handleLoginSuccess(action) }
-            { ...loginDialogProps } />
         </Portal>
       </Provider>
     </AppStateContext.Provider>

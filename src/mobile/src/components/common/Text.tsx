@@ -7,13 +7,11 @@ import { useStyles, useTheme } from '~/hooks';
 
 export type TextProps = Stylable<TextStyle> & React.PropsWithChildren<{
   color?: keyof ReturnType<typeof useTheme>['colors'] | string;
-  variant?: keyof ReturnType<typeof useTheme>['typography'];
 }>;
 
 export function Text({
   children,
-  color = 'text',
-  variant = 'base',
+  color,
   ...styleProps
 }: TextProps) {
   
@@ -23,30 +21,16 @@ export function Text({
   const { textAlign, ...otherStyles } = useStyles(styleProps);
   
   const style = React.useMemo(() => ({
-    ...theme.typography[variant],
-    color: Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color,
+    ...theme.components.text,
+    color: color && Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color,
+    fontSize: (otherStyles.fontSize ?? 14) * textScale,
     textAlign,
     ...otherStyles,
-    fontSize: (otherStyles.fontSize ?? 20) * textScale,
-  }), [color, otherStyles, textAlign, textScale, theme, variant]);
+  }), [color, otherStyles, textAlign, textScale, theme]);
   
   return (
-    <View style={ otherStyles }><RNText style={ style }>{children}</RNText></View>
+    <View style={ otherStyles }>
+      <RNText style={ style }>{children}</RNText>
+    </View>
   );
-}
-
-export function Code({ children, ...props }: TextProps) {
-  return <Text variant="code" { ...props }>{children}</Text>;
-}
-
-export function Strong({ children, ...props }: TextProps) {
-  return <Text bold { ...props }>{children}</Text>;
-}
-
-export function Em({ children, ...props }: TextProps) {
-  return <Text italic { ...props }>{children}</Text>;
-}
-
-export function StrongEm({ children, ...props }: TextProps) {
-  return <Text bold italic { ...props }>{children}</Text>;
 }

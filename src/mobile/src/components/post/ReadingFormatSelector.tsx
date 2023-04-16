@@ -29,6 +29,7 @@ export function ReadingFormatSelector({
   const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
     return (
       <Button
+        body2
         selectable
         outlined
         row
@@ -37,7 +38,6 @@ export function ReadingFormatSelector({
         justifyCenter
         color={ 'primary' }
         spacing={ 8 }
-        fontSize={ 16 }
         p={ 8 }
         startIcon={ FORMAT_ICONS[newFormat] }
         width={ row === 0 ? '33.33%' : '50%' }

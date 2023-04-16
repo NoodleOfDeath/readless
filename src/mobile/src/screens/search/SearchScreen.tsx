@@ -193,7 +193,7 @@ export function SearchScreen({
         )}
         {!loading && onlyCustomNews && recentSummaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
-            <Text fontSize={ 20 } pb={ 8 }>
+            <Text subtitle1 pb={ 8 }>
               It seems your filters are too specific. You may want to consider 
               adding more categories and/or news sources to your follow list.
             </Text>

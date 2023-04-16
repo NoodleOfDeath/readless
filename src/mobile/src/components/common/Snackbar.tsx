@@ -11,6 +11,6 @@ export function Snackbar(props: SnackbarProps) {
   return (
     <RNPSnackbar 
       { ...props }
-      style={ [theme.components.dialog, props.style] } />
+      style={ [theme.components.toastDefault, props.style] } />
   );
 }
