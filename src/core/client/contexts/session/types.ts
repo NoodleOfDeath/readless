@@ -83,6 +83,5 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   setUserData: () => {
     /* placeholder function */
   },
-  systemColorMode:  'light',
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };
