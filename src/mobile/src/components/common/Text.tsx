@@ -23,10 +23,10 @@ export function Text({
   const style = React.useMemo(() => ({
     ...theme.components.text,
     color: color && Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color,
-    fontSize: (otherStyles.fontSize ?? 14) * textScale,
     textAlign,
     ...otherStyles,
-  }), [color, otherStyles, textAlign, textScale, theme]);
+    fontSize: (styleProps.fontSize ?? otherStyles.fontSize ?? 14) * textScale,
+  }), [color, otherStyles, styleProps, textAlign, textScale, theme]);
   
   return (
     <View style={ otherStyles }>
