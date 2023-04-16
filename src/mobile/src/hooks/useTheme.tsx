@@ -45,6 +45,7 @@ const makeTheme = (lightMode: boolean) => {
           borderWidth: 5,
         },
         divider: {
+          backgroundColor: lightMode ? '#222' : '#ddd',
           height: StyleSheet.hairlineWidth,
           marginBottom: 6,
           marginTop: 6,
@@ -81,6 +82,14 @@ const makeTheme = (lightMode: boolean) => {
           overflow: 'hidden',
           width: '100%',
         },
+        text: { fontFamily: 'Lato' },
+        toastDefault: {
+          backgroundColor: lightMode ? '#ddd' : '#111',
+          borderColor: '#8b0000',
+          borderRadius: 8,
+          borderWidth: 5,
+          color: lightMode ? '#000' : '#fff',
+        },
       }),
     },
     isLightMode: lightMode,   
@@ -91,63 +100,6 @@ const makeTheme = (lightMode: boolean) => {
       notification: '#8b0000',
       primary: '#8b0000',
       text: lightMode ? '#212121' : '#fff',
-    },
-    typography: {
-      ...StyleSheet.create({
-      // typographies
-        base: { fontFamily: 'Lato' },
-        body1: {
-          fontFamily: 'Lato',
-          fontSize: 16, // normal
-        },
-        body2: {
-          fontFamily: 'Lato',
-          fontSize: 14,
-        },
-        caption: {
-          fontFamily: 'Lato',
-          fontSize: 13,
-        },
-        code: { fontFamily: 'DM Mono' },
-        subtitle1: {
-          fontFamily: 'Lato',
-          fontSize: 16,
-          paddingBottom: 2,
-          paddingTop: 2,
-        },
-        subtitle1Center: {
-          fontFamily: 'Lato',
-          fontSize: 16,
-          justifyContent: 'center',
-          paddingBottom: 2,
-          paddingTop: 2,
-          textAlign: 'center',
-        },
-        subtitle2: {
-          fontFamily: 'Lato',
-          fontSize: 15, 
-          paddingBottom: 2,
-          // normal
-          paddingTop: 2,
-        },
-        title1: {
-          fontFamily: 'Lato',
-          fontSize: 20,
-          paddingBottom: 2,
-          paddingTop: 2,
-        },
-        title2: {
-          fontFamily: 'Lato',
-          fontSize: 18,
-          paddingBottom: 2,
-          paddingTop: 2,
-        },
-        titleBold: {
-          fontFamily: 'Lato',
-          fontSize: 20,
-          fontWeight: 'bold',
-        },
-      }),   
     },
   };
 };

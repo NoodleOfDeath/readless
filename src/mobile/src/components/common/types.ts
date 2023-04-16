@@ -14,6 +14,18 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   justifyStart?: boolean;
   justifyEnd?: boolean;
   justifySpaced?: boolean;
+  // typographies
+  caption?: boolean;
+  subtitle1?: boolean;
+  subtitle2?: boolean;
+  body1?: boolean;
+  body2?: boolean;
+  h1?: boolean;
+  h2?: boolean;
+  h3?: boolean;
+  h4?: boolean;
+  h5?: boolean;
+  h6?: boolean;
   // text styling
   color?: string;
   center?: boolean;
@@ -23,6 +35,7 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   bold?: boolean;
   italic?: boolean;
   underline?: boolean;
+  code?: boolean;
   // margins
   m?: number;
   mh?: number;

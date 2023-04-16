@@ -4,7 +4,7 @@ import { Portal } from 'react-native-paper';
 
 import { DEFAULT_TOAST_CONTEXT } from './types';
 
-import { Snackbar, View } from '~/components';
+import { Snackbar } from '~/components';
 import { SessionContext } from '~/contexts';
 
 export const ToastContext = React.createContext(DEFAULT_TOAST_CONTEXT);
@@ -37,11 +37,11 @@ export function ToastContextProvider({ children }: Props) {
             key={ id } 
             visible
             duration={ toast.duration }
-            style={ { bottom: i * 85 * (textScale * 1) } }
+            style={ { bottom: i * 85 * (textScale ?? 1) } }
             onDismiss={ () => {
               setToasts((prev) => {
                 const state = { ...prev };
-                delete state[id];
+                delete state[Number(id)];
                 return (prev = state);
               });
             } }>

@@ -21,7 +21,7 @@ type OptionProps = React.PropsWithChildren<{
   visible?: boolean;
 }>;
 
-const displayModes = ['light', undefined, 'dark'] as ColorMode[];
+const displayModes = ['light', 'system', 'dark'];
 const textScales = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
@@ -50,7 +50,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       return;
     }
     setActiveDisplayMode(index);
-    setPreference('displayMode', newDisplayMode);
+    setPreference('displayMode', newDisplayMode === 'system' ? undefined : newDisplayMode as ColorMode);
   }, [displayMode, setPreference]);
 
   const handleReadingFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
@@ -88,17 +88,17 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
                   key="light"
                   alignCenter
                   justifyCenter>
-                  <Icon name="weather-sunny" fontSize={ 40 } />
-                  <Text center fontSize={ 16 }>
+                  <Icon name="weather-sunny" h1 />
+                  <Text center body1>
                     Light
                   </Text>
                 </View>,
                 <View
-                  key="system"
+                  key={ undefined }
                   alignCenter
                   justifyCenter>
-                  <Icon name="theme-light-dark" fontSize={ 40 } />
-                  <Text center fontSize={ 16 }>
+                  <Icon name="theme-light-dark" h1 />
+                  <Text center body1>
                     System
                   </Text>
                 </View>,
@@ -106,8 +106,8 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
                   key="dark"
                   alignCenter
                   justifyCenter>
-                  <Icon name="weather-night" fontSize={ 40 } />
-                  <Text center fontSize={ 16 }>
+                  <Icon name="weather-night" h1 />
+                  <Text center body1>
                     Dark
                   </Text>
                 </View>,
@@ -153,7 +153,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             rounded
             p={ 8 }
             onPress={ handleResetRemovedContent }
-            fontSize={ 24 }>
+            h5>
             Reset Content Marked Offensive/Spam (
             {Object.values(removedSummaries ?? {}).length}
             )

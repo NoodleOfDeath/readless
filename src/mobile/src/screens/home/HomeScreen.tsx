@@ -32,12 +32,12 @@ const routes: RouteProp<StackableTabParams, 'search'>[] = [
 export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   
   const router = React.useCallback(({ url }: { url: string }) => {
-    // http://mac.local:6969/read/?s=150&f=casual
-    // https://dev.readless.ai/read/?s=150&f=casual
+    // http://localhost:6969/read/?s=158&f=casual
+    // https://dev.readless.ai/read/?s=158&f=casual
     // https://www.readless.ai/read/?s=4070&f=bullets
     // readless://read/?s=4070
     const [path, query] = url.split('?');
-    const expr = /^(?:readless|https?):\/\/(?:(?:www\.)?readless\.ai\/)?(\w+)\/?/;
+    const expr = /^(?:readless|https?):\/\/(?:(?:dev|www\.)?readless\.ai\/)?(\w+)\/?/;
     const [, route] = path.match(expr) ?? [];
     const params: Record<string, string> = {};
     if (query) {
@@ -55,13 +55,6 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
       navigation?.navigate('summary', { initialFormat, summary });
     }
   }, [navigation]);
-
-  React.useEffect(() => {
-    Linking.addEventListener('url', router);
-    return () => {
-      Linking.removeAllListeners('url');
-    };
-  }, [router]);
   
   const {
     preferences: {
@@ -80,11 +73,16 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
     setTimeout(() => setRefreshing(false), 100);
   };
   
-  const onMount = React.useCallback(() => {
+  const onMount = React.useCallback(async () => {
+    const url = await Linking.getInitialURL();
+    if (url) {
+      router({ url });
+    }
+    Linking.addEventListener('url', router);
     const followCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
     setActiveTab(followCount > 0 ? 1 : 0);
     setMounted(true);
-  }, [bookmarkedCategories, bookmarkedOutlets]);
+  }, [bookmarkedCategories, bookmarkedOutlets, router]);
   
   React.useEffect(() => {
     if (!ready || mounted) {

@@ -5,7 +5,11 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { Platform, ReleaseAttributes } from './Release.types';
+import {
+  Platform,
+  ReleaseAttributes,
+  ReleaseOptions,
+} from './Release.types';
 import { BaseModel } from '../base';
 
 @Table({
@@ -27,7 +31,17 @@ export class Release extends BaseModel<ReleaseAttributes, ReleaseAttributes> imp
   })
   declare version: string;
 
-  @Column({ type: DataType.TEXT })
-  declare description?: string;
+  @Column({ 
+    allowNull: false,
+    defaultValue: '',
+    type: DataType.TEXT,
+  })
+  declare description: string;
+
+  @Column({
+    allowNull: true,
+    type: DataType.JSON,
+  })
+  declare options?: ReleaseOptions;
     
 }

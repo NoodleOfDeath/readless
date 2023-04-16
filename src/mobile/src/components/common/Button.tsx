@@ -22,9 +22,9 @@ export type ButtonProps = PressableProps & ViewProps & {
 };
 
 export const BUTTON_SIZES = {
-  big: 32,
-  normal: 20,
-  small: 16,
+  big: 24,
+  normal: 16,
+  small: 13,
 };
 
 export function Button({

@@ -25,10 +25,11 @@ export function ReadingFormatSelector({
   onChange,
 }: Props = {}) {
   const theme = useTheme();
-  const { preferences: { compactMode } } = React.useContext(SessionContext);
+  const { preferences: { compactMode, textScale } } = React.useContext(SessionContext);
   const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
     return (
       <Button
+        body2
         selectable
         outlined
         row
@@ -36,9 +37,8 @@ export function ReadingFormatSelector({
         alignCenter
         justifyCenter
         color={ 'primary' }
-        spacing={ 8 }
-        fontSize={ 16 }
-        p={ 8 }
+        spacing={ 8 * (textScale ?? 1) }
+        p={ 8 * (textScale ?? 1) }
         startIcon={ FORMAT_ICONS[newFormat] }
         width={ row === 0 ? '33.33%' : '50%' }
         selected={ format === newFormat }
@@ -47,7 +47,7 @@ export function ReadingFormatSelector({
         {!compactMode && newFormat}
       </Button>
     );
-  }, [compactMode, format, preferredFormat, onChange]);
+  }, [compactMode, format, preferredFormat, onChange, textScale]);
 
   return (
     compactMode ? (

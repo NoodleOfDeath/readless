@@ -116,7 +116,8 @@ export function MediaContextProvider({ children }: Props) {
         <Portal>
           <FAB 
             icon='stop'
-            visible />
+            visible
+            onPress={ () => cancelTts() } />
         </Portal>
       )}
     </MediaContext.Provider>

@@ -8,6 +8,7 @@ import {
   PublicOutletAttributes,
   PublicSummaryAttributes,
   ReadingFormat,
+  ReleaseAttributes,
   RequestParams,
 } from '~/api';
 
@@ -34,7 +35,7 @@ export class Bookmark<T> {
 
 export type Preferences = {
   displayMode?: ColorMode;
-  lastReleaseNotesDate?: string;
+  releases?: Record<string, ReleaseAttributes>;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;

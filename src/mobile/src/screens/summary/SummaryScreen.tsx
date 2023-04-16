@@ -25,6 +25,7 @@ export function SummaryScreen({
   const { getSummary, handleInteraction } = useSummaryClient();
 
   const [loading, setLoading] = React.useState(false);
+  const [reloadId, setReloadId] = React.useState(0);
   const [summary, setSummary] = React.useState<PublicSummaryAttributes>();
   const [format, setFormat] = React.useState(route?.params?.initialFormat);
 
@@ -70,8 +71,10 @@ export function SummaryScreen({
   React.useEffect(() => {
     const summary = route?.params?.summary;
     if (typeof summary === 'number') {
+      setReloadId(summary);
       load(summary);
     } else {
+      setReloadId(summary?.id ?? 0);
       setSummary(summary);
     }
   }, [load, route?.params?.summary]);
@@ -79,13 +82,13 @@ export function SummaryScreen({
   return (
     <Screen
       refreshing={ loading }
-      onRefresh={ () => load(summary?.id) }>
+      onRefresh={ () => load(reloadId) }>
       <View mt={ 10 } mh={ 16 }>
         {loading ? (
           <View alignCenter justifyCenter>
             <ActivityIndicator size="large" />
           </View>
-        ) : (!!summary && (
+        ) : (summary && (
           <Summary
             summary={ summary }
             format={ format }
