@@ -69,7 +69,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
         .filter((release) => release.platform === Platform.OS)
         .map((release) => [release.version, release])) as Record<string, ReleaseAttributes>;
       const newReleases = Object.entries(onServerReleases)
-        .filter(([version]) => !(releases ?? {})[version] && VersionCheck.getCurrentVersion() < version)
+        .filter(([version]) => !(releases ?? {})[version] && VersionCheck.getCurrentVersion() <= version)
         .map(([, release]) => release);
       if (newReleases.length > 0) {
         if (newReleases.some((release) => release.options?.updateRequired === true)) {

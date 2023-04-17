@@ -255,6 +255,7 @@ export function Summary({
               <View row alignCenter justifyEnd>
                 <Button
                   justifyEnd
+                  alignCenter
                   row
                   spacing={ 4 }
                   startIcon={ playingAudio ? 'stop' : 'volume-source' }
