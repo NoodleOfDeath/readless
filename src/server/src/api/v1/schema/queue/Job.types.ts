@@ -32,5 +32,6 @@ export type JobCreationAttributes<DataType extends Serializable, ReturnType, Que
 export type SiteMapJobData = {
   outlet: string;
   url: string; 
+  content?: string;
   force?: boolean;
 };

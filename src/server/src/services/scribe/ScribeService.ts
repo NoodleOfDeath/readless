@@ -21,7 +21,7 @@ export class ScribeService extends BaseService {
   }
   
   public static async readAndSummarize(
-    { url }: ReadAndSummarizePayload,
+    { url, content }: ReadAndSummarizePayload,
     {
       onProgress, force, outletId, 
     }: ReadAndSummarizeOptions = {}
@@ -41,18 +41,26 @@ export class ScribeService extends BaseService {
     } else {
       console.log(`Forcing summary rewrite for ${url}`);
     }
-    // fetch web content with the spider
-    const spider = new SpiderService();
-    const loot = await spider.loot(url);
-    // create the prompt onReply map to be sent to chatgpt
-    if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
-      throw new Error('Article too long for OpenAI');
+    let subjectContent = content;
+    let originalTitle = '';
+    let rawText = content;
+    if (!subjectContent) {
+      // fetch web content with the spider
+      const spider = new SpiderService();
+      const loot = await spider.loot(url);
+      // create the prompt onReply map to be sent to chatgpt
+      if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
+        throw new Error('Article too long for OpenAI');
+      }
+      subjectContent = loot.filteredText;
+      originalTitle = loot.title;
+      rawText = loot.text;
     }
     const newSummary = Summary.json<Summary>({
-      filteredText: loot.filteredText,
-      originalTitle: loot.title,
+      filteredText: subjectContent,
+      originalTitle,
       outletId,
-      rawText: loot.text,
+      rawText,
       url,
     });
     const prompts: Prompt[] = [

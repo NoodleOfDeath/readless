@@ -6,4 +6,5 @@ export type ReadAndSummarizeOptions = {
 
 export type ReadAndSummarizePayload = {
   url: string;
+  content?: string;
 };
