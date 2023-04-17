@@ -36,6 +36,7 @@ export class Bookmark<T> {
 export type Preferences = {
   displayMode?: ColorMode;
   releases?: Record<string, ReleaseAttributes>;
+  alwaysShowReadingFormatSelector?: boolean;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;
@@ -72,6 +73,8 @@ export type SessionContextType = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
+
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { alwaysShowReadingFormatSelector: true };
 
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   addUserToken: () => {

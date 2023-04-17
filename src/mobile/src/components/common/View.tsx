@@ -28,13 +28,13 @@ export function View({
       return (
         <View style={ {
           ...StyleSheet.absoluteFillObject, 
-          backgroundColor: theme.colors.primary, 
+          backgroundColor: theme.colors.inactive, 
           borderRadius: style.borderRadius ?? 0,
-          opacity: 0.5,
+          opacity: 0.3,
         } } />
       );
     }
-  }, [inactive, style.borderRadius, theme.colors.primary]);
+  }, [inactive, style.borderRadius, theme.colors.inactive]);
   return (pressable || props.onPress) ? (
     <TouchableHighlight { ...props } style={ style } underlayColor="transparent">
       <React.Fragment>

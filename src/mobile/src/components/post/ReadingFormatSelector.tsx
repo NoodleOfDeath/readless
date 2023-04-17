@@ -29,7 +29,7 @@ export function ReadingFormatSelector({
   const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
     return (
       <Button
-        body2
+        caption
         selectable
         outlined
         row
@@ -50,7 +50,7 @@ export function ReadingFormatSelector({
   }, [compactMode, format, preferredFormat, onChange, textScale]);
 
   return (
-    <View shadowed>
+    <View>
       {compactMode ? (
         <View row rounded outlined style={ theme.components.buttonGroup }>
           {makeButton(ReadingFormat.Concise)}

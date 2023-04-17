@@ -110,7 +110,7 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
                 navigation={ navigation } />
             )}
           </View>
-          <View ph={ -16 }>
+          <View mh={ -16 }>
             {!refreshing && (
               <SearchScreen 
                 route={ routes[1] }

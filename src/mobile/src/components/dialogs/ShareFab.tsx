@@ -15,7 +15,7 @@ import {
 } from '~/api';
 import { Text } from '~/components';
 import { ToastContext } from '~/contexts';
-import {  useTheme } from '~/hooks';
+import {  useOrientation, useTheme } from '~/hooks';
 import { SummaryUtils } from '~/utils';
 
 export type ShareFabProps = Partial<FABGroupProps> & {
@@ -59,6 +59,7 @@ export function ShareFab({
   ...other
 }: ShareFabProps) {
   const theme = useTheme();
+  const orientation = useOrientation();
   const toast = React.useContext(ToastContext);
 
   const handleCopyToClipboard = React.useCallback(async (content: string, message: string) => {

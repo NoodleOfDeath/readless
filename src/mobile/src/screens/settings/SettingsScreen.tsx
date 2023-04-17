@@ -31,9 +31,10 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
   const {
     preferences: {
       textScale, 
+      alwaysShowReadingFormatSelector,
+      preferredReadingFormat,
       compactMode,
       displayMode,
-      preferredReadingFormat,
       removedSummaries,
       readSummaries,
     }, 
@@ -118,6 +119,13 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       },
       {
         children: (
+          <Switch value={ alwaysShowReadingFormatSelector } onValueChange={ (newValue) => setPreference('alwaysShowReadingFormatSelector', newValue) } />
+        ),
+        id: 'always-show-reading-format',
+        label: 'Always Show Reading Format Selector',
+      },
+      {
+        children: (
           <ReadingFormatSelector 
             format={ preferredReadingFormat }
             preferredFormat={ preferredReadingFormat }
@@ -151,8 +159,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             outlined
             rounded
             p={ 8 }
-            onPress={ () => setPreference('readSummaries', {}) }
-            h5>
+            onPress={ () => setPreference('readSummaries', {}) }>
             Reset Read Articles to Unread (
             {Object.values(readSummaries ?? {}).length}
             )
@@ -167,8 +174,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             outlined
             rounded
             p={ 8 }
-            onPress={ () => setPreference('removedSummaries', {}) }
-            h5>
+            onPress={ () => setPreference('removedSummaries', {}) }>
             Reset Content Marked Offensive/Spam (
             {Object.values(removedSummaries ?? {}).length}
             )
@@ -178,7 +184,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Reset Removed Content',
       },
     ];
-  }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference]);
+  }, [activeDisplayMode, textScale, handleDisplayModeChange, alwaysShowReadingFormatSelector, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference]);
   
   return (
     <Screen>

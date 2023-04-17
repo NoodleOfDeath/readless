@@ -7,6 +7,7 @@ export const INTERACTION_TYPES = {
   downvote: 'downvote',
   favorite: 'favorite',
   feedback: 'feedback',
+  hide: 'hide',
   listen: 'listen',
   read: 'read',
   share: 'share',

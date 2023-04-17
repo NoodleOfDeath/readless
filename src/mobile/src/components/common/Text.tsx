@@ -1,11 +1,15 @@
 import React from 'react';
-import { Text as RNText, TextStyle } from 'react-native';
+import {
+  Text as RNText,
+  TextProps as RNTextProps,
+  TextStyle,
+} from 'react-native';
 
 import { Stylable, View } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useStyles, useTheme } from '~/hooks';
 
-export type TextProps = Stylable<TextStyle> & React.PropsWithChildren<{
+export type TextProps = Stylable<TextStyle> & RNTextProps & React.PropsWithChildren<{
   color?: keyof ReturnType<typeof useTheme>['colors'] | string;
 }>;
 
@@ -30,7 +34,7 @@ export function Text({
   
   return (
     <View style={ otherStyles }>
-      <RNText style={ style }>{children}</RNText>
+      <RNText { ...styleProps } style={ style }>{children}</RNText>
     </View>
   );
 }

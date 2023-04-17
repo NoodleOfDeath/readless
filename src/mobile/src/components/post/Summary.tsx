@@ -52,7 +52,12 @@ export function Summary({
   const theme = useTheme();
   const {
     preferences: {
-      preferredReadingFormat, bookmarkedSummaries, favoritedSummaries, readSummaries, textScale, 
+      alwaysShowReadingFormatSelector, 
+      preferredReadingFormat, 
+      bookmarkedSummaries, 
+      favoritedSummaries,
+      readSummaries,
+      textScale, 
     }, setPreference, 
   } = React.useContext(SessionContext);
   const {
@@ -139,6 +144,7 @@ export function Summary({
 
   const renderLeftActions = React.useCallback(() => {
     const onPress = () => setPreference('readSummaries', (prev) => {
+      onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !isRead });
       const newBookmarks = { ...prev };
       if (isRead) {
         delete newBookmarks[summary.id];
@@ -153,29 +159,35 @@ export function Summary({
         justifyCenter>
         <View col p={ 8 } mb={ 8 }>
           <Button
-            col
+            col={ !isRead }
+            row ={ isRead }
+            width={ 120 }
+            spacing={ 4 }
+            mv={ 4 }
+            p={ 8 }
             alignCenter
             justifyCenter
             rounded
             shadowed
             bg={ theme.colors.primary }
             color="white"
-            mv={ 4 }
-            p={ 16 }
-            startIcon={ isRead ? 'email-mark-as-unread' : 'read' }
+            startIcon={ isRead ? 'email-mark-as-unread' : 'email-open' }
             onPress={ onPress }>
             {isRead ? 'Mark as Unread' : 'Mark as Read'}
           </Button>
           <Button 
-            col
+            col={ !isRead }
+            row ={ isRead }
+            width={ 120 }
+            spacing={ 4 }
+            mv={ 4 }
+            p={ 8 }
             alignCenter
             justifyCenter
             rounded
             shadowed
             bg={ theme.colors.primary }
             color="white"
-            mv={ 4 }
-            p={ 16 }
             startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
             onPress={ () => onInteract?.(InteractionType.Bookmark) }>
             Read Later
@@ -187,7 +199,7 @@ export function Summary({
   
   const renderRightActions = React.useCallback(() => {
     const hide = () => {
-      onInteract?.(InteractionType.Feedback, 'hide', undefined, () => {
+      onInteract?.(InteractionType.Hide, undefined, undefined, () => {
         setPreference('removedSummaries', (prev) => ({
           ...prev,
           [summary.id]: new Bookmark(summary),
@@ -205,29 +217,35 @@ export function Summary({
         justifyCenter>
         <View col p={ 8 } mb={ 8 }>
           <Button
-            col
+            col={ !isRead }
+            row ={ isRead }
+            width={ 120 }
+            spacing={ 4 }
+            mv={ 4 }
+            p={ 8 }
             alignCenter
             justifyCenter
             rounded
             shadowed
             bg={ theme.colors.primary }
-            mv={ 4 }
-            p={ 16 }
             color="white"
             startIcon={ 'eye-off' }
             onPress={ hide }>
             Hide
           </Button>
           <Button
-            col
+            col={ !isRead }
+            row ={ isRead }
+            width={ 120 }
+            spacing={ 4 }
+            mv={ 4 }
+            p={ 8 }
             alignCenter
             justifyCenter
             rounded
             shadowed
             bg={ theme.colors.primary }
             color="white"
-            mv={ 4 }
-            p={ 16 }
             startIcon={ 'bug' }
             onPress={ report }>
             Report a Bug
@@ -235,102 +253,115 @@ export function Summary({
         </View>
       </View>
     );
-  }, [theme.colors.primary, onInteract, setShowFeedbackDialog, summary, setPreference]);
+  }, [isRead, theme.colors.primary, onInteract, setPreference, summary, setShowFeedbackDialog]);
   
   return (
     <ViewShot ref={ viewshot }>
       <Swipeable 
         renderLeftActions={ renderLeftActions }
         renderRightActions={ renderRightActions }>
-        <View rounded shadowed style={ theme.components.card } inactive={ isRead }>
-          <View row alignCenter>
-            <View row rounded style={ theme.components.category }>
-              <View 
-                row
-                alignCenter
-                onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
-                {summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } />}
-                <Text color='contrastText'>{summary.categoryAttributes?.displayName}</Text>
+        <View rounded outlined style={ theme.components.card } inactive={ isRead }>
+          {!isRead && (
+            <React.Fragment>
+              <View row alignCenter>
+                <View row alignCenter rounded style={ theme.components.category }>
+                  <View>
+                    <Button 
+                      row
+                      alignCenter
+                      justifyEnd
+                      spacing={ 8 }
+                      color="contrastText"
+                      startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } /> }
+                      onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
+                      {summary.categoryAttributes?.displayName}
+                    </Button>
+                  </View>
+                  <Button
+                    justifyEnd
+                    alignCenter
+                    row
+                    spacing={ 4 }
+                    color="contrastText"
+                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                    onPress={ () => handlePlayAudio(summary.title) }
+                    mr={ 8 }>
+                    { playingAudio ? 'Stop' : 'Play' }
+                  </Button>
+                </View>
               </View>
-              <View row alignCenter justifyEnd>
-                <Button
-                  justifyEnd
-                  alignCenter
-                  row
-                  spacing={ 4 }
-                  startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                  onPress={ () => handlePlayAudio(summary.title) }
-                  color={ 'contrastText' }
-                  mr={ 8 }>
-                  Play Headline as Audio
+              <View row justifySpaced alignCenter mb={ 8 }>
+                <Button 
+                  subtitle2
+                  underline
+                  onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
+                  {summary.outletAttributes?.displayName.trim()}
+                </Button>
+                <Button 
+                  subtitle2
+                  underline
+                  onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
+                  View original source
                 </Button>
               </View>
-            </View>
-          </View>
-          <View row justifySpaced alignCenter>
-            <Button 
-              onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-              <Text underline subtitle2>
-                {summary.outletAttributes?.displayName.trim()}
-              </Text>
-            </Button>
-            <Button 
-              onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-              <Text right subtitle2 underline>View original source</Text>
-            </Button>
-          </View>
+            </React.Fragment>
+          )}
           <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
-            <Text subtitle1>{summary.title.trim()}</Text>
+            <Text numberOfLines={ isRead ? 2 : 10 } ellipsizeMode='tail' subtitle1>{summary.title.trim()}</Text>
           </View>
           <Divider />
           <View row={ (textScale ?? 1) <= 1 } col={ (textScale ?? 1) > 1 } justifySpaced alignCenter>
             <View col alignCenter={ (textScale ?? 1) > 1 } justifyCenter>
-              <Text body1>{timeAgo}</Text>
+              <Text subtitle2>{timeAgo}</Text>
             </View>
             <View row alignCenter justifyEnd={ (textScale ?? 1) <= 1 }>
-              <View>
-                <Text body1>{String(interactions.view)}</Text>
+              <View mr={ 4 }>
+                <Text h6>{String(interactions.view)}</Text>
               </View>
               <Icon
+                h6
                 name="eye"
                 color={ 'primary' }
                 mh={ 4 } />
               <Button
-                startIcon={ favorited ? 'heart' : 'heart-outline' }
-                h5
+                h6
                 mh={ 4 }
                 color='primary'
+                startIcon={ favorited ? 'heart' : 'heart-outline' }
                 onPress={ () => onInteract?.(InteractionType.Favorite) } />
-              <View>
-                <Button
-                  h5
-                  mh={ 4 }
-                  color='primary'
-                  onPress={ () => setShowShareFab(true, {
-                    content, format, summary, viewshot: viewshot.current, 
-                  }) }
-                  startIcon='share' />
-              </View>
+              <Button
+                h6
+                mh={ 4 }
+                color='primary'
+                startIcon='share'
+                onPress={ () => setShowShareFab(true, {
+                  content, format, summary, viewshot: viewshot.current, 
+                }) } />
             </View>
           </View>
-          <View mt={ 2 }>
-            <ReadingFormatSelector 
-              format={ format } 
-              preferredFormat={ preferredReadingFormat }
-              onChange={ handleFormatChange } />
-            {content && <Divider />}
-            {content && (
+          {alwaysShowReadingFormatSelector && !isRead && (
+            <View>
+              <ReadingFormatSelector 
+                format={ format } 
+                preferredFormat={ preferredReadingFormat }
+                onChange={ handleFormatChange } />
+            </View>
+          )}
+          {content && (
+            <View mt={ 2 }>
+              
+              <Divider />
               <View row alignCenter justifyStart>
                 <Button
                   startIcon={ playingAudio ? 'stop' : 'volume-source' }
                   onPress={ () => handlePlayAudio(content) }
                   mr={ 8 } />
               </View>
-            )}
-            <View mt={ 4 }>
-              {content && <Text subtitle1 mt={ 4 }>{content}</Text>}
+              <View mt={ 4 }>
+                <Text subtitle1 mt={ 4 }>{content}</Text>
+              </View>
             </View>
-          </View>
+          )}
         </View>
       </Swipeable>
     </ViewShot>

@@ -8,6 +8,7 @@ const makeTheme = (lightMode: boolean) => {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
+      inactive: lightMode ? '#111' : '#666',
       invertText: lightMode ? '#fff' : '#000',
       primary: '#8b0000',
       text: lightMode ? '#000' : '#fff',
@@ -32,8 +33,6 @@ const makeTheme = (lightMode: boolean) => {
           backgroundColor: lightMode ? '#eee' : '#111',
           marginBottom: 8,
           padding: 16,
-          position: 'relative',
-          zIndex: 2,
         },
         category: {
           backgroundColor: '#8b0000',
@@ -73,13 +72,15 @@ const makeTheme = (lightMode: boolean) => {
         },
         outlined: {
           borderColor: '#8b0000',
-          borderWidth: 2,
+          borderWidth: 1,
         },
         rounded: { borderRadius: 8 },
         searchBar: {
+          backgroundColor: lightMode ? '#fff' : '#000',
+          borderRadius: 8,
           marginBottom: 8,
           marginTop: 8,
-          overflow: 'hidden',
+          overflow: 'visible',
           width: '100%',
         },
         text: { fontFamily: 'Lato' },

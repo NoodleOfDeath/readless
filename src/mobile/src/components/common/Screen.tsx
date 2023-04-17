@@ -33,8 +33,11 @@ export function Screen({
     <React.Fragment>
       <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
       <SafeAreaView style={ theme.components.flexCol }>
-        <KeyboardAwareScrollView refreshControl={ refreshControl } { ...props }>
-          <View style={ style }>{children}</View>
+        <KeyboardAwareScrollView
+          refreshControl={ refreshControl }
+          style={ { overflow: 'visible' } }
+          { ...props }>
+          <View style={ [style, { overflow: 'visible' }] }>{children}</View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
     </React.Fragment>

@@ -92,7 +92,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                 <Button
                   rounded
                   outlined
-                  small
                   selectable
                   p={ 8 }
                   m={ 8 }
@@ -105,7 +104,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
               <View>
                 <Button 
                   rounded
-                  small
                   selectable
                   p={ 8 }
                   m={ 8 }
@@ -157,7 +155,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                 <Button
                   rounded
                   outlined
-                  small
                   selectable
                   p={ 8 }
                   m={ 8 }
