@@ -36,7 +36,7 @@ export function TabSwitcher({
 
   const handleSlide = React.useCallback((tab: number) => {
     Animated.spring(translateX, {
-      toValue: tab * (100 / (titles?.length ?? 1)),
+      toValue: tab * Math.ceil(100 / (titles?.length ?? 1)),
       useNativeDriver: true,
     }).start();
   }, [translateX, titles?.length]);

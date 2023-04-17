@@ -4,7 +4,6 @@ import { Switch } from 'react-native';
 import { ReadingFormat } from '~/api';
 import { 
   Button,
-  Icon,
   ReadingFormatSelector,
   Screen, 
   ScrollView, 
@@ -13,6 +12,7 @@ import {
   View,
 } from '~/components';
 import { ColorMode, SessionContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 type OptionProps = React.PropsWithChildren<{
@@ -30,6 +30,7 @@ const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
 const fonts = ['Alegreya', 'DM Mono', 'DM Sans', 'Lato'];
 
 export function SettingsScreen(_: ScreenProps<'default'>) {
+  const theme = useTheme();
   const {
     preferences: {
       textScale, 
@@ -84,37 +85,8 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
           <View justifyCenter>
             <TabSwitcher
               activeTab={ activeDisplayMode }
-              tabHeight={ 100 * (textScale ?? 1) } 
               onTabChange={ handleDisplayModeChange }
-              titles={ [
-                <View
-                  key="light"
-                  alignCenter
-                  justifyCenter>
-                  <Icon name="weather-sunny" h1 />
-                  <Text center body1>
-                    Light
-                  </Text>
-                </View>,
-                <View
-                  key={ undefined }
-                  alignCenter
-                  justifyCenter>
-                  <Icon name="theme-light-dark" h1 />
-                  <Text center body1>
-                    System
-                  </Text>
-                </View>,
-                <View
-                  key="dark"
-                  alignCenter
-                  justifyCenter>
-                  <Icon name="weather-night" h1 />
-                  <Text center body1>
-                    Dark
-                  </Text>
-                </View>,
-              ] } />
+              titles={ [ 'Light', 'System', 'Dark'] } />
           </View>
         ),
         id: 'display-mode',
@@ -122,10 +94,24 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       },
       {
         children: (
-          <Switch value={ alwaysShowReadingFormatSelector } onValueChange={ (newValue) => setPreference('alwaysShowReadingFormatSelector', newValue) } />
+          <View row alignCenter justifyCenter>
+            <View col alignCenter>
+              <Text center mb={ 4 }>Always Show Reading Format Selector</Text>
+              <Switch 
+                thumbColor={ theme.colors.primary } 
+                value={ alwaysShowReadingFormatSelector } 
+                onValueChange={ (newValue) => setPreference('alwaysShowReadingFormatSelector', newValue) } />
+            </View>
+            <View col alignCenter>
+              <Text center mb={ 4 }>Compact Reading Format Selector</Text>
+              <Switch 
+                thumbColor={ theme.colors.primary } 
+                value={ compactMode } 
+                onValueChange={ (newValue) => setPreference('compactMode', newValue) } />
+            </View>
+          </View>
         ),
         id: 'always-show-reading-format',
-        label: 'Always Show Reading Format Selector',
       },
       {
         children: (
@@ -136,13 +122,6 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         ),
         id: 'reading-format',
         label: 'Preferred Reading Format on Open',
-      },
-      {
-        children: (
-          <Switch value={ compactMode } onValueChange={ (newValue) => setPreference('compactMode', newValue) } />
-        ),
-        id: 'compact-reading-format',
-        label: 'Compact Reading Format Selector',
       },
       {
         children: (
@@ -213,7 +192,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Reset Removed Content',
       },
     ];
-  }, [activeDisplayMode, textScale, handleDisplayModeChange, alwaysShowReadingFormatSelector, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference, fontFamily]);
+  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, alwaysShowReadingFormatSelector, compactMode, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference, fontFamily]);
   
   return (
     <Screen>
@@ -222,7 +201,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
           <View>
             {options.filter((o) => o.visible !== false).map((option) => (
               <View col key={ option.id } p={ 4 } mv={ 4 }>
-                {!option.onPress && (
+                {!option.onPress && option.label && (
                   <Text mb={ 4 }>{option.label}</Text>
                 )}
                 {option.onPress && (
