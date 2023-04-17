@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Portal } from 'react-native-paper';
+import { Portal, Provider } from 'react-native-paper';
 
 import { DEFAULT_TOAST_CONTEXT } from './types';
 
@@ -30,25 +30,27 @@ export function ToastContextProvider({ children }: Props) {
   
   return (
     <ToastContext.Provider value={ { alert } }>
-      {children}
-      <Portal>
-        {Object.entries(toasts).map(([id, toast], i) => (
-          <Snackbar 
-            key={ id } 
-            visible
-            duration={ toast.duration }
-            style={ { bottom: i * 85 * (textScale ?? 1) } }
-            onDismiss={ () => {
-              setToasts((prev) => {
-                const state = { ...prev };
-                delete state[Number(id)];
-                return (prev = state);
-              });
-            } }>
-            {toast.content}
-          </Snackbar>
-        ))}
-      </Portal>
+      <Provider>
+        {children}
+        <Portal>
+          {Object.entries(toasts).map(([id, toast], i) => (
+            <Snackbar 
+              key={ id } 
+              visible
+              duration={ toast.duration }
+              style={ { bottom: i * 85 * (textScale ?? 1) } }
+              onDismiss={ () => {
+                setToasts((prev) => {
+                  const state = { ...prev };
+                  delete state[Number(id)];
+                  return (prev = state);
+                });
+              } }>
+              {toast.content}
+            </Snackbar>
+          ))}
+        </Portal>
+      </Provider>
     </ToastContext.Provider>
   );
 }

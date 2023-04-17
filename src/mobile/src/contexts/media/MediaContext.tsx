@@ -11,6 +11,7 @@ import {
 } from './types';
 
 import { FAB } from '~/components';
+import { useTheme } from '~/hooks';
 
 export const MediaContext = React.createContext(DEFAULT_MEDIA_CONTEXT);
 
@@ -18,6 +19,7 @@ type Props = React.PropsWithChildren;
 
 export function MediaContextProvider({ children }: Props) {
 
+  const theme = useTheme();
   const [voices, setVoices] = React.useState<Voice[]>([]);
   const [ttsStatus, setTtsStatus] = React.useState<TtsStatus>('initializing');
   const [selectedVoiceIndex, setSelectedVoice] = React.useState(0);
@@ -125,6 +127,7 @@ export function MediaContextProvider({ children }: Props) {
           <FAB 
             icon='stop'
             visible
+            style={ { backgroundColor: theme.colors.primary } }
             onPress={ () => cancelTts() } />
         </Portal>
       )}

@@ -11,13 +11,13 @@ import {
 export default function App() {
   return (
     <SessionContextProvider>
-      <DialogContextProvider>
+      <ToastContextProvider>
         <MediaContextProvider>
-          <ToastContextProvider>
+          <DialogContextProvider>
             <NavigationController />
-          </ToastContextProvider>
+          </DialogContextProvider>
         </MediaContextProvider>
-      </DialogContextProvider>
+      </ToastContextProvider>
     </SessionContextProvider>
   );
 }

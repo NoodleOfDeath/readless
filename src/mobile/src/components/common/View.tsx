@@ -2,12 +2,13 @@ import React from 'react';
 import {
   View as RNView,
   ViewProps as RNViewProps,
+  StyleSheet,
   TouchableHighlight,
   TouchableHighlightProps,
 } from 'react-native';
 
 import { Stylable } from '~/components';
-import { useStyles } from '~/hooks';
+import { useStyles, useTheme } from '~/hooks';
 
 export type ViewProps = React.PropsWithChildren<TouchableHighlightProps & RNViewProps & Stylable> & {
   title?: string;
@@ -17,17 +18,33 @@ export type ViewProps = React.PropsWithChildren<TouchableHighlightProps & RNView
 export function View({ 
   children,
   pressable,
+  inactive,
   ...props
 }: ViewProps) {
   const style = useStyles(props);
+  const theme = useTheme();
+  const overlay = React.useMemo(() => {
+    if (inactive) {
+      return (
+        <View style={ {
+          ...StyleSheet.absoluteFillObject, 
+          backgroundColor: theme.colors.primary, 
+          borderRadius: style.borderRadius ?? 0,
+          opacity: 0.5,
+        } } />
+      );
+    }
+  }, [inactive, style.borderRadius, theme.colors.primary]);
   return (pressable || props.onPress) ? (
     <TouchableHighlight { ...props } style={ style } underlayColor="transparent">
       <React.Fragment>
+        {inactive && overlay}
         {children}
       </React.Fragment>
     </TouchableHighlight>
   ) : (
     <RNView { ...props } style={ style }>
+      {inactive && overlay}
       {children}
     </RNView>
   );

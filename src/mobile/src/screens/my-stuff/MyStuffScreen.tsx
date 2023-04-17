@@ -22,6 +22,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
     preferences: {
       bookmarkedSummaries,
       favoritedSummaries,
+      readSummaries,
       preferredReadingFormat, 
     },
     setPreference,
@@ -29,6 +30,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   const { handleInteraction } = useSummaryClient();
   
   const [activeTab, setActiveTab] = React.useState(0);
+  const [activeBookmarksTab, setActiveBookmarksTab] = React.useState(0);
   
   const clearBookmarkedSummaries = React.useCallback(() => {
     setPreference('bookmarkedSummaries', {});
@@ -79,7 +81,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   
   return (
     <Screen>
-      <View col mh={ 16 }>
+      <View col ph={ 16 }>
         <TabSwitcher
           activeTab={ activeTab }
           onTabChange={ setActiveTab }
@@ -111,17 +113,41 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                   onPress={ () => clearBookmarkedSummaries() }>
                   Clear Bookmarks
                 </Button>
-                {Object.entries(bookmarkedSummaries ?? {}).map(([id, bookmark]) => {
-                  return (
-                    <View col key={ id }>
-                      <Summary
-                        summary={ bookmark.item }
-                        onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
-                        onReferSearch={ handleReferSearch }
-                        onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
-                    </View>
-                  );
-                })}
+                <TabSwitcher 
+                  activeTab={ activeBookmarksTab }
+                  onTabChange={ setActiveBookmarksTab }
+                  titles={ ['Unread', 'Read'] }>
+                  <View>
+                    {Object.entries(bookmarkedSummaries ?? {})
+                      .filter(([id]) => readSummaries?.[Number(id)] === undefined)
+                      .map(([id, bookmark]) => {
+                        return (
+                          <View col key={ id }>
+                            <Summary
+                              summary={ bookmark.item }
+                              onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
+                              onReferSearch={ handleReferSearch }
+                              onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
+                          </View>
+                        );
+                      })}
+                  </View>
+                  <View>
+                    {Object.entries(bookmarkedSummaries ?? {})
+                      .filter(([id]) => readSummaries?.[Number(id)] !== undefined)
+                      .map(([id, bookmark]) => {
+                        return (
+                          <View col key={ id }>
+                            <Summary
+                              summary={ bookmark.item }
+                              onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
+                              onReferSearch={ handleReferSearch }
+                              onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
+                          </View>
+                        );
+                      })}
+                  </View>
+                </TabSwitcher>
               </View>
             )}
           </View>

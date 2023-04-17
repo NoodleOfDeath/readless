@@ -32,6 +32,8 @@ const makeTheme = (lightMode: boolean) => {
           backgroundColor: lightMode ? '#eee' : '#111',
           marginBottom: 8,
           padding: 16,
+          position: 'relative',
+          zIndex: 2,
         },
         category: {
           backgroundColor: '#8b0000',
@@ -75,8 +77,6 @@ const makeTheme = (lightMode: boolean) => {
         },
         rounded: { borderRadius: 8 },
         searchBar: {
-          backgroundColor: lightMode ? '#fff' : '#000',
-          borderRadius: 8,
           marginBottom: 8,
           marginTop: 8,
           overflow: 'hidden',

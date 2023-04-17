@@ -1,11 +1,6 @@
 import React from 'react';
-import { Pressable, SafeAreaView } from 'react-native';
 
-import {
-  Portal,
-  Provider,
-  Dialog as RNDialog,
-} from 'react-native-paper';
+import { Dialog as RNDialog } from 'react-native-paper';
 
 import { View, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
@@ -19,7 +14,7 @@ export type DialogProps = ViewProps & React.PropsWithChildren<{
 
 export function Dialog({
   children,
-  visible,
+  visible = false,
   onClose,
   title,
   actions,
@@ -28,13 +23,13 @@ export function Dialog({
   const theme = useTheme();
   const style = useStyles(other);
   
-  const dialogActions = React.useMemo(() => actions && (Array.isArray(actions) ? actions : [actions]).map((a, i) => ({ ...a, key: i })), [actions]);
+  const dialogActions = React.useMemo(() => actions && (Array.isArray(actions) ? actions : [actions]), [actions]);
   
   return (
     <RNDialog 
       visible={ visible }
       onDismiss={ () => onClose?.() }
-      style={ theme.components.dialog }>
+      style={ [theme.components.dialog, style] }>
       {title && (
         <RNDialog.Title style={ { color: theme.colors.text } }>{title}</RNDialog.Title>
       )}

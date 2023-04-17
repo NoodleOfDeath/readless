@@ -62,6 +62,7 @@ export function useStyles({
   outlined,
   contained,
   rounded,
+  shadowed,
   // selectable,
   // other
   style,
@@ -129,28 +130,39 @@ export function useStyles({
   }, [justifyCenter, justifyEnd, justifySpaced, justifyStart]);
   
   const appearance = React.useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const appearance: any[] = [];
     if (outlined === true) {
-      return theme.components.outlined;
+      appearance.push(theme.components.outlined);
     } else
     if (typeof outlined === 'string') {
-      return { borderColor: outlined, borderWidth: 1 };
+      appearance.push({ borderColor: outlined, borderWidth: 1 });
     } else
     if (typeof outlined === 'number') {
-      return { borderColor: theme.colors.primary, borderWidth: outlined };
+      appearance.push({ borderColor: theme.colors.primary, borderWidth: outlined });
     } else
     if (Array.isArray(outlined) && outlined.length === 2 && typeof outlined[0] === 'string' && typeof outlined[1] === 'number') {
-      return {
+      appearance.push({
         borderColor: outlined[0],
         borderWidth: outlined[1],
-      };
+      });
     } else
     if (contained) {
-      return theme.components.buttonSelected;
+      appearance.push(theme.components.buttonSelected);
     }
     if (opacity) {
-      return { opacity };
+      appearance.push({ opacity });
     }
-  }, [opacity, outlined, contained, theme]);
+    if (shadowed) {
+      appearance.push({
+        shadowColor: 'rgba(0,0,0,.7)',
+        shadowOffset: { height: 1, width: 1 },
+        shadowOpacity: 0.7,
+        shadowRadius: 3,
+      });
+    }
+    return appearance.reduce((cur, n) => ({ ...cur, ...n }), {});
+  }, [opacity, outlined, contained, shadowed, theme]);
 
   const viewStyle = React.useMemo(() => {
     const scale = ((((textScale ?? 1) - 1) / 2) + 1);

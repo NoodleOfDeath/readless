@@ -6,16 +6,19 @@ import VersionCheck from 'react-native-version-check';
 
 import { DEFAULT_DIALOG_CONTEXT } from './types';
 
-import { PublicSummaryAttributes, ReleaseAttributes } from '~/api';
+import { ReleaseAttributes } from '~/api';
 import {
   Button,
   Dialog,
   FeedBackDialog,
+  FeedBackDialogProps,
   ReleaseNotesCarousel,
+  ShareFab,
+  ShareFabProps,
   Text,
 } from '~/components';
 import { SessionContext } from '~/core/contexts';
-import { useStatusClient } from '~/hooks';
+import { useStatusClient, useSummaryClient } from '~/hooks';
 
 export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
 
@@ -27,17 +30,35 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     setPreference, 
   } = React.useContext(SessionContext);
   const { getReleases } = useStatusClient();
+  const { handleInteraction } = useSummaryClient();
 
-  const [showFeedbackDialog, setShowFeedbackDialog] = React.useState<boolean>(false);
-  const [feedbackSubject, setFeedbackSubject] = React.useState<PublicSummaryAttributes>();
-  const [showReleaseNotes, setShowReleaseNotes] = React.useState<boolean>(false);
+  const [showReleaseNotes, setShowReleaseNotesRaw] = React.useState<boolean>(false);
   const [releaseNotes, setReleaseNotes] = React.useState<ReleaseAttributes[]>([]);
   const [updateRequired, setUpdateRequired] = React.useState<boolean>(false);
+  const [showShareFab, setShowShareFabRaw] = React.useState<boolean>(false);
+  const [shareFabOptions, setShareFabOptions] = React.useState<ShareFabProps>();
+  const [showFeedbackDialog, setShowFeedbackDialogRaw] = React.useState<boolean>(false);
+  const [feedbackOptions, setFeedbackOptions] = React.useState<FeedBackDialogProps>();
+
+  const setShowReleaseNotes = React.useCallback((state: boolean | ((prev: boolean) => boolean), options: ReleaseAttributes[] = []) => {
+    setShowReleaseNotesRaw(state);
+    setReleaseNotes(options);
+  }, []);
+
+  const setShowShareFab = React.useCallback((state: boolean | ((prev: boolean) => boolean), options?: ShareFabProps) => {
+    setShowShareFabRaw(state);
+    setShareFabOptions(options);
+  }, []);
+
+  const setShowFeedbackDialog = React.useCallback((state: boolean | ((prev: boolean) => boolean), options?: FeedBackDialogProps) => {
+    setShowFeedbackDialogRaw(state);
+    setFeedbackOptions(options);
+  }, []);
 
   const handleReleaseNotesClose = React.useCallback(() => {
     setPreference('releases', (prev) => ({ ...prev }));
     setShowReleaseNotes(false);
-  }, [setPreference]);
+  }, [setPreference, setShowReleaseNotes]);
 
   const onMount = React.useCallback(async () => {
     const { data, error } = await getReleases();
@@ -56,12 +77,11 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
           setUpdateRequired(true);
           return;
         }
-        setReleaseNotes(newReleases);
-        setShowReleaseNotes(true);
+        setShowReleaseNotes(true, newReleases);
         setPreference('releases', onServerReleases);
       }
     }
-  }, [getReleases, releases, setPreference]);
+  }, [getReleases, releases, setPreference, setShowReleaseNotes]);
 
   React.useEffect(() => {
     if (!ready) {
@@ -74,14 +94,12 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
   
   return (
     <DialogContext.Provider value={ {
-      feedbackSubject,
-      releaseNotes,
-      setFeedbackSubject,
-      setReleaseNotes,
       setShowFeedbackDialog,
       setShowReleaseNotes,
+      setShowShareFab,
       showFeedbackDialog,
       showReleaseNotes,
+      showShareFab,
     } }>
       <Provider>
         {children}
@@ -114,9 +132,15 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
               <Text>Sorry for being obnoxious and forcing you to update the app!</Text>
             </Dialog>
           )}
-          {feedbackSubject && (
+          <ShareFab
+            { ...shareFabOptions }
+            open={ showShareFab }
+            visible={ showShareFab }
+            onInteract={ (...args) => shareFabOptions?.summary && handleInteraction(shareFabOptions.summary, ...args) }
+            onDismiss={ () => setShowShareFab(false) } />
+          {feedbackOptions && showFeedbackDialog && (
             <FeedBackDialog
-              summary={ feedbackSubject }
+              { ...feedbackOptions }
               visible={ showFeedbackDialog }
               onClose={ () => setShowFeedbackDialog(false) } />
           )}

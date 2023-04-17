@@ -105,12 +105,12 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
           titles={ ['All News', 'My News'] }>
           <View mh={ -16 }>
             {!refreshing && (
-              <SearchScreen 
+              <SearchScreen  
                 route={ routes[0] }
                 navigation={ navigation } />
             )}
           </View>
-          <View mh={ -16 }>
+          <View ph={ -16 }>
             {!refreshing && (
               <SearchScreen 
                 route={ routes[1] }
