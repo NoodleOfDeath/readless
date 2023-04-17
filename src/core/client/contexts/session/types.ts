@@ -40,6 +40,7 @@ export type Preferences = {
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;
+  fontFamily?: string;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
@@ -47,6 +48,11 @@ export type Preferences = {
   removedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   readSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   showOnlyBookmarkedNews?: boolean;
+};
+
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { 
+  alwaysShowReadingFormatSelector: true,
+  fontFamily: 'Alegreya',
 };
 
 // Headers
@@ -73,8 +79,6 @@ export type SessionContextType = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
-
-export const DEFAULT_PREFERENCES: Partial<Preferences> = { alwaysShowReadingFormatSelector: true };
 
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   addUserToken: () => {

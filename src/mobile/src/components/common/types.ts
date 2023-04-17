@@ -5,6 +5,13 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   width?: number | string;
   height?: number | string;
   // flexbox
+  flex?: number;
+  flexWrap?: 'wrap' | 'nowrap';
+  flexGrow?: number | boolean;
+  flexRow?: boolean;
+  flexRowReverse?: boolean;
+  flexColumn?: boolean;
+  flexColumnReverse?: boolean;
   col?: boolean;
   row?: boolean;
   alignCenter?: boolean;
@@ -31,6 +38,7 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   center?: boolean;
   left?: boolean;
   right?: boolean;
+  fontFamily?: string;
   fontSize?: number;
   bold?: boolean;
   italic?: boolean;

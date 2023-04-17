@@ -39,6 +39,44 @@ type Props = {
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
 };
 
+type RenderAction = {
+  text: string;
+  startIcon?: string;
+  onPress: () => void;
+};
+
+type RenderActionsProps = {
+  actions: RenderAction[];
+  theme: ReturnType<typeof useTheme>;
+};
+
+function RenderActions({ actions, theme }: RenderActionsProps) {
+  return (
+    <View>
+      <View col justifyCenter p={ 8 } mb={ 8 }>
+        {actions.map((action) => (
+          <Button 
+            key={ action.text }
+            col
+            mv={ 4 }
+            p={ 8 }
+            alignCenter
+            justifyCenter
+            rounded
+            shadowed
+            bg={ theme.colors.primary }
+            caption
+            color="white"
+            startIcon={ action.startIcon }
+            onPress={ action.onPress }>
+            {action.text}
+          </Button>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 export function Summary({
   summary,
   tickIntervalMs = 60_000,
@@ -57,7 +95,6 @@ export function Summary({
       bookmarkedSummaries, 
       favoritedSummaries,
       readSummaries,
-      textScale, 
     }, setPreference, 
   } = React.useContext(SessionContext);
   const {
@@ -143,202 +180,126 @@ export function Summary({
   }, [cancelTts, onInteract, firstResponder, readText, summary]);
 
   const renderLeftActions = React.useCallback(() => {
-    const onPress = () => setPreference('readSummaries', (prev) => {
-      onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !isRead });
-      const newBookmarks = { ...prev };
-      if (isRead) {
-        delete newBookmarks[summary.id];
-      } else {
-        newBookmarks[summary.id] = new Bookmark(summary);
-      }
-      return (prev = newBookmarks);
-    });
+    const actions = [{
+      onPress: () => setPreference('readSummaries', (prev) => {
+        onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !isRead });
+        const newBookmarks = { ...prev };
+        if (isRead) {
+          delete newBookmarks[summary.id];
+        } else {
+          newBookmarks[summary.id] = new Bookmark(summary);
+        }
+        return (prev = newBookmarks);
+      }),
+      startIcon: isRead ? 'email-mark-as-unread' : 'email-open',
+      text: isRead ? 'Mark as Unread' : 'Mark as Read',
+    }, {
+      onPress: () => onInteract?.(InteractionType.Bookmark),
+      startIcon: bookmarked ? 'bookmark' : 'bookmark-outline',
+      text: 'Read Later',
+    }];
     return (
-      <View 
-        rounded
-        justifyCenter>
-        <View col p={ 8 } mb={ 8 }>
-          <Button
-            col={ !isRead }
-            row ={ isRead }
-            width={ 120 }
-            spacing={ 4 }
-            mv={ 4 }
-            p={ 8 }
-            alignCenter
-            justifyCenter
-            rounded
-            shadowed
-            bg={ theme.colors.primary }
-            color="white"
-            startIcon={ isRead ? 'email-mark-as-unread' : 'email-open' }
-            onPress={ onPress }>
-            {isRead ? 'Mark as Unread' : 'Mark as Read'}
-          </Button>
-          <Button 
-            col={ !isRead }
-            row ={ isRead }
-            width={ 120 }
-            spacing={ 4 }
-            mv={ 4 }
-            p={ 8 }
-            alignCenter
-            justifyCenter
-            rounded
-            shadowed
-            bg={ theme.colors.primary }
-            color="white"
-            startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-            onPress={ () => onInteract?.(InteractionType.Bookmark) }>
-            Read Later
-          </Button>
-        </View>
-      </View>
+      <RenderActions actions={ actions } theme={ theme } />
     );
-  }, [bookmarked, isRead, onInteract, setPreference, summary, theme.colors.primary]);
+  }, [bookmarked, isRead, onInteract, setPreference, summary, theme]);
   
   const renderRightActions = React.useCallback(() => {
-    const hide = () => {
-      onInteract?.(InteractionType.Hide, undefined, undefined, () => {
-        setPreference('removedSummaries', (prev) => ({
-          ...prev,
-          [summary.id]: new Bookmark(summary),
-        }));
-      });
-    };
-    const report = () => { 
-      onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
-        setShowFeedbackDialog(true, { summary });
-      });
-    };
+    const actions = [{
+      onPress: () => {
+        onInteract?.(InteractionType.Hide, undefined, undefined, () => {
+          setPreference('removedSummaries', (prev) => ({
+            ...prev,
+            [summary.id]: new Bookmark(summary),
+          }));
+        });
+      },
+      startIcon: 'eye-off',
+      text: 'Hide',
+    }, {
+      onPress: () => { 
+        onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
+          setShowFeedbackDialog(true, { summary });
+        });
+      },
+      startIcon: 'bug',
+      text: 'Report a Bug',
+    }];
     return (
-      <View 
-        rounded
-        justifyCenter>
-        <View col p={ 8 } mb={ 8 }>
-          <Button
-            col={ !isRead }
-            row ={ isRead }
-            width={ 120 }
-            spacing={ 4 }
-            mv={ 4 }
-            p={ 8 }
-            alignCenter
-            justifyCenter
-            rounded
-            shadowed
-            bg={ theme.colors.primary }
-            color="white"
-            startIcon={ 'eye-off' }
-            onPress={ hide }>
-            Hide
-          </Button>
-          <Button
-            col={ !isRead }
-            row ={ isRead }
-            width={ 120 }
-            spacing={ 4 }
-            mv={ 4 }
-            p={ 8 }
-            alignCenter
-            justifyCenter
-            rounded
-            shadowed
-            bg={ theme.colors.primary }
-            color="white"
-            startIcon={ 'bug' }
-            onPress={ report }>
-            Report a Bug
-          </Button>
-        </View>
-      </View>
+      <RenderActions actions={ actions } theme={ theme } />
     );
-  }, [isRead, theme.colors.primary, onInteract, setPreference, summary, setShowFeedbackDialog]);
+  }, [theme, onInteract, setPreference, summary, setShowFeedbackDialog]);
   
   return (
     <ViewShot ref={ viewshot }>
       <Swipeable 
         renderLeftActions={ renderLeftActions }
         renderRightActions={ renderRightActions }>
-        <View rounded outlined style={ theme.components.card } inactive={ isRead }>
+        <View outlined rounded style={ theme.components.card } inactive={ isRead }>
+          <View row justifySpaced alignCenter mb={ 8 }>
+            <Button 
+              startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" mr={ 8 } /> }
+              onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+            <Button 
+              row
+              alignCenter
+              underline
+              onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
+              {summary.outletAttributes?.displayName.trim()}
+            </Button>
+            <Button 
+              underline
+              onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
+              View original source
+            </Button>
+          </View>
+          <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
+            <Text numberOfLines={ isRead ? 2 : 10 } ellipsizeMode='tail'>
+              {summary.title.trim()}
+            </Text>
+          </View>
           {!isRead && (
             <React.Fragment>
-              <View row alignCenter>
-                <View row alignCenter rounded style={ theme.components.category }>
-                  <View>
-                    <Button 
-                      row
-                      alignCenter
-                      justifyEnd
-                      spacing={ 8 }
-                      color="contrastText"
-                      startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="contrastText" mr={ 8 } /> }
-                      onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
-                      {summary.categoryAttributes?.displayName}
-                    </Button>
-                  </View>
-                  <Button
-                    justifyEnd
-                    alignCenter
-                    row
-                    spacing={ 4 }
-                    color="contrastText"
-                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                    onPress={ () => handlePlayAudio(summary.title) }
-                    mr={ 8 }>
-                    { playingAudio ? 'Stop' : 'Play' }
-                  </Button>
+              <Divider />
+              <View row justifySpaced alignCenter>
+                <View col>
+                  <Text>{timeAgo}</Text>
                 </View>
-              </View>
-              <View row justifySpaced alignCenter mb={ 8 }>
-                <Button 
-                  subtitle2
-                  underline
-                  onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-                  {summary.outletAttributes?.displayName.trim()}
-                </Button>
-                <Button 
-                  subtitle2
-                  underline
-                  onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-                  View original source
-                </Button>
+                <View row alignCenter justifyEnd>
+                  <View mr={ 4 } alignCenter>
+                    <Text>{String(interactions.view)}</Text>
+                  </View>
+                  <Icon
+                    alignCenter
+                    mh={ 4 }
+                    subtitle2
+                    color='text'
+                    name="eye" />
+                  <Button
+                    alignCenter
+                    mh={ 4 }
+                    subtitle2
+                    color='text'
+                    startIcon={ favorited ? 'heart' : 'heart-outline' }
+                    onPress={ () => onInteract?.(InteractionType.Favorite) } />
+                  <Button
+                    mh={ 4 }
+                    subtitle2
+                    color='text'
+                    startIcon='share'
+                    onPress={ () => setShowShareFab(true, {
+                      content, format, summary, viewshot: viewshot.current, 
+                    }) } />
+                  <Button
+                    alignCenter
+                    mh={ 4 }
+                    subtitle2
+                    color="text"
+                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                    onPress={ () => handlePlayAudio(summary.title) } />
+                </View>
               </View>
             </React.Fragment>
           )}
-          <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
-            <Text numberOfLines={ isRead ? 2 : 10 } ellipsizeMode='tail' subtitle1>{summary.title.trim()}</Text>
-          </View>
-          <Divider />
-          <View row={ (textScale ?? 1) <= 1 } col={ (textScale ?? 1) > 1 } justifySpaced alignCenter>
-            <View col alignCenter={ (textScale ?? 1) > 1 } justifyCenter>
-              <Text subtitle2>{timeAgo}</Text>
-            </View>
-            <View row alignCenter justifyEnd={ (textScale ?? 1) <= 1 }>
-              <View mr={ 4 }>
-                <Text h6>{String(interactions.view)}</Text>
-              </View>
-              <Icon
-                h6
-                name="eye"
-                color={ 'primary' }
-                mh={ 4 } />
-              <Button
-                h6
-                mh={ 4 }
-                color='primary'
-                startIcon={ favorited ? 'heart' : 'heart-outline' }
-                onPress={ () => onInteract?.(InteractionType.Favorite) } />
-              <Button
-                h6
-                mh={ 4 }
-                color='primary'
-                startIcon='share'
-                onPress={ () => setShowShareFab(true, {
-                  content, format, summary, viewshot: viewshot.current, 
-                }) } />
-            </View>
-          </View>
           {alwaysShowReadingFormatSelector && !isRead && (
             <View>
               <ReadingFormatSelector 
@@ -349,7 +310,6 @@ export function Summary({
           )}
           {content && (
             <View mt={ 2 }>
-              
               <Divider />
               <View row alignCenter justifyStart>
                 <Button
@@ -358,7 +318,7 @@ export function Summary({
                   mr={ 8 } />
               </View>
               <View mt={ 4 }>
-                <Text subtitle1 mt={ 4 }>{content}</Text>
+                <Text mt={ 4 }>{content}</Text>
               </View>
             </View>
           )}

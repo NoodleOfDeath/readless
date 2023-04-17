@@ -7,6 +7,7 @@ import {
   Icon,
   ReadingFormatSelector,
   Screen, 
+  ScrollView, 
   TabSwitcher,
   Text,
   View,
@@ -22,15 +23,17 @@ type OptionProps = React.PropsWithChildren<{
 }>;
 
 const displayModes = ['light', 'system', 'dark'];
-const textScales = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
+const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
 }));
+const fonts = ['Alegreya', 'DM Mono', 'DM Sans', 'Lato'];
 
 export function SettingsScreen(_: ScreenProps<'default'>) {
   const {
     preferences: {
       textScale, 
+      fontFamily,
       alwaysShowReadingFormatSelector,
       preferredReadingFormat,
       compactMode,
@@ -155,6 +158,32 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       },
       {
         children: (
+          <ScrollView horizontal>
+            <View row alignCenter>
+              {fonts.map((font) => (
+                <Button 
+                  row
+                  alignCenter
+                  spacing={ 4 }
+                  key={ font }
+                  rounded
+                  outlined
+                  p={ 8 }
+                  mh={ 4 }
+                  startIcon={ fontFamily === font ? 'check' : undefined } 
+                  fontFamily={ font }
+                  onPress={ () => setPreference('fontFamily', font) }>
+                  {font}
+                </Button>
+              ))}
+            </View>
+          </ScrollView>
+        ),
+        id: 'font-family',
+        label: 'Font',
+      },
+      {
+        children: (
           <Button
             outlined
             rounded
@@ -184,7 +213,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Reset Removed Content',
       },
     ];
-  }, [activeDisplayMode, textScale, handleDisplayModeChange, alwaysShowReadingFormatSelector, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference]);
+  }, [activeDisplayMode, textScale, handleDisplayModeChange, alwaysShowReadingFormatSelector, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference, fontFamily]);
   
   return (
     <Screen>

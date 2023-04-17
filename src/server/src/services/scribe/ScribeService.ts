@@ -102,13 +102,13 @@ export class ScribeService extends BaseService {
         onReply: (reply) => { 
           newSummary.longSummary = reply.text;
         },
-        text: 'Please provide a 250 to 350 word summary',
+        text: 'Please provide a 200 to 300 word summary',
       },
       {
         onReply: (reply) => { 
           newSummary.text = reply.text;
         },
-        text: 'Please provide a 400 to 500 word summary',
+        text: 'Please provide a 300 to 400 word summary',
       },
       {
         onReply: (reply) => {

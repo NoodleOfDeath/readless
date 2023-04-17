@@ -111,6 +111,7 @@ export function Button({
         <Text { ...{ 
           ...textStyle, 
           color: buttonStyle.color,
+          fontFamily: buttonStyle.fontFamily,
           fontSize: fontSize ?? buttonStyle.fontSize,
         } }>
           { children }

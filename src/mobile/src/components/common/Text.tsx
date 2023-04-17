@@ -20,7 +20,7 @@ export function Text({
 }: TextProps) {
   
   const theme = useTheme();
-  const { preferences: { textScale = 1 } } = React.useContext(SessionContext);
+  const { preferences: { textScale = 1, fontFamily } } = React.useContext(SessionContext);
   
   const { textAlign, ...otherStyles } = useStyles(styleProps);
   
@@ -29,8 +29,9 @@ export function Text({
     color: color && (Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color),
     textAlign,
     ...otherStyles,
+    fontFamily: otherStyles.fontFamily ?? fontFamily,
     fontSize: (styleProps.fontSize ?? otherStyles.fontSize ?? 14) * textScale,
-  }), [color, otherStyles, styleProps, textAlign, textScale, theme]);
+  }), [color, fontFamily, otherStyles, styleProps.fontSize, textAlign, textScale, theme]);
   
   return (
     <View style={ otherStyles }>

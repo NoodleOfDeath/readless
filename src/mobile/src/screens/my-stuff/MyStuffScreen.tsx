@@ -31,10 +31,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   
   const [activeTab, setActiveTab] = React.useState(0);
   const [activeBookmarksTab, setActiveBookmarksTab] = React.useState(0);
-  
-  const clearBookmarkedSummaries = React.useCallback(() => {
-    setPreference('bookmarkedSummaries', {});
-  }, [setPreference]);
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, interaction: InteractionType, format?: ReadingFormat) => {
@@ -102,15 +98,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
               </View>
             ) : (
               <View>
-                <Button 
-                  rounded
-                  selectable
-                  p={ 8 }
-                  m={ 8 }
-                  center
-                  onPress={ () => clearBookmarkedSummaries() }>
-                  Clear Bookmarks
-                </Button>
                 <TabSwitcher 
                   activeTab={ activeBookmarksTab }
                   onTabChange={ setActiveBookmarksTab }
