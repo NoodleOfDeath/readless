@@ -41,7 +41,7 @@ async function main() {
     },
     meta: true,
     msg: 'HTTP {{req.method}} {{req.url}}', 
-    skip: (req, res) => {
+    skip: () => {
       return false;
     }, 
     transports: [new winston.transports.Console()], // optional: allows to skip some log messages based on request and/or response

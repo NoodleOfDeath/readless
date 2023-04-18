@@ -765,7 +765,7 @@ export class Outlet<
   
   @Column({ type: DataType.JSON })
   declare fetchPolicy: FetchPolicy;
-  
+
   async getRateLimit() {
     const key = ['//outlet', this.id, this.name].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });

@@ -27,7 +27,7 @@ const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
 }));
-const fonts = ['Alegreya', 'DM Mono', 'DM Sans', 'Lato'];
+const fonts = ['Alegreya', 'DM Mono', 'DM Sans', 'Lato', 'Roboto'];
 
 export function SettingsScreen(_: ScreenProps<'default'>) {
   const theme = useTheme();
@@ -168,7 +168,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             rounded
             p={ 8 }
             onPress={ () => setPreference('readSummaries', {}) }>
-            Reset Read Articles to Unread (
+            Reset Read Summaries to Unread (
             {Object.values(readSummaries ?? {}).length}
             )
           </Button>
@@ -183,7 +183,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             rounded
             p={ 8 }
             onPress={ () => setPreference('removedSummaries', {}) }>
-            Reset Content Marked Offensive/Spam (
+            Reset Hidden Summaries (
             {Object.values(removedSummaries ?? {}).length}
             )
           </Button>
