@@ -17,7 +17,6 @@ import { InteractionType } from '../../interaction/Interaction.types';
 import { TitledCategorizedPost } from '../Post.model';
 import { Outlet } from '../outlet/Outlet.model';
 import { Category } from '../topic/Category.model';
-import { CategoryAttributes } from '../topic/Category.types';
 
 @Scopes(() => ({ 
   conservative: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE] },
@@ -61,8 +60,8 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
   })
   declare originalTitle: string;
 
-  outletName: string;
-  categoryAttributes?: CategoryAttributes;
+  @Column({ type: DataType.DATE })
+  declare originalDate: Date;
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {

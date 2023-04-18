@@ -137,9 +137,9 @@ export default function Header() {
          || navigator.userAgent.match(/BlackBerry/i)
          || navigator.userAgent.match(/Windows Phone/i));
     if (isIos) {
-      setDownloadMobileApp('ios');
+      setDownloadMobileApp('https://apps.apple.com/us/app/read-less-news/id6447275859?itsct=apps_box_badge&itscg=30200');
     } else if (isAndroid) {
-      setDownloadMobileApp('android');
+      setDownloadMobileApp('https://play.google.com/store/apps/details?id=com.readless');
     }
   }, []);
 
@@ -149,14 +149,14 @@ export default function Header() {
         <StyledDownloadBanner>
           <StyledStack direction="row" spacing={ 2 }>
             <StyledCardMedia
-              onClick={ () => window.open(`/${downloadMobileApp}`, '_blank') }
+              onClick={ () => window.open(downloadMobileApp, '_blank') }
               image="/AppIcon.png" />
             <Typography variant="caption">
               Read anywhere and offline in the app
             </Typography>
             <Button
               variant='outlined'
-              onClick={ () => window.open(`/${downloadMobileApp}`, '_blank') }>
+              onClick={ () => window.open(downloadMobileApp, '_blank') }>
               <Typography variant="caption">Read In App</Typography>
             </Button>
           </StyledStack>

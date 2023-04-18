@@ -5,6 +5,7 @@ import { Op } from 'sequelize';
 import UserAgent from 'user-agents';
 
 import {
+  Job,
   Outlet,
   Queue,
   SiteMapParams,
@@ -118,7 +119,11 @@ async function pollForNews() {
             for (const url of urls) {
               await queue.add(
                 url,
-                { outlet: name, url }
+                { 
+                  dateSelector: outlet.siteMaps.map((m) => m.dateSelector).filter((s) => !!s).join(','),
+                  outlet: name, 
+                  url,
+                }
               );
             }
           } catch (e) {
@@ -140,10 +145,21 @@ const RETIRE_IF_NO_RESPONSE_IN_MS = ms('10m');
 async function cleanUpDeadWorkers() {
   try {
     // check up on dead workers
-    await Worker.update({
+    const [_, rows] = await Worker.update({
       deletedAt: new Date(),
       state: 'retired',
-    }, { where: { lastUpdateAt: { [Op.lt]: new Date(Date.now() - RETIRE_IF_NO_RESPONSE_IN_MS) } } });
+    }, { 
+      returning: true,
+      where: { lastUpdateAt: { [Op.lt]: new Date(Date.now() - RETIRE_IF_NO_RESPONSE_IN_MS) } },
+    });
+    console.log(rows);
+    const deadWorkers = rows?.map((r) => r.id);
+    if (deadWorkers) {
+      await Job.update({
+        lockedBy: null,
+        startedAt: null,
+      }, { where: { lockedBy: deadWorkers } });
+    }
   } catch (e) {
     console.error(e);
   } finally {
