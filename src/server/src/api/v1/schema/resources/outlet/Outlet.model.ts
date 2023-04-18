@@ -754,6 +754,9 @@ export class Outlet<
   })
   declare displayName: string;
   
+  @Column({ type: DataType.STRING(2083) })
+  declare brandImageUrl?: string;
+  
   @Column({ type: DataType.TEXT })
   declare description?: string;
 
