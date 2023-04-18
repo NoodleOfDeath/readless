@@ -48,9 +48,11 @@ export class SpiderService extends BaseService {
   }
 
   /** Custom scraping implementation */
-  async loot(url: string) {
-    const text = await this.fetch(url);
-    const loot = new Loot({ text, url });
+  async loot(url: string, content?: string, dateSelector?: string) {
+    const text = content ?? await this.fetch(url);
+    const loot = new Loot({
+      dateSelector, text, url, 
+    });
     return loot;
   }
 

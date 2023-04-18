@@ -2,6 +2,7 @@ import React from 'react';
 
 import { formatDistance } from 'date-fns';
 import { Swipeable } from 'react-native-gesture-handler';
+import { SvgCssUri } from 'react-native-svg';
 import ViewShot from 'react-native-view-shot';
 
 import { 
@@ -239,12 +240,13 @@ export function Summary({
             <Button 
               startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" mr={ 8 } /> }
               onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+           
             <Button 
               row
               alignCenter
               underline
               onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-              {summary.outletAttributes?.displayName.trim()}
+              {summary.outletAttributes?.displayName}
             </Button>
             <Button 
               underline

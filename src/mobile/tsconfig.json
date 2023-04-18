@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": false,
     "jsx": "react",
     "esModuleInterop": true,
     "baseUrl": ".",

@@ -33,5 +33,6 @@ export type SiteMapJobData = {
   outlet: string;
   url: string; 
   content?: string;
+  dateSelector?: string;
   force?: boolean;
 };

@@ -12,6 +12,7 @@ export type LootProps = {
 
 export type LootInitProps = Omit<LootProps, 'timestamp'> & {
   timestamp?: number;
+  dateSelector?: string;
 };
 
 export class Loot implements LootProps {
@@ -30,13 +31,14 @@ export class Loot implements LootProps {
     timestamp = Date.now(),
     text,
     queryFilter = 'h1,h2,h3,h4,h5,h6,p,blockquote',
+    dateSelector,
   }: LootInitProps) {
     this.url = url;
-    this.timestamp = timestamp;
     this.text = text;
     this.queryFilter = queryFilter;
     const $ = load(text);
     this.title = $('title').text();
+    this.timestamp = dateSelector ? new Date($(dateSelector).text()).valueOf() || timestamp : timestamp;
     this.filteredText = $(queryFilter).text();
   }
 

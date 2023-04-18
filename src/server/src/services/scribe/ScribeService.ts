@@ -1,4 +1,4 @@
-import { ReadAndSummarizeOptions, ReadAndSummarizePayload } from './types';
+import { ReadAndSummarizePayload } from './types';
 import {
   ChatGPTService,
   Prompt,
@@ -21,10 +21,9 @@ export class ScribeService extends BaseService {
   }
   
   public static async readAndSummarize(
-    { url, content }: ReadAndSummarizePayload,
     {
-      onProgress, force, outletId, 
-    }: ReadAndSummarizeOptions = {}
+      url, content, dateSelector, outletId, force, 
+    }: ReadAndSummarizePayload
   ): Promise<Summary> {
     if (this.categories.length === 0) {
       await this.init();
@@ -41,26 +40,19 @@ export class ScribeService extends BaseService {
     } else {
       console.log(`Forcing summary rewrite for ${url}`);
     }
-    let subjectContent = content;
-    let originalTitle = '';
-    let rawText = content;
-    if (!subjectContent) {
-      // fetch web content with the spider
-      const spider = new SpiderService();
-      const loot = await spider.loot(url);
-      // create the prompt onReply map to be sent to chatgpt
-      if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
-        throw new Error('Article too long for OpenAI');
-      }
-      subjectContent = loot.filteredText;
-      originalTitle = loot.title;
-      rawText = loot.text;
+    // fetch web content with the spider
+    const spider = new SpiderService();
+    const loot = await spider.loot(url, content, dateSelector);
+    // create the prompt onReply map to be sent to chatgpt
+    if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
+      throw new Error('Article too long for OpenAI');
     }
     const newSummary = Summary.json<Summary>({
-      filteredText: subjectContent,
-      originalTitle,
+      filteredText: loot.filteredText,
+      originalDate: new Date(loot.timestamp),
+      originalTitle: loot.title,
       outletId,
-      rawText,
+      rawText: loot.text,
       url,
     });
     const prompts: Prompt[] = [
@@ -154,9 +146,6 @@ export class ScribeService extends BaseService {
       }
       console.log(reply);
       prompt.onReply(reply);
-      if (onProgress) {
-        onProgress((n + 1) / prompts.length);
-      }
     }
     const category = await Category.findOne({ where: { displayName: newSummary.category } });
     newSummary.category = category.name;

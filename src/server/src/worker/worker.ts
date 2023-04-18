@@ -49,8 +49,9 @@ export async function doWork() {
           }
           limit.advance();
           const summary = await ScribeService.readAndSummarize(
-            { content, url },
-            { outletId: outlet.id }
+            {
+              content, outletId: outlet.id, url, 
+            }
           );
           await job.moveToCompleted();
           return summary;
