@@ -51,6 +51,8 @@
 		0150EA1B29EDD6C7004FBDFA /* Alegreya-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya-Regular.otf */; };
 		0150EA1D29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1C29EDD7EA004FBDFA /* DMSans-Regular.ttf */; };
 		0150EA1E29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1C29EDD7EA004FBDFA /* DMSans-Regular.ttf */; };
+		0150EA2029EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */; };
+		0150EA2129EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */; };
 		015A19D129EAEB1A0072EEE3 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A19D029EAEB1A0072EEE3 /* View.swift */; };
 		018173BF29EA1842006D3509 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
 		018173C129EA4529006D3509 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C029EA4529006D3509 /* SummaryCard.swift */; };
@@ -158,6 +160,7 @@
 		0150EA1629EDD681004FBDFA /* Arrow.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Arrow.ttf; sourceTree = "<group>"; };
 		0150EA1929EDD6C7004FBDFA /* Alegreya-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Alegreya-Regular.otf"; sourceTree = "<group>"; };
 		0150EA1C29EDD7EA004FBDFA /* DMSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMSans-Regular.ttf"; sourceTree = "<group>"; };
+		0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		015A19D029EAEB1A0072EEE3 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		018173BE29EA1842006D3509 /* PressActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressActions.swift; sourceTree = "<group>"; };
 		018173C029EA4529006D3509 /* SummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryCard.swift; sourceTree = "<group>"; };
@@ -323,6 +326,7 @@
 				0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */,
 				0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */,
 				0125BD1C29D791EC00EAC61C /* Octicons.ttf */,
+				0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */,
 				0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */,
 				0125BD3129D791EC00EAC61C /* Zocial.ttf */,
 			);
@@ -615,6 +619,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				010F0CEB29E88D480064DD97 /* Preview Assets.xcassets in Resources */,
+				0150EA2129EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */,
 				0150EA1829EDD681004FBDFA /* Arrow.ttf in Resources */,
 				0150EA1529EDD59C004FBDFA /* Lato-Regular.ttf in Resources */,
 				0150EA1E29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */,
@@ -643,6 +648,7 @@
 			files = (
 				0150EA1A29EDD6C7004FBDFA /* Alegreya-Regular.otf in Resources */,
 				0125BD4C29D791ED00EAC61C /* FontAwesome5_Regular.ttf in Resources */,
+				0150EA2029EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */,
 				0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */,
 				0150EA1D29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */,
 				0125BD4A29D791ED00EAC61C /* Ionicons.ttf in Resources */,

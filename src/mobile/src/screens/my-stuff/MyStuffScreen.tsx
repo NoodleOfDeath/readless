@@ -33,15 +33,22 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   
   const [activeTab, setActiveTab] = React.useState(0);
 
-  const unreadBookmarks = React.useMemo(() => Object.fromEntries(Object.entries(bookmarkedSummaries ?? {})
-    .filter(([id]) => readSummaries?.[Number(id)] === undefined)), [bookmarkedSummaries, readSummaries]);
+  const unreadBookmarks = React.useMemo(() => Object.entries(bookmarkedSummaries ?? {})
+    .filter(([id]) => readSummaries?.[Number(id)] === undefined), [bookmarkedSummaries, readSummaries]);
+  const readBookmarks = React.useMemo(() => Object.entries(readSummaries ?? {}).sort((a, b) => a[1].createdAt < b[1].createdAt ? 1 : -1), [readSummaries]);
+  const favoritedBookmarks = React.useMemo(() => Object.entries(favoritedSummaries ?? {}), [favoritedSummaries]);
+
   const [unreadPage, setUnreadPage] = React.useState(0);
   const [readPage, setReadPage] = React.useState(0);
+  const [favoritedPage, setFavoritedPage] = React.useState(0);
+
+  const titles = React.useMemo(() => [`Unread (${unreadBookmarks.length})`, `Read (${readBookmarks.length})`, `Favorites (${favoritedBookmarks.length})`], [unreadBookmarks, readBookmarks, favoritedBookmarks]);
 
   const onTabChange = React.useCallback((index: number) => {
     setActiveTab(index);
     setUnreadPage(0);
     setReadPage(0);
+    setFavoritedPage(0);
   }, []);
 
   const handleFormatChange = React.useCallback(
@@ -93,7 +100,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
         <TabSwitcher
           activeTab={ activeTab }
           onTabChange={ onTabChange }
-          titles={ ['Unread', 'Read', 'Favorites'] }>
+          titles={ titles }>
           {Object.entries(unreadBookmarks ?? {}).length === 0 ? (
             <View justifyCenter alignCenter>
               <Button
@@ -109,7 +116,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
             </View>
           ) : (
             <View>
-              {Object.entries(unreadBookmarks ?? {}).slice(0, unreadPage * pageSize + pageSize)
+              {(unreadBookmarks ?? []).slice(0, unreadPage * pageSize + pageSize)
                 .map(([id, bookmark]) => {
                   return (
                     <View col key={ id }>
@@ -121,7 +128,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                     </View>
                   );
                 })}
-              {Object.entries(unreadBookmarks ?? {}).length > unreadPage * pageSize + pageSize && (
+              {(unreadBookmarks ?? []).length > unreadPage * pageSize + pageSize && (
                 <View justifyCenter alignCenter>
                   <Button
                     rounded
@@ -138,7 +145,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
             </View>
           )}
           <View>
-            {Object.entries(readSummaries ?? {}).slice(0, readPage * pageSize + pageSize)
+            {(readBookmarks ?? []).slice(0, readPage * pageSize + pageSize)
               .map(([id, bookmark]) => {
                 return (
                   <View col key={ id }>
@@ -150,7 +157,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                   </View>
                 );
               })}
-            {Object.entries(readSummaries ?? {}).length > readPage * pageSize + pageSize && (
+            {(readBookmarks ?? []).length > readPage * pageSize + pageSize && (
               <View justifyCenter alignCenter>
                 <Button
                   rounded
@@ -166,7 +173,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
             )}
           </View>
           <View>
-            {Object.entries(favoritedSummaries ?? {}).length === 0 ? (
+            {(favoritedBookmarks ?? []).length === 0 ? (
               <View justifyCenter alignCenter>
                 <Button
                   rounded
@@ -181,17 +188,32 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
               </View>
             ) : (
               <View>
-                {Object.entries(favoritedSummaries ?? {}).map(([id, bookmark]) => {
-                  return (
-                    <View col key={ id }>
-                      <Summary
-                        summary={ bookmark.item }
-                        onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Favorite, format) }
-                        onReferSearch={ handleReferSearch }
-                        onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
-                    </View>
-                  );
-                })}
+                {(favoritedBookmarks ?? []).slice(0, favoritedPage * pageSize + pageSize)
+                  .map(([id, bookmark]) => {
+                    return (
+                      <View col key={ id }>
+                        <Summary
+                          summary={ bookmark.item }
+                          onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Favorite, format) }
+                          onReferSearch={ handleReferSearch }
+                          onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
+                      </View>
+                    );
+                  })}
+                {(favoritedBookmarks ?? []).length > favoritedPage * pageSize + pageSize && (
+                  <View justifyCenter alignCenter>
+                    <Button
+                      rounded
+                      outlined
+                      selectable
+                      p={ 8 }
+                      m={ 8 }
+                      center
+                      onPress={ () => setFavoritedPage((prev) => prev + 1) }>
+                      Load More
+                    </Button>
+                  </View>
+                )}
               </View>
             )}
           </View>

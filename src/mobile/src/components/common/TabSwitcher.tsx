@@ -29,7 +29,7 @@ export function TabSwitcher({
 }: Props) {
   
   const theme = useTheme();
-  const views = React.useMemo(() => Array.isArray(children) ? children : [children], [children]);
+  const views = React.useMemo(() => Array.isArray(children) ? children : children ? [children] : undefined, [children]);
 
   const [switcherLayout, setSwitcherLayout] = React.useState<LayoutRectangle>();
   const translateX = React.useRef(new Animated.Value(0)).current;
@@ -52,7 +52,7 @@ export function TabSwitcher({
           row
           outlined
           rounded
-          mv={ 16 }
+          mv={ views && views.length > 0 ? 16 : 0 }
           height={ tabHeight ?? 36 }
           onLayout={ (event) => setSwitcherLayout(event.nativeEvent.layout) }>
           <Animated.View
@@ -96,11 +96,13 @@ export function TabSwitcher({
             </TouchableOpacity>
           ))}
         </View>
-        <ScrollView>
-          <Animated.View>
-            {activeTab < views.length && views[activeTab]}
-          </Animated.View>
-        </ScrollView>
+        {views && views.length > 0 && (
+          <ScrollView>
+            <Animated.View>
+              {activeTab < views.length && views[activeTab]}
+            </Animated.View>
+          </ScrollView>
+        )}
       </View>
     </Animated.View>
   );

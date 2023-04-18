@@ -8,6 +8,7 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
+  ActivityIndicator,
   Button,
   Screen,
   Summary,
@@ -50,7 +51,7 @@ export function SearchScreen({
   }, [prefilter, navigation]);
 
   const [loading, setLoading] = React.useState(false);
-  const [recentSummaries, setRecentSummaries] = React.useState<PublicSummaryAttributes[]>([]);
+  const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
 
   const [pageSize] = React.useState(10);
@@ -75,7 +76,7 @@ export function SearchScreen({
   const load = React.useCallback(async (pageSize: number, page: number) => {
     setLoading(true);
     if (page === 0) {
-      setRecentSummaries([]);
+      setSummaries([]);
     }
     if (onlyCustomNews && !followFilter) {
       setLoading(false);
@@ -102,7 +103,7 @@ export function SearchScreen({
       if (!data) {
         return;
       }
-      setRecentSummaries((prev) => {
+      setSummaries((prev) => {
         if (page === 0) {
           return (prev = data.rows.filter((r) => !(r.id in (removedSummaries ?? {}))));
         }
@@ -113,7 +114,7 @@ export function SearchScreen({
     } catch (e) {
       console.error(e);
       toast.alert(String(e));
-      setRecentSummaries([]);
+      setSummaries([]);
       setTotalResultCount(0);
     } finally {
       setLoading(false);
@@ -154,7 +155,7 @@ export function SearchScreen({
         console.error(error);
         toast.alert(error.message);
       } else if (interactions) {
-        setRecentSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
+        setSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
       }
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
@@ -186,7 +187,7 @@ export function SearchScreen({
               value={ searchText } />
           </View>
         )}
-        {!loading && onlyCustomNews && recentSummaries.length === 0 && (
+        {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>
               It seems your filters are too specific. You may want to consider 
@@ -203,7 +204,7 @@ export function SearchScreen({
             </Button>
           </View>
         )}
-        {recentSummaries.map((summary) => (
+        {summaries.map((summary) => (
           <Summary
             key={ summary.id }
             summary={ summary }
@@ -213,7 +214,7 @@ export function SearchScreen({
             onInteract={ (...e) => handleInteraction(summary, ...e) }
             onReferSearch={ handleReferSearch } />
         ))}
-        {!loading && !noResults && totalResultCount > recentSummaries.length && (
+        {!loading && !noResults && totalResultCount > summaries.length && (
           <View row justifyCenter p={ 16 } pb={ 24 }>
             <Button 
               outlined
@@ -223,6 +224,11 @@ export function SearchScreen({
               onPress={ loadMore }>
               Load More
             </Button>
+          </View>
+        )}
+        {loading && summaries.length > 0 && (
+          <View row justifyCenter p={ 16 } pb={ 24 }>
+            <ActivityIndicator size="large" color={ theme.colors.primary } />
           </View>
         )}
       </View>
