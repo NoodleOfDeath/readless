@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 
-import { SessionContext } from '~/contexts';
+import { Preferences, SessionContext } from '~/contexts';
 
-const makeTheme = (lightMode: boolean) => {
+const makeTheme = (lightMode: boolean, preferences: Preferences) => {
   return {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
+      inactive: lightMode ? '#111' : '#666',
       invertText: lightMode ? '#fff' : '#000',
       primary: '#8b0000',
       text: lightMode ? '#000' : '#fff',
@@ -51,7 +52,7 @@ const makeTheme = (lightMode: boolean) => {
           marginTop: 6,
         },
         fab: {
-          bottom: 64,
+          bottom: 96,
           position: 'absolute',
           right: 32,
         },
@@ -71,15 +72,11 @@ const makeTheme = (lightMode: boolean) => {
         },
         outlined: {
           borderColor: '#8b0000',
-          borderWidth: 2,
+          borderWidth: 1,
         },
         rounded: { borderRadius: 8 },
         searchBar: {
-          backgroundColor: lightMode ? '#fff' : '#000',
-          borderRadius: 8,
-          marginBottom: 8,
-          marginTop: 8,
-          overflow: 'hidden',
+          fontFamily: preferences.fontFamily,
           width: '100%',
         },
         text: { fontFamily: 'Lato' },
@@ -104,15 +101,16 @@ const makeTheme = (lightMode: boolean) => {
   };
 };
 
-export const LIGHT_THEME = makeTheme(true);
-const DARK_THEME = makeTheme(false);
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function useTheme() {
-  const { preferences: { displayMode } } = React.useContext(SessionContext);
+
+  const { preferences } = React.useContext(SessionContext);
+
+  const LIGHT_THEME = makeTheme(true, preferences);
+  const DARK_THEME = makeTheme(false, preferences);
 
   const colorScheme = useColorScheme();
   
-  return ((displayMode ?? colorScheme) === 'light') ? LIGHT_THEME : DARK_THEME;
+  return ((preferences.displayMode ?? colorScheme) === 'light') ? LIGHT_THEME : DARK_THEME;
   
 }

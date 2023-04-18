@@ -22,7 +22,7 @@ export async function doWork() {
       async (job, next) => {
         try {
           const {
-            outlet: outletName, url, force, 
+            outlet: outletName, content, url, force, 
           } = job.data;
           const outlet = await Outlet.findOne({ where: { name: outletName } });
           if (!outlet) {
@@ -49,7 +49,7 @@ export async function doWork() {
           }
           limit.advance();
           const summary = await ScribeService.readAndSummarize(
-            { url },
+            { content, url },
             { outletId: outlet.id }
           );
           await job.moveToCompleted();

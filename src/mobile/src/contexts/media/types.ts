@@ -13,7 +13,6 @@ export const deviceLanguage = (
 export type MediaContextType = {
   deviceLanguage: string;
   firstResponder: string;
-  navigation?: any;
   selectedVoice?: Voice;
   selectedVoiceIndex: number;
   speechRate: number;
@@ -24,7 +23,6 @@ export type MediaContextType = {
   cancelTts: () => Promise<void>;
   readText: (text: string, firstResponder: string) => Promise<void>;
   setFirstResponder: React.Dispatch<React.SetStateAction<string>>;
-  setNavigation: React.Dispatch<React.SetStateAction<any>>;
   setSpeechRate: React.Dispatch<React.SetStateAction<number>>;
   setSpeechPitch: React.Dispatch<React.SetStateAction<number>>;
   setSpeechVolume: React.Dispatch<React.SetStateAction<number>>;
@@ -40,9 +38,6 @@ export const DEFAULT_MEDIA_CONTEXT: MediaContextType = {
   readText: () => Promise.resolve(),  
   selectedVoiceIndex: 0,
   setFirstResponder: () => {
-    /** placeholder */
-  },
-  setNavigation: () => {
     /** placeholder */
   },
   setSelectedVoice: () => {

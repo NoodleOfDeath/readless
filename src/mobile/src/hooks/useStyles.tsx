@@ -25,12 +25,20 @@ export function useStyles({
   center,
   left,
   right,
+  fontFamily,
   fontSize = h1 ? 36 : h2 ? 32 : h3 ? 28 : h4 ? 26 : h5 ? 24 : h6 ? 22 : caption ? 12 : subtitle1 ? 20 : subtitle2 ? 18 : body1 ? 16 : body2 ? 15 : 16,
   bold,
   italic,
   underline,
   code,
   // flex styles
+  flex,
+  flexWrap,
+  flexGrow,
+  flexRow,
+  flexRowReverse,
+  flexColumn,
+  flexColumnReverse,
   col,
   row,
   alignCenter,
@@ -58,9 +66,11 @@ export function useStyles({
   pr = ph,
   // appearance
   bg,
+  opacity,
   outlined,
   contained,
   rounded,
+  shadowed,
   // selectable,
   // other
   style,
@@ -85,6 +95,9 @@ export function useStyles({
   const fontAppearance = React.useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const styles: any[] = [];
+    if (fontFamily) {
+      styles.push({ fontFamily });
+    }
     if (bold) {
       styles.push({ fontWeight: 'bold' });
     }
@@ -98,7 +111,7 @@ export function useStyles({
       styles.push({ fontFamily: 'monospace' });
     }
     return styles.reduce((cur, n) => ({ ...cur, ...n }), {});
-  }, [bold, italic, underline, code]);
+  }, [fontFamily, bold, italic, underline, code]);
 
   const alignItems = React.useMemo(() => {
     if (alignCenter) {
@@ -128,25 +141,39 @@ export function useStyles({
   }, [justifyCenter, justifyEnd, justifySpaced, justifyStart]);
   
   const appearance = React.useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const appearance: any[] = [];
     if (outlined === true) {
-      return theme.components.outlined;
+      appearance.push(theme.components.outlined);
     } else
     if (typeof outlined === 'string') {
-      return { borderColor: outlined, borderWidth: 1 };
+      appearance.push({ borderColor: outlined, borderWidth: 1 });
     } else
     if (typeof outlined === 'number') {
-      return { borderColor: theme.colors.primary, borderWidth: outlined };
+      appearance.push({ borderColor: theme.colors.primary, borderWidth: outlined });
     } else
     if (Array.isArray(outlined) && outlined.length === 2 && typeof outlined[0] === 'string' && typeof outlined[1] === 'number') {
-      return {
+      appearance.push({
         borderColor: outlined[0],
         borderWidth: outlined[1],
-      };
+      });
     } else
     if (contained) {
-      return theme.components.buttonSelected;
-    } 
-  }, [outlined, contained, theme]);
+      appearance.push(theme.components.buttonSelected);
+    }
+    if (opacity) {
+      appearance.push({ opacity });
+    }
+    if (shadowed) {
+      appearance.push({
+        shadowColor: 'rgba(0,0,0,.7)',
+        shadowOffset: { height: 1, width: 1 },
+        shadowOpacity: 0.7,
+        shadowRadius: 3,
+      });
+    }
+    return appearance.reduce((cur, n) => ({ ...cur, ...n }), {});
+  }, [opacity, outlined, contained, shadowed, theme]);
 
   const viewStyle = React.useMemo(() => {
     const scale = ((((textScale ?? 1) - 1) / 2) + 1);
@@ -154,6 +181,13 @@ export function useStyles({
     const attrs: any[] = [];
     attrs.push(row? theme.components.flexRow : undefined);
     attrs.push(col ? theme.components.flexCol : undefined);
+    attrs.push(flex ? { flex } : undefined);
+    attrs.push(flexWrap ? { flexWrap } : undefined);
+    attrs.push(flexGrow ? { flexGrow } : undefined);
+    attrs.push(flexRow ? { flexDirection: 'row' } : undefined);
+    attrs.push(flexRowReverse ? { flexDirection: 'row-reverse' } : undefined);
+    attrs.push(flexColumn ? { flexDirection: 'column' } : undefined);
+    attrs.push(flexColumnReverse ? { flexDirection: 'column-reverse' } : undefined);
     attrs.push(textAlign);
     attrs.push(fontAppearance);
     attrs.push(alignItems);
@@ -174,27 +208,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
     attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter(Boolean).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [
-    textScale,
-    width,
-    height,
-    color,
-    fontSize,
-    fontAppearance,
-    row, 
-    col, 
-    textAlign,
-    alignItems,
-    justifyContent,
-    mt, mb, ml, mr, 
-    pt, pb, pl, pr, 
-    bg,
-    rounded, 
-    appearance, 
-    theme.components.flexRow, 
-    theme.components.flexCol,
-    theme.components.rounded, 
-    newStyle,
-  ]);
+  }, [textScale, row, theme.components.flexRow, theme.components.flexCol, theme.components.rounded, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, textAlign, fontAppearance, alignItems, justifyContent, appearance, color, width, height, fontSize, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
   return viewStyle;
 }

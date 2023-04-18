@@ -36,15 +36,23 @@ export class Bookmark<T> {
 export type Preferences = {
   displayMode?: ColorMode;
   releases?: Record<string, ReleaseAttributes>;
+  alwaysShowReadingFormatSelector?: boolean;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;
+  fontFamily?: string;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
   bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
   removedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
+  readSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   showOnlyBookmarkedNews?: boolean;
+};
+
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { 
+  alwaysShowReadingFormatSelector: true,
+  fontFamily: 'Alegreya',
 };
 
 // Headers

@@ -8,7 +8,6 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
-  ActivityIndicator,
   Button,
   Screen,
   Summary,
@@ -178,17 +177,13 @@ export function SearchScreen({
       onRefresh={ () => load(pageSize, 0) }>
       <View col mh={ 16 }>
         {!prefilter && (
-          <View style={ theme.components.searchBar }>
+          <View mb={ 16 }>
             <Searchbar
               placeholder="show me something worth reading..."
               onChangeText={ ((text) => 
                 setSearchText(text)) }
+              inputStyle={ theme.components.searchBar }
               value={ searchText } />
-          </View>
-        )}
-        {loading && recentSummaries.length === 0 && (
-          <View justifyCenter p={ 16 }>
-            <ActivityIndicator size="large" />
           </View>
         )}
         {!loading && onlyCustomNews && recentSummaries.length === 0 && (

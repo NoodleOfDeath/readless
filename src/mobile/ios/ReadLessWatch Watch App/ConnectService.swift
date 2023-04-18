@@ -60,7 +60,6 @@ class ConnectService: ObservableObject {
       }
       self.loading = false
     }
-    self.loading = false
     
   }
 

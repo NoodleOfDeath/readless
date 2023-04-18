@@ -4,14 +4,15 @@ import { Switch } from 'react-native';
 import { ReadingFormat } from '~/api';
 import { 
   Button,
-  Icon,
   ReadingFormatSelector,
   Screen, 
+  ScrollView, 
   TabSwitcher,
   Text,
   View,
 } from '~/components';
 import { ColorMode, SessionContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 type OptionProps = React.PropsWithChildren<{
@@ -22,19 +23,24 @@ type OptionProps = React.PropsWithChildren<{
 }>;
 
 const displayModes = ['light', 'system', 'dark'];
-const textScales = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
+const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
 }));
+const fonts = ['Alegreya', 'DM Mono', 'DM Sans', 'Lato'];
 
 export function SettingsScreen(_: ScreenProps<'default'>) {
+  const theme = useTheme();
   const {
     preferences: {
       textScale, 
+      fontFamily,
+      alwaysShowReadingFormatSelector,
+      preferredReadingFormat,
       compactMode,
       displayMode,
-      preferredReadingFormat,
       removedSummaries,
+      readSummaries,
     }, 
     setPreference,
   } = React.useContext(SessionContext);
@@ -72,8 +78,6 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     setPreference('textScale', newTextScale.value);
   }, [textScale, setPreference]);
   
-  const handleResetRemovedContent = React.useCallback(() => setPreference('removedSummaries', {}), [setPreference]);
-  
   const options: OptionProps[] = React.useMemo(() => {
     return [
       {
@@ -81,41 +85,33 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
           <View justifyCenter>
             <TabSwitcher
               activeTab={ activeDisplayMode }
-              tabHeight={ 100 * (textScale ?? 1) } 
               onTabChange={ handleDisplayModeChange }
-              titles={ [
-                <View
-                  key="light"
-                  alignCenter
-                  justifyCenter>
-                  <Icon name="weather-sunny" h1 />
-                  <Text center body1>
-                    Light
-                  </Text>
-                </View>,
-                <View
-                  key={ undefined }
-                  alignCenter
-                  justifyCenter>
-                  <Icon name="theme-light-dark" h1 />
-                  <Text center body1>
-                    System
-                  </Text>
-                </View>,
-                <View
-                  key="dark"
-                  alignCenter
-                  justifyCenter>
-                  <Icon name="weather-night" h1 />
-                  <Text center body1>
-                    Dark
-                  </Text>
-                </View>,
-              ] } />
+              titles={ [ 'Light', 'System', 'Dark'] } />
           </View>
         ),
         id: 'display-mode',
         label: 'Color Scheme',
+      },
+      {
+        children: (
+          <View row alignCenter justifyCenter>
+            <View col alignCenter>
+              <Text center mb={ 4 }>Always Show Reading Format Selector</Text>
+              <Switch 
+                thumbColor={ theme.colors.primary } 
+                value={ alwaysShowReadingFormatSelector } 
+                onValueChange={ (newValue) => setPreference('alwaysShowReadingFormatSelector', newValue) } />
+            </View>
+            <View col alignCenter>
+              <Text center mb={ 4 }>Compact Reading Format Selector</Text>
+              <Switch 
+                thumbColor={ theme.colors.primary } 
+                value={ compactMode } 
+                onValueChange={ (newValue) => setPreference('compactMode', newValue) } />
+            </View>
+          </View>
+        ),
+        id: 'always-show-reading-format',
       },
       {
         children: (
@@ -126,13 +122,6 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         ),
         id: 'reading-format',
         label: 'Preferred Reading Format on Open',
-      },
-      {
-        children: (
-          <Switch value={ compactMode } onValueChange={ (newValue) => setPreference('compactMode', newValue) } />
-        ),
-        id: 'compact-reading-format',
-        label: 'Compact Reading Format Selector',
       },
       {
         children: (
@@ -148,12 +137,52 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       },
       {
         children: (
+          <ScrollView horizontal>
+            <View row alignCenter>
+              {fonts.map((font) => (
+                <Button 
+                  row
+                  alignCenter
+                  spacing={ 4 }
+                  key={ font }
+                  rounded
+                  outlined
+                  p={ 8 }
+                  mh={ 4 }
+                  startIcon={ fontFamily === font ? 'check' : undefined } 
+                  fontFamily={ font }
+                  onPress={ () => setPreference('fontFamily', font) }>
+                  {font}
+                </Button>
+              ))}
+            </View>
+          </ScrollView>
+        ),
+        id: 'font-family',
+        label: 'Font',
+      },
+      {
+        children: (
           <Button
             outlined
             rounded
             p={ 8 }
-            onPress={ handleResetRemovedContent }
-            h5>
+            onPress={ () => setPreference('readSummaries', {}) }>
+            Reset Read Articles to Unread (
+            {Object.values(readSummaries ?? {}).length}
+            )
+          </Button>
+        ),
+        id: 'reset-read-summaries',
+        label: 'Reset Read Content',
+      },
+      {
+        children: (
+          <Button
+            outlined
+            rounded
+            p={ 8 }
+            onPress={ () => setPreference('removedSummaries', {}) }>
             Reset Content Marked Offensive/Spam (
             {Object.values(removedSummaries ?? {}).length}
             )
@@ -163,7 +192,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Reset Removed Content',
       },
     ];
-  }, [activeDisplayMode, textScale, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, compactMode, activeTextScale, handleTextScaleChange, handleResetRemovedContent, removedSummaries, setPreference]);
+  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, alwaysShowReadingFormatSelector, compactMode, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference, fontFamily]);
   
   return (
     <Screen>
@@ -172,7 +201,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
           <View>
             {options.filter((o) => o.visible !== false).map((option) => (
               <View col key={ option.id } p={ 4 } mv={ 4 }>
-                {!option.onPress && (
+                {!option.onPress && option.label && (
                   <Text mb={ 4 }>{option.label}</Text>
                 )}
                 {option.onPress && (

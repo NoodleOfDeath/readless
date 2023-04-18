@@ -2,6 +2,7 @@ import React from 'react';
 
 import { UserData, UserDataProps } from './UserData';
 import {
+  DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
   Preferences,
@@ -102,8 +103,7 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     getCookie(COOKIES.preferences)
       .then((cookie) => { 
-        const prefs = JSON.parse(cookie ?? '{}');
-        setPreferences(prefs);
+        setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(cookie ?? '{}') });
         setReadyFlags((prev) => ({ ...prev, preferences: true }));
       })
       .catch((e) => {

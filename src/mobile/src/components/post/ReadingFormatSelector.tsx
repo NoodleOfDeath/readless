@@ -29,7 +29,7 @@ export function ReadingFormatSelector({
   const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
     return (
       <Button
-        body2
+        caption
         selectable
         outlined
         row
@@ -50,26 +50,28 @@ export function ReadingFormatSelector({
   }, [compactMode, format, preferredFormat, onChange, textScale]);
 
   return (
-    compactMode ? (
-      <View row rounded outlined style={ theme.components.buttonGroup }>
-        {makeButton(ReadingFormat.Concise)}
-        {makeButton(ReadingFormat.Bullets)}
-        {makeButton(ReadingFormat.Casual)}
-        {makeButton(ReadingFormat.Detailed)}
-        {makeButton(ReadingFormat.InDepth)}
-      </View>
-    ) : (  
-      <View rounded outlined style={ theme.components.buttonGroup }>
-        <View row style={ theme.components.buttonGroupRow }>
+    <View>
+      {compactMode ? (
+        <View row rounded outlined style={ theme.components.buttonGroup }>
           {makeButton(ReadingFormat.Concise)}
           {makeButton(ReadingFormat.Bullets)}
           {makeButton(ReadingFormat.Casual)}
+          {makeButton(ReadingFormat.Detailed)}
+          {makeButton(ReadingFormat.InDepth)}
         </View>
-        <View row style={ theme.components.buttonGroupRow }>
-          {makeButton(ReadingFormat.Detailed, 1)}
-          {makeButton(ReadingFormat.InDepth, 1)}
+      ) : (  
+        <View rounded outlined style={ theme.components.buttonGroup }>
+          <View row style={ theme.components.buttonGroupRow }>
+            {makeButton(ReadingFormat.Concise)}
+            {makeButton(ReadingFormat.Bullets)}
+            {makeButton(ReadingFormat.Casual)}
+          </View>
+          <View row style={ theme.components.buttonGroupRow }>
+            {makeButton(ReadingFormat.Detailed, 1)}
+            {makeButton(ReadingFormat.InDepth, 1)}
+          </View>
         </View>
-      </View>
-    )
+      )}
+    </View>
   );
 }

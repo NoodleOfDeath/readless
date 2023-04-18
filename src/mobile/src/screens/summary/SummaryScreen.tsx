@@ -91,7 +91,7 @@ export function SummaryScreen({
         ) : (summary && (
           <Summary
             summary={ summary }
-            format={ format }
+            initialFormat={ format }
             collapsible={ false }
             bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
             favorited={ Boolean(favoritedSummaries?.[summary.id]) }

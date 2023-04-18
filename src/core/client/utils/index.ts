@@ -1,2 +1,2 @@
-export * from './Array';
-export * from './Summary';
+export * from './ArrayUtils';
+export * from './SummaryUtils';
