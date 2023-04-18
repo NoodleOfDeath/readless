@@ -39,22 +39,15 @@ export * from './user/UserMetadata.types';
 export * from './auth/Credential.types';
 export * from './auth/Role.types';
 
-export * from './newsletter/Newsletter.types';
-export * from './newsletter/Subscription.types';
-
 export * from './interaction/Interaction.types';
 
-export * from './resources/Media.types';
 export * from './resources/Post.types';
 
 export * from './resources/topic/Category.types';
-export * from './resources/topic/CategoryMedia.types';
 
 export * from './resources/outlet/Outlet.types';
-export * from './resources/outlet/OutletMedia.types';
 
 export * from './resources/summary/Summary.types';
-export * from './resources/summary/SummaryMedia.types';
 
 export * from './queue/Queue.types';
 export * from './queue/Job.types';
