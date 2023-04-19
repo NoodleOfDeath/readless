@@ -32,8 +32,8 @@ export class Loot implements LootProps {
     url,
     text,
     queryFilter = 'h1,h2,h3,h4,h5,h6,p,blockquote',
-    dateSelector = 'time,div[aria-label="Published"]',
-    dateAttribute = 'datetime,aria-label',
+    dateSelector = 'time',
+    dateAttribute = 'datetime',
   }: LootInitProps) {
     this.url = url;
     this.text = text;
