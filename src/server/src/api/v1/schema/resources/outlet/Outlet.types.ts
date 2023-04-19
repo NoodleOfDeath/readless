@@ -25,6 +25,7 @@ export type SiteMap = {
   /** attribute to extract from retrieved html nodes; if nothing is specified the element's `innerHTML` is used */
   attribute?: 'href' | 'src';
   dateSelector?: string;
+  dateAttribute?: string;
 };
 
 export type FetchPolicy = {

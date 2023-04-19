@@ -22,7 +22,7 @@ export class ScribeService extends BaseService {
   
   public static async readAndSummarize(
     {
-      url, content, dateSelector, outletId, force, 
+      url, content, dateSelector, dateAttribute, outletId, force, 
     }: ReadAndSummarizePayload
   ): Promise<Summary> {
     if (this.categories.length === 0) {
@@ -42,7 +42,7 @@ export class ScribeService extends BaseService {
     }
     // fetch web content with the spider
     const spider = new SpiderService();
-    const loot = await spider.loot(url, content, dateSelector);
+    const loot = await spider.loot(url, content, dateSelector, dateAttribute);
     // create the prompt onReply map to be sent to chatgpt
     if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       throw new Error('Article too long for OpenAI');
