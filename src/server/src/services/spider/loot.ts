@@ -2,7 +2,7 @@ import { load } from 'cheerio';
 
 export type LootProps = {
   url: string;
-  timestamp: number;
+  timestamp?: number;
   text?: string;
   queryFilter?: string;
   title?: string;
@@ -21,7 +21,7 @@ export class Loot implements LootProps {
 
   url: string;
   text: string;
-  timestamp: number;
+  timestamp?: number;
   filteredText?: string;
   queryFilter?: string;
   title?: string;
@@ -32,8 +32,8 @@ export class Loot implements LootProps {
     url,
     text,
     queryFilter = 'h1,h2,h3,h4,h5,h6,p,blockquote',
-    dateSelector = 'time',
-    dateAttribute = 'datetime',
+    dateSelector = 'time,div[aria-label="Published"]',
+    dateAttribute = 'datetime,aria-label',
   }: LootInitProps) {
     this.url = url;
     this.text = text;
@@ -42,12 +42,10 @@ export class Loot implements LootProps {
     this.title = $('title').text();
     const bodyText = $('body').text();
     const dateMatch = bodyText.match(DATE_EXPR)?.[0].replace(/([ECMP])T$/, ($0, $1) => `${$1}ST`).replace('AK', 'AST');
-    console.log(dateMatch);
-    let defaultTimestamp = DATE_EXPR.test(bodyText) ? new Date(dateMatch).valueOf() : Date.now();
+    let defaultTimestamp = DATE_EXPR.test(bodyText) ? new Date(dateMatch).valueOf() : undefined;
     if (Number.isNaN(defaultTimestamp)) {
-      defaultTimestamp = Date.now();
+      defaultTimestamp = undefined;
     }
-    console.log(defaultTimestamp);
     this.timestamp = dateSelector ? new Date(dateAttribute ? $(dateSelector).attr(dateAttribute) || $(dateSelector).text() : $(dateSelector).text()).valueOf() || defaultTimestamp : defaultTimestamp;
     this.filteredText = $(queryFilter).text();
   }
