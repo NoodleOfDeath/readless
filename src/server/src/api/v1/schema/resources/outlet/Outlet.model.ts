@@ -17,6 +17,7 @@ import { RateLimit } from '../../analytics/RateLimit.model';
 import { BaseModel } from '../../base';
 
 const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 1; // 1 for dev and testing
+const WORKER_MAX_FETCH_RATE_LIMIT = process.env.WORKER_MAX_FETCH_RATE_LIMIT ? Number(process.env.WORKER_MAX_FETCH_RATE_LIMIT) : 5;
 const WORKER_FETCH_INTERVAL_MS = process.env.WORKER_FETCH_INTERVAL_MS
   ? Number(process.env.WORKER_FETCH_INTERVAL_MS)
   : ms('1d');
@@ -763,14 +764,14 @@ export class Outlet<
   @Column({ type: DataType.JSON })
   declare fetchPolicy: FetchPolicy;
 
-  async getRateLimit() {
-    const key = ['//outlet', this.id, this.name].join('§§');
+  async getRateLimit(namespace = 'default') {
+    const key = ['//outlet', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });
     if (!limit) {
       limit = await RateLimit.create({
         expiresAt: new Date(Date.now() + WORKER_FETCH_INTERVAL_MS),
         key,
-        limit: WORKER_FETCH_RATE_LIMIT,
+        limit: namespace === 'default' ? WORKER_FETCH_RATE_LIMIT : WORKER_MAX_FETCH_RATE_LIMIT,
         window: WORKER_FETCH_INTERVAL_MS,
       });
     }
