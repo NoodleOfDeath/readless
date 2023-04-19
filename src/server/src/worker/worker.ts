@@ -32,8 +32,14 @@ export async function doWork() {
           }
           const limit = await outlet.getRateLimit();
           if (await limit.isSaturated()) {
-            console.log(`Outlet ${outlet.name} has reached its fetch limit of ${limit.limit} per ${limit.window}ms`);
+            console.log(`Outlet ${outlet.name} has reached its limit of ${limit.limit} per ${limit.window}ms`);
             await job.delay(limit.window);
+            return;
+          }
+          const fetchMax = await outlet.getRateLimit('fetch-max');
+          if (await fetchMax.isSaturated()) {
+            console.log(`Outlet ${outlet.name} has reached its maximum fetch limit of ${fetchMax.limit} per ${fetchMax.window}ms`);
+            await job.delay(fetchMax.window);
             return;
           }
           if (!force) {
@@ -47,12 +53,13 @@ export async function doWork() {
               return existingSummary;
             }
           }
-          limit.advance();
+          fetchMax.advance();
           const summary = await ScribeService.readAndSummarize(
             {
               content, outletId: outlet.id, url, 
             }
           );
+          limit.advance();
           await job.moveToCompleted();
           return summary;
         } catch (e) {
