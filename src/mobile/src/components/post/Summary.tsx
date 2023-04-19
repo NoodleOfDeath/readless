@@ -2,7 +2,6 @@ import React from 'react';
 
 import { formatDistance } from 'date-fns';
 import { Swipeable } from 'react-native-gesture-handler';
-import { SvgCssUri } from 'react-native-svg';
 import ViewShot from 'react-native-view-shot';
 
 import { 
@@ -82,7 +81,6 @@ export function Summary({
   summary,
   tickIntervalMs = 60_000,
   initialFormat,
-  realtimeInteractions,
   onFormatChange,
   onReferSearch,
   onInteract,
@@ -110,7 +108,6 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const interactions = React.useMemo(() => realtimeInteractions ?? summary.interactions, [realtimeInteractions, summary.interactions]);
 
   const isRead = React.useMemo(() => Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareFab, [initialFormat, readSummaries, showShareFab, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
@@ -119,12 +116,10 @@ export function Summary({
   const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
 
   const timeAgo = React.useMemo(() => {
-    return formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true });
+    const originalTime = formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true });
+    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true });
+    return summary.originalDate ? `${originalTime} (generated ${generatedTime})` : `generated ${generatedTime}`;
   }, [summary.createdAt, summary.originalDate, lastTick]);
-
-  const generatedTimeAgo = React.useMemo(() => {
-    return formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true });
-  }, [summary.createdAt, lastTick]);
 
   const content = React.useMemo(() => {
     if (!format || !summary) {
@@ -241,7 +236,6 @@ export function Summary({
             <Button 
               startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" mr={ 8 } /> }
               onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
-           
             <Button 
               row
               alignCenter
@@ -266,27 +260,10 @@ export function Summary({
               <View row justifySpaced alignCenter>
                 <View col>
                   <Text>
-                    {timeAgo} 
-                    { timeAgo !== generatedTimeAgo && (
-                      <Text>
-                        {' '}
-                        (
-                        {generatedTimeAgo}
-                        )
-                      </Text>
-                    )}
+                    {timeAgo}
                   </Text>
                 </View>
                 <View row alignCenter justifyEnd>
-                  <View mr={ 4 } alignCenter>
-                    <Text>{String(interactions.view)}</Text>
-                  </View>
-                  <Icon
-                    alignCenter
-                    mh={ 4 }
-                    subtitle2
-                    color='text'
-                    name="eye" />
                   <Button
                     alignCenter
                     mh={ 4 }

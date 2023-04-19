@@ -30,6 +30,7 @@ import {
   SummaryInteraction,
   User,
 } from '../../schema';
+import { orderByToItems } from '../../schema/types';
 
 function parsePrefilter(prefilter: string) {
   return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
@@ -106,12 +107,13 @@ export class SummaryController {
     @Query() ids?: number[],
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page
+    @Query() offset = pageSize * page,
+    @Query() order: string[] = ['originalDate:desc', 'createdAt:desc']
   ): Promise<BulkResponse<PublicSummaryAttributes>> {
     const options: FindAndCountOptions<Summary> = {
       limit: pageSize,
       offset,
-      order: [['createdAt', 'DESC']],
+      order: orderByToItems(order),
     };
     const filteredOptions = applyFilter(options, filter, ids);
     const summaries = await Summary.scope(scope).findAndCountAll(filteredOptions);
