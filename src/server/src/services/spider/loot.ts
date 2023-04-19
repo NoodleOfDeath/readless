@@ -15,7 +15,7 @@ export type LootInitProps = Omit<LootProps, 'timestamp'> & {
   dateAttribute?: string;
 };
 
-const DATE_EXPR = /((?:\d+\/\d+\/)|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?[,\s]\s*)\d{4}(?:,?\s+\d{1,2}:\d{1,2}(?:\s*(?:am|pm))?)?(?:\s+[A-Z]{1,3})/i;
+const DATE_EXPR = /((?:\d{1,2}\/\d{1,2}\/)|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?[,\s]\s*)\d{4}(?:,?\s+\d{1,2}:\d{1,2}(?:\s*(?:am|pm))?)?(?:\s+ET|EST|UDT)?/i;
 
 export class Loot implements LootProps {
 
@@ -41,7 +41,13 @@ export class Loot implements LootProps {
     const $ = load(text);
     this.title = $('title').text();
     const bodyText = $('body').text();
-    const defaultTimestamp = DATE_EXPR.test(bodyText) ? new Date(text.match(DATE_EXPR)?.[0]).valueOf() : Date.now();
+    const dateMatch = bodyText.match(DATE_EXPR)?.[0].replace(/([ECMP])T$/, ($0, $1) => `${$1}ST`).replace('AK', 'AST');
+    console.log(dateMatch);
+    let defaultTimestamp = DATE_EXPR.test(bodyText) ? new Date(dateMatch).valueOf() : Date.now();
+    if (Number.isNaN(defaultTimestamp)) {
+      defaultTimestamp = Date.now();
+    }
+    console.log(defaultTimestamp);
     this.timestamp = dateSelector ? new Date(dateAttribute ? $(dateSelector).attr(dateAttribute) || $(dateSelector).text() : $(dateSelector).text()).valueOf() || defaultTimestamp : defaultTimestamp;
     this.filteredText = $(queryFilter).text();
   }
