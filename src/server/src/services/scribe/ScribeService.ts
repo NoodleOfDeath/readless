@@ -49,7 +49,7 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.filteredText,
-      originalDate: new Date(loot.timestamp),
+      originalDate: loot.timestamp && new Date(loot.timestamp),
       originalTitle: loot.title,
       outletId,
       rawText: loot.text,
