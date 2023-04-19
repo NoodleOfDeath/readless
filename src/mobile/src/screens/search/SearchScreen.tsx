@@ -56,6 +56,7 @@ export function SearchScreen({
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
+  const [order] = React.useState<string[]|undefined>(['originalDate:desc']);
   const [searchText, setSearchText] = React.useState('');
 
   const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
@@ -93,7 +94,8 @@ export function SearchScreen({
         filter,
         undefined,
         page,
-        pageSize
+        pageSize,
+        order
       );
       if (error) {
         console.error(error);
@@ -119,15 +121,7 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [
-    onlyCustomNews, 
-    followFilter, 
-    searchText, 
-    prefilter, 
-    getSummaries, 
-    removedSummaries,
-    toast,
-  ]);
+  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, order, toast, removedSummaries]);
 
   const onMount = React.useCallback(() => {
     setPage(0);
@@ -141,7 +135,7 @@ export function SearchScreen({
   React.useEffect(
     () => onMount(), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pageSize, prefilter, searchText]
+    [pageSize, prefilter, order, searchText]
   );
 
   const loadMore = React.useCallback(async () => {

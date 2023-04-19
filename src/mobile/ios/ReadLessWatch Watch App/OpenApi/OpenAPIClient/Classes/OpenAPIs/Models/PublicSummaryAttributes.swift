@@ -22,6 +22,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   public var createdAt: Date?
   public var updatedAt: Date?
   public var deletedAt: Date?
+  public var originalDate: Date?
 
   public init(id: Int,
               url: String,
@@ -31,7 +32,8 @@ public struct PublicSummaryAttributes: Codable, Hashable {
               categoryAttributes: PublicCategoryAttributes? = nil,
               createdAt: Date? = nil,
               updatedAt: Date? = nil,
-              deletedAt: Date? = nil) {
+              deletedAt: Date? = nil,
+              originalDate: Date? = nil) {
     self.id = id
     self.url = url
     self.title = title
@@ -41,6 +43,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     self.createdAt = createdAt
     self.updatedAt = updatedAt
     self.deletedAt = deletedAt
+    self.originalDate = originalDate
   }
 
   public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -53,6 +56,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     case createdAt
     case updatedAt
     case deletedAt
+    case originalDate
   }
 
   // Encodable protocol methods
@@ -66,6 +70,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     try container.encodeIfPresent(createdAt, forKey: .createdAt)
     try container.encodeIfPresent(updatedAt, forKey: .updatedAt)
     try container.encodeIfPresent(deletedAt, forKey: .deletedAt)
+    try container.encodeIfPresent(originalDate, forKey: .originalDate)
   }
 }
 

@@ -10,15 +10,15 @@ import SwiftUI
 struct SummaryCard: View {
   let summary: PublicSummaryAttributes
   let compact: Bool
-  
+
   @Environment(\.colorScheme) private var colorScheme
-  
+
   var card: Color {
     return colorScheme == .light ? Color(hex: 0xEEEEEE) : Color(hex: 0x111111)
   }
-  
+
   var primary = Color(hex: 0x8B0000)
-  
+
   var body: some View {
     VStack(spacing: 1) {
       VStack(alignment: .leading) {
@@ -35,11 +35,18 @@ struct SummaryCard: View {
           .frame(maxWidth: .infinity)
           .padding(3)
         Divider()
-        Text(summary.createdAt?.distanceFromNow() ?? "")
+        Text(summary.originalDate?.distanceFromNow() ?? "")
           .font(.footnote)
           .frame(maxWidth: .infinity)
           .padding(3)
           .multilineTextAlignment(.leading)
+        if summary.originalDate?.distanceFromNow() != summary.createdAt?.distanceFromNow() {
+          Text("(generated \(summary.createdAt?.distanceFromNow() ?? ""))")
+            .font(.footnote)
+            .frame(maxWidth: .infinity)
+            .padding(3)
+            .multilineTextAlignment(.leading)
+        }
         Text(summary.title)
           .padding(3)
           .if(compact) { view in
@@ -54,5 +61,4 @@ struct SummaryCard: View {
     .background(self.card)
     .cornerRadius(8)
   }
-  
 }

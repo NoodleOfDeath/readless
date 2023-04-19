@@ -20,11 +20,12 @@ export function useSummaryClient() {
     filter?: string,
     ids?: number[],
     page = 0,
-    pageSize = 10
+    pageSize = 10,
+    order?: string[]
   ) => {
     try {
       return await withHeaders(API.getSummaries)({
-        filter, ids, page, pageSize, 
+        filter, ids, order, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };

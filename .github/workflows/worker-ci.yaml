@@ -71,6 +71,7 @@ jobs:
       WORKER_CONCURRENCY: ${{ vars.WORKER_CONCURRENCY }}
       WORKER_FETCH_RATE_LIMIT: ${{ vars.WORKER_FETCH_RATE_LIMIT }}
       WORKER_FETCH_INTERVAL_MS: ${{ vars.WORKER_FETCH_INTERVAL_MS }}
+      WORKER_MAX_FETCH_RATE_LIMIT: ${{ vars.WORKER_MAX_FETCH_RATE_LIMIT }}
       WS_API_KEY: ${{ secrets.WS_API_KEY }}
     steps:
       - name: Print Job Description
