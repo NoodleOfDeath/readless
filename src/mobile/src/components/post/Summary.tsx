@@ -119,10 +119,11 @@ export function Summary({
   const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
 
   const timeAgo = React.useMemo(() => {
-    if (!summary.createdAt) {
-      return;
-    }
-    return formatDistance(new Date(summary.createdAt), lastTick, { addSuffix: true });
+    return formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true });
+  }, [summary.createdAt, summary.originalDate, lastTick]);
+
+  const generatedTimeAgo = React.useMemo(() => {
+    return formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true });
   }, [summary.createdAt, lastTick]);
 
   const content = React.useMemo(() => {
@@ -264,7 +265,17 @@ export function Summary({
               <Divider />
               <View row justifySpaced alignCenter>
                 <View col>
-                  <Text>{timeAgo}</Text>
+                  <Text>
+                    {timeAgo} 
+                    { timeAgo !== generatedTimeAgo && (
+                      <Text>
+                        {' '}
+                        (
+                        {generatedTimeAgo}
+                        )
+                      </Text>
+                    )}
+                  </Text>
                 </View>
                 <View row alignCenter justifyEnd>
                   <View mr={ 4 } alignCenter>
