@@ -13,6 +13,7 @@ jest.setTimeout(30_000);
 const TARGETS = [
   'https://www.politico.com/news/magazine/2023/03/11/trump-pence-election-opinion-00086541',
   'https://abcnews.go.com/US/3-school-kids-hospitalized-after-finding-ingesting-suspected/story?id=98686723',
+  'https://www.barrons.com/articles/stocks-to-watch-this-week-tesla-att-goldman-sachs-netflix-charles-schwab-9d157291',
 ];
 
 describe('spider tests', () => {
