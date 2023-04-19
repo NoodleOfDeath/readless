@@ -12,6 +12,7 @@ export type SummaryAttributesRaw = TitledCategorizedPostAttributes & {
   rawText: string;
   filteredText: string;
   originalTitle: string;
+  originalDate?: Date;
 };
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
@@ -25,10 +26,11 @@ export type SummaryCreationAttributes = TitledCategorizedPostCreationAttributes 
   rawText: string;
   filteredText: string;
   originalTitle: string;
+  originalDate?: Date;
 };
 
 /** light weight record for a summary post */
-export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_TITLED_CATEGORIZED_POST_ATTRIBUTES, 'outletId', 'url', 'originalTitle'] as const;
-export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = ['id', 'url', 'title', 'createdAt'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_TITLED_CATEGORIZED_POST_ATTRIBUTES, 'outletId', 'url', 'originalDate', 'originalTitle'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = ['id', 'url', 'title', 'originalDate', 'createdAt'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;

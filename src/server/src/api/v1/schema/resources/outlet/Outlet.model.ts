@@ -40,17 +40,8 @@ export class Outlet<
       name: 'abc',
       siteMaps: [{
         attribute: 'href',
-        params: [[
-          'Business',
-          'Entertainment',
-          'Health',
-          'Politics',
-          'Lifestyle',
-          'Sports',
-          'Technology',
-        ]],
-        selector: 'h2 a[class*="AnchorLink"]',
-        url: 'https://abcnews.go.com/${1}',
+        selector: 'a[class*="AnchorLink"]',
+        url: 'https://abcnews.go.com',
       }],
     },
     advocate: {
@@ -289,6 +280,7 @@ export class Outlet<
       name: 'enews',
       siteMaps: [{
         attribute: 'href',
+        dateSelector: '.article-detail__meta__date',
         selector: 'a[class*="widget__title"]',
         url: 'https://www.eonline.com',
       }],
@@ -307,6 +299,8 @@ export class Outlet<
       name: 'essence',
       siteMaps: [{
         attribute: 'href',
+        dateAttribute: 'datetime',
+        dateSelector: 'time[class*="entry-date"]',
         selector: 'article a',
         url: 'https://www.essence.com',
       }],

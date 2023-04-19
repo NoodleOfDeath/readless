@@ -11,15 +11,17 @@ export type LootProps = {
 };
 
 export type LootInitProps = Omit<LootProps, 'timestamp'> & {
-  timestamp?: number;
   dateSelector?: string;
+  dateAttribute?: string;
 };
+
+const DATE_EXPR = /((?:\d+\/\d+\/)|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?[,\s]\s*)\d{4}(?:,?\s+\d{1,2}:\d{1,2}(?:\s*(?:am|pm))?)?(?:\s+[A-Z]{1,3})/i;
 
 export class Loot implements LootProps {
 
   url: string;
-  timestamp: number;
   text: string;
+  timestamp: number;
   filteredText?: string;
   queryFilter?: string;
   title?: string;
@@ -28,17 +30,19 @@ export class Loot implements LootProps {
 
   constructor({
     url,
-    timestamp = Date.now(),
     text,
     queryFilter = 'h1,h2,h3,h4,h5,h6,p,blockquote',
-    dateSelector,
+    dateSelector = 'time',
+    dateAttribute = 'datetime',
   }: LootInitProps) {
     this.url = url;
     this.text = text;
     this.queryFilter = queryFilter;
     const $ = load(text);
     this.title = $('title').text();
-    this.timestamp = dateSelector ? new Date($(dateSelector).text()).valueOf() || timestamp : timestamp;
+    const bodyText = $('body').text();
+    const defaultTimestamp = DATE_EXPR.test(bodyText) ? new Date(text.match(DATE_EXPR)?.[0]).valueOf() : Date.now();
+    this.timestamp = dateSelector ? new Date(dateAttribute ? $(dateSelector).attr(dateAttribute) || $(dateSelector).text() : $(dateSelector).text()).valueOf() || defaultTimestamp : defaultTimestamp;
     this.filteredText = $(queryFilter).text();
   }
 

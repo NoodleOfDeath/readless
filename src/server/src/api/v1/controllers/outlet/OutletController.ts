@@ -31,7 +31,7 @@ export class OutletController {
     @Query() userId?: number,
     @Query() filter?: string
   ): Promise<BulkResponse<PublicOutletAttributes>> {
-    const options: FindAndCountOptions<Outlet> = { order: [['name', 'ASC']] };
+    const options: FindAndCountOptions<Outlet> = { order: [['displayName', 'ASC']] };
     const outlets = await Outlet.scope('public').findAndCountAll(options);
     return outlets;
   }

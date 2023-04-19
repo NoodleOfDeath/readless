@@ -60,8 +60,8 @@ ReadLess is the model for a fully automated user content-driven podcast and news
 - [x] Add support for interactions (v1) such as upvotes and downvotes (backend)
 - [x] upvote/downvote interactions front ent support
 - [x] Record views and reading format
-- [ ] Add support for users to provide feedback about articles
-- [ ] Add support for users to flag articles as false, low-quality, etc.
+- [x] Add support for users to provide feedback about articles
+- [x] Add support for users to flag articles as false, low-quality, etc.
 - [x] (I alread record the metrics to implement this eventually) Bounty/training/feedback program will play an important role in the loyalty and beta test programs (eventually moderation)
 
 ### v1.3.0 - Mobile App
@@ -75,14 +75,14 @@ ReadLess is the model for a fully automated user content-driven podcast and news
 - [x] Onboarding guide for mobile app
 - [x] Basic settings/preferences
 - [x] Interactions
-- [ ] Modify Account Page 
+- [ ] ~Modify Account Page~
 - [x] User login/signup
 - [x] Activity history
 - [x] Minor UI touch ups
 - [x] Offline bookmarking
 - [x] Categories
 - [x] Following of categories on (My Stuff Screen)
-- [x] Metrics gathering (you won't notice this other than a popup asking if you'd like to opt out)
+- [x] Metrics gathering
 
 ### v1.3.1 - First Real (Beta) Release
 
@@ -96,7 +96,7 @@ ReadLess is the model for a fully automated user content-driven podcast and news
 - [x] Display mobile app banner on web app
 - [x] Update web app manifests to have graphics
 - [ ] Adding of comments and messaging support (hopefully will not be a heavy lift as moderation could be outsourced to ChatGPT)
-- [ ] Adding of following users/friends (see the news articles your friends interact with in realtime)
+- [ ] ~Adding of following users/friends (see the news articles your friends interact with in realtime)~
 
 ### v1.5.0 - Notifications/Newletters
 

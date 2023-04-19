@@ -1,4 +1,8 @@
-import { Attributes, FindAndCountOptions as SequelizeFindAndCountOptions } from 'sequelize';
+import {
+  Attributes,
+  OrderItem,
+  FindAndCountOptions as SequelizeFindAndCountOptions,
+} from 'sequelize';
 import { Hooks } from 'sequelize/types/hooks';
 import { Model } from 'sequelize-typescript';
 
@@ -14,6 +18,14 @@ export type FindAndCountOptions<T extends Model<any, any> | Hooks<Model<any, any
   SequelizeFindAndCountOptions<Attributes<T>>,
   'groups'
 >;
+
+export function orderByToItem(orderBy: string): OrderItem {
+  return orderBy.split(':') as OrderItem;
+}
+
+export function orderByToItems(orderBy: string[]): OrderItem[] {
+  return orderBy.map(orderByToItem);
+}
 
 export type BulkResponse<T> = {
   count: number;

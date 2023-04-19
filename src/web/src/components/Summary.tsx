@@ -94,6 +94,12 @@ export default function Summary({
 
   const timeAgo = React.useMemo(
     () =>
+      formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true }),
+    [summary.originalDate, summary.createdAt, lastTick]
+  );
+
+  const generatedTimeAgo = React.useMemo(
+    () =>
       formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true }),
     [summary.createdAt, lastTick]
   );
@@ -173,7 +179,18 @@ export default function Summary({
         <StyledDivider variant="fullWidth" />
         <Stack direction='column' spacing={ 1 }>
           <Stack direction='row' flexGrow={ 1 } alignItems="center">
-            <Typography variant="subtitle2">{timeAgo}</Typography>
+            <Typography variant="subtitle2">
+              {timeAgo} 
+              {' '}
+              { timeAgo !== generatedTimeAgo && (
+                <Typography variant="subtitle2">
+                  {' '}
+                  (
+                  {generatedTimeAgo}
+                  )
+                </Typography>
+              )}
+            </Typography>
             <Box flexGrow={ 1 } />
             <Stack direction='row' spacing={ 1 } alignItems="center">
               <Typography variant="subtitle2">{ summary.interactions.view ?? '...' }</Typography>
