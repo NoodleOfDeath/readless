@@ -73,7 +73,7 @@ export class ScribeService extends BaseService {
           newSummary.bullets = reply.text
             .replace(/^bullets:\s*/i, '')
             .replace(/\.$/, '')
-            .split(',')
+            .split(/[,;\n]/)
             .map((bullet) => bullet.trim());
         },
         text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol',
@@ -107,7 +107,7 @@ export class ScribeService extends BaseService {
           newSummary.tags = reply.text
             .replace(/^tags:\s*/i, '')
             .replace(/\.$/, '')
-            .split(',')
+            .split(/[,;\n]/)
             .map((tag) => tag.trim());
         },
         text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
