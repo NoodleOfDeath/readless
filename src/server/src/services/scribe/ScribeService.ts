@@ -58,14 +58,25 @@ export class ScribeService extends BaseService {
     const prompts: Prompt[] = [
       {
         handleReply: (reply) => { 
+          if (/no/i.test(reply.text)) {
+            throw new Error(['Not an actual article'].join('\n'));
+          }
+          newSummary.title = reply.text;
+        },
+        text: [
+          'Does the following appear to be an actual news article? Please respond with just "yes" or "no"\n\n', 
+          newSummary.filteredText,
+        ].join(''),
+      },
+      {
+        handleReply: (reply) => { 
           if (reply.text.length > 200) {
             throw new Error(['Title too long'].join('\n'));
           }
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the general take away message of the following article in a single sentence using no more than 150 characters:\n\n', 
-          newSummary.filteredText,
+          'Please summarize the general take away message of the article I just gave you in a single sentence using no more than 150 character', 
         ].join(''),
       },
       {
