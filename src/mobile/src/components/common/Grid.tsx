@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { View, ViewProps } from '~/components';
-import { useStyles } from '~/hooks';
 
 type GridStyle = {
   tesselate?: boolean;
@@ -17,7 +16,6 @@ type Props = Omit<ViewProps, 'children'> & {
 
 export function Grid({
   children,
-  gridStyle,
   ...props
 }: Props) {
   const childArray = React.useMemo(() => Array.isArray(children) ? children : children ? [children] : undefined, [children]);

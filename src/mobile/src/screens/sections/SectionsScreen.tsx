@@ -8,18 +8,15 @@ import {
 import {
   ActivityIndicator,
   Button,
-  Checkbox,
   Grid,
   Screen,
   TabSwitcher,
-  Text,
   View,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
 import { ClientError, useCategoryClient } from '~/hooks';
-import { ScreenProps } from '~/screens';
 
-export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
+export function SectionsScreen() {
 
   const { getCategories, getOutlets } = useCategoryClient();
   const {
@@ -36,6 +33,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
   const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
   const [_, setError] = React.useState<InternalError>();
+
+  const sortedOutlets = React.useMemo(() => [...outlets].sort((a, b) => a.name.replace(/^the/i, '').localeCompare(b.name.replace(/^the/i, ''))), [outlets]);
   
   const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
   const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
@@ -83,14 +82,6 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
     loadCategories();
     loadOutlets();
   }, [loadCategories, loadOutlets]);
-
-  const selectCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigation?.navigate('search', { prefilter: `cat:${category.name.toLowerCase().replace(/\s/g, '-')}` });
-  }, [navigation]);
-
-  const selectOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    navigation?.navigate('search', { prefilter: `src:${outlet.name}` });
-  }, [navigation]);
   
   const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
     setPreference('bookmarkedCategories', (prev) => {
@@ -114,10 +105,6 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
       }
       return (prev = state);
     });
-  }, [setPreference]);
-  
-  const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' | 'bookmarkedOutlets') => {
-    setPreference(key, {});
   }, [setPreference]);
 
   return (
@@ -153,7 +140,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
               ))}
             </Grid>
             <Grid alignCenter justifyCenter>
-              {outlets.sort((a, b) => a.displayName.replace(/^the/i, '').trim() < b.displayName.replace(/^the/i, '').trim() ? -1 : 1).map((outlet) => (
+              {sortedOutlets.map((outlet) => (
                 <Button 
                   key={ outlet.name }
                   selected={ Boolean(bookmarkedOutlets?.[outlet.name]) }

@@ -16,11 +16,7 @@ import {
   Text,
   View,
 } from '~/components';
-import {
-  Bookmark,
-  SessionContext,
-  ToastContext,
-} from '~/contexts';
+import { SessionContext, ToastContext } from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 import { lengthOf } from '~/utils';
@@ -62,6 +58,7 @@ export function SearchScreen({
   const [loading, setLoading] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
+  const [pendingReload, setPendingReload] = React.useState(false);
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
@@ -89,7 +86,7 @@ export function SearchScreen({
   
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
-  const load = React.useCallback(async (pageSize: number, page: number) => {
+  const load = React.useCallback(async (page: number) => {
     setLoading(true);
     if (page === 0) {
       setSummaries([]);
@@ -137,18 +134,18 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [excludeIds, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast]);
+  }, [excludeIds, pageSize, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast]);
 
   const onMount = React.useCallback(() => {
     if (!ready) {
       return;
     }
     setPage(0);
-    load(pageSize, 0);
+    load(0);
     if (prefilter) {
       navigation?.setOptions({ headerShown: true, headerTitle: prefilter });
     }
-  }, [load, navigation, pageSize, prefilter, ready]);
+  }, [load, navigation, prefilter, ready]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(
@@ -163,10 +160,23 @@ export function SearchScreen({
       return (prev = newState);
     });
   }, [removedSummaries]);
+  
+  React.useEffect(() => {
+    if (!pendingReload) {
+      return;
+    }
+    setPendingReload(false);
+    load(0);
+  }, [pendingReload, load, removedSummaries]);
+  
+  const removeReadSummaries = React.useCallback(() => {
+    setPreference('removedSummaries', (prev) => (prev = ({ ...prev, ...readSummaries })));
+    setPendingReload(true);
+  }, [setPreference, readSummaries]);
 
   const loadMore = React.useCallback(async () => {
-    await load(pageSize, page + 1);
-  }, [load, pageSize, page]);
+    await load(page + 1);
+  }, [load, page]);
 
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
@@ -189,7 +199,7 @@ export function SearchScreen({
   return (
     <Screen
       refreshing={ loading }
-      onRefresh={ () => load(pageSize, 0) }>
+      onRefresh={ () => load(0) }>
       <View col mh={ 16 }>
         {!prefilter && (
           <View mb={ 8 }>
@@ -229,13 +239,7 @@ export function SearchScreen({
               </View>
             </View>
           </ScrollView>
-          <Button
-            onPress={ () => {
-              setPreference('removedSummaries', (prev) => {
-                const state = { ...prev, ...readSummaries };
-                return (prev = state);
-              });
-            } }>
+          <Button onPress={ () => removeReadSummaries() }>
             Clear Read
           </Button>
         </View>

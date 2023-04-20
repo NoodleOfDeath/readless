@@ -2,7 +2,7 @@ import { PublicSummaryAttributes, ReadingFormat } from '~/api';
 
 export class SummaryUtils {
 
-  static shareableLink(summary: PublicSummaryAttributes, baseUrl: string, format: ReadingFormat = ReadingFormat.Concise) {
+  static shareableLink(summary: PublicSummaryAttributes, baseUrl: string, format: ReadingFormat = ReadingFormat.Summary) {
     return `${baseUrl}/read/?s=${summary.id}&f=${format}`;
   }
 
