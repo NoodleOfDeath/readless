@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { formatDistance } from 'date-fns';
-import { Swipeable } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import ViewShot from 'react-native-view-shot';
 
 import { 
@@ -237,92 +237,94 @@ export function Summary({
   
   return (
     <ViewShot ref={ viewshot }>
-      <Swipeable 
-        renderLeftActions={ renderLeftActions }
-        renderRightActions={ renderRightActions }>
-        <View outlined rounded style={ theme.components.card } inactive={ isRead }>
-          <View row justifySpaced alignCenter mb={ 8 }>
-            <Button 
-              startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" mr={ 8 } /> }
-              onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
-            <Button 
-              row
-              alignCenter
-              underline
-              onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-              {summary.outletAttributes?.displayName}
-            </Button>
-            <Button 
-              underline
-              onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-              View original source
-            </Button>
-          </View>
-          <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
-            <Text numberOfLines={ isRead ? 2 : 10 } ellipsizeMode='tail'>
-              {summary.title.trim()}
-            </Text>
-          </View>
-          {!isRead && (
-            <React.Fragment>
-              <Divider />
-              <View row justifySpaced alignCenter>
-                <View col>
-                  {timeAgo}
-                </View>
-                <View>
-                  <View row alignCenter justifyEnd>
-                    <Button
-                      alignCenter
-                      mh={ 4 }
-                      subtitle2
-                      color='text'
-                      startIcon={ favorited ? 'heart' : 'heart-outline' }
-                      onPress={ () => onInteract?.(InteractionType.Favorite) } />
-                    <Button
-                      mh={ 4 }
-                      subtitle2
-                      color='text'
-                      startIcon='share'
-                      onPress={ () => setShowShareFab(true, {
-                        content, format, summary, viewshot: viewshot.current, 
-                      }) } />
-                    <Button
-                      alignCenter
-                      mh={ 4 }
-                      subtitle2
-                      color="text"
-                      startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                      onPress={ () => handlePlayAudio(summary.title) } />
+      <GestureHandlerRootView>
+        <Swipeable 
+          renderLeftActions={ renderLeftActions }
+          renderRightActions={ renderRightActions }>
+          <View outlined rounded style={ theme.components.card } inactive={ isRead }>
+            <View row justifySpaced alignCenter mb={ 8 }>
+              <Button 
+                startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" mr={ 8 } /> }
+                onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+              <Button 
+                row
+                alignCenter
+                underline
+                onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
+                {summary.outletAttributes?.displayName}
+              </Button>
+              <Button 
+                underline
+                onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
+                View original source
+              </Button>
+            </View>
+            <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
+              <Text numberOfLines={ isRead ? 2 : 10 } ellipsizeMode='tail'>
+                {summary.title.trim()}
+              </Text>
+            </View>
+            {!isRead && (
+              <React.Fragment>
+                <Divider />
+                <View row justifySpaced alignCenter>
+                  <View col>
+                    {timeAgo}
+                  </View>
+                  <View>
+                    <View row alignCenter justifyEnd>
+                      <Button
+                        alignCenter
+                        mh={ 4 }
+                        subtitle2
+                        color='text'
+                        startIcon={ favorited ? 'heart' : 'heart-outline' }
+                        onPress={ () => onInteract?.(InteractionType.Favorite) } />
+                      <Button
+                        mh={ 4 }
+                        subtitle2
+                        color='text'
+                        startIcon='share'
+                        onPress={ () => setShowShareFab(true, {
+                          content, format, summary, viewshot: viewshot.current, 
+                        }) } />
+                      <Button
+                        alignCenter
+                        mh={ 4 }
+                        subtitle2
+                        color="text"
+                        startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                        onPress={ () => handlePlayAudio(summary.title) } />
+                    </View>
                   </View>
                 </View>
+              </React.Fragment>
+            )}
+            {((alwaysShowReadingFormatSelector && !isRead) || initialFormat) && (
+              <View>
+                <ReadingFormatSelector 
+                  format={ format } 
+                  preferredFormat={ preferredReadingFormat }
+                  onChange={ handleFormatChange } />
               </View>
-            </React.Fragment>
-          )}
-          {((alwaysShowReadingFormatSelector && !isRead) || initialFormat) && (
-            <View>
-              <ReadingFormatSelector 
-                format={ format } 
-                preferredFormat={ preferredReadingFormat }
-                onChange={ handleFormatChange } />
-            </View>
-          )}
-          {content && (
-            <View mt={ 2 }>
-              <Divider />
-              <View row alignCenter justifyStart>
-                <Button
-                  startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                  onPress={ () => handlePlayAudio(content) }
-                  mr={ 8 } />
+            )}
+            {content && (
+              <View mt={ 2 }>
+                <Divider />
+                <View row alignCenter justifyStart>
+                  <Button
+                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                    onPress={ () => handlePlayAudio(content) }
+                    mr={ 8 } />
+                </View>
+                <View mt={ 4 }>
+                  <Text mt={ 4 }>{content}</Text>
+                </View>
               </View>
-              <View mt={ 4 }>
-                <Text mt={ 4 }>{content}</Text>
-              </View>
-            </View>
-          )}
-        </View>
-      </Swipeable>
+            )}
+          </View>
+        </Swipeable>
+      </GestureHandlerRootView>
     </ViewShot>
   );
 }

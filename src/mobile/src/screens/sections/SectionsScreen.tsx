@@ -130,23 +130,14 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
           <View col height='100%'>
             <View row>
               <View row>
-                <Text left>
+                <Text>
                   Category
                 </Text>
               </View>
               <View>
                 <Button 
-                  left
                   onPress={ () => clearBookmarks('bookmarkedCategories') }>
-                  Follow 
-                  {' '}
-                  {categoryCount > 0 && (
-                    <React.Fragment>
-                      (
-                      {categoryCount}
-                      )
-                    </React.Fragment>
-                  )}
+                  { `Follow ${categoryCount > 0 ? `(${categoryCount})` : ''}` }
                 </Button>
               </View>
             </View>
@@ -179,23 +170,14 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
           <View col>
             <View row>
               <View row>
-                <Text left>
+                <Text>
                   News Source
                 </Text>
               </View>
               <View>
                 <Button
-                  left
                   onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
-                  Follow 
-                  {' '}
-                  {outletCount > 0 && (
-                    <React.Fragment>
-                      (
-                      {outletCount}
-                      )
-                    </React.Fragment>
-                  )}
+                  { `Follow ${outletCount > 0 ? `(${outletCount})` : ''}` }
                 </Button>
               </View>
             </View>

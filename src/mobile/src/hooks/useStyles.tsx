@@ -24,7 +24,7 @@ export function useStyles({
   color,
   center,
   left,
-  right,
+  textRight: right,
   fontFamily,
   fontSize = h1 ? 36 : h2 ? 32 : h3 ? 28 : h4 ? 26 : h5 ? 24 : h6 ? 22 : caption ? 12 : subtitle1 ? 20 : subtitle2 ? 18 : body1 ? 16 : body2 ? 15 : 16,
   bold,
