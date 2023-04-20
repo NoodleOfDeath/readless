@@ -98,8 +98,8 @@ android {
         applicationId "com.readless"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "1.1.2 <Loxosceles reclusa>"
+        versionCode 9
+        versionName "1.1.2-2 <Loxosceles reclusa>"
     }
 
     splits {
