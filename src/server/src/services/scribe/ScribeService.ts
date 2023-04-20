@@ -79,7 +79,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Does the following appear to be a news article? Please respond with just "yes" or "no"\n\n', 
+          'Does the following appear to be a news article? A collection of article headlines, advertisement, or description of a news website should not be considered a news article. Please respond with just "yes" or "no"\n\n', 
           newSummary.filteredText,
         ].join(''),
       },
