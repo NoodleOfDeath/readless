@@ -1,5 +1,7 @@
 import { load } from 'cheerio';
 
+import { parseAnyDate } from '../../utils';
+
 export type LootProps = {
   url: string;
   timestamp?: number;
@@ -14,8 +16,6 @@ export type LootInitProps = Omit<LootProps, 'timestamp'> & {
   dateSelector?: string;
   dateAttribute?: string;
 };
-
-const DATE_EXPR = /((?:\d{1,2}\/\d{1,2}\/)|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?[,\s]\s*)\d{4}(?:,?\s+\d{1,2}:\d{1,2}(?:\s*(?:am|pm))?)?(?:\s+ET|EST|UDT)?/i;
 
 export class Loot implements LootProps {
 
@@ -41,12 +41,24 @@ export class Loot implements LootProps {
     const $ = load(text);
     this.title = $('title').text();
     const bodyText = $('body').text();
-    const dateMatch = bodyText.match(DATE_EXPR)?.[0].replace(/([ECMP])T$/, ($0, $1) => `${$1}ST`).replace('AK', 'AST');
-    let defaultTimestamp = DATE_EXPR.test(bodyText) ? new Date(dateMatch).valueOf() : undefined;
+    const dateMatch = parseAnyDate(bodyText);
+    let defaultTimestamp = dateMatch?.valueOf();
     if (Number.isNaN(defaultTimestamp)) {
       defaultTimestamp = undefined;
     }
-    this.timestamp = dateSelector ? new Date(dateAttribute ? $(dateSelector).attr(dateAttribute) || $(dateSelector).text() : $(dateSelector).text()).valueOf() || defaultTimestamp : defaultTimestamp;
+    const datetext = new Date($(dateSelector).first().text());
+    const datetime = new Date($(dateSelector).attr(dateAttribute));
+    if (Number.isNaN(datetext) && Number.isNaN(datetime)) {
+      this.timestamp = defaultTimestamp;
+    } else
+    if (!Number.isNaN(datetext) && Number.isNaN(datetime)) {
+      this.timestamp = datetext.valueOf();
+    } else
+    if (Number.isNaN(datetext) && !Number.isNaN(datetime)) {
+      this.timestamp = datetime.valueOf();
+    } else {
+      this.timestamp = datetext.valueOf() > datetime.valueOf() ? datetext.valueOf() : datetime.valueOf();
+    }
     this.filteredText = $(queryFilter).text();
   }
 

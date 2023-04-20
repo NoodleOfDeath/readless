@@ -1,3 +1,5 @@
+import ms from 'ms';
+
 import { ReadAndSummarizePayload } from './types';
 import {
   ChatGPTService,
@@ -9,6 +11,8 @@ import { BaseService } from '../base';
 
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
+
+const OLD_NEWS_THRESHOLD = '5d';
 
 export class ScribeService extends BaseService {
   
@@ -47,6 +51,9 @@ export class ScribeService extends BaseService {
     if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       throw new Error('Article too long for OpenAI');
     }
+    if (Date.now() - (loot.timestamp ?? 0) > ms(OLD_NEWS_THRESHOLD)) {
+      throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
+    }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.filteredText,
       originalDate: loot.timestamp && new Date(loot.timestamp),
@@ -59,24 +66,24 @@ export class ScribeService extends BaseService {
       {
         handleReply: (reply) => { 
           if (/no/i.test(reply.text)) {
-            throw new Error(['Not an actual article'].join('\n'));
+            throw new Error('Not an actual article');
           }
           newSummary.title = reply.text;
         },
         text: [
-          'Does the following appear to be an actual news article? Please respond with just "yes" or "no"\n\n', 
+          'Does the following appear to be a news article? Please respond with just "yes" or "no"\n\n', 
           newSummary.filteredText,
         ].join(''),
       },
       {
         handleReply: (reply) => { 
           if (reply.text.length > 200) {
-            throw new Error(['Title too long'].join('\n'));
+            throw new Error('Title too long');
           }
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the general take away message of the article I just gave you in a single sentence using no more than 150 character', 
+          'Please summarize the general take away message of the article I just gave you in a single sentence using no more than 150 characters. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -93,25 +100,25 @@ export class ScribeService extends BaseService {
         handleReply: (reply) => { 
           newSummary.shortSummary = reply.text;
         },
-        text: 'Please provide a two sentence summary using no more than 300 characters',
+        text: 'Please provide a two sentence summary using no more than 300 characters. Do not start with "The article" or "This article".',
       },
       {
         handleReply: (reply) => { 
           newSummary.summary = reply.text;
         },
-        text: 'Please provide a 100 to 150 word summary',
+        text: 'Please provide a 100 to 150 word summary. Do not start with "The article" or "This article".',
       },
       {
         handleReply: (reply) => { 
           newSummary.longSummary = reply.text;
         },
-        text: 'Please provide a 150 to 200 word summary',
+        text: 'Please provide a 150 to 200 word summary. Do not start with "The article" or "This article".',
       },
       {
         handleReply: (reply) => { 
           newSummary.text = reply.text;
         },
-        text: 'Please provide a 200 to 300 word summary',
+        text: 'Please provide a 200 to 300 word summary. Do not start with "The article" or "This article".',
       },
       {
         handleReply: (reply) => {
