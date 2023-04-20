@@ -12,6 +12,8 @@ import { BaseService } from '../base';
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
+const NOTICE_MESSAGE = 'This reading format will be going away in the next major update, which will include more useful analysis metrics that are short and easier to read! Stay tuned!';
+
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '2d';
 
 export class ScribeService extends BaseService {
@@ -59,10 +61,13 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.filteredText,
+      longSummary: NOTICE_MESSAGE,
       originalDate: loot.timestamp && new Date(loot.timestamp),
       originalTitle: loot.title,
       outletId,
       rawText: loot.text,
+      summary: NOTICE_MESSAGE,
+      text: NOTICE_MESSAGE,
       url,
     });
     const prompts: Prompt[] = [
@@ -103,25 +108,7 @@ export class ScribeService extends BaseService {
         handleReply: (reply) => { 
           newSummary.shortSummary = reply.text;
         },
-        text: 'Please provide a two sentence summary using no more than 300 characters. Do not start with "The article" or "This article".',
-      },
-      {
-        handleReply: (reply) => { 
-          newSummary.summary = reply.text;
-        },
-        text: 'Please provide a 100 to 150 word summary. Do not start with "The article" or "This article".',
-      },
-      {
-        handleReply: (reply) => { 
-          newSummary.longSummary = reply.text;
-        },
-        text: 'Please provide a 150 to 200 word summary. Do not start with "The article" or "This article".',
-      },
-      {
-        handleReply: (reply) => { 
-          newSummary.text = reply.text;
-        },
-        text: 'Please provide a 200 to 300 word summary. Do not start with "The article" or "This article".',
+        text: 'Please provide a two to three sentence summary using no more than 150 words. Do not start with "The article" or "This article".',
       },
       {
         handleReply: (reply) => {

@@ -75,11 +75,8 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: nu
       where[Op.or].push({
         [Op.or]: {
           bullets: { [Op.contains] : [subquery] },
-          longSummary: { [Op.iLike] : `%${subquery}%` },
           shortSummary: { [Op.iLike] : `%${subquery}%` },
-          summary: { [Op.iLike] : `%${subquery}%` },
           tags: { [Op.contains] : [subquery] },
-          text: { [Op.iLike] : `%${subquery}%` },
           title: { [Op.iLike] : `%${subquery}%` },
           url: { [Op.iLike] : `%${subquery}%` },
         },
