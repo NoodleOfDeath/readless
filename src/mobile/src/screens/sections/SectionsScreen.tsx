@@ -6,6 +6,7 @@ import {
   PublicOutletAttributes,
 } from '~/api';
 import {
+  ActivityIndicator,
   Button,
   Checkbox,
   Screen,
@@ -122,91 +123,95 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
     <Screen
       refreshing={ loading }
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
-      <View col mh={ 16 } mb={ 16 }>
-        <TabSwitcher 
-          activeTab={ activeTab }
-          onTabChange={ setActiveTab }
-          titles={ titles }>
-          <View col height='100%'>
-            <View row>
+      {loading ? (
+        <ActivityIndicator animating />
+      ) : (
+        <View col mh={ 16 } mb={ 16 }>
+          <TabSwitcher 
+            activeTab={ activeTab }
+            onTabChange={ setActiveTab }
+            titles={ titles }>
+            <View col height='100%'>
               <View row>
-                <Text>
-                  Category
-                </Text>
+                <View row>
+                  <Text>
+                    Category
+                  </Text>
+                </View>
+                <View>
+                  <Button 
+                    onPress={ () => clearBookmarks('bookmarkedCategories') }>
+                    { `Follow ${categoryCount > 0 ? `(${categoryCount})` : ''}` }
+                  </Button>
+                </View>
               </View>
-              <View>
-                <Button 
-                  onPress={ () => clearBookmarks('bookmarkedCategories') }>
-                  { `Follow ${categoryCount > 0 ? `(${categoryCount})` : ''}` }
-                </Button>
-              </View>
-            </View>
-            {categories.map((category) => (
-              <View 
-                row
-                alignCenter
-                justifySpaced
-                key={ category.name }>
-                <Button 
+              {categories.map((category) => (
+                <View 
                   row
-                  selectable
                   alignCenter
-                  outlined
-                  rounded
-                  spacing={ 8 }
-                  startIcon={ category.icon }
-                  p={ 8 }
-                  mv={ 4 }
-                  onPress={ () => selectCategory(category) }>
-                  {category.displayName}
-                </Button>
-                <Checkbox
-                  checked={ Boolean(bookmarkedCategories?.[category.name]) }
-                  onPress={ () => followCategory(category) }
-                  containerStyle={ { backgroundColor: 'transparent' } } />
-              </View>
-            ))}
-          </View>
-          <View col>
-            <View row>
+                  justifySpaced
+                  key={ category.name }>
+                  <Button 
+                    row
+                    selectable
+                    alignCenter
+                    outlined
+                    rounded
+                    spacing={ 8 }
+                    startIcon={ category.icon }
+                    p={ 8 }
+                    mv={ 4 }
+                    onPress={ () => selectCategory(category) }>
+                    {category.displayName}
+                  </Button>
+                  <Checkbox
+                    checked={ Boolean(bookmarkedCategories?.[category.name]) }
+                    onPress={ () => followCategory(category) }
+                    containerStyle={ { backgroundColor: 'transparent' } } />
+                </View>
+              ))}
+            </View>
+            <View col>
               <View row>
-                <Text>
-                  News Source
-                </Text>
+                <View row>
+                  <Text>
+                    News Source
+                  </Text>
+                </View>
+                <View>
+                  <Button
+                    onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
+                    { `Follow ${outletCount > 0 ? `(${outletCount})` : ''}` }
+                  </Button>
+                </View>
               </View>
-              <View>
-                <Button
-                  onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
-                  { `Follow ${outletCount > 0 ? `(${outletCount})` : ''}` }
-                </Button>
-              </View>
-            </View>
-            {outlets.map((outlet) => (
-              <View 
-                row
-                alignCenter
-                justifySpaced
-                key={ outlet.name }>
-                <Button 
+              {outlets.map((outlet) => (
+                <View 
                   row
-                  selectable
                   alignCenter
-                  outlined
-                  rounded
-                  p={ 8 }
-                  mv={ 4 }
-                  onPress={ () => selectOutlet(outlet) }>
-                  {outlet.displayName}
-                </Button>
-                <Checkbox
-                  checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
-                  onPress={ () => followOutlet(outlet) }
-                  containerStyle={ { backgroundColor: 'transparent' } } />
-              </View>
-            ))}
-          </View>
-        </TabSwitcher>
-      </View>
+                  justifySpaced
+                  key={ outlet.name }>
+                  <Button 
+                    row
+                    selectable
+                    alignCenter
+                    outlined
+                    rounded
+                    p={ 8 }
+                    mv={ 4 }
+                    onPress={ () => selectOutlet(outlet) }>
+                    {outlet.displayName}
+                  </Button>
+                  <Checkbox
+                    checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
+                    onPress={ () => followOutlet(outlet) }
+                    containerStyle={ { backgroundColor: 'transparent' } } />
+                </View>
+              ))}
+            </View>
+          </TabSwitcher>
+        </View>
+      )}
     </Screen>
   );
 }

@@ -15,6 +15,23 @@ class ConnectService: ObservableObject {
     self.summaries = summaries
   }
 
+  func fetchHandler(_ data: Data?) {
+    if let data = data {
+      let dateFormatter = DateFormatter()
+      dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+      let decoder = JSONDecoder()
+      decoder.dateDecodingStrategy = .formatted(dateFormatter)
+      DispatchQueue.main.async {
+        if let decodedResponse = try? decoder.decode(BulkResponse<PublicSummaryAttributes>.self, from: data) {
+          self.summaries = decodedResponse.rows
+        }
+        self.loading = false
+      }
+    }
+    self.loading = false
+  }
+  
   @Sendable func fetchSync() {
     guard let url = URL(string: "https://api.readless.ai/v1/summary/?scope=conservative&order=originalDate%3Adesc") else {
       return
@@ -22,20 +39,7 @@ class ConnectService: ObservableObject {
     loading = true
     let request = URLRequest(url: url)
     URLSession.shared.dataTask(with: request) { data, _, _ in
-      if let data = data {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .formatted(dateFormatter)
-        DispatchQueue.main.async {
-          if let decodedResponse = try? decoder.decode(BulkResponse<PublicSummaryAttributes>.self, from: data) {
-            self.summaries = decodedResponse.rows
-          }
-          self.loading = false
-        }
-      }
-      self.loading = false
+      self.fetchHandler(data)
     }.resume()
   }
 
@@ -48,16 +52,6 @@ class ConnectService: ObservableObject {
     guard let httpResponse = response as? HTTPURLResponse, (200 ... 299).contains(httpResponse.statusCode) else {
       throw URLError(.badServerResponse)
     }
-    let dateFormatter = DateFormatter()
-    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-    let decoder = JSONDecoder()
-    decoder.dateDecodingStrategy = .formatted(dateFormatter)
-    DispatchQueue.main.async {
-      if let decodedResponse = try? decoder.decode(BulkResponse<PublicSummaryAttributes>.self, from: data) {
-        self.summaries = decodedResponse.rows
-      }
-      self.loading = false
-    }
+    self.fetchHandler(data)
   }
 }

@@ -16,7 +16,6 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   public var id: Int
   public var url: String
   public var title: String
-  public var shortSummary: String
   public var outletAttributes: PublicOutletAttributes?
   public var categoryAttributes: PublicCategoryAttributes?
   public var createdAt: Date?
@@ -27,7 +26,6 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   public init(id: Int,
               url: String,
               title: String,
-              shortSummary: String,
               outletAttributes: PublicOutletAttributes? = nil,
               categoryAttributes: PublicCategoryAttributes? = nil,
               createdAt: Date? = nil,
@@ -37,7 +35,6 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     self.id = id
     self.url = url
     self.title = title
-    self.shortSummary = shortSummary
     self.outletAttributes = outletAttributes
     self.categoryAttributes = categoryAttributes
     self.createdAt = createdAt
@@ -50,7 +47,6 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     case id
     case url
     case title
-    case shortSummary
     case outletAttributes
     case categoryAttributes
     case createdAt
@@ -66,7 +62,6 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     try container.encode(id, forKey: .id)
     try container.encode(url, forKey: .url)
     try container.encode(title, forKey: .title)
-    try container.encode(shortSummary, forKey: .shortSummary)
     try container.encodeIfPresent(createdAt, forKey: .createdAt)
     try container.encodeIfPresent(updatedAt, forKey: .updatedAt)
     try container.encodeIfPresent(deletedAt, forKey: .deletedAt)
