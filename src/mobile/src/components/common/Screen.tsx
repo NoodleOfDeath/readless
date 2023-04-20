@@ -10,7 +10,7 @@ import {
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-aware-scroll-view';
 
-import { Stylable, View } from '~/components';
+import { Stylable } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type SafeScrollViewProps = KeyboardAwareScrollViewProps & {
@@ -35,8 +35,9 @@ export function Screen({
       <SafeAreaView style={ theme.components.flexCol }>
         <KeyboardAwareScrollView
           refreshControl={ refreshControl }
+          style={ style }
           { ...props }>
-          <View style={ style }>{children}</View>
+          {children}
         </KeyboardAwareScrollView>
       </SafeAreaView>
     </React.Fragment>

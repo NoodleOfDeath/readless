@@ -3,7 +3,6 @@ import React from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 
 import {
-  InteractionResponse,
   InteractionType,
   PublicSummaryAttributes,
   ReadingFormat,
@@ -29,19 +28,11 @@ export function SummaryScreen({
   const [summary, setSummary] = React.useState<PublicSummaryAttributes>();
   const [format, setFormat] = React.useState(route?.params?.initialFormat);
 
-  const [interactions, setInteractions] = React.useState<InteractionResponse>();
-  
   const handleFormatChange = React.useCallback(async (newFormat?: ReadingFormat) => {
     if (!summary || !newFormat || newFormat === format) {
       return;
     }
-    const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
-    if (error) {
-      console.error(error);
-    } 
-    if (interactions) {
-      setInteractions(interactions);
-    }
+    handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
     setFormat(newFormat);
   }, [format, handleInteraction, summary]);
   
@@ -92,13 +83,11 @@ export function SummaryScreen({
           <Summary
             summary={ summary }
             initialFormat={ format }
-            collapsible={ false }
             bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
             favorited={ Boolean(favoritedSummaries?.[summary.id]) }
             onFormatChange={ (format) => handleFormatChange(format) }
             onReferSearch={ handleReferSearch }
-            onInteract={ (...e) => handleInteraction(summary, ...e) }
-            realtimeInteractions={ interactions } />
+            onInteract={ (...e) => handleInteraction(summary, ...e) } />
         ))}
       </View>
     </Screen>

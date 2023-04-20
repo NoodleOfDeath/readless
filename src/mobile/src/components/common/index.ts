@@ -6,6 +6,7 @@ export * from './Checkbox';
 export * from './Dialog';
 export * from './Divider';
 export * from './FAB';
+export * from './Grid';
 export * from './Icon';
 export * from './Markdown';
 export * from './Screen';

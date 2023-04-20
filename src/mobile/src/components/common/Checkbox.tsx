@@ -1,13 +1,9 @@
 import React from 'react';
 
-import {
-  Button,
-  Icon,
-  ViewProps,
-} from '~/components';
+import { Button, Icon } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type CheckboxProps = RNPCheckboxProps & {
+export type CheckboxProps = {
   checked?: boolean;
   onPress?: () => void;
 };
@@ -23,16 +19,17 @@ export function Checkbox({
     <Button 
       rounded
       outlined
+      alignCenter
+      justifyCenter
       width={ 24 }
       height={ 24 }
       mh={ 8 }
       style={ style }
       onPress={ onPress }
-      { ...other }>
-      {checked && (
+      { ...other }
+      startIcon={ checked && (
         <Icon name='check' color={ theme.colors.primary } />
-      )}
-    </Button>
+      ) } />
   );
 }
 

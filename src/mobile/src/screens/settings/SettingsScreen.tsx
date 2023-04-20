@@ -1,5 +1,4 @@
 import React from 'react';
-import { Switch } from 'react-native';
 
 import { ReadingFormat } from '~/api';
 import { 
@@ -12,7 +11,6 @@ import {
   View,
 } from '~/components';
 import { ColorMode, SessionContext } from '~/contexts';
-import { useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 type OptionProps = React.PropsWithChildren<{
@@ -30,14 +28,11 @@ const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
 const fonts = ['Alegreya', 'DM Mono', 'DM Sans', 'Lato', 'Roboto'];
 
 export function SettingsScreen(_: ScreenProps<'default'>) {
-  const theme = useTheme();
   const {
     preferences: {
       textScale, 
       fontFamily,
-      alwaysShowReadingFormatSelector,
       preferredReadingFormat,
-      compactMode,
       displayMode,
       removedSummaries,
       readSummaries,
@@ -91,27 +86,6 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         ),
         id: 'display-mode',
         label: 'Color Scheme',
-      },
-      {
-        children: (
-          <View row alignCenter justifyCenter>
-            <View col alignCenter>
-              <Text center mb={ 4 }>Always Show Reading Format Selector</Text>
-              <Switch 
-                thumbColor={ theme.colors.primary } 
-                value={ alwaysShowReadingFormatSelector } 
-                onValueChange={ (newValue) => setPreference('alwaysShowReadingFormatSelector', newValue) } />
-            </View>
-            <View col alignCenter>
-              <Text center mb={ 4 }>Compact Reading Format Selector</Text>
-              <Switch 
-                thumbColor={ theme.colors.primary } 
-                value={ compactMode } 
-                onValueChange={ (newValue) => setPreference('compactMode', newValue) } />
-            </View>
-          </View>
-        ),
-        id: 'always-show-reading-format',
       },
       {
         children: (
@@ -192,7 +166,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Reset Removed Content',
       },
     ];
-  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, alwaysShowReadingFormatSelector, compactMode, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference, fontFamily]);
+  }, [activeDisplayMode, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference, fontFamily]);
   
   return (
     <Screen>

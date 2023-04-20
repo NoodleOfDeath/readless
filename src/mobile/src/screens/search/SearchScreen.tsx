@@ -16,7 +16,11 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext, ToastContext } from '~/contexts';
+import {
+  Bookmark,
+  SessionContext,
+  ToastContext,
+} from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 import { lengthOf } from '~/utils';
@@ -31,6 +35,7 @@ export function SearchScreen({
       bookmarkedOutlets,
       bookmarkedSummaries, 
       favoritedSummaries, 
+      readSummaries,
       removedSummaries,
       preferredReadingFormat,
       sortOrder,
@@ -76,7 +81,7 @@ export function SearchScreen({
   }, [categoryOutletCount, bookmarkedCategories, bookmarkedOutlets]);
   
   const excludeIds = React.useMemo(() => {
-    if (!removedSummaries || Object.keys(removedSummaries) === 0) {
+    if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
       return undefined;
     }
     return Object.keys(removedSummaries).map((k) => Number(k));
@@ -132,7 +137,7 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [excludeIds, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast, removedSummaries]);
+  }, [excludeIds, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast]);
 
   const onMount = React.useCallback(() => {
     if (!ready) {
@@ -165,12 +170,9 @@ export function SearchScreen({
 
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
-      const { data: interactions, error } = handleInteraction(summary, InteractionType.Read, undefined, { format });
-      if (error) {
-        console.error(error);
-      }
+      handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.push('summary', {
-        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
         summary,
       });
     },
@@ -227,6 +229,15 @@ export function SearchScreen({
               </View>
             </View>
           </ScrollView>
+          <Button
+            onPress={ () => {
+              setPreference('removedSummaries', (prev) => {
+                const state = { ...prev, ...readSummaries };
+                return (prev = state);
+              });
+            } }>
+            Clear Read
+          </Button>
         </View>
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
@@ -267,9 +278,11 @@ export function SearchScreen({
             </Button>
           </View>
         )}
-        {loading && summaries.length > 0 && (
-          <View row justifyCenter p={ 16 } pb={ 24 }>
-            <ActivityIndicator size="large" color={ theme.colors.primary } />
+        {loading && (
+          <View row mb={ 64 }>
+            <View row justifyCenter p={ 16 } pb={ 24 }>
+              <ActivityIndicator size="large" color={ theme.colors.primary } />
+            </View>
           </View>
         )}
       </View>

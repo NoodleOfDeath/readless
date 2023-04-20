@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+struct Endpoints {
+  static let GetSummaries = "https://api.readless.ai/v1/summary/?scope=conservative&order=originalDate%3Adesc"
+}
+
 class ConnectService: ObservableObject {
   @Published var summaries = [PublicSummaryAttributes]()
   @Published var loading = false
@@ -33,7 +37,7 @@ class ConnectService: ObservableObject {
   }
   
   @Sendable func fetchSync() {
-    guard let url = URL(string: "https://api.readless.ai/v1/summary/?scope=conservative&order=originalDate%3Adesc") else {
+    guard let url = URL(string: Endpoints.GetSummaries) else {
       return
     }
     loading = true
@@ -44,7 +48,7 @@ class ConnectService: ObservableObject {
   }
 
   func fetch() async throws {
-    guard let url = URL(string: "https://api.readless.ai/v1/summary/?scope=conservative&order=originalDate%3Adesc") else {
+    guard let url = URL(string: Endpoints.GetSummaries) else {
       return
     }
     loading = true

@@ -5,7 +5,6 @@ import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import ViewShot from 'react-native-view-shot';
 
 import { 
-  InteractionResponse,
   InteractionType,
   PublicSummaryAttributes,
   ReadingFormat,
@@ -30,12 +29,10 @@ type Props = {
   summary: PublicSummaryAttributes;
   tickIntervalMs?: number;
   initialFormat?: ReadingFormat;
-  realtimeInteractions?: InteractionResponse;
   bookmarked?: boolean;
   favorited?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
-  onCollapse?: (collapsed: boolean) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
 };
 
@@ -89,7 +86,6 @@ export function Summary({
   const theme = useTheme();
   const {
     preferences: {
-      alwaysShowReadingFormatSelector, 
       preferredReadingFormat, 
       bookmarkedSummaries, 
       favoritedSummaries,
@@ -137,14 +133,8 @@ export function Summary({
     switch (format) {
     case 'bullets':
       return summary.bullets.join('\n');
-    case 'concise':
+    case 'summary':
       return summary.shortSummary;
-    case 'casual':
-      return summary.summary;
-    case 'detailed':
-      return summary.longSummary;
-    default:
-      return summary.text;
     }
   }, [format, summary]);
 
@@ -259,49 +249,45 @@ export function Summary({
                 View original source
               </Button>
             </View>
-            <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
-              <Text numberOfLines={ isRead ? 2 : 10 } ellipsizeMode='tail'>
+            <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+              <Text numberOfLines={ isRead ? 1 : 10 } ellipsizeMode='tail'>
                 {summary.title.trim()}
               </Text>
             </View>
-            {!isRead && (
-              <React.Fragment>
-                <Divider />
-                <View row justifySpaced alignCenter>
-                  <View col>
-                    {timeAgo}
-                  </View>
-                  <View>
-                    <View row alignCenter justifyEnd>
-                      <Button
-                        alignCenter
-                        mh={ 4 }
-                        subtitle2
-                        color='text'
-                        startIcon={ favorited ? 'heart' : 'heart-outline' }
-                        onPress={ () => onInteract?.(InteractionType.Favorite) } />
-                      <Button
-                        mh={ 4 }
-                        subtitle2
-                        color='text'
-                        startIcon='share'
-                        onPress={ () => setShowShareFab(true, {
-                          content, format, summary, viewshot: viewshot.current, 
-                        }) } />
-                      <Button
-                        alignCenter
-                        mh={ 4 }
-                        subtitle2
-                        color="text"
-                        startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                        onPress={ () => handlePlayAudio(summary.title) } />
-                    </View>
-                  </View>
-                </View>
-              </React.Fragment>
-            )}
-            {((alwaysShowReadingFormatSelector && !isRead) || initialFormat) && (
+            <Divider />
+            <View row justifySpaced alignCenter>
+              <View col>
+                {timeAgo}
+              </View>
               <View>
+                <View row alignCenter justifyEnd>
+                  <Button
+                    alignCenter
+                    mh={ 4 }
+                    subtitle2
+                    color='text'
+                    startIcon={ favorited ? 'heart' : 'heart-outline' }
+                    onPress={ () => onInteract?.(InteractionType.Favorite) } />
+                  <Button
+                    mh={ 4 }
+                    subtitle2
+                    color='text'
+                    startIcon='share'
+                    onPress={ () => setShowShareFab(true, {
+                      content, format, summary, viewshot: viewshot.current, 
+                    }) } />
+                  <Button
+                    alignCenter
+                    mh={ 4 }
+                    subtitle2
+                    color="text"
+                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                    onPress={ () => handlePlayAudio(summary.title) } />
+                </View>
+              </View>
+            </View>
+            {initialFormat && (
+              <View mt={ 4 }>
                 <ReadingFormatSelector 
                   format={ format } 
                   preferredFormat={ preferredReadingFormat }

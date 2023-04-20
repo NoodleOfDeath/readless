@@ -10,14 +10,8 @@ export class SummaryUtils {
     switch (str) {
     case 'bullets':
       return ReadingFormat.Bullets;
-    case 'casual':
-      return ReadingFormat.Casual;
-    case 'detailed':
-      return ReadingFormat.Detailed;
-    case 'in-depth':
-      return ReadingFormat.InDepth;
     default:
-      return ReadingFormat.Concise;
+      return ReadingFormat.Summary;
     }
   }
 
