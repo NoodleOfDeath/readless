@@ -27,7 +27,7 @@ spec:
               cpu: "$K8S_CPU_LIMITS"
           env:
             - name: OLD_NEWS_THRESHOLD
-              valye: "$OLD_NEWS_THRESHOLD"
+              value: "$OLD_NEWS_THRESHOLD"
             - name: OPENAI_API_KEY
               value: "$OPENAI_API_KEY"
             - name: PG_CONNECTION_STRING
