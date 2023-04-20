@@ -190,7 +190,16 @@ export function Summary({
       startIcon: isRead ? 'email-mark-as-unread' : 'email-open',
       text: isRead ? 'Mark as Unread' : 'Mark as Read',
     }, {
-      onPress: () => onInteract?.(InteractionType.Bookmark),
+      onPress: () => 
+        onInteract?.(InteractionType.Bookmark, undefined, undefined, () => {
+          if (!bookmarked) {
+            setPreference('readSummaries', (prev) => {
+              const state = { ...prev };
+              delete state[summary.id];
+              return (prev = state);
+            });
+          }
+        }),
       startIcon: bookmarked ? 'bookmark' : 'bookmark-outline',
       text: 'Read Later',
     }];

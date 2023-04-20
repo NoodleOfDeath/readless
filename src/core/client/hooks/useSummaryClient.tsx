@@ -95,7 +95,8 @@ export function useSummaryClient() {
         }
         return (prev = favorites);
       });
-    } else if (alternateAction) {
+    }
+    if (alternateAction) {
       // pass
       try {
         await alternateAction();
