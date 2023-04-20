@@ -56,7 +56,11 @@ export async function doWork() {
           fetchMax.advance();
           const summary = await ScribeService.readAndSummarize(
             {
-              content, outletId: outlet.id, url, 
+              content, 
+              dateAttribute: outlet.siteMaps.map((s) => s.dateAttribute).filter(Boolean).join(','),
+              dateSelector: outlet.siteMaps.map((s) => s.dateSelector).filter(Boolean).join(','),
+              outletId: outlet.id, 
+              url, 
             }
           );
           limit.advance();

@@ -188,6 +188,8 @@ export class Outlet<
       name: 'cbsnews',
       siteMaps: [{
         attribute: 'href',
+        dateAttribute: 'text',
+        dateSelector: 'span[class*="now-playing__relative"]',
         selector: 'article a',
         url: 'https://www.cbsnews.com',
       }],
@@ -291,6 +293,8 @@ export class Outlet<
       name: 'espn',
       siteMaps: [{
         attribute: 'href',
+        dateAttribute: 'data-date',
+        dateSelector: 'span[class*="timestamp"]',
         selector: 'ul[class*="headlineStack"] li a',
         url: 'https://www.espn.com',
       }],

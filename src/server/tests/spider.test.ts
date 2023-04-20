@@ -15,7 +15,7 @@ const TARGETS = [
   // 'https://abcnews.go.com/US/3-school-kids-hospitalized-after-finding-ingesting-suspected/story?id=98686723',
   // 'https://www.barrons.com/articles/stocks-to-watch-this-week-tesla-att-goldman-sachs-netflix-charles-schwab-9d157291',
   // 'https://fortune.com/2023/04/11/whole-foods-san-francisco-flagship-store-closes/',
-  'https://www.usatoday.com/story/news/2023/04/18/when-is-tornado-season-2023/11650152002/',
+  'https://www.billboard.com/music/music-news/beck-gorillaz-kimmel-performance-1235311022/',
 ];
 
 describe('spider tests', () => {
