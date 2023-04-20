@@ -52,7 +52,7 @@ export class ScribeService extends BaseService {
       throw new Error('Article too long for OpenAI');
     }
     if (Date.now() - (loot.timestamp ?? 0) > ms(OLD_NEWS_THRESHOLD)) {
-      throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
+      throw new Error(`News is invalid or older than ${OLD_NEWS_THRESHOLD}`);
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.filteredText,
