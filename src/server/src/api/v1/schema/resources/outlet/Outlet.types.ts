@@ -43,6 +43,7 @@ export type OutletAttributes = DatedAttributes & {
   siteMaps: SiteMap[];
   /** fetch policy for this outlet */
   fetchPolicy?: FetchPolicy;
+  timezone?: string;
 };
 
 export type OutletCreationAttributes = {
@@ -52,6 +53,7 @@ export type OutletCreationAttributes = {
   description?: string;
   siteMaps: SiteMap[];
   fetchPolicy?: FetchPolicy;
+  timezone?: string;
 };
 
 export const PUBLIC_OUTLET_ATTRIBUTES = [

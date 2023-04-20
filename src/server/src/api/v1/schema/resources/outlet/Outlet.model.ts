@@ -44,6 +44,7 @@ export class Outlet<
         selector: 'a[class*="AnchorLink"]',
         url: 'https://abcnews.go.com',
       }],
+      timezone: 'EST',
     },
     advocate: {
       displayName: 'Advocate',
@@ -53,6 +54,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.advocate.com',
       }],
+      timezone: 'EST',
     },
     aei: {
       displayName: 'AEI',
@@ -62,6 +64,7 @@ export class Outlet<
         selector: 'div[class*="hero__post"] a',
         url: 'https://www.aei.org',
       }],
+      timezone: 'EST',
     },
     apnews: {
       displayName: 'AP News',
@@ -71,6 +74,7 @@ export class Outlet<
         selector: 'a[class*="Component-headline"]',
         url: 'https://www.apnews.com',
       }],
+      timezone: 'EST',
     },
     'ars-technica': {
       displayName: 'ars technica',
@@ -80,6 +84,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.arstechnica.com',
       }],
+      timezone: 'EST',
     },
     atlantic: {
       displayName: 'The Atlantic',
@@ -89,6 +94,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.theatlantic.com',
       }],
+      timezone: 'EST',
     },
     barrons: {
       displayName: 'Barron\'s',
@@ -98,6 +104,7 @@ export class Outlet<
         selector: 'a[class*="headline-link"]',
         url: 'https://www.barrons.com/real-time',
       }],
+      timezone: 'EST',
     },
     bbc: {
       displayName: 'BBC',
@@ -118,6 +125,7 @@ export class Outlet<
         selector: 'a[class*="media__link"],a[class*="link__overlay__link"],a[class*="item__title"]',
         url: 'https://www.bbc.com/${1}',
       }],
+      timezone: 'UTC+1',
     },
     billboard: {
       displayName: 'billboard',
@@ -127,6 +135,7 @@ export class Outlet<
         selector: 'a[class*="c-title"]',
         url: 'https://www.billboard.com',
       }],
+      timezone: 'EST',
     },
     'bleeping-computer': {
       displayName: 'Bleeping Computer',
@@ -136,6 +145,7 @@ export class Outlet<
         selector: 'div[class*="bc_latest_news_text"] a',
         url: 'https://www.bleepingcomputer.com',
       }],
+      timezone: 'EST',
     },
     bloomberg: {
       displayName: 'Bloomberg',
@@ -145,6 +155,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.bloomberg.com',
       }],
+      timezone: 'EST',
     },
     'business-insider': {
       displayName: 'Business Insider',
@@ -154,6 +165,7 @@ export class Outlet<
         selector: 'a[class*="tout-title-link"]',
         url: 'https://www.businessinsider.com',
       }],
+      timezone: 'EST',
     },
     bustle: {
       displayName: 'Bustle',
@@ -171,8 +183,9 @@ export class Outlet<
           'wellness',
         ]], 
         selector: 'ul[class="Lwl"] li a', 
-        url: 'https://www.bustle.com/archive/${MMMM}/${YYYY}/${1}', 
+        url: 'https://www.bustle.com/archive/${MMMM}/${YYYY}/${1}',
       }],
+      timezone: 'EST',
     },
     buzzfeed: {
       displayName: 'BuzzFeed',
@@ -182,6 +195,7 @@ export class Outlet<
         selector: 'div[class*="feedItem"] a',
         url: 'https://www.buzzfeed.com',
       }],
+      timezone: 'EST',
     },
     cbsnews: {
       displayName: 'CBS News',
@@ -193,6 +207,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.cbsnews.com',
       }],
+      timezone: 'EST',
     },
     cnbc: {
       displayName: 'CNBC',
@@ -202,14 +217,16 @@ export class Outlet<
         selector: 'a[class="SiteMapArticleList-link"]',
         url: 'https://www.cnbc.com/site-map/articles/${YYYY}/${MMMM}/${D}/',
       }],
+      timezone: 'EST',
     },
     cnn: {
       displayName: 'CNN',
       name: 'cnn',
       siteMaps: [{
         selector: 'loc', 
-        url: 'https://www.cnn.com/sitemaps/cnn/news.xml', 
+        url: 'https://www.cnn.com/sitemaps/cnn/news.xml',
       }],
+      timezone: 'EST',
     },
     coindesk: {
       displayName: 'CoinDesk',
@@ -219,6 +236,7 @@ export class Outlet<
         selector: 'div[class*="most-read-article"] a',
         url: 'https://www.coindesk.com',
       }],
+      timezone: 'EST',
     },
     cryptoglobe: {
       displayName: 'Cryptoglobe',
@@ -228,6 +246,7 @@ export class Outlet<
         selector: 'a[class*="u-link"]',
         url: 'https://www.cryptoglobe.com',
       }],
+      timezone: 'EST',
     },
     csis: {
       displayName: 'CSIS',
@@ -254,6 +273,7 @@ export class Outlet<
         selector: 'article[typeof*="schema:Article"] a',
         url: 'https://www.csis.org/topics/${1}',
       }],
+      timezone: 'EST',
     },
     'defense-one': {
       displayName: 'Defense One',
@@ -263,6 +283,7 @@ export class Outlet<
         selector: 'a[class*="river-item-hed"],a[class*="skybox-link"]',
         url: 'https://www.defenseone.com',
       }],
+      timezone: 'EST',
     },
     'developer-tech': {
       displayName: 'Developer Tech',
@@ -272,11 +293,13 @@ export class Outlet<
         selector: 'header[class*="article-header"] a',
         url: 'https://www.developer-tech.com',
       }],
+      timezone: 'EST',
     },
     economist: {
       displayName: 'The Economist (Coming Soon)',
       name: 'economist',
       siteMaps: [],
+      timezone: 'EST',
     },
     enews: {
       displayName: 'E! News',
@@ -287,6 +310,7 @@ export class Outlet<
         selector: 'a[class*="widget__title"]',
         url: 'https://www.eonline.com',
       }],
+      timezone: 'UTC-7',
     },
     espn: {
       displayName: 'ESPN',
@@ -298,6 +322,7 @@ export class Outlet<
         selector: 'ul[class*="headlineStack"] li a',
         url: 'https://www.espn.com',
       }],
+      timezone: 'EST',
     },
     essence: {
       displayName: 'Essence',
@@ -309,6 +334,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.essence.com',
       }],
+      timezone: 'EST',
     },
     ew: {
       displayName: 'Entertainment Weekly',
@@ -318,6 +344,7 @@ export class Outlet<
         selector: 'div[class*="entityTout"] a',
         url: 'https://www.ew.com',
       }],
+      timezone: 'EST',
     },
     forbes: {
       displayName: 'Forbes',
@@ -327,6 +354,7 @@ export class Outlet<
         selector: 'a[class*="headlink"]',
         url: 'https://www.forbes.com',
       }],
+      timezone: 'EDT',
     },
     'foreign-policy': {
       displayName: 'Foreign Policy',
@@ -336,6 +364,7 @@ export class Outlet<
         selector: 'a[class*="hed-heading"]',
         url: 'https://www.foreignpolicy.com',
       }],
+      timezone: 'EST',
     },
     fortune: {
       displayName: 'Fortune',
@@ -345,6 +374,7 @@ export class Outlet<
         selector: 'a[class*="titleLink"]',
         url: 'https://www.fortune.com',
       }],
+      timezone: 'EDT',
     },
     foxnews: {
       displayName: 'Fox News',
@@ -354,6 +384,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.foxnews.com',
       }],
+      timezone: 'EST',
     },
     ft: {
       displayName: 'Financial Times',
@@ -363,6 +394,7 @@ export class Outlet<
         selector: 'a[class*="js-teaser-heading-link"]',
         url: 'https://www.ft.com',
       }],
+      timezone: 'EST',
     },
     gizmodo: {
       displayName: 'Gizmodo',
@@ -372,6 +404,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.gizmodo.com',
       }],
+      timezone: 'EST',
     },
     guardian: {
       displayName: 'The Guardian',
@@ -381,6 +414,7 @@ export class Outlet<
         selector: 'a[class*="js-headline-text"]',
         url: 'https://www.theguardian.com',
       }],
+      timezone: 'EST',
     },
     hill: {
       displayName: 'The Hill',
@@ -390,6 +424,7 @@ export class Outlet<
         selector: 'div[class*="featured-cards"] a',
         url: 'https://www.thehill.com',
       }],
+      timezone: 'EST',
     },
     huffpost: {
       displayName: 'HuffPost',
@@ -399,6 +434,7 @@ export class Outlet<
         selector: 'a[class*="card__headline"]',
         url: 'https://www.huffpost.com',
       }],
+      timezone: 'EST',
     },
     inverse: {
       displayName: 'Inverse',
@@ -408,6 +444,7 @@ export class Outlet<
         selector: 'a[href*="/gaming"],a[href*="/science"],a[href*="/tech"],a[href*="entertainment"]',
         url: 'https://www.coindesk.com',
       }],
+      timezone: 'EST',
     },
     kotaku: {
       displayName: 'Kotaku',
@@ -417,6 +454,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.kotaku.com',
       }],
+      timezone: 'EST',
     },
     ksl: {
       displayName: 'KSL',
@@ -426,6 +464,7 @@ export class Outlet<
         selector: 'div[class*="headling"] a',
         url: 'https://www.ksl.com',
       }],
+      timezone: 'EST',
     },
     latimes: {
       displayName: 'Los Angelos Times',
@@ -435,6 +474,7 @@ export class Outlet<
         selector: 'h1[class*="promo-title"] a,h2[class*="promo-title"] a',
         url: 'https://www.latimes.com',
       }],
+      timezone: 'UTC-7',
     },
     lifewire: {
       displayName: 'Lifewire',
@@ -444,6 +484,7 @@ export class Outlet<
         selector: 'div[class*="news-latest__article"] a',
         url: 'https://www.lifewire.com',
       }],
+      timezone: 'EDT',
     },
     mashable: {
       displayName: 'Mashable',
@@ -453,6 +494,7 @@ export class Outlet<
         selector: 'a[href*="/article"]',
         url: 'https://www.mashable.com',
       }],
+      timezone: 'EST',
     },
     'mens-health': {
       displayName: 'Men\'s Health',
@@ -462,6 +504,7 @@ export class Outlet<
         selector: 'a[href*="/fitness"],a[href*="/health"],a[href*="/style"],a[href*="/grooming"]',
         url: 'https://www.menshealth.com',
       }],
+      timezone: 'EST',
     },
     'national-geographic': {
       displayName: 'National Geographic',
@@ -471,6 +514,7 @@ export class Outlet<
         selector: 'a[class*="AnchorLink"]',
         url: 'https://www.nationalgeographic.com',
       }],
+      timezone: 'EST',
     },
     nbcnews: {
       displayName: 'NBC News',
@@ -480,6 +524,7 @@ export class Outlet<
         selector: 'div[class*="tease-card"] a',
         url: 'https://www.nbcnews.com',
       }],
+      timezone: 'EST',
     },
     newsweek: {
       displayName: 'Newsweek',
@@ -489,6 +534,7 @@ export class Outlet<
         selector: 'div[class*="news-title"] a',
         url: 'https://www.newsweek.com',
       }],
+      timezone: 'EST',
     },
     newyorker: {
       displayName: 'The New Yorker',
@@ -498,6 +544,7 @@ export class Outlet<
         selector: 'a[class*="SummaryItem"]',
         url: 'https://www.newyorker.com',
       }],
+      timezone: 'EST',
     },
     npr: {
       displayName: 'NPR',
@@ -507,11 +554,13 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.npr.org',
       }],
+      timezone: 'EST',
     },
     nytimes: {
       displayName: 'New York Times (Coming Soon)',
       name: 'nytimes',
       siteMaps: [],
+      timezone: 'EST',
     },
     out: {
       displayName: 'Out',
@@ -521,6 +570,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.out.com',
       }],
+      timezone: 'EST',
     },
     people: {
       displayName: 'People',
@@ -530,6 +580,7 @@ export class Outlet<
         selector: 'div[class*="entityTout"] a',
         url: 'https://www.people.com',
       }],
+      timezone: 'EST',
     },
     politico: {
       displayName: 'Politico',
@@ -539,6 +590,7 @@ export class Outlet<
         selector: 'h3[class*="headline"] a',
         url: 'https://www.politico.com',
       }],
+      timezone: 'EST',
     },
     'popular-mechanics': {
       displayName: 'Popular Mechanics ',
@@ -548,6 +600,7 @@ export class Outlet<
         selector: 'a[href*="/technology"],a[href*="/science"],a[href*="/space"]',
         url: 'https://www.popularmechanics.com',
       }],
+      timezone: 'EST',
     },
     reuters: {
       displayName: 'Reuters',
@@ -566,6 +619,7 @@ export class Outlet<
         selector: 'a[class*="text__heading_"]',
         url: 'https://www.reuters.com/${1}',
       }],
+      timezone: 'EST',
     },
     'rolling-stone': {
       displayName: 'Rolling Stone',
@@ -575,6 +629,7 @@ export class Outlet<
         selector: 'a[class*="c-title"]',
         url: 'https://www.rollingstone.com',
       }],
+      timezone: 'EST',
     },
     science: {
       displayName: 'Science',
@@ -584,6 +639,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.science.org',
       }],
+      timezone: 'EST',
     },
     'science-daily': {
       displayName: 'Science Daily',
@@ -593,6 +649,7 @@ export class Outlet<
         selector: 'h3[class*="latest-head"] a',
         url: 'https://www.sciencedaily.com',
       }],
+      timezone: 'EST',
     },
     space: {
       displayName: 'Space',
@@ -602,6 +659,7 @@ export class Outlet<
         selector: 'a[class*="article-link"]',
         url: 'https://www.space.com',
       }],
+      timezone: 'EST',
     },
     'sunday-times': {
       displayName: 'The Sunday Times ',
@@ -611,6 +669,7 @@ export class Outlet<
         selector: 'div[class*="Item-content"] a',
         url: 'https://www.thetimes.co.uk',
       }],
+      timezone: 'UTC+1',
     },
     telegraph: {
       displayName: 'The Telegraph',
@@ -620,6 +679,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.telegraph.co.uk',
       }],
+      timezone: 'UTC+1',
     },
     thestreet: {
       displayName: 'The Street',
@@ -629,6 +689,7 @@ export class Outlet<
         selector: 'phoenix-card[role*="article"] a',
         url: 'https://www.thestreet.com',
       }],
+      timezone: 'EST',
     },
     time: {
       displayName: 'Time',
@@ -638,6 +699,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.time.com',
       }],
+      timezone: 'EST',
     },
     usatoday: {
       displayName: 'USA Today',
@@ -647,6 +709,7 @@ export class Outlet<
         selector: 'a[href*="/story"]',
         url: 'https://www.usatoday.com',
       }],
+      timezone: 'EST',
     },
     usnews: {
       displayName: 'U.S. News',
@@ -656,6 +719,7 @@ export class Outlet<
         selector: 'h3[class*="story-headline"] a',
         url: 'https://www.usnews.com',
       }],
+      timezone: 'EST',
     },
     'venture-beat': {
       displayName: 'Venture Beat',
@@ -665,6 +729,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.venturebeat.com',
       }],
+      timezone: 'EST',
     },
     vice: {
       displayName: 'Vice',
@@ -674,6 +739,7 @@ export class Outlet<
         selector: 'a[class*="vice-card-hed__link"]',
         url: 'https://www.vice.com',
       }],
+      timezone: 'EST',
     },
     vox: {
       displayName: 'Vox',
@@ -683,11 +749,13 @@ export class Outlet<
         selector: 'div[class*="c-newspaper"] a',
         url: 'https://www.vox.com',
       }],
+      timezone: 'EDT',
     },
     'washington-post': {
       displayName: 'The Washington Post (Coming Soon)',
       name: 'washington-post',
       siteMaps: [],
+      timezone: 'EST',
     },
     'wilson-center': {
       displayName: 'Wilson Center',
@@ -697,6 +765,7 @@ export class Outlet<
         selector: 'a[class*="teaser"],a[class*="home-hero-event"]',
         url: 'https://www.wilsoncenter.org',
       }],
+      timezone: 'EST',
     },
     wired: {
       displayName: 'Wired',
@@ -706,6 +775,7 @@ export class Outlet<
         selector: 'a[class*="SummaryItem"]',
         url: 'https://www.wired.com',
       }],
+      timezone: 'EST',
     },
     wsj: {
       displayName: 'The Wall Street Journal',
@@ -731,6 +801,7 @@ export class Outlet<
         selector: 'article a',
         url: 'https://www.wsj.com/news/${1}',
       }],
+      timezone: 'EST',
     },
   };
 
@@ -767,6 +838,12 @@ export class Outlet<
   
   @Column({ type: DataType.JSON })
   declare fetchPolicy: FetchPolicy;
+  
+  @Column({ 
+    defaultValue: 'UTC',
+    type: DataType.STRING,
+  })
+  declare timezone?: string;
 
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');

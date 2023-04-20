@@ -6,4 +6,5 @@ export type ReadAndSummarizePayload = {
   onProgress?: (progress: number) => void;
   force?: boolean;
   outletId?: number;
+  timezone?: string;
 };
