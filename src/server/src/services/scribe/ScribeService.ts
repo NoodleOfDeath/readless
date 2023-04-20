@@ -54,6 +54,9 @@ export class ScribeService extends BaseService {
     if (Date.now() - (loot.timestamp ?? 0) > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is invalid or older than ${OLD_NEWS_THRESHOLD}`);
     }
+    if ((loot.timestamp ?? 0) > Date.now()) {
+      loot.timestamp = Date.now();
+    }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.filteredText,
       originalDate: loot.timestamp && new Date(loot.timestamp),
