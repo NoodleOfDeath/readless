@@ -116,9 +116,18 @@ export function Summary({
   const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
 
   const timeAgo = React.useMemo(() => {
-    const originalTime = formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true });
-    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true });
-    return summary.originalDate ? `${originalTime} (generated ${generatedTime})` : `generated ${generatedTime}`;
+    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
+    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
+    return new Date(summary.originalDate ?? 0).valueOf() > 0 && originalTime !== generatedTime ? 
+      (
+        <React.Fragment>
+          <Text>{originalTime}</Text>
+          <Text>
+            {`(generated ${generatedTime})`}
+          </Text>
+        </React.Fragment>
+      ) : 
+      (<Text>{new Date(summary.originalDate ?? 0).valueOf() > 0 ? generatedTime : `generated ${generatedTime}`}</Text>);
   }, [summary.createdAt, summary.originalDate, lastTick]);
 
   const content = React.useMemo(() => {
@@ -259,38 +268,38 @@ export function Summary({
               <Divider />
               <View row justifySpaced alignCenter>
                 <View col>
-                  <Text>
-                    {timeAgo}
-                  </Text>
+                  {timeAgo}
                 </View>
-                <View row alignCenter justifyEnd>
-                  <Button
-                    alignCenter
-                    mh={ 4 }
-                    subtitle2
-                    color='text'
-                    startIcon={ favorited ? 'heart' : 'heart-outline' }
-                    onPress={ () => onInteract?.(InteractionType.Favorite) } />
-                  <Button
-                    mh={ 4 }
-                    subtitle2
-                    color='text'
-                    startIcon='share'
-                    onPress={ () => setShowShareFab(true, {
-                      content, format, summary, viewshot: viewshot.current, 
-                    }) } />
-                  <Button
-                    alignCenter
-                    mh={ 4 }
-                    subtitle2
-                    color="text"
-                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                    onPress={ () => handlePlayAudio(summary.title) } />
+                <View>
+                  <View row alignCenter justifyEnd>
+                    <Button
+                      alignCenter
+                      mh={ 4 }
+                      subtitle2
+                      color='text'
+                      startIcon={ favorited ? 'heart' : 'heart-outline' }
+                      onPress={ () => onInteract?.(InteractionType.Favorite) } />
+                    <Button
+                      mh={ 4 }
+                      subtitle2
+                      color='text'
+                      startIcon='share'
+                      onPress={ () => setShowShareFab(true, {
+                        content, format, summary, viewshot: viewshot.current, 
+                      }) } />
+                    <Button
+                      alignCenter
+                      mh={ 4 }
+                      subtitle2
+                      color="text"
+                      startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                      onPress={ () => handlePlayAudio(summary.title) } />
+                  </View>
                 </View>
               </View>
             </React.Fragment>
           )}
-          {alwaysShowReadingFormatSelector && !isRead && (
+          {((alwaysShowReadingFormatSelector && !isRead) || initialFormat) && (
             <View>
               <ReadingFormatSelector 
                 format={ format } 

@@ -22,15 +22,16 @@ router.get(
   query('scope').isString().matches(/^(?:conservative|public)$/).optional(),
   query('filter').isString().optional(),
   query('ids').optional(),
+  query('excludeIds').isBoolean().optional(),
   ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     const {
-      scope, filter, ids, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
+      scope, filter, ids, excludeIds, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
     try {
-      const response = await SummaryController.getSummaries(userId, scope, filter, ids, pageSize, page, offset, order);
+      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, pageSize, page, offset, order);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);

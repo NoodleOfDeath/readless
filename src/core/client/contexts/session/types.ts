@@ -41,6 +41,7 @@ export type Preferences = {
   compactMode?: boolean;
   textScale?: number;
   fontFamily?: string;
+  sortOrder?: string[];
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
@@ -53,6 +54,7 @@ export type Preferences = {
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { 
   alwaysShowReadingFormatSelector: true,
   fontFamily: 'Alegreya',
+  sortOrder: ['originalDate:desc'],
 };
 
 // Headers

@@ -60,7 +60,10 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
   })
   declare originalTitle: string;
 
-  @Column({ type: DataType.DATE })
+  @Column({ 
+    defaultValue: new Date(0),
+    type: DataType.DATE,
+  })
   declare originalDate: Date;
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {

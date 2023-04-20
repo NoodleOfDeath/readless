@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Button,
   Screen,
+  ScrollView,
   Summary,
   Text,
   View,
@@ -32,7 +33,10 @@ export function SearchScreen({
       favoritedSummaries, 
       removedSummaries,
       preferredReadingFormat,
+      sortOrder,
     },
+    ready,
+    setPreference,
   } = React.useContext(SessionContext);
   const toast = React.useContext(ToastContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
@@ -71,6 +75,13 @@ export function SearchScreen({
       .join(' ');
   }, [categoryOutletCount, bookmarkedCategories, bookmarkedOutlets]);
   
+  const excludeIds = React.useMemo(() => {
+    if (!removedSummaries || Object.keys(removedSummaries) === 0) {
+      return undefined;
+    }
+    return Object.keys(removedSummaries).map((k) => Number(k));
+  }, [removedSummaries]);
+  
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
   const load = React.useCallback(async (pageSize: number, page: number) => {
@@ -91,9 +102,11 @@ export function SearchScreen({
     try {
       const { data, error } = await getSummaries(
         filter,
-        undefined,
+        excludeIds,
+        Boolean(excludeIds),
         page,
-        pageSize
+        pageSize,
+        sortOrder
       );
       if (error) {
         console.error(error);
@@ -105,9 +118,9 @@ export function SearchScreen({
       }
       setSummaries((prev) => {
         if (page === 0) {
-          return (prev = data.rows.filter((r) => !(r.id in (removedSummaries ?? {}))));
+          return (prev = data.rows);
         }
-        return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id) && !(r.id in (removedSummaries ?? {})))]);
+        return (prev = [...prev, ...data.rows]);
       });
       setTotalResultCount(data.count);
       setPage((prev) => prev + 1);
@@ -119,50 +132,49 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [
-    onlyCustomNews, 
-    followFilter, 
-    searchText, 
-    prefilter, 
-    getSummaries, 
-    removedSummaries,
-    toast,
-  ]);
+  }, [excludeIds, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast, removedSummaries]);
 
   const onMount = React.useCallback(() => {
+    if (!ready) {
+      return;
+    }
     setPage(0);
     load(pageSize, 0);
     if (prefilter) {
       navigation?.setOptions({ headerShown: true, headerTitle: prefilter });
     }
-  }, [load, navigation, pageSize, prefilter]);
+  }, [load, navigation, pageSize, prefilter, ready]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(
     () => onMount(), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pageSize, prefilter, searchText]
+    [pageSize, prefilter, ready, sortOrder, searchText]
   );
+  
+  React.useEffect(() => {
+    setSummaries((prev) => {
+      const newState = prev.filter((p) => !(p.id in (removedSummaries ?? {})));
+      return (prev = newState);
+    });
+  }, [removedSummaries]);
 
   const loadMore = React.useCallback(async () => {
     await load(pageSize, page + 1);
   }, [load, pageSize, page]);
 
   const handleFormatChange = React.useCallback(
-    async (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
-      const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
+    (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
+      const { data: interactions, error } = handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (error) {
         console.error(error);
-        toast.alert(error.message);
-      } else if (interactions) {
-        setSummaries((prev) => prev.map((s) => s.id === summary.id ? { ...s, interactions } : s));
       }
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
         summary,
       });
     },
-    [handleInteraction, navigation, preferredReadingFormat, toast]
+    [handleInteraction, navigation, preferredReadingFormat]
   );
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
@@ -178,7 +190,7 @@ export function SearchScreen({
       onRefresh={ () => load(pageSize, 0) }>
       <View col mh={ 16 }>
         {!prefilter && (
-          <View mb={ 16 }>
+          <View mb={ 8 }>
             <Searchbar
               placeholder="show me something worth reading..."
               onChangeText={ ((text) => 
@@ -187,6 +199,35 @@ export function SearchScreen({
               value={ searchText } />
           </View>
         )}
+        <View row mb={ 8 }>
+          <Text mr={ 8 }>Sort By:</Text>
+          <ScrollView horizontal>
+            <View row>
+              <View mr={ 8 }>
+                <Button 
+                  row
+                  alignCenter
+                  startIcon={ (sortOrder ?? []).length > 0 ? 'check' : undefined }
+                  underline={ (sortOrder ?? []).length > 0 }
+                  spacing={ 4 }
+                  onPress={ () => setPreference('sortOrder', ['originalDate:desc', 'createdAt:desc']) }>
+                  Publication Date
+                </Button>
+              </View>
+              <View>
+                <Button 
+                  row
+                  alignCenter
+                  startIcon={ (sortOrder ?? []).length === 0 ? 'check' : undefined }
+                  underline={ (sortOrder ?? []).length === 0 }
+                  spacing={ 4 }
+                  onPress={ () => setPreference('sortOrder', []) }>
+                  Generation Date
+                </Button>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>

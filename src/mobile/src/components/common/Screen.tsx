@@ -35,9 +35,8 @@ export function Screen({
       <SafeAreaView style={ theme.components.flexCol }>
         <KeyboardAwareScrollView
           refreshControl={ refreshControl }
-          style={ { overflow: 'visible' } }
           { ...props }>
-          <View style={ [style, { overflow: 'visible' }] }>{children}</View>
+          <View style={ style }>{children}</View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
     </React.Fragment>

@@ -23,7 +23,10 @@ export function orderByToItem(orderBy: string): OrderItem {
   return orderBy.split(':') as OrderItem;
 }
 
-export function orderByToItems(orderBy: string[]): OrderItem[] {
+export function orderByToItems(orderBy: string | string[]): OrderItem[] {
+  if (typeof orderBy === 'string') {
+    return [orderByToItem(orderBy)];
+  }
   return orderBy.map(orderByToItem);
 }
 
