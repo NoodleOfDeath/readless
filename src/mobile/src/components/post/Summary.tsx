@@ -116,8 +116,8 @@ export function Summary({
   const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
 
   const timeAgo = React.useMemo(() => {
-    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true });
-    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true });
+    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
+    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
     return new Date(summary.originalDate ?? 0).valueOf() > 0 && originalTime !== generatedTime ? 
       (
         <React.Fragment>
@@ -299,7 +299,7 @@ export function Summary({
               </View>
             </React.Fragment>
           )}
-          {alwaysShowReadingFormatSelector && !isRead && (
+          {((alwaysShowReadingFormatSelector && !isRead) || initialFormat) && (
             <View>
               <ReadingFormatSelector 
                 format={ format } 

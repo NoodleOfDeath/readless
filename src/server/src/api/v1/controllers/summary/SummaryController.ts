@@ -36,14 +36,15 @@ function parsePrefilter(prefilter: string) {
   return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
 }
 
-function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: number[] = []) {
+function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: number[] = [], excludeIds = false) {
   const newOptions = { ...options };
   if (!filter && ids.length === 0) {
     return newOptions;
   }
   const where: FindAndCountOptions<Summary>['where'] = {};
   if (ids.length > 0) {
-    where.id = ids;
+    const set = Array.isArray(ids) ? ids : [ids];
+    where.id = excludeIds ? { [Op.notIn]: set } : { [Op.in]: set };
   }
   const splitExpr = /\s*((?:\w+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+\w+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
@@ -105,6 +106,7 @@ export class SummaryController {
     @Query() scope = 'public',
     @Query() filter?: string,
     @Query() ids?: number[],
+    @Query() excludeIds?: boolean,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
@@ -115,7 +117,7 @@ export class SummaryController {
       offset,
       order: orderByToItems(order),
     };
-    const filteredOptions = applyFilter(options, filter, ids);
+    const filteredOptions = applyFilter(options, filter, ids, excludeIds);
     const summaries = await Summary.scope(scope).findAndCountAll(filteredOptions);
     await Promise.all(summaries.rows.map(async (row) => await SummaryInteraction.create({
       targetId: row.id,

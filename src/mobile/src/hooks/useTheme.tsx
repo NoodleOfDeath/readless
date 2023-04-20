@@ -77,6 +77,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         rounded: { borderRadius: 8 },
         searchBar: {
           fontFamily: preferences.fontFamily,
+          overflow: 'visible',
           width: '100%',
         },
         text: { fontFamily: 'Lato' },

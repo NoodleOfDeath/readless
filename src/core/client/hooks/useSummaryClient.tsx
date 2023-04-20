@@ -19,13 +19,14 @@ export function useSummaryClient() {
   const getSummaries = React.useCallback(async (
     filter?: string,
     ids?: number[],
+    excludeIds?: boolean,
     page = 0,
     pageSize = 10,
     order?: string[]
   ) => {
     try {
       return await withHeaders(API.getSummaries)({
-        filter, ids, order, page, pageSize,
+        excludeIds, filter, ids, order, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
@@ -97,10 +98,10 @@ export function useSummaryClient() {
     } else if (interaction === InteractionType.Feedback) {
       await alternateAction?.();
       return { data: undefined, error: undefined };
-    } else if (interaction === InteractionType.Read || interaction === InteractionType.Share || interaction === InteractionType.View) {
+    } else if (alternateAction) {
       // pass
       try {
-        await alternateAction?.();
+        await alternateAction();
       } catch (e) {
         console.error(e);
       }
