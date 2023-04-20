@@ -60,6 +60,7 @@ export async function doWork() {
               dateAttribute: outlet.siteMaps.map((s) => s.dateAttribute).filter(Boolean).join(','),
               dateSelector: outlet.siteMaps.map((s) => s.dateSelector).filter(Boolean).join(','),
               outletId: outlet.id, 
+              timezone: outlet.timezone,
               url, 
             }
           );
