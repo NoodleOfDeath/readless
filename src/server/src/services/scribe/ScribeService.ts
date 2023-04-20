@@ -84,7 +84,7 @@ export class ScribeService extends BaseService {
           newSummary.bullets = reply.text
             .replace(/^bullets:\s*/i, '')
             .replace(/\.$/, '')
-            .split(/[,;\n]/)
+            .split(/\n/)
             .map((bullet) => bullet.trim());
         },
         text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol',
