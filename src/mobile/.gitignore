@@ -54,6 +54,7 @@ swagger.json
 **/fastlane/Preview.html
 **/fastlane/screenshots
 **/fastlane/test_output
+*.aab
 
 # Bundle artifact
 *.jsbundle

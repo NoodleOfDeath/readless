@@ -21,8 +21,6 @@ import { Serializable } from '../../../../types';
 import { RateLimit } from '../analytics/RateLimit.model';
 import { BaseModel } from '../base';
 
-const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '2d';
-
 function getHost() {
   const nets = networkInterfaces();
   const results: Record<string, string[]> = {};
@@ -149,8 +147,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
       order: [['createdAt', 'DESC']],
       where: {
         completedAt: null,
-        createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) },
-        delayedUntil: { [Op.or]: [null, { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) }] },
+        delayedUntil: { [Op.or]: [null, { [Op.lt]: new Date() }] },
         lockedBy: null,
         queue: this.queueProps.name,
         startedAt: null,

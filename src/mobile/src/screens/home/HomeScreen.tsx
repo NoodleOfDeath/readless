@@ -78,6 +78,7 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
     if (url) {
       router({ url });
     }
+    Linking.removeAllListeners('url');
     Linking.addEventListener('url', router);
     const followCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
     setActiveTab(followCount > 0 ? 1 : 0);
