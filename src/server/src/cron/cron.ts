@@ -13,6 +13,8 @@ import {
 } from '../api/v1/schema';
 import { DBService } from '../services';
 
+const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '2d';
+
 async function main() {
   await DBService.initTables();
   await Queue.initQueues();
@@ -152,7 +154,6 @@ async function cleanUpDeadWorkers() {
       returning: true,
       where: { lastUpdateAt: { [Op.lt]: new Date(Date.now() - RETIRE_IF_NO_RESPONSE_IN_MS) } },
     });
-    console.log(rows);
     const deadWorkers = rows?.map((r) => r.id);
     if (deadWorkers) {
       await Job.update({
@@ -160,6 +161,7 @@ async function cleanUpDeadWorkers() {
         startedAt: null,
       }, { where: { lockedBy: deadWorkers } });
     }
+    await Job.destroy({ where: { [Op.or]: [ { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }] } });
   } catch (e) {
     console.error(e);
   } finally {

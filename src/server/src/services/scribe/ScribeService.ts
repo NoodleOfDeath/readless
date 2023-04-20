@@ -12,7 +12,7 @@ import { BaseService } from '../base';
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
-const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD ? process.env.OLD_NEWS_THRESHOLD : '2d';
+const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '2d';
 
 export class ScribeService extends BaseService {
   

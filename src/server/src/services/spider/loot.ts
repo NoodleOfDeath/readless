@@ -48,19 +48,16 @@ export class Loot implements LootProps {
     }
     const datetext = new Date($(dateSelector).first().text());
     const datetime = new Date($(dateSelector).attr(dateAttribute));
-    if (Number.isNaN(datetext.valueOf()) && Number.isNaN(datetime.valueOf())) {
+    if (Number.isNaN(datetext) && Number.isNaN(datetime)) {
       this.timestamp = defaultTimestamp;
     } else
-    if (!Number.isNaN(datetext.valueOf()) && Number.isNaN(datetime.valueOf())) {
+    if (!Number.isNaN(datetext) && Number.isNaN(datetime)) {
       this.timestamp = datetext.valueOf();
     } else
-    if (Number.isNaN(datetext.valueOf()) && !Number.isNaN(datetime.valueOf())) {
+    if (Number.isNaN(datetext) && !Number.isNaN(datetime)) {
       this.timestamp = datetime.valueOf();
     } else {
       this.timestamp = datetext.valueOf() > datetime.valueOf() ? datetext.valueOf() : datetime.valueOf();
-    }
-    if (Number.isNaN(this.timestamp)) {
-      this.timestamp = undefined;
     }
     this.filteredText = $(queryFilter).text();
   }
