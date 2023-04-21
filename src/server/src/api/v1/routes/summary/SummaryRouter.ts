@@ -27,9 +27,10 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     const {
-      scope, filter, ids, excludeIds, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
+      scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
+    const excludeIds = exclude === 'false' || exclude === 0 || exlcude === 'undefined' ? false : exclude;
     try {
       const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, pageSize, page, offset, order);
       return res.json(response);
