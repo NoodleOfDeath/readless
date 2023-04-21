@@ -8,17 +8,15 @@ import {
 import {
   ActivityIndicator,
   Button,
-  Checkbox,
+  Grid,
   Screen,
   TabSwitcher,
-  Text,
   View,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
 import { ClientError, useCategoryClient } from '~/hooks';
-import { ScreenProps } from '~/screens';
 
-export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
+export function SectionsScreen() {
 
   const { getCategories, getOutlets } = useCategoryClient();
   const {
@@ -35,6 +33,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
   const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
   const [_, setError] = React.useState<InternalError>();
+
+  const sortedOutlets = React.useMemo(() => [...outlets].sort((a, b) => a.name.replace(/^the/i, '').localeCompare(b.name.replace(/^the/i, ''))), [outlets]);
   
   const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
   const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
@@ -82,14 +82,6 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
     loadCategories();
     loadOutlets();
   }, [loadCategories, loadOutlets]);
-
-  const selectCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigation?.navigate('search', { prefilter: `cat:${category.name.toLowerCase().replace(/\s/g, '-')}` });
-  }, [navigation]);
-
-  const selectOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    navigation?.navigate('search', { prefilter: `src:${outlet.name}` });
-  }, [navigation]);
   
   const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
     setPreference('bookmarkedCategories', (prev) => {
@@ -114,10 +106,6 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
       return (prev = state);
     });
   }, [setPreference]);
-  
-  const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' | 'bookmarkedOutlets') => {
-    setPreference(key, {});
-  }, [setPreference]);
 
   return (
     <Screen
@@ -131,84 +119,42 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
             activeTab={ activeTab }
             onTabChange={ setActiveTab }
             titles={ titles }>
-            <View col height='100%'>
-              <View row>
-                <View row>
-                  <Text>
-                    Category
-                  </Text>
-                </View>
-                <View>
-                  <Button 
-                    onPress={ () => clearBookmarks('bookmarkedCategories') }>
-                    { `Follow ${categoryCount > 0 ? `(${categoryCount})` : ''}` }
-                  </Button>
-                </View>
-              </View>
+            <Grid alignCenter justifyCenter>
               {categories.map((category) => (
-                <View 
-                  row
+                <Button
+                  key={ category.name }
+                  selected={ Boolean(bookmarkedCategories?.[category.name]) }
+                  selectable
+                  height={ 80 }
                   alignCenter
-                  justifySpaced
-                  key={ category.name }>
-                  <Button 
-                    row
-                    selectable
-                    alignCenter
-                    outlined
-                    rounded
-                    spacing={ 8 }
-                    startIcon={ category.icon }
-                    p={ 8 }
-                    mv={ 4 }
-                    onPress={ () => selectCategory(category) }>
-                    {category.displayName}
-                  </Button>
-                  <Checkbox
-                    checked={ Boolean(bookmarkedCategories?.[category.name]) }
-                    onPress={ () => followCategory(category) }
-                    containerStyle={ { backgroundColor: 'transparent' } } />
-                </View>
+                  justifyCenter
+                  outlined
+                  rounded
+                  spacing={ 4 }
+                  startIcon={ category.icon }
+                  p={ 8 }
+                  m={ 4 }
+                  onPress={ () => followCategory(category) }>
+                  {category.displayName}
+                </Button>
               ))}
-            </View>
-            <View col>
-              <View row>
-                <View row>
-                  <Text>
-                    News Source
-                  </Text>
-                </View>
-                <View>
-                  <Button
-                    onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
-                    { `Follow ${outletCount > 0 ? `(${outletCount})` : ''}` }
-                  </Button>
-                </View>
-              </View>
-              {outlets.map((outlet) => (
-                <View 
-                  row
+            </Grid>
+            <Grid alignCenter justifyCenter>
+              {sortedOutlets.map((outlet) => (
+                <Button 
+                  key={ outlet.name }
+                  selected={ Boolean(bookmarkedOutlets?.[outlet.name]) }
+                  selectable
                   alignCenter
-                  justifySpaced
-                  key={ outlet.name }>
-                  <Button 
-                    row
-                    selectable
-                    alignCenter
-                    outlined
-                    rounded
-                    p={ 8 }
-                    mv={ 4 }
-                    onPress={ () => selectOutlet(outlet) }>
-                    {outlet.displayName}
-                  </Button>
-                  <Checkbox
-                    checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
-                    onPress={ () => followOutlet(outlet) }
-                    containerStyle={ { backgroundColor: 'transparent' } } />
-                </View>
+                  outlined
+                  rounded
+                  p={ 8 }
+                  m={ 4 }
+                  onPress={ () => followOutlet(outlet) }>
+                  {outlet.displayName}
+                </Button>
               ))}
-            </View>
+            </Grid>
           </TabSwitcher>
         </View>
       )}

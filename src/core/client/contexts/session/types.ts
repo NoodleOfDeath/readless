@@ -52,7 +52,6 @@ export type Preferences = {
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { 
-  alwaysShowReadingFormatSelector: true,
   fontFamily: 'Alegreya',
   sortOrder: ['originalDate:desc'],
 };

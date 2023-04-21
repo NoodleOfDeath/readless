@@ -35,7 +35,7 @@ export function useSummaryClient() {
 
   const getSummary = React.useCallback(async (id: number) => {
     try {
-      const { data, error } = await getSummaries(undefined, [id], 0, 1);
+      const { data, error } = await getSummaries(undefined, [id], false, 0, 1);
       if (error) {
         return { data: undefined, error };
       }
@@ -95,19 +95,15 @@ export function useSummaryClient() {
         }
         return (prev = favorites);
       });
-    } else if (interaction === InteractionType.Feedback) {
-      await alternateAction?.();
-      return { data: undefined, error: undefined };
-    } else if (alternateAction) {
+    }
+    if (alternateAction) {
       // pass
       try {
         await alternateAction();
       } catch (e) {
         console.error(e);
       }
-    } else {
-      return { data: undefined, error: new ClientError('UNKNOWN') };
-    }
+    } 
     return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, setPreference]);
 

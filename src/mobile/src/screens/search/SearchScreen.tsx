@@ -31,6 +31,7 @@ export function SearchScreen({
       bookmarkedOutlets,
       bookmarkedSummaries, 
       favoritedSummaries, 
+      readSummaries,
       removedSummaries,
       preferredReadingFormat,
       sortOrder,
@@ -57,6 +58,7 @@ export function SearchScreen({
   const [loading, setLoading] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
+  const [pendingReload, setPendingReload] = React.useState(false);
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
@@ -76,7 +78,7 @@ export function SearchScreen({
   }, [categoryOutletCount, bookmarkedCategories, bookmarkedOutlets]);
   
   const excludeIds = React.useMemo(() => {
-    if (!removedSummaries || Object.keys(removedSummaries) === 0) {
+    if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
       return undefined;
     }
     return Object.keys(removedSummaries).map((k) => Number(k));
@@ -84,7 +86,7 @@ export function SearchScreen({
   
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
-  const load = React.useCallback(async (pageSize: number, page: number) => {
+  const load = React.useCallback(async (page: number) => {
     setLoading(true);
     if (page === 0) {
       setSummaries([]);
@@ -132,18 +134,18 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [excludeIds, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast, removedSummaries]);
+  }, [excludeIds, pageSize, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast]);
 
   const onMount = React.useCallback(() => {
     if (!ready) {
       return;
     }
     setPage(0);
-    load(pageSize, 0);
+    load(0);
     if (prefilter) {
       navigation?.setOptions({ headerShown: true, headerTitle: prefilter });
     }
-  }, [load, navigation, pageSize, prefilter, ready]);
+  }, [load, navigation, prefilter, ready]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(
@@ -158,19 +160,29 @@ export function SearchScreen({
       return (prev = newState);
     });
   }, [removedSummaries]);
+  
+  React.useEffect(() => {
+    if (!pendingReload) {
+      return;
+    }
+    setPendingReload(false);
+    load(0);
+  }, [pendingReload, load, removedSummaries]);
+  
+  const removeReadSummaries = React.useCallback(() => {
+    setPreference('removedSummaries', (prev) => (prev = ({ ...prev, ...readSummaries })));
+    setPendingReload(true);
+  }, [setPreference, readSummaries]);
 
   const loadMore = React.useCallback(async () => {
-    await load(pageSize, page + 1);
-  }, [load, pageSize, page]);
+    await load(page + 1);
+  }, [load, page]);
 
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
-      const { data: interactions, error } = handleInteraction(summary, InteractionType.Read, undefined, { format });
-      if (error) {
-        console.error(error);
-      }
+      handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.push('summary', {
-        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
         summary,
       });
     },
@@ -187,7 +199,7 @@ export function SearchScreen({
   return (
     <Screen
       refreshing={ loading }
-      onRefresh={ () => load(pageSize, 0) }>
+      onRefresh={ () => load(0) }>
       <View col mh={ 16 }>
         {!prefilter && (
           <View mb={ 8 }>
@@ -227,6 +239,9 @@ export function SearchScreen({
               </View>
             </View>
           </ScrollView>
+          <Button onPress={ () => removeReadSummaries() }>
+            Clear Read
+          </Button>
         </View>
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
@@ -267,9 +282,11 @@ export function SearchScreen({
             </Button>
           </View>
         )}
-        {loading && summaries.length > 0 && (
-          <View row justifyCenter p={ 16 } pb={ 24 }>
-            <ActivityIndicator size="large" color={ theme.colors.primary } />
+        {loading && (
+          <View row mb={ 64 }>
+            <View row justifyCenter p={ 16 } pb={ 24 }>
+              <ActivityIndicator size="large" color={ theme.colors.primary } />
+            </View>
           </View>
         )}
       </View>

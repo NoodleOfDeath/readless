@@ -12,7 +12,7 @@ import {
   TabSwitcher,
   View,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
@@ -27,7 +27,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
       readSummaries,
       preferredReadingFormat, 
     },
-    setPreference,
   } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
   
@@ -53,41 +52,13 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, interaction: InteractionType, format?: ReadingFormat) => {
-      const { data: interactions, error } = await handleInteraction(summary, InteractionType.Read, undefined, { format });
-      if (error) {
-        console.error(error);
-      }
-      if (interactions) {
-        if (activeTab === 0) {
-          setPreference('bookmarkedSummaries', (prev) => {
-            const bookmarks = { ...prev };
-            if (bookmarks[summary.id]) {
-              bookmarks[summary.id] = new Bookmark({
-                ...bookmarks[summary.id].item,
-                interactions,
-              });
-            }
-            return (prev = bookmarks);
-          });
-        } else if (activeTab === 1) {
-          setPreference('favoritedSummaries', (prev) => {
-            const bookmarks = { ...prev };
-            if (bookmarks[summary.id]) {
-              bookmarks[summary.id] = new Bookmark({
-                ...bookmarks[summary.id].item,
-                interactions,
-              });
-            }
-            return (prev = bookmarks);
-          });
-        }
-      }
+      handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.push('summary', {
-        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Concise,
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
         summary,
       });
     },
-    [activeTab, handleInteraction, navigation, preferredReadingFormat, setPreference]
+    [handleInteraction, navigation, preferredReadingFormat]
   );
   
   const handleReferSearch = React.useCallback((prefilter: string) => {

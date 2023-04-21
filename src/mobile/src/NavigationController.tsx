@@ -7,7 +7,11 @@ import { Badge } from 'react-native-paper';
 
 import { Preferences, SessionContext } from './contexts';
 
-import { Icon, View } from '~/components';
+import {
+  ActivityIndicator,
+  Icon,
+  View,
+} from '~/components';
 import { useTheme } from '~/hooks';
 import {
   HomeScreen,
@@ -96,40 +100,46 @@ export default function NavigationController() {
   const theme = useTheme();
   const Tab = createBottomTabNavigator();
 
-  const { preferences } = React.useContext(SessionContext);
+  const { ready, preferences } = React.useContext(SessionContext);
 
   return (
-    <NavigationContainer
-      theme={ { 
-        colors: theme.navContainerColors,
-        dark: !theme.isLightMode,
-      } }
-      linking={ NAVIGATION_LINKING_OPTIONS }>
-      <Tab.Navigator>
-        {TABS.map((tab) => (
-          <Tab.Screen
-            key={ tab.name }
-            name={ tab.name }
-            component={ tab.component }
-            options={ {
-              tabBarIcon: (props) => {
-                const badge = tab.badge ? tab.badge(preferences) : 0;
-                return (
-                  <View>
-                    {badge > 0 && (
-                      <Badge style={ {
-                        position: 'absolute', right: 0, top: 0, zIndex: 1,
-                      } }>
-                        {badge}
-                      </Badge>
-                    )}
-                    <Icon name={ tab.icon } { ...props } color="primary" />
-                  </View>
-                );
-              },
-            } } />
-        ))}
-      </Tab.Navigator>
-    </NavigationContainer>
+    <React.Fragment>
+      {!ready ? (
+        <ActivityIndicator animating />
+      ) : (
+        <NavigationContainer
+          theme={ { 
+            colors: theme.navContainerColors,
+            dark: !theme.isLightMode,
+          } }
+          linking={ NAVIGATION_LINKING_OPTIONS }>
+          <Tab.Navigator>
+            {TABS.map((tab) => (
+              <Tab.Screen
+                key={ tab.name }
+                name={ tab.name }
+                component={ tab.component }
+                options={ {
+                  tabBarIcon: (props) => {
+                    const badge = tab.badge ? tab.badge(preferences) : 0;
+                    return (
+                      <View>
+                        {badge > 0 && (
+                          <Badge style={ {
+                            position: 'absolute', right: 0, top: 0, zIndex: 1,
+                          } }>
+                            {badge}
+                          </Badge>
+                        )}
+                        <Icon name={ tab.icon } { ...props } color="primary" />
+                      </View>
+                    );
+                  },
+                } } />
+            ))}
+          </Tab.Navigator>
+        </NavigationContainer>
+      )}
+    </React.Fragment>
   );
 }

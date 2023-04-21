@@ -20,10 +20,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         buttonGroup: {
           backgroundColor: lightMode ? '#fff' : '#000',
           marginTop: 8,
-          overflow: 'hidden',
-          width: '100%',
         },
-        buttonGroupRow: { width: '100%' },
         buttonSelected: {
           backgroundColor: '#8b0000',
           color: '#fff',

@@ -1,9 +1,7 @@
 import React from 'react';
 
 import { ReadingFormat } from '~/api';
-import { Button, View } from '~/components';
-import { SessionContext } from '~/contexts';
-import { useTheme } from '~/hooks';
+import { TabSwitcher } from '~/components';
 
 type Props = {
   format?: ReadingFormat;
@@ -11,67 +9,24 @@ type Props = {
   onChange?: (mode?: ReadingFormat) => void;
 };
 
-const FORMAT_ICONS = {
-  [ReadingFormat.Concise]: 'text-short',
-  [ReadingFormat.Bullets]: 'format-list-bulleted',
-  [ReadingFormat.Casual]: 'text-long',
-  [ReadingFormat.Detailed]: 'text-box',
-  [ReadingFormat.InDepth]: 'text-box-multiple',
-} as const;
-
 export function ReadingFormatSelector({
   format,
-  preferredFormat = ReadingFormat.Concise, 
+  preferredFormat = ReadingFormat.Summary, 
   onChange,
 }: Props = {}) {
-  const theme = useTheme();
-  const { preferences: { compactMode, textScale } } = React.useContext(SessionContext);
-  const makeButton = React.useCallback((newFormat: ReadingFormat, row = 0) => {
-    return (
-      <Button
-        caption
-        selectable
-        outlined
-        row
-        center
-        alignCenter
-        justifyCenter
-        color={ 'primary' }
-        spacing={ 8 * (textScale ?? 1) }
-        p={ 8 * (textScale ?? 1) }
-        startIcon={ FORMAT_ICONS[newFormat] }
-        width={ row === 0 ? '33.33%' : '50%' }
-        selected={ format === newFormat }
-        bg={ newFormat === preferredFormat ? '#aaaacc' : undefined }
-        onPress={ () => onChange?.(newFormat) }>
-        {!compactMode && newFormat}
-      </Button>
-    );
-  }, [compactMode, format, preferredFormat, onChange, textScale]);
+  const [activeTab, setActiveTab] = React.useState((format ?? preferredFormat) === ReadingFormat.Bullets ? 0 : 1);
+  
+  const handleTabChange = React.useCallback((index: number) => {
+    setActiveTab(index);
+    if (onChange) {
+      onChange(index === 0 ? ReadingFormat.Bullets : ReadingFormat.Summary);
+    }
+  }, [onChange]);
 
   return (
-    <View>
-      {compactMode ? (
-        <View row rounded outlined style={ theme.components.buttonGroup }>
-          {makeButton(ReadingFormat.Concise)}
-          {makeButton(ReadingFormat.Bullets)}
-          {makeButton(ReadingFormat.Casual)}
-          {makeButton(ReadingFormat.Detailed)}
-          {makeButton(ReadingFormat.InDepth)}
-        </View>
-      ) : (  
-        <View rounded outlined style={ theme.components.buttonGroup }>
-          <View row style={ theme.components.buttonGroupRow }>
-            {makeButton(ReadingFormat.Concise)}
-            {makeButton(ReadingFormat.Bullets)}
-            {makeButton(ReadingFormat.Casual)}
-          </View>
-          <View row style={ theme.components.buttonGroupRow }>
-            {makeButton(ReadingFormat.Detailed, 1)}
-            {makeButton(ReadingFormat.InDepth, 1)}
-          </View>
-        </View>
-      )}
-    </View>
+    <TabSwitcher 
+      activeTab={ activeTab }
+      onTabChange={ handleTabChange }
+      titles={ ['bullets', 'summary'] } />
   );
 }
