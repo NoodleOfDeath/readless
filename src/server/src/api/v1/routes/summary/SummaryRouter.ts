@@ -30,7 +30,7 @@ router.get(
       scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-    const excludeIds = exclude === 'false' || exclude === 0 || exlcude === 'undefined' ? false : exclude;
+    const excludeIds = exclude === 'false' || exclude === 0 || exclude === 'undefined' ? false : exclude;
     try {
       const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, pageSize, page, offset, order);
       return res.json(response);
