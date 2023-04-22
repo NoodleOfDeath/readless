@@ -80,11 +80,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
   queueProps: QueueSpecifier<DataType, ReturnType, QueueName>;
   
   handler: (job: Job<DataType, ReturnType, QueueName>, next: (() => void)) => Promise<ReturnType>;
-  
-  get failureExprs() {
-    return (this.options.retryFailedJobs ?? []).map((e) => ({ [Op.iRegexp]: e }));
-  }
-  
+
   static async from<DataType extends Serializable, ReturnType, QueueName extends string = string>(
     queueProps: QueueSpecifier<DataType, ReturnType, QueueName>,
     handler: (job: Job<DataType, ReturnType, QueueName>, next: (() => void)) => Promise<ReturnType>,
@@ -151,7 +147,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
         lockedBy: null,
         queue: this.queueProps.name,
         startedAt: null,
-        [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...this.failureExprs] } }],
+        [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...(this.options.retryFailedJobs ?? []).map((e) => ({ [Op.iRegexp]: e }))] } }],
       },
     });
     return job as Job<DataType, ReturnType, QueueName>;

@@ -1,3 +1,4 @@
+import ms from 'ms';
 import puppeteer, {
   ElementHandle,
   Viewport,
@@ -36,37 +37,47 @@ export class PuppeteerService extends BaseService {
     actions: SelectorAction[], 
     { viewport = { height: 1024, width: 1080 } }: PageOptions = {}
   ) {
+    try {
+      const browser = await puppeteer.launch({
+        args: ['--no-sandbox'], 
+        executablePath: process.env.CHROMIUM_EXECUTABLE_PATH, 
+        timeout: process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('10s'), 
+      });
+      const page = await browser.newPage();
+      await page.goto(url);
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(url);
+      // Set screen size
+      await page.setViewport(viewport);
 
-    // Set screen size
-    await page.setViewport(viewport);
+      const rawText = await page.evaluate(() => document.body.innerText);
 
-    const rawText = await page.evaluate(() => document.body.innerText);
-
-    for (const selectorAction of actions) {
-      const {
-        selector, selectAll, pageOptions, action, 
-      } = selectorAction;
-      await page.setViewport(pageOptions?.viewport ?? viewport);
-      const el = await page.waitForSelector(selector);
-      if (selectAll) {
-        const els = await page.$$(selector);
-        for (const el of els) {
+      for (const selectorAction of actions) {
+        const {
+          selector, selectAll, pageOptions, action, 
+        } = selectorAction;
+        if (selector === 'disabled') {
+          return '';
+        }
+        await page.setViewport(pageOptions?.viewport ?? viewport);
+        const el = await page.waitForSelector(selector);
+        if (selectAll) {
+          const els = await page.$$(selector);
+          for (const el of els) {
+            await action(el);
+          }
+          continue;
+        } else {
           await action(el);
         }
-        continue;
-      } else {
-        await action(el);
       }
+
+      await browser.close();
+
+      return rawText;
+    } catch (e) {
+      console.log(e);
+      return '';
     }
-
-    await browser.close();
-
-    return rawText;
-
   }
 
   public static async crawl(outlet: OutletCreationAttributes) {
@@ -76,7 +87,7 @@ export class PuppeteerService extends BaseService {
       {
         action: async (el) => {
           const url = await el.evaluate((el, selectors) => el.getAttribute(selectors.spider.attribute ?? 'href'), selectors);
-          const domain = new URL(url).hostname.replace(/^www\./, '');
+          const domain = new URL(outlet.baseUrl).hostname.replace(/^www\./, '');
           if (/^https?:\/\//.test(url) && !new RegExp(`^https?://(?:www\\.)?${domain}`).test(url)) {
             return;
           }
@@ -87,7 +98,7 @@ export class PuppeteerService extends BaseService {
           }
         }, 
         selectAll: true,
-        selector:selectors.spider.selector,
+        selector: selectors.spider.selector,
       },
     ]);
     return urls;

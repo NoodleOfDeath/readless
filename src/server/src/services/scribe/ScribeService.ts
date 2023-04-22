@@ -16,7 +16,7 @@ const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. Ho
 
 const NOTICE_MESSAGE = 'This reading format will be going away in the next major update, which will include more useful analysis metrics that are short and easier to read! Stay tuned!';
 
-const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '2d';
+const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
 export class ScribeService extends BaseService {
   

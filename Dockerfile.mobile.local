@@ -1,4 +1,4 @@
-FROM node:19.3.0 as base
+FROM node:19.3.0 AS base
 
 # install required cli tools
 RUN npm i -g tsoa
@@ -33,13 +33,13 @@ COPY src/mobile/yarn.lock ./
 RUN yarn tsoa
 
 # run yarn installation
-FROM base as yarn-install
+FROM base AS yarn-install
 RUN yarn install --non-interactive --immutable
 
 # run pod install
-FROM yarn-install as pod-install
+FROM yarn-install AS pod-install
 RUN yarn npx pod-install
 
 # launch container
-FROM pod-install as dev
+FROM pod-install AS dev
 CMD yarn start

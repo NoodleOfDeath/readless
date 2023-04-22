@@ -1138,7 +1138,7 @@ export class Outlet<
       limit = await RateLimit.create({
         expiresAt: new Date(Date.now() + WORKER_FETCH_INTERVAL_MS),
         key,
-        limit: namespace === 'default' ? WORKER_FETCH_RATE_LIMIT : WORKER_MAX_FETCH_RATE_LIMIT,
+        limit: namespace === 'default' ? WORKER_FETCH_RATE_LIMIT : WORKER_MAX_FETCH_RATE_LIMIT ?? 5,
         window: WORKER_FETCH_INTERVAL_MS,
       });
     }

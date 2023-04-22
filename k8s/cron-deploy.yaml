@@ -26,22 +26,14 @@ spec:
               memory: "$K8S_MEMORY_LIMITS"
               cpu: "$K8S_CPU_LIMITS"
           env:
-            - name: CORS_ORIGIN
-              value: "$CORS_ORIGIN"
+            - name: CHROMIUM_EXECUTABLE_PATH
+              value: "$CHROMIUM_EXECUTABLE_PATH"
             - name: OLD_NEWS_THRESHOLD
               value: "$OLD_NEWS_THRESHOLD"
             - name: OPENAI_API_KEY
               value: "$OPENAI_API_KEY"
             - name: PG_CONNECTION_STRING
               value: "$PG_CONNECTION_STRING"
-            - name: PORT
-              value: "$PORT"
-            - name: RECAPTCHA_SECRET_KEY
-              value: "$RECAPTCHA_SECRET_KEY"
-            - name: REDIS_CONNECTION_STRING
-              value: "$REDIS_CONNECTION_STRING"
-            - name: WS_API_KEY
-              value: "$WS_API_KEY"
           # livenessProbe:
           #   httpGet:
           #     path: /v1/healthz
