@@ -1,12 +1,6 @@
 import React from 'react';
 
-import {
-  mdiFormatListBulleted,
-  mdiTextBox,
-  mdiTextBoxMultiple,
-  mdiTextLong,
-  mdiTextShort,
-} from '@mdi/js';
+import { mdiFormatListBulleted, mdiTextLong } from '@mdi/js';
 import { Icon } from '@mdi/react';
 import {
   Button,
@@ -46,10 +40,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const FORMAT_ICONS: Record<ReadingFormat, string> = {
   [ReadingFormat.Bullets]: mdiFormatListBulleted,
-  [ReadingFormat.Concise]: mdiTextShort,
-  [ReadingFormat.Casual]: mdiTextLong,
-  [ReadingFormat.Detailed]: mdiTextBox,
-  [ReadingFormat.InDepth]: mdiTextBoxMultiple,
+  [ReadingFormat.Summary]: mdiTextLong,
 };
 
 export default function ReadingFormatSelector({ onChange }: Props = {}) {
@@ -66,16 +57,9 @@ export default function ReadingFormatSelector({ onChange }: Props = {}) {
   }, [onChange]);
   
   return (
-    <StyledStack>
-      <Stack direction="row">
-        {ReadingFormatButton(ReadingFormat.Concise)}
-        {ReadingFormatButton(ReadingFormat.Bullets)}
-        {ReadingFormatButton(ReadingFormat.Casual)}
-      </Stack>
-      <Stack direction="row">
-        {ReadingFormatButton(ReadingFormat.Detailed)}
-        {ReadingFormatButton(ReadingFormat.InDepth)}
-      </Stack>
+    <StyledStack direction="row">
+      {ReadingFormatButton(ReadingFormat.Summary)}
+      {ReadingFormatButton(ReadingFormat.Bullets)}
     </StyledStack>
   );
 }
