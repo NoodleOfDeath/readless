@@ -63,6 +63,10 @@ jobs:
       K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
       K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
       K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER }}
+      MAIL_HOST: ${{ vars.MAIL_HOST }}
+      MAIL_PASS: ${{ secrets.MAIL_PASS }}
+      MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_USER: ${{ secrets.MAIL_USER }}
       OLD_NEWS_THRESHOLD: ${{ vars.OLD_NEWS_THRESHOLD }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}

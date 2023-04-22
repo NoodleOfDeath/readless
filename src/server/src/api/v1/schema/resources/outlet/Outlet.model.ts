@@ -35,8 +35,6 @@ export class Outlet<
   extends BaseModel<A, B>
   implements OutletAttributes {
 
-  siteMaps?: string[];
-
   static OUTLETS: Record<string, OutletCreationAttributes> = {
     abc: {
       baseUrl: 'https://abcnews.go.com',
@@ -755,7 +753,6 @@ export class Outlet<
         date: { selector: 'disabled' },
         spider:{ selector: 'disbaled' },
       },
-      siteMaps: [],
       timezone: 'EST',
     },
     out: {
@@ -1138,7 +1135,7 @@ export class Outlet<
       limit = await RateLimit.create({
         expiresAt: new Date(Date.now() + WORKER_FETCH_INTERVAL_MS),
         key,
-        limit: namespace === 'default' ? WORKER_FETCH_RATE_LIMIT : WORKER_MAX_FETCH_RATE_LIMIT ?? 5,
+        limit: namespace === 'default' ? WORKER_FETCH_RATE_LIMIT : WORKER_MAX_FETCH_RATE_LIMIT,
         window: WORKER_FETCH_INTERVAL_MS,
       });
     }

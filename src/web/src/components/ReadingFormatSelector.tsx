@@ -58,8 +58,8 @@ export default function ReadingFormatSelector({ onChange }: Props = {}) {
   
   return (
     <StyledStack direction="row">
-      {ReadingFormatButton(ReadingFormat.Summary)}
       {ReadingFormatButton(ReadingFormat.Bullets)}
+      {ReadingFormatButton(ReadingFormat.Summary)}
     </StyledStack>
   );
 }

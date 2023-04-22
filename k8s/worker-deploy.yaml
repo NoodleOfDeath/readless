@@ -28,6 +28,14 @@ spec:
           env:
             - name: CHROMIUM_EXECUTABLE_PATH
               value: "$CHROMIUM_EXECUTABLE_PATH"
+            - name: MAIL_HOST
+              value: "$MAIL_HOST"
+            - name: MAIL_PASS
+              value: "$MAIL_PASS"
+            - name: MAIL_PORT
+              value: "$MAIL_PORT"
+            - name: "MAIL_USER"
+              value: "$MAIL_USER"
             - name: OLD_NEWS_THRESHOLD
               value: "$OLD_NEWS_THRESHOLD"
             - name: OPENAI_API_KEY
