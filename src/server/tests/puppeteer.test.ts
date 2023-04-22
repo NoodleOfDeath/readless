@@ -29,7 +29,7 @@ describe('crawl', () => {
 });
 
 describe('loot', () => {
-  test('loot-single', async () => {
+  test('loot-bbc', async () => {
     const loot = await PuppeteerService.loot('https://www.bbc.com/news/world-us-canada-65356390', Outlet.OUTLETS.bbc);
     expect(loot).toBeDefined();
     expect(loot.url).toBe('https://www.bbc.com/news/world-us-canada-65356390');
@@ -40,6 +40,12 @@ describe('loot', () => {
     expect(loot.date).toBeDefined();
     expect(loot.date).toBeInstanceOf(Date);
     expect(loot.date?.toISOString()).toBe('2023-04-22T01:53:48.000Z');
+    console.log(loot);
+  });
+  test('loot-barrons', async () => {
+    const loot = await PuppeteerService.loot('https://www.barrons.com/articles/at-t-cash-flow-dividend-stock-earnings-fea3533-1a9ce2d3f5fb?mod=RTA', Outlet.OUTLETS.barrons);
+    expect(loot).toBeDefined();
+    expect(loot.url).toBe('https://www.barrons.com/articles/at-t-cash-flow-dividend-stock-earnings-fea3533-1a9ce2d3f5fb?mod=RTA');
     console.log(loot);
   });
 });

@@ -10,7 +10,7 @@ import {
 import { Category, Summary } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
-const MIN_TOKEN_COUNT = 200 as const;
+const MIN_TOKEN_COUNT = 100 as const;
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 

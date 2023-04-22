@@ -129,8 +129,8 @@ export class Outlet<
       name: 'barrons',
       selectors: {
         article: { selector: 'article' },
-        author: { selector: 'article header .byline-container .byline .author' },
-        date: { selector: 'article header .timestamp-container' },
+        author: { selector: 'article header .byline .author' },
+        date: { selector: 'article header time' },
         spider:{
           attribute: 'href',
           selector: 'a[class*="headline-link"]',

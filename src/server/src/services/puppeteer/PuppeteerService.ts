@@ -1,9 +1,12 @@
+import axios from 'axios';
+import { load } from 'cheerio';
 import ms from 'ms';
 import puppeteer, {
   ElementHandle,
   Viewport,
   WaitForSelectorOptions,
 } from 'puppeteer';
+import UserAgent from 'user-agents';
 
 import { OutletCreationAttributes } from '../../api/v1/schema';
 import { BaseService } from '../base';
@@ -30,6 +33,20 @@ export type Loot = {
 };
 
 export class PuppeteerService extends BaseService {
+
+  static async fetch(url: string) {
+    try {
+      const { data: text } = await axios.get(url, {
+        headers: { 
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+          'User-Agent': new UserAgent().random().toString(),
+        }, 
+      });
+      return text;
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static async open(
@@ -108,35 +125,64 @@ export class PuppeteerService extends BaseService {
     const loot: Loot = {
       authors: [],
       content: content ?? '',
-      date: new Date(),
+      date: new Date(0),
       rawText: content ?? '',
       title: '',
       url,
     };
+    function clean(text = '') {
+      return text
+        .replace(/<(\w+)>.*?<\/\1>/g, '')
+        .replace(/\s\s+/g, ' ')
+        .replace(/\n\n+/g, '\n')
+        .trim();
+    }
     if (!content) {
-      loot.rawText = await PuppeteerService.open(url, [
-        {
+      const staticText = await PuppeteerService.fetch(url);
+      if (staticText) {
+        loot.rawText = staticText;
+        const $ = load(staticText);
+        $('script,style').remove();
+        loot.content = clean($(outlet.selectors.article.selector).text());
+        loot.title = clean($(outlet.selectors.title?.selector || 'title').text());
+        const datetext = clean($(outlet.selectors.date.selector || 'time').text());
+        const datetime = clean($(outlet.selectors.date.selector || 'time').attr('datetime'));
+        const othertime = clean($(outlet.selectors.date.selector || 'time').attr('pubdate'));
+        loot.date = new Date((datetime || datetext || othertime).replace(/^(?:published|updated):?\s*/i, ''));
+        loot.authors = $(outlet.selectors.author.selector || 'author').map((i, el) => clean($(el).text())).get();
+      }
+      const actions: SelectorAction[] = [];
+      if (!loot.title) {
+        actions.push({
           action: async (el) => {
-            loot.title = await el.evaluate((el) => el.textContent);
+            loot.title = clean(await el.evaluate((el) => el.textContent));
           },
           selector: outlet.selectors.title?.selector || 'title',
-        },
-        { 
+        });
+      }
+      if (!loot.content) {
+        actions.push({
           action: async (el) => {
-            loot.content = await el.evaluate((el) => el.textContent.replace(/<(\w+)>.*?<\/\1>/g, ''));
+            const $ = load(await el.evaluate((el) => el.innerHTML));
+            $('script,style').remove();
+            loot.content = $.text();
           },
           selector: outlet.selectors.article.selector,
-        },
-        {
+        });
+      }
+      if (!loot.date.valueOf()) {
+        actions.push({
           action: async (el) => {
-            const datetext = await el.evaluate((el) => el.textContent);
+            const datetext = clean(await el.evaluate((el) => el.textContent));
             const datetime = await el.evaluate((el) => el.getAttribute('datetime'));
             const othertime = await el.evaluate((el, attr) => el.getAttribute(attr), outlet.selectors.date.attribute ?? 'datetime');
             loot.date = new Date((datetime || datetext || othertime).replace(/^(?:published|updated):?\s*/i, ''));
           },
-          selector:  outlet.selectors.date.selector || 'time',
-        },
-        {
+          selector: outlet.selectors.date.selector || 'time',
+        });
+      }
+      if (!loot.authors.length) {
+        actions.push({
           action: async (el) => {
             loot.authors = await el.evaluate((el) => {
               const authors: string[] = [];
@@ -145,8 +191,11 @@ export class PuppeteerService extends BaseService {
             });
           },
           selector: outlet.selectors.author.selector,
-        },
-      ]);
+        });
+      }
+      if (actions.length) {
+        await PuppeteerService.open(url, actions);
+      }
     }
     return loot;
   }
