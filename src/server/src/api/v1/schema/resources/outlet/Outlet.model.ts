@@ -11,7 +11,7 @@ import {
   OutletAttributes,
   OutletCreationAttributes,
   PUBLIC_OUTLET_ATTRIBUTES,
-  SiteMap,
+  Selectors,
 } from './Outlet.types';
 import { RateLimit } from '../../analytics/RateLimit.model';
 import { BaseModel } from '../../base';
@@ -35,772 +35,1051 @@ export class Outlet<
   extends BaseModel<A, B>
   implements OutletAttributes {
 
+  siteMaps?: string[];
+
   static OUTLETS: Record<string, OutletCreationAttributes> = {
     abc: {
+      baseUrl: 'https://abcnews.go.com',
       displayName: 'ABC News',
       name: 'abc',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="AnchorLink"]',
-        url: 'https://abcnews.go.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: '.ShareByline a[href*=https://abcnews.go.com/author]' },
+        date: { selector: '.ShareByline > div  > div :last-child' },
+        spider: {
+          attribute: 'href',
+          selector: 'a[class*="AnchorLink"]',
+        },
+      },
       timezone: 'EST',
     },
     advocate: {
+      baseUrl: 'https://www.advocate.com',
       displayName: 'Advocate',
       name: 'advocate',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.advocate.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .social-author' },
+        date: { selector: 'article .social-date' },
+        spider: { attribute: 'href', selector: 'article a' },
+      },
       timezone: 'EST',
     },
     aei: {
+      baseUrl: 'https://www.aei.org',
       displayName: 'AEI',
       name: 'aei',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="hero__post"] a',
-        url: 'https://www.aei.org',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header p[class*="publisher"]' },
+        date: { selector: 'article header p[class*=date"]' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="hero__post"] a',
+        },
+      },
       timezone: 'EST',
     },
     apnews: {
+      baseUrl: 'https://www.apnews.com',
       displayName: 'AP News',
       name: 'apnews',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="Component-headline"]',
-        url: 'https://www.apnews.com',
-      }],
+      selectors: {
+        article: { selector: '.Content .Article' },
+        author: { selector: '.Content .CardHeadline .Byline' },
+        date: { attribute: 'date-source', selector: '.Content .CardHeadline .Timestamp' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="Component-headline"]',
+        },
+      },
       timezone: 'EST',
     },
     'ars-technica': {
+      baseUrl: 'https://www.arstechnica.com',
       displayName: 'ars technica',
       name: 'ars-technica',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.arstechnica.com',
-      }],
+      selectors: {
+        article:{ selector: 'article' }, 
+        author: { selector: 'article header section *[itemprop*="author creator"]' },
+        date: { selector: 'article header time' },
+        spider: {
+          attribute: 'href',
+          selector: 'li.tease.article > a',
+        },
+      },
       timezone: 'EST',
     },
     atlantic: {
+      baseUrl: 'https://www.theatlantic.com',
       displayName: 'The Atlantic',
       name: 'atlantic',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.theatlantic.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header .byline a' },
+        date: { selector: 'article header time' },
+        spider: {
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     barrons: {
+      baseUrl: 'https://www.barrons.com/real-time',
       displayName: 'Barron\'s',
       name: 'barrons',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="headline-link"]',
-        url: 'https://www.barrons.com/real-time',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header .byline-container .byline .author' },
+        date: { selector: 'article header .timestamp-container' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="headline-link"]',
+        },
+      },
       timezone: 'EST',
     },
     bbc: {
+      baseUrl: 'https://www.bbc.com',
       displayName: 'BBC',
       name: 'bbc',
-      siteMaps: [{
-        attribute: 'href',
-        params: [[
-          '',
-          'culture',
-          'culture/music',
-          'future',
-          'news',
-          'reel',
-          'sport',
-          'travel',
-          'worklife',
-        ]],
-        selector: 'a[class*="media__link"],a[class*="link__overlay__link"],a[class*="item__title"]',
-        url: 'https://www.bbc.com/${1}',
-      }],
+      selectors: { 
+        article: { selector: 'article' },
+        author: { selector: 'article *[class*="TextContributorName"]' },
+        date: { selector: 'article time' },
+        spider:{ selector: 'a[class*="media__link"],a[class*="link__overlay__link"],a[class*="item__title"]' }, 
+      },
       timezone: 'UTC+1',
     },
     billboard: {
+      baseUrl: 'https://www.billboard.com',
       displayName: 'billboard',
       name: 'billboard',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="c-title"]',
-        url: 'https://www.billboard.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header .byline-container .byline .author a' },
+        date: { selector: 'article header time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="c-title"]',
+        },
+      },
       timezone: 'EST',
     },
     'bleeping-computer': {
+      baseUrl: 'https://www.bleepingcomputer.com',
       displayName: 'Bleeping Computer',
       name: 'bleeping-computer',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="bc_latest_news_text"] a',
-        url: 'https://www.bleepingcomputer.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .author a' },
+        date: { attribute: 'text', selector: 'article .cz-news-date,article .cz-news-time' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="bc_latest_news_text"] a',
+        },
+      },
       timezone: 'EST',
     },
     bloomberg: {
+      baseUrl: 'https://www.bloomberg.com',
       displayName: 'Bloomberg',
       name: 'bloomberg',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.bloomberg.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article address p[class*="author"] a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     'business-insider': {
+      baseUrl: 'https://www.businessinsider.com',
       displayName: 'Business Insider',
       name: 'business-insider',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="tout-title-link"]',
-        url: 'https://www.businessinsider.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: '.byline .byline-author-name' },
+        date: { selector: '.byline .byline-timestamp' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="tout-title-link"]',
+        },
+      },
       timezone: 'EST',
     },
     bustle: {
+      baseUrl: 'https://www.bustle.com',
       displayName: 'Bustle',
       name: 'bustle',
-      siteMaps: [{ 
-        attribute:'href', 
-        'params': [[
-          'books',
-          'entertainment',
-          'fashion',
-          'info',
-          'news',
-          'politics',
-          'rule-breakers',
-          'wellness',
-        ]], 
-        selector: 'ul[class="Lwl"] li a', 
-        url: 'https://www.bustle.com/archive/${MMMM}/${YYYY}/${1}',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article address a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'ul[class="Lwl"] li a', 
+        },
+      },
       timezone: 'EST',
     },
     buzzfeed: {
+      baseUrl: 'https://www.buzzfeed.com',
       displayName: 'BuzzFeed',
       name: 'buzzfeed',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="feedItem"] a',
-        url: 'https://www.buzzfeed.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .author a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="feedItem"] a',
+        },
+      },
       timezone: 'EST',
     },
     cbsnews: {
+      baseUrl: 'https://www.cbsnews.com',
       displayName: 'CBS News',
       name: 'cbsnews',
-      siteMaps: [{
-        attribute: 'href',
-        dateAttribute: 'text',
-        dateSelector: 'span[class*="now-playing__relative"]',
-        selector: 'article a',
-        url: 'https://www.cbsnews.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author : { selector: '' },
+        date: { selector: 'article time' },
+        spider:{ attribute: 'href', selector: 'article a' },
+      },
       timezone: 'EST',
     },
     cnbc: {
+      baseUrl: 'https://www.cnbc.com',
       displayName: 'CNBC',
       name: 'cnbc',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class="SiteMapArticleList-link"]',
-        url: 'https://www.cnbc.com/site-map/articles/${YYYY}/${MMMM}/${D}/',
-      }],
+      selectors: {
+        article: { selector: '.ArticleBody-articleBody' },
+        author: { selector: '.Author-authorName' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class="SiteMapArticleList-link"]',
+        },
+      },
+      siteMaps: ['https://www.cnbc.com/site-map/articles/${YYYY}/${MMMM}/${D}/'],
       timezone: 'EST',
     },
     cnn: {
+      baseUrl: 'https://www.cnn.com',
       displayName: 'CNN',
       name: 'cnn',
-      siteMaps: [{
-        selector: 'loc', 
-        url: 'https://www.cnn.com/sitemaps/cnn/news.xml',
-      }],
+      selectors: {
+        article: { selector: '.ArticleBody-articleBody' },
+        author: { selector: 'header .headline__sub-text .byline_name' },
+        date: { selector: 'header .headline__sub-text .timestamp' },
+        spider:{
+          attribute: 'src',
+          selector: 'loc',
+        },
+      },
+      siteMaps: ['https://www.cnn.com/sitemaps/cnn/news.xml'],
       timezone: 'EST',
     },
     coindesk: {
+      baseUrl: 'https://www.coindesk.com',
       displayName: 'CoinDesk',
       name: 'coindesk',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="most-read-article"] a',
-        url: 'https://www.coindesk.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .at-authors a' },
+        date: { selector: 'article .at-created,article .at-updated' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="most-read-article"] a',
+        },
+      },
       timezone: 'EST',
     },
     cryptoglobe: {
+      baseUrl: 'https://www.cryptoglobe.com',
       displayName: 'Cryptoglobe',
       name: 'cryptoglobe',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="u-link"]',
-        url: 'https://www.cryptoglobe.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header .media-body a[href*="/contributors"]' },
+        date: { selector: 'article header .media-body :last-child' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="u-link"]',
+        },
+      },
       timezone: 'EST',
     },
     csis: {
+      baseUrl: 'https://www.csis.org',
       displayName: 'CSIS',
       name: 'csis',
-      siteMaps: [{
-        attribute: 'href',
-        params: [[
-          'american-innovation',
-          'climate-change',
-          'cybersecurity',
-          'defense-and-security',
-          'economics',
-          'energy-and-sustainability',
-          'food-and-security',
-          'geopolitics',
-          'global-health',
-          'human-rights',
-          'missile-defense',
-          'nuclear-issues',
-          'space',
-          'technology',
-          'trade',
-        ]],
-        selector: 'article[typeof*="schema:Article"] a',
-        url: 'https://www.csis.org/topics/${1}',
-      }],
+      selectors: {
+        article: { selector: 'div[role*="article"] .column' },
+        author: { selector: 'article .contributors a' },
+        date: { selector: 'article .contributors :last-child' },
+        spider:{
+          attribute: 'href',
+          selector: 'article[typeof*="schema:Article"] a',
+        },
+      },
       timezone: 'EST',
     },
     'defense-one': {
+      baseUrl: 'https://www.defenseone.com',
       displayName: 'Defense One',
       name: 'defense-one',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="river-item-hed"],a[class*="skybox-link"]',
-        url: 'https://www.defenseone.com',
-      }],
+      selectors: {
+        article: { selector: 'div[role*="article"] .column' },
+        author: { selector: 'article .contributors a' },
+        date: { selector: 'article .contributors :last-child' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="river-item-hed"],a[class*="skybox-link"]',
+        },
+      },
       timezone: 'EST',
     },
     'developer-tech': {
+      baseUrl: 'https://www.developer-tech.com',
       displayName: 'Developer Tech',
       name: 'developer-tech',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'header[class*="article-header"] a',
-        url: 'https://www.developer-tech.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline .by a' },
+        date: { selector: 'article .byline time' },
+        spider:{
+          attribute: 'href',
+          selector: 'header[class*="article-header"] a',
+        },
+      },
       timezone: 'EST',
     },
     economist: {
+      baseUrl: 'https://www.economist.com',
       displayName: 'The Economist (Coming Soon)',
       name: 'economist',
-      siteMaps: [],
+      selectors: {
+        article: { selector: 'disabled' },
+        author: { selector: 'disabled' },
+        date: { selector: 'disabled' },
+        spider : { selector: 'disabled' },
+      },
       timezone: 'EST',
     },
     enews: {
+      baseUrl: 'https://www.eonline.com',
       displayName: 'E! News',
       name: 'enews',
-      siteMaps: [{
-        attribute: 'href',
-        dateSelector: '.article-detail__meta__date',
-        selector: 'a[class*="widget__title"]',
-        url: 'https://www.eonline.com',
-      }],
+      selectors: {
+        article: { selector: '.article-detail__text-only' },
+        author: { selector: 'header .article-detail__meta__author' },
+        date: { selector: 'header .article-detail__meta__date' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="widget__title"]',
+        },
+      },
       timezone: 'UTC-7',
     },
     espn: {
+      baseUrl: 'https://www.espn.com',
       displayName: 'ESPN',
       name: 'espn',
-      siteMaps: [{
-        attribute: 'href',
-        dateAttribute: 'data-date',
-        dateSelector: 'span[class*="timestamp"]',
-        selector: 'ul[class*="headlineStack"] li a',
-        url: 'https://www.espn.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .authors .author' },
+        date: { attribute: 'data-date', selector: 'article .timestamp' },
+        spider:{
+          attribute: 'href',
+          selector: 'ul[class*="headlineStack"] li a',
+        },
+      },
       timezone: 'EST',
     },
     essence: {
+      baseUrl: 'https://www.essence.com',
       displayName: 'Essence',
       name: 'essence',
-      siteMaps: [{
-        attribute: 'href',
-        dateAttribute: 'datetime',
-        dateSelector: 'time[class*="entry-date"]',
-        selector: 'article a',
-        url: 'https://www.essence.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header .byline .author a' },
+        date: { selector: 'article .posted-on time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     ew: {
+      baseUrl: 'https://www.ew.com',
       displayName: 'Entertainment Weekly',
       name: 'ew',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="entityTout"] a',
-        url: 'https://www.ew.com',
-      }],
+      selectors: {
+        article: { selector: 'main > .longformContent' },
+        author: { attribute: 'alt', selector: 'main > .longformContent .byline__authorAvatar img' },
+        date: { attribute: 'data-date', selector: '.byline_block--timestamp' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="entityTout"] a',
+        },
+      },
       timezone: 'EST',
     },
     forbes: {
+      baseUrl: 'https://www.forbes.com',
       displayName: 'Forbes',
       name: 'forbes',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="headlink"]',
-        url: 'https://www.forbes.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .fs-author-name a' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="headlink"]',
+        },
+      },
       timezone: 'EDT',
     },
     'foreign-policy': {
+      baseUrl: 'https://www.foreignpolicy.com',
       displayName: 'Foreign Policy',
       name: 'foreign-policy',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="hed-heading"]',
-        url: 'https://www.foreignpolicy.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .author-bio a[rel*="author"]' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="hed-heading"]',
+        },
+      },
       timezone: 'EST',
     },
     fortune: {
+      baseUrl: 'https://www.fortune.com',
       displayName: 'Fortune',
       name: 'fortune',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="titleLink"]',
-        url: 'https://www.fortune.com',
-      }],
+      selectors: {
+        article: { selector: '#article-content' },
+        author: { selector: '#content a[href*="/author"]' },
+        date: { selector: '#content' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="titleLink"]',
+        },
+      },
       timezone: 'EDT',
     },
     foxnews: {
+      baseUrl: 'https://www.foxnews.com',
       displayName: 'Fox News',
       name: 'foxnews',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.foxnews.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header .author-byline a[href*="/person"]' },
+        date: { selector: 'article header time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     ft: {
+      baseUrl: 'https://www.ft.com',
       displayName: 'Financial Times',
       name: 'ft',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="js-teaser-heading-link"]',
-        url: 'https://www.ft.com',
-      }],
+      selectors: {
+        article: { selector: 'disabled' },
+        author: { selector: 'disabled' },
+        date: { selector: 'disabled' },
+        spider : { selector: 'disabled' },
+      },
       timezone: 'EST',
     },
     gizmodo: {
+      baseUrl: 'https://www.gizmodo.com', 
       displayName: 'Gizmodo',
       name: 'gizmodo',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.gizmodo.com',
-      }],
+      selectors: {
+        article: { selector: '.js_post-content' },
+        author: { selector: '.js_starterpost a[href*="/author"]' },
+        date: { selector: '.js_starterpost time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     guardian: {
+      baseUrl: 'https://www.theguardian.com',
       displayName: 'The Guardian',
       name: 'theguardian',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="js-headline-text"]',
-        url: 'https://www.theguardian.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article address a[rel*="author"]' },
+        date: { selector: 'article details summary' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="js-headline-text"]',
+        },
+      },
       timezone: 'EST',
     },
     hill: {
+      baseUrl: 'https://www.thehill.com',
       displayName: 'The Hill',
       name: 'thehill',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="featured-cards"] a',
-        url: 'https://www.thehill.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .submitted-by.desktop-only a[href*="/author"]' },
+        date: { selector: 'article .submitted-by.desktop-only' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="featured-cards"] a',
+        },
+      },
       timezone: 'EST',
     },
     huffpost: {
+      baseUrl: 'https://www.huffpost.com',
       displayName: 'HuffPost',
       name: 'huffpost',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="card__headline"]',
-        url: 'https://www.huffpost.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'main header .entry__wirepartner span' },
+        date: { selector: 'main header time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="card__headline"]',
+        },
+      },
       timezone: 'EST',
     },
     inverse: {
+      baseUrl: 'https://www.inverse.com',
       displayName: 'Inverse',
       name: 'inverse',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[href*="/gaming"],a[href*="/science"],a[href*="/tech"],a[href*="entertainment"]',
-        url: 'https://www.coindesk.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article address a' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[href*="/gaming"],a[href*="/science"],a[href*="/tech"],a[href*="entertainment"]',
+        },
+      },
       timezone: 'EST',
     },
     kotaku: {
+      baseUrl: 'https://www.kotaku.com',
       displayName: 'Kotaku',
       name: 'kotaku',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.kotaku.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'main a[href*="/author"]' },
+        date: { selector: 'main time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     ksl: {
+      baseUrl: 'https://www.ksl.com',
       displayName: 'KSL',
       name: 'ksl',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="headling"] a',
-        url: 'https://www.ksl.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: '.byline .author a' },
+        date: { selector: '.byline .author a' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="headling"] a',
+        },
+      },
       timezone: 'EST',
     },
     latimes: {
+      baseUrl: 'https://www.latimes.com',
       displayName: 'Los Angelos Times',
       name: 'latimes',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'h1[class*="promo-title"] a,h2[class*="promo-title"] a',
-        url: 'https://www.latimes.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline .authors .author-name a' },
+        date: { selector: 'aritcle .byline time' },
+        spider:{
+          attribute: 'href',
+          selector: 'h1[class*="promo-title"] a,h2[class*="promo-title"] a',
+        },
+      },
       timezone: 'UTC-7',
     },
     lifewire: {
+      baseUrl: 'https://www.lifewire.com',
       displayName: 'Lifewire',
       name: 'lifewire',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="news-latest__article"] a',
-        url: 'https://www.lifewire.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: '.article-meta a' },
+        date: { selector: '.mntl-attribution__item-date' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="news-latest__article"] a',
+        },
+      },
       timezone: 'EDT',
     },
     mashable: {
+      baseUrl: 'https://www.mashable.com',
       displayName: 'Mashable',
       name: 'mashable',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[href*="/article"]',
-        url: 'https://www.mashable.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'header a[href*="/author"]' },
+        date: { selector: 'header time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[href*="/article"]',
+        },
+      },
       timezone: 'EST',
     },
     'mens-health': {
+      baseUrl: 'https://www.menshealth.com',
       displayName: 'Men\'s Health',
       name: 'mens-health',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[href*="/fitness"],a[href*="/health"],a[href*="/style"],a[href*="/grooming"]',
-        url: 'https://www.menshealth.com',
-      }],
+      selectors: {
+        article: { selector: '.article-body-content' },
+        author: { selector: 'header address a[href*="/author"]' },
+        date: { selector: 'header time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[href*="/fitness"],a[href*="/health"],a[href*="/style"],a[href*="/grooming"]',
+        },
+      },
       timezone: 'EST',
     },
     'national-geographic': {
+      baseUrl: 'https://www.nationalgeographic.com',
       displayName: 'National Geographic',
       name: 'national-geographic',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="AnchorLink"]',
-        url: 'https://www.nationalgeographic.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article header .Byline .Byline__Author a[href*="/author"]' },
+        date: { selector: 'article header .Byline__TimestampWrapper .Byline__Meta--publishDate' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="AnchorLink"]',
+        },
+      },
       timezone: 'EST',
     },
     nbcnews: {
+      baseUrl: 'https://www.nbcnews.com',
       displayName: 'NBC News',
       name: 'nbcnews',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="tease-card"] a',
-        url: 'https://www.nbcnews.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { attribute:'content', selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="tease-card"] a',
+        },
+      },
       timezone: 'EST',
     },
     newsweek: {
+      baseUrl: 'https://www.newsweek.com',
       displayName: 'Newsweek',
       name: 'newsweek',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="news-title"] a',
-        url: 'https://www.newsweek.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { attribute:'content', selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="news-title"] a',
+        },
+      },
       timezone: 'EST',
     },
     newyorker: {
+      baseUrl: 'https://www.newyorker.com',
       displayName: 'The New Yorker',
       name: 'newyorker',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="SummaryItem"]',
-        url: 'https://www.newyorker.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article *[class*="BylinesWrapper"] a[href*="/contributors"]' },
+        date: { attribute: 'datetime', selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="SummaryItem"]',
+        },
+      },
       timezone: 'EST',
     },
     npr: {
+      baseUrl: 'https://www.npr.org',
       displayName: 'NPR',
       name: 'npr',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.npr.org',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: '#storybyline .byline__name a' },
+        date: { attribute:'datetime', selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     nytimes: {
+      baseUrl: 'https://www.nytimes.com',
       displayName: 'New York Times (Coming Soon)',
       name: 'nytimes',
+      selectors: {
+        article: { selector: 'disabled' },
+        author: { selector: 'disabled' },
+        date: { selector: 'disabled' },
+        spider:{ selector: 'disbaled' },
+      },
       siteMaps: [],
       timezone: 'EST',
     },
     out: {
+      baseUrl: 'https://www.out.com',
       displayName: 'Out',
       name: 'out',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.out.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { attribute: 'content', selector: 'article .social-date,article .social-date-modified' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     people: {
+      baseUrl: 'https://www.people.com',
       displayName: 'People',
       name: 'people',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="entityTout"] a',
-        url: 'https://www.people.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .mntl-bylines__item a[href*="/author"]' },
+        date: { attribute: 'text', selector: '.mntl-attribution__item-date' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="entityTout"] a',
+        },
+      },
       timezone: 'EST',
     },
     politico: {
+      baseUrl: 'https://www.politico.com',
       displayName: 'Politico',
       name: 'politico',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'h3[class*="headline"] a',
-        url: 'https://www.politico.com',
-      }],
+      selectors: {
+        article: { selector: '.article__container .article__content' },
+        author: { selector: '.article-meta .authors a' },
+        date: { selector: '.article-meta .articla-meta__datetime-duration .date-time__date' },
+        spider:{
+          attribute: 'href',
+          selector: 'h3[class*="headline"] a',
+        },
+      },
       timezone: 'EST',
     },
     'popular-mechanics': {
+      baseUrl: 'https://www.popularmechanics.com',
       displayName: 'Popular Mechanics ',
       name: 'popular-mechanics',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[href*="/technology"],a[href*="/science"],a[href*="/space"]',
-        url: 'https://www.popularmechanics.com',
-      }],
+      selectors: {
+        article: { selector: '.article-body-content' },
+        author: { selector: 'address a[href*="/author"]' },
+        date: { attribute: 'text', selector: 'address time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[href*="/technology"],a[href*="/science"],a[href*="/space"]',
+        },
+      },
       timezone: 'EST',
     },
     reuters: {
+      baseUrl: 'https://www.reuters.com', 
       displayName: 'Reuters',
       name: 'reuters',
-      siteMaps: [{
-        attribute: 'href',
-        params: [[
-          'business', 
-          'entertainment',
-          'health',
-          'legal',
-          'markets',
-          'technology',
-          'world',
-        ]],
-        selector: 'a[class*="text__heading_"]',
-        url: 'https://www.reuters.com/${1}',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: '*[class*="author-name"] a' },
+        date: { attribute: 'text', selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="text__heading_"]',
+        },
+      },
       timezone: 'EST',
     },
     'rolling-stone': {
+      baseUrl: 'https://www.rollingstone.com',
       displayName: 'Rolling Stone',
       name: 'rolling-stone',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="c-title"]',
-        url: 'https://www.rollingstone.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .author-tagline a' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="c-title"]',
+        },
+      },
       timezone: 'EST',
     },
     science: {
+      baseUrl: 'https://www.science.org',
       displayName: 'Science',
       name: 'science',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.science.org',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     'science-daily': {
+      baseUrl: 'https://www.sciencedaily.com',
       displayName: 'Science Daily',
       name: 'science-daily',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'h3[class*="latest-head"] a',
-        url: 'https://www.sciencedaily.com',
-      }],
+      selectors: {
+        article: { selector: '#story_text' },
+        author: { selector: '#source' },
+        date: { selector: '#date_posted' },
+        spider:{
+          attribute: 'href',
+          selector: 'h3[class*="latest-head"] a',
+        },
+      },
       timezone: 'EST',
     },
     space: {
+      baseUrl: 'https://www.space.com',
       displayName: 'Space',
       name: 'space',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="article-link"]',
-        url: 'https://www.space.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .author-byline__authors .author-byline__author-name a' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="article-link"]',
+        },
+      },
       timezone: 'EST',
     },
     'sunday-times': {
+      baseUrl: 'https://www.thetimes.co.uk',
       displayName: 'The Sunday Times ',
       name: 'sunday-times',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="Item-content"] a',
-        url: 'https://www.thetimes.co.uk',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: '' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="Item-content"] a',
+        },
+      },
       timezone: 'UTC+1',
     },
     telegraph: {
+      baseUrl: 'https://www.telegraph.co.uk',
       displayName: 'The Telegraph',
       name: 'telegraph',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.telegraph.co.uk',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .e-byline__author' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'UTC+1',
     },
     thestreet: {
+      baseUrl: 'https://www.thestreet.com',
       displayName: 'The Street',
       name: 'thestreet',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'phoenix-card[role*="article"] a',
-        url: 'https://www.thestreet.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .m-detail-header--meta-author' },
+        date: { selector: 'article .m-detail-header--date' },
+        spider:{
+          attribute: 'href',
+          selector: 'phoenix-card[role*="article"] a',
+        },
+      },
       timezone: 'EST',
     },
     time: {
+      baseUrl: 'https://www.time.com',
       displayName: 'Time',
       name: 'time',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.time.com',
-      }],
+      selectors: {
+        article: { selector: '#article-body' },
+        author: { selector: '.article .author .author-name' },
+        date: { selector: '.article .author .timestamp' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     usatoday: {
+      baseUrl: 'https://www.usatoday.com',
       displayName: 'USA Today',
       name: 'usatoday',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[href*="/story"]',
-        url: 'https://www.usatoday.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article a[href="/staff"]' },
+        date: { selector: 'article *[aria-label*="Published:"]' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[href*="/story"]',
+        },
+      },
       timezone: 'EST',
     },
     usnews: {
+      baseUrl: 'https://www.usnews.com',
       displayName: 'U.S. News',
       name: 'usnews',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'h3[class*="story-headline"] a',
-        url: 'https://www.usnews.com',
-      }],
+      selectors: {
+        article: { selector: '#main-column' },
+        author: { selector: '*[class*="BylineArticle__AuthorWrapper"] a' },
+        date: { selector: '*[class*="BylineArticle__AuthorWrapper"] *[class*="BylineArticle__DateSpan"]' },
+        spider:{
+          attribute: 'href',
+          selector: 'h3[class*="story-headline"] a',
+        },
+      },
       timezone: 'EST',
     },
     'venture-beat': {
+      baseUrl: 'https://www.venturebeat.com',
       displayName: 'Venture Beat',
       name: 'venture-beat',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'article a',
-        url: 'https://www.venturebeat.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
     vice: {
+      baseUrl: 'https://www.vice.com',
       displayName: 'Vice',
       name: 'vice',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="vice-card-hed__link"]',
-        url: 'https://www.vice.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="vice-card-hed__link"]',
+        },
+      },
       timezone: 'EST',
     },
     vox: {
+      baseUrl: 'https://www.vox.com',
       displayName: 'Vox',
       name: 'vox',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'div[class*="c-newspaper"] a',
-        url: 'https://www.vox.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'div[class*="c-newspaper"] a',
+        },
+      },
       timezone: 'EDT',
     },
     'washington-post': {
+      baseUrl: 'https://www.washingtonpost.com',
       displayName: 'The Washington Post (Coming Soon)',
       name: 'washington-post',
-      siteMaps: [],
+      selectors: {
+        article: { selector: 'disabled' },
+        author: { selector: 'disabled' },
+        date: { selector:'disabled' },
+        spider:{ selector: 'disabled' },
+      },
       timezone: 'EST',
     },
     'wilson-center': {
+      baseUrl: 'https://www.wilsoncenter.org',
       displayName: 'Wilson Center',
       name: 'wilson-center',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="teaser"],a[class*="home-hero-event"]',
-        url: 'https://www.wilsoncenter.org',
-      }],
+      selectors: {
+        article: { selector: 'disabled' },
+        author: { selector: 'disabled' },
+        date: { selector:'disabled' },
+        spider:{ selector: 'disabled' },
+      },
       timezone: 'EST',
     },
     wired: {
+      baseUrl: 'https://www.wired.com',
       displayName: 'Wired',
       name: 'wired',
-      siteMaps: [{
-        attribute: 'href',
-        selector: 'a[class*="SummaryItem"]',
-        url: 'https://www.wired.com',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="SummaryItem"]',
+        },
+      },
       timezone: 'EST',
     },
     wsj: {
+      baseUrl: 'https://www.wsj.com',
       displayName: 'The Wall Street Journal',
       name: 'wsj',
-      siteMaps: [{
-        attribute: 'href',
-        params: [[
-          'arts',
-          'book-arts',
-          'business',
-          'economy',
-          'latest-headlines',
-          'life-work',
-          'markets',
-          'opinion',
-          'politics',
-          'realestate',
-          'sports',
-          'style',
-          'technology',
-          'world',
-        ]],
-        selector: 'article a',
-        url: 'https://www.wsj.com/news/${1}',
-      }],
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .byline-name a' },
+        date: { selector: 'time' },
+        spider:{
+          attribute: 'href',
+          selector: 'article a',
+        },
+      },
       timezone: 'EST',
     },
   };
@@ -823,6 +1102,12 @@ export class Outlet<
     type: DataType.STRING,
   })
   declare displayName: string;
+
+  @Column({
+    allowNull: false,
+    type: DataType.STRING(2083),
+  })
+  declare baseUrl: string;
   
   @Column({ type: DataType.STRING(2083) })
   declare brandImageUrl?: string;
@@ -832,9 +1117,10 @@ export class Outlet<
 
   @Column({
     allowNull: false,
-    type: DataType.ARRAY(DataType.JSON),
+    defaultValue: {},
+    type: DataType.JSON,
   })
-  declare siteMaps: SiteMap[];
+  declare selectors: Selectors;
   
   @Column({ type: DataType.JSON })
   declare fetchPolicy: FetchPolicy;

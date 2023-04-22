@@ -1,10 +1,8 @@
+import { Outlet } from '../../api/v1/schema';
+
 export type ReadAndSummarizePayload = {
   url: string;
   content?: string;
-  dateSelector?: string;
-  dateAttribute?: string;
-  onProgress?: (progress: number) => void;
+  outlet?: Outlet;
   force?: boolean;
-  outletId?: number;
-  timezone?: string;
 };

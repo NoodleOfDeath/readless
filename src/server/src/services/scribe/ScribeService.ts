@@ -3,12 +3,14 @@ import ms from 'ms';
 import { ReadAndSummarizePayload } from './types';
 import {
   ChatGPTService,
+  MailService,
   Prompt,
-  SpiderService,
+  PuppeteerService,
 } from '../';
 import { Category, Summary } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
+const MIN_TOKEN_COUNT = 200 as const;
 const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
@@ -28,13 +30,13 @@ export class ScribeService extends BaseService {
   
   public static async readAndSummarize(
     {
-      url, content, dateSelector, dateAttribute, outletId, timezone, force, 
+      url, content, outlet, force, 
     }: ReadAndSummarizePayload
   ): Promise<Summary> {
     if (this.categories.length === 0) {
       await this.init();
     }
-    if (!outletId) {
+    if (!outlet) {
       throw new Error('no outlet id specified');
     }
     if (!force) {
@@ -47,32 +49,61 @@ export class ScribeService extends BaseService {
       console.log(`Forcing summary rewrite for ${url}`);
     }
     // fetch web content with the spider
-    const spider = new SpiderService();
-    const loot = await spider.loot(url, content, dateSelector, dateAttribute, timezone);
+    const loot = await PuppeteerService.loot(url, outlet, content);
     // create the prompt onReply map to be sent to chatgpt
-    if (loot.filteredText.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
+    if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
+      await new MailService().sendMail({
+        from: 'debug@readless.ai',
+        subject: 'Article too long',
+        text: `Article too long for ${url}\n\n${loot.content}`,
+        to: 'debug@readless.ai',
+      });
       throw new Error('Article too long for OpenAI');
     }
-    if (Date.now() - (loot.timestamp ?? 0) > ms(OLD_NEWS_THRESHOLD)) {
+    if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
+      await new MailService().sendMail({
+        from: 'debug@readless.ai',
+        subject: 'Article too short',
+        text: `Article too short for ${url}\n\n${loot.content}`,
+        to: 'debug@readless.ai',
+      });
+      throw new Error('Article too short');
+    }
+    if (Number.isNaN(loot.date.valueOf())) {
+      await new MailService().sendMail({
+        from: 'debug@readless.ai',
+        subject: 'Invalid date found',
+        text: `Invalid date found for ${url}`,
+        to: 'debug@readless.ai',
+      });
+      throw new Error('Published date found is invalid');
+    }
+    if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is invalid or older than ${OLD_NEWS_THRESHOLD}`);
     }
-    if ((loot.timestamp ?? 0) > Date.now()) {
-      loot.timestamp = Date.now();
+    if (loot.date > new Date()) {
+      await new MailService().sendMail({
+        from: 'debug@readless.ai',
+        subject: 'News is from the future',
+        text: `News is from the future for ${url}\n\n${loot.date.toISOString()}`,
+        to: 'debug@readless.ai',
+      });
+      throw new Error('News is from the future');
     }
     const newSummary = Summary.json<Summary>({
-      filteredText: loot.filteredText,
+      filteredText: loot.content,
       longSummary: NOTICE_MESSAGE,
-      originalDate: loot.timestamp && new Date(loot.timestamp),
+      originalDate: loot.date,
       originalTitle: loot.title,
-      outletId,
-      rawText: loot.text,
+      outletId: outlet.id,
+      rawText: loot.rawText,
       summary: NOTICE_MESSAGE,
       text: NOTICE_MESSAGE,
       url,
     });
     const prompts: Prompt[] = [
       {
-        handleReply: (reply) => { 
+        handleReply: async (reply) => { 
           if (/no/i.test(reply.text)) {
             throw new Error('Not an actual article');
           }
@@ -84,8 +115,14 @@ export class ScribeService extends BaseService {
         ].join(''),
       },
       {
-        handleReply: (reply) => { 
+        handleReply: async (reply) => { 
           if (reply.text.length > 200) {
+            await new MailService().sendMail({
+              from: 'debug@readless.ai',
+              subject: 'Title too long',
+              text: `Title too long for ${url}\n\n${loot.title}\n\n${loot.content}`,
+              to: 'debug@readless.ai',
+            });
             throw new Error('Title too long');
           }
           newSummary.title = reply.text;
@@ -95,7 +132,7 @@ export class ScribeService extends BaseService {
         ].join(''),
       },
       {
-        handleReply: (reply) => {
+        handleReply: async (reply) => {
           newSummary.bullets = reply.text
             .replace(/^bullets:\s*/i, '')
             .replace(/\.$/, '')
@@ -105,13 +142,13 @@ export class ScribeService extends BaseService {
         text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol',
       },
       {
-        handleReply: (reply) => { 
+        handleReply: async (reply) => { 
           newSummary.shortSummary = reply.text;
         },
         text: 'Please provide a two to three sentence summary using no more than 150 words. Do not start with "The article" or "This article".',
       },
       {
-        handleReply: (reply) => {
+        handleReply: async (reply) => {
           newSummary.tags = reply.text
             .replace(/^tags:\s*/i, '')
             .replace(/\.$/, '')
@@ -121,7 +158,7 @@ export class ScribeService extends BaseService {
         text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
       },
       {
-        handleReply: (reply) => { 
+        handleReply: async (reply) => { 
           newSummary.category = reply.text
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
@@ -129,7 +166,7 @@ export class ScribeService extends BaseService {
         text: `Please select a best category for this article from the following choices: ${this.categories.join(' ')}`,
       },
       {
-        handleReply: (reply) => { 
+        handleReply: async (reply) => { 
           newSummary.subcategory = reply.text
             .replace(/^subcategory:\s*/i, '')
             .replace(/\.$/, '').trim();
@@ -137,7 +174,7 @@ export class ScribeService extends BaseService {
         text: `Please provide a one word subcategory for this article under the category '${newSummary.category}'`,
       },
       {
-        handleReply: (reply) => {
+        handleReply: async (reply) => {
           newSummary.imagePrompt = reply.text;
         },
         text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
@@ -152,7 +189,7 @@ export class ScribeService extends BaseService {
         throw new Error(['Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
       }
       console.log(reply);
-      prompt.handleReply(reply);
+      await prompt.handleReply(reply);
     }
     const category = await Category.findOne({ where: { displayName: newSummary.category } });
     newSummary.category = category.name;

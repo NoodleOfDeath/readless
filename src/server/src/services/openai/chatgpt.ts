@@ -9,7 +9,7 @@ import { BaseService } from '../base';
 export type Prompt = {
   text: string;
   size?: number;
-  handleReply: (reply: ChatMessage) => void;
+  handleReply: (reply: ChatMessage) => Promise<void>;
 };
 
 export type ChatGPTServiceInitProps = {

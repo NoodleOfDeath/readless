@@ -127,7 +127,7 @@ export class AccountService extends BaseService {
       return await this.login(req);
     } else {
       const mailer = new MailService();
-      await mailer.sendMail({ to: newAliasValue }, 'verifyEmail', {
+      await mailer.sendMailFromTemplate({ to: newAliasValue }, 'verifyEmail', {
         email: newAliasValue,
         verificationCode,
       });
@@ -209,7 +209,7 @@ export class AccountService extends BaseService {
     await user.createCredential('otp', otp);
     const emailData = email.toJSON();
     const mailer = new MailService();
-    await mailer.sendMail({ to: emailData.value }, 'resetPassword', {
+    await mailer.sendMailFromTemplate({ to: emailData.value }, 'resetPassword', {
       email: emailData.value,
       otp,
     });
