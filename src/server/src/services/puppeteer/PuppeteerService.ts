@@ -64,16 +64,19 @@ export class PuppeteerService extends BaseService {
   public static async open(
     url: string, 
     actions: SelectorAction[], 
-    { viewport = { height: 1024, width: 1080 } }: PageOptions = {}
+    { 
+      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('10s'),
+      viewport = { height: 1024, width: 1080 },
+    }: PageOptions = {}
   ) {
     try {
       const browser = await puppeteer.launch({
         args: ['--no-sandbox'], 
         executablePath: process.env.CHROMIUM_EXECUTABLE_PATH, 
-        timeout: process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('10s'), 
+        timeout, 
       });
       const page = await browser.newPage();
-      await page.goto(url);
+      await page.goto(url, { timeout });
 
       await page.setViewport(viewport);
 
@@ -87,7 +90,7 @@ export class PuppeteerService extends BaseService {
           return '';
         }
         await page.setViewport(pageOptions?.viewport ?? viewport);
-        const el = await page.waitForSelector(selector);
+        const el = await page.waitForSelector(selector, { timeout: pageOptions?.timeout ?? timeout });
         if (selectAll) {
           const els = await page.$$(selector);
           for (const el of els) {
@@ -210,7 +213,7 @@ export class PuppeteerService extends BaseService {
           );
         }
         
-        authors.push(...$(author.selector || 'author').map((i, el) => clean($(el).text(), /^\s*by:?\s*/i)).get());
+        authors.push(...$(author.selector || 'author').map((i, el) => $(el).text()).get());
       }
       
       const actions: SelectorAction[] = [];
@@ -264,7 +267,7 @@ export class PuppeteerService extends BaseService {
       await PuppeteerService.open(url, actions);
       
       loot.date = selectDate(dates);
-      loot.authors = authors.map((a) => clean(a, /^\s*by:?\s*/i));
+      loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
       
     }
     return loot;

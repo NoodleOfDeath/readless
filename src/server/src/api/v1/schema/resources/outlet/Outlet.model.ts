@@ -84,8 +84,8 @@ export class Outlet<
       name: 'apnews',
       selectors: {
         article: { selector: '.Content .Article' },
-        author: { selector: '.Content .CardHeadline .Byline' },
-        date: { attribute: 'date-source', selector: '.Content .CardHeadline .Timestamp' },
+        author: { selector: '.Content .CardHeadline *[class*="Component-bylines"]' },
+        date: { attribute: 'data-source', selector: '.Content .CardHeadline .Timestamp' },
         spider:{
           attribute: 'href',
           selector: 'a[class*="Component-headline"]',
@@ -93,13 +93,13 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'ars-technica': {
+    arstechnica: {
       baseUrl: 'https://www.arstechnica.com',
       displayName: 'ars technica',
       name: 'ars-technica',
       selectors: {
         article:{ selector: 'article' }, 
-        author: { selector: 'article header section *[itemprop*="author creator"]' },
+        author: { selector: 'article header section *[itemprop*="author creator"] a' },
         date: { selector: 'article header time' },
         spider: {
           attribute: 'href',
@@ -114,7 +114,7 @@ export class Outlet<
       name: 'atlantic',
       selectors: {
         article: { selector: 'article' },
-        author: { selector: 'article header .byline a' },
+        author: { selector: 'article header #byline a' },
         date: { selector: 'article header time' },
         spider: {
           attribute: 'href',
@@ -165,13 +165,13 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'bleeping-computer': {
+    bleepingcomputer: {
       baseUrl: 'https://www.bleepingcomputer.com',
       displayName: 'Bleeping Computer',
       name: 'bleeping-computer',
       selectors: {
         article: { selector: 'article' },
-        author: { selector: 'article .author a' },
+        author: { selector: 'article .author' },
         date: { attribute: 'text', selector: 'article .cz-news-date,article .cz-news-time' },
         spider:{
           attribute: 'href',
@@ -195,7 +195,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'business-insider': {
+    businessinsider: {
       baseUrl: 'https://www.businessinsider.com',
       displayName: 'Business Insider',
       name: 'business-insider',
@@ -329,7 +329,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'defense-one': {
+    defenseone: {
       baseUrl: 'https://www.defenseone.com',
       displayName: 'Defense One',
       name: 'defense-one',
@@ -344,7 +344,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'developer-tech': {
+    developertech: {
       baseUrl: 'https://www.developer-tech.com',
       displayName: 'Developer Tech',
       name: 'developer-tech',
@@ -446,7 +446,7 @@ export class Outlet<
       },
       timezone: 'EDT',
     },
-    'foreign-policy': {
+    foreignpolicy: {
       baseUrl: 'https://www.foreignpolicy.com',
       displayName: 'Foreign Policy',
       name: 'foreign-policy',
@@ -653,7 +653,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'mens-health': {
+    menshealth: {
       baseUrl: 'https://www.menshealth.com',
       displayName: 'Men\'s Health',
       name: 'mens-health',
@@ -668,7 +668,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'national-geographic': {
+    natgeo: {
       baseUrl: 'https://www.nationalgeographic.com',
       displayName: 'National Geographic',
       name: 'national-geographic',
@@ -800,7 +800,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'popular-mechanics': {
+    popmechs: {
       baseUrl: 'https://www.popularmechanics.com',
       displayName: 'Popular Mechanics ',
       name: 'popular-mechanics',
@@ -830,7 +830,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'rolling-stone': {
+    rstone: {
       baseUrl: 'https://www.rollingstone.com',
       displayName: 'Rolling Stone',
       name: 'rolling-stone',
@@ -860,7 +860,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'science-daily': {
+    sciencedaily: {
       baseUrl: 'https://www.sciencedaily.com',
       displayName: 'Science Daily',
       name: 'science-daily',
@@ -890,7 +890,22 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'sunday-times': {
+    street: {
+      baseUrl: 'https://www.thestreet.com',
+      displayName: 'The Street',
+      name: 'thestreet',
+      selectors: {
+        article: { selector: 'article' },
+        author: { selector: 'article .m-detail-header--meta-author' },
+        date: { selector: 'article .m-detail-header--date' },
+        spider:{
+          attribute: 'href',
+          selector: 'phoenix-card[role*="article"] a',
+        },
+      },
+      timezone: 'EST',
+    },
+    sundaytimes: {
       baseUrl: 'https://www.thetimes.co.uk',
       displayName: 'The Sunday Times ',
       name: 'sunday-times',
@@ -919,21 +934,6 @@ export class Outlet<
         },
       },
       timezone: 'UTC+1',
-    },
-    thestreet: {
-      baseUrl: 'https://www.thestreet.com',
-      displayName: 'The Street',
-      name: 'thestreet',
-      selectors: {
-        article: { selector: 'article' },
-        author: { selector: 'article .m-detail-header--meta-author' },
-        date: { selector: 'article .m-detail-header--date' },
-        spider:{
-          attribute: 'href',
-          selector: 'phoenix-card[role*="article"] a',
-        },
-      },
-      timezone: 'EST',
     },
     time: {
       baseUrl: 'https://www.time.com',
@@ -980,7 +980,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'venture-beat': {
+    vbeat: {
       baseUrl: 'https://www.venturebeat.com',
       displayName: 'Venture Beat',
       name: 'venture-beat',
@@ -1025,7 +1025,7 @@ export class Outlet<
       },
       timezone: 'EDT',
     },
-    'washington-post': {
+    wapo: {
       baseUrl: 'https://www.washingtonpost.com',
       displayName: 'The Washington Post (Coming Soon)',
       name: 'washington-post',
@@ -1037,7 +1037,7 @@ export class Outlet<
       },
       timezone: 'EST',
     },
-    'wilson-center': {
+    wilsoncenter: {
       baseUrl: 'https://www.wilsoncenter.org',
       displayName: 'Wilson Center',
       name: 'wilson-center',
