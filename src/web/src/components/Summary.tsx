@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { mdiEye, mdiShare } from '@mdi/js';
 import Icon from '@mdi/react';
 import {
   Box,
@@ -152,23 +151,10 @@ export default function Summary({
         <Stack direction='column' spacing={ 1 }>
           <Stack direction='row' flexGrow={ 1 } alignItems="center">
             <Typography variant="subtitle2">
-              {timeAgo} 
+              {`${timeAgo}${timeAgo !== generatedTimeAgo ? ` (generated ${generatedTimeAgo})`: ''}`} 
               {' '}
-              { timeAgo !== generatedTimeAgo && (
-                <Typography variant="subtitle2">
-                  {' '}
-                  (
-                  {generatedTimeAgo}
-                  )
-                </Typography>
-              )}
             </Typography>
             <Box flexGrow={ 1 } />
-            <Stack direction='row' spacing={ 1 } alignItems="center">
-              <Typography variant="subtitle2">{ summary.interactions.view ?? '...' }</Typography>
-              <Icon path={ mdiEye } size={ 1 } />
-              <Button startIcon={ <Icon path={ mdiShare } size={ 1 } /> } />
-            </Stack>
           </Stack>
           <ReadingFormatSelector onChange={ (newFormat) => handleFormatChange(newFormat) } />
         </Stack>

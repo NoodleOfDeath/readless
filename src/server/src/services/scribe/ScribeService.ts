@@ -10,13 +10,19 @@ import {
 import { Category, Summary } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
-const MIN_TOKEN_COUNT = 100 as const;
-const MAX_OPENAI_TOKEN_COUNT = 4096 as const;
+const MIN_TOKEN_COUNT = 70 as const;
+const MAX_OPENAI_TOKEN_COUNT = 4000 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
 const NOTICE_MESSAGE = 'This reading format will be going away in the next major update, which will include more useful analysis metrics that are short and easier to read! Stay tuned!';
 
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
+
+export function abbreviate(str: string, len: number, segments = 3) {
+  const parts = str.match(new RegExp(`.{1,${Math.floor(str.length / segments)}}`));
+  console.log(parts);
+  return str.substring(0, len);
+}
 
 export class ScribeService extends BaseService {
   
@@ -49,7 +55,7 @@ export class ScribeService extends BaseService {
       console.log(`Forcing summary rewrite for ${url}`);
     }
     // fetch web content with the spider
-    const loot = await PuppeteerService.loot(url, outlet, content);
+    const loot = await PuppeteerService.loot(url, outlet, { content });
     // create the prompt onReply map to be sent to chatgpt
     if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       await new MailService().sendMail({
@@ -58,7 +64,7 @@ export class ScribeService extends BaseService {
         text: `Article too long for ${url}\n\n${loot.content}`,
         to: 'debug@readless.ai',
       });
-      throw new Error('Article too long for OpenAI');
+      throw new Error('Article too long');
     }
     if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
       await new MailService().sendMail({

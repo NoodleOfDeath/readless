@@ -25,7 +25,7 @@ export default function AppPage() {
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [pageSize] = React.useState<number>(10);
-  const [page, setPage] = React.useState<number>(1);
+  const [page, setPage] = React.useState<number>(0);
   const [searchText, setSearchText] = React.useState<string>();
 
   const [expandedSummary, setExpandedSummary] = React.useState<number>();
