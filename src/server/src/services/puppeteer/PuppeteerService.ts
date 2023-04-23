@@ -9,13 +9,19 @@ import puppeteer, {
 import UserAgent from 'user-agents';
 
 import { OutletCreationAttributes } from '../../api/v1/schema';
+import { maxDate, parseDate } from '../../utils';
 import { BaseService } from '../base';
 
 type PageOptions = WaitForSelectorOptions & {
   viewport?: Viewport;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ReplacePattern = string | RegExp | {
+  expr: string | RegExp,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  repl: string,
+};
+
 type SelectorAction = {
   selector: string;
   action: (el: ElementHandle<Element>) => Promise<void>;
@@ -30,6 +36,13 @@ export type Loot = {
   title: string;
   content: string;
   authors: string[];
+};
+
+export type LootOptions = {
+  /** initial content if already fetched elsewhere */
+  content?: string;
+  /** selectors to remove from DOM */
+  ignore?: string;
 };
 
 export class PuppeteerService extends BaseService {
@@ -48,7 +61,6 @@ export class PuppeteerService extends BaseService {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static async open(
     url: string, 
     actions: SelectorAction[], 
@@ -63,7 +75,6 @@ export class PuppeteerService extends BaseService {
       const page = await browser.newPage();
       await page.goto(url);
 
-      // Set screen size
       await page.setViewport(viewport);
 
       const rawText = await page.evaluate(() => document.body.innerText);
@@ -82,7 +93,6 @@ export class PuppeteerService extends BaseService {
           for (const el of els) {
             await action(el);
           }
-          continue;
         } else {
           await action(el);
         }
@@ -98,16 +108,21 @@ export class PuppeteerService extends BaseService {
   }
 
   public static async crawl(outlet: OutletCreationAttributes) {
-    const { baseUrl, selectors } = outlet;
+    const { baseUrl, selectors: { spider } } = outlet;
+    if (spider.selector === 'disabled') {
+      return [];
+    }
+    const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
     const urls: string[] = [];
     await PuppeteerService.open(baseUrl, [
       {
         action: async (el) => {
-          const url = await el.evaluate((el, selectors) => el.getAttribute(selectors.spider.attribute ?? 'href'), selectors);
-          const domain = new URL(outlet.baseUrl).hostname.replace(/^www\./, '');
+          const url = await el.evaluate((el, spider) => el.getAttribute(spider.attribute ?? 'href'), spider);
+          // exclude external links
           if (/^https?:\/\//.test(url) && !new RegExp(`^https?://(?:www\\.)?${domain}`).test(url)) {
             return;
           }
+          // fix relative hrefs
           if (!/^https?:\/\//.test(url)) {
             urls.push(`${baseUrl}${url}`);
           } else {
@@ -115,13 +130,21 @@ export class PuppeteerService extends BaseService {
           }
         }, 
         selectAll: true,
-        selector: selectors.spider.selector,
+        selector: spider.selector,
       },
     ]);
     return urls;
   }
 
-  public static async loot(url: string, outlet: OutletCreationAttributes, content?: string): Promise<Loot> {
+  public static async loot(
+    url: string, 
+    outlet: OutletCreationAttributes, 
+    {
+      content,
+      ignore = 'img,script,source,style',
+    }: LootOptions = {}
+  ): Promise<Loot> {
+    
     const loot: Loot = {
       authors: [],
       content: content ?? '',
@@ -130,72 +153,119 @@ export class PuppeteerService extends BaseService {
       title: '',
       url,
     };
-    function clean(text = '') {
-      return text
-        .replace(/<(\w+)>.*?<\/\1>/g, '')
+    
+    function clean(text?: string, ...patterns: ReplacePattern[]) {
+      let newText = (text ?? '')
         .replace(/\s\s+/g, ' ')
+        .replace(/\t\t+/g, '\t')
         .replace(/\n\n+/g, '\n')
         .trim();
-    }
-    if (!content) {
-      const staticText = await PuppeteerService.fetch(url);
-      if (staticText) {
-        loot.rawText = staticText;
-        const $ = load(staticText);
-        $('script,style').remove();
-        loot.content = clean($(outlet.selectors.article.selector).text());
-        loot.title = clean($(outlet.selectors.title?.selector || 'title').text());
-        const datetext = clean($(outlet.selectors.date.selector || 'time').text());
-        const datetime = clean($(outlet.selectors.date.selector || 'time').attr('datetime'));
-        const othertime = clean($(outlet.selectors.date.selector || 'time').attr('pubdate'));
-        loot.date = new Date((datetime || datetext || othertime).replace(/^(?:published|updated):?\s*/i, ''));
-        loot.authors = $(outlet.selectors.author.selector || 'author').map((i, el) => clean($(el).text())).get();
+      for (const pattern of patterns) {
+        if (typeof pattern === 'string' || pattern instanceof RegExp) {
+          newText = newText.replace(pattern, '');
+        } else {
+          newText = newText.replace(pattern.expr, pattern.repl);
+        }
       }
+      return newText;
+    }
+    
+    function selectDate(dates: string[]) {
+      return maxDate(...dates.map((date) => parseDate(clean(date), outlet.timezone)));
+    }
+    
+    if (!content) {
+      
+      const rawHtml = await PuppeteerService.fetch(url);
+      const {
+        article, author, date, title, 
+      } = outlet.selectors;
+      
+      const authors: string[] = [];
+      const dates: string[] = [];
+      
+      if (rawHtml) {
+        
+        loot.rawText = rawHtml;
+        const $ = load(rawHtml);
+        $(ignore).remove();
+        
+        const extract = (sel: string, attr?: string): string => {
+          if (attr && clean($(sel)?.attr(attr))) {
+            return clean($(sel).attr(attr));
+          }
+          return clean($(sel)?.text());
+        };
+        
+        loot.content = extract(article.selector, article.attribute);
+        loot.title = extract(title?.selector || 'title', title?.attribute);
+        
+        dates.push(...[
+          extract(date.selector),
+          extract(date.selector, 'datetime'),
+        ]);
+        if (date.attribute) {
+          dates.push(
+            extract(date.selector, date.attribute)
+          );
+        }
+        
+        authors.push(...$(author.selector || 'author').map((i, el) => clean($(el).text(), /^\s*by:?\s*/i)).get());
+      }
+      
       const actions: SelectorAction[] = [];
+      
       if (!loot.title) {
         actions.push({
           action: async (el) => {
             loot.title = clean(await el.evaluate((el) => el.textContent));
           },
-          selector: outlet.selectors.title?.selector || 'title',
+          selector: title?.selector || 'title',
         });
       }
+      
       if (!loot.content) {
         actions.push({
           action: async (el) => {
             const $ = load(await el.evaluate((el) => el.innerHTML));
-            $('script,style').remove();
+            $(ignore).remove();
             loot.content = $.text();
           },
-          selector: outlet.selectors.article.selector,
+          selector: article.selector,
         });
       }
-      if (!loot.date.valueOf()) {
-        actions.push({
-          action: async (el) => {
-            const datetext = clean(await el.evaluate((el) => el.textContent));
-            const datetime = await el.evaluate((el) => el.getAttribute('datetime'));
-            const othertime = await el.evaluate((el, attr) => el.getAttribute(attr), outlet.selectors.date.attribute ?? 'datetime');
-            loot.date = new Date((datetime || datetext || othertime).replace(/^(?:published|updated):?\s*/i, ''));
-          },
-          selector: outlet.selectors.date.selector || 'time',
-        });
-      }
-      if (!loot.authors.length) {
-        actions.push({
-          action: async (el) => {
-            loot.authors = await el.evaluate((el) => {
-              const authors: string[] = [];
-              el.childNodes.forEach((e) => authors.push(e.textContent.replace(/^\s*by\s*/i, '')));
-              return authors;
-            });
-          },
-          selector: outlet.selectors.author.selector,
-        });
-      }
-      if (actions.length) {
-        await PuppeteerService.open(url, actions);
-      }
+      
+      actions.push({
+        action: async (el) => {
+          dates.push(...[
+            await el.evaluate((el) => el.textContent),
+            await el.evaluate((el) => el.getAttribute('datetime')),
+          ]);
+          if (date.attribute) {
+            dates.push(
+              await el.evaluate((el, attr) => el.getAttribute(attr), date.attribute)
+            );
+          }
+        },
+        selector: date.selector,
+      });
+      
+      actions.push({
+        action: async (el) => {
+          authors.push(...await el.evaluate((el) => {
+            const names: string[] = [];
+            el.childNodes.forEach((e) => names.push(e.textContent));
+            return names;
+          }));
+        },
+        selector: author.selector,
+      });
+      
+      await PuppeteerService.open(url, actions);
+      
+      loot.date = selectDate(dates);
+      loot.authors = authors.map((a) => clean(a, /^\s*by:?\s*/i));
+      
     }
     return loot;
   }

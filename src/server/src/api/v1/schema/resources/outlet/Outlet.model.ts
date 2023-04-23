@@ -42,7 +42,7 @@ export class Outlet<
       name: 'abc',
       selectors: {
         article: { selector: 'article' },
-        author: { selector: '.ShareByline a[href*=https://abcnews.go.com/author]' },
+        author: { selector: '.ShareByline a[href*="/author"]' },
         date: { selector: '.ShareByline > div  > div :last-child' },
         spider: {
           attribute: 'href',
@@ -69,8 +69,8 @@ export class Outlet<
       name: 'aei',
       selectors: {
         article: { selector: 'article' },
-        author: { selector: 'article header p[class*="publisher"]' },
-        date: { selector: 'article header p[class*=date"]' },
+        author: { selector: 'article header .author' },
+        date: { selector: 'article header .date' },
         spider:{
           attribute: 'href',
           selector: 'div[class*="hero__post"] a',
@@ -156,8 +156,8 @@ export class Outlet<
       name: 'billboard',
       selectors: {
         article: { selector: 'article' },
-        author: { selector: 'article header .byline-container .byline .author a' },
-        date: { selector: 'article header time' },
+        author: { selector: 'header .author a' },
+        date: { selector: 'header time' },
         spider:{
           attribute: 'href',
           selector: 'a[class*="c-title"]',
@@ -610,7 +610,7 @@ export class Outlet<
     },
     latimes: {
       baseUrl: 'https://www.latimes.com',
-      displayName: 'Los Angelos Times',
+      displayName: 'Los Angeles Times',
       name: 'latimes',
       selectors: {
         article: { selector: 'article' },
