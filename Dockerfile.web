@@ -1,4 +1,4 @@
-FROM node:19.3.0 as base
+FROM node:19.3.0 AS base
 
 # install required clintools
 RUN npm i -g tsoa
@@ -24,12 +24,12 @@ COPY src/web/package.json ./
 COPY src/web/yarn.lock ./
 
 # run yarn installation
-FROM base as install
+FROM base AS install
 RUN yarn cp:core
 RUN yarn tsoa
 RUN yarn install --non-interactive --immutable
 
-FROM install as build
+FROM install AS build
 ARG NEXT_PUBLIC_API_ENDPOINT
 ENV NEXT_PUBLIC_API_ENDPOINT=${NEXT_PUBLIC_API_ENDPOINT}
 ARG NEXT_PUBLIC_APPLE_APP_ID
@@ -51,7 +51,7 @@ RUN echo NEXT_PUBLIC_GOOGLE_CLIENT_ID=\"${NEXT_PUBLIC_GOOGLE_CLIENT_ID}\" >> .en
 ENV NODE_ENV=production
 RUN yarn build
 
-# deploy as nginx
-FROM nginx:alpine as web
+# deploy AS nginx
+FROM nginx:alpine AS web
 COPY src/web/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /home/node/app/build /etc/nginx/html

@@ -1,57 +1,47 @@
 import { DatedAttributes } from '../../types';
 
-export type SiteMapParams = string | string[][];
-
-export type SiteMap = {
-  /**
-   * Template url for retrieving news articles
-   * Can contain template options such as:
-   * YYYY = 4-digit year (current)
-   * YY = 2-digit year (current)
-   * MMMM = month name (current)
-   * MM = 2-digit month (current)
-   * M = 1/2-digit month (current)
-   * DD = 2-digit day (current)
-   * D = 1/2 digit day (current)
-   * $1, $2, ... = param1, param2, ...
-   */
-  url: string;
-  /** template params to dynamically interpolate */
-  params?: SiteMapParams;
-  /** keep query string */
-  keepQuery?: boolean;
-  /** css selector(s) for getting news links */
-  selector: string;
-  /** attribute to extract from retrieved html nodes; if nothing is specified the element's `innerHTML` is used */
-  attribute?: 'href' | 'src';
-  dateSelector?: string;
-  dateAttribute?: string;
-};
-
 export type FetchPolicy = {
   count: number;
   window: number;
 };
 
+export type Selector = {
+  selector: string;
+  ignore?: string[];
+  attribute?: string;
+};
+
+export type Selectors = {
+  article: Selector;
+  author: Selector;
+  date: Selector;
+  spider: Selector;
+  title?: Selector;
+};
+
 export type OutletAttributes = DatedAttributes & {
+  baseUrl: string;
   /** name of this outlet */
   name: string;
   /** xml site maps for this outlet and selector for extracting urls */
   displayName: string;
   brandImageUrl?: string;
   description?: string;
-  siteMaps: SiteMap[];
+  selectors: Selectors;
+  siteMaps?: string[];
   /** fetch policy for this outlet */
   fetchPolicy?: FetchPolicy;
   timezone?: string;
 };
 
 export type OutletCreationAttributes = {
+  baseUrl: string;
   name: string;
   displayName: string;
   brandImageUrl?: string;
   description?: string;
-  siteMaps: SiteMap[];
+  selectors: Selectors;
+  siteMaps?: string[];
   fetchPolicy?: FetchPolicy;
   timezone?: string;
 };

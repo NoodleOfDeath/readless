@@ -1,15 +1,15 @@
-FROM node:19.3.0 as base
+FROM node:19.3.0 AS base
 WORKDIR /home/node/app
 COPY src/server/package.json ./
 COPY src/server/yarn.lock ./
 COPY src/server/src ./src
 RUN yarn install --non-interactive --immutable
 
-FROM base as pre-build
+FROM base AS pre-build
 COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 
-FROM pre-build as build
+FROM pre-build AS build
 # swagger.json file
 COPY src/server/tsoa.config.json ./
 RUN yarn tsoa
@@ -18,5 +18,5 @@ RUN yarn build:api
 # tiktoken hack 🙄
 RUN cp node_modules/@dqbd/tiktoken/dist/node/_tiktoken_bg.wasm ./dist
 
-FROM build as api
+FROM build AS api
 CMD yarn start:api

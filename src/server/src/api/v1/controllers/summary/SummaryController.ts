@@ -144,7 +144,7 @@ export class SummaryController {
       throw new InternalError('Failed to create interaction');
     }
     if (type === 'feedback') {
-      await new MailService().sendMail({
+      await new MailService().sendMailFromTemplate({
         from: 'user@readless.ai',
         subject: 'Feedback',
         text: [content, JSON.stringify(metadata)].join('\n\n'),

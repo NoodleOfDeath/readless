@@ -72,6 +72,8 @@ services:
       dockerfile: Dockerfile.cron
     env_file:
       - src/server/.env
+    environment:
+      - CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome
 
   cron-local:
     build:
@@ -79,6 +81,8 @@ services:
       dockerfile: Dockerfile.cron.local
     env_file:
       - src/server/.env
+    environment:
+      - CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome
     volumes:
       - ./src/server:/home/node/app
       - ./src/server/node_modules:/home/node/app/node_modules
@@ -89,6 +93,8 @@ services:
       dockerfile: Dockerfile.worker
     env_file:
       - src/server/.env
+    environment:
+      - CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome
 
   worker-local:
     build:
@@ -96,6 +102,8 @@ services:
       dockerfile: Dockerfile.worker.local
     env_file:
       - src/server/.env
+    environment:
+      - CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome
     volumes:
       - ./src/server:/home/node/app
       - ./src/server/node_modules:/home/node/app/node_modules

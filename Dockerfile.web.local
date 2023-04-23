@@ -1,4 +1,4 @@
-FROM node:19.3.0 as base
+FROM node:19.3.0 AS base
 
 # install required cli tools
 RUN npm i -g tsoa
@@ -24,9 +24,9 @@ RUN yarn cp:core
 RUN yarn tsoa
 
 # run yarn installation
-FROM base as install
+FROM base AS install
 RUN yarn install --non-interactive --immutable
 
 # launch container
-FROM install as dev
+FROM install AS dev
 CMD yarn dev

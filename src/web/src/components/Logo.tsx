@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Paper, styled } from '@mui/material';
+import { styled } from '@mui/material';
 
 import { hexToFilter } from '~/utils';
 
-const StyledIcon = styled(Paper)(({ theme }) => ({
+const StyledIcon = styled('div')(({ theme }) => ({
   background: 'transparent',
   filter: hexToFilter(theme.palette.primary.main),
 }));

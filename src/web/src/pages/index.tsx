@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {
+  Card,
+  CardContent,
   Stack,
   Typography,
   useMediaQuery,
@@ -49,6 +51,24 @@ export default function HomePage() {
               style={ {
                 borderRadius: 13, height: 100, width: 340, 
               } } />
+          </a>
+          <a
+            href="/app"
+            rel="noreferrer"
+            style={ { textDecoration: 'none' } }>
+            <Card
+              style={ {
+                alignItems: 'center',
+                border: '1px solid #fff',
+                borderRadius: 13, 
+                display: 'flex', 
+                fontSize: '2rem',
+                height: 100, 
+                justifyContent: 'center',
+                width: 340,
+              } }>
+              <CardContent>Web App</CardContent>
+            </Card>
           </a>
         </Stack>
       </Stack>

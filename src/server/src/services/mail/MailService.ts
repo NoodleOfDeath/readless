@@ -38,7 +38,11 @@ export class MailService extends BaseService {
     });
   }
 
-  async sendMail<
+  async sendMail(opts: SMTPTransport.Options) {
+    return await this.client.sendMail(opts);
+  }
+
+  async sendMailFromTemplate<
     TemplateName extends keyof typeof TEMPLATES,
   >(
     opts: SMTPTransport.Options,

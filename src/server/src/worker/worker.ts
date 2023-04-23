@@ -57,10 +57,7 @@ export async function doWork() {
           const summary = await ScribeService.readAndSummarize(
             {
               content, 
-              dateAttribute: outlet.siteMaps.map((s) => s.dateAttribute).filter(Boolean).join(','),
-              dateSelector: outlet.siteMaps.map((s) => s.dateSelector).filter(Boolean).join(','),
-              outletId: outlet.id, 
-              timezone: outlet.timezone,
+              outlet,
               url, 
             }
           );

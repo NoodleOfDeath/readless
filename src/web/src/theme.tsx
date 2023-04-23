@@ -60,6 +60,6 @@ export const loadTheme = (mode: ColorMode = 'light') => {
         secondary: lightMode ? '#757575' : '#BDBDBD',
       },
     },
-    typography: { fontFamily: 'Lato' },
+    typography: { fontFamily: 'Alegreya' },
   });
 };

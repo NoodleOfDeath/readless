@@ -1,10 +1,5 @@
 import React from 'react';
 
-import {
-  mdiBookmarkBoxOutline,
-  mdiEye,
-  mdiShare,
-} from '@mdi/js';
 import Icon from '@mdi/react';
 import {
   Box,
@@ -53,15 +48,6 @@ const StyledTitle = styled(Typography)(() => ({
   textDecoration: 'none',
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  background: theme.palette.primary.main,
-  border: theme.palette.secondary.main,
-  borderRadius: 20,
-  color: theme.palette.primary.contrastText,
-  height: 40,
-  paddingRight: theme.spacing(5),
-}));
-
 const StyledCategoryBox = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
   background: theme.palette.primary.main,
@@ -84,12 +70,11 @@ export default function Summary({
   initialFormat,
   tickIntervalMs = 60_000,
   onChange,
-  onInteract,
 }: Props) {
 
   const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
 
-  const [format, setFormat] = React.useState(initialFormat ?? preferredReadingFormat ?? ReadingFormat.Concise);
+  const [format, setFormat] = React.useState(initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary);
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const timeAgo = React.useMemo(
@@ -121,17 +106,9 @@ export default function Summary({
     case 'bullets':
       text = summary.bullets.join('\n');
       break;
-    case 'concise':
+    case 'summary':
       text = summary.shortSummary;
       break;
-    case 'casual':
-      text = summary.summary;
-      break;
-    case 'detailed':
-      text = summary.longSummary;
-      break;
-    default:
-      text = summary.text;
     }
     return (
       <ReactMarkdown>{text}</ReactMarkdown>
@@ -153,12 +130,6 @@ export default function Summary({
           <StyledStack flexGrow={ 1 }>
             <StyledCategoryBox direction="row" spacing={ 1 }>
               <Typography variant="subtitle1">{summary.categoryAttributes?.displayName ?? 'category'}</Typography>
-              <Box flexGrow={ 1 } />
-              <StyledButton 
-                startIcon={ <Icon path={ mdiBookmarkBoxOutline } size={ 1 } /> } 
-                onClick={ () => onInteract?.(InteractionType.Bookmark) }>
-                Read Later
-              </StyledButton>
             </StyledCategoryBox>
             <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
               <Typography variant="subtitle1">{summary.outletAttributes?.displayName}</Typography>
@@ -171,7 +142,7 @@ export default function Summary({
                 View Original Source
               </StyledLink>
             </Stack>
-            <StyledTitle variant="h6" onClick={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Concise) }>
+            <StyledTitle variant="h6" onClick={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
               <TruncatedText maxCharCount={ 200 }>{summary.title}</TruncatedText>
             </StyledTitle>
           </StyledStack>
@@ -180,23 +151,10 @@ export default function Summary({
         <Stack direction='column' spacing={ 1 }>
           <Stack direction='row' flexGrow={ 1 } alignItems="center">
             <Typography variant="subtitle2">
-              {timeAgo} 
+              {`${timeAgo}${timeAgo !== generatedTimeAgo ? ` (generated ${generatedTimeAgo})`: ''}`} 
               {' '}
-              { timeAgo !== generatedTimeAgo && (
-                <Typography variant="subtitle2">
-                  {' '}
-                  (
-                  {generatedTimeAgo}
-                  )
-                </Typography>
-              )}
             </Typography>
             <Box flexGrow={ 1 } />
-            <Stack direction='row' spacing={ 1 } alignItems="center">
-              <Typography variant="subtitle2">{ summary.interactions.view ?? '...' }</Typography>
-              <Icon path={ mdiEye } size={ 1 } />
-              <Button startIcon={ <Icon path={ mdiShare } size={ 1 } /> } />
-            </Stack>
           </Stack>
           <ReadingFormatSelector onChange={ (newFormat) => handleFormatChange(newFormat) } />
         </Stack>
