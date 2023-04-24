@@ -18,7 +18,7 @@ const router = Router();
 
 router.get(
   '/',
-  rateLimitMiddleware('25 per 3s'),
+  rateLimitMiddleware('15 per 1m'),
   query('scope').isString().matches(/^(?:conservative|public)$/).optional(),
   query('filter').isString().optional(),
   query('ids').optional(),
@@ -61,7 +61,7 @@ router.post(
 
 router.delete(
   '/:targetId',
-  rateLimitMiddleware('1 per 2s'),
+  rateLimitMiddleware('1 per 10s'),
   authMiddleware('jwt', { required: true, scope: ['god:*'] }),
   param('targetId').isNumeric(),
   validationMiddleware,
@@ -78,7 +78,7 @@ router.delete(
 
 router.patch(
   '/restore/:targetId',
-  rateLimitMiddleware('1 per 2s'),
+  rateLimitMiddleware('1 per 10s'),
   authMiddleware('jwt', { required: true, scope: ['god:*'] }),
   param('targetId').isNumeric(),
   validationMiddleware,

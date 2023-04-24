@@ -1130,7 +1130,7 @@ export class Outlet<
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });
-    const policy = this.fetchPolicy[namespace];
+    const policy = this.fetchPolicy?.[namespace];
     if (!limit) {
       limit = await RateLimit.create({
         expiresAt: new Date(Date.now() + ms(policy?.window || OUTLET_FETCH_INTERVAL)),
