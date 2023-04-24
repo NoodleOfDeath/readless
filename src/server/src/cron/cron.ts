@@ -9,7 +9,8 @@ import {
 } from '../api/v1/schema';
 import { DBService, PuppeteerService } from '../services';
 
-const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '2d';
+const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
+const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
 async function main() {
   await DBService.initTables();
@@ -71,7 +72,7 @@ async function pollForNews() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(pollForNews, ms('30m'));
+    setTimeout(pollForNews, ms(SPIDER_FETCH_INTERVAL));
   }
 }
 
