@@ -42,7 +42,7 @@ spec:
               value: '$MAIL_PASS'
             - name: MAIL_PORT
               value: '$MAIL_PORT'
-            - name: 'MAIL_USER'
+            - name: MAIL_USER
               value: '$MAIL_USER'
             - name: OPENAI_API_KEY
               value: '$OPENAI_API_KEY'

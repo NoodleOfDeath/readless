@@ -12,14 +12,6 @@ jest.setTimeout(30_000);
 import { Outlet } from '../src/api/v1/schema/resources/outlet/Outlet.model';
 import { Loot, PuppeteerService } from '../src/services/puppeteer';
 
-describe('crawl', () => {
-  test('crawl-arstechnica', async () => {
-    const outlet = Outlet.OUTLETS.arstechnica;
-    const urls = await PuppeteerService.crawl(outlet);
-    expect(urls.length).toBeGreaterThan(0);
-  });
-});
-
 const LOOT: { [ Key in keyof typeof Outlet.OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'date'> } = {
   abc: {
     authors: ['Shannon K. Crawford', 'Luis Martinez'],
@@ -347,6 +339,17 @@ const LOOT: { [ Key in keyof typeof Outlet.OUTLETS]?: Pick<Loot, 'url' | 'author
     url: 'https://www.wsj.com/articles/another-biden-trump-presidential-race-in-2024-looks-more-likely-19d88039?mod=mhp',
   },
 };
+
+describe('crawl', () => {
+  for (const [name] of Object.entries(LOOT)) {
+    test(`crawl-${name}`, async () => {
+      const outlet = Outlet.OUTLETS[name];
+      const urls = await PuppeteerService.crawl(outlet);
+      expect(urls.length).toBeGreaterThan(0);
+      console.log(urls);
+    });
+  }
+});
 
 describe('loot', () => {
   for (const [name, exp] of Object.entries(LOOT)) {

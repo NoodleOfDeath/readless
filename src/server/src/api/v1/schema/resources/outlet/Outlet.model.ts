@@ -16,11 +16,9 @@ import {
 import { RateLimit } from '../../analytics/RateLimit.model';
 import { BaseModel } from '../../base';
 
-const WORKER_FETCH_RATE_LIMIT = process.env.WORKER_FETCH_RATE_LIMIT ? Number(process.env.WORKER_FETCH_RATE_LIMIT) : 1; // 1 for dev and testing
-const WORKER_MAX_FETCH_RATE_LIMIT = process.env.WORKER_MAX_FETCH_RATE_LIMIT ? Number(process.env.WORKER_MAX_FETCH_RATE_LIMIT) : 5;
-const WORKER_FETCH_INTERVAL_MS = process.env.WORKER_FETCH_INTERVAL_MS
-  ? Number(process.env.WORKER_FETCH_INTERVAL_MS)
-  : ms('1d');
+const OUTLET_FETCH_LIMIT = process.env.OUTLET_FETCH_LIMIT ? Number(process.env.OUTLET_FETCH_LIMIT) : 1; // 1 for dev and testing
+const OUTLET_MAX_ATTEMPT_LIMIT = process.env.OUTLET_MAX_ATTEMPT_LIMIT ? Number(process.env.OUTLET_MAX_ATTEMPT_LIMIT) : 5;
+const OUTLET_FETCH_INTERVAL = process.env.OUTLET_FETCH_INTERVAL || '1d';
 
 @Scopes(() => ({ public: { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] } }))
 @Table({
@@ -59,7 +57,10 @@ export class Outlet<
         article: { selector: 'article' },
         author: { selector: 'article .social-author' },
         date: { selector: 'article .social-date' },
-        spider: { attribute: 'href', selector: 'article a' },
+        spider: { 
+          attribute: 'href',
+          selector: 'article a',
+        },
       },
       timezone: 'EST',
     },
@@ -265,7 +266,6 @@ export class Outlet<
           selector: 'a[class="SiteMapArticleList-link"]',
         },
       },
-      siteMaps: ['https://www.cnbc.com/site-map/articles/${YYYY}/${MMMM}/${D}/'],
       timezone: 'EST',
     },
     cnn: {
@@ -281,7 +281,6 @@ export class Outlet<
           selector: 'loc',
         },
       },
-      siteMaps: ['https://www.cnn.com/sitemaps/cnn/news.xml'],
       timezone: 'EST',
     },
     coindesk: {
@@ -539,8 +538,8 @@ export class Outlet<
       name: 'thehill',
       selectors: {
         article: { selector: 'article' },
-        author: { selector: 'article .submitted-by.desktop-only a[href*="/author"]' },
-        date: { selector: 'article .submitted-by.desktop-only' },
+        author: { selector: 'article .submitted-by a[href*="/author"]' },
+        date: { selector: 'article .submitted-by' },
         spider:{
           attribute: 'href',
           selector: 'div[class*="featured-cards"] a',
@@ -1120,23 +1119,24 @@ export class Outlet<
   declare selectors: Selectors;
   
   @Column({ type: DataType.JSON })
-  declare fetchPolicy: FetchPolicy;
+  declare fetchPolicy?: Record<string, FetchPolicy>;
   
   @Column({ 
     defaultValue: 'UTC',
     type: DataType.STRING,
   })
-  declare timezone?: string;
+  declare timezone: string;
 
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });
+    const policy = this.fetchPolicy[namespace];
     if (!limit) {
       limit = await RateLimit.create({
-        expiresAt: new Date(Date.now() + WORKER_FETCH_INTERVAL_MS),
+        expiresAt: new Date(Date.now() + ms(policy?.window || OUTLET_FETCH_INTERVAL)),
         key,
-        limit: namespace === 'default' ? WORKER_FETCH_RATE_LIMIT : WORKER_MAX_FETCH_RATE_LIMIT,
-        window: WORKER_FETCH_INTERVAL_MS,
+        limit: policy?.limit || namespace === 'default' ? OUTLET_FETCH_LIMIT : OUTLET_MAX_ATTEMPT_LIMIT,
+        window: ms(policy?.window || OUTLET_FETCH_INTERVAL),
       });
     }
     return limit;

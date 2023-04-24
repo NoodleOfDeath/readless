@@ -36,7 +36,7 @@ export async function doWork() {
             await job.delay(limit.window);
             return;
           }
-          const fetchMax = await outlet.getRateLimit('fetch-max');
+          const fetchMax = await outlet.getRateLimit('maxAttempt');
           if (await fetchMax.isSaturated()) {
             console.log(`Outlet ${outlet.name} has reached its maximum fetch limit of ${fetchMax.limit} per ${fetchMax.window}ms`);
             await job.delay(fetchMax.window);

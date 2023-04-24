@@ -1,13 +1,13 @@
 import { DatedAttributes } from '../../types';
 
 export type FetchPolicy = {
-  count: number;
-  window: number;
+  limit: number;
+  window: string;
 };
 
 export type Selector = {
   selector: string;
-  ignore?: string[];
+  exclude?: string[];
   attribute?: string;
 };
 
@@ -28,10 +28,9 @@ export type OutletAttributes = DatedAttributes & {
   brandImageUrl?: string;
   description?: string;
   selectors: Selectors;
-  siteMaps?: string[];
   /** fetch policy for this outlet */
-  fetchPolicy?: FetchPolicy;
-  timezone?: string;
+  fetchPolicy?: Record<string, FetchPolicy>;
+  timezone: string;
 };
 
 export type OutletCreationAttributes = {
@@ -41,8 +40,7 @@ export type OutletCreationAttributes = {
   brandImageUrl?: string;
   description?: string;
   selectors: Selectors;
-  siteMaps?: string[];
-  fetchPolicy?: FetchPolicy;
+  fetchPolicy?: Record<string, FetchPolicy>;
   timezone?: string;
 };
 

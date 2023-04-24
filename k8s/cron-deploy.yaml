@@ -20,22 +20,22 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              memory: "$K8S_MEMORY_REQUESTS"
-              cpu: "$K8S_CPU_REQUESTS"
+              memory: '$K8S_MEMORY_REQUESTS'
+              cpu: '$K8S_CPU_REQUESTS'
             limits:
-              memory: "$K8S_MEMORY_LIMITS"
-              cpu: "$K8S_CPU_LIMITS"
+              memory: '$K8S_MEMORY_LIMITS'
+              cpu: '$K8S_CPU_LIMITS'
           env:
             - name: CHROMIUM_EXECUTABLE_PATH
-              value: "$CHROMIUM_EXECUTABLE_PATH"
+              value: '$CHROMIUM_EXECUTABLE_PATH'
             - name: OLD_NEWS_THRESHOLD
-              value: "$OLD_NEWS_THRESHOLD"
+              value: '$OLD_NEWS_THRESHOLD'
             - name: OPENAI_API_KEY
-              value: "$OPENAI_API_KEY"
+              value: '$OPENAI_API_KEY'
             - name: PG_CONNECTION_STRING
-              value: "$PG_CONNECTION_STRING"
+              value: '$PG_CONNECTION_STRING'
             - name: SPIDER_FETCH_INTERVAL
-              value: "$SPIDER_FETCH_INTERVAL"
+              value: '$SPIDER_FETCH_INTERVAL'
           # livenessProbe:
           #   httpGet:
           #     path: /v1/healthz
@@ -60,3 +60,4 @@ spec:
     - port: 80
   selector:
     app: $IMAGE
+    

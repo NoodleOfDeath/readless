@@ -59,8 +59,8 @@ async function main() {
   app.set('trust proxy', 1);
   
   app.use(rateLimitMiddleware({
-    duration: '15m',
-    limit: 200,
+    duration: process.env.API_RATE_LIMIT_DURATION || '10m',
+    limit: process.env.API_RATE_LIMIT ? Number.parseInt(process.env.API_RATE_LIMIT) : 200,
     path: '',
   }));
   

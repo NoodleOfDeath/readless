@@ -42,10 +42,24 @@ export type LootOptions = {
   /** initial content if already fetched elsewhere */
   content?: string;
   /** selectors to remove from DOM */
-  ignore?: string;
+  exclude?: string[];
 };
 
 export class PuppeteerService extends BaseService {
+  
+  static EXCLUDE_EXPRS = {
+    depth0: [
+      '^/?$',
+    ],
+    depth1: [
+      '^/?$',
+      '^/[^/]+/?$',
+      '^/author',
+      '^/contributor',
+      '^/live',
+      '^/video',
+    ],
+  };
 
   static async fetch(url: string) {
     try {
@@ -111,25 +125,34 @@ export class PuppeteerService extends BaseService {
     }
   }
 
-  public static async crawl(outlet: OutletCreationAttributes) {
+  public static async crawl(outlet: OutletCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
     const { baseUrl, selectors: { spider } } = outlet;
     if (spider.selector === 'disabled') {
       return [];
     }
     const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
+    const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
     const urls: string[] = [];
     await PuppeteerService.open(baseUrl, [
       {
         action: async (el) => {
           const url = await el.evaluate((el, spider) => el.getAttribute(spider.attribute ?? 'href'), spider);
-          // exclude external links
-          if (/^https?:\/\//.test(url) && !new RegExp(`^https?://(?:www\\.)?${domain}`).test(url)) {
+          if (!url) {
+            return;
+          }
+          // exclude known bad urls
+          if (exclude && !exclude.every((e) => !new RegExp(e, 'i').test(url.replace(domainExpr, '')))) {
             return;
           }
           // fix relative hrefs
-          if (!/^https?:\/\//.test(url)) {
+          if (/^\//.test(url)) {
             urls.push(`${baseUrl}${url}`);
-          } else {
+          } else
+          if (/^https?:\/\//.test(url)) {
+            // exclude external links
+            if (!domainExpr.test(url)) {
+              return;
+            }
             urls.push(url);
           }
         }, 
@@ -137,7 +160,7 @@ export class PuppeteerService extends BaseService {
         selector: spider.selector,
       },
     ]);
-    return urls;
+    return [...new Set(urls)];
   }
 
   public static async loot(
@@ -145,7 +168,12 @@ export class PuppeteerService extends BaseService {
     outlet: OutletCreationAttributes, 
     {
       content,
-      ignore = 'img,script,source,style',
+      exclude = [
+        'img',
+        'script',
+        'source',
+        'style',
+      ],
     }: LootOptions = {}
   ): Promise<Loot> {
     
@@ -192,7 +220,7 @@ export class PuppeteerService extends BaseService {
         
         loot.rawText = rawHtml;
         const $ = load(rawHtml);
-        $(ignore).remove();
+        exclude.forEach((tag) => $(tag).remove());
         
         const extract = (sel: string, attr?: string): string => {
           if (attr && clean($(sel)?.attr(attr))) {
@@ -232,7 +260,7 @@ export class PuppeteerService extends BaseService {
         actions.push({
           action: async (el) => {
             const $ = load(await el.evaluate((el) => el.innerHTML));
-            $(ignore).remove();
+            exclude.forEach((tag) => $(tag).remove());
             loot.content = $.text();
           },
           selector: article.selector,
