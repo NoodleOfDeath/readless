@@ -26,7 +26,7 @@ export function useStyles({
   left,
   right,
   fontFamily,
-  fontSize = h1 ? 36 : h2 ? 32 : h3 ? 28 : h4 ? 26 : h5 ? 24 : h6 ? 22 : caption ? 12 : subtitle1 ? 20 : subtitle2 ? 18 : body1 ? 16 : body2 ? 15 : 16,
+  fontSize = h1 ? 36 : h2 ? 32 : h3 ? 28 : h4 ? 26 : h5 ? 24 : h6 ? 22 : caption ? 12 : subtitle1 ? 20 : subtitle2 ? 18 : body1 ? 18 : body2 ? 17 : 18,
   bold,
   italic,
   underline,
@@ -39,6 +39,9 @@ export function useStyles({
   flexRowReverse,
   flexColumn,
   flexColumnReverse,
+  gap,
+  rowGap = gap,
+  colGap = gap,
   col,
   row,
   alignCenter,
@@ -65,6 +68,8 @@ export function useStyles({
   pl = ph,
   pr = ph,
   // appearance
+  borderColor,
+  border = borderColor ? 1 : 0,
   bg,
   opacity,
   outlined,
@@ -188,6 +193,8 @@ export function useStyles({
     attrs.push(flexRowReverse ? { flexDirection: 'row-reverse' } : undefined);
     attrs.push(flexColumn ? { flexDirection: 'column' } : undefined);
     attrs.push(flexColumnReverse ? { flexDirection: 'column-reverse' } : undefined);
+    attrs.push(rowGap ? { rowGap: rowGap * scale } : undefined);
+    attrs.push(colGap ? { columnGap: colGap * scale } : undefined);
     attrs.push(textAlign);
     attrs.push(fontAppearance);
     attrs.push(alignItems);
@@ -197,6 +204,8 @@ export function useStyles({
     attrs.push(width ? { width }: undefined);
     attrs.push(height ? { height }: undefined);
     attrs.push(fontSize ? { fontSize }: undefined);
+    attrs.push(border ? { border }: undefined);
+    attrs.push(borderColor ? { borderColor }: undefined);
     attrs.push(bg ? { backgroundColor: bg } : undefined);
     attrs.push(rounded ? theme.components.rounded : undefined);
     attrs.push(mt ? { marginTop: mt * scale } : undefined);
@@ -208,6 +217,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
     attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter(Boolean).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [textScale, row, theme.components.flexRow, theme.components.flexCol, theme.components.rounded, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, textAlign, fontAppearance, alignItems, justifyContent, appearance, color, width, height, fontSize, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
+  }, [textScale, row, theme.components.flexRow, theme.components.flexCol, theme.components.rounded, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, fontAppearance, alignItems, justifyContent, appearance, color, width, height, fontSize, border, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
   return viewStyle;
 }

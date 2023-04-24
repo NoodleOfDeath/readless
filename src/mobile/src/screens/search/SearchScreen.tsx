@@ -239,7 +239,9 @@ export function SearchScreen({
               </View>
             </View>
           </ScrollView>
-          <Button onPress={ () => removeReadSummaries() }>
+          <Button 
+            ml={ 16 }
+            onPress={ () => removeReadSummaries() }>
             Clear Read
           </Button>
         </View>

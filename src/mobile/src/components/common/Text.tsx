@@ -30,7 +30,7 @@ export function Text({
     textAlign,
     ...otherStyles,
     fontFamily: otherStyles.fontFamily ?? fontFamily,
-    fontSize: (styleProps.fontSize ?? otherStyles.fontSize ?? 14) * textScale,
+    fontSize: (styleProps.fontSize ?? otherStyles.fontSize ?? 18) * textScale,
   }), [color, fontFamily, otherStyles, styleProps.fontSize, textAlign, textScale, theme]);
   
   return (
