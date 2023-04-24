@@ -19,7 +19,6 @@ type PageOptions = WaitForSelectorOptions & {
 
 type ReplacePattern = string | RegExp | {
   expr: string | RegExp,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   repl: string,
 };
 

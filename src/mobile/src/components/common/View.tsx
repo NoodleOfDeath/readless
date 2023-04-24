@@ -36,7 +36,7 @@ export function View({
     }
   }, [inactive, style.borderRadius, theme.colors.inactive]);
   return (pressable || props.onPress) ? (
-    <TouchableHighlight { ...props } style={ style } underlayColor="transparent">
+    <TouchableHighlight { ...props } style={ style } underlayColor={ 'transparent' }>
       <React.Fragment>
         {inactive && overlay}
         {children}

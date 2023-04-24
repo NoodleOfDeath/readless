@@ -29,11 +29,9 @@ export function SearchScreen({
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
-      bookmarkedSummaries, 
-      favoritedSummaries, 
+      preferredReadingFormat,
       readSummaries,
       removedSummaries,
-      preferredReadingFormat,
       sortOrder,
     },
     ready,
@@ -63,6 +61,7 @@ export function SearchScreen({
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
+  const [keywords, setKeywords] = React.useState<string[]>([]);
 
   const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
 
@@ -122,13 +121,12 @@ export function SearchScreen({
         if (page === 0) {
           return (prev = data.rows);
         }
-        return (prev = [...prev, ...data.rows]);
+        return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
       });
       setTotalResultCount(data.count);
       setPage((prev) => prev + 1);
     } catch (e) {
       console.error(e);
-      toast.alert(String(e));
       setSummaries([]);
       setTotalResultCount(0);
     } finally {
@@ -140,18 +138,18 @@ export function SearchScreen({
     if (!ready) {
       return;
     }
+    setSearchText('');
     setPage(0);
     load(0);
     if (prefilter) {
       navigation?.setOptions({ headerShown: true, headerTitle: prefilter });
     }
   }, [load, navigation, prefilter, ready]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   React.useEffect(
     () => onMount(), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pageSize, prefilter, ready, sortOrder, searchText]
+    [pageSize, prefilter, ready, sortOrder]
   );
   
   React.useEffect(() => {
@@ -167,7 +165,7 @@ export function SearchScreen({
     }
     setPendingReload(false);
     load(0);
-  }, [pendingReload, load, removedSummaries]);
+  }, [pendingReload, load, removedSummaries, searchText]);
   
   const removeReadSummaries = React.useCallback(() => {
     setPreference('removedSummaries', (prev) => (prev = ({ ...prev, ...readSummaries })));
@@ -183,10 +181,11 @@ export function SearchScreen({
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
+        keywords: searchText ? searchText.split(' ').filter((s) => s.trim()) : [],
         summary,
       });
     },
-    [handleInteraction, navigation, preferredReadingFormat]
+    [handleInteraction, navigation, preferredReadingFormat, searchText]
   );
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
@@ -208,7 +207,16 @@ export function SearchScreen({
               onChangeText={ ((text) => 
                 setSearchText(text)) }
               inputStyle={ theme.components.searchBar }
-              value={ searchText } />
+              value={ searchText }
+              onClearIconPress={ () => {
+                setSearchText('');
+                setKeywords([]);
+                setPendingReload(true);
+              } }
+              onSubmitEditing={ () => {
+                setKeywords(searchText.split(' ').filter((s) => s.trim()));
+                load(0);
+              } } />
           </View>
         )}
         <View row mb={ 8 }>
@@ -239,8 +247,10 @@ export function SearchScreen({
               </View>
             </View>
           </ScrollView>
-          <Button onPress={ () => removeReadSummaries() }>
-            Clear Read
+          <Button 
+            ml={ 16 }
+            onPress={ () => removeReadSummaries() }>
+            Remove Read
           </Button>
         </View>
         {!loading && onlyCustomNews && summaries.length === 0 && (
@@ -264,8 +274,7 @@ export function SearchScreen({
           <Summary
             key={ summary.id }
             summary={ summary }
-            bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
-            favorited={ Boolean(favoritedSummaries?.[summary.id]) }
+            keywords={ keywords }
             onFormatChange={ (format) => handleFormatChange(summary, format) }
             onInteract={ (...e) => handleInteraction(summary, ...e) }
             onReferSearch={ handleReferSearch } />

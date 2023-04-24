@@ -12,6 +12,9 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   flexRowReverse?: boolean;
   flexColumn?: boolean;
   flexColumnReverse?: boolean;
+  gap?: number;
+  rowGap?: number;
+  colGap?: number;
   col?: boolean;
   row?: boolean;
   alignCenter?: boolean;
@@ -63,6 +66,8 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   pl?: number;
   pr?: number;
   // appearance
+  border?: number;
+  borderColor?: string;
   bg?: string;
   outlined?: boolean | string | number | [string, number];
   opacity?: number;

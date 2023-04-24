@@ -13,11 +13,13 @@ import { useStyles } from '~/hooks';
 
 type Props = Omit<React.ComponentProps<typeof View>, 'children'> & {
   children: string;
+  styles?: { [key in keyof JSX.IntrinsicElements]?: Omit<React.ComponentProps<typeof Text>['style'], 'children'>},
   textStyles?: Omit<React.ComponentProps<typeof Text>['style'], 'children'>;
 };
 
 export function Markdown({ 
   children, 
+  styles,
   textStyles,
   ...props
 }: Props) {
@@ -71,7 +73,7 @@ export function Markdown({
           dl: (props) => <Text { ...textStyles }>{props.children}</Text>,
           dt: (props) => <Text { ...textStyles }>{props.children}</Text>,
           ellipse: (props) => <Text { ...textStyles }>{props.children}</Text>,
-          em: (props) => <Text { ...textStyles } italic>{props.children}</Text>,
+          em: (props) => <Text { ...textStyles } { ...styles?.em }>{props.children}</Text>,
           embed: (props) => <Text { ...textStyles }>{props.children}</Text>,
           feBlend: (props) => <Text { ...textStyles }>{props.children}</Text>,
           feColorMatrix: (props) => <Text { ...textStyles }>{props.children}</Text>,
@@ -117,7 +119,7 @@ export function Markdown({
           hgroup: (props) => <Text { ...textStyles }>{props.children}</Text>,
           hr: () => <Divider />,
           html: (props) => <Text { ...textStyles }>{props.children}</Text>,
-          i: (props) => <Text { ...textStyles } italic>{props.children}</Text>,
+          i: (props) => <Text { ...textStyles }>{props.children}</Text>,
           iframe: (props) => <Text { ...textStyles }>{props.children}</Text>,
           image: (props) => <Text { ...textStyles }>{props.children}</Text>,
           img: (props) => (

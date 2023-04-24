@@ -13,6 +13,7 @@ import {
   Button,
   Divider,
   Icon,
+  Markdown,
   ReadingFormatSelector,
   Text,
   View,
@@ -29,8 +30,7 @@ type Props = {
   summary: PublicSummaryAttributes;
   tickIntervalMs?: number;
   initialFormat?: ReadingFormat;
-  bookmarked?: boolean;
-  favorited?: boolean;
+  keywords?: string[];
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
@@ -78,6 +78,7 @@ export function Summary({
   summary,
   tickIntervalMs = 60_000,
   initialFormat,
+  keywords = [],
   onFormatChange,
   onReferSearch,
   onInteract,
@@ -111,6 +112,14 @@ export function Summary({
   
   const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
 
+  const markdownTitle = React.useMemo(() => {
+    let title = summary.title;
+    for (const word of keywords) {
+      title = title.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
+    }
+    return title;
+  }, [keywords, summary.title]);
+
   const timeAgo = React.useMemo(() => {
     const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
     const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
@@ -130,13 +139,15 @@ export function Summary({
     if (!format || !summary) {
       return;
     }
-    switch (format) {
-    case 'bullets':
-      return summary.bullets.join('\n');
-    case 'summary':
-      return summary.shortSummary;
+    let content: string = summary.shortSummary;
+    if (format === 'bullets') {
+      content = summary.bullets.join('\n');
     }
-  }, [format, summary]);
+    for (const word of keywords) {
+      content = content.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
+    }
+    return content;
+  }, [format, keywords, summary]);
 
   // update time ago every `tickIntervalMs` milliseconds
   React.useEffect(() => {
@@ -260,7 +271,15 @@ export function Summary({
             </View>
             <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
               <Text numberOfLines={ isRead ? 1 : 10 } ellipsizeMode='tail'>
-                {summary.title.trim()}
+                <Markdown
+                  styles={ {
+                    em: { 
+                      backgroundColor: 'yellow',
+                      color: 'black',
+                    }, 
+                  } }>
+                  {markdownTitle}
+                </Markdown>
               </Text>
             </View>
             <Divider />
@@ -312,8 +331,19 @@ export function Summary({
                     onPress={ () => handlePlayAudio(content) }
                     mr={ 8 } />
                 </View>
-                <View mt={ 4 }>
-                  <Text mt={ 4 }>{content}</Text>
+                <View mt={ 8 }>
+                  {content.split(/\n/).map((line, i) => (
+                    <Markdown
+                      key={ i }
+                      styles={ {
+                        em: { 
+                          backgroundColor: 'yellow',
+                          color: 'black',
+                        }, 
+                      } }>
+                      {line}
+                    </Markdown>
+                  ))}
                 </View>
               </View>
             )}

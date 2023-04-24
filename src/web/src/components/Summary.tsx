@@ -1,9 +1,7 @@
 import React from 'react';
 
-import Icon from '@mdi/react';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Divider,

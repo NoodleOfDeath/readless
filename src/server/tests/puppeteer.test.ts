@@ -77,7 +77,7 @@ const LOOT: { [ Key in keyof typeof Outlet.OUTLETS]?: Pick<Loot, 'url' | 'author
     url: 'https://www.bloomberg.com/news/articles/2023-04-23/retailer-bed-bath-beyond-files-for-chapter-11-in-new-jersey?srnd=premium',
   },
   businessinsider: {
-    authors: [],
+    authors: ['David Kushner'],
     date: new Date('placeholder'),
     url: 'https://www.businessinsider.com/celebrity-speaker-wild-money-drugs-alcohol-hunter-thompson-2023-4',
   },

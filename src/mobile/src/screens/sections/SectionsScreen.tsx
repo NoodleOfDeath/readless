@@ -6,17 +6,18 @@ import {
   PublicOutletAttributes,
 } from '~/api';
 import {
-  ActivityIndicator,
   Button,
-  Grid,
+  Checkbox,
   Screen,
   TabSwitcher,
+  Text,
   View,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
 import { ClientError, useCategoryClient } from '~/hooks';
+import { ScreenProps } from '~/screens';
 
-export function SectionsScreen() {
+export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
 
   const { getCategories, getOutlets } = useCategoryClient();
   const {
@@ -33,8 +34,6 @@ export function SectionsScreen() {
   const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
   const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
   const [_, setError] = React.useState<InternalError>();
-
-  const sortedOutlets = React.useMemo(() => [...outlets].sort((a, b) => a.name.replace(/^the/i, '').localeCompare(b.name.replace(/^the/i, ''))), [outlets]);
   
   const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
   const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
@@ -82,6 +81,14 @@ export function SectionsScreen() {
     loadCategories();
     loadOutlets();
   }, [loadCategories, loadOutlets]);
+
+  const selectCategory = React.useCallback((category: PublicCategoryAttributes) => {
+    navigation?.navigate('search', { prefilter: `cat:${category.name.toLowerCase().replace(/\s/g, '-')}` });
+  }, [navigation]);
+
+  const selectOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
+    navigation?.navigate('search', { prefilter: `src:${outlet.name}` });
+  }, [navigation]);
   
   const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
     setPreference('bookmarkedCategories', (prev) => {
@@ -106,58 +113,98 @@ export function SectionsScreen() {
       return (prev = state);
     });
   }, [setPreference]);
+  
+  const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' | 'bookmarkedOutlets') => {
+    setPreference(key, {});
+  }, [setPreference]);
 
   return (
     <Screen
       refreshing={ loading }
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
-      {loading ? (
-        <ActivityIndicator animating />
-      ) : (
-        <View col mh={ 16 } mb={ 16 }>
-          <TabSwitcher 
-            activeTab={ activeTab }
-            onTabChange={ setActiveTab }
-            titles={ titles }>
-            <Grid alignCenter justifyCenter>
-              {categories.map((category) => (
-                <Button
-                  key={ category.name }
-                  selected={ Boolean(bookmarkedCategories?.[category.name]) }
+      <View col mh={ 16 } mb={ 16 }>
+        <TabSwitcher 
+          activeTab={ activeTab }
+          onTabChange={ setActiveTab }
+          titles={ titles }>
+          <View col height='100%'>
+            <View row>
+              <View row>
+                <Text>
+                  Category
+                </Text>
+              </View>
+              <View>
+                <Button 
+                  onPress={ () => clearBookmarks('bookmarkedCategories') }>
+                  {categoryCount > 0 ? `Unfollow [ ${categoryCount} ]` : 'Follow'}
+                </Button>
+              </View>
+            </View>
+            {categories.map((category) => (
+              <View 
+                row
+                alignCenter
+                justifySpaced
+                key={ category.name }>
+                <Button 
+                  row
                   selectable
-                  height={ 80 }
                   alignCenter
-                  justifyCenter
                   outlined
                   rounded
-                  spacing={ 4 }
+                  spacing={ 8 }
                   startIcon={ category.icon }
                   p={ 8 }
-                  m={ 4 }
-                  onPress={ () => followCategory(category) }>
+                  mv={ 4 }
+                  onPress={ () => selectCategory(category) }>
                   {category.displayName}
                 </Button>
-              ))}
-            </Grid>
-            <Grid alignCenter justifyCenter>
-              {sortedOutlets.map((outlet) => (
+                <Checkbox
+                  checked={ Boolean(bookmarkedCategories?.[category.name]) }
+                  onPress={ () => followCategory(category) } />
+              </View>
+            ))}
+          </View>
+          <View col>
+            <View row>
+              <View row>
+                <Text>
+                  News Source
+                </Text>
+              </View>
+              <View>
+                <Button
+                  onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
+                  {outletCount > 0 ? `Unfollow [ ${outletCount} ]` : 'Follow'}
+                </Button>
+              </View>
+            </View>
+            {outlets.map((outlet) => (
+              <View 
+                row
+                alignCenter
+                justifySpaced
+                key={ outlet.name }>
                 <Button 
-                  key={ outlet.name }
-                  selected={ Boolean(bookmarkedOutlets?.[outlet.name]) }
+                  row
                   selectable
                   alignCenter
                   outlined
                   rounded
                   p={ 8 }
-                  m={ 4 }
-                  onPress={ () => followOutlet(outlet) }>
+                  mv={ 4 }
+                  onPress={ () => selectOutlet(outlet) }>
                   {outlet.displayName}
                 </Button>
-              ))}
-            </Grid>
-          </TabSwitcher>
-        </View>
-      )}
+                <Checkbox
+                  checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
+                  onPress={ () => followOutlet(outlet) } />
+              </View>
+            ))}
+          </View>
+        </TabSwitcher>
+      </View>
     </Screen>
   );
 }

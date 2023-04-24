@@ -1,5 +1,6 @@
 export * from './types';
 
+export * from './bulletin/BulletinScreen';
 export * from './home/HomeScreen';
 export * from './media/MediaScreen';
 export * from './my-stuff/MyStuffScreen';
