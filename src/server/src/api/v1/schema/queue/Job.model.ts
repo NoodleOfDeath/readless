@@ -50,6 +50,12 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     type: DataType.JSON,
   })
   declare data: DataType;
+  
+  @Column({
+    defaultValue: 'default',
+    type: DataType.STRING,
+  })
+  declare group: string;
     
   @Column({
     defaultValue: 'backoff',

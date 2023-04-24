@@ -138,12 +138,19 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
   }
 
   async fetchJob() {
+    const otherJobs = await Job.findAll({
+      where: {
+        lockedBy: { [Op.ne]: this.id },
+        startedAt: { [Op.ne]: null },
+      },
+    });
     const job = await Job.findOne({
       // lifo
       order: [['createdAt', 'DESC']],
       where: {
         completedAt: null,
         delayedUntil: { [Op.or]: [null, { [Op.lt]: new Date() }] },
+        group: { [Op.notIn]: otherJobs.map((j) => j.group) },
         lockedBy: null,
         queue: this.queueProps.name,
         startedAt: null,

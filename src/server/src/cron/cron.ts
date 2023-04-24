@@ -63,9 +63,10 @@ async function pollForNews() {
         await queue.add(
           url,
           { 
-            outlet: outlet.name, 
+            outlet: outlet.name,
             url,
-          }
+          },
+          outlet.name
         );
       }
     }
