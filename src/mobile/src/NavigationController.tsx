@@ -14,6 +14,7 @@ import {
 } from '~/components';
 import { useTheme } from '~/hooks';
 import {
+  BulletinScreen,
   HomeScreen,
   MyStuffScreen,
   NAVIGATION_LINKING_OPTIONS,
@@ -89,6 +90,17 @@ const TABS: TabProps[] = [
     icon: 'newspaper',
     name: 'Sections',
   },
+  // {
+  //   component: TabViewController<StackableTabParams>(
+  //     {
+  //       default: BulletinScreen, 
+  //       search: SearchScreen, 
+  //       summary: SummaryScreen,
+  //     }
+  //   ),
+  //   icon: 'pin',
+  //   name: 'Bulletin',
+  // },
   {
     component: TabViewController({ default: SettingsScreen }),
     icon: 'cog',

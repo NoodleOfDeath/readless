@@ -12,7 +12,6 @@ import {
   Summary,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
@@ -20,13 +19,13 @@ export function SummaryScreen({
   route,
   navigation,
 }: ScreenProps<'summary'>) {
-  const { preferences: { bookmarkedSummaries, favoritedSummaries } } = React.useContext(SessionContext);
   const { getSummary, handleInteraction } = useSummaryClient();
 
   const [loading, setLoading] = React.useState(false);
   const [reloadId, setReloadId] = React.useState(0);
   const [summary, setSummary] = React.useState<PublicSummaryAttributes>();
   const [format, setFormat] = React.useState(route?.params?.initialFormat);
+  const keywords = React.useMemo(() => route?.params?.keywords ?? [], [route]);
 
   const handleFormatChange = React.useCallback(async (newFormat?: ReadingFormat) => {
     if (!summary || !newFormat || newFormat === format) {
@@ -83,8 +82,7 @@ export function SummaryScreen({
           <Summary
             summary={ summary }
             initialFormat={ format }
-            bookmarked={ Boolean(bookmarkedSummaries?.[summary.id]) }
-            favorited={ Boolean(favoritedSummaries?.[summary.id]) }
+            keywords={ keywords }
             onFormatChange={ (format) => handleFormatChange(format) }
             onReferSearch={ handleReferSearch }
             onInteract={ (...e) => handleInteraction(summary, ...e) } />
