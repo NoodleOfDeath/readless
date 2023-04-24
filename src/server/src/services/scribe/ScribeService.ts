@@ -58,13 +58,14 @@ export class ScribeService extends BaseService {
     const loot = await PuppeteerService.loot(url, outlet, { content });
     // create the prompt onReply map to be sent to chatgpt
     if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
+      loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
       await new MailService().sendMail({
         from: 'debug@readless.ai',
         subject: 'Article too long',
         text: `Article too long for ${url}\n\n${loot.content}`,
         to: 'debug@readless.ai',
       });
-      throw new Error('Article too long');
+      //throw new Error('Article too long');
     }
     if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
       await new MailService().sendMail({
@@ -87,7 +88,7 @@ export class ScribeService extends BaseService {
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is invalid or older than ${OLD_NEWS_THRESHOLD}`);
     }
-    if (loot.date > new Date()) {
+    if (loot.date > new Date(Date.now() + ms('4h'))) {
       await new MailService().sendMail({
         from: 'debug@readless.ai',
         subject: 'News is from the future',
