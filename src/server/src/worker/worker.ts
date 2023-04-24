@@ -53,7 +53,6 @@ export async function doWork() {
               return existingSummary;
             }
           }
-          fetchMax.advance();
           const summary = await ScribeService.readAndSummarize(
             {
               content, 
@@ -68,6 +67,7 @@ export async function doWork() {
           console.error(e);
           await job.moveToFailed(e);
         } finally {
+          fetchMax.advance();
           next();
         }
       }
