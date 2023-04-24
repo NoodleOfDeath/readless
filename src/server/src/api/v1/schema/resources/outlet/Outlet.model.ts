@@ -101,7 +101,7 @@ export class Outlet<
       selectors: {
         article:{ selector: 'article' }, 
         author: { selector: 'article header section *[itemprop*="author creator"] a' },
-        date: { selector: 'article header time' },
+        date: { selector: 'article header time,article header .date' },
         spider: {
           attribute: 'href',
           selector: 'a',
@@ -999,8 +999,8 @@ export class Outlet<
       displayName: 'Vice',
       name: 'vice',
       selectors: {
-        article: { selector: 'article' },
-        author: { selector: 'article .byline-name a' },
+        article: { selector: 'main p' },
+        author: { selector: '.contributor a' },
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
@@ -1130,13 +1130,12 @@ export class Outlet<
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });
-    const policy = this.fetchPolicy?.[namespace];
     if (!limit) {
       limit = await RateLimit.create({
-        expiresAt: new Date(Date.now() + ms(policy?.window || OUTLET_FETCH_INTERVAL)),
+        expiresAt: new Date(Date.now() + ms(OUTLET_FETCH_INTERVAL)),
         key,
-        limit: policy?.limit || namespace === 'default' ? OUTLET_FETCH_LIMIT : OUTLET_MAX_ATTEMPT_LIMIT,
-        window: ms(policy?.window || OUTLET_FETCH_INTERVAL),
+        limit: namespace === 'default' ? OUTLET_FETCH_LIMIT : OUTLET_MAX_ATTEMPT_LIMIT,
+        window: ms(OUTLET_FETCH_INTERVAL),
       });
     }
     return limit;
