@@ -20,11 +20,11 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              memory: "$K8S_MEMORY_REQUESTS"
-              cpu: "$K8S_CPU_REQUESTS"
+              memory: '$K8S_MEMORY_REQUESTS'
+              cpu: '$K8S_CPU_REQUESTS'
             limits:
-              memory: "$K8S_MEMORY_LIMITS"
-              cpu: "$K8S_CPU_LIMITS"
+              memory: '$K8S_MEMORY_LIMITS'
+              cpu: '$K8S_CPU_LIMITS'
           livenessProbe:
             httpGet:
               path: /

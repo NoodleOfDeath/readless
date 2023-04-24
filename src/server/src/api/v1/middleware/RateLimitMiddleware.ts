@@ -7,31 +7,35 @@ import { RateLimit } from '../schema';
 export type Duration = `${number}${'ms'|'s'|'m'|'h'|'d'|'w'|'M'|'y'}`;
 export type RateLimitString = `${number}${'/'|'every'|'per'}${Duration}`;
 
+export function parseDuration(period: number | string) {
+  const duration = typeof period === 'number' ? period : ms(period);
+  return !Number.isNaN(duration) ? duration : undefined;
+}
+
 export type RateLimitOptions = {
-  duration: number | Duration;
+  duration: number | string;
   limit: number;
   path?: string | ((req: Request) => string);
 };
 
 function parseRateLimitString(rateLimitString: RateLimitString): RateLimitOptions {
   const [limit, period] = rateLimitString.split(/\s*(?:\/|every|per)\s*/i);
-  const duration = ms(period);
   return {
-    duration: Number.isNaN(duration) ? ms('15m') : duration,
-    limit: Number.isNaN(parseInt(limit)) ? 100 : parseInt(limit),
+    duration: parseDuration(period) ?? ms('10m'),
+    limit: Number.isNaN(Number.parseInt(limit)) ? 200 : Number.parseInt(limit),
     path: (req) => [req.method, req.path].join(':'),
   };
 }
 
 export const rateLimitMiddleware = (
   opts: RateLimitString | RateLimitOptions = {
-    duration: ms('15m'), 
-    limit: 100, 
+    duration: ms('10m'), 
+    limit: 200, 
     path: (req) => [req.method, req.path].join(':'), 
   }
 ): RequestHandler => {
   const options = typeof opts === 'string' ? parseRateLimitString(opts) : opts;
-  const duration = typeof options.duration === 'string' ? ms(options.duration) : options.duration;
+  const duration = parseDuration(options.duration);
   return async (req, res, next) => {
     const path = options.path instanceof Function ? options.path(req) : options.path;
     const key = path ? [req.ip, path].join(':') : req.ip;

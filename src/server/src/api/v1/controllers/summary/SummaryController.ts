@@ -76,9 +76,7 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: nu
         [Op.or]: {
           bullets: { [Op.contains] : [subquery] },
           shortSummary: { [Op.iLike] : `%${subquery}%` },
-          tags: { [Op.contains] : [subquery] },
           title: { [Op.iLike] : `%${subquery}%` },
-          url: { [Op.iLike] : `%${subquery}%` },
         },
       });
     }

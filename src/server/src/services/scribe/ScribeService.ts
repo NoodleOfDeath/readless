@@ -54,6 +54,9 @@ export class ScribeService extends BaseService {
     } else {
       console.log(`Forcing summary rewrite for ${url}`);
     }
+    if (!PuppeteerService.EXCLUDE_EXPRS.depth1.every((e) => !new RegExp(e, 'i').test(url.replace(/^https?:\/\/.*?(?=\/)/, '')))) {
+      throw new Error('Probably not a news article');
+    }
     // fetch web content with the spider
     const loot = await PuppeteerService.loot(url, outlet, { content });
     // create the prompt onReply map to be sent to chatgpt

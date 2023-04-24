@@ -1,6 +1,7 @@
 import {
   Outlet,
   Queue,
+  RateLimit,
   Summary,
   Worker,
 } from '../api/v1/schema/models';
@@ -20,6 +21,7 @@ export async function doWork() {
     await Worker.from(
       Queue.QUEUES.siteMaps,
       async (job, next) => {
+        let fetchMax: RateLimit;
         try {
           const {
             outlet: outletName, content, url, force, 
@@ -36,7 +38,7 @@ export async function doWork() {
             await job.delay(limit.window);
             return;
           }
-          const fetchMax = await outlet.getRateLimit('fetch-max');
+          fetchMax = await outlet.getRateLimit('maxAttempt');
           if (await fetchMax.isSaturated()) {
             console.log(`Outlet ${outlet.name} has reached its maximum fetch limit of ${fetchMax.limit} per ${fetchMax.window}ms`);
             await job.delay(fetchMax.window);
@@ -53,7 +55,6 @@ export async function doWork() {
               return existingSummary;
             }
           }
-          fetchMax.advance();
           const summary = await ScribeService.readAndSummarize(
             {
               content, 
@@ -68,6 +69,7 @@ export async function doWork() {
           console.error(e);
           await job.moveToFailed(e);
         } finally {
+          fetchMax?.advance();
           next();
         }
       }
