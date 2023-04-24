@@ -101,12 +101,12 @@ export class PuppeteerService extends BaseService {
         }
       }
 
-      await browser.close();
-
       return rawText;
     } catch (e) {
       console.log(e);
       return '';
+    } finally {
+      await browser.close();
     }
   }
 
