@@ -54,18 +54,14 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   resp?: ReturnType;
 
   async add(jobName: string, payload: DataType) {
-    return await Job.findOrCreate({
-      defaults: {
-        data: payload,
-        name: jobName,
-        queue: this.toJSON().name,
-      },
-      where: {
-        completedAt: null,
-        name: jobName,
-        queue: this.toJSON().name,
-        startedAt: null,
-      },
+    const job = await Job.findOne({ where: { name: jobName } });
+    if (job) {
+      return job;
+    }
+    return await Job.create({
+      data: payload,
+      name: jobName,
+      queue: this.toJSON().name,
     });
   }
 
