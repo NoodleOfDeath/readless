@@ -2,6 +2,7 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import ms from 'ms';
 import puppeteer, {
+  Browser,
   ElementHandle,
   Viewport,
   WaitForSelectorOptions,
@@ -69,8 +70,9 @@ export class PuppeteerService extends BaseService {
       viewport = { height: 1024, width: 1080 },
     }: PageOptions = {}
   ) {
+    let browser: Browser;
     try {
-      const browser = await puppeteer.launch({
+      browser = await puppeteer.launch({
         args: ['--no-sandbox'], 
         executablePath: process.env.CHROMIUM_EXECUTABLE_PATH, 
         timeout, 
@@ -106,7 +108,7 @@ export class PuppeteerService extends BaseService {
       console.log(e);
       return '';
     } finally {
-      await browser.close();
+      await browser?.close();
     }
   }
 
