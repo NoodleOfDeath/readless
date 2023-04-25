@@ -25,6 +25,8 @@ const DATES: Test[] = [
   { date: 'Apr 20, 2023, 11:19AM EDT' },
   { date: '20 April 2023 • 3:26pm' },
   { date: 'by Lauren Sforza - 04/24/23 6:03 PM ET' },
+  { date: 'April 24, 2023 at 06:27 PM EDT' },
+  { date: 'April 24, 2023 at 06:27 a.m. EDT' },
 ];
 
 describe('date tests', () => {

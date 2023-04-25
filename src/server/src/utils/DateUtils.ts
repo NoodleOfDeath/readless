@@ -1,6 +1,8 @@
 import ms from 'ms';
 
-const DATE_EXPR = /(?:(?:(\d\d?)\/(\d\d?)\/(\d{2}|\d{4}))|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?[,\s]\s*(\d{4}))(?:.*?\s*(\d\d?):(\d\d?)(?:\s*(am|pm))?)?(?:\s*(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))?|(\d\d?\s*(?:h|h(?:ou)?rs?|m|min(?:ute)s?))\s*ago|(\d\d\d+$)/i;
+export const TIME_EXPR = /(?:(\d\d?):(\d\d?)(?:\s*(a\.?m\.?|p\.?m\.?))?)|(\d\d?\s*(?:h|h(?:ou)?rs?|m|min(?:ute)s?))\s*ago/i;
+
+export const DATE_EXPR = /(?:(?:(\d\d?)\/(\d\d?)\/(\d{2}|\d{4}))|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?[,\s]\s*(\d{4}))(?:.*?\s*(\d\d?):(\d\d?)(?:\s*(a\.?m\.?|p\.?m\.?))?)?(?:\s*(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))?|(\d\d?\s*(?:h|h(?:ou)?rs?|m|min(?:ute)s?))\s*ago|(\d\d\d+$)/i;
 
 export function parseDate(context: string, timezone = 'UTC') {
   const date = new Date(context.trim());
@@ -17,7 +19,7 @@ export function parseDate(context: string, timezone = 'UTC') {
     const year = y1 ?? y2 ?? new Date().getFullYear();
     const min = min1 ?? '00';
     const hour = h1 ?? '00';
-    dateMatch = `${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min} ${amOrPm ? amOrPm : (min + hour === '0000') ? 'am' : ''}`;
+    dateMatch = `${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min} ${amOrPm ? amOrPm.replace(/\./g, '') : (min + hour === '0000') ? 'am' : ''}`;
     if (relative) {
       parsedDate = new Date(Date.now() - ms(relative));
     } else
@@ -25,7 +27,7 @@ export function parseDate(context: string, timezone = 'UTC') {
       parsedDate = new Date(Number.parseInt(timestamp));
     } else
     if (tz) {
-      parsedDate = new Date([dateMatch, tz.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/, ($0, $1) => `${$1}ST`)].join(' '));
+      parsedDate = new Date([dateMatch, tz.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/, ($0, $1) => `${$1}DT`)].join(' '));
     }
     return parsedDate;
   }
