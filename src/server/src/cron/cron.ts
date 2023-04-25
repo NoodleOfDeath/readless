@@ -70,7 +70,7 @@ async function pollForNews() {
             outlet.name
           );
         }
-      } catch(e) {
+      } catch (e) {
         console.error(e);
       }
     }
