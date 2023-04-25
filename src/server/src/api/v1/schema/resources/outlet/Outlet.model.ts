@@ -39,7 +39,7 @@ export class Outlet<
       displayName: 'ABC News',
       name: 'abc',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: '.ShareByline a[href*="/author"]' },
         date: { selector: '.ShareByline > div  > div :last-child' },
         spider: {
@@ -54,7 +54,7 @@ export class Outlet<
       displayName: 'Advocate',
       name: 'advocate',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .social-author' },
         date: { selector: 'article .social-date' },
         spider: { 
@@ -69,7 +69,7 @@ export class Outlet<
       displayName: 'AEI',
       name: 'aei',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article header .author' },
         date: { selector: 'article header .date' },
         spider:{
@@ -99,7 +99,7 @@ export class Outlet<
       displayName: 'ars technica',
       name: 'ars-technica',
       selectors: {
-        article:{ selector: 'article' }, 
+        article:{ selector: 'article p' }, 
         author: { selector: 'article header section *[itemprop*="author creator"] a' },
         date: { selector: 'article header time,article header .date' },
         spider: {
@@ -114,7 +114,7 @@ export class Outlet<
       displayName: 'The Atlantic',
       name: 'atlantic',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article header #byline a' },
         date: { selector: 'article header time' },
         spider: {
@@ -129,7 +129,7 @@ export class Outlet<
       displayName: 'Barron\'s',
       name: 'barrons',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article header .byline .author' },
         date: { selector: 'article header time' },
         spider:{
@@ -144,7 +144,7 @@ export class Outlet<
       displayName: 'BBC',
       name: 'bbc',
       selectors: { 
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article *[class*="TextContributorName"]' },
         date: { selector: 'article time' },
         spider:{ attribute: 'href', selector: 'a[class*="media__link"]' }, 
@@ -156,7 +156,7 @@ export class Outlet<
       displayName: 'billboard',
       name: 'billboard',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'header .author a' },
         date: { selector: 'header time' },
         spider:{
@@ -171,7 +171,7 @@ export class Outlet<
       displayName: 'Bleeping Computer',
       name: 'bleeping-computer',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .author' },
         date: { attribute: 'text', selector: 'article .cz-news-date,article .cz-news-time' },
         spider:{
@@ -186,7 +186,7 @@ export class Outlet<
       displayName: 'Bloomberg',
       name: 'bloomberg',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'address p[class*="author"] a' },
         date: { selector: 'time' },
         spider:{
@@ -201,7 +201,7 @@ export class Outlet<
       displayName: 'Business Insider',
       name: 'business-insider',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: '.byline .byline-author-name' },
         date: { selector: '.byline .byline-timestamp' },
         spider:{
@@ -216,7 +216,7 @@ export class Outlet<
       displayName: 'Bustle',
       name: 'bustle',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'address a' },
         date: { selector: 'time' },
         spider:{
@@ -239,7 +239,7 @@ export class Outlet<
       displayName: 'BuzzFeed',
       name: 'buzzfeed',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .author a' },
         date: { selector: 'time' },
         spider:{
@@ -257,7 +257,7 @@ export class Outlet<
       displayName: 'CBS News',
       name: 'cbsnews',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author : { selector: '' },
         date: { selector: 'article time' },
         spider:{ attribute: 'href', selector: 'a[href*="/news/"]' },
@@ -269,7 +269,7 @@ export class Outlet<
       displayName: 'CNBC',
       name: 'cnbc',
       selectors: {
-        article: { selector: '.ArticleBody-articleBody' },
+        article: { selector: '.ArticleBody-articleBody p' },
         author: { selector: '.Author-authorName' },
         date: { selector: 'time' },
         spider:{
@@ -287,7 +287,7 @@ export class Outlet<
       displayName: 'CNN',
       name: 'cnn',
       selectors: {
-        article: { selector: '.ArticleBody-articleBody' },
+        article: { selector: 'main.article__main p' },
         author: { selector: 'header .headline__sub-text .byline_name' },
         date: { selector: 'header .headline__sub-text .timestamp' },
         spider:{
@@ -302,7 +302,7 @@ export class Outlet<
       displayName: 'CoinDesk',
       name: 'coindesk',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .at-authors a' },
         date: { selector: 'article .at-created,article .at-updated' },
         spider:{
@@ -317,7 +317,7 @@ export class Outlet<
       displayName: 'Cryptoglobe',
       name: 'cryptoglobe',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article header .media-body a[href*="/contributors"]' },
         date: { selector: 'article header .media-body :last-child' },
         spider:{
@@ -334,7 +334,7 @@ export class Outlet<
       displayName: 'CSIS',
       name: 'csis',
       selectors: {
-        article: { selector: 'div[role*="article"] .column' },
+        article: { selector: 'div[role*="article"] .column p' },
         author: { selector: 'article .contributors a' },
         date: { selector: 'article .contributors :last-child' },
         spider:{
@@ -367,7 +367,7 @@ export class Outlet<
       displayName: 'Developer Tech',
       name: 'developer-tech',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline .by a' },
         date: { selector: 'article .byline time' },
         spider:{
@@ -394,7 +394,7 @@ export class Outlet<
       displayName: 'E! News',
       name: 'enews',
       selectors: {
-        article: { selector: '.article-detail__text-only' },
+        article: { selector: '.article-detail__text-only p' },
         author: { selector: 'header .article-detail__meta__author' },
         date: { selector: 'header .article-detail__meta__date' },
         spider:{
@@ -409,7 +409,7 @@ export class Outlet<
       displayName: 'ESPN',
       name: 'espn',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .authors .author' },
         date: { attribute: 'data-date', selector: 'article .timestamp' },
         spider:{
@@ -428,7 +428,7 @@ export class Outlet<
       displayName: 'Essence',
       name: 'essence',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article header .byline .author a' },
         date: { selector: 'article .posted-on time' },
         spider:{
@@ -469,7 +469,7 @@ export class Outlet<
       displayName: 'Forbes',
       name: 'forbes',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .fs-author-name a' },
         date: { selector: 'article time' },
         spider:{
@@ -484,7 +484,7 @@ export class Outlet<
       displayName: 'Foreign Policy',
       name: 'foreign-policy',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .author-bio a[rel*="author"]' },
         date: { selector: 'time' },
         spider:{
@@ -499,7 +499,7 @@ export class Outlet<
       displayName: 'Fortune',
       name: 'fortune',
       selectors: {
-        article: { selector: '#article-content' },
+        article: { selector: '#article-content p' },
         author: { selector: '#content a[href*="/author"]' },
         date: { selector: '#content' },
         spider:{
@@ -514,7 +514,7 @@ export class Outlet<
       displayName: 'Fox News',
       name: 'foxnews',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article header .author-byline a[href*="/person"]' },
         date: { selector: 'article header time' },
         spider:{
@@ -541,7 +541,7 @@ export class Outlet<
       displayName: 'Gizmodo',
       name: 'gizmodo',
       selectors: {
-        article: { selector: '.js_post-content' },
+        article: { selector: '.js_post-content p' },
         author: { selector: '.js_starterpost a[href*="/author"]' },
         date: { selector: '.js_starterpost time' },
         spider:{
@@ -556,7 +556,7 @@ export class Outlet<
       displayName: 'The Guardian',
       name: 'theguardian',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'address a[rel*="author"]' },
         date: { selector: 'details summary' },
         spider:{
@@ -571,7 +571,7 @@ export class Outlet<
       displayName: 'The Hill',
       name: 'thehill',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .submitted-by a[href*="/author"]' },
         date: { selector: 'article .submitted-by' },
         spider:{
@@ -589,7 +589,7 @@ export class Outlet<
       displayName: 'HuffPost',
       name: 'huffpost',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'main header .entry__wirepartner span' },
         date: { selector: 'main header time' },
         spider:{
@@ -604,7 +604,7 @@ export class Outlet<
       displayName: 'Inverse',
       name: 'inverse',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'address a' },
         date: { selector: 'article time' },
         spider:{
@@ -640,7 +640,7 @@ export class Outlet<
       displayName: 'KSL',
       name: 'ksl',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: '.byline .author a' },
         date: { selector: '.byline .author a' },
         spider:{
@@ -655,7 +655,7 @@ export class Outlet<
       displayName: 'Los Angeles Times',
       name: 'latimes',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline .authors .author-name a' },
         date: { selector: 'aritcle .byline time' },
         spider:{
@@ -672,7 +672,7 @@ export class Outlet<
       displayName: 'Lifewire',
       name: 'lifewire',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: '.article-meta a' },
         date: { selector: '.mntl-attribution__item-date' },
         spider:{
@@ -690,7 +690,7 @@ export class Outlet<
       displayName: 'Mashable',
       name: 'mashable',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'header a[href*="/author"]' },
         date: { selector: 'header time' },
         spider:{
@@ -705,7 +705,7 @@ export class Outlet<
       displayName: 'Men\'s Health',
       name: 'mens-health',
       selectors: {
-        article: { selector: '.article-body-content' },
+        article: { selector: '.article-body-content p' },
         author: { selector: 'header address a[href*="/author"]' },
         date: { selector: 'header time' },
         spider:{
@@ -726,7 +726,7 @@ export class Outlet<
       displayName: 'National Geographic',
       name: 'national-geographic',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article header .Byline .Byline__Author a[href*="/author"]' },
         date: { selector: 'article header .Byline__TimestampWrapper .Byline__Meta--publishDate' },
         spider:{
@@ -744,7 +744,7 @@ export class Outlet<
       displayName: 'NBC News',
       name: 'nbcnews',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { attribute:'content', selector: 'time' },
         spider:{
@@ -766,7 +766,7 @@ export class Outlet<
       displayName: 'Newsweek',
       name: 'newsweek',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { attribute:'content', selector: 'time' },
         spider:{
@@ -781,7 +781,7 @@ export class Outlet<
       displayName: 'The New Yorker',
       name: 'newyorker',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article *[class*="BylinesWrapper"] a[href*="/contributors"]' },
         date: { attribute: 'datetime', selector: 'article time' },
         spider:{
@@ -800,7 +800,7 @@ export class Outlet<
       displayName: 'NPR',
       name: 'npr',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: '#storybyline .byline__name a' },
         date: { attribute:'datetime', selector: 'article time' },
         spider:{
@@ -827,7 +827,7 @@ export class Outlet<
       displayName: 'Out',
       name: 'out',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { attribute: 'content', selector: 'article .social-date,article .social-date-modified' },
         spider:{
@@ -842,7 +842,7 @@ export class Outlet<
       displayName: 'People',
       name: 'people',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .mntl-bylines__item a[href*="/author"]' },
         date: { attribute: 'text', selector: '.mntl-attribution__item-date' },
         spider:{
@@ -912,7 +912,7 @@ export class Outlet<
       displayName: 'Reuters',
       name: 'reuters',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: '*[class*="author-name"] a' },
         date: { attribute: 'text', selector: 'article time' },
         spider:{
@@ -937,7 +937,7 @@ export class Outlet<
       displayName: 'Rolling Stone',
       name: 'rolling-stone',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .author-tagline a' },
         date: { selector: 'article time' },
         spider:{
@@ -958,7 +958,7 @@ export class Outlet<
       maxAge: '7d',
       name: 'science',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { selector: 'time' },
         spider:{
@@ -974,7 +974,7 @@ export class Outlet<
       maxAge: '4d',
       name: 'science-daily',
       selectors: {
-        article: { selector: '#story_text' },
+        article: { selector: '#story_text p' },
         author: { selector: '#source' },
         date: { selector: '#date_posted' },
         spider:{
@@ -989,7 +989,7 @@ export class Outlet<
       displayName: 'Space',
       name: 'space',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .author-byline__authors .author-byline__author-name a' },
         date: { selector: 'article time' },
         spider:{
@@ -1004,7 +1004,7 @@ export class Outlet<
       displayName: 'The Street',
       name: 'thestreet',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .m-detail-header--meta-author' },
         date: { selector: 'article .m-detail-header--date' },
         spider:{
@@ -1026,7 +1026,7 @@ export class Outlet<
       displayName: 'The Sunday Times ',
       name: 'sunday-times',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: '' },
         date: { selector: 'time' },
         spider:{
@@ -1043,7 +1043,7 @@ export class Outlet<
       displayName: 'The Telegraph',
       name: 'telegraph',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .e-byline__author' },
         date: { selector: 'article time' },
         spider:{
@@ -1058,7 +1058,7 @@ export class Outlet<
       displayName: 'Time',
       name: 'time',
       selectors: {
-        article: { selector: '#article-body' },
+        article: { selector: '#article-body p' },
         author: { selector: '.article .author .author-name' },
         date: { selector: '.article .author .timestamp' },
         spider:{
@@ -1073,7 +1073,7 @@ export class Outlet<
       displayName: 'USA Today',
       name: 'usatoday',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'a[href="/staff"]' },
         date: { selector: 'article *[aria-label*="Published:"]' },
         spider:{
@@ -1088,7 +1088,7 @@ export class Outlet<
       displayName: 'U.S. News',
       name: 'usnews',
       selectors: {
-        article: { selector: '#main-column' },
+        article: { selector: '#main-column p' },
         author: { selector: '*[class*="BylineArticle__AuthorWrapper"] a' },
         date: { selector: '*[class*="BylineArticle__AuthorWrapper"] *[class*="BylineArticle__DateSpan"]' },
         spider:{
@@ -1103,7 +1103,7 @@ export class Outlet<
       displayName: 'Venture Beat',
       name: 'venture-beat',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { selector: 'time' },
         spider:{
@@ -1133,7 +1133,7 @@ export class Outlet<
       displayName: 'Vox',
       name: 'vox',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { selector: 'time' },
         spider:{
@@ -1172,7 +1172,7 @@ export class Outlet<
       displayName: 'Wired',
       name: 'wired',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { selector: 'time' },
         spider:{
@@ -1187,7 +1187,7 @@ export class Outlet<
       displayName: 'The Wall Street Journal',
       name: 'wsj',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'article p' },
         author: { selector: 'article .byline-name a' },
         date: { selector: 'time' },
         spider:{
