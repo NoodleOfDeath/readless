@@ -237,7 +237,7 @@ export class PuppeteerService extends BaseService {
           return clean($(sel)?.text());
         };
         
-        loot.content = extract(article.selector, article.attribute);
+        loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         loot.title = extract(title?.selector || 'title', title?.attribute);
         
         dates.push(...[
