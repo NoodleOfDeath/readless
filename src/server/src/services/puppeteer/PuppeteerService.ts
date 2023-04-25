@@ -213,7 +213,7 @@ export class PuppeteerService extends BaseService {
     }
     
     function selectDate(dates: string[]) {
-      return maxDate(...dates.map((date) => parseDate(clean(date), outlet.timezone)));
+      return maxDate(...dates.map((date) => parseDate(clean(date))));
     }
     
     if (!content) {

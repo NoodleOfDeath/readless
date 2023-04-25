@@ -20,7 +20,7 @@ const OUTLET_FETCH_LIMIT = process.env.OUTLET_FETCH_LIMIT ? Number(process.env.O
 const OUTLET_MAX_ATTEMPT_LIMIT = process.env.OUTLET_MAX_ATTEMPT_LIMIT ? Number(process.env.OUTLET_MAX_ATTEMPT_LIMIT) : 5;
 const OUTLET_FETCH_INTERVAL = process.env.OUTLET_FETCH_INTERVAL || '1d';
 
-const DEFAULT_TIMEZONE = process.env.DEFAULT_TIMZONE || 'EDT';
+const DEFAULT_TIMEZONE = process.env.DEFAULT_TIMZONE || 'EST';
 
 @Scopes(() => ({ public: { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] } }))
 @Table({
@@ -873,8 +873,8 @@ export class Outlet<
       name: 'politico',
       selectors: {
         article: { selector: '.article__container .article__content' },
-        author: { selector: '.article-meta .authors a' },
-        date: { selector: '.article-meta .articla-meta__datetime-duration .date-time__date' },
+        author: { selector: '.article-meta .authors a, .story-meta__authors a' },
+        date: { selector: '.article-meta .article-meta__datetime-duration .date-time__date, .story-meta__timestamp, time' },
         spider:{
           attribute: 'href',
           selector: [

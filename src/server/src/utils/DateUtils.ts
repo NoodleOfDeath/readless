@@ -1,34 +1,54 @@
 import ms from 'ms';
 
-export const TIME_EXPR = /(?:(\d\d?):(\d\d?)(?:\s*(a\.?m\.?|p\.?m\.?))?)|(\d\d?\s*(?:h|h(?:ou)?rs?|m|min(?:ute)s?))\s*ago/i;
+export const TIME_EXPR = /(\d\d?)\s*(a\.?m\.?|p\.?m\.?)|(\d\d?)[.:](\d\d?)(?:[.:](\d\d?))?(?:\s*(a\.?m\.?|p\.?m\.?))?/i;
 
-export const DATE_EXPR = /(?:(?:(\d\d?)\/(\d\d?)\/(\d{2}|\d{4}))|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?[,\s]\s*(\d{4}))(?:.*?\s*(\d\d?):(\d\d?)(?:\s*(a\.?m\.?|p\.?m\.?))?)?(?:\s*(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))?|(\d\d?\s*(?:h|h(?:ou)?rs?|m|min(?:ute)s?))\s*ago|(\d\d\d+$)/i;
+export const DATE_EXPR = /(\d\d?\s*(?:h|h(?:ou)?rs?|m|min(?:ute)s?))\s*ago|(?:(\d\d?)([-./])(\d\d?)\3(\d{4}|\d{2})|(\d{4})([-./])(\d\d?)\7(\d\d?)|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?(?:[,\s]\s*(\d{4})?))(?:.*(?:\s*(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC)))?|(\d\d\d\d+)/i;
 
-export function parseDate(context: string, timezone = 'UTC') {
+export function monthToString(month: number | string) {
+  const m = parseInt(`${month}`);
+  if (Number.isNaN(m)) {
+    return month;
+  }
+  return new Date(`2023-${m}-07`).toLocaleString('en-US', { month: 'long' });
+}
+
+export function parseDate(context: string) {
   const date = new Date(context.trim());
   if (!Number.isNaN(date.valueOf()) && date.valueOf() > 0) {
     return date;
   }
   const dateMatches = context.match(DATE_EXPR);
+  const timeMatches = context.match(TIME_EXPR);
   let dateMatch: string;
   let parsedDate: Date;
+  let hour = 0, min = 0, sec = 0, amOrPm = '';
   if (dateMatches) {
-    const [_, m1, d1, y1, d2, m2, d3, y2, h1, min1, amOrPm, tz = timezone, relative, timestamp] = dateMatches;
-    const day = d1 ?? d2 ?? d3;
-    const month = m1 ? new Date(`2023-${ !Number.isNaN(parseInt(m1)) ? String(parseInt(m1)) : m1 }-01`).toLocaleString('en-US', { month: 'long' }) : !Number.isNaN(parseInt(m2)) ? String(parseInt(m2)) : m2;
-    const year = y1 ?? y2 ?? new Date().getFullYear();
-    const min = min1 ?? '00';
-    const hour = h1 ?? '00';
-    dateMatch = `${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min} ${amOrPm ? amOrPm.replace(/\./g, '') : (min + hour === '0000') ? 'am' : ''}`;
+    const [_0, relative, month1, _3, day1, year1, year2, _7, month2, day2, day3, month3, day4, year3, tz = '', timestamp] = dateMatches;
     if (relative) {
-      parsedDate = new Date(Date.now() - ms(relative));
-    } else
-    if (timestamp && !Number.isNaN(Number.parseInt(timestamp))) {
-      parsedDate = new Date(Number.parseInt(timestamp));
-    } else
-    if (tz) {
-      parsedDate = new Date([dateMatch, tz.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/, ($0, $1) => `${$1}DT`)].join(' '));
+      return new Date(Date.now() - ms(relative.replace(/h(?:ou)?rs?/, 'h').replace(/m(?:in)?s?/, 'm')));
     }
+    const datetime = parseInt(timestamp);
+    if (!Number.isNaN(datetime)) {
+      if (!Number.isNaN(new Date(datetime)).valueOf()) {
+        return new Date(datetime);
+      }
+    }
+    const year = year1 ?? year2 ?? year3 ?? new Date().getFullYear();
+    const month = monthToString(month1 ?? month2 ?? month3 ?? new Date().getMonth() + 1);
+    const day = day1 ?? day2 ?? day3 ?? day4;
+    if (timeMatches) {
+      const [_0, hour1, amOrPm1, hour2, min1, sec1, amOrPm2] = timeMatches;
+      hour = !Number.isNaN(parseInt(hour1 ?? hour2)) ? parseInt(hour1 ?? hour2) : 0;
+      min = !Number.isNaN(parseInt(min1)) ? parseInt(min1) : 0;
+      sec = !Number.isNaN(parseInt(sec1)) ? parseInt(sec1) : 0;
+      amOrPm = (amOrPm1 ?? amOrPm2 ?? '').replace(/\./g, '');
+    }
+    dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : 'pm'}`, tz.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/, ($0, $1) => `${$1}ST`)].join(' ');
+    console.log(dateMatch, '---', context);
+    if (/Lauren/.test(context)) {
+      console.log(dateMatches);
+    }
+    parsedDate = new Date(dateMatch);
     return parsedDate;
   }
   return new Date('invalid');
