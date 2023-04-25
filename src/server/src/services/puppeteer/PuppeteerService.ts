@@ -53,8 +53,6 @@ export class PuppeteerService extends BaseService {
     ],
     depth1: [
       '^/?$',
-      '^/[-\\w]+/?$',
-      '^/\\w+/\\w+/?$',
       '^/author',
       '^/contributor',
       '^/live',
