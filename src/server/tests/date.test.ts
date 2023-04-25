@@ -81,6 +81,10 @@ const DATES: Test[] = [
     date: 'April 25, 2023 + 9:30 - 10:45 am EDT',
     expect: new Date('April 25, 2023 9:30 AM EDT'), 
   },
+  {
+    date: '1:47 PM EDT, Tue April 25, 2023',
+    expect: new Date('Apr 25, 2023 1:47 PM EDT'),
+  },
 ];
 
 describe('date tests', () => {
@@ -88,6 +92,7 @@ describe('date tests', () => {
     test(`parsing: ${date}`, async () => {
       const parsedDate = parseDate(date.date);
       expect(parsedDate.toLocaleDateString()).toEqual(date.expect.toLocaleDateString());
+      expect(parsedDate.toTimeString()).toEqual(date.expect.toTimeString());
     });
   }
 });
