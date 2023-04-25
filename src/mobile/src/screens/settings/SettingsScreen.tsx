@@ -25,7 +25,7 @@ const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
 }));
-const fonts = ['Alegreya', 'DM Mono', 'DM Sans', 'Lato', 'Roboto'];
+const fonts = ['Alegreya', 'Anonymous Pro', 'DM Mono', 'DM Sans', 'Lato', 'Roboto'];
 
 export function SettingsScreen(_: ScreenProps<'default'>) {
   const {
