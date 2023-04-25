@@ -64,32 +64,25 @@ export class ScribeService extends BaseService {
       loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
       await new MailService().sendMail({
         from: 'debug@readless.ai',
-        subject: 'Article too long',
-        text: `Article too long for ${url}\n\n${loot.content}`,
+        subject: 'Long article found',
+        text: `Long article found ${url}\n\n${loot.content}`,
         to: 'debug@readless.ai',
       });
-      //throw new Error('Article too long');
     }
     if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
-      await new MailService().sendMail({
-        from: 'debug@readless.ai',
-        subject: 'Article too short',
-        text: `Article too short for ${url}\n\n${loot.content}`,
-        to: 'debug@readless.ai',
-      });
       throw new Error('Article too short');
     }
     if (Number.isNaN(loot.date.valueOf())) {
       await new MailService().sendMail({
         from: 'debug@readless.ai',
         subject: 'Invalid date found',
-        text: `Invalid date found for ${url}`,
+        text: `Invalid date found for ${url}\n\n${loot.dateMatches.join('\n')}`,
         to: 'debug@readless.ai',
       });
       throw new Error('Published date found is invalid');
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
-      throw new Error(`News is invalid or older than ${OLD_NEWS_THRESHOLD}`);
+      throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
     }
     if (loot.date > new Date(Date.now() + ms('4h'))) {
       await new MailService().sendMail({

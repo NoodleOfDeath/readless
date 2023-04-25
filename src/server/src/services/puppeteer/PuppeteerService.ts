@@ -33,6 +33,7 @@ export type Loot = {
   url: string;
   rawText: string;
   date: Date;
+  dateMatches: string[];
   title: string;
   content: string;
   authors: string[];
@@ -189,6 +190,7 @@ export class PuppeteerService extends BaseService {
       authors: [],
       content: content ?? '',
       date: new Date(0),
+      dateMatches: [],
       rawText: content ?? '',
       title: '',
       url,
@@ -303,6 +305,7 @@ export class PuppeteerService extends BaseService {
       
       await PuppeteerService.open(url, actions);
       
+      loot.dateMatches = dates;
       loot.date = selectDate(dates);
       loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
       
