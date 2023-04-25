@@ -57,17 +57,21 @@ async function pollForNews() {
     const { rows: outlets } = await Outlet.findAndCountAll();
     const queue = await Queue.from(Queue.QUEUES.siteMaps);
     for (const outlet of outlets) {
-      console.log(`fetching sitemaps for ${outlet.name}`);
-      const urls = await PuppeteerService.crawl(outlet);
-      for (const url of urls) {
-        await queue.add(
-          url,
-          { 
-            outlet: outlet.name,
+      try {
+        console.log(`fetching sitemaps for ${outlet.name}`);
+        const urls = await PuppeteerService.crawl(outlet);
+        for (const url of urls) {
+          await queue.add(
             url,
-          },
-          outlet.name
-        );
+            { 
+              outlet: outlet.name,
+              url,
+            },
+            outlet.name
+          );
+        }
+      } catch(e) {
+        console.error(e);
       }
     }
   } catch (e) {
