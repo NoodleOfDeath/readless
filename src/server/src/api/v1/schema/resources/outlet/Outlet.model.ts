@@ -454,8 +454,8 @@ export class Outlet<
       displayName: 'Entertainment Weekly',
       name: 'ew',
       selectors: {
-        article: { selector: 'main > .longformContent' },
-        author: { attribute: 'alt', selector: 'main > .longformContent .byline__authorAvatar img' },
+        article: { selector: 'main > .longformContent, article p' },
+        author: { selector: 'article a.author-name' },
         date: { attribute: 'data-date', selector: '.byline_block--timestamp' },
         spider:{
           attribute: 'href',
@@ -558,7 +558,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article' },
         author: { selector: 'address a[rel*="author"]' },
-        date: { selector: 'article details summary' },
+        date: { selector: 'details summary' },
         spider:{
           attribute: 'href',
           selector: 'a[data-link-name="article"]',
@@ -625,7 +625,7 @@ export class Outlet<
       displayName: 'Kotaku',
       name: 'kotaku',
       selectors: {
-        article: { selector: 'article' },
+        article: { selector: 'main p' },
         author: { selector: 'main a[href*="/author"]' },
         date: { selector: 'main time' },
         spider:{
@@ -955,6 +955,7 @@ export class Outlet<
     science: {
       baseUrl: 'https://www.science.org',
       displayName: 'Science',
+      maxAge: '7d',
       name: 'science',
       selectors: {
         article: { selector: 'article' },
