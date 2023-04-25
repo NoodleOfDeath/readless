@@ -135,27 +135,32 @@ export class PuppeteerService extends BaseService {
     const urls: string[] = [];
     const rawHtml = await PuppeteerService.fetch(baseUrl);
     const $ = load(rawHtml);
-    urls.push(...$(spider.selector).map((i, el) => $(el).attr(spider.attribute || 'href')));
+    const cleanUrl = (url?: string) => {
+      if (!url) {
+        return;
+      }
+      // exclude known bad urls
+      if (exclude && !exclude.every((e) => !new RegExp(e, 'i').test(url.replace(domainExpr, '')))) {
+        return;
+      }
+      // fix relative hrefs
+      if (/^\//.test(url)) {
+        return `${baseUrl}${url}`;
+      } else
+      if (/^https?:\/\//.test(url)) {
+        // exclude external links
+        if (!domainExpr.test(url)) {
+          return;
+        }
+        return url;
+      }
+    };
+    urls.push(...$(spider.selector).map((i, el) => cleanUrl($(el).attr(spider.attribute || 'href'))).filter(Boolean));
     await PuppeteerService.open(baseUrl, [
       {
         action: async (el) => {
-          const url = await el.evaluate((el, spider) => el.getAttribute(spider.attribute ?? 'href'), spider);
-          if (!url) {
-            return;
-          }
-          // exclude known bad urls
-          if (exclude && !exclude.every((e) => !new RegExp(e, 'i').test(url.replace(domainExpr, '')))) {
-            return;
-          }
-          // fix relative hrefs
-          if (/^\//.test(url)) {
-            urls.push(`${baseUrl}${url}`);
-          } else
-          if (/^https?:\/\//.test(url)) {
-            // exclude external links
-            if (!domainExpr.test(url)) {
-              return;
-            }
+          const url = cleanUrl(await el.evaluate((el, spider) => el.getAttribute(spider.attribute ?? 'href'), spider));
+          if (url) {
             urls.push(url);
           }
         }, 
@@ -163,7 +168,7 @@ export class PuppeteerService extends BaseService {
         selector: spider.selector,
       },
     ]);
-    return [...new Set(urls)];
+    return [...new Set(urls)].filter((url) => url.length < 2000);
   }
 
   public static async loot(
