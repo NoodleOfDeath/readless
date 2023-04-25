@@ -79,7 +79,7 @@ export class PuppeteerService extends BaseService {
     url: string, 
     actions: SelectorAction[], 
     { 
-      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('10s'),
+      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('20s'),
       viewport = { height: 1024, width: 1080 },
     }: PageOptions = {}
   ) {
@@ -133,6 +133,9 @@ export class PuppeteerService extends BaseService {
     const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
     const urls: string[] = [];
+    const rawHtml = await PuppeteerService.fetch(baseUrl);
+    const $ = load(rawHtml);
+    urls.push(...$(spider.selector).map((i, el) => $(el).attr(spider.attribute || 'href')));
     await PuppeteerService.open(baseUrl, [
       {
         action: async (el) => {
