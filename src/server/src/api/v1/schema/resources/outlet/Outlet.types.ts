@@ -28,6 +28,7 @@ export type OutletAttributes = DatedAttributes & {
   brandImageUrl?: string;
   description?: string;
   selectors: Selectors;
+  maxAge: string;
   /** fetch policy for this outlet */
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone: string;
@@ -40,6 +41,7 @@ export type OutletCreationAttributes = {
   brandImageUrl?: string;
   description?: string;
   selectors: Selectors;
+  maxAge?: string;
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone?: string;
 };

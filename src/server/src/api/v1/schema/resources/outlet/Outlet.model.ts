@@ -44,7 +44,7 @@ export class Outlet<
         date: { selector: '.ShareByline > div  > div :last-child' },
         spider: {
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[class*="AnchorLink"]',
         },
       },
       timezone: 'EST',
@@ -59,7 +59,7 @@ export class Outlet<
         date: { selector: 'article .social-date' },
         spider: { 
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -74,7 +74,7 @@ export class Outlet<
         date: { selector: 'article header .date' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: '.post .post__title a',
         },
       },
       timezone: 'EST',
@@ -89,7 +89,7 @@ export class Outlet<
         date: { attribute: 'data-source', selector: '.Content .CardHeadline .Timestamp' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/article/"]',
         },
       },
       timezone: 'EST',
@@ -104,7 +104,7 @@ export class Outlet<
         date: { selector: 'article header time,article header .date' },
         spider: {
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -119,7 +119,7 @@ export class Outlet<
         date: { selector: 'article header time' },
         spider: {
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[class*="titleLink"]',
         },
       },
       timezone: 'EST',
@@ -134,7 +134,7 @@ export class Outlet<
         date: { selector: 'article header time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[class*="headline-link"]',
         },
       },
       timezone: 'EST',
@@ -147,7 +147,7 @@ export class Outlet<
         article: { selector: 'article' },
         author: { selector: 'article *[class*="TextContributorName"]' },
         date: { selector: 'article time' },
-        spider:{ attribute: 'href', selector: 'a' }, 
+        spider:{ attribute: 'href', selector: 'a[class*="media__link"]' }, 
       },
       timezone: 'UTC+1',
     },
@@ -161,7 +161,7 @@ export class Outlet<
         date: { selector: 'header time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -176,7 +176,7 @@ export class Outlet<
         date: { attribute: 'text', selector: 'article .cz-news-date,article .cz-news-time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: '.bc_latest_news_img a, #pop-stories li a',
         },
       },
       timezone: 'EST',
@@ -191,7 +191,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/articles/"]',
         },
       },
       timezone: 'EST',
@@ -206,7 +206,7 @@ export class Outlet<
         date: { selector: '.byline .byline-timestamp' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a.tout-title-link',
         },
       },
       timezone: 'EST',
@@ -221,7 +221,15 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a', 
+          selector: [
+            'a[href*="/entertainment/"]', 
+            'a[href*="/style/"]', 
+            'a[href*="/wellness/"]', 
+            'a[href*="/lifestyle/"]', 
+            'a[href*="/rule-breakers/"]', 
+            'a[href*="/originals/"]', 
+            'a[href*="/amplifying-our-voices/"]', 
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -236,7 +244,10 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            '*[class*="feedItem_textWrapper"] a',
+            'li[class*="carousel_itemWrapper"] a',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -249,7 +260,7 @@ export class Outlet<
         article: { selector: 'article' },
         author : { selector: '' },
         date: { selector: 'article time' },
-        spider:{ attribute: 'href', selector: 'a' },
+        spider:{ attribute: 'href', selector: 'a[href*="/news/"]' },
       },
       timezone: 'EST',
     },
@@ -263,7 +274,10 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            '.LatestNews-headlineWrapper a',
+            '.RiverHeadline-headline a',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -278,7 +292,7 @@ export class Outlet<
         date: { selector: 'header .headline__sub-text .timestamp' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[data-link-type="article"]',
         },
       },
       timezone: 'EST',
@@ -293,7 +307,7 @@ export class Outlet<
         date: { selector: 'article .at-created,article .at-updated' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a.card-title-link',
         },
       },
       timezone: 'EST',
@@ -308,7 +322,9 @@ export class Outlet<
         date: { selector: 'article header .media-body :last-child' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/latest/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -323,7 +339,7 @@ export class Outlet<
         date: { selector: 'article .contributors :last-child' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -338,7 +354,10 @@ export class Outlet<
         date: { selector: 'article .contributors :last-child' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a.skybox-link',
+            'a[class*="hed-link"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -353,7 +372,7 @@ export class Outlet<
         date: { selector: 'article .byline time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/news/"]',
         },
       },
       timezone: 'EST',
@@ -380,7 +399,7 @@ export class Outlet<
         date: { selector: 'header .article-detail__meta__date' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/news/"]',
         },
       },
       timezone: 'UTC-7',
@@ -395,7 +414,11 @@ export class Outlet<
         date: { attribute: 'data-date', selector: 'article .timestamp' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/story/"]',
+            'a[href*="/post/"]',
+            'a[href*="/blog/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -410,7 +433,18 @@ export class Outlet<
         date: { selector: 'article .posted-on time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[class*="topic__link"]',
+            'a[class*="story__anchor"]',
+            'a[href*="/celebrity/"]',
+            'a[href*="/fashion/"]',
+            'a[href*="/story/"]',
+            'a[href*="/beauty/"]',
+            'a[href*="/hair/"]',
+            'a[href*="/love/"]',
+            'a[href*="/lifestyle/"]',
+            'a[href*="/news/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -425,7 +459,7 @@ export class Outlet<
         date: { attribute: 'data-date', selector: '.byline_block--timestamp' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a.entityTout__link',
         },
       },
       timezone: 'EST',
@@ -440,7 +474,7 @@ export class Outlet<
         date: { selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/sites/"]',
         },
       },
       timezone: 'EDT',
@@ -455,7 +489,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[class*="hed-heading"]',
         },
       },
       timezone: 'EST',
@@ -470,7 +504,7 @@ export class Outlet<
         date: { selector: '#content' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: `a[href*="/${new Date().getFullYear()}/"]`,
         },
       },
       timezone: 'EDT',
@@ -485,7 +519,7 @@ export class Outlet<
         date: { selector: 'article header time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -512,7 +546,7 @@ export class Outlet<
         date: { selector: '.js_starterpost time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -527,7 +561,7 @@ export class Outlet<
         date: { selector: 'article details summary' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[data-link-name="article"]',
         },
       },
       timezone: 'EST',
@@ -542,7 +576,10 @@ export class Outlet<
         date: { selector: 'article .submitted-by' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/homenews/"]',
+            'a[href*="/newsletters/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -557,7 +594,7 @@ export class Outlet<
         date: { selector: 'main header time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/entry/"]',
         },
       },
       timezone: 'EST',
@@ -572,7 +609,13 @@ export class Outlet<
         date: { selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/culture/"]',
+            'a[href*="/entertainment/"]',
+            'a[href*="/gaming/"]',
+            'a[href*="/science/"]',
+            'a[href*="/tech/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -587,7 +630,7 @@ export class Outlet<
         date: { selector: 'main time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -602,7 +645,7 @@ export class Outlet<
         date: { selector: '.byline .author a' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/article/"]',
         },
       },
       timezone: 'EST',
@@ -617,7 +660,9 @@ export class Outlet<
         date: { selector: 'aritcle .byline time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/story/"]',
+          ].join(','),
         },
       },
       timezone: 'UTC-7',
@@ -632,7 +677,10 @@ export class Outlet<
         date: { selector: '.mntl-attribution__item-date' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            '.news-latest__article a',
+            '.mntl-carousel__wrapper li a',
+          ].join(','),
         },
       },
       timezone: 'EDT',
@@ -647,7 +695,7 @@ export class Outlet<
         date: { selector: 'header time' },
         spider:{
           attribute: 'href',
-          selector: 'a[href*="/article"]',
+          selector: 'a[href*="/article/"]',
         },
       },
       timezone: 'EST',
@@ -662,7 +710,13 @@ export class Outlet<
         date: { selector: 'header time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/health/"]',
+            'a[href*="/entertainment/"]',
+            'a[href*="/fitness/"]',
+            'a[href*="/grooming/"]',
+            'a[href*="/style/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -677,7 +731,10 @@ export class Outlet<
         date: { selector: 'article header .Byline__TimestampWrapper .Byline__Meta--publishDate' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[class*="AnchorLink"]',
+            'a[href*="/magazine/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -692,7 +749,14 @@ export class Outlet<
         date: { attribute:'content', selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            '*[class*="articleTitle"] a',
+            'a[href*="/news/"]',
+            'a[href*="/politics/"]',
+            'a[href*="/pop-culture/"]',
+            'a[href*="/us-news/"]',
+            'a[href*="/world/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -707,7 +771,7 @@ export class Outlet<
         date: { attribute:'content', selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: '.news-title a',
         },
       },
       timezone: 'EST',
@@ -722,7 +786,11 @@ export class Outlet<
         date: { attribute: 'datetime', selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/culture/"]',
+            'a[href*="/magazine/"]',
+            'a[href*="/news/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -737,7 +805,7 @@ export class Outlet<
         date: { attribute:'datetime', selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -764,7 +832,7 @@ export class Outlet<
         date: { attribute: 'content', selector: 'article .social-date,article .social-date-modified' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -779,7 +847,20 @@ export class Outlet<
         date: { attribute: 'text', selector: '.mntl-attribution__item-date' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/celebrity/"]',
+            'a[href*="/entertainment/"]',
+            'a[href*="/home/"]',
+            'a[href*="/human-interest/"]',
+            'a[href*="/fashion/"]',
+            'a[href*="/food/"]',
+            'a[href*="/lifestyle/"]',
+            'a[href*="/news/"]',
+            'a[href*="/politics/"]',
+            'a[href*="/royals/"]',
+            'a[href*="/style/"]',
+            'a[href*="/tv/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -794,7 +875,9 @@ export class Outlet<
         date: { selector: '.article-meta .articla-meta__datetime-duration .date-time__date' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/news/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -809,7 +892,17 @@ export class Outlet<
         date: { attribute: 'text', selector: 'address time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/airplanes/"]',
+            'a[href*="/adventure/"]',
+            'a[href*="/cars/"]',
+            'a[href*="/culture/"]',
+            'a[href*="/home/"]',
+            'a[href*="/military/"]',
+            'a[href*="/science/"]',
+            'a[href*="/space/"]',
+            'a[href*="/technology/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -824,7 +917,17 @@ export class Outlet<
         date: { attribute: 'text', selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/business/"]',
+            'a[href*="/breakingviews/"]',
+            'a[href*="/investigations/"]',
+            'a[href*="/lifestyle/"]',
+            'a[href*="/sports/"]',
+            'a[href*="/technology/"]',
+            'a[href*="/legal/"]',
+            'a[href*="/markets/"]',
+            'a[href*="/world/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -839,7 +942,12 @@ export class Outlet<
         date: { selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/music/"]',
+            'a[href*="/politics/"]',
+            'a[href*="/culture/"]',
+            'a[href*="/tv-movies/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -854,7 +962,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -862,6 +970,7 @@ export class Outlet<
     sciencedaily: {
       baseUrl: 'https://www.sciencedaily.com',
       displayName: 'Science Daily',
+      maxAge: '4d',
       name: 'science-daily',
       selectors: {
         article: { selector: '#story_text' },
@@ -869,7 +978,7 @@ export class Outlet<
         date: { selector: '#date_posted' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/releases/"]',
         },
       },
       timezone: 'EST',
@@ -884,7 +993,7 @@ export class Outlet<
         date: { selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -899,7 +1008,14 @@ export class Outlet<
         date: { selector: 'article .m-detail-header--date' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/breaking-news/"]',
+            'a[href*="/restaurants/"]',
+            'a[href*="/investing/"]',
+            'a[href*="/travel/"]',
+            'a[href*="/technology/"]',
+            'a[href*="/taxes/"]',
+          ].join(','),
         },
       },
       timezone: 'EST',
@@ -914,7 +1030,9 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: [
+            'a[href*="/article/"]',
+          ].join(','),
         },
       },
       timezone: 'UTC+1',
@@ -929,7 +1047,7 @@ export class Outlet<
         date: { selector: 'article time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a, a[class*="headline__link"]',
         },
       },
       timezone: 'UTC+1',
@@ -944,7 +1062,7 @@ export class Outlet<
         date: { selector: '.article .author .timestamp' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -959,7 +1077,7 @@ export class Outlet<
         date: { selector: 'article *[aria-label*="Published:"]' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -974,7 +1092,7 @@ export class Outlet<
         date: { selector: '*[class*="BylineArticle__AuthorWrapper"] *[class*="BylineArticle__DateSpan"]' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/story/"]',
         },
       },
       timezone: 'EST',
@@ -989,7 +1107,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -1004,7 +1122,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a',
         },
       },
       timezone: 'EST',
@@ -1019,7 +1137,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/article/"]',
         },
       },
       timezone: 'EDT',
@@ -1058,7 +1176,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'a[href*="/story/"]',
         },
       },
       timezone: 'EST',
@@ -1073,7 +1191,7 @@ export class Outlet<
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
-          selector: 'a',
+          selector: 'article a, a[href*="/articles/"]',
         },
       },
       timezone: 'EST',
@@ -1117,6 +1235,12 @@ export class Outlet<
     type: DataType.JSON,
   })
   declare selectors: Selectors;
+  
+  @Column({ 
+    defaultValue: '12h',
+    type: DataType.STRING,
+  })
+  declare maxAge: string;
   
   @Column({ type: DataType.JSON })
   declare fetchPolicy?: Record<string, FetchPolicy>;
