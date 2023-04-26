@@ -85,6 +85,10 @@ const DATES: Test[] = [
     date: '1:47 PM EDT, Tue April 25, 2023',
     expect: new Date('Apr 25, 2023 1:47 PM EDT'),
   },
+  {
+    date: 'By Mike Headrick, KSL-TV | Posted - April 25, 2023 at 1:31 p.m.',
+    expect: new Date('Apr 25, 2023 1:31 PM'),
+  },
 ];
 
 describe('date tests', () => {
