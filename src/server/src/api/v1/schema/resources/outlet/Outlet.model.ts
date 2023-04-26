@@ -42,7 +42,7 @@ export class Outlet<
       name: 'abc',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: '.ShareByline a[href*="/author"]' },
+        author: { selector: '.ShareByline a[href*="/author/"]' },
         date: { selector: '.ShareByline > div  > div :last-child' },
         spider: {
           attribute: 'href',
@@ -82,11 +82,11 @@ export class Outlet<
       timezone: DEFAULT_TIMEZONE,
     },
     apnews: {
-      baseUrl: 'https://www.apnews.com',
+      baseUrl: 'https://apnews.com',
       displayName: 'AP News',
       name: 'apnews',
       selectors: {
-        article: { selector: '.Content .Article' },
+        article: { selector: '.Content .Article p' },
         author: { selector: '.Content .CardHeadline *[class*="Component-bylines"]' },
         date: { attribute: 'data-source', selector: '.Content .CardHeadline .Timestamp' },
         spider:{
@@ -175,7 +175,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: 'article .author' },
-        date: { attribute: 'text', selector: 'article .cz-news-date,article .cz-news-time' },
+        date: { selector: 'article .cz-news-date,article .cz-news-time' },
         spider:{
           attribute: 'href',
           selector: '.bc_latest_news_img a, #pop-stories li a',
@@ -189,7 +189,7 @@ export class Outlet<
       name: 'bloomberg',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'address p[class*="author"] a' },
+        author: { selector: 'address p[class*="author/"] a' },
         date: { selector: 'article time' },
         spider:{
           attribute: 'href',
@@ -466,6 +466,26 @@ export class Outlet<
       },
       timezone: DEFAULT_TIMEZONE,
     },
+    fbiotech: {
+      baseUrl: 'https://www.fiercebiotech.com',
+      displayName: 'Fierce Biotefh',
+      name: 'fbiotech',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'article .byline a[href*="/person/"]' },
+        date: { selector: 'article .byline .date' },
+        spider:{
+          attribute: 'href',
+          selector: [
+            'a[href*="/biotech/"]',
+            'a[href*="/cro/"]',
+            'a[href*="/medtech/"]',
+            'a[href*="/research/"]',
+          ].join(','),
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
     forbes: {
       baseUrl: 'https://www.forbes.com',
       displayName: 'Forbes',
@@ -487,7 +507,7 @@ export class Outlet<
       name: 'foreign-policy',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'article .author-bio a[rel*="author"]' },
+        author: { selector: 'article .author-bio a[rel*="author/"]' },
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
@@ -502,7 +522,7 @@ export class Outlet<
       name: 'fortune',
       selectors: {
         article: { selector: '#article-content p' },
-        author: { selector: '#content a[href*="/author"]' },
+        author: { selector: '#content a[href*="/author/"]' },
         date: { selector: '#content' },
         spider:{
           attribute: 'href',
@@ -544,7 +564,7 @@ export class Outlet<
       name: 'gizmodo',
       selectors: {
         article: { selector: '.js_post-content p' },
-        author: { selector: 'a[href*="/author"]' },
+        author: { selector: 'a[href*="/author/"]' },
         date: { selector: 'time' },
         spider:{
           attribute: 'href',
@@ -559,7 +579,7 @@ export class Outlet<
       name: 'theguardian',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'address a[rel*="author"]' },
+        author: { selector: 'address a[rel*="author/"]' },
         date: { selector: 'details summary' },
         spider:{
           attribute: 'href',
@@ -574,7 +594,7 @@ export class Outlet<
       name: 'thehill',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'article .submitted-by a[href*="/author"]' },
+        author: { selector: 'article .submitted-by a[href*="/author/"]' },
         date: { selector: 'article .submitted-by' },
         spider:{
           attribute: 'href',
@@ -628,7 +648,7 @@ export class Outlet<
       name: 'kotaku',
       selectors: {
         article: { selector: 'main p' },
-        author: { selector: 'main a[href*="/author"]' },
+        author: { selector: 'main a[href*="/author/"]' },
         date: { selector: 'main time' },
         spider:{
           attribute: 'href',
@@ -693,7 +713,7 @@ export class Outlet<
       name: 'mashable',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'header a[href*="/author"]' },
+        author: { selector: 'header a[href*="/author/"]' },
         date: { selector: 'header time' },
         spider:{
           attribute: 'href',
@@ -708,7 +728,7 @@ export class Outlet<
       name: 'mens-health',
       selectors: {
         article: { selector: '.article-body-content p' },
-        author: { selector: 'header address a[href*="/author"]' },
+        author: { selector: 'header address a[href*="/author/"]' },
         date: { selector: 'header time' },
         spider:{
           attribute: 'href',
@@ -729,7 +749,7 @@ export class Outlet<
       name: 'national-geographic',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'article header .Byline .Byline__Author a[href*="/author"]' },
+        author: { selector: 'article header .Byline .Byline__Author a[href*="/author/"]' },
         date: { selector: 'article header .Byline__TimestampWrapper .Byline__Meta--publishDate' },
         spider:{
           attribute: 'href',
@@ -845,8 +865,8 @@ export class Outlet<
       name: 'people',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'article .mntl-bylines__item a[href*="/author"]' },
-        date: { attribute: 'text', selector: '.mntl-attribution__item-date' },
+        author: { selector: 'article .mntl-bylines__item a[href*="/author/"]' },
+        date: { selector: '.mntl-attribution__item-date' },
         spider:{
           attribute: 'href',
           selector: [
@@ -890,8 +910,8 @@ export class Outlet<
       name: 'popular-mechanics',
       selectors: {
         article: { selector: '.article-body-content' },
-        author: { selector: 'address a[href*="/author"]' },
-        date: { attribute: 'text', selector: 'address time' },
+        author: { selector: 'address a[href*="/author/"]' },
+        date: { selector: 'address time' },
         spider:{
           attribute: 'href',
           selector: [
@@ -909,6 +929,27 @@ export class Outlet<
       },
       timezone: DEFAULT_TIMEZONE,
     },
+    popsci: {
+      baseUrl: 'https://www.popsci.com',
+      displayName: 'Popular Science ',
+      name: 'popsci',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'article .Article-author a' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: [
+            'a[href*="/gear/"]',
+            'a[href*="/health/"]',
+            'a[href*="/science/"]',
+            'a[href*="/technology/"]',
+            '.article-container a',
+          ].join(','),
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
     reuters: {
       baseUrl: 'https://www.reuters.com', 
       displayName: 'Reuters',
@@ -916,7 +957,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: '*[class*="author-name"] a' },
-        date: { attribute: 'text', selector: 'article time' },
+        date: { selector: 'article time' },
         spider:{
           attribute: 'href',
           selector: [
@@ -1066,6 +1107,30 @@ export class Outlet<
         spider:{
           attribute: 'href',
           selector: 'article a',
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
+    torontostar: {
+      baseUrl: 'https://www.thestar.com',
+      displayName: 'Toronto Star',
+      name: 'thestar',
+      selectors: {
+        article: { selector: '.c-article-body p' },
+        author: { selector: '.article__byline .article__author a' },
+        date: { selector: '.article_byline .article__published-date' },
+        spider:{
+          attribute: 'href',
+          selector: [
+            'a[href*="/business/"]',
+            'a[href*="/life/"]',
+            'a[href*="/opinion/"]',
+            'a[href*="/politics/"]',
+            'a[href*="/sports/"]',
+            'a[href*="/entertainment/"]',
+            'a[href*="/news/"]',
+            'a[href*="/world/"]',
+          ].join(','),
         },
       },
       timezone: DEFAULT_TIMEZONE,
