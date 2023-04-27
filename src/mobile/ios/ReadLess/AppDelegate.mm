@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 
+#import <AVFoundation/AVFoundation.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
 #import "RNNotifications.h"
@@ -13,6 +14,7 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
   [RNNotifications startMonitorNotifications];
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

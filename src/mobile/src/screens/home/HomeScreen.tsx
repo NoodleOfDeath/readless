@@ -60,7 +60,9 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
+      homeTab,
     },
+    setPreference,
     ready,
   } = React.useContext(SessionContext);
   
@@ -77,13 +79,21 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
     const url = await Linking.getInitialURL();
     if (url) {
       router({ url });
+      return;
     }
     Linking.removeAllListeners('url');
     Linking.addEventListener('url', router);
+    if (homeTab === 'All News') {
+      setActiveTab(0);
+    } else if (homeTab === 'My News') {
+      setActiveTab(1);
+    }
     const followCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
-    setActiveTab(followCount > 0 ? 1 : 0);
+    if (!homeTab && followCount > 0) {
+      setActiveTab(1);
+    } 
     setMounted(true);
-  }, [bookmarkedCategories, bookmarkedOutlets, router]);
+  }, [bookmarkedCategories, bookmarkedOutlets, homeTab, router]);
   
   React.useEffect(() => {
     if (!ready || mounted) {
@@ -94,24 +104,31 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   
   const onTabChange = React.useCallback((tab: number) => {
     setActiveTab(tab);
+    const followCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
+    if (followCount === 0) {
+      setPreference('homeTab', undefined);
+    } else {
+      setPreference('homeTab', tab === 0 ? 'All News' : 'My News');
+    }
     refresh();
-  }, []);
+  }, [bookmarkedCategories, bookmarkedOutlets, setPreference]);
   
   return (
     <Screen onRefresh={ () => refresh() }>
-      <View col mh={ 16 }>
+      <View col>
         <TabSwitcher
+          tabHeight={ 48 }
           activeTab={ activeTab }
           onTabChange={ onTabChange }
           titles={ ['All News', 'My News'] }>
-          <View mh={ -16 }>
+          <View>
             {!refreshing && (
               <SearchScreen  
                 route={ routes[0] }
                 navigation={ navigation } />
             )}
           </View>
-          <View mh={ -16 }>
+          <View>
             {!refreshing && (
               <SearchScreen 
                 route={ routes[1] }

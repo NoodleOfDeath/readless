@@ -1,5 +1,7 @@
 import React from 'react';
 
+import RNFS from 'react-native-fs';
+
 import { ReadingFormat } from '~/api';
 import { 
   Button,
@@ -25,7 +27,7 @@ const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
 }));
-const fonts = ['Alegreya', 'Anonymous Pro', 'DM Mono', 'DM Sans', 'Lato', 'Roboto'];
+const fonts = ['Alegreya', 'Anonymous Pro', 'DM Sans', 'Lato', 'Roboto'];
 
 export function SettingsScreen(_: ScreenProps<'default'>) {
   const {
@@ -40,8 +42,10 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     setPreference,
   } = React.useContext(SessionContext);
   
+  const [loading, setLoading] = React.useState(false);
   const [activeDisplayMode, setActiveDisplayMode] = React.useState(displayModes.indexOf(displayMode ?? 'system'));
   const [activeTextScale, setActiveTextScale] = React.useState(textScales.findIndex((s) => s.value == (textScale ?? 1)));
+  const [cacheSize, setCacheSize] = React.useState('');
   
   const handleDisplayModeChange = React.useCallback((index: number) => {
     const newDisplayMode = displayModes[index];
@@ -72,6 +76,27 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     setActiveTextScale(index);
     setPreference('textScale', newTextScale.value);
   }, [textScale, setPreference]);
+
+  const handleClearCache = React.useCallback(() => {
+    RNFS.readDir(RNFS.DocumentDirectoryPath).then((files) => {
+      files.forEach((file) => {
+        RNFS.unlink(file.path);
+      });
+      setCacheSize('0MB');
+    });
+  }, []);
+  
+  const onMount = React.useCallback(async () => {
+    setLoading(true);
+    const files = await RNFS.readDir(RNFS.DocumentDirectoryPath);
+    const size = files.reduce((acc, file) => acc + file.size, 0);
+    setCacheSize(`${(size / 1000000).toFixed(1)}MB`);
+    setLoading(false);
+  }, []);
+
+  React.useEffect(() => {
+    onMount();
+  }, [onMount]);
   
   const options: OptionProps[] = React.useMemo(() => {
     return [
@@ -79,6 +104,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         children: (
           <View justifyCenter>
             <TabSwitcher
+              rounded
               activeTab={ activeDisplayMode }
               onTabChange={ handleDisplayModeChange }
               titles={ [ 'Light', 'System', 'Dark'] } />
@@ -101,6 +127,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         children: (
           <View justifyCenter>
             <TabSwitcher
+              rounded
               activeTab={ activeTextScale }
               onTabChange={ handleTextScaleChange }
               titles={ textScales.map((s) => s.label) } />
@@ -111,16 +138,16 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       },
       {
         children: (
-          <ScrollView horizontal>
+          <ScrollView horizontal style={ { overflow:'visible' } }>
             <View row alignCenter>
               {fonts.map((font) => (
                 <Button 
                   row
                   alignCenter
-                  spacing={ 4 }
+                  gap={ 4 }
                   key={ font }
+                  elevated
                   rounded
-                  outlined
                   p={ 8 }
                   mh={ 4 }
                   startIcon={ fontFamily === font ? 'check' : undefined } 
@@ -138,7 +165,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       {
         children: (
           <Button
-            outlined
+            elevated
             rounded
             p={ 8 }
             onPress={ () => setPreference('readSummaries', {}) }>
@@ -153,7 +180,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       {
         children: (
           <Button
-            outlined
+            elevated
             rounded
             p={ 8 }
             onPress={ () => setPreference('removedSummaries', {}) }>
@@ -165,14 +192,31 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         id: 'reset-removed-summaries',
         label: 'Reset Removed Content',
       },
+      {
+        children: (
+          <Button
+            elevated
+            rounded
+            p={ 8 }
+            onPress={ () => handleClearCache() }>
+            Clear Cache (
+            {cacheSize}
+            )
+          </Button>
+        ),
+        id: 'clear-cache',
+        label: 'Clear Cache',
+      },
     ];
-  }, [activeDisplayMode, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, setPreference, fontFamily]);
+  }, [activeDisplayMode, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, cacheSize, fontFamily, setPreference, handleClearCache]);
   
   return (
-    <Screen>
-      <View mh={ 16 }>
-        <TabSwitcher titles={ ['Preferences'] }>
-          <View>
+    <Screen
+      refreshing={ loading }
+      onRefresh={ onMount }>
+      <View>
+        <TabSwitcher tabHeight={ 48 } titles={ ['Preferences'] }>
+          <View mh={ 16 }>
             {options.filter((o) => o.visible !== false).map((option) => (
               <View col key={ option.id } p={ 4 } mv={ 4 }>
                 {!option.onPress && option.label && (
@@ -181,9 +225,8 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
                 {option.onPress && (
                   <Button
                     p={ 8 }
+                    elevated
                     rounded
-                    selectable
-                    outlined 
                     onPress={ option.onPress }>
                     {option.label}
                   </Button>

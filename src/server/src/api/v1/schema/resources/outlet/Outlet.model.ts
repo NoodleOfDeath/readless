@@ -468,7 +468,7 @@ export class Outlet<
     },
     fbiotech: {
       baseUrl: 'https://www.fiercebiotech.com',
-      displayName: 'Fierce Biotefh',
+      displayName: 'Fierce Biotech',
       name: 'fbiotech',
       selectors: {
         article: { selector: 'article p' },

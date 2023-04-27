@@ -1,12 +1,16 @@
 import React from 'react';
 
-import { Button, Icon } from '~/components';
+import {
+  Button,
+  Icon,
+  ViewProps,
+} from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type CheckboxProps = {
   checked?: boolean;
   onPress?: () => void;
-};
+} & ViewProps;
 
 export function Checkbox({
   checked,

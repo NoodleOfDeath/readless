@@ -1,6 +1,5 @@
 export * from './types';
 export * from './ActivityIndicator';
-export * from './AnimatedCard';
 export * from './Button';
 export * from './Checkbox';
 export * from './Dialog';
@@ -12,6 +11,7 @@ export * from './Markdown';
 export * from './Screen';
 export * from './ScrollView';
 export * from './Snackbar';
+export * from './Surface';
 export * from './TabSwitcher';
 export * from './Text';
 export * from './TextInput';

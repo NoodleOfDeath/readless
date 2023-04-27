@@ -23,7 +23,6 @@
           "~": "./src"
         }
       }
-    ],
-    "react-native-reanimated/plugin"
+    ]
   ]
 }

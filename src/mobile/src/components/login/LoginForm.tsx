@@ -127,7 +127,7 @@ export function LoginForm({
     <View row>
       <ScrollView>
         <View mb={ 16 }>
-          <Text center>{action === 'logIn' ? 'Log In' : action === 'signUp' ? 'Sign Up' : 'Forgot Password'}</Text>
+          <Text textCenter>{action === 'logIn' ? 'Log In' : action === 'signUp' ? 'Sign Up' : 'Forgot Password'}</Text>
         </View>
         {alert && (
           <View row justifyCenter mb={ 16 }>
@@ -188,7 +188,7 @@ export function LoginForm({
                 </Button>
               )}
               {formError && (
-                <View row center m={ 8 }>
+                <View row textCenter m={ 8 }>
                   <Icon name="alert-circle" color="error" mr={ 8 } />
                   <Text color="error">{typeof formError === 'string' ? formError : formError.message}</Text>
                 </View>
@@ -204,7 +204,7 @@ export function LoginForm({
                       selectable
                       rounded
                       outlined
-                      center
+                      textCenter
                       p={ 8 }
                       m={ 8 }
                       onPress={ () => setAction('signUp') }>
@@ -221,7 +221,7 @@ export function LoginForm({
                     selectable
                     rounded
                     outlined
-                    center
+                    textCenter
                     p={ 8 }
                     m={ 8 }
                     onPress={ () => setAction('logIn') }>

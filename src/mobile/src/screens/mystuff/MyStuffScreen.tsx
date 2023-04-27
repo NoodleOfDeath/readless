@@ -67,8 +67,9 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   
   return (
     <Screen>
-      <View col ph={ 16 }>
+      <View col>
         <TabSwitcher
+          tabHeight={ 48 }
           activeTab={ activeTab }
           onTabChange={ onTabChange }
           titles={ titles }>
@@ -80,7 +81,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                 selectable
                 p={ 8 }
                 m={ 8 }
-                center
+                textCenter
                 onPress={ () => navigation?.getParent()?.navigate('search') }>
                 Search for Articles
               </Button>
@@ -107,7 +108,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                     selectable
                     p={ 8 }
                     m={ 8 }
-                    center
+                    textCenter
                     onPress={ () => setUnreadPage((prev) => prev + 1) }>
                     Load More
                   </Button>
@@ -136,7 +137,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                   selectable
                   p={ 8 }
                   m={ 8 }
-                  center
+                  textCenter
                   onPress={ () => setReadPage((prev) => prev + 1) }>
                   Load More
                 </Button>
@@ -152,7 +153,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                   selectable
                   p={ 8 }
                   m={ 8 }
-                  center
+                  textCenter
                   onPress={ () => navigation?.getParent()?.navigate('search') }>
                   Search for Articles
                 </Button>
@@ -179,7 +180,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                       selectable
                       p={ 8 }
                       m={ 8 }
-                      center
+                      textCenter
                       onPress={ () => setFavoritedPage((prev) => prev + 1) }>
                       Load More
                     </Button>

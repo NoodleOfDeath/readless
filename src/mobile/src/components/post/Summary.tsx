@@ -2,6 +2,7 @@ import React from 'react';
 
 import { formatDistance } from 'date-fns';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import TrackPlayer, { State } from 'react-native-track-player';
 import ViewShot from 'react-native-view-shot';
 
 import { 
@@ -31,6 +32,8 @@ type Props = {
   tickIntervalMs?: number;
   initialFormat?: ReadingFormat;
   keywords?: string[];
+  swipeable?: boolean;
+  forceStatic?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
@@ -45,25 +48,25 @@ type RenderAction = {
 type RenderActionsProps = {
   actions: RenderAction[];
   theme: ReturnType<typeof useTheme>;
+  side?: 'left' | 'right';
 };
 
-function RenderActions({ actions, theme }: RenderActionsProps) {
+function RenderActions({ actions, side }: RenderActionsProps) {
   return (
-    <View>
-      <View col justifyCenter p={ 8 } mb={ 8 }>
+    <View ml={ side === 'right' ? 0 : 24 } mr={ side === 'left' ? 0 : 24 }>
+      <View col justifyCenter p={ 8 } mb={ 8 } gap={ 8 }>
         {actions.map((action) => (
           <Button 
             key={ action.text }
-            col
+            elevated
+            flexGrow={ 1 }
+            flex={ 1 }
             mv={ 4 }
             p={ 8 }
             alignCenter
             justifyCenter
             rounded
-            shadowed
-            bg={ theme.colors.primary }
             caption
-            color="white"
             startIcon={ action.startIcon }
             onPress={ action.onPress }>
             {action.text}
@@ -79,6 +82,8 @@ export function Summary({
   tickIntervalMs = 60_000,
   initialFormat,
   keywords = [],
+  swipeable = true,
+  forceStatic = false,
   onFormatChange,
   onReferSearch,
   onInteract,
@@ -97,7 +102,7 @@ export function Summary({
     showShareFab, setShowFeedbackDialog, setShowShareFab, 
   } = React.useContext(DialogContext);
   const {
-    firstResponder, readText, cancelTts, 
+    trackState, queueSummary, currentTrack, stopAndClearTracks,
   } = React.useContext(MediaContext);
   
   const viewshot = React.useRef<ViewShot | null>(null);
@@ -106,11 +111,11 @@ export function Summary({
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
 
-  const isRead = React.useMemo(() => Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareFab, [initialFormat, readSummaries, showShareFab, summary.id]);
+  const isRead = React.useMemo(() => !forceStatic && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareFab, [forceStatic, initialFormat, readSummaries, showShareFab, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
   const favorited = React.useMemo(() => Boolean(favoritedSummaries?.[summary.id]), [favoritedSummaries, summary]);
   
-  const playingAudio = React.useMemo(() => firstResponder === ['summary', summary.id].join('-'), [firstResponder, summary]);
+  const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
 
   const markdownTitle = React.useMemo(() => {
     let title = summary.title;
@@ -121,18 +126,35 @@ export function Summary({
   }, [keywords, summary.title]);
 
   const timeAgo = React.useMemo(() => {
-    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
-    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true }).replace(/about /, '');
+    if ((new Date(summary.originalDate ?? 0)).valueOf() > Date.now()) {
+      return <Text bold caption>just now</Text>;
+    }
+    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true })
+      .replace(/about /, '')
+      .replace(/less than a minute ago/, 'just now')
+      .replace(/ minutes/, 'm')
+      .replace(/ hours?/, 'h')
+      .replace(/ days?/, 'd')
+      .replace(/ months?/, 'm')
+      .replace(/ years?/, 'y');
+    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true })
+      .replace(/about /, '')
+      .replace(/less than a minute ago/, 'just now')
+      .replace(/ minutes/, 'm')
+      .replace(/ hours?/, 'h')
+      .replace(/ days?/, 'd')
+      .replace(/ months?/, 'm')
+      .replace(/ years?/, 'y');
     return new Date(summary.originalDate ?? 0).valueOf() > 0 && originalTime !== generatedTime ? 
       (
         <React.Fragment>
-          <Text>{originalTime}</Text>
-          <Text>
+          <Text bold caption>{originalTime}</Text>
+          <Text bold caption>
             {`(generated ${generatedTime})`}
           </Text>
         </React.Fragment>
       ) : 
-      (<Text>{new Date(summary.originalDate ?? 0).valueOf() > 0 ? generatedTime : `generated ${generatedTime}`}</Text>);
+      (<Text bold caption>{new Date(summary.originalDate ?? 0).valueOf() > 0 ? generatedTime : `generated ${generatedTime}`}</Text>);
   }, [summary.createdAt, summary.originalDate, lastTick]);
 
   const content = React.useMemo(() => {
@@ -164,7 +186,7 @@ export function Summary({
         ...prev,
         [summary.id]: new Bookmark(summary),
       }));
-    }, 1000);
+    }, 200);
     if (!initialFormat) {
       return;
     }
@@ -172,19 +194,13 @@ export function Summary({
   }, [initialFormat, onFormatChange, setPreference, summary]);
 
   const handlePlayAudio = React.useCallback(async (text: string) => {
-    if (firstResponder) {
-      cancelTts();
-      if (firstResponder === ['summary', summary.id].join('-')) {
-        return;
-      }
+    if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
+      await stopAndClearTracks();
+      return;
     }
-    onInteract?.(InteractionType.Listen, text);
-    try {
-      await readText(text, ['summary', summary.id].join('-'));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [cancelTts, onInteract, firstResponder, readText, summary]);
+    await queueSummary(summary, text);
+    TrackPlayer.play();
+  }, [currentTrack?.id, queueSummary, summary, trackState, stopAndClearTracks]);
 
   const renderLeftActions = React.useCallback(() => {
     const actions = [{
@@ -215,7 +231,7 @@ export function Summary({
       text: 'Read Later',
     }];
     return (
-      <RenderActions actions={ actions } theme={ theme } />
+      <RenderActions actions={ actions } theme={ theme } side='left' />
     );
   }, [bookmarked, isRead, onInteract, setPreference, summary, theme]);
   
@@ -241,7 +257,7 @@ export function Summary({
       text: 'Report a Bug',
     }];
     return (
-      <RenderActions actions={ actions } theme={ theme } />
+      <RenderActions actions={ actions } theme={ theme } side='right' />
     );
   }, [theme, onInteract, setPreference, summary, setShowFeedbackDialog]);
   
@@ -249,73 +265,105 @@ export function Summary({
     <ViewShot ref={ viewshot }>
       <GestureHandlerRootView>
         <Swipeable 
+          enabled={ swipeable }
           renderLeftActions={ renderLeftActions }
           renderRightActions={ renderRightActions }>
-          <View outlined rounded style={ theme.components.card } inactive={ isRead }>
-            <View row justifySpaced alignCenter mb={ 8 }>
-              <Button 
-                startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" mr={ 8 } /> }
-                onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
-              <Button 
-                row
-                alignCenter
-                underline
-                onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-                {summary.outletAttributes?.displayName}
-              </Button>
-              <Button 
-                underline
-                onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-                View original source
-              </Button>
-            </View>
-            <View onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-              <Text numberOfLines={ isRead ? 1 : 10 } ellipsizeMode='tail'>
-                <Markdown
+          <View 
+            elevated
+            mh={ 16 }
+            rounded 
+            style={ theme.components.card } 
+            inactive={ isRead } 
+            onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }
+            gap={ 4 }>
+            {!forceStatic && (
+              <View row alignCenter mb={ 8 } gap={ 8 }>
+                <Button 
+                  elevated
+                  p={ 5 }
+                  rounded
+                  startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
+                  onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+                <Button 
+                  elevated
+                  p={ 4 }
+                  rounded
+                  onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
+                  {summary.outletAttributes?.displayName}
+                </Button>
+                <View row />
+                <Button 
+                  elevated
+                  p={ 4 }
+                  rounded
+                  onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
+                  View original source
+                </Button>
+              </View>
+            )}
+            <Text
+              bold 
+              subtitle1
+              onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+              {showShareFab ? markdownTitle : (
+                <Markdown 
+                  bold
+                  subtitle1
                   styles={ {
                     em: { 
                       backgroundColor: 'yellow',
-                      color: 'black',
+                      color: 'black', 
                     }, 
-                  } }>
+                  } }
+                  onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
                   {markdownTitle}
                 </Markdown>
-              </Text>
-            </View>
-            <Divider />
-            <View row justifySpaced alignCenter>
-              <View col>
-                {timeAgo}
-              </View>
-              <View>
-                <View row alignCenter justifyEnd>
-                  <Button
-                    alignCenter
-                    mh={ 4 }
-                    subtitle2
-                    color='text'
-                    startIcon={ favorited ? 'heart' : 'heart-outline' }
-                    onPress={ () => onInteract?.(InteractionType.Favorite) } />
-                  <Button
-                    mh={ 4 }
-                    subtitle2
-                    color='text'
-                    startIcon='share'
-                    onPress={ () => setShowShareFab(true, {
-                      content, format, summary, viewshot: viewshot.current, 
-                    }) } />
-                  <Button
-                    alignCenter
-                    mh={ 4 }
-                    subtitle2
-                    color="text"
-                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                    onPress={ () => handlePlayAudio(summary.title) } />
+              )}
+            </Text>
+            {!forceStatic && (
+              <React.Fragment>
+                <Divider />
+                <View row justifySpaced alignCenter>
+                  <View row gap={ 4 }>
+                    {timeAgo}
+                  </View>
+                  <View>
+                    <View row alignCenter justifyEnd gap={ 8 }>
+                      <Button
+                        elevated
+                        p={ 4 }
+                        rounded
+                        alignCenter
+                        subtitle2
+                        color='text'
+                        startIcon={ favorited ? 'heart' : 'heart-outline' }
+                        onPress={ () => onInteract?.(InteractionType.Favorite) } />
+                      <Button
+                        elevated
+                        p={ 4 }
+                        rounded
+                        subtitle2
+                        color='text'
+                        startIcon='share'
+                        onPress={ () => setShowShareFab(true, {
+                          content, format, summary, viewshot: viewshot.current, 
+                        }) } />
+                      <Button
+                        elevated
+                        p={ 4 }
+                        rounded
+                        alignCenter
+                        subtitle2
+                        color="text"
+                        startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                        onPress={ () => handlePlayAudio(summary.title) } />
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
+              </React.Fragment>
+            )}
             {initialFormat && (
-              <View mt={ 4 }>
+              <View mt={ 8 }>
                 <ReadingFormatSelector 
                   format={ format } 
                   preferredFormat={ preferredReadingFormat }
@@ -323,16 +371,10 @@ export function Summary({
               </View>
             )}
             {content && (
-              <View mt={ 2 }>
+              <View>
                 <Divider />
-                <View row alignCenter justifyStart>
-                  <Button
-                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                    onPress={ () => handlePlayAudio(content) }
-                    mr={ 8 } />
-                </View>
-                <View mt={ 8 }>
-                  {content.split(/\n/).map((line, i) => (
+                <View>
+                  {showShareFab ? content : content.split(/\n/).map((line, i) => (
                     <Markdown
                       key={ i }
                       styles={ {

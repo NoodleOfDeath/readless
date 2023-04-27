@@ -8,27 +8,25 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
-      inactive: lightMode ? '#111' : '#666',
+      inactive: lightMode ? '#888' : '#999',
       invertText: lightMode ? '#fff' : '#000',
       primary: '#8b0000',
       text: lightMode ? '#000' : '#fff',
       textDark: '#000',
     },
-    components: {
-      // containers
-      ...StyleSheet.create({
-        buttonGroup: {
-          backgroundColor: lightMode ? '#fff' : '#000',
-          marginTop: 8,
-        },
+    // containers
+    components: 
+      StyleSheet.create({
+        button: { backgroundColor: lightMode ? '#efefef' : '#2a2a2a' },
         buttonSelected: {
           backgroundColor: '#8b0000',
           color: '#fff',
         },
         buttonText: { padding: 4 },
         card: {
-          backgroundColor: lightMode ? '#eee' : '#111',
+          backgroundColor: lightMode ? '#fafafa' : '#010101',
           marginBottom: 8,
+          overflow: 'visible',
           padding: 16,
         },
         category: {
@@ -77,7 +75,10 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           overflow: 'visible',
           width: '100%',
         },
-        text: { fontFamily: 'Lato' },
+        surface: {
+          backgroundColor: lightMode ? '#fff' : '#000',
+          color: lightMode ? '#000' : '#fff',
+        },
         toastDefault: {
           backgroundColor: lightMode ? '#ddd' : '#111',
           borderColor: '#8b0000',
@@ -86,7 +87,6 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           color: lightMode ? '#000' : '#fff',
         },
       }),
-    },
     isLightMode: lightMode,   
     navContainerColors: {
       background: lightMode ? '#fff' : '#1e1e1e',

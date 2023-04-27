@@ -12,7 +12,6 @@ import { useStyles, useTheme } from '~/hooks';
 export type ButtonProps = PressableProps & ViewProps & {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
-  spacing?: number;
   iconSize?: number;
   fontSize?: number;
   selected?: boolean;
@@ -22,7 +21,6 @@ export function Button({
   children,
   startIcon,
   endIcon,
-  spacing = 0,
   fontSize,
   iconSize,
   selected,
@@ -49,7 +47,7 @@ export function Button({
   
   const buttonStyle = React.useMemo(
     () => {
-      let newStyle = { ...style };
+      let newStyle = pressableProps.elevated ? { ...theme.components.button, ...style } : { ...style };
       if (pressableProps.selectable) {
         if (selected || isPressed) {
           newStyle = {
@@ -60,7 +58,7 @@ export function Button({
       }
       return newStyle;
     }
-    , [isPressed, pressableProps.selectable, style, selected, theme]
+    , [pressableProps.elevated, pressableProps.selectable, theme.components.button, theme.components.buttonSelected, style, selected, isPressed]
   );
   
   const startIconComponent = React.useMemo(() => {
@@ -110,8 +108,8 @@ export function Button({
       { ...pressableProps } 
       onPress={ handlePress } 
       onPressOut={ handlePressOut } 
-      style={ buttonStyle }> 
-      {startIconComponent && <View mr={ pressableProps.row ? spacing : 0 } mb={ pressableProps.row ? 0 : spacing }>{ startIconComponent }</View>}
+      style={ buttonStyle }>
+      {startIconComponent && <View>{startIconComponent }</View>}
       {children && (
         <Text { ...{ 
           ...textStyle, 
@@ -122,7 +120,7 @@ export function Button({
           { children }
         </Text>
       )}
-      {endIconComponent && <View ml={ pressableProps.row ? spacing : 0 } mt={ pressableProps.row ? 0 : spacing }>{ endIconComponent }</View>}
+      {endIconComponent && <View>{ endIconComponent }</View>}
     </View>
   );
 }

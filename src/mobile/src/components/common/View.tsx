@@ -1,23 +1,25 @@
 import React from 'react';
 import {
+  Pressable,
+  PressableProps,
   View as RNView,
   ViewProps as RNViewProps,
   StyleSheet,
-  TouchableHighlight,
-  TouchableHighlightProps,
 } from 'react-native';
 
-import { Stylable } from '~/components';
+import { Stylable, Surface } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type ViewProps = React.PropsWithChildren<TouchableHighlightProps & RNViewProps & Stylable> & {
+export type ViewProps = React.PropsWithChildren<PressableProps & RNViewProps & Stylable> & {
   title?: string;
   pressable?: boolean;
+  elevated?: boolean;
 };
 
 export function View({ 
   children,
   pressable,
+  elevated,
   inactive,
   ...props
 }: ViewProps) {
@@ -35,17 +37,30 @@ export function View({
       );
     }
   }, [inactive, style.borderRadius, theme.colors.inactive]);
+  const contents = React.useMemo(() => {
+    if (elevated) {
+      return (
+        <Surface style={ style }>
+          {inactive && overlay}
+          {children}
+        </Surface>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          {inactive && overlay}
+          {children}
+        </React.Fragment>
+      );
+    }
+  }, [children, elevated, inactive, overlay, style]);
   return (pressable || props.onPress) ? (
-    <TouchableHighlight { ...props } style={ style } underlayColor={ 'transparent' }>
-      <React.Fragment>
-        {inactive && overlay}
-        {children}
-      </React.Fragment>
-    </TouchableHighlight>
+    <Pressable { ...props } style={ elevated ? undefined : style }>
+      {contents}
+    </Pressable>
   ) : (
-    <RNView { ...props } style={ style }>
-      {inactive && overlay}
-      {children}
+    <RNView { ...props } style={ elevated ? undefined : style }>
+      {contents}
     </RNView>
   );
 }

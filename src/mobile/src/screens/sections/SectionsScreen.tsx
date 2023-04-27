@@ -7,18 +7,21 @@ import {
 } from '~/api';
 import {
   Button,
-  Checkbox,
   Screen,
   TabSwitcher,
-  Text,
   View,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
-import { ClientError, useCategoryClient } from '~/hooks';
+import {
+  ClientError,
+  useCategoryClient,
+  useTheme,
+} from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
 
+  const theme = useTheme();
   const { getCategories, getOutlets } = useCategoryClient();
   const {
     preferences: {
@@ -40,7 +43,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
   
   const titles = React.useMemo(() => [
     `Categories (${categoryCount === 0 ? categories.length : categoryCount}/${categories.length})`,
-    `News Sources (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`,
+    `Sources (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`,
   ], [categories, categoryCount, outlets, outletCount]);
 
   const loadCategories = React.useCallback(async () => {
@@ -122,84 +125,100 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
     <Screen
       refreshing={ loading }
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
-      <View col mh={ 16 } mb={ 16 }>
+      <View col mb={ 16 }>
         <TabSwitcher 
+          tabHeight={ 48 }
           activeTab={ activeTab }
           onTabChange={ setActiveTab }
           titles={ titles }>
-          <View col height='100%'>
+          <View col height='100%' mh={ 16 } gap={ 8 }>
             <View row>
-              <View row>
-                <Text>
-                  Category
-                </Text>
-              </View>
-              <View>
-                <Button 
-                  onPress={ () => clearBookmarks('bookmarkedCategories') }>
-                  {categoryCount > 0 ? `Unfollow [ ${categoryCount} ]` : 'Follow'}
-                </Button>
-              </View>
-            </View>
-            {categories.map((category) => (
-              <View 
-                row
+              <View row />
+              <Button 
+                elevated
+                selectable
                 alignCenter
-                justifySpaced
-                key={ category.name }>
+                rounded
+                gap={ 8 }
+                p={ 8 }
+                onPress={ () => clearBookmarks('bookmarkedCategories') }>
+                {categoryCount > 0 ? 'Clear Selection' : ''}
+              </Button>
+            </View>
+            {categories.map((category, i) => (
+              <View 
+                key={ category.name }
+                row
+                bg={ i % 2 === 0 ? theme.components.card.backgroundColor : undefined }>
                 <Button 
                   row
+                  elevated
                   selectable
                   alignCenter
-                  outlined
                   rounded
-                  spacing={ 8 }
+                  gap={ 8 }
                   startIcon={ category.icon }
                   p={ 8 }
-                  mv={ 4 }
                   onPress={ () => selectCategory(category) }>
                   {category.displayName}
                 </Button>
-                <Checkbox
-                  checked={ Boolean(bookmarkedCategories?.[category.name]) }
-                  onPress={ () => followCategory(category) } />
+                <View row />
+                <Button
+                  row
+                  rounded
+                  gap={ 8 }
+                  p={ 8 }
+                  elevated
+                  startIcon={ bookmarkedCategories?.[category.name] ? 'check' : undefined }
+                  onPress={ () => followCategory(category) }>
+                  {bookmarkedCategories?.[category.name] ? 'Unfollow' : 'Follow'}
+                </Button>
               </View>
             ))}
           </View>
-          <View col>
+          <View col mh={ 16 } gap={ 8 }>
             <View row>
-              <View row>
-                <Text>
-                  News Source
-                </Text>
-              </View>
+              <View row />
               <View>
                 <Button
+                  elevated
+                  selectable
+                  alignCenter
+                  rounded
+                  gap={ 8 }
+                  p={ 8 }
                   onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
-                  {outletCount > 0 ? `Unfollow [ ${outletCount} ]` : 'Follow'}
+                  {outletCount > 0 ? 'Clear Selection' : ''}
                 </Button>
               </View>
             </View>
-            {outlets.map((outlet) => (
+            {outlets.map((outlet, i) => (
               <View 
+                key={ outlet.name }
                 row
-                alignCenter
-                justifySpaced
-                key={ outlet.name }>
+                bg={ i % 2 === 0 ? theme.components.card.backgroundColor : undefined }>
                 <Button 
                   row
+                  elevated
                   selectable
                   alignCenter
-                  outlined
                   rounded
+                  gap={ 8 }
                   p={ 8 }
-                  mv={ 4 }
                   onPress={ () => selectOutlet(outlet) }>
                   {outlet.displayName}
                 </Button>
-                <Checkbox
-                  checked={ Boolean(bookmarkedOutlets?.[outlet.name]) }
-                  onPress={ () => followOutlet(outlet) } />
+                <View row />
+                <Button
+                  row
+                  rounded
+                  gap={ 8 }
+                  p={ 8 }
+                  elevated
+                  startIcon={ bookmarkedOutlets?.[outlet.name] ? 'check' : undefined }
+                  onPress={ () => followOutlet(outlet) }>
+                  {bookmarkedOutlets?.[outlet.name] ? 'Unfollow' : 'Follow'}
+                </Button>
               </View>
             ))}
           </View>

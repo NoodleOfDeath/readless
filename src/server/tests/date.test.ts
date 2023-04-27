@@ -92,7 +92,7 @@ const DATES: Test[] = [
   {
     date: '2023-04-17 12:22:23.000000-0400',
     expect: new Date('Apr 17, 2023 12:22:23 PM GMT-0400'),
-  }
+  },
 ];
 
 describe('date tests', () => {
