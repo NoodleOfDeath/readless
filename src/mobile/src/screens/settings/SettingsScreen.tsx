@@ -77,18 +77,17 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     setPreference('textScale', newTextScale.value);
   }, [textScale, setPreference]);
 
-  const handleClearCache = React.useCallback(() => {
-    RNFS.readDir(RNFS.DocumentDirectoryPath).then((files) => {
-      files.forEach((file) => {
-        RNFS.unlink(file.path);
-      });
-      setCacheSize('0MB');
+  const handleClearCache = React.useCallback(async () => {
+    const files = await RNFS.readDir(RNFS.CachesDirectoryPath);
+    files.forEach((file) => {
+      RNFS.unlink(file.path);
     });
+    setCacheSize('0MB');
   }, []);
   
   const onMount = React.useCallback(async () => {
     setLoading(true);
-    const files = await RNFS.readDir(RNFS.DocumentDirectoryPath);
+    const files = await RNFS.readDir(RNFS.CachesDirectoryPath);
     const size = files.reduce((acc, file) => acc + file.size, 0);
     setCacheSize(`${(size / 1000000).toFixed(1)}MB`);
     setLoading(false);

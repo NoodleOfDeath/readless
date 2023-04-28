@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:296325753505:android:6b4f175e3a418c4bdedee0",
+        "mobilesdk_app_id": "1:296325753505:android:3b924f8cb3332ac1dedee0",
         "android_client_info": {
-          "package_name": "ai.readless"
+          "package_name": "com.readless"
         }
       },
       "oauth_client": [

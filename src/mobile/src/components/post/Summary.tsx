@@ -2,7 +2,7 @@ import React from 'react';
 
 import { formatDistance } from 'date-fns';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
-import TrackPlayer, { State } from 'react-native-track-player';
+import { State } from 'react-native-track-player';
 import ViewShot from 'react-native-view-shot';
 
 import { 
@@ -102,7 +102,7 @@ export function Summary({
     showShareFab, setShowFeedbackDialog, setShowShareFab, 
   } = React.useContext(DialogContext);
   const {
-    trackState, queueSummary, currentTrack, stopAndClearTracks,
+    trackState, queueSummary, playTrack, currentTrack, stopAndClearTracks,
   } = React.useContext(MediaContext);
   
   const viewshot = React.useRef<ViewShot | null>(null);
@@ -126,7 +126,7 @@ export function Summary({
   }, [keywords, summary.title]);
 
   const timeAgo = React.useMemo(() => {
-    if ((new Date(summary.originalDate ?? 0)).valueOf() > lastTick) {
+    if (new Date(summary.originalDate ?? 0) > lastTick) {
       return <Text bold caption>just now</Text>;
     }
     const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true })
@@ -203,7 +203,7 @@ export function Summary({
         });
       }
     });
-  }, [bookmarked, onInteract, setPreference]);
+  }, [bookmarked, onInteract, setPreference, summary.id]);
 
   const handlePlayAudio = React.useCallback(async (text: string) => {
     if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
@@ -211,8 +211,8 @@ export function Summary({
       return;
     }
     await queueSummary(summary, text);
-    TrackPlayer.play();
-  }, [currentTrack?.id, queueSummary, summary, trackState, stopAndClearTracks]);
+    playTrack();
+  }, [currentTrack?.id, queueSummary, summary, trackState, playTrack, stopAndClearTracks]);
 
   const renderLeftActions = React.useCallback(() => {
     const actions = [{
@@ -258,7 +258,7 @@ export function Summary({
     return (
       <RenderActions actions={ actions } theme={ theme } side='right' />
     );
-  }, [theme, onInteract, setPreference, summary, setShowFeedbackDialog]);
+  }, [theme, onInteract, summary, setShowFeedbackDialog]);
   
   return (
     <ViewShot ref={ viewshot }>

@@ -2,7 +2,7 @@ import React from 'react';
 import { NativeModules, Platform } from 'react-native';
 
 import { State, Track } from 'react-native-track-player';
-import { Voice } from 'react-native-tts';
+import { Voice } from 'react-native-tts-reborn';
 
 import { PublicSummaryAttributes } from '~/api';
 
@@ -26,6 +26,8 @@ export type MediaContextType = {
   currentTrackIndex?: number;
   currentTrack?: Track;
   tracks: Track[];
+  canSkipToPrevious: boolean;
+  canSkipToNext: boolean;
   cancelTts: () => Promise<void>;
   textToTrack: (text: string, firstResponder: string, track?: Partial<Track>) => Promise<Track|undefined>;
   queueTrack: (track: Track) => Promise<void>;
@@ -41,6 +43,8 @@ export type MediaContextType = {
 };
 
 export const DEFAULT_MEDIA_CONTEXT: MediaContextType = {
+  canSkipToNext: false,
+  canSkipToPrevious: false,
   cancelTts: () => Promise.resolve(),
   deviceLanguage,
   playTrack: () => Promise.resolve(),

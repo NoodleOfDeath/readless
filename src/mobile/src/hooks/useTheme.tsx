@@ -18,6 +18,10 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
     components: 
       StyleSheet.create({
         button: { backgroundColor: lightMode ? '#eee' : '#2a2a2a' },
+        buttonDisabled: { 
+          backgroundColor: lightMode ? '#ddd' : '#333',
+          color: lightMode ? '#888' : '#999',
+        },
         buttonSelected: {
           backgroundColor: '#8b0000',
           color: '#fff',

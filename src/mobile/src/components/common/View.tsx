@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Animated,
   Pressable,
   PressableProps,
   View as RNView,
@@ -12,12 +13,14 @@ import { useStyles, useTheme } from '~/hooks';
 
 export type ViewProps = React.PropsWithChildren<PressableProps & RNViewProps & Stylable> & {
   title?: string;
+  animated?: boolean;
   pressable?: boolean;
   elevated?: boolean;
 };
 
 export function View({ 
   children,
+  animated,
   pressable,
   elevated,
   inactive,
@@ -58,6 +61,10 @@ export function View({
     <Pressable { ...props } style={ elevated ? undefined : style }>
       {contents}
     </Pressable>
+  ) : animated ? (
+    <Animated.View { ...props } style={ elevated ? undefined : style }>
+      {contents}
+    </Animated.View>
   ) : (
     <RNView { ...props } style={ elevated ? undefined : style }>
       {contents}

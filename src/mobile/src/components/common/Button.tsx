@@ -56,9 +56,15 @@ export function Button({
           };
         }
       }
+      if (pressableProps.disabled) {
+        newStyle = {
+          ...newStyle,
+          ...theme.components.buttonDisabled,
+        };
+      }
       return newStyle;
     }
-    , [pressableProps.elevated, pressableProps.selectable, theme.components.button, theme.components.buttonSelected, style, selected, isPressed]
+    , [pressableProps.elevated, pressableProps.selectable, pressableProps.disabled, theme.components.button, theme.components.buttonSelected, theme.components.buttonDisabled, style, selected, isPressed]
   );
   
   const startIconComponent = React.useMemo(() => {

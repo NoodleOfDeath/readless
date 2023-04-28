@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Platform } from 'react-native';
 
 import { formatDistance } from 'date-fns';
 import TrackPlayer, {
+  AppKilledPlaybackBehavior,
   Capability,
   Event,
   State,
@@ -21,26 +21,28 @@ import {
 import { PublicSummaryAttributes } from '~/api';
 
 export const PlaybackService = async () => {
-  await TrackPlayer.setupPlayer();
-  await TrackPlayer.updateOptions({ 
-    capabilities: [
-      Capability.Bookmark,
-      Capability.Like,
-      Capability.Pause, 
-      Capability.Play,
-      Capability.Skip,
-      Capability.SkipToPrevious,
-      Capability.SkipToNext,
-      Capability.Stop,
-    ],
-  });
-  TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play());
-  TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause());
-  TrackPlayer.addEventListener(Event.RemoteStop, () => TrackPlayer.pause());
-  TrackPlayer.addEventListener(Event.RemotePrevious, () => TrackPlayer.skipToPrevious());
-  TrackPlayer.addEventListener(Event.RemoteNext, () => TrackPlayer.skipToNext());
-  if (Platform.OS === 'android') {
-    TrackPlayer.addEventListener(Event.RemoteSkip, () => TrackPlayer.skipToNext());
+  try {
+    await TrackPlayer.setupPlayer({ maxCacheSize: 1024 * 5 });
+    await TrackPlayer.updateOptions({
+      android: { appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification },
+      capabilities: [
+        Capability.Bookmark,
+        Capability.Like,
+        Capability.Pause,
+        Capability.Play,
+        Capability.Skip,
+        Capability.SkipToPrevious,
+        Capability.SkipToNext,
+        Capability.Stop,
+      ],
+    });
+    TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play());
+    TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause());
+    TrackPlayer.addEventListener(Event.RemoteStop, () => TrackPlayer.pause());
+    TrackPlayer.addEventListener(Event.RemotePrevious, () => TrackPlayer.skipToPrevious());
+    TrackPlayer.addEventListener(Event.RemoteNext, () => TrackPlayer.skipToNext());
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -62,6 +64,9 @@ export function MediaContextProvider({ children }: Props) {
   const [currentTrack, setCurrentTrack] = React.useState<Track>();
   const [tracks, setTracks] = React.useState<Track[]>([]);
 
+  const canSkipToPrevious = React.useMemo(() => currentTrackIndex != null && currentTrackIndex > 0, [currentTrackIndex]);
+  const canSkipToNext = React.useMemo(() => currentTrackIndex != null && currentTrackIndex < tracks.length - 1, [currentTrackIndex, tracks]);
+
   useTrackPlayerEvents([
     Event.PlaybackQueueEnded,
     Event.PlaybackState,
@@ -77,7 +82,7 @@ export function MediaContextProvider({ children }: Props) {
       }
     } else
     if (event.type === Event.PlaybackQueueEnded) {
-      setTracks([]);
+      stopAndClearTracks();
     }
   });
   
@@ -124,7 +129,6 @@ export function MediaContextProvider({ children }: Props) {
   const textToTrack = React.useCallback(async (text: string, firstResponder: string, track?: Partial<Track>): Promise<Track> => {
     const file = await Tts.export(text, { filename: firstResponder, overwrite: true } );
     return {
-      contentType: 'audio/caf',
       id: firstResponder,
       url: file,
       ...track,
@@ -164,12 +168,12 @@ export function MediaContextProvider({ children }: Props) {
   );
 
   const playTrack = React.useCallback(async () => {
-    if (trackState === State.Paused) {
+    if (trackState === State.Playing) {
+      setTrackState(State.Paused);
+      await TrackPlayer.pause();
+    } else {
       setTrackState(State.Playing);
       await TrackPlayer.play();
-    } else {
-      setTrackState(State.Paused);
-      TrackPlayer.pause();
     }
   }, [trackState]);
 
@@ -178,11 +182,13 @@ export function MediaContextProvider({ children }: Props) {
     setTrackState(State.Stopped);
     setCurrentTrackIndex(undefined);
     setTracks([]);
-    TrackPlayer.reset();
+    await TrackPlayer.reset();
   }, []);
   
   return (
     <MediaContext.Provider value={ {
+      canSkipToNext,
+      canSkipToPrevious,
       cancelTts,
       currentTrack,
       currentTrackIndex,

@@ -1,10 +1,11 @@
-package ai.readless.ReadLess;
+package com.readless;
 import android.content.res.Configuration;
+
+import com.readless.BuildConfig;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
 
 import android.app.Application;
-import com.facebook.react.BuildConfig;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
