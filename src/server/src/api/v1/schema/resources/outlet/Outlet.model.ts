@@ -558,6 +558,26 @@ export class Outlet<
       },
       timezone: DEFAULT_TIMEZONE,
     },
+    futurism: {
+      baseUrl: 'https://www.futurism.com',
+      displayName: 'Furturism',
+      name: 'futurism',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'a[href*="/authors/"]' },
+        date: { selector: 'article .flex.text-sm' },
+        spider:{
+          attribute: 'href',
+          selector: [
+            'article a',
+            'a[href*="/the-byte/"]',
+            'a[href*="/neoscope/"]',
+            'a[href*="/latest/"]',
+          ].join(','),
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
     gizmodo: {
       baseUrl: 'https://www.gizmodo.com', 
       displayName: 'Gizmodo',
@@ -1164,6 +1184,26 @@ export class Outlet<
             'a[href*="/story/"]',
             'a[href*="/articles/"]',
             'a[href*="/news/"]',
+          ].join(','),
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
+    variety: {
+      baseUrl: 'https://www.variety.com',
+      displayName: 'Variety',
+      name: 'variety',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'article .author' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: [
+            'article a',
+            'a[href*="/film/"]',
+            'a[href*="/news/"]',
+            'a[href*="/tv/"]',
           ].join(','),
         },
       },

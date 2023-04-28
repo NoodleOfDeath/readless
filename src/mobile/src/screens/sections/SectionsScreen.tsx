@@ -149,7 +149,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
               <View 
                 key={ category.name }
                 row
-                bg={ i % 2 === 0 ? theme.components.card.backgroundColor : undefined }>
+                rounded
+                bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
                 <Button 
                   row
                   elevated
@@ -165,6 +166,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                 <View row />
                 <Button
                   row
+                  alignCenter
                   rounded
                   gap={ 8 }
                   p={ 8 }
@@ -196,7 +198,8 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
               <View 
                 key={ outlet.name }
                 row
-                bg={ i % 2 === 0 ? theme.components.card.backgroundColor : undefined }>
+                rounded
+                bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
                 <Button 
                   row
                   elevated
@@ -211,6 +214,7 @@ export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
                 <View row />
                 <Button
                   row
+                  alignCenter
                   rounded
                   gap={ 8 }
                   p={ 8 }
