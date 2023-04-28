@@ -1,16 +1,14 @@
 import React from 'react';
-import {
-  Animated,
-  LayoutRectangle,
-  TouchableOpacity,
-} from 'react-native';
+import { Animated, LayoutRectangle } from 'react-native';
 
 import {
   ScrollView,
+  Surface,
   Text,
   View,
+  ViewProps,
 } from '~/components';
-import { useTheme } from '~/hooks';
+import { useStyles, useTheme } from '~/hooks';
 
 type Props = {
   titles?: React.ReactNode[];
@@ -18,21 +16,27 @@ type Props = {
   children?: React.ReactNode | React.ReactNode[];
   activeTab?: number;
   onTabChange?: (tab: number) => void;
-};
+} & ViewProps;
 
 export function TabSwitcher({
   activeTab = 0,
-  tabHeight,
+  tabHeight = 36,
   children,
   onTabChange,
   titles, 
+  ...props
 }: Props) {
   
   const theme = useTheme();
+  const style = useStyles(props);
   const views = React.useMemo(() => Array.isArray(children) ? children : children ? [children] : undefined, [children]);
 
   const [switcherLayout, setSwitcherLayout] = React.useState<LayoutRectangle>();
   const translateX = React.useRef(new Animated.Value(0)).current;
+
+  const fontSize = React.useMemo(() => {
+    return (tabHeight ? tabHeight / 2 : style.fontSize ?? 16) ?? style.fontSize ?? 16;
+  }, [style.fontSize, tabHeight]);
 
   const handleSlide = React.useCallback((tab: number) => {
     Animated.spring(translateX, {
@@ -47,22 +51,22 @@ export function TabSwitcher({
 
   return (
     <Animated.View style={ { flex: 1 } }>
-      <View>
-        <View 
+      <View gap={ 16 }>
+        <Surface 
           row
-          outlined
-          rounded
-          mv={ views && views.length > 0 ? 16 : 0 }
-          height={ tabHeight ?? 36 }
-          onLayout={ (event) => setSwitcherLayout(event.nativeEvent.layout) }>
+          alignCenter
+          justifyCenter
+          height={ tabHeight ?? 48 }
+          onLayout={ (event) => setSwitcherLayout(event.nativeEvent.layout) }
+          style={ style }>
           <Animated.View
             style={ {
               backgroundColor: theme.colors.primary,
               borderRadius: 4,
-              height: '100%',
+              bottom: -4,
+              height: 5,
               left: 0,
               position: 'absolute',
-              top: 0,
               transform: [
                 {
                   translateX: translateX.interpolate({
@@ -74,28 +78,19 @@ export function TabSwitcher({
               width: `${100 / (titles?.length ?? 1)}%`,
             } } />
           {titles?.map((title, i) => (
-            <TouchableOpacity
+            <Text
               key={ i }
-              style={ {
-                alignItems: 'center',
-                borderBottomRightRadius: 0,
-                borderColor: '#007aff',
-                borderRadius: 4,
-                borderRightWidth: 0,
-                borderTopRightRadius: 0,
-                flex: 1,
-                justifyContent: 'center',
-              } }
               onPress={ () => {
                 onTabChange?.(i);
-              } }>
-              <Text
-                style={ { color: activeTab === i ? theme.colors.contrastText : theme.colors.primary } }>
-                {title}
-              </Text>
-            </TouchableOpacity>
+              } }
+              row
+              fontSize={ fontSize }
+              textCenter 
+              color={ theme.colors.text }>
+              {title}
+            </Text>
           ))}
-        </View>
+        </Surface>
         {views && views.length > 0 && (
           <ScrollView>
             <Animated.View>

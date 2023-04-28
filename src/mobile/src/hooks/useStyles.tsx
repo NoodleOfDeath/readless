@@ -1,10 +1,17 @@
 import React from 'react';
 
-import { Stylable } from '~/components';
+import { FONT_SIZES, Stylable } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
 export function useStyles({
+  // position
+  absolute,
+  relative,
+  top,
+  bottom,
+  left,
+  right,
   // dimensions
   width,
   height,
@@ -22,15 +29,14 @@ export function useStyles({
   h6,
   // text styles
   color,
-  center,
-  left,
-  right,
+  textCenter,
+  textLeft,
+  textRight,
   fontFamily,
-  fontSize = h1 ? 36 : h2 ? 32 : h3 ? 28 : h4 ? 26 : h5 ? 24 : h6 ? 22 : caption ? 12 : subtitle1 ? 20 : subtitle2 ? 18 : body1 ? 18 : body2 ? 17 : 18,
+  fontSize = caption ? FONT_SIZES.caption : subtitle1 ? FONT_SIZES.subtitle1 : subtitle2 ? FONT_SIZES.subtitle2 : body1 ? FONT_SIZES.body1 : body2 ? FONT_SIZES.body2 : h1 ? FONT_SIZES.h1 : h2 ? FONT_SIZES.h2 : h3 ? FONT_SIZES.h3 : h4 ? FONT_SIZES.h4 : h5 ? FONT_SIZES.h5 : h6 ? FONT_SIZES.h6 : FONT_SIZES.body1,
   bold,
   italic,
   underline,
-  code,
   // flex styles
   flex,
   flexWrap,
@@ -69,55 +75,42 @@ export function useStyles({
   pr = ph,
   // appearance
   borderColor,
-  border = borderColor ? 1 : 0,
+  border = borderColor ? 1 : undefined,
   bg,
   opacity,
   outlined,
   contained,
   rounded,
-  shadowed,
   // selectable,
   // other
   style,
-}: Stylable) {
+} : Stylable) {
   const theme = useTheme();
   
-  const { preferences: { textScale } } = React.useContext(SessionContext);
+  const { preferences: { fontFamily: preferredFont, textScale } } = React.useContext(SessionContext);
   const newStyle = React.useMemo(() => ({ ...style }), [style]);
+
+  const position = React.useMemo(() => {
+    if (absolute) {
+      return { position: 'absolute' };
+    }
+    if (relative) {
+      return { position: 'relative' };
+    }
+  }, [absolute, relative]);
   
   const textAlign = React.useMemo(() => {
-    if (center) {
-      return { textAlign: 'center' };
-    } 
-    if (right) {
-      return { textAlign: 'right' };
-    }
-    if (left) {
+    if (textLeft) {
       return { textAlign: 'left' };
     }
-  }, [center, left, right]);
-
-  const fontAppearance = React.useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const styles: any[] = [];
-    if (fontFamily) {
-      styles.push({ fontFamily });
+    if (textCenter) {
+      return { textAlign: 'center' };
+    } 
+    if (textRight) {
+      return { textAlign: 'right' };
     }
-    if (bold) {
-      styles.push({ fontWeight: 'bold' });
-    }
-    if (italic) {
-      styles.push({ fontStyle: 'italic' });
-    }
-    if (underline) {
-      styles.push({ textDecorationLine: 'underline' });
-    }
-    if (code) {
-      styles.push({ fontFamily: 'monospace' });
-    }
-    return styles.reduce((cur, n) => ({ ...cur, ...n }), {});
-  }, [fontFamily, bold, italic, underline, code]);
-
+  }, [textLeft, textCenter, textRight]);
+  
   const alignItems = React.useMemo(() => {
     if (alignCenter) {
       return { alignItems: 'center' };
@@ -169,22 +162,19 @@ export function useStyles({
     if (opacity) {
       appearance.push({ opacity });
     }
-    if (shadowed) {
-      appearance.push({
-        shadowColor: 'rgba(0,0,0,.7)',
-        shadowOffset: { height: 1, width: 1 },
-        shadowOpacity: 0.7,
-        shadowRadius: 3,
-      });
-    }
     return appearance.reduce((cur, n) => ({ ...cur, ...n }), {});
-  }, [opacity, outlined, contained, shadowed, theme]);
+  }, [opacity, outlined, contained, theme]);
 
   const viewStyle = React.useMemo(() => {
     const scale = ((((textScale ?? 1) - 1) / 2) + 1);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
-    attrs.push(row? theme.components.flexRow : undefined);
+    attrs.push(position ? position : undefined);
+    attrs.push(top ? { top: typeof top === 'number' ? top * scale : top } : undefined);
+    attrs.push(left ? { left: typeof left === 'number' ? left * scale : left } : undefined);
+    attrs.push(right ? { right: typeof right === 'number' ? right * scale : right } : undefined);
+    attrs.push(bottom ? { bottom: typeof bottom === 'number' ? bottom * scale : bottom } : undefined);
+    attrs.push(row ? theme.components.flexRow : undefined);
     attrs.push(col ? theme.components.flexCol : undefined);
     attrs.push(flex ? { flex } : undefined);
     attrs.push(flexWrap ? { flexWrap } : undefined);
@@ -196,16 +186,19 @@ export function useStyles({
     attrs.push(rowGap ? { rowGap: rowGap * scale } : undefined);
     attrs.push(colGap ? { columnGap: colGap * scale } : undefined);
     attrs.push(textAlign);
-    attrs.push(fontAppearance);
+    attrs.push(bold ? { fontWeight: 'bold' } : undefined);
+    attrs.push(italic ? { fontStyle: 'italic' } : undefined);
+    attrs.push(underline ? { textDecorationLine: 'underline' } : undefined);
+    attrs.push({ fontFamily : fontFamily ?? preferredFont });
     attrs.push(alignItems);
     attrs.push(justifyContent);
     attrs.push(appearance);
-    attrs.push(color ? { color }: undefined);
-    attrs.push(width ? { width }: undefined);
-    attrs.push(height ? { height }: undefined);
-    attrs.push(fontSize ? { fontSize }: undefined);
-    attrs.push(border ? { border }: undefined);
-    attrs.push(borderColor ? { borderColor }: undefined);
+    attrs.push(color ? { color: Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color } : undefined);
+    attrs.push(width ? { width } : undefined);
+    attrs.push(height ? { height } : undefined);
+    attrs.push({ fontSize : fontSize * scale });
+    attrs.push(border ? { border } : undefined);
+    attrs.push(borderColor ? { borderColor } : undefined);
     attrs.push(bg ? { backgroundColor: bg } : undefined);
     attrs.push(rounded ? theme.components.rounded : undefined);
     attrs.push(mt ? { marginTop: mt * scale } : undefined);
@@ -217,6 +210,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
     attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter(Boolean).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [textScale, row, theme.components.flexRow, theme.components.flexCol, theme.components.rounded, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, fontAppearance, alignItems, justifyContent, appearance, color, width, height, fontSize, border, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
+  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, width, height, fontSize, border, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
   return viewStyle;
 }

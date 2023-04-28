@@ -25,8 +25,9 @@ export function ReadingFormatSelector({
 
   return (
     <TabSwitcher 
+      rounded
       activeTab={ activeTab }
       onTabChange={ handleTabChange }
-      titles={ ['bullets', 'summary'] } />
+      titles={ ['Bullets', 'Summary'] } />
   );
 }

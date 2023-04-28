@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Searchbar } from 'react-native-paper';
+import TrackPlayer from 'react-native-track-player';
 
 import {
   InteractionType,
@@ -16,7 +17,11 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext, ToastContext } from '~/contexts';
+import {
+  MediaContext,
+  SessionContext,
+  ToastContext,
+} from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 import { lengthOf } from '~/utils';
@@ -38,6 +43,7 @@ export function SearchScreen({
     setPreference,
   } = React.useContext(SessionContext);
   const toast = React.useContext(ToastContext);
+  const { queueSummary } = React.useContext(MediaContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
@@ -62,7 +68,7 @@ export function SearchScreen({
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
-
+   
   const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
 
   const followFilter = React.useMemo(() => {
@@ -187,6 +193,18 @@ export function SearchScreen({
     },
     [handleInteraction, navigation, preferredReadingFormat, searchText]
   );
+
+  const handlePlayAll = React.useCallback(async () => {
+    if (summaries.length < 1) {
+      return;
+    }
+    await queueSummary(summaries[0]);
+    TrackPlayer.play();
+    [...summaries].slice(1, pageSize - 1).forEach((summary) => {
+      handleInteraction(summary, InteractionType.Listen);
+      setTimeout(async () => await queueSummary(summary), 200);
+    });
+  }, [pageSize, summaries, handleInteraction, queueSummary]);
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
     if (prefilter === newPrefilter) {
@@ -199,77 +217,100 @@ export function SearchScreen({
     <Screen
       refreshing={ loading }
       onRefresh={ () => load(0) }>
-      <View col mh={ 16 }>
-        {!prefilter && (
-          <View mb={ 8 }>
-            <Searchbar
-              placeholder="show me something worth reading..."
-              onChangeText={ ((text) => 
-                setSearchText(text)) }
-              inputStyle={ theme.components.searchBar }
-              value={ searchText }
-              onClearIconPress={ () => {
-                setSearchText('');
-                setKeywords([]);
-                setPendingReload(true);
-              } }
-              onSubmitEditing={ () => {
-                setKeywords(searchText.split(' ').filter((s) => s.trim()));
-                load(0);
-              } } />
-          </View>
-        )}
-        <View row mb={ 8 }>
-          <Text mr={ 8 }>Sort By:</Text>
-          <ScrollView horizontal>
+      <React.Fragment>
+        <View col mh={ 16 }>
+          {!prefilter && (
+            <View mb={ 8 }>
+              <Searchbar
+                placeholder="show me something worth reading..."
+                onChangeText={ ((text) => 
+                  setSearchText(text)) }
+                inputStyle={ theme.components.searchBar }
+                value={ searchText }
+                onClearIconPress={ () => {
+                  setSearchText('');
+                  setKeywords([]);
+                  setPendingReload(true);
+                } }
+                onSubmitEditing={ () => {
+                  setKeywords(searchText.split(' ').filter((s) => s.trim()));
+                  load(0);
+                } } />
+            </View>
+          )}
+          <View mb={ 8 } elevated p={ 8 } rounded gap={ 8 } bg={ theme.components.card.backgroundColor }>
             <View row>
-              <View mr={ 8 }>
-                <Button 
-                  row
-                  alignCenter
-                  startIcon={ (sortOrder ?? []).length > 0 ? 'check' : undefined }
-                  underline={ (sortOrder ?? []).length > 0 }
-                  spacing={ 4 }
-                  onPress={ () => setPreference('sortOrder', ['originalDate:desc', 'createdAt:desc']) }>
-                  Publication Date
-                </Button>
-              </View>
+              <Text mr={ 8 }>Sort By:</Text>
+              <ScrollView horizontal>
+                <View row>
+                  <View mr={ 8 }>
+                    <Button 
+                      row
+                      alignCenter
+                      startIcon={ (sortOrder ?? []).length > 0 ? 'check' : undefined }
+                      underline={ (sortOrder ?? []).length > 0 }
+                      gap={ 4 }
+                      onPress={ () => setPreference('sortOrder', ['originalDate:desc', 'createdAt:desc']) }>
+                      Publication Date
+                    </Button>
+                  </View>
+                  <View>
+                    <Button 
+                      row
+                      alignCenter
+                      startIcon={ (sortOrder ?? []).length === 0 ? 'check' : undefined }
+                      underline={ (sortOrder ?? []).length === 0 }
+                      gap={ 4 }
+                      onPress={ () => setPreference('sortOrder', []) }>
+                      Generation Date
+                    </Button>
+                  </View>
+                </View>
+              </ScrollView>
+            </View>
+            <View row>
+              <Button 
+                elevated
+                p={ 4 }
+                rounded
+                onPress={ () => removeReadSummaries() }>
+                Hide Read
+              </Button>
+              <View row />
               <View>
-                <Button 
+                <Button
                   row
+                  elevated
+                  p={ 4 }
+                  rounded
                   alignCenter
-                  startIcon={ (sortOrder ?? []).length === 0 ? 'check' : undefined }
-                  underline={ (sortOrder ?? []).length === 0 }
-                  spacing={ 4 }
-                  onPress={ () => setPreference('sortOrder', []) }>
-                  Generation Date
+                  gap={ 4 }
+                  startIcon="volume-high"
+                  onPress={ () => handlePlayAll() }>
+                  Play All
                 </Button>
               </View>
             </View>
-          </ScrollView>
-          <Button 
-            ml={ 16 }
-            onPress={ () => removeReadSummaries() }>
-            Remove Read
-          </Button>
-        </View>
-        {!loading && onlyCustomNews && summaries.length === 0 && (
-          <View col justifyCenter p={ 16 }>
-            <Text subtitle1 pb={ 8 }>
-              It seems your filters are too specific. You may want to consider 
-              adding more categories and/or news sources to your follow list.
-            </Text>
-            <Button 
-              alignCenter
-              rounded 
-              outlined 
-              p={ 8 }
-              selectable
-              onPress={ () => navigation?.getParent()?.navigate('Sections') }>
-              Go to Sections
-            </Button>
           </View>
-        )}
+          {!loading && onlyCustomNews && summaries.length === 0 && (
+            <View col justifyCenter p={ 16 }>
+              <Text subtitle1 pb={ 8 }>
+                It seems your filters are too specific. You may want to consider 
+                adding more categories and/or news sources to your follow list.
+              </Text>
+              <Button 
+                alignCenter
+                rounded 
+                outlined 
+                p={ 8 }
+                selectable
+                onPress={ () => navigation?.getParent()?.navigate('Sections') }>
+                Go to Sections
+              </Button>
+            </View>
+          )}
+        </View>
+
         {summaries.map((summary) => (
           <Summary
             key={ summary.id }
@@ -298,7 +339,7 @@ export function SearchScreen({
             </View>
           </View>
         )}
-      </View>
+      </React.Fragment>
     </Screen>
   );
 }

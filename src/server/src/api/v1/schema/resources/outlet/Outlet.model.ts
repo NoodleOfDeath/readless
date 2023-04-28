@@ -468,7 +468,7 @@ export class Outlet<
     },
     fbiotech: {
       baseUrl: 'https://www.fiercebiotech.com',
-      displayName: 'Fierce Biotefh',
+      displayName: 'Fierce Biotech',
       name: 'fbiotech',
       selectors: {
         article: { selector: 'article p' },
@@ -981,8 +981,8 @@ export class Outlet<
       name: 'rolling-stone',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'header .author-name a' },
-        date: { selector: 'header time' },
+        author: { selector: 'article .author-name a' },
+        date: { selector: 'article .author time' },
         spider:{
           attribute: 'href',
           selector: [
@@ -1142,7 +1142,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: 'article a[href="/staff/"]' },
-        date: { selector: 'article *[aria-label*="Published:"]' },
+        date: { attribute: 'aria-label', selector: 'article div[aria-label^="Published"]' },
         spider:{
           attribute: 'href',
           selector: 'a[href*="/story/"]',

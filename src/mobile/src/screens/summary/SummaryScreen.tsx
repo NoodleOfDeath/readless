@@ -73,7 +73,7 @@ export function SummaryScreen({
     <Screen
       refreshing={ loading }
       onRefresh={ () => load(reloadId) }>
-      <View mt={ 10 } mh={ 16 }>
+      <View mt={ 10 }>
         {loading ? (
           <View alignCenter justifyCenter>
             <ActivityIndicator size="large" />

@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 
 import { Stylable, View } from '~/components';
-import { SessionContext } from '~/contexts';
 import { useStyles, useTheme } from '~/hooks';
 
 export type TextProps = Stylable<TextStyle> & RNTextProps & React.PropsWithChildren<{
@@ -16,26 +15,12 @@ export type TextProps = Stylable<TextStyle> & RNTextProps & React.PropsWithChild
 export function Text({
   children,
   color = 'text',
-  ...styleProps
+  ...textProps
 }: TextProps) {
-  
-  const theme = useTheme();
-  const { preferences: { textScale = 1, fontFamily } } = React.useContext(SessionContext);
-  
-  const { textAlign, ...otherStyles } = useStyles(styleProps);
-  
-  const style = React.useMemo(() => ({
-    ...theme.components.text,
-    color: color && (Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color),
-    textAlign,
-    ...otherStyles,
-    fontFamily: otherStyles.fontFamily ?? fontFamily,
-    fontSize: (styleProps.fontSize ?? otherStyles.fontSize ?? 18) * textScale,
-  }), [color, fontFamily, otherStyles, styleProps.fontSize, textAlign, textScale, theme]);
-  
+  const style = useStyles({ ...textProps, color });
   return (
-    <View style={ otherStyles }>
-      <RNText { ...styleProps } style={ style }>{children}</RNText>
+    <View style={ style }>
+      <RNText { ...textProps } style={ style }>{children}</RNText>
     </View>
   );
 }

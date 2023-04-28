@@ -40,6 +40,8 @@ export type Preferences = {
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;
+  letterSpacing?: number;
+  homeTab?: 'All News' | 'My News',
   fontFamily?: string;
   sortOrder?: string[];
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };

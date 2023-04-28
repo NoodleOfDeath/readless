@@ -236,7 +236,7 @@ export class PuppeteerService extends BaseService {
           if (attr && clean($(sel)?.attr(attr))) {
             return clean($(sel).attr(attr));
           }
-          return clean($(sel)?.text());
+          return clean($(sel)?.get().map((e) => $(e).text()).join(' '));
         };
         
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
@@ -280,7 +280,15 @@ export class PuppeteerService extends BaseService {
       actions.push({
         action: async (el) => {
           dates.push(...[
-            await el.evaluate((el) => el.textContent),
+            await el.evaluate((el) => { 
+              if (el.childNodes.length > 1) {
+                const parts: string[] = [];
+                el.childNodes.forEach((n) => parts.push(n.textContent));
+                return parts.join(' ');
+              } else {
+                return el.textContent; 
+              }
+            }),
             await el.evaluate((el) => el.getAttribute('datetime')),
           ]);
           if (date.attribute) {

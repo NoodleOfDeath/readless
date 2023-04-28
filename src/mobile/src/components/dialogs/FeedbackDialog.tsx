@@ -111,7 +111,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
       <ScrollView p={ 8 }>
         <React.Fragment>
           {!success ? (
-            <View justifyCenter>
+            <View col justifyCenter>
               {checkboxes.map((checkbox, index) => (
                 <View key={ index } row alignCenter>
                   <Checkbox

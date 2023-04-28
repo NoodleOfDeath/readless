@@ -1,7 +1,10 @@
 import React from 'react';
 import { NativeModules, Platform } from 'react-native';
 
+import { State, Track } from 'react-native-track-player';
 import { Voice } from 'react-native-tts';
+
+import { PublicSummaryAttributes } from '~/api';
 
 export type TtsStatus = 'ready' | 'initializing' | 'error' |'started' | 'finished' | 'cancelled';
 
@@ -12,7 +15,6 @@ export const deviceLanguage = (
 
 export type MediaContextType = {
   deviceLanguage: string;
-  firstResponder: string;
   selectedVoice?: Voice;
   selectedVoiceIndex: number;
   speechRate: number;
@@ -20,9 +22,16 @@ export type MediaContextType = {
   speechVolume: number;
   ttsStatus: TtsStatus;
   voices: Voice[];
+  trackState: State;
+  currentTrackIndex?: number;
+  currentTrack?: Track;
+  tracks: Track[];
   cancelTts: () => Promise<void>;
-  readText: (text: string, firstResponder: string) => Promise<void>;
-  setFirstResponder: React.Dispatch<React.SetStateAction<string>>;
+  textToTrack: (text: string, firstResponder: string, track?: Partial<Track>) => Promise<Track|undefined>;
+  queueTrack: (track: Track) => Promise<void>;
+  queueSummary: (summary: PublicSummaryAttributes, altText?: string) => Promise<void>;
+  playTrack: () => Promise<void>;
+  stopAndClearTracks: () => Promise<void>;
   setSpeechRate: React.Dispatch<React.SetStateAction<number>>;
   setSpeechPitch: React.Dispatch<React.SetStateAction<number>>;
   setSpeechVolume: React.Dispatch<React.SetStateAction<number>>;
@@ -34,12 +43,10 @@ export type MediaContextType = {
 export const DEFAULT_MEDIA_CONTEXT: MediaContextType = {
   cancelTts: () => Promise.resolve(),
   deviceLanguage,
-  firstResponder: '',
-  readText: () => Promise.resolve(),  
+  playTrack: () => Promise.resolve(),
+  queueSummary: () => Promise.resolve(),
+  queueTrack: () => Promise.resolve(),
   selectedVoiceIndex: 0,
-  setFirstResponder: () => {
-    /** placeholder */
-  },
   setSelectedVoice: () => {
     /** placeholder */
   },
@@ -61,6 +68,10 @@ export const DEFAULT_MEDIA_CONTEXT: MediaContextType = {
   speechPitch: 1,
   speechRate: 0.5,
   speechVolume: 1,
+  stopAndClearTracks: () => Promise.resolve(),
+  textToTrack: () => Promise.resolve(undefined),
+  trackState: State.None,
+  tracks:[],
   ttsStatus: 'initializing',
   voices: [],
 };

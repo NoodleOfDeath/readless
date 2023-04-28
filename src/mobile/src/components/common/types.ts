@@ -1,6 +1,28 @@
 import { ViewStyle } from 'react-native';
 
-export type Stylable<Style extends ViewStyle = ViewStyle> = {
+export const FONT_SIZES = {
+  body1: 16,
+  body2: 15,
+  caption: 14,
+  h1: 36,
+  h2: 32,
+  h3: 28,
+  h4: 26,
+  h5: 24,
+  h6: 22,
+  subtitle1: 18,
+  subtitle2: 17,
+} as const;
+
+export type Stylable<Style extends ViewStyle = ViewStyle> = 
+  { [key in keyof typeof FONT_SIZES]?: boolean } & {
+  // position
+  absolute?: boolean;
+  relative?: boolean;
+  top?: number | string;
+  bottom?: number | string;
+  left?: number | string;
+  right?: number | string;
   // dimensions
   width?: number | string;
   height?: number | string;
@@ -24,23 +46,11 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   justifyStart?: boolean;
   justifyEnd?: boolean;
   justifySpaced?: boolean;
-  // typographies
-  caption?: boolean;
-  subtitle1?: boolean;
-  subtitle2?: boolean;
-  body1?: boolean;
-  body2?: boolean;
-  h1?: boolean;
-  h2?: boolean;
-  h3?: boolean;
-  h4?: boolean;
-  h5?: boolean;
-  h6?: boolean;
   // text styling
   color?: string;
-  center?: boolean;
-  left?: boolean;
-  right?: boolean;
+  textCenter?: boolean;
+  textLeft?: boolean;
+  textRight?: boolean;
   fontFamily?: string;
   fontSize?: number;
   bold?: boolean;
@@ -48,7 +58,6 @@ export type Stylable<Style extends ViewStyle = ViewStyle> = {
   underline?: boolean;
   code?: boolean;
   inactive?: boolean;
-  shadowed?: boolean;
   // margins
   m?: number;
   mh?: number;

@@ -66,14 +66,19 @@
 	<string>Providing location can help ReadLess find news that is more local and relevant to you. We do not store you location data.</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Alegreya.otf</string>
 		<string>Alegreya-Bold.otf</string>
+		<string>Alegreya-BoldItalic.otf</string>
 		<string>Alegreya-Italic.otf</string>
-		<string>Alegreya-Regular.otf</string>
-		<string>AnonymousPro-Regular.ttf</string>
+		<string>Anonymous Pro.ttf</string>
+		<string>Anonymous Pro-Bold.ttf</string>
+		<string>Anonymous Pro-BoldItalic.ttf</string>
+		<string>Anonymous Pro-Italic.ttf</string>
 		<string>AntDesign.ttf</string>
-		<string>Arrow.ttf</string>
-		<string>DMMono-Regular.ttf</string>
-		<string>DMSans-Regular.ttf</string>
+		<string>DM Sans.ttf</string>
+		<string>DM Sans-Bold.ttf</string>
+		<string>DM Sans-BoldItalic.ttf</string>
+		<string>DM Sans-Italic.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
@@ -83,13 +88,23 @@
 		<string>Fontisto.ttf</string>
 		<string>Foundation.ttf</string>
 		<string>Ionicons.ttf</string>
-		<string>Lato-Regular.ttf</string>
+		<string>Lato.ttf</string>
+		<string>Lato-Bold.ttf</string>
+		<string>Lato-BoldItalic.ttf</string>
+		<string>Lato-Italic.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
 		<string>MaterialIcons.ttf</string>
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
-		<string>Roboto-Regular.ttf</string>
+		<string>Roboto.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-BoldItalic.ttf</string>
+		<string>Roboto-Italic.ttf</string>
 		<string>Zocial.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

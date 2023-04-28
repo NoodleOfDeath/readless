@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshControl } from 'react-native';
+import { ScrollView as RNScrollView, RefreshControl } from 'react-native';
 
 import {
   KeyboardAwareScrollView,
@@ -16,6 +16,7 @@ import { useStyles } from '~/hooks';
 export type ScrollViewProps = ViewProps & KeyboardAwareScrollViewProps & {
   refreshing?: boolean;
   onRefresh?: () => void;
+  keyboardAware?: boolean;
 };
 
 export function ScrollView({
@@ -25,12 +26,18 @@ export function ScrollView({
   refreshControl = onRefresh && (
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
+  keyboardAware = true,
   ...props
 }: ScrollViewProps) {
   const style = useStyles(props as Stylable);
   return (
-    <KeyboardAwareScrollView refreshControl={ refreshControl } { ...props }>
-      <View style={ style }>{children}</View>
-    </KeyboardAwareScrollView>
-  );
+    keyboardAware ? (
+      <KeyboardAwareScrollView refreshControl={ refreshControl } { ...props }>
+        <View style={ style }>{children}</View>
+      </KeyboardAwareScrollView>
+    ) : (
+      <RNScrollView refreshControl={ refreshControl } { ...props }>
+        <View style={ style }>{children}</View>
+      </RNScrollView>
+    ));
 }

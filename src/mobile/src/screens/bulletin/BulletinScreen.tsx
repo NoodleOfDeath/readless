@@ -52,7 +52,7 @@ export function BulletinScreen(_: ScreenProps<'default'>) {
       refreshing={ loading }
       onRefresh={ () => onMount() }>
       <View mt={ 10 } mh={ 16 }>
-        <Text center bold>
+        <Text textCenter bold>
           Come here for general updates, messages, and polls
         </Text>
         {loading && (

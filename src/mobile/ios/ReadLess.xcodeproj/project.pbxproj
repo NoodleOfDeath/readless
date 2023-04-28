@@ -21,9 +21,6 @@
 		010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
 		010F0D5C29E88EC40064DD97 /* PublicOutletAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */; };
 		010F0D6129E88EC40064DD97 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D3029E88EC40064DD97 /* Platform.swift */; };
-		010F0D7C29E895FC0064DD97 /* InteractionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D7A29E895FB0064DD97 /* InteractionType.swift */; };
-		010F0D7D29E895FC0064DD97 /* InteractionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D7B29E895FB0064DD97 /* InteractionResponse.swift */; };
-		010F0D7F29E896240064DD97 /* InteractionUserVote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D7E29E896240064DD97 /* InteractionUserVote.swift */; };
 		010F0D8129E89D770064DD97 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
 		0125BD3A29D791ED00EAC61C /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1A29D791EC00EAC61C /* Fontisto.ttf */; };
 		0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1C29D791EC00EAC61C /* Octicons.ttf */; };
@@ -32,30 +29,127 @@
 		0125BD4329D791ED00EAC61C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2329D791EC00EAC61C /* FontAwesome5_Brands.ttf */; };
 		0125BD4429D791ED00EAC61C /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */; };
 		0125BD4529D791ED00EAC61C /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2529D791EC00EAC61C /* AntDesign.ttf */; };
-		0125BD4829D791ED00EAC61C /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2829D791EC00EAC61C /* Lato-Regular.ttf */; };
+		0125BD4829D791ED00EAC61C /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2829D791EC00EAC61C /* Lato.ttf */; };
 		0125BD4929D791ED00EAC61C /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2929D791EC00EAC61C /* Foundation.ttf */; };
 		0125BD4A29D791ED00EAC61C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2A29D791EC00EAC61C /* Ionicons.ttf */; };
 		0125BD4B29D791ED00EAC61C /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2B29D791EC00EAC61C /* FontAwesome5_Solid.ttf */; };
 		0125BD4C29D791ED00EAC61C /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2C29D791EC00EAC61C /* FontAwesome5_Regular.ttf */; };
 		0125BD4F29D791ED00EAC61C /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */; };
-		0125BD5029D791ED00EAC61C /* DMMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3029D791EC00EAC61C /* DMMono-Regular.ttf */; };
 		0125BD5129D791ED00EAC61C /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3129D791EC00EAC61C /* Zocial.ttf */; };
 		0125BD5229D791ED00EAC61C /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3229D791EC00EAC61C /* EvilIcons.ttf */; };
 		0125BD5829D791ED00EAC61C /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */; };
 		0125BD5929D791ED00EAC61C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
 		013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* ConnectService.swift */; };
-		0150EA1529EDD59C004FBDFA /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2829D791EC00EAC61C /* Lato-Regular.ttf */; };
-		0150EA1729EDD681004FBDFA /* Arrow.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1629EDD681004FBDFA /* Arrow.ttf */; };
-		0150EA1829EDD681004FBDFA /* Arrow.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1629EDD681004FBDFA /* Arrow.ttf */; };
-		0150EA1A29EDD6C7004FBDFA /* Alegreya-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya-Regular.otf */; };
-		0150EA1B29EDD6C7004FBDFA /* Alegreya-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya-Regular.otf */; };
-		0150EA1D29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1C29EDD7EA004FBDFA /* DMSans-Regular.ttf */; };
-		0150EA1E29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1C29EDD7EA004FBDFA /* DMSans-Regular.ttf */; };
-		0150EA2029EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */; };
-		0150EA2129EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */; };
+		0143020329FACE1400D40293 /* Anonymous Pro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020029FACE1400D40293 /* Anonymous Pro-Italic.ttf */; };
+		0143020429FACE1400D40293 /* Anonymous Pro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020029FACE1400D40293 /* Anonymous Pro-Italic.ttf */; };
+		0143020529FACE1400D40293 /* Anonymous Pro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020029FACE1400D40293 /* Anonymous Pro-Italic.ttf */; };
+		0143020629FACE1400D40293 /* Anonymous Pro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020129FACE1400D40293 /* Anonymous Pro-Bold.ttf */; };
+		0143020729FACE1400D40293 /* Anonymous Pro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020129FACE1400D40293 /* Anonymous Pro-Bold.ttf */; };
+		0143020829FACE1400D40293 /* Anonymous Pro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020129FACE1400D40293 /* Anonymous Pro-Bold.ttf */; };
+		0143020929FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020229FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf */; };
+		0143020A29FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020229FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf */; };
+		0143020B29FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020229FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf */; };
+		0143020D29FACE2100D40293 /* Alegreya-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020C29FACE2100D40293 /* Alegreya-BoldItalic.otf */; };
+		0143020E29FACE2100D40293 /* Alegreya-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020C29FACE2100D40293 /* Alegreya-BoldItalic.otf */; };
+		0143020F29FACE2100D40293 /* Alegreya-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0143020C29FACE2100D40293 /* Alegreya-BoldItalic.otf */; };
+		0143021329FACE5900D40293 /* DM Sans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021029FACE5900D40293 /* DM Sans-Bold.ttf */; };
+		0143021429FACE5900D40293 /* DM Sans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021029FACE5900D40293 /* DM Sans-Bold.ttf */; };
+		0143021529FACE5900D40293 /* DM Sans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021029FACE5900D40293 /* DM Sans-Bold.ttf */; };
+		0143021629FACE5900D40293 /* DM Sans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021129FACE5900D40293 /* DM Sans-BoldItalic.ttf */; };
+		0143021729FACE5900D40293 /* DM Sans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021129FACE5900D40293 /* DM Sans-BoldItalic.ttf */; };
+		0143021829FACE5900D40293 /* DM Sans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021129FACE5900D40293 /* DM Sans-BoldItalic.ttf */; };
+		0143021929FACE5900D40293 /* DMSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021229FACE5900D40293 /* DMSans-Italic.ttf */; };
+		0143021A29FACE5900D40293 /* DMSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021229FACE5900D40293 /* DMSans-Italic.ttf */; };
+		0143021B29FACE5900D40293 /* DMSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143021229FACE5900D40293 /* DMSans-Italic.ttf */; };
+		0143021C29FACEDC00D40293 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2C29D791EC00EAC61C /* FontAwesome5_Regular.ttf */; };
+		0143021D29FACEDC00D40293 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3129D791EC00EAC61C /* Zocial.ttf */; };
+		0143021E29FACEDC00D40293 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2B29D791EC00EAC61C /* FontAwesome5_Solid.ttf */; };
+		0143021F29FACEDC00D40293 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2529D791EC00EAC61C /* AntDesign.ttf */; };
+		0143022029FACEDC00D40293 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1A29D791EC00EAC61C /* Fontisto.ttf */; };
+		0143022129FACEDC00D40293 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2A29D791EC00EAC61C /* Ionicons.ttf */; };
+		0143022229FACEDC00D40293 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2029D791EC00EAC61C /* Entypo.ttf */; };
+		0143022329FACEDC00D40293 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1C29D791EC00EAC61C /* Octicons.ttf */; };
+		0143022529FACEDC00D40293 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3229D791EC00EAC61C /* EvilIcons.ttf */; };
+		0143022629FACEDC00D40293 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2329D791EC00EAC61C /* FontAwesome5_Brands.ttf */; };
+		0143022729FACEDC00D40293 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */; };
+		0143022829FACEDC00D40293 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */; };
+		0143022929FACEDC00D40293 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2929D791EC00EAC61C /* Foundation.ttf */; };
+		0143022A29FACEDC00D40293 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1D29D791EC00EAC61C /* Feather.ttf */; };
+		0143022B29FACEDC00D40293 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */; };
+		0143022C29FACEDC00D40293 /* Alegreya-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B929F7348F003CC730 /* Alegreya-Bold.otf */; };
+		0143022D29FACEDC00D40293 /* Alegreya-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8BA29F73490003CC730 /* Alegreya-Italic.otf */; };
+		0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
+		0143022F29FACEDD00D40293 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2C29D791EC00EAC61C /* FontAwesome5_Regular.ttf */; };
+		0143023029FACEDD00D40293 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto.ttf */; };
+		0143023129FACEDD00D40293 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3129D791EC00EAC61C /* Zocial.ttf */; };
+		0143023229FACEDD00D40293 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2829D791EC00EAC61C /* Lato.ttf */; };
+		0143023329FACEDD00D40293 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2B29D791EC00EAC61C /* FontAwesome5_Solid.ttf */; };
+		0143023429FACEDD00D40293 /* Anonymous Pro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B629F7346F003CC730 /* Anonymous Pro.ttf */; };
+		0143023529FACEDD00D40293 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2529D791EC00EAC61C /* AntDesign.ttf */; };
+		0143023629FACEDD00D40293 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1A29D791EC00EAC61C /* Fontisto.ttf */; };
+		0143023729FACEDD00D40293 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2A29D791EC00EAC61C /* Ionicons.ttf */; };
+		0143023829FACEDD00D40293 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2029D791EC00EAC61C /* Entypo.ttf */; };
+		0143023929FACEDD00D40293 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1C29D791EC00EAC61C /* Octicons.ttf */; };
+		0143023B29FACEDD00D40293 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3229D791EC00EAC61C /* EvilIcons.ttf */; };
+		0143023C29FACEDD00D40293 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2329D791EC00EAC61C /* FontAwesome5_Brands.ttf */; };
+		0143023D29FACEDD00D40293 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */; };
+		0143023E29FACEDD00D40293 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */; };
+		0143023F29FACEDD00D40293 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2929D791EC00EAC61C /* Foundation.ttf */; };
+		0143024029FACEDD00D40293 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1D29D791EC00EAC61C /* Feather.ttf */; };
+		0143024129FACEDD00D40293 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */; };
+		0143024229FACEDD00D40293 /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
+		0143024329FACEDD00D40293 /* Alegreya-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B929F7348F003CC730 /* Alegreya-Bold.otf */; };
+		0143024429FACEDD00D40293 /* Alegreya-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8BA29F73490003CC730 /* Alegreya-Italic.otf */; };
+		0143024529FACEDD00D40293 /* DM Sans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1C29EDD7EA004FBDFA /* DM Sans.ttf */; };
+		0143024629FACEDD00D40293 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
+		0143024A29FACEF300D40293 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024729FACEF300D40293 /* Roboto-BoldItalic.ttf */; };
+		0143024B29FACEF300D40293 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024729FACEF300D40293 /* Roboto-BoldItalic.ttf */; };
+		0143024C29FACEF300D40293 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024729FACEF300D40293 /* Roboto-BoldItalic.ttf */; };
+		0143024D29FACEF300D40293 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024829FACEF300D40293 /* Roboto-Italic.ttf */; };
+		0143024E29FACEF300D40293 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024829FACEF300D40293 /* Roboto-Italic.ttf */; };
+		0143024F29FACEF300D40293 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024829FACEF300D40293 /* Roboto-Italic.ttf */; };
+		0143025029FACEF300D40293 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024929FACEF300D40293 /* Roboto-Bold.ttf */; };
+		0143025129FACEF300D40293 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024929FACEF300D40293 /* Roboto-Bold.ttf */; };
+		0143025229FACEF300D40293 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143024929FACEF300D40293 /* Roboto-Bold.ttf */; };
+		0143025629FACF1C00D40293 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025329FACF1C00D40293 /* Lato-Bold.ttf */; };
+		0143025729FACF1C00D40293 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025329FACF1C00D40293 /* Lato-Bold.ttf */; };
+		0143025829FACF1C00D40293 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025329FACF1C00D40293 /* Lato-Bold.ttf */; };
+		0143025929FACF1C00D40293 /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025429FACF1C00D40293 /* Lato-BoldItalic.ttf */; };
+		0143025A29FACF1C00D40293 /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025429FACF1C00D40293 /* Lato-BoldItalic.ttf */; };
+		0143025B29FACF1C00D40293 /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025429FACF1C00D40293 /* Lato-BoldItalic.ttf */; };
+		0143025C29FACF1C00D40293 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025529FACF1C00D40293 /* Lato-Italic.ttf */; };
+		0143025D29FACF1C00D40293 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025529FACF1C00D40293 /* Lato-Italic.ttf */; };
+		0143025E29FACF1C00D40293 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0143025529FACF1C00D40293 /* Lato-Italic.ttf */; };
+		0150ACA529F9577400875CF7 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0150ACA429F9577400875CF7 /* WidgetKit.framework */; };
+		0150ACA729F9577400875CF7 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0150ACA629F9577400875CF7 /* SwiftUI.framework */; };
+		0150ACAA29F9577400875CF7 /* ReadLessWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACA929F9577400875CF7 /* ReadLessWidgetBundle.swift */; };
+		0150ACAC29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAB29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift */; };
+		0150ACAE29F9577400875CF7 /* ReadLessWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAD29F9577400875CF7 /* ReadLessWidget.swift */; };
+		0150ACB129F9577600875CF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0150ACB029F9577600875CF7 /* Assets.xcassets */; };
+		0150ACB329F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */; };
+		0150ACB429F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */; };
+		0150ACBC29F957BB00875CF7 /* PublicOutletAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */; };
+		0150ACBD29F957BE00875CF7 /* PublicCategoryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */; };
+		0150ACBE29F957C100875CF7 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D3029E88EC40064DD97 /* Platform.swift */; };
+		0150ACBF29F957C400875CF7 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
+		0150ACC029F957D000875CF7 /* BulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkResponse.swift */; };
+		0150ACC129F957D500875CF7 /* ReadingFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D1329E88EC40064DD97 /* ReadingFormat.swift */; };
+		0150ACC329F957F200875CF7 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* ConnectService.swift */; };
+		0150ACC629F9582900875CF7 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACC529F9582900875CF7 /* SummaryCard.swift */; };
+		0150ACCB29F958A600875CF7 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
+		0150ACCC29F958A600875CF7 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A19D029EAEB1A0072EEE3 /* View.swift */; };
+		0150ACCD29F958A600875CF7 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
+		0150ACCE29F958A600875CF7 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C229EA4833006D3509 /* Date.swift */; };
+		0150EA1529EDD59C004FBDFA /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2829D791EC00EAC61C /* Lato.ttf */; };
+		0150EA1A29EDD6C7004FBDFA /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
+		0150EA1B29EDD6C7004FBDFA /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
+		0150EA1D29EDD7EA004FBDFA /* DM Sans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1C29EDD7EA004FBDFA /* DM Sans.ttf */; };
+		0150EA1E29EDD7EA004FBDFA /* DM Sans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1C29EDD7EA004FBDFA /* DM Sans.ttf */; };
+		0150EA2029EE16D8004FBDFA /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto.ttf */; };
+		0150EA2129EE16D8004FBDFA /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto.ttf */; };
 		015A19D129EAEB1A0072EEE3 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A19D029EAEB1A0072EEE3 /* View.swift */; };
-		015EF8B729F7346F003CC730 /* AnonymousPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B629F7346F003CC730 /* AnonymousPro-Regular.ttf */; };
-		015EF8B829F73472003CC730 /* AnonymousPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B629F7346F003CC730 /* AnonymousPro-Regular.ttf */; };
+		015EF8B729F7346F003CC730 /* Anonymous Pro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B629F7346F003CC730 /* Anonymous Pro.ttf */; };
+		015EF8B829F73472003CC730 /* Anonymous Pro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B629F7346F003CC730 /* Anonymous Pro.ttf */; };
 		015EF8BB29F73490003CC730 /* Alegreya-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8B929F7348F003CC730 /* Alegreya-Bold.otf */; };
 		015EF8BC29F73490003CC730 /* Alegreya-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 015EF8BA29F73490003CC730 /* Alegreya-Italic.otf */; };
 		018173BF29EA1842006D3509 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
@@ -137,9 +231,6 @@
 		010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicSummaryAttributes.swift; sourceTree = "<group>"; };
 		010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicOutletAttributes.swift; sourceTree = "<group>"; };
 		010F0D3029E88EC40064DD97 /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
-		010F0D7A29E895FB0064DD97 /* InteractionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionType.swift; sourceTree = "<group>"; };
-		010F0D7B29E895FB0064DD97 /* InteractionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionResponse.swift; sourceTree = "<group>"; };
-		010F0D7E29E896240064DD97 /* InteractionUserVote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionUserVote.swift; sourceTree = "<group>"; };
 		010F0D8029E89D770064DD97 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		0125BD1829D791EC00EAC61C /* ReadLess.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = ReadLess.entitlements; path = ReadLess/ReadLess.entitlements; sourceTree = "<group>"; };
 		0125BD1A29D791EC00EAC61C /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
@@ -149,24 +240,45 @@
 		0125BD2329D791EC00EAC61C /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
 		0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		0125BD2529D791EC00EAC61C /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AntDesign.ttf; sourceTree = "<group>"; };
-		0125BD2829D791EC00EAC61C /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
+		0125BD2829D791EC00EAC61C /* Lato.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lato.ttf; sourceTree = "<group>"; };
 		0125BD2929D791EC00EAC61C /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Foundation.ttf; sourceTree = "<group>"; };
 		0125BD2A29D791EC00EAC61C /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
 		0125BD2B29D791EC00EAC61C /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
 		0125BD2C29D791EC00EAC61C /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
 		0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
-		0125BD3029D791EC00EAC61C /* DMMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMMono-Regular.ttf"; sourceTree = "<group>"; };
 		0125BD3129D791EC00EAC61C /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
 		0125BD3229D791EC00EAC61C /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		013F32C229E8BA2D00CE8555 /* ConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectService.swift; sourceTree = "<group>"; };
-		0150EA1629EDD681004FBDFA /* Arrow.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Arrow.ttf; sourceTree = "<group>"; };
-		0150EA1929EDD6C7004FBDFA /* Alegreya-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Alegreya-Regular.otf"; sourceTree = "<group>"; };
-		0150EA1C29EDD7EA004FBDFA /* DMSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMSans-Regular.ttf"; sourceTree = "<group>"; };
-		0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		0143020029FACE1400D40293 /* Anonymous Pro-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Anonymous Pro-Italic.ttf"; sourceTree = "<group>"; };
+		0143020129FACE1400D40293 /* Anonymous Pro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Anonymous Pro-Bold.ttf"; sourceTree = "<group>"; };
+		0143020229FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Anonymous Pro-BoldItalic.ttf"; sourceTree = "<group>"; };
+		0143020C29FACE2100D40293 /* Alegreya-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Alegreya-BoldItalic.otf"; sourceTree = "<group>"; };
+		0143021029FACE5900D40293 /* DM Sans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DM Sans-Bold.ttf"; sourceTree = "<group>"; };
+		0143021129FACE5900D40293 /* DM Sans-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DM Sans-BoldItalic.ttf"; sourceTree = "<group>"; };
+		0143021229FACE5900D40293 /* DMSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DMSans-Italic.ttf"; sourceTree = "<group>"; };
+		0143024729FACEF300D40293 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
+		0143024829FACEF300D40293 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
+		0143024929FACEF300D40293 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		0143025329FACF1C00D40293 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
+		0143025429FACF1C00D40293 /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-BoldItalic.ttf"; sourceTree = "<group>"; };
+		0143025529FACF1C00D40293 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
+		0150ACA329F9577400875CF7 /* ReadLessWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReadLessWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0150ACA429F9577400875CF7 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		0150ACA629F9577400875CF7 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		0150ACA929F9577400875CF7 /* ReadLessWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidgetBundle.swift; sourceTree = "<group>"; };
+		0150ACAB29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidgetLiveActivity.swift; sourceTree = "<group>"; };
+		0150ACAD29F9577400875CF7 /* ReadLessWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidget.swift; sourceTree = "<group>"; };
+		0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = ReadLessWidget.intentdefinition; sourceTree = "<group>"; };
+		0150ACB029F9577600875CF7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0150ACB229F9577600875CF7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0150ACC529F9582900875CF7 /* SummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryCard.swift; sourceTree = "<group>"; };
+		0150EA1929EDD6C7004FBDFA /* Alegreya.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alegreya.otf; sourceTree = "<group>"; };
+		0150EA1C29EDD7EA004FBDFA /* DM Sans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DM Sans.ttf"; sourceTree = "<group>"; };
+		0150EA1F29EE16D8004FBDFA /* Roboto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Roboto.ttf; sourceTree = "<group>"; };
 		015A19D029EAEB1A0072EEE3 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
-		015EF8B629F7346F003CC730 /* AnonymousPro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnonymousPro-Regular.ttf"; sourceTree = "<group>"; };
+		015EF8B629F7346F003CC730 /* Anonymous Pro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Anonymous Pro.ttf"; sourceTree = "<group>"; };
 		015EF8B929F7348F003CC730 /* Alegreya-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Alegreya-Bold.otf"; sourceTree = "<group>"; };
 		015EF8BA29F73490003CC730 /* Alegreya-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Alegreya-Italic.otf"; sourceTree = "<group>"; };
 		018173BE29EA1842006D3509 /* PressActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressActions.swift; sourceTree = "<group>"; };
@@ -224,6 +336,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0150ACA029F9577400875CF7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0150ACA729F9577400875CF7 /* SwiftUI.framework in Frameworks */,
+				0150ACA529F9577400875CF7 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -255,15 +376,12 @@
 		010F0CE229E88D470064DD97 /* ReadLessWatch Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				010F0CE729E88D480064DD97 /* Assets.xcassets */,
 				018CE3AE29E989F5005E6391 /* ReadLessWatch Watch App.entitlements */,
 				018CE3AD29E9892B005E6391 /* ReadLessWatch-Watch-App-Info.plist */,
 				010F0CE329E88D470064DD97 /* ReadLessWatchApp.swift */,
 				010F0CE529E88D470064DD97 /* ContentView.swift */,
-				013F32C229E8BA2D00CE8555 /* ConnectService.swift */,
 				015A19CD29EAE6D70072EEE3 /* Views */,
-				013F32C429E8BA5E00CE8555 /* Extensions */,
-				010F0D0E29E88EC40064DD97 /* Models */,
-				010F0CE729E88D480064DD97 /* Assets.xcassets */,
 				010F0CE929E88D480064DD97 /* Preview Content */,
 			);
 			path = "ReadLessWatch Watch App";
@@ -297,9 +415,6 @@
 		010F0D0E29E88EC40064DD97 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				010F0D7E29E896240064DD97 /* InteractionUserVote.swift */,
-				010F0D7B29E895FB0064DD97 /* InteractionResponse.swift */,
-				010F0D7A29E895FB0064DD97 /* InteractionType.swift */,
 				010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */,
 				010F0D3029E88EC40064DD97 /* Platform.swift */,
 				010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */,
@@ -307,21 +422,25 @@
 				010F0D1329E88EC40064DD97 /* ReadingFormat.swift */,
 				018CE3AF29E98AB9005E6391 /* BulkResponse.swift */,
 			);
-			name = Models;
-			path = OpenApi/OpenAPIClient/Classes/OpenAPIs/Models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		0125BD1929D791EC00EAC61C /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				0150EA1929EDD6C7004FBDFA /* Alegreya.otf */,
 				015EF8B929F7348F003CC730 /* Alegreya-Bold.otf */,
+				0143020C29FACE2100D40293 /* Alegreya-BoldItalic.otf */,
 				015EF8BA29F73490003CC730 /* Alegreya-Italic.otf */,
-				0150EA1929EDD6C7004FBDFA /* Alegreya-Regular.otf */,
-				015EF8B629F7346F003CC730 /* AnonymousPro-Regular.ttf */,
+				015EF8B629F7346F003CC730 /* Anonymous Pro.ttf */,
+				0143020129FACE1400D40293 /* Anonymous Pro-Bold.ttf */,
+				0143020229FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf */,
+				0143020029FACE1400D40293 /* Anonymous Pro-Italic.ttf */,
 				0125BD2529D791EC00EAC61C /* AntDesign.ttf */,
-				0150EA1629EDD681004FBDFA /* Arrow.ttf */,
-				0125BD3029D791EC00EAC61C /* DMMono-Regular.ttf */,
-				0150EA1C29EDD7EA004FBDFA /* DMSans-Regular.ttf */,
+				0150EA1C29EDD7EA004FBDFA /* DM Sans.ttf */,
+				0143021029FACE5900D40293 /* DM Sans-Bold.ttf */,
+				0143021129FACE5900D40293 /* DM Sans-BoldItalic.ttf */,
+				0143021229FACE5900D40293 /* DMSans-Italic.ttf */,
 				0125BD2029D791EC00EAC61C /* Entypo.ttf */,
 				0125BD3229D791EC00EAC61C /* EvilIcons.ttf */,
 				0125BD1D29D791EC00EAC61C /* Feather.ttf */,
@@ -332,11 +451,17 @@
 				0125BD1A29D791EC00EAC61C /* Fontisto.ttf */,
 				0125BD2929D791EC00EAC61C /* Foundation.ttf */,
 				0125BD2A29D791EC00EAC61C /* Ionicons.ttf */,
-				0125BD2829D791EC00EAC61C /* Lato-Regular.ttf */,
+				0125BD2829D791EC00EAC61C /* Lato.ttf */,
+				0143025329FACF1C00D40293 /* Lato-Bold.ttf */,
+				0143025429FACF1C00D40293 /* Lato-BoldItalic.ttf */,
+				0143025529FACF1C00D40293 /* Lato-Italic.ttf */,
 				0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */,
 				0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */,
 				0125BD1C29D791EC00EAC61C /* Octicons.ttf */,
-				0150EA1F29EE16D8004FBDFA /* Roboto-Regular.ttf */,
+				0150EA1F29EE16D8004FBDFA /* Roboto.ttf */,
+				0143024929FACEF300D40293 /* Roboto-Bold.ttf */,
+				0143024729FACEF300D40293 /* Roboto-BoldItalic.ttf */,
+				0143024829FACEF300D40293 /* Roboto-Italic.ttf */,
 				0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */,
 				0125BD3129D791EC00EAC61C /* Zocial.ttf */,
 			);
@@ -355,6 +480,36 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		0150ACA829F9577400875CF7 /* ReadLessWidget */ = {
+			isa = PBXGroup;
+			children = (
+				0150ACC729F9582F00875CF7 /* Views */,
+				0150ACA929F9577400875CF7 /* ReadLessWidgetBundle.swift */,
+				0150ACAB29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift */,
+				0150ACAD29F9577400875CF7 /* ReadLessWidget.swift */,
+				0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */,
+				0150ACB029F9577600875CF7 /* Assets.xcassets */,
+				0150ACB229F9577600875CF7 /* Info.plist */,
+			);
+			path = ReadLessWidget;
+			sourceTree = "<group>";
+		};
+		0150ACC229F957E400875CF7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				013F32C229E8BA2D00CE8555 /* ConnectService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		0150ACC729F9582F00875CF7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0150ACC529F9582900875CF7 /* SummaryCard.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		015A19CD29EAE6D70072EEE3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -366,6 +521,9 @@
 		13B07FAE1A68108700A75B9A /* ReadLess */ = {
 			isa = PBXGroup;
 			children = (
+				013F32C429E8BA5E00CE8555 /* Extensions */,
+				010F0D0E29E88EC40064DD97 /* Models */,
+				0150ACC229F957E400875CF7 /* Services */,
 				01BC567B29DCF36700C69F9A /* main.jsbundle */,
 				0125BD1929D791EC00EAC61C /* Fonts */,
 				0125BD1829D791EC00EAC61C /* ReadLess.entitlements */,
@@ -385,6 +543,8 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */,
+				0150ACA429F9577400875CF7 /* WidgetKit.framework */,
+				0150ACA629F9577400875CF7 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -421,6 +581,7 @@
 				010F0CE229E88D470064DD97 /* ReadLessWatch Watch App */,
 				010F0CF329E88D490064DD97 /* ReadLessWatch Watch AppTests */,
 				010F0CFD29E88D490064DD97 /* ReadLessWatch Watch AppUITests */,
+				0150ACA829F9577400875CF7 /* ReadLessWidget */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -439,6 +600,7 @@
 				010F0CE129E88D470064DD97 /* Read Less.app */,
 				010F0CF029E88D490064DD97 /* ReadLessWatch Watch AppTests.xctest */,
 				010F0CFA29E88D490064DD97 /* ReadLessWatch Watch AppUITests.xctest */,
+				0150ACA329F9577400875CF7 /* ReadLessWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -540,6 +702,23 @@
 			productReference = 010F0CFA29E88D490064DD97 /* ReadLessWatch Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		0150ACA229F9577400875CF7 /* ReadLessWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0150ACBB29F9577600875CF7 /* Build configuration list for PBXNativeTarget "ReadLessWidgetExtension" */;
+			buildPhases = (
+				0150AC9F29F9577400875CF7 /* Sources */,
+				0150ACA029F9577400875CF7 /* Frameworks */,
+				0150ACA129F9577400875CF7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ReadLessWidgetExtension;
+			productName = ReadLessWidgetExtension;
+			productReference = 0150ACA329F9577400875CF7 /* ReadLessWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		13B07F861A680F5B00A75B9A /* ReadLess */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ReadLess" */;
@@ -589,6 +768,9 @@
 						CreatedOnToolsVersion = 14.3;
 						TestTargetID = 010F0CE029E88D470064DD97;
 					};
+					0150ACA229F9577400875CF7 = {
+						CreatedOnToolsVersion = 14.3;
+					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
 					};
@@ -612,6 +794,7 @@
 				010F0CE029E88D470064DD97 /* ReadLessWatch Watch App */,
 				010F0CEF29E88D490064DD97 /* ReadLessWatch Watch AppTests */,
 				010F0CF929E88D490064DD97 /* ReadLessWatch Watch AppUITests */,
+				0150ACA229F9577400875CF7 /* ReadLessWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -628,14 +811,44 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0143024B29FACEF300D40293 /* Roboto-BoldItalic.ttf in Resources */,
+				0143022329FACEDC00D40293 /* Octicons.ttf in Resources */,
+				0143022929FACEDC00D40293 /* Foundation.ttf in Resources */,
 				010F0CEB29E88D480064DD97 /* Preview Assets.xcassets in Resources */,
-				0150EA2129EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */,
-				0150EA1829EDD681004FBDFA /* Arrow.ttf in Resources */,
-				0150EA1529EDD59C004FBDFA /* Lato-Regular.ttf in Resources */,
-				0150EA1E29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */,
-				015EF8B829F73472003CC730 /* AnonymousPro-Regular.ttf in Resources */,
-				0150EA1B29EDD6C7004FBDFA /* Alegreya-Regular.otf in Resources */,
+				0143025729FACF1C00D40293 /* Lato-Bold.ttf in Resources */,
+				0143022229FACEDC00D40293 /* Entypo.ttf in Resources */,
+				0143022C29FACEDC00D40293 /* Alegreya-Bold.otf in Resources */,
+				0143021729FACE5900D40293 /* DM Sans-BoldItalic.ttf in Resources */,
+				0143022629FACEDC00D40293 /* FontAwesome5_Brands.ttf in Resources */,
+				0143021A29FACE5900D40293 /* DMSans-Italic.ttf in Resources */,
+				0143020729FACE1400D40293 /* Anonymous Pro-Bold.ttf in Resources */,
+				0150EA2129EE16D8004FBDFA /* Roboto.ttf in Resources */,
+				0143020E29FACE2100D40293 /* Alegreya-BoldItalic.otf in Resources */,
+				0143021F29FACEDC00D40293 /* AntDesign.ttf in Resources */,
+				0143025129FACEF300D40293 /* Roboto-Bold.ttf in Resources */,
+				0143022A29FACEDC00D40293 /* Feather.ttf in Resources */,
+				0150EA1529EDD59C004FBDFA /* Lato.ttf in Resources */,
+				0150EA1E29EDD7EA004FBDFA /* DM Sans.ttf in Resources */,
+				0143025A29FACF1C00D40293 /* Lato-BoldItalic.ttf in Resources */,
+				0143021D29FACEDC00D40293 /* Zocial.ttf in Resources */,
+				0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */,
+				0143022B29FACEDC00D40293 /* MaterialCommunityIcons.ttf in Resources */,
+				0143022529FACEDC00D40293 /* EvilIcons.ttf in Resources */,
+				0143022729FACEDC00D40293 /* SimpleLineIcons.ttf in Resources */,
+				0143022129FACEDC00D40293 /* Ionicons.ttf in Resources */,
+				0143022029FACEDC00D40293 /* Fontisto.ttf in Resources */,
+				015EF8B829F73472003CC730 /* Anonymous Pro.ttf in Resources */,
+				0143025D29FACF1C00D40293 /* Lato-Italic.ttf in Resources */,
+				0143022D29FACEDC00D40293 /* Alegreya-Italic.otf in Resources */,
+				0143021429FACE5900D40293 /* DM Sans-Bold.ttf in Resources */,
+				0143020A29FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf in Resources */,
+				0150EA1B29EDD6C7004FBDFA /* Alegreya.otf in Resources */,
+				0143021C29FACEDC00D40293 /* FontAwesome5_Regular.ttf in Resources */,
+				0143022829FACEDC00D40293 /* FontAwesome.ttf in Resources */,
+				0143020429FACE1400D40293 /* Anonymous Pro-Italic.ttf in Resources */,
+				0143024E29FACEF300D40293 /* Roboto-Italic.ttf in Resources */,
 				010F0CE829E88D480064DD97 /* Assets.xcassets in Resources */,
+				0143021E29FACEDC00D40293 /* FontAwesome5_Solid.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,38 +866,93 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0150ACA129F9577400875CF7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0143020529FACE1400D40293 /* Anonymous Pro-Italic.ttf in Resources */,
+				0143024229FACEDD00D40293 /* Alegreya.otf in Resources */,
+				0143023F29FACEDD00D40293 /* Foundation.ttf in Resources */,
+				0143024429FACEDD00D40293 /* Alegreya-Italic.otf in Resources */,
+				0143021529FACE5900D40293 /* DM Sans-Bold.ttf in Resources */,
+				0143025B29FACF1C00D40293 /* Lato-BoldItalic.ttf in Resources */,
+				0143023029FACEDD00D40293 /* Roboto.ttf in Resources */,
+				0143023329FACEDD00D40293 /* FontAwesome5_Solid.ttf in Resources */,
+				0143025829FACF1C00D40293 /* Lato-Bold.ttf in Resources */,
+				0143025229FACEF300D40293 /* Roboto-Bold.ttf in Resources */,
+				0143023729FACEDD00D40293 /* Ionicons.ttf in Resources */,
+				0143023C29FACEDD00D40293 /* FontAwesome5_Brands.ttf in Resources */,
+				0143021829FACE5900D40293 /* DM Sans-BoldItalic.ttf in Resources */,
+				0143020B29FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf in Resources */,
+				0143023829FACEDD00D40293 /* Entypo.ttf in Resources */,
+				0143024C29FACEF300D40293 /* Roboto-BoldItalic.ttf in Resources */,
+				0143024529FACEDD00D40293 /* DM Sans.ttf in Resources */,
+				0143023429FACEDD00D40293 /* Anonymous Pro.ttf in Resources */,
+				0143024329FACEDD00D40293 /* Alegreya-Bold.otf in Resources */,
+				0150ACB129F9577600875CF7 /* Assets.xcassets in Resources */,
+				0143023E29FACEDD00D40293 /* FontAwesome.ttf in Resources */,
+				0143023B29FACEDD00D40293 /* EvilIcons.ttf in Resources */,
+				0143023129FACEDD00D40293 /* Zocial.ttf in Resources */,
+				0143023529FACEDD00D40293 /* AntDesign.ttf in Resources */,
+				0143023229FACEDD00D40293 /* Lato.ttf in Resources */,
+				0143020829FACE1400D40293 /* Anonymous Pro-Bold.ttf in Resources */,
+				0143024F29FACEF300D40293 /* Roboto-Italic.ttf in Resources */,
+				0143022F29FACEDD00D40293 /* FontAwesome5_Regular.ttf in Resources */,
+				0143021B29FACE5900D40293 /* DMSans-Italic.ttf in Resources */,
+				0143024629FACEDD00D40293 /* MaterialIcons.ttf in Resources */,
+				0143025E29FACF1C00D40293 /* Lato-Italic.ttf in Resources */,
+				0143023929FACEDD00D40293 /* Octicons.ttf in Resources */,
+				0143024029FACEDD00D40293 /* Feather.ttf in Resources */,
+				0143023D29FACEDD00D40293 /* SimpleLineIcons.ttf in Resources */,
+				0143023629FACEDD00D40293 /* Fontisto.ttf in Resources */,
+				0143024129FACEDD00D40293 /* MaterialCommunityIcons.ttf in Resources */,
+				0143020F29FACE2100D40293 /* Alegreya-BoldItalic.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0150EA1A29EDD6C7004FBDFA /* Alegreya-Regular.otf in Resources */,
+				0150EA1A29EDD6C7004FBDFA /* Alegreya.otf in Resources */,
+				0143024D29FACEF300D40293 /* Roboto-Italic.ttf in Resources */,
 				0125BD4C29D791ED00EAC61C /* FontAwesome5_Regular.ttf in Resources */,
-				0150EA2029EE16D8004FBDFA /* Roboto-Regular.ttf in Resources */,
-				015EF8B729F7346F003CC730 /* AnonymousPro-Regular.ttf in Resources */,
+				0150EA2029EE16D8004FBDFA /* Roboto.ttf in Resources */,
+				015EF8B729F7346F003CC730 /* Anonymous Pro.ttf in Resources */,
+				0143021929FACE5900D40293 /* DMSans-Italic.ttf in Resources */,
 				0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */,
-				0150EA1D29EDD7EA004FBDFA /* DMSans-Regular.ttf in Resources */,
+				0150EA1D29EDD7EA004FBDFA /* DM Sans.ttf in Resources */,
 				0125BD4A29D791ED00EAC61C /* Ionicons.ttf in Resources */,
 				0125BD5129D791ED00EAC61C /* Zocial.ttf in Resources */,
-				0125BD5029D791ED00EAC61C /* DMMono-Regular.ttf in Resources */,
+				0143025629FACF1C00D40293 /* Lato-Bold.ttf in Resources */,
+				0143025929FACF1C00D40293 /* Lato-BoldItalic.ttf in Resources */,
 				0125BD5229D791ED00EAC61C /* EvilIcons.ttf in Resources */,
 				0125BD4929D791ED00EAC61C /* Foundation.ttf in Resources */,
+				0143020629FACE1400D40293 /* Anonymous Pro-Bold.ttf in Resources */,
 				0125BD4B29D791ED00EAC61C /* FontAwesome5_Solid.ttf in Resources */,
 				01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */,
-				0150EA1729EDD681004FBDFA /* Arrow.ttf in Resources */,
 				0125BD4529D791ED00EAC61C /* AntDesign.ttf in Resources */,
 				0125BD3A29D791ED00EAC61C /* Fontisto.ttf in Resources */,
 				0125BD4F29D791ED00EAC61C /* FontAwesome.ttf in Resources */,
 				0125BD3D29D791ED00EAC61C /* Feather.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				015EF8BC29F73490003CC730 /* Alegreya-Italic.otf in Resources */,
+				0143020929FACE1400D40293 /* Anonymous Pro-BoldItalic.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0125BD4329D791ED00EAC61C /* FontAwesome5_Brands.ttf in Resources */,
+				0143021629FACE5900D40293 /* DM Sans-BoldItalic.ttf in Resources */,
 				0125BD5829D791ED00EAC61C /* SimpleLineIcons.ttf in Resources */,
+				0143020329FACE1400D40293 /* Anonymous Pro-Italic.ttf in Resources */,
+				0143025C29FACF1C00D40293 /* Lato-Italic.ttf in Resources */,
 				0125BD4429D791ED00EAC61C /* MaterialCommunityIcons.ttf in Resources */,
 				0125BD5929D791ED00EAC61C /* MaterialIcons.ttf in Resources */,
+				0143020D29FACE2100D40293 /* Alegreya-BoldItalic.otf in Resources */,
+				0143025029FACEF300D40293 /* Roboto-Bold.ttf in Resources */,
 				0125BD4029D791ED00EAC61C /* Entypo.ttf in Resources */,
 				015EF8BB29F73490003CC730 /* Alegreya-Bold.otf in Resources */,
-				0125BD4829D791ED00EAC61C /* Lato-Regular.ttf in Resources */,
+				0125BD4829D791ED00EAC61C /* Lato.ttf in Resources */,
+				0143024A29FACEF300D40293 /* Roboto-BoldItalic.ttf in Resources */,
+				0143021329FACE5900D40293 /* DM Sans-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -862,14 +1130,11 @@
 				013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */,
 				018CE3B029E98AB9005E6391 /* BulkResponse.swift in Sources */,
 				010F0D8129E89D770064DD97 /* Color.swift in Sources */,
-				010F0D7D29E895FC0064DD97 /* InteractionResponse.swift in Sources */,
 				010F0D5C29E88EC40064DD97 /* PublicOutletAttributes.swift in Sources */,
 				010F0CE429E88D470064DD97 /* ReadLessWatchApp.swift in Sources */,
 				010F0D4429E88EC40064DD97 /* ReadingFormat.swift in Sources */,
 				010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */,
-				010F0D7C29E895FC0064DD97 /* InteractionType.swift in Sources */,
 				015A19D129EAEB1A0072EEE3 /* View.swift in Sources */,
-				010F0D7F29E896240064DD97 /* InteractionUserVote.swift in Sources */,
 				010F0D5229E88EC40064DD97 /* PublicCategoryAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -891,6 +1156,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0150AC9F29F9577400875CF7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0150ACBE29F957C100875CF7 /* Platform.swift in Sources */,
+				0150ACAE29F9577400875CF7 /* ReadLessWidget.swift in Sources */,
+				0150ACBC29F957BB00875CF7 /* PublicOutletAttributes.swift in Sources */,
+				0150ACCE29F958A600875CF7 /* Date.swift in Sources */,
+				0150ACAC29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift in Sources */,
+				0150ACCB29F958A600875CF7 /* Color.swift in Sources */,
+				0150ACBF29F957C400875CF7 /* PublicSummaryAttributes.swift in Sources */,
+				0150ACAA29F9577400875CF7 /* ReadLessWidgetBundle.swift in Sources */,
+				0150ACB329F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */,
+				0150ACC129F957D500875CF7 /* ReadingFormat.swift in Sources */,
+				0150ACC029F957D000875CF7 /* BulkResponse.swift in Sources */,
+				0150ACBD29F957BE00875CF7 /* PublicCategoryAttributes.swift in Sources */,
+				0150ACC329F957F200875CF7 /* ConnectService.swift in Sources */,
+				0150ACCC29F958A600875CF7 /* View.swift in Sources */,
+				0150ACCD29F958A600875CF7 /* PressActions.swift in Sources */,
+				0150ACC629F9582900875CF7 /* SummaryCard.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -898,6 +1186,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */,
+				0150ACB429F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1201,6 +1490,87 @@
 			};
 			name = Release;
 		};
+		0150ACB929F9577600875CF7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UD23CMJ5W5;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadLessWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadLessWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.ReadLessWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0150ACBA29F9577600875CF7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = UD23CMJ5W5;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadLessWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadLessWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.ReadLessWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-ReadLess.debug.xcconfig */;
@@ -1209,7 +1579,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
@@ -1219,7 +1589,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1246,7 +1616,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Read Less";
@@ -1255,7 +1625,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1446,6 +1816,15 @@
 			buildConfigurations = (
 				010F0D0C29E88D490064DD97 /* Debug */,
 				010F0D0D29E88D490064DD97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0150ACBB29F9577600875CF7 /* Build configuration list for PBXNativeTarget "ReadLessWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0150ACB929F9577600875CF7 /* Debug */,
+				0150ACBA29F9577600875CF7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
