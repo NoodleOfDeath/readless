@@ -274,7 +274,7 @@ export function SearchScreen({
                 p={ 4 }
                 rounded
                 onPress={ () => removeReadSummaries() }>
-                Hide Read
+                Hide Already Read
               </Button>
               <View row />
               <View>

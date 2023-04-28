@@ -15,7 +15,7 @@ import {
 } from '~/api';
 import { Text } from '~/components';
 import { ToastContext } from '~/contexts';
-import {  useOrientation, useTheme } from '~/hooks';
+import {  useTheme } from '~/hooks';
 import { SummaryUtils } from '~/utils';
 
 export type ShareFabProps = Partial<FABGroupProps> & {
@@ -59,7 +59,7 @@ export function ShareFab({
   ...other
 }: ShareFabProps) {
   const theme = useTheme();
-  const orientation = useOrientation();
+  // const orientation = useOrientation();
   const toast = React.useContext(ToastContext);
 
   const handleCopyToClipboard = React.useCallback(async (content: string, message: string) => {
@@ -133,6 +133,7 @@ export function ShareFab({
   return (
     <FAB.Group
       { ...other }
+      color="white"
       fabStyle={ { backgroundColor: theme.colors.primary } }
       visible={ visible }
       open={ open }
@@ -144,14 +145,24 @@ export function ShareFab({
           onPress: () => summary && handleCopyToClipboard(content ?? SummaryUtils.shareableLink(summary, BASE_DOMAIN, format), `Copied "${SummaryUtils.shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`),
         },
         {
-          icon:'content-copy',
-          label: `Copy summary ${format ?? 'title'}`,
-          onPress: () => handleCopyToClipboard(content ?? summary?.title ?? '', `Summary ${format ?? 'title'} copied to clipboard`), 
+          icon: 'link-variant',
+          label: 'Copy original source link',
+          onPress: () => summary && handleCopyToClipboard(summary.url, `Copied "${summary.url}" to clipboard`),
         },
         {
-          icon: 'export-variant',
-          label: 'Share',
-          onPress: () => handleStandardShare(), 
+          icon:'content-copy',
+          label: 'Copy summary title',
+          onPress: () => handleCopyToClipboard(content ?? summary?.title ?? '', 'Summary title copied to clipboard'), 
+        },
+        {
+          icon:'content-copy',
+          label: 'Copy summary bullets',
+          onPress: () => handleCopyToClipboard(summary?.bullets.join('\n') ?? '', 'Summary bullets copied to clipboard'), 
+        },
+        {
+          icon:'content-copy',
+          label: 'Copy summary paragraph',
+          onPress: () => handleCopyToClipboard(summary?.shortSummary ?? '', 'Summary paragraph copied to clipboard'), 
         },
         {
           icon:'instagram',
@@ -167,6 +178,11 @@ export function ShareFab({
           icon:'twitter',
           label: 'Twitter',
           onPress:() => handleSocialShare(Social.Twitter), 
+        },
+        {
+          icon: 'export-variant',
+          label: 'Share',
+          onPress: () => handleStandardShare(), 
         },
       ] }
       onStateChange={ ({ open }) => !open && onDismiss?.() } />

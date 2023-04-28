@@ -126,7 +126,7 @@ export function Summary({
   }, [keywords, summary.title]);
 
   const timeAgo = React.useMemo(() => {
-    if ((new Date(summary.originalDate ?? 0)).valueOf() > Date.now()) {
+    if (new Date(summary.originalDate ?? 0) > lastTick) {
       return <Text bold caption>just now</Text>;
     }
     const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true })
@@ -192,6 +192,18 @@ export function Summary({
     }
     setFormat(newFormat);
   }, [initialFormat, onFormatChange, setPreference, summary]);
+  
+  const toggleBookmarked = React.useCallback(() => {
+    onInteract?.(InteractionType.Bookmark, undefined, undefined, () => {
+      if (!bookmarked) {
+        setPreference('readSummaries', (prev) => {
+          const state = { ...prev };
+          delete state[summary.id];
+          return (prev = state);
+        });
+      }
+    });
+  }, [bookmarked, onInteract, setPreference, summary.id]);
 
   const handlePlayAudio = React.useCallback(async (text: string) => {
     if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
@@ -217,26 +229,6 @@ export function Summary({
       startIcon: isRead ? 'email-mark-as-unread' : 'email-open',
       text: isRead ? 'Mark as Unread' : 'Mark as Read',
     }, {
-      onPress: () => 
-        onInteract?.(InteractionType.Bookmark, undefined, undefined, () => {
-          if (!bookmarked) {
-            setPreference('readSummaries', (prev) => {
-              const state = { ...prev };
-              delete state[summary.id];
-              return (prev = state);
-            });
-          }
-        }),
-      startIcon: bookmarked ? 'bookmark' : 'bookmark-outline',
-      text: 'Read Later',
-    }];
-    return (
-      <RenderActions actions={ actions } theme={ theme } side='left' />
-    );
-  }, [bookmarked, isRead, onInteract, setPreference, summary, theme]);
-  
-  const renderRightActions = React.useCallback(() => {
-    const actions = [{
       onPress: () => {
         onInteract?.(InteractionType.Hide, undefined, undefined, () => {
           setPreference('removedSummaries', (prev) => ({
@@ -247,7 +239,14 @@ export function Summary({
       },
       startIcon: 'eye-off',
       text: 'Hide',
-    }, {
+    }];
+    return (
+      <RenderActions actions={ actions } theme={ theme } side='left' />
+    );
+  }, [isRead, onInteract, setPreference, summary, theme]);
+  
+  const renderRightActions = React.useCallback(() => {
+    const actions = [{
       onPress: () => { 
         onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
           setShowFeedbackDialog(true, { summary });
@@ -259,7 +258,7 @@ export function Summary({
     return (
       <RenderActions actions={ actions } theme={ theme } side='right' />
     );
-  }, [theme, onInteract, setPreference, summary, setShowFeedbackDialog]);
+  }, [theme, onInteract, summary, setShowFeedbackDialog]);
   
   return (
     <ViewShot ref={ viewshot }>
@@ -292,13 +291,19 @@ export function Summary({
                   {summary.outletAttributes?.displayName}
                 </Button>
                 <View row />
-                <Button 
-                  elevated
-                  p={ 4 }
-                  rounded
-                  onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-                  View original source
-                </Button>
+                <View>
+                  <Button 
+                    row
+                    alignCenter
+                    gap={ 4 }
+                    elevated
+                    p={ 4 }
+                    rounded
+                    endIcon='open-in-app'
+                    onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
+                    Original source
+                  </Button>
+                </View>
               </View>
             )}
             <Text
@@ -329,6 +334,15 @@ export function Summary({
                   </View>
                   <View>
                     <View row alignCenter justifyEnd gap={ 8 }>
+                      <Button
+                        elevated
+                        p={ 4 }
+                        rounded
+                        alignCenter
+                        subtitle2
+                        color='text'
+                        startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+                        onPress={ () => toggleBookmarked() } />
                       <Button
                         elevated
                         p={ 4 }
@@ -374,7 +388,7 @@ export function Summary({
               <View>
                 <Divider />
                 <View>
-                  {showShareFab ? content : content.split(/\n/).map((line, i) => (
+                  {showShareFab ? <Text>{content}</Text> : content.split(/\n/).map((line, i) => (
                     <Markdown
                       key={ i }
                       styles={ {
