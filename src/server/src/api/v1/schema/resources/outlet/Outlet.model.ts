@@ -321,7 +321,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: 'article header .media-body a[href*="/contributors"]' },
-        date: { selector: 'article header .media-body :last-child' },
+        date: { selector: 'article header .media-body .d-block > ul > li' },
         spider:{
           attribute: 'href',
           selector: [
@@ -1118,7 +1118,7 @@ export class Outlet<
       selectors: {
         article: { selector: '.c-article-body p' },
         author: { selector: '.article__byline .article__author a' },
-        date: { selector: '.article_byline .article__published-date' },
+        date: { selector: '.article__byline .article__published-date' },
         spider:{
           attribute: 'href',
           selector: [
