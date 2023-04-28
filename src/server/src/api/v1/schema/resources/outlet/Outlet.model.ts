@@ -321,7 +321,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: 'article header .media-body a[href*="/contributors"]' },
-        date: { selector: 'article header .media-body :last-child' },
+        date: { selector: 'article header .media-body .d-block > ul > li' },
         spider:{
           attribute: 'href',
           selector: [
@@ -981,8 +981,8 @@ export class Outlet<
       name: 'rolling-stone',
       selectors: {
         article: { selector: 'article p' },
-        author: { selector: 'header .author-name a' },
-        date: { selector: 'header time' },
+        author: { selector: 'article .author-name a' },
+        date: { selector: 'article .author time' },
         spider:{
           attribute: 'href',
           selector: [
@@ -1118,7 +1118,7 @@ export class Outlet<
       selectors: {
         article: { selector: '.c-article-body p' },
         author: { selector: '.article__byline .article__author a' },
-        date: { selector: '.article_byline .article__published-date' },
+        date: { selector: '.article__byline .article__published-date' },
         spider:{
           attribute: 'href',
           selector: [
@@ -1142,7 +1142,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: 'article a[href="/staff/"]' },
-        date: { selector: 'article *[aria-label*="Published:"]' },
+        date: { attribute: 'aria-label', selector: 'article div[aria-label^="Published"]' },
         spider:{
           attribute: 'href',
           selector: 'a[href*="/story/"]',

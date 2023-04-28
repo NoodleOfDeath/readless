@@ -46,8 +46,8 @@ const DATES: Test[] = [
     expect: new Date('Jun 12, 2023, 11:19 AM EDT'), 
   },
   {
-    date: '20 May 2023 • 3:26pm',
-    expect: new Date('May 20, 2023 3:26 PM EDT'), 
+    date: 'Apr 27 20237:55 PM EDT11 Hours Ago',
+    expect: new Date('Apr 27, 2023 7:55 EDT'), 
   },
   {
     date: 'by Lauren Sforza - 11/24/23 6:03 PM ET',
@@ -92,6 +92,10 @@ const DATES: Test[] = [
   {
     date: '2023-04-17 12:22:23.000000-0400',
     expect: new Date('Apr 17, 2023 12:22:23 PM GMT-0400'),
+  },
+  {
+    date: 'Published: 10:16 a.m. ET April 27, 2023 Updated: 8:28 p.m. ET April 27, 2023',
+    expect: new Date('Apr 27, 2023 10:16 AM EST'),
   },
 ];
 
