@@ -91,7 +91,7 @@ const LOOT: { [ Key in keyof typeof Outlet.OUTLETS]?: Pick<Loot, 'url' | 'author
   cnbc: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.cnbc.com/2023/04/23/hbo-netflix-have-evolved-away-from-each-other.html',
+    url: 'https://www.cnbc.com/2023/04/28/asia-markets-to-rise-as-wall-street-rallies-investors-look-ahead-to-bank-of-japan-policy-meeting.html',
   },
   cnn: {
     authors: [],
