@@ -135,8 +135,7 @@ export default function Summary({
               <StyledLink
                 variant="subtitle1"
                 href={ summary.url }
-                target="_blank"
-                color="inherit">
+                target="_blank">
                 View Original Source
               </StyledLink>
             </Stack>
