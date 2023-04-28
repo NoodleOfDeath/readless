@@ -17,14 +17,18 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
     // containers
     components: 
       StyleSheet.create({
-        button: { backgroundColor: lightMode ? '#efefef' : '#2a2a2a' },
+        button: { backgroundColor: lightMode ? '#eee' : '#2a2a2a' },
+        buttonDisabled: { 
+          backgroundColor: lightMode ? '#ddd' : '#333',
+          color: lightMode ? '#888' : '#999',
+        },
         buttonSelected: {
           backgroundColor: '#8b0000',
           color: '#fff',
         },
         buttonText: { padding: 4 },
         card: {
-          backgroundColor: lightMode ? '#fafafa' : '#010101',
+          backgroundColor: lightMode ? '#fefefe' : '#010101',
           marginBottom: 8,
           overflow: 'visible',
           padding: 16,

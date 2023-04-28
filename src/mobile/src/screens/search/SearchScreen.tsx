@@ -199,11 +199,11 @@ export function SearchScreen({
       return;
     }
     await queueSummary(summaries[0]);
-    TrackPlayer.play();
     [...summaries].slice(1, pageSize - 1).forEach((summary) => {
       handleInteraction(summary, InteractionType.Listen);
-      setTimeout(async () => await queueSummary(summary), 200);
+      setTimeout(async () => await queueSummary(summary), 500);
     });
+    TrackPlayer.play();
   }, [pageSize, summaries, handleInteraction, queueSummary]);
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
@@ -274,7 +274,7 @@ export function SearchScreen({
                 p={ 4 }
                 rounded
                 onPress={ () => removeReadSummaries() }>
-                Hide Read
+                Hide Already Read
               </Button>
               <View row />
               <View>

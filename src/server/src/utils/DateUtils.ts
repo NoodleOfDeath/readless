@@ -19,8 +19,9 @@ export function parseDate(context: string) {
   }
   const dateMatches = context.match(DATE_EXPR);
   const timeMatches = context.match(TIME_EXPR);
-  let dateMatch: string;
-  let parsedDate: Date;
+  let year = String(new Date().getFullYear());
+  let month = monthToString(new Date().getMonth() + 1);
+  let day = String(new Date().getDate());
   let hour = 0, min = 0, sec = 0, amOrPm = '';
   let timezone = '';
   if (dateMatches) {
@@ -35,24 +36,23 @@ export function parseDate(context: string) {
       }
     }
     timezone = tz;
-    const year = year1 ?? year2 ?? year3 ?? new Date().getFullYear();
-    const month = monthToString(month1 ?? month2 ?? month3 ?? new Date().getMonth() + 1);
-    const day = day1 ?? day2 ?? day3 ?? day4;
-    if (timeMatches) {
-      const [_0, hour1, amOrPm1, hour2, min1, sec1, amOrPm2, timezone2] = timeMatches;
-      hour = !Number.isNaN(parseInt(hour1 ?? hour2)) ? parseInt(hour1 ?? hour2) : 0;
-      min = !Number.isNaN(parseInt(min1)) ? parseInt(min1) : 0;
-      sec = !Number.isNaN(parseInt(sec1)) ? parseInt(sec1) : 0;
-      amOrPm = (amOrPm1 ?? amOrPm2 ?? '').replace(/\./g, '');
-      if (timezone2) {
-        timezone = timezone2;
-      }
-    }
-    dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : 'pm'}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/, ($0, $1) => `${$1}ST`)].join(' ');
-    parsedDate = new Date(dateMatch);
-    return parsedDate;
+    year = year1 ?? year2 ?? year3 ?? String(new Date().getFullYear());
+    month = monthToString(month1 ?? month2 ?? month3 ?? new Date().getMonth() + 1);
+    day = day1 ?? day2 ?? day3 ?? day4 ?? String(new Date().getDate());
   }
-  return new Date('invalid');
+  if (timeMatches) {
+    const [_0, hour1, amOrPm1, hour2, min1, sec1, amOrPm2, timezone2] = timeMatches;
+    hour = !Number.isNaN(parseInt(hour1 ?? hour2)) ? parseInt(hour1 ?? hour2) : 0;
+    min = !Number.isNaN(parseInt(min1)) ? parseInt(min1) : 0;
+    sec = !Number.isNaN(parseInt(sec1)) ? parseInt(sec1) : 0;
+    amOrPm = (amOrPm1 ?? amOrPm2 ?? '').replace(/\./g, '');
+    if (timezone2) {
+      timezone = timezone2;
+    }
+  }
+  const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : 'pm'}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/, ($0, $1) => `${$1}ST`)].join(' ');
+  const parsedDate = new Date(dateMatch);
+  return parsedDate;
 }
 
 export function sortDates(...dates: Date[]) {

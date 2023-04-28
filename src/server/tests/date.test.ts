@@ -46,8 +46,8 @@ const DATES: Test[] = [
     expect: new Date('Jun 12, 2023, 11:19 AM EDT'), 
   },
   {
-    date: 'Apr 27 20237:55 PM EDT11 Hours Ago',
-    expect: new Date('Apr 27, 2023 7:55 EDT'), 
+    date: 'Apr 27 2023 7:55 PM EDT11 Hours Ago',
+    expect: new Date('Apr 27, 2023 7:55 PM EDT'), 
   },
   {
     date: 'by Lauren Sforza - 11/24/23 6:03 PM ET',
@@ -96,6 +96,10 @@ const DATES: Test[] = [
   {
     date: 'Published: 10:16 a.m. ET April 27, 2023 Updated: 8:28 p.m. ET April 27, 2023',
     expect: new Date('Apr 27, 2023 10:16 AM EST'),
+  },
+  {
+    date: '11:12 am',
+    expect: new Date(`${new Date().toLocaleDateString()} 11:12 AM`),
   },
 ];
 

@@ -1,5 +1,6 @@
 export * from './types';
 export * from './ActivityIndicator';
+export * from './Banner';
 export * from './Button';
 export * from './Checkbox';
 export * from './Dialog';
