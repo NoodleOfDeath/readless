@@ -93,13 +93,13 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.readless"
+    namespace "ai.readless"
     defaultConfig {
-        applicationId "com.readless"
+        applicationId "ai.readless.ReadLess"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "1.1.2-2 <Loxosceles reclusa>"
+        versionCode 10
+        versionName "1.1.4 <Loxosceles reclusa>"
     }
 
     splits {

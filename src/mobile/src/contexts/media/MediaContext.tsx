@@ -10,7 +10,7 @@ import TrackPlayer, {
   Track,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
-import Tts, { Voice } from 'react-native-tts';
+import Tts, { Voice } from 'react-native-tts-reborn';
 
 import {
   DEFAULT_MEDIA_CONTEXT,

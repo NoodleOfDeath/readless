@@ -465,8 +465,7 @@
 				0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */,
 				0125BD3129D791EC00EAC61C /* Zocial.ttf */,
 			);
-			name = Fonts;
-			path = ReadLess/Fonts;
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		013F32C429E8BA5E00CE8555 /* Extensions */ = {
@@ -524,15 +523,15 @@
 				013F32C429E8BA5E00CE8555 /* Extensions */,
 				010F0D0E29E88EC40064DD97 /* Models */,
 				0150ACC229F957E400875CF7 /* Services */,
-				01BC567B29DCF36700C69F9A /* main.jsbundle */,
 				0125BD1929D791EC00EAC61C /* Fonts */,
 				0125BD1829D791EC00EAC61C /* ReadLess.entitlements */,
+				01BC567B29DCF36700C69F9A /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
+				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
-				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = ReadLess;
 			sourceTree = "<group>";
@@ -1579,7 +1578,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
@@ -1616,7 +1615,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Read Less";

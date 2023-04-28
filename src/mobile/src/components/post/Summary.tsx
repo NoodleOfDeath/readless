@@ -126,7 +126,7 @@ export function Summary({
   }, [keywords, summary.title]);
 
   const timeAgo = React.useMemo(() => {
-    if (new Date(summary.originalDate ?? 0) > lastTick) {
+    if ((new Date(summary.originalDate ?? 0)).valueOf() > lastTick) {
       return <Text bold caption>just now</Text>;
     }
     const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true })
@@ -203,7 +203,7 @@ export function Summary({
         });
       }
     });
-  }, [bookmarked, onInteract, setPreference, summary.id]);
+  }, [bookmarked, onInteract, setPreference]);
 
   const handlePlayAudio = React.useCallback(async (text: string) => {
     if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
@@ -258,7 +258,7 @@ export function Summary({
     return (
       <RenderActions actions={ actions } theme={ theme } side='right' />
     );
-  }, [theme, onInteract, summary, setShowFeedbackDialog]);
+  }, [theme, onInteract, setPreference, summary, setShowFeedbackDialog]);
   
   return (
     <ViewShot ref={ viewshot }>
@@ -310,7 +310,7 @@ export function Summary({
               bold 
               subtitle1
               onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-              {showShareFab ? markdownTitle : (
+              {showShareFab || keywords.length === 0 ? markdownTitle : (
                 <Markdown 
                   bold
                   subtitle1
@@ -388,7 +388,9 @@ export function Summary({
               <View>
                 <Divider />
                 <View>
-                  {showShareFab ? <Text>{content}</Text> : content.split(/\n/).map((line, i) => (
+                  {showShareFab || keywords.length === 0 ? (
+                    <Text>{content}</Text>
+                  ) : content.split(/\n/).map((line, i) => (
                     <Markdown
                       key={ i }
                       styles={ {

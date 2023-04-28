@@ -1,9 +1,10 @@
-package com.readless;
+package ai.readless.ReadLess;
 import android.content.res.Configuration;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
 
 import android.app.Application;
+import com.facebook.react.BuildConfig;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -26,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
+          // Packages that cannot be auto-linked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           return packages;
         }
@@ -55,7 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
+    SoLoader.init(this, /* native expo package */ false);
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       DefaultNewArchitectureEntryPoint.load();
