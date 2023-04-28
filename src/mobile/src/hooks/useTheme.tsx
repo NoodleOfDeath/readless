@@ -11,6 +11,8 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
       inactive: lightMode ? '#888' : '#999',
       invertText: lightMode ? '#fff' : '#000',
       primary: '#8b0000',
+      rowEven: lightMode ? '#fcfcfc' : '#202020',
+      rowOdd: lightMode ? '#fafafa' : '#222',
       text: lightMode ? '#000' : '#fff',
       textDark: '#000',
     },
