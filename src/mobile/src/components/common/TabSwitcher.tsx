@@ -15,7 +15,7 @@ type Props = {
   tabHeight?: number;
   children?: React.ReactNode | React.ReactNode[];
   activeTab?: number;
-  onTabChange?: (tab: number) => void;
+  onTabChange?: (tab: number, prev: number) => void;
 } & ViewProps;
 
 export function TabSwitcher({
@@ -24,6 +24,7 @@ export function TabSwitcher({
   children,
   onTabChange,
   titles, 
+  rounded,
   ...props
 }: Props) {
   
@@ -37,6 +38,18 @@ export function TabSwitcher({
   const fontSize = React.useMemo(() => {
     return (tabHeight ? tabHeight / 2 : style.fontSize ?? 16) ?? style.fontSize ?? 16;
   }, [style.fontSize, tabHeight]);
+
+  const computedStyle = React.useMemo(() => {
+    if (!rounded) {
+      return style;
+    }
+    return {
+      ...theme.components.tabSwitcher,
+      ...style,
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8,
+    };
+  }, [rounded, style, theme.components.tabSwitcher]);
 
   const handleSlide = React.useCallback((tab: number) => {
     Animated.spring(translateX, {
@@ -58,7 +71,7 @@ export function TabSwitcher({
           justifyCenter
           height={ tabHeight ?? 48 }
           onLayout={ (event) => setSwitcherLayout(event.nativeEvent.layout) }
-          style={ style }>
+          style={ computedStyle }>
           <Animated.View
             style={ {
               backgroundColor: theme.colors.primary,
@@ -78,17 +91,30 @@ export function TabSwitcher({
               width: `${100 / (titles?.length ?? 1)}%`,
             } } />
           {titles?.map((title, i) => (
-            <Text
-              key={ i }
-              onPress={ () => {
-                onTabChange?.(i);
-              } }
-              row
-              fontSize={ fontSize }
-              textCenter 
-              color={ theme.colors.text }>
-              {title}
-            </Text>
+            typeof title === 'string' ? (
+              <Text
+                key={ i }
+                onPress={ () => {
+                  onTabChange?.(i, activeTab);
+                } }
+                row
+                fontSize={ fontSize }
+                textCenter 
+                color={ theme.colors.text }>
+                {title}
+              </Text>
+            ) : (
+              <View 
+                key={ i } 
+                onPress={ () => {
+                  onTabChange?.(i, activeTab);
+                } }
+                alignCenter
+                justifyCenter
+                row>
+                {title}
+              </View>
+            )
           ))}
         </Surface>
         {views && views.length > 0 && (

@@ -81,8 +81,6 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
       router({ url });
       return;
     }
-    Linking.removeAllListeners('url');
-    Linking.addEventListener('url', router);
     if (homeTab === 'All News') {
       setActiveTab(0);
     } else if (homeTab === 'My News') {
@@ -96,11 +94,17 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   }, [bookmarkedCategories, bookmarkedOutlets, homeTab, router]);
   
   React.useEffect(() => {
+    const subscription = Linking.addEventListener('url', router);
     if (!ready || mounted) {
-      return;
+      return () => {
+        subscription.remove();
+      };
     }
     onMount();
-  }, [ready, onMount, mounted]);
+    return () => {
+      subscription.remove();
+    };
+  }, [ready, onMount, mounted, router]);
   
   const onTabChange = React.useCallback((tab: number) => {
     setActiveTab(tab);

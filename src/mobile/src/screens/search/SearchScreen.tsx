@@ -1,7 +1,9 @@
 import React from 'react';
+import { DeviceEventEmitter } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
-import TrackPlayer from 'react-native-track-player';
+
+import { SearchOptionsMenu } from './SearchOptionsMenu';
 
 import {
   InteractionType,
@@ -12,8 +14,8 @@ import {
   ActivityIndicator,
   Button,
   Screen,
-  ScrollView,
   Summary,
+  TabSwitcher,
   Text,
   View,
 } from '~/components';
@@ -43,14 +45,16 @@ export function SearchScreen({
     setPreference,
   } = React.useContext(SessionContext);
   const toast = React.useContext(ToastContext);
-  const { queueSummary } = React.useContext(MediaContext);
+  const {
+    queueSummary, currentTrackIndex, preloadCount,
+  } = React.useContext(MediaContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter ?? '');
   
   const onlyCustomNews = React.useMemo(() => Boolean(route?.params?.onlyCustomNews), [route]);
-  
+
   React.useEffect(() => {
     setPrefilter(route?.params?.prefilter ?? '');
   }, [route]);
@@ -67,6 +71,7 @@ export function SearchScreen({
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
+  const [showSearchOptions, _] = React.useState(false);
   const [keywords, setKeywords] = React.useState<string[]>([]);
    
   const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
@@ -178,8 +183,11 @@ export function SearchScreen({
     setPendingReload(true);
   }, [setPreference, readSummaries]);
 
-  const loadMore = React.useCallback(async () => {
+  const loadMore = React.useCallback(async (event?: string) => {
     await load(page + 1);
+    if (event) {
+      DeviceEventEmitter.emit(event);
+    }
   }, [load, page]);
 
   const handleFormatChange = React.useCallback(
@@ -198,13 +206,34 @@ export function SearchScreen({
     if (summaries.length < 1) {
       return;
     }
-    await queueSummary(summaries[0]);
-    [...summaries].slice(1, pageSize - 1).forEach((summary) => {
+    queueSummary(summaries);
+    summaries.forEach((summary) => {
       handleInteraction(summary, InteractionType.Listen);
-      setTimeout(async () => await queueSummary(summary), 500);
     });
-    TrackPlayer.play();
-  }, [pageSize, summaries, handleInteraction, queueSummary]);
+  }, [summaries, queueSummary, handleInteraction]);
+
+  const loadMoreAsNeeded = React.useCallback(async () => {
+    if (!currentTrackIndex) {
+      return;
+    }
+    if (currentTrackIndex + preloadCount > summaries.length) {
+      await loadMore('autoloaded-for-track');
+    }
+  }, [currentTrackIndex, loadMore, preloadCount, summaries]);
+
+  React.useEffect(() => {
+    loadMoreAsNeeded();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrackIndex]);
+  
+  React.useEffect(() => {
+    const subscriber = DeviceEventEmitter.addListener('autoloaded-for-track', () => {
+      queueSummary(summaries);
+    });
+    return () => {
+      subscriber.remove();
+    };
+  }, [queueSummary, summaries]);
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
     if (prefilter === newPrefilter) {
@@ -236,37 +265,52 @@ export function SearchScreen({
                   setKeywords(searchText.split(' ').filter((s) => s.trim()));
                   load(0);
                 } } />
+              {showSearchOptions && <SearchOptionsMenu />}
             </View>
           )}
-          <View mb={ 8 } elevated p={ 8 } rounded gap={ 8 } bg={ theme.components.card.backgroundColor }>
-            <View row>
-              <Text mr={ 8 }>Sort By:</Text>
-              <ScrollView horizontal>
-                <View row>
-                  <View mr={ 8 }>
-                    <Button 
-                      row
-                      alignCenter
-                      startIcon={ (sortOrder ?? []).length > 0 ? 'check' : undefined }
-                      underline={ (sortOrder ?? []).length > 0 }
-                      gap={ 4 }
-                      onPress={ () => setPreference('sortOrder', ['originalDate:desc', 'createdAt:desc']) }>
-                      Publication Date
-                    </Button>
-                  </View>
-                  <View>
-                    <Button 
-                      row
-                      alignCenter
-                      startIcon={ (sortOrder ?? []).length === 0 ? 'check' : undefined }
-                      underline={ (sortOrder ?? []).length === 0 }
-                      gap={ 4 }
-                      onPress={ () => setPreference('sortOrder', []) }>
-                      Generation Date
-                    </Button>
-                  </View>
-                </View>
-              </ScrollView>
+          <View mb={ 8 } elevated p={ 12 } rounded gap={ 12 } bg={ theme.components.card.backgroundColor }>
+            <View row alignCenter gap={ 8 }>
+              <TabSwitcher
+                rounded
+                activeTab={ sortOrder?.[0].match(/^createdAt/i) ? 1 : 0 }
+                titles={ [
+                  <Button
+                    key='p' 
+                    gap={ 4 }
+                    row
+                    alignCenter
+                    textCenter
+                    onPress={ () => {
+                      setPreference(
+                        'sortOrder', 
+                        (prev) => prev?.[0].match(/originalDate:desc/i) ?
+                          ['originalDate:asc', 'createdAt:asc'] : ['originalDate:desc', 'createdAt:desc']
+                      );
+                    } }
+                    justifyCenter
+                    endIcon={ sortOrder?.[0].match(/^originalDate/i) ? 
+                      sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
+                    Publication Date
+                  </Button>,
+                  <Button
+                    key='g' 
+                    gap={ 4 }
+                    row
+                    alignCenter
+                    textCenter
+                    onPress={ () => {
+                      setPreference(
+                        'sortOrder', 
+                        (prev) => prev?.[0].match(/createdAt:desc/i) ?
+                          ['createdAt:asc', 'originalDate:asc'] : ['createdAt:desc', 'originalDate:desc']
+                      );
+                    } }
+                    justifyCenter
+                    endIcon={ sortOrder?.[0].match(/^createdAt/i) ? 
+                      sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
+                    Generation Date
+                  </Button>,
+                ] } />
             </View>
             <View row>
               <Button 
@@ -304,13 +348,12 @@ export function SearchScreen({
                 outlined 
                 p={ 8 }
                 selectable
-                onPress={ () => navigation?.getParent()?.navigate('Sections') }>
-                Go to Sections
+                onPress={ () => navigation?.getParent()?.navigate('Browse') }>
+                Go to Browse
               </Button>
             </View>
           )}
         </View>
-
         {summaries.map((summary) => (
           <Summary
             key={ summary.id }
@@ -327,7 +370,7 @@ export function SearchScreen({
               rounded
               p={ 8 }
               selectable
-              onPress={ loadMore }>
+              onPress={ () => loadMore() }>
               Load More
             </Button>
           </View>

@@ -28,21 +28,21 @@ export type StackableTabParams = TabParams & {
 
 export type RootParamList = {
   // Tabs
+  bulletinTab: StackableTabParams;
   myStuffTab: StackableTabParams;
-  realtimeTab: StackableTabParams;
-  sectionsTab: StackableTabParams;
-  settingsTab: {
-    default: undefined;
-  };
+  todayTab: StackableTabParams;
+  browseTab: StackableTabParams;
+  settingsTab: TabParams;
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   config: {
     screens: {
+      browseTab: { path: 'browse' },
+      bulletinTab: { path: 'bulletin' },
       myStuffTab: { path: 'my-stuff' },
-      realtimeTab: { path: 'hot-off-press' },
-      sectionsTab: { path: 'sections' },
       settingsTab: { path: 'settings' },
+      todayTab: { path: 'today' },
     },
   },
   prefixes: [

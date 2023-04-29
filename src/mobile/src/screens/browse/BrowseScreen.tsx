@@ -19,7 +19,7 @@ import {
 } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
-export function SectionsScreen({ navigation }: ScreenProps<'default'>) {
+export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
 
   const theme = useTheme();
   const { getCategories, getOutlets } = useCategoryClient();

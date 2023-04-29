@@ -85,6 +85,10 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           backgroundColor: lightMode ? '#fff' : '#000',
           color: lightMode ? '#000' : '#fff',
         },
+        tabSwitcher: {
+          backgroundColor: lightMode ? '#eee' : '#2a2a2a',
+          color: lightMode ? '#000' : '#fff',
+        },
         toastDefault: {
           backgroundColor: lightMode ? '#ddd' : '#111',
           borderColor: '#8b0000',

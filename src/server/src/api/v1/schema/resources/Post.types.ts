@@ -29,7 +29,7 @@ export type PostAttributes = DatedAttributes & {
   shortSummary: string;
   bullets: string[];
   imagePrompt: string;
-  interactions: InteractionResponse;
+  interactions?: InteractionResponse;
   formats: ReadingFormat[];
 };
 

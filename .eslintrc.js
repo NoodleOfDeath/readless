@@ -4,10 +4,14 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+  extends: [
+    'eslint:recommended', 'plugin:@typescript-eslint/recommended',
+  ],
   overrides: [
     {
-      files: ['*.md'],
+      files: [
+        '*.md',
+      ],
       processor: 'markdown/markdown',
       rules: {
         'no-undef': 'off',
@@ -17,7 +21,9 @@ module.exports = {
     {
       // 3. Optionally, customize the configuration ESLint uses for ```js
       // fenced code blocks inside .md files.
-      files: ['**/*.md/*.js'],
+      files: [
+        '**/*.md/*.js',
+      ],
     },
   ],
   parser: '@typescript-eslint/parser',
@@ -37,9 +43,18 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
-    '@typescript-eslint/semi': ['error', 'always'],
-    'array-bracket-newline': ['error', 'consistent'],
-    'brace-style': ['error', '1tbs'],
+    '@typescript-eslint/semi': [
+      'error', 'always',
+    ],
+    'array-bracket-newline': [
+      'error', 'consistent',
+    ],
+    'array-element-newline': [
+      'error', 'consistent',
+    ],
+    'brace-style': [
+      'error', '1tbs',
+    ],
     'comma-dangle': [
       'error',
       {
@@ -50,10 +65,18 @@ module.exports = {
         objects: 'always-multiline',
       },
     ],
-    'comma-spacing': ['error'],
-    curly: ['error'],
-    'function-call-argument-newline': ['error', 'consistent'],
-    'function-paren-newline': ['error', 'multiline-arguments'],
+    'comma-spacing': [
+      'error',
+    ],
+    curly: [
+      'error',
+    ],
+    'function-call-argument-newline': [
+      'error', 'consistent',
+    ],
+    'function-paren-newline': [
+      'error', 'multiline-arguments',
+    ],
     'import-newlines/enforce': [
       'error',
       {
@@ -73,7 +96,9 @@ module.exports = {
           'builtin',
           'external',
           'internal',
-          ['parent', 'sibling'],
+          [
+            'parent', 'sibling',
+          ],
           'index',
         ],
         'newlines-between': 'always',
@@ -84,12 +109,20 @@ module.exports = {
             position: 'before',
           },
         ],
-        pathGroupsExcludedImportTypes: ['react'],
+        pathGroupsExcludedImportTypes: [
+          'react',
+        ],
       },
     ],
-    indent: ['error', 2],
-    'keyword-spacing': ['error'],
-    'linebreak-style': ['error', 'unix'],
+    indent: [
+      'error', 2,
+    ],
+    'keyword-spacing': [
+      'error',
+    ],
+    'linebreak-style': [
+      'error', 'unix',
+    ],
     'lines-between-class-members': [
       'error',
       'always',
@@ -105,7 +138,9 @@ module.exports = {
         },
       },
     ],
-    'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
+    'no-multiple-empty-lines': [
+      'error', { max: 1, maxEOF: 1 },
+    ],
     'no-unused-vars': 'off',
     'no-useless-rename': 'error',
     'object-curly-newline': [
@@ -129,10 +164,18 @@ module.exports = {
         },
       },
     ],
-    'object-curly-spacing': ['error', 'always'],
-    'object-shorthand': ['error', 'always'],
-    'padded-blocks': ['error', { classes: 'always' }],
-    quotes: ['error', 'single'],
+    'object-curly-spacing': [
+      'error', 'always',
+    ],
+    'object-shorthand': [
+      'error', 'always',
+    ],
+    'padded-blocks': [
+      'error', { classes: 'always' },
+    ],
+    quotes: [
+      'error', 'single',
+    ],
     semi: 'off',
     'sort-imports': [
       'error',
