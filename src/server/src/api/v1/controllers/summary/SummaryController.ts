@@ -36,7 +36,13 @@ function parsePrefilter(prefilter: string) {
   return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
 }
 
-function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: number[] = [], excludeIds = false) {
+function applyFilter(
+  options: FindAndCountOptions<Summary>,
+  filter = '', 
+  ids: number[] = [], 
+  excludeIds = false,
+  matchType: 'all' | 'any' = 'all'
+) {
   const newOptions = { ...options };
   if (!filter && ids.length === 0) {
     return newOptions;
@@ -71,14 +77,20 @@ function applyFilter(options: FindAndCountOptions<Summary>, filter = '', ids: nu
   if (query && query.length > 0) {
     const subqueries = query.replace(/\s\s+/g, ' ').split(' ');
     where[Op.or] = [];
-    for (const subquery of subqueries) {
-      where[Op.or].push({
-        [Op.or]: {
-          bullets: { [Op.contains] : [subquery] },
-          shortSummary: { [Op.iLike] : `%${subquery}%` },
-          title: { [Op.iLike] : `%${subquery}%` },
-        },
-      });
+    if (matchType === 'all') {
+      where[Op.or].push(subqueries.map((subquery) => ({ bullets: { [Op.contains] : [subquery] } })));
+      where[Op.or].push(subqueries.map((subquery) => ({ shortSummary: { [Op.iLike] : `%${subquery}%` } })));
+      where[Op.or].push(subqueries.map((subquery) => ({ title: { [Op.iLike] : `%${subquery}%` } })));
+    } else {
+      for (const subquery of subqueries) {
+        where[Op.or].push({
+          [Op.or]: {
+            bullets: { [Op.contains] : [subquery] },
+            shortSummary: { [Op.iLike] : `%${subquery}%` },
+            title: { [Op.iLike] : `%${subquery}%` },
+          },
+        });
+      }
     }
   }
   newOptions.where = where;
@@ -102,6 +114,7 @@ export class SummaryController {
     @Query() filter?: string,
     @Query() ids?: number[],
     @Query() excludeIds?: boolean,
+    @Query() match?: 'all' | 'any',
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
@@ -112,7 +125,7 @@ export class SummaryController {
       offset,
       order: orderByToItems(order),
     };
-    const filteredOptions = applyFilter(options, filter, ids, excludeIds);
+    const filteredOptions = applyFilter(options, filter, ids, excludeIds, match);
     const summaries = await Summary.scope(scope).findAndCountAll(filteredOptions);
     await Promise.all(summaries.rows.map(async (row) => await SummaryInteraction.create({
       targetId: row.id,
