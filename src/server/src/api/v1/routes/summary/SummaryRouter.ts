@@ -18,7 +18,7 @@ const router = Router();
 
 router.get(
   '/',
-  rateLimitMiddleware('15 per 1m'),
+  rateLimitMiddleware('10 per 1m'),
   query('scope').isString().matches(/^(?:conservative|public)$/).optional(),
   query('filter').isString().optional(),
   query('ids').optional(),

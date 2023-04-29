@@ -58,6 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
+      API_RATE_LIMIT: ${{ vars.API_RATE_LIMIT }}
+      API_RATE_LIMIT_DURATION: ${{ vars.API_RATE_LIMIT_DURATION }}
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
       GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
