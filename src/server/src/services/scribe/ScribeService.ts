@@ -95,7 +95,6 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
-      longSummary: NOTICE_MESSAGE,
       originalDate: loot.date,
       originalTitle: loot.title,
       outletId: outlet.id,
@@ -119,7 +118,7 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.length > 200) {
+          if (reply.text.split(' ').length > 20) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
               subject: 'Title too long',
@@ -131,8 +130,31 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the general take away message of the article I just gave you in a single sentence using no more than 150 characters. Do not start with "The article" or "This article".', 
+          'Please summarize the general take away message of the article I just gave you in a single sentence using no more than 20 words. Do not start with "The article" or "This article".', 
         ].join(''),
+      },
+      {
+        handleReply: async (reply) => { 
+          if (reply.text.split(' ').length > 20) {
+            await new MailService().sendMail({
+              from: 'debug@readless.ai',
+              subject: 'Title too long',
+              text: `Title too long for ${url}\n\n${loot.title}\n\n${loot.content}`,
+              to: 'debug@readless.ai',
+            });
+            throw new Error('Title too long');
+          }
+          newSummary.shortSummary = reply.text;
+        },
+        text: [
+          'Please provide a single sentence summary using no more than 150 characters. Do not start with "The article" or "This article".', 
+        ].join(''),
+      },
+      {
+        handleReply: async (reply) => { 
+          newSummary.shortSummary = reply.text;
+        },
+        text: 'Please provide a three to four sentence summary using no more than 200 words. Do not start with "The article" or "This article".',
       },
       {
         handleReply: async (reply) => {
@@ -146,41 +168,11 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          newSummary.shortSummary = reply.text;
-        },
-        text: 'Please provide a two to three sentence summary using no more than 150 words. Do not start with "The article" or "This article".',
-      },
-      {
-        handleReply: async (reply) => {
-          newSummary.tags = reply.text
-            .replace(/^tags:\s*/i, '')
-            .replace(/\.$/, '')
-            .split(/[,;\n]/)
-            .map((tag) => tag.trim());
-        },
-        text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
-      },
-      {
-        handleReply: async (reply) => { 
           newSummary.category = reply.text
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
         text: `Please select a best category for this article from the following choices: ${this.categories.join(' ')}`,
-      },
-      {
-        handleReply: async (reply) => { 
-          newSummary.subcategory = reply.text
-            .replace(/^subcategory:\s*/i, '')
-            .replace(/\.$/, '').trim();
-        },
-        text: `Please provide a one word subcategory for this article under the category '${newSummary.category}'`,
-      },
-      {
-        handleReply: async (reply) => {
-          newSummary.imagePrompt = reply.text;
-        },
-        text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
       },
     ];
     // initialize chatgpt service and send the prompt

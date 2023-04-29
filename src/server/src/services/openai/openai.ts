@@ -1,14 +1,13 @@
-import { Configuration, OpenAIApi } from 'openai';
+import {
+  Configuration,
+  CreateCompletionRequest,
+  OpenAIApi,
+} from 'openai';
 
 import { BaseService } from '../base';
 
 export type OpenAIServiceInitProps = {
   apiKey?: string;
-};
-
-export type CreateImageOptions = {
-  n?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-  size?: '256x256' | '512x512' | '1024x1024';
 };
 
 export class OpenAIService extends BaseService {
@@ -20,13 +19,16 @@ export class OpenAIService extends BaseService {
     this.api = new OpenAIApi(new Configuration({ apiKey }));
   }
   
-  async createImage(prompt: string, {
-    n = 1,
-    size = '1024x1024',
-  }: CreateImageOptions = {}) {
-    return await this.api.createImage({
-      n, prompt, size, 
-    });
+  async sendMessage(prompt: string, {
+    model = 'gpt3.5',
+    max_tokens = 150,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }: Partial<CreateCompletionRequest> = {}) {
+    // return await this.api.createCompletion({
+    //   max_tokens, 
+    //   model,
+    //   prompt,
+    // });
   }
   
 }

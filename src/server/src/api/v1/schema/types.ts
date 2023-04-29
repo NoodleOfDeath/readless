@@ -41,29 +41,26 @@ export type DestroyResponse = {
 
 // Model Types
 
-export * from './version/Release.types';
-
-export * from './analytics/Metric.types';
 export * from './analytics/RateLimit.types';
-export * from './analytics/Status.types';
 
+// Queues
+export * from './queue/Queue.types';
+export * from './queue/Job.types';
+export * from './queue/Worker.types';
+
+// User
 export * from './user/Alias.types';
 export * from './user/User.types';
 export * from './user/UserMetadata.types';
 
+// Auth
 export * from './auth/Credential.types';
 export * from './auth/Role.types';
 
+// Posts
 export * from './interaction/Interaction.types';
-
 export * from './resources/Post.types';
-
 export * from './resources/topic/Category.types';
-
 export * from './resources/outlet/Outlet.types';
-
 export * from './resources/summary/Summary.types';
-
-export * from './queue/Queue.types';
-export * from './queue/Job.types';
-export * from './queue/Worker.types';
+export * from './resources/note/Note.types';

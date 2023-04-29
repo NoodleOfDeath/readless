@@ -1,4 +1,4 @@
-import { InteractionResponse } from './../interaction/Interaction.types';
+import { InteractionResponse } from '../interaction/Interaction.types';
 import { DatedAttributes } from '../types';
 
 export type Attr<Model, K extends keyof Model> = {
@@ -6,58 +6,25 @@ export type Attr<Model, K extends keyof Model> = {
 };
 
 export const RESOURCE_TYPES = {
-  article: 'article',
-  interaction: 'interaction',
-  media: 'media',
   outlet: 'outlet',
   summary: 'summary',
 } as const;
 
 export type ResourceType = typeof RESOURCE_TYPES[keyof typeof RESOURCE_TYPES];
 
-export const READING_FORMATS = {
-  bullets: 'bullets',
-  summary: 'summary',
-} as const;
-
-export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS];
-
 export type PostAttributes = DatedAttributes & {
-  text: string;
-  longSummary: string;
-  summary: string;
-  shortSummary: string;
-  bullets: string[];
-  imagePrompt: string;
+  title: string;
+  text?: string;
+  imageUrl?: string;
   interactions?: InteractionResponse;
-  formats: ReadingFormat[];
 };
 
 export type PostCreationAttributes = {
-  text: string;
-  longSummary: string;
-  summary: string;
-  shortSummary: string;
-  bullets: string[];
-  imagePrompt: string;
+  title: string;
+  text?: string;
+  imageUrl?: string;
 };
 
 /** light weight record for a post */
-export const PUBLIC_POST_ATTRIBUTES = ['id', 'longSummary', 'summary', 'shortSummary', 'text', 'bullets', 'createdAt'] as const;
+export const PUBLIC_POST_ATTRIBUTES = ['id', 'title', 'text', 'imageUrl', 'createdAt'] as const;
 /** light weight record for a post with title, category, subcategory, and tags */
-
-export type TitledCategorizedPostAttributes = PostAttributes & {
-  title: string;
-  category: string;
-  subcategory: string;
-  tags: string[];
-};
-
-export type TitledCategorizedPostCreationAttributes = PostCreationAttributes & {
-  title: string;
-  category: string;
-  subcategory: string;
-  tags: string[];
-};
-
-export const PUBLIC_TITLED_CATEGORIZED_POST_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'title', 'category', 'subcategory', 'tags'] as const;
