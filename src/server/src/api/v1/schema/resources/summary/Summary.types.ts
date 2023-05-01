@@ -13,6 +13,32 @@ export const READING_FORMATS = {
 
 export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS];
 
+export class Sentiment {
+
+  score: number;
+  tokens: Record<string, number>;
+
+  constructor(score: number, tokens: Record<string, number>) {
+    this.score = score;
+    this.tokens = tokens;
+  }
+
+  static from(str: string) {
+    const expr = /\{.*\}/;
+    const payload = expr.exec(str);
+    if (!payload) {
+      return new Sentiment(Number.NaN, {});
+    }
+    try {
+      const { score, tokens } = JSON.parse(payload[0]);
+      return new Sentiment(score, tokens);
+    } catch (e) {
+      return new Sentiment(Number.NaN, {});
+    }
+  }
+
+}
+
 export type SummaryAttributesRaw = PostAttributes & {
   summary: string;
   shortSummary: string;
@@ -24,6 +50,7 @@ export type SummaryAttributesRaw = PostAttributes & {
   filteredText: string;
   originalTitle: string;
   originalDate?: Date;
+  sentiments?: Record<string, Sentiment>;
   formats: ReadingFormat[];
 };
 
@@ -43,10 +70,11 @@ export type SummaryCreationAttributes = PostCreationAttributes & {
   filteredText: string;
   originalTitle: string;
   originalDate?: Date;
+  sentiments?: Record<string, Sentiment>;
 };
 
 /** light weight record for a summary post */
-export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'category', 'outletId', 'url', 'originalDate'] as const;
-export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'category', 'outletId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'category', 'outletId', 'url', 'sentiments', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'category', 'outletId', 'url', 'sentiments', 'originalDate'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;

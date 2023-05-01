@@ -10,6 +10,7 @@ import {
   PUBLIC_SUMMARY_ATTRIBUTES,
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
   READING_FORMATS,
+  Sentiment,
   SummaryAttributes,
   SummaryCreationAttributes,
 } from './Summary.types';
@@ -95,6 +96,9 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
     type: DataType.DATE,
   })
   declare originalDate: Date;
+
+  @Column({ type: DataType.JSON })
+  declare sentiments?: Record<string, Sentiment>;
 
   formats = Object.values(READING_FORMATS);
   

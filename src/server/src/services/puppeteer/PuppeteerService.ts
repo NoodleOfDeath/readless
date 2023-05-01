@@ -36,6 +36,7 @@ export type Loot = {
   dateMatches: string[];
   title: string;
   content: string;
+  imageUrl?: string;
   authors: string[];
 };
 
@@ -220,7 +221,7 @@ export class PuppeteerService extends BaseService {
       
       const rawHtml = await PuppeteerService.fetch(url);
       const {
-        article, author, date, title, 
+        article, author, date, image, title, 
       } = outlet.selectors;
       
       const authors: string[] = [];
@@ -232,15 +233,22 @@ export class PuppeteerService extends BaseService {
         const $ = load(rawHtml);
         exclude.forEach((tag) => $(tag).remove());
         
-        const extract = (sel: string, attr?: string): string => {
+        const extract = (sel: string, attr?: string, first?: boolean): string => {
           if (attr && clean($(sel)?.attr(attr))) {
+            if (first) {
+              return clean($(sel)?.first()?.attr(attr));
+            }
             return clean($(sel).attr(attr));
+          }
+          if (first) {
+            return clean($(sel)?.first()?.text());
           }
           return clean($(sel)?.get().map((e) => $(e).text()).join(' '));
         };
         
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         loot.title = extract(title?.selector || 'title', title?.attribute);
+        loot.imageUrl = extract(image?.selector || 'img', image?.attribute || 'src', true);
         
         dates.push(...[
           extract(date.selector),

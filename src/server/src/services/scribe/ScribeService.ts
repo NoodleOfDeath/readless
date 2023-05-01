@@ -8,6 +8,7 @@ import {
   PuppeteerService,
 } from '../';
 import { Category, Summary } from '../../api/v1/schema/models';
+import { Sentiment } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 70 as const;
@@ -18,9 +19,9 @@ const NOTICE_MESSAGE = 'This reading format will be going away in the next major
 
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
-export function abbreviate(str: string, len: number, segments = 3) {
-  const parts = str.match(new RegExp(`.{1,${Math.floor(str.length / segments)}}`));
-  console.log(parts);
+export function abbreviate(str: string, len: number) {
+  // const sentences = str.split(/\.|\?|!/);
+  //console.log(parts);
   return str.substring(0, len);
 }
 
@@ -95,10 +96,12 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
+      imageUrl: loot.imageUrl,
       originalDate: loot.date,
       originalTitle: loot.title,
       outletId: outlet.id,
       rawText: loot.rawText,
+      sentiments: {},
       summary: NOTICE_MESSAGE,
       text: NOTICE_MESSAGE,
       url,
@@ -112,17 +115,27 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Does the following appear to be a news article? A collection of article headlines, advertisement, or description of a news website should not be considered a news article. Please respond with just "yes" or "no"\n\n', 
+          'Does the following appear to be a news article? A collection of articles, advertisements, or description of a news website should not be considered a news article. Please respond with just "yes" or "no"\n\n', 
           newSummary.filteredText,
         ].join(''),
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 20) {
+          const sentiment = Sentiment.from(reply.text);
+          if (Number.isNaN(sentiment.score)) {
+            throw new Error(`Not a valid sentiment score: ${reply.text}`);
+          }
+          newSummary.sentiments.chatgpt = sentiment;
+        },
+        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 adjective token counts. Please respond with JSON only using the format: { score: number, tokens: Record<string, number> }',
+      },
+      {
+        handleReply: async (reply) => { 
+          if (reply.text.split(' ').length > 30) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
               subject: 'Title too long',
-              text: `Title too long for ${url}\n\n${loot.title}\n\n${loot.content}`,
+              text: `Title too long for ${url}\n\n${reply.text}`,
               to: 'debug@readless.ai',
             });
             throw new Error('Title too long');
@@ -130,16 +143,16 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the general take away message of the article I just gave you in a single sentence using no more than 20 words. Do not start with "The article" or "This article".', 
+          'Please summarize the general take away message of the same article in a single sentence using no more than 30 words. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 20) {
+          if (reply.text.split(' ').length > 100) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
-              subject: 'Title too long',
-              text: `Title too long for ${url}\n\n${loot.title}\n\n${loot.content}`,
+              subject: 'Short summary too long',
+              text: `Title too long for ${url}\n\n${reply.text}`,
               to: 'debug@readless.ai',
             });
             throw new Error('Title too long');
@@ -147,14 +160,8 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide a single sentence summary using no more than 150 characters. Do not start with "The article" or "This article".', 
+          'Please provide a three to four sentence summary using no more than 100 words. Do not start with "The article" or "This article".', 
         ].join(''),
-      },
-      {
-        handleReply: async (reply) => { 
-          newSummary.shortSummary = reply.text;
-        },
-        text: 'Please provide a three to four sentence summary using no more than 200 words. Do not start with "The article" or "This article".',
       },
       {
         handleReply: async (reply) => {
