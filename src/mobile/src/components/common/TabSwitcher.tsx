@@ -46,8 +46,8 @@ export function TabSwitcher({
     return {
       ...theme.components.tabSwitcher,
       ...style,
-      borderTopLeftRadius: 8,
-      borderTopRightRadius: 8,
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12,
     };
   }, [rounded, style, theme.components.tabSwitcher]);
 

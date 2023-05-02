@@ -1,7 +1,7 @@
 import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
-import { Searchbar } from 'react-native-paper';
+import { Provider, Searchbar } from 'react-native-paper';
 
 import { SearchOptionsMenu } from './SearchOptionsMenu';
 
@@ -20,6 +20,7 @@ import {
   View,
 } from '~/components';
 import {
+  DialogContext,
   MediaContext,
   SessionContext,
   ToastContext,
@@ -48,6 +49,7 @@ export function SearchScreen({
   const {
     queueSummary, currentTrackIndex, preloadCount,
   } = React.useContext(MediaContext);
+  const { showShareFab } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
@@ -249,23 +251,25 @@ export function SearchScreen({
       <React.Fragment>
         <View col mh={ 16 }>
           {!prefilter && (
-            <View mb={ 8 }>
-              <Searchbar
-                placeholder="show me something worth reading..."
-                onChangeText={ ((text) => 
-                  setSearchText(text)) }
-                inputStyle={ theme.components.searchBar }
-                value={ searchText }
-                onClearIconPress={ () => {
-                  setSearchText('');
-                  setKeywords([]);
-                  setPendingReload(true);
-                } }
-                onSubmitEditing={ () => {
-                  setKeywords(searchText.split(' ').filter((s) => s.trim()));
-                  load(0);
-                } } />
-              {showSearchOptions && <SearchOptionsMenu />}
+            <View row mb={ 8 }>
+              <Provider>
+                <Searchbar
+                  placeholder="show me something worth reading..."
+                  onChangeText={ ((text) => 
+                    setSearchText(text)) }
+                  inputStyle={ theme.components.searchBar }
+                  value={ searchText }
+                  onClearIconPress={ () => {
+                    setSearchText('');
+                    setKeywords([]);
+                    setPendingReload(true);
+                  } }
+                  onSubmitEditing={ () => {
+                    setKeywords(searchText.split(' ').filter((s) => s.trim()));
+                    load(0);
+                  } } />
+                <SearchOptionsMenu visible={ showSearchOptions } anchor={ undefined } />
+              </Provider>
             </View>
           )}
           <View mb={ 8 } elevated p={ 12 } rounded gap={ 12 } bg={ theme.components.card.backgroundColor }>
@@ -358,7 +362,7 @@ export function SearchScreen({
           <Summary
             key={ summary.id }
             summary={ summary }
-            keywords={ keywords }
+            keywords={ showShareFab ? undefined : keywords }
             onFormatChange={ (format) => handleFormatChange(summary, format) }
             onInteract={ (...e) => handleInteraction(summary, ...e) }
             onReferSearch={ handleReferSearch } />

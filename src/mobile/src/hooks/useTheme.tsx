@@ -31,19 +31,14 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         buttonText: { padding: 4 },
         card: {
           backgroundColor: lightMode ? '#fefefe' : '#010101',
-          marginBottom: 8,
+          marginBottom: 12,
           overflow: 'visible',
-          padding: 16,
-        },
-        category: {
-          backgroundColor: '#8b0000',
-          marginBottom: 8,
-          padding: 8,
+          padding: 12,
         },
         dialog: {
           backgroundColor: lightMode ? '#ddd' : '#111',
           borderColor: '#8b0000',
-          borderRadius: 8,
+          borderRadius: 12,
           borderWidth: 5,
         },
         divider: {
@@ -75,7 +70,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           borderColor: '#8b0000',
           borderWidth: 1,
         },
-        rounded: { borderRadius: 8 },
+        rounded: { borderRadius: 12 },
         searchBar: {
           fontFamily: preferences.fontFamily,
           overflow: 'visible',
@@ -92,7 +87,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         toastDefault: {
           backgroundColor: lightMode ? '#ddd' : '#111',
           borderColor: '#8b0000',
-          borderRadius: 8,
+          borderRadius: 12,
           borderWidth: 5,
           color: lightMode ? '#000' : '#fff',
         },

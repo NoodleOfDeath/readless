@@ -4,6 +4,10 @@ import { FONT_SIZES, Stylable } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
+export type UseStylesOptions = {
+  onlyInclude?: string[];
+};
+
 export function useStyles({
   // position
   absolute,
@@ -13,6 +17,7 @@ export function useStyles({
   left,
   right,
   // dimensions
+  aspectRatio,
   width,
   height,
   // typographies
@@ -194,6 +199,7 @@ export function useStyles({
     attrs.push(justifyContent);
     attrs.push(appearance);
     attrs.push(color ? { color: Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color } : undefined);
+    attrs.push(aspectRatio ? { aspectRatio } : undefined);
     attrs.push(width ? { width } : undefined);
     attrs.push(height ? { height } : undefined);
     attrs.push({ fontSize : fontSize * scale });
@@ -210,6 +216,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
     attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter(Boolean).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, width, height, fontSize, border, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
+  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, fontSize, border, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle]);
   return viewStyle;
 }

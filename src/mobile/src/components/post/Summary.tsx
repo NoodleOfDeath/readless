@@ -2,6 +2,7 @@ import React from 'react';
 
 import { formatDistance } from 'date-fns';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import { Menu } from 'react-native-paper';
 import { State } from 'react-native-track-player';
 import ViewShot from 'react-native-view-shot';
 
@@ -14,6 +15,7 @@ import {
   Button,
   Divider,
   Icon,
+  Image,
   Markdown,
   ReadingFormatSelector,
   Text,
@@ -33,7 +35,8 @@ type Props = {
   initialFormat?: ReadingFormat;
   keywords?: string[];
   swipeable?: boolean;
-  forceStatic?: boolean;
+  compact?: boolean;
+  isStatic?: boolean;
   mock?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
@@ -78,21 +81,25 @@ function RenderActions({ actions, side }: RenderActionsProps) {
 }
 
 const MOCK_SUMMARY: PublicSummaryAttributes = {
-  bullets: [],
+  bullets: ['- this is a bullet', '- this is another bullet'],
   category: '',
+  categoryAttributes: {
+    displayName: 'Category', icon: 'popcorn', name: '',
+  },
   formats: [],
   id: 1,
-  imagePrompt: '',
-  longSummary: 'The long summary',
+  imageUrl: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/s/01084930-e927-11ed-a438-a9ea5ed3eb49.jpg',
   originalTitle: '',
-  outletId: 0,
-  shortSummary: 'The short summary',
-  subcategory: '',
-  summary: '',
-  tags: [],
+  outletAttributes: {
+    displayName: 'News Source', id: -1, name: '', 
+  },
+  outletId: -1,
+  sentiments: {},
+  shortSummary: 'This is a short 40-60 word summary that can appear under titles if you set it to show in the settings',
+  summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
   text: '',
-  title: 'This is an exmaple title of at least 150 characters',
-  url: 'https://www.google.com',
+  title: 'This is an example summary title',
+  url: 'https://www.readless.ai',
 };
 
 export function Summary({
@@ -101,7 +108,8 @@ export function Summary({
   initialFormat,
   keywords = [],
   swipeable = true,
-  forceStatic = false,
+  compact = false,
+  isStatic = false,
   onFormatChange,
   onReferSearch,
   onInteract,
@@ -110,6 +118,7 @@ export function Summary({
   const theme = useTheme();
   const {
     preferences: {
+      showShortSummary,
       preferredReadingFormat, 
       bookmarkedSummaries, 
       favoritedSummaries,
@@ -128,20 +137,20 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
+  const [showInfoMenu, setShowInfoMenu] = React.useState(false);
 
-  const isRead = React.useMemo(() => !forceStatic && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareFab, [forceStatic, initialFormat, readSummaries, showShareFab, summary.id]);
+  const isRead = React.useMemo(() => !compact && !isStatic && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareFab, [compact, isStatic, initialFormat, readSummaries, showShareFab, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
   const favorited = React.useMemo(() => Boolean(favoritedSummaries?.[summary.id]), [favoritedSummaries, summary]);
   
   const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
 
-  const markdownTitle = React.useMemo(() => {
-    let title = summary.title;
+  const markdown = React.useCallback((text: string) => {
     for (const word of keywords) {
-      title = title.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
+      text = text.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
     }
-    return title;
-  }, [keywords, summary.title]);
+    return text;
+  }, [keywords]);
 
   const timeAgo = React.useMemo(() => {
     if (new Date(summary.originalDate ?? 0) > lastTick) {
@@ -174,17 +183,17 @@ export function Summary({
       ) : 
       (<Text bold caption>{new Date(summary.originalDate ?? 0).valueOf() > 0 ? generatedTime : `generated ${generatedTime}`}</Text>);
   }, [summary.createdAt, summary.originalDate, lastTick]);
-
+  
   const content = React.useMemo(() => {
-    if (!format || !summary) {
+    if (!format) {
       return;
     }
-    let content: string = summary.shortSummary;
+    let content = summary.summary;
     if (format === 'bullets') {
       content = summary.bullets.join('\n');
     }
     for (const word of keywords) {
-      content = content.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
+      content = content?.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
     }
     return content;
   }, [format, keywords, summary]);
@@ -273,7 +282,7 @@ export function Summary({
   return (
     <GestureHandlerRootView>
       <Swipeable 
-        enabled={ swipeable }
+        enabled={ swipeable && !initialFormat && !isStatic }
         renderRightActions={ renderRightActions }>
         <ViewShot ref={ viewshot }>
           <View 
@@ -283,58 +292,104 @@ export function Summary({
             style={ theme.components.card } 
             inactive={ isRead } 
             onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }
-            gap={ 4 }>
-            {!forceStatic && (
-              <View row alignCenter mb={ 8 } gap={ 8 }>
-                <Button 
-                  elevated
-                  p={ 5 }
-                  rounded
-                  startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
-                  onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
-                <Button 
-                  elevated
-                  p={ 4 }
-                  rounded
-                  onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-                  {summary.outletAttributes?.displayName}
-                </Button>
-                <View row />
-                <View>
-                  <Button 
-                    row
-                    alignCenter
-                    gap={ 4 }
-                    elevated
-                    p={ 4 }
-                    rounded
-                    endIcon='open-in-app'
-                    onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-                    Original source
-                  </Button>
+            gap={ 3 }>
+            <View row gap={ 12 }>
+              <View col width="100%" gap={ 6 }>
+                {!compact && (
+                  <View col gap={ 6 }>
+                    <View row alignCenter gap={ 6 }>
+                      <Button 
+                        elevated
+                        p={ 4 }
+                        rounded
+                        startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
+                        onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+                      <Button 
+                        elevated
+                        p={ 4 }
+                        rounded
+                        onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
+                        {summary.outletAttributes?.displayName}
+                      </Button>
+                    </View>
+                  </View>
+                )}
+                <View col>
+                  {showShareFab || keywords.length === 0 ? <Text bold subtitle1>{summary.title}</Text> : (
+                    <Markdown 
+                      bold
+                      subtitle1
+                      styles={ {
+                        em: { 
+                          backgroundColor: 'yellow',
+                          color: 'black', 
+                        }, 
+                      } }
+                      onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+                      {markdown(summary.title)}
+                    </Markdown>
+                  )}
                 </View>
               </View>
-            )}
-            <Text
-              bold 
-              subtitle1
-              onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-              {showShareFab || keywords.length === 0 ? markdownTitle : (
-                <Markdown 
-                  bold
-                  subtitle1
-                  styles={ {
-                    em: { 
-                      backgroundColor: 'yellow',
-                      color: 'black', 
-                    }, 
-                  } }
-                  onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-                  {markdownTitle}
-                </Markdown>
+              {!compact && summary.imageUrl && (
+                <View 
+                  width="33%" 
+                  gap={ 6 }>
+                  <Image
+                    source={ { uri: summary.imageUrl } }  
+                    rounded
+                    aspectRatio={ 1 } />
+                </View>
               )}
-            </Text>
-            {!forceStatic && (
+            </View>
+            <View row alignCenter justifyCenter>
+              <Text 
+                row
+                alignCenter
+                gap={ 4 }
+                numberOfLines={ 1 }
+                p={ 4 }
+                underline
+                rounded
+                onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
+                {summary.url}
+              </Text>
+              <Menu
+                contentStyle={ { 
+                  borderRadius: 12,
+                  padding: 12,
+                  position: 'relative',
+                  top: 24,
+                  width: 200,
+                } }
+                visible={ showInfoMenu }
+                onDismiss={ () => setShowInfoMenu(false) }
+                anchor={
+                  <Button iconSize={ 24 } startIcon="information" onPress={ () => setShowInfoMenu(true) } />
+                }>
+                <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
+              </Menu>
+            </View>
+            {!compact && showShortSummary === true && (
+              <View>
+                <Divider />
+                {(showShareFab || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
+                  <Markdown 
+                    bold
+                    subtitle1
+                    styles={ {
+                      em: { 
+                        backgroundColor: 'yellow',
+                        color: 'black', 
+                      }, 
+                    } }
+                    onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+                    {markdown(summary.shortSummary ?? '')}
+                  </Markdown>
+                )}
+              </View>
+            )}
+            {!compact && (
               <React.Fragment>
                 <Divider />
                 <View row justifySpaced alignCenter>
@@ -414,6 +469,13 @@ export function Summary({
                 </View>
               </View>
             )}
+            {/* {initialFormat && summary.sentiments && (
+              <View>
+                <Divider />
+                <AnalyticsView
+                  sentiments={ summary.sentiments } />
+              </View>
+            )} */}
           </View>
         </ViewShot>
       </Swipeable>

@@ -1,4 +1,4 @@
-import { AppRegistry } from 'react-native';
+import { AppRegistry, Platform } from 'react-native';
 
 import TrackPlayer from 'react-native-track-player';
 
@@ -10,3 +10,6 @@ import { PlaybackService } from '~/contexts';
 AppRegistry.registerComponent(appName, () => App);
 TrackPlayer.registerPlaybackService(() => PlaybackService);
 
+if (Platform.OS === 'android') {
+  TrackPlayer.setupPlayer();
+}

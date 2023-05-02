@@ -1,6 +1,7 @@
 import React from 'react';
 
 import RNFS from 'react-native-fs';
+import { Switch } from 'react-native-paper';
 
 import { ReadingFormat } from '~/api';
 import { 
@@ -8,11 +9,13 @@ import {
   ReadingFormatSelector,
   Screen, 
   ScrollView, 
+  Summary, 
   TabSwitcher,
   Text,
   View,
 } from '~/components';
 import { ColorMode, SessionContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 type OptionProps = React.PropsWithChildren<{
@@ -35,12 +38,14 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       textScale, 
       fontFamily,
       preferredReadingFormat,
+      showShortSummary,
       displayMode,
       removedSummaries,
       readSummaries,
     }, 
     setPreference,
   } = React.useContext(SessionContext);
+  const theme = useTheme();
   
   const [loading, setLoading] = React.useState(false);
   const [activeDisplayMode, setActiveDisplayMode] = React.useState(displayModes.indexOf(displayMode ?? 'system'));
@@ -111,6 +116,18 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         ),
         id: 'display-mode',
         label: 'Color Scheme',
+      },
+      {
+        children: (
+          <Switch 
+            color={ theme.colors.primary } 
+            value={ showShortSummary }
+            onValueChange={ (value) => {
+              setPreference('showShortSummary', value);
+            } } />
+        ),
+        id: 'short-summaries',
+        label: 'Show Short Summaries under titles',
       },
       {
         children: (
@@ -207,7 +224,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Clear Cache',
       },
     ];
-  }, [activeDisplayMode, handleDisplayModeChange, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, cacheSize, fontFamily, setPreference, handleClearCache]);
+  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, showShortSummary, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, cacheSize, setPreference, fontFamily, handleClearCache]);
   
   return (
     <Screen
@@ -215,7 +232,11 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       onRefresh={ onMount }>
       <View>
         <TabSwitcher tabHeight={ 48 } titles={ ['Preferences'] }>
-          <View mh={ 16 }>
+          <View mh={ 16 } gap={ 12 }>
+            <Text>Example Summary</Text>
+            <Summary 
+              isStatic
+              initialFormat={ ReadingFormat.Summary } />
             {options.filter((o) => o.visible !== false).map((option) => (
               <View col key={ option.id } p={ 4 } mv={ 4 }>
                 {!option.onPress && option.label && (
