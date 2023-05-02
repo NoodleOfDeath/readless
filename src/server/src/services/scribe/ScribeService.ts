@@ -30,6 +30,7 @@ export class ScribeService extends BaseService {
   static categories: string[] = [];
   
   public static async init() {
+    console.log('features', this.features);
     await Category.initCategories();
     const categories = await Category.findAll();
     this.categories = categories.map((c) => c.displayName);
@@ -91,7 +92,7 @@ export class ScribeService extends BaseService {
     }
     // daylight savings most likely
     if (loot.date > new Date() && loot.date < new Date(Date.now() + ms('1h'))) {
-      loot.date = new Date(loot.date.valueOf() - ms('1h') + ms(`${loot.date.getMinutes()}m`));
+      loot.date = new Date(Date.now() - ms('1h') + ms(`${loot.date.getMinutes()}m`));
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
@@ -186,31 +187,35 @@ export class ScribeService extends BaseService {
       if (BAD_RESPONSE_EXPR.test(reply.text)) {
         throw new Error(['Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
       }
-      console.log(reply);
+      this.log(reply);
       await prompt.handleReply(reply);
     }
     const category = await Category.findOne({ where: { displayName: newSummary.category } });
     newSummary.category = category.name;
+
+    if (this.features.image_generation) {
     
-    // Generate image from the title
-    const image = await DeepAiService.textToImage(newSummary.title);
-    if (!image) {
-      throw new Error('Image generation failed');
+      // Generate image from the title
+      const image = await DeepAiService.textToImage(newSummary.title);
+      if (!image) {
+        throw new Error('Image generation failed');
+      }
+      
+      // Save image to S3 CDN
+      const file = await S3Service.download(image.output_url);
+      const obj = await S3Service.uploadObject({
+        ACL: 'public-read',
+        ContentType: 'image/jpeg',
+        File: file,
+        Folder: 'img/s',
+      });
+      newSummary.imageUrl = obj.url;
+
     }
-    
-    // Save image to S3 CDN
-    const file = await S3Service.download(image.output_url);
-    const obj = await S3Service.uploadObject({
-      ACL: 'public-read',
-      ContentType: 'image/jpeg',
-      File: file,
-      Folder: 'img/s',
-    });
-    newSummary.imageUrl = obj.url;
     
     // Save summary to database
     const summary = await Summary.create(newSummary);
-    console.log('Created new summary from', url, newSummary.title);
+    this.log('Created new summary from', url, newSummary.title);
     return summary;
   }
   
