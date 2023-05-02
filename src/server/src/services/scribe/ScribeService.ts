@@ -3,9 +3,11 @@ import ms from 'ms';
 import { ReadAndSummarizePayload } from './types';
 import {
   ChatGPTService,
+  DeepAiService,
   MailService,
   Prompt,
   PuppeteerService,
+  S3Service,
 } from '../';
 import { Category, Summary } from '../../api/v1/schema/models';
 import { Sentiment } from '../../api/v1/schema/types';
@@ -31,6 +33,18 @@ export class ScribeService extends BaseService {
     await Category.initCategories();
     const categories = await Category.findAll();
     this.categories = categories.map((c) => c.displayName);
+  }
+
+  public static async error(subject: string, text: string, throws = true): Promise<void> {
+    await new MailService().sendMail({
+      from: 'debug@readless.ai',
+      subject,
+      text,
+      to: 'debug@readless.ai',
+    });
+    if (throws) {
+      throw new Error(subject);
+    }
   }
   
   public static async readAndSummarize(
@@ -61,36 +75,19 @@ export class ScribeService extends BaseService {
     // create the prompt onReply map to be sent to chatgpt
     if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
-      await new MailService().sendMail({
-        from: 'debug@readless.ai',
-        subject: 'Long article found',
-        text: `Long article found ${url}\n\n${loot.content}`,
-        to: 'debug@readless.ai',
-      });
+      await this.error('Long article found', `Long article found for ${url}\n\n${loot.content}`, false);
     }
     if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
       throw new Error('Article too short');
     }
     if (Number.isNaN(loot.date.valueOf())) {
-      await new MailService().sendMail({
-        from: 'debug@readless.ai',
-        subject: 'Invalid date found',
-        text: `Invalid date found for ${url}\n\n${loot.dateMatches.join('\n')}`,
-        to: 'debug@readless.ai',
-      });
-      throw new Error('Published date found is invalid');
+      await this.error('Invalid date found', `Invalid date found for ${url}\n\n${loot.dateMatches.join('\n')}`);
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
     }
     if (loot.date > new Date(Date.now() + ms('2h'))) {
-      await new MailService().sendMail({
-        from: 'debug@readless.ai',
-        subject: 'News is from the future',
-        text: `News is from the future for ${url}\n\n${loot.date.toISOString()}`,
-        to: 'debug@readless.ai',
-      });
-      throw new Error('News is from the future');
+      await this.error('News is from the future', `News is from the future for ${url}\n\n${loot.date.toISOString()}`);
     }
     // daylight savings most likely
     if (loot.date > new Date() && loot.date < new Date(Date.now() + ms('1h'))) {
@@ -132,13 +129,7 @@ export class ScribeService extends BaseService {
       {
         handleReply: async (reply) => { 
           if (reply.text.split(' ').length > 20) {
-            await new MailService().sendMail({
-              from: 'debug@readless.ai',
-              subject: 'Title too long',
-              text: `Title too long for ${url}\n\n${reply.text}`,
-              to: 'debug@readless.ai',
-            });
-            throw new Error('Title too long');
+            await this.error('Title too long', `Title too long for ${url}\n\n${reply.text}`);
           }
           newSummary.title = reply.text;
         },
@@ -148,20 +139,24 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 120) {
-            await new MailService().sendMail({
-              from: 'debug@readless.ai',
-              subject: 'Summary too long',
-              text: `Summary too long for ${url}\n\n${reply.text}`,
-              to: 'debug@readless.ai',
-            });
-            throw new Error('Title too long');
+          if (reply.text.split(' ').length > 60) {
+            await this.error('Short summary too long', `Short summary too long for ${url}\n\n${reply.text}`);
           }
           newSummary.shortSummary = reply.text;
+        },
+        text: [
+          'Please provide a summary using no more than 40 words. Do not start with "The article" or "This article".', 
+        ].join(''),
+      },
+      {
+        handleReply: async (reply) => { 
+          if (reply.text.split(' ').length > 150) {
+            await this.error('Summary too long', `Summary too long for ${url}\n\n${reply.text}`);
+          }
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide a three to four sentence summary using no more than 100 words. Do not start with "The article" or "This article".', 
+          'Please provide a slightly longer summary using no more than 100 words. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -196,8 +191,26 @@ export class ScribeService extends BaseService {
     }
     const category = await Category.findOne({ where: { displayName: newSummary.category } });
     newSummary.category = category.name;
-    console.log('Created new summary from', url, newSummary.title);
+    
+    // Generate image from the title
+    const image = await DeepAiService.textToImage(newSummary.title);
+    if (!image) {
+      throw new Error('Image generation failed');
+    }
+    
+    // Save image to S3 CDN
+    const file = await S3Service.download(image.output_url);
+    const obj = await S3Service.uploadObject({
+      ACL: 'public-read',
+      ContentType: 'image/jpeg',
+      File: file,
+      Folder: 'img/s',
+    });
+    newSummary.imageUrl = obj.url;
+    
+    // Save summary to database
     const summary = await Summary.create(newSummary);
+    console.log('Created new summary from', url, newSummary.title);
     return summary;
   }
   

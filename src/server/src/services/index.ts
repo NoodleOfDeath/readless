@@ -1,6 +1,7 @@
 export * from './account';
 export * from './aws';
 export * from './db';
+export * from './deepai';
 export * from './google';
 export * from './mail';
 export * from './openai';

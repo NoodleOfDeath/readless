@@ -12,7 +12,7 @@ on:
       - "src/mobile/package.json"
       - "src/mobile/public/**"
       - "src/mobile/src/**"
-      - 'src/core/client/**'
+      - "src/core/client/**"
       - "src/server/api/**"
 
 concurrency:
@@ -38,17 +38,14 @@ jobs:
         with:
           ssh-key: ${{ secrets.GIT_SSH_KEY }}
           submodules: recursive
-      - name: Install yarn
-        run: |
-          npm install -g yarn
-      - name: Pod Install
-        run: |
-          cd src/mobile \
-          pod install
-      - name: Build
-        run: |
-          cd src/mobile \
-          yarn build
+      - name: Xcode build
+        uses: sersoft-gmbh/xcodebuild-action@v2
+        with:
+          workspace: src/mobile/ios/ReadLess/ReadLess.xcworkspace
+          scheme: ReadLess
+          destination: platform=iOS
+          action: archive
+      #- name: Upload Build to AppStore Connect
 
   deploy-mobile:
     needs: build-mobile
