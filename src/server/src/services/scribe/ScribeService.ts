@@ -127,7 +127,7 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 15) {
+          if (reply.text.split(' ').length > 20) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
               subject: 'Title too long',
@@ -154,6 +154,7 @@ export class ScribeService extends BaseService {
             throw new Error('Title too long');
           }
           newSummary.summary = reply.text;
+          newSummary.shortSummary = reply.text;
         },
         text: [
           'Please provide a three to four sentence summary using no more than 100 words. Do not start with "The article" or "This article".', 
