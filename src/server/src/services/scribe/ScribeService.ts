@@ -145,7 +145,7 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide a three to four sentence summary using no more than 40 words. Do not start with "The article" or "This article".', 
+          'Please provide a summary using no more than 40 words. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -156,7 +156,7 @@ export class ScribeService extends BaseService {
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide a slighly longer summary using no more than 100 words. Do not start with "The article" or "This article".', 
+          'Please provide a slightly longer summary using no more than 100 words. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
