@@ -1,51 +1,77 @@
-// Step 1: Import the S3Client object and all necessary SDK commands.
+import fs from 'fs';
+import p from 'path';
+
 import {
   PutObjectCommand,
   PutObjectCommandInput,
   S3Client,
 } from '@aws-sdk/client-s3';
+import axios from 'axios';
+import { v1 as uuid } from 'uuid';
 
 import { BaseService } from '../../base';
 
-type S3ServiceOptions = {
-  endpoint?: string;
-  forcePathStyle?: boolean;
-  region?: string;
-  credentials?: {
-    accessKeyId: string;
-    secretAccessKey: string;
-  };
+export type DownloadOptions = {
+  filetype?: string;
+  filename?: string;
+  filepath?: string;
+};
+
+export type UploadOptions = Omit<PutObjectCommandInput, 'Body' | 'Bucket' | 'Key'> & {
+  Bucket?: string;
+  Body?: string;
+  File?: string;
+  Folder?: string;
+  Key?: string;
 };
 
 export class S3Service extends BaseService {
 
-  s3Client: S3Client;
-
-  constructor({
-    endpoint = 'https://readless.nyc3.digitaloceanspaces.com',
-    forcePathStyle = false,
-    region = 'nyc3',
-    credentials = {
-      accessKeyId: 'C58A976M583E23R1O00N',
-      secretAccessKey: process.env.SPACES_SECRET,
+  public static s3Client = new S3Client({
+    credentials: {
+      accessKeyId: process.env.S3_KEY,
+      secretAccessKey: process.env.S3_SECRET,
     },
-  }: S3ServiceOptions = {}) {
-    super();
-    this.s3Client = new S3Client({
-      credentials,
-      endpoint,
-      forcePathStyle,
-      region,
+    endpoint: 'https://nyc3.digitaloceanspaces.com',
+    forcePathStyle: false,
+    region: 'nyc3',
+  });
+  
+  public static async download(url: string, {
+    filetype = 'jpg', 
+    filename = `${uuid()}.${filetype}`,
+    filepath = `/tmp/${filename}`,
+  }: DownloadOptions = {}): Promise<string> {
+    const response = await axios.get(url, { responseType: 'stream' });
+    return new Promise((resolve, reject) => {
+      response.data.pipe(fs.createWriteStream(filepath))
+        .on('error', reject)
+        .once('close', () => resolve(filepath));
     });
   }
 
-  async uploadObject(params: PutObjectCommandInput) {
-    try {
-      const data = await this.s3Client.send(new PutObjectCommand(params));
-      return data;
-    } catch (err) {
-      console.log('Error', err);
+  public static async uploadObject(options: UploadOptions) {
+    const params = {
+      ...options,
+      Body: options.Body ? options.Body : options.File ? fs.readFileSync(options.File) : null,
+      Bucket: options.Bucket ? options.Bucket : process.env.S3_BUCKET,
+      Key: options.Folder ? [options.Folder, options.File ? p.basename(options.File) : options.Key].join('/') : options.Key,
+    };
+    if (!params.Body) {
+      throw new Error('Malformed body');
     }
+    if (!params.Bucket) {
+      throw new Error('Malformed bucket');
+    }
+    if (!params.Key) {
+      throw new Error('Malformed key');
+    }
+    const data = await this.s3Client.send(new PutObjectCommand(params));
+    const url = `https://${params.Bucket}.nyc3.digitaloceanspaces.com/${params.Key}`;
+    return {
+      ...data,
+      url,
+    };
   }
 
 }

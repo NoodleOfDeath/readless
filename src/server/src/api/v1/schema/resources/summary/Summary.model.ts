@@ -33,9 +33,6 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
 })
 export class Summary extends Post<SummaryInteraction, SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
 
-  outletAttributes?: PublicOutletAttributes;
-  categoryAttributes?: PublicCategoryAttributes;
-
   @Column({ type: DataType.TEXT })
   declare summary?: string;
 
@@ -95,6 +92,9 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   declare sentiments?: Record<string, Sentiment>;
 
   formats = Object.values(READING_FORMATS);
+
+  outletAttributes?: PublicOutletAttributes;
+  categoryAttributes?: PublicCategoryAttributes;
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {

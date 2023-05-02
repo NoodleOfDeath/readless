@@ -57,6 +57,7 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
+      DEEPAI_API_KEY: ${{ secrets.DEEPAI_API_KEY }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
       K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
@@ -74,6 +75,9 @@ jobs:
       OUTLET_MAX_ATTEMPT_LIMIT: ${{ vars.OUTLET_MAX_ATTEMPT_LIMIT }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PORT: ${{ vars.PORT }}
+      S3_BUCKET: ${{ vars.S3_BUCKET }}
+      S3_KEY: ${{ secrets.S3_KEY }}
+      S3_SECRET: ${{ secrets.S3_SECRET }}
     steps:
       - name: Print Job Description
         run: |
