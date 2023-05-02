@@ -20,7 +20,7 @@ export class DBService extends BaseService {
     this.sq = new Sequelize(connectionString, {
       dialect: 'postgres',
       dialectOptions: { ssl: { rejectUnauthorized: false } },
-      logging: !!process.env.SQL_LOGGING,
+      logging: process.env.SQL_LOGGING === 'true',
       models,
     });
     await this.sq.authenticate();

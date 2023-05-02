@@ -36,17 +36,11 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   outletAttributes?: PublicOutletAttributes;
   categoryAttributes?: PublicCategoryAttributes;
 
-  @Column({
-    allowNull: false,
-    type: DataType.TEXT,
-  })
-  declare summary: string;
+  @Column({ type: DataType.TEXT })
+  declare summary?: string;
 
-  @Column({
-    allowNull: false,
-    type: DataType.STRING(1024),
-  })
-  declare shortSummary: string;
+  @Column({ type: DataType.STRING(1024) })
+  declare shortSummary?: string;
 
   @Column({
     defaultValue: [],

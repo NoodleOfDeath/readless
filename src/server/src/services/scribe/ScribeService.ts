@@ -15,8 +15,6 @@ const MIN_TOKEN_COUNT = 70 as const;
 const MAX_OPENAI_TOKEN_COUNT = 4000 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
-const NOTICE_MESSAGE = 'This reading format will be going away in the next major update, which will include more useful analysis metrics that are short and easier to read! Stay tuned!';
-
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
 export function abbreviate(str: string, len: number) {
@@ -102,8 +100,6 @@ export class ScribeService extends BaseService {
       outletId: outlet.id,
       rawText: loot.rawText,
       sentiments: {},
-      summary: NOTICE_MESSAGE,
-      text: NOTICE_MESSAGE,
       url,
     });
     const prompts: Prompt[] = [
@@ -131,7 +127,7 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 30) {
+          if (reply.text.split(' ').length > 15) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
               subject: 'Title too long',
@@ -143,7 +139,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the general take away message of the same article in a single sentence using no more than 30 words. Do not start with "The article" or "This article".', 
+          'Please summarize the same article using no more than 15 words. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -151,13 +147,13 @@ export class ScribeService extends BaseService {
           if (reply.text.split(' ').length > 100) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
-              subject: 'Short summary too long',
-              text: `Title too long for ${url}\n\n${reply.text}`,
+              subject: 'Summary too long',
+              text: `Summary too long for ${url}\n\n${reply.text}`,
               to: 'debug@readless.ai',
             });
             throw new Error('Title too long');
           }
-          newSummary.shortSummary = reply.text;
+          newSummary.summary = reply.text;
         },
         text: [
           'Please provide a three to four sentence summary using no more than 100 words. Do not start with "The article" or "This article".', 

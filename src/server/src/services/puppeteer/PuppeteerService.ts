@@ -285,6 +285,15 @@ export class PuppeteerService extends BaseService {
         });
       }
       
+      if (!loot.imageUrl) {
+        actions.push({
+          action: async (el) => {
+            loot.imageUrl = await el.evaluate((el, image) => el.getAttribute(image?.attribute || 'src'), image);
+          },
+          selector: image?.selector || 'img',
+        });
+      }
+      
       actions.push({
         action: async (el) => {
           dates.push(...[

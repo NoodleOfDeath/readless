@@ -6,3 +6,4 @@ export * from './mail';
 export * from './openai';
 export * from './puppeteer';
 export * from './scribe';
+export * from './tts';

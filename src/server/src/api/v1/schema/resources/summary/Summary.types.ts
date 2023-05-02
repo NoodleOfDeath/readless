@@ -24,13 +24,8 @@ export class Sentiment {
   }
 
   static from(str: string) {
-    const expr = /\{.*\}/;
-    const payload = expr.exec(str);
-    if (!payload) {
-      return new Sentiment(Number.NaN, {});
-    }
     try {
-      const { score, tokens } = JSON.parse(payload[0]);
+      const { score, tokens } = JSON.parse(str);
       return new Sentiment(score, tokens);
     } catch (e) {
       return new Sentiment(Number.NaN, {});
@@ -40,8 +35,8 @@ export class Sentiment {
 }
 
 export type SummaryAttributesRaw = PostAttributes & {
-  summary: string;
-  shortSummary: string;
+  summary?: string;
+  shortSummary?: string;
   bullets: string[];
   category: string;
   outletId: number;
@@ -60,8 +55,8 @@ export type SummaryAttributes = SummaryAttributesRaw & {
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {
-  summary: string;
-  shortSummary: string;
+  summary?: string;
+  shortSummary?: string;
   bullets: string[];
   category: string;
   outletId: number;
