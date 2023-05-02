@@ -145,12 +145,12 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide a three to four sentence summary using no more than 50 words. Do not start with "The article" or "This article".', 
+          'Please provide a three to four sentence summary using no more than 40 words. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 120) {
+          if (reply.text.split(' ').length > 150) {
             await this.error('Summary too long', `Summary too long for ${url}\n\n${reply.text}`);
           }
           newSummary.summary = reply.text;
