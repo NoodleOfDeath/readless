@@ -83,7 +83,7 @@ export class ScribeService extends BaseService {
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
     }
-    if (loot.date > new Date(Date.now() + ms('4h'))) {
+    if (loot.date > new Date(Date.now() + ms('2h'))) {
       await new MailService().sendMail({
         from: 'debug@readless.ai',
         subject: 'News is from the future',
@@ -91,6 +91,10 @@ export class ScribeService extends BaseService {
         to: 'debug@readless.ai',
       });
       throw new Error('News is from the future');
+    }
+    // daylight savings most likely
+    if (loot.date > new Date() && loot.date < new Date(Date.now() + ms('1h'))) {
+      loot.date = new Date(loot.date.valueOf() - ms('1h') + ms(`${loot.date.getMinutes()}m`));
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
@@ -144,7 +148,7 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 100) {
+          if (reply.text.split(' ').length > 120) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
               subject: 'Summary too long',
@@ -153,8 +157,8 @@ export class ScribeService extends BaseService {
             });
             throw new Error('Title too long');
           }
-          newSummary.summary = reply.text;
           newSummary.shortSummary = reply.text;
+          newSummary.summary = reply.text;
         },
         text: [
           'Please provide a three to four sentence summary using no more than 100 words. Do not start with "The article" or "This article".', 
