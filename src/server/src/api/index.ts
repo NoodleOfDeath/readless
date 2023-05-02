@@ -25,7 +25,6 @@ async function main() {
   const app = express();
   
   const IGNORE_PATHS = [
-    '/v1/metrics',
     '/v1/healthz',
   ];
   

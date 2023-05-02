@@ -9,14 +9,18 @@ import {
 import { 
   PUBLIC_SUMMARY_ATTRIBUTES,
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
+  READING_FORMATS,
+  Sentiment,
   SummaryAttributes,
   SummaryCreationAttributes,
 } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { InteractionType } from '../../interaction/Interaction.types';
-import { TitledCategorizedPost } from '../Post.model';
+import { Post } from '../Post.model';
 import { Outlet } from '../outlet/Outlet.model';
+import { PublicOutletAttributes } from '../outlet/Outlet.types';
 import { Category } from '../topic/Category.model';
+import { PublicCategoryAttributes } from '../topic/Category.types';
 
 @Scopes(() => ({ 
   conservative: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE] },
@@ -27,7 +31,28 @@ import { Category } from '../topic/Category.model';
   paranoid: true,
   timestamps: true,
 })
-export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
+export class Summary extends Post<SummaryInteraction, SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
+
+  outletAttributes?: PublicOutletAttributes;
+  categoryAttributes?: PublicCategoryAttributes;
+
+  @Column({ type: DataType.TEXT })
+  declare summary?: string;
+
+  @Column({ type: DataType.STRING(1024) })
+  declare shortSummary?: string;
+
+  @Column({
+    defaultValue: [],
+    type: DataType.ARRAY(DataType.STRING(1024)),
+  })
+  declare bullets: string[];
+  
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+  })
+  declare category: string;
   
   @Column({
     allowNull: false,
@@ -65,6 +90,11 @@ export class Summary extends TitledCategorizedPost<SummaryInteraction, SummaryAt
     type: DataType.DATE,
   })
   declare originalDate: Date;
+
+  @Column({ type: DataType.JSON })
+  declare sentiments?: Record<string, Sentiment>;
+
+  formats = Object.values(READING_FORMATS);
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {

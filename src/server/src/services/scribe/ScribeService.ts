@@ -8,19 +8,18 @@ import {
   PuppeteerService,
 } from '../';
 import { Category, Summary } from '../../api/v1/schema/models';
+import { Sentiment } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 70 as const;
 const MAX_OPENAI_TOKEN_COUNT = 4000 as const;
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
-const NOTICE_MESSAGE = 'This reading format will be going away in the next major update, which will include more useful analysis metrics that are short and easier to read! Stay tuned!';
-
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
-export function abbreviate(str: string, len: number, segments = 3) {
-  const parts = str.match(new RegExp(`.{1,${Math.floor(str.length / segments)}}`));
-  console.log(parts);
+export function abbreviate(str: string, len: number) {
+  // const sentences = str.split(/\.|\?|!/);
+  //console.log(parts);
   return str.substring(0, len);
 }
 
@@ -95,13 +94,12 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
-      longSummary: NOTICE_MESSAGE,
+      imageUrl: loot.imageUrl,
       originalDate: loot.date,
       originalTitle: loot.title,
       outletId: outlet.id,
       rawText: loot.rawText,
-      summary: NOTICE_MESSAGE,
-      text: NOTICE_MESSAGE,
+      sentiments: {},
       url,
     });
     const prompts: Prompt[] = [
@@ -113,17 +111,27 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Does the following appear to be a news article? A collection of article headlines, advertisement, or description of a news website should not be considered a news article. Please respond with just "yes" or "no"\n\n', 
+          'Does the following appear to be a news article? A collection of articles, advertisements, or description of a news website should not be considered a news article. Please respond with just "yes" or "no"\n\n', 
           newSummary.filteredText,
         ].join(''),
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.length > 200) {
+          const sentiment = Sentiment.from(reply.text);
+          if (Number.isNaN(sentiment.score)) {
+            throw new Error(`Not a valid sentiment score: ${reply.text}`);
+          }
+          newSummary.sentiments.chatgpt = sentiment;
+        },
+        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 adjective token counts. Please respond with JSON only using the format: { score: number, tokens: Record<string, number> }',
+      },
+      {
+        handleReply: async (reply) => { 
+          if (reply.text.split(' ').length > 15) {
             await new MailService().sendMail({
               from: 'debug@readless.ai',
               subject: 'Title too long',
-              text: `Title too long for ${url}\n\n${loot.title}\n\n${loot.content}`,
+              text: `Title too long for ${url}\n\n${reply.text}`,
               to: 'debug@readless.ai',
             });
             throw new Error('Title too long');
@@ -131,7 +139,24 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the general take away message of the article I just gave you in a single sentence using no more than 150 characters. Do not start with "The article" or "This article".', 
+          'Please summarize the same article using no more than 15 words. Do not start with "The article" or "This article".', 
+        ].join(''),
+      },
+      {
+        handleReply: async (reply) => { 
+          if (reply.text.split(' ').length > 100) {
+            await new MailService().sendMail({
+              from: 'debug@readless.ai',
+              subject: 'Summary too long',
+              text: `Summary too long for ${url}\n\n${reply.text}`,
+              to: 'debug@readless.ai',
+            });
+            throw new Error('Title too long');
+          }
+          newSummary.summary = reply.text;
+        },
+        text: [
+          'Please provide a three to four sentence summary using no more than 100 words. Do not start with "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -146,41 +171,11 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          newSummary.shortSummary = reply.text;
-        },
-        text: 'Please provide a two to three sentence summary using no more than 150 words. Do not start with "The article" or "This article".',
-      },
-      {
-        handleReply: async (reply) => {
-          newSummary.tags = reply.text
-            .replace(/^tags:\s*/i, '')
-            .replace(/\.$/, '')
-            .split(/[,;\n]/)
-            .map((tag) => tag.trim());
-        },
-        text: 'Please provide a list of at least 10 tags most relevant to this article separated by commas like: tag 1,tag 2,tag 3,tag 4,tag 5,tag 6,tag 7,tag 8,tag 9,tag 10',
-      },
-      {
-        handleReply: async (reply) => { 
           newSummary.category = reply.text
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
         text: `Please select a best category for this article from the following choices: ${this.categories.join(' ')}`,
-      },
-      {
-        handleReply: async (reply) => { 
-          newSummary.subcategory = reply.text
-            .replace(/^subcategory:\s*/i, '')
-            .replace(/\.$/, '').trim();
-        },
-        text: `Please provide a one word subcategory for this article under the category '${newSummary.category}'`,
-      },
-      {
-        handleReply: async (reply) => {
-          newSummary.imagePrompt = reply.text;
-        },
-        text: 'Please provide a short image prompt for an ai image generator to make an image for this article',
       },
     ];
     // initialize chatgpt service and send the prompt

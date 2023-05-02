@@ -16,6 +16,7 @@ export type Selectors = {
   author: Selector;
   date: Selector;
   spider: Selector;
+  image?: Selector;
   title?: Selector;
 };
 

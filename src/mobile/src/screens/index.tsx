@@ -4,6 +4,6 @@ export * from './bulletin/BulletinScreen';
 export * from './home/HomeScreen';
 export * from './mystuff/MyStuffScreen';
 export * from './search/SearchScreen';
-export * from './sections/SectionsScreen';
+export * from './browse/BrowseScreen';
 export * from './settings/SettingsScreen';
 export * from './summary/SummaryScreen';

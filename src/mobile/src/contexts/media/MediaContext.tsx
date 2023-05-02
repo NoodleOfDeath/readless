@@ -1,20 +1,20 @@
 
 import React from 'react';
+import { DeviceEventEmitter } from 'react-native';
 
 import { formatDistance } from 'date-fns';
 import TrackPlayer, {
-  AppKilledPlaybackBehavior,
   Capability,
   Event,
+  Track as RNTrack,
   State,
-  Track,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Tts, { Voice } from 'react-native-tts-reborn';
 
 import {
   DEFAULT_MEDIA_CONTEXT,
-  TtsStatus,
+  Track,
   deviceLanguage,
 } from './types';
 
@@ -22,9 +22,8 @@ import { PublicSummaryAttributes } from '~/api';
 
 export const PlaybackService = async () => {
   try {
-    await TrackPlayer.setupPlayer({ maxCacheSize: 1024 * 5 });
+    await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
-      android: { appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification },
       capabilities: [
         Capability.Bookmark,
         Capability.Like,
@@ -52,17 +51,21 @@ type Props = React.PropsWithChildren;
 
 export function MediaContextProvider({ children }: Props) {
 
+  // TTS
   const [voices, setVoices] = React.useState<Voice[]>([]);
-  const [ttsStatus, setTtsStatus] = React.useState<TtsStatus>('initializing');
   const [selectedVoiceIndex, setSelectedVoice] = React.useState(0);
   const [speechRate, setSpeechRate] = React.useState(0.5);
   const [speechPitch, setSpeechPitch] = React.useState(1);
   const [speechVolume, setSpeechVolume] = React.useState(1);
 
+  // Track Player
   const [trackState, setTrackState] = React.useState<State>(State.None);
   const [currentTrackIndex, setCurrentTrackIndex] = React.useState<number>();
   const [currentTrack, setCurrentTrack] = React.useState<Track>();
   const [tracks, setTracks] = React.useState<Track[]>([]);
+  const [cacheMap, setCacheMap] = React.useState<Record<string, boolean>>({});
+  const [preloadCount] = React.useState(3);
+  const [isPreloaded, setIsPreloaded] = React.useState(false);
 
   const canSkipToPrevious = React.useMemo(() => currentTrackIndex != null && currentTrackIndex > 0, [currentTrackIndex]);
   const canSkipToNext = React.useMemo(() => currentTrackIndex != null && currentTrackIndex < tracks.length - 1, [currentTrackIndex, tracks]);
@@ -75,10 +78,14 @@ export function MediaContextProvider({ children }: Props) {
       const state = await TrackPlayer.getState();
       const currentTrack = await TrackPlayer.getCurrentTrack() ?? undefined;
       const track = currentTrack != null ? tracks[currentTrack] : undefined;
-      setCurrentTrackIndex(currentTrack);
-      setCurrentTrack(track);
       if (state) {
         setTrackState(state);
+      }
+      if (currentTrack) {
+        setCurrentTrackIndex(currentTrack);
+      }
+      if (track) {
+        setCurrentTrack(track);
       }
     } else
     if (event.type === Event.PlaybackQueueEnded) {
@@ -101,117 +108,151 @@ export function MediaContextProvider({ children }: Props) {
       setVoices(availableVoices);
       const defaultVoice = voices?.findIndex((v) => /Aaron/i.test(v.name)) ?? 0;
       setSelectedVoice(defaultVoice);
-      setTtsStatus('ready');
-    } else {
-      setTtsStatus('ready');
     }
   }, []);
-
-  React.useEffect(() => {
-    // Set up the player
-    Tts.addEventListener('tts-start', (_event) => setTtsStatus('started'));
-    Tts.addEventListener('tts-finish', (_event) => setTtsStatus('finished'));
-    Tts.addEventListener('tts-cancel', (_event) => setTtsStatus('cancelled'));
-    Tts.setDefaultRate(speechRate);
-    Tts.setDefaultPitch(speechPitch);
-    Tts.getInitStatus().then(initTts);
-    return () => {
-      Tts.removeEventListener('tts-start', (_event) => setTtsStatus('started'));
-      Tts.removeEventListener('tts-finish', (_event) => setTtsStatus('finished'));
-      Tts.removeEventListener('tts-cancel', (_event) => setTtsStatus('cancelled'));
-    };
-  }, [initTts, speechPitch, speechRate]);
-  
-  const cancelTts = React.useCallback(async () => {
-    Tts.stop();
-  }, []);
-
-  const textToTrack = React.useCallback(async (text: string, firstResponder: string, track?: Partial<Track>): Promise<Track> => {
-    const file = await Tts.export(text, { filename: firstResponder, overwrite: true } );
-    return {
-      id: firstResponder,
-      url: file,
-      ...track,
-    };
-  }, []);
-  
-  const queueTrack = React.useCallback(async (track: Track | Track[]) => {
-    // Add a track to the queue
-    const existingTracks = await TrackPlayer.getQueue();
-    const tracks = (Array.isArray(track) ? track : [track]).filter((t) => !existingTracks.find((et) => et.id === t.id));
-    setTracks([...existingTracks, ...tracks]);
-    await TrackPlayer.add(tracks);
-  }, []);
-
-  const queueSummary = React.useCallback(
-    async (summary: PublicSummaryAttributes, altText?: string) => {
-      const timeAgo = formatDistance(new Date(summary.originalDate ?? 0), new Date(), { addSuffix: true });
-      const text = [
-        `From ${summary.outletAttributes?.displayName} ${timeAgo}:`,
-        altText ?? summary.title,
-      ].join('\n');
-      const track = await textToTrack(
-        text,
-        ['summary', summary.id].join('-'),
-        {
-          artist: summary.outletAttributes?.displayName,
-          artwork: 'https://www.readless.ai/AppIcon.png',
-          data: summary,
-          title: summary.title,
-        }
-      );
-      if (track) {
-        await queueTrack(track);
-      }
-    },
-    [queueTrack, textToTrack]
-  );
 
   const playTrack = React.useCallback(async () => {
-    if (trackState === State.Playing) {
-      setTrackState(State.Paused);
-      await TrackPlayer.pause();
-    } else {
-      setTrackState(State.Playing);
-      await TrackPlayer.play();
-    }
-  }, [trackState]);
+    setTrackState(State.Playing);
+    await TrackPlayer.play();
+  }, []);
+
+  const pauseTrack = React.useCallback(async () => {
+    setTrackState(State.Paused);
+    await TrackPlayer.pause();
+  }, []);
 
   const stopAndClearTracks = React.useCallback(async () => {
     setCurrentTrack(undefined);
     setTrackState(State.Stopped);
     setCurrentTrackIndex(undefined);
     setTracks([]);
+    setCacheMap({});
     await TrackPlayer.reset();
   }, []);
+
+  React.useEffect(() => {
+    // Set up TTS player
+    Tts.setDefaultRate(speechRate);
+    Tts.setDefaultPitch(speechPitch);
+    Tts.getInitStatus().then(initTts);
+    Tts.addEventListener('tts-finish', () => {
+      /* placeholder */
+    });
+    Tts.addEventListener('tts-cancel', () => {
+      /* placeholder */
+    });
+    Tts.addEventListener('tts-start', () => {
+      /* placeholder */
+    });
+  }, [initTts, speechPitch, speechRate]);
+  
+  const generateTrack = React.useCallback(async (
+    track: Track
+  ): Promise<RNTrack> => {
+    const file = await Tts.export(track.text, {
+      filename: track.id, 
+      overwrite: true, 
+    } );
+    return {
+      cached: true,
+      url: file,
+      ...track,
+    };
+  }, []);
+
+  const preload = React.useCallback(async () => {
+    setIsPreloaded(false);
+    const trackIndex = currentTrackIndex ?? 0;
+    const updatedTracks: string[] = [];
+    for (let i = trackIndex; i < Math.min(tracks.length, trackIndex + preloadCount); i++) {
+      const track = tracks[i];
+      if (!cacheMap[track.id]) {
+        const newTrack = await generateTrack(track);
+        updatedTracks.push(newTrack.id);
+        await TrackPlayer.add(newTrack);
+      }
+    }
+    DeviceEventEmitter.emit('media-preload');
+    setIsPreloaded(true);
+    setCacheMap((prev) => { 
+      const state = { ...prev };
+      for (const track of updatedTracks) {
+        state[track] = true;
+      }
+      return (prev = state);
+    });
+  }, [cacheMap, currentTrackIndex, generateTrack, preloadCount, tracks]);
+  
+  React.useEffect(() => {
+    preload();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrackIndex, tracks]);
+
+  React.useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('media-preload', () =>{
+      console.log('Preload event received');
+      if (trackState !== State.Paused) {
+        playTrack();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, [playTrack, trackState]);
+
+  const queueSummary = React.useCallback(
+    (summary: PublicSummaryAttributes | PublicSummaryAttributes[]) => {
+      const tracks: Track[] = [];
+      const summaries = Array.isArray(summary) ? summary : [summary];
+      for (const summary of summaries) {
+        const timeAgo = formatDistance(new Date(summary.originalDate ?? 0), new Date(), { addSuffix: true });
+        const text = [
+          `From ${summary.outletAttributes?.displayName} ${timeAgo}:`,
+          summary.title,
+        ].join('\n');
+        tracks.push(
+          {
+            artist: summary.outletAttributes?.displayName,
+            artwork: 'https://www.readless.ai/AppIcon.png',
+            id: ['summary', summary.id].join('-'),
+            summary,
+            text,
+            title: summary.title,
+          }
+        );
+      }
+      setTracks((prev) => {
+        const state = [...prev, ...tracks.filter((t) => !prev.some((p) => p.id === t.id))];
+        return state;
+      });
+    },
+    []
+  );
   
   return (
     <MediaContext.Provider value={ {
       canSkipToNext,
       canSkipToPrevious,
-      cancelTts,
       currentTrack,
       currentTrackIndex,
       deviceLanguage,
+      isPreloaded,
+      pauseTrack,
       playTrack,
+      preloadCount,
       queueSummary,
-      queueTrack,
       selectedVoice: voices[selectedVoiceIndex],
       selectedVoiceIndex,
       setSelectedVoice,
       setSpeechPitch,
       setSpeechRate,
       setSpeechVolume,
-      setTtsStatus,
-      setVoices,
       speechPitch,
       speechRate,
       speechVolume,
       stopAndClearTracks,
-      textToTrack,
       trackState,
       tracks,
-      ttsStatus,
       voices,
     } }>
       {children}

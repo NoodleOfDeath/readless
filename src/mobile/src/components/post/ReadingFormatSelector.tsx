@@ -14,12 +14,12 @@ export function ReadingFormatSelector({
   preferredFormat = ReadingFormat.Summary, 
   onChange,
 }: Props = {}) {
-  const [activeTab, setActiveTab] = React.useState((format ?? preferredFormat) === ReadingFormat.Bullets ? 0 : 1);
+  const [activeTab, setActiveTab] = React.useState((format ?? preferredFormat) === ReadingFormat.Bullets ? 1 : 0);
   
   const handleTabChange = React.useCallback((index: number) => {
     setActiveTab(index);
     if (onChange) {
-      onChange(index === 0 ? ReadingFormat.Bullets : ReadingFormat.Summary);
+      onChange(index === 0 ? ReadingFormat.Summary : ReadingFormat.Bullets);
     }
   }, [onChange]);
 
@@ -28,6 +28,6 @@ export function ReadingFormatSelector({
       rounded
       activeTab={ activeTab }
       onTabChange={ handleTabChange }
-      titles={ ['Bullets', 'Summary'] } />
+      titles={ ['Summary', 'Bullets'] } />
   );
 }

@@ -19,12 +19,13 @@ import {
 } from '~/components';
 import { useTheme } from '~/hooks';
 import {
+  BrowseScreen,
+  BulletinScreen,
   HomeScreen,
   MyStuffScreen,
   NAVIGATION_LINKING_OPTIONS,
   ScreenComponentType,
   SearchScreen,
-  SectionsScreen,
   SettingsScreen,
   StackableTabParams,
   SummaryScreen,
@@ -60,6 +61,7 @@ type TabProps = {
   component: ReturnType<typeof TabViewController>;
   icon: string;
   name: string;
+  disabled?: boolean;
   badge?: (preferences: Preferences) => number;
 };
 
@@ -72,7 +74,7 @@ const TABS: TabProps[] = [
         summary: SummaryScreen,
       }
     ),
-    icon: 'home',
+    icon: 'newspaper',
     name: 'Today',
   },
   {
@@ -90,25 +92,26 @@ const TABS: TabProps[] = [
   {
     component: TabViewController<StackableTabParams>(
       {
-        default: SectionsScreen, 
+        default: BrowseScreen, 
         search: SearchScreen, 
         summary: SummaryScreen,
       }
     ),
-    icon: 'newspaper',
-    name: 'Sections',
+    icon: 'bookshelf',
+    name: 'Browse',
   },
-  // {
-  //   component: TabViewController<StackableTabParams>(
-  //     {
-  //       default: BulletinScreen, 
-  //       search: SearchScreen, 
-  //       summary: SummaryScreen,
-  //     }
-  //   ),
-  //   icon: 'pin',
-  //   name: 'Bulletin',
-  // },
+  {
+    component: TabViewController<StackableTabParams>(
+      {
+        default: BulletinScreen, 
+        search: SearchScreen, 
+        summary: SummaryScreen,
+      }
+    ),
+    disabled: true,
+    icon: 'pin',
+    name: 'Bulletin',
+  },
   {
     component: TabViewController({ default: SettingsScreen }),
     icon: 'cog',
@@ -125,41 +128,39 @@ export default function NavigationController() {
       {!ready ? (
         <ActivityIndicator animating />
       ) : (
-        <View col>
-          <NavigationContainer
-            theme={ { 
-              colors: theme.navContainerColors,
-              dark: !theme.isLightMode,
-            } }
-            fallback={ <ActivityIndicator animating /> }
-            linking={ NAVIGATION_LINKING_OPTIONS }>
-            <Tab.Navigator>
-              {TABS.map((tab) => (
-                <Tab.Screen
-                  key={ tab.name }
-                  name={ tab.name }
-                  component={ tab.component }
-                  options={ {
-                    tabBarIcon: (props) => {
-                      const badge = tab.badge ? tab.badge(preferences) : 0;
-                      return (
-                        <View>
-                          {badge > 0 && (
-                            <Badge style={ {
-                              position: 'absolute', right: 0, top: 0, zIndex: 1,
-                            } }>
-                              {badge}
-                            </Badge>
-                          )}
-                          <Icon name={ tab.icon } { ...props } color="primary" />
-                        </View>
-                      );
-                    },
-                  } } />
-              ))}
-            </Tab.Navigator>
-          </NavigationContainer>
-        </View>
+        <NavigationContainer
+          theme={ { 
+            colors: theme.navContainerColors,
+            dark: !theme.isLightMode,
+          } }
+          fallback={ <ActivityIndicator animating /> }
+          linking={ NAVIGATION_LINKING_OPTIONS }>
+          <Tab.Navigator>
+            {TABS.filter((tab) => !tab.disabled).map((tab) => (
+              <Tab.Screen
+                key={ tab.name }
+                name={ tab.name }
+                component={ tab.component }
+                options={ {
+                  tabBarIcon: (props) => {
+                    const badge = tab.badge ? tab.badge(preferences) : 0;
+                    return (
+                      <View>
+                        {badge > 0 && (
+                          <Badge style={ {
+                            position: 'absolute', right: 0, top: 0, zIndex: 1,
+                          } }>
+                            {badge}
+                          </Badge>
+                        )}
+                        <Icon name={ tab.icon } { ...props } color="primary" />
+                      </View>
+                    );
+                  },
+                } } />
+            ))}
+          </Tab.Navigator>
+        </NavigationContainer>
       )}
     </React.Fragment>
   );

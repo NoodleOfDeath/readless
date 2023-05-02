@@ -28,12 +28,13 @@ import {
 import { useInAppBrowser, useTheme } from '~/hooks';
 
 type Props = {
-  summary: PublicSummaryAttributes;
+  summary?: PublicSummaryAttributes;
   tickIntervalMs?: number;
   initialFormat?: ReadingFormat;
   keywords?: string[];
   swipeable?: boolean;
   forceStatic?: boolean;
+  mock?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
@@ -47,7 +48,6 @@ type RenderAction = {
 
 type RenderActionsProps = {
   actions: RenderAction[];
-  theme: ReturnType<typeof useTheme>;
   side?: 'left' | 'right';
 };
 
@@ -77,8 +77,26 @@ function RenderActions({ actions, side }: RenderActionsProps) {
   );
 }
 
+const MOCK_SUMMARY: PublicSummaryAttributes = {
+  bullets: [],
+  category: '',
+  formats: [],
+  id: 1,
+  imagePrompt: '',
+  longSummary: 'The long summary',
+  originalTitle: '',
+  outletId: 0,
+  shortSummary: 'The short summary',
+  subcategory: '',
+  summary: '',
+  tags: [],
+  text: '',
+  title: 'This is an exmaple title of at least 150 characters',
+  url: 'https://www.google.com',
+};
+
 export function Summary({
-  summary,
+  summary = MOCK_SUMMARY,
   tickIntervalMs = 60_000,
   initialFormat,
   keywords = [],
@@ -102,7 +120,7 @@ export function Summary({
     showShareFab, setShowFeedbackDialog, setShowShareFab, 
   } = React.useContext(DialogContext);
   const {
-    trackState, queueSummary, playTrack, currentTrack, stopAndClearTracks,
+    trackState, queueSummary, currentTrack, stopAndClearTracks,
   } = React.useContext(MediaContext);
   
   const viewshot = React.useRef<ViewShot | null>(null);
@@ -205,16 +223,15 @@ export function Summary({
     });
   }, [bookmarked, onInteract, setPreference, summary.id]);
 
-  const handlePlayAudio = React.useCallback(async (text: string) => {
+  const handlePlayAudio = React.useCallback(async () => {
     if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
       await stopAndClearTracks();
       return;
     }
-    await queueSummary(summary, text);
-    playTrack();
-  }, [currentTrack?.id, queueSummary, summary, trackState, playTrack, stopAndClearTracks]);
-
-  const renderLeftActions = React.useCallback(() => {
+    queueSummary(summary);
+  }, [trackState, currentTrack?.id, summary, queueSummary, stopAndClearTracks]);
+  
+  const renderRightActions = React.useCallback(() => {
     const actions = [{
       onPress: () => setPreference('readSummaries', (prev) => {
         onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !isRead });
@@ -239,14 +256,7 @@ export function Summary({
       },
       startIcon: 'eye-off',
       text: 'Hide',
-    }];
-    return (
-      <RenderActions actions={ actions } theme={ theme } side='left' />
-    );
-  }, [isRead, onInteract, setPreference, summary, theme]);
-  
-  const renderRightActions = React.useCallback(() => {
-    const actions = [{
+    }, {
       onPress: () => { 
         onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
           setShowFeedbackDialog(true, { summary });
@@ -256,17 +266,16 @@ export function Summary({
       text: 'Report a Bug',
     }];
     return (
-      <RenderActions actions={ actions } theme={ theme } side='right' />
+      <RenderActions actions={ actions } side='right' />
     );
-  }, [theme, onInteract, summary, setShowFeedbackDialog]);
+  }, [isRead, setPreference, onInteract, summary, setShowFeedbackDialog]);
   
   return (
-    <ViewShot ref={ viewshot }>
-      <GestureHandlerRootView>
-        <Swipeable 
-          enabled={ swipeable }
-          renderLeftActions={ renderLeftActions }
-          renderRightActions={ renderRightActions }>
+    <GestureHandlerRootView>
+      <Swipeable 
+        enabled={ swipeable }
+        renderRightActions={ renderRightActions }>
+        <ViewShot ref={ viewshot }>
           <View 
             elevated
             mh={ 16 }
@@ -370,7 +379,7 @@ export function Summary({
                         subtitle2
                         color="text"
                         startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                        onPress={ () => handlePlayAudio(summary.title) } />
+                        onPress={ () => handlePlayAudio() } />
                     </View>
                   </View>
                 </View>
@@ -406,8 +415,8 @@ export function Summary({
               </View>
             )}
           </View>
-        </Swipeable>
-      </GestureHandlerRootView>
-    </ViewShot>
+        </ViewShot>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 }
