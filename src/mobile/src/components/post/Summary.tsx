@@ -29,16 +29,20 @@ import {
   MediaContext,
   SessionContext,
 } from '~/contexts';
-import { useInAppBrowser, useTheme } from '~/hooks';
+import {
+  useInAppBrowser,
+  useShare,
+  useTheme,
+} from '~/hooks';
 
 type Props = {
   summary?: PublicSummaryAttributes;
   tickIntervalMs?: number;
   initialFormat?: ReadingFormat;
   keywords?: string[];
-  swipeable?: boolean;
   compact?: boolean;
-  isStatic?: boolean;
+  swipeable?: boolean;
+  disableInteractions?: boolean;
   collapsed?: boolean | {
     summary?: boolean;
     analytics?: boolean;
@@ -99,7 +103,7 @@ const MOCK_SUMMARY: PublicSummaryAttributes = {
     displayName: 'News Source', id: -1, name: '', 
   },
   outletId: -1,
-  sentiments: { chatgpt: { score: '0.1', tokens: { test: 2 } } },
+  sentiments: { chatgpt: { score: 0.1, tokens: { test: 2 } } },
   shortSummary: 'This is a short 40-60 word summary that can appear under titles if you set it to show in the settings',
   summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
   text: '',
@@ -112,9 +116,9 @@ export function Summary({
   tickIntervalMs = 60_000,
   initialFormat,
   keywords = [],
-  swipeable = true,
   compact = false,
-  isStatic = false,
+  swipeable = true,
+  disableInteractions = false,
   collapsed,
   onFormatChange,
   onReferSearch,
@@ -122,6 +126,7 @@ export function Summary({
 }: Props) {
   const { openURL } = useInAppBrowser();
   const theme = useTheme();
+  const { copyToClipboard } = useShare({ onInteract });
   const {
     preferences: {
       showShortSummary,
@@ -147,7 +152,7 @@ export function Summary({
   const [collapseSummary, setCollapseSummary] = React.useState(Boolean(collapsed));
   const [collapseAnalytics, setCollapseAnalytics] = React.useState(Boolean(collapsed));
 
-  const isRead = React.useMemo(() => !compact && !isStatic && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [compact, isStatic, initialFormat, readSummaries, showShareDialog, summary.id]);
+  const isRead = React.useMemo(() => !compact && !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [compact, disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
   const favorited = React.useMemo(() => Boolean(favoritedSummaries?.[summary.id]), [favoritedSummaries, summary]);
   
@@ -162,34 +167,23 @@ export function Summary({
 
   const timeAgo = React.useMemo(() => {
     if (new Date(summary.originalDate ?? 0) > lastTick) {
-      return <Text bold caption>just now</Text>;
+      return 'just now';
     }
     const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true })
       .replace(/about /, '')
       .replace(/less than a minute ago/, 'just now')
-      .replace(/ minutes/, 'm')
+      .replace(/ minutes?/, 'm')
       .replace(/ hours?/, 'h')
-      .replace(/ days?/, 'd')
-      .replace(/ months?/, 'm')
-      .replace(/ years?/, 'y');
+      .replace(/ days?/, 'd');
     const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true })
       .replace(/about /, '')
       .replace(/less than a minute ago/, 'just now')
       .replace(/ minutes/, 'm')
       .replace(/ hours?/, 'h')
-      .replace(/ days?/, 'd')
-      .replace(/ months?/, 'm')
-      .replace(/ years?/, 'y');
+      .replace(/ days?/, 'd');
     return new Date(summary.originalDate ?? 0).valueOf() > 0 && originalTime !== generatedTime ? 
-      (
-        <React.Fragment>
-          <Text bold caption>{originalTime}</Text>
-          <Text bold caption>
-            {`(generated ${generatedTime})`}
-          </Text>
-        </React.Fragment>
-      ) : 
-      (<Text bold caption>{new Date(summary.originalDate ?? 0).valueOf() > 0 ? generatedTime : `generated ${generatedTime}`}</Text>);
+      `${originalTime} ${`(generated ${generatedTime})`}` : 
+      `${new Date(summary.originalDate ?? 0).valueOf() > 0 ? generatedTime : `generated ${generatedTime}`}`;
   }, [summary.createdAt, summary.originalDate, lastTick]);
   
   const content = React.useMemo(() => {
@@ -219,7 +213,7 @@ export function Summary({
     setTimeout(() => {
       setPreference('readSummaries', (prev) => ({
         ...prev,
-        [summary.id]: new Bookmark(summary),
+        [summary.id]: new Bookmark(true),
       }));
     }, 200);
     if (!initialFormat) {
@@ -256,7 +250,7 @@ export function Summary({
         if (isRead) {
           delete newBookmarks[summary.id];
         } else {
-          newBookmarks[summary.id] = new Bookmark(summary);
+          newBookmarks[summary.id] = new Bookmark(true);
         }
         return (prev = newBookmarks);
       }),
@@ -267,7 +261,7 @@ export function Summary({
         onInteract?.(InteractionType.Hide, undefined, undefined, () => {
           setPreference('removedSummaries', (prev) => ({
             ...prev,
-            [summary.id]: new Bookmark(summary),
+            [summary.id]: new Bookmark(true),
           }));
         });
       },
@@ -290,7 +284,7 @@ export function Summary({
   return (
     <GestureHandlerRootView>
       <Swipeable 
-        enabled={ swipeable && !initialFormat && !isStatic }
+        enabled={ swipeable && !initialFormat && !disableInteractions }
         renderRightActions={ renderRightActions }>
         <ViewShot ref={ viewshot }>
           <View 
@@ -306,12 +300,6 @@ export function Summary({
                 {!compact && (
                   <View col gap={ 6 }>
                     <View row alignCenter gap={ 6 }>
-                      <Button 
-                        elevated
-                        p={ 4 }
-                        rounded
-                        startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
-                        onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
                       <Button 
                         elevated
                         p={ 4 }
@@ -337,6 +325,22 @@ export function Summary({
                       {markdown(summary.title)}
                     </Markdown>
                   )}
+                  <Divider />
+                  <View gap={ 0 }>
+                    <View row gap={ 4 }>
+                      <Text bold caption>{`${timeAgo} from`}</Text>
+                    </View>
+                    <Text 
+                      alignCenter
+                      numberOfLines={ 1 }
+                      underline
+                      rounded
+                      caption
+                      onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
+                      onLongPress={ () => copyToClipboard(summary.url) }>
+                      {summary.url}
+                    </Text>
+                  </View>
                 </View>
               </View>
               {!compact && summary.imageUrl && (
@@ -372,17 +376,6 @@ export function Summary({
               )}
             </View>
             <View row alignCenter justifyCenter>
-              <Text 
-                row
-                alignCenter
-                gap={ 4 }
-                numberOfLines={ 1 }
-                p={ 4 }
-                underline
-                rounded
-                onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
-                {summary.url}
-              </Text>
             </View>
             {!compact && showShortSummary === true && (
               <View>
@@ -407,9 +400,17 @@ export function Summary({
               <React.Fragment>
                 <Divider />
                 <View row justifySpaced alignCenter>
-                  <View row gap={ 4 }>
-                    {timeAgo}
-                  </View>
+                  <Button 
+                    elevated
+                    row
+                    alignCenter
+                    gap={ 6 }
+                    p={ 4 }
+                    rounded
+                    startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
+                    onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
+                    {summary.categoryAttributes?.displayName}
+                  </Button>
                   <View>
                     <View row alignCenter justifyEnd gap={ 8 }>
                       <Button

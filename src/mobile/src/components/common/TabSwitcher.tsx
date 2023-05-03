@@ -36,7 +36,7 @@ export function TabSwitcher({
   const translateX = React.useRef(new Animated.Value(0)).current;
 
   const fontSize = React.useMemo(() => {
-    return (tabHeight ? tabHeight / 2 : style.fontSize ?? 16) ?? style.fontSize ?? 16;
+    return (tabHeight ? tabHeight * 0.4 : style.fontSize ?? 16) ?? style.fontSize ?? 16;
   }, [style.fontSize, tabHeight]);
 
   const computedStyle = React.useMemo(() => {

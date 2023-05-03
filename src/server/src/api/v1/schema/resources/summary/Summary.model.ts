@@ -33,11 +33,17 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
 })
 export class Summary extends Post<SummaryInteraction, SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
 
-  @Column({ type: DataType.TEXT })
-  declare summary?: string;
+  @Column({ 
+    allowNull: false,
+    type: DataType.TEXT,
+  })
+  declare summary: string;
 
-  @Column({ type: DataType.STRING(1024) })
-  declare shortSummary?: string;
+  @Column({
+    allowNull: false, 
+    type: DataType.STRING(1024), 
+  })
+  declare shortSummary: string;
 
   @Column({
     defaultValue: [],
@@ -89,7 +95,7 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   declare originalDate: Date;
 
   @Column({ type: DataType.JSON })
-  declare sentiments?: Record<string, Sentiment>;
+  declare sentiments?: { [key: string]: Sentiment };
 
   formats = Object.values(READING_FORMATS);
 

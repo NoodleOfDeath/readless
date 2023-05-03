@@ -234,7 +234,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         <View col mh={ 16 } gap={ 12 }>
           <Text>Example Summary</Text>
           <Summary 
-            isStatic
+            disableInteractions
             collapsed
             initialFormat={ ReadingFormat.Summary } />
           {options.filter((o) => o.visible !== false).map((option) => (

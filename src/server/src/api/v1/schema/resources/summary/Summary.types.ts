@@ -35,8 +35,8 @@ export class Sentiment {
 }
 
 export type SummaryAttributesRaw = PostAttributes & {
-  summary?: string;
-  shortSummary?: string;
+  summary: string;
+  shortSummary: string;
   bullets: string[];
   category: string;
   outletId: number;
@@ -45,7 +45,7 @@ export type SummaryAttributesRaw = PostAttributes & {
   filteredText: string;
   originalTitle: string;
   originalDate?: Date;
-  sentiments?: Record<string, Sentiment>;
+  sentiments?: { [key: string]: Sentiment };
   formats: ReadingFormat[];
 };
 
@@ -55,8 +55,8 @@ export type SummaryAttributes = SummaryAttributesRaw & {
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {
-  summary?: string;
-  shortSummary?: string;
+  summary: string;
+  shortSummary: string;
   bullets: string[];
   category: string;
   outletId: number;
@@ -65,7 +65,7 @@ export type SummaryCreationAttributes = PostCreationAttributes & {
   filteredText: string;
   originalTitle: string;
   originalDate?: Date;
-  sentiments?: Record<string, Sentiment>;
+  sentiments?: { [key: string]: Sentiment };
 };
 
 /** light weight record for a summary post */

@@ -82,7 +82,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
       <ScrollView>
         {currentTrack && (
           <Summary 
-            isStatic
+            disableInteractions
             swipeable={ false }
             summary={ currentTrack.summary }
             onFormatChange={ (format) => handleFormatChange(currentTrack.summary, format) }

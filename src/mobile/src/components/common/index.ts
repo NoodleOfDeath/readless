@@ -10,6 +10,7 @@ export * from './Grid';
 export * from './Icon';
 export * from './Image';
 export * from './Markdown';
+export * from './Menu';
 export * from './Screen';
 export * from './ScrollView';
 export * from './Snackbar';

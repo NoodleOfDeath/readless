@@ -1,102 +1,17 @@
 import React from 'react';
-import { Animated } from 'react-native';
 
 import { Menu } from 'react-native-paper';
-import {
-  Circle,
-  Path,
-  Rect,
-  Svg,
-} from 'react-native-svg';
 
 import { Sentiment } from '~/api';
 import {
   Button,
-  Divider,
   Icon,
+  MeterDial,
   Text,
   View,
   ViewProps,
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
-
-export type MeterDialProps = {
-  min?: number;
-  max?: number;
-  value?: number;
-  majorTick?: number;
-  minorTick?: number;
-  meterStyle?: {
-    stroke?: string;
-    fill?: string;
-  }
-  needleStyle?: {
-    stroke?: string;
-    fill?: string;
-  }
-  width?: number;
-  height?: number;
-};
-
-export function MeterDial({
-  min = -1,
-  max = 1,
-  value = 0,
-  majorTick = 0.2,
-  minorTick = majorTick / 2,
-  meterStyle = {
-    fill: 'transparent',
-    stroke: '#888',
-  },
-  needleStyle = {
-    fill: '#ccc',
-    stroke: '#888',
-  },
-  width = 200,
-  height = width / 2,
-}: MeterDialProps = {}) {
-  const rotation = React.useMemo(() => {
-    // x / -90 = v / min
-    // x = -90v / min
-    // x / 90 = v / max
-    // x = 90v / max
-    // x^2 = (-90v / min) * (90v / max)
-    // x^2 = -810v^2/(min * max)
-    // x = sqrt(-810v^2/(min*max))
-    return value === 0 ? 0 : (value/Math.abs(value)) * Math.sqrt((-90 * value / min) * (90 * value / max));
-  }, [min, max, value]);
-  const majorTicks = React.useMemo(() => [...Array((max - min) / majorTick).keys()], [min, max, majorTick]);
-  const minorTicks = React.useMemo(() => [...Array((max - min) / minorTick).keys()], [min, max, minorTick]);
-  return (
-    <Svg viewBox="0 0 100 60" width={ width } height={ height }>
-      <Path 
-        d="M90,50 a10,10 00 0,0 -80,0 Z"
-        { ...meterStyle } />
-      {majorTicks.map((k) => {
-        return (
-          <Path 
-            key={ k }
-            d="M50,10 L50,20"
-            { ...meterStyle }
-            transform={ `rotate(${(180 * k / majorTicks.length) - 90}, 50, 50)` } />
-        );
-      })}
-      {minorTicks.map((k) => {
-        return (
-          <Path 
-            key={ k }
-            d="M50,10 L50,13"
-            { ...meterStyle }
-            transform={ `rotate(${(180 * k / minorTicks.length) - 90}, 50, 50)` } />
-        );
-      })}
-      <Path 
-        d="M50,50 L45,45 L50,0 L55,45 Z" 
-        { ...needleStyle }
-        transform={ `rotate(${rotation}, 50, 50)` } />
-    </Svg>
-  );
-}
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
   sentiments: Record<string, Sentiment>;
@@ -126,14 +41,14 @@ export function AnalyticsView({
   }, [sentiments]);
   
   const sentiment = React.useMemo(() => {
-    if (average < -0.33333) {
-      if (average < -0.66666) {
+    if (average < -0.2) {
+      if (average < -0.6) {
         return 'Very Negative';
       }
       return 'Negative';
     }
-    if (average > 0.33333) {
-      if (average > 0.66666) {
+    if (average > 0.2) {
+      if (average > 0.6) {
         return 'Very Positive';
       }
       return 'Positive';
@@ -167,15 +82,11 @@ export function AnalyticsView({
         </View>
         <Text
           rounded
-          bg={ /negative/i.test(sentiment) ? '#ff0000' : /positive/i.test(sentiment) ? '#00cc00' : '#222' }
+          bg={ /negative/i.test(sentiment) ? '#ff0000' : /positive/i.test(sentiment) ? '#00cc00' : '#888' }
           color="white"
           style={ { overflow: 'hidden' } }
-          padding={ 6 }>
-          { sentiment }
-          {' '}
-          (
-          { average }
-          )
+          p={ 6 }>
+          {`${ sentiment } ${average.toFixed(2)}`}
         </Text>
         <View row alignCenter>
           <Icon 
@@ -193,8 +104,7 @@ export function AnalyticsView({
         <Text>Notable Tokens</Text>
         {tokens.map(([key]) => (
           <Text key={ key }>
-            •
-            {key}
+            {`• ${key}`}
           </Text>
         ))}
       </View>
