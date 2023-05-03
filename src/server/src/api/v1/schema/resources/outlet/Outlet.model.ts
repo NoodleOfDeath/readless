@@ -36,6 +36,34 @@ export class Outlet<
   implements OutletAttributes {
 
   static OUTLETS: Record<string, OutletCreationAttributes> = {
+    _9to5google: {
+      baseUrl: 'https://9to5google.com',
+      displayName: '9to5google',
+      name: '9to5google',
+      selectors: {
+        article: { selector: '#river p' },
+        author: { selector: '#main .author-name' },
+        date: { selector: '#main .post-meta' },
+        spider: {
+          attribute: 'href',
+          selector: 'a[class*="article__title"], article a',
+        },
+      },
+    },
+    _9to5mac: {
+      baseUrl: 'https://9to5mac.com',
+      displayName: '9to5mac',
+      name: '9to5mac',
+      selectors: {
+        article: { selector: '#river p' },
+        author: { selector: '#main .author-name' },
+        date: { selector: '#main .post-meta' },
+        spider: {
+          attribute: 'href',
+          selector: 'a[class*="article__title"]',
+        },
+      },
+    },
     abc: {
       baseUrl: 'https://abcnews.go.com',
       displayName: 'ABC News',
@@ -163,7 +191,13 @@ export class Outlet<
         date: { selector: 'header time' },
         spider:{
           attribute: 'href',
-          selector: 'article a',
+          selector: [
+            'a[href*="/music/"]', 
+            'a[href*="/lists/"]', 
+            'a[href*="/culture/"]', 
+            'a[href*="/media/"]', 
+            'a[href*="/business/"]', 
+          ].join(','),
         },
       },
       timezone: DEFAULT_TIMEZONE,
@@ -977,7 +1011,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: '*[class*="author-name"] a' },
-        date: { selector: 'article time' },
+        date: { selector: 'article time, article time span' },
         spider:{
           attribute: 'href',
           selector: [

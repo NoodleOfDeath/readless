@@ -26,6 +26,8 @@ export function Banner({
 
   const theme = useTheme();
   const style = useStyles(props);
+  
+  const [minimized, setMinimized] = React.useState(false);
 
   return (
     <React.Fragment>
@@ -35,9 +37,21 @@ export function Banner({
           style={ style } 
           gap={ 8 }
           p={ 16 }>
-          <View>
-            {children}
+          <View justifyCenter alignEnd>
+            <View>
+              <Button 
+                onPress={ ()=> setMinimized(!minimized) }
+                startIcon={ minimized ? 'chevron-up' : 'chevron-down' }
+                elevated
+                p={ 4 }
+                rounded />
+            </View>
           </View>
+          {minimized === false && (
+            <View>
+              {children}
+            </View>
+          )}
           <View height={ 54 } alignCenter>
             <View row alignCenter gap={ 16 }>
               {actions.map((action, index) => (

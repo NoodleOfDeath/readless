@@ -1,23 +1,36 @@
 import React from 'react';
 
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import TrackPlayer, { State } from 'react-native-track-player';
 
 import {
+  InteractionType,
+  PublicSummaryAttributes,
+  ReadingFormat,
+} from '~/api';
+import {
   Banner,
   BannerProps,
+  ScrollView,
   Summary,
-  View,
   ViewProps,
 } from '~/components';
-import { MediaContext } from '~/contexts';
+import { MediaContext, SessionContext } from '~/contexts';
+import { useSummaryClient } from '~/hooks';
+import { StackableTabParams } from '~/screens';
 
-type MediaPlayerProps = ViewProps & Omit<BannerProps, 'actions' | 'children'>;
+type MediaPlayerProps = ViewProps & Omit<BannerProps, 'actions' | 'children'> ;
 
 export function MediaPlayer(props: MediaPlayerProps) {
 
   const {
     canSkipToPrevious, canSkipToNext, currentTrack, trackState, playTrack, pauseTrack, stopAndClearTracks, 
   } = React.useContext(MediaContext);
+  const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
+  const { handleInteraction } = useSummaryClient();
+
+  const navigation = useNavigation<NativeStackNavigationProp<StackableTabParams>>();
 
   const handleSkipToPrevious = React.useCallback(async () => {
     await TrackPlayer.skipToPrevious();
@@ -26,6 +39,22 @@ export function MediaPlayer(props: MediaPlayerProps) {
   const handleSkipToNext = React.useCallback(async () => {
     await TrackPlayer.skipToNext();
   }, []);
+
+  const handleFormatChange = React.useCallback(
+    (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
+      handleInteraction(summary, InteractionType.Read, undefined, { format });
+      console.log(navigation);
+      navigation?.navigate('summary', {
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
+        summary,
+      });
+    },
+    [handleInteraction, navigation, preferredReadingFormat]
+  );
+  
+  const handleReferSearch = React.useCallback((newPrefilter: string) => {
+    navigation?.navigate('search', { prefilter: newPrefilter });
+  }, [navigation]);
 
   return (
     <Banner
@@ -50,14 +79,17 @@ export function MediaPlayer(props: MediaPlayerProps) {
           onPress: handleSkipToNext,
         },
       ] }>
-      <View>
+      <ScrollView>
         {currentTrack && (
           <Summary 
-            forceStatic
+            isStatic
             swipeable={ false }
-            summary={ currentTrack.summary } />
+            summary={ currentTrack.summary }
+            onFormatChange={ (format) => handleFormatChange(currentTrack.summary, format) }
+            onInteract={ (...args) => handleInteraction(currentTrack.summary, ...args) }
+            onReferSearch={ handleReferSearch } />
         )}
-      </View>
+      </ScrollView>
     </Banner>
   );
 }

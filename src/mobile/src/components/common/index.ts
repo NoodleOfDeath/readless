@@ -8,6 +8,7 @@ export * from './Divider';
 export * from './FAB';
 export * from './Grid';
 export * from './Icon';
+export * from './Image';
 export * from './Markdown';
 export * from './Screen';
 export * from './ScrollView';

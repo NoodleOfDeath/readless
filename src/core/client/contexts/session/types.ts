@@ -38,10 +38,11 @@ export type Preferences = {
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;
-  letterSpacing?: number;
   homeTab?: 'All News' | 'My News',
   fontFamily?: string;
+  letterSpacing?: number;
   sortOrder?: string[];
+  showShortSummary?: boolean;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };

@@ -14,8 +14,21 @@ export const FONT_SIZES = {
   subtitle2: 17,
 } as const;
 
-export type Stylable<Style extends ViewStyle = ViewStyle> = 
-  { [key in keyof typeof FONT_SIZES]?: boolean } & {
+export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
+  // text styling
+  color?: string;
+  textCenter?: boolean;
+  textLeft?: boolean;
+  textRight?: boolean;
+  fontFamily?: string;
+  fontSize?: number;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  code?: boolean;
+};
+
+export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   // position
   absolute?: boolean;
   relative?: boolean;
@@ -24,6 +37,7 @@ export type Stylable<Style extends ViewStyle = ViewStyle> =
   left?: number | string;
   right?: number | string;
   // dimensions
+  aspectRatio?: number;
   width?: number | string;
   height?: number | string;
   // flexbox
@@ -46,17 +60,6 @@ export type Stylable<Style extends ViewStyle = ViewStyle> =
   justifyStart?: boolean;
   justifyEnd?: boolean;
   justifySpaced?: boolean;
-  // text styling
-  color?: string;
-  textCenter?: boolean;
-  textLeft?: boolean;
-  textRight?: boolean;
-  fontFamily?: string;
-  fontSize?: number;
-  bold?: boolean;
-  italic?: boolean;
-  underline?: boolean;
-  code?: boolean;
   inactive?: boolean;
   // margins
   m?: number;
@@ -86,3 +89,6 @@ export type Stylable<Style extends ViewStyle = ViewStyle> =
   // other
   style?: Style;
 };
+
+export type Stylable<Style extends ViewStyle = ViewStyle> = 
+TextStyleProps & ViewStyleProps<Style>;
