@@ -18,7 +18,7 @@ import { ToastContext } from '~/contexts';
 import {  useOrientation, useTheme } from '~/hooks';
 import { SummaryUtils } from '~/utils';
 
-export type ShareFabProps = Partial<FABGroupProps> & {
+export type ShareDialogProps = Partial<FABGroupProps> & {
   summary?: PublicSummaryAttributes;
   viewshot?: ViewShot | null;
   content?: string;
@@ -47,7 +47,7 @@ const SocialAppIds: Record<Social, string> = {
   [Social.Viber]: 'com.viber.voip',
 };
 
-export function ShareFab({
+export function ShareDialog({
   summary,
   viewshot,
   content,
@@ -57,7 +57,7 @@ export function ShareFab({
   onInteract,
   onDismiss,
   ...other
-}: ShareFabProps) {
+}: ShareDialogProps) {
   const theme = useTheme();
   const orientation = useOrientation();
   const toast = React.useContext(ToastContext);

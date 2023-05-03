@@ -27,6 +27,8 @@ export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
   underline?: boolean;
   code?: boolean;
 };
+ 
+export const TEXT_STYLE_PROPS = ['color', 'textCenter', 'textLeft', 'textRight', 'fontFamily', 'fontSize', 'bold', 'italic', 'underline', 'code', ...Object.keys(FONT_SIZES)];
 
 export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   // position
@@ -89,6 +91,8 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   // other
   style?: Style;
 };
+
+export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'borderColor', 'backgroundColor', 'opacity', 'borderRadius', 'borderWidth', 'style'];
 
 export type Stylable<Style extends ViewStyle = ViewStyle> = 
 TextStyleProps & ViewStyleProps<Style>;

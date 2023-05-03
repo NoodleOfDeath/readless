@@ -12,11 +12,13 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
+  AnalyticsView,
   Button,
   Divider,
   Icon,
   Image,
   Markdown,
+  MeterDial,
   ReadingFormatSelector,
   Text,
   View,
@@ -37,7 +39,10 @@ type Props = {
   swipeable?: boolean;
   compact?: boolean;
   isStatic?: boolean;
-  mock?: boolean;
+  collapsed?: boolean | {
+    summary?: boolean;
+    analytics?: boolean;
+  }
   onFormatChange?: (format?: ReadingFormat) => void;
   onReferSearch?: (prefilter: string) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
@@ -81,7 +86,7 @@ function RenderActions({ actions, side }: RenderActionsProps) {
 }
 
 const MOCK_SUMMARY: PublicSummaryAttributes = {
-  bullets: ['- this is a bullet', '- this is another bullet'],
+  bullets: ['• this is a bullet', '• this is another bullet'],
   category: '',
   categoryAttributes: {
     displayName: 'Category', icon: 'popcorn', name: '',
@@ -94,7 +99,7 @@ const MOCK_SUMMARY: PublicSummaryAttributes = {
     displayName: 'News Source', id: -1, name: '', 
   },
   outletId: -1,
-  sentiments: {},
+  sentiments: { chatgpt: { score: '0.1', tokens: { test: 2 } } },
   shortSummary: 'This is a short 40-60 word summary that can appear under titles if you set it to show in the settings',
   summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
   text: '',
@@ -110,6 +115,7 @@ export function Summary({
   swipeable = true,
   compact = false,
   isStatic = false,
+  collapsed,
   onFormatChange,
   onReferSearch,
   onInteract,
@@ -126,7 +132,7 @@ export function Summary({
     }, setPreference, 
   } = React.useContext(SessionContext);
   const {
-    showShareFab, setShowFeedbackDialog, setShowShareFab, 
+    showShareDialog, setShowFeedbackDialog, setShowShareDialog, 
   } = React.useContext(DialogContext);
   const {
     trackState, queueSummary, currentTrack, stopAndClearTracks,
@@ -138,8 +144,10 @@ export function Summary({
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [showInfoMenu, setShowInfoMenu] = React.useState(false);
+  const [collapseSummary, setCollapseSummary] = React.useState(Boolean(collapsed));
+  const [collapseAnalytics, setCollapseAnalytics] = React.useState(Boolean(collapsed));
 
-  const isRead = React.useMemo(() => !compact && !isStatic && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareFab, [compact, isStatic, initialFormat, readSummaries, showShareFab, summary.id]);
+  const isRead = React.useMemo(() => !compact && !isStatic && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [compact, isStatic, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
   const favorited = React.useMemo(() => Boolean(favoritedSummaries?.[summary.id]), [favoritedSummaries, summary]);
   
@@ -315,7 +323,7 @@ export function Summary({
                   </View>
                 )}
                 <View col>
-                  {showShareFab || keywords.length === 0 ? <Text bold subtitle1>{summary.title}</Text> : (
+                  {showShareDialog || keywords.length === 0 ? <Text bold subtitle1>{summary.title}</Text> : (
                     <Markdown 
                       bold
                       subtitle1
@@ -332,13 +340,34 @@ export function Summary({
                 </View>
               </View>
               {!compact && summary.imageUrl && (
-                <View 
+                <View
                   width="33%" 
                   gap={ 6 }>
                   <Image
                     source={ { uri: summary.imageUrl } }  
                     rounded
                     aspectRatio={ 1 } />
+                  <View row gap={ 6 } alignCenter justifyCenter>
+                    <MeterDial 
+                      value={ summary.sentiments?.chatgpt?.score ?? 0 }
+                      width={ 50 } />
+                    <Menu
+                      contentStyle={ { 
+                        ...theme.components.card,
+                        borderRadius: 12,
+                        padding: 12,
+                        position: 'relative',
+                        top: 24,
+                        width: 200,
+                      } }
+                      visible={ showInfoMenu }
+                      onDismiss={ () => setShowInfoMenu(false) }
+                      anchor={
+                        <Button iconSize={ 24 } startIcon="information" onPress={ () => setShowInfoMenu(true) } />
+                      }>
+                      <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
+                    </Menu>
+                  </View>
                 </View>
               )}
             </View>
@@ -354,26 +383,11 @@ export function Summary({
                 onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }>
                 {summary.url}
               </Text>
-              <Menu
-                contentStyle={ { 
-                  borderRadius: 12,
-                  padding: 12,
-                  position: 'relative',
-                  top: 24,
-                  width: 200,
-                } }
-                visible={ showInfoMenu }
-                onDismiss={ () => setShowInfoMenu(false) }
-                anchor={
-                  <Button iconSize={ 24 } startIcon="information" onPress={ () => setShowInfoMenu(true) } />
-                }>
-                <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
-              </Menu>
             </View>
             {!compact && showShortSummary === true && (
               <View>
                 <Divider />
-                {(showShareFab || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
+                {(showShareDialog || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
                   <Markdown 
                     bold
                     subtitle1
@@ -423,7 +437,7 @@ export function Summary({
                         subtitle2
                         color='text'
                         startIcon='share'
-                        onPress={ () => setShowShareFab(true, {
+                        onPress={ () => setShowShareDialog(true, {
                           content, format, summary, viewshot: viewshot.current, 
                         }) } />
                       <Button
@@ -441,18 +455,28 @@ export function Summary({
               </React.Fragment>
             )}
             {initialFormat && (
-              <View mt={ 8 }>
+              <View>
+                <Divider />
+                <View row mv={ 8 } gap={ 6 } alignCenter>
+                  <Button
+                    elevated
+                    p={ 6 }
+                    rounded
+                    iconSize={ 24 }
+                    onPress={ () => setCollapseSummary((prev) => !prev) }
+                    startIcon={ collapseSummary ? 'chevron-right' : 'chevron-down' } />
+                  <Text subtitle1>Summary/Bullets</Text>
+                </View>
+              </View>
+            )}
+            {content && !collapseSummary && (
+              <View gap={ 12 }>
                 <ReadingFormatSelector 
                   format={ format } 
                   preferredFormat={ preferredReadingFormat }
                   onChange={ handleFormatChange } />
-              </View>
-            )}
-            {content && (
-              <View>
-                <Divider />
                 <View>
-                  {showShareFab || keywords.length === 0 ? (
+                  {showShareDialog || keywords.length === 0 ? (
                     <Text>{content}</Text>
                   ) : content.split(/\n/).map((line, i) => (
                     <Markdown
@@ -469,13 +493,38 @@ export function Summary({
                 </View>
               </View>
             )}
-            {/* {initialFormat && summary.sentiments && (
+            {initialFormat && summary.sentiments && (
               <View>
                 <Divider />
-                <AnalyticsView
-                  sentiments={ summary.sentiments } />
+                <View row mv={ 8 } gap={ 6 } alignCenter>
+                  <Button
+                    elevated
+                    p={ 6 }
+                    rounded
+                    iconSize={ 24 }
+                    onPress={ () => setCollapseAnalytics((prev) => !prev) }
+                    startIcon={ collapseAnalytics ? 'chevron-right' : 'chevron-down' } />
+                  <Text subtitle1>Analytics</Text>
+                  <View>
+                    <View row gap={ 6 } alignCenter>
+                      <View 
+                        bg={ 'blue' }
+                        p={ 3 }
+                        rounded>
+                        <Text
+                          color="white">
+                          beta
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+                {!collapseAnalytics && (
+                  <AnalyticsView
+                    sentiments={ summary.sentiments } />
+                )}
               </View>
-            )} */}
+            )}
           </View>
         </ViewShot>
       </Swipeable>
