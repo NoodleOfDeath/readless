@@ -62,6 +62,7 @@ jobs:
       API_RATE_LIMIT_DURATION: ${{ vars.API_RATE_LIMIT_DURATION }}
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
+      ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}
       GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
       GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}

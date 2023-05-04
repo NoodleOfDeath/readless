@@ -30,6 +30,8 @@ spec:
               value: "$CHROMIUM_EXECUTABLE_PATH"
             - name: DEEPAI_API_KEY
               value: "$DEEPAI_API_KEY"
+            - name: ENABLED_FEATURES
+              value: '$ENABLED_FEATURES'
             - name: MAIL_HOST
               value: "$MAIL_HOST"
             - name: MAIL_PASS

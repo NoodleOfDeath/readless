@@ -28,6 +28,8 @@ spec:
           env:
             - name: CHROMIUM_EXECUTABLE_PATH
               value: '$CHROMIUM_EXECUTABLE_PATH'
+            - name: ENABLED_FEATURES
+              value: '$ENABLED_FEATURES'
             - name: OLD_NEWS_THRESHOLD
               value: '$OLD_NEWS_THRESHOLD'
             - name: OPENAI_API_KEY
