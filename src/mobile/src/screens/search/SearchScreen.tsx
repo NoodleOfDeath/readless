@@ -186,11 +186,14 @@ export function SearchScreen({
   }, [setPreference, readSummaries]);
 
   const loadMore = React.useCallback(async (event?: string) => {
+    if (loading || totalResultCount <= summaries.length) {
+      return;
+    }
     await load(page + 1);
     if (event) {
       DeviceEventEmitter.emit(event);
     }
-  }, [load, page]);
+  }, [load, loading, page, totalResultCount, summaries]);
 
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
@@ -225,7 +228,7 @@ export function SearchScreen({
 
   React.useEffect(() => {
     loadMoreAsNeeded();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrackIndex]);
   
   React.useEffect(() => {
@@ -236,6 +239,11 @@ export function SearchScreen({
       subscriber.remove();
     };
   }, [queueSummary, summaries]);
+  
+  React.useEffect(() => {
+    const subscriber = DeviceEventEmitter.addListener('load-more', loadMore);
+    return () => subscriber.remove();
+  }, [loadMore]);
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
     if (prefilter === newPrefilter) {

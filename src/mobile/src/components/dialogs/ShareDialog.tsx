@@ -92,9 +92,14 @@ export function ShareDialog({
           onPress:() => shareSocial(summary, viewshot, Social.Twitter), 
         },
         {
-          icon: 'export-variant',
-          label: 'Share',
+          icon: 'camera',
+          label: 'Share as Image',
           onPress: () => shareStandard(summary, viewshot), 
+        },
+        {
+          icon: 'share',
+          label: 'Share as Link',
+          onPress: () => shareStandard(summary, null), 
         },
       ] }
       onStateChange={ ({ open }) => !open && onDismiss?.() } />

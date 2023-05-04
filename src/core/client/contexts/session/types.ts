@@ -3,6 +3,7 @@ import React from 'react';
 import { UserData, UserDataProps } from './UserData';
 
 import {
+  InteractionType,
   LoginResponse,
   PublicCategoryAttributes,
   PublicOutletAttributes,
@@ -25,9 +26,9 @@ export class Bookmark<T> {
     };
   }
 
-  constructor(item: T) {
+  constructor(item: T, createdAt = new Date()) {
     this.item = item;
-    this.createdAt = new Date();
+    this.createdAt = createdAt;
   }
 
 }
@@ -49,6 +50,7 @@ export type Preferences = {
   bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
   removedSummaries?: { [key: number]: Bookmark<boolean> };
   readSummaries?: { [key: number]: Bookmark<boolean> };
+  summaryHistory?: { [key: number]: Bookmark<InteractionType> };
   showOnlyBookmarkedNews?: boolean;
 };
 

@@ -60,19 +60,17 @@ export function useShare({
       return;
     }
     try {
-      const url = SummaryUtils.shareableLink(summary, BASE_DOMAIN);
-      const urls = [url];
+      let url = SummaryUtils.shareableLink(summary, BASE_DOMAIN);
       const imageUrl = await viewshot?.capture?.();
       const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
       if (base64ImageUrl) {
-        urls.push(base64ImageUrl);
+        url = base64ImageUrl;
       }
       const message = summary.title;
       onInteract?.(InteractionType.Share, 'standard', { message, url }, async () => {
         await Share.open({ 
           message,
           url,
-          urls,
         });
       });
     } catch (e) {

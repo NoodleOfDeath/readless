@@ -20,7 +20,6 @@ import {
 import { useTheme } from '~/hooks';
 import {
   BrowseScreen,
-  BulletinScreen,
   HomeScreen,
   MyStuffScreen,
   NAVIGATION_LINKING_OPTIONS,
@@ -99,18 +98,6 @@ const TABS: TabProps[] = [
     ),
     icon: 'bookshelf',
     name: 'Browse',
-  },
-  {
-    component: TabViewController<StackableTabParams>(
-      {
-        default: BulletinScreen, 
-        search: SearchScreen, 
-        summary: SummaryScreen,
-      }
-    ),
-    disabled: true,
-    icon: 'pin',
-    name: 'Bulletin',
   },
   {
     component: TabViewController({ default: SettingsScreen }),

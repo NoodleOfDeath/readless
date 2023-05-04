@@ -25,16 +25,21 @@ export function Screen({
   refreshControl = onRefresh && (
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
+  onScroll,
+  scrollEventThrottle = 500,
   ...props
 }: SafeScrollViewProps) {
   const theme = useTheme();
   const style = useStyles(props as Stylable);
+  console.log(onScroll);
   return (
     <React.Fragment>
       <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
       <SafeAreaView style={ theme.components.flexCol }>
         <KeyboardAwareScrollView
           refreshControl={ refreshControl }
+          onScroll={ onScroll }
+          scrollEventThrottle={ scrollEventThrottle }
           style={ style }
           { ...props }>
           {children}

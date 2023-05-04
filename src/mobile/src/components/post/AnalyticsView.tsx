@@ -1,17 +1,16 @@
 import React from 'react';
 
-import { Menu } from 'react-native-paper';
-
 import { Sentiment } from '~/api';
 import {
   Button,
   Icon,
+  Menu,
   MeterDial,
   Text,
   View,
   ViewProps,
 } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { useStyles } from '~/hooks';
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
   sentiments: Record<string, Sentiment>;
@@ -23,9 +22,8 @@ export function AnalyticsView({
 }: AnalyticsViewProps) {
   
   const style = useStyles(props);
-  const theme = useTheme();
   
-  const [showSentimentInfo, setShowSentimentInfo] = React.useState(false);
+  const [showTokens, setShowTokens] = React.useState(false);
   
   const average = React.useMemo(() => {
     const scores = Object.values(sentiments).reduce((curr, prev) => curr + prev.score, 0);
@@ -64,18 +62,8 @@ export function AnalyticsView({
             Sentiment Analysis
           </Text>
           <Menu
-            contentStyle={ { 
-              ...theme.components.card,
-              borderRadius: 12,
-              padding: 12,
-              position: 'relative',
-              top: 24,
-              width: 200,
-            } }
-            visible={ showSentimentInfo }
-            onDismiss={ () => setShowSentimentInfo(false) }
-            anchor={
-              <Button iconSize={ 24 } startIcon="information" onPress={ () => setShowSentimentInfo(true) } />
+            autoAnchor={
+              <Icon size={ 24 } name="information" />
             }>
             <Text>Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.</Text>
           </Menu>
@@ -100,13 +88,35 @@ export function AnalyticsView({
             size={ 36 } />
         </View>
       </View>
-      <View>
-        <Text>Notable Tokens</Text>
-        {tokens.map(([key]) => (
-          <Text key={ key }>
-            {`• ${key}`}
+      <View gap={ 6 }>
+        <View row gap={ 6 } alignCenter>
+          <Button
+            elevated
+            alignCenter
+            rounded
+            p={ 6 }
+            iconSize={ 24 }
+            startIcon={ showTokens ? 'chevron-down' : 'chevron-right' }
+            onPress={ () => setShowTokens((prev) => !prev) } />
+          <Text>
+            Notable Tokens
           </Text>
-        ))}
+          <Menu
+            autoAnchor={
+              <Icon size={ 24 } name="information" />
+            }>
+            <Text>Sentiment is typically measured by counting the number of negative and positive words (tokens) in a certain text. This gives the reader an idea of the general tone of an article before even needing to read it.</Text>
+          </Menu>
+        </View>
+        {showTokens && (
+          <View>
+            {tokens.map(([key]) => (
+              <Text key={ key }>
+                {`• ${key}`}
+              </Text>
+            ))}
+          </View>
+        )}
       </View>
     </View>
   );

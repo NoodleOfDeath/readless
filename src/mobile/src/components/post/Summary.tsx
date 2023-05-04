@@ -2,7 +2,6 @@ import React from 'react';
 
 import { formatDistance } from 'date-fns';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
-import { Menu } from 'react-native-paper';
 import { State } from 'react-native-track-player';
 import ViewShot from 'react-native-view-shot';
 
@@ -18,6 +17,7 @@ import {
   Icon,
   Image,
   Markdown,
+  Menu,
   MeterDial,
   ReadingFormatSelector,
   Text,
@@ -104,7 +104,7 @@ const MOCK_SUMMARY: PublicSummaryAttributes = {
   },
   outletId: -1,
   sentiments: { chatgpt: { score: 0.1, tokens: { test: 2 } } },
-  shortSummary: 'This is a short 40-60 word summary that can appear under titles if you set it to show in the settings',
+  shortSummary: 'This is a short 30-40 word summary that can appear under titles if you set it to show in the settings',
   summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
   text: '',
   title: 'This is an example summary title',
@@ -132,7 +132,6 @@ export function Summary({
       showShortSummary,
       preferredReadingFormat, 
       bookmarkedSummaries, 
-      favoritedSummaries,
       readSummaries,
     }, setPreference, 
   } = React.useContext(SessionContext);
@@ -148,13 +147,11 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const [showInfoMenu, setShowInfoMenu] = React.useState(false);
   const [collapseSummary, setCollapseSummary] = React.useState(Boolean(collapsed));
   const [collapseAnalytics, setCollapseAnalytics] = React.useState(Boolean(collapsed));
 
   const isRead = React.useMemo(() => !compact && !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [compact, disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
-  const favorited = React.useMemo(() => Boolean(favoritedSummaries?.[summary.id]), [favoritedSummaries, summary]);
   
   const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
 
@@ -210,10 +207,14 @@ export function Summary({
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     onFormatChange?.(newFormat);
-    setTimeout(() => {
+    setTimeout(async () => {
       setPreference('readSummaries', (prev) => ({
         ...prev,
         [summary.id]: new Bookmark(true),
+      }));
+      setPreference('summaryHistory', (prev) => ({
+        ...prev,
+        [summary.id]: new Bookmark(InteractionType.Read),
       }));
     }, 200);
     if (!initialFormat) {
@@ -231,6 +232,10 @@ export function Summary({
           return (prev = state);
         });
       }
+      setPreference('summaryHistory', (prev) => ({
+        ...prev,
+        [summary.id]: new Bookmark(InteractionType.Bookmark),
+      }));
     });
   }, [bookmarked, onInteract, setPreference, summary.id]);
 
@@ -297,19 +302,6 @@ export function Summary({
             gap={ 3 }>
             <View row gap={ 12 }>
               <View col width="100%" gap={ 6 }>
-                {!compact && (
-                  <View col gap={ 6 }>
-                    <View row alignCenter gap={ 6 }>
-                      <Button 
-                        elevated
-                        p={ 4 }
-                        rounded
-                        onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-                        {summary.outletAttributes?.displayName}
-                      </Button>
-                    </View>
-                  </View>
-                )}
                 <View col>
                   {showShareDialog || keywords.length === 0 ? <Text bold subtitle1>{summary.title}</Text> : (
                     <Markdown 
@@ -325,21 +317,27 @@ export function Summary({
                       {markdown(summary.title)}
                     </Markdown>
                   )}
-                  <Divider />
-                  <View gap={ 0 }>
-                    <View row gap={ 4 }>
-                      <Text bold caption>{`${timeAgo} from`}</Text>
+                  <View col />
+                  <View>
+                    <View row alignCenter gap={ 6 }>
+                      <Button 
+                        elevated
+                        row
+                        alignCenter
+                        gap={ 6 }
+                        p={ 4 }
+                        rounded
+                        startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
+                        onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+                      <Button 
+                        row
+                        elevated
+                        p={ 4 }
+                        rounded
+                        onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
+                        {summary.outletAttributes?.displayName}
+                      </Button>
                     </View>
-                    <Text 
-                      alignCenter
-                      numberOfLines={ 1 }
-                      underline
-                      rounded
-                      caption
-                      onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
-                      onLongPress={ () => copyToClipboard(summary.url) }>
-                      {summary.url}
-                    </Text>
                   </View>
                 </View>
               </View>
@@ -356,26 +354,14 @@ export function Summary({
                       value={ summary.sentiments?.chatgpt?.score ?? 0 }
                       width={ 50 } />
                     <Menu
-                      contentStyle={ { 
-                        ...theme.components.card,
-                        borderRadius: 12,
-                        padding: 12,
-                        position: 'relative',
-                        top: 24,
-                        width: 200,
-                      } }
-                      visible={ showInfoMenu }
-                      onDismiss={ () => setShowInfoMenu(false) }
-                      anchor={
-                        <Button iconSize={ 24 } startIcon="information" onPress={ () => setShowInfoMenu(true) } />
+                      autoAnchor={
+                        <Icon size={ 24 } name="information" />
                       }>
                       <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
                     </Menu>
                   </View>
                 </View>
               )}
-            </View>
-            <View row alignCenter justifyCenter>
             </View>
             {!compact && showShortSummary === true && (
               <View>
@@ -399,18 +385,22 @@ export function Summary({
             {!compact && (
               <React.Fragment>
                 <Divider />
-                <View row justifySpaced alignCenter>
-                  <Button 
-                    elevated
-                    row
-                    alignCenter
-                    gap={ 6 }
-                    p={ 4 }
-                    rounded
-                    startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
-                    onPress={ () => onReferSearch?.(`cat:${summary.category}`) }>
-                    {summary.categoryAttributes?.displayName}
-                  </Button>
+                <View row alignCenter gap={ 6 }>
+                  <View row>
+                    <View gap={ 0 } width="100%">
+                      <Text bold caption>{`${timeAgo} from`}</Text>
+                      <Text 
+                        row
+                        numberOfLines={ 1 }
+                        underline
+                        rounded
+                        caption
+                        onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
+                        onLongPress={ () => copyToClipboard(summary.url) }>
+                        {summary.url}
+                      </Text>
+                    </View>
+                  </View>
                   <View>
                     <View row alignCenter justifyEnd gap={ 8 }>
                       <Button
@@ -422,15 +412,6 @@ export function Summary({
                         color='text'
                         startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
                         onPress={ () => toggleBookmarked() } />
-                      <Button
-                        elevated
-                        p={ 4 }
-                        rounded
-                        alignCenter
-                        subtitle2
-                        color='text'
-                        startIcon={ favorited ? 'heart' : 'heart-outline' }
-                        onPress={ () => onInteract?.(InteractionType.Favorite) } />
                       <Button
                         elevated
                         p={ 4 }

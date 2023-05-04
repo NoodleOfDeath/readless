@@ -1011,7 +1011,7 @@ export class Outlet<
       selectors: {
         article: { selector: 'article p' },
         author: { selector: '*[class*="author-name"] a' },
-        date: { selector: 'article time, article time span' },
+        date: { selector: 'article header time span' },
         spider:{
           attribute: 'href',
           selector: [

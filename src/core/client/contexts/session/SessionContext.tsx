@@ -35,7 +35,7 @@ export function SessionContextProvider({ children }: Props) {
 
   const [preferences, setPreferences] = React.useState<Preferences>({});
   const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps>();
-
+  
   const userData = React.useMemo(() => userDataRaw ? new UserData(userDataRaw) : undefined, [userDataRaw]);
 
   const setUserData = 
@@ -99,27 +99,32 @@ export function SessionContextProvider({ children }: Props) {
     };
   }, [userData?.tokenString]);
 
-  // Load cookies on mount
+  // Load preferences on mount
   React.useEffect(() => {
     getCookie(COOKIES.preferences)
       .then((cookie) => { 
         setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(cookie ?? '{}') });
-        setReadyFlags((prev) => ({ ...prev, preferences: true }));
       })
       .catch((e) => {
         console.error(e);
         setPreferences({});
+      })
+      .finally(() => {
+        setReadyFlags((prev) => ({ ...prev, preferences: true }));
       });
   }, []);
 
+  // Load user data on mount
   React.useEffect(() => {
     getCookie(COOKIES.userData)
       .then((cookie) => { 
         setUserData(JSON.parse(cookie ?? '{}'));
-        setReadyFlags((prev) => ({ ...prev, userData: true }));
       })
       .catch((e) => {
         console.error(e);
+      })
+      .finally(() => {
+        setReadyFlags((prev) => ({ ...prev, userData: true }));
       });
   }, []);
 

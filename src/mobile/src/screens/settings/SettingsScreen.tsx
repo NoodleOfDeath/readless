@@ -42,6 +42,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       displayMode,
       removedSummaries,
       readSummaries,
+      summaryHistory,
     }, 
     setPreference,
   } = React.useContext(SessionContext);
@@ -199,6 +200,21 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             elevated
             rounded
             p={ 8 }
+            onPress={ () => setPreference('summaryHistory', {}) }>
+            Clear History (
+            {Object.values(summaryHistory ?? {}).length}
+            )
+          </Button>
+        ),
+        id: 'clear-history',
+        label: 'Clear History',
+      },
+      {
+        children: (
+          <Button
+            elevated
+            rounded
+            p={ 8 }
             onPress={ () => setPreference('removedSummaries', {}) }>
             Reset Hidden Summaries (
             {Object.values(removedSummaries ?? {}).length}
@@ -224,7 +240,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Clear Cache',
       },
     ];
-  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, showShortSummary, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, cacheSize, setPreference, fontFamily, handleClearCache]);
+  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, showShortSummary, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, summaryHistory, cacheSize, setPreference, fontFamily, handleClearCache]);
   
   return (
     <Screen
