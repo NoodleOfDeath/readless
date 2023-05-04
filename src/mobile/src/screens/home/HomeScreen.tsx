@@ -1,5 +1,10 @@
 import React from 'react';
-import { Linking } from 'react-native';
+import {
+  DeviceEventEmitter,
+  Linking,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
 
 import { RouteProp } from '@react-navigation/native';
 
@@ -93,6 +98,14 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
     setMounted(true);
   }, [bookmarkedCategories, bookmarkedOutlets, homeTab, router]);
   
+  const onScroll = React.useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offset = event.nativeEvent.contentOffset.y + event.nativeEvent.layoutMeasurement.height;
+    const height = event.nativeEvent.contentSize.height;
+    if (offset >= height - 400) {
+      DeviceEventEmitter.emit('load-more');
+    }
+  }, []);
+  
   React.useEffect(() => {
     const subscription = Linking.addEventListener('url', router);
     if (!ready || mounted) {
@@ -108,39 +121,42 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   
   const onTabChange = React.useCallback((tab: number) => {
     setActiveTab(tab);
-    const followCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
-    if (followCount === 0) {
-      setPreference('homeTab', undefined);
-    } else {
-      setPreference('homeTab', tab === 0 ? 'All News' : 'My News');
-    }
+    setTimeout(() => {
+      const followCount = lengthOf(bookmarkedCategories, bookmarkedOutlets);
+      if (followCount === 0) {
+        setPreference('homeTab', undefined);
+      } else {
+        setPreference('homeTab', tab === 0 ? 'All News' : 'My News');
+      }
+    }, 200);
     refresh();
   }, [bookmarkedCategories, bookmarkedOutlets, setPreference]);
   
   return (
-    <Screen onRefresh={ () => refresh() }>
-      <View col>
-        <TabSwitcher
-          tabHeight={ 48 }
-          activeTab={ activeTab }
-          onTabChange={ onTabChange }
-          titles={ ['All News', 'My News'] }>
-          <View>
-            {!refreshing && (
-              <SearchScreen  
-                route={ routes[0] }
-                navigation={ navigation } />
-            )}
-          </View>
-          <View>
-            {!refreshing && (
-              <SearchScreen 
-                route={ routes[1] }
-                navigation={ navigation } />
-            )}
-          </View>
-        </TabSwitcher>
-      </View>
+    <Screen
+      refreshing={ refreshing }
+      onRefresh={ refresh }
+      onScroll={ onScroll }>
+      <TabSwitcher
+        tabHeight={ 48 }
+        activeTab={ activeTab }
+        onTabChange={ onTabChange }
+        titles={ ['All News', 'My News'] }>
+        <View>
+          {!refreshing && (
+            <SearchScreen
+              route={ routes[0] }
+              navigation={ navigation } />
+          )}
+        </View>
+        <View>
+          {!refreshing && (
+            <SearchScreen 
+              route={ routes[1] }
+              navigation={ navigation } />
+          )}
+        </View>
+      </TabSwitcher>
     </Screen>
   );
 }

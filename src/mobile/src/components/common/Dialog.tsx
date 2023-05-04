@@ -34,7 +34,7 @@ export function Dialog({
         <RNDialog.Title style={ { color: theme.colors.text } }>{title}</RNDialog.Title>
       )}
       <RNDialog.Content>
-        <View elevated>
+        <View elevated rounded>
           {children}
         </View>
       </RNDialog.Content>

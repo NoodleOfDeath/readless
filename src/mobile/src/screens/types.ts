@@ -18,6 +18,7 @@ export type StackableTabParams = TabParams & {
   search: {
     prefilter?: string,
     onlyCustomNews?: boolean;
+    specificIds?: number[];
   },
   summary: {
     initialFormat: ReadingFormat;

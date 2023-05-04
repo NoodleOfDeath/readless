@@ -15,6 +15,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
       rowOdd: lightMode ? '#fafafa' : '#222',
       text: lightMode ? '#000' : '#fff',
       textDark: '#000',
+      textSecondary: lightMode ? '#888' : '#999',
     },
     // containers
     components: 
@@ -32,7 +33,6 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         card: {
           backgroundColor: lightMode ? '#fefefe' : '#010101',
           marginBottom: 12,
-          overflow: 'visible',
           padding: 12,
         },
         dialog: {
@@ -44,8 +44,8 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         divider: {
           backgroundColor: lightMode ? '#222' : '#ddd',
           height: StyleSheet.hairlineWidth,
-          marginBottom: 6,
-          marginTop: 6,
+          marginBottom: 3,
+          marginTop: 3,
         },
         fab: {
           bottom: 96,
@@ -65,6 +65,13 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         input: { 
           backgroundColor: lightMode ? '#ddd' : '#111',
           color: lightMode ? '#000' : '#fff',
+        },
+        menu: {
+          backgroundColor: lightMode ? '#fefefe' : '#010101',
+          borderRadius: 12,
+          marginBottom: 12,
+          padding: 12,
+          width: 200,
         },
         outlined: {
           borderColor: '#8b0000',

@@ -49,13 +49,13 @@ export function SearchScreen({
   const {
     queueSummary, currentTrackIndex, preloadCount,
   } = React.useContext(MediaContext);
-  const { showShareFab } = React.useContext(DialogContext);
+  const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter ?? '');
-  
   const onlyCustomNews = React.useMemo(() => Boolean(route?.params?.onlyCustomNews), [route]);
+  const specificIds = React.useMemo<number[] | undefined>(() => (route?.params?.specificIds), [route]);
 
   React.useEffect(() => {
     setPrefilter(route?.params?.prefilter ?? '');
@@ -116,8 +116,8 @@ export function SearchScreen({
     try {
       const { data, error } = await getSummaries(
         filter,
-        excludeIds,
-        Boolean(excludeIds),
+        specificIds ?? excludeIds,
+        !specificIds && Boolean(excludeIds),
         page,
         pageSize,
         sortOrder
@@ -145,7 +145,7 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [excludeIds, pageSize, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, sortOrder, toast]);
+  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder, toast]);
 
   const onMount = React.useCallback(() => {
     if (!ready) {
@@ -186,11 +186,14 @@ export function SearchScreen({
   }, [setPreference, readSummaries]);
 
   const loadMore = React.useCallback(async (event?: string) => {
+    if (loading || totalResultCount <= summaries.length) {
+      return;
+    }
     await load(page + 1);
     if (event) {
       DeviceEventEmitter.emit(event);
     }
-  }, [load, page]);
+  }, [load, loading, page, totalResultCount, summaries]);
 
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
@@ -225,7 +228,7 @@ export function SearchScreen({
 
   React.useEffect(() => {
     loadMoreAsNeeded();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrackIndex]);
   
   React.useEffect(() => {
@@ -236,6 +239,11 @@ export function SearchScreen({
       subscriber.remove();
     };
   }, [queueSummary, summaries]);
+  
+  React.useEffect(() => {
+    const subscriber = DeviceEventEmitter.addListener('load-more', loadMore);
+    return () => subscriber.remove();
+  }, [loadMore]);
   
   const handleReferSearch = React.useCallback((newPrefilter: string) => {
     if (prefilter === newPrefilter) {
@@ -362,7 +370,7 @@ export function SearchScreen({
           <Summary
             key={ summary.id }
             summary={ summary }
-            keywords={ showShareFab ? undefined : keywords }
+            keywords={ showShareDialog ? undefined : keywords }
             onFormatChange={ (format) => handleFormatChange(summary, format) }
             onInteract={ (...e) => handleInteraction(summary, ...e) }
             onReferSearch={ handleReferSearch } />

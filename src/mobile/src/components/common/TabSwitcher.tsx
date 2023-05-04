@@ -2,7 +2,6 @@ import React from 'react';
 import { Animated, LayoutRectangle } from 'react-native';
 
 import {
-  ScrollView,
   Surface,
   Text,
   View,
@@ -21,10 +20,10 @@ type Props = {
 export function TabSwitcher({
   activeTab = 0,
   tabHeight = 36,
-  children,
-  onTabChange,
   titles, 
   rounded,
+  children,
+  onTabChange,
   ...props
 }: Props) {
   
@@ -36,7 +35,7 @@ export function TabSwitcher({
   const translateX = React.useRef(new Animated.Value(0)).current;
 
   const fontSize = React.useMemo(() => {
-    return (tabHeight ? tabHeight / 2 : style.fontSize ?? 16) ?? style.fontSize ?? 16;
+    return (tabHeight ? tabHeight * 0.45 : style.fontSize ?? 16) ?? style.fontSize ?? 16;
   }, [style.fontSize, tabHeight]);
 
   const computedStyle = React.useMemo(() => {
@@ -118,11 +117,9 @@ export function TabSwitcher({
           ))}
         </Surface>
         {views && views.length > 0 && (
-          <ScrollView>
-            <Animated.View>
-              {activeTab < views.length && views[activeTab]}
-            </Animated.View>
-          </ScrollView>
+          <Animated.View>
+            {activeTab < views.length && views[activeTab]}
+          </Animated.View>
         )}
       </View>
     </Animated.View>

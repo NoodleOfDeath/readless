@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { RouteProp } from '@react-navigation/native';
+
 import {
   InteractionType,
   PublicSummaryAttributes,
@@ -7,48 +9,65 @@ import {
 } from '~/api';
 import { 
   Button,
+  Icon,
+  Menu,
   Screen,
   Summary,
   TabSwitcher,
+  Text,
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
-import { ScreenProps } from '~/screens';
+import {
+  ScreenProps,
+  SearchScreen,
+  StackableTabParams,
+} from '~/screens';
 
 const pageSize = 10;
 
-export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
+export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
   
   const { 
     preferences: {
       bookmarkedSummaries,
-      favoritedSummaries,
       readSummaries,
       preferredReadingFormat, 
+      summaryHistory,
     },
+    setPreference,
   } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
   
+  const [refreshing, setRefreshing] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
 
-  const unreadBookmarks = React.useMemo(() => Object.entries(bookmarkedSummaries ?? {})
-    .filter(([id]) => readSummaries?.[Number(id)] === undefined), [bookmarkedSummaries, readSummaries]);
-  const readBookmarks = React.useMemo(() => Object.entries(readSummaries ?? {}).sort((a, b) => a[1].createdAt < b[1].createdAt ? 1 : -1), [readSummaries]);
-  const favoritedBookmarks = React.useMemo(() => Object.entries(favoritedSummaries ?? {}), [favoritedSummaries]);
-
+  const bookmarks = React.useMemo(() => Object.entries({ ...bookmarkedSummaries }), [bookmarkedSummaries]);
+  const history = React.useMemo(() => Object.entries({ ...summaryHistory }).sort((a, b) => a[1].createdAt < b[1].createdAt ? 1 : -1), [summaryHistory]);
+  
   const [unreadPage, setUnreadPage] = React.useState(0);
-  const [readPage, setReadPage] = React.useState(0);
-  const [favoritedPage, setFavoritedPage] = React.useState(0);
 
-  const titles = React.useMemo(() => [`Unread (${unreadBookmarks.length})`, `Read (${readBookmarks.length})`, `Favorites (${favoritedBookmarks.length})`], [unreadBookmarks, readBookmarks, favoritedBookmarks]);
+  const titles = React.useMemo(() => [`Bookmarks (${bookmarks.length})`, `Activity (${history.length})` ], [bookmarks, history]);
+
+  const historyRoute = React.useMemo<RouteProp<StackableTabParams, 'search'>>(() => ({
+    key: 'read',
+    name: 'search',
+    params: { 
+      onlyCustomNews: false,
+      specificIds: history.map(([id]) => Number(id)),
+    },
+  }), [history]);
 
   const onTabChange = React.useCallback((index: number) => {
     setActiveTab(index);
     setUnreadPage(0);
-    setReadPage(0);
-    setFavoritedPage(0);
   }, []);
+
+  const refresh = () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 100);
+  };
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryAttributes, interaction: InteractionType, format?: ReadingFormat) => {
@@ -66,14 +85,16 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
   }, [navigation]);
   
   return (
-    <Screen>
+    <Screen 
+      refreshing={ refreshing }
+      onRefresh={ refresh }>
       <View col>
         <TabSwitcher
           tabHeight={ 48 }
           activeTab={ activeTab }
           onTabChange={ onTabChange }
           titles={ titles }>
-          {Object.entries(unreadBookmarks ?? {}).length === 0 ? (
+          {Object.entries(bookmarks ?? {}).length === 0 ? (
             <View justifyCenter alignCenter>
               <Button
                 rounded
@@ -87,65 +108,68 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
               </Button>
             </View>
           ) : (
-            <View>
-              {(unreadBookmarks ?? []).slice(0, unreadPage * pageSize + pageSize)
-                .map(([id, bookmark]) => {
-                  return (
-                    <View col key={ id }>
+            <View gap={ 12 }>
+              <View mh={ 16 } gap={ 6 }>
+                <View row gap={ 6 }>
+                  <Text>
+                    Bookmarks are always available offline
+                  </Text>
+                  <Menu
+                    autoAnchor={
+                      <Icon size={ 24 } name="information" />
+                    }>
+                    <Text>Note: The original ariticles themselves are not saved for offline reading.</Text>
+                  </Menu>
+                </View>
+                <View row>
+                  <Button
+                    elevated
+                    rounded
+                    p={ 6 }
+                    onPress={ () => setPreference('bookmarkedSummaries', (prev) => {
+                      const state = { ...prev };
+                      for (const [id] of Object.entries(state)) {
+                        if (id in (readSummaries ?? {})) {
+                          delete state[Number(id)];
+                        }
+                      }
+                      return (prev = state);
+                    }) }>
+                    Removed Read from Bookmarks
+                  </Button>
+                </View>
+              </View>
+              <View>
+                {(bookmarks ?? []).slice(0, unreadPage * pageSize + pageSize)
+                  .map(([id, bookmark]) => {
+                    return (
                       <Summary
+                        key={ id }
                         summary={ bookmark.item }
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
                         onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
-                    </View>
-                  );
-                })}
-              {(unreadBookmarks ?? []).length > unreadPage * pageSize + pageSize && (
-                <View justifyCenter alignCenter>
-                  <Button
-                    rounded
-                    outlined
-                    selectable
-                    p={ 8 }
-                    m={ 8 }
-                    textCenter
-                    onPress={ () => setUnreadPage((prev) => prev + 1) }>
-                    Load More
-                  </Button>
-                </View>
-              )}
+                    );
+                  })}
+                {(bookmarks ?? []).length > unreadPage * pageSize + pageSize && (
+                  <View justifyCenter alignCenter>
+                    <Button
+                      rounded
+                      outlined
+                      selectable
+                      p={ 8 }
+                      m={ 8 }
+                      textCenter
+                      onPress={ () => setUnreadPage((prev) => prev + 1) }>
+                      Load More
+                    </Button>
+                  </View>
+                )}
+              </View>
             </View>
           )}
           <View>
-            {(readBookmarks ?? []).slice(0, readPage * pageSize + pageSize)
-              .map(([id, bookmark]) => {
-                return (
-                  <View col key={ id }>
-                    <Summary
-                      summary={ bookmark.item }
-                      onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
-                      onReferSearch={ handleReferSearch }
-                      onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
-                  </View>
-                );
-              })}
-            {(readBookmarks ?? []).length > readPage * pageSize + pageSize && (
-              <View justifyCenter alignCenter>
-                <Button
-                  rounded
-                  outlined
-                  selectable
-                  p={ 8 }
-                  m={ 8 }
-                  textCenter
-                  onPress={ () => setReadPage((prev) => prev + 1) }>
-                  Load More
-                </Button>
-              </View>
-            )}
-          </View>
-          <View>
-            {(favoritedBookmarks ?? []).length === 0 ? (
+            {history.length === 0 ? (
               <View justifyCenter alignCenter>
                 <Button
                   rounded
@@ -155,38 +179,15 @@ export function MyStuffScreen({ navigation }: ScreenProps<'default'>) {
                   m={ 8 }
                   textCenter
                   onPress={ () => navigation?.getParent()?.navigate('search') }>
-                  Search for Articles
+                  Read Articles
                 </Button>
               </View>
             ) : (
-              <View>
-                {(favoritedBookmarks ?? []).slice(0, favoritedPage * pageSize + pageSize)
-                  .map(([id, bookmark]) => {
-                    return (
-                      <View col key={ id }>
-                        <Summary
-                          summary={ bookmark.item }
-                          onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Favorite, format) }
-                          onReferSearch={ handleReferSearch }
-                          onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
-                      </View>
-                    );
-                  })}
-                {(favoritedBookmarks ?? []).length > favoritedPage * pageSize + pageSize && (
-                  <View justifyCenter alignCenter>
-                    <Button
-                      rounded
-                      outlined
-                      selectable
-                      p={ 8 }
-                      m={ 8 }
-                      textCenter
-                      onPress={ () => setFavoritedPage((prev) => prev + 1) }>
-                      Load More
-                    </Button>
-                  </View>
-                )}
-              </View>
+              !refreshing && (
+                <SearchScreen
+                  route={ historyRoute }
+                  navigation={ navigation } />
+              )
             )}
           </View>
         </TabSwitcher>

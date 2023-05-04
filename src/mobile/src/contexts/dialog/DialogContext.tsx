@@ -7,8 +7,8 @@ import { DEFAULT_DIALOG_CONTEXT } from './types';
 import {
   FeedBackDialog,
   FeedBackDialogProps,
-  ShareFab,
-  ShareFabProps,
+  ShareDialog,
+  ShareDialogProps,
 } from '~/components';
 import { useSummaryClient } from '~/hooks';
 
@@ -18,14 +18,14 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
 
   const { handleInteraction } = useSummaryClient();
 
-  const [showShareFab, setShowShareFabRaw] = React.useState<boolean>(false);
-  const [shareFabOptions, setShareFabOptions] = React.useState<ShareFabProps>();
+  const [showShareDialog, setShowShareDialogRaw] = React.useState<boolean>(false);
+  const [shareFabOptions, setShareDialogOptions] = React.useState<ShareDialogProps>();
   const [showFeedbackDialog, setShowFeedbackDialogRaw] = React.useState<boolean>(false);
   const [feedbackOptions, setFeedbackOptions] = React.useState<FeedBackDialogProps>();
 
-  const setShowShareFab = React.useCallback((state: boolean | ((prev: boolean) => boolean), options?: ShareFabProps) => {
-    setShowShareFabRaw(state);
-    setShareFabOptions(options);
+  const setShowShareDialog = React.useCallback((state: boolean | ((prev: boolean) => boolean), options?: ShareDialogProps) => {
+    setShowShareDialogRaw(state);
+    setShareDialogOptions(options);
   }, []);
 
   const setShowFeedbackDialog = React.useCallback((state: boolean | ((prev: boolean) => boolean), options?: FeedBackDialogProps) => {
@@ -36,19 +36,19 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
   return (
     <DialogContext.Provider value={ {
       setShowFeedbackDialog,
-      setShowShareFab,
+      setShowShareDialog,
       showFeedbackDialog,
-      showShareFab,
+      showShareDialog,
     } }>
       <Provider>
         {children}
         <Portal>
-          <ShareFab
+          <ShareDialog
             { ...shareFabOptions }
-            open={ showShareFab }
-            visible={ showShareFab }
+            open={ showShareDialog }
+            visible={ showShareDialog }
             onInteract={ (...args) => shareFabOptions?.summary && handleInteraction(shareFabOptions.summary, ...args) }
-            onDismiss={ () => setShowShareFab(false) } />
+            onDismiss={ () => setShowShareDialog(false) } />
           {feedbackOptions && showFeedbackDialog && (
             <FeedBackDialog
               { ...feedbackOptions }

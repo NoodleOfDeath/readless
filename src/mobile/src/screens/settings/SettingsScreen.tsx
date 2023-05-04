@@ -42,6 +42,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       displayMode,
       removedSummaries,
       readSummaries,
+      summaryHistory,
     }, 
     setPreference,
   } = React.useContext(SessionContext);
@@ -199,6 +200,21 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             elevated
             rounded
             p={ 8 }
+            onPress={ () => setPreference('summaryHistory', {}) }>
+            Clear History (
+            {Object.values(summaryHistory ?? {}).length}
+            )
+          </Button>
+        ),
+        id: 'clear-history',
+        label: 'Clear History',
+      },
+      {
+        children: (
+          <Button
+            elevated
+            rounded
+            p={ 8 }
             onPress={ () => setPreference('removedSummaries', {}) }>
             Reset Hidden Summaries (
             {Object.values(removedSummaries ?? {}).length}
@@ -224,39 +240,38 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
         label: 'Clear Cache',
       },
     ];
-  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, showShortSummary, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, cacheSize, setPreference, fontFamily, handleClearCache]);
+  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, showShortSummary, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, summaryHistory, cacheSize, setPreference, fontFamily, handleClearCache]);
   
   return (
     <Screen
       refreshing={ loading }
       onRefresh={ onMount }>
-      <View>
-        <TabSwitcher tabHeight={ 48 } titles={ ['Preferences'] }>
-          <View mh={ 16 } gap={ 12 }>
-            <Text>Example Summary</Text>
-            <Summary 
-              isStatic
-              initialFormat={ ReadingFormat.Summary } />
-            {options.filter((o) => o.visible !== false).map((option) => (
-              <View col key={ option.id } p={ 4 } mv={ 4 }>
-                {!option.onPress && option.label && (
-                  <Text mb={ 4 }>{option.label}</Text>
-                )}
-                {option.onPress && (
-                  <Button
-                    p={ 8 }
-                    elevated
-                    rounded
-                    onPress={ option.onPress }>
-                    {option.label}
-                  </Button>
-                )}
-                {option.children}
-              </View>
-            ))}
-          </View>
-        </TabSwitcher>
-      </View>
+      <TabSwitcher tabHeight={ 48 } titles={ ['Preferences'] }>
+        <View col mh={ 16 } gap={ 12 }>
+          <Text>Example Summary</Text>
+          <Summary 
+            disableInteractions
+            collapsed
+            initialFormat={ ReadingFormat.Summary } />
+          {options.filter((o) => o.visible !== false).map((option) => (
+            <View col key={ option.id } p={ 4 } mv={ 4 }>
+              {!option.onPress && option.label && (
+                <Text mb={ 4 }>{option.label}</Text>
+              )}
+              {option.onPress && (
+                <Button
+                  p={ 8 }
+                  elevated
+                  rounded
+                  onPress={ option.onPress }>
+                  {option.label}
+                </Button>
+              )}
+              {option.children}
+            </View>
+          ))}
+        </View>
+      </TabSwitcher>
     </Screen>
   );
 }

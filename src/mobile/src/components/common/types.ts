@@ -1,8 +1,8 @@
 import { ViewStyle } from 'react-native';
 
 export const FONT_SIZES = {
-  body1: 16,
-  body2: 15,
+  body1: 18,
+  body2: 17,
   caption: 14,
   h1: 36,
   h2: 32,
@@ -10,8 +10,8 @@ export const FONT_SIZES = {
   h4: 26,
   h5: 24,
   h6: 22,
-  subtitle1: 18,
-  subtitle2: 17,
+  subtitle1: 21,
+  subtitle2: 20,
 } as const;
 
 export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
@@ -27,6 +27,8 @@ export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
   underline?: boolean;
   code?: boolean;
 };
+ 
+export const TEXT_STYLE_PROPS = ['color', 'textCenter', 'textLeft', 'textRight', 'fontFamily', 'fontSize', 'bold', 'italic', 'underline', 'code', ...Object.keys(FONT_SIZES)];
 
 export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   // position
@@ -89,6 +91,8 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   // other
   style?: Style;
 };
+
+export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'borderColor', 'backgroundColor', 'opacity', 'borderRadius', 'borderWidth', 'style'];
 
 export type Stylable<Style extends ViewStyle = ViewStyle> = 
 TextStyleProps & ViewStyleProps<Style>;

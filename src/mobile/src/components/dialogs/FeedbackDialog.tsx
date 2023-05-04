@@ -37,7 +37,8 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
     { label: 'This summary is too long', value: 'too long' },
     { label: 'This summary is too short', value: 'too short' },
     { label: 'This summary is not about news', value: 'irrelevant' },
-    { label: 'I actually found this summary helpful', value: 'helpful' },
+    { label: 'The sentiment is wrong', value: 'sentiment-wrong' },
+    { label: 'I actually found this helpful', value: 'helpful' },
   ];
   
   const handleCheckboxPress = React.useCallback((checkbox: typeof checkboxes[number]) => {
@@ -118,7 +119,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
                     mb={ 4 }
                     checked={ selectedValues.includes(checkbox.value) }
                     onPress={ () => handleCheckboxPress(checkbox) } />
-                  <Button onPress={ () => handleCheckboxPress(checkbox) }>{ checkbox.label }</Button>
+                  <Button alignCenter onPress={ () => handleCheckboxPress(checkbox) }>{ checkbox.label }</Button>
                 </View>
               ))}
               <TextInput 
