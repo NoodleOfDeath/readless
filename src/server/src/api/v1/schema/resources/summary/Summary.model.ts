@@ -24,7 +24,13 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
 
 @Scopes(() => ({ 
   conservative: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE] },
-  public: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] },
+  public: { 
+    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
+    include: [
+      Outlet.scope('public'),
+      Category.scope('public'),
+    ],
+  },
 }))
 @Table({
   modelName: 'summary',

@@ -1,3 +1,4 @@
+import sql from 'sequelize';
 import {
   Get,
   Query,
@@ -10,11 +11,13 @@ import {
   
 import { AuthError, InternalError } from '../../middleware';
 import {
-  BulkResponse,
+  BulkMetadataResponse,
   FindAndCountOptions,
   Outlet,
   PublicOutletAttributes,
+  Summary,
 } from '../../schema';
+import { Sentiment } from '../../schema/types';
 
 @Route('/v1/outlet')
 @Tags('Outlet')
@@ -30,8 +33,15 @@ export class OutletController {
   public static async getOutlets(
     @Query() userId?: number,
     @Query() filter?: string
-  ): Promise<BulkResponse<PublicOutletAttributes>> {
-    const options: FindAndCountOptions<Outlet> = { order: [['displayName', 'ASC']] };
+  ): Promise<BulkMetadataResponse<PublicOutletAttributes>> {
+    const options: FindAndCountOptions<Outlet> = {
+      attributes: [sql.fn('avg', 'summaries.sentiment -> \'chatgpt\' -> \'score\''), 'average_sentiment']
+      include: [
+        Summary.scope('public_raw'),
+      ],
+      order: [['displayName', 'ASC']],
+      raw: true,
+    };
     const outlets = await Outlet.scope('public').findAndCountAll(options);
     return outlets;
   }

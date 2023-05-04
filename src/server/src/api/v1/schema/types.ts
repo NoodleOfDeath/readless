@@ -61,7 +61,8 @@ export * from './auth/Credential.types';
 export * from './auth/Role.types';
 
 // Posts
-export * from './interaction/Interaction.types';
+export * from './resources/interaction/Interaction.types';
+export * from './resources/sentiment/Sentiment.types';
 export * from './resources/Post.types';
 export * from './resources/topic/Category.types';
 export * from './resources/outlet/Outlet.types';

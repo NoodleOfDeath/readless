@@ -20,10 +20,10 @@ export * from './auth/Credential.model';
 export * from './auth/Role.model';
 
 // resource models
-export * from './resources/topic/Category.model';
-
 export * from './resources/outlet/Outlet.model';
+export * from './resources/topic/Category.model';
 
 export * from './resources/summary/Summary.model';
 export * from './resources/summary/SummaryInteraction.model';
+export * from './resources/summary/SummarySentiment.model';
 
