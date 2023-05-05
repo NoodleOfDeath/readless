@@ -1,4 +1,7 @@
-export * from './analytics/RateLimit.model';
+// system
+export * from './system/RateLimit.model';
+export * from './system/Service.model';
+export * from './system/ServiceStatus.model';
 
 // queues
 export * from './queue/Queue.model';

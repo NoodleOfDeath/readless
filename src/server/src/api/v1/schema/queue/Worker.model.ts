@@ -18,7 +18,7 @@ import {
   WorkerState,
 } from './Worker.types';
 import { Serializable } from '../../../../types';
-import { RateLimit } from '../analytics/RateLimit.model';
+import { RateLimit } from '../system/RateLimit.model';
 import { BaseModel } from '../base';
 
 function getHost() {
