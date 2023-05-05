@@ -9,7 +9,7 @@ router.get(
   '/',
   async (req, res) => {
     try {
-      const response = await ServiceController.getServices(req.body);
+      const response = await ServiceController.getServices();
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

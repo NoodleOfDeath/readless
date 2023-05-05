@@ -1,1 +1,1 @@
-export * from './ServiceRouter';
+export { default } from './ServiceRouter';

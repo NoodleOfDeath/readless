@@ -18,8 +18,8 @@ import {
   WorkerState,
 } from './Worker.types';
 import { Serializable } from '../../../../types';
-import { RateLimit } from '../system/RateLimit.model';
 import { BaseModel } from '../base';
+import { RateLimit } from '../system/RateLimit.model';
 
 function getHost() {
   const nets = networkInterfaces();

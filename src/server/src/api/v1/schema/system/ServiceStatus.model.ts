@@ -4,10 +4,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import {
-  ServiceStatusAttributes, 
-  ServiceStatusCreationAttributes,
-} from './ServiceStatus.types';
+import { ServiceStatusAttributes, ServiceStatusCreationAttributes } from './ServiceStatus.types';
 import { BaseModel } from '../base';
 
 @Table({
@@ -20,7 +17,7 @@ export class ServiceStatus<A extends ServiceStatusAttributes = ServiceStatusAttr
   @Column({
     allowNull: false, 
     type: DataType.INTEGER,
-    unique: true,, 
+    unique: true,
   })
   declare serviceId: number;
 
@@ -28,7 +25,7 @@ export class ServiceStatus<A extends ServiceStatusAttributes = ServiceStatusAttr
     allowNull: false, 
     type: DataType.STRING, 
   })
-  declare status: string;
+  declare state: string;
   
   @Column({
     allowNull: false,

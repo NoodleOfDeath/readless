@@ -13,8 +13,8 @@ import {
   PUBLIC_OUTLET_ATTRIBUTES,
   Selectors,
 } from './Outlet.types';
-import { RateLimit } from '../../system/RateLimit.model';
 import { BaseModel } from '../../base';
+import { RateLimit } from '../../system/RateLimit.model';
 
 const OUTLET_FETCH_LIMIT = process.env.OUTLET_FETCH_LIMIT ? Number(process.env.OUTLET_FETCH_LIMIT) : 1; // 1 for dev and testing
 const OUTLET_MAX_ATTEMPT_LIMIT = process.env.OUTLET_MAX_ATTEMPT_LIMIT ? Number(process.env.OUTLET_MAX_ATTEMPT_LIMIT) : 5;

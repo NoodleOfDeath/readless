@@ -1,6 +1,5 @@
 import {
   Get,
-  Query,
   Response,
   Route,
   Security,
@@ -11,9 +10,9 @@ import {
 import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
+  FindAndCountOptions,
   Service,
   ServiceAttributes,
-  FindAndCountOptions,
 } from '../../schema';
 
 @Route('/v1/service')
@@ -27,7 +26,7 @@ import {
 export class ServiceController {
   
   @Get('/')
-  public static async getServicees(): Promise<BulkResponse<ServiceAttributes>> {
+  public static async getServices(): Promise<BulkResponse<ServiceAttributes>> {
     const options: FindAndCountOptions<Service> = { order: [['name', 'ASC']] };
     const services = await Service.scope('public').findAndCountAll(options);
     return services;
