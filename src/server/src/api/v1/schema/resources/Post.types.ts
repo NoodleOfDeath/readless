@@ -1,4 +1,4 @@
-import { InteractionResponse } from '../interaction/Interaction.types';
+import { InteractionResponse } from './interaction/Interaction.types';
 import { DatedAttributes } from '../types';
 
 export type Attr<Model, K extends keyof Model> = {

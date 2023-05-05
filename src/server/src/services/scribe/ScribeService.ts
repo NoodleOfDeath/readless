@@ -9,7 +9,11 @@ import {
   PuppeteerService,
   S3Service,
 } from '../';
-import { Category, SummarySentiment, Summary } from '../../api/v1/schema/models';
+import {
+  Category,
+  Summary,
+  SummarySentiment,
+} from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 70 as const;
@@ -102,8 +106,8 @@ export class ScribeService extends BaseService {
       rawText: loot.rawText,
       url,
     });
-    let categoryDisplayName?: string;
-    let sentiment?: SummarySentiment;
+    let categoryDisplayName: string;
+    const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'chatgpt' });
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -119,10 +123,11 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          sentiment = SummarySentiment.from(reply.text);
-          if (Number.isNaN(sentiment.score)) {
+          const { score } = JSON.parse(reply.text);
+          if (Number.isNaN(score)) {
             throw new Error(`Not a valid sentiment score: ${reply.text}`);
           }
+          sentiment.score = score;
         },
         text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 adjective token counts. Please respond with JSON only using the format: { score: number, tokens: Record<string, number> }',
       },
@@ -220,14 +225,13 @@ export class ScribeService extends BaseService {
       const summary = await Summary.create(newSummary);
       
       // Create sentiment
-      sentiment?.set('method', 'chatgpt')
-      sentiment?.set('targetId', summary.id)
-      await sentiment?.save();
+      sentiment.parentId = summary.id;
+      await SummarySentiment.create(sentiment);
       
       this.log('Created new summary from', url, newSummary.title);
       return summary;
       
-    } catch(e) {
+    } catch (e) {
       await this.error('Unexpected Error Encountered', `${e}\n\n${JSON.stringify(newSummary, null, 2)}`);
     }
     

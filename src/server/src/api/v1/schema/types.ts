@@ -34,6 +34,10 @@ export type BulkResponse<T> = {
   rows: T[];
 };
 
+export type BulkMetadataResponse<T, M> = BulkResponse<T> & {
+  metadata?: M;
+};
+
 export type DestroyResponse = {
   success: boolean;
 };
@@ -64,6 +68,6 @@ export * from './auth/Role.types';
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
 export * from './resources/Post.types';
-export * from './resources/topic/Category.types';
 export * from './resources/outlet/Outlet.types';
+export * from './resources/topic/Category.types';
 export * from './resources/summary/Summary.types';

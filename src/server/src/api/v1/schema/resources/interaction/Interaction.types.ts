@@ -1,4 +1,4 @@
-import { DatedAttributes } from '../types';
+import { DatedAttributes } from '../../types';
 
 export const INTERACTION_TYPES = {
   bookmark: 'bookmark',

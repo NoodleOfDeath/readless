@@ -11,13 +11,15 @@ import {
   
 import { AuthError, InternalError } from '../../middleware';
 import {
-  BulkMetadataResponse,
+  BulkResponse,
   FindAndCountOptions,
   Outlet,
+  PUBLIC_OUTLET_ATTRIBUTES,
+  PUBLIC_SUMMARY_ATTRIBUTES,
   PublicOutletAttributes,
   Summary,
+  SummarySentiment,
 } from '../../schema';
-import { Sentiment } from '../../schema/types';
 
 @Route('/v1/outlet')
 @Tags('Outlet')
@@ -33,11 +35,13 @@ export class OutletController {
   public static async getOutlets(
     @Query() userId?: number,
     @Query() filter?: string
-  ): Promise<BulkMetadataResponse<PublicOutletAttributes>> {
+  ): Promise<BulkResponse<PublicOutletAttributes>> {
     const options: FindAndCountOptions<Outlet> = {
-      attributes: [sql.fn('avg', 'summaries.sentiment -> \'chatgpt\' -> \'score\''), 'average_sentiment']
+      attributes: [[sql.fn('avg', sql.col('sentiment.score')), 'average_sentiment']],
+      group: [...PUBLIC_OUTLET_ATTRIBUTES, ...PUBLIC_SUMMARY_ATTRIBUTES],
       include: [
-        Summary.scope('public_raw'),
+        Summary.scope('publicRaw'),
+        SummarySentiment,
       ],
       order: [['displayName', 'ASC']],
       raw: true,

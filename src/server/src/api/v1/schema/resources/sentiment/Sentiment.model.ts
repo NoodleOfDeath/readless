@@ -1,8 +1,4 @@
-import { 
-  Column,
-  DataType,
-  Table,
-} from 'sequelize-typescript';
+import { Column, DataType } from 'sequelize-typescript';
 
 import { SentimentAttributes, SentimentCreationAttributes } from './Sentiment.types';
 import { BaseModel } from '../../base';

@@ -11,3 +11,5 @@ export type SentimentCreationAttributes = {
   method: string;
   score: number;
 };
+
+export type SentimentMap<T extends SentimentAttributes> = { [key: string]: T };
