@@ -20,11 +20,19 @@ import { Post } from '../Post.model';
 import { InteractionType } from '../interaction/Interaction.types';
 import { Outlet } from '../outlet/Outlet.model';
 import { PublicOutletAttributes } from '../outlet/Outlet.types';
+import { Token } from '../sentiment/Sentiment.types';
 import { Category } from '../topic/Category.model';
 import { PublicCategoryAttributes } from '../topic/Category.types';
 
 @Scopes(() => ({ 
-  conservative: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE] },
+  conservative: { 
+    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
+    include: [
+      Outlet.scope('public'),
+      Category.scope('public'),
+      SummarySentiment,
+    ],
+  },
   public: { 
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
     include: [
@@ -107,8 +115,11 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
 
   declare outlet?: PublicOutletAttributes;
   declare category?: PublicCategoryAttributes;
-  outletAttributes?: PublicOutletAttributes;
-  categoryAttributes?: PublicCategoryAttributes;
+  
+  // @Deprecated
+  declare outletAttributes?: PublicOutletAttributes;
+  // @Deprecated
+  declare categoryAttributes?: PublicCategoryAttributes;
 
   declare summary_sentiments?: SummarySentimentAttributes[];
   declare sentiments?: { [key: string]: SummarySentimentAttributes };
@@ -142,7 +153,7 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
     summaries.forEach((summary) => {
       summary.set('outletAttributes', summary.outlet, { raw: true });
       summary.set('categoryAttributes', summary.category, { raw: true });
-      const sentiments = Object.fromEntries((summary.summary_sentiments ?? []).map((s) => [s.method, s]));
+      const sentiments = Object.fromEntries((summary.summary_sentiments ?? []).map((s) => [s.method, { ...s, tokens: Object.fromEntries((s.tokens ?? [])?.map((t) => [t.text, t])) as unknown as Token[] }]));
       summary.set('sentiments', sentiments, { raw: true });
     });
   }

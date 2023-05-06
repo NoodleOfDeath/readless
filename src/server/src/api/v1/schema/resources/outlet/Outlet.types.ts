@@ -1,6 +1,5 @@
 import { DatedAttributes } from '../../types';
-import { SentimentMap } from '../sentiment/Sentiment.types';
-import { SummarySentimentAttributes } from '../summary/SummarySentiment.types';
+import { SentimentAttributes } from '../sentiment/Sentiment.types';
 
 export type FetchPolicy = {
   limit: number;
@@ -63,5 +62,5 @@ export type PublicOutletAttributes = {
   displayName: string;
   brandImageUrl?: string;
   description?: string;
-  averageSentiment?: SentimentMap<SummarySentimentAttributes>;
+  sentiment?: SentimentAttributes;
 };

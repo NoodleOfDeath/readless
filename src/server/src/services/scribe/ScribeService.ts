@@ -123,13 +123,17 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          const { score } = JSON.parse(reply.text);
+          const { score, tokens } = JSON.parse(reply.text);
           if (Number.isNaN(score)) {
-            throw new Error(`Not a valid sentiment score: ${reply.text}`);
+            await this.error('Not a valid sentiment score', reply.text);
           }
           sentiment.score = score;
+          if (!Array.isArray(tokens) || !tokens.every((t) => typeof t === 'string')) {
+            await this.error('tokens are in the wrong format', reply.text);
+          }
+          sentiment.tokens = tokens.map((t) => ({ text: t }));
         },
-        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 adjective token counts. Please respond with JSON only using the format: { score: number, tokens: Record<string, number> }',
+        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
       },
       {
         handleReply: async (reply) => { 

@@ -4,7 +4,11 @@ import {
   Index,
 } from 'sequelize-typescript';
 
-import { SentimentAttributes, SentimentCreationAttributes } from './Sentiment.types';
+import { 
+  SentimentAttributes, 
+  SentimentCreationAttributes,
+  Token,
+} from './Sentiment.types';
 import { BaseModel } from '../../base';
 
 export abstract class Sentiment<
@@ -37,5 +41,11 @@ export abstract class Sentiment<
     type: DataType.DOUBLE,
   })
   declare score: number;
-
+  
+  @Column({
+    defaultValue: [],
+    type: DataType.ARRAY(DataType.JSON),
+  })
+  declare tokens?: Token[];
+  
 }
