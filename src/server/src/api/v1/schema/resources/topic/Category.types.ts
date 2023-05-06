@@ -15,7 +15,7 @@ export type CategoryCreationAttributes = {
   icon: string;
 };
 
-export const PUBLIC_CATEGORY_ATTRIBUTES = ['name', 'displayName', 'icon'] as const;
+export const PUBLIC_CATEGORY_ATTRIBUTES = ['id', 'name', 'displayName', 'icon'] as const;
 
 export type PublicCategoryAttributes = {
   name: string;

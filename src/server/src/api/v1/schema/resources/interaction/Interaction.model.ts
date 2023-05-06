@@ -5,7 +5,7 @@ import {
   InteractionCreationAttributes,
   InteractionType,
 } from './Interaction.types';
-import { BaseModel } from '../base';
+import { BaseModel } from '../../base';
 
 export abstract class Interaction<
     A extends InteractionAttributes = InteractionAttributes,

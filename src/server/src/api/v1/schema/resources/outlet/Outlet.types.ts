@@ -1,4 +1,5 @@
 import { DatedAttributes } from '../../types';
+import { SentimentAttributes } from '../sentiment/Sentiment.types';
 
 export type FetchPolicy = {
   limit: number;
@@ -61,4 +62,5 @@ export type PublicOutletAttributes = {
   displayName: string;
   brandImageUrl?: string;
   description?: string;
+  sentiment?: SentimentAttributes;
 };

@@ -4,7 +4,7 @@ import {
   SummaryInteractionAttributes,
   SummaryInteractionCreationAttributes,
 } from './SummaryInteraction.types';
-import { Interaction } from '../../interaction/Interaction.model';
+import { Interaction } from '../interaction/Interaction.model';
 
 @Table({
   modelName: 'summary_interaction',

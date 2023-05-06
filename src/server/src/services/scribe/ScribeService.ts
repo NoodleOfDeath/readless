@@ -9,8 +9,12 @@ import {
   PuppeteerService,
   S3Service,
 } from '../';
-import { Category, Summary } from '../../api/v1/schema/models';
-import { Sentiment } from '../../api/v1/schema/types';
+import {
+  Category,
+  Summary,
+  SummarySentiment,
+  SummarySentimentToken,
+} from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 70 as const;
@@ -101,9 +105,11 @@ export class ScribeService extends BaseService {
       originalTitle: loot.title,
       outletId: outlet.id,
       rawText: loot.rawText,
-      sentiments: {},
       url,
     });
+    let categoryDisplayName: string;
+    const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'chatgpt' });
+    const sentimentTokens: string[] = [];
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -119,13 +125,17 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          const sentiment = Sentiment.from(reply.text);
-          if (Number.isNaN(sentiment.score)) {
-            throw new Error(`Not a valid sentiment score: ${reply.text}`);
+          const { score, tokens } = JSON.parse(reply.text);
+          if (Number.isNaN(score)) {
+            await this.error('Not a valid sentiment score', reply.text);
           }
-          newSummary.sentiments.chatgpt = sentiment;
+          sentiment.score = score;
+          if (!Array.isArray(tokens) || !tokens.every((t) => typeof t === 'string')) {
+            await this.error('tokens are in the wrong format', reply.text);
+          }
+          sentimentTokens.push(...tokens);
         },
-        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 adjective token counts. Please respond with JSON only using the format: { score: number, tokens: Record<string, number> }',
+        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
       },
       {
         handleReply: async (reply) => { 
@@ -172,51 +182,73 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          newSummary.category = reply.text
+          categoryDisplayName = reply.text
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
         text: `Please select a best category for this article from the following choices: ${this.categories.join(' ')}`,
       },
     ];
-    // initialize chatgpt service and send the prompt
-    const chatgpt = new ChatGPTService();
-    // iterate through each summary prompt and send them to chatgpt
-    for (const prompt of prompts) {
-      const reply = await chatgpt.send(prompt.text);
-      if (BAD_RESPONSE_EXPR.test(reply.text)) {
-        throw new Error(['Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
-      }
-      this.log(reply);
-      await prompt.handleReply(reply);
-    }
-    const category = await Category.findOne({ where: { displayName: newSummary.category } });
-    newSummary.category = category.name;
-
-    if (this.features.image_generation) {
     
-      // Generate image from the title
-      const image = await DeepAiService.textToImage(newSummary.title);
-      if (!image) {
-        throw new Error('Image generation failed');
+    try {
+      
+      // initialize chatgpt service and send the prompt
+      const chatgpt = new ChatGPTService();
+      // iterate through each summary prompt and send them to chatgpt
+      for (const prompt of prompts) {
+        const reply = await chatgpt.send(prompt.text);
+        if (BAD_RESPONSE_EXPR.test(reply.text)) {
+          throw new Error(['Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
+        }
+        this.log(reply);
+        await prompt.handleReply(reply);
+      }
+    
+      const category = await Category.findOne({ where: { displayName: categoryDisplayName } });
+      newSummary.categoryId = category.id;
+
+      if (this.features.image_generation) {
+      
+        // Generate image from the title
+        const image = await DeepAiService.textToImage(newSummary.title);
+        if (!image) {
+          throw new Error('Image generation failed');
+        }
+        
+        // Save image to S3 CDN
+        const file = await S3Service.download(image.output_url);
+        const obj = await S3Service.uploadObject({
+          ACL: 'public-read',
+          ContentType: 'image/jpeg',
+          File: file,
+          Folder: 'img/s',
+        });
+        newSummary.imageUrl = obj.url;
+  
+      }
+    
+      // Save summary to database
+      const summary = await Summary.create(newSummary);
+      
+      // Create sentiment
+      sentiment.parentId = summary.id;
+      const newSentiment = await SummarySentiment.create(sentiment);
+
+      // Create summary sentiment tokens
+      for (const token of sentimentTokens) {
+        await SummarySentimentToken.create({
+          parentId: newSentiment.id,
+          text: token,
+        });
       }
       
-      // Save image to S3 CDN
-      const file = await S3Service.download(image.output_url);
-      const obj = await S3Service.uploadObject({
-        ACL: 'public-read',
-        ContentType: 'image/jpeg',
-        File: file,
-        Folder: 'img/s',
-      });
-      newSummary.imageUrl = obj.url;
-
+      this.log('Created new summary from', url, newSummary.title);
+      return summary;
+      
+    } catch (e) {
+      await this.error('Unexpected Error Encountered', `${e}\n\n${JSON.stringify(newSummary, null, 2)}`);
     }
     
-    // Save summary to database
-    const summary = await Summary.create(newSummary);
-    this.log('Created new summary from', url, newSummary.title);
-    return summary;
   }
   
 }

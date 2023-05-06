@@ -1,4 +1,8 @@
-export * from './analytics/RateLimit.model';
+// system
+export * from './system/RateLimit.model';
+export * from './system/service/Service.model';
+export * from './system/service/ServiceStatus.model';
+export * from './system/message/Message.model';
 
 // queues
 export * from './queue/Queue.model';
@@ -16,11 +20,11 @@ export * from './auth/Credential.model';
 export * from './auth/Role.model';
 
 // resource models
+export * from './resources/outlet/Outlet.model';
 export * from './resources/topic/Category.model';
 
-export * from './resources/outlet/Outlet.model';
+export * from './resources/summary/SummaryInteraction.model';
+export * from './resources/summary/SummarySentiment.model';
+export * from './resources/summary/SummarySentimentToken.model';
 
 export * from './resources/summary/Summary.model';
-export * from './resources/summary/SummaryInteraction.model';
-
-export * from './resources/note/Note.model';

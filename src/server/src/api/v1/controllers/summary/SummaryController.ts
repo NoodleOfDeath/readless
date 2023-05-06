@@ -19,6 +19,7 @@ import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
+  Category,
   DestroyResponse,
   FindAndCountOptions,
   InteractionRequest,
@@ -33,7 +34,7 @@ import {
 import { orderByToItems } from '../../schema/types';
 
 function parsePrefilter(prefilter: string) {
-  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
+  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: c })) };
 }
 
 function applyFilter(
@@ -63,7 +64,10 @@ function applyFilter(
         const [_, prefix, prefixValues] = match;
         const pf = parsePrefilter(prefixValues);
         if (/cat(egory)?/i.test(prefix)) {
-          where.category = pf;
+          newOptions.include = [{
+            model: Category,
+            where: { name: pf },
+          }];
         }
         if (/outlet|source|src/i.test(prefix)) {
           newOptions.include = [{

@@ -1,3 +1,4 @@
+import { SummarySentimentAttributes } from './SummarySentiment.types';
 import {
   PUBLIC_POST_ATTRIBUTES,
   PostAttributes,
@@ -13,63 +14,45 @@ export const READING_FORMATS = {
 
 export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS];
 
-export class Sentiment {
-
-  score: number;
-  tokens: Record<string, number>;
-
-  constructor(score: number, tokens: Record<string, number>) {
-    this.score = score;
-    this.tokens = tokens;
-  }
-
-  static from(str: string) {
-    try {
-      const { score, tokens } = JSON.parse(str);
-      return new Sentiment(score, tokens);
-    } catch (e) {
-      return new Sentiment(Number.NaN, {});
-    }
-  }
-
-}
-
 export type SummaryAttributesRaw = PostAttributes & {
-  summary: string;
-  shortSummary: string;
-  bullets: string[];
-  category: string;
   outletId: number;
+  outlet: PublicOutletAttributes;
+  categoryId: number;
+  category: PublicCategoryAttributes;
   url: string;
   rawText: string;
   filteredText: string;
   originalTitle: string;
   originalDate?: Date;
-  sentiments?: { [key: string]: Sentiment };
+  summary: string;
+  shortSummary: string;
+  bullets: string[];
   formats: ReadingFormat[];
+  sentiments?: { [key: string]: SummarySentimentAttributes };
 };
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
-  outletAttributes?: PublicOutletAttributes,
-  categoryAttributes?: PublicCategoryAttributes,
+  // @Deprecated
+  outletAttributes: PublicOutletAttributes,
+  // @Deprecated
+  categoryAttributes: PublicCategoryAttributes,
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {
-  summary: string;
-  shortSummary: string;
-  bullets: string[];
-  category: string;
   outletId: number;
+  categoryId: number;
   url: string;
   rawText: string;
   filteredText: string;
   originalTitle: string;
   originalDate?: Date;
-  sentiments?: { [key: string]: Sentiment };
+  summary: string;
+  shortSummary: string;
+  bullets: string[];
 };
 
 /** light weight record for a summary post */
-export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'category', 'outletId', 'url', 'sentiments', 'originalDate'] as const;
-export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'category', 'outletId', 'url', 'sentiments', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'outletId', 'categoryId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'outletId', 'categoryId', 'url', 'originalDate'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;

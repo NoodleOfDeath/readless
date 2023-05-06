@@ -15,6 +15,7 @@ import {
   ActivityIndicator,
   Icon,
   MediaPlayer,
+  SystemMessagesView,
   View,
 } from '~/components';
 import { useTheme } from '~/hooks';
@@ -115,39 +116,43 @@ export default function NavigationController() {
       {!ready ? (
         <ActivityIndicator animating />
       ) : (
-        <NavigationContainer
-          theme={ { 
-            colors: theme.navContainerColors,
-            dark: !theme.isLightMode,
-          } }
-          fallback={ <ActivityIndicator animating /> }
-          linking={ NAVIGATION_LINKING_OPTIONS }>
-          <Tab.Navigator>
-            {TABS.filter((tab) => !tab.disabled).map((tab) => (
-              <Tab.Screen
-                key={ tab.name }
-                name={ tab.name }
-                component={ tab.component }
-                options={ {
-                  tabBarIcon: (props) => {
-                    const badge = tab.badge ? tab.badge(preferences) : 0;
-                    return (
-                      <View>
-                        {badge > 0 && (
-                          <Badge style={ {
-                            position: 'absolute', right: 0, top: 0, zIndex: 1,
-                          } }>
-                            {badge}
-                          </Badge>
-                        )}
-                        <Icon name={ tab.icon } { ...props } color="primary" />
-                      </View>
-                    );
-                  },
-                } } />
-            ))}
-          </Tab.Navigator>
-        </NavigationContainer>
+        <View col>
+          <SystemMessagesView />
+          <NavigationContainer
+            theme={ { 
+              colors: theme.navContainerColors,
+              dark: !theme.isLightMode,
+            } }
+            fallback={ <ActivityIndicator animating /> }
+            linking={ NAVIGATION_LINKING_OPTIONS }>
+            <Tab.Navigator
+              screenOptions={ { headerShown: false } }>
+              {TABS.filter((tab) => !tab.disabled).map((tab) => (
+                <Tab.Screen
+                  key={ tab.name }
+                  name={ tab.name }
+                  component={ tab.component }
+                  options={ {
+                    tabBarIcon: (props) => {
+                      const badge = tab.badge ? tab.badge(preferences) : 0;
+                      return (
+                        <View>
+                          {badge > 0 && (
+                            <Badge style={ {
+                              position: 'absolute', right: 0, top: 0, zIndex: 1,
+                            } }>
+                              {badge}
+                            </Badge>
+                          )}
+                          <Icon name={ tab.icon } { ...props } color="primary" />
+                        </View>
+                      );
+                    },
+                  } } />
+              ))}
+            </Tab.Navigator>
+          </NavigationContainer>
+        </View>
       )}
     </React.Fragment>
   );

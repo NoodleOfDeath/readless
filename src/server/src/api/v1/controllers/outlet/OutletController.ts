@@ -1,3 +1,4 @@
+import sql from 'sequelize';
 import {
   Get,
   Query,
@@ -13,7 +14,11 @@ import {
   BulkResponse,
   FindAndCountOptions,
   Outlet,
+  PUBLIC_OUTLET_ATTRIBUTES,
+  PUBLIC_SUMMARY_ATTRIBUTES,
   PublicOutletAttributes,
+  Summary,
+  SummarySentiment,
 } from '../../schema';
 
 @Route('/v1/outlet')
@@ -31,7 +36,16 @@ export class OutletController {
     @Query() userId?: number,
     @Query() filter?: string
   ): Promise<BulkResponse<PublicOutletAttributes>> {
-    const options: FindAndCountOptions<Outlet> = { order: [['displayName', 'ASC']] };
+    const options: FindAndCountOptions<Outlet> = {
+      attributes: [[sql.fn('avg', sql.col('sentiment.score')), 'average_sentiment']],
+      group: [...PUBLIC_OUTLET_ATTRIBUTES, ...PUBLIC_SUMMARY_ATTRIBUTES],
+      include: [
+        Summary,
+        SummarySentiment,
+      ],
+      order: [['displayName', 'ASC']],
+      raw: true,
+    };
     const outlets = await Outlet.scope('public').findAndCountAll(options);
     return outlets;
   }
