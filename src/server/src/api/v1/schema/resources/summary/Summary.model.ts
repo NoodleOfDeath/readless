@@ -31,9 +31,7 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
     include: [
       Outlet.scope('public'),
       Category.scope('public'),
-      {
-        include: [{ model: SummarySentimentToken, required: false }], model: SummarySentiment, required: false, 
-      },
+      { include: [{ model: SummarySentimentToken }], model: SummarySentiment },
     ],
   },
   public: { 
@@ -41,9 +39,7 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
     include: [
       Outlet.scope('public'),
       Category.scope('public'),
-      {
-        include: [{ model: SummarySentimentToken, required: false }], model: SummarySentiment, required: false, 
-      },
+      { include: [{ model: SummarySentimentToken }], model: SummarySentiment },
     ],
   },
 }))
@@ -126,7 +122,7 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   declare categoryAttributes: PublicCategoryAttributes;
 
   declare summary_sentiments: SummarySentimentAttributes[];
-  declare sentiments: { [key: string]: SummarySentimentAttributes };
+  declare sentiments?: { [key: string]: SummarySentimentAttributes };
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {
@@ -157,8 +153,10 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
     summaries.forEach((summary) => {
       summary.set('outletAttributes', summary.outlet, { raw: true });
       summary.set('categoryAttributes', summary.category, { raw: true });
-      const sentiments = Object.fromEntries((summary.summary_sentiments ?? []).map((s) => [s.method, { ...(s as SummarySentiment).toJSON(), tokens: Object.fromEntries((s.summary_sentiment_tokens ?? [])?.map((t) => [t.text, (t as SummarySentimentToken).toJSON()])) as unknown as SummarySentimentTokenAttributes[] }]));
-      summary.set('sentiments', sentiments, { raw: true });
+      if ((summary.summary_sentiments ?? []).length > 0) {
+        const sentiments = Object.fromEntries((summary.summary_sentiments ?? []).map((s) => [s.method, { ...(s as SummarySentiment).toJSON(), tokens: Object.fromEntries((s.summary_sentiment_tokens ?? [])?.map((t) => [t.text, (t as SummarySentimentToken).toJSON()])) as unknown as SummarySentimentTokenAttributes[] }]));
+        summary.set('sentiments', sentiments, { raw: true });
+      }
     });
   }
 
