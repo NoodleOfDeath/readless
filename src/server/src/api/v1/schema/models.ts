@@ -23,7 +23,8 @@ export * from './auth/Role.model';
 export * from './resources/outlet/Outlet.model';
 export * from './resources/topic/Category.model';
 
-export * from './resources/summary/Summary.model';
 export * from './resources/summary/SummaryInteraction.model';
 export * from './resources/summary/SummarySentiment.model';
+export * from './resources/summary/SummarySentimentToken.model';
 
+export * from './resources/summary/Summary.model';

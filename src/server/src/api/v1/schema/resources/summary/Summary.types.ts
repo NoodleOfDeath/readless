@@ -16,9 +16,9 @@ export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS]
 
 export type SummaryAttributesRaw = PostAttributes & {
   outletId: number;
-  outlet?: PublicOutletAttributes;
+  outlet: PublicOutletAttributes;
   categoryId: number;
-  category?: PublicCategoryAttributes;
+  category: PublicCategoryAttributes;
   url: string;
   rawText: string;
   filteredText: string;
@@ -32,8 +32,10 @@ export type SummaryAttributesRaw = PostAttributes & {
 };
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
-  outletAttributes?: PublicOutletAttributes,
-  categoryAttributes?: PublicCategoryAttributes,
+  // @Deprecated
+  outletAttributes: PublicOutletAttributes,
+  // @Deprecated
+  categoryAttributes: PublicCategoryAttributes,
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {

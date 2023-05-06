@@ -13,6 +13,7 @@ import {
   Category,
   Summary,
   SummarySentiment,
+  SummarySentimentToken,
 } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
@@ -108,6 +109,7 @@ export class ScribeService extends BaseService {
     });
     let categoryDisplayName: string;
     const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'chatgpt' });
+    const sentimentTokens: string[] = [];
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -131,7 +133,7 @@ export class ScribeService extends BaseService {
           if (!Array.isArray(tokens) || !tokens.every((t) => typeof t === 'string')) {
             await this.error('tokens are in the wrong format', reply.text);
           }
-          sentiment.tokens = tokens.map((t) => ({ text: t }));
+          sentimentTokens.push(...tokens);
         },
         text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
       },
@@ -230,7 +232,15 @@ export class ScribeService extends BaseService {
       
       // Create sentiment
       sentiment.parentId = summary.id;
-      await SummarySentiment.create(sentiment);
+      const newSentiment = await SummarySentiment.create(sentiment);
+
+      // Create summary sentiment tokens
+      for (const token of sentimentTokens) {
+        await SummarySentimentToken.create({
+          parentId: newSentiment.id,
+          text: token,
+        });
+      }
       
       this.log('Created new summary from', url, newSummary.title);
       return summary;

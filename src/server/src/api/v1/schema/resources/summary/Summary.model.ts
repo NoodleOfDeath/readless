@@ -16,11 +16,12 @@ import {
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { SummarySentimentAttributes } from './SummarySentiment.types';
+import { SummarySentimentToken } from './SummarySentimentToken.model';
+import { SummarySentimentTokenAttributes } from './SummarySentimentToken.types';
 import { Post } from '../Post.model';
 import { InteractionType } from '../interaction/Interaction.types';
 import { Outlet } from '../outlet/Outlet.model';
 import { PublicOutletAttributes } from '../outlet/Outlet.types';
-import { Token } from '../sentiment/Sentiment.types';
 import { Category } from '../topic/Category.model';
 import { PublicCategoryAttributes } from '../topic/Category.types';
 
@@ -30,7 +31,9 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
     include: [
       Outlet.scope('public'),
       Category.scope('public'),
-      SummarySentiment,
+      {
+        include: [{ model: SummarySentimentToken, required: false }], model: SummarySentiment, required: false, 
+      },
     ],
   },
   public: { 
@@ -38,10 +41,11 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
     include: [
       Outlet.scope('public'),
       Category.scope('public'),
-      SummarySentiment,
+      {
+        include: [{ model: SummarySentimentToken, required: false }], model: SummarySentiment, required: false, 
+      },
     ],
   },
-  publicRaw: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] },
 }))
 @Table({
   modelName: 'summary',
@@ -113,16 +117,16 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
 
   formats = Object.values(READING_FORMATS);
 
-  declare outlet?: PublicOutletAttributes;
-  declare category?: PublicCategoryAttributes;
+  declare outlet: PublicOutletAttributes;
+  declare category: PublicCategoryAttributes;
   
   // @Deprecated
-  declare outletAttributes?: PublicOutletAttributes;
+  declare outletAttributes: PublicOutletAttributes;
   // @Deprecated
-  declare categoryAttributes?: PublicCategoryAttributes;
+  declare categoryAttributes: PublicCategoryAttributes;
 
-  declare summary_sentiments?: SummarySentimentAttributes[];
-  declare sentiments?: { [key: string]: SummarySentimentAttributes };
+  declare summary_sentiments: SummarySentimentAttributes[];
+  declare sentiments: { [key: string]: SummarySentimentAttributes };
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {
@@ -153,7 +157,7 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
     summaries.forEach((summary) => {
       summary.set('outletAttributes', summary.outlet, { raw: true });
       summary.set('categoryAttributes', summary.category, { raw: true });
-      const sentiments = Object.fromEntries((summary.summary_sentiments ?? []).map((s) => [s.method, { ...s, tokens: Object.fromEntries((s.tokens ?? [])?.map((t) => [t.text, t])) as unknown as Token[] }]));
+      const sentiments = Object.fromEntries((summary.summary_sentiments ?? []).map((s) => [s.method, { ...(s as SummarySentiment).toJSON(), tokens: Object.fromEntries((s.summary_sentiment_tokens ?? [])?.map((t) => [t.text, (t as SummarySentimentToken).toJSON()])) as unknown as SummarySentimentTokenAttributes[] }]));
       summary.set('sentiments', sentiments, { raw: true });
     });
   }

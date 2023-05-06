@@ -67,7 +67,14 @@ export * from './auth/Role.types';
 // Posts
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
+export * from './resources/sentiment/SentimentToken.types';
+
 export * from './resources/Post.types';
+
 export * from './resources/outlet/Outlet.types';
-export * from './resources/topic/Category.types';
+export * from './resources/topic/Category.types'
+;
 export * from './resources/summary/Summary.types';
+export * from './resources/summary/SummaryInteraction.types';
+export * from './resources/summary/SummarySentiment.types';
+export * from './resources/summary/SummarySentimentToken.types';
