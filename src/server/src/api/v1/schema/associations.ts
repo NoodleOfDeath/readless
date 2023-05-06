@@ -11,6 +11,7 @@ import {
   ServiceStatus,
   Summary,
   SummaryInteraction,
+  SummarySentiment,
   User,
   UserMetadata,
   Worker,
@@ -35,14 +36,13 @@ export function makeAssociations() {
   Credential.belongsTo(User, { foreignKey: 'userId' });
   
   // summaries
-  Summary.belongsTo(Category, {
-    as: 'summaryCategory',
-    foreignKey: 'category',
-    targetKey: 'name',
-  });
   Summary.belongsTo(Outlet, { foreignKey: 'outletId' });
+  Outlet.hasMany(Summary, { foreignKey: 'outletId' });
+  Summary.belongsTo(Category, { foreignKey: 'categoryId' });
+  Category.hasMany(Summary, { foreignKey: 'categoryId' });
   Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
-
+  Summary.hasMany(SummarySentiment, { foreignKey: 'parentId' });
+  
   SummaryInteraction.belongsTo(User, {
     foreignKey: {
       allowNull: true,

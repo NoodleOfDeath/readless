@@ -19,6 +19,7 @@ import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
+  Category,
   DestroyResponse,
   FindAndCountOptions,
   InteractionRequest,
@@ -63,7 +64,10 @@ function applyFilter(
         const [_, prefix, prefixValues] = match;
         const pf = parsePrefilter(prefixValues);
         if (/cat(egory)?/i.test(prefix)) {
-          where.category = pf;
+          newOptions.include = [{
+            model: Category,
+            where: { name: pf },
+          }];
         }
         if (/outlet|source|src/i.test(prefix)) {
           newOptions.include = [{
