@@ -13,11 +13,10 @@ export type DatedAttributes = {
   deletedAt?: Date;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FindAndCountOptions<T extends Model<any, any> | Hooks<Model<any, any>, any, any>> = Omit<
-  SequelizeFindAndCountOptions<Attributes<T>>,
-  'groups'
->;
+export type FindAndCountOptions<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends Model<any, any> | Hooks<Model<any, any>, any, any>,
+> = Omit<SequelizeFindAndCountOptions<Attributes<T>>, 'groups'>;
 
 export function orderByToItem(orderBy: string): OrderItem {
   return orderBy.split(':') as OrderItem;
@@ -43,8 +42,9 @@ export type DestroyResponse = {
 
 // System
 export * from './system/RateLimit.types';
-export * from './system/Service.types';
-export * from './system/ServiceStatus.types';
+export * from './system/service/Service.types';
+export * from './system/service/ServiceStatus.types';
+export * from './system/message/Message.types';
 
 // Queues
 export * from './queue/Queue.types';
@@ -66,4 +66,3 @@ export * from './resources/Post.types';
 export * from './resources/topic/Category.types';
 export * from './resources/outlet/Outlet.types';
 export * from './resources/summary/Summary.types';
-export * from './resources/note/Note.types';

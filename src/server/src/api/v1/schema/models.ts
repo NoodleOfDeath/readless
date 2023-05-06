@@ -1,7 +1,8 @@
 // system
 export * from './system/RateLimit.model';
-export * from './system/Service.model';
-export * from './system/ServiceStatus.model';
+export * from './system/service/Service.model';
+export * from './system/service/ServiceStatus.model';
+export * from './system/message/Message.model';
 
 // queues
 export * from './queue/Queue.model';
@@ -26,4 +27,3 @@ export * from './resources/outlet/Outlet.model';
 export * from './resources/summary/Summary.model';
 export * from './resources/summary/SummaryInteraction.model';
 
-export * from './resources/note/Note.model';

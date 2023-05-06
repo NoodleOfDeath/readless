@@ -11,6 +11,8 @@ import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
   FindAndCountOptions,
+  Message,
+  MessageAttributes,
   Service,
   ServiceAttributes,
 } from '../../schema';
@@ -30,6 +32,13 @@ export class ServiceController {
     const options: FindAndCountOptions<Service> = { order: [['name', 'ASC']] };
     const services = await Service.scope('public').findAndCountAll(options);
     return services;
+  }
+
+  @Get('/messages')
+  public static async getSystemMessages(): Promise<BulkResponse<MessageAttributes>> {
+    const options: FindAndCountOptions<Message> = { order: [['createdAt', 'DESC']] };
+    const messages = await Message.scope('public').findAndCountAll(options);
+    return messages;
   }
   
 }

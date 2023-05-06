@@ -7,10 +7,10 @@ import {
 
 import { ServiceAttributes, ServiceCreationAttributes } from './Service.types';
 import { ServiceStatus } from './ServiceStatus.model';
-import { BaseModel } from '../base';
+import { BaseModel } from '../../base';
 
 @Scopes(() => ({ 
-  public: { 
+  public: {
     include: [{ 
       as: 'status',
       model: ServiceStatus,

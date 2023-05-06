@@ -5,7 +5,7 @@ import {
 } from 'sequelize-typescript';
 
 import { ServiceStatusAttributes, ServiceStatusCreationAttributes } from './ServiceStatus.types';
-import { BaseModel } from '../base';
+import { BaseModel } from '../../base';
 
 @Table({
   modelName: 'service_status',

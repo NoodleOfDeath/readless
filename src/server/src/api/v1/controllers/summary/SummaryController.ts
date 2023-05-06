@@ -33,7 +33,7 @@ import {
 import { orderByToItems } from '../../schema/types';
 
 function parsePrefilter(prefilter: string) {
-  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: `%${c}%` })) };
+  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: c })) };
 }
 
 function applyFilter(

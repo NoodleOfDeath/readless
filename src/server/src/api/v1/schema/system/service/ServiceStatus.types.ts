@@ -1,4 +1,4 @@
-import { DatedAttributes } from '../types';
+import { DatedAttributes } from '../../types';
 
 export type ServiceStatusAttributes = DatedAttributes & {
   serviceId: number;
