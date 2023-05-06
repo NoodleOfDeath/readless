@@ -37,7 +37,9 @@ export function makeAssociations() {
   
   // summaries
   Summary.belongsTo(Outlet, { foreignKey: 'outletId' });
+  Outlet.hasMany(Summary, { foreignKey: 'outletId' });
   Summary.belongsTo(Category, { foreignKey: 'categoryId' });
+  Category.hasMany(Summary, { foreignKey: 'categoryId' });
   Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
   Summary.hasMany(SummarySentiment, { foreignKey: 'parentId' });
   

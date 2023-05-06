@@ -40,7 +40,7 @@ export class OutletController {
       attributes: [[sql.fn('avg', sql.col('sentiment.score')), 'average_sentiment']],
       group: [...PUBLIC_OUTLET_ATTRIBUTES, ...PUBLIC_SUMMARY_ATTRIBUTES],
       include: [
-        Summary.scope('publicRaw'),
+        Summary,
         SummarySentiment,
       ],
       order: [['displayName', 'ASC']],

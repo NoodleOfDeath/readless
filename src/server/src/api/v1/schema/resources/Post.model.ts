@@ -2,10 +2,8 @@ import { Column, DataType } from 'sequelize-typescript';
 
 import { PostAttributes, PostCreationAttributes } from './Post.types';
 import { Interaction } from './interaction/Interaction.model';
-import { InteractionResponse, InteractionType } from './interaction/Interaction.types';
+import { InteractionResponse } from './interaction/Interaction.types';
 import { BaseModel } from '../base';
-import { Interaction } from '../interaction/Interaction.model';
-import { InteractionResponse } from '../interaction/Interaction.types';
 
 export abstract class Post<
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,3 +1,4 @@
+import { SummarySentimentAttributes } from './SummarySentiment.types';
 import {
   PUBLIC_POST_ATTRIBUTES,
   PostAttributes,
@@ -15,7 +16,9 @@ export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS]
 
 export type SummaryAttributesRaw = PostAttributes & {
   outletId: number;
+  outlet?: PublicOutletAttributes;
   categoryId: number;
+  category?: PublicCategoryAttributes;
   url: string;
   rawText: string;
   filteredText: string;
@@ -25,6 +28,7 @@ export type SummaryAttributesRaw = PostAttributes & {
   shortSummary: string;
   bullets: string[];
   formats: ReadingFormat[];
+  sentiments?: { [key: string]: SummarySentimentAttributes };
 };
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
@@ -46,7 +50,7 @@ export type SummaryCreationAttributes = PostCreationAttributes & {
 };
 
 /** light weight record for a summary post */
-export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'category', 'outletId', 'url', 'originalDate'] as const;
-export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'category', 'outletId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'outletId', 'categoryId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'outletId', 'categoryId', 'url', 'originalDate'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;

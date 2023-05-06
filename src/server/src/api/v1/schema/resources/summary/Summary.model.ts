@@ -1,4 +1,5 @@
 import {
+  AfterFind,
   Column,
   DataType,
   Scopes,
@@ -13,6 +14,8 @@ import {
   SummaryCreationAttributes,
 } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
+import { SummarySentiment } from './SummarySentiment.model';
+import { SummarySentimentAttributes } from './SummarySentiment.types';
 import { Post } from '../Post.model';
 import { InteractionType } from '../interaction/Interaction.types';
 import { Outlet } from '../outlet/Outlet.model';
@@ -27,6 +30,7 @@ import { PublicCategoryAttributes } from '../topic/Category.types';
     include: [
       Outlet.scope('public'),
       Category.scope('public'),
+      SummarySentiment,
     ],
   },
   publicRaw: { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] },
@@ -101,8 +105,13 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
 
   formats = Object.values(READING_FORMATS);
 
+  declare outlet?: PublicOutletAttributes;
+  declare category?: PublicCategoryAttributes;
   outletAttributes?: PublicOutletAttributes;
   categoryAttributes?: PublicCategoryAttributes;
+
+  declare summary_sentiments?: SummarySentimentAttributes[];
+  declare sentiments?: { [key: string]: SummarySentimentAttributes };
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {
@@ -124,77 +133,18 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
     this.set('interactions', interactions, { raw: true });
   }
 
-  // @AfterFind
-  // static async addOutlet(cursor?: Summary | Summary[]) {
-  //   if (!cursor) {
-  //     return;
-  //   }
-  //   const summaries = Array.isArray(cursor) ? cursor : [cursor];
-  //   const outletIds = summaries.map((summary) => {
-  //     return summary.outletId;
-  //   });
-  //   const outlets = await Outlet.scope('public').findAll({ where: { id: outletIds } });
-  //   summaries.forEach((summary) => {
-  //     const outlet = outlets.find((o) => o.id === summary.outletId);
-  //     summary.set('outletAttributes', outlet?.toJSON(), { raw: true });
-  //   });
-  // }
-
-  // @AfterFind
-  // static async addCategory(cursor?: Summary | Summary[]) {
-  //   if (!cursor) {
-  //     return;
-  //   }
-  //   const summaries = Array.isArray(cursor) ? cursor : [cursor];
-  //   const categoryNames = summaries.map((summary) => summary.category);
-  //   const categories = await Category.scope('public').findAll({ where: { name: categoryNames } });
-  //   summaries.forEach((summary) => {
-  //     const category = categories.find((c) => c.name === summary.category);
-  //     summary.set('categoryAttributes', category?.toJSON(), { raw: true });
-  //   });
-  // }
-
-  // @AfterFind
-  // static async addInteractions(cursor?: Summary | Summary[]) {
-  //   if (!cursor) {
-  //     return;
-  //   }
-  //   const summaries = Array.isArray(cursor) ? cursor : [cursor];
-  //   const summaryIds = summaries.map((summary) => {
-  //     return summary.id;
-  //   });
-  //   const interactions = await SummaryInteraction.findAll({ where: { targetId: summaryIds } });
-  //   for (const summary of summaries) {
-  //     const interactionMap = {
-  //       bookmark: [],
-  //       comment: [],
-  //       downvote: [],
-  //       favorite: [],
-  //       listen: [],
-  //       read: [],
-  //       share: [],
-  //       upvote: [],
-  //       view: [],
-  //     };
-  //     interactions.forEach((interaction) => {
-  //       if (interaction.targetId === summary.id && interaction.type in interactionMap) {
-  //         interactionMap[interaction.type].push(interaction);
-  //       }
-  //     });
-  //     const summaryInteractions = {
-  //       bookmark: interactionMap.bookmark.length,
-  //       comment: interactionMap.comment.length,
-  //       downvote: interactionMap.downvote.length,
-  //       favorite: interactionMap.favorite.length,
-  //       listen: interactionMap.listen.length,
-  //       read: interactionMap.read.length,
-  //       share: interactionMap.share.length,
-  //       upvote: interactionMap.upvote.length,
-  //       view: interactionMap.view.length + 1,
-  //     };
-  //     summary.set('interactions', summaryInteractions, { raw: true });
-  //   }
-    
-  // }
+  @AfterFind
+  static async legacySupport(cursor?: Summary | Summary[]) {
+    if (!cursor) {
+      return;
+    }
+    const summaries = Array.isArray(cursor) ? cursor : [cursor];
+    summaries.forEach((summary) => {
+      summary.set('outletAttributes', summary.outlet, { raw: true });
+      summary.set('categoryAttributes', summary.category, { raw: true });
+      const sentiments = Object.fromEntries((summary.summary_sentiments ?? []).map((s) => [s.method, s]));
+      summary.set('sentiments', sentiments, { raw: true });
+    });
+  }
 
 }
