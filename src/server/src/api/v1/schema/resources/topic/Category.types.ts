@@ -7,6 +7,7 @@ export type CategoryAttributes = DatedAttributes & {
   displayName: string;
   /** mdi icon for this string **/
   icon: string;
+  averageSentiment: number;
 };
 
 export type CategoryCreationAttributes = {
@@ -21,4 +22,5 @@ export type PublicCategoryAttributes = {
   name: string;
   displayName: string;
   icon: string;
+  averageSentiment: number;
 };

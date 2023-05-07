@@ -1,5 +1,4 @@
 import { DatedAttributes } from '../../types';
-import { SentimentAttributes } from '../sentiment/Sentiment.types';
 
 export type FetchPolicy = {
   limit: number;
@@ -34,6 +33,7 @@ export type OutletAttributes = DatedAttributes & {
   /** fetch policy for this outlet */
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone: string;
+  averageSentiment: number;
 };
 
 export type OutletCreationAttributes = {
@@ -62,5 +62,5 @@ export type PublicOutletAttributes = {
   displayName: string;
   brandImageUrl?: string;
   description?: string;
-  sentiment?: SentimentAttributes;
+  averageSentiment: number;
 };

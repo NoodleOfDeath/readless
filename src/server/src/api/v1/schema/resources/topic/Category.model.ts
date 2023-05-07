@@ -225,5 +225,7 @@ export class Category<
     type: DataType.STRING,
   })
   declare icon: string;
+
+  declare averageSentiment: number;
   
 }

@@ -94,11 +94,11 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   declare category: PublicCategoryAttributes;
   
   // @Deprecated
-  declare outletAttributes: PublicOutletAttributes;
+  declare outletAttributes?: PublicOutletAttributes;
   // @Deprecated
-  declare categoryAttributes: PublicCategoryAttributes;
+  declare categoryAttributes?: PublicCategoryAttributes;
 
-  declare summary_sentiments: SummarySentimentAttributes[];
+  declare summary_sentiments?: SummarySentimentAttributes[];
   declare sentiments?: { [key: string]: SummarySentimentAttributes };
   
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {

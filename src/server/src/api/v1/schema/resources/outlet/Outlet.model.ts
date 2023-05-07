@@ -1398,6 +1398,8 @@ export class Outlet<
   })
   declare timezone: string;
 
+  declare averageSentiment: number;
+
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });

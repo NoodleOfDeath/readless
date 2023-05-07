@@ -14,6 +14,6 @@ import { Sentiment } from '../sentiment/Sentiment.model';
 })
 export class SummarySentiment<A extends SummarySentimentAttributes = SummarySentimentAttributes, B extends SummarySentimentCreationAttributes = SummarySentimentCreationAttributes> extends Sentiment<A, B> implements SummarySentimentAttributes {
 
-  declare summary_sentiment_tokens: SummarySentimentTokenAttributes[];
+  declare summary_sentiment_tokens?: SummarySentimentTokenAttributes[];
 
 }

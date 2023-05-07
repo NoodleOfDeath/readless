@@ -33,9 +33,9 @@ export type SummaryAttributesRaw = PostAttributes & {
 
 export type SummaryAttributes = SummaryAttributesRaw & { 
   // @Deprecated
-  outletAttributes: PublicOutletAttributes,
+  outletAttributes?: PublicOutletAttributes,
   // @Deprecated
-  categoryAttributes: PublicCategoryAttributes,
+  categoryAttributes?: PublicCategoryAttributes,
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {
