@@ -1,7 +1,11 @@
 import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
-import { Provider, Searchbar } from 'react-native-paper';
+import {
+  Provider,
+  Searchbar,
+  Switch,
+} from 'react-native-paper';
 
 import { SearchOptionsMenu } from './SearchOptionsMenu';
 
@@ -13,6 +17,9 @@ import {
 import {
   ActivityIndicator,
   Button,
+  Divider,
+  Icon,
+  Menu,
   Screen,
   Summary,
   TabSwitcher,
@@ -35,12 +42,14 @@ export function SearchScreen({
 }: ScreenProps<'search'>) {
   const { 
     preferences: {
+      compactMode,
       bookmarkedCategories,
       bookmarkedOutlets,
       preferredReadingFormat,
       readSummaries,
       removedSummaries,
       sortOrder,
+      showShortSummary,
     },
     ready,
     setPreference,
@@ -280,71 +289,97 @@ export function SearchScreen({
               </Provider>
             </View>
           )}
-          <View mb={ 8 } elevated p={ 12 } rounded gap={ 12 } bg={ theme.components.card.backgroundColor }>
-            <View row alignCenter gap={ 8 }>
-              <TabSwitcher
-                rounded
-                activeTab={ sortOrder?.[0].match(/^createdAt/i) ? 1 : 0 }
-                titles={ [
-                  <Button
-                    key='p' 
-                    gap={ 4 }
-                    row
-                    alignCenter
-                    textCenter
-                    onPress={ () => {
-                      setPreference(
-                        'sortOrder', 
-                        (prev) => prev?.[0].match(/originalDate:desc/i) ?
-                          ['originalDate:asc', 'createdAt:asc'] : ['originalDate:desc', 'createdAt:desc']
-                      );
-                    } }
-                    justifyCenter
-                    endIcon={ sortOrder?.[0].match(/^originalDate/i) ? 
-                      sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
-                    Publication Date
-                  </Button>,
-                  <Button
-                    key='g' 
-                    gap={ 4 }
-                    row
-                    alignCenter
-                    textCenter
-                    onPress={ () => {
-                      setPreference(
-                        'sortOrder', 
-                        (prev) => prev?.[0].match(/createdAt:desc/i) ?
-                          ['createdAt:asc', 'originalDate:asc'] : ['createdAt:desc', 'originalDate:desc']
-                      );
-                    } }
-                    justifyCenter
-                    endIcon={ sortOrder?.[0].match(/^createdAt/i) ? 
-                      sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
-                    Generation Date
-                  </Button>,
-                ] } />
-            </View>
-            <View row>
-              <Button 
-                elevated
-                p={ 4 }
-                rounded
-                onPress={ () => removeReadSummaries() }>
-                Hide Already Read
-              </Button>
-              <View row />
-              <View>
-                <Button
-                  row
-                  elevated
-                  p={ 4 }
-                  rounded
-                  alignCenter
-                  gap={ 4 }
-                  startIcon="volume-high"
-                  onPress={ () => handlePlayAll() }>
-                  Play All
-                </Button>
+          <View row mb={ 8 }>
+            <Menu width={ 300 } autoAnchor={ <Icon name="filter" size={ 24 } /> }>
+              <View gap={ 8 }>
+                <View row alignCenter gap={ 8 }>
+                  <TabSwitcher
+                    rounded
+                    activeTab={ sortOrder?.[0].match(/^createdAt/i) ? 1 : 0 }
+                    titles={ [
+                      <Button
+                        key='p' 
+                        gap={ 4 }
+                        row
+                        alignCenter
+                        textCenter
+                        onPress={ () => {
+                          setPreference(
+                            'sortOrder', 
+                            (prev) => prev?.[0].match(/originalDate:desc/i) ?
+                              ['originalDate:asc', 'createdAt:asc'] : ['originalDate:desc', 'createdAt:desc']
+                          );
+                        } }
+                        justifyCenter
+                        endIcon={ sortOrder?.[0].match(/^originalDate/i) ? 
+                          sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
+                        Publication Date
+                      </Button>,
+                      <Button
+                        key='g' 
+                        gap={ 4 }
+                        row
+                        alignCenter
+                        textCenter
+                        onPress={ () => {
+                          setPreference(
+                            'sortOrder', 
+                            (prev) => prev?.[0].match(/createdAt:desc/i) ?
+                              ['createdAt:asc', 'originalDate:asc'] : ['createdAt:desc', 'originalDate:desc']
+                          );
+                        } }
+                        justifyCenter
+                        endIcon={ sortOrder?.[0].match(/^createdAt/i) ? 
+                          sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
+                        Generation Date
+                      </Button>,
+                    ] } />
+                </View>
+                <View row gap={ 8 }>
+                  <Button 
+                    elevated
+                    p={ 4 }
+                    rounded
+                    onPress={ () => removeReadSummaries() }>
+                    Hide Already Read
+                  </Button>
+                  <View row />
+                  <View>
+                    <Button
+                      row
+                      elevated
+                      p={ 4 }
+                      rounded
+                      alignCenter
+                      gap={ 4 }
+                      startIcon="volume-high"
+                      onPress={ () => handlePlayAll() }>
+                      Play All
+                    </Button>
+                  </View>
+                </View>
+              </View>
+            </Menu>
+            <View row />
+            <View>
+              <View row gap={ 6 } alignCenter>
+                <Menu autoAnchor={ <Icon name="view-agenda" size={ 24 } /> }>
+                  <View gap={ 2 }>
+                    <Text bold>Expanded Mode (Default)</Text>
+                  </View>
+                </Menu>
+                <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
+                <Menu autoAnchor={ <Icon name="view-headline" size={ 24 } /> }>
+                  <View gap={ 2 }>
+                    <Text bold>Headline Mode</Text>
+                    <Text>Note: When short summaries are enabled, short summaries will be shown instead of headlines</Text>
+                    <Divider />
+                    <Text>
+                      {`Short summaries are currently ${ showShortSummary ? 'enabled' : 'disabled' }`}
+                    </Text>
+                    <Switch value={ showShortSummary } onValueChange={ () => setPreference('showShortSummary', (prev) => !prev) } color={ theme.colors.primary } />
+                  </View>
+                </Menu>
               </View>
             </View>
           </View>

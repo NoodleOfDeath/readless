@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated, LayoutRectangle } from 'react-native';
 
 import {
+  ScrollView,
   Surface,
   Text,
   View,
@@ -117,9 +118,9 @@ export function TabSwitcher({
           ))}
         </Surface>
         {views && views.length > 0 && (
-          <Animated.View>
+          <ScrollView>
             {activeTab < views.length && views[activeTab]}
-          </Animated.View>
+          </ScrollView>
         )}
       </View>
     </Animated.View>

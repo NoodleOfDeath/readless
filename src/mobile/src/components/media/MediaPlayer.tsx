@@ -59,6 +59,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
   return (
     <Banner
       { ...props } 
+      onDismiss={ () => stopAndClearTracks() }
       actions={ [
         {
           disabled: !canSkipToPrevious,

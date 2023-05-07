@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Sentiment } from '~/api';
+import { SummarySentimentAttributes } from '~/api';
 import {
   Button,
   Icon,
@@ -11,9 +11,10 @@ import {
   ViewProps,
 } from '~/components';
 import { useStyles } from '~/hooks';
+import { averageOfSentiments } from '~/utils';
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
-  sentiments: Record<string, Sentiment>;
+  sentiments: SummarySentimentAttributes | SummarySentimentAttributes[];
 };
 
 export function AnalyticsView({
@@ -25,19 +26,8 @@ export function AnalyticsView({
   
   const [showTokens, setShowTokens] = React.useState(false);
   
-  const average = React.useMemo(() => {
-    const scores = Object.values(sentiments).reduce((curr, prev) => curr + prev.score, 0);
-    return scores / Object.values(sentiments).length;
-  }, [sentiments]);
-  
-  const tokens = React.useMemo(() => {
-    let tokens: Record<string, number> = {};
-    Object.values(sentiments).forEach((s) => {
-      tokens = { ...tokens, ...s.tokens };
-    });
-    return Object.entries(tokens).sort(([a], [b]) => a.toLowerCase() < b.toLowerCase() ? -1 : a.toLowerCase() > b.toLowerCase() ? 1 : 0);
-  }, [sentiments]);
-  
+  const { score: average, tokens } = React.useMemo(() => averageOfSentiments(sentiments), [sentiments]);
+
   const sentiment = React.useMemo(() => {
     if (average < -0.2) {
       if (average < -0.6) {
@@ -110,7 +100,7 @@ export function AnalyticsView({
         </View>
         {showTokens && (
           <View>
-            {tokens.map(([key]) => (
+            {tokens.map((key) => (
               <Text key={ key }>
                 {`• ${key}`}
               </Text>

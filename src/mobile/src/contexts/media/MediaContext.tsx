@@ -213,7 +213,7 @@ export function MediaContextProvider({ children }: Props) {
         tracks.push(
           {
             artist: summary.outletAttributes?.displayName,
-            artwork: 'https://www.readless.ai/AppIcon.png',
+            artwork: summary.imageUrl ?? 'https://www.readless.ai/AppIcon.png',
             id: ['summary', summary.id].join('-'),
             summary,
             text,

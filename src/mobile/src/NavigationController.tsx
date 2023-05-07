@@ -37,7 +37,7 @@ export function TabViewController<T extends TabParams = TabParams>(
 ) {
   const Controller = () => {
     const Stack = createNativeStackNavigator<T>();
-    const { tracks } = React.useContext(MediaContext);
+    const { currentTrack } = React.useContext(MediaContext);
     return (
       <View col>
         <Stack.Navigator initialRouteName={ initialRouteName }>
@@ -49,7 +49,7 @@ export function TabViewController<T extends TabParams = TabParams>(
               options={ { headerShown: false } } />
           ))}
         </Stack.Navigator>
-        <MediaPlayer visible={ tracks.length > 0 } />
+        <MediaPlayer visible={ Boolean(currentTrack) } />
       </View>
     );
   };
@@ -129,6 +129,7 @@ export default function NavigationController() {
                 name={ tab.name }
                 component={ tab.component }
                 options={ {
+                  headerShown: false,
                   tabBarIcon: (props) => {
                     const badge = tab.badge ? tab.badge(preferences) : 0;
                     return (

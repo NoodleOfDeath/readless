@@ -91,20 +91,26 @@ function RenderActions({ actions, side }: RenderActionsProps) {
 
 const MOCK_SUMMARY: PublicSummaryAttributes = {
   bullets: ['• this is a bullet', '• this is another bullet'],
-  category: '',
-  categoryAttributes: {
-    displayName: 'Category', icon: 'popcorn', name: '',
+  category: {
+    averageSentiment: 0.1, displayName: 'Category', icon: 'popcorn', name: '',
   },
+  categoryId: -1,
   formats: [],
   id: 1,
   imageUrl: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/s/01084930-e927-11ed-a438-a9ea5ed3eb49.jpg',
   originalTitle: '',
-  outletAttributes: {
-    displayName: 'News Source', id: -1, name: '', 
+  outlet: {
+    averageSentiment: 0.1, displayName: 'News Source', id: -1, name: '', 
   },
   outletId: -1,
-  sentiments: { chatgpt: { score: 0.1, tokens: { test: 2 } } },
-  shortSummary: 'This is a short 30-40 word summary that can appear under titles if you set it to show in the settings',
+  sentiments: {
+    chatgpt: {
+      id: 0, method: 'chatgpt', parentId: 0, score: 0.1, tokens: [{
+        id:0, parentId:0, text: 'token', 
+      }],
+    },
+  },
+  shortSummary: 'This is a short 30-40 word summary that can appear under titles if you set it to show in the settings (this will appear instead of titles when in headline mode)',
   summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
   text: '',
   title: 'This is an example summary title',
@@ -129,6 +135,7 @@ export function Summary({
   const { copyToClipboard } = useShare({ onInteract });
   const {
     preferences: {
+      compactMode,
       showShortSummary,
       preferredReadingFormat, 
       bookmarkedSummaries, 
@@ -150,7 +157,7 @@ export function Summary({
   const [collapseSummary, setCollapseSummary] = React.useState(Boolean(collapsed));
   const [collapseAnalytics, setCollapseAnalytics] = React.useState(Boolean(collapsed));
 
-  const isRead = React.useMemo(() => !compact && !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [compact, disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
+  const isRead = React.useMemo(() => !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
   
   const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
@@ -303,7 +310,7 @@ export function Summary({
             <View row gap={ 12 }>
               <View col width="100%" gap={ 6 }>
                 <View col>
-                  {showShareDialog || keywords.length === 0 ? <Text bold subtitle1>{summary.title}</Text> : (
+                  {showShareDialog || keywords.length === 0 ? <Text bold subtitle1>{(compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title}</Text> : (
                     <Markdown 
                       bold
                       subtitle1
@@ -314,56 +321,57 @@ export function Summary({
                         }, 
                       } }
                       onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-                      {markdown(summary.title)}
+                      {markdown((compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title )}
                     </Markdown>
                   )}
                   <View col />
-                  <View>
-                    <View row alignCenter gap={ 6 }>
-                      <Button 
-                        elevated
-                        row
-                        alignCenter
-                        gap={ 6 }
-                        p={ 4 }
-                        rounded
-                        startIcon={ summary.categoryAttributes?.icon && <Icon name={ summary.categoryAttributes?.icon } color="text" /> }
-                        onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
-                      <Button 
-                        row
-                        elevated
-                        p={ 4 }
-                        rounded
-                        onPress={ () => onReferSearch?.(`src:${summary.outletAttributes?.name}`) }>
-                        {summary.outletAttributes?.displayName}
-                      </Button>
+                  {!(compact || compactMode) && (
+                    <View>
+                      <View row alignCenter gap={ 6 }>
+                        <Button 
+                          elevated
+                          row
+                          alignCenter
+                          gap={ 6 }
+                          p={ 4 }
+                          rounded
+                          startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                          onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+                        <Button 
+                          row
+                          elevated
+                          p={ 4 }
+                          rounded
+                          onPress={ () => onReferSearch?.(`src:${summary.outlet.name}`) }>
+                          {summary.outlet.displayName}
+                        </Button>
+                      </View>
                     </View>
-                  </View>
+                  )}
                 </View>
               </View>
-              {!compact && summary.imageUrl && (
+              {!(compact || compactMode) && summary.imageUrl && (
                 <View
-                  width="33%" 
+                  width="25%" 
                   gap={ 6 }>
-                  <Image
-                    source={ { uri: summary.imageUrl } }  
-                    rounded
-                    aspectRatio={ 1 } />
+                  <Menu
+                    autoAnchor={ (
+                      <Image
+                        source={ { uri: summary.imageUrl } }  
+                        rounded
+                        aspectRatio={ 1 } />
+                    ) }>
+                    <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
+                  </Menu>
                   <View row gap={ 6 } alignCenter justifyCenter>
                     <MeterDial 
                       value={ summary.sentiments?.chatgpt?.score ?? 0 }
                       width={ 50 } />
-                    <Menu
-                      autoAnchor={
-                        <Icon size={ 24 } name="information" />
-                      }>
-                      <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
-                    </Menu>
                   </View>
                 </View>
               )}
             </View>
-            {!compact && showShortSummary === true && (
+            {!(compact || compactMode) && showShortSummary === true && (
               <View>
                 <Divider />
                 {(showShareDialog || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
@@ -382,7 +390,7 @@ export function Summary({
                 )}
               </View>
             )}
-            {!compact && (
+            {!(compact || compactMode) && (
               <React.Fragment>
                 <Divider />
                 <View row alignCenter gap={ 6 }>
@@ -503,7 +511,7 @@ export function Summary({
                 </View>
                 {!collapseAnalytics && (
                   <AnalyticsView
-                    sentiments={ summary.sentiments } />
+                    sentiments={ Object.values(summary.sentiments) } />
                 )}
               </View>
             )}

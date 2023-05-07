@@ -7,6 +7,7 @@ import {
 } from '~/api';
 import {
   Button,
+  MeterDial,
   Screen,
   TabSwitcher,
   View,
@@ -81,6 +82,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   }, [getOutlets]);
 
   React.useEffect(() => {
+    setLoading(true);
     loadCategories();
     loadOutlets();
   }, [loadCategories, loadOutlets]);
@@ -142,15 +144,17 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                 gap={ 8 }
                 p={ 8 }
                 onPress={ () => clearBookmarks('bookmarkedCategories') }>
-                {categoryCount > 0 ? 'Clear Selection' : ''}
+                Clear Selection
               </Button>
             </View>
             {categories.map((category, i) => (
               <View 
                 key={ category.name }
                 row
+                alignCenter
                 rounded
                 bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
+                <MeterDial width={ 40 } height={ 20 } value={ category.averageSentiment ?? 0 } />
                 <Button 
                   row
                   elevated
@@ -190,7 +194,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                   gap={ 8 }
                   p={ 8 }
                   onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
-                  {outletCount > 0 ? 'Clear Selection' : ''}
+                  Clear Selection
                 </Button>
               </View>
             </View>
@@ -198,8 +202,10 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
               <View 
                 key={ outlet.name }
                 row
+                alignCenter
                 rounded
                 bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
+                <MeterDial width={ 40 } height={ 20 } value={ outlet.averageSentiment ?? 0 } />
                 <Button 
                   row
                   elevated

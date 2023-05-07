@@ -8,11 +8,13 @@ import { useStyles, useTheme } from '~/hooks';
 export type MenuProps = Omit<RNMenuProps, 'anchor' | 'theme' | 'visible'> & ViewProps & {
   anchor?: React.ReactNode;
   autoAnchor?: React.ReactNode;
+  width?: number;
   visible?: boolean;
 };
 
 export function Menu({
   children,
+  width = 200,
   ...props
 }: MenuProps) {
 
@@ -23,7 +25,7 @@ export function Menu({
   
   const computedAnchor = React.useMemo(() => {
     return (
-      <View onPress={ () => setVisible(true) }>
+      <View elevated p={ 3 } rounded onPress={ () => setVisible(true) }>
         {props.autoAnchor}
       </View>
     );
@@ -35,6 +37,7 @@ export function Menu({
     <RNMenu
       contentStyle={ { 
         ...theme.components.menu,
+        width,
         ...style,
       } }
       { ...props } 
