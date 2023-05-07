@@ -1,7 +1,7 @@
-package com.readless;
+package ai.readless.ReadLess;
 import android.content.res.Configuration;
 
-import com.readless.BuildConfig;
+import ai.readless.ReadLess.BuildConfig;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
 

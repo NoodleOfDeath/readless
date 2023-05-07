@@ -1,4 +1,4 @@
-package com.readless;
+package ai.readless.ReadLess;
 import expo.modules.ReactActivityDelegateWrapper;
 
 import com.facebook.react.ReactActivity;

@@ -31,6 +31,7 @@ export function Screen({
 }: SafeScrollViewProps) {
   const theme = useTheme();
   const style = useStyles(props as Stylable);
+  console.log(onScroll);
   return (
     <React.Fragment>
       <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
