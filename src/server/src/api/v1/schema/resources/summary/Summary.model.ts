@@ -2,13 +2,10 @@ import {
   AfterFind,
   Column,
   DataType,
-  Scopes,
   Table,
 } from 'sequelize-typescript';
 
 import { 
-  PUBLIC_SUMMARY_ATTRIBUTES,
-  PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
   READING_FORMATS,
   SummaryAttributes,
   SummaryCreationAttributes,
@@ -20,29 +17,9 @@ import { SummarySentimentToken } from './SummarySentimentToken.model';
 import { SummarySentimentTokenAttributes } from './SummarySentimentToken.types';
 import { Post } from '../Post.model';
 import { InteractionType } from '../interaction/Interaction.types';
-import { Outlet } from '../outlet/Outlet.model';
 import { PublicOutletAttributes } from '../outlet/Outlet.types';
-import { Category } from '../topic/Category.model';
 import { PublicCategoryAttributes } from '../topic/Category.types';
 
-@Scopes(() => ({ 
-  conservative: { 
-    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
-    include: [
-      Outlet.scope('public'),
-      Category.scope('public'),
-      { include: [{ model: SummarySentimentToken }], model: SummarySentiment },
-    ],
-  },
-  public: { 
-    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
-    include: [
-      Outlet.scope('public'),
-      Category.scope('public'),
-      { include: [{ model: SummarySentimentToken }], model: SummarySentiment },
-    ],
-  },
-}))
 @Table({
   modelName: 'summary',
   paranoid: true,
