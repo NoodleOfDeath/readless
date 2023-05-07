@@ -1,3 +1,5 @@
+import sql from 'sequelize';
+
 import {
   Alias,
   Category,
@@ -17,9 +19,84 @@ import {
   UserMetadata,
   Worker,
 } from './models';
+import { PUBLIC_SUMMARY_ATTRIBUTES, PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE } from './types';
+
+export function addScopes() {
+
+  Outlet.addScope(
+    'public', 
+    {
+      attributes: {
+        exclude: ['selectors', 'maxAge', 'fetchPolicy', 'timezone', 'updatedAt', 'deletedAt'],
+        include: [
+          [sql.literal(`(
+            SELECT AVG(summary_sentiments.score) as "averageSentiment"
+            FROM outlets
+            LEFT JOIN summaries ON summaries."outletId" = outlet.id
+            AND summaries."deletedAt" IS NULL
+            LEFT JOIN summary_sentiments ON summary_sentiments."parentId" = summaries.id
+            AND summary_sentiments."deletedAt" IS NULL
+            WHERE outlet.id = outlets.id
+          )`), 'averageSentiment'],
+        ],
+      },
+      group: ['outlet.id', 'outlet.name', 'outlet."displayName"', 'outlet.description'],
+    }
+  );
+  Category.addScope(
+    'public', 
+    {
+      attributes: {
+        exclude: ['updatedAt', 'deletedAt'],
+        include: [
+          [sql.literal(`(
+          SELECT avg(a."averageSentiment") as "averageSentiment" FROM (
+              SELECT AVG(summary_sentiments.score) as "averageSentiment" FROM categories
+              LEFT JOIN summaries ON summaries."categoryId" = category.id
+              AND summaries."deletedAt" IS NULL
+              LEFT JOIN summary_sentiments ON summary_sentiments."parentId" = summaries.id
+              AND summary_sentiments."deletedAt" IS NULL
+              WHERE category.id = categories.id
+            ) a
+          )`), 'averageSentiment'],
+        ],
+      },
+      group: ['category.id', 'category.name', 'category."displayName"', 'category.icon'],
+    }
+  );
+
+  Summary.addScope('conservative', {
+    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
+    include: [
+      Outlet.scope('public'),
+      Category.scope('public'),
+      { include: [SummarySentimentToken], model: SummarySentiment },
+    ],
+  });
+  
+  Summary.addScope('public', {
+    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
+    include: [
+      Outlet.scope('public'),
+      Category.scope('public'),
+      { include: [SummarySentimentToken], model: SummarySentiment },
+    ],
+  });
+
+  Summary.addScope('sentimentOnly', {
+    attributes: ['id', 'outletId', 'categoryId', [sql.fn('avg', sql.col('summaries->summary_sentiments.score')), 'sentiment']],
+    group: ['summary.id', 'outletId', 'categoryId'],
+    include: [
+      { include: [SummarySentimentToken], model: SummarySentiment },
+    ],
+  });
+
+}
 
 export function makeAssociations() {
   
+  addScopes();
+
   // System
   ServiceStatus.belongsTo(Service, { 
     as: 'status',

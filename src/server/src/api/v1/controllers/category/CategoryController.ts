@@ -32,8 +32,11 @@ export class CategoryController {
     @Query() filter?: string
   ): Promise<BulkResponse<CategoryAttributes>> {
     const options: FindAndCountOptions<Category> = { order: [['name', 'ASC']] };
-    const categories = await Category.scope('public').findAndCountAll(options);
-    return categories;
+    const categories = await Category.scope('public').findAll(options);
+    return {
+      count: categories.length,
+      rows: categories,
+    };
   }
   
 }

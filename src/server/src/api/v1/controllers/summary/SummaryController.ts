@@ -18,7 +18,7 @@ import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
-  BulkResponse,
+  BulkMetadataResponse,
   Category,
   DestroyResponse,
   FindAndCountOptions,
@@ -31,7 +31,7 @@ import {
   SummaryInteraction,
   User,
 } from '../../schema';
-import { orderByToItems } from '../../schema/types';
+import { SummarySentimentAttributes, orderByToItems } from '../../schema/types';
 
 function parsePrefilter(prefilter: string) {
   return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: c })) };
@@ -123,7 +123,7 @@ export class SummaryController {
     @Query() page = 0,
     @Query() offset = pageSize * page,
     @Query() order: string[] = ['createdAt:desc', 'originalDate:desc']
-  ): Promise<BulkResponse<PublicSummaryAttributes>> {
+  ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { [key:string]: SummarySentimentAttributes }>> {
     const options: FindAndCountOptions<Summary> = {
       limit: pageSize,
       offset,

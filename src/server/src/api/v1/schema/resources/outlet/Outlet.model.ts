@@ -2,7 +2,6 @@ import ms from 'ms';
 import {
   Column,
   DataType,
-  Scopes,
   Table,
 } from 'sequelize-typescript';
 
@@ -10,7 +9,6 @@ import {
   FetchPolicy,
   OutletAttributes,
   OutletCreationAttributes,
-  PUBLIC_OUTLET_ATTRIBUTES,
   Selectors,
 } from './Outlet.types';
 import { BaseModel } from '../../base';
@@ -22,7 +20,6 @@ const OUTLET_FETCH_INTERVAL = process.env.OUTLET_FETCH_INTERVAL || '1d';
 
 const DEFAULT_TIMEZONE = process.env.DEFAULT_TIMZONE || 'EST';
 
-@Scopes(() => ({ public: { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] } }))
 @Table({
   modelName: 'outlet',
   paranoid: true,
