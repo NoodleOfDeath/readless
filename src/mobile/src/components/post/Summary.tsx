@@ -336,7 +336,7 @@ export function Summary({
                           p={ 4 }
                           rounded
                           startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                          onPress={ () => onReferSearch?.(`cat:${summary.category}`) } />
+                          onPress={ () => onReferSearch?.(`cat:${summary.category.name}`) } />
                         <Button 
                           row
                           elevated
