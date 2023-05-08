@@ -12,8 +12,8 @@ import { AuthError, InternalError } from '../../middleware';
 import {
   BulkResponse,
   Category,
-  CategoryAttributes,
   FindAndCountOptions,
+  PublicCategoryAttributes,
 } from '../../schema';
 
 @Route('/v1/category')
@@ -30,7 +30,7 @@ export class CategoryController {
   public static async getCategories(
     @Query() userId?: number,
     @Query() filter?: string
-  ): Promise<BulkResponse<CategoryAttributes>> {
+  ): Promise<BulkResponse<PublicCategoryAttributes>> {
     const options: FindAndCountOptions<Category> = { order: [['name', 'ASC']] };
     const categories = await Category.scope('public').findAll(options);
     return {

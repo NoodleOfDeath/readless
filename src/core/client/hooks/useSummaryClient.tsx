@@ -84,18 +84,7 @@ export function useSummaryClient() {
         }
         return (prev = bookmarks);
       });
-    } else if (interaction === InteractionType.Favorite) {
-      setPreference('favoritedSummaries', (prev) => {
-        const favorites = { ...prev };
-        payload.value = String(!favorites[summary.id]);
-        if (favorites[summary.id]) {
-          delete favorites[summary.id];
-        } else {
-          favorites[summary.id] = new Bookmark(summary);
-        }
-        return (prev = favorites);
-      });
-    }
+    } 
     if (alternateAction) {
       // pass
       try {

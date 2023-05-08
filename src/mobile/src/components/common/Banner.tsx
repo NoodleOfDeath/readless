@@ -15,12 +15,14 @@ export type BannerActionProps = {
 export type BannerProps = React.PropsWithChildren & {
   visible?: boolean;
   actions: BannerActionProps[];
+  onDismiss?: () => void;
 };
 
 export function Banner({ 
   children,
   visible,
   actions,
+  onDismiss,
   ...props
 }: BannerProps) {
 
@@ -37,18 +39,29 @@ export function Banner({
           style={ style } 
           gap={ 8 }
           p={ 16 }>
-          <View justifyCenter alignEnd>
-            <View>
-              <Button 
-                onPress={ ()=> setMinimized(!minimized) }
-                startIcon={ minimized ? 'chevron-up' : 'chevron-down' }
-                elevated
-                p={ 4 }
-                rounded />
+          <View height={ 40 }>
+            <View justifyCenter row>
+              <View>
+                <Button 
+                  onPress={ ()=> setMinimized(!minimized) }
+                  startIcon={ minimized ? 'chevron-up' : 'chevron-down' }
+                  elevated
+                  p={ 4 }
+                  rounded />
+              </View>
+              <View row />
+              <View>
+                <Button 
+                  onPress={ ()=> onDismiss?.() }
+                  startIcon={ 'close' }
+                  elevated
+                  p={ 4 }
+                  rounded />
+              </View>
             </View>
           </View>
           {minimized === false && (
-            <View>
+            <View height={ 250 }>
               {children}
             </View>
           )}

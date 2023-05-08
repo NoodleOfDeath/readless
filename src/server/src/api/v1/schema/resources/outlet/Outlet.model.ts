@@ -1,5 +1,6 @@
 import ms from 'ms';
 import {
+  AfterFind,
   Column,
   DataType,
   Table,
@@ -1350,6 +1351,17 @@ export class Outlet<
       await this.upsert(outlet);
     }
   }
+  
+  @AfterFind
+  public static async legacySupport(cursor: Outlet | Outlet[]) {
+    if (!cursor) {
+      return;
+    }
+    const outlets = Array.isArray(cursor) ? cursor : [cursor];
+    for (const outlet of outlets) {
+      outlet.set('averageSentiment', outlet.toJSON().sentiment, { raw: true });
+    }
+  }
 
   @Column({
     allowNull: false,
@@ -1397,6 +1409,11 @@ export class Outlet<
     type: DataType.STRING,
   })
   declare timezone: string;
+
+  declare sentiment: number;
+  
+  // @Deprecated
+  declare averageSentiment?: number;
 
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');

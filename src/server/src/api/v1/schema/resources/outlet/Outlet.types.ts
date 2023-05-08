@@ -1,5 +1,5 @@
 import { DatedAttributes } from '../../types';
-import { SentimentAttributes } from '../sentiment/Sentiment.types';
+import { Sentimental } from '../sentiment/Sentiment.types';
 
 export type FetchPolicy = {
   limit: number;
@@ -21,7 +21,7 @@ export type Selectors = {
   title?: Selector;
 };
 
-export type OutletAttributes = DatedAttributes & {
+export type OutletAttributes = DatedAttributes & Sentimental & {
   baseUrl: string;
   /** name of this outlet */
   name: string;
@@ -36,7 +36,7 @@ export type OutletAttributes = DatedAttributes & {
   timezone: string;
 };
 
-export type OutletCreationAttributes = {
+export type OutletCreationAttributes = Partial<DatedAttributes & Sentimental> & {
   baseUrl: string;
   name: string;
   displayName: string;
@@ -56,11 +56,10 @@ export const PUBLIC_OUTLET_ATTRIBUTES = [
   'description',
 ] as const;
 
-export type PublicOutletAttributes = {
+export type PublicOutletAttributes = Sentimental & {
   id: number;
   name: string;
   displayName: string;
   brandImageUrl?: string;
   description?: string;
-  sentiment?: SentimentAttributes;
 };

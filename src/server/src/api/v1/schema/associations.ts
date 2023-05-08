@@ -19,10 +19,17 @@ import {
   UserMetadata,
   Worker,
 } from './models';
-import { PUBLIC_SUMMARY_ATTRIBUTES, PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE } from './types';
+import { 
+  PUBLIC_CATEGORY_ATTRIBUTES,
+  PUBLIC_OUTLET_ATTRIBUTES,
+  PUBLIC_SUMMARY_ATTRIBUTES, 
+  PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
+} from './types';
 
 export function addScopes() {
 
+  Outlet.addScope('raw', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES], });
+  
   Outlet.addScope(
     'public', 
     {
@@ -30,19 +37,22 @@ export function addScopes() {
         exclude: ['selectors', 'maxAge', 'fetchPolicy', 'timezone', 'updatedAt', 'deletedAt'],
         include: [
           [sql.literal(`(
-            SELECT AVG(summary_sentiments.score) as "averageSentiment"
+            SELECT AVG(summary_sentiments.score) as sentiment
             FROM outlets
             LEFT JOIN summaries ON summaries."outletId" = outlet.id
             AND summaries."deletedAt" IS NULL
             LEFT JOIN summary_sentiments ON summary_sentiments."parentId" = summaries.id
             AND summary_sentiments."deletedAt" IS NULL
             WHERE outlet.id = outlets.id
-          )`), 'averageSentiment'],
+          )`), 'sentiment'],
         ],
       },
       group: ['outlet.id', 'outlet.name', 'outlet."displayName"', 'outlet.description'],
     }
   );
+  
+  Category.addScope('raw', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES], });
+  
   Category.addScope(
     'public', 
     {
@@ -50,52 +60,57 @@ export function addScopes() {
         exclude: ['updatedAt', 'deletedAt'],
         include: [
           [sql.literal(`(
-          SELECT avg(a."averageSentiment") as "averageSentiment" FROM (
-              SELECT AVG(summary_sentiments.score) as "averageSentiment" FROM categories
+          SELECT avg(a.sentiment) as sentiment FROM (
+              SELECT AVG(summary_sentiments.score) as sentiment FROM categories
               LEFT JOIN summaries ON summaries."categoryId" = category.id
               AND summaries."deletedAt" IS NULL
               LEFT JOIN summary_sentiments ON summary_sentiments."parentId" = summaries.id
               AND summary_sentiments."deletedAt" IS NULL
               WHERE category.id = categories.id
             ) a
-          )`), 'averageSentiment'],
+          )`), 'sentiment'],
         ],
       },
       group: ['category.id', 'category.name', 'category."displayName"', 'category.icon'],
     }
   );
+  
 
   Summary.addScope('conservative', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
     include: [
-      Outlet.scope('public'),
-      Category.scope('public'),
-      { include: [SummarySentimentToken], model: SummarySentiment },
+      Outlet.scope('raw'),
+      Category.scope('raw'),
+      { 
+        as: 'summary_sentiments', 
+        include: [{ 
+          as: 'summary_sentiment_tokens', 
+          model: SummarySentimentToken,
+        }], 
+        model: SummarySentiment,
+      },
     ],
   });
   
   Summary.addScope('public', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
     include: [
-      Outlet.scope('public'),
-      Category.scope('public'),
-      { include: [SummarySentimentToken], model: SummarySentiment },
+      Outlet.scope('raw'),
+      Category.scope('raw'),
+      { 
+        as: 'summary_sentiments', 
+        include: [{ 
+          as: 'summary_sentiment_tokens', 
+          model: SummarySentimentToken,
+        }], 
+        model: SummarySentiment,
+      },
     ],
-  });
-
-  Summary.addScope('sentimentOnly', {
-    attributes: ['id', 'outletId', 'categoryId', [sql.fn('avg', sql.col('summaries->summary_sentiments.score')), 'sentiment']],
-    group: ['summary.id', 'outletId', 'categoryId'],
-    include: [
-      { include: [SummarySentimentToken], model: SummarySentiment },
-    ],
-  });
+    });
 
 }
 
 export function makeAssociations() {
-  
-  addScopes();
 
   // System
   ServiceStatus.belongsTo(Service, { 
@@ -130,11 +145,23 @@ export function makeAssociations() {
   SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
   Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
 
-  SummarySentiment.belongsTo(Summary, { foreignKey: 'parentId' });
-  Summary.hasMany(SummarySentiment, { foreignKey: 'parentId' });
+  SummarySentiment.belongsTo(Summary, {
+    as: 'summary_sentiments',
+    foreignKey: 'parentId',
+  });
+  Summary.hasMany(SummarySentiment, {
+    as: 'summary_sentiments',
+    foreignKey: 'parentId',
+  });
 
-  SummarySentimentToken.belongsTo(SummarySentiment, { foreignKey: 'parentId' });
-  SummarySentiment.hasMany(SummarySentimentToken, { foreignKey: 'parentId' });
+  SummarySentimentToken.belongsTo(SummarySentiment, { 
+    as: 'summary_sentiment_tokens',
+    foreignKey: 'parentId',
+  });
+  SummarySentiment.hasMany(SummarySentimentToken, {
+    as: 'summary_sentiment_tokens',
+    foreignKey: 'parentId',
+  });
   
   SummaryInteraction.belongsTo(User, {
     foreignKey: {
@@ -158,4 +185,6 @@ export function makeAssociations() {
       name: 'lockedBy',
     },
   });
+  
+  addScopes();
 }

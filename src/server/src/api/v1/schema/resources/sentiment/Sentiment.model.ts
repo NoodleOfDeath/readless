@@ -5,13 +5,15 @@ import {
 } from 'sequelize-typescript';
 
 import { SentimentAttributes, SentimentCreationAttributes } from './Sentiment.types';
-import { SentimentTokenAttributes } from './SentimentToken.types';
+import { SentimentTokenAttributes, SentimentTokenCreationAttributes } from './SentimentToken.types';
 import { BaseModel } from '../../base';
 
 export abstract class Sentiment<
-    A extends SentimentAttributes = SentimentAttributes,
-    B extends SentimentCreationAttributes = SentimentCreationAttributes,
-  > extends BaseModel<A, B> implements SentimentAttributes {
+    T extends SentimentTokenAttributes = SentimentTokenAttributes,
+    C extends SentimentTokenCreationAttributes = SentimentTokenCreationAttributes,
+    A extends SentimentAttributes<T> = SentimentAttributes<T>,
+    B extends SentimentCreationAttributes<C> = SentimentCreationAttributes<C>,
+  > extends BaseModel<A, B> implements SentimentAttributes<T> {
     
   @Index({
     name: 'sentiment_parent_id_method_unique',
@@ -39,6 +41,6 @@ export abstract class Sentiment<
   })
   declare score: number;
   
-  declare tokens?: SentimentTokenAttributes[];
+  declare tokens: T[];
   
 }

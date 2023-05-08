@@ -4,7 +4,10 @@ import {
   SummarySentimentAttributes,
   SummarySentimentCreationAttributes,
 } from './SummarySentiment.types';
-import { SummarySentimentTokenAttributes } from './SummarySentimentToken.types';
+import {
+  SummarySentimentTokenAttributes,
+  SummarySentimentTokenCreationAttributes,
+} from './SummarySentimentToken.types';
 import { Sentiment } from '../sentiment/Sentiment.model';
 
 @Table({
@@ -12,8 +15,12 @@ import { Sentiment } from '../sentiment/Sentiment.model';
   paranoid: true,
   timestamps: true,
 })
-export class SummarySentiment<A extends SummarySentimentAttributes = SummarySentimentAttributes, B extends SummarySentimentCreationAttributes = SummarySentimentCreationAttributes> extends Sentiment<A, B> implements SummarySentimentAttributes {
-
-  declare summary_sentiment_tokens: SummarySentimentTokenAttributes[];
+export class SummarySentiment<
+  A extends SummarySentimentAttributes = SummarySentimentAttributes, 
+  B extends SummarySentimentCreationAttributes = SummarySentimentCreationAttributes>
+  extends Sentiment<
+    SummarySentimentTokenAttributes, 
+    SummarySentimentTokenCreationAttributes, A, B> 
+  implements SummarySentimentAttributes {
 
 }

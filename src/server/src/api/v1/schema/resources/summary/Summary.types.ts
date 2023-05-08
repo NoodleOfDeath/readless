@@ -14,11 +14,15 @@ export const READING_FORMATS = {
 
 export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS];
 
-export type SummaryAttributesRaw = PostAttributes & {
+export type SummaryAttributes = PostAttributes & {
   outletId: number;
   outlet: PublicOutletAttributes;
+  // @Deprecated
+  outletAttributes?: PublicOutletAttributes;
   categoryId: number;
   category: PublicCategoryAttributes;
+  // @Deprecated
+  categoryAttributes?: PublicCategoryAttributes;
   url: string;
   rawText: string;
   filteredText: string;
@@ -28,14 +32,9 @@ export type SummaryAttributesRaw = PostAttributes & {
   shortSummary: string;
   bullets: string[];
   formats: ReadingFormat[];
-  sentiments?: { [key: string]: SummarySentimentAttributes };
-};
-
-export type SummaryAttributes = SummaryAttributesRaw & { 
   // @Deprecated
-  outletAttributes: PublicOutletAttributes,
-  // @Deprecated
-  categoryAttributes: PublicCategoryAttributes,
+  summary_sentiments?: SummarySentimentAttributes[];
+  sentiments: { [key: string]: SummarySentimentAttributes };
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {

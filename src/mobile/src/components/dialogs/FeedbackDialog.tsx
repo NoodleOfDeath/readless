@@ -64,7 +64,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
         if (summaries[summary.id]) {
           delete summaries[summary.id];
         } else {
-          summaries[summary.id] = new Bookmark(summary);
+          summaries[summary.id] = new Bookmark(true);
         }
         return (prev = summaries);
       });

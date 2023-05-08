@@ -43,12 +43,14 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
       <Provider>
         {children}
         <Portal>
-          <ShareDialog
-            { ...shareFabOptions }
-            open={ showShareDialog }
-            visible={ showShareDialog }
-            onInteract={ (...args) => shareFabOptions?.summary && handleInteraction(shareFabOptions.summary, ...args) }
-            onDismiss={ () => setShowShareDialog(false) } />
+          {shareFabOptions?.summary && (
+            <ShareDialog
+              { ...shareFabOptions }
+              open={ showShareDialog }
+              visible={ showShareDialog }
+              onInteract={ (...args) => handleInteraction(shareFabOptions.summary, ...args) }
+              onDismiss={ () => setShowShareDialog(false) } />
+          )}
           {feedbackOptions && showFeedbackDialog && (
             <FeedBackDialog
               { ...feedbackOptions }

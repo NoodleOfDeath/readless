@@ -70,8 +70,8 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           backgroundColor: lightMode ? '#fefefe' : '#010101',
           borderRadius: 12,
           marginBottom: 12,
+          maxWidth: 300,
           padding: 12,
-          width: 200,
         },
         outlined: {
           borderColor: '#8b0000',

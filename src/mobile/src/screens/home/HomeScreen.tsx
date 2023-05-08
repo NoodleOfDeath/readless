@@ -19,7 +19,7 @@ import {
   SearchScreen,
   StackableTabParams,
 } from '~/screens';
-import { SummaryUtils, lengthOf } from '~/utils';
+import { lengthOf, readingFormat } from '~/utils';
 
 const routes: RouteProp<StackableTabParams, 'search'>[] = [
   {
@@ -55,7 +55,7 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
     if (!summary) {
       return;
     }
-    const initialFormat = SummaryUtils.format(params['f']);
+    const initialFormat = readingFormat(params['f']);
     if (route === 'read' && summary) {
       navigation?.navigate('summary', { initialFormat, summary });
     }
@@ -101,7 +101,7 @@ export function HomeScreen({ navigation } : ScreenProps<'search'>) {
   const onScroll = React.useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offset = event.nativeEvent.contentOffset.y + event.nativeEvent.layoutMeasurement.height;
     const height = event.nativeEvent.contentSize.height;
-    if (offset >= height - 400) {
+    if (offset >= height - 600) {
       DeviceEventEmitter.emit('load-more');
     }
   }, []);

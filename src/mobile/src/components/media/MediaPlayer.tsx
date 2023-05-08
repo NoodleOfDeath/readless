@@ -43,7 +43,6 @@ export function MediaPlayer(props: MediaPlayerProps) {
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
-      console.log(navigation);
       navigation?.navigate('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
         summary,
@@ -59,6 +58,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
   return (
     <Banner
       { ...props } 
+      onDismiss={ () => stopAndClearTracks() }
       actions={ [
         {
           disabled: !canSkipToPrevious,
