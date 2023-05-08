@@ -18,7 +18,6 @@ export function ReadingFormatSelector({
   
   const handleTabChange = React.useCallback((index: number) => {
     setActiveTab(index);
-    console.log(index);
     if (onChange) {
       onChange(index === 0 ? ReadingFormat.Summary : ReadingFormat.Bullets);
     }
