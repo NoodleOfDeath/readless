@@ -132,7 +132,7 @@ export class SummaryController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() order: string[] = ['createdAt:desc', 'originalDate:desc']
+    @Query() order: string[] = ['originalDate:desc', 'createdAt:desc']
   ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { [key:string]: SummarySentimentAttributes }>> {
     const options: FindAndCountOptions<Summary> = {
       limit: pageSize,

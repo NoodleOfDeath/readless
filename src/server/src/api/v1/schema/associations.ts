@@ -75,6 +75,8 @@ export function addScopes() {
     }
   );
 
+  Summary.addScope('raw', { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] });
+
   Summary.addScope('conservative', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
     include: [
