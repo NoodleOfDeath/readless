@@ -14,7 +14,7 @@ import { useStyles } from '~/hooks';
 import { averageOfSentiments } from '~/utils';
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
-  sentiments: SummarySentimentAttributes | SummarySentimentAttributes[];
+  sentiments: SummarySentimentAttributes[] | { [key: string]: SummarySentimentAttributes };
 };
 
 export function AnalyticsView({

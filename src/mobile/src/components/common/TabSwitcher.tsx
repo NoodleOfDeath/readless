@@ -2,7 +2,6 @@ import React from 'react';
 import { Animated, LayoutRectangle } from 'react-native';
 
 import {
-  ScrollView,
   Surface,
   Text,
   View,
@@ -30,7 +29,7 @@ export function TabSwitcher({
   
   const theme = useTheme();
   const style = useStyles(props);
-  const views = React.useMemo(() => Array.isArray(children) ? children : children ? [children] : undefined, [children]);
+  const views = React.useMemo(() => Array.isArray(children) ? children : [children ? children : undefined], [children]);
 
   const [switcherLayout, setSwitcherLayout] = React.useState<LayoutRectangle>();
   const translateX = React.useRef(new Animated.Value(0)).current;
@@ -117,11 +116,7 @@ export function TabSwitcher({
             )
           ))}
         </Surface>
-        {views && views.length > 0 && (
-          <ScrollView>
-            {activeTab < views.length && views[activeTab]}
-          </ScrollView>
-        )}
+        {views[activeTab]}
       </View>
     </Animated.View>
   );

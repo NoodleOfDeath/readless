@@ -6,6 +6,7 @@ import {
   PublicOutletAttributes,
 } from '~/api';
 import {
+  ActivityIndicator,
   Button,
   MeterDial,
   Screen,
@@ -127,113 +128,116 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
     <Screen
       refreshing={ loading }
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
-      <View col mb={ 16 }>
-        <TabSwitcher 
-          tabHeight={ 48 }
-          activeTab={ activeTab }
-          onTabChange={ setActiveTab }
-          titles={ titles }>
-          <View col height='100%' mh={ 16 } gap={ 8 }>
-            <View row>
-              <View row />
-              <Button 
-                elevated
-                selectable
-                alignCenter
-                rounded
-                gap={ 8 }
-                p={ 8 }
-                onPress={ () => clearBookmarks('bookmarkedCategories') }>
-                Clear Selection
-              </Button>
-            </View>
-            {categories.map((category, i) => (
-              <View 
-                key={ category.name }
-                row
-                alignCenter
-                rounded
-                bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
-                <MeterDial width={ 40 } height={ 20 } value={ category.averageSentiment ?? 0 } />
-                <Button 
-                  row
-                  elevated
-                  selectable
-                  alignCenter
-                  rounded
-                  gap={ 8 }
-                  startIcon={ category.icon }
-                  p={ 8 }
-                  onPress={ () => selectCategory(category) }>
-                  {category.displayName}
-                </Button>
-                <View row />
-                <Button
-                  row
-                  alignCenter
-                  rounded
-                  gap={ 8 }
-                  p={ 8 }
-                  elevated
-                  startIcon={ bookmarkedCategories?.[category.name] ? 'check' : undefined }
-                  onPress={ () => followCategory(category) }>
-                  {bookmarkedCategories?.[category.name] ? 'Unfollow' : 'Follow'}
-                </Button>
+      {loading ? (<ActivityIndicator animating size={ 24 } />) : 
+        (
+          <View col mb={ 16 }>
+            <TabSwitcher 
+              tabHeight={ 48 }
+              activeTab={ activeTab }
+              onTabChange={ setActiveTab }
+              titles={ titles }>
+              <View col height='100%' mh={ 16 } gap={ 8 }>
+                <View row>
+                  <View row />
+                  <Button 
+                    elevated
+                    selectable
+                    alignCenter
+                    rounded
+                    gap={ 8 }
+                    p={ 8 }
+                    onPress={ () => clearBookmarks('bookmarkedCategories') }>
+                    Clear Selection
+                  </Button>
+                </View>
+                {categories.map((category, i) => (
+                  <View 
+                    key={ category.name }
+                    row
+                    alignCenter
+                    rounded
+                    bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
+                    <MeterDial width={ 40 } height={ 20 } value={ category.averageSentiment ?? 0 } />
+                    <Button 
+                      row
+                      elevated
+                      selectable
+                      alignCenter
+                      rounded
+                      gap={ 8 }
+                      startIcon={ category.icon }
+                      p={ 8 }
+                      onPress={ () => selectCategory(category) }>
+                      {category.displayName}
+                    </Button>
+                    <View row />
+                    <Button
+                      row
+                      alignCenter
+                      rounded
+                      gap={ 8 }
+                      p={ 8 }
+                      elevated
+                      startIcon={ bookmarkedCategories?.[category.name] ? 'check' : undefined }
+                      onPress={ () => followCategory(category) }>
+                      {bookmarkedCategories?.[category.name] ? 'Unfollow' : 'Follow'}
+                    </Button>
+                  </View>
+                ))}
               </View>
-            ))}
+              <View col mh={ 16 } gap={ 8 }>
+                <View row>
+                  <View row />
+                  <View>
+                    <Button
+                      elevated
+                      selectable
+                      alignCenter
+                      rounded
+                      gap={ 8 }
+                      p={ 8 }
+                      onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
+                      Clear Selection
+                    </Button>
+                  </View>
+                </View>
+                {outlets.map((outlet, i) => (
+                  <View 
+                    key={ outlet.name }
+                    row
+                    alignCenter
+                    rounded
+                    bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
+                    <MeterDial width={ 40 } height={ 20 } value={ outlet.averageSentiment ?? 0 } />
+                    <Button 
+                      row
+                      elevated
+                      selectable
+                      alignCenter
+                      rounded
+                      gap={ 8 }
+                      p={ 8 }
+                      onPress={ () => selectOutlet(outlet) }>
+                      {outlet.displayName}
+                    </Button>
+                    <View row />
+                    <Button
+                      row
+                      alignCenter
+                      rounded
+                      gap={ 8 }
+                      p={ 8 }
+                      elevated
+                      startIcon={ bookmarkedOutlets?.[outlet.name] ? 'check' : undefined }
+                      onPress={ () => followOutlet(outlet) }>
+                      {bookmarkedOutlets?.[outlet.name] ? 'Unfollow' : 'Follow'}
+                    </Button>
+                  </View>
+                ))}
+              </View>
+            </TabSwitcher>
           </View>
-          <View col mh={ 16 } gap={ 8 }>
-            <View row>
-              <View row />
-              <View>
-                <Button
-                  elevated
-                  selectable
-                  alignCenter
-                  rounded
-                  gap={ 8 }
-                  p={ 8 }
-                  onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
-                  Clear Selection
-                </Button>
-              </View>
-            </View>
-            {outlets.map((outlet, i) => (
-              <View 
-                key={ outlet.name }
-                row
-                alignCenter
-                rounded
-                bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
-                <MeterDial width={ 40 } height={ 20 } value={ outlet.averageSentiment ?? 0 } />
-                <Button 
-                  row
-                  elevated
-                  selectable
-                  alignCenter
-                  rounded
-                  gap={ 8 }
-                  p={ 8 }
-                  onPress={ () => selectOutlet(outlet) }>
-                  {outlet.displayName}
-                </Button>
-                <View row />
-                <Button
-                  row
-                  alignCenter
-                  rounded
-                  gap={ 8 }
-                  p={ 8 }
-                  elevated
-                  startIcon={ bookmarkedOutlets?.[outlet.name] ? 'check' : undefined }
-                  onPress={ () => followOutlet(outlet) }>
-                  {bookmarkedOutlets?.[outlet.name] ? 'Unfollow' : 'Follow'}
-                </Button>
-              </View>
-            ))}
-          </View>
-        </TabSwitcher>
-      </View>
+        )}
     </Screen>
   );
 }

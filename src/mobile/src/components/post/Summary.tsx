@@ -34,7 +34,8 @@ import {
   useShare,
   useTheme,
 } from '~/hooks';
-
+import { averageOfSentiments } from '~/utils';
+ 
 type Props = {
   summary?: PublicSummaryAttributes;
   tickIntervalMs?: number;
@@ -92,7 +93,7 @@ function RenderActions({ actions, side }: RenderActionsProps) {
 const MOCK_SUMMARY: PublicSummaryAttributes = {
   bullets: ['• this is a bullet', '• this is another bullet'],
   category: {
-    averageSentiment: 0.1, displayName: 'Category', icon: 'popcorn', name: '',
+    displayName: 'Category', icon: 'popcorn', name: '', sentiment: 0.1,
   },
   categoryId: -1,
   formats: [],
@@ -100,16 +101,16 @@ const MOCK_SUMMARY: PublicSummaryAttributes = {
   imageUrl: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/s/01084930-e927-11ed-a438-a9ea5ed3eb49.jpg',
   originalTitle: '',
   outlet: {
-    averageSentiment: 0.1, displayName: 'News Source', id: -1, name: '', 
+    displayName: 'News Source', id: -1, name: '', sentiment: 0.1, 
   },
   outletId: -1,
-  sentiments: {
-    chatgpt: {
+  sentiments: [
+    {
       id: 0, method: 'chatgpt', parentId: 0, score: 0.1, tokens: [{
         id:0, parentId:0, text: 'token', 
       }],
     },
-  },
+  ],
   shortSummary: 'This is a short 30-40 word summary that can appear under titles if you set it to show in the settings (this will appear instead of titles when in headline mode)',
   summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
   text: '',
@@ -305,7 +306,7 @@ export function Summary({
             rounded 
             style={ theme.components.card } 
             inactive={ isRead } 
-            onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }
+            onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }
             gap={ 3 }>
             <View row gap={ 12 }>
               <View col width="100%" gap={ 6 }>
@@ -319,8 +320,7 @@ export function Summary({
                           backgroundColor: 'yellow',
                           color: 'black', 
                         }, 
-                      } }
-                      onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+                      } }>
                       {markdown((compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title )}
                     </Markdown>
                   )}
@@ -365,7 +365,7 @@ export function Summary({
                   </Menu>
                   <View row gap={ 6 } alignCenter justifyCenter>
                     <MeterDial 
-                      value={ summary.sentiments?.chatgpt?.score ?? 0 }
+                      value={ averageOfSentiments(summary.sentiments)?.score ?? 0 }
                       width={ 50 } />
                   </View>
                 </View>
@@ -383,8 +383,7 @@ export function Summary({
                         backgroundColor: 'yellow',
                         color: 'black', 
                       }, 
-                    } }
-                    onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+                    } }>
                     {markdown(summary.shortSummary ?? '')}
                   </Markdown>
                 )}

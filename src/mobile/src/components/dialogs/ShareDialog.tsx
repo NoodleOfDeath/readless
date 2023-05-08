@@ -11,7 +11,7 @@ import {
   ReadingFormat,
 } from '~/api';
 import {  useShare, useTheme } from '~/hooks';
-import { SummaryUtils } from '~/utils';
+import { shareableLink } from '~/utils';
 
 export type ShareDialogProps = Partial<FABGroupProps> & {
   summary: PublicSummaryAttributes;
@@ -54,7 +54,7 @@ export function ShareDialog({
         {
           icon: 'link-variant',
           label: 'Copy link',
-          onPress: () => summary && copyToClipboard(content ?? SummaryUtils.shareableLink(summary, BASE_DOMAIN, format), `Copied "${SummaryUtils.shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`),
+          onPress: () => summary && copyToClipboard(content ?? shareableLink(summary, BASE_DOMAIN, format), `Copied "${shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`),
         },
         {
           icon: 'link-variant',

@@ -34,7 +34,7 @@ import {
 } from '~/contexts';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
-import { lengthOf } from '~/utils';
+import * as ArrayUtils from '~/utils';
 
 export function SearchScreen({ 
   route,
@@ -85,7 +85,7 @@ export function SearchScreen({
   const [showSearchOptions, _] = React.useState(false);
   const [keywords, setKeywords] = React.useState<string[]>([]);
    
-  const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
+  const categoryOutletCount = React.useMemo(() => ArrayUtils.lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
 
   const followFilter = React.useMemo(() => {
     if (categoryOutletCount === 0) {
