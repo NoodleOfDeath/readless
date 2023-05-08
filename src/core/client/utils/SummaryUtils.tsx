@@ -21,8 +21,11 @@ export const readingFormat = (str = ''): ReadingFormat => {
   }
 };
 
-export const averageOfSentiments = (sentiments: SummarySentimentAttributes | SummarySentimentAttributes[]) => {
-  const values = Object.values(Array.isArray(sentiments) ? sentiments : [sentiments]);
+export const averageOfSentiments = (sentiments: SummarySentimentAttributes[] | Record<string, SummarySentimentAttributes>) => {
+  if (!sentiments) {
+    return { score: 0, tokens: [] };
+  }
+  const values = Object.values(sentiments);
   if (values.length === 0) {
     return { score: 0, tokens: [] };
   }

@@ -104,13 +104,13 @@ const MOCK_SUMMARY: PublicSummaryAttributes = {
     displayName: 'News Source', id: -1, name: '', sentiment: 0.1, 
   },
   outletId: -1,
-  sentiments: [
-    {
+  sentiments: {
+    chatgpt: {
       id: 0, method: 'chatgpt', parentId: 0, score: 0.1, tokens: [{
         id:0, parentId:0, text: 'token', 
       }],
     },
-  ],
+  },
   shortSummary: 'This is a short 30-40 word summary that can appear under titles if you set it to show in the settings (this will appear instead of titles when in headline mode)',
   summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
   text: '',

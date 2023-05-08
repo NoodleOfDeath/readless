@@ -60,10 +60,10 @@ function applyFilter(
     const expr = /(\w+):([-\w.]*(?:,[-\w.]*)*)/gi;
     const matches = prefilter.matchAll(expr);
     if (matches) {
+      const include: Includeable[] = [];
       for (const match of matches) {
         const [_, prefix, prefixValues] = match;
         const pf = parsePrefilter(prefixValues);
-        const include: Includeable[] = [];
         if (/cat(egory)?/i.test(prefix)) {
           include.push({
             model: Category.scope('raw'),
@@ -76,8 +76,8 @@ function applyFilter(
             where: { name: pf },
           });
         }
-        newOptions.include = include;
       }
+      newOptions.include = include;
     }
   }
   if (query && query.length > 0) {
@@ -132,7 +132,7 @@ export class SummaryController {
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() order: string[] = ['createdAt:desc', 'originalDate:desc']
+    @Query() order: string[] = ['originalDate:desc', 'createdAt:desc']
   ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { [key:string]: SummarySentimentAttributes }>> {
     const options: FindAndCountOptions<Summary> = {
       limit: pageSize,
