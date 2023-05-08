@@ -62,12 +62,14 @@ export function SearchScreen({
   const { getSummaries, handleInteraction } = useSummaryClient();
   const theme = useTheme();
   
-  const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter ?? '');
+  const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter);
   const onlyCustomNews = React.useMemo(() => Boolean(route?.params?.onlyCustomNews), [route]);
   const specificIds = React.useMemo<number[] | undefined>(() => (route?.params?.specificIds), [route]);
 
   React.useEffect(() => {
-    setPrefilter(route?.params?.prefilter ?? '');
+    if (route?.params?.prefilter) {
+      setPrefilter(route?.params?.prefilter);
+    }
   }, [route]);
   
   React.useEffect(() => {
@@ -92,7 +94,7 @@ export function SearchScreen({
       return '';
     }
     return [`cat:${Object.values(bookmarkedCategories ?? {})
-      .map((c) => c.item.name.toLowerCase().replace(/\s/g, '-')).join(',')}`, 
+      .map((c) => c.item.name).join(',')}`, 
     `src:${Object.values(bookmarkedOutlets ?? {})
       .map((o) => o.item.name).join(',')}`]
       .join(' ');
@@ -124,7 +126,7 @@ export function SearchScreen({
     }
     try {
       const { data, error } = await getSummaries(
-        filter,
+        filter.trim(),
         specificIds ?? excludeIds,
         !specificIds && Boolean(excludeIds),
         page,
@@ -139,13 +141,13 @@ export function SearchScreen({
       if (!data) {
         return;
       }
+      setTotalResultCount(data.count);
       setSummaries((prev) => {
         if (page === 0) {
           return (prev = data.rows);
         }
         return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
       });
-      setTotalResultCount(data.count);
       setPage((prev) => prev + 1);
     } catch (e) {
       console.error(e);

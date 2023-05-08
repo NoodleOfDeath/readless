@@ -89,7 +89,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   }, [loadCategories, loadOutlets]);
 
   const selectCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigation?.navigate('search', { prefilter: `cat:${category.name.toLowerCase().replace(/\s/g, '-')}` });
+    navigation?.navigate('search', { prefilter: `cat:${category.name}` });
   }, [navigation]);
 
   const selectOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
