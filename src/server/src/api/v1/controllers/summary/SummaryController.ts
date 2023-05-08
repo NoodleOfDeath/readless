@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Includeable, Op } from 'sequelize';
 import {
   Body,
   Delete,
@@ -55,7 +55,7 @@ function applyFilter(
   }
   const splitExpr = /\s*((?:\w+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+\w+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
-  const query = q ?? '';
+  const query = (q ?? '').trim();
   if (prefilter) {
     const expr = /(\w+):([-\w.]*(?:,[-\w.]*)*)/gi;
     const matches = prefilter.matchAll(expr);
@@ -63,18 +63,20 @@ function applyFilter(
       for (const match of matches) {
         const [_, prefix, prefixValues] = match;
         const pf = parsePrefilter(prefixValues);
+        const include: Includeable[] = [];
         if (/cat(egory)?/i.test(prefix)) {
-          newOptions.include = [{
-            model: Category,
+          include.push({
+            model: Category.scope('raw'),
             where: { name: pf },
-          }];
+          });
         }
         if (/outlet|source|src/i.test(prefix)) {
-          newOptions.include = [{
-            model: Outlet,
+          include.push({
+            model: Outlet.scope('raw'),
             where: { name: pf },
-          }];
+          });
         }
+        newOptions.include = include;
       }
     }
   }
