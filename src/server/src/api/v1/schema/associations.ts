@@ -19,10 +19,17 @@ import {
   UserMetadata,
   Worker,
 } from './models';
-import { PUBLIC_SUMMARY_ATTRIBUTES, PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE } from './types';
+import { 
+  PUBLIC_CATEGORY_ATTRIBUTES,
+  PUBLIC_OUTLET_ATTRIBUTES,
+  PUBLIC_SUMMARY_ATTRIBUTES, 
+  PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
+} from './types';
 
 export function addScopes() {
 
+  Outlet.addScope('raw', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES], });
+  
   Outlet.addScope(
     'public', 
     {
@@ -30,7 +37,7 @@ export function addScopes() {
         exclude: ['selectors', 'maxAge', 'fetchPolicy', 'timezone', 'updatedAt', 'deletedAt'],
         include: [
           [sql.literal(`(
-            SELECT AVG(summary_sentiments.score) as "averageSentiment"
+            SELECT AVG(summary_sentiments.score) as sentiment
             FROM outlets
             LEFT JOIN summaries ON summaries."outletId" = outlet.id
             AND summaries."deletedAt" IS NULL
@@ -44,6 +51,8 @@ export function addScopes() {
     }
   );
   
+  Category.addScope('raw', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES], });
+  
   Category.addScope(
     'public', 
     {
@@ -51,8 +60,8 @@ export function addScopes() {
         exclude: ['updatedAt', 'deletedAt'],
         include: [
           [sql.literal(`(
-          SELECT avg(a."averageSentiment") as sentiment FROM (
-              SELECT AVG(summary_sentiments.score) as "averageSentiment" FROM categories
+          SELECT avg(a.sentiment) as sentiment FROM (
+              SELECT AVG(summary_sentiments.score) as sentiment FROM categories
               LEFT JOIN summaries ON summaries."categoryId" = category.id
               AND summaries."deletedAt" IS NULL
               LEFT JOIN summary_sentiments ON summary_sentiments."parentId" = summaries.id
@@ -65,12 +74,13 @@ export function addScopes() {
       group: ['category.id', 'category.name', 'category."displayName"', 'category.icon'],
     }
   );
+  
 
   Summary.addScope('conservative', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
     include: [
-      Outlet.scope('public'),
-      Category.scope('public'),
+      Outlet.scope('raw'),
+      Category.scope('raw'),
       { 
         as: 'summary_sentiments', 
         include: [{ 
@@ -85,8 +95,8 @@ export function addScopes() {
   Summary.addScope('public', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
     include: [
-      Outlet.scope('public'),
-      Category.scope('public'),
+      Outlet.scope('raw'),
+      Category.scope('raw'),
       { 
         as: 'summary_sentiments', 
         include: [{ 
@@ -96,7 +106,7 @@ export function addScopes() {
         model: SummarySentiment,
       },
     ],
-  });
+    });
 
 }
 

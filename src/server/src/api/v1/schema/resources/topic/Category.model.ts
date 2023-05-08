@@ -208,6 +208,17 @@ export class Category<
     }
   }
   
+  @AfterFind
+  public static async legacySupport(cursor: Category | Category[]) {
+    if (!cursor) {
+      return;
+    }
+    const categories = Array.isArray(cursor) ? cursor : [cursor];
+    for (const category of categories) {
+      category.set('averageSentiment', category.toJSON().sentiment, { raw: true });
+    }
+  }
+  
   @Column({
     allowNull: false,
     type: DataType.STRING,
@@ -231,16 +242,5 @@ export class Category<
   
   // @Deprecated
   declare averageSentiment?: number;
-  
-  @AfterFind
-  public static async legacySupport(cursor: Category | Category[]) {
-    if (!cursor) {
-      return;
-    }
-    const categories = Array.isArray(cursor) ? cursor : [cursor];
-    for (const category of categories) {
-      category.set('averageSentiment', category.sentiment, { raw: true });
-    }
-  }
   
 }
