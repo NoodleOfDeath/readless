@@ -1,5 +1,6 @@
 import ms from 'ms';
 import {
+  AfterFind,
   Column,
   DataType,
   Table,
@@ -1398,7 +1399,21 @@ export class Outlet<
   })
   declare timezone: string;
 
-  declare averageSentiment: number;
+  declare sentiment: number;
+  
+  // @Deprecated
+  declare averageSentiment?: number;
+  
+  @AfterFind
+  public static async legacySupport(cursor: Outlet | Outlet[]) {
+    if (!cursor) {
+      return;
+    }
+    const outlets = Array.isArray(cursor) ? cursor : [cursor];
+    for (const outlet of outlets) {
+      outlet.set('averageSentiment', outlet.sentiment, { raw: true });
+    }
+  }
 
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');

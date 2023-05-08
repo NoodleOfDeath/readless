@@ -1,4 +1,5 @@
 import { 
+  AfterFind,
   Column,
   DataType,
   Table,
@@ -226,6 +227,20 @@ export class Category<
   })
   declare icon: string;
 
-  declare averageSentiment: number;
+  declare sentiment: number;
+  
+  // @Deprecated
+  declare averageSentiment?: number;
+  
+  @AfterFind
+  public static async legacySupport(cursor: Category | Category[]) {
+    if (!cursor) {
+      return;
+    }
+    const categories = Array.isArray(cursor) ? cursor : [cursor];
+    for (const category of categories) {
+      category.set('averageSentiment', category.sentiment, { raw: true });
+    }
+  }
   
 }

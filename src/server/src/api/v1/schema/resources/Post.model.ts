@@ -26,6 +26,6 @@ export abstract class Post<
   @Column({ type: DataType.STRING(2083) })
   declare imageUrl?: string;
 
-  interactions?: InteractionResponse;
+  declare interactions?: InteractionResponse;
 
 }

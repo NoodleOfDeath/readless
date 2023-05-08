@@ -79,22 +79,30 @@ function applyFilter(
     }
   }
   if (query && query.length > 0) {
-    const subqueries = query.replace(/\s\s+/g, ' ').split(' ');
-    where[Op.or] = [];
-    if (matchType === 'all') {
-      where[Op.or].push(subqueries.map((subquery) => ({ bullets: { [Op.contains] : [subquery] } })));
-      where[Op.or].push(subqueries.map((subquery) => ({ shortSummary: { [Op.iLike] : `%${subquery}%` } })));
-      where[Op.or].push(subqueries.map((subquery) => ({ title: { [Op.iLike] : `%${subquery}%` } })));
-    } else {
-      for (const subquery of subqueries) {
-        where[Op.or].push({
-          [Op.or]: {
-            bullets: { [Op.contains] : [subquery] },
-            shortSummary: { [Op.iLike] : `%${subquery}%` },
-            title: { [Op.iLike] : `%${subquery}%` },
-          },
-        });
-      }
+    const matches = query.replace(/\s\s+/g, ' ').matchAll(/(['"])(.*?)\1|\b([\S]+)\b/gm);
+    if (matches) {
+      const subqueries = [...matches].map((match) => ({
+        boundaries: Boolean(match[1]),
+        value: match[1] ? match[2] : match[3],
+      }));
+      where[Op.or] = [];
+      if (matchType === 'all') {
+        where[Op.or].push(subqueries.map((subquery) => ({ bullets: { [Op.contains] : [subquery.value] } })));
+        where[Op.or].push(subqueries.map((subquery) => ({ shortSummary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value } })));
+        where[Op.or].push(subqueries.map((subquery) => ({ summary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value } })));
+        where[Op.or].push(subqueries.map((subquery) => ({ title: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value } })));
+      } else {
+        for (const subquery of subqueries) {
+          where[Op.or].push({
+            [Op.or]: {
+              bullets: { [Op.contains] : [subquery.value] },
+              shortSummary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value },
+              summary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value },
+              title: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value },
+            },
+          });
+        }
+      } 
     }
   }
   newOptions.where = where;
@@ -131,10 +139,6 @@ export class SummaryController {
     };
     const filteredOptions = applyFilter(options, filter, ids, excludeIds, match);
     const summaries = await Summary.scope(scope).findAndCountAll(filteredOptions);
-    await Promise.all(summaries.rows.map(async (row) => await SummaryInteraction.create({
-      targetId: row.id,
-      type: 'view',
-    })));
     if (userId && scope === 'public') {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
     }
