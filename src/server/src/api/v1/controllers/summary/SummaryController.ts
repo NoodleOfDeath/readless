@@ -34,7 +34,7 @@ import {
 import { SummarySentimentAttributes, orderByToItems } from '../../schema/types';
 
 function parsePrefilter(prefilter: string) {
-  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: c })) };
+  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: c.trim() })) };
 }
 
 function applyFilter(
@@ -79,7 +79,7 @@ function applyFilter(
     }
   }
   if (query && query.length > 0) {
-    const matches = query.replace(/\s\s+/g, ' ').matchAll(/(['"])(.*?)\1|\b([\S]+)\b/gm);
+    const matches = query.replace(/\s\s+/g, ' ').matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
     if (matches) {
       const subqueries = [...matches].map((match) => ({
         boundaries: Boolean(match[1]),

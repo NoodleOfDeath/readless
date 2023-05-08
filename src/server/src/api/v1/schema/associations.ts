@@ -28,7 +28,7 @@ import {
 
 export function addScopes() {
 
-  Outlet.addScope('raw', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES], });
+  Outlet.addScope('raw', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] });
   
   Outlet.addScope(
     'public', 
@@ -51,7 +51,7 @@ export function addScopes() {
     }
   );
   
-  Category.addScope('raw', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES], });
+  Category.addScope('raw', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES] });
   
   Category.addScope(
     'public', 
@@ -74,7 +74,6 @@ export function addScopes() {
       group: ['category.id', 'category.name', 'category."displayName"', 'category.icon'],
     }
   );
-  
 
   Summary.addScope('conservative', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
@@ -106,7 +105,7 @@ export function addScopes() {
         model: SummarySentiment,
       },
     ],
-    });
+  });
 
 }
 
