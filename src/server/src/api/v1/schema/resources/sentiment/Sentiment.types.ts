@@ -23,4 +23,4 @@ export type Sentimental = {
   sentiment: number;
   // @Deprecated
   averageSentiment?: number;
-}
+};
