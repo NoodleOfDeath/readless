@@ -231,22 +231,6 @@ export function Summary({
     setFormat(newFormat);
   }, [initialFormat, onFormatChange, setPreference, summary]);
   
-  const toggleBookmarked = React.useCallback(() => {
-    onInteract?.(InteractionType.Bookmark, undefined, undefined, () => {
-      if (!bookmarked) {
-        setPreference('readSummaries', (prev) => {
-          const state = { ...prev };
-          delete state[summary.id];
-          return (prev = state);
-        });
-      }
-      setPreference('summaryHistory', (prev) => ({
-        ...prev,
-        [summary.id]: new Bookmark(InteractionType.Bookmark),
-      }));
-    });
-  }, [bookmarked, onInteract, setPreference, summary.id]);
-
   const handlePlayAudio = React.useCallback(async () => {
     if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
       await stopAndClearTracks();
@@ -418,7 +402,7 @@ export function Summary({
                         subtitle2
                         color='text'
                         startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-                        onPress={ () => toggleBookmarked() } />
+                        onPress={ () => onInteract?.(InteractionType.Bookmark) } />
                       <Button
                         elevated
                         p={ 4 }
