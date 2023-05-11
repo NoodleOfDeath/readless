@@ -148,24 +148,24 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 60) {
+          if (reply.text.split(' ').length > 40) {
             await this.error('Short summary too long', `Short summary too long for ${url}\n\n${reply.text}`);
           }
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide another unbiased summary using no more than 40 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
+          'Please provide another unbiased summary using no more than 30 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 150) {
+          if (reply.text.split(' ').length > 120) {
             await this.error('Summary too long', `Summary too long for ${url}\n\n${reply.text}`);
           }
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide another longer unbiased summary using no more than 100 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
+          'Please provide another longer two paragraph unbiased summary using no more than 80 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
