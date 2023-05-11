@@ -91,7 +91,7 @@ export class ScribeService extends BaseService {
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
     }
-    if (loot.date > new Date(Date.now() + ms('2h'))) {
+    if (loot.date > new Date(Date.now() + ms('3h'))) {
       await this.error('News is from the future', `News is from the future for ${url}\n\n${loot.date.toISOString()}`);
     }
     // daylight savings most likely
@@ -108,7 +108,7 @@ export class ScribeService extends BaseService {
       url,
     });
     let categoryDisplayName: string;
-    const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'chatgpt' });
+    const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
     const sentimentTokens: string[] = [];
     const prompts: Prompt[] = [
       {
@@ -119,7 +119,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Does the following appear to be a news article? A collection of articles, advertisements, or description of a news website should not be considered a news article. Please respond with just "yes" or "no"\n\n', 
+          'Does the following appear to be a news article or story? A collection of article headlines, advertisements, description of a news website, or subscription program should not be considered a news article/story. Please respond with just "yes" or "no"\n\n', 
           newSummary.filteredText,
         ].join(''),
       },
@@ -135,7 +135,7 @@ export class ScribeService extends BaseService {
           }
           sentimentTokens.push(...tokens);
         },
-        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1 as well as at least 10 notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
+        text: 'For the article/story I just gave you, please provide a floating point sentiment score between -1 and 1 as well as the 10 most notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
       },
       {
         handleReply: async (reply) => { 
@@ -145,7 +145,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the same article using no more than 15 words. Do not start with "The article" or "This article".', 
+          'Please summarize the same article using no more than 15 words. Do not start with "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -156,7 +156,7 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide a summary using no more than 40 words. Do not start with "The article" or "This article".', 
+          'Please provide a summary using no more than 40 words. Do not start with "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -167,7 +167,7 @@ export class ScribeService extends BaseService {
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide a slightly longer summary using no more than 100 words. Do not start with "The article" or "This article".', 
+          'Please provide a slightly longer summary using no more than 100 words. Do not start with "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -178,7 +178,7 @@ export class ScribeService extends BaseService {
             .split(/\n/)
             .map((bullet) => bullet.trim());
         },
-        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol',
+        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article/story using • as the bullet symbol',
       },
       {
         handleReply: async (reply) => { 
@@ -186,7 +186,7 @@ export class ScribeService extends BaseService {
             .replace(/^category:\s*/i, '')
             .replace(/\.$/, '').trim();
         },
-        text: `Please select a best category for this article from the following choices: ${this.categories.join(' ')}`,
+        text: `Please select a best category for this article/story from the following choices: ${this.categories.join(' ')}`,
       },
     ];
     

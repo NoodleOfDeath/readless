@@ -10,7 +10,7 @@ import ViewShot from 'react-native-view-shot';
 import { InteractionType, PublicSummaryAttributes } from '~/api';
 import { Text } from '~/components';
 import { ToastContext } from '~/contexts';
-import { SummaryUtils } from '~/utils';
+import { shareableLink } from '~/utils';
 
 const SocialAppIds: Record<Social, string> = {
   [Social.Facebook]: 'com.facebook.Facebook',
@@ -60,7 +60,7 @@ export function useShare({
       return;
     }
     try {
-      let url = SummaryUtils.shareableLink(summary, BASE_DOMAIN);
+      let url = shareableLink(summary, BASE_DOMAIN);
       const imageUrl = await viewshot?.capture?.();
       const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
       if (base64ImageUrl) {
@@ -98,7 +98,7 @@ export function useShare({
           appId: SocialAppIds[social],
           backgroundBottomColor: '#fefefe',
           backgroundTopColor: '#906df4',
-          message: `${summary.title} ${SummaryUtils.shareableLink(summary, BASE_DOMAIN)}`,
+          message: `${summary.title} ${shareableLink(summary, BASE_DOMAIN)}`,
           social,
           stickerImage: base64ImageUrl,
           url,

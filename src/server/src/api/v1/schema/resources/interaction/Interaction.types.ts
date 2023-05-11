@@ -10,6 +10,7 @@ export const INTERACTION_TYPES = {
   hide: 'hide',
   listen: 'listen',
   read: 'read',
+  search: 'search',
   share: 'share',
   upvote: 'upvote',
   view: 'view',

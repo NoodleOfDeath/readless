@@ -7,7 +7,7 @@ import {
   Switch,
 } from 'react-native-paper';
 
-import { SearchOptionsMenu } from './SearchOptionsMenu';
+import { SearchMenu } from './SearchMenu';
 
 import {
   InteractionType,
@@ -84,7 +84,6 @@ export function SearchScreen({
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
-  const [showSearchOptions, _] = React.useState(false);
   const [keywords, setKeywords] = React.useState<string[]>([]);
    
   const categoryOutletCount = React.useMemo(() => ArrayUtils.lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
@@ -190,11 +189,6 @@ export function SearchScreen({
     setPendingReload(false);
     load(0);
   }, [pendingReload, load, removedSummaries, searchText]);
-  
-  const removeReadSummaries = React.useCallback(() => {
-    setPreference('removedSummaries', (prev) => (prev = ({ ...prev, ...readSummaries })));
-    setPendingReload(true);
-  }, [setPreference, readSummaries]);
 
   const loadMore = React.useCallback(async (event?: string) => {
     if (loading || totalResultCount <= summaries.length) {
@@ -217,6 +211,11 @@ export function SearchScreen({
     },
     [handleInteraction, navigation, preferredReadingFormat, searchText]
   );
+  
+  const removeReadSummaries = React.useCallback(() => {
+    setPreference('removedSummaries', (prev) => (prev = ({ ...prev, ...readSummaries })));
+    setPendingReload(true);
+  }, [setPreference, readSummaries]);
 
   const handlePlayAll = React.useCallback(async () => {
     if (summaries.length < 1) {
@@ -269,99 +268,14 @@ export function SearchScreen({
       onRefresh={ () => load(0) }>
       <React.Fragment>
         <View col mh={ 16 }>
-          {!prefilter && (
-            <View row mb={ 8 }>
-              <Provider>
-                <Searchbar
-                  placeholder="show me something worth reading..."
-                  onChangeText={ ((text) => 
-                    setSearchText(text)) }
-                  inputStyle={ theme.components.searchBar }
-                  value={ searchText }
-                  onClearIconPress={ () => {
-                    setSearchText('');
-                    setKeywords([]);
-                    setPendingReload(true);
-                  } }
-                  onSubmitEditing={ () => {
-                    setKeywords(searchText.split(' ').filter((s) => s.trim()));
-                    load(0);
-                  } } />
-                <SearchOptionsMenu visible={ showSearchOptions } anchor={ undefined } />
-              </Provider>
-            </View>
-          )}
           <View row mb={ 8 }>
-            <Menu width={ 300 } autoAnchor={ <Icon name="filter" size={ 24 } /> }>
-              <View gap={ 8 }>
-                <View row alignCenter gap={ 8 }>
-                  <TabSwitcher
-                    rounded
-                    activeTab={ sortOrder?.[0].match(/^createdAt/i) ? 1 : 0 }
-                    titles={ [
-                      <Button
-                        key='p' 
-                        gap={ 4 }
-                        row
-                        alignCenter
-                        textCenter
-                        onPress={ () => {
-                          setPreference(
-                            'sortOrder', 
-                            (prev) => prev?.[0].match(/originalDate:desc/i) ?
-                              ['originalDate:asc', 'createdAt:asc'] : ['originalDate:desc', 'createdAt:desc']
-                          );
-                        } }
-                        justifyCenter
-                        endIcon={ sortOrder?.[0].match(/^originalDate/i) ? 
-                          sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
-                        Publication Date
-                      </Button>,
-                      <Button
-                        key='g' 
-                        gap={ 4 }
-                        row
-                        alignCenter
-                        textCenter
-                        onPress={ () => {
-                          setPreference(
-                            'sortOrder', 
-                            (prev) => prev?.[0].match(/createdAt:desc/i) ?
-                              ['createdAt:asc', 'originalDate:asc'] : ['createdAt:desc', 'originalDate:desc']
-                          );
-                        } }
-                        justifyCenter
-                        endIcon={ sortOrder?.[0].match(/^createdAt/i) ? 
-                          sortOrder?.[0].match(/desc/i) ? 'sort-descending' : 'sort-ascending' : undefined }>
-                        Generation Date
-                      </Button>,
-                    ] } />
-                </View>
-                <View row gap={ 8 }>
-                  <Button 
-                    elevated
-                    p={ 4 }
-                    rounded
-                    onPress={ () => removeReadSummaries() }>
-                    Hide Already Read
-                  </Button>
-                  <View row />
-                  <View>
-                    <Button
-                      row
-                      elevated
-                      p={ 4 }
-                      rounded
-                      alignCenter
-                      gap={ 4 }
-                      startIcon="volume-high"
-                      onPress={ () => handlePlayAll() }>
-                      Play All
-                    </Button>
-                  </View>
-                </View>
-              </View>
-            </Menu>
+            {!prefilter && (
+              <Menu width={ 300 } autoAnchor={ <Icon name="magnify" size={ 24 } /> }>
+                <SearchMenu 
+                  onClear={ () => setPendingReload(true) }
+                  onSubmit={ (text) => setSearchText(text) } />
+              </Menu>
+            )}
             <View row />
             <View>
               <View row gap={ 6 } alignCenter>
