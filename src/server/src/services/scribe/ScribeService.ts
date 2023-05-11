@@ -137,13 +137,13 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 20) {
+          if (reply.text.split(' ').length > 15) {
             await this.error('Title too long', `Title too long for ${url}\n\n${reply.text}`);
           }
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the same article/story using no more than 15 words. Prioritize any important numeric/date values and try to make the summary as unbiased as possible.',
+          'Please summarize the same article/story using no more than 10 words. Prioritize any important numeric/date values and try to make the summary as unbiased as possible.',
         ].join(''),
       },
       {
