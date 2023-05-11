@@ -17,15 +17,14 @@ import {
 } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
-const MIN_TOKEN_COUNT = 70 as const;
+const MIN_TOKEN_COUNT = 50 as const;
 const MAX_OPENAI_TOKEN_COUNT = 4000 as const;
-const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
+const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|got it|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
 export function abbreviate(str: string, len: number) {
-  // const sentences = str.split(/\.|\?|!/);
-  //console.log(parts);
+  //
   return str.substring(0, len);
 }
 
@@ -34,7 +33,6 @@ export class ScribeService extends BaseService {
   static categories: string[] = [];
   
   public static async init() {
-    console.log('features', this.features);
     await Category.initCategories();
     const categories = await Category.findAll();
     this.categories = categories.map((c) => c.displayName);
@@ -145,7 +143,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the same article using no more than 15 words. Do not start with "The article/story" or "This article/story".', 
+          'Please summarize the same article/story using no more than 15 words. Prioritize any important numeric/date values and try to make the summary as unbiased as possible.',
         ].join(''),
       },
       {
@@ -156,7 +154,7 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide a summary using no more than 40 words. Do not start with "The article/story" or "This article/story".', 
+          'Please provide another unbiased summary using no more than 40 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -167,7 +165,7 @@ export class ScribeService extends BaseService {
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide a slightly longer summary using no more than 100 words. Do not start with "The article/story" or "This article/story".', 
+          'Please provide another longer unbiased summary using no more than 100 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -178,7 +176,7 @@ export class ScribeService extends BaseService {
             .split(/\n/)
             .map((bullet) => bullet.trim());
         },
-        text: 'Please provide 5 concise bullet point sentences no longer than 10 words each that summarize this article/story using • as the bullet symbol',
+        text: 'Please provide 5 concise unbiased bullet point sentences no longer than 10 words each that summarize this article/story using • as the bullet symbol',
       },
       {
         handleReply: async (reply) => { 
