@@ -29,7 +29,6 @@ import {
   DialogContext,
   MediaContext,
   SessionContext,
-  ToastContext,
 } from '~/contexts';
 import {
   useLayout,
@@ -53,11 +52,9 @@ export function SearchScreen({
       readSummaries,
       removedSummaries,
       sortOrder,
-      searchCanMatchAny,
     },
     ready,
   } = React.useContext(SessionContext);
-  const toast = React.useContext(ToastContext);
   const {
     queueSummary, currentTrackIndex, preloadCount,
   } = React.useContext(MediaContext);
@@ -79,6 +76,7 @@ export function SearchScreen({
 
   const [loading, setLoading] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
+  const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [pendingReload, setPendingReload] = React.useState(false);
@@ -94,21 +92,21 @@ export function SearchScreen({
   const [resizing, setResizing] = React.useState(false);
 
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
-   
-  const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
   
   const bookmarkCount = React.useMemo(() => Object.keys(bookmarkedSummaries ?? {}).filter((summary) => !(summary in (readSummaries ?? {}))).length ?? 0, [bookmarkedSummaries, readSummaries]);
 
   const followFilter = React.useMemo(() => {
-    if (categoryOutletCount === 0) {
-      return '';
+    const filters: string[] = [];
+    if (lengthOf(bookmarkedCategories) > 0) {
+      filters.push(['cat', Object.values(bookmarkedCategories ?? {})
+      .map((c) => c.item.name).join(',')].join(':'));
     }
-    return [`cat:${Object.values(bookmarkedCategories ?? {})
-      .map((c) => c.item.name).join(',')}`, 
-    `src:${Object.values(bookmarkedOutlets ?? {})
-      .map((o) => o.item.name).join(',')}`]
-      .join(' ');
-  }, [categoryOutletCount, bookmarkedCategories, bookmarkedOutlets]);
+    if (lengthOf(bookmarkedOutlets) > 0) {
+      filters.push(['src', Object.values(bookmarkedOutlets ?? {})
+      .map((o) => o.item.name).join(',')].join(':'));
+    }
+    return filters.join(' ');
+  }, [bookmarkedCategories, bookmarkedOutlets]);
   
   const excludeIds = React.useMemo(() => {
     if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
@@ -150,14 +148,13 @@ export function SearchScreen({
         filter.trim(),
         specificIds ?? excludeIds,
         !specificIds && Boolean(excludeIds),
-        searchCanMatchAny ? 'any' : 'all',
+        undefined,
         page,
         pageSize,
         sortOrder
       );
       if (error) {
         console.error(error);
-        toast.alert(error.message);
         return;
       }
       if (!data) {
@@ -177,15 +174,17 @@ export function SearchScreen({
         return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
       });
       setPage((prev) => prev + 1);
+      setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
       setSummaries([]);
       setTotalResultCount(0);
+      setLastFetchFailed(true);
     } finally {
       setLoading(false);
       setLoaded(true);
     }
-  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder, toast, searchCanMatchAny]);
+  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder]);
   
   const headerLeft = React.useMemo(() => {
     return (
@@ -299,7 +298,7 @@ export function SearchScreen({
   
   const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setLastFocus('master');
-    if (loading || totalResultCount <= summaries.length) {
+    if (loading || totalResultCount <= summaries.length || lastFetchFailed) {
       return;
     }
     const {
@@ -312,7 +311,7 @@ export function SearchScreen({
     ) {
       await loadMore('autoloaded');
     }
-  }, [loading, totalResultCount, summaries.length, loadMore]);
+  }, [loading, totalResultCount, summaries.length, loadMore, lastFetchFailed]);
 
   const handleDetailScroll = React.useCallback(async (_event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setLastFocus('detail');
@@ -338,7 +337,13 @@ export function SearchScreen({
   }, [resizing, masterWidth, supportsMasterDetail, detailWidth]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => handleResize(), [supportsMasterDetail, detailSummary, loading]);
+  React.useEffect(() => handleResize(), [
+    handleResize,
+    supportsMasterDetail, 
+    detailSummary, 
+    loading,
+    summaries,
+  ]);
 
   const loadMoreAsNeeded = React.useCallback(async () => {
     if (!currentTrackIndex) {
@@ -437,7 +442,18 @@ export function SearchScreen({
                     </View>
                   )}
                   {summaries.length === 0 && !loading && (
-                    <Text textCenter mh={ 16 }>No results found 🥺</Text>
+                    <View col gap={ 12 } alignCenter justifyCenter>
+                      <Text textCenter mh={ 16 }>No results found 🥺</Text>
+                      <Button 
+                        alignCenter
+                        rounded 
+                        outlined 
+                        p={ 8 }
+                        selectable
+                        onPress={ () => load(0) }>
+                        Reload
+                      </Button>
+                    </View>
                   )}
                 </View>
               </ScrollView>
