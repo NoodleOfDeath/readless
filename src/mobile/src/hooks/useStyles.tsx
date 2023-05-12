@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { FONT_SIZES, Stylable } from '~/components';
+import {
+  AVAILABLE_FONTS,
+  FONT_SIZES,
+  Stylable,
+} from '~/components';
 import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
@@ -33,7 +37,7 @@ export function useStyles({
   h5,
   h6,
   // text styles
-  color,
+  color = 'text',
   textCenter,
   textLeft,
   textRight,
@@ -93,7 +97,7 @@ export function useStyles({
 } : Stylable, { onlyInclude }: UseStylesOptions = {}) {
   const theme = useTheme();
   
-  const { preferences: { fontFamily: preferredFont, textScale } } = React.useContext(SessionContext);
+  const { preferences: { fontFamily: preferredFont = 'Manuale', textScale } } = React.useContext(SessionContext);
   const newStyle = React.useMemo(() => ({ ...style }), [style]);
 
   const position = React.useMemo(() => {
@@ -198,7 +202,7 @@ export function useStyles({
     attrs.push(bold ? { fontWeight: 'bold' } : undefined);
     attrs.push(italic ? { fontStyle: 'italic' } : undefined);
     attrs.push(underline ? { textDecorationLine: 'underline' } : undefined);
-    attrs.push({ fontFamily : fontFamily ?? preferredFont });
+    attrs.push({ fontFamily : !AVAILABLE_FONTS.includes(fontFamily ?? preferredFont ?? '') ? 'Manuale' : fontFamily ?? preferredFont });
     attrs.push(alignItems);
     attrs.push(justifyContent);
     attrs.push(appearance);

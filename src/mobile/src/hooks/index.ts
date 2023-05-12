@@ -1,6 +1,6 @@
 export * from './useInAppBrowser';
+export * from './useNavigation';
 export * from './useOrientation';
-export * from './useSearch';
 export * from './useShare';
 export * from './useStyles';
 export * from './useTheme';

@@ -1,5 +1,11 @@
 import React from 'react';
-import { DeviceEventEmitter } from 'react-native';
+import {
+  DeviceEventEmitter,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
+
+import { Badge } from 'react-native-paper';
 
 import { DisplaySettingsMenu } from './DisplaySettingsMenu';
 import { SearchMenu } from './SearchMenu';
@@ -24,12 +30,12 @@ import {
   ToastContext,
 } from '~/contexts';
 import {
-  useSearch,
+  useNavigation,
   useSummaryClient,
   useTheme,
 } from '~/hooks';
 import { ScreenProps } from '~/screens';
-import * as ArrayUtils from '~/utils';
+import { lengthOf } from '~/utils';
 
 export function SearchScreen({ 
   route,
@@ -39,7 +45,9 @@ export function SearchScreen({
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
+      bookmarkedSummaries,
       preferredReadingFormat,
+      readSummaries,
       removedSummaries,
       sortOrder,
       searchCanMatchAny,
@@ -52,7 +60,7 @@ export function SearchScreen({
   } = React.useContext(MediaContext);
   const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
-  const { search } = useSearch();
+  const { search, router } = useNavigation();
   const theme = useTheme();
   
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter);
@@ -66,7 +74,7 @@ export function SearchScreen({
   }, [route]);
 
   const [loading, setLoading] = React.useState(false);
-  const [mounted, setMounted] = React.useState(false);
+  const [loaded, setLoaded] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [pendingReload, setPendingReload] = React.useState(false);
@@ -76,7 +84,9 @@ export function SearchScreen({
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
    
-  const categoryOutletCount = React.useMemo(() => ArrayUtils.lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
+  const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
+  
+  const bookmarkCount = React.useMemo(() => Object.keys(bookmarkedSummaries ?? {}).filter((summary) => !(summary in (readSummaries ?? {}))).length ?? 0, [bookmarkedSummaries, readSummaries]);
 
   const followFilter = React.useMemo(() => {
     if (categoryOutletCount === 0) {
@@ -155,62 +165,76 @@ export function SearchScreen({
       setTotalResultCount(0);
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder, toast, searchCanMatchAny]);
+  
+  const headerLeft = React.useMemo(() => {
+    return (
+      <SearchMenu 
+        initialValue={ prefilter }
+        onChangeText={ (text) => setSearchText(text) }
+        onSubmit={ (value) => search({ onlyCustomNews, prefilter: value }) } />
+    );
+  }, [prefilter, search, onlyCustomNews]);
+  
+  React.useEffect(() => {
+    if (prefilter) {
+      setSearchText(prefilter + ' ');
+      navigation?.setOptions({ 
+        headerBackVisible: true,
+        headerLeft: () => headerLeft,
+        headerRight: () => (
+          <View>
+            <View row gap={ 12 } alignCenter>
+              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
+              <DisplaySettingsMenu />
+            </View>
+          </View>
+        ),
+        headerTitle: '',
+      });
+      setKeywords(prefilter.replace(/['"]/g, '').split(' ').filter((s) => s.trim()));
+    } else {
+      setSearchText('');
+      navigation?.setOptions({
+        headerBackTitleVisible: false,
+        headerBackVisible: true,
+        headerLeft: () => !route?.params?.noHeader && headerLeft,
+        headerRight: () => !route?.params?.noHeader && (
+          <View>
+            <View row gap={ 12 } alignCenter>
+              <View onPress={ () => navigation?.push('bookmarks') }>
+                {bookmarkCount > 0 && (
+                  <Badge style={ {
+                    position: 'absolute', right: -5, top: -5, zIndex: 1,
+                  } }>
+                    {bookmarkCount}
+                  </Badge>
+                )}
+                <Button startIcon="bookmark-outline" iconSize={ 24 } />
+              </View>
+              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
+              <DisplaySettingsMenu />
+            </View>
+          </View>
+        ),
+      });
+    }
+  }, [navigation, route, router, headerLeft, handlePlayAll, prefilter, bookmarkCount, onlyCustomNews]);
   
   const onMount = React.useCallback(() => {
     if (!ready) {
       return;
     }
-    const headerLeft = (
-      <SearchMenu 
-        initialValue={ prefilter }
-        onChangeText={ (text) => setSearchText(text) }
-        onSubmit={ () => search({ onlyCustomNews, prefilter: searchText }) } />
-    );
-    if (prefilter) {
-      setSearchText(prefilter + ' ');
-      navigation?.setOptions({ 
-        headerLeft: () => headerLeft,
-        headerRight: () => (
-          <View>
-            <View row gap={ 12 } alignCenter>
-              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
-              <DisplaySettingsMenu />
-            </View>
-          </View>
-        ),
-        headerShown: true,
-        headerTitle: () => '',
-      });
-      setKeywords(prefilter.replace(/['"]/g, '').split(' ').filter((s) => s.trim()));
-    } else {
-      setSearchText('');
-      navigation?.setOptions({ 
-        headerLeft: () => headerLeft,
-        headerRight: () => (
-          <View>
-            <View row gap={ 12 } alignCenter>
-              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
-              <DisplaySettingsMenu />
-            </View>
-          </View>
-        ),
-        headerShown: true,
-        headerTitle: () => <Text h5>{onlyCustomNews ? 'My News' : 'All News'}</Text>,
-      });
-    }
-    if (!mounted) {
-      setPage(0);
-      load(0);
-    }
-    setMounted(true);
-  }, [ready, searchText, prefilter, mounted, search, navigation, handlePlayAll, onlyCustomNews, load]);
+    setPage(0);
+    load(0);
+  }, [ready, load]);
   
   React.useEffect(
     () => onMount(), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pageSize, prefilter, ready, searchText, sortOrder, bookmarkedCategories, bookmarkedOutlets]
+    [prefilter, ready]
   );
   
   React.useEffect(() => {
@@ -249,6 +273,14 @@ export function SearchScreen({
     },
     [handleInteraction, navigation, preferredReadingFormat, searchText]
   );
+  
+  const handleScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if ( !loading && event.nativeEvent.contentOffset.y + 
+        event.nativeEvent.layoutMeasurement.height > 
+        event.nativeEvent.contentSize.height - 400) {
+      await loadMore();
+    }
+  }, [loading, loadMore]);
 
   const loadMoreAsNeeded = React.useCallback(async () => {
     if (!currentTrackIndex) {
@@ -281,7 +313,8 @@ export function SearchScreen({
   return (
     <Screen
       refreshing={ loading }
-      onRefresh={ () => load(0) }>
+      onRefresh={ () => load(0) }
+      onScroll={ handleScroll }>
       <View col mh={ 16 } mt={ 12 }>
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
@@ -301,6 +334,9 @@ export function SearchScreen({
           </View>
         )}
       </View>
+      {prefilter && onlyCustomNews && (
+        <Text caption textCenter mb={ 6 } mh={ 12 }>Note: This is searching within only your custom news feed and not all news articles</Text>
+      )}
       {summaries.map((summary) => (
         <Summary
           key={ summary.id }
@@ -321,12 +357,15 @@ export function SearchScreen({
           </Button>
         </View>
       )}
-      {loading && (summaries.length > 0 || !mounted) && (
+      {loading && (summaries.length > 0 || !loaded) && (
         <View row mb={ 64 }>
           <View row justifyCenter p={ 16 } pb={ 24 }>
             <ActivityIndicator size="large" color={ theme.colors.primary } />
           </View>
         </View>
+      )}
+      {summaries.length === 0 && !loading && (
+        <Text textCenter mh={ 16 }>No results found 🥺</Text>
       )}
     </Screen>
   );

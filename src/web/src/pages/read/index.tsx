@@ -7,7 +7,7 @@ import { PublicSummaryAttributes } from '~/api';
 import Summary from '~/components/Summary';
 import Page from '~/components/layout/Page';
 import { useRouter, useSummaryClient } from '~/hooks';
-import { SummaryUtils } from '~/utils';
+import { readingFormat } from '~/utils';
 
 export default function SummaryPage() {
   
@@ -17,7 +17,7 @@ export default function SummaryPage() {
   const [loading, setLoading] = React.useState(true);
   const [summary, setSummary] = React.useState<PublicSummaryAttributes | undefined>(undefined);
   const id = React.useMemo(() => parseInt(searchParams.get('s') ?? '-1'), [searchParams]);
-  const initialFormat = React.useMemo(() => SummaryUtils.format(searchParams.get('f') ?? ''), [searchParams]);
+  const initialFormat = React.useMemo(() => readingFormat(searchParams.get('f') ?? ''), [searchParams]);
   
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -42,7 +42,7 @@ export default function SummaryPage() {
   return (
     <Page>
       <Head>
-        <title>Read &apos; Less</title>
+        <title>Read Less</title>
       </Head>
       {loading ? <CircularProgress variant="indeterminate" /> : summary && (
         <Summary 

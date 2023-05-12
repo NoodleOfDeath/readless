@@ -4,7 +4,6 @@ import {
   LinkingOptions,
   ParamListBase,
   RouteProp,
-  TabNavigationState,
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -24,6 +23,7 @@ export type StackableTabParams = TabParams & {
     prefilter?: string,
     onlyCustomNews?: boolean;
     specificIds?: number[];
+    noHeader?: boolean;
   },
   summary: {
     initialFormat: ReadingFormat;
@@ -36,25 +36,22 @@ export type StackableTabParams = TabParams & {
   category: {
     category: PublicCategoryAttributes;
   }
+  bookmarks: undefined;
 };
 
 export type RootParamList = {
   // Tabs
-  bulletinTab: StackableTabParams;
-  myStuffTab: StackableTabParams;
-  todayTab: StackableTabParams;
+  headlinesTab: StackableTabParams;
+  myNewsTab: StackableTabParams;
   browseTab: StackableTabParams;
-  settingsTab: TabParams;
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
   config: {
     screens: {
       browseTab: { path: 'browse' },
-      bulletinTab: { path: 'bulletin' },
-      myStuffTab: { path: 'my-stuff' },
-      settingsTab: { path: 'settings' },
-      todayTab: { path: 'today' },
+      headlinesTab: { path: 'headlines' },
+      myNewsTab: { path: 'my-news' },
     },
   },
   prefixes: [
@@ -91,9 +88,4 @@ export type ScreenProps<Path extends keyof StackableTabParams = keyof StackableT
     ;
   route?: RouteProp<StackableTabParams, Path> 
   navigation?: NativeStackNavigationProp<StackableTabParams, Path>
-};
-
-export type TabProps = {
-  route: RouteProp<StackableTabParams>;
-  navigation: TabNavigationState<RootParamList>;
 };

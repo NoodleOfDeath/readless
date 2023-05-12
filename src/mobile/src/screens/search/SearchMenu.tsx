@@ -4,10 +4,8 @@ import { Searchbar, Switch } from 'react-native-paper';
 
 import {
   Button,
-  Divider,
   Icon,
   Menu,
-  ScrollView,
   Text,
   View,
   ViewProps,
@@ -39,10 +37,7 @@ export function SearchMenu({
   const [forceHide, setForceHide] = React.useState<boolean>();
 
   const { 
-    preferences: { 
-      searchCanMatchAny,
-      searchHistory,
-    },
+    preferences: { searchCanMatchAny },
     setPreference,
   } = React.useContext(SessionContext);
   
@@ -65,6 +60,7 @@ export function SearchMenu({
       ) }>
       <View gap={ 8 } style={ style }>
         <Searchbar
+          autoFocus
           placeholder={ placeholder }
           onChangeText={ (text) => {
             onChangeText?.(text); setValue(text); 
@@ -76,50 +72,25 @@ export function SearchMenu({
             onClear?.();
           } } 
           onSubmitEditing={ submit } />
-        <View row>
-          <View row />
-          <Button alignCenter row elevated rounded p={ 4 } onPress={ submit }>Search</Button>
-        </View>
-        <Divider />
-        <View gap={ 4 }>
-          <Text>Results Must Contain</Text>
+        <View gap={ 8 }>
+          <Text caption>Results Must Contain</Text>
           <View row alignCenter gap={ 4 }>
-            <Text>Any Words</Text>
+            <Text caption>Any Words</Text>
             <Switch
               color={ theme.colors.primary }
               value={ !searchCanMatchAny }
               onValueChange={ (value) => setPreference('searchCanMatchAny', value) } />
-            <Text>All Words</Text>
+            <Text caption>All Words</Text>
           </View>
+          <Button 
+            alignCenter 
+            elevated 
+            rounded 
+            p={ 4 } 
+            onPress={ submit }>
+            Search
+          </Button>
         </View>
-        {(searchHistory ?? []).length > 0 && (
-          <View>
-            <Divider />
-            <View>
-              <View row>
-                <Text>Search History</Text>
-                <View row />
-                <Button underline onPress={ () => setPreference('searchHistory', []) }>
-                  Clear History
-                </Button>
-              </View>
-              <ScrollView>
-                {(searchHistory ?? []).map((s) => (
-                  <Text 
-                    key={ s }
-                    underline
-                    onPress={ () => {
-                      setValue(s);
-                      onChangeText?.(s);
-                      submit();
-                    } }>
-                    {s}
-                  </Text>
-                ))}
-              </ScrollView>
-            </View>
-          </View>
-        )}
       </View>
     </Menu>
   );

@@ -1,5 +1,14 @@
 import { ViewStyle } from 'react-native';
 
+export const AVAILABLE_FONTS = [
+  'Alegreya', 
+  'DM Sans',
+  'Faustina',
+  'Lato',
+  'Manuale',
+  'Roboto',
+];
+
 export const FONT_SIZES = {
   body1: 18,
   body2: 15,

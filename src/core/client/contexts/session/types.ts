@@ -46,6 +46,7 @@ export type Preferences = {
   searchHistory?: string[];
   searchCanMatchAny?: boolean;
   showShortSummary?: boolean;
+  loadedInitialUrl?: boolean;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<boolean> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
@@ -57,7 +58,12 @@ export type Preferences = {
   showOnlyBookmarkedNews?: boolean;
 };
 
-export const DEFAULT_PREFERENCES: Partial<Preferences> = { sortOrder: ['originalDate:desc'] };
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { 
+  fontFamily: 'Manuale',
+  sortOrder: ['originalDate:desc'], 
+};
+
+export const OVERRIDDEN_INITIAL_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
 
 // Headers
 
