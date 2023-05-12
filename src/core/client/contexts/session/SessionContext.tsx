@@ -6,6 +6,7 @@ import {
   DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
+  OVERRIDDEN_INITIAL_PREFERENCES,
   Preferences,
   SessionSetOptions,
 } from './types';
@@ -18,6 +19,7 @@ import {
 import {
   clearCookie,
   getCookie,
+  getUserAgent,
   setCookie,
 } from '~/utils';
 
@@ -119,12 +121,12 @@ export function SessionContextProvider({ children }: Props) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
-    if (!userData?.tokenString) {
-      return (...args: T) => fn(...args, {});
+    const headers: HeadersInit = { 'X-App-Version': getUserAgent().currentVersion };
+    if (userData?.tokenString) {
+      headers.Authorization = `Bearer ${userData.tokenString}`;
     }
     return (...args: T) => {
-      const requestParams = { headers: { Authorization: `Bearer ${userData.tokenString}` } };
-      return fn(...args, requestParams);
+      return fn(...args, { headers });
     };
   }, [userData?.tokenString]);
 
@@ -132,7 +134,9 @@ export function SessionContextProvider({ children }: Props) {
   React.useEffect(() => {
     getCookie(COOKIES.preferences)
       .then((cookie) => { 
-        setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(cookie ?? '{}') });
+        setPreferences({
+          ...DEFAULT_PREFERENCES, ...JSON.parse(cookie ?? '{}'), ...OVERRIDDEN_INITIAL_PREFERENCES,
+        });
       })
       .catch((e) => {
         console.error(e);

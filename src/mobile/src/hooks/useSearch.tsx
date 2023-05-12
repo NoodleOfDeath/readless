@@ -15,11 +15,13 @@ export function useSearch() {
   }, [navigation]);
 
   const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    navigation?.navigate('outlet', { outlet });
+    navigation?.push('search', { prefilter: `src:${outlet.name}` });
+    //navigation?.navigate('outlet', { outlet });
   }, [navigation]);
 
   const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigation?.navigate('category', { category });
+    navigation?.push('search', { prefilter: `cat:${category.name}` });
+    //navigation?.navigate('category', { category });
   }, [navigation]);
 
   return {

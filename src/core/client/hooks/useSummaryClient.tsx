@@ -27,7 +27,7 @@ export function useSummaryClient() {
   ) => {
     try {
       return await withHeaders(API.getSummaries)({
-        excludeIds, filter, ids, matchType, order, page, pageSize,
+        excludeIds, filter, ids, match: matchType, order, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
@@ -36,7 +36,7 @@ export function useSummaryClient() {
 
   const getSummary = React.useCallback(async (id: number) => {
     try {
-      const { data, error } = await getSummaries(undefined, [id], false, 0, 1);
+      const { data, error } = await getSummaries(undefined, [id], false, 'all', 0, 1);
       if (error) {
         return { data: undefined, error };
       }
@@ -86,7 +86,7 @@ export function useSummaryClient() {
         return (prev = bookmarks);
       });
     } else
-    if (interaction === InteractionType.Read && /original source/i.test(content)) {
+    if (interaction === InteractionType.Read && /original source/i.test(content ?? '')) {
       setPreference('readSources', (prev) => {
         const bookmarks = { ...prev };
         bookmarks[summary.id] = new Bookmark(true);

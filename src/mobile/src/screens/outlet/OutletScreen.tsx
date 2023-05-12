@@ -9,7 +9,7 @@ import { ScreenProps } from '~/screens';
 
 export function OutletScreen({
   route,
-  navigation,
+  // navigation,
 }: ScreenProps<'outlet'>) {
 
   const outlet = React.useMemo(() => route?.params?.outlet, [route]);

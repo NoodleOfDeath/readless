@@ -8,7 +8,7 @@ export function SystemMessagesView() {
 
   const { getServices, getSystemMessages } = useServiceClient();
 
-  const [services, setServices] = React.useState<ServiceAttributes[]>([]);
+  const [_services, setServices] = React.useState<ServiceAttributes[]>([]);
   const [systemMessages, setSystemMessages] = React.useState<MessageAttributes[]>([]);
 
   const onMount = React.useCallback(async () => {

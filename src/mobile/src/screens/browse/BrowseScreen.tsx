@@ -13,19 +13,23 @@ import {
   TabSwitcher,
   View,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import {  SessionContext } from '~/contexts';
 import {
   ClientError,
   useCategoryClient,
+  useNavigation,
   useTheme,
 } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
-export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
+export function BrowseScreen(_props: ScreenProps<'default'>) {
 
   const theme = useTheme();
+  const { openCategory, openOutlet } = useNavigation();
   const { getCategories, getOutlets } = useCategoryClient();
   const {
+    followCategory,
+    followOutlet,
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
@@ -38,14 +42,14 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
 
   const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
   const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
-  const [_, setError] = React.useState<InternalError>();
+  const [_error, setError] = React.useState<InternalError>();
   
   const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
   const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
   
   const titles = React.useMemo(() => [
     `Categories (${categoryCount === 0 ? categories.length : categoryCount}/${categories.length})`,
-    `Sources (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`,
+    `Channels (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`,
   ], [categories, categoryCount, outlets, outletCount]);
 
   const loadCategories = React.useCallback(async () => {
@@ -87,44 +91,6 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
     loadCategories();
     loadOutlets();
   }, [loadCategories, loadOutlets]);
-
-  const selectCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigation?.navigate('search', {
-      category,
-      prefilter: `cat:${category.name}`,
-    });
-  }, [navigation]);
-
-  const selectOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    navigation?.navigate('search', { 
-      outlet,
-      prefilter: `src:${outlet.name}`,
-    });
-  }, [navigation]);
-  
-  const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    setPreference('bookmarkedCategories', (prev) => {
-      const state = { ...prev };
-      if (!state[category.name]) {
-        state[category.name] = new Bookmark(category);
-      } else {
-        delete state[category.name];
-      }
-      return (prev = state);
-    });
-  }, [setPreference]);
-  
-  const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    setPreference('bookmarkedOutlets', (prev) => {
-      const state = { ...prev };
-      if (!state[outlet.name]) {
-        state[outlet.name] = new Bookmark(outlet);
-      } else {
-        delete state[outlet.name];
-      }
-      return (prev = state);
-    });
-  }, [setPreference]);
   
   const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' | 'bookmarkedOutlets') => {
     setPreference(key, {});
@@ -163,7 +129,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     alignCenter
                     rounded
                     bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
-                    <MeterDial width={ 40 } height={ 20 } value={ category.averageSentiment ?? 0 } />
+                    <MeterDial width={ 40 } height={ 20 } value={ category.sentiment ?? 0 } />
                     <Button 
                       row
                       elevated
@@ -173,7 +139,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                       gap={ 8 }
                       startIcon={ category.icon }
                       p={ 8 }
-                      onPress={ () => selectCategory(category) }>
+                      onPress={ () => openCategory(category) }>
                       {category.displayName}
                     </Button>
                     <View row />
@@ -214,7 +180,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     alignCenter
                     rounded
                     bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
-                    <MeterDial width={ 40 } height={ 20 } value={ outlet.averageSentiment ?? 0 } />
+                    <MeterDial width={ 40 } height={ 20 } value={ outlet.sentiment ?? 0 } />
                     <Button 
                       row
                       elevated
@@ -223,7 +189,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                       rounded
                       gap={ 8 }
                       p={ 8 }
-                      onPress={ () => selectOutlet(outlet) }>
+                      onPress={ () => openOutlet(outlet) }>
                       {outlet.displayName}
                     </Button>
                     <View row />

@@ -1,8 +1,17 @@
 import React from 'react';
+import { Linking } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  EventMapBase,
+  NavigationContainer,
+  NavigationState,
+  RouteConfig,
+} from '@react-navigation/native';
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 import { Badge } from 'react-native-paper';
 
 import {
@@ -17,13 +26,13 @@ import {
   MediaPlayer,
   View,
 } from '~/components';
-import { useTheme } from '~/hooks';
+import { useNavigation, useTheme } from '~/hooks';
 import {
   BrowseScreen,
   CategoryScreen,
+  MyStuffScreen,
   NAVIGATION_LINKING_OPTIONS,
   OutletScreen,
-  ScreenComponentType,
   SearchScreen,
   StackableTabParams,
   SummaryScreen,
@@ -31,24 +40,44 @@ import {
 } from '~/screens';
 
 export function TabViewController<T extends TabParams = TabParams>(
-  tabs: { component: ScreenComponentType<T, keyof T>, name: keyof T, initialParams?: Partial<T[keyof T]> }[], 
+  tabs: RouteConfig<T,
+  keyof T,
+  NavigationState,
+  NativeStackNavigationOptions,
+  EventMapBase>[], 
   initialRouteName?: Extract<keyof T, string>
 ) {
   const Controller = () => {
     const Stack = createNativeStackNavigator<T>();
     const { currentTrack } = React.useContext(MediaContext);
+    const { preferences: { loadedInitialUrl }, setPreference } = React.useContext(SessionContext);
+
+    const { router } = useNavigation();
+
+    React.useEffect(() => {
+      const subscriber = Linking.addEventListener('url', router);
+      if (!loadedInitialUrl) {
+        Linking.getInitialURL().then((url) => {
+          if (url) {
+            router({ url } );
+            setPreference('loadedInitialUrl', true);
+          }
+        });
+      } 
+      return () => subscriber.remove();
+    }, [router, loadedInitialUrl, setPreference]);
+  
     return (
       <View col>
         <Stack.Navigator initialRouteName={ initialRouteName }>
-          {tabs.map(({
-            component, initialParams, name, 
-          }) => (
+          {tabs.map((tab) => (
             <Stack.Screen
-              key={ String(name) }
-              name={ name as keyof T }
-              component={ component }
-              initialParams={ initialParams }
-              options={ { headerShown: true } } />
+              key={ String(tab.name) }
+              { ...tab }
+              options={ { 
+                headerShown: true,
+                ...tab.options,
+              } } />
           ))}
         </Stack.Navigator>
         <MediaPlayer visible={ Boolean(currentTrack) } />
@@ -70,30 +99,38 @@ const TABS: TabProps[] = [
   {
     component: TabViewController<StackableTabParams>(
       [
-        { component: SearchScreen, name:'default' }, 
+        { 
+          component: SearchScreen, 
+          name:'default', 
+          options: { headerTitle: 'Headlines' },
+        }, 
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
         { component: OutletScreen, name: 'outlet' },
         { component: CategoryScreen, name: 'category' },
+        { component: MyStuffScreen, name: 'bookmarks' },
       ],
       'default'
     ),
     icon: 'newspaper',
-    name: 'All News',
+    name: 'Headlines',
   },
   {
-    badge: (preferences) => Object.keys(preferences.bookmarkedSummaries ?? {}).filter((summary) => !(summary in (preferences.readSummaries ?? {}))).length ?? 0,
     component: TabViewController<StackableTabParams>(
       [
         {
           component: SearchScreen, 
           initialParams: { onlyCustomNews: true }, 
           name:'default', 
-        }, 
+          options: { headerTitle: 'My News' },
+        },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
         { component: OutletScreen, name: 'outlet' },
         { component: CategoryScreen, name: 'category' },
+        {
+          component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
+        },
       ],
       'default'
     ),
@@ -103,11 +140,18 @@ const TABS: TabProps[] = [
   {
     component: TabViewController<StackableTabParams>(
       [
-        { component: BrowseScreen, name:'default' }, 
+        { 
+          component: BrowseScreen, 
+          name:'default',
+          options: { headerTitle: 'Browse' },
+        }, 
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
         { component: OutletScreen, name: 'outlet' },
         { component: CategoryScreen, name: 'category' },
+        {
+          component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
+        },
       ],
       'default'
     ),
@@ -121,45 +165,43 @@ export default function NavigationController() {
   const Tab = createBottomTabNavigator();
   const { ready, preferences } = React.useContext(SessionContext);
   return (
-    <React.Fragment>
+    <NavigationContainer
+      theme={ { 
+        colors: theme.navContainerColors,
+        dark: !theme.isLightMode,
+      } }
+      fallback={ <ActivityIndicator animating /> }
+      linking={ NAVIGATION_LINKING_OPTIONS }>
       {!ready ? (
         <ActivityIndicator animating />
       ) : (
-        <NavigationContainer
-          theme={ { 
-            colors: theme.navContainerColors,
-            dark: !theme.isLightMode,
-          } }
-          fallback={ <ActivityIndicator animating /> }
-          linking={ NAVIGATION_LINKING_OPTIONS }>
-          <Tab.Navigator>
-            {TABS.filter((tab) => !tab.disabled).map((tab) => (
-              <Tab.Screen
-                key={ tab.name }
-                name={ tab.name }
-                component={ tab.component }
-                options={ {
-                  headerShown: false,
-                  tabBarIcon: (props) => {
-                    const badge = tab.badge ? tab.badge(preferences) : 0;
-                    return (
-                      <View>
-                        {badge > 0 && (
-                          <Badge style={ {
-                            position: 'absolute', right: 0, top: 0, zIndex: 1,
-                          } }>
-                            {badge}
-                          </Badge>
-                        )}
-                        <Icon name={ tab.icon } { ...props } color="primary" />
-                      </View>
-                    );
-                  },
-                } } />
-            ))}
-          </Tab.Navigator>
-        </NavigationContainer>
+        <Tab.Navigator>
+          {TABS.filter((tab) => !tab.disabled).map((tab) => (
+            <Tab.Screen
+              key={ tab.name }
+              name={ tab.name }
+              component={ tab.component }
+              options={ {
+                headerShown: false,
+                tabBarIcon: (props) => {
+                  const badge = tab.badge ? tab.badge(preferences) : 0;
+                  return (
+                    <View>
+                      {badge > 0 && (
+                        <Badge style={ {
+                          position: 'absolute', right: -5, top: -5, zIndex: 1,
+                        } }>
+                          {badge}
+                        </Badge>
+                      )}
+                      <Icon name={ tab.icon } { ...props } color="primary" />
+                    </View>
+                  );
+                },
+              } } />
+          ))}
+        </Tab.Navigator>
       )}
-    </React.Fragment>
+    </NavigationContainer>
   );
 }

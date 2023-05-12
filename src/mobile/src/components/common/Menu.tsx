@@ -10,11 +10,12 @@ export type MenuProps = Omit<RNMenuProps, 'anchor' | 'theme' | 'visible'> & View
   autoAnchor?: React.ReactNode;
   width?: number;
   visible?: boolean;
+  onAppear?: () => void;
 };
 
 export function Menu({
   children,
-  width = 200,
+  onAppear,
   ...props
 }: MenuProps) {
 
@@ -36,12 +37,18 @@ export function Menu({
       setVisible(props.visible);
     }
   }, [props.visible]);
+  
+  React.useEffect(() => {
+    if (!visible) {
+      return; 
+    }
+    onAppear?.();
+  }, [visible, onAppear]);
 
   return (
     <RNMenu
       contentStyle={ { 
         ...theme.components.menu,
-        width,
         ...style,
       } }
       { ...props } 
