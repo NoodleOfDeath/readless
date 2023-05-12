@@ -109,6 +109,9 @@ const TABS: TabProps[] = [
         { component: OutletScreen, name: 'outlet' },
         { component: CategoryScreen, name: 'category' },
         { component: MyStuffScreen, name: 'bookmarks' },
+        {
+          component: BrowseScreen, name: 'browse', options: { headerTitle: 'Browse' },
+        },
       ],
       'default'
     ),
@@ -131,6 +134,9 @@ const TABS: TabProps[] = [
         {
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
         },
+        {
+          component: BrowseScreen, name: 'browse', options: { headerTitle: 'Browse' },
+        },
       ],
       'default'
     ),
@@ -140,17 +146,20 @@ const TABS: TabProps[] = [
   {
     component: TabViewController<StackableTabParams>(
       [
-        { 
+        {
           component: BrowseScreen, 
-          name:'default',
+          name:'default', 
           options: { headerTitle: 'Browse' },
-        }, 
+        },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
         { component: OutletScreen, name: 'outlet' },
         { component: CategoryScreen, name: 'category' },
         {
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
+        },
+        {
+          component: BrowseScreen, name: 'browse', options: { headerTitle: 'Browse' },
         },
       ],
       'default'

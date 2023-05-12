@@ -4,6 +4,7 @@ export * from './Banner';
 export * from './Button';
 export * from './CardStack';
 export * from './Checkbox';
+export * from './CollapsedView';
 export * from './Dialog';
 export * from './Divider';
 export * from './FAB';

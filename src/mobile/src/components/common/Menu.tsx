@@ -16,6 +16,7 @@ export type MenuProps = Omit<RNMenuProps, 'anchor' | 'theme' | 'visible'> & View
 export function Menu({
   children,
   onAppear,
+  width = 200,
   ...props
 }: MenuProps) {
 
@@ -49,6 +50,7 @@ export function Menu({
     <RNMenu
       contentStyle={ { 
         ...theme.components.menu,
+        width,
         ...style,
       } }
       { ...props } 

@@ -13,6 +13,7 @@ import {
 import {
   AnalyticsView,
   Button,
+  CollapsedView,
   Divider,
   Highlighter,
   Icon,
@@ -40,6 +41,7 @@ import { averageOfSentiments } from '~/utils';
 type Props = {
   summary?: PublicSummaryAttributes;
   tickIntervalMs?: number;
+  selected?: boolean;
   initialFormat?: ReadingFormat;
   keywords?: string[];
   compact?: boolean;
@@ -119,6 +121,7 @@ const MOCK_SUMMARY: PublicSummaryAttributes = {
 export function Summary({
   summary = MOCK_SUMMARY,
   tickIntervalMs = 60_000,
+  selected,
   initialFormat,
   keywords = [],
   compact = false,
@@ -158,8 +161,6 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const [collapseSummary, setCollapseSummary] = React.useState(Boolean(collapsed));
-  const [collapseAnalytics, setCollapseAnalytics] = React.useState(Boolean(collapsed));
 
   const isRead = React.useMemo(() => !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
@@ -281,212 +282,210 @@ export function Summary({
             elevated 
             style={ theme.components.card } 
             inactive={ isRead } 
-            onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }
-            gap={ 3 }>
-            <View row gap={ 12 }>
-              <View col width="100%">
-                <View col gap={ 12 }>
-                  <View>
-                    <View row alignCenter gap={ 6 }>
-                      <Text 
-                        italic
-                        onPress={ () => openOutlet(summary.outlet) }>
-                        {summary.outlet.displayName}
-                      </Text>
-                      <View row />
-                      <MeterDial 
-                        value={ averageOfSentiments(summary.sentiments)?.score ?? 0 }
-                        width={ 40 } />
-                    </View>
-                  </View>
-                  <View>
-                    <View row gap={ 16 }>
-                      {!(compact || compactMode) && summary.imageUrl && (
-                        <View
-                          justifyCenter
-                          width={ isRead ? '15%' : '20%' }
-                          gap={ 6 }>
-                          <Menu
-                            autoAnchor={ (
-                              <Image
-                                source={ { uri: summary.imageUrl } }  
-                                rounded
-                                aspectRatio={ 1 } />
-                            ) }>
-                            <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
-                          </Menu>
-                        </View>
-                      )}
-                      <View row alignCenter>
-                        {showShareDialog || keywords.length === 0 ? (
-                          <Text 
-                            bold
-                            justifyCenter
-                            subtitle1
-                            color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
-                            {(compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title}
-                          </Text>
-                        ) : (
-                          <Highlighter
-                            bold
-                            subtitle1
-                            justifyCenter
-                            highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                            searchWords={ keywords }
-                            textToHighlight={ summary.title } />
-                        )}
-                      </View>
-                    </View>
-                  </View>
-                  <View col />
-                </View>
-              </View>
-            </View>
-            {!(compact || compactMode) && showShortSummary === true && (
+            onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
+            <View col gap={ 12 }>
               <View row>
-                <Divider />
-                {(showShareDialog || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
-                  <Highlighter 
-                    highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                    searchWords={ keywords }
-                    textToHighlight={ summary.shortSummary ?? '' } />
+                {!initialFormat && !showShareDialog && selected && (
+                  <View
+                    width={ 12 }
+                    ml={ -12 }
+                    mr={ 12 }
+                    mb={ -12 }
+                    mt={ -12 }
+                    bg={ theme.colors.primary } />
                 )}
-              </View>
-            )}
-            {!(compact || compactMode) && (
-              <React.Fragment>
-                <Divider />
-                <View row alignCenter gap={ 12 }>
-                  <Button 
-                    elevated
-                    rounded
-                    alignCenter
-                    p={ 4 }
-                    startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                    onPress={ () => openCategory(summary.category) } />
-                  <View row>
-                    <View gap={ 0 } width="100%">
-                      <View row gap={ 6 }>
-                        <Text 
-                          bold 
-                          caption
-                          color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
-                          {`${timeAgo} from`}
-                        </Text>
+                <View col gap={ 12 }>
+                  <View row gap={ 12 }>
+                    <View col width="100%">
+                      <View col gap={ 12 }>
+                        <View>
+                          <View row alignCenter gap={ 12 }>
+                            <Text 
+                              italic
+                              onPress={ () => openOutlet(summary.outlet) }>
+                              {summary.outlet.displayName}
+                            </Text>
+                            <View row />
+                            <MeterDial 
+                              value={ averageOfSentiments(summary.sentiments)?.score ?? 0 }
+                              width={ 40 } />
+                          </View>
+                        </View>
+                        <View>
+                          <View row gap={ 12 }>
+                            {!(compact || compactMode) && summary.imageUrl && (
+                              <View
+                                justifyCenter
+                                width={ '20%' }>
+                                <Menu
+                                  autoAnchor={ (
+                                    <Image
+                                      source={ { uri: summary.imageUrl } }  
+                                      rounded
+                                      aspectRatio={ 1 } />
+                                  ) }>
+                                  <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
+                                </Menu>
+                              </View>
+                            )}
+                            <View row alignCenter>
+                              {showShareDialog || keywords.length === 0 ? (
+                                <Text 
+                                  bold
+                                  justifyCenter
+                                  subtitle1
+                                  color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                                  {(compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title}
+                                </Text>
+                              ) : (
+                                <Highlighter
+                                  bold
+                                  subtitle1
+                                  justifyCenter
+                                  highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                                  searchWords={ keywords }
+                                  textToHighlight={ summary.title } />
+                              )}
+                            </View>
+                          </View>
+                        </View>
                       </View>
-                      <Text 
-                        row
-                        numberOfLines={ 1 }
-                        underline
-                        rounded
-                        caption
-                        color={ !initialFormat && !showShareDialog && readSources?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }
-                        onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
-                        onLongPress={ () => copyToClipboard(summary.url) }>
-                        {summary.url}
-                      </Text>
                     </View>
                   </View>
-                  <View>
-                    <View row alignCenter justifyEnd gap={ 8 }>
-                      <Button
-                        elevated
-                        p={ 4 }
-                        rounded
-                        alignCenter
-                        subtitle2
-                        color='text'
-                        startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-                        onPress={ () => onInteract?.(InteractionType.Bookmark) } />
-                      <Button
-                        elevated
-                        p={ 4 }
-                        rounded
-                        subtitle2
-                        color='text'
-                        startIcon='share'
-                        onPress={ () => setShowShareDialog(true, {
-                          content, format, summary, viewshot: viewshot.current, 
-                        }) } />
-                      <Button
-                        elevated
-                        p={ 4 }
-                        rounded
-                        alignCenter
-                        subtitle2
-                        color="text"
-                        startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                        onPress={ () => handlePlayAudio() } />
+                  {!(compact || compactMode) && showShortSummary === true && (
+                    <View row>
+                      <Divider />
+                      {(showShareDialog || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
+                        <Highlighter 
+                          highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                          searchWords={ keywords }
+                          textToHighlight={ summary.shortSummary ?? '' } />
+                      )}
                     </View>
-                  </View>
-                </View>
-              </React.Fragment>
-            )}
-            {initialFormat && (
-              <View>
-                <Divider />
-                <View row mv={ 8 } gap={ 6 } alignCenter>
-                  <Button
-                    elevated
-                    p={ 6 }
-                    rounded
-                    iconSize={ 24 }
-                    onPress={ () => setCollapseSummary((prev) => !prev) }
-                    startIcon={ collapseSummary ? 'chevron-right' : 'chevron-down' } />
-                  <Text subtitle1>Summary/Bullets</Text>
-                </View>
-              </View>
-            )}
-            {content && !collapseSummary && (
-              <View gap={ 12 }>
-                <ReadingFormatSelector 
-                  format={ format } 
-                  preferredFormat={ preferredReadingFormat }
-                  onChange={ handleFormatChange } />
-                <View>
-                  {showShareDialog || keywords.length === 0 ? (
-                    <Text>{content}</Text>
-                  ) : (
-                    <Highlighter 
-                      highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                      searchWords={ keywords }
-                      textToHighlight={ content } />
+                  )}
+                  {!(compact || compactMode) && (
+                    <View row alignCenter gap={ 12 }>
+                      <Button 
+                        elevated
+                        rounded
+                        alignCenter
+                        p={ 4 }
+                        startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                        onPress={ () => openCategory(summary.category) } />
+                      <View row>
+                        <View gap={ 0 } width="100%">
+                          <View row gap={ 6 }>
+                            <Text 
+                              bold 
+                              caption
+                              color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                              {`${timeAgo} from`}
+                            </Text>
+                          </View>
+                          <Text 
+                            row
+                            numberOfLines={ 1 }
+                            underline
+                            rounded
+                            caption
+                            color={ !initialFormat && !showShareDialog && readSources?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }
+                            onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
+                            onLongPress={ () => copyToClipboard(summary.url) }>
+                            {summary.url}
+                          </Text>
+                        </View>
+                      </View>
+                      <View>
+                        <View row alignCenter justifyEnd gap={ 8 }>
+                          <Button
+                            elevated
+                            p={ 4 }
+                            rounded
+                            alignCenter
+                            subtitle2
+                            color='text'
+                            startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+                            onPress={ () => onInteract?.(InteractionType.Bookmark) } />
+                          <Button
+                            elevated
+                            p={ 4 }
+                            rounded
+                            subtitle2
+                            color='text'
+                            startIcon='share'
+                            onPress={ () => setShowShareDialog(true, {
+                              content, format, summary, viewshot: viewshot.current, 
+                            }) } />
+                          <Button
+                            elevated
+                            p={ 4 }
+                            rounded
+                            alignCenter
+                            subtitle2
+                            color="text"
+                            startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                            onPress={ () => handlePlayAudio() } />
+                        </View>
+                      </View>
+                    </View>
                   )}
                 </View>
               </View>
-            )}
-            {initialFormat && summary.sentiments && (
-              <View>
-                <Divider />
-                <View row mv={ 8 } gap={ 6 } alignCenter>
-                  <Button
-                    elevated
-                    p={ 6 }
-                    rounded
-                    iconSize={ 24 }
-                    onPress={ () => setCollapseAnalytics((prev) => !prev) }
-                    startIcon={ collapseAnalytics ? 'chevron-right' : 'chevron-down' } />
-                  <Text subtitle1>Analytics</Text>
-                  <View>
-                    <View row gap={ 6 } alignCenter>
-                      <View 
-                        bg={ 'blue' }
-                        p={ 3 }
-                        rounded>
-                        <Text
-                          color="white">
-                          beta
-                        </Text>
+              {initialFormat && <Divider />}
+              {initialFormat && (
+                <CollapsedView 
+                  startCollapsed={ false }
+                  indent={ 0 }
+                  title={ (
+                    <Text subtitle1>Summary/Bullets</Text>
+                  ) }>
+                  {content && (
+                    <View gap={ 12 }>
+                      <ReadingFormatSelector 
+                        format={ format } 
+                        preferredFormat={ preferredReadingFormat }
+                        onChange={ handleFormatChange } />
+                      <View>
+                        {showShareDialog || keywords.length === 0 ? (
+                          <Text>{content}</Text>
+                        ) : (
+                          <Highlighter 
+                            highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                            searchWords={ keywords }
+                            textToHighlight={ content } />
+                        )}
+                      </View>
+                    </View>
+                  )}
+                </CollapsedView>
+              )}
+              {initialFormat && summary.sentiments && (
+                <CollapsedView title={ (
+                  <View row mv={ 8 } gap={ 6 } alignCenter>
+                    <Text subtitle1>Analytics</Text>
+                    <View>
+                      <View row gap={ 6 } alignCenter>
+                        <View 
+                          bg={ 'blue' }
+                          p={ 3 }
+                          absolute
+                          top={ 0 }
+                          rounded>
+                          <Text
+                            subscript
+                            color="white">
+                            beta
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
-                {!collapseAnalytics && (
+                ) }>
                   <AnalyticsView
                     sentiments={ Object.values(summary.sentiments) } />
-                )}
-              </View>
-            )}
+                </CollapsedView>
+              )}
+            </View>
           </View>
         </ViewShot>
       </Swipeable>

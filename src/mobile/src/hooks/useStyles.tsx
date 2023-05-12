@@ -26,6 +26,7 @@ export function useStyles({
   height,
   // typographies
   caption,
+  subscript,
   subtitle1,
   subtitle2,
   body1,
@@ -42,7 +43,7 @@ export function useStyles({
   textLeft,
   textRight,
   fontFamily,
-  fontSize = caption ? FONT_SIZES.caption : subtitle1 ? FONT_SIZES.subtitle1 : subtitle2 ? FONT_SIZES.subtitle2 : body1 ? FONT_SIZES.body1 : body2 ? FONT_SIZES.body2 : h1 ? FONT_SIZES.h1 : h2 ? FONT_SIZES.h2 : h3 ? FONT_SIZES.h3 : h4 ? FONT_SIZES.h4 : h5 ? FONT_SIZES.h5 : h6 ? FONT_SIZES.h6 : FONT_SIZES.body1,
+  fontSize = caption ? FONT_SIZES.caption : subscript ? FONT_SIZES.subscript : subtitle1 ? FONT_SIZES.subtitle1 : subtitle2 ? FONT_SIZES.subtitle2 : body1 ? FONT_SIZES.body1 : body2 ? FONT_SIZES.body2 : h1 ? FONT_SIZES.h1 : h2 ? FONT_SIZES.h2 : h3 ? FONT_SIZES.h3 : h4 ? FONT_SIZES.h4 : h5 ? FONT_SIZES.h5 : h6 ? FONT_SIZES.h6 : FONT_SIZES.body1,
   bold,
   italic,
   underline,
@@ -84,7 +85,7 @@ export function useStyles({
   pr = ph,
   // appearance
   borderColor,
-  border = borderColor ? 1 : undefined,
+  borderWidth = borderColor ? 1 : undefined,
   bg,
   opacity,
   outlined,
@@ -211,7 +212,7 @@ export function useStyles({
     attrs.push(width ? { width } : undefined);
     attrs.push(height ? { height } : undefined);
     attrs.push({ fontSize : fontSize * scale });
-    attrs.push(border ? { border } : undefined);
+    attrs.push(borderWidth ? { borderWidth } : undefined);
     attrs.push(borderColor ? { borderColor } : undefined);
     attrs.push(bg ? { backgroundColor: bg } : undefined);
     attrs.push(rounded ? theme.components.rounded : undefined);
@@ -224,6 +225,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
     attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, fontSize, border, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle, onlyInclude]);
+  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle, onlyInclude]);
   return viewStyle;
 }

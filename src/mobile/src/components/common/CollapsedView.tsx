@@ -11,13 +11,15 @@ import { useStyles } from '~/hooks';
 export type CollapsedViewProps = ViewProps & {
   title?: React.ReactNode;
   startCollapsed?: boolean;
+  indent?: number;
   onExpand?: () => void;
   onCollapse?: () => void;
 };
 
 export function CollapsedView({
   title,
-  startCollapsed,
+  startCollapsed = true,
+  indent = 36,
   onExpand,
   onCollapse,
   children,
@@ -33,11 +35,11 @@ export function CollapsedView({
   }, [collapsed, onCollapse, onExpand]);
 
   return (
-    <View style={ style }>
-      <View row mv={ 8 } gap={ 6 } alignCenter>
+    <View style={ style } gap={ 12 }>
+      <View row gap={ 12 } alignCenter>
         <Button
           elevated
-          p={ 6 }
+          p={ 8 }
           rounded
           iconSize={ 24 }
           onPress={ () => setCollapsed((prev) => !prev) }
@@ -45,7 +47,7 @@ export function CollapsedView({
         {typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
       </View>
       {!collapsed && (
-        <View>
+        <View ml={ indent }>
           {children}
         </View>
       )}

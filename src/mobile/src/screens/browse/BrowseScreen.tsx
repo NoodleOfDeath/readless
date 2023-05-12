@@ -10,6 +10,7 @@ import {
   Button,
   MeterDial,
   Screen,
+  ScrollView,
   TabSwitcher,
   View,
 } from '~/components';
@@ -102,7 +103,7 @@ export function BrowseScreen(_props: ScreenProps<'default'>) {
       onRefresh={ () => activeTab === 0 ? loadCategories() : loadOutlets() }>
       {loading ? (<ActivityIndicator animating size={ 24 } />) : 
         (
-          <View col mb={ 16 }>
+          <ScrollView col mb={ 16 }>
             <TabSwitcher 
               tabHeight={ 48 }
               activeTab={ activeTab }
@@ -208,7 +209,7 @@ export function BrowseScreen(_props: ScreenProps<'default'>) {
                 ))}
               </View>
             </TabSwitcher>
-          </View>
+          </ScrollView>
         )}
     </Screen>
   );

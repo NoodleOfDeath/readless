@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Searchbar, Switch } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 
 import {
   Button,
@@ -37,16 +37,24 @@ export function SearchMenu({
   const [forceHide, setForceHide] = React.useState<boolean>();
 
   const { 
-    preferences: { searchCanMatchAny },
-    setPreference,
+    preferences: { searchHistory },
+    setPreference, 
   } = React.useContext(SessionContext);
   
-  const submit = React.useCallback(() => {
+  const submit = React.useCallback((text?: string) => {
+    if (text) {
+      setValue(text);
+    }
     setForceHide(true);
     setTimeout(() => setForceHide(undefined), 200);
-    onSubmit?.(value);
-    setPreference('searchHistory', (prev) => [...new Set([value, ...(prev ?? [])])].slice(0, 10));
+    onSubmit?.(text ?? value);
+    setTimeout(() => setPreference('searchHistory', (prev) => [...new Set([text ?? value, ...(prev ?? [])])].slice(0, 10)), 500);
   }, [onSubmit, setPreference, value]);
+
+  const handleChangeText = React.useCallback((text: string) => {
+    onChangeText?.(text);
+    setValue(text);
+  }, [onChangeText]);
 
   return (
     <Menu 
@@ -62,34 +70,35 @@ export function SearchMenu({
         <Searchbar
           autoFocus
           placeholder={ placeholder }
-          onChangeText={ (text) => {
-            onChangeText?.(text); setValue(text); 
-          } }
+          onChangeText={ handleChangeText }
           inputStyle={ theme.components.searchBar }
           value={ value }
           onClearIconPress={ () => {
-            onChangeText?.('');
+            handleChangeText('');
             onClear?.();
           } } 
-          onSubmitEditing={ submit } />
+          onSubmitEditing={ () => submit() } />
         <View gap={ 8 }>
-          <Text caption>Results Must Contain</Text>
-          <View row alignCenter gap={ 4 }>
-            <Text caption>Any Words</Text>
-            <Switch
-              color={ theme.colors.primary }
-              value={ !searchCanMatchAny }
-              onValueChange={ (value) => setPreference('searchCanMatchAny', value) } />
-            <Text caption>All Words</Text>
-          </View>
           <Button 
             alignCenter 
             elevated 
             rounded 
             p={ 4 } 
-            onPress={ submit }>
+            onPress={ () => submit() }>
             Search
           </Button>
+        </View>
+        <View>
+          {searchHistory?.map((item) => (
+            <Button
+              key={ item }
+              underline
+              onPress={ () => {
+                submit(item);
+              } }>
+              {item}
+            </Button>
+          ))}
         </View>
       </View>
     </Menu>

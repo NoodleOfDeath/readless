@@ -37,6 +37,7 @@ export type StackableTabParams = TabParams & {
     category: PublicCategoryAttributes;
   }
   bookmarks: undefined;
+  browse: undefined;
 };
 
 export type RootParamList = {
