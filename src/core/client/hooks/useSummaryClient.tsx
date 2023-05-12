@@ -20,13 +20,14 @@ export function useSummaryClient() {
     filter?: string,
     ids?: number[],
     excludeIds?: boolean,
+    matchType: 'all' | 'any' = 'all',
     page = 0,
     pageSize = 10,
     order?: string[]
   ) => {
     try {
       return await withHeaders(API.getSummaries)({
-        excludeIds, filter, ids, order, page, pageSize,
+        excludeIds, filter, ids, matchType, order, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
@@ -84,7 +85,18 @@ export function useSummaryClient() {
         }
         return (prev = bookmarks);
       });
-    } 
+    } else
+    if (interaction === InteractionType.Read && /original source/i.test(content)) {
+      setPreference('readSources', (prev) => {
+        const bookmarks = { ...prev };
+        bookmarks[summary.id] = new Bookmark(true);
+        return (prev = bookmarks);
+      });
+    }
+    setPreference('summaryHistory', (prev) => ({
+      ...prev,
+      [summary.id]: new Bookmark(interaction),
+    }));
     if (alternateAction) {
       // pass
       try {
@@ -92,7 +104,7 @@ export function useSummaryClient() {
       } catch (e) {
         console.error(e);
       }
-    } 
+    }
     return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, setPreference]);
 

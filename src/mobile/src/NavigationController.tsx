@@ -20,19 +20,18 @@ import {
 import { useTheme } from '~/hooks';
 import {
   BrowseScreen,
-  HomeScreen,
-  MyStuffScreen,
+  CategoryScreen,
   NAVIGATION_LINKING_OPTIONS,
+  OutletScreen,
   ScreenComponentType,
   SearchScreen,
-  SettingsScreen,
   StackableTabParams,
   SummaryScreen,
   TabParams,
 } from '~/screens';
 
 export function TabViewController<T extends TabParams = TabParams>(
-  tabs: { [key in keyof T]: ScreenComponentType<T, keyof T> }, 
+  tabs: { component: ScreenComponentType<T, keyof T>, name: keyof T, initialParams?: Partial<T[keyof T]> }[], 
   initialRouteName?: Extract<keyof T, string>
 ) {
   const Controller = () => {
@@ -41,12 +40,15 @@ export function TabViewController<T extends TabParams = TabParams>(
     return (
       <View col>
         <Stack.Navigator initialRouteName={ initialRouteName }>
-          {Object.entries(tabs).map(([name, component]) => (
+          {tabs.map(({
+            component, initialParams, name, 
+          }) => (
             <Stack.Screen
-              key={ name }
+              key={ String(name) }
               name={ name as keyof T }
               component={ component }
-              options={ { headerShown: false } } />
+              initialParams={ initialParams }
+              options={ { headerShown: true } } />
           ))}
         </Stack.Navigator>
         <MediaPlayer visible={ Boolean(currentTrack) } />
@@ -67,42 +69,50 @@ type TabProps = {
 const TABS: TabProps[] = [
   {
     component: TabViewController<StackableTabParams>(
-      {
-        default: HomeScreen, 
-        search: SearchScreen, 
-        summary: SummaryScreen,
-      }
+      [
+        { component: SearchScreen, name:'default' }, 
+        { component: SearchScreen, name: 'search' },
+        { component: SummaryScreen, name: 'summary' },
+        { component: OutletScreen, name: 'outlet' },
+        { component: CategoryScreen, name: 'category' },
+      ],
+      'default'
     ),
     icon: 'newspaper',
-    name: 'Today',
+    name: 'All News',
   },
   {
     badge: (preferences) => Object.keys(preferences.bookmarkedSummaries ?? {}).filter((summary) => !(summary in (preferences.readSummaries ?? {}))).length ?? 0,
     component: TabViewController<StackableTabParams>(
-      {
-        default: MyStuffScreen, 
-        search: SearchScreen, 
-        summary: SummaryScreen,
-      }
+      [
+        {
+          component: SearchScreen, 
+          initialParams: { onlyCustomNews: true }, 
+          name:'default', 
+        }, 
+        { component: SearchScreen, name: 'search' },
+        { component: SummaryScreen, name: 'summary' },
+        { component: OutletScreen, name: 'outlet' },
+        { component: CategoryScreen, name: 'category' },
+      ],
+      'default'
     ),
-    icon: 'bookmark-multiple',
-    name: 'My Stuff',
+    icon: 'cards',
+    name: 'My News',
   },
   {
     component: TabViewController<StackableTabParams>(
-      {
-        default: BrowseScreen, 
-        search: SearchScreen, 
-        summary: SummaryScreen,
-      }
+      [
+        { component: BrowseScreen, name:'default' }, 
+        { component: SearchScreen, name: 'search' },
+        { component: SummaryScreen, name: 'summary' },
+        { component: OutletScreen, name: 'outlet' },
+        { component: CategoryScreen, name: 'category' },
+      ],
+      'default'
     ),
     icon: 'bookshelf',
     name: 'Browse',
-  },
-  {
-    component: TabViewController({ default: SettingsScreen }),
-    icon: 'cog',
-    name: 'Settings',
   },
 ];
 

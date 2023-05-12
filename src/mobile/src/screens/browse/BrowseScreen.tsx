@@ -89,11 +89,17 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   }, [loadCategories, loadOutlets]);
 
   const selectCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigation?.navigate('search', { prefilter: `cat:${category.name}` });
+    navigation?.navigate('search', {
+      category,
+      prefilter: `cat:${category.name}`,
+    });
   }, [navigation]);
 
   const selectOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    navigation?.navigate('search', { prefilter: `src:${outlet.name}` });
+    navigation?.navigate('search', { 
+      outlet,
+      prefilter: `src:${outlet.name}`,
+    });
   }, [navigation]);
   
   const followCategory = React.useCallback((category: PublicCategoryAttributes) => {

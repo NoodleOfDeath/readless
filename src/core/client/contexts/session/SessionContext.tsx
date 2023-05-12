@@ -2,6 +2,7 @@ import React from 'react';
 
 import { UserData, UserDataProps } from './UserData';
 import {
+  Bookmark,
   DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
@@ -9,7 +10,11 @@ import {
   SessionSetOptions,
 } from './types';
 
-import { JwtTokenResponse } from '~/api';
+import {
+  JwtTokenResponse,
+  PublicCategoryAttributes,
+  PublicOutletAttributes,
+} from '~/api';
 import {
   clearCookie,
   getCookie,
@@ -88,6 +93,30 @@ export function SessionContextProvider({ children }: Props) {
     });
   };
 
+  const followOutlet = (outlet: PublicOutletAttributes) => {
+    setPreference('bookmarkedOutlets', (prev) => {
+      const state = { ...prev };
+      if (state[outlet.name]) {
+        delete state[outlet.name];
+      } else {
+        state[outlet.name] = new Bookmark(outlet);
+      }
+      return (prev = state);
+    });
+  };
+
+  const followCategory = (category: PublicCategoryAttributes) => {
+    setPreference('bookmarkedCategories', (prev) => {
+      const state = { ...prev };
+      if (state[category.name]) {
+        delete state[category.name];
+      } else {
+        state[category.name] = new Bookmark(category);
+      }
+      return (prev = state);
+    });
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
     if (!userData?.tokenString) {
@@ -138,6 +167,8 @@ export function SessionContextProvider({ children }: Props) {
     <SessionContext.Provider
       value={ {
         addUserToken,
+        followCategory,
+        followOutlet,
         preferences,
         ready,
         setPreference,

@@ -1,7 +1,7 @@
 import { ViewStyle } from 'react-native';
 
 export const FONT_SIZES = {
-  body1: 16,
+  body1: 18,
   body2: 15,
   caption: 14,
   h1: 36,
@@ -11,7 +11,7 @@ export const FONT_SIZES = {
   h5: 24,
   h6: 22,
   subtitle1: 20,
-  subtitle2: 18,
+  subtitle2: 19,
 } as const;
 
 export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
@@ -88,6 +88,7 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   selectable?: boolean;
   contained?: boolean;
   rounded?: boolean;
+  overflow?: string;
   // other
   style?: Style;
 };
