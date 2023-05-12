@@ -86,6 +86,7 @@ export function useStyles({
   outlined,
   contained,
   rounded,
+  overflow,
   // selectable,
   // other
   style,
@@ -167,8 +168,11 @@ export function useStyles({
     if (opacity) {
       appearance.push({ opacity });
     }
+    if (overflow) {
+      appearance.push({ overflow });
+    }
     return appearance.reduce((cur, n) => ({ ...cur, ...n }), {});
-  }, [opacity, outlined, contained, theme]);
+  }, [opacity, outlined, contained, theme, overflow]);
 
   const viewStyle = React.useMemo(() => {
     const scale = ((((textScale ?? 1) - 1) / 2) + 1);

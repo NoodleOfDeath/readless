@@ -25,13 +25,17 @@ export function Menu({
   
   const computedAnchor = React.useMemo(() => {
     return (
-      <View elevated p={ 3 } rounded onPress={ () => setVisible(true) }>
+      <View rounded onPress={ () => setVisible(true) }>
         {props.autoAnchor}
       </View>
     );
   }, [props.autoAnchor]);
   
-  React.useEffect(() => setVisible(Boolean(props.visible)), [props.visible]);
+  React.useEffect(() => {
+    if (props.visible !== undefined) { 
+      setVisible(props.visible);
+    }
+  }, [props.visible]);
 
   return (
     <RNMenu

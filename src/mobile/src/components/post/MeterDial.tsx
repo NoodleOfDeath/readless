@@ -77,6 +77,7 @@ export function MeterDial({
       <Path 
         d="M90,50 a10,10 0 0,0 -80,0 Z"
         stroke={ theme.colors.text }
+        strokeWidth={ 2 }
         fill="transparent"
         { ...meterStyle } />
       {majorTicks.map((k) => {
@@ -85,6 +86,7 @@ export function MeterDial({
             key={ k }
             d="M50,10 L50,20"
             stroke={ theme.colors.text }
+            strokeWidth={ 2 }
             { ...meterStyle }
             transform={ `rotate(${(180 * k / majorTicks.length) - 90}, 50, 50)` } />
         );
@@ -95,6 +97,7 @@ export function MeterDial({
             key={ k }
             d="M50,10 L50,13"
             stroke={ theme.colors.text }
+            strokeWidth={ 2 }
             { ...meterStyle }
             transform={ `rotate(${(180 * k / minorTicks.length) - 90}, 50, 50)` } />
         );
@@ -102,6 +105,7 @@ export function MeterDial({
       <Path 
         d="M50,50 L46,47 L50,0 L54,47 Z" 
         stroke={ theme.colors.text }
+        strokeWidth={ 2 }
         fill={ theme.colors.invertText }
         { ...needleStyle }
         transform={ `rotate(${rotation}, 50, 50)` } />
@@ -110,6 +114,7 @@ export function MeterDial({
         cy="50"
         r="6"
         stroke={ theme.colors.text }
+        strokeWidth={ 2 }
         fill={ theme.colors.invertText }
         { ...needleStyle } />
     </Svg>

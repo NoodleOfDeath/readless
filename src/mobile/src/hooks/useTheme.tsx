@@ -8,13 +8,14 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
-      inactive: lightMode ? '#888' : '#999',
+      inactive: lightMode ? '#aaa' : '#777',
       invertText: lightMode ? '#fff' : '#000',
       primary: '#8b0000',
       rowEven: lightMode ? '#fcfcfc' : '#202020',
       rowOdd: lightMode ? '#fafafa' : '#222',
       text: lightMode ? '#000' : '#fff',
       textDark: '#000',
+      textDisabled: lightMode ? '#aaa' : '#888',
       textSecondary: lightMode ? '#888' : '#999',
     },
     // containers
@@ -68,7 +69,9 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         },
         menu: {
           backgroundColor: lightMode ? '#fefefe' : '#010101',
+          borderColor: '#888',
           borderRadius: 12,
+          borderWidth: 1,
           marginBottom: 12,
           maxWidth: 300,
           padding: 12,
@@ -81,6 +84,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         searchBar: {
           fontFamily: preferences.fontFamily,
           overflow: 'visible',
+          padding: 0,
           width: '100%',
         },
         surface: {
@@ -101,7 +105,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
       }),
     isLightMode: lightMode,   
     navContainerColors: {
-      background: lightMode ? '#fff' : '#1e1e1e',
+      background: lightMode ? '#eee' : '#1e1e1e',
       border: lightMode ? '#bdbdbd' : '#757575',
       card: lightMode ? '#fff' : '#1e1e1e',
       notification: '#8b0000',

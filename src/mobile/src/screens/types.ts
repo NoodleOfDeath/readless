@@ -8,7 +8,12 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { PublicSummaryAttributes, ReadingFormat } from '~/api';
+import {
+  PublicCategoryAttributes,
+  PublicOutletAttributes,
+  PublicSummaryAttributes,
+  ReadingFormat,
+} from '~/api';
 
 export type TabParams = {
   default: undefined;
@@ -25,6 +30,12 @@ export type StackableTabParams = TabParams & {
     keywords?: string[];
     summary: PublicSummaryAttributes | number;
   };
+  outlet: {
+    outlet: PublicOutletAttributes;
+  }
+  category: {
+    category: PublicCategoryAttributes;
+  }
 };
 
 export type RootParamList = {

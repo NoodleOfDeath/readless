@@ -31,11 +31,12 @@ import {
 } from '~/contexts';
 import {
   useInAppBrowser,
+  useSearch,
   useShare,
   useTheme,
 } from '~/hooks';
 import { averageOfSentiments } from '~/utils';
- 
+
 type Props = {
   summary?: PublicSummaryAttributes;
   tickIntervalMs?: number;
@@ -49,7 +50,6 @@ type Props = {
     analytics?: boolean;
   }
   onFormatChange?: (format?: ReadingFormat) => void;
-  onReferSearch?: (prefilter: string) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
 };
 
@@ -64,9 +64,9 @@ type RenderActionsProps = {
   side?: 'left' | 'right';
 };
 
-function RenderActions({ actions, side }: RenderActionsProps) {
+function RenderActions({ actions }: RenderActionsProps) {
   return (
-    <View ml={ side === 'right' ? 0 : 24 } mr={ side === 'left' ? 0 : 24 }>
+    <View>
       <View col justifyCenter p={ 8 } mb={ 8 } gap={ 8 }>
         {actions.map((action) => (
           <Button 
@@ -74,11 +74,9 @@ function RenderActions({ actions, side }: RenderActionsProps) {
             elevated
             flexGrow={ 1 }
             flex={ 1 }
-            mv={ 4 }
             p={ 8 }
             alignCenter
             justifyCenter
-            rounded
             caption
             startIcon={ action.startIcon }
             onPress={ action.onPress }>
@@ -128,12 +126,15 @@ export function Summary({
   disableInteractions = false,
   collapsed,
   onFormatChange,
-  onReferSearch,
   onInteract,
 }: Props) {
+
   const { openURL } = useInAppBrowser();
-  const theme = useTheme();
+  const { openOutlet, openCategory } = useSearch();
   const { copyToClipboard } = useShare({ onInteract });
+
+  const theme = useTheme();
+
   const {
     preferences: {
       compactMode,
@@ -141,8 +142,10 @@ export function Summary({
       preferredReadingFormat, 
       bookmarkedSummaries, 
       readSummaries,
+      readSources,
     }, setPreference, 
   } = React.useContext(SessionContext);
+
   const {
     showShareDialog, setShowFeedbackDialog, setShowShareDialog, 
   } = React.useContext(DialogContext);
@@ -180,16 +183,8 @@ export function Summary({
       .replace(/ minutes?/, 'm')
       .replace(/ hours?/, 'h')
       .replace(/ days?/, 'd');
-    const generatedTime = formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true })
-      .replace(/about /, '')
-      .replace(/less than a minute ago/, 'just now')
-      .replace(/ minutes/, 'm')
-      .replace(/ hours?/, 'h')
-      .replace(/ days?/, 'd');
-    return new Date(summary.originalDate ?? 0).valueOf() > 0 && originalTime !== generatedTime ? 
-      `${originalTime} ${`(generated ${generatedTime})`}` : 
-      `${new Date(summary.originalDate ?? 0).valueOf() > 0 ? generatedTime : `generated ${generatedTime}`}`;
-  }, [summary.createdAt, summary.originalDate, lastTick]);
+    return originalTime;
+  }, [summary.originalDate, lastTick]);
   
   const content = React.useMemo(() => {
     if (!format) {
@@ -220,10 +215,6 @@ export function Summary({
         ...prev,
         [summary.id]: new Bookmark(true),
       }));
-      setPreference('summaryHistory', (prev) => ({
-        ...prev,
-        [summary.id]: new Bookmark(InteractionType.Read),
-      }));
     }, 200);
     if (!initialFormat) {
       return;
@@ -241,16 +232,28 @@ export function Summary({
   
   const renderRightActions = React.useCallback(() => {
     const actions = [{
-      onPress: () => setPreference('readSummaries', (prev) => {
-        onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !isRead });
-        const newBookmarks = { ...prev };
-        if (isRead) {
-          delete newBookmarks[summary.id];
-        } else {
-          newBookmarks[summary.id] = new Bookmark(true);
-        }
-        return (prev = newBookmarks);
-      }),
+      onPress: () => {
+        setPreference('readSummaries', (prev) => {
+          onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !isRead });
+          const newBookmarks = { ...prev };
+          if (isRead) {
+            delete newBookmarks[summary.id];
+          } else {
+            newBookmarks[summary.id] = new Bookmark(true);
+          }
+          return (prev = newBookmarks);
+        });
+        setPreference('readSources', (prev) => {
+          onInteract?.(InteractionType.Read, 'mark-source-unread', { isRead: !isRead });
+          const newBookmarks = { ...prev };
+          if (isRead) {
+            delete newBookmarks[summary.id];
+          } else {
+            newBookmarks[summary.id] = new Bookmark(true);
+          }
+          return (prev = newBookmarks);
+        });
+      },
       startIcon: isRead ? 'email-mark-as-unread' : 'email-open',
       text: isRead ? 'Mark as Unread' : 'Mark as Read',
     }, {
@@ -274,7 +277,7 @@ export function Summary({
       text: 'Report a Bug',
     }];
     return (
-      <RenderActions actions={ actions } side='right' />
+      <RenderActions actions={ actions } />
     );
   }, [isRead, setPreference, onInteract, summary, setShowFeedbackDialog]);
   
@@ -285,78 +288,78 @@ export function Summary({
         renderRightActions={ renderRightActions }>
         <ViewShot ref={ viewshot }>
           <View 
-            elevated
-            mh={ 16 }
-            rounded 
+            elevated 
             style={ theme.components.card } 
             inactive={ isRead } 
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }
             gap={ 3 }>
             <View row gap={ 12 }>
-              <View col width="100%" gap={ 6 }>
-                <View col>
-                  {showShareDialog || keywords.length === 0 ? <Text bold subtitle1>{(compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title}</Text> : (
-                    <Markdown 
-                      bold
-                      subtitle1
-                      styles={ {
-                        em: { 
-                          backgroundColor: 'yellow',
-                          color: 'black', 
-                        }, 
-                      } }>
-                      {markdown((compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title )}
-                    </Markdown>
-                  )}
-                  <View col />
-                  {!(compact || compactMode) && (
-                    <View>
-                      <View row alignCenter gap={ 6 }>
-                        <Button 
-                          elevated
-                          row
-                          alignCenter
-                          gap={ 6 }
-                          p={ 4 }
-                          rounded
-                          startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                          onPress={ () => onReferSearch?.(`cat:${summary.category.name}`) } />
-                        <Button 
-                          row
-                          elevated
-                          p={ 4 }
-                          rounded
-                          onPress={ () => onReferSearch?.(`src:${summary.outlet.name}`) }>
-                          {summary.outlet.displayName}
-                        </Button>
+              <View col width="100%">
+                <View col gap={ 12 }>
+                  <View>
+                    <View row alignCenter gap={ 6 }>
+                      <Text 
+                        italic
+                        onPress={ () => openOutlet(summary.outlet) }>
+                        {summary.outlet.displayName}
+                      </Text>
+                      <View row />
+                      <MeterDial 
+                        value={ averageOfSentiments(summary.sentiments)?.score ?? 0 }
+                        width={ 40 } />
+                    </View>
+                  </View>
+                  <View>
+                    <View row gap={ 16 }>
+                      {!(compact || compactMode) && summary.imageUrl && (
+                        <View
+                          justifyCenter
+                          width={ isRead ? '15%' : '20%' }
+                          gap={ 6 }>
+                          <Menu
+                            autoAnchor={ (
+                              <Image
+                                source={ { uri: summary.imageUrl } }  
+                                rounded
+                                aspectRatio={ 1 } />
+                            ) }>
+                            <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
+                          </Menu>
+                        </View>
+                      )}
+                      <View row>
+                        {showShareDialog || keywords.length === 0 ? (
+                          <Text 
+                            bold
+                            justifyCenter
+                            subtitle1
+                            color={ !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                            {(compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title}
+                          </Text>
+                        ) : (
+                          <Markdown 
+                            bold
+                            subtitle1
+                            styles={ {
+                              em: { 
+                                backgroundColor: 'yellow',
+                                color: 'black',
+                                flexDirection: 'row',
+                                flexGrow: 1,
+                              }, 
+                            } }>
+                            {markdown((compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title )}
+                          </Markdown>
+                        )}
                       </View>
                     </View>
-                  )}
+                  </View>
+                  <View col />
                 </View>
               </View>
-              {!(compact || compactMode) && summary.imageUrl && (
-                <View
-                  width="25%" 
-                  gap={ 6 }>
-                  <Menu
-                    autoAnchor={ (
-                      <Image
-                        source={ { uri: summary.imageUrl } }  
-                        rounded
-                        aspectRatio={ 1 } />
-                    ) }>
-                    <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
-                  </Menu>
-                  <View row gap={ 6 } alignCenter justifyCenter>
-                    <MeterDial 
-                      value={ averageOfSentiments(summary.sentiments)?.score ?? 0 }
-                      width={ 50 } />
-                  </View>
-                </View>
-              )}
             </View>
             {!(compact || compactMode) && showShortSummary === true && (
-              <View>
+              <View row>
                 <Divider />
                 {(showShareDialog || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
                   <Markdown 
@@ -366,6 +369,8 @@ export function Summary({
                       em: { 
                         backgroundColor: 'yellow',
                         color: 'black', 
+                        flexDirection: 'row',
+                        flexGrow: 1, 
                       }, 
                     } }>
                     {markdown(summary.shortSummary ?? '')}
@@ -376,16 +381,31 @@ export function Summary({
             {!(compact || compactMode) && (
               <React.Fragment>
                 <Divider />
-                <View row alignCenter gap={ 6 }>
+                <View row alignCenter gap={ 12 }>
+                  <Button 
+                    elevated
+                    rounded
+                    alignCenter
+                    p={ 4 }
+                    startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                    onPress={ () => openCategory(summary.category) } />
                   <View row>
                     <View gap={ 0 } width="100%">
-                      <Text bold caption>{`${timeAgo} from`}</Text>
+                      <View row gap={ 6 }>
+                        <Text 
+                          bold 
+                          caption
+                          color={ !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                          {`${timeAgo} from`}
+                        </Text>
+                      </View>
                       <Text 
                         row
                         numberOfLines={ 1 }
                         underline
                         rounded
                         caption
+                        color={ !showShareDialog && readSources?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }
                         onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
                         onLongPress={ () => copyToClipboard(summary.url) }>
                         {summary.url}

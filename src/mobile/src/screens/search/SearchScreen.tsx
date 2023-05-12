@@ -1,12 +1,7 @@
 import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
-import {
-  Provider,
-  Searchbar,
-  Switch,
-} from 'react-native-paper';
-
+import { DisplaySettingsMenu } from './DisplaySettingsMenu';
 import { SearchMenu } from './SearchMenu';
 
 import {
@@ -17,12 +12,8 @@ import {
 import {
   ActivityIndicator,
   Button,
-  Divider,
-  Icon,
-  Menu,
   Screen,
   Summary,
-  TabSwitcher,
   Text,
   View,
 } from '~/components';
@@ -32,7 +23,11 @@ import {
   SessionContext,
   ToastContext,
 } from '~/contexts';
-import { useSummaryClient, useTheme } from '~/hooks';
+import {
+  useSearch,
+  useSummaryClient,
+  useTheme,
+} from '~/hooks';
 import { ScreenProps } from '~/screens';
 import * as ArrayUtils from '~/utils';
 
@@ -42,17 +37,14 @@ export function SearchScreen({
 }: ScreenProps<'search'>) {
   const { 
     preferences: {
-      compactMode,
       bookmarkedCategories,
       bookmarkedOutlets,
       preferredReadingFormat,
-      readSummaries,
       removedSummaries,
       sortOrder,
-      showShortSummary,
+      searchCanMatchAny,
     },
     ready,
-    setPreference,
   } = React.useContext(SessionContext);
   const toast = React.useContext(ToastContext);
   const {
@@ -60,6 +52,7 @@ export function SearchScreen({
   } = React.useContext(MediaContext);
   const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
+  const { search } = useSearch();
   const theme = useTheme();
   
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter);
@@ -71,12 +64,9 @@ export function SearchScreen({
       setPrefilter(route?.params?.prefilter);
     }
   }, [route]);
-  
-  React.useEffect(() => {
-    navigation?.setOptions({ headerShown: false });
-  }, [prefilter, navigation]);
 
   const [loading, setLoading] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [pendingReload, setPendingReload] = React.useState(false);
@@ -108,6 +98,16 @@ export function SearchScreen({
   
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
+  const handlePlayAll = React.useCallback(async () => {
+    if (summaries.length < 1) {
+      return;
+    }
+    queueSummary(summaries);
+    summaries.forEach((summary) => {
+      handleInteraction(summary, InteractionType.Listen);
+    });
+  }, [summaries, queueSummary, handleInteraction]);
+
   const load = React.useCallback(async (page: number) => {
     setLoading(true);
     if (page === 0) {
@@ -128,6 +128,7 @@ export function SearchScreen({
         filter.trim(),
         specificIds ?? excludeIds,
         !specificIds && Boolean(excludeIds),
+        searchCanMatchAny ? 'any' : 'all',
         page,
         pageSize,
         sortOrder
@@ -155,24 +156,61 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder, toast]);
-
+  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder, toast, searchCanMatchAny]);
+  
   const onMount = React.useCallback(() => {
     if (!ready) {
       return;
     }
-    setSearchText('');
-    setPage(0);
-    load(0);
+    const headerLeft = (
+      <SearchMenu 
+        initialValue={ prefilter }
+        onChangeText={ (text) => setSearchText(text) }
+        onSubmit={ () => search({ onlyCustomNews, prefilter: searchText }) } />
+    );
     if (prefilter) {
-      navigation?.setOptions({ headerShown: true, headerTitle: prefilter });
+      setSearchText(prefilter + ' ');
+      navigation?.setOptions({ 
+        headerLeft: () => headerLeft,
+        headerRight: () => (
+          <View>
+            <View row gap={ 12 } alignCenter>
+              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
+              <DisplaySettingsMenu />
+            </View>
+          </View>
+        ),
+        headerShown: true,
+        headerTitle: () => '',
+      });
+      setKeywords(prefilter.replace(/['"]/g, '').split(' ').filter((s) => s.trim()));
+    } else {
+      setSearchText('');
+      navigation?.setOptions({ 
+        headerLeft: () => headerLeft,
+        headerRight: () => (
+          <View>
+            <View row gap={ 12 } alignCenter>
+              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
+              <DisplaySettingsMenu />
+            </View>
+          </View>
+        ),
+        headerShown: true,
+        headerTitle: () => <Text h5>{onlyCustomNews ? 'My News' : 'All News'}</Text>,
+      });
     }
-  }, [load, navigation, prefilter, ready]);
+    if (!mounted) {
+      setPage(0);
+      load(0);
+    }
+    setMounted(true);
+  }, [ready, searchText, prefilter, mounted, search, navigation, handlePlayAll, onlyCustomNews, load]);
   
   React.useEffect(
     () => onMount(), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pageSize, prefilter, ready, sortOrder]
+    [pageSize, prefilter, ready, searchText, sortOrder, bookmarkedCategories, bookmarkedOutlets]
   );
   
   React.useEffect(() => {
@@ -205,27 +243,12 @@ export function SearchScreen({
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
-        keywords: searchText ? searchText.split(' ').filter((s) => s.trim()) : [],
+        keywords: searchText ? searchText.replace(/['"]/g, '').split(' ').filter((s) => s.trim()) : [],
         summary,
       });
     },
     [handleInteraction, navigation, preferredReadingFormat, searchText]
   );
-  
-  const removeReadSummaries = React.useCallback(() => {
-    setPreference('removedSummaries', (prev) => (prev = ({ ...prev, ...readSummaries })));
-    setPendingReload(true);
-  }, [setPreference, readSummaries]);
-
-  const handlePlayAll = React.useCallback(async () => {
-    if (summaries.length < 1) {
-      return;
-    }
-    queueSummary(summaries);
-    summaries.forEach((summary) => {
-      handleInteraction(summary, InteractionType.Listen);
-    });
-  }, [summaries, queueSummary, handleInteraction]);
 
   const loadMoreAsNeeded = React.useCallback(async () => {
     if (!currentTrackIndex) {
@@ -254,98 +277,57 @@ export function SearchScreen({
     const subscriber = DeviceEventEmitter.addListener('load-more', loadMore);
     return () => subscriber.remove();
   }, [loadMore]);
-  
-  const handleReferSearch = React.useCallback((newPrefilter: string) => {
-    if (prefilter === newPrefilter) {
-      return;
-    }
-    navigation?.push('search', { prefilter: newPrefilter });
-  }, [navigation, prefilter]);
 
   return (
     <Screen
       refreshing={ loading }
       onRefresh={ () => load(0) }>
-      <React.Fragment>
-        <View col mh={ 16 }>
-          <View row mb={ 8 }>
-            {!prefilter && (
-              <Menu width={ 300 } autoAnchor={ <Icon name="magnify" size={ 24 } /> }>
-                <SearchMenu 
-                  onClear={ () => setPendingReload(true) }
-                  onSubmit={ (text) => setSearchText(text) } />
-              </Menu>
-            )}
-            <View row />
-            <View>
-              <View row gap={ 6 } alignCenter>
-                <Menu autoAnchor={ <Icon name="view-agenda" size={ 24 } /> }>
-                  <View gap={ 2 }>
-                    <Text bold>Expanded Mode (Default)</Text>
-                  </View>
-                </Menu>
-                <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
-                <Menu autoAnchor={ <Icon name="view-headline" size={ 24 } /> }>
-                  <View gap={ 2 }>
-                    <Text bold>Headline Mode</Text>
-                    <Text>Note: When short summaries are enabled, short summaries will be shown instead of headlines</Text>
-                    <Divider />
-                    <Text>
-                      {`Short summaries are currently ${ showShortSummary ? 'enabled' : 'disabled' }`}
-                    </Text>
-                    <Switch value={ showShortSummary } onValueChange={ () => setPreference('showShortSummary', (prev) => !prev) } color={ theme.colors.primary } />
-                  </View>
-                </Menu>
-              </View>
-            </View>
-          </View>
-          {!loading && onlyCustomNews && summaries.length === 0 && (
-            <View col justifyCenter p={ 16 }>
-              <Text subtitle1 pb={ 8 }>
-                It seems your filters are too specific. You may want to consider 
-                adding more categories and/or news sources to your follow list.
-              </Text>
-              <Button 
-                alignCenter
-                rounded 
-                outlined 
-                p={ 8 }
-                selectable
-                onPress={ () => navigation?.getParent()?.navigate('Browse') }>
-                Go to Browse
-              </Button>
-            </View>
-          )}
-        </View>
-        {summaries.map((summary) => (
-          <Summary
-            key={ summary.id }
-            summary={ summary }
-            keywords={ showShareDialog ? undefined : keywords }
-            onFormatChange={ (format) => handleFormatChange(summary, format) }
-            onInteract={ (...e) => handleInteraction(summary, ...e) }
-            onReferSearch={ handleReferSearch } />
-        ))}
-        {!loading && !noResults && totalResultCount > summaries.length && (
-          <View row justifyCenter p={ 16 } pb={ 24 }>
+      <View col mh={ 16 } mt={ 12 }>
+        {!loading && onlyCustomNews && summaries.length === 0 && (
+          <View col justifyCenter p={ 16 }>
+            <Text subtitle1 pb={ 8 }>
+              It seems your filters are too specific. You may want to consider 
+              adding more categories and/or news sources to your follow list.
+            </Text>
             <Button 
-              outlined
-              rounded
+              alignCenter
+              rounded 
+              outlined 
               p={ 8 }
               selectable
-              onPress={ () => loadMore() }>
-              Load More
+              onPress={ () => navigation?.getParent()?.navigate('Browse') }>
+              Go to Browse
             </Button>
           </View>
         )}
-        {loading && (
-          <View row mb={ 64 }>
-            <View row justifyCenter p={ 16 } pb={ 24 }>
-              <ActivityIndicator size="large" color={ theme.colors.primary } />
-            </View>
+      </View>
+      {summaries.map((summary) => (
+        <Summary
+          key={ summary.id }
+          summary={ summary }
+          keywords={ showShareDialog ? undefined : keywords }
+          onFormatChange={ (format) => handleFormatChange(summary, format) }
+          onInteract={ (...e) => handleInteraction(summary, ...e) } />
+      ))}
+      {!loading && !noResults && totalResultCount > summaries.length && (
+        <View row justifyCenter p={ 16 } pb={ 24 }>
+          <Button 
+            outlined
+            rounded
+            p={ 8 }
+            selectable
+            onPress={ () => loadMore() }>
+            Load More
+          </Button>
+        </View>
+      )}
+      {loading && (summaries.length > 0 || !mounted) && (
+        <View row mb={ 64 }>
+          <View row justifyCenter p={ 16 } pb={ 24 }>
+            <ActivityIndicator size="large" color={ theme.colors.primary } />
           </View>
-        )}
-      </React.Fragment>
+        </View>
+      )}
     </Screen>
   );
 }

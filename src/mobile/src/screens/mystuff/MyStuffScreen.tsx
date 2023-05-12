@@ -80,10 +80,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
     [handleInteraction, navigation, preferredReadingFormat]
   );
   
-  const handleReferSearch = React.useCallback((prefilter: string) => {
-    navigation?.push('search', { prefilter });
-  }, [navigation]);
-  
   return (
     <Screen 
       refreshing={ refreshing }
@@ -147,7 +143,6 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
                         key={ id }
                         summary={ bookmark.item }
                         onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
-                        onReferSearch={ handleReferSearch }
                         onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
                     );
                   })}

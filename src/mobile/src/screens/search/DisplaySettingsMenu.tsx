@@ -4,19 +4,19 @@ import RNFS from 'react-native-fs';
 import { Switch } from 'react-native-paper';
 
 import { ReadingFormat } from '~/api';
-import { 
+import {
   Button,
+  Divider,
+  Icon,
+  Menu,
   ReadingFormatSelector,
-  Screen, 
-  ScrollView, 
-  Summary, 
+  ScrollView,
   TabSwitcher,
   Text,
   View,
 } from '~/components';
 import { ColorMode, SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
-import { ScreenProps } from '~/screens';
 
 type OptionProps = React.PropsWithChildren<{
   id: string;
@@ -39,9 +39,13 @@ const fonts = [
   'Roboto',
 ];
 
-export function SettingsScreen(_: ScreenProps<'default'>) {
+export function DisplaySettingsMenu() {
+
+  const theme = useTheme();
+
   const {
     preferences: {
+      compactMode,
       textScale, 
       fontFamily,
       preferredReadingFormat,
@@ -53,7 +57,6 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
     }, 
     setPreference,
   } = React.useContext(SessionContext);
-  const theme = useTheme();
   
   const [loading, setLoading] = React.useState(false);
   const [activeDisplayMode, setActiveDisplayMode] = React.useState(displayModes.indexOf(displayMode ?? 'system'));
@@ -135,7 +138,7 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             } } />
         ),
         id: 'short-summaries',
-        label: 'Show Short Summaries under titles',
+        label: 'Short Summaries under titles',
       },
       {
         children: (
@@ -248,18 +251,28 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
       },
     ];
   }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, showShortSummary, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, summaryHistory, cacheSize, setPreference, fontFamily, handleClearCache]);
-  
+
   return (
-    <Screen
-      refreshing={ loading }
-      onRefresh={ onMount }>
-      <TabSwitcher tabHeight={ 48 } titles={ ['Preferences'] }>
-        <View col mh={ 16 } gap={ 12 }>
-          <Text>Example Summary</Text>
-          <Summary 
-            disableInteractions
-            collapsed
-            initialFormat={ ReadingFormat.Summary } />
+    <Menu
+      width={ 300 }
+      autoAnchor={
+        <Icon name="cog" size={ 24 } />
+      }>
+      <View gap={ 6 } overflow="hidden">
+        <View row gap={ 6 } alignCenter>
+          <View>
+            <Text row gap={ 4 } startIcon="view-agenda" bold alignCenter>
+              Expanded Mode
+            </Text>
+          </View>
+          <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
+          <View>
+            <Text row gap={ 4 } startIcon="view-headline" bold alignCenter>
+              Headline Mode
+            </Text>
+          </View>
+        </View>
+        <View>
           {options.filter((o) => o.visible !== false).map((option) => (
             <View col key={ option.id } p={ 4 } mv={ 4 }>
               {!option.onPress && option.label && (
@@ -278,7 +291,21 @@ export function SettingsScreen(_: ScreenProps<'default'>) {
             </View>
           ))}
         </View>
-      </TabSwitcher>
-    </Screen>
+        {/* <View>
+          <Button
+            row
+            alignCenter
+            gap={ 4 }
+            elevated
+            rounded
+            onPress={ () => handlePlayAll() }
+            p={ 4 }
+            startIcon="volume-high">
+            Play All
+          </Button>
+          <View row />
+        </View> */}
+      </View>
+    </Menu>
   );
 }

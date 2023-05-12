@@ -43,6 +43,8 @@ export type Preferences = {
   fontFamily?: string;
   letterSpacing?: number;
   sortOrder?: string[];
+  searchHistory?: string[];
+  searchCanMatchAny?: boolean;
   showShortSummary?: boolean;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<boolean> };
@@ -50,14 +52,12 @@ export type Preferences = {
   bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
   removedSummaries?: { [key: number]: Bookmark<boolean> };
   readSummaries?: { [key: number]: Bookmark<boolean> };
+  readSources?: { [key: number]: Bookmark<boolean> };
   summaryHistory?: { [key: number]: Bookmark<InteractionType> };
   showOnlyBookmarkedNews?: boolean;
 };
 
-export const DEFAULT_PREFERENCES: Partial<Preferences> = { 
-  fontFamily: 'Alegreya',
-  sortOrder: ['originalDate:desc'],
-};
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { sortOrder: ['originalDate:desc'] };
 
 // Headers
 
@@ -79,13 +79,20 @@ export type SessionContextType = {
   // preferences
   preferences: Preferences;
   setPreference<Key extends keyof Preferences>(key: Key, value: React.SetStateAction<Preferences[Key]>): void;
-  // header hooks
+  followOutlet: (outlet: PublicOutletAttributes) => void;
+  followCategory: (category: PublicCategoryAttributes) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
 
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   addUserToken: () => {
+    /* placeholder function */
+  },
+  followCategory: () => {
+    /* placeholder function */
+  },
+  followOutlet: () => {
     /* placeholder function */
   },
   preferences: {},
