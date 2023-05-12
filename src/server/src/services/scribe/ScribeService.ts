@@ -117,7 +117,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Does the following appear to be a news article or story? A collection of article headlines, advertisements, description of a news website, or subscription program should not be considered a news article/story. Please respond with just "yes" or "no"\n\n', 
+          'Does the following appear to be a news article or story? A collection of article headlines, pictures, videos, advertisements, description of a news website, or subscription program should not be considered a news article/story. Please respond with just "yes" or "no"\n\n', 
           newSummary.filteredText,
         ].join(''),
       },
@@ -154,7 +154,7 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide another unbiased summary using no more than 30 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
+          'Please provide another unbiased summary using no more than 30 words. Do not use phrases like "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -165,7 +165,7 @@ export class ScribeService extends BaseService {
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide another longer two paragraph unbiased summary using no more than 80 words. Make note of any biases within the article. Do not start with "The article/story" or "This article/story".', 
+          'Please provide another longer two paragraph unbiased summary using no more than 80 words. Do not use phrases like "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
