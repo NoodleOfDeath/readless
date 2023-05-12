@@ -14,9 +14,9 @@ import {
   AnalyticsView,
   Button,
   Divider,
+  Highlighter,
   Icon,
   Image,
-  Markdown,
   Menu,
   MeterDial,
   ReadingFormatSelector,
@@ -31,7 +31,7 @@ import {
 } from '~/contexts';
 import {
   useInAppBrowser,
-  useSearch,
+  useNavigation,
   useShare,
   useTheme,
 } from '~/hooks';
@@ -130,7 +130,7 @@ export function Summary({
 }: Props) {
 
   const { openURL } = useInAppBrowser();
-  const { openOutlet, openCategory } = useSearch();
+  const { openOutlet, openCategory } = useNavigation();
   const { copyToClipboard } = useShare({ onInteract });
 
   const theme = useTheme();
@@ -166,13 +166,6 @@ export function Summary({
   
   const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
 
-  const markdown = React.useCallback((text: string) => {
-    for (const word of keywords) {
-      text = text.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
-    }
-    return text;
-  }, [keywords]);
-
   const timeAgo = React.useMemo(() => {
     if (new Date(summary.originalDate ?? 0) > lastTick) {
       return 'just now';
@@ -194,11 +187,8 @@ export function Summary({
     if (format === 'bullets') {
       content = summary.bullets.join('\n');
     }
-    for (const word of keywords) {
-      content = content?.replace(new RegExp(`(${word})`, 'gi'), ' _$1_ ');
-    }
     return content;
-  }, [format, keywords, summary]);
+  }, [format, summary]);
 
   // update time ago every `tickIntervalMs` milliseconds
   React.useEffect(() => {
@@ -327,29 +317,23 @@ export function Summary({
                           </Menu>
                         </View>
                       )}
-                      <View row>
+                      <View row alignCenter>
                         {showShareDialog || keywords.length === 0 ? (
                           <Text 
                             bold
                             justifyCenter
                             subtitle1
-                            color={ !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                            color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
                             {(compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title}
                           </Text>
                         ) : (
-                          <Markdown 
+                          <Highlighter
                             bold
                             subtitle1
-                            styles={ {
-                              em: { 
-                                backgroundColor: 'yellow',
-                                color: 'black',
-                                flexDirection: 'row',
-                                flexGrow: 1,
-                              }, 
-                            } }>
-                            {markdown((compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title )}
-                          </Markdown>
+                            justifyCenter
+                            highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                            searchWords={ keywords }
+                            textToHighlight={ summary.title } />
                         )}
                       </View>
                     </View>
@@ -362,19 +346,10 @@ export function Summary({
               <View row>
                 <Divider />
                 {(showShareDialog || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
-                  <Markdown 
-                    bold
-                    subtitle1
-                    styles={ {
-                      em: { 
-                        backgroundColor: 'yellow',
-                        color: 'black', 
-                        flexDirection: 'row',
-                        flexGrow: 1, 
-                      }, 
-                    } }>
-                    {markdown(summary.shortSummary ?? '')}
-                  </Markdown>
+                  <Highlighter 
+                    highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                    searchWords={ keywords }
+                    textToHighlight={ summary.shortSummary ?? '' } />
                 )}
               </View>
             )}
@@ -395,7 +370,7 @@ export function Summary({
                         <Text 
                           bold 
                           caption
-                          color={ !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                          color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
                           {`${timeAgo} from`}
                         </Text>
                       </View>
@@ -405,7 +380,7 @@ export function Summary({
                         underline
                         rounded
                         caption
-                        color={ !showShareDialog && readSources?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }
+                        color={ !initialFormat && !showShareDialog && readSources?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }
                         onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
                         onLongPress={ () => copyToClipboard(summary.url) }>
                         {summary.url}
@@ -471,18 +446,12 @@ export function Summary({
                 <View>
                   {showShareDialog || keywords.length === 0 ? (
                     <Text>{content}</Text>
-                  ) : content.split(/\n/).map((line, i) => (
-                    <Markdown
-                      key={ i }
-                      styles={ {
-                        em: { 
-                          backgroundColor: 'yellow',
-                          color: 'black',
-                        }, 
-                      } }>
-                      {line}
-                    </Markdown>
-                  ))}
+                  ) : (
+                    <Highlighter 
+                      highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                      searchWords={ keywords }
+                      textToHighlight={ content } />
+                  )}
                 </View>
               </View>
             )}

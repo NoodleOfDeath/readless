@@ -9,7 +9,7 @@ import { ScreenProps } from '~/screens';
 
 export function CategoryScreen({
   route,
-  navigation,
+  // navigation,
 }: ScreenProps<'category'>) {
 
   const category = React.useMemo(() => route?.params?.category, [route]);

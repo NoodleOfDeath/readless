@@ -2019,6 +2019,14 @@
   resolved "https://registry.yarnpkg.com/@react-native/polyfills/-/polyfills-2.0.0.tgz#4c40b74655c83982c8cf47530ee7dc13d957b6aa"
   integrity sha512-K0aGNn1TjalKj+65D7ycc1//H9roAQ51GJVk5ZJQFb2teECGmzd86bYDC0aYdbRf7gtovescq4Zt6FR0tgXiHQ==
 
+"@react-native/virtualized-lists@^0.72.4":
+  version "0.72.4"
+  resolved "https://registry.yarnpkg.com/@react-native/virtualized-lists/-/virtualized-lists-0.72.4.tgz#926ddb5eced27dc3975dad0915cb96d1f9c01c62"
+  integrity sha512-2t8WBVACkKEadtsiGYJaYTix575J/5VQJyqnyL7iDIsd3iG7ODjfMDsTGsVyAA2Av/xeVIuVQRUX0ZzV3cucug==
+  dependencies:
+    invariant "^2.2.4"
+    nullthrows "^1.1.1"
+
 "@react-navigation/bottom-tabs@^6.5.7":
   version "6.5.7"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.5.7.tgz#08470c96e0d11481422214bb98f0ff034038856c"
@@ -2269,6 +2277,14 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
+"@types/react-native-highlight-words@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-native-highlight-words/-/react-native-highlight-words-1.0.2.tgz#8db0915f42b599384627bc08461aff93edc1fa45"
+  integrity sha512-cs3asWG2l8lawsrwMmrlR6jeUguBeA65dIQBPQ3Mc/XTPZAfxUl6/hOY/XAXzMPmdWU+PbfjkdgbbAcLS3gG1A==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-native-vector-icons@^6.4.13":
   version "6.4.13"
   resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.13.tgz#28b34d15094e040718beefb67cb3eff0c4994cb6"
@@ -2283,6 +2299,14 @@
   integrity sha512-fWK/2LOo8kTCGkKefM6u2GETUazS13uyyU/UIpzspEb1J6oL47vqhhBJuq/wxYFFV251tXPu6ZE2co0PDNrKrQ==
   dependencies:
     "@types/node-fetch" "*"
+
+"@types/react-native@*":
+  version "0.72.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.72.0.tgz#d19f0115936129caca770618af82b16e15ea8bec"
+  integrity sha512-g1PJXUQ0SnYTimfTeN9dRqj8VfzvgJjt/eakEH7+tlm/ZiEPiL9xCool4iKmqalthwtM0/BkGhjwrKnJyg1JDA==
+  dependencies:
+    "@react-native/virtualized-lists" "^0.72.4"
+    "@types/react" "*"
 
 "@types/react-native@^0.70":
   version "0.70.13"
@@ -4818,6 +4842,11 @@ hermes-profile-transformer@^0.0.6:
   integrity sha512-cnN7bQUm65UWOy6cbGcCcZ3rpwW8Q/j4OP5aWRhEry4Z2t2aR1cjrbp0BS+KiBN0smvP1caBgAuxutvyvJILzQ==
   dependencies:
     source-map "^0.7.3"
+
+highlight-words-core@^1.0.3:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/highlight-words-core/-/highlight-words-core-1.2.2.tgz#1eff6d7d9f0a22f155042a00791237791b1eeaaa"
+  integrity sha512-BXUKIkUuh6cmmxzi5OIbUJxrG8OAk2MqoL1DtO3Wo9D2faJg2ph5ntyuQeLqaHJmzER6H5tllCDA9ZnNe9BVGg==
 
 hoist-non-react-statics@^3.3.0:
   version "3.3.2"
@@ -7566,7 +7595,7 @@ prompts@^2.0.1, prompts@^2.3.2, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.0.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.0.0, prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -7751,6 +7780,14 @@ react-native-gradle-plugin@^0.71.15:
   version "0.71.17"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.17.tgz#cf780a27270f0a32dca8184eff91555d7627dd00"
   integrity sha512-OXXYgpISEqERwjSlaCiaQY6cTY5CH6j73gdkWpK0hedxtiWMWgH+i5TOi4hIGYitm9kQBeyDu+wim9fA8ROFJA==
+
+react-native-highlight-words@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-highlight-words/-/react-native-highlight-words-1.0.1.tgz#d998f8eb88765820367c6e8a12e1392df7fd58c7"
+  integrity sha512-cza6kbXeX2bWIwog6iatcMoWX6xogWvSKK1esCA7EQnQ/2hmqvdYGdGjvzTwLXyLmcBRySgreARNNKuDrKh7dg==
+  dependencies:
+    highlight-words-core "^1.0.3"
+    prop-types "^15.5.7"
 
 react-native-inappbrowser-reborn@^3.7.0:
   version "3.7.0"

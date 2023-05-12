@@ -5,8 +5,9 @@ import { Switch } from 'react-native-paper';
 
 import { ReadingFormat } from '~/api';
 import {
+  AVAILABLE_FONTS,
+  ActivityIndicator,
   Button,
-  Divider,
   Icon,
   Menu,
   ReadingFormatSelector,
@@ -18,26 +19,11 @@ import {
 import { ColorMode, SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
-type OptionProps = React.PropsWithChildren<{
-  id: string;
-  label?: string;
-  onPress?: () => void;
-  visible?: boolean;
-}>;
-
 const displayModes = ['light', 'system', 'dark'];
 const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
 }));
-const fonts = [
-  'Alegreya', 
-  'DM Sans',
-  'Faustina',
-  'Lato',
-  'Manuale',
-  'Roboto',
-];
 
 export function DisplaySettingsMenu() {
 
@@ -112,145 +98,6 @@ export function DisplaySettingsMenu() {
   React.useEffect(() => {
     onMount();
   }, [onMount]);
-  
-  const options: OptionProps[] = React.useMemo(() => {
-    return [
-      {
-        children: (
-          <View justifyCenter>
-            <TabSwitcher
-              rounded
-              activeTab={ activeDisplayMode }
-              onTabChange={ handleDisplayModeChange }
-              titles={ [ 'Light', 'System', 'Dark'] } />
-          </View>
-        ),
-        id: 'display-mode',
-        label: 'Color Scheme',
-      },
-      {
-        children: (
-          <Switch 
-            color={ theme.colors.primary } 
-            value={ showShortSummary }
-            onValueChange={ (value) => {
-              setPreference('showShortSummary', value);
-            } } />
-        ),
-        id: 'short-summaries',
-        label: 'Short Summaries under titles',
-      },
-      {
-        children: (
-          <ReadingFormatSelector 
-            format={ preferredReadingFormat }
-            preferredFormat={ preferredReadingFormat }
-            onChange={ handleReadingFormatChange } />
-        ),
-        id: 'reading-format',
-        label: 'Preferred Reading Format on Open',
-      },
-      {
-        children: (
-          <View justifyCenter>
-            <TabSwitcher
-              rounded
-              activeTab={ activeTextScale }
-              onTabChange={ handleTextScaleChange }
-              titles={ textScales.map((s) => s.label) } />
-          </View>
-        ),
-        id: 'text-scale',
-        label: 'Text Scale',
-      },
-      {
-        children: (
-          <ScrollView horizontal style={ { overflow:'visible' } }>
-            <View row alignCenter>
-              {fonts.map((font) => (
-                <Button 
-                  row
-                  alignCenter
-                  gap={ 4 }
-                  key={ font }
-                  elevated
-                  rounded
-                  p={ 8 }
-                  mh={ 4 }
-                  startIcon={ fontFamily === font ? 'check' : undefined } 
-                  fontFamily={ font }
-                  onPress={ () => setPreference('fontFamily', font) }>
-                  {font}
-                </Button>
-              ))}
-            </View>
-          </ScrollView>
-        ),
-        id: 'font-family',
-        label: 'Font',
-      },
-      {
-        children: (
-          <Button
-            elevated
-            rounded
-            p={ 8 }
-            onPress={ () => setPreference('readSummaries', {}) }>
-            Reset Read Summaries to Unread (
-            {Object.values(readSummaries ?? {}).length}
-            )
-          </Button>
-        ),
-        id: 'reset-read-summaries',
-        label: 'Reset Read Content',
-      },
-      {
-        children: (
-          <Button
-            elevated
-            rounded
-            p={ 8 }
-            onPress={ () => setPreference('summaryHistory', {}) }>
-            Clear History (
-            {Object.values(summaryHistory ?? {}).length}
-            )
-          </Button>
-        ),
-        id: 'clear-history',
-        label: 'Clear History',
-      },
-      {
-        children: (
-          <Button
-            elevated
-            rounded
-            p={ 8 }
-            onPress={ () => setPreference('removedSummaries', {}) }>
-            Reset Hidden Summaries (
-            {Object.values(removedSummaries ?? {}).length}
-            )
-          </Button>
-        ),
-        id: 'reset-removed-summaries',
-        label: 'Reset Removed Content',
-      },
-      {
-        children: (
-          <Button
-            elevated
-            rounded
-            p={ 8 }
-            onPress={ () => handleClearCache() }>
-            Clear Cache (
-            {cacheSize}
-            )
-          </Button>
-        ),
-        id: 'clear-cache',
-        label: 'Clear Cache',
-      },
-    ];
-  }, [activeDisplayMode, handleDisplayModeChange, theme.colors.primary, showShortSummary, preferredReadingFormat, handleReadingFormatChange, activeTextScale, handleTextScaleChange, readSummaries, removedSummaries, summaryHistory, cacheSize, setPreference, fontFamily, handleClearCache]);
 
   return (
     <Menu
@@ -259,52 +106,122 @@ export function DisplaySettingsMenu() {
         <Icon name="cog" size={ 24 } />
       }>
       <View gap={ 6 } overflow="hidden">
-        <View row gap={ 6 } alignCenter>
-          <View>
-            <Text row gap={ 4 } startIcon="view-agenda" bold alignCenter>
-              Expanded Mode
-            </Text>
-          </View>
-          <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
-          <View>
-            <Text row gap={ 4 } startIcon="view-headline" bold alignCenter>
-              Headline Mode
-            </Text>
-          </View>
-        </View>
-        <View>
-          {options.filter((o) => o.visible !== false).map((option) => (
-            <View col key={ option.id } p={ 4 } mv={ 4 }>
-              {!option.onPress && option.label && (
-                <Text mb={ 4 }>{option.label}</Text>
-              )}
-              {option.onPress && (
-                <Button
-                  p={ 8 }
-                  elevated
-                  rounded
-                  onPress={ option.onPress }>
-                  {option.label}
-                </Button>
-              )}
-              {option.children}
+        <View gap={ 16 }>
+          <View justifyCenter gap={ 6 }>
+            <Text caption>Expanded or Headline Mode</Text>
+            <View row gap={ 6 } alignCenter>
+              <View>
+                <Text row gap={ 4 } startIcon="view-agenda" bold alignCenter>
+                  Expanded Mode
+                </Text>
+              </View>
+              <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
+              <View>
+                <Text row gap={ 4 } startIcon="view-headline" bold alignCenter>
+                  Headline Mode
+                </Text>
+              </View>
             </View>
-          ))}
-        </View>
-        {/* <View>
+          </View>
+          <View justifyCenter gap={ 6 }>
+            <Text caption>Color Scheme</Text>
+            <TabSwitcher
+              rounded
+              activeTab={ activeDisplayMode }
+              onTabChange={ handleDisplayModeChange }
+              titles={ [ 'Light', 'System', 'Dark'] } />
+          </View>
+          <View justifyCenter gap={ 6 }>
+            <Text caption>Short summaries under titles</Text>
+            <Switch 
+              color={ theme.colors.primary } 
+              value={ showShortSummary }
+              onValueChange={ (value) => {
+                setPreference('showShortSummary', value);
+              } } />
+          </View>
+          <View justifyCenter gap={ 6 }>
+            <Text caption>Default reading mode on open</Text>
+            <ReadingFormatSelector 
+              format={ preferredReadingFormat }
+              preferredFormat={ preferredReadingFormat }
+              onChange={ handleReadingFormatChange } />
+          </View>
+          <View justifyCenter gap={ 6 }>
+            <Text caption>Text Scale</Text>
+            <TabSwitcher
+              rounded
+              activeTab={ activeTextScale }
+              onTabChange={ handleTextScaleChange }
+              titles={ textScales.map((s) => s.label) } />
+          </View>
+          <View gap={ 6 }>
+            <Text caption>Font</Text>
+            <ScrollView horizontal style={ { overflow:'visible' } }>
+              <View row alignCenter>
+                {AVAILABLE_FONTS.map((font) => (
+                  <Button 
+                    row
+                    caption
+                    alignCenter
+                    gap={ 4 }
+                    key={ font }
+                    elevated
+                    rounded
+                    p={ 8 }
+                    mh={ 4 }
+                    startIcon={ fontFamily === font ? 'check' : undefined } 
+                    fontFamily={ font }
+                    onPress={ () => setPreference('fontFamily', font) }>
+                    {font}
+                  </Button>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
           <Button
-            row
-            alignCenter
-            gap={ 4 }
             elevated
             rounded
-            onPress={ () => handlePlayAll() }
-            p={ 4 }
-            startIcon="volume-high">
-            Play All
+            caption
+            p={ 8 }
+            onPress={ () => setPreference('readSummaries', {}) }>
+            Reset Read Summaries to Unread (
+            {Object.values(readSummaries ?? {}).length}
+            )
           </Button>
-          <View row />
-        </View> */}
+          <Button
+            elevated
+            rounded
+            caption
+            p={ 8 }
+            onPress={ () => setPreference('summaryHistory', {}) }>
+            Clear History (
+            {Object.values(summaryHistory ?? {}).length}
+            )
+          </Button>
+          <Button
+            elevated
+            rounded
+            caption
+            p={ 8 }
+            onPress={ () => setPreference('removedSummaries', {}) }>
+            Reset Hidden Summaries (
+            {Object.values(removedSummaries ?? {}).length}
+            )
+          </Button>
+          {loading ? (<ActivityIndicator animating />) : (
+            <Button
+              elevated
+              rounded
+              caption
+              p={ 8 }
+              onPress={ () => handleClearCache() }>
+              Clear Cache (
+              {cacheSize}
+              )
+            </Button>
+          )}
+        </View>
       </View>
     </Menu>
   );

@@ -22,7 +22,7 @@ export function SummaryScreen({
   const { getSummary, handleInteraction } = useSummaryClient();
 
   const [loading, setLoading] = React.useState(false);
-  const [reloadId, setReloadId] = React.useState(0);
+  const [summaryId, setSummaryId] = React.useState(0);
   const [summary, setSummary] = React.useState<PublicSummaryAttributes>();
   const [format, setFormat] = React.useState(route?.params?.initialFormat);
   const keywords = React.useMemo(() => route?.params?.keywords ?? [], [route]);
@@ -34,10 +34,6 @@ export function SummaryScreen({
     handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
     setFormat(newFormat);
   }, [format, handleInteraction, summary]);
-  
-  const handleReferSearch = React.useCallback((prefilter: string) => {
-    navigation?.push('search', { prefilter });
-  }, [navigation]);
 
   const load = React.useCallback(async (id?: number) => {
     if (!id) {
@@ -60,11 +56,11 @@ export function SummaryScreen({
 
   React.useEffect(() => {
     const summary = route?.params?.summary;
-    if (typeof summary === 'number') {
-      setReloadId(summary);
+    if (typeof summary === 'number' || typeof summary === 'string') {
+      setSummaryId(summary);
       load(summary);
     } else {
-      setReloadId(summary?.id ?? 0);
+      setSummaryId(summary?.id ?? 0);
       setSummary(summary);
     }
   }, [load, route?.params?.summary]);
@@ -72,7 +68,7 @@ export function SummaryScreen({
   return (
     <Screen
       refreshing={ loading }
-      onRefresh={ () => load(reloadId) }>
+      onRefresh={ () => load(summaryId) }>
       <View mt={ 10 }>
         {loading ? (
           <View alignCenter justifyCenter>
@@ -84,7 +80,6 @@ export function SummaryScreen({
             initialFormat={ format }
             keywords={ keywords }
             onFormatChange={ (format) => handleFormatChange(format) }
-            onReferSearch={ handleReferSearch }
             onInteract={ (...e) => handleInteraction(summary, ...e) } />
         ))}
       </View>

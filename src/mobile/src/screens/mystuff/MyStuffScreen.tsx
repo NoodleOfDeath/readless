@@ -54,6 +54,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
     key: 'read',
     name: 'search',
     params: { 
+      noHeader: true,
       onlyCustomNews: false,
       specificIds: history.map(([id]) => Number(id)),
     },
