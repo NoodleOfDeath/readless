@@ -139,7 +139,7 @@ export default function Header() {
     if (isIos) {
       setDownloadMobileApp('https://apps.apple.com/us/app/read-less-news/id6447275859?itsct=apps_box_badge&itscg=30200');
     } else if (isAndroid) {
-      setDownloadMobileApp('https://play.google.com/store/apps/details?id=com.readless');
+      setDownloadMobileApp('https://play.google.com/store/apps/details?id=ai.readless.ReadLess');
     }
   }, []);
 

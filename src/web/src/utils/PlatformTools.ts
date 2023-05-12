@@ -1,3 +1,6 @@
 export function getUserAgent() {
-  return window.navigator.userAgent;
+  return {
+    currentVersion: 'web1.4.0',
+    userAgent: window.navigator.userAgent,
+  };
 }

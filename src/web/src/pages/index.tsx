@@ -39,7 +39,7 @@ export default function HomePage() {
               } } />
           </a>
           <a
-            href="https://play.google.com/store/apps/details?id=com.readless"
+            href="https://play.google.com/store/apps/details?id=ai.readless.ReadLess"
             target="_blank"
             style={ {
               borderRadius: 13, display: 'inline-block', height: 100, overflow: 'hidden', width: 340,

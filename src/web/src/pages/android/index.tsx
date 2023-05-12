@@ -4,7 +4,7 @@ import Page from '~/components/layout/Page';
 
 export default function AndroidDownloadPage() {
   React.useEffect(() => {
-    window.open('https://play.google.com/store/apps/details?id=com.readless');
+    window.open('https://play.google.com/store/apps/details?id=ai.readless.ReadLess');
   }, []);
   return (
     <Page>

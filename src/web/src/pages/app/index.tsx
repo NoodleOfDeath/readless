@@ -37,6 +37,7 @@ export default function AppPage() {
         searchText,
         undefined,
         undefined,
+        undefined,
         page,
         pageSize
       );
