@@ -253,7 +253,7 @@ export class ScribeService extends BaseService {
       
       for (const tag of tags) {
         await SummaryToken.create({
-          parentId: newSummary.id,
+          parentId: summary.id,
           text: tag,
         });
       }
