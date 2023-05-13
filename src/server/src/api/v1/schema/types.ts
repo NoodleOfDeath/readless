@@ -72,9 +72,10 @@ export * from './resources/sentiment/SentimentToken.types';
 export * from './resources/Post.types';
 
 export * from './resources/outlet/Outlet.types';
-export * from './resources/topic/Category.types'
-;
+export * from './resources/topic/Category.types';
+
 export * from './resources/summary/Summary.types';
+export * from './resources/summary/SummaryToken.types';
 export * from './resources/summary/SummaryInteraction.types';
 export * from './resources/summary/SummarySentiment.types';
 export * from './resources/summary/SummarySentimentToken.types';
