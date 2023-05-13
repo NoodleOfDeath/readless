@@ -133,7 +133,7 @@ export class ScribeService extends BaseService {
           if (!Array.isArray(tokens) || !tokens.every((t) => typeof t === 'string')) {
             await this.error('tokens are in the wrong format', reply.text);
           }
-          sentimentTokens.push(...[new Set(tokens]);
+          sentimentTokens.push(...[...new Set(tokens]);
         },
         text: 'For the article/story I just gave you, please provide a floating point sentiment score between -1 and 1 as well as the 10 most notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
       },
@@ -143,7 +143,7 @@ export class ScribeService extends BaseService {
             .replace(/^\.*?:\s*/, '')
             .replace(/\.$/, '')
             .split(/\/*,\s*/));
-          tags.push(...[new Set(newTags)]);
+          tags.push(...[...new Set(newTags)]);
         },
         text: 'Please provide a comma separated list of at least 10 tags/phrases that are related to this article/story that can be used for identifying trending topics over time. Prioritize names, places, events, companies, or anything that seems time sensitive. Please only respond with the tags.',
       },
