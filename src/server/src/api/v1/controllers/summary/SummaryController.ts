@@ -42,7 +42,7 @@ function applyFilter(
   filter = '', 
   ids: number[] = [], 
   excludeIds = false,
-  matchType: 'all' | 'any' = 'all'
+  matchType: 'any' | 'all' = 'any'
 ) {
   const newOptions = { ...options };
   if (!filter && ids.length === 0) {
