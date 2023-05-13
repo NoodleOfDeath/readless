@@ -9,6 +9,7 @@ import {
 } from '~/api';
 import {
   Screen,
+  ScrollView,
   Summary,
   View,
 } from '~/components';
@@ -69,7 +70,7 @@ export function SummaryScreen({
     <Screen
       refreshing={ loading }
       onRefresh={ () => load(summaryId) }>
-      <View mt={ 10 }>
+      <ScrollView mt={ 10 }>
         {loading ? (
           <View alignCenter justifyCenter>
             <ActivityIndicator size="large" />
@@ -82,7 +83,7 @@ export function SummaryScreen({
             onFormatChange={ (format) => handleFormatChange(format) }
             onInteract={ (...e) => handleInteraction(summary, ...e) } />
         ))}
-      </View>
+      </ScrollView>
     </Screen>
   );
 }

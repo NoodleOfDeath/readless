@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Animated,
   DeviceEventEmitter,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -19,6 +20,7 @@ import {
   ActivityIndicator,
   Button,
   Screen,
+  ScrollView,
   Summary,
   Text,
   View,
@@ -27,9 +29,9 @@ import {
   DialogContext,
   MediaContext,
   SessionContext,
-  ToastContext,
 } from '~/contexts';
 import {
+  useLayout,
   useNavigation,
   useSummaryClient,
   useTheme,
@@ -50,17 +52,16 @@ export function SearchScreen({
       readSummaries,
       removedSummaries,
       sortOrder,
-      searchCanMatchAny,
     },
     ready,
   } = React.useContext(SessionContext);
-  const toast = React.useContext(ToastContext);
   const {
     queueSummary, currentTrackIndex, preloadCount,
   } = React.useContext(MediaContext);
   const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const { search, router } = useNavigation();
+  const { supportsMasterDetail } = useLayout();
   const theme = useTheme();
   
   const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter);
@@ -75,6 +76,7 @@ export function SearchScreen({
 
   const [loading, setLoading] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
+  const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [pendingReload, setPendingReload] = React.useState(false);
@@ -83,21 +85,28 @@ export function SearchScreen({
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
-   
-  const categoryOutletCount = React.useMemo(() => lengthOf(bookmarkedCategories, bookmarkedOutlets), [bookmarkedCategories, bookmarkedOutlets]);
+  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryAttributes>();
+
+  const masterWidth = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
+  const detailWidth = React.useRef(new Animated.Value(supportsMasterDetail ? 1 : 0)).current;
+  const [resizing, setResizing] = React.useState(false);
+
+  const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   
   const bookmarkCount = React.useMemo(() => Object.keys(bookmarkedSummaries ?? {}).filter((summary) => !(summary in (readSummaries ?? {}))).length ?? 0, [bookmarkedSummaries, readSummaries]);
 
   const followFilter = React.useMemo(() => {
-    if (categoryOutletCount === 0) {
-      return '';
+    const filters: string[] = [];
+    if (lengthOf(bookmarkedCategories) > 0) {
+      filters.push(['cat', Object.values(bookmarkedCategories ?? {})
+      .map((c) => c.item.name).join(',')].join(':'));
     }
-    return [`cat:${Object.values(bookmarkedCategories ?? {})
-      .map((c) => c.item.name).join(',')}`, 
-    `src:${Object.values(bookmarkedOutlets ?? {})
-      .map((o) => o.item.name).join(',')}`]
-      .join(' ');
-  }, [categoryOutletCount, bookmarkedCategories, bookmarkedOutlets]);
+    if (lengthOf(bookmarkedOutlets) > 0) {
+      filters.push(['src', Object.values(bookmarkedOutlets ?? {})
+      .map((o) => o.item.name).join(',')].join(':'));
+    }
+    return filters.join(' ');
+  }, [bookmarkedCategories, bookmarkedOutlets]);
   
   const excludeIds = React.useMemo(() => {
     if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
@@ -122,6 +131,7 @@ export function SearchScreen({
     setLoading(true);
     if (page === 0) {
       setSummaries([]);
+      setDetailSummary(undefined);
     }
     if (onlyCustomNews && !followFilter) {
       setLoading(false);
@@ -138,20 +148,25 @@ export function SearchScreen({
         filter.trim(),
         specificIds ?? excludeIds,
         !specificIds && Boolean(excludeIds),
-        searchCanMatchAny ? 'any' : 'all',
+        undefined,
         page,
         pageSize,
         sortOrder
       );
       if (error) {
         console.error(error);
-        toast.alert(error.message);
         return;
       }
       if (!data) {
         return;
       }
       setTotalResultCount(data.count);
+      setDetailSummary((prev) => {
+        if (!prev && data.count > 0) {
+          return (prev = data.rows[0]);
+        }
+        return prev;
+      });
       setSummaries((prev) => {
         if (page === 0) {
           return (prev = data.rows);
@@ -159,15 +174,17 @@ export function SearchScreen({
         return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
       });
       setPage((prev) => prev + 1);
+      setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
       setSummaries([]);
       setTotalResultCount(0);
+      setLastFetchFailed(true);
     } finally {
       setLoading(false);
       setLoaded(true);
     }
-  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder, toast, searchCanMatchAny]);
+  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder]);
   
   const headerLeft = React.useMemo(() => {
     return (
@@ -265,22 +282,68 @@ export function SearchScreen({
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
-      navigation?.push('summary', {
-        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
-        keywords: searchText ? searchText.replace(/['"]/g, '').split(' ').filter((s) => s.trim()) : [],
-        summary,
-      });
+      if (supportsMasterDetail) {
+        setDetailSummary(summary);
+        setLastFocus('detail');
+      } else {
+        navigation?.push('summary', {
+          initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
+          keywords: searchText ? searchText.replace(/['"]/g, '').split(' ').filter((s) => s.trim()) : [],
+          summary,
+        });
+      }
     },
-    [handleInteraction, navigation, preferredReadingFormat, searchText]
+    [handleInteraction, navigation, preferredReadingFormat, searchText, supportsMasterDetail]
   );
   
-  const handleScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if ( !loading && event.nativeEvent.contentOffset.y + 
-        event.nativeEvent.layoutMeasurement.height > 
-        event.nativeEvent.contentSize.height - 400) {
-      await loadMore();
+  const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setLastFocus('master');
+    if (loading || totalResultCount <= summaries.length || lastFetchFailed) {
+      return;
     }
-  }, [loading, loadMore]);
+    const {
+      layoutMeasurement, contentOffset, contentSize, 
+    } = event.nativeEvent;
+    const paddingToBottom = 400;
+    if (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    ) {
+      await loadMore('autoloaded');
+    }
+  }, [loading, totalResultCount, summaries.length, loadMore, lastFetchFailed]);
+
+  const handleDetailScroll = React.useCallback(async (_event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setLastFocus('detail');
+  }, []);
+
+  const handleResize = React.useCallback(() => {
+    if (resizing) {
+      return;
+    }
+    setResizing(true);
+    Animated.parallel([
+      Animated.spring(masterWidth, {
+        toValue: supportsMasterDetail ? 0 : 1,
+        useNativeDriver: false,
+      }),
+      Animated.spring(detailWidth, {
+        toValue: supportsMasterDetail ? 1 : 0,
+        useNativeDriver: false,
+      }),
+    ]).start(() => {
+      setResizing(false);
+    });
+  }, [resizing, masterWidth, supportsMasterDetail, detailWidth]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => handleResize(), [
+    handleResize,
+    supportsMasterDetail, 
+    detailSummary, 
+    loading,
+    summaries,
+  ]);
 
   const loadMoreAsNeeded = React.useCallback(async () => {
     if (!currentTrackIndex) {
@@ -290,6 +353,18 @@ export function SearchScreen({
       await loadMore('autoloaded-for-track');
     }
   }, [currentTrackIndex, loadMore, preloadCount, summaries]);
+
+  const summaryList = React.useMemo(() => {
+    return summaries.map((summary) => (
+      <Summary
+        key={ summary.id }
+        summary={ summary }
+        selected={ Boolean(supportsMasterDetail && summary.id === detailSummary?.id) }
+        keywords={ showShareDialog ? undefined : keywords }
+        onFormatChange={ (format) => handleFormatChange(summary, format) }
+        onInteract={ (...e) => handleInteraction(summary, ...e) } />
+    ));
+  }, [detailSummary?.id, handleFormatChange, handleInteraction, keywords, showShareDialog, summaries, supportsMasterDetail]);
 
   React.useEffect(() => {
     loadMoreAsNeeded();
@@ -311,11 +386,8 @@ export function SearchScreen({
   }, [loadMore]);
 
   return (
-    <Screen
-      refreshing={ loading }
-      onRefresh={ () => load(0) }
-      onScroll={ handleScroll }>
-      <View col mh={ 16 } mt={ 12 }>
+    <Screen>
+      <View col>
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>
@@ -333,40 +405,83 @@ export function SearchScreen({
             </Button>
           </View>
         )}
-      </View>
-      {prefilter && onlyCustomNews && (
-        <Text caption textCenter mb={ 6 } mh={ 12 }>Note: This is searching within only your custom news feed and not all news articles</Text>
-      )}
-      {summaries.map((summary) => (
-        <Summary
-          key={ summary.id }
-          summary={ summary }
-          keywords={ showShareDialog ? undefined : keywords }
-          onFormatChange={ (format) => handleFormatChange(summary, format) }
-          onInteract={ (...e) => handleInteraction(summary, ...e) } />
-      ))}
-      {!loading && !noResults && totalResultCount > summaries.length && (
-        <View row justifyCenter p={ 16 } pb={ 24 }>
-          <Button 
-            outlined
-            rounded
-            p={ 8 }
-            selectable
-            onPress={ () => loadMore() }>
-            Load More
-          </Button>
-        </View>
-      )}
-      {loading && (summaries.length > 0 || !loaded) && (
-        <View row mb={ 64 }>
-          <View row justifyCenter p={ 16 } pb={ 24 }>
-            <ActivityIndicator size="large" color={ theme.colors.primary } />
+        {prefilter && onlyCustomNews && (
+          <Text caption textCenter mb={ 6 } mh={ 12 }>Note: This is searching within only your custom news feed and not all news articles</Text>
+        )}
+        <View col>
+          <View row>
+            <Animated.View style={ {
+              width: masterWidth.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['40%', '100%'],
+              }),
+            } }>
+              <ScrollView
+                refreshing={ loading }
+                onScroll={ handleMasterScroll }
+                onRefresh={ () => load(0) }>
+                <View col width="100%" pt={ 12 }>
+                  {summaryList}
+                  {!loading && !noResults && totalResultCount > summaries.length && (
+                    <View row justifyCenter p={ 16 } pb={ 24 }>
+                      <Button 
+                        outlined
+                        rounded
+                        p={ 8 }
+                        selectable
+                        onPress={ () => loadMore() }>
+                        Load More
+                      </Button>
+                    </View>
+                  )}
+                  {loading && (summaries.length > 0 || !loaded) && (
+                    <View row mb={ 64 }>
+                      <View row justifyCenter p={ 16 } pb={ 24 }>
+                        <ActivityIndicator size="large" color={ theme.colors.primary } />
+                      </View>
+                    </View>
+                  )}
+                  {summaries.length === 0 && !loading && (
+                    <View col gap={ 12 } alignCenter justifyCenter>
+                      <Text textCenter mh={ 16 }>No results found 🥺</Text>
+                      <Button 
+                        alignCenter
+                        rounded 
+                        outlined 
+                        p={ 8 }
+                        selectable
+                        onPress={ () => load(0) }>
+                        Reload
+                      </Button>
+                    </View>
+                  )}
+                </View>
+              </ScrollView>
+            </Animated.View>
+            <Animated.View style={ {
+              width: detailWidth.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0%', '60%'],
+              }), 
+            } }>
+              <ScrollView 
+                refreshing={ loading }
+                onScroll={ handleDetailScroll }
+                mt={ 12 }
+                ph={ 12 }>
+                {detailSummary && (
+                  <Summary
+                    summary={ detailSummary }
+                    initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+                    keywords={ showShareDialog ? undefined : keywords }
+                    onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                    onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
+                )}
+              </ScrollView>
+            </Animated.View>
           </View>
         </View>
-      )}
-      {summaries.length === 0 && !loading && (
-        <Text textCenter mh={ 16 }>No results found 🥺</Text>
-      )}
+      </View>
     </Screen>
   );
 }

@@ -108,6 +108,7 @@ export class ScribeService extends BaseService {
     let categoryDisplayName: string;
     const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
     const sentimentTokens: string[] = [];
+    const tags: string[] = [];
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -134,6 +135,15 @@ export class ScribeService extends BaseService {
           sentimentTokens.push(...tokens);
         },
         text: 'For the article/story I just gave you, please provide a floating point sentiment score between -1 and 1 as well as the 10 most notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
+      },
+      {
+        handleReply: async (reply) => { 
+          tags.push(...reply
+            .replace(/^\.*?:\s*/, '')
+            .replace(/\.$/, '')
+            .split(/\/*,\s*/));
+        },
+        text: 'Please provide a comma separated list of at least 10 tags/phrases that are related to this article/story. Please only respond with the tags.',
       },
       {
         handleReply: async (reply) => { 
@@ -171,7 +181,7 @@ export class ScribeService extends BaseService {
       {
         handleReply: async (reply) => {
           newSummary.bullets = reply.text
-            .replace(/^bullets:\s*/i, '')
+            .replace(/^\.*?:\s*/, '')
             .replace(/\.$/, '')
             .split(/\n/)
             .map((bullet) => bullet.trim());
@@ -181,7 +191,7 @@ export class ScribeService extends BaseService {
       {
         handleReply: async (reply) => { 
           categoryDisplayName = reply.text
-            .replace(/^category:\s*/i, '')
+            .replace(/^.*?:\s*/, '')
             .replace(/\.$/, '').trim();
         },
         text: `Please select a best category for this article/story from the following choices: ${this.categories.join(' ')}`,
@@ -237,6 +247,13 @@ export class ScribeService extends BaseService {
         await SummarySentimentToken.create({
           parentId: newSentiment.id,
           text: token,
+        });
+      }
+      
+      for (const tag of tags) {
+        await SummaryToken.create({
+          parentId: summary.id,
+          text: tag,
         });
       }
       

@@ -69,6 +69,14 @@ export function useSummaryClient() {
     metadata?: Record<string, unknown>,
     alternateAction?: (() => Promise<void>) | (() => void)
   ) => {
+    if (alternateAction) {
+      // pass
+      try {
+        await alternateAction();
+      } catch (e) {
+        console.error(e);
+      }
+    }
     const payload: Record<string, unknown> = { 
       ...metadata, 
       content,
@@ -85,26 +93,20 @@ export function useSummaryClient() {
         }
         return (prev = bookmarks);
       });
-    } else
-    if (interaction === InteractionType.Read && /original source/i.test(content ?? '')) {
-      setPreference('readSources', (prev) => {
-        const bookmarks = { ...prev };
-        bookmarks[summary.id] = new Bookmark(true);
-        return (prev = bookmarks);
-      });
-    }
-    setPreference('summaryHistory', (prev) => ({
-      ...prev,
-      [summary.id]: new Bookmark(interaction),
-    }));
-    if (alternateAction) {
-      // pass
-      try {
-        await alternateAction();
-      } catch (e) {
-        console.error(e);
+    } 
+    setTimeout(() => {
+      if (interaction === InteractionType.Read && /original source/i.test(content ?? '')) {
+        setPreference('readSources', (prev) => {
+          const bookmarks = { ...prev };
+          bookmarks[summary.id] = new Bookmark(true);
+          return (prev = bookmarks);
+        });
       }
-    }
+      setPreference('summaryHistory', (prev) => ({
+        ...prev,
+        [summary.id]: new Bookmark(interaction),
+      }));
+    }, 300);
     return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, setPreference]);
 

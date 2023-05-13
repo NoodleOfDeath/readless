@@ -19,6 +19,7 @@ export const FONT_SIZES = {
   h4: 26,
   h5: 24,
   h6: 22,
+  subscript: 8,
   subtitle1: 20,
   subtitle2: 19,
 } as const;
@@ -89,7 +90,7 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   pl?: number;
   pr?: number;
   // appearance
-  border?: number;
+  borderWidth?: number;
   borderColor?: string;
   bg?: string;
   outlined?: boolean | string | number | [string, number];

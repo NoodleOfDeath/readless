@@ -7,6 +7,7 @@ import { DEFAULT_DIALOG_CONTEXT } from './types';
 import {
   FeedBackDialog,
   FeedBackDialogProps,
+  OnboardingDialog,
   ShareDialog,
   ShareDialogProps,
 } from '~/components';

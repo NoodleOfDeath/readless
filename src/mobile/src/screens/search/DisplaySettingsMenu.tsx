@@ -107,32 +107,32 @@ export function DisplaySettingsMenu() {
       }>
       <View gap={ 6 } overflow="hidden">
         <View gap={ 16 }>
-          <View justifyCenter gap={ 6 }>
-            <Text caption>Expanded or Headline Mode</Text>
+          <View justifyCenter alignCenter gap={ 6 }>
+            <Text caption>Display Mode</Text>
             <View row gap={ 6 } alignCenter>
               <View>
-                <Text row gap={ 4 } startIcon="view-agenda" bold alignCenter>
-                  Expanded Mode
-                </Text>
+                <Button caption gap={ 4 } startIcon="view-agenda" iconSize={ 24 } bold alignCenter>
+                  Expanded 
+                </Button>
               </View>
               <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
               <View>
-                <Text row gap={ 4 } startIcon="view-headline" bold alignCenter>
-                  Headline Mode
-                </Text>
+                <Button caption gap={ 4 } startIcon="view-headline" iconSize={ 24 } bold alignCenter>
+                  Compact
+                </Button>
               </View>
             </View>
           </View>
           <View justifyCenter gap={ 6 }>
-            <Text caption>Color Scheme</Text>
+            <Text caption textCenter>Color Scheme</Text>
             <TabSwitcher
               rounded
               activeTab={ activeDisplayMode }
               onTabChange={ handleDisplayModeChange }
               titles={ [ 'Light', 'System', 'Dark'] } />
           </View>
-          <View justifyCenter gap={ 6 }>
-            <Text caption>Short summaries under titles</Text>
+          <View justifyCenter alignCenter gap={ 6 }>
+            <Text caption textCenter>Short summaries under titles</Text>
             <Switch 
               color={ theme.colors.primary } 
               value={ showShortSummary }
@@ -141,14 +141,14 @@ export function DisplaySettingsMenu() {
               } } />
           </View>
           <View justifyCenter gap={ 6 }>
-            <Text caption>Default reading mode on open</Text>
+            <Text caption textCenter>Default reading mode on open</Text>
             <ReadingFormatSelector 
               format={ preferredReadingFormat }
               preferredFormat={ preferredReadingFormat }
               onChange={ handleReadingFormatChange } />
           </View>
           <View justifyCenter gap={ 6 }>
-            <Text caption>Text Scale</Text>
+            <Text caption textCenter>Text Scale</Text>
             <TabSwitcher
               rounded
               activeTab={ activeTextScale }
@@ -156,7 +156,7 @@ export function DisplaySettingsMenu() {
               titles={ textScales.map((s) => s.label) } />
           </View>
           <View gap={ 6 }>
-            <Text caption>Font</Text>
+            <Text caption textCenter>Font</Text>
             <ScrollView horizontal style={ { overflow:'visible' } }>
               <View row alignCenter>
                 {AVAILABLE_FONTS.map((font) => (

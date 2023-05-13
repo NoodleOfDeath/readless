@@ -12,6 +12,7 @@ import {
   Icon,
   Menu,
   Screen,
+  ScrollView,
   Summary,
   TabSwitcher,
   Text,
@@ -82,10 +83,11 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
   );
   
   return (
-    <Screen 
-      refreshing={ refreshing }
-      onRefresh={ refresh }>
-      <View col>
+    <Screen>
+      <ScrollView
+        col
+        refreshing={ refreshing }
+        onRefresh={ refresh }>
         <TabSwitcher
           tabHeight={ 48 }
           activeTab={ activeTab }
@@ -187,7 +189,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
             )}
           </View>
         </TabSwitcher>
-      </View>
+      </ScrollView>
     </Screen>
   );
 }

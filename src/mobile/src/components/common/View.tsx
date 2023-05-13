@@ -12,7 +12,6 @@ import { Stylable, Surface } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type ViewProps = React.PropsWithChildren<PressableProps & RNViewProps & Stylable> & {
-  title?: string;
   animated?: boolean;
   pressable?: boolean;
   elevated?: boolean;
