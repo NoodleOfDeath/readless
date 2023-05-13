@@ -213,10 +213,6 @@ export class PuppeteerService extends BaseService {
       return newText;
     }
     
-    function selectDate(dates: string[]) {
-      return maxDate(...dates.map((date) => parseDate(clean(date))));
-    }
-    
     if (!content) {
       
       const rawHtml = await PuppeteerService.fetch(url);
@@ -321,7 +317,7 @@ export class PuppeteerService extends BaseService {
       await PuppeteerService.open(url, actions);
       
       loot.dateMatches = dates;
-      loot.date = selectDate(dates);
+      loot.date = parseDate(dates.join(' '));
       loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
       
     }
