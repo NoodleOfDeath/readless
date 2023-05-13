@@ -203,7 +203,7 @@ export class Category<
       displayName: 'Wildlife', icon: 'rabbit', name: 'wildlife', 
     },
     'women-empowerment': {
-      displayName: 'Women Empowerment', icon: 'account-tie-woman', name: 'Women Empowerment',
+      displayName: 'Women Empowerment', icon: 'human-female', name: 'women-empowerment',
     },
     'world-news': {
       displayName: 'World News', icon: 'earth', name: 'world-news', 
