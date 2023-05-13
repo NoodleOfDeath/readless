@@ -1,6 +1,6 @@
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 
-import { makeAssociations } from '../../api/v1/schema';
+import { addScopes, makeAssociations } from '../../api/v1/schema';
 import * as Models from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
@@ -25,6 +25,7 @@ export class DBService extends BaseService {
     });
     await this.sq.authenticate();
     makeAssociations();
+    addScopes();
     await this.sq.sync();
   }
 

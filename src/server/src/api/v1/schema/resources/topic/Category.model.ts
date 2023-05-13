@@ -1,5 +1,4 @@
-import { 
-  AfterFind,
+import {
   Column,
   DataType,
   Table,
@@ -20,6 +19,9 @@ export class Category<
   implements CategoryAttributes {
   
   public static CATEGORIES: Record<string, CategoryCreationAttributes> = {
+    accessibility: {
+      displayName: 'Accessibility', icon: 'wheelchair-accessibility', name: 'accessibility', 
+    },
     art: {
       displayName: 'Art', icon: 'palette', name: 'art', 
     },
@@ -28,6 +30,9 @@ export class Category<
     },
     automotive: {
       displayName: 'Automotive', icon: 'car', name: 'automotive', 
+    },
+    'black-culture': {
+      displayName: 'Black Culture', icon: '', name: 'black-culture',
     },
     books: {
       displayName: 'Books', icon: 'book-open-variant', name: 'books', 
@@ -197,6 +202,9 @@ export class Category<
     wildlife: {
       displayName: 'Wildlife', icon: 'rabbit', name: 'wildlife', 
     },
+    'women-empowerment': {
+      displayName: 'Women Empowerment', icon: 'account-tie-woman', name: 'Women Empowerment',
+    },
     'world-news': {
       displayName: 'World News', icon: 'earth', name: 'world-news', 
     },
@@ -205,17 +213,6 @@ export class Category<
   public static async initCategories() {
     for (const category of Object.values(this.CATEGORIES)) {
       await this.upsert(category);
-    }
-  }
-  
-  @AfterFind
-  public static async legacySupport(cursor: Category | Category[]) {
-    if (!cursor) {
-      return;
-    }
-    const categories = Array.isArray(cursor) ? cursor : [cursor];
-    for (const category of categories) {
-      category.set('averageSentiment', category.toJSON().sentiment, { raw: true });
     }
   }
   
@@ -239,8 +236,5 @@ export class Category<
   declare icon: string;
 
   declare sentiment: number;
-  
-  // @Deprecated
-  declare averageSentiment?: number;
   
 }

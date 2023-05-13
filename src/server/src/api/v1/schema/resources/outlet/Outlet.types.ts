@@ -49,7 +49,6 @@ export type OutletCreationAttributes = Partial<DatedAttributes & Sentimental> & 
 };
 
 export const PUBLIC_OUTLET_ATTRIBUTES = [
-  'id',
   'name',
   'displayName',
   'brandImageUrl',
@@ -57,7 +56,6 @@ export const PUBLIC_OUTLET_ATTRIBUTES = [
 ] as const;
 
 export type PublicOutletAttributes = Sentimental & {
-  id: number;
   name: string;
   displayName: string;
   brandImageUrl?: string;

@@ -5,8 +5,6 @@ export type SentimentAttributes<T extends SentimentTokenAttributes> = DatedAttri
   parentId: number;
   method: string;
   score: number;
-  // @Deprecated
-  summary_sentiment_tokens?: SentimentTokenAttributes[];
   tokens: T[];
 };
 
@@ -14,13 +12,16 @@ export type SentimentCreationAttributes<T extends SentimentTokenCreationAttribut
   parentId: number;
   method: string;
   score: number;
-  // @Deprecated
-  summary_sentiment_tokens?: SentimentTokenAttributes[];
   tokens?: T[];
 };
 
 export type Sentimental = {
   sentiment: number;
-  // @Deprecated
-  averageSentiment?: number;
+};
+
+export const PUBLIC_SENTIMENT_ATTRIBUTES = ['id', 'method', 'score'];
+
+export type PublicSentimentAttributes = {
+  method: string;
+  score: number;
 };
