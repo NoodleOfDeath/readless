@@ -144,7 +144,7 @@ export class ScribeService extends BaseService {
             .replace(/\.$/, '')
             .split(/\/*,\s*/));
         },
-        text: 'Please provide a comma separated list of at least 10 tags/phrases that are related to this article/story. Please only respond with the tags.',
+        text: 'Please provide a comma separated list of at least 10 tags/phrases that are related to this article/story that can be used for identifying trending topics over time. Please only respond with the tags.',
       },
       {
         handleReply: async (reply) => { 
