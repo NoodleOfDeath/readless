@@ -18,15 +18,15 @@ import {
 } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
-const MIN_TOKEN_COUNT = 50 as const;
-const MAX_OPENAI_TOKEN_COUNT = 4000 as const;
+const MIN_TOKEN_COUNT = 50;
+const MAX_OPENAI_TOKEN_COUNT = Number(process.env.MAX_OPENAI_TOKEN_COUNT || 1500);
 const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|got it|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
 export function abbreviate(str: string, len: number) {
   //
-  return str.substring(0, len);
+  return str.split(' ').slice(0, len).join(' ');
 }
 
 export class ScribeService extends BaseService {
@@ -46,7 +46,7 @@ export class ScribeService extends BaseService {
       text,
       to: 'debug@readless.ai',
     });
-    if (throws) {
+    if (throws === true) {
       throw new Error(subject);
     }
   }
@@ -79,19 +79,18 @@ export class ScribeService extends BaseService {
     // create the prompt onReply map to be sent to chatgpt
     if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
-      await this.error('Long article found', `Long article found for ${url}\n\n${loot.content}`, false);
     }
     if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
-      throw new Error('Article too short');
+      await this.error('Article too short', [url, loot.content].join('\n\n'));
     }
     if (Number.isNaN(loot.date.valueOf())) {
-      await this.error('Invalid date found', `Invalid date found for ${url}\n\n${loot.dateMatches.join('\n')}`);
+      await this.error('Invalid date found', [url, loot.dateMatches.join('\n')].join('\n\n'));
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
     }
     if (loot.date > new Date(Date.now() + ms('3h'))) {
-      await this.error('News is from the future', `News is from the future for ${url}\n\n${loot.date.toISOString()}`);
+      await this.error('News is from the future', [url, loot.date.toISOString()].join('\n\n'));
     }
     // daylight savings most likely
     if (loot.date > new Date() && loot.date < new Date(Date.now() + ms('1h'))) {
@@ -99,7 +98,7 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
-      imageUrl: loot.imageUrl,
+      imageUrl: '',
       originalDate: loot.date,
       originalTitle: loot.title,
       outletId: outlet.id,
@@ -194,9 +193,13 @@ export class ScribeService extends BaseService {
         handleReply: async (reply) => { 
           categoryDisplayName = reply.text
             .replace(/^.*?:\s*/, '')
-            .replace(/\.$/, '').trim();
+            .replace(/\.$/, '')
+            .trim();
+          if (!this.categories.includes(categoryDisplayName)) {
+            await this.error('Bad category', [url, categoryDisplayName, reply.text].join('\n\n'));
+          }
         },
-        text: `Please select a best category for this article/story from the following choices: ${this.categories.join(' ')}`,
+        text: `Please select a best category for this article/story from the following choices: ${this.categories.join(',')}. Respond with only the category name`,
       },
     ];
       
@@ -204,12 +207,27 @@ export class ScribeService extends BaseService {
     const chatgpt = new ChatGPTService();
     // iterate through each summary prompt and send them to chatgpt
     for (const prompt of prompts) {
-      const reply = await chatgpt.send(prompt.text);
+      let reply = await chatgpt.send(prompt.text);
       if (BAD_RESPONSE_EXPR.test(reply.text)) {
-        this.error('Bad response from chatgpt', [ 'Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
+        // attempt single retry
+        reply = await chatgpt.send(prompt.text);
+        if (BAD_RESPONSE_EXPR.test(reply.text)) {
+          this.error('Bad response from chatgpt', ['--repl--', reply.text, '--prompt--', prompt.text].join('\n'));
+        }
+      }
+      try {
+        await prompt.handleReply(reply);
+      } catch(e) {
+        if (/too long|sentiment|category/i.test(e.message)) {
+          reply = await chatgpt.send(prompt.text);
+          console.error(e);
+          // attempt single retry
+          await prompt.handleReply(reply);
+        } else {
+          throw e;
+        }
       }
       this.log(reply);
-      await prompt.handleReply(reply);
     }
       
     try {
@@ -218,22 +236,34 @@ export class ScribeService extends BaseService {
       newSummary.categoryId = category.id;
 
       if (this.features.image_generation) {
+        
+        const generateImage = async () => {
       
-        // Generate image from the title
-        const image = await DeepAiService.textToImage(newSummary.title);
-        if (!image) {
-          throw new Error('Image generation failed');
+          // Generate image from the title
+          const image = await DeepAiService.textToImage(newSummary.title);
+          if (!image) {
+            throw new Error('Image generation failed');
+          }
+          
+          // Save image to S3 CDN
+          const file = await S3Service.download(image.output_url);
+          const obj = await S3Service.uploadObject({
+            ACL: 'public-read',
+            ContentType: 'image/jpeg',
+            File: file,
+            Folder: 'img/s',
+          });
+          newSummary.imageUrl = obj.url;
+          
         }
         
-        // Save image to S3 CDN
-        const file = await S3Service.download(image.output_url);
-        const obj = await S3Service.uploadObject({
-          ACL: 'public-read',
-          ContentType: 'image/jpeg',
-          File: file,
-          Folder: 'img/s',
-        });
-        newSummary.imageUrl = obj.url;
+        try {
+          generateImage();
+        } catch(e) {
+          console.error(e);
+          // attempt single retry
+          generateImage();
+        }
   
       }
     
@@ -263,7 +293,7 @@ export class ScribeService extends BaseService {
       return summary;
       
     } catch (e) {
-      await this.error('Unexpected Error Encountered', `${e}\n\n${JSON.stringify(newSummary, null, 2)}`);
+      await this.error('Unexpected Error Encountered', [url, e.message, JSON.stringify(newSummary, null, 2)].join('\n\n'));
     }
     
   }
