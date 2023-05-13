@@ -14,6 +14,7 @@ import {
   Summary,
   SummarySentiment,
   SummarySentimentToken,
+  SummaryToken,
 } from '../../api/v1/schema/models';
 import { BaseService } from '../base';
 
@@ -108,7 +109,7 @@ export class ScribeService extends BaseService {
     let categoryDisplayName: string;
     const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
     const sentimentTokens: string[] = [];
-    ///const tags: string[] = [];
+    const tags: string[] = [];
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -136,15 +137,15 @@ export class ScribeService extends BaseService {
         },
         text: 'For the article/story I just gave you, please provide a floating point sentiment score between -1 and 1 as well as the 10 most notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
       },
-      // {
-      //   handleReply: async (reply) => { 
-      //     tags.push(...reply
-      //       .replace(/^\.*?:\s*/, '')
-      //       .replace(/\.$/, '')
-      //       .split(/\/*,\s*/));
-      //   },
-      //   text: 'Please provide a comma separated list of at least 10 tags/phrases that are related to this article/story. Please only respond with the tags.',
-      // },
+      {
+        handleReply: async (reply) => { 
+          tags.push(...reply.text
+            .replace(/^\.*?:\s*/, '')
+            .replace(/\.$/, '')
+            .split(/\/*,\s*/));
+        },
+        text: 'Please provide a comma separated list of at least 10 tags/phrases that are related to this article/story. Please only respond with the tags.',
+      },
       {
         handleReply: async (reply) => { 
           if (reply.text.split(' ').length > 15) {
@@ -169,13 +170,13 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 150) {
+          if (reply.text.split(' ').length > 120) {
             await this.error('Summary too long', `Summary too long for ${url}\n\n${reply.text}`);
           }
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide another longer two paragraph unbiased summary using no more than 100 words. Do not use phrases like "The article/story" or "This article/story".', 
+          'Please provide another longer unbiased summary using no more than 100 words. Do not use phrases like "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -247,6 +248,13 @@ export class ScribeService extends BaseService {
         await SummarySentimentToken.create({
           parentId: newSentiment.id,
           text: token,
+        });
+      }
+      
+      for (const tag of tags) {
+        await SummaryToken.create({
+          parentId: newSummary.id,
+          text: tag,
         });
       }
       

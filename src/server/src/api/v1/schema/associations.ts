@@ -15,6 +15,7 @@ import {
   SummaryInteraction,
   SummarySentiment,
   SummarySentimentToken,
+  SummaryToken,
   User,
   UserMetadata,
   Worker,
@@ -142,10 +143,16 @@ export function makeAssociations() {
 
   Summary.belongsTo(Category, { foreignKey: 'categoryId' });
   Category.hasMany(Summary, { foreignKey: 'categoryId' });
-
-  SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
-  Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
-
+  
+  SummaryToken.belongsTo(Summary, { 
+    as: 'tokens',
+    foreignKey: 'parentId',
+  });
+  Summary.hasMany(SummaryToken, {
+    as: 'tokens',
+    foreignKey: 'parentId',
+  });
+  
   SummarySentiment.belongsTo(Summary, {
     as: 'summary_sentiments',
     foreignKey: 'parentId',
@@ -163,6 +170,9 @@ export function makeAssociations() {
     as: 'summary_sentiment_tokens',
     foreignKey: 'parentId',
   });
+  
+  SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
+  Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
   
   SummaryInteraction.belongsTo(User, {
     foreignKey: {

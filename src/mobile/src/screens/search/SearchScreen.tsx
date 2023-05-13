@@ -99,11 +99,11 @@ export function SearchScreen({
     const filters: string[] = [];
     if (lengthOf(bookmarkedCategories) > 0) {
       filters.push(['cat', Object.values(bookmarkedCategories ?? {})
-      .map((c) => c.item.name).join(',')].join(':'));
+        .map((c) => c.item.name).join(',')].join(':'));
     }
     if (lengthOf(bookmarkedOutlets) > 0) {
       filters.push(['src', Object.values(bookmarkedOutlets ?? {})
-      .map((o) => o.item.name).join(',')].join(':'));
+        .map((o) => o.item.name).join(',')].join(':'));
     }
     return filters.join(' ');
   }, [bookmarkedCategories, bookmarkedOutlets]);
