@@ -108,7 +108,7 @@ export class ScribeService extends BaseService {
     let categoryDisplayName: string;
     const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
     const sentimentTokens: string[] = [];
-    const tags: string[] = [];
+    ///const tags: string[] = [];
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -204,7 +204,7 @@ export class ScribeService extends BaseService {
     for (const prompt of prompts) {
       const reply = await chatgpt.send(prompt.text);
       if (BAD_RESPONSE_EXPR.test(reply.text)) {
-        this.error(['Bad response from chatgpt', 'Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
+        this.error('Bad response from chatgpt', [ 'Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
       }
       this.log(reply);
       await prompt.handleReply(reply);
