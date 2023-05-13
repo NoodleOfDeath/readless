@@ -169,13 +169,13 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 120) {
+          if (reply.text.split(' ').length > 150) {
             await this.error('Summary too long', `Summary too long for ${url}\n\n${reply.text}`);
           }
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide another longer two paragraph unbiased summary using no more than 80 words. Do not use phrases like "The article/story" or "This article/story".', 
+          'Please provide another longer two paragraph unbiased summary using no more than 100 words. Do not use phrases like "The article/story" or "This article/story".', 
         ].join(''),
       },
       {
@@ -197,20 +197,20 @@ export class ScribeService extends BaseService {
         text: `Please select a best category for this article/story from the following choices: ${this.categories.join(' ')}`,
       },
     ];
-    
-    try {
       
-      // initialize chatgpt service and send the prompt
-      const chatgpt = new ChatGPTService();
-      // iterate through each summary prompt and send them to chatgpt
-      for (const prompt of prompts) {
-        const reply = await chatgpt.send(prompt.text);
-        if (BAD_RESPONSE_EXPR.test(reply.text)) {
-          throw new Error(['Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
-        }
-        this.log(reply);
-        await prompt.handleReply(reply);
+    // initialize chatgpt service and send the prompt
+    const chatgpt = new ChatGPTService();
+    // iterate through each summary prompt and send them to chatgpt
+    for (const prompt of prompts) {
+      const reply = await chatgpt.send(prompt.text);
+      if (BAD_RESPONSE_EXPR.test(reply.text)) {
+        this.error(['Bad response from chatgpt', 'Bad response from chatgpt', '--prompt--', prompt.text, '--repl--', reply.text].join('\n'));
       }
+      this.log(reply);
+      await prompt.handleReply(reply);
+    }
+      
+    try {
     
       const category = await Category.findOne({ where: { displayName: categoryDisplayName } });
       newSummary.categoryId = category.id;
