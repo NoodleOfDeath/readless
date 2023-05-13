@@ -39,6 +39,8 @@ function getHost() {
 
 const HOST = JSON.stringify(getHost());
 
+const WORKER_RETRY_EXPRS = (process.env.WORKER_RETRY_EXPRS || 'took long,bad response,unexpected error').split(',');
+
 @Table({
   modelName: 'worker',
   paranoid: true,
@@ -154,7 +156,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
         lockedBy: null,
         queue: this.queueProps.name,
         startedAt: null,
-        [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...(this.options.retryFailedJobs ?? []).map((e) => ({ [Op.iRegexp]: e }))] } }],
+        [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...(this.options.retryFailedJobs ?? WORKER_RETRY_EXPRS).map((e) => ({ [Op.iRegexp]: e }))] } }],
       },
     });
     return job as Job<DataType, ReturnType, QueueName>;
