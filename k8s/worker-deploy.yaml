@@ -58,6 +58,8 @@ spec:
               value: "$S3_KEY"
             - name: S3_SECRET
               value: "$S3_SECRET"
+            - name: WORKER_RETRY_EXPRS
+              value: "$WORKER_RETRY_EXPRS"
           # livenessProbe:
           #   httpGet:
           #     path: /v1/healthz
