@@ -137,7 +137,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() filter?: string,
     @Query() ids?: number[],
     @Query() excludeIds?: boolean,
-    @Query() match?: 'all' | 'any',
+    @Query() match?: 'all' | 'any' = 'any',
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
