@@ -119,7 +119,7 @@ export function makeAssociations() {
 
 export function addScopes() {
 
-  Outlet.addScope('defaultScope', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] });
+  Outlet.addScope('raw', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] });
   
   Outlet.addScope(
     'public', 
@@ -142,7 +142,7 @@ export function addScopes() {
     }
   );
   
-  Category.addScope('defaultScope', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES] });
+  Category.addScope('raw', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES] });
   
   Category.addScope(
     'public', 
@@ -166,24 +166,26 @@ export function addScopes() {
     }
   );
   
-  SummaryToken.addScope('defaultScope', { attributes: [...PUBLIC_SUMMARY_TOKEN_ATTRIBUTES] });
-  SummarySentiment.addScope('defaultScope', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
-  SummarySentimentToken.addScope('defaultScope', { attributes: [...PUBLIC_SENTIMENT_TOKEN_ATTRIBUTES] });
+  SummaryToken.addScope('raw', { attributes: [...PUBLIC_SUMMARY_TOKEN_ATTRIBUTES] });
+  
+  SummarySentiment.addScope('raw', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
+  
+  SummarySentimentToken.addScope('raw', { attributes: [...PUBLIC_SENTIMENT_TOKEN_ATTRIBUTES] });
 
-  Summary.addScope('defaultScope', { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] });
+  Summary.addScope('raw', { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] });
 
   Summary.addScope('conservative', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
     include: [
-      Outlet,
-      Category,
+      Outlet.scope('raw'),
+      Category.scope('raw'),
       { 
         as: 'sentiments', 
         include: [{ 
           as: 'tokens', 
-          model: SummarySentimentToken,
+          model: SummarySentimentToken.scope('raw'),
         }], 
-        model: SummarySentiment,
+        model: SummarySentiment.scope('raw'),
       },
     ],
   });
@@ -191,15 +193,15 @@ export function addScopes() {
   Summary.addScope('public', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
     include: [
-      Outlet,
-      Category,
+      Outlet.scope('raw'),
+      Category.scope('raw'),
       { 
         as: 'sentiments', 
         include: [{ 
           as: 'tokens', 
-          model: SummarySentimentToken,
+          model: SummarySentimentToken.scope('raw'),
         }], 
-        model: SummarySentiment,
+        model: SummarySentiment.scope('raw'),
       },
     ],
   });
