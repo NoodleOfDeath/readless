@@ -1,8 +1,4 @@
-import {
-  Column,
-  DataType,
-  Index,
-} from 'sequelize-typescript';
+import { Column, DataType } from 'sequelize-typescript';
 
 import { SentimentAttributes, SentimentCreationAttributes } from './Sentiment.types';
 import { SentimentTokenAttributes, SentimentTokenCreationAttributes } from './SentimentToken.types';
@@ -15,20 +11,12 @@ export abstract class Sentiment<
     B extends SentimentCreationAttributes<C> = SentimentCreationAttributes<C>,
   > extends BaseModel<A, B> implements SentimentAttributes<T> {
     
-  @Index({
-    name: 'sentiment_parent_id_method_unique',
-    unique: true,
-  })
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
   declare parentId: number;
 
-  @Index({
-    name: 'sentiment_parent_id_method_unique',
-    unique: true,
-  })
   @Column({
     allowNull: false,
     type: DataType.STRING,

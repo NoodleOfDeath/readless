@@ -16,6 +16,10 @@ import {
   SummarySentimentToken,
   SummaryToken,
 } from '../../api/v1/schema/models';
+import {
+  SummaryTokenCreationAttributes,
+  TOKEN_TYPES,
+} from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 50;
@@ -108,7 +112,7 @@ export class ScribeService extends BaseService {
     let categoryDisplayName: string;
     const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
     const sentimentTokens: string[] = [];
-    const tags: string[] = [];
+    const tags: Partial<SummaryTokenCreationAttributes>[] = [];
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -137,14 +141,33 @@ export class ScribeService extends BaseService {
         text: 'For the article/story I just gave you, please provide a floating point sentiment score between -1 and 1 as well as the 10 most notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
       },
       {
-        handleReply: async (reply) => { 
-          const newTags = reply.text
-            .replace(/^\.*?:\s*/, '')
-            .replace(/\.$/, '')
-            .split(/\/*,\s*/);
-          tags.push(...new Set<string>(newTags));
+        handleReply: async (reply) => {
+          try {
+            const newTags = reply.text
+              .replace(/^\.*?:\s*/, '')
+              .replace(/\.$/, '')
+              .split('\n')
+              .map((t) => {
+                const parts = t.split(/\/*,\s*/);
+                if (parts.length !== 2) {
+                  return undefined;
+                }
+                const text = parts[0];
+                let type = parts[1] as typeof TOKEN_TYPES[number];
+                if (!TOKEN_TYPES.includes(type)) {
+                  type = 'other';
+                }
+                return {
+                  text,
+                  type,
+                }
+              }).filter(Boolean);
+            tags.push(...newTags);
+          } catch(e) {
+            await this.error('Bad tags', reply.text, false);
+          }
         },
-        text: 'Please provide a comma separated list of at least 10 tags/phrases that are related to this article/story that can be used for identifying trending topics over time. Prioritize names, places, events, companies, or anything that seems time sensitive. Please only respond with the tags.',
+        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article/story. Prioritize names, places, events, organizations, pronouns, or anything that seems time sensitive. For each tag, also provide a token type that is one of ${TOKEN_TYPES.join(', ')}. Only respond with each tag and its respective token type (separated by comma) on its own line`,
       },
       {
         handleReply: async (reply) => { 
@@ -258,11 +281,11 @@ export class ScribeService extends BaseService {
         }
         
         try {
-          generateImage();
+          await generateImage();
         } catch(e) {
           console.error(e);
           // attempt single retry
-          generateImage();
+          await generateImage();
         }
   
       }
@@ -285,7 +308,8 @@ export class ScribeService extends BaseService {
       for (const tag of tags) {
         await SummaryToken.create({
           parentId: summary.id,
-          text: tag,
+          text: tag.text,
+          type: tag.type,
         });
       }
       

@@ -17,12 +17,8 @@ export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS]
 export type SummaryAttributes = PostAttributes & {
   outletId: number;
   outlet: PublicOutletAttributes;
-  // @Deprecated
-  outletAttributes?: PublicOutletAttributes;
   categoryId: number;
   category: PublicCategoryAttributes;
-  // @Deprecated
-  categoryAttributes?: PublicCategoryAttributes;
   url: string;
   rawText: string;
   filteredText: string;
@@ -32,9 +28,7 @@ export type SummaryAttributes = PostAttributes & {
   shortSummary: string;
   bullets: string[];
   formats: ReadingFormat[];
-  // @Deprecated
-  summary_sentiments?: SummarySentimentAttributes[];
-  sentiments: { [key: string]: SummarySentimentAttributes };
+  sentiments: SummarySentimentAttributes[];
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {

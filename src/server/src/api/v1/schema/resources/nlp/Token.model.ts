@@ -1,6 +1,10 @@
 import { Column, DataType } from 'sequelize-typescript';
 
-import { TokenAttributes, TokenCreationAttributes } from './Token.types';
+import { 
+  TokenAttributes, 
+  TokenCreationAttributes,
+  TokenType,
+} from './Token.types';
 import { BaseModel } from '../../base';
 
 export abstract class Token<
@@ -19,5 +23,11 @@ export abstract class Token<
     type: DataType.STRING,
   })
   declare text: string;
+  
+  @Column({
+    defaultValue: 'other',
+    type: DataType.STRING,
+  })
+  declare type: TokenType;
   
 }

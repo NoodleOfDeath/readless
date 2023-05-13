@@ -1,4 +1,9 @@
-import { Includeable, Op } from 'sequelize';
+//import ms from 'ms';
+import { 
+  Includeable, 
+  Op,
+  QueryTypes,
+} from 'sequelize';
 import {
   Body,
   Delete,
@@ -14,11 +19,13 @@ import {
   Tags,
 } from 'tsoa';
 
+import { GET_SUMMARY_TOKEN_COUNTS } from './queries';
 import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
   BulkMetadataResponse,
+  BulkResponse,
   Category,
   DestroyResponse,
   FindAndCountOptions,
@@ -29,9 +36,11 @@ import {
   PublicSummaryAttributes,
   Summary,
   SummaryInteraction,
+  SummaryTokenAttributes,
   User,
 } from '../../schema';
 import { SummarySentimentAttributes, orderByToItems } from '../../schema/types';
+import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 function parsePrefilter(prefilter: string) {
   return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: c.trim() })) };
@@ -119,7 +128,7 @@ function applyFilter(
 @SuccessResponse(204, 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Error')
-export class SummaryController {
+export class SummaryController extends BaseControllerWithPersistentStorageAccess {
 
   @Get('/')
   public static async getSummaries(
@@ -145,6 +154,29 @@ export class SummaryController {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
     }
     return summaries;
+  }
+  
+  @Get('/trends')
+  public static async getTrends(
+    @Query() userId?: number,
+    @Query() filter?: string,
+    @Query() interval = '7d',
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page,
+    @Query() order: string[] = ['count:desc']
+  ): Promise<BulkResponse<SummaryTokenAttributes>> {
+    const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
+      nest: true,
+      replacements: {
+        interval,
+        limit: Number(pageSize),
+        offset,
+        order,
+      },
+      type: QueryTypes.SELECT,
+    });
+    return (records?.[0] ?? { count: 0, rows: [] }) as BulkResponse<SummaryTokenAttributes>;
   }
   
   @Security('jwt')
