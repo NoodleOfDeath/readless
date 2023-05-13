@@ -378,6 +378,40 @@ export class Outlet<
       },
       timezone: DEFAULT_TIMEZONE,
     },
+    cultofmac: {
+      baseUrl: 'https://www.cultofmac.com',
+      displayName: 'Cult of Mac',
+      name: 'cultofmac',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'article .author a[class*="/author/"]' },
+        date: { selector: 'article .author time' },
+        spider:{
+          attribute: 'href',
+          selector: 'a[class*="post-title"]',
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
+    dailymail: {
+      baseUrl: 'https://www.dailymail.co.uk/ushome/index.html',
+      displayName: 'Daily Mail',
+      name: 'daily-mail',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'article .author, .author' },
+        date: { selector: 'article .date time' },
+        spider:{
+          attribute: 'href',
+          selector: [
+            '.article .articletext a',
+            'a[href*="/news/"]',
+            'a[href*="/article"]',
+          ].join(','),
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
     defenseone: {
       baseUrl: 'https://www.defenseone.com',
       displayName: 'Defense One',
@@ -407,6 +441,28 @@ export class Outlet<
         spider:{
           attribute: 'href',
           selector: 'a[href*="/news/"]',
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
+    digitaltrends: {
+      baseUrl: 'https://www.digitaltrends.com',
+      displayName: 'digitaltrends',
+      name: 'digitaltrends',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'cite a[href*="/users/"], cite a.author' },
+        date: { selector: 'cite time.date, cite time' },
+        spider:{
+          attribute: 'href',
+          selector: [
+            'a[href*="/cars/"]',
+            'a[href*="/computing/"]',
+            'a[href*="/entertainment/"]',
+            'a[href*="/gaming/"]',
+            'a[href*="/mobile/"]',
+            'a[href*="/movies/"]',
+          ].join(','),
         },
       },
       timezone: DEFAULT_TIMEZONE,
@@ -1252,6 +1308,21 @@ export class Outlet<
         spider:{
           attribute: 'href',
           selector: 'article a',
+        },
+      },
+      timezone: DEFAULT_TIMEZONE,
+    },
+    verge: {
+      baseUrl: 'https://www.theverge.com',
+      displayName: 'The Verge',
+      name: 'verge',
+      selectors: {
+        article: { selector: 'article p' },
+        author: { selector: 'article a[class*="/authors/"]' },
+        date: { selector: 'article time' },
+        spider:{
+          attribute: 'href',
+          selector: 'li[class*="duet--content-cards"] a',
         },
       },
       timezone: DEFAULT_TIMEZONE,
