@@ -173,7 +173,7 @@ export function SearchScreen({
         }
         return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
       });
-      setPage((prev) => prev + 1);
+      setPage((prev) => (page === 0 ? 0 : prev) + 1);
       setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
@@ -419,7 +419,10 @@ export function SearchScreen({
               <ScrollView
                 refreshing={ loading }
                 onScroll={ handleMasterScroll }
-                onRefresh={ () => load(0) }>
+                onRefresh={ () => {
+                  setPage(0);
+                  load(0);
+                } }>
                 <View col width="100%" pt={ 12 }>
                   {summaryList}
                   {!loading && !noResults && totalResultCount > summaries.length && (

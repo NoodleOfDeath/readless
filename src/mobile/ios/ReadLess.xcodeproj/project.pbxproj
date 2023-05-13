@@ -156,18 +156,6 @@
 		CD4AEB662A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
 		CD4AEB672A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
 		CD4AEB682A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
-		CD4AEB6D2A0D9D450093B6D1 /* AnonymousProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB692A0D9D450093B6D1 /* AnonymousProBold.ttf */; };
-		CD4AEB6E2A0D9D450093B6D1 /* AnonymousProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB692A0D9D450093B6D1 /* AnonymousProBold.ttf */; };
-		CD4AEB6F2A0D9D450093B6D1 /* AnonymousProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB692A0D9D450093B6D1 /* AnonymousProBold.ttf */; };
-		CD4AEB702A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6A2A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf */; };
-		CD4AEB712A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6A2A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf */; };
-		CD4AEB722A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6A2A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf */; };
-		CD4AEB732A0D9D450093B6D1 /* AnonymousPro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6B2A0D9D450093B6D1 /* AnonymousPro.ttf */; };
-		CD4AEB742A0D9D450093B6D1 /* AnonymousPro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6B2A0D9D450093B6D1 /* AnonymousPro.ttf */; };
-		CD4AEB752A0D9D450093B6D1 /* AnonymousPro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6B2A0D9D450093B6D1 /* AnonymousPro.ttf */; };
-		CD4AEB762A0D9D450093B6D1 /* AnonymousProItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6C2A0D9D450093B6D1 /* AnonymousProItalic.ttf */; };
-		CD4AEB772A0D9D450093B6D1 /* AnonymousProItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6C2A0D9D450093B6D1 /* AnonymousProItalic.ttf */; };
-		CD4AEB782A0D9D450093B6D1 /* AnonymousProItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB6C2A0D9D450093B6D1 /* AnonymousProItalic.ttf */; };
 		CD4AEB7D2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
 		CD4AEB7E2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
 		CD4AEB7F2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
@@ -313,10 +301,6 @@
 		CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AlegreyaBoldItalic.otf; sourceTree = "<group>"; };
 		CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AlegreyaItalic.otf; sourceTree = "<group>"; };
 		CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AlegreyaBold.otf; sourceTree = "<group>"; };
-		CD4AEB692A0D9D450093B6D1 /* AnonymousProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AnonymousProBold.ttf; sourceTree = "<group>"; };
-		CD4AEB6A2A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AnonymousProBoldItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB6B2A0D9D450093B6D1 /* AnonymousPro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AnonymousPro.ttf; sourceTree = "<group>"; };
-		CD4AEB6C2A0D9D450093B6D1 /* AnonymousProItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AnonymousProItalic.ttf; sourceTree = "<group>"; };
 		CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansBold.ttf; sourceTree = "<group>"; };
 		CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSans.ttf; sourceTree = "<group>"; };
 		CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansBoldItalic.ttf; sourceTree = "<group>"; };
@@ -452,10 +436,6 @@
 				CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */,
 				CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */,
 				CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */,
-				CD4AEB6B2A0D9D450093B6D1 /* AnonymousPro.ttf */,
-				CD4AEB692A0D9D450093B6D1 /* AnonymousProBold.ttf */,
-				CD4AEB6A2A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf */,
-				CD4AEB6C2A0D9D450093B6D1 /* AnonymousProItalic.ttf */,
 				0125BD2529D791EC00EAC61C /* AntDesign.ttf */,
 				CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */,
 				CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */,
@@ -852,9 +832,7 @@
 				CD4AEB3F2A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */,
 				CD4AEB7E2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */,
 				CD4AEB552A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */,
-				CD4AEB6E2A0D9D450093B6D1 /* AnonymousProBold.ttf in Resources */,
 				0143021D29FACEDC00D40293 /* Zocial.ttf in Resources */,
-				CD4AEB712A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf in Resources */,
 				CD4AEB642A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */,
 				0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */,
 				CD4AEB812A0D9D860093B6D1 /* DMSans.ttf in Resources */,
@@ -863,10 +841,8 @@
 				CD4AEB582A0D99D30093B6D1 /* LatoItalic.ttf in Resources */,
 				CD4AEB672A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */,
 				0143022729FACEDC00D40293 /* SimpleLineIcons.ttf in Resources */,
-				CD4AEB742A0D9D450093B6D1 /* AnonymousPro.ttf in Resources */,
 				CD4AEB3C2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */,
 				CD4AEB612A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */,
-				CD4AEB772A0D9D450093B6D1 /* AnonymousProItalic.ttf in Resources */,
 				CD4AEB842A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */,
 				CD4AEB4B2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */,
 				0143022129FACEDC00D40293 /* Ionicons.ttf in Resources */,
@@ -908,7 +884,6 @@
 				CD4AEB3D2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */,
 				0143023729FACEDD00D40293 /* Ionicons.ttf in Resources */,
 				0143023C29FACEDD00D40293 /* FontAwesome5_Brands.ttf in Resources */,
-				CD4AEB782A0D9D450093B6D1 /* AnonymousProItalic.ttf in Resources */,
 				CD4AEB7F2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */,
 				CD4AEB822A0D9D860093B6D1 /* DMSans.ttf in Resources */,
 				CD4AEB402A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */,
@@ -920,9 +895,7 @@
 				0143023829FACEDD00D40293 /* Entypo.ttf in Resources */,
 				CD4AEB242A0D93180093B6D1 /* Manuale.ttf in Resources */,
 				CD4AEB652A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */,
-				CD4AEB722A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf in Resources */,
 				CD4AEB882A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */,
-				CD4AEB6F2A0D9D450093B6D1 /* AnonymousProBold.ttf in Resources */,
 				CD4AEB462A0D99780093B6D1 /* ManualeBold.ttf in Resources */,
 				0150ACB129F9577600875CF7 /* Assets.xcassets in Resources */,
 				0143023E29FACEDD00D40293 /* FontAwesome.ttf in Resources */,
@@ -930,7 +903,6 @@
 				0143023129FACEDD00D40293 /* Zocial.ttf in Resources */,
 				0143023529FACEDD00D40293 /* AntDesign.ttf in Resources */,
 				CD4AEB492A0D99780093B6D1 /* ManualeItalic.ttf in Resources */,
-				CD4AEB752A0D9D450093B6D1 /* AnonymousPro.ttf in Resources */,
 				CD4AEB202A0D92DD0093B6D1 /* Faustina.ttf in Resources */,
 				0143022F29FACEDD00D40293 /* FontAwesome5_Regular.ttf in Resources */,
 				0143024629FACEDD00D40293 /* MaterialIcons.ttf in Resources */,
@@ -952,7 +924,6 @@
 				0125BD4C29D791ED00EAC61C /* FontAwesome5_Regular.ttf in Resources */,
 				0150EA2029EE16D8004FBDFA /* Roboto.ttf in Resources */,
 				CD4AEB542A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */,
-				CD4AEB732A0D9D450093B6D1 /* AnonymousPro.ttf in Resources */,
 				0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */,
 				0125BD4A29D791ED00EAC61C /* Ionicons.ttf in Resources */,
 				CD4AEB632A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */,
@@ -962,7 +933,6 @@
 				0125BD4B29D791ED00EAC61C /* FontAwesome5_Solid.ttf in Resources */,
 				CD4AEB3B2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */,
 				CD4AEB572A0D99D30093B6D1 /* LatoItalic.ttf in Resources */,
-				CD4AEB762A0D9D450093B6D1 /* AnonymousProItalic.ttf in Resources */,
 				CD4AEB222A0D93180093B6D1 /* Manuale.ttf in Resources */,
 				CD4AEB512A0D99D30093B6D1 /* LatoBold.ttf in Resources */,
 				01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */,
@@ -981,7 +951,6 @@
 				CD4AEB1E2A0D92DD0093B6D1 /* Faustina.ttf in Resources */,
 				CD4AEB802A0D9D860093B6D1 /* DMSans.ttf in Resources */,
 				CD4AEB832A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */,
-				CD4AEB702A0D9D450093B6D1 /* AnonymousProBoldItalic.ttf in Resources */,
 				CD4AEB382A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0125BD4329D791ED00EAC61C /* FontAwesome5_Brands.ttf in Resources */,
@@ -989,7 +958,6 @@
 				CD4AEB4A2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */,
 				CD4AEB442A0D99780093B6D1 /* ManualeBold.ttf in Resources */,
 				0125BD4429D791ED00EAC61C /* MaterialCommunityIcons.ttf in Resources */,
-				CD4AEB6D2A0D9D450093B6D1 /* AnonymousProBold.ttf in Resources */,
 				0125BD5929D791ED00EAC61C /* MaterialIcons.ttf in Resources */,
 				0125BD4029D791ED00EAC61C /* Entypo.ttf in Resources */,
 			);
@@ -1620,7 +1588,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
@@ -1661,7 +1629,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Read Less";
