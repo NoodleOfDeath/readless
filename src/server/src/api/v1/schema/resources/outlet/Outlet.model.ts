@@ -1425,7 +1425,7 @@ export class Outlet<
   
   @AfterFind
   public static async legacy(cursor: Outlet | Outlet[]) {
-    if (cursor) {
+    if (!cursor) {
       return;
     }
     const outlets = Array.isArray(cursor) ? cursor : [cursor];

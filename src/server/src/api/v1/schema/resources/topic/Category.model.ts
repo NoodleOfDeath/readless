@@ -219,7 +219,7 @@ export class Category<
   
   @AfterFind
   public static async legacy(cursor: Category | Category[]) {
-    if (cursor) {
+    if (!cursor) {
       return;
     }
     const categories = Array.isArray(cursor) ? cursor : [cursor];
