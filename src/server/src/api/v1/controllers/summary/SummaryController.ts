@@ -34,9 +34,9 @@ import {
   InteractionType,
   Outlet,
   PublicSummaryAttributes,
+  PublicSummaryTokenAttributes,
   Summary,
   SummaryInteraction,
-  SummaryTokenAttributes,
   User,
 } from '../../schema';
 import { 
@@ -164,13 +164,13 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   public static async getTrends(
     @Query() userId?: number,
     @Query() type?: TokenType,
-    @Query() interval = '7d',
+    @Query() interval = '12h',
     @Query() min = 0,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
     @Query() order: string[] = ['count:desc']
-  ): Promise<BulkResponse<SummaryTokenAttributes>> {
+  ): Promise<BulkResponse<PublicSummaryTokenAttributes>> {
     const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
       nest: true,
       replacements: {
@@ -183,7 +183,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       },
       type: QueryTypes.SELECT,
     });
-    return (records?.[0] ?? { count: 0, rows: [] }) as BulkResponse<SummaryTokenAttributes>;
+    return (records?.[0] ?? { count: 0, rows: [] }) as BulkResponse<PublicSummaryTokenAttributes>;
   }
   
   @Security('jwt')
