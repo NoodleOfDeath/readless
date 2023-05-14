@@ -153,8 +153,9 @@ export class ScribeService extends BaseService {
                   return undefined;
                 }
                 const text = parts[0];
-                let type = parts[1] as typeof TOKEN_TYPES[number];
+                let type = parts[1].toLowerCase() as typeof TOKEN_TYPES[number];
                 if (!TOKEN_TYPES.includes(type)) {
+                  console.error('Unknown token type', type);
                   type = 'other';
                 }
                 return {
