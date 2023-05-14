@@ -4,6 +4,7 @@ export const TOKEN_TYPES = [
   'activity',
   'adjective',
   'business',
+  'city',
   'controversy',
   'country',
   'event',
@@ -14,6 +15,8 @@ export const TOKEN_TYPES = [
   'place',
   'other',
   'social-interaction',
+  'sports-team',
+  'us-state',
 ] as const;
 
 export type TokenType = typeof TOKEN_TYPES[number];
