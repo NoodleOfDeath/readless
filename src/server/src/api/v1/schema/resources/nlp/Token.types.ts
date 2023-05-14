@@ -17,7 +17,7 @@ export type TokenType = typeof TOKEN_TYPES[number];
 export type TokenAttributes = DatedAttributes & {
   parentId: number;
   text: string;
-  type: TokenType;
+  type?: TokenType;
 };
 
 export type TokenCreationAttributes = {
