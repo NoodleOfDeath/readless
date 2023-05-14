@@ -16,10 +16,7 @@ import {
   SummarySentimentToken,
   SummaryToken,
 } from '../../api/v1/schema/models';
-import {
-  SummaryTokenCreationAttributes,
-  TOKEN_TYPES,
-} from '../../api/v1/schema/types';
+import { SummaryTokenCreationAttributes, TOKEN_TYPES } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 50;
@@ -162,10 +159,10 @@ export class ScribeService extends BaseService {
                 return {
                   text,
                   type,
-                }
+                };
               }).filter(Boolean);
             tags.push(...newTags);
-          } catch(e) {
+          } catch (e) {
             await this.error('Bad tags', reply.text, false);
           }
         },
@@ -242,7 +239,7 @@ export class ScribeService extends BaseService {
       }
       try {
         await prompt.handleReply(reply);
-      } catch(e) {
+      } catch (e) {
         if (/too long|sentiment|category/i.test(e.message)) {
           reply = await chatgpt.send(prompt.text);
           console.error(e);
@@ -280,11 +277,11 @@ export class ScribeService extends BaseService {
           });
           newSummary.imageUrl = obj.url;
           
-        }
+        };
         
         try {
           await generateImage();
-        } catch(e) {
+        } catch (e) {
           console.error(e);
           // attempt single retry
           await generateImage();

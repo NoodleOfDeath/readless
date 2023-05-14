@@ -12,7 +12,10 @@ export function monthToString(month: number | string) {
   return new Date(`2023-${m}-07`).toLocaleString('en-US', { month: 'long' });
 }
 
-export function parseDate(context: string) {
+export function parseDate(context?: string) {
+  if (!context) {
+    return new Date('invalid');
+  }
   const date = new Date(context.trim());
   if (!Number.isNaN(date.valueOf()) && date.valueOf() > 0) {
     return date;

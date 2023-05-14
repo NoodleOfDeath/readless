@@ -23,17 +23,17 @@ router.get(
   query('filter').isString().optional(),
   query('ids').optional(),
   query('excludeIds').isBoolean().optional(),
-  query('match').isString().matches(/^(?:any|all)$/).optional(),
+  query('matchType').isString().matches(/^(?:any|all)$/).optional(),
   ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     const {
-      scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order, match,
+      scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order, matchType,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
     const excludeIds = exclude === 'false' || exclude === 0 || exclude === 'undefined' ? false : exclude;
     try {
-      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, match, pageSize, page, offset, order);
+      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, matchType, pageSize, page, offset, order);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);
@@ -44,17 +44,18 @@ router.get(
 router.get(
   '/trends',
   rateLimitMiddleware('15 per 1m'),
-  query('filter').isString().optional(),
+  query('type').isString().optional(),
   query('interval').isString().optional(),
+  query('min').isNumeric().optional(),
   ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     const {
-      filter, interval, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
+      type, interval, min = 0, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
     try {
-      const response = await SummaryController.getTrends(userId, filter, interval, pageSize, page, offset, order);
+      const response = await SummaryController.getTrends(userId, type, interval, min, pageSize, page, offset, order);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);

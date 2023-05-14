@@ -39,7 +39,11 @@ import {
   SummaryTokenAttributes,
   User,
 } from '../../schema';
-import { SummarySentimentAttributes, orderByToItems } from '../../schema/types';
+import { 
+  SummarySentimentAttributes, 
+  TokenType,
+  orderByToItems,
+} from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 function parsePrefilter(prefilter: string) {
@@ -137,7 +141,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() filter?: string,
     @Query() ids?: number[],
     @Query() excludeIds?: boolean,
-    @Query() match?: 'all' | 'any' = 'any',
+    @Query() matchType?: 'all' | 'any',
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
@@ -148,7 +152,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       offset,
       order: orderByToItems(order),
     };
-    const filteredOptions = applyFilter(options, filter, ids, excludeIds, match);
+    const filteredOptions = applyFilter(options, filter, ids, excludeIds, matchType);
     const summaries = await Summary.scope(scope).findAndCountAll(filteredOptions);
     if (userId && scope === 'public') {
       await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
@@ -159,8 +163,9 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Get('/trends')
   public static async getTrends(
     @Query() userId?: number,
-    @Query() filter?: string,
+    @Query() type?: TokenType,
     @Query() interval = '7d',
+    @Query() min = 0,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
@@ -171,8 +176,10 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       replacements: {
         interval,
         limit: Number(pageSize),
+        min: Number(min),
         offset,
         order,
+        type: type ?? '%',
       },
       type: QueryTypes.SELECT,
     });
