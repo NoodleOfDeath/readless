@@ -95,7 +95,7 @@ function applyFilter(
   if (query && query.length > 0) {
     const matches = 
       query.replace(/\s\s+/g, ' ')
-        .replace(/[-.^$!?(){}[\]]/g, ($0) => `\\${$0}`)
+        .replace(/[-+*|=<>\\.^$!?(){}[\]]/g, ($0) => `\\${$0}`)
         .matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
     if (matches) {
       const subqueries = [...matches].map((match) => ({
@@ -119,7 +119,7 @@ function applyFilter(
             },
           });
         }
-      } 
+      }
     }
   }
   newOptions.where = where;
