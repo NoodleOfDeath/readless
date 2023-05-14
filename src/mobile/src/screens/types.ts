@@ -20,6 +20,7 @@ export type TabParams = {
 
 export type StackableTabParams = TabParams & {
   search: {
+    sampler?: boolean;
     prefilter?: string,
     onlyCustomNews?: boolean;
     specificIds?: number[];

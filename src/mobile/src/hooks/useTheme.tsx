@@ -81,6 +81,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           borderWidth: 1,
         },
         rounded: { borderRadius: 12 },
+        sampler: { backgroundColor: lightMode ? '#aaa' : '#444' },
         searchBar: {
           fontFamily: preferences.fontFamily,
           overflow: 'visible',

@@ -4,12 +4,14 @@ import { useNavigation as useRNNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { PublicCategoryAttributes, PublicOutletAttributes } from '~/api';
+import { SessionContext } from '~/contexts';
 import { StackableTabParams } from '~/screens';
 import { readingFormat } from '~/utils';
 
 export function useNavigation() {
 
   const navigation = useRNNavigation<NativeStackNavigationProp<StackableTabParams>>();
+  const { setPreference } = React.useContext(SessionContext);
 
   const router = React.useCallback(({ url }: { url: string }) => {
     // http://localhost:6969/read/?s=158&f=casual
@@ -38,7 +40,12 @@ export function useNavigation() {
 
   const search = React.useCallback((params: StackableTabParams['search']) => {
     navigation?.push('search', params);
-  }, [navigation]);
+    const searchText = params.prefilter;
+    if (!searchText) {
+      return;
+    }
+    setTimeout(() => setPreference('searchHistory', (prev) => [...new Set([searchText, ...(prev ?? [])])].slice(0, 10)), 500);
+  }, [navigation, setPreference]);
 
   const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
     navigation?.push('search', { prefilter: `src:${outlet.name}` });

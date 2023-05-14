@@ -36,10 +36,7 @@ export function SearchMenu({
   const [value, setValue] = React.useState(initialValue);
   const [forceHide, setForceHide] = React.useState<boolean>();
 
-  const { 
-    preferences: { searchHistory },
-    setPreference, 
-  } = React.useContext(SessionContext);
+  const { preferences: { searchHistory } } = React.useContext(SessionContext);
   
   const submit = React.useCallback((text?: string) => {
     if (text) {
@@ -48,8 +45,7 @@ export function SearchMenu({
     setForceHide(true);
     setTimeout(() => setForceHide(undefined), 200);
     onSubmit?.(text ?? value);
-    setTimeout(() => setPreference('searchHistory', (prev) => [...new Set([text ?? value, ...(prev ?? [])])].slice(0, 10)), 500);
-  }, [onSubmit, setPreference, value]);
+  }, [onSubmit, value]);
 
   const handleChangeText = React.useCallback((text: string) => {
     onChangeText?.(text);

@@ -7,6 +7,7 @@ import {
   API,
   InteractionType,
   PublicSummaryAttributes,
+  TokenType,
 } from '~/api';
 import { getUserAgent } from '~/utils';
 
@@ -20,14 +21,14 @@ export function useSummaryClient() {
     filter?: string,
     ids?: number[],
     excludeIds?: boolean,
-    matchType: 'all' | 'any' = 'all',
+    matchType?: 'all' | 'any',
     page = 0,
     pageSize = 10,
     order?: string[]
   ) => {
     try {
       return await withHeaders(API.getSummaries)({
-        excludeIds, filter, ids, match: matchType, order, page, pageSize,
+        excludeIds, filter, ids, matchType, order, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
@@ -48,6 +49,23 @@ export function useSummaryClient() {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
   }, [getSummaries]);
+  
+  const getTrends = React.useCallback(async (
+    type?: TokenType,
+    interval?: string,
+    min?: number,
+    page = 0,
+    pageSize = 10,
+    order?: string[]
+  ) => {
+    try {
+      return await withHeaders(API.getTrends)({
+        interval, min, order, page, pageSize, type,
+      });
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
   
   const interactWithSummary = React.useCallback(
     async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
@@ -113,6 +131,7 @@ export function useSummaryClient() {
   return {
     getSummaries,
     getSummary,
+    getTrends,
     handleInteraction,
     interactWithSummary,
   };

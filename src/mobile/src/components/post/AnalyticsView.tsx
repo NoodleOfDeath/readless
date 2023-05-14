@@ -2,7 +2,6 @@ import React from 'react';
 
 import { SummarySentimentAttributes } from '~/api';
 import {
-  Button,
   CollapsedView,
   Icon,
   Menu,
@@ -45,19 +44,20 @@ export function AnalyticsView({
   
   return (
     <View style={ style } gap={ 12 }>
-      <CollapsedView title={ (
-        <View row gap={ 12 }>
-          <Text>
-            Sentiment Analysis
-          </Text>
-          <Menu
-            autoAnchor={
-              <Icon size={ 24 } name="information" />
-            }>
-            <Text>Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.</Text>
-          </Menu>
-        </View>
-      ) }>
+      <CollapsedView
+        title={ (
+          <View row gap={ 12 }>
+            <Text>
+              Sentiment Analysis
+            </Text>
+            <Menu
+              autoAnchor={
+                <Icon size={ 24 } name="information" />
+              }>
+              <Text>Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.</Text>
+            </Menu>
+          </View>
+        ) }>
         <View col alignStart gap={ 12 }>
           <Text
             rounded
