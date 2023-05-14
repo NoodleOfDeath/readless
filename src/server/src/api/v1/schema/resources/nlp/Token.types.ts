@@ -13,6 +13,7 @@ export const TOKEN_TYPES = [
   'innovation',
   'person',
   'place',
+  'organization',
   'other',
   'social-interaction',
   'sports-team',
