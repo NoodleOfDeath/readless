@@ -1,3 +1,4 @@
+import { PublicTokenAttributes } from '../nlp/Token.types';
 import {
   SentimentTokenAttributes,
   SentimentTokenCreationAttributes,
@@ -5,3 +6,5 @@ import {
 
 export type SummarySentimentTokenAttributes = SentimentTokenAttributes; 
 export type SummarySentimentTokenCreationAttributes = SentimentTokenCreationAttributes;
+
+export type PublicSummarySentimentTokenAttributes = PublicTokenAttributes;
