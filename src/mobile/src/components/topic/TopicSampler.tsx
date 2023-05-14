@@ -113,7 +113,7 @@ export function TopicSampler({
                 key={ topic.text }
                 elevated
                 p={ 4 }
-                onPress={ () => search({ prefilter: `"${topic.text.replace(/['"'$]/g, '')}"` }) }>
+                onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
                 {topic.text}
               </Button>
             ))}
