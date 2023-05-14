@@ -37,8 +37,8 @@ export const rateLimitMiddleware = (
   const options = typeof opts === 'string' ? parseRateLimitString(opts) : opts;
   const duration = parseDuration(options.duration);
   return async (req, res, next) => {
-    const path = options.path instanceof Function ? options.path(req) : options.path;
     try {
+      const path = options.path instanceof Function ? options.path(req) : options.path;
       await Query.create({
         appVersion: JSON.stringify(req.headers['x-app-version']),
         path,
