@@ -43,7 +43,7 @@ router.get(
 
 router.get(
   '/trends',
-  rateLimitMiddleware('15 per 1m'),
+  rateLimitMiddleware('30 per 1m'),
   query('type').isString().optional(),
   query('interval').isString().optional(),
   query('min').isNumeric().optional(),
