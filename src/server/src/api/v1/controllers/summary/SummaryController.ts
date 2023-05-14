@@ -61,6 +61,7 @@ function applyFilter(
   if (!filter && ids.length === 0) {
     return newOptions;
   }
+  const include: Includeable[] = [];
   const where: FindAndCountOptions<Summary>['where'] = {};
   if (ids.length > 0) {
     const set = Array.isArray(ids) ? ids : [ids];
@@ -73,7 +74,6 @@ function applyFilter(
     const expr = /(\w+):([-\w.]*(?:,[-\w.]*)*)/gi;
     const matches = prefilter.matchAll(expr);
     if (matches) {
-      const include: Includeable[] = [];
       for (const match of matches) {
         const [_, prefix, prefixValues] = match;
         const pf = parsePrefilter(prefixValues);
@@ -90,15 +90,17 @@ function applyFilter(
           });
         }
       }
-      newOptions.include = include;
     }
   }
   if (query && query.length > 0) {
-    const matches = query.replace(/\s\s+/g, ' ').matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
+    const matches = 
+      query.replace(/\s\s+/g, ' ')
+        .replace(/[-.^$!?(){}[\]]/g, ($0) => `\\${$0}`)
+        .matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
     if (matches) {
       const subqueries = [...matches].map((match) => ({
         boundaries: Boolean(match[1]),
-        value: match[1] ? match[2] : match[3],
+        value: (match[1] ? match[2] : match[3]).replace(/['"]/g, ($0) => `\\${$0}`),
       }));
       where[Op.or] = [];
       if (matchType === 'all') {
@@ -121,6 +123,7 @@ function applyFilter(
     }
   }
   newOptions.where = where;
+  newOptions.include = include;
   return newOptions;
 }
 

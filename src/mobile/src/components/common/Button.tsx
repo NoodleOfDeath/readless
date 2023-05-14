@@ -33,13 +33,15 @@ export function Button({
   body1,
   body2,
   caption,
+  bold,
+  italic,
   underline,
   ...pressableProps
 }: ButtonProps) {
 
   const textStyle = React.useMemo(() => ({
-    body1, body2, caption, h1, h2, h3, h4, h5, h6, underline, 
-  }), [h1, h2, h3, h4, h5, h6, body1, body2, caption, underline]);
+    body1, body2, bold, caption, h1, h2, h3, h4, h5, h6, italic, underline, 
+  }), [body1, body2, caption, h1, h2, h3, h4, h5, h6, bold, italic, underline]);
   
   const theme = useTheme();
   const style = useStyles({ ...textStyle, ...pressableProps });

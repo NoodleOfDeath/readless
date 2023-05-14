@@ -23,6 +23,7 @@ import {
   ScrollView,
   Summary,
   Text,
+  TopicSampler,
   View,
 } from '~/components';
 import {
@@ -64,15 +65,10 @@ export function SearchScreen({
   const { supportsMasterDetail } = useLayout();
   const theme = useTheme();
   
-  const [prefilter, setPrefilter] = React.useState(route?.params?.prefilter);
+  const sampler = React.useMemo(() => route?.params?.sampler, [route?.params?.sampler]);
+  const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
   const onlyCustomNews = React.useMemo(() => Boolean(route?.params?.onlyCustomNews), [route]);
-  const specificIds = React.useMemo<number[] | undefined>(() => (route?.params?.specificIds), [route]);
-
-  React.useEffect(() => {
-    if (route?.params?.prefilter) {
-      setPrefilter(route?.params?.prefilter);
-    }
-  }, [route]);
+  const specificIds = React.useMemo(() => (route?.params?.specificIds), [route]);
 
   const [loading, setLoading] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
@@ -87,8 +83,7 @@ export function SearchScreen({
   const [keywords, setKeywords] = React.useState<string[]>([]);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryAttributes>();
 
-  const masterWidth = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
-  const detailWidth = React.useRef(new Animated.Value(supportsMasterDetail ? 1 : 0)).current;
+  const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
   const [resizing, setResizing] = React.useState(false);
 
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
@@ -322,19 +317,13 @@ export function SearchScreen({
       return;
     }
     setResizing(true);
-    Animated.parallel([
-      Animated.spring(masterWidth, {
-        toValue: supportsMasterDetail ? 0 : 1,
-        useNativeDriver: false,
-      }),
-      Animated.spring(detailWidth, {
-        toValue: supportsMasterDetail ? 1 : 0,
-        useNativeDriver: false,
-      }),
-    ]).start(() => {
+    Animated.spring(resizeAnimation, {
+      toValue: supportsMasterDetail ? 0 : 1,
+      useNativeDriver: true,
+    }).start(() => {
       setResizing(false);
     });
-  }, [resizing, masterWidth, supportsMasterDetail, detailWidth]);
+  }, [resizing, resizeAnimation, supportsMasterDetail]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => handleResize(), [
@@ -387,7 +376,8 @@ export function SearchScreen({
 
   return (
     <Screen>
-      <View col>
+      <View col gap={ 12 }>
+        {sampler && <TopicSampler horizontal />}
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>
@@ -410,12 +400,7 @@ export function SearchScreen({
         )}
         <View col>
           <View row>
-            <Animated.View style={ {
-              width: masterWidth.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['40%', '100%'],
-              }),
-            } }>
+            <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
               <ScrollView
                 refreshing={ loading }
                 onScroll={ handleMasterScroll }
@@ -462,10 +447,22 @@ export function SearchScreen({
               </ScrollView>
             </Animated.View>
             <Animated.View style={ {
-              width: detailWidth.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', '60%'],
-              }), 
+              transform: [
+                { perspective: 1000 }, 
+                {
+                  rotateY: resizeAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '360deg'],
+                  }),
+                },
+                {
+                  scaleX: resizeAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+                }, 
+              ],
+              width: '60%',
             } }>
               <ScrollView 
                 refreshing={ loading }

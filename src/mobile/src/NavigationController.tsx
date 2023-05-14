@@ -101,6 +101,7 @@ const TABS: TabProps[] = [
       [
         { 
           component: SearchScreen, 
+          initialParams: { sampler: true },
           name:'default', 
           options: { headerTitle: 'Headlines' },
         }, 

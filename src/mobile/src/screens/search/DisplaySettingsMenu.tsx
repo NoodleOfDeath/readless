@@ -158,7 +158,7 @@ export function DisplaySettingsMenu() {
           <View gap={ 6 }>
             <Text caption textCenter>Font</Text>
             <ScrollView horizontal style={ { overflow:'visible' } }>
-              <View row alignCenter>
+              <View row alignCenter gap={ 8 } mh={ 8 }>
                 {AVAILABLE_FONTS.map((font) => (
                   <Button 
                     row
@@ -169,7 +169,6 @@ export function DisplaySettingsMenu() {
                     elevated
                     rounded
                     p={ 8 }
-                    mh={ 4 }
                     startIcon={ fontFamily === font ? 'check' : undefined } 
                     fontFamily={ font }
                     onPress={ () => setPreference('fontFamily', font) }>
