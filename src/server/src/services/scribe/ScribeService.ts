@@ -157,7 +157,7 @@ export class ScribeService extends BaseService {
                 if (!TOKEN_TYPES.includes(type)) {
                   console.log(TOKEN_TYPES);
                   console.error('Unknown token type', type);
-                  type = 'other';
+                  type = undefined;
                 }
                 return {
                   text,

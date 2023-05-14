@@ -24,10 +24,7 @@ export abstract class Token<
   })
   declare text: string;
   
-  @Column({
-    defaultValue: 'other',
-    type: DataType.STRING,
-  })
-  declare type: TokenType;
+  @Column({ type: DataType.STRING })
+  declare type?: TokenType;
   
 }
