@@ -95,7 +95,7 @@ function applyFilter(
   if (query && query.length > 0) {
     const matches = 
       query.replace(/\s\s+/g, ' ')
-        .replace(/[-+*|=<>\\.^$!?(){}[\]]/g, ($0) => `\\${$0}`)
+        .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`)
         .matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
     if (matches) {
       const subqueries = [...matches].map((match) => ({
@@ -105,17 +105,17 @@ function applyFilter(
       where[Op.or] = [];
       if (matchType === 'all') {
         where[Op.or].push(subqueries.map((subquery) => ({ bullets: { [Op.contains] : [subquery.value] } })));
-        where[Op.or].push(subqueries.map((subquery) => ({ shortSummary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value } })));
-        where[Op.or].push(subqueries.map((subquery) => ({ summary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value } })));
-        where[Op.or].push(subqueries.map((subquery) => ({ title: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value } })));
+        where[Op.or].push(subqueries.map((subquery) => ({ shortSummary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value } })));
+        where[Op.or].push(subqueries.map((subquery) => ({ summary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value } })));
+        where[Op.or].push(subqueries.map((subquery) => ({ title: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value } })));
       } else {
         for (const subquery of subqueries) {
           where[Op.or].push({
             [Op.or]: {
               bullets: { [Op.contains] : [subquery.value] },
-              shortSummary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value },
-              summary: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value },
-              title: { [Op.iRegexp] : subquery.boundaries ? `\\y${subquery.value}\\y` : subquery.value },
+              shortSummary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value },
+              summary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value },
+              title: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value },
             },
           });
         }
