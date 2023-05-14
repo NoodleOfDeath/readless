@@ -317,9 +317,9 @@ export class PuppeteerService extends BaseService {
       await PuppeteerService.open(url, actions);
       
       loot.dateMatches = dates;
-      loot.date = parseDate(dates.join(' '));
+      loot.date = maxDate(...dates.map((d) => parseDate(d)));
       if (Number.isNaN(loot.date.valueOf())) {
-        loot.date = maxDate(...dates.map((d) => parseDate(d)));
+        loot.date = parseDate(dates.join(' '));
       }
       loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
       
