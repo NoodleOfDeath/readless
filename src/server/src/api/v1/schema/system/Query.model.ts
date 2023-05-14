@@ -26,16 +26,10 @@ export class Query<A extends QueryAttributes = QueryAttributes, B extends QueryC
   })
   declare path: string;
 
-  @Column({ 
-    allowNull: false, 
-    type: DataType.TEXT,
-  })
-  declare userAgent: string;
+  @Column({ type: DataType.TEXT })
+  declare userAgent?: string;
   
-  @Column({
-    allowNull: false,
-    type: DataType.STRING,
-  })
-  declare appVersion: string;
+  @Column({ type: DataType.STRING })
+  declare appVersion?: string;
 
 }
