@@ -45,6 +45,7 @@ export type DestroyResponse = {
 // Model Types
 
 // System
+export * from './system/Query.types';
 export * from './system/RateLimit.types';
 export * from './system/service/Service.types';
 export * from './system/service/ServiceStatus.types';
@@ -77,6 +78,6 @@ export * from './resources/topic/Category.types';
 
 export * from './resources/summary/Summary.types';
 export * from './resources/summary/SummaryToken.types';
-export * from './resources/summary/SummaryInteraction.types';
 export * from './resources/summary/SummarySentiment.types';
 export * from './resources/summary/SummarySentimentToken.types';
+export * from './resources/summary/SummaryInteraction.types';

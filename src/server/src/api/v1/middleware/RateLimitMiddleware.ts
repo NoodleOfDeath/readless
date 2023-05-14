@@ -2,7 +2,7 @@ import { Request, RequestHandler } from 'express';
 import ms from 'ms';
 
 import { AuthError, internalErrorHandler } from './internal-errors';
-import { RateLimit } from '../schema';
+import { Query, RateLimit } from '../schema';
 
 export type Duration = `${number}${'ms'|'s'|'m'|'h'|'d'|'w'|'M'|'y'}`;
 export type RateLimitString = `${number}${'/'|'every'|'per'}${Duration}`;
@@ -38,6 +38,12 @@ export const rateLimitMiddleware = (
   const duration = parseDuration(options.duration);
   return async (req, res, next) => {
     const path = options.path instanceof Function ? options.path(req) : options.path;
+    await Query.create({
+      appVersion: JSON.stringify(req.headers['x-app-version']) ?? '<= 1.3.3',
+      path,
+      remoteAddr: req.ip,
+      userAgent: JSON.stringify(req.headers['user-agent']) ?? 'unknown',
+    });
     const key = path ? [req.ip, path].join(':') : req.ip;
     try {
       const limit = await RateLimit.findOne({ where: { key } });
