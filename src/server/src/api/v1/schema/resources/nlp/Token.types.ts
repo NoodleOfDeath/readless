@@ -1,12 +1,19 @@
 import { DatedAttributes } from '../../types';
 
 export const TOKEN_TYPES = [
+  'activity',
   'adjective',
+  'business',
+  'controversy',
+  'country',
   'event',
+  'geopolitical-interaction',
+  'group',
+  'innovation',
   'person',
   'place',
-  'organization',
   'other',
+  'social-interaction',
 ] as const;
 
 export type TokenType = typeof TOKEN_TYPES[number];
