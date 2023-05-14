@@ -38,14 +38,14 @@ export const rateLimitMiddleware = (
   const duration = parseDuration(options.duration);
   return async (req, res, next) => {
     const path = options.path instanceof Function ? options.path(req) : options.path;
-    await Query.create({
-      appVersion: JSON.stringify(req.headers['x-app-version']) ?? '<= 1.3.3',
-      path,
-      remoteAddr: req.ip,
-      userAgent: JSON.stringify(req.headers['user-agent']) ?? 'unknown',
-    });
-    const key = path ? [req.ip, path].join(':') : req.ip;
     try {
+      await Query.create({
+        appVersion: JSON.stringify(req.headers['x-app-version']),
+        path,
+        remoteAddr: req.ip,
+        userAgent: JSON.stringify(req.headers['user-agent']),
+      });
+      const key = path ? [req.ip, path].join(':') : req.ip;
       const limit = await RateLimit.findOne({ where: { key } });
       if (limit) {
         if (await limit.isSaturated()) {
