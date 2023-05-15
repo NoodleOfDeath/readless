@@ -205,7 +205,7 @@ export class ScribeService extends BaseService {
         handleReply: async (reply) => {
           newSummary.bullets = reply.text
             .replace(/^\.*?:\s*/, '')
-            .replace(/\W*$/, '')
+            .replace(/\\?\.?$/, '')
             .replace(/<br\s*\/?>/g, '')
             .split(/\n/)
             .map((bullet) => bullet.trim());
