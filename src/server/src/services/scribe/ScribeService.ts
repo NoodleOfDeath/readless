@@ -208,7 +208,7 @@ export class ScribeService extends BaseService {
             .replace(/\\?\.?$/, '')
             .replace(/<br\s*\/?>/g, '')
             .split(/\n/)
-            .map((bullet) => bullet.trim());
+            .map((bullet) => bullet.trim().replace(/\n*/g, ''));
         },
         text: 'Please provide 5 concise unbiased bullet point sentences no longer than 10 words each that summarize this article/story using • as the bullet symbol',
       },
