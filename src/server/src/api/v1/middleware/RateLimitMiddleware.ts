@@ -39,12 +39,16 @@ export const rateLimitMiddleware = (
   return async (req, res, next) => {
     try {
       const path = options.path instanceof Function ? options.path(req) : options.path;
-      await Query.create({
-        appVersion: JSON.stringify(req.headers['x-app-version']),
-        path,
-        remoteAddr: req.ip,
-        userAgent: JSON.stringify(req.headers['user-agent']),
-      });
+      const appVersion = JSON.stringify(req.headers['x-app-version']);
+      const userAgent = JSON.stringify(req.headers['user-agent']);
+      if (!/kube-probe/i.test(userAgent)) {
+        await Query.create({
+          appVersion,
+          path,
+          remoteAddr: req.ip,
+          userAgent,
+        });
+      }
       const key = path ? [req.ip, path].join(':') : req.ip;
       const limit = await RateLimit.findOne({ where: { key } });
       if (limit) {
