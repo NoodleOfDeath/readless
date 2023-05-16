@@ -33,7 +33,7 @@ export class Category<
       displayName: 'Automotive', icon: 'car', name: 'automotive', 
     },
     'black-culture': {
-      displayName: 'Black Culture', icon: '', name: 'black-culture',
+      displayName: 'Black Culture', icon: 'hand-back-left', name: 'black-culture',
     },
     books: {
       displayName: 'Books', icon: 'book-open-variant', name: 'books', 
