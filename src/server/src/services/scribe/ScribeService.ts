@@ -205,10 +205,11 @@ export class ScribeService extends BaseService {
         handleReply: async (reply) => {
           newSummary.bullets = reply.text
             .replace(/^\.*?:\s*/, '')
-            .replace(/\\?\.?$/, '')
             .replace(/<br\s*\/?>/g, '')
             .split(/\n/)
-            .map((bullet) => bullet.trim().replace(/\n*/g, ''));
+            .map((bullet) => bullet.trim()
+              .replace(/\n*/g, '')
+              .replace(/[\\.]*$/, ''));
         },
         text: 'Please provide 5 concise unbiased bullet point sentences no longer than 10 words each that summarize this article/story using • as the bullet symbol',
       },
