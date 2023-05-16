@@ -169,7 +169,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       replacements: {
         interval,
         limit: Number(pageSize),
-        min: Number(min),
+        min: Number(min < 2 ? 2 : min),
         offset,
         order,
         type: type ?? '%',
