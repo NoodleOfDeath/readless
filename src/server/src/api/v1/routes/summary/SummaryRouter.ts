@@ -24,16 +24,17 @@ router.get(
   query('ids').optional(),
   query('excludeIds').isBoolean().optional(),
   query('matchType').isString().matches(/^(?:any|all)$/).optional(),
+  query('interval').isString().matches(/^\d+(?:d(?:ays?)?|h(?:ours?)?|m(?:in(?:utes?)?)?|w(?:eeks?)?|month|y(?:ears?)?)$/).optional(),
   ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     const {
-      scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order, matchType,
+      scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order, matchType, interval,
     } = req.query;
     const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
     const excludeIds = exclude === 'false' || exclude === 0 || exclude === 'undefined' ? false : exclude;
     try {
-      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, matchType, pageSize, page, offset, order);
+      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, matchType, interval, pageSize, page, offset, order);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);

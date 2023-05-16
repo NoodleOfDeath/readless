@@ -1,9 +1,5 @@
 //import ms from 'ms';
-import { 
-  Includeable, 
-  Op,
-  QueryTypes,
-} from 'sequelize';
+import { QueryTypes } from 'sequelize';
 import {
   Body,
   Delete,
@@ -19,53 +15,38 @@ import {
   Tags,
 } from 'tsoa';
 
-import { GET_SUMMARY_TOKEN_COUNTS } from './queries';
+import { GET_SUMMARIES, GET_SUMMARY_TOKEN_COUNTS } from './queries';
 import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
   BulkMetadataResponse,
   BulkResponse,
-  Category,
   DestroyResponse,
-  FindAndCountOptions,
   InteractionRequest,
   InteractionResponse,
   InteractionType,
-  Outlet,
   PublicSummaryAttributes,
   PublicSummaryTokenAttributes,
   Summary,
   SummaryInteraction,
   User,
 } from '../../schema';
-import { 
-  SummarySentimentAttributes, 
-  TokenType,
-  orderByToItems,
-} from '../../schema/types';
+import { TokenType } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
-function parsePrefilter(prefilter: string) {
-  return { [Op.or]: prefilter.split(',').map((c) => ({ [Op.iLike]: c.trim() })) };
-}
-
 function applyFilter(
-  options: FindAndCountOptions<Summary>,
   filter = '', 
-  ids: number[] = [], 
-  excludeIds = false,
   matchType: 'any' | 'all' = 'any'
 ) {
-  const newOptions = { ...options };
-  if (!filter && ids.length === 0) {
-    return newOptions;
-  }
-  const include: Includeable[] = [];
-  const where: FindAndCountOptions<Summary>['where'] = {};
-  if (ids.length > 0) {
-    const set = Array.isArray(ids) ? ids : [ids];
-    where.id = excludeIds ? { [Op.notIn]: set } : { [Op.in]: set };
+  const categories: string[] = [];
+  const outlets: string[] = [];
+  if (!filter) {
+    return {
+      categories,
+      filter: '.',
+      outlets,
+    };
   }
   const splitExpr = /\s*((?:\w+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+\w+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
@@ -76,22 +57,17 @@ function applyFilter(
     if (matches) {
       for (const match of matches) {
         const [_, prefix, prefixValues] = match;
-        const pf = parsePrefilter(prefixValues);
+        const pf = prefixValues.split(',');
         if (/cat(egory)?/i.test(prefix)) {
-          include.push({
-            model: Category.scope('raw'),
-            where: { name: pf },
-          });
+          categories.push(...pf);
         }
         if (/outlet|source|src/i.test(prefix)) {
-          include.push({
-            model: Outlet.scope('raw'),
-            where: { name: pf },
-          });
+          outlets.push(...pf);
         }
       }
     }
   }
+  const parts: string[] = [];
   if (query && query.length > 0) {
     const matches = 
       query.replace(/\s\s+/g, ' ')
@@ -102,29 +78,18 @@ function applyFilter(
         boundaries: Boolean(match[1]),
         value: (match[1] ? match[2] : match[3]).replace(/['"]/g, ($0) => `\\${$0}`),
       }));
-      where[Op.or] = [];
       if (matchType === 'all') {
-        where[Op.or].push(subqueries.map((subquery) => ({ bullets: { [Op.contains] : [subquery.value] } })));
-        where[Op.or].push(subqueries.map((subquery) => ({ shortSummary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value } })));
-        where[Op.or].push(subqueries.map((subquery) => ({ summary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value } })));
-        where[Op.or].push(subqueries.map((subquery) => ({ title: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value } })));
+        //
       } else {
-        for (const subquery of subqueries) {
-          where[Op.or].push({
-            [Op.or]: {
-              bullets: { [Op.contains] : [subquery.value] },
-              shortSummary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value },
-              summary: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value },
-              title: { [Op.iRegexp] : subquery.boundaries ? `(?:^|\\y)${subquery.value}(?:\\y|$)` : subquery.value },
-            },
-          });
-        }
+        parts.push(...subqueries.map((subquery) => subquery.boundaries ? `(?:(?:^|\\y)${subquery.value}(?:\\y|$))` : `(?:${subquery.value})`));
       }
     }
   }
-  newOptions.where = where;
-  newOptions.include = include;
-  return newOptions;
+  return {
+    categories,
+    filter: parts.join('|'),
+    outlets,
+  };
 }
 
 @Route('/v1/summary')
@@ -141,26 +106,51 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   public static async getSummaries(
     @Query() userId?: number,
     @Query() scope = 'public',
-    @Query() filter?: string,
-    @Query() ids?: number[],
-    @Query() excludeIds?: boolean,
+    @Query() filter = '.',
+    @Query() ids: number[] = [],
+    @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
+    @Query() interval = '100y',
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
     @Query() order: string[] = ['originalDate:desc', 'createdAt:desc']
-  ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { [key:string]: SummarySentimentAttributes }>> {
-    const options: FindAndCountOptions<Summary> = {
-      limit: pageSize,
-      offset,
-      order: orderByToItems(order),
-    };
-    const filteredOptions = applyFilter(options, filter, ids, excludeIds, matchType);
-    const summaries = await Summary.scope(scope).findAndCountAll(filteredOptions);
-    if (userId && scope === 'public') {
-      await Promise.all(summaries.rows.map(async (row) => await row.addUserInteractions(userId)));
+  ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>> {
+    const { 
+      categories, 
+      outlets,
+      filter: query,
+    } = applyFilter(filter, matchType);
+    const noOutlets = outlets.length === 0;
+    const noCategories = categories.length === 0;
+    const noIds = ids.length === 0;
+    const records = await this.store.query(GET_SUMMARIES, {
+      nest: true,
+      replacements: {
+        categories: categories.length === 0 ? [''] : categories,
+        excludeIds,
+        filter: query,
+        ids: ids.length === 0 ? [-1] : ids,
+        interval,
+        limit: Number(pageSize),
+        noCategories,
+        noIds,
+        noOutlets,
+        offset: Number(offset),
+        outlets: outlets.length === 0 ? [''] : outlets,
+      },
+      type: QueryTypes.SELECT,
+    });
+    if (!records || records.length === 0) {
+      return { count: 0, rows: [] };
     }
-    return summaries;
+    const record = records[0] as { count: number, overallSentiment: number };
+    const response = {
+      count: record.count,
+      metadata: { sentiment: record.overallSentiment },
+      rows: records,
+    };
+    return response as BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>;
   }
   
   @Get('/trends')
