@@ -176,7 +176,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the same article/story using no more than 10 words. Prioritize any important numeric/date values and try to make the summary as unbiased as possible.',
+          'Please summarize the same article/story using no more than 10 words. Prioritize any important names, places, events, date, or numeric values and try to make the summary as unbiased as possible.',
         ].join(''),
       },
       {
