@@ -3,6 +3,7 @@ import { QueryTypes } from 'sequelize';
 import {
   Body,
   Delete,
+  Deprecated,
   Get,
   Patch,
   Path,
@@ -27,9 +28,11 @@ import {
   InteractionResponse,
   InteractionType,
   PublicSummaryAttributes,
-  PublicSummaryTokenAttributes,
+  PublicTokenAttributes,
+  PublicTokenTypeAttributes,
   Summary,
   SummaryInteraction,
+  TokenType,
   User,
 } from '../../schema';
 import { TokenTypeName } from '../../schema/types';
@@ -153,8 +156,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     return response as BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>;
   }
   
-  @Get('/trends')
-  public static async getTrends(
+  @Get('/topics')
+  public static async getTopics(
     @Query() userId?: number,
     @Query() type?: TokenTypeName,
     @Query() interval = '12h',
@@ -163,7 +166,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() page = 0,
     @Query() offset = pageSize * page,
     @Query() order: string[] = ['count:desc']
-  ): Promise<BulkResponse<PublicSummaryTokenAttributes>> {
+  ): Promise<BulkResponse<PublicTokenAttributes>> {
     const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
       nest: true,
       replacements: {
@@ -176,7 +179,29 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       },
       type: QueryTypes.SELECT,
     });
-    return (records?.[0] ?? { count: 0, rows: [] }) as BulkResponse<PublicSummaryTokenAttributes>;
+    return (records?.[0] ?? { count: 0, rows: [] }) as BulkResponse<PublicTokenAttributes>;
+  }
+  
+  @Get('/trends')
+  @Deprecated()
+  public static async getTrends(
+    @Query() userId?: number,
+    @Query() type?: TokenTypeName,
+    @Query() interval = '12h',
+    @Query() min = 0,
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page,
+    @Query() order: string[] = ['count:desc']
+  ): Promise<BulkResponse<PublicTokenAttributes>> {
+    return await this.getTopics(userId, type, interval, min, pageSize, page, offset, order);
+  }
+  
+  @Get('/topics/groups')
+  public static async getTopicGroups(
+    @Query() userId?: number
+  ): Promise<BulkResponse<PublicTokenTypeAttributes>> {
+    return await TokenType.scope('raw').findAndCountAll();
   }
   
   @Security('jwt')
