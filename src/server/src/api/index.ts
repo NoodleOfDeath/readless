@@ -11,6 +11,7 @@ import {
   Outlet,
   Queue,
   Role,
+  TokenType,
 } from './v1/schema';
 import { DBService } from '../services';
 
@@ -21,6 +22,7 @@ async function main() {
   await Role.initRoles();
   await Category.initCategories();
   await Outlet.initOutlets();
+  await TokenType.initTokenTypes();
   
   const app = express();
   
