@@ -4,8 +4,8 @@ import {
   PostAttributes,
   PostCreationAttributes,
 } from '../Post.types';
-import { PublicOutletAttributes } from '../outlet/Outlet.types';
-import { PublicCategoryAttributes } from '../topic/Category.types';
+import { PublicCategoryAttributes } from '../channel/Category.types';
+import { PublicOutletAttributes } from '../channel/Outlet.types';
 
 export const READING_FORMATS = {
   bullets: 'bullets',

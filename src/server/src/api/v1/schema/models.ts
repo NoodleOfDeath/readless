@@ -22,8 +22,10 @@ export * from './auth/Credential.model';
 export * from './auth/Role.model';
 
 // resource models
-export * from './resources/outlet/Outlet.model';
-export * from './resources/topic/Category.model';
+export * from './resources/nlp/TokenType.model';
+
+export * from './resources/channel/Outlet.model';
+export * from './resources/channel/Category.model';
 
 export * from './resources/summary/Summary.model';
 export * from './resources/summary/SummaryToken.model';

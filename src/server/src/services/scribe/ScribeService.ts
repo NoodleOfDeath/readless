@@ -16,7 +16,7 @@ import {
   SummarySentimentToken,
   SummaryToken,
 } from '../../api/v1/schema/models';
-import { SummaryTokenCreationAttributes, TOKEN_TYPES } from '../../api/v1/schema/types';
+import { SummaryTokenCreationAttributes, TOKEN_TYPE_NAMES } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 50;
@@ -150,9 +150,8 @@ export class ScribeService extends BaseService {
                   return undefined;
                 }
                 const text = parts[0].trim();
-                let type = parts[1].toLowerCase().trim() as typeof TOKEN_TYPES[number];
-                if (!TOKEN_TYPES.includes(type)) {
-                  console.log(TOKEN_TYPES);
+                let type = parts[1].toLowerCase().trim() as typeof TOKEN_TYPE_NAMES[number];
+                if (!TOKEN_TYPE_NAMES.includes(type)) {
                   console.error('Unknown token type', type);
                   type = undefined;
                 }
@@ -166,7 +165,7 @@ export class ScribeService extends BaseService {
             await this.error('Bad tags', reply.text, false);
           }
         },
-        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article/story that can be classified under one of the following types: ${TOKEN_TYPES.join(', ')}. Companies like Apple, Meta, Facebook, OpenAI, Google, etc. should be considered a business not an organization. Only respond with each tag and its respective token type (separated by comma) on its own line`,
+        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article/story that can be classified under one of the following types: ${TOKEN_TYPE_NAMES.join(', ')}. Companies like Apple, Meta, Facebook, OpenAI, Google, etc. should be considered a business not an organization. Only respond with each tag and its respective token type (separated by comma) on its own line`,
       },
       {
         handleReply: async (reply) => { 

@@ -16,6 +16,7 @@ import {
   SummarySentiment,
   SummarySentimentToken,
   SummaryToken,
+  TokenType,
   User,
   UserMetadata,
   Worker,
@@ -70,6 +71,8 @@ export function makeAssociations() {
     as: 'tokens',
     foreignKey: 'parentId',
   });
+
+  TokenType.hasMany(SummaryToken, { foreignKey: 'type', sourceKey: 'name' });
   
   SummarySentiment.belongsTo(Summary, {
     as: 'summary',
