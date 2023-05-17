@@ -455,29 +455,8 @@ export function Summary({
                 </CollapsedView>
               )}
               {initialFormat && summary.sentiments && (
-                <CollapsedView title={ (
-                  <View row mv={ 8 } gap={ 6 } alignCenter>
-                    <Text subtitle1>Analytics</Text>
-                    <View>
-                      <View row gap={ 6 } alignCenter>
-                        <View 
-                          bg={ 'blue' }
-                          p={ 3 }
-                          absolute
-                          top={ 0 }
-                          rounded>
-                          <Text
-                            subscript
-                            color="white">
-                            beta
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                ) }>
-                  <AnalyticsView
-                    sentiments={ Object.values(summary.sentiments) } />
+                <CollapsedView startCollapsed={ false } title={ 'Analytics' }>
+                  <AnalyticsView sentiments={ Object.values(summary.sentiments) } />
                 </CollapsedView>
               )}
             </View>

@@ -32,7 +32,7 @@ import {
   SummaryInteraction,
   User,
 } from '../../schema';
-import { TokenType } from '../../schema/types';
+import { TokenTypeName } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 function applyFilter(
@@ -105,7 +105,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Get('/')
   public static async getSummaries(
     @Query() userId?: number,
-    @Query() scope = 'public',
+    @Query() _scope = 'public',
     @Query() filter = '.',
     @Query() ids: number[] = [],
     @Query() excludeIds = false,
@@ -114,7 +114,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
-    @Query() order: string[] = ['originalDate:desc', 'createdAt:desc']
+    @Query() _order: string[] = ['originalDate:desc', 'createdAt:desc']
   ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>> {
     const { 
       categories, 
@@ -156,7 +156,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Get('/trends')
   public static async getTrends(
     @Query() userId?: number,
-    @Query() type?: TokenType,
+    @Query() type?: TokenTypeName,
     @Query() interval = '12h',
     @Query() min = 0,
     @Query() pageSize = 10,

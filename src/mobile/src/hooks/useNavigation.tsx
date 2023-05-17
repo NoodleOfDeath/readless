@@ -48,13 +48,13 @@ export function useNavigation() {
   }, [navigation, setPreference]);
 
   const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    navigation?.push('search', { prefilter: `src:${outlet.name}` });
-    //navigation?.navigate('outlet', { outlet });
+    // (navigation?.push ?? navigation.navigate)('search', { prefilter: `src:${outlet.name}` });
+    (navigation?.push ?? navigation.navigate)('channel', { attributes: outlet, type: 'outlet' });
   }, [navigation]);
 
   const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigation?.push('search', { prefilter: `cat:${category.name}` });
-    //navigation?.navigate('category', { category });
+    // (navigation?.push ?? navigation.navigate)('search', { prefilter: `cat:${category.name}` });
+    (navigation?.push ?? navigation.navigate)('channel', { attributes: category, type: 'category' });
   }, [navigation]);
 
   return {

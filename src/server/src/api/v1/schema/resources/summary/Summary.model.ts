@@ -12,9 +12,9 @@ import {
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummarySentimentAttributes } from './SummarySentiment.types';
 import { Post } from '../Post.model';
+import { PublicCategoryAttributes } from '../channel/Category.types';
+import { PublicOutletAttributes } from '../channel/Outlet.types';
 import { InteractionType } from '../interaction/Interaction.types';
-import { PublicOutletAttributes } from '../outlet/Outlet.types';
-import { PublicCategoryAttributes } from '../topic/Category.types';
 
 @Table({
   modelName: 'summary',
@@ -91,6 +91,7 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
 
   declare outlet: PublicOutletAttributes;
   declare category: PublicCategoryAttributes;
+  declare subcategory?: PublicCategoryAttributes;
   declare sentiments: SummarySentimentAttributes[];
 
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {

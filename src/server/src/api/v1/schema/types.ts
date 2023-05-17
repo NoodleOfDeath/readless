@@ -66,15 +66,17 @@ export * from './auth/Credential.types';
 export * from './auth/Role.types';
 
 // Posts
+export * from './resources/Post.types';
+
 export * from './resources/nlp/Token.types';
+export * from './resources/nlp/TokenType.types';
+
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
 export * from './resources/sentiment/SentimentToken.types';
 
-export * from './resources/Post.types';
-
-export * from './resources/outlet/Outlet.types';
-export * from './resources/topic/Category.types';
+export * from './resources/channel/Outlet.types';
+export * from './resources/channel/Category.types';
 
 export * from './resources/summary/Summary.types';
 export * from './resources/summary/SummaryToken.types';
