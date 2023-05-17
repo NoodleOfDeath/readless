@@ -167,6 +167,10 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() offset = pageSize * page,
     @Query() order: string[] = ['count:desc']
   ): Promise<BulkResponse<PublicTokenAttributes>> {
+    let filter = `^(?:${type})$`;
+    if (/innovation/i.test(type)) {
+      filter = '^(?:innovation|software/app)$' as TokenTypeName;
+    }
     const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
       nest: true,
       replacements: {
@@ -175,7 +179,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         min: Number(min) < 2 ? 2 : Number(min),
         offset,
         order,
-        type: type ?? '%',
+        type: type ? filter : '.',
       },
       type: QueryTypes.SELECT,
     });
