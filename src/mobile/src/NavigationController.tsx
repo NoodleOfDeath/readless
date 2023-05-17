@@ -29,10 +29,9 @@ import {
 import { useNavigation, useTheme } from '~/hooks';
 import {
   BrowseScreen,
-  CategoryScreen,
+  ChannelScreen,
   MyStuffScreen,
   NAVIGATION_LINKING_OPTIONS,
-  OutletScreen,
   SearchScreen,
   StackableTabParams,
   SummaryScreen,
@@ -107,8 +106,7 @@ const TABS: TabProps[] = [
         }, 
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
-        { component: OutletScreen, name: 'outlet' },
-        { component: CategoryScreen, name: 'category' },
+        { component: ChannelScreen, name: 'channel' },
         { component: MyStuffScreen, name: 'bookmarks' },
         {
           component: BrowseScreen, name: 'browse', options: { headerTitle: 'Browse' },
@@ -130,8 +128,7 @@ const TABS: TabProps[] = [
         },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
-        { component: OutletScreen, name: 'outlet' },
-        { component: CategoryScreen, name: 'category' },
+        { component: ChannelScreen, name: 'channel' },
         {
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
         },
@@ -154,8 +151,7 @@ const TABS: TabProps[] = [
         },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
-        { component: OutletScreen, name: 'outlet' },
-        { component: CategoryScreen, name: 'category' },
+        { component: ChannelScreen, name: 'channel' },
         {
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
         },

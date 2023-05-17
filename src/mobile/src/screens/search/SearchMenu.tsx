@@ -4,8 +4,10 @@ import { Searchbar } from 'react-native-paper';
 
 import {
   Button,
+  Divider,
   Icon,
   Menu,
+  ScrollView,
   Text,
   View,
   ViewProps,
@@ -36,7 +38,7 @@ export function SearchMenu({
   const [value, setValue] = React.useState(initialValue);
   const [forceHide, setForceHide] = React.useState<boolean>();
 
-  const { preferences: { searchHistory } } = React.useContext(SessionContext);
+  const { preferences: { searchHistory }, setPreference } = React.useContext(SessionContext);
   
   const submit = React.useCallback((text?: string) => {
     if (text) {
@@ -84,17 +86,23 @@ export function SearchMenu({
             Search
           </Button>
         </View>
-        <View>
-          {searchHistory?.map((item) => (
-            <Button
-              key={ item }
-              underline
-              onPress={ () => {
-                submit(item);
-              } }>
-              {item}
-            </Button>
-          ))}
+        <View gap={ 6 }>
+          <Button caption onPress={ () => setPreference('searchHistory', []) }>
+            Clear History
+          </Button>
+          <Divider />
+          <ScrollView>
+            {searchHistory?.map((item) => (
+              <Button
+                key={ item }
+                underline
+                onPress={ () => {
+                  submit(item);
+                } }>
+                {item}
+              </Button>
+            ))}
+          </ScrollView>
         </View>
       </View>
     </Menu>

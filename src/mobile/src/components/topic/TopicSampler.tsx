@@ -40,7 +40,7 @@ export type TopicSamplerProps = ScrollViewProps & {
 
 export function TopicSampler({
   initialType,
-  initialInterval = '12h',
+  initialInterval = '24h',
   initialPageSize = 10,
   min = 0,
   ...props

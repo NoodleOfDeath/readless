@@ -38,7 +38,7 @@ import {
   useTheme,
 } from '~/hooks';
 import { ScreenProps } from '~/screens';
-import { lengthOf } from '~/utils';
+import { lengthOf, parseKeywords } from '~/utils';
 
 export function SearchScreen({ 
   route,
@@ -206,7 +206,7 @@ export function SearchScreen({
         ),
         headerTitle: '',
       });
-      setKeywords(prefilter.replace(/['"]/g, '').split(' ').filter((s) => s.trim()));
+      setKeywords(parseKeywords(prefilter));
     } else {
       setSearchText('');
       navigation?.setOptions({
@@ -283,7 +283,7 @@ export function SearchScreen({
       } else {
         navigation?.push('summary', {
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
-          keywords: searchText ? searchText.replace(/['"]/g, '').split(' ').filter((s) => s.trim()) : [],
+          keywords: parseKeywords(searchText),
           summary,
         });
       }

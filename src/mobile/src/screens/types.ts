@@ -18,6 +18,15 @@ export type TabParams = {
   default: undefined;
 };
 
+export type ChannelType = 'outlet' | 'category';
+
+export type Channel<T extends ChannelType = ChannelType> = {
+  type: T;
+  attributes: T extends 'outlet'
+    ? PublicOutletAttributes
+    : PublicCategoryAttributes;
+};
+
 export type StackableTabParams = TabParams & {
   search: {
     sampler?: boolean;
@@ -31,12 +40,7 @@ export type StackableTabParams = TabParams & {
     keywords?: string[];
     summary: PublicSummaryAttributes | number;
   };
-  outlet: {
-    outlet: PublicOutletAttributes;
-  }
-  category: {
-    category: PublicCategoryAttributes;
-  }
+  channel: Channel;
   bookmarks: undefined;
   browse: undefined;
 };

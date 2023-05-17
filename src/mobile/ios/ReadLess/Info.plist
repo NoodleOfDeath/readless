@@ -34,7 +34,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<true/>
+	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.news</string>
 	<key>LSApplicationQueriesSchemes</key>
