@@ -170,7 +170,7 @@ export class ScribeService extends BaseService {
             await this.error('Bad tags', reply.text, false);
           }
         },
-        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article/story that can be classified under one of the following types: ${this.tokenTypes.join(', ')}. Companies like Apple, Meta, Facebook, OpenAI, Google, etc. should be considered a business not an organization. Only respond with each tag and its respective token type (separated by comma) on its own line`,
+        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article/story that can be classified under one of the following types: ${this.tokenTypes.join(', ')}. Companies like Apple, Meta, Facebook, OpenAI, Google, etc. should be considered a business not an organization. Only respond with each tag and its respective token type (separated by comma) on its own line like this: King Charles,person\nWales,place\n2024 election,event`,
       },
       {
         handleReply: async (reply) => { 
