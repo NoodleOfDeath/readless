@@ -35,6 +35,9 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   })
   declare categoryId: number;
 
+  @Column({ type: DataType.INTEGER })
+  declare subcategoryId?: number;
+
   @Column({
     allowNull: false,
     type: DataType.STRING(2083),

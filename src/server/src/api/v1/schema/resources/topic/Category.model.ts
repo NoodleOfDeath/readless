@@ -48,10 +48,13 @@ export class Category<
       displayName: 'Cryptocurrency', icon: 'bitcoin', name: 'cryptocurrency', 
     },
     culture: {
-      displayName: 'Culture', icon: 'cannabis', name: 'culture', 
+      displayName: 'Culture', icon: 'hand-peace', name: 'culture', 
     },
     disasters: {
       displayName: 'Disasters', icon: 'weather-tornado', name: 'disasters', 
+    },
+    discovery: {
+      displayName: 'Discovery', icon: 'magnify', name: 'discovery', 
     },
     economics: {
       displayName: 'Economics', icon: 'cash', name: 'economics', 
@@ -84,7 +87,7 @@ export class Category<
       displayName: 'Geopolitics', icon: 'handshake', name: 'geopolitics', 
     },
     health: {
-      displayName: 'Health', icon: 'weight-lifter', name: 'health', 
+      displayName: 'Health', icon: 'heart-pulse', name: 'health', 
     },
     healthcare: {
       displayName: 'Healthcare', icon: 'medical-bag', name: 'healthcare', 
@@ -144,7 +147,7 @@ export class Category<
       displayName: 'Politics', icon: 'bank-outline', name: 'politics', 
     },
     'pop-culture': {
-      displayName: 'Pop Culture', icon: 'bullhorn', name: 'pop-culture', 
+      displayName: 'Pop Culture', icon: 'microphone-variant', name: 'pop-culture', 
     },
     productivity: {
       displayName: 'Productivity', icon: 'tools', name: 'productivity', 
@@ -186,10 +189,10 @@ export class Category<
       displayName: 'Television', icon: 'television-classic', name: 'television', 
     },
     tragedy: {
-      displayName: 'Tragedy', icon: 'drama-masks', name: 'tragedy', 
+      displayName: 'Tragedy', icon: 'emoticon-cry', name: 'tragedy', 
     },
     transportation: {
-      displayName: 'Transportation', icon: 'bike', name: 'transportation', 
+      displayName: 'Transportation', icon: 'train', name: 'transportation', 
     },
     travel: {
       displayName: 'Travel', icon: 'airplane', name: 'travel', 

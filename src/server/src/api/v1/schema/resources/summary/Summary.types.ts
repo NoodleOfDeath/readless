@@ -19,6 +19,8 @@ export type SummaryAttributes = PostAttributes & {
   outlet: PublicOutletAttributes;
   categoryId: number;
   category: PublicCategoryAttributes;
+  subcategoryId?: number;
+  subcategory?: PublicCategoryAttributes;
   url: string;
   rawText: string;
   filteredText: string;
@@ -34,6 +36,7 @@ export type SummaryAttributes = PostAttributes & {
 export type SummaryCreationAttributes = PostCreationAttributes & {
   outletId: number;
   categoryId: number;
+  subcategoryId?: number;
   url: string;
   rawText: string;
   filteredText: string;
@@ -45,7 +48,7 @@ export type SummaryCreationAttributes = PostCreationAttributes & {
 };
 
 /** light weight record for a summary post */
-export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'outletId', 'categoryId', 'url', 'originalDate'] as const;
-export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'outletId', 'categoryId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'outletId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'outletId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
