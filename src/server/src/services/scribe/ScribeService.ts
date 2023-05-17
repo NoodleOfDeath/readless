@@ -156,14 +156,13 @@ export class ScribeService extends BaseService {
                 }
                 const text = parts[0].trim();
                 let type = parts[1]
-                   .replace(/[\s\n]/g, '')
                    .replace(/-/g, '_')
                    .replace(/\W/g, '')
                    .replace(/_/g, '-')
                    .toLowerCase() as TokenTypeName;
                 if (!this.tokenTypes.includes(type)) {
                   console.error('Unknown token type', type);
-                  type = undefined;
+                  return undefined;
                 }
                 return {
                   text,
