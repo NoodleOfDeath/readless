@@ -145,41 +145,37 @@ ORDER BY
 
 export const GET_SUMMARY_TOKEN_COUNTS = `
 SELECT 
-  b.total_count AS count, 
-  JSON_AGG(
-    JSON_BUILD_OBJECT(
-      'text', b.text, 
-      'type', b.type, 
-      'count', b.count
-    )
-  ) AS rows
+  total_count AS count,
+  JSON_AGG(JSON_BUILD_OBJECT(
+    'text', b.text,
+    'type', b.type,
+    'count', b.count
+  ) ORDER BY b.count DESC) AS rows
 FROM (
-  SELECT 
-    COUNT(*) OVER() AS total_count, 
-    a.text, 
-    a.type, 
-    a.count
+  SELECT
+    COUNT(*) OVER() AS total_count,
+    COUNT(*) count,
+    a.text,
+    a.type
   FROM (
     SELECT
       summary_tokens.text, 
-      summary_tokens.type, 
-      COUNT(summary_tokens.text) AS count
-    FROM summary_tokens
-    LEFT JOIN summaries ON summaries.id = summary_tokens."parentId"
-    WHERE 
-      summary_tokens."deletedAt" IS NULL
-      AND summaries."deletedAt" IS NULL
-      AND "originalDate" > NOW() - INTERVAL :interval
-      AND type ~* :type
-    GROUP BY 
-      summary_tokens.text, 
       summary_tokens.type
-    HAVING COUNT(summary_tokens.text) >= :min
-    ORDER BY count DESC
+    FROM summary_tokens
+    LEFT OUTER JOIN summaries ON summaries.id = summary_tokens."parentId"
+    AND (summaries."deletedAt" IS NULL)
+    AND ("originalDate" > NOW() - INTERVAL :interval)
+    WHERE 
+      (summary_tokens."deletedAt" IS NULL)
+      AND (type ~* :type)
   ) a
+  GROUP BY
+    a.text,
+    a.type
+  HAVING COUNT(*) >= :min
+  ORDER BY count DESC
   LIMIT :limit
   OFFSET :offset
 ) b
-GROUP BY 
-  b.total_count;
+GROUP BY total_count;
 `;
