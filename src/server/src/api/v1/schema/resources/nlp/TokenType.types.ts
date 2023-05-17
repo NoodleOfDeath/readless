@@ -10,6 +10,7 @@ export const TOKEN_TYPE_NAMES = [
   'place',
   'software/app',
   'sports-team',
+  'video-game',
 ] as const;
 
 export type TokenTypeName = typeof TOKEN_TYPE_NAMES[number];
@@ -26,7 +27,7 @@ export type TokenTypeCreationAttributes = Partial<DatedAttributes> & {
   displayName: string;
 };
 
-export const PUBLIC_TOKEN_TYPE_ATTRIBUTES = ['name', 'displayName'] as const;
+export const PUBLIC_TOKEN_TYPE_ATTRIBUTES = ['id', 'name', 'displayName'] as const;
 
 export type PublicTokenTypeAttributes = {
   name: TokenTypeName;
@@ -69,6 +70,10 @@ export const TOKEN_TYPES: Record<string, TokenTypeCreationAttributes> = {
   sportsTeam: {
     displayName: 'Sports Team',
     name: 'sports-team',
+  },
+  videoGame: {
+    displayName: 'Video Game',
+    name: 'video-game',
   },
 };
 

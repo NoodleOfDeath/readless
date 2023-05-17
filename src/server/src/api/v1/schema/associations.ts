@@ -29,6 +29,7 @@ import {
   PUBLIC_SUMMARY_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
   PUBLIC_SUMMARY_TOKEN_ATTRIBUTES, 
+  PUBLIC_TOKEN_TYPE_ATTRIBUTES,
 } from './types';
 
 export function makeAssociations() {
@@ -208,5 +209,7 @@ export function addScopes() {
       },
     ],
   });
+  
+  TokenType.addScope('raw', { attributes: [...PUBLIC_TOKEN_TYPE_ATTRIBUTES ] });
   
 }
