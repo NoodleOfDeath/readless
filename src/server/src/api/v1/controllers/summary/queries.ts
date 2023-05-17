@@ -170,7 +170,7 @@ FROM (
       summary_tokens."deletedAt" IS NULL
       AND summaries."deletedAt" IS NULL
       AND "originalDate" > NOW() - INTERVAL :interval
-      AND type LIKE :type
+      AND type ~* :type
     GROUP BY 
       summary_tokens.text, 
       summary_tokens.type
