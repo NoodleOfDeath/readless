@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { PublicSummaryTokenAttributes, TokenType } from '~/api';
+import pluralize from 'pluralize';
+
+import { 
+  PublicTokenAttributes,
+  PublicTopicTypeAttributes,
+  TokenTypeName,
+} from '~/api';
 import {
   Button,
   CollapsedView,
@@ -17,29 +23,15 @@ import {
   useTheme,
 } from '~/hooks';
 
-type TokenToPlural = {
-  value?: TokenType;
-  plural: string;
-};
-
-const TOKEN_TYPES: TokenToPlural[] = [
-  { plural: 'topics' },
-  { plural: 'businesses', value: TokenType.Business },
-  { plural: 'events', value: TokenType.Event },
-  { plural: 'innovations', value: TokenType.Innovation },
-  { plural: 'people', value: TokenType.Person },
-  { plural: 'places', value: TokenType.Place },
-];
-
 export type TopicSamplerProps = ScrollViewProps & {
-  initialType?: TokenToPlural;
+  initialTopicType?: PublicTopicTypeAttributes;
   initialInterval?: string;
   initialPageSize?: number;
   min?: number;
 };
 
 export function TopicSampler({
-  initialType,
+  initialTopicType = { displayName: 'Topic', name: undefined },
   initialInterval = '24h',
   initialPageSize = 10,
   min = 0,
@@ -49,85 +41,101 @@ export function TopicSampler({
   const theme = useTheme();
   const style = useStyles(props);
 
-  const { getTrends } = useSummaryClient();
+  const { getTopicGroups, getTopics } = useSummaryClient();
   const { search } = useNavigation();
   const { ready } = React.useContext(SessionContext);
   
   const [_loading, setLoading] = React.useState(false);
-  const [page, _setPage] = React.useState(0);
-  const [pageSize] = React.useState(initialPageSize);
 
-  const [type, setTopicType] = React.useState(initialType);
-  const [interval, _setTopicInterval] = React.useState(initialInterval);
+  const [topicGroups, setTopicGroups] = React.useState<PublicTopicTypeAttributes[]>([]);
+  const [topicType, setTopicType] = React.useState(initialTopicType);
+  const [topicInterval, _setTopicInterval] = React.useState(initialInterval);
 
   const [_topicCount, setTopicCount] = React.useState(0);
-  const [topics, setTopics] = React.useState<PublicSummaryTokenAttributes[]>([]);
+  const [topics, setTopics] = React.useState<PublicTokenAttributes[]>([]);
   
-  const title = React.useMemo(() => `${type?.plural || 'topics'} trending in the last ${interval}`, [type, interval]);
+  const title = React.useMemo(() => `${pluralize(topicType?.displayName || 'Topic')} in the last ${topicInterval}`, [topicType, topicInterval]);
   
   const onMount = React.useCallback(async () => {
     if (!ready) {
       return;
     }
     setLoading(true);
-    const { data, error } = await getTrends(type?.value, interval, min, page, pageSize);
+    const { data, error } = await getTopicGroups();
     if (error) {
       console.error(error);
       setLoading(false);
       return;
     }
     if (data) {
-      setTopicCount(data.count);
+      setTopicGroups([{ displayName: 'Topic', name: undefined }, ...data.rows]);
+    }
+  }, [getTopicGroups, ready]);
+  
+  const loadTopics = React.useCallback(async () => {
+    if (!ready) {
+      return;
+    }
+    const { data, error } = await getTopics(topicType.name, topicInterval);
+    if (error) {
+      console.error(error);
+      setLoading(false);
+      return;
+    }
+    if (data) {
       setTopics(data.rows);
     }
     setLoading(false);
-  }, [getTrends, type, interval, min, page, pageSize, ready]);
-  
+  }, [getTopics, topicType, topicInterval, ready]);
+    
   React.useEffect(() => {
     onMount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready]);
 
   React.useEffect(() => {
-    onMount();
+    loadTopics();
     const refreshInterval = setInterval(() => {
-      onMount(); 
+      loadTopics(); 
     }, 1000 * 60 * 5);
     return () => clearInterval(refreshInterval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [ready, topicType, topicGroups]);
   
   return (
     <CollapsedView startCollapsed={ false } banner>
       <View
-        height={ 140 } 
+        height={ 100 } 
         ph={ 24 }
-        pt={ 12 }
-        gap={ 12 }
+        gap={ 6 }
         style={ [theme.components.sampler, style] }>
         <Text textCenter subtitle1 capitalize bold>{title}</Text>
-        <ScrollView horizontal style={ { overflow: 'visible' } }>
-          <View row alignCenter mh={ 12 } gap={ 12 }>
-            {topics.map((topic) => (
-              <Button 
-                key={ topic.text }
-                elevated
-                p={ 4 }
-                onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
-                {topic.text}
-              </Button>
-            ))}
-          </View>
-        </ScrollView>
+        {topics.length > 0 ? (
+          <ScrollView horizontal style={ { overflow: 'visible' } }>
+            <View row alignCenter mh={ 12 } gap={ 12 }>
+              {topics.map((topic) => (
+                <Button 
+                  key={ topic.text }
+                  elevated
+                  p={ 2 }
+                  onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
+                  {topic.text}
+                </Button>
+              ))}
+            </View>
+          </ScrollView>
+        ) : (
+          <Text p={ 2 } textCenter>No results 🥺</Text>
+        )}
         <ScrollView horizontal style={ { overflow: 'visible' } }>
           <View row gap={ 12 }>
-            {TOKEN_TYPES.map((tokenType) => (
+            {topicGroups.map((topicGroup) => (
               <Button
-                key={ tokenType.plural } 
-                onPress={ () => setTopicType(tokenType) }
-                bold={ tokenType.value === type?.value }
-                underline={ tokenType.value === type?.value }>
-                {tokenType.plural}
+                key={ topicGroup.name ?? 'Topic' } 
+                onPress={ () => setTopicType(topicGroup) }
+                bold={ topicGroup.name === topicType?.name }
+                underline={ topicGroup.name === topicType?.name }>
+                {pluralize(topicGroup.displayName)}
               </Button>
             ))}
           </View>

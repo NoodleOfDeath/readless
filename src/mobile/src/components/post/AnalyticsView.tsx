@@ -79,6 +79,14 @@ export function AnalyticsView({
               size={ 36 } />
           </View>
         </View>
+        <View>
+          {sentiments.map((s) => (
+            <View key={ s.method } row gap={ 12 }>
+              <Text>{s.method}</Text>
+              <Text>{s.score.toFixed(2)}</Text>
+            </View>
+          ))}
+        </View>
       </CollapsedView>
       <CollapsedView
         title={ (
