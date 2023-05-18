@@ -193,12 +193,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   }
   
   @Get('/topics/groups')
-  public static async getTopicGroups(
-    @Query() userId?: number,
-    @Query() interval = '24h',
-    @Query() min = 2
-  ): Promise<BulkResponse<PublicTokenTypeAttributes>> {
-    return await TokenType.scope('public').findAndCountAll();
+  public static async getTopicGroups(): Promise<BulkResponse<PublicTokenTypeAttributes>> {
+    return await TokenType.scope('raw').findAndCountAll();
   }
   
   @Security('jwt')
