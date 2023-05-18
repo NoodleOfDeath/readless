@@ -153,9 +153,9 @@ FROM (
       a."category.displayName",
       a."category.icon"
     ORDER BY a."originalDate" DESC
-    LIMIT :limit
-    OFFSET :offset
   ) b
+  LIMIT :limit
+  OFFSET :offset
 ) c
 GROUP BY
   c.total_count,
