@@ -12,30 +12,24 @@ import AnyCodable
 
 public struct PublicOutletAttributes: Codable, Hashable {
 
-  public var id: Int
   public var name: String
   public var displayName: String
   public var description: String?
 
-  public init(id: Int, name: String, displayName: String, description: String? = nil) {
-    self.id = id
+  public init(name: String, displayName: String, description: String? = nil) {
     self.name = name
-    self.description = description
     self.displayName = displayName
+    self.description = description
   }
 
   public enum CodingKeys: String, CodingKey, CaseIterable {
-    case id
     case name
     case displayName
     case description
   }
 
-  // Encodable protocol methods
-
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
-    try container.encode(id, forKey: .id)
     try container.encode(name, forKey: .name)
     try container.encode(displayName, forKey: .displayName)
     try container.encodeIfPresent(description, forKey: .description)

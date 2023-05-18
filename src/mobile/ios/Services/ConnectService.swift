@@ -21,15 +21,29 @@ class ConnectService: ObservableObject {
 
   func fetchHandler(_ data: Data?) {
     if let data = data {
-      let dateFormatter = DateFormatter()
-      dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
       let decoder = JSONDecoder()
-      decoder.dateDecodingStrategy = .formatted(dateFormatter)
-      DispatchQueue.main.async {
-        if let decodedResponse = try? decoder.decode(BulkResponse<PublicSummaryAttributes>.self, from: data) {
-          self.summaries = decodedResponse.rows
+      decoder.dateDecodingStrategy = .custom { (decoder) -> Date in
+        let container = try decoder.singleValueContainer()
+        let dateString = try container.decode(String.self)
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        if let date = dateFormatter.date(from: dateString) {
+            return date
         }
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        if let date = dateFormatter.date(from: dateString) {
+            return date
+        }
+        throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date format")
+      }
+      DispatchQueue.main.async {
+         do {
+           let decodedResponse = try decoder.decode(BulkResponse<PublicSummaryAttributes, SentimentMetadata>.self, from: data)
+           self.summaries = decodedResponse.rows
+         } catch {
+           print(error)
+         }
         self.loading = false
       }
     }

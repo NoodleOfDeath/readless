@@ -16,11 +16,9 @@
 		010F0CFF29E88D490064DD97 /* ReadLessWatch_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0CFE29E88D490064DD97 /* ReadLessWatch_Watch_AppUITests.swift */; };
 		010F0D0129E88D490064DD97 /* ReadLessWatch_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D0029E88D490064DD97 /* ReadLessWatch_Watch_AppUITestsLaunchTests.swift */; };
 		010F0D0429E88D490064DD97 /* Read Less.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 010F0CE129E88D470064DD97 /* Read Less.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		010F0D4429E88EC40064DD97 /* ReadingFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D1329E88EC40064DD97 /* ReadingFormat.swift */; };
 		010F0D5229E88EC40064DD97 /* PublicCategoryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */; };
 		010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
 		010F0D5C29E88EC40064DD97 /* PublicOutletAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */; };
-		010F0D6129E88EC40064DD97 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D3029E88EC40064DD97 /* Platform.swift */; };
 		010F0D8129E89D770064DD97 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
 		0125BD3A29D791ED00EAC61C /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1A29D791EC00EAC61C /* Fontisto.ttf */; };
 		0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1C29D791EC00EAC61C /* Octicons.ttf */; };
@@ -83,10 +81,8 @@
 		0150ACB429F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */; };
 		0150ACBC29F957BB00875CF7 /* PublicOutletAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */; };
 		0150ACBD29F957BE00875CF7 /* PublicCategoryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */; };
-		0150ACBE29F957C100875CF7 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D3029E88EC40064DD97 /* Platform.swift */; };
 		0150ACBF29F957C400875CF7 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
 		0150ACC029F957D000875CF7 /* BulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkResponse.swift */; };
-		0150ACC129F957D500875CF7 /* ReadingFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D1329E88EC40064DD97 /* ReadingFormat.swift */; };
 		0150ACC329F957F200875CF7 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* ConnectService.swift */; };
 		0150ACC629F9582900875CF7 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACC529F9582900875CF7 /* SummaryCard.swift */; };
 		0150ACCB29F958A600875CF7 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
@@ -229,11 +225,9 @@
 		010F0CFA29E88D490064DD97 /* ReadLessWatch Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ReadLessWatch Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		010F0CFE29E88D490064DD97 /* ReadLessWatch_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWatch_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		010F0D0029E88D490064DD97 /* ReadLessWatch_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWatch_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		010F0D1329E88EC40064DD97 /* ReadingFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingFormat.swift; sourceTree = "<group>"; };
 		010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicCategoryAttributes.swift; sourceTree = "<group>"; };
 		010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicSummaryAttributes.swift; sourceTree = "<group>"; };
 		010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicOutletAttributes.swift; sourceTree = "<group>"; };
-		010F0D3029E88EC40064DD97 /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		010F0D8029E89D770064DD97 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		0125BD1829D791EC00EAC61C /* ReadLess.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = ReadLess.entitlements; path = ReadLess/ReadLess.entitlements; sourceTree = "<group>"; };
 		0125BD1A29D791EC00EAC61C /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
@@ -384,7 +378,6 @@
 				018CE3AE29E989F5005E6391 /* ReadLessWatch Watch App.entitlements */,
 				018CE3AD29E9892B005E6391 /* ReadLessWatch-Watch-App-Info.plist */,
 				010F0CE329E88D470064DD97 /* ReadLessWatchApp.swift */,
-				010F0CE529E88D470064DD97 /* ContentView.swift */,
 				015A19CD29EAE6D70072EEE3 /* Views */,
 				010F0CE929E88D480064DD97 /* Preview Content */,
 			);
@@ -420,10 +413,8 @@
 			isa = PBXGroup;
 			children = (
 				010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */,
-				010F0D3029E88EC40064DD97 /* Platform.swift */,
 				010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */,
 				010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */,
-				010F0D1329E88EC40064DD97 /* ReadingFormat.swift */,
 				018CE3AF29E98AB9005E6391 /* BulkResponse.swift */,
 			);
 			path = Models;
@@ -517,6 +508,7 @@
 		015A19CD29EAE6D70072EEE3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				010F0CE529E88D470064DD97 /* ContentView.swift */,
 				018173C029EA4529006D3509 /* SummaryCard.swift */,
 			);
 			path = Views;
@@ -1134,13 +1126,11 @@
 				010F0CE629E88D470064DD97 /* ContentView.swift in Sources */,
 				018173BF29EA1842006D3509 /* PressActions.swift in Sources */,
 				018173C329EA4833006D3509 /* Date.swift in Sources */,
-				010F0D6129E88EC40064DD97 /* Platform.swift in Sources */,
 				013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */,
 				018CE3B029E98AB9005E6391 /* BulkResponse.swift in Sources */,
 				010F0D8129E89D770064DD97 /* Color.swift in Sources */,
 				010F0D5C29E88EC40064DD97 /* PublicOutletAttributes.swift in Sources */,
 				010F0CE429E88D470064DD97 /* ReadLessWatchApp.swift in Sources */,
-				010F0D4429E88EC40064DD97 /* ReadingFormat.swift in Sources */,
 				010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */,
 				015A19D129EAEB1A0072EEE3 /* View.swift in Sources */,
 				010F0D5229E88EC40064DD97 /* PublicCategoryAttributes.swift in Sources */,
@@ -1168,7 +1158,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0150ACBE29F957C100875CF7 /* Platform.swift in Sources */,
 				0150ACAE29F9577400875CF7 /* ReadLessWidget.swift in Sources */,
 				0150ACBC29F957BB00875CF7 /* PublicOutletAttributes.swift in Sources */,
 				0150ACCE29F958A600875CF7 /* Date.swift in Sources */,
@@ -1177,7 +1166,6 @@
 				0150ACBF29F957C400875CF7 /* PublicSummaryAttributes.swift in Sources */,
 				0150ACAA29F9577400875CF7 /* ReadLessWidgetBundle.swift in Sources */,
 				0150ACB329F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */,
-				0150ACC129F957D500875CF7 /* ReadingFormat.swift in Sources */,
 				0150ACC029F957D000875CF7 /* BulkResponse.swift in Sources */,
 				0150ACBD29F957BE00875CF7 /* PublicCategoryAttributes.swift in Sources */,
 				0150ACC329F957F200875CF7 /* ConnectService.swift in Sources */,
@@ -1308,7 +1296,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -1353,7 +1341,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.watchkitapp;
