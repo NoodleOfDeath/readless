@@ -12,6 +12,7 @@ import {
 } from '../';
 import {
   Category,
+  SentimentMethod,
   Summary,
   SummarySentiment,
   SummarySentimentToken,
@@ -41,6 +42,7 @@ export class ScribeService extends BaseService {
     await Category.initCategories();
     const categories = await Category.findAll();
     this.categories = categories.map((c) => c.displayName);
+    await SentimentMethod.initSentimentMethods();
     await TokenType.initTokenTypes();
     const tokenTypes = await TokenType.findAll();
     this.tokenTypes = tokenTypes.map((t) => t.name);
@@ -317,7 +319,7 @@ export class ScribeService extends BaseService {
       
       const AFFINSentiment = new Sentiment().analyze(newSummary.summary);
       const secondSentiment = await SummarySentiment.create({
-        method: 'AFINN',
+        method: 'afinn',
         parentId: summary.id,
         score: AFFINSentiment.comparative,
       });

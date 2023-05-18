@@ -1,6 +1,7 @@
 import { Column, DataType } from 'sequelize-typescript';
 
 import { SentimentAttributes, SentimentCreationAttributes } from './Sentiment.types';
+import { SentimentMethodName } from './SentimentMethod.types';
 import { SentimentTokenAttributes, SentimentTokenCreationAttributes } from './SentimentToken.types';
 import { BaseModel } from '../../base';
 
@@ -21,7 +22,7 @@ export abstract class Sentiment<
     allowNull: false,
     type: DataType.STRING,
   })
-  declare method: string;
+  declare method: SentimentMethodName;
     
   @Column({
     allowNull: false,
