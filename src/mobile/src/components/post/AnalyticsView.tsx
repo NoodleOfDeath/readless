@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SummarySentimentAttributes } from '~/api';
+import { PublicSummarySentimentAttributes } from '~/api';
 import {
   CollapsedView,
   Icon,
@@ -14,7 +14,7 @@ import { useStyles } from '~/hooks';
 import { averageOfSentiments } from '~/utils';
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
-  sentiments: SummarySentimentAttributes[] | { [key: string]: SummarySentimentAttributes };
+  sentiments: PublicSummarySentimentAttributes[];
 };
 
 export function AnalyticsView({
@@ -80,8 +80,12 @@ export function AnalyticsView({
           </View>
         </View>
         <View>
-          {sentiments.map((s) => (
+          {sentiments.sort((a, b) => a.method < b.method ? -1 : a.method > b.method ? 1 : 0).map((s) => (
             <View key={ s.method } row gap={ 12 }>
+              <Menu
+                autoAnchor={ <Icon name="information" size={ 24 } /> }>
+                <Text>{s.description}</Text>
+              </Menu>
               <Text>{s.method}</Text>
               <Text>{s.score.toFixed(2)}</Text>
             </View>

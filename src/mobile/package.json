@@ -64,6 +64,7 @@
     "@types/js-cookie": "^3.0.3",
     "@types/ms": "^0.7.31",
     "@types/node": "^18.14.6",
+    "@types/pluralize": "^0.0.29",
     "@types/react": "^18.0.24",
     "@types/react-native-highlight-words": "^1.0.2",
     "@types/react-native-vector-icons": "^6.4.13",

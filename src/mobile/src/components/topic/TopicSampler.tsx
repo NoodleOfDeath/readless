@@ -2,11 +2,7 @@ import React from 'react';
 
 import pluralize from 'pluralize';
 
-import { 
-  PublicTokenAttributes,
-  PublicTopicTypeAttributes,
-  TokenTypeName,
-} from '~/api';
+import { PublicTokenAttributes, PublicTokenTypeAttributes } from '~/api';
 import {
   Button,
   CollapsedView,
@@ -24,17 +20,13 @@ import {
 } from '~/hooks';
 
 export type TopicSamplerProps = ScrollViewProps & {
-  initialTopicType?: PublicTopicTypeAttributes;
+  initialTopicType?: Partial<PublicTokenTypeAttributes>;
   initialInterval?: string;
-  initialPageSize?: number;
-  min?: number;
 };
 
 export function TopicSampler({
-  initialTopicType = { displayName: 'Topic', name: undefined },
+  initialTopicType = { displayName: 'Topic' },
   initialInterval = '24h',
-  initialPageSize = 10,
-  min = 0,
   ...props
 }: TopicSamplerProps) {
   
@@ -47,11 +39,11 @@ export function TopicSampler({
   
   const [_loading, setLoading] = React.useState(false);
 
-  const [topicGroups, setTopicGroups] = React.useState<PublicTopicTypeAttributes[]>([]);
+  const [topicGroups, setTopicGroups] = React.useState<Partial<PublicTokenTypeAttributes>[]>([]);
   const [topicType, setTopicType] = React.useState(initialTopicType);
   const [topicInterval, _setTopicInterval] = React.useState(initialInterval);
 
-  const [_topicCount, setTopicCount] = React.useState(0);
+  const [_topicCount, _setTopicCount] = React.useState(0);
   const [topics, setTopics] = React.useState<PublicTokenAttributes[]>([]);
   
   const title = React.useMemo(() => `${pluralize(topicType?.displayName || 'Topic')} in the last ${topicInterval}`, [topicType, topicInterval]);
@@ -68,7 +60,7 @@ export function TopicSampler({
       return;
     }
     if (data) {
-      setTopicGroups([{ displayName: 'Topic', name: undefined }, ...data.rows]);
+      setTopicGroups([{ displayName: 'Topic' }, ...data.rows]);
     }
   }, [getTopicGroups, ready]);
   
@@ -135,7 +127,7 @@ export function TopicSampler({
                 onPress={ () => setTopicType(topicGroup) }
                 bold={ topicGroup.name === topicType?.name }
                 underline={ topicGroup.name === topicType?.name }>
-                {pluralize(topicGroup.displayName)}
+                {pluralize(topicGroup?.displayName ?? '')}
               </Button>
             ))}
           </View>

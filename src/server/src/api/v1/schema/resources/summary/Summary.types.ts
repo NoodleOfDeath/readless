@@ -1,4 +1,4 @@
-import { SummarySentimentAttributes } from './SummarySentiment.types';
+import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import {
   PUBLIC_POST_ATTRIBUTES,
   PostAttributes,
@@ -30,7 +30,7 @@ export type SummaryAttributes = PostAttributes & {
   shortSummary: string;
   bullets: string[];
   formats: ReadingFormat[];
-  sentiments: SummarySentimentAttributes[];
+  sentiments: PublicSummarySentimentAttributes[];
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & {

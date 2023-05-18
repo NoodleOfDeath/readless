@@ -1,3 +1,4 @@
+import { PublicSentimentAttributes } from './../sentiment/Sentiment.types';
 import {
   SummarySentimentTokenAttributes,
   SummarySentimentTokenCreationAttributes,
@@ -6,3 +7,5 @@ import { SentimentAttributes, SentimentCreationAttributes } from '../sentiment/S
 
 export type SummarySentimentAttributes = SentimentAttributes<SummarySentimentTokenAttributes>;
 export type SummarySentimentCreationAttributes = SentimentCreationAttributes<SummarySentimentTokenCreationAttributes>;
+
+export type PublicSummarySentimentAttributes = PublicSentimentAttributes<SummarySentimentTokenCreationAttributes>;

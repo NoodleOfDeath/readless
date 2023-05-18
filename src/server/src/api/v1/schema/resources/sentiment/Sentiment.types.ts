@@ -23,8 +23,9 @@ export type Sentimental = {
 
 export const PUBLIC_SENTIMENT_ATTRIBUTES = ['id', 'method', 'score'];
 
-export type PublicSentimentAttributes = {
+export type PublicSentimentAttributes<T extends SentimentTokenCreationAttributes> = {
   method: string;
   score: number;
   description: string;
+  tokens: T[];
 };
