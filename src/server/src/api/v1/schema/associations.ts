@@ -9,6 +9,7 @@ import {
   Queue,
   RefUserRole,
   Role,
+  SentimentMethod,
   Service,
   ServiceStatus,
   Summary,
@@ -74,6 +75,8 @@ export function makeAssociations() {
   });
 
   TokenType.hasMany(SummaryToken, { foreignKey: 'type', sourceKey: 'name' });
+
+  SentimentMethod.hasMany(SummarySentiment, { foreignKey: 'method', sourceKey: 'name' });
   
   SummarySentiment.belongsTo(Summary, {
     as: 'summary',

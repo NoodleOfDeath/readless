@@ -37,6 +37,7 @@ FROM (
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
           'method', a.method,
           'score', a.score,
+          'description', a.sentiment_method_description,
           'tokens', tokens
       )) FILTER (WHERE tokens IS NOT NULL), '[]'::JSON) AS sentiments,
       AVG(a.score) as sentiment,
@@ -62,6 +63,7 @@ FROM (
         categories.icon as "category.icon",
         summary_sentiments.method,
         summary_sentiments.score,
+        sentiment_methods.description AS "sentiment_method_description",
         JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
           'text', summary_sentiment_tokens.text
         )) FILTER (WHERE summary_sentiment_tokens.text IS NOT NULL) AS tokens
@@ -79,6 +81,9 @@ FROM (
         LEFT OUTER JOIN summary_sentiments
           ON summaries.id = summary_sentiments."parentId"
           AND (summary_sentiments."deletedAt" IS NULL)
+        LEFT OUTER JOIN sentiment_methods
+          ON summary_sentiments.method = sentiment_methods.name
+          AND (sentiment_methods."deletedAt" IS NULL)
         LEFT OUTER JOIN summary_sentiment_tokens
           ON summary_sentiments.id = summary_sentiment_tokens."parentId"
           AND (summary_sentiment_tokens."deletedAt" IS NULL)
@@ -126,7 +131,8 @@ FROM (
         "category.displayName",
         "category.icon",
         summary_sentiments.method,
-        summary_sentiments.score
+        summary_sentiments.score,
+        "sentiment_method_description"
     ) a
     GROUP BY
       a.id,

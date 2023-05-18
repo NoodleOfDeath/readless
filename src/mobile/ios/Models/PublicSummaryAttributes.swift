@@ -16,30 +16,24 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   public var id: Int
   public var url: String
   public var title: String
-  public var outletAttributes: PublicOutletAttributes?
-  public var categoryAttributes: PublicCategoryAttributes?
-  public var createdAt: Date?
-  public var updatedAt: Date?
-  public var deletedAt: Date?
+  public var outlet: PublicOutletAttributes
+  public var category: PublicCategoryAttributes
+  public var imageUrl: String?
   public var originalDate: Date?
 
   public init(id: Int,
               url: String,
               title: String,
-              outletAttributes: PublicOutletAttributes? = nil,
-              categoryAttributes: PublicCategoryAttributes? = nil,
-              createdAt: Date? = nil,
-              updatedAt: Date? = nil,
-              deletedAt: Date? = nil,
+              outlet: PublicOutletAttributes,
+              category: PublicCategoryAttributes,
+              imageUrl: String? = nil,
               originalDate: Date? = nil) {
     self.id = id
     self.url = url
     self.title = title
-    self.outletAttributes = outletAttributes
-    self.categoryAttributes = categoryAttributes
-    self.createdAt = createdAt
-    self.updatedAt = updatedAt
-    self.deletedAt = deletedAt
+    self.outlet = outlet
+    self.category = category
+    self.imageUrl = imageUrl
     self.originalDate = originalDate
   }
 
@@ -47,11 +41,9 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     case id
     case url
     case title
-    case outletAttributes
-    case categoryAttributes
-    case createdAt
-    case updatedAt
-    case deletedAt
+    case outlet
+    case category
+    case imageUrl
     case originalDate
   }
 
@@ -62,9 +54,9 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     try container.encode(id, forKey: .id)
     try container.encode(url, forKey: .url)
     try container.encode(title, forKey: .title)
-    try container.encodeIfPresent(createdAt, forKey: .createdAt)
-    try container.encodeIfPresent(updatedAt, forKey: .updatedAt)
-    try container.encodeIfPresent(deletedAt, forKey: .deletedAt)
+    try container.encode(outlet, forKey: .outlet)
+    try container.encode(category, forKey: .category)
+    try container.encodeIfPresent(imageUrl, forKey: .imageUrl)
     try container.encodeIfPresent(originalDate, forKey: .originalDate)
   }
 }

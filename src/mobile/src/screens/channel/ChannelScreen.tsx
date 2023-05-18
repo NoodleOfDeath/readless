@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   Screen,
+  ScrollView,
   Text,
   View,
 } from '~/components';
@@ -17,9 +18,16 @@ export function ChannelScreen({
 
   return (
     <Screen>
-      <View mt={ 10 }>
-        <Text h5 capitalize>{attributes?.displayName}</Text>
-        <Text subtitle2 capitalize>{type}</Text>
+      <View m={ 12 }>
+        <View>
+          <Text h5 capitalize>{attributes?.displayName}</Text>
+          <Text subtitle2 capitalize>{type}</Text>
+        </View>
+        <View col>
+          <ScrollView>
+            <Text>More cool shit</Text>
+          </ScrollView>
+        </View>
       </View>
     </Screen>
   );

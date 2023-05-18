@@ -70,6 +70,7 @@ export * from './resources/Post.types';
 
 export * from './resources/nlp/Token.types';
 export * from './resources/nlp/TokenType.types';
+export * from './resources/sentiment/SentimentMethod.types';
 
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';

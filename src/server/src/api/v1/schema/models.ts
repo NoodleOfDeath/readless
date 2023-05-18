@@ -23,6 +23,7 @@ export * from './auth/Role.model';
 
 // resource models
 export * from './resources/nlp/TokenType.model';
+export * from './resources/sentiment/SentimentMethod.model';
 
 export * from './resources/channel/Outlet.model';
 export * from './resources/channel/Category.model';

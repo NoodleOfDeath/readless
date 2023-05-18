@@ -1,22 +1,23 @@
 import { SentimentTokenAttributes, SentimentTokenCreationAttributes } from './SentimentToken.types';
-import { DatedAttributes } from '../../types';
+import { DatedAttributes, SentimentMethodName } from '../../types';
 
 export type SentimentAttributes<T extends SentimentTokenAttributes> = DatedAttributes & {
   parentId: number;
-  method: string;
+  method: SentimentMethodName;
   score: number;
   tokens: T[];
 };
 
 export type SentimentCreationAttributes<T extends SentimentTokenCreationAttributes> = {
   parentId: number;
-  method: string;
+  method: SentimentMethodName;
   score: number;
   tokens?: T[];
 };
 
 export type Sentimental = {
   sentiment: number;
+  // @deprecated
   averageSentiment: number;
 };
 
@@ -25,4 +26,5 @@ export const PUBLIC_SENTIMENT_ATTRIBUTES = ['id', 'method', 'score'];
 export type PublicSentimentAttributes = {
   method: string;
   score: number;
+  description: string;
 };

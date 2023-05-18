@@ -103,7 +103,7 @@ export function DisplaySettingsMenu() {
     <Menu
       width={ 300 }
       autoAnchor={
-        <Icon name="cog" size={ 24 } />
+        <Icon name="menu" size={ 24 } />
       }>
       <View gap={ 6 } overflow="hidden">
         <View gap={ 16 }>
