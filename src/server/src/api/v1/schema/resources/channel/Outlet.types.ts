@@ -443,6 +443,24 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
+  daringfireball: {
+    baseUrl: 'https://www.daringfireball.net',
+    displayName: 'Daring Fireball',
+    name: 'daring-fireball',
+    selectors: {
+      article: { selector: '.article p' },
+      author: { selector: '.article .dateline' },
+      date: { selector: '.article .dateline' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          '.article a',
+          'a[href*="/2023/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
   defenseone: {
     baseUrl: 'https://www.defenseone.com',
     displayName: 'Defense One',
@@ -1187,8 +1205,8 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     name: 'thestreet',
     selectors: {
       article: { selector: 'article p' },
-      author: { selector: 'article .m-detail-header--meta-author' },
-      date: { selector: 'article .m-detail-header--date' },
+      author: { selector: 'article a[href*="/author/"]' },
+      date: { selector: 'article time' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1391,6 +1409,24 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
       },
     },
     timezone: 'EDT',
+  },
+  vulture: {
+    baseUrl: 'https://www.vulture.com',
+    displayName: 'Vulture',
+    name: 'vulture',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article .author-name a' },
+      date: { selector: 'aritcle time, .article-timestamp' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/article/"]',
+          'a[href*="/2023/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
   },
   wapo: {
     baseUrl: 'https://www.washingtonpost.com',
