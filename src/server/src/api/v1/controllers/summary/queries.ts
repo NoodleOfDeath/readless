@@ -50,7 +50,7 @@ FROM (
         summaries.bullets,
         summaries.url,
         summaries."imageUrl",
-        TO_CHAR(summaries."originalDate", 'yyyy-MM-dd"T"HH:mm:ss.SSS"Z"') AS "originalDate",
+        TO_CHAR(summaries."originalDate", 'yyyy-MM-dd"T"HH:mm:ss.SS"Z"') AS "originalDate",
         outlets.id as "outlet.id",
         outlets.name as "outlet.name",
         outlets."displayName" as "outlet.displayName",
