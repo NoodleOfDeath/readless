@@ -98,8 +98,8 @@ android {
         applicationId "ai.readless.ReadLess"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
-        versionName "1.5.2"
+        versionCode 22
+        versionName "1.6.0"
     }
 
     splits {
