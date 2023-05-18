@@ -89,13 +89,9 @@ router.get(
 router.get(
   '/topics/groups',
   rateLimitMiddleware('30 per 1m'),
-  query('interval').isString().optional(),
-  query('min').isNumeric().optional(),
-  validationMiddleware,
   async (req, res) => {
     try {
-      const { interval, min } = req.query;
-      const response = await SummaryController.getTopicGroups(undefined, interval, min);
+      const response = await SummaryController.getTopicGroups();
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);
