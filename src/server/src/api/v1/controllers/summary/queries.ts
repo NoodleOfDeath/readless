@@ -162,12 +162,13 @@ FROM (
       summary_tokens.text, 
       summary_tokens.type
     FROM summary_tokens
-    LEFT OUTER JOIN summaries ON summaries.id = summary_tokens."parentId"
-    AND (summaries."deletedAt" IS NULL)
-    AND ("originalDate" > NOW() - INTERVAL :interval)
+    LEFT OUTER JOIN summaries 
+      ON summaries.id = summary_tokens."parentId"
+      AND (summaries."deletedAt" IS NULL)
     WHERE 
       (summary_tokens."deletedAt" IS NULL)
-      AND (type ~* :type)
+      AND (summary_tokens.type ~* :type)
+      AND (summaries."originalDate" > NOW() - INTERVAL :interval)
   ) a
   GROUP BY
     a.text,
