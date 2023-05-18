@@ -16,9 +16,7 @@ export const TOKEN_TYPE_NAMES = [
 export type TokenTypeName = typeof TOKEN_TYPE_NAMES[number];
 
 export type TokenTypeAttributes = DatedAttributes & {
-  /** type of this type */
   name: TokenTypeName;
-  /** display name of this type */
   displayName: string;
 };
 
