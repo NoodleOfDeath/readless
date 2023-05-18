@@ -31,9 +31,9 @@ FROM (
         'icon', "category.icon"
       ) as category,
       JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
-        'method', a.method,
-        'score', a.score,
-        'tokens', tokens
+          'method', a.method,
+          'score', a.score,
+          'tokens', tokens
       )) AS sentiments,
       AVG(a.score) as sentiment,
       COUNT(a.id) OVER() AS total_count
@@ -58,7 +58,7 @@ FROM (
         summary_sentiments.score,
         JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
           'text', summary_sentiment_tokens.text
-        )) AS tokens
+        )) FILTER (WHERE summary_sentiment_tokens.text IS NOT NULL) AS tokens
       FROM
         summaries
         LEFT OUTER JOIN "outlets"
