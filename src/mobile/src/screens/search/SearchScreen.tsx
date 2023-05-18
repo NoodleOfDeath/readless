@@ -19,6 +19,7 @@ import {
 import {
   ActivityIndicator,
   Button,
+  MeterDial,
   Screen,
   ScrollView,
   Summary,
@@ -75,6 +76,7 @@ export function SearchScreen({
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
+  const [averageSentiment, setAverageSentiment] = React.useState<number>();
   const [pendingReload, setPendingReload] = React.useState(false);
 
   const [pageSize] = React.useState(10);
@@ -94,11 +96,11 @@ export function SearchScreen({
     const filters: string[] = [];
     if (lengthOf(bookmarkedCategories) > 0) {
       filters.push(['cat', Object.values(bookmarkedCategories ?? {})
-        .map((c) => c.item.name).join(',')].join(':'));
+        .map((c) => c?.item?.name).filter(Boolean).join(',')].join(':'));
     }
     if (lengthOf(bookmarkedOutlets) > 0) {
       filters.push(['src', Object.values(bookmarkedOutlets ?? {})
-        .map((o) => o.item.name).join(',')].join(':'));
+        .map((o) => o?.item?.name).filter(Boolean).join(',')].join(':'));
     }
     return filters.join(' ');
   }, [bookmarkedCategories, bookmarkedOutlets]);
@@ -168,6 +170,7 @@ export function SearchScreen({
         }
         return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
       });
+      setAverageSentiment(data.metadata?.sentiment);
       setPage((prev) => (page === 0 ? 0 : prev) + 1);
       setLastFetchFailed(false);
     } catch (e) {
@@ -378,6 +381,14 @@ export function SearchScreen({
     <Screen>
       <View col gap={ 12 }>
         {sampler && <TopicSampler horizontal />}
+        {averageSentiment && (
+          <View elevated height={ 50 } p={ 12 } justifyCenter>
+            <View row gap={ 12 }>
+              <MeterDial value={ averageSentiment } width={ 50 } />
+              <Text>{`Average sentiment for ${totalResultCount} results: ${averageSentiment.toFixed(2)}`}</Text>
+            </View>
+          </View>
+        )}
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>

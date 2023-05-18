@@ -8,7 +8,6 @@ import {
 import {
   ActivityIndicator,
   Button,
-  MeterDial,
   Screen,
   ScrollView,
   TabSwitcher,
@@ -130,7 +129,6 @@ export function BrowseScreen(_props: ScreenProps<'default'>) {
                     alignCenter
                     rounded
                     bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
-                    <MeterDial width={ 40 } height={ 20 } value={ category.sentiment ?? 0 } />
                     <Button 
                       row
                       elevated
@@ -181,7 +179,6 @@ export function BrowseScreen(_props: ScreenProps<'default'>) {
                     alignCenter
                     rounded
                     bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
-                    <MeterDial width={ 40 } height={ 20 } value={ outlet.sentiment ?? 0 } />
                     <Button 
                       row
                       elevated

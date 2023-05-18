@@ -49,8 +49,10 @@ export type Preferences = {
   loadedInitialUrl?: boolean;
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
   favoritedSummaries?: { [key: number]: Bookmark<boolean> };
-  bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
   bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
+  bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
+  excludedOutlets?: { [key: string]: Bookmark<boolean> };
+  excludedCategories?: { [key: string]: Bookmark<boolean> };
   removedSummaries?: { [key: number]: Bookmark<boolean> };
   readSummaries?: { [key: number]: Bookmark<boolean> };
   readSources?: { [key: number]: Bookmark<boolean> };
