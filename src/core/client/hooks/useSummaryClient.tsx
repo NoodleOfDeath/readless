@@ -50,7 +50,15 @@ export function useSummaryClient() {
     }
   }, [getSummaries]);
   
-  const getTrends = React.useCallback(async (
+  const getTopicGroups = React.useCallback(async () => {
+    try {
+      return await withHeaders(API.getTopicGroups)();
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+  
+  const getTopics = React.useCallback(async (
     type?: TokenType,
     interval?: string,
     min?: number,
@@ -59,7 +67,7 @@ export function useSummaryClient() {
     order?: string[]
   ) => {
     try {
-      return await withHeaders(API.getTrends)({
+      return await withHeaders(API.getTopics)({
         interval, min, order, page, pageSize, type,
       });
     } catch (e) {
@@ -131,7 +139,8 @@ export function useSummaryClient() {
   return {
     getSummaries,
     getSummary,
-    getTrends,
+    getTopicGroups,
+    getTopics,
     handleInteraction,
     interactWithSummary,
   };
