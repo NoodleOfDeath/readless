@@ -146,6 +146,9 @@ export class PuppeteerService extends BaseService {
         return;
       }
       // fix relative hrefs
+      if (/^\/\//.test(url)) {
+        return `https:${url}`;
+      } else
       if (/^\//.test(url)) {
         return `${baseUrl}${url}`;
       } else
