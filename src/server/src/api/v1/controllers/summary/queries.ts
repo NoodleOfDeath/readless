@@ -8,9 +8,9 @@ SELECT
 FROM (
   SELECT
     *,
-    b.outlet AS "outletAttributes",
-    b.category AS "categoryAttributes",
-    b.total_sentiment AS average_sentiment
+    b.outlet as "outletAttributes",
+    b.category as "categoryAttributes",
+    AVG(b.sentiment) OVER() AS average_sentiment
   FROM (
     SELECT
       a.id,
@@ -40,8 +40,7 @@ FROM (
           'description', a.sentiment_method_description,
           'tokens', tokens
       )) FILTER (WHERE tokens IS NOT NULL), '[]'::JSON) AS sentiments,
-      AVG(a.score) AS sentiment,
-      AVG(a.score) OVER() AS total_sentiment,
+      AVG(a.score) as sentiment,
       COUNT(a.id) OVER() AS total_count
     FROM (
       SELECT
@@ -152,8 +151,7 @@ FROM (
       a."category.id",
       a."category.name",
       a."category.displayName",
-      a."category.icon",
-      a.score
+      a."category.icon"
     ORDER BY a."originalDate" DESC
     LIMIT :limit
     OFFSET :offset
