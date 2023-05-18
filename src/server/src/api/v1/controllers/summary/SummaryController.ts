@@ -38,12 +38,24 @@ import {
 import { TokenTypeName } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
+function parseTimeInterval(str: string, requirePrefix = false) {
+  const matches = str.match(/(\d+)\s*(months?|m(?:in(?:ute)?s?)?|h(?:(?:ou)?rs?)?|d(?:ays?)?|w(?:(?:ee)?ks?)?|y(?:(?:ea)?rs?)?)/i);
+  if (matches && matches[1] && matches[2]) {
+    const n = matches[1];
+    const unit = matches[2];
+    if (n && unit) {
+      return `${n}${/month/i.test(unit) ? unit : unit[0]}`;
+    }
+  }
+}
+
 function applyFilter(
   filter = '', 
   matchType: 'any' | 'all' = 'any'
 ) {
   const categories: string[] = [];
   const outlets: string[] = [];
+  let interval: string;
   if (!filter) {
     return {
       categories,
@@ -53,7 +65,7 @@ function applyFilter(
   }
   const splitExpr = /\s*((?:\w+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+\w+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
-  const query = (q ?? '').trim();
+  let query = (q ?? '').trim();
   if (prefilter) {
     const expr = /(\w+):([-\w.]*(?:,[-\w.]*)*)/gi;
     const matches = prefilter.matchAll(expr);
@@ -61,17 +73,30 @@ function applyFilter(
       for (const match of matches) {
         const [_, prefix, prefixValues] = match;
         const pf = prefixValues.split(',');
-        if (/cat(egory)?/i.test(prefix)) {
+        if (/^cat(egory)?$/i.test(prefix)) {
           categories.push(...pf);
         }
-        if (/outlet|source|src/i.test(prefix)) {
+        if (/^(?:outlet|source|src)$/i.test(prefix)) {
           outlets.push(...pf);
+        }
+        if (/^past$/i.test(prefix)) {
+          const timeInterval = parseTimeInterval(prefixValues);
+          if (timeInterval) {
+            interval = timeInterval;
+          }
         }
       }
     }
   }
   const parts: string[] = [];
   if (query && query.length > 0) {
+    const timeMatches = query.match(/(.*?)(?:in\s+)?(?:the\s+)?[pl]ast\s+(\d+\s*(?:months?|m(?:in(?:ute)?s?)?|h(?:(?:ou)?rs?)?|d(?:ays?)?|w(?:(?:ee)?ks?)?|y(?:(?:ea)?rs?)?))/i);
+    if (timeMatches && timeMatches[2]) {
+      interval = parseTimeInterval(timeMatches[2]);
+      if (interval) {
+        query = timeMatches[1];
+      }
+    }
     const matches = 
       query.replace(/\s\s+/g, ' ')
         .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`)
@@ -91,6 +116,7 @@ function applyFilter(
   return {
     categories,
     filter: parts.join('|'),
+    interval,
     outlets,
   };
 }
@@ -122,6 +148,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     const { 
       categories, 
       outlets,
+      interval: pastInterval,
       filter: query,
     } = applyFilter(filter, matchType);
     const noOutlets = outlets.length === 0;
@@ -134,7 +161,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         excludeIds,
         filter: query,
         ids: ids.length === 0 ? [-1] : ids,
-        interval,
+        interval: pastInterval ?? interval,
         limit: Number(pageSize),
         noCategories,
         noIds,
