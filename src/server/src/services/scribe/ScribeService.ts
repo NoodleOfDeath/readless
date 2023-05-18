@@ -220,7 +220,8 @@ export class ScribeService extends BaseService {
             .split(/\n/)
             .map((bullet) => bullet.trim()
               .replace(/\n*/g, '')
-              .replace(/[\\.]*$/, ''));
+              .replace(/[\\.]*$/, ''))
+            .filter(Boolean);
         },
         text: 'Please provide 5 concise unbiased bullet point sentences no longer than 10 words each that summarize this article/story using • as the bullet symbol',
       },
