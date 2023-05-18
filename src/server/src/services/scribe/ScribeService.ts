@@ -1,4 +1,5 @@
 import ms from 'ms';
+import Sentiment from 'sentiment';
 
 import { ReadAndSummarizePayload } from './types';
 import {
@@ -314,12 +315,30 @@ export class ScribeService extends BaseService {
         });
       }
       
-      for (const tag of tags) {
-        await SummaryToken.create({
-          parentId: summary.id,
-          text: tag.text,
-          type: tag.type,
+      const AFFINSentiment = new Sentiment().analyze(newSummary.summary);
+      const secondSentiment = await SummarySentiment.create({
+        method: 'AFINN',
+        parentId: summary.id,
+        score: AFFINSentiment.comparative,
+      });
+      
+      for (const word of AFFINSentiment.words) {
+        await SummarySentimentToken.create({
+          parentId: secondSentiment.id,
+          text: word,
         });
+      }
+      
+      for (const tag of tags) {
+        try {
+          await SummaryToken.create({
+            parentId: summary.id,
+            text: tag.text,
+            type: tag.type,
+          });
+        } catch (e) {
+          console.error(e);
+        }
       }
       
       this.log('Created new summary from', url, newSummary.title);

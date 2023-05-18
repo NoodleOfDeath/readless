@@ -144,23 +144,14 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       },
       type: QueryTypes.SELECT,
     });
-    if (!records || records.length === 0) {
-      return { count: 0, rows: [] };
-    }
-    const record = records[0] as { count: number, overallSentiment: number };
-    const response = {
-      count: record.count,
-      metadata: { sentiment: record.overallSentiment },
-      rows: records,
-    };
-    return response as BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>;
+    return (records?.[0] ?? { count: 0, rows: [] }) as BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>;
   }
   
   @Get('/topics')
   public static async getTopics(
     @Query() userId?: number,
     @Query() type?: TokenTypeName,
-    @Query() interval = '12h',
+    @Query() interval = '1d',
     @Query() min = 0,
     @Query() pageSize = 10,
     @Query() page = 0,
@@ -191,7 +182,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   public static async getTrends(
     @Query() userId?: number,
     @Query() type?: TokenTypeName,
-    @Query() interval = '12h',
+    @Query() interval = '1d',
     @Query() min = 0,
     @Query() pageSize = 10,
     @Query() page = 0,
@@ -203,9 +194,11 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   
   @Get('/topics/groups')
   public static async getTopicGroups(
-    @Query() userId?: number
+    @Query() userId?: number,
+    @Query() interval = '24h',
+    @Query() min = 2
   ): Promise<BulkResponse<PublicTokenTypeAttributes>> {
-    return await TokenType.scope('raw').findAndCountAll();
+    return await TokenType.scope('public').findAndCountAll();
   }
   
   @Security('jwt')
