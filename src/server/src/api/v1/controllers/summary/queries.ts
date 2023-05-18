@@ -8,6 +8,8 @@ SELECT
 FROM (
   SELECT
     *,
+    b.outlet as "outletAttributes",
+    b.category as "categoryAttributes",
     AVG(b.sentiment) OVER() AS average_sentiment
   FROM (
     SELECT
