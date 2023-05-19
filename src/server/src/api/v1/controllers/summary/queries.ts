@@ -64,9 +64,9 @@ FROM (
         summary_sentiments.method,
         summary_sentiments.score,
         sentiment_methods.description AS "sentiment_method_description",
-        JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
+        COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
           'text', summary_sentiment_tokens.text
-        )) FILTER (WHERE summary_sentiment_tokens.text IS NOT NULL) AS tokens
+        )) FILTER (WHERE summary_sentiment_tokens.text IS NOT NULL), '[]'::JSON) AS tokens
       FROM
         summaries
         LEFT OUTER JOIN "outlets"
