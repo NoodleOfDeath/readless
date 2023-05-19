@@ -5,10 +5,10 @@ export const TOKEN_TYPE_NAMES = [
   'event',
   'group',
   'innovation',
+  'misc',
   'organization',
   'person',
   'place',
-  'software-app',
   'sports-team',
   'video-game',
 ] as const;
@@ -49,6 +49,10 @@ export const TOKEN_TYPES: Record<string, TokenTypeCreationAttributes> = {
     displayName: 'Innovation',
     name: 'innovation',
   },
+  misc: {
+    displayName: 'Miscellaneous',
+    name: 'misc',
+  },
   organization: {
     displayName: 'Organization',
     name: 'organization',
@@ -60,10 +64,6 @@ export const TOKEN_TYPES: Record<string, TokenTypeCreationAttributes> = {
   place: {
     displayName: 'Place',
     name: 'place',
-  },
-  software: {
-    displayName: 'Software/App',
-    name: 'software-app',
   },
   sportsTeam: {
     displayName: 'Sports Team',
