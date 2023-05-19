@@ -9,10 +9,10 @@ import {
 
 jest.setTimeout(30_000);
 
-import { Outlet } from '../src/api/v1/schema/resources/outlet/Outlet.model';
+import { OUTLETS } from '../src/api/v1/schema/resources/channel/Outlet.types';
 import { Loot, PuppeteerService } from '../src/services/puppeteer';
 
-const LOOT: { [ Key in keyof typeof Outlet.OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'date'> } = {
+const LOOT: { [ Key in keyof typeof OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'date'> } = {
   abc: {
     authors: ['Shannon K. Crawford', 'Luis Martinez'],
     date: new Date('2023-04-23T14:52:00.000Z'),
@@ -341,9 +341,9 @@ const LOOT: { [ Key in keyof typeof Outlet.OUTLETS]?: Pick<Loot, 'url' | 'author
 };
 
 describe('crawl', () => {
-  for (const [name] of Object.entries(LOOT)) {
+  for (const [, { name }] of Object.entries(OUTLETS)) {
     test(`crawl-${name}`, async () => {
-      const outlet = Outlet.OUTLETS[name];
+      const outlet = OUTLETS[name];
       const urls = await PuppeteerService.crawl(outlet);
       expect(urls.length).toBeGreaterThan(0);
       console.log(urls);
@@ -354,7 +354,7 @@ describe('crawl', () => {
 describe('loot', () => {
   for (const [name, exp] of Object.entries(LOOT)) {
     test(`loot-${name}`, async () => {
-      const loot = await PuppeteerService.loot(exp.url, Outlet.OUTLETS[name]);
+      const loot = await PuppeteerService.loot(exp.url, OUTLETS[name]);
       expect(loot).toBeDefined();
       expect(loot.url).toBe(exp.url);
       expect(loot.content.length).toBeGreaterThan(0);
