@@ -63,7 +63,7 @@ export const TOKEN_TYPES: Record<string, TokenTypeCreationAttributes> = {
   },
   software: {
     displayName: 'Software/App',
-    name: 'software/app',
+    name: 'software-app',
   },
   sportsTeam: {
     displayName: 'Sports Team',
