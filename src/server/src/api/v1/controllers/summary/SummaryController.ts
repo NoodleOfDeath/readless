@@ -38,7 +38,7 @@ import {
 import { TokenTypeName } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
-function parseTimeInterval(str: string, requirePrefix = false) {
+function parseTimeInterval(str: string) {
   const matches = str.match(/(\d+)\s*(months?|m(?:in(?:ute)?s?)?|h(?:(?:ou)?rs?)?|d(?:ays?)?|w(?:(?:ee)?ks?)?|y(?:(?:ea)?rs?)?)/i);
   if (matches && matches[1] && matches[2]) {
     const n = matches[1];
