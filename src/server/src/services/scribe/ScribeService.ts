@@ -1,5 +1,4 @@
 import ms from 'ms';
-import Sentiment from 'sentiment';
 
 import { ReadAndSummarizePayload } from './types';
 import {
@@ -21,6 +20,7 @@ import {
 } from '../../api/v1/schema/models';
 import { SummaryTokenCreationAttributes, TokenTypeName } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
+import { SentimentService } from '../sentiment';
 
 const MIN_TOKEN_COUNT = 50;
 const MAX_OPENAI_TOKEN_COUNT = Number(process.env.MAX_OPENAI_TOKEN_COUNT || 1500);
@@ -318,19 +318,19 @@ export class ScribeService extends BaseService {
         });
       }
       
-      const AFFINSentiment = new Sentiment().analyze(newSummary.summary);
-      const secondSentiment = await SummarySentiment.create({
+      const afinnSentimentScores = SentimentService.sentiment('afinn', loot.content);
+      await SummarySentiment.create({
         method: 'afinn',
         parentId: summary.id,
-        score: AFFINSentiment.comparative,
+        score: afinnSentimentScores.comparative,
       });
       
-      for (const word of AFFINSentiment.words) {
-        await SummarySentimentToken.create({
-          parentId: secondSentiment.id,
-          text: word,
-        });
-      }
+      const vaderSentimentScores = SentimentService.sentiment('vader', loot.content);
+      await SummarySentiment.create({
+        method: 'vader',
+        parentId: summary.id,
+        score: vaderSentimentScores.compound,
+      });
       
       for (const tag of tags) {
         try {

@@ -17,7 +17,10 @@
   },
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["esnext", "dom"],
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "declaration": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -35,6 +38,13 @@
     "resolveJsonModule": true,
     "noUnusedLocals": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts",
+    "src/services/sentiment/vader/lexicon.xs",
+    "src/services/sentiment/vader/lexicon.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
