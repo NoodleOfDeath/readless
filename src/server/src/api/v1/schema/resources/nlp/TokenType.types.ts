@@ -8,7 +8,7 @@ export const TOKEN_TYPE_NAMES = [
   'organization',
   'person',
   'place',
-  'software/app',
+  'software-app',
   'sports-team',
   'video-game',
 ] as const;
