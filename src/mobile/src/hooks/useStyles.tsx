@@ -92,7 +92,7 @@ export function useStyles({
   contained,
   rounded,
   overflow,
-  // selectable,
+  zIndex,
   // other
   style,
 } : Stylable, { onlyInclude }: UseStylesOptions = {}) {
@@ -184,6 +184,7 @@ export function useStyles({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
     attrs.push(position ? position : undefined);
+    attrs.push(zIndex ? zIndex : undefined);
     attrs.push(top ? { top: typeof top === 'number' ? top * scale : top } : undefined);
     attrs.push(left ? { left: typeof left === 'number' ? left * scale : left } : undefined);
     attrs.push(right ? { right: typeof right === 'number' ? right * scale : right } : undefined);
@@ -225,6 +226,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
     attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle, onlyInclude]);
+  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle, zIndex, onlyInclude]);
   return viewStyle;
 }

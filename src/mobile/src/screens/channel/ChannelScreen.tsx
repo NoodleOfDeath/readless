@@ -2,13 +2,14 @@ import React from 'react';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { PublicCategoryAttributes } from '~/api';
 import {
   Button,
   Screen,
   Text,
   View,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext } from '~/contexts';
 import {
   ScreenProps,
   SearchScreen,
@@ -25,22 +26,12 @@ export function ChannelScreen({
       bookmarkedCategories,
       bookmarkedOutlets,
     },
-    setPreference,
+    followOutlet,
+    followCategory,
   } = React.useContext(SessionContext);
 
   const type = React.useMemo(() => route?.params?.type, [route]);
   const attributes = React.useMemo(() => route?.params?.attributes, [route]);
-
-  const preferenceKey = React.useMemo(() => {
-    switch (type) {
-    case 'category':
-      return 'bookmarkedCategories';
-    case 'outlet':
-      return 'bookmarkedOutlets';
-    default:
-      return undefined;
-    }
-  }, [type]);
 
   const bookmarked = React.useMemo(() => {
     if (!attributes) {
@@ -76,7 +67,7 @@ export function ChannelScreen({
         <View row alignCenter elevated height={ 80 } p={ 12 } mh={ 12 }>
           <View>
             <Text h6 capitalize>{attributes?.displayName}</Text>
-            <Text subtitle2 capitalize>{type}</Text>
+            <Text subtitle2>{type === 'category' ? 'Category' : 'News Source'}</Text>
           </View>
           <View row />
           <View>
@@ -85,19 +76,7 @@ export function ChannelScreen({
               body2
               rounded
               p={ 6 }
-              onPress={ () => preferenceKey && setPreference(preferenceKey, (prev) => {
-                if (!attributes) {
-                  return prev;
-                }
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const state = { ...prev } as Record<string, any>;
-                if (state[attributes.name]) {
-                  delete state[attributes.name];
-                } else {
-                  state[attributes.name] = new Bookmark(attributes);
-                }
-                return (prev = state);
-              }) }>
+              onPress={ () => attributes && (type === 'category' ? followCategory(attributes as PublicCategoryAttributes) : followOutlet(attributes)) }>
               { bookmarked ? 'Unfollow Channel' : 'Follow Channel' }
             </Button>
           </View>

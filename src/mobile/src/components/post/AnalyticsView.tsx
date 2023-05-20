@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { BarChart } from 'react-native-chart-kit';
+
 import { PublicSummarySentimentAttributes } from '~/api';
 import {
   CollapsedView,
@@ -11,40 +13,59 @@ import {
   ViewProps,
 } from '~/components';
 import { useStyles } from '~/hooks';
-import { averageOfSentiments } from '~/utils';
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
+  sentiment: number;
   sentiments: PublicSummarySentimentAttributes[];
 };
 
+const chartConfig = {
+  backgroundColor: '#ccc',
+  color: (opacity = 1) => `rgba(255, 255, 146, ${opacity})`,
+};
+
 export function AnalyticsView({
+  sentiment,
   sentiments,
   ...props  
 }: AnalyticsViewProps) {
   
   const style = useStyles(props);
-  
-  const { score: average, tokens } = React.useMemo(() => averageOfSentiments(sentiments), [sentiments]);
 
-  const sentiment = React.useMemo(() => {
-    if (average < -0.2) {
-      if (average < -0.6) {
+  const sentimentLabel = React.useMemo(() => {
+    if (sentiment < -0.2) {
+      if (sentiment < -0.6) {
         return 'Very Negative';
       }
       return 'Negative';
     }
-    if (average > 0.2) {
-      if (average > 0.6) {
+    if (sentiment > 0.2) {
+      if (sentiment > 0.6) {
         return 'Very Positive';
       }
       return 'Positive';
     }
     return 'Neutral';
-  }, [average]);
+  }, [sentiment]);
+  
+  const chartData = React.useMemo(() => {
+    const sets = [...sentiments].sort((a, b) => a.method.localeCompare(b.method));
+    const data = {
+      datasets: [{
+        color: (opacity = 1) => {
+          return `rgba(255, 255, 146, ${opacity})`;
+        },
+        data: sets.map((s) => Number(s.score.toFixed(2))),
+      }],
+      labels: sets.map((s) => s.method),
+    };
+    return data;
+  }, [sentiments]);
   
   return (
     <View style={ style } gap={ 12 }>
       <CollapsedView
+        startCollapsed={ false }
         title={ (
           <View row gap={ 12 }>
             <Text>
@@ -58,60 +79,40 @@ export function AnalyticsView({
             </Menu>
           </View>
         ) }>
-        <View col alignStart gap={ 12 }>
-          <Text
-            rounded
-            bg={ /negative/i.test(sentiment) ? '#ff0000' : /positive/i.test(sentiment) ? '#00cc00' : '#888' }
-            color="white"
-            style={ { overflow: 'hidden' } }
-            p={ 6 }>
-            {`${ sentiment } ${average.toFixed(2)}`}
-          </Text>
-          <View row>
-            <Icon 
-              name="emoticon-sad"
-              color="#ff0000"
-              size={ 36 } />
-            <MeterDial width={ 80 } value={ average } />
-            <Icon 
-              name="emoticon-happy"
-              color="#00cc00"
-              size={ 36 } />
-          </View>
-        </View>
-        <View>
-          {sentiments.sort((a, b) => a.method < b.method ? -1 : a.method > b.method ? 1 : 0).map((s) => (
-            <View key={ s.method } row gap={ 12 }>
-              <Menu
-                autoAnchor={ <Icon name="information" size={ 24 } /> }>
-                <Text>{s.description}</Text>
-              </Menu>
-              <Text>{s.method}</Text>
-              <Text>{s.score.toFixed(2)}</Text>
+        <View gap={ 12 }>
+          <View row alignStart gap={ 12 }>
+            <Text
+              bg={ /negative/i.test(sentimentLabel) ? '#ff0000' : /positive/i.test(sentimentLabel) ? '#00cc00' : '#888' }
+              color="white"
+              style={ { overflow: 'hidden' } }
+              p={ 4 }>
+              {`${ sentimentLabel } ${sentiment.toFixed(2)}`}
+            </Text>
+            <View row>
+              <Icon 
+                name="emoticon-sad"
+                color="#ff0000"
+                size={ 36 } />
+              <MeterDial width={ 80 } value={ sentiment } />
+              <Icon 
+                name="emoticon-happy"
+                color="#00cc00"
+                size={ 36 } />
             </View>
-          ))}
-        </View>
-      </CollapsedView>
-      <CollapsedView
-        title={ (
-          <View row gap={ 12 } alignCenter>
-            <Text>
-              Notable Tokens
-            </Text>
-            <Menu
-              autoAnchor={
-                <Icon size={ 24 } name="information" />
-              }>
-              <Text>Sentiment is typically measured by counting the number of negative and positive words (tokens) in a certain text. This gives the reader an idea of the general tone of an article before even needing to read it.</Text>
-            </Menu>
           </View>
-        ) }>
-        <View col>
-          {tokens.map((key) => (
-            <Text key={ key }>
-              {`• ${key}`}
-            </Text>
-          ))}
+          <View>
+            <View>
+              <BarChart
+                width={ 300 }
+                height={ 200 }
+                data={ chartData }
+                fromZero
+                showValuesOnTopOfBars
+                chartConfig={ chartConfig }
+                yAxisLabel=""
+                yAxisSuffix="" />
+            </View>
+          </View>
         </View>
       </CollapsedView>
     </View>

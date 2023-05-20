@@ -92,6 +92,8 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   declare outlet: PublicOutletAttributes;
   declare category: PublicCategoryAttributes;
   declare subcategory?: PublicCategoryAttributes;
+
+  declare sentiment: number;
   declare sentiments: PublicSummarySentimentAttributes[];
 
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {

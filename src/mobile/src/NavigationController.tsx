@@ -1,8 +1,11 @@
 import React from 'react';
-import { Linking } from 'react-native';
+import { Linking, useColorScheme } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
+  CommonActions,
+  DarkTheme,
+  DefaultTheme,
   EventMapBase,
   NavigationContainer,
   NavigationState,
@@ -12,6 +15,7 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import { BottomNavigation, adaptNavigationTheme } from 'react-native-paper';
 import { Badge } from 'react-native-paper';
 
 import {
@@ -26,7 +30,7 @@ import {
   MediaPlayer,
   View,
 } from '~/components';
-import { useNavigation, useTheme } from '~/hooks';
+import { useNavigation } from '~/hooks';
 import {
   BrowseScreen,
   ChannelScreen,
@@ -74,7 +78,7 @@ export function TabViewController<T extends TabParams = TabParams>(
               key={ String(tab.name) }
               { ...tab }
               options={ { 
-                headerShown: true,
+                headerShown: false,
                 ...tab.options,
               } } />
           ))}
@@ -167,21 +171,53 @@ const TABS: TabProps[] = [
 ];
 
 export default function NavigationController() {
-  const theme = useTheme();
+  const colorScheme = useColorScheme();
+  const theme = React.useMemo(() => colorScheme === 'dark' ? adaptNavigationTheme({ reactNavigationDark: DarkTheme }).DarkTheme : adaptNavigationTheme({ reactNavigationLight: DefaultTheme }).LightTheme, [colorScheme]);
   const Tab = createBottomTabNavigator();
   const { ready, preferences } = React.useContext(SessionContext);
   return (
     <NavigationContainer
-      theme={ { 
-        colors: theme.navContainerColors,
-        dark: !theme.isLightMode,
-      } }
+      theme={ theme }
       fallback={ <ActivityIndicator animating /> }
       linking={ NAVIGATION_LINKING_OPTIONS }>
       {!ready ? (
         <ActivityIndicator animating />
       ) : (
-        <Tab.Navigator>
+        <Tab.Navigator
+          tabBar={ ({
+            navigation, state, descriptors, insets, 
+          }) => (
+            <BottomNavigation.Bar
+              navigationState={ state }
+              safeAreaInsets={ insets }
+              onTabPress={ ({ route, preventDefault }) => {
+                const event = navigation.emit({
+                  canPreventDefault: true,
+                  target: route.key,
+                  type: 'tabPress',
+                });
+                if (event.defaultPrevented) {
+                  preventDefault();
+                } else {
+                  navigation.dispatch({
+                    ...CommonActions.navigate(route.name, route.params),
+                    target: state.key,
+                  });
+                }
+              } }
+              renderIcon={ ({
+                route, focused, color, 
+              }) => {
+                const { options } = descriptors[route.key];
+                if (options.tabBarIcon) {
+                  return options.tabBarIcon({
+                    color, focused, size: 24, 
+                  });
+                }
+                return null;
+              } }
+              getLabelText={ ({ route }) => route.name } />
+          ) }>
           {TABS.filter((tab) => !tab.disabled).map((tab) => (
             <Tab.Screen
               key={ tab.name }

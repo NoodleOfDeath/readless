@@ -2,14 +2,14 @@ import React from 'react';
 import {
   Animated,
   DeviceEventEmitter,
+  Dimensions,
+  Keyboard,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
 
-import { Badge } from 'react-native-paper';
-
-import { DisplaySettingsMenu } from './DisplaySettingsMenu';
 import { SearchMenu } from './SearchMenu';
+import { SpeedDial } from './SpeedDial';
 
 import {
   InteractionType,
@@ -34,7 +34,6 @@ import {
 } from '~/contexts';
 import {
   useLayout,
-  useNavigation,
   useSummaryClient,
   useTheme,
 } from '~/hooks';
@@ -49,9 +48,7 @@ export function SearchScreen({
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
-      bookmarkedSummaries,
       preferredReadingFormat,
-      readSummaries,
       removedSummaries,
       sortOrder,
     },
@@ -62,7 +59,6 @@ export function SearchScreen({
   } = React.useContext(MediaContext);
   const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
-  const { search, router } = useNavigation();
   const { supportsMasterDetail } = useLayout();
   const theme = useTheme();
   
@@ -89,8 +85,7 @@ export function SearchScreen({
   const [resizing, setResizing] = React.useState(false);
 
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
-  
-  const bookmarkCount = React.useMemo(() => Object.keys(bookmarkedSummaries ?? {}).filter((summary) => !(summary in (readSummaries ?? {}))).length ?? 0, [bookmarkedSummaries, readSummaries]);
+  const [speedDialOpen, setSpeedDialOpen] = React.useState(false);
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
@@ -114,7 +109,7 @@ export function SearchScreen({
   
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
-  const handlePlayAll = React.useCallback(async () => {
+  const _handlePlayAll = React.useCallback(async () => {
     if (summaries.length < 1) {
       return;
     }
@@ -184,59 +179,20 @@ export function SearchScreen({
     }
   }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder]);
   
-  const headerLeft = React.useMemo(() => {
-    return (
-      <SearchMenu 
-        initialValue={ prefilter }
-        onChangeText={ (text) => setSearchText(text) }
-        onSubmit={ (value) => search({ onlyCustomNews, prefilter: value }) } />
-    );
-  }, [prefilter, search, onlyCustomNews]);
-  
   React.useEffect(() => {
     if (prefilter) {
       setSearchText(prefilter + ' ');
       navigation?.setOptions({ 
         headerBackVisible: true,
-        headerLeft: () => headerLeft,
-        headerRight: () => (
-          <View>
-            <View row gap={ 12 } alignCenter>
-              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
-              <DisplaySettingsMenu />
-            </View>
-          </View>
-        ),
-        headerTitle: '',
+        headerShown: true,
+        headerTitle: prefilter,
       });
       setKeywords(parseKeywords(prefilter));
     } else {
       setSearchText('');
-      navigation?.setOptions({
-        headerBackTitleVisible: false,
-        headerBackVisible: true,
-        headerLeft: () => !route?.params?.noHeader && headerLeft,
-        headerRight: () => !route?.params?.noHeader && (
-          <View>
-            <View row gap={ 12 } alignCenter>
-              <View onPress={ () => navigation?.push('bookmarks') }>
-                {bookmarkCount > 0 && (
-                  <Badge style={ {
-                    position: 'absolute', right: -5, top: -5, zIndex: 1,
-                  } }>
-                    {bookmarkCount}
-                  </Badge>
-                )}
-                <Button startIcon="bookmark-outline" iconSize={ 24 } />
-              </View>
-              <Button startIcon="volume-high" iconSize={ 24 } onPress={ handlePlayAll } />
-              <DisplaySettingsMenu />
-            </View>
-          </View>
-        ),
-      });
+      navigation?.setOptions({ headerShown: false });
     }
-  }, [navigation, route, router, headerLeft, handlePlayAll, prefilter, bookmarkCount, onlyCustomNews]);
+  }, [navigation, route, prefilter]);
   
   const onMount = React.useCallback(() => {
     if (!ready) {
@@ -374,7 +330,9 @@ export function SearchScreen({
   
   React.useEffect(() => {
     const subscriber = DeviceEventEmitter.addListener('load-more', loadMore);
-    return () => subscriber.remove();
+    return () => { 
+      subscriber.remove();
+    };
   }, [loadMore]);
 
   return (
@@ -493,6 +451,7 @@ export function SearchScreen({
           </View>
         </View>
       </View>
+      <SearchMenu initialValue={ prefilter ?? searchText } />
     </Screen>
   );
 }

@@ -1,9 +1,12 @@
 import React from 'react';
 
-import { ReadingFormat } from '~/api';
-import { TabSwitcher } from '~/components';
+import { SegmentedButtons } from 'react-native-paper';
 
-type Props = {
+import { ReadingFormat } from '~/api';
+import { ViewProps } from '~/components';
+import { useStyles } from '~/hooks';
+
+type Props = ViewProps & {
   format?: ReadingFormat;
   preferredFormat?: ReadingFormat;
   onChange?: (mode?: ReadingFormat) => void;
@@ -13,21 +16,25 @@ export function ReadingFormatSelector({
   format,
   preferredFormat = ReadingFormat.Summary, 
   onChange,
+  ...props
 }: Props = {}) {
-  const [activeTab, setActiveTab] = React.useState((format ?? preferredFormat) === ReadingFormat.Bullets ? 1 : 0);
-  
-  const handleTabChange = React.useCallback((index: number) => {
-    setActiveTab(index);
-    if (onChange) {
-      onChange(index === 0 ? ReadingFormat.Summary : ReadingFormat.Bullets);
-    }
-  }, [onChange]);
-
+  const style = useStyles(props);
   return (
-    <TabSwitcher 
-      rounded
-      activeTab={ activeTab }
-      onTabChange={ handleTabChange }
-      titles={ ['Summary', 'Bullets'] } />
+    <SegmentedButtons 
+      style={ style }
+      value={ format ?? preferredFormat }
+      onValueChange={ (value) => onChange?.(value as ReadingFormat) }
+      buttons={ [
+        {
+          icon: 'text-long',
+          label: 'Summary',
+          value: 'summary',
+        },
+        {
+          icon: 'view-list',
+          label: 'Bullets',
+          value: 'bullets',
+        },
+      ] } />
   );
 }

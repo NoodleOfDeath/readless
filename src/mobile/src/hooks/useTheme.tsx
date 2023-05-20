@@ -48,11 +48,6 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           marginBottom: 3,
           marginTop: 3,
         },
-        fab: {
-          bottom: 96,
-          position: 'absolute',
-          right: 32,
-        },
         flexCol: {
           flex: 1,
           flexDirection: 'column',
@@ -62,11 +57,11 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           flex: 1,
           flexDirection: 'row',
           flexGrow: 1,
-        }, 
+        },
         input: { 
           backgroundColor: lightMode ? '#ddd' : '#111',
           color: lightMode ? '#000' : '#fff',
-        },
+        }, 
         menu: {
           backgroundColor: lightMode ? '#fefefe' : '#010101',
           borderColor: '#888',
@@ -87,6 +82,14 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           overflow: 'visible',
           padding: 0,
           width: '100%',
+        },
+        speedDialButton: {
+          backgroundColor: lightMode ? '#eee' : '#2a2a2a',
+          bottom: 32,
+          padding: 12,
+          position: 'absolute',
+          right: 32,
+          zIndex: 300,
         },
         surface: {
           backgroundColor: lightMode ? '#fff' : '#000',
