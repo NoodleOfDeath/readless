@@ -27,22 +27,23 @@ export function parseDate(context?: string) {
   let day = String(new Date().getDate());
   let hour = 0, min = 0, sec = 0, amOrPm = '';
   let timezone = '';
-  if (dateMatches) {
-    const [_0, relative, month1, _3, day1, year1, year2, _7, month2, day2, day3, month3, day4, year3, tz = '', timestamp] = dateMatches;
-    if (relative) {
-      return new Date(Date.now() - ms(relative.replace(/h(?:ou)?rs?/, 'h').replace(/m(?:in)?s?/, 'm')));
-    }
-    const datetime = parseInt(timestamp);
-    if (!Number.isNaN(datetime)) {
-      if (!Number.isNaN(new Date(datetime)).valueOf()) {
-        return new Date(datetime);
-      }
-    }
-    timezone = tz;
-    year = year1 ?? year2 ?? year3 ?? String(new Date().getFullYear());
-    month = monthToString(month1 ?? month2 ?? month3 ?? new Date().getMonth() + 1);
-    day = day1 ?? day2 ?? day3 ?? day4 ?? String(new Date().getDate());
+  if (!dateMatches) {
+    return new Date('invalid');
   }
+  const [_0, relative, month1, _3, day1, year1, year2, _7, month2, day2, day3, month3, day4, year3, tz = '', timestamp] = dateMatches;
+  if (relative) {
+    return new Date(Date.now() - ms(relative.replace(/h(?:ou)?rs?/, 'h').replace(/m(?:in)?s?/, 'm')));
+  }
+  const datetime = parseInt(timestamp);
+  if (!Number.isNaN(datetime)) {
+    if (!Number.isNaN(new Date(datetime)).valueOf()) {
+      return new Date(datetime);
+    }
+  }
+  timezone = tz;
+  year = year1 ?? year2 ?? year3 ?? String(new Date().getFullYear());
+  month = monthToString(month1 ?? month2 ?? month3 ?? new Date().getMonth() + 1);
+  day = day1 ?? day2 ?? day3 ?? day4 ?? String(new Date().getDate());
   if (timeMatches) {
     const [_0, hour1, amOrPm1, hour2, min1, sec1, amOrPm2, timezone2] = timeMatches;
     hour = !Number.isNaN(parseInt(hour1 ?? hour2)) ? parseInt(hour1 ?? hour2) : 0;
