@@ -13,6 +13,7 @@ on:
       - "src/server/package.json"
       - "src/server/src/worker/**"
       - "src/server/src/services/**"
+      - "src/server/src/utils/**"
       - "src/server/src/api/v1/schema/**"
 
 concurrency:
