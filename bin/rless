@@ -2,8 +2,8 @@
 
 THIS=$(basename $0)
 
-if [[ -z "$READ_LESS_ROOT" ]]; then
-  echo "READ_LESS_ROOT is not set"
+if [[ -z "$READLESS_HOME" ]]; then
+  echo "READLESS_HOME is not set"
   exit 1
 fi
 
@@ -87,4 +87,4 @@ if [[ "$LOCAL" == "1" ]]; then
   MODULE="$MODULE-local"
 fi
 
-(cd $READ_LESS_ROOT && docker compose --env-file $ENV up $MODULE ${POSTOPTS[@]} ${ARGS[@]})
+(cd $READLESS_HOME && docker compose --env-file $ENV up $MODULE ${POSTOPTS[@]} ${ARGS[@]})
