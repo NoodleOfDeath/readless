@@ -6,6 +6,7 @@ import {
 } from '../Post.types';
 import { PublicCategoryAttributes } from '../channel/Category.types';
 import { PublicOutletAttributes } from '../channel/Outlet.types';
+import { Translatable } from '../localization/Translation.types';
 import { Sentimental } from '../sentiment/Sentiment.types';
 
 export const READING_FORMATS = {
@@ -15,7 +16,7 @@ export const READING_FORMATS = {
 
 export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS];
 
-export type SummaryAttributes = PostAttributes & Sentimental & {
+export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
   outletId: number;
   outlet: PublicOutletAttributes;
   categoryId: number;
@@ -31,7 +32,7 @@ export type SummaryAttributes = PostAttributes & Sentimental & {
   shortSummary: string;
   bullets: string[];
   formats: ReadingFormat[];
-  sentiments: PublicSummarySentimentAttributes[];
+  sentiments?: PublicSummarySentimentAttributes[];
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {

@@ -164,7 +164,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         ids: ids.length === 0 ? [-1] : ids,
         interval: pastInterval ?? interval,
         limit: Number(pageSize),
-        locale,
+        locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
         noCategories,
         noIds,
         noOutlets,

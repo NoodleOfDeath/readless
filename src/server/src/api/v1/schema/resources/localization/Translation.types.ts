@@ -21,3 +21,7 @@ export type PublicTranslationAttributes = {
   attribute: string;
   value: string;
 };
+
+export type Translatable = {
+  translations?: PublicTranslationAttributes[];
+};

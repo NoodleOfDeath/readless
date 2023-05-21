@@ -96,7 +96,7 @@ export class Outlet<
   })
   declare timezone: string;
 
-  declare sentiment: number;
+  declare sentiment?: number;
   
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');
