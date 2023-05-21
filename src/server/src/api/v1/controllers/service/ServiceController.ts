@@ -58,9 +58,8 @@ export class ServiceController {
     @Body() req: LocalizeRequest
   ): Promise<BulkResponse<PublicSummaryTranslationAttributes>> {
     const {
-      resourceId, resourceType, locale: unparsedLocale, 
+      resourceId, resourceType, locale, 
     } = req;
-    const locale = unparsedLocale.replace(/-[A-Z]{2}$/, '');
     const languages = (await GoogleService.getLanguages()).map((language) => language.code);
     if (!languages.includes(locale)) {
       throw new InternalError('Invalid locale');

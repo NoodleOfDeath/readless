@@ -23,6 +23,7 @@ import {
   Preferences,
   SessionContext,
 } from './contexts';
+import { locales } from './locales';
 
 import {
   ActivityIndicator,
@@ -78,7 +79,7 @@ export function TabViewController<T extends TabParams = TabParams>(
               key={ String(tab.name) }
               { ...tab }
               options={ { 
-                headerShown: false,
+                headerShown: true,
                 ...tab.options,
               } } />
           ))}
@@ -106,20 +107,20 @@ const TABS: TabProps[] = [
           component: SearchScreen, 
           initialParams: { sampler: true },
           name:'default', 
-          options: { headerTitle: 'Headlines' },
+          options: { headerTitle: locales.headlines },
         }, 
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
         { component: ChannelScreen, name: 'channel' },
         { component: MyStuffScreen, name: 'bookmarks' },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: 'Browse' },
+          component: BrowseScreen, name: 'browse', options: { headerTitle: locales.browse },
         },
       ],
       'default'
     ),
     icon: 'newspaper',
-    name: 'Headlines',
+    name: locales.headlines,
   },
   {
     component: TabViewController<StackableTabParams>(
@@ -128,7 +129,7 @@ const TABS: TabProps[] = [
           component: SearchScreen, 
           initialParams: { onlyCustomNews: true }, 
           name:'default', 
-          options: { headerTitle: 'My News' },
+          options: { headerTitle: locales.myNews },
         },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
@@ -137,13 +138,13 @@ const TABS: TabProps[] = [
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
         },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: 'Browse' },
+          component: BrowseScreen, name: 'browse', options: { headerTitle: locales.browse },
         },
       ],
       'default'
     ),
     icon: 'cards',
-    name: 'My News',
+    name: locales.myNews,
   },
   {
     component: TabViewController<StackableTabParams>(
@@ -151,7 +152,7 @@ const TABS: TabProps[] = [
         {
           component: BrowseScreen, 
           name:'default', 
-          options: { headerTitle: 'Browse' },
+          options: { headerTitle: locales.headlines },
         },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
@@ -160,13 +161,13 @@ const TABS: TabProps[] = [
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
         },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: 'Browse' },
+          component: BrowseScreen, name: 'browse', options: { headerTitle: locales.headlines },
         },
       ],
       'default'
     ),
     icon: 'bookshelf',
-    name: 'Browse',
+    name: locales.browse,
   },
 ];
 

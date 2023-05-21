@@ -86,8 +86,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
             swipeable={ false }
             summary={ currentTrack.summary }
             onFormatChange={ (format) => handleFormatChange(currentTrack.summary, format) }
-            onInteract={ (...args) => handleInteraction(currentTrack.summary, ...args) }
-            onReferSearch={ handleReferSearch } />
+            onInteract={ (...args) => handleInteraction(currentTrack.summary, ...args) } />
         )}
       </ScrollView>
     </Banner>

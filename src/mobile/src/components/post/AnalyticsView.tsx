@@ -13,6 +13,7 @@ import {
   ViewProps,
 } from '~/components';
 import { useStyles } from '~/hooks';
+import { fixedSentiment } from '~/utils';
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
   sentiment: number;
@@ -86,19 +87,9 @@ export function AnalyticsView({
               color="white"
               style={ { overflow: 'hidden' } }
               p={ 4 }>
-              {`${ sentimentLabel } ${sentiment.toFixed(2)}`}
+              {`${ sentimentLabel } ${fixedSentiment(sentiment)}`}
             </Text>
-            <View row>
-              <Icon 
-                name="emoticon-sad"
-                color="#ff0000"
-                size={ 36 } />
-              <MeterDial width={ 80 } value={ sentiment } />
-              <Icon 
-                name="emoticon-happy"
-                color="#00cc00"
-                size={ 36 } />
-            </View>
+            <MeterDial width={ 80 } value={ sentiment } />
           </View>
           <View>
             <View>

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { formatDistance } from 'date-fns';
+import ms from 'ms';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { State } from 'react-native-track-player';
 import ViewShot from 'react-native-view-shot';
@@ -8,9 +9,11 @@ import ViewShot from 'react-native-view-shot';
 import { 
   InteractionType,
   PublicSummaryAttributes,
+  PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
 import {
+  ActivityIndicator,
   AnalyticsView,
   Button,
   CollapsedView,
@@ -33,13 +36,20 @@ import {
 import {
   useInAppBrowser,
   useNavigation,
+  useServiceClient,
   useShare,
   useTheme,
 } from '~/hooks';
+import {
+  getFnsLocale,
+  getLocale,
+  locales,
+} from '~/locales';
+import { fixedSentiment } from '~/utils';
 
 type Props = {
-  summary?: PublicSummaryAttributes;
-  tickIntervalMs?: number;
+  summary: PublicSummaryAttributes;
+  tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
   keywords?: string[];
@@ -85,36 +95,9 @@ function RenderActions({ actions }: RenderActionsProps) {
   );
 }
 
-const MOCK_SUMMARY: PublicSummaryAttributes = {
-  bullets: ['• this is a bullet', '• this is another bullet'],
-  category: {
-    displayName: 'Category', icon: 'popcorn', name: '', sentiment: 0.1,
-  },
-  categoryId: -1,
-  formats: [],
-  id: 1,
-  imageUrl: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/s/01084930-e927-11ed-a438-a9ea5ed3eb49.jpg',
-  originalTitle: '',
-  outlet: {
-    displayName: 'News Source', name: '', sentiment: 0.1,
-  },
-  outletId: -1,
-  sentiment: 0.1,
-  sentiments: [
-    {
-      description: '', method: 'chatgpt', score: 0.1, tokens: [], 
-    },
-  ],
-  shortSummary: 'This is a short 30-40 word summary that can appear under titles if you set it to show in the settings (this will appear instead of titles when in headline mode)',
-  summary: 'This is a 100-120 word summary that will only appear if you open the summary.',
-  text: '',
-  title: 'This is an example summary title',
-  url: 'https://www.readless.ai',
-};
-
 export function Summary({
-  summary = MOCK_SUMMARY,
-  tickIntervalMs = 60_000,
+  summary,
+  tickInterval = '2m',
   selected,
   initialFormat,
   keywords = [],
@@ -128,6 +111,7 @@ export function Summary({
   const { openURL } = useInAppBrowser();
   const { openOutlet, openCategory } = useNavigation();
   const { copyToClipboard } = useShare({ onInteract });
+  const { localizeSummary } = useServiceClient();
 
   const theme = useTheme();
 
@@ -154,6 +138,8 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
+  const [translations, setTranslations] = React.useState<Record<string, PublicSummaryTranslationAttributes>>(Object.fromEntries((summary.translations ?? []).map((t) => [t.attribute, t])));
+  const [isLocalizing, setIsLocalizing] = React.useState(false);
 
   const isRead = React.useMemo(() => !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
@@ -164,12 +150,7 @@ export function Summary({
     if (new Date(summary.originalDate ?? 0) > lastTick) {
       return 'just now';
     }
-    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true })
-      .replace(/about /, '')
-      .replace(/less than a minute ago/, 'just now')
-      .replace(/ minutes?/, 'm')
-      .replace(/ hours?/, 'h')
-      .replace(/ days?/, 'd');
+    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true, locale: getFnsLocale() });
     return originalTime;
   }, [summary.originalDate, lastTick]);
   
@@ -177,20 +158,20 @@ export function Summary({
     if (!format) {
       return;
     }
-    let content = summary.summary;
+    let content = translations?.summary?.value ?? summary.summary;
     if (format === 'bullets') {
-      content = summary.bullets.join('\n');
+      content = translations?.bullets?.value ?? summary.bullets.join('\n');
     }
     return content;
-  }, [format, summary]);
+  }, [format, summary.bullets, summary.summary, translations?.bullets, translations?.summary]);
 
   // update time ago every `tickIntervalMs` milliseconds
-  // React.useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setLastTick(new Date());
-  //   }, tickIntervalMs);
-  //   return () => clearInterval(interval);
-  // }, [tickIntervalMs]);
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setLastTick(new Date());
+    }, ms(tickInterval));
+    return () => clearInterval(interval);
+  }, [tickInterval]);
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     onFormatChange?.(newFormat);
@@ -205,6 +186,18 @@ export function Summary({
     }
     setFormat(newFormat);
   }, [initialFormat, onFormatChange, setPreference, summary]);
+
+  const handleLocalizeSummary = React.useCallback(async () => {
+    setIsLocalizing(true);
+    const { data: localizedSummaries, error } = await localizeSummary(summary, locales.getInterfaceLanguage());
+    if (!localizedSummaries || error) {
+      console.log(error);
+      setIsLocalizing(false);
+      return;
+    }
+    setTranslations(Object.fromEntries(localizedSummaries.rows.map((row) => [row.attribute, row])));
+    setIsLocalizing(false);
+  }, [localizeSummary, summary]);
   
   const handlePlayAudio = React.useCallback(async () => {
     if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
@@ -299,6 +292,7 @@ export function Summary({
                               {summary.outlet.displayName}
                             </Text>
                             <View row />
+                            <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
                             <MeterDial 
                               value={ summary.sentiment }
                               width={ 40 } />
@@ -311,33 +305,60 @@ export function Summary({
                                 justifyCenter
                                 width={ '20%' }>
                                 <Menu
+                                  width={ 300 }
                                   autoAnchor={ (
+                                    <View>
+                                      <Image
+                                        source={ { uri: summary.imageUrl } }  
+                                        rounded
+                                        aspectRatio={ 1 } />
+                                    </View>
+                                  ) }>
+                                  <View gap={ 12 }>
+                                    <Text caption>{locales.thisIsNotARealImage}</Text>
                                     <Image
                                       source={ { uri: summary.imageUrl } }  
                                       rounded
                                       aspectRatio={ 1 } />
-                                  ) }>
-                                  <Text>This image was generated using AI and is not a real photo of a real event, place, thing, or person.</Text>
+                                  </View>
                                 </Menu>
                               </View>
                             )}
-                            <View row alignCenter>
-                              {showShareDialog || keywords.length === 0 ? (
-                                <Text 
-                                  bold
-                                  justifyCenter
-                                  subtitle1
-                                  color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
-                                  {(compact || compactMode && showShortSummary) ? summary.shortSummary : summary.title}
-                                </Text>
-                              ) : (
-                                <Highlighter
-                                  bold
-                                  subtitle1
-                                  justifyCenter
-                                  highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                  searchWords={ keywords }
-                                  textToHighlight={ summary.title } />
+                            <View col gap={ 6 }>
+                              <View row alignCenter>
+                                {showShareDialog || keywords.length === 0 ? (
+                                  <Text 
+                                    bold
+                                    justifyCenter
+                                    subtitle1
+                                    color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                                    {(compact || compactMode && showShortSummary) ? (translations?.shortSummary?.value ?? summary.shortSummary) : (translations?.title?.value ?? summary.title )}
+                                  </Text>
+                                ) : (
+                                  <Highlighter
+                                    bold
+                                    subtitle1
+                                    justifyCenter
+                                    highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                                    searchWords={ keywords }
+                                    textToHighlight={ (translations?.title?.value ?? summary.title ) } />
+                                )}
+                              </View>
+                              {getLocale() !== 'en' && Object.values(translations).length === 0 && (
+                                !isLocalizing ? (
+                                  <Text
+                                    caption 
+                                    bold
+                                    underline
+                                    onPress={ () => handleLocalizeSummary() }>
+                                    {locales.translate}
+                                  </Text>
+                                )
+                                  : (
+                                    <View row>
+                                      <ActivityIndicator animating />
+                                    </View>
+                                  )
                               )}
                             </View>
                           </View>
@@ -348,11 +369,11 @@ export function Summary({
                   {!(compact || compactMode) && showShortSummary === true && (
                     <View row>
                       <Divider />
-                      {(showShareDialog || keywords.length === 0) ? <Text>{summary.shortSummary}</Text> : (
+                      {(showShareDialog || keywords.length === 0) ? <Text>{translations?.shortSummary?.value ?? summary.shortSummary}</Text> : (
                         <Highlighter 
                           highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                           searchWords={ keywords }
-                          textToHighlight={ summary.shortSummary ?? '' } />
+                          textToHighlight={ translations?.shortSummary?.value ?? summary.shortSummary ?? '' } />
                       )}
                     </View>
                   )}
@@ -372,7 +393,7 @@ export function Summary({
                               bold 
                               caption
                               color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
-                              {`${timeAgo} from`}
+                              {timeAgo}
                             </Text>
                           </View>
                           <Text 
@@ -452,12 +473,10 @@ export function Summary({
                   )}
                 </CollapsedView>
               )}
-              {initialFormat && summary.sentiments && (
-                <CollapsedView startCollapsed={ false } title={ 'Analytics' }>
-                  <AnalyticsView
-                    sentiment={ summary.sentiment }
-                    sentiments={ Object.values(summary.sentiments) } />
-                </CollapsedView>
+              {initialFormat && summary.sentiment && (
+                <AnalyticsView
+                  sentiment={ summary.sentiment }
+                  sentiments={ Object.values(summary.sentiments ?? []) } />
               )}
             </View>
           </View>

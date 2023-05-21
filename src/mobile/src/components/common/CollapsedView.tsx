@@ -48,8 +48,9 @@ export function CollapsedView({
         toValue: collapsed ? 0 : 1,
         useNativeDriver: true,
       }),
-    ]).start();
-    collapsed ? onCollapse?.() : onExpand?.();
+    ]).start(() => { 
+      collapsed ? onCollapse?.() : onExpand?.();
+    });
   }, [animation, collapsed, onCollapse, onExpand]);
 
   return (
