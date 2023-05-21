@@ -31,11 +31,11 @@ router.get(
   async (req, res) => {
     try {
       const {
-        scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order, matchType, interval, locale,
+        scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, matchType, interval, locale,
       } = req.query;
       const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
       const excludeIds = exclude === 'false' || exclude === 0 || exclude === 'undefined' ? false : exclude;
-      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, matchType, interval, locale, pageSize, page, offset, order);
+      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, matchType, interval, locale, pageSize, page, offset);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);

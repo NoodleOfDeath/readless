@@ -144,8 +144,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() locale = '',
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page,
-    @Query() _order: string[] = ['originalDate:desc', 'createdAt:desc']
+    @Query() offset = pageSize * page
   ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>> {
     const { 
       categories, 
