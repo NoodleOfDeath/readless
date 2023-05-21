@@ -28,15 +28,15 @@ export class Category<
       await this.upsert(category);
     }
   }
-  
+
   @AfterFind
-  public static async legacy(cursor: Category | Category[]) {
+  static async legacySupport(cursor: Category | Category[]) {
     if (!cursor) {
       return;
     }
     const categories = Array.isArray(cursor) ? cursor : [cursor];
     for (const category of categories) {
-      category.set('averageSentiment', category.toJSON().sentiment, { raw: true });
+      category.set('sentiment', 0, { raw: true });
     }
   }
   
@@ -60,7 +60,5 @@ export class Category<
   declare icon: string;
 
   declare sentiment: number;
-  // @Deprecated
-  declare averageSentiment: number;
   
 }

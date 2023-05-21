@@ -36,16 +36,16 @@ export class Outlet<
     for (const outlet of Object.values(OUTLETS)) {
       await this.upsert(outlet);
     }
-  }  
-  
+  } 
+
   @AfterFind
-  public static async legacy(cursor: Outlet | Outlet[]) {
+  static async legacySupport(cursor: Outlet | Outlet[]) {
     if (!cursor) {
       return;
     }
     const outlets = Array.isArray(cursor) ? cursor : [cursor];
     for (const outlet of outlets) {
-      outlet.set('averageSentiment', outlet.toJSON().sentiment, { raw: true });
+      outlet.set('sentiment', 0, { raw: true });
     }
   }
 
@@ -98,9 +98,6 @@ export class Outlet<
 
   declare sentiment: number;
   
-  // @Deprecated
-  declare averageSentiment: number;
-
   async getRateLimit(namespace = 'default') {
     const key = ['//outlet', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });

@@ -21,7 +21,7 @@ import { InteractionType } from '../interaction/Interaction.types';
   paranoid: true,
   timestamps: true,
 })
-export class Summary extends Post<SummaryInteraction, SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
+export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> implements SummaryAttributes {
   
   @Column({
     allowNull: false,
@@ -92,6 +92,8 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
   declare outlet: PublicOutletAttributes;
   declare category: PublicCategoryAttributes;
   declare subcategory?: PublicCategoryAttributes;
+
+  declare sentiment: number;
   declare sentiments: PublicSummarySentimentAttributes[];
 
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
@@ -105,13 +107,6 @@ export class Summary extends Post<SummaryInteraction, SummaryAttributes, Summary
       return await SummaryInteraction.findAll({ where: { targetId: this.id, userId } });
     }
     return await SummaryInteraction.findAll({ where: { targetId: this.id } });
-  }
-  
-  async addUserInteractions(userId: number) {
-    const uservotes = await this.getInteractions(userId, ['downvote', 'upvote']);
-    const interactions = this.interactions;
-    interactions.uservote = uservotes.some((v) => v.type === 'downvote') ? 'down' : uservotes.some((v) => v.type === 'upvote') ? 'up' : undefined;
-    this.set('interactions', interactions, { raw: true });
   }
 
 }

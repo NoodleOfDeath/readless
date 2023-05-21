@@ -36,7 +36,6 @@ import {
   useShare,
   useTheme,
 } from '~/hooks';
-import { averageOfSentiments } from '~/utils';
 
 type Props = {
   summary?: PublicSummaryAttributes;
@@ -89,7 +88,7 @@ function RenderActions({ actions }: RenderActionsProps) {
 const MOCK_SUMMARY: PublicSummaryAttributes = {
   bullets: ['• this is a bullet', '• this is another bullet'],
   category: {
-    averageSentiment: 0.1, displayName: 'Category', icon: 'popcorn', name: '', sentiment: 0.1,
+    displayName: 'Category', icon: 'popcorn', name: '', sentiment: 0.1,
   },
   categoryId: -1,
   formats: [],
@@ -97,14 +96,13 @@ const MOCK_SUMMARY: PublicSummaryAttributes = {
   imageUrl: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/s/01084930-e927-11ed-a438-a9ea5ed3eb49.jpg',
   originalTitle: '',
   outlet: {
-    averageSentiment: 0.1, displayName: 'News Source', name: '', sentiment: 0.1,
+    displayName: 'News Source', name: '', sentiment: 0.1,
   },
   outletId: -1,
+  sentiment: 0.1,
   sentiments: [
     {
-      id: 0, method: 'chatgpt', parentId: 0, score: 0.1, tokens: [{
-        id:0, parentId:0, text: 'token', 
-      }],
+      description: '', method: 'chatgpt', score: 0.1, tokens: [], 
     },
   ],
   shortSummary: 'This is a short 30-40 word summary that can appear under titles if you set it to show in the settings (this will appear instead of titles when in headline mode)',
@@ -138,7 +136,7 @@ export function Summary({
       compactMode,
       showShortSummary,
       preferredReadingFormat, 
-      bookmarkedSummaries, 
+      bookmarkedSummaries,
       readSummaries,
       readSources,
     }, setPreference, 
@@ -187,12 +185,12 @@ export function Summary({
   }, [format, summary]);
 
   // update time ago every `tickIntervalMs` milliseconds
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setLastTick(new Date());
-    }, tickIntervalMs);
-    return () => clearInterval(interval);
-  }, [tickIntervalMs]);
+  // React.useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setLastTick(new Date());
+  //   }, tickIntervalMs);
+  //   return () => clearInterval(interval);
+  // }, [tickIntervalMs]);
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     onFormatChange?.(newFormat);
@@ -274,8 +272,8 @@ export function Summary({
         renderRightActions={ renderRightActions }>
         <ViewShot ref={ viewshot }>
           <View 
-            elevated 
-            style={ theme.components.card } 
+            elevated
+            style={ theme.components.card }
             inactive={ isRead } 
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
             <View col gap={ 12 }>
@@ -302,7 +300,7 @@ export function Summary({
                             </Text>
                             <View row />
                             <MeterDial 
-                              value={ averageOfSentiments(summary.sentiments)?.score ?? 0 }
+                              value={ summary.sentiment }
                               width={ 40 } />
                           </View>
                         </View>
@@ -456,7 +454,9 @@ export function Summary({
               )}
               {initialFormat && summary.sentiments && (
                 <CollapsedView startCollapsed={ false } title={ 'Analytics' }>
-                  <AnalyticsView sentiments={ Object.values(summary.sentiments) } />
+                  <AnalyticsView
+                    sentiment={ summary.sentiment }
+                    sentiments={ Object.values(summary.sentiments) } />
                 </CollapsedView>
               )}
             </View>

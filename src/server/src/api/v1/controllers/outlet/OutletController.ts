@@ -7,10 +7,10 @@ import {
   SuccessResponse,
   Tags,
 } from 'tsoa';
-  
+ 
+import { BulkResponse } from '../';
 import { AuthError, InternalError } from '../../middleware';
 import {
-  BulkResponse,
   FindAndCountOptions,
   Outlet,
   PublicOutletAttributes,
@@ -32,11 +32,8 @@ export class OutletController {
     @Query() filter?: string
   ): Promise<BulkResponse<PublicOutletAttributes>> {
     const options: FindAndCountOptions<Outlet> = { order: [['displayName', 'ASC']] };
-    const outlets = await Outlet.scope('public').findAll(options);
-    return {
-      count: outlets.length,
-      rows: outlets,
-    };
+    const outlets = await Outlet.scope('public').findAndCountAll(options);
+    return outlets;
   }
   
 }

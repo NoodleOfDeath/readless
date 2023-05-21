@@ -1,10 +1,9 @@
-import sql from 'sequelize';
-
 import {
   Alias,
   Category,
   Credential,
   Job,
+  Message,
   Outlet,
   Queue,
   RefUserRole,
@@ -17,6 +16,7 @@ import {
   SummarySentiment,
   SummarySentimentToken,
   SummaryToken,
+  SummaryTranslation,
   TokenType,
   User,
   UserMetadata,
@@ -24,12 +24,14 @@ import {
 } from './models';
 import { 
   PUBLIC_CATEGORY_ATTRIBUTES,
+  PUBLIC_MESSAGE_ATTRIBUTES,
   PUBLIC_OUTLET_ATTRIBUTES,
   PUBLIC_SENTIMENT_ATTRIBUTES,
   PUBLIC_SENTIMENT_TOKEN_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
   PUBLIC_SUMMARY_TOKEN_ATTRIBUTES, 
+  PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES, 
   PUBLIC_TOKEN_TYPE_ATTRIBUTES,
 } from './types';
 
@@ -37,7 +39,11 @@ export function makeAssociations() {
 
   // System
   ServiceStatus.belongsTo(Service, { 
-    as: 'status',
+    as: 'statuses',
+    foreignKey: 'serviceId',
+  });
+  Service.hasMany(ServiceStatus, { 
+    as: 'statuses',
     foreignKey: 'serviceId',
   });
 
@@ -106,6 +112,15 @@ export function makeAssociations() {
     },
   });
   
+  SummaryTranslation.belongsTo(Summary, { 
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  Summary.hasMany(SummaryTranslation, {
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  
   // queues
   Queue.hasMany(Job, {
     foreignKey: 'queue',
@@ -125,94 +140,44 @@ export function makeAssociations() {
 }
 
 export function addScopes() {
-
-  Outlet.addScope('raw', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] });
   
-  Outlet.addScope(
-    'public', 
-    {
-      attributes: {
-        exclude: ['selectors', 'maxAge', 'fetchPolicy', 'timezone', 'updatedAt', 'deletedAt'],
-        include: [
-          [sql.literal(`(
-            SELECT AVG(summary_sentiments.score) as sentiment
-            FROM outlets
-            LEFT JOIN summaries ON summaries."outletId" = outlet.id
-            AND summaries."deletedAt" IS NULL
-            LEFT JOIN summary_sentiments ON summary_sentiments."parentId" = summaries.id
-            AND summary_sentiments."deletedAt" IS NULL
-            WHERE outlet.id = outlets.id
-          )`), 'sentiment'],
-        ],
+  Service.addScope('public', {
+    include: [
+      {
+        as: 'statuses',
+        model: ServiceStatus,
       },
-      group: ['outlet.id', 'outlet.name', 'outlet."displayName"', 'outlet.description'],
-    }
-  );
+    ],
+  });
   
-  Category.addScope('raw', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES] });
-  
-  Category.addScope(
-    'public', 
-    {
-      attributes: {
-        exclude: ['updatedAt', 'deletedAt'],
-        include: [
-          [sql.literal(`(
-          SELECT avg(a.sentiment) as sentiment FROM (
-              SELECT AVG(summary_sentiments.score) as sentiment FROM categories
-              LEFT JOIN summaries ON summaries."categoryId" = category.id
-              AND summaries."deletedAt" IS NULL
-              LEFT JOIN summary_sentiments ON summary_sentiments."parentId" = summaries.id
-              AND summary_sentiments."deletedAt" IS NULL
-              WHERE category.id = categories.id
-            ) a
-          )`), 'sentiment'],
-        ],
-      },
-      group: ['category.id', 'category.name', 'category."displayName"', 'category.icon'],
-    }
-  );
-  
-  SummaryToken.addScope('raw', { attributes: [...PUBLIC_SUMMARY_TOKEN_ATTRIBUTES] });
-  
-  SummarySentiment.addScope('raw', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
-  
-  SummarySentimentToken.addScope('raw', { attributes: [...PUBLIC_SENTIMENT_TOKEN_ATTRIBUTES] });
+  Message.addScope('public', { attributes: [...PUBLIC_MESSAGE_ATTRIBUTES] });
 
-  Summary.addScope('raw', { attributes: [...PUBLIC_SUMMARY_ATTRIBUTES] });
+  Outlet.addScope('public', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] });
+  Category.addScope('public', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES] });
+  
+  SummaryToken.addScope('public', { attributes: [...PUBLIC_SUMMARY_TOKEN_ATTRIBUTES] });
+  
+  SummarySentiment.addScope('public', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
+  
+  SummarySentimentToken.addScope('public', { attributes: [...PUBLIC_SENTIMENT_TOKEN_ATTRIBUTES] });
 
+  Summary.addScope('public', { 
+    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
+    include: [
+      Outlet.scope('public'),
+      Category.scope('public'),
+    ],
+  });
   Summary.addScope('conservative', {
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE],
     include: [
-      Outlet.scope('raw'),
-      Category.scope('raw'),
-      { 
-        as: 'sentiments', 
-        include: [{ 
-          as: 'tokens', 
-          model: SummarySentimentToken.scope('raw'),
-        }], 
-        model: SummarySentiment.scope('raw'),
-      },
+      Outlet.scope('public'),
+      Category.scope('public'),
     ],
   });
   
-  Summary.addScope('public', {
-    attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
-    include: [
-      Outlet.scope('raw'),
-      Category.scope('raw'),
-      { 
-        as: 'sentiments', 
-        include: [{ 
-          as: 'tokens', 
-          model: SummarySentimentToken.scope('raw'),
-        }], 
-        model: SummarySentiment.scope('raw'),
-      },
-    ],
-  });
+  TokenType.addScope('public', { attributes: [...PUBLIC_TOKEN_TYPE_ATTRIBUTES ] });
   
-  TokenType.addScope('raw', { attributes: [...PUBLIC_TOKEN_TYPE_ATTRIBUTES ] });
-  
+  SummaryTranslation.addScope('public', { attributes: [...PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES] });
+
 }

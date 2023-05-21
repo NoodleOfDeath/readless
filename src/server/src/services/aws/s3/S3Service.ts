@@ -23,6 +23,7 @@ export type UploadOptions = Omit<PutObjectCommandInput, 'Body' | 'Bucket' | 'Key
   File?: string;
   Folder?: string;
   Key?: string;
+  Provider?: string;
 };
 
 export class S3Service extends BaseService {
@@ -56,6 +57,7 @@ export class S3Service extends BaseService {
       Body: options.Body ? options.Body : options.File ? fs.readFileSync(options.File) : null,
       Bucket: options.Bucket ? options.Bucket : process.env.S3_BUCKET,
       Key: options.Folder ? [options.Folder, options.File ? p.basename(options.File) : options.Key].join('/') : options.Key,
+      Provider: options.Provider || process.env.S3_PROVIDER || 'nyc3.digitaloceanspaces.com',
     };
     if (!params.Body) {
       throw new Error('Malformed body');
@@ -67,7 +69,7 @@ export class S3Service extends BaseService {
       throw new Error('Malformed key');
     }
     const data = await this.s3Client.send(new PutObjectCommand(params));
-    const url = `https://${params.Bucket}.nyc3.digitaloceanspaces.com/${params.Key}`;
+    const url = `https://${params.Bucket}.${params.Provider}/${params.Key}`;
     return {
       ...data,
       url,

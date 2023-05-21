@@ -1,22 +1,12 @@
 import {
   Column,
   DataType,
-  Scopes,
   Table,
 } from 'sequelize-typescript';
 
 import { ServiceAttributes, ServiceCreationAttributes } from './Service.types';
-import { ServiceStatus } from './ServiceStatus.model';
 import { BaseModel } from '../../base';
 
-@Scopes(() => ({ 
-  public: {
-    include: [{ 
-      as: 'status',
-      model: ServiceStatus,
-    }],
-  },
-}))
 @Table({
   modelName: 'service',
   paranoid: true,

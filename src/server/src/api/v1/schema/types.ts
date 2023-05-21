@@ -29,19 +29,6 @@ export function orderByToItems(orderBy: string | string[]): OrderItem[] {
   return orderBy.map(orderByToItem);
 }
 
-export type BulkResponse<T> = {
-  count: number;
-  rows: T[];
-};
-
-export type BulkMetadataResponse<T, M> = BulkResponse<T> & {
-  metadata?: M;
-};
-
-export type DestroyResponse = {
-  success: boolean;
-};
-
 // Model Types
 
 // System
@@ -60,10 +47,8 @@ export * from './queue/Worker.types';
 export * from './user/Alias.types';
 export * from './user/User.types';
 export * from './user/UserMetadata.types';
-
-// Auth
-export * from './auth/Credential.types';
-export * from './auth/Role.types';
+export * from './user/Credential.types';
+export * from './user/Role.types';
 
 // Posts
 export * from './resources/Post.types';
@@ -71,6 +56,7 @@ export * from './resources/Post.types';
 export * from './resources/nlp/Token.types';
 export * from './resources/nlp/TokenType.types';
 export * from './resources/sentiment/SentimentMethod.types';
+export * from './resources/localization/Translation.types';
 
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
@@ -84,3 +70,4 @@ export * from './resources/summary/SummaryToken.types';
 export * from './resources/summary/SummarySentiment.types';
 export * from './resources/summary/SummarySentimentToken.types';
 export * from './resources/summary/SummaryInteraction.types';
+export * from './resources/summary/SummaryTranslation.types';

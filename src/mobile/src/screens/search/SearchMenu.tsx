@@ -2,17 +2,7 @@ import React from 'react';
 
 import { Searchbar } from 'react-native-paper';
 
-import {
-  Button,
-  Divider,
-  Icon,
-  Menu,
-  ScrollView,
-  Text,
-  View,
-  ViewProps,
-} from '~/components';
-import { SessionContext } from '~/contexts';
+import { View, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type SearchMenuProps = Omit<ViewProps, 'children'> & {
@@ -36,16 +26,16 @@ export function SearchMenu({
   const style = useStyles(props);
 
   const [value, setValue] = React.useState(initialValue);
-  const [forceHide, setForceHide] = React.useState<boolean>();
 
-  const { preferences: { searchHistory }, setPreference } = React.useContext(SessionContext);
+  const [focused, setFocused] = React.useState(false);
+  
+  const top = React.useMemo(() => focused ? 64 : undefined, [focused]);
+  const bottom = React.useMemo(() => focused ? undefined : 32, [focused]);
   
   const submit = React.useCallback((text?: string) => {
     if (text) {
       setValue(text);
     }
-    setForceHide(true);
-    setTimeout(() => setForceHide(undefined), 200);
     onSubmit?.(text ?? value);
   }, [onSubmit, value]);
 
@@ -55,18 +45,28 @@ export function SearchMenu({
   }, [onChangeText]);
 
   return (
-    <Menu 
-      width={ 300 }
-      visible={ forceHide === true ? false : undefined }
-      autoAnchor={ (
-        <View row gap={ 6 }>
-          <Icon name="magnify" size={ 24 } />
-          {value && <Text numberOfLines={ 1 } mr={ 6 }>{value}</Text>}
-        </View>
-      ) }>
-      <View gap={ 8 } style={ style }>
+    <React.Fragment>
+      {focused && (
+        <View
+          absolute  
+          left={ 0 }
+          right={ 0 }
+          top={ 0 }
+          bottom={ 0 }
+          bg="rgba(0,0,0,0.5)"  
+          onPress={ () => setFocused(false) } />
+      )}
+      <View 
+        gap={ 8 }
+        absolute
+        left={ 32 }
+        right={ 32 }
+        top={ top }
+        bottom={ bottom }
+        style={ style }>
         <Searchbar
-          autoFocus
+          onFocus={ () => setFocused(true) }
+          onBlur={ () => setFocused(false) }
           placeholder={ placeholder }
           onChangeText={ handleChangeText }
           inputStyle={ theme.components.searchBar }
@@ -76,35 +76,35 @@ export function SearchMenu({
             onClear?.();
           } } 
           onSubmitEditing={ () => submit() } />
-        <View gap={ 8 }>
-          <Button 
-            alignCenter 
-            elevated 
-            rounded 
-            p={ 4 } 
-            onPress={ () => submit() }>
-            Search
-          </Button>
-        </View>
-        <View gap={ 6 }>
-          <Button caption onPress={ () => setPreference('searchHistory', []) }>
-            Clear History
-          </Button>
-          <Divider />
-          <ScrollView>
-            {searchHistory?.map((item) => (
-              <Button
-                key={ item }
-                underline
-                onPress={ () => {
-                  submit(item);
-                } }>
-                {item}
-              </Button>
-            ))}
-          </ScrollView>
-        </View>
+        {/* <View gap={ 8 }>
+        <Button 
+          alignCenter 
+          elevated 
+          rounded 
+          p={ 4 } 
+          onPress={ () => submit() }>
+          Search
+        </Button>
       </View>
-    </Menu>
+      <View gap={ 6 }>
+        <Button caption onPress={ () => setPreference('searchHistory', []) }>
+          Clear History
+        </Button>
+        <Divider />
+        <ScrollView>
+          {searchHistory?.map((item) => (
+            <Button
+              key={ item }
+              underline
+              onPress={ () => {
+                submit(item);
+              } }>
+              {item}
+            </Button>
+          ))}
+        </ScrollView>
+      </View> */}
+      </View>
+    </React.Fragment>
   );
 }

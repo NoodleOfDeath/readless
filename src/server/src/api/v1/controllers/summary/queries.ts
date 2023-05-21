@@ -1,47 +1,62 @@
 export const GET_SUMMARIES = `
 SELECT
-  c.total_count::INT AS count,
-  JSON_BUILD_OBJECT(
-    'sentiment', c.average_sentiment
+  "totalCount" AS count,
+  JSONB_BUILD_OBJECT(
+    'sentiment', "averageSentiment"
   ) AS metadata,
   JSON_AGG(c.*) AS rows
 FROM (
   SELECT
-    *,
-    b.outlet as "outletAttributes",
-    b.category as "categoryAttributes",
-    AVG(b.sentiment) OVER() AS average_sentiment
+    id,
+    title,
+    "shortSummary",
+    summary,
+    bullets,
+    url,
+    "imageUrl",
+    "originalDate",
+    outlet,
+    category,
+    translations,
+    COALESCE(sentiment, 0) AS sentiment,
+    sentiments,
+    AVG(sentiment) OVER() AS "averageSentiment",
+    "totalCount"
   FROM (
     SELECT
-      a.id,
-      a.title,
-      a."shortSummary",
-      a.summary,
-      a.bullets,
-      a.url,
-      a."imageUrl",
-      a."originalDate",
-      JSON_BUILD_OBJECT(
-        'id', a."outlet.id",
-        'name', a."outlet.name",
-        'displayName', a."outlet.displayName",
-        'brandImageUrl', a."outlet.brandImageUrl",
-        'description', a."outlet.description"
-      ) as outlet,
-      JSON_BUILD_OBJECT(
-        'id', a."category.id",
-        'name', a."category.name",
-        'displayName', a."category.displayName",
+      id,
+      title,
+      "shortSummary",
+      summary,
+      bullets,
+      url,
+      "imageUrl",
+      "originalDate",
+      JSONB_BUILD_OBJECT(
+        'id', "outlet.id",
+        'name', "outlet.name",
+        'displayName', "outlet.displayName",
+        'brandImageUrl', "outlet.brandImageUrl",
+        'description', "outlet.description"
+      ) AS outlet,
+      JSONB_BUILD_OBJECT(
+        'id', "category.id",
+        'name', "category.name",
+        'displayName', "category.displayName",
         'icon', "category.icon"
-      ) as category,
+      ) AS category,
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
-          'method', a.method,
-          'score', a.score,
-          'description', a.sentiment_method_description,
-          'tokens', tokens
-      )) FILTER (WHERE tokens IS NOT NULL), '[]'::JSON) AS sentiments,
-      AVG(a.score) as sentiment,
-      COUNT(a.id) OVER() AS total_count
+        'attribute', "translation.attribute",
+        'value', "translation.value"
+      )) FILTER (WHERE "translation.attribute" IS NOT NULL), '[]'::JSON) AS translations,
+      AVG("sentiment.score") AS sentiment,
+      COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
+        'method', "sentiment.method",
+        'score', "sentiment.score",
+        'description', "sentiment.method.description",
+        'tokens', "sentiment.tokens"
+      )) FILTER (WHERE "sentiment.score" IS NOT NULL), '[]'::JSON) AS sentiments,
+      COUNT(id) OVER() AS "totalCount"
     FROM (
       SELECT
         summaries.id,
@@ -52,29 +67,35 @@ FROM (
         summaries.url,
         summaries."imageUrl",
         summaries."originalDate",
-        outlets.id as "outlet.id",
-        outlets.name as "outlet.name",
-        outlets."displayName" as "outlet.displayName",
-        outlets."brandImageUrl" as "outlet.brandImageUrl",
-        outlets."description" as "outlet.description",
-        categories.id as "category.id",
-        categories.name as "category.name",
-        categories."displayName" as "category.displayName",
-        categories.icon as "category.icon",
-        summary_sentiments.method,
-        summary_sentiments.score,
-        sentiment_methods.description AS "sentiment_method_description",
+        outlets.id AS "outlet.id",
+        outlets.name AS "outlet.name",
+        outlets."displayName" AS "outlet.displayName",
+        outlets."brandImageUrl" AS "outlet.brandImageUrl",
+        outlets.description AS "outlet.description",
+        categories.id AS "category.id",
+        categories.name AS "category.name",
+        categories."displayName" AS "category.displayName",
+        categories.icon AS "category.icon",
+        summary_translations.attribute AS "translation.attribute",
+        summary_translations.value AS "translation.value",
+        summary_sentiments.method AS "sentiment.method",
+        summary_sentiments.score AS "sentiment.score",
+        sentiment_methods.description AS "sentiment.method.description",
         COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
           'text', summary_sentiment_tokens.text
-        )) FILTER (WHERE summary_sentiment_tokens.text IS NOT NULL), '[]'::JSON) AS tokens
+        )) FILTER (WHERE summary_sentiment_tokens.text IS NOT NULL), '[]'::JSON) AS "sentiment.tokens"
       FROM
         summaries
-        LEFT OUTER JOIN "outlets"
-          ON summaries."outletId" = "outlets"."id" 
-          AND ("outlets"."deletedAt" IS NULL) 
-        LEFT OUTER JOIN "categories" 
-          ON "summaries"."categoryId" = "categories"."id" 
-          AND ("categories"."deletedAt" IS NULL) 
+        LEFT OUTER JOIN outlets
+          ON summaries."outletId" = outlets.id 
+          AND (outlets."deletedAt" IS NULL) 
+        LEFT OUTER JOIN categories
+          ON summaries."categoryId" = categories.id 
+          AND (categories."deletedAt" IS NULL) 
+        LEFT OUTER JOIN summary_translations
+          ON summaries.id = summary_translations."parentId"
+          AND (summary_translations."deletedAt" IS NULL)
+          AND (summary_translations.locale = :locale)
         LEFT OUTER JOIN summary_tokens
           ON summaries.id = summary_tokens."parentId"
           AND (summary_tokens."deletedAt" IS NULL)
@@ -87,29 +108,29 @@ FROM (
         LEFT OUTER JOIN summary_sentiment_tokens
           ON summary_sentiments.id = summary_sentiment_tokens."parentId"
           AND (summary_sentiment_tokens."deletedAt" IS NULL)
-      WHERE ("summaries"."deletedAt" IS NULL)
-        AND ("summaries"."originalDate" > NOW() - INTERVAL :interval)
+      WHERE (summaries."deletedAt" IS NULL)
+        AND (summaries."originalDate" > NOW() - INTERVAL :interval)
         AND (
-          ("summaries"."id" IN (:ids))
+          (summaries.id IN (:ids))
           OR :noIds
         )
         AND (
-          (:excludeIds AND "summaries"."id" NOT IN (:ids))
+          (:excludeIds AND summaries.id NOT IN (:ids))
           OR NOT :excludeIds
         )
         AND (
-          ("outlets"."name" IN (:outlets))
+          (outlets.name IN (:outlets))
           OR :noOutlets
         )
         AND (
-          ("categories"."name" IN (:categories))
+          (categories.name IN (:categories))
           OR :noCategories
         )
         AND (
           summaries.title ~* :filter
           OR (summaries."shortSummary" ~* :filter)
           OR (summaries.summary ~* :filter)
-          OR (summaries."bullets"::text ~* :filter)
+          OR (summaries.bullets::text ~* :filter)
           OR (summary_tokens.text ~* :filter)
         )
       GROUP BY
@@ -130,52 +151,54 @@ FROM (
         "category.name",
         "category.displayName",
         "category.icon",
-        summary_sentiments.method,
-        summary_sentiments.score,
-        "sentiment_method_description"
+        "translation.attribute",
+        "translation.value",
+        "sentiment.method",
+        "sentiment.score",
+        "sentiment.method.description"
     ) a
     GROUP BY
-      a.id,
-      a.title,
-      a."shortSummary",
-      a.summary,
-      a.bullets,
-      a.url,
-      a."imageUrl",
-      a."originalDate",
-      a."outlet.id",
-      a."outlet.name",
-      a."outlet.displayName",
-      a."outlet.brandImageUrl",
-      a."outlet.description",
-      a."category.id",
-      a."category.name",
-      a."category.displayName",
-      a."category.icon"
-    ORDER BY a."originalDate" DESC
+      id,
+      title,
+      "shortSummary",
+      summary,
+      bullets,
+      url,
+      "imageUrl",
+      "originalDate",
+      "outlet.id",
+      "outlet.name",
+      "outlet.displayName",
+      "outlet.brandImageUrl",
+      "outlet.description",
+      "category.id",
+      "category.name",
+      "category.displayName",
+      "category.icon"
+    ORDER BY "originalDate" DESC
   ) b
   LIMIT :limit
   OFFSET :offset
 ) c
 GROUP BY
-  c.total_count,
-  c.average_sentiment
+  "averageSentiment",
+  "totalCount"
 `;
 
 export const GET_SUMMARY_TOKEN_COUNTS = `
 SELECT 
-  total_count AS count,
-  JSON_AGG(JSON_BUILD_OBJECT(
-    'text', b.text,
-    'type', b.type,
-    'count', b.count
-  ) ORDER BY b.count DESC) AS rows
+  "totalCount" AS count,
+  COALESCE(JSON_AGG(JSONB_BUILD_OBJECT(
+    'text', text,
+    'type', type,
+    'count', count
+  ) ORDER BY count DESC), '[]'::JSON) AS rows
 FROM (
   SELECT
-    COUNT(*) OVER() AS total_count,
-    COUNT(*) count,
-    a.text,
-    a.type
+    COUNT(*) OVER() AS "totalCount",
+    COUNT(*) AS count,
+    text,
+    type
   FROM (
     SELECT
       summary_tokens.text, 
@@ -190,13 +213,14 @@ FROM (
       AND (summaries."originalDate" > NOW() - INTERVAL :interval)
   ) a
   GROUP BY
-    a.text,
-    a.type
+    text,
+    type
   HAVING COUNT(*) >= :min
   ORDER BY count DESC
   LIMIT :limit
   OFFSET :offset
 ) b
-GROUP BY total_count;
+GROUP BY 
+  "totalCount";
 `;
 

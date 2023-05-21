@@ -53,42 +53,6 @@
 		0143022A29FACEDC00D40293 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1D29D791EC00EAC61C /* Feather.ttf */; };
 		0143022B29FACEDC00D40293 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */; };
 		0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
-		0143022F29FACEDD00D40293 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2C29D791EC00EAC61C /* FontAwesome5_Regular.ttf */; };
-		0143023029FACEDD00D40293 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto.ttf */; };
-		0143023129FACEDD00D40293 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3129D791EC00EAC61C /* Zocial.ttf */; };
-		0143023329FACEDD00D40293 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2B29D791EC00EAC61C /* FontAwesome5_Solid.ttf */; };
-		0143023529FACEDD00D40293 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2529D791EC00EAC61C /* AntDesign.ttf */; };
-		0143023629FACEDD00D40293 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1A29D791EC00EAC61C /* Fontisto.ttf */; };
-		0143023729FACEDD00D40293 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2A29D791EC00EAC61C /* Ionicons.ttf */; };
-		0143023829FACEDD00D40293 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2029D791EC00EAC61C /* Entypo.ttf */; };
-		0143023929FACEDD00D40293 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1C29D791EC00EAC61C /* Octicons.ttf */; };
-		0143023B29FACEDD00D40293 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3229D791EC00EAC61C /* EvilIcons.ttf */; };
-		0143023C29FACEDD00D40293 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2329D791EC00EAC61C /* FontAwesome5_Brands.ttf */; };
-		0143023D29FACEDD00D40293 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */; };
-		0143023E29FACEDD00D40293 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */; };
-		0143023F29FACEDD00D40293 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2929D791EC00EAC61C /* Foundation.ttf */; };
-		0143024029FACEDD00D40293 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1D29D791EC00EAC61C /* Feather.ttf */; };
-		0143024129FACEDD00D40293 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */; };
-		0143024229FACEDD00D40293 /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
-		0143024629FACEDD00D40293 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
-		0150ACA529F9577400875CF7 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0150ACA429F9577400875CF7 /* WidgetKit.framework */; };
-		0150ACA729F9577400875CF7 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0150ACA629F9577400875CF7 /* SwiftUI.framework */; };
-		0150ACAA29F9577400875CF7 /* ReadLessWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACA929F9577400875CF7 /* ReadLessWidgetBundle.swift */; };
-		0150ACAC29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAB29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift */; };
-		0150ACAE29F9577400875CF7 /* ReadLessWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAD29F9577400875CF7 /* ReadLessWidget.swift */; };
-		0150ACB129F9577600875CF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0150ACB029F9577600875CF7 /* Assets.xcassets */; };
-		0150ACB329F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */; };
-		0150ACB429F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */; };
-		0150ACBC29F957BB00875CF7 /* PublicOutletAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */; };
-		0150ACBD29F957BE00875CF7 /* PublicCategoryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */; };
-		0150ACBF29F957C400875CF7 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
-		0150ACC029F957D000875CF7 /* BulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkResponse.swift */; };
-		0150ACC329F957F200875CF7 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* ConnectService.swift */; };
-		0150ACC629F9582900875CF7 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0150ACC529F9582900875CF7 /* SummaryCard.swift */; };
-		0150ACCB29F958A600875CF7 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
-		0150ACCC29F958A600875CF7 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A19D029EAEB1A0072EEE3 /* View.swift */; };
-		0150ACCD29F958A600875CF7 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
-		0150ACCE29F958A600875CF7 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C229EA4833006D3509 /* Date.swift */; };
 		0150EA1A29EDD6C7004FBDFA /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
 		0150EA1B29EDD6C7004FBDFA /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
 		0150EA2029EE16D8004FBDFA /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto.ttf */; };
@@ -109,61 +73,42 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CD4AEB1E2A0D92DD0093B6D1 /* Faustina.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */; };
 		CD4AEB1F2A0D92DD0093B6D1 /* Faustina.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */; };
-		CD4AEB202A0D92DD0093B6D1 /* Faustina.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */; };
 		CD4AEB222A0D93180093B6D1 /* Manuale.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB212A0D93180093B6D1 /* Manuale.ttf */; };
 		CD4AEB232A0D93180093B6D1 /* Manuale.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB212A0D93180093B6D1 /* Manuale.ttf */; };
-		CD4AEB242A0D93180093B6D1 /* Manuale.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB212A0D93180093B6D1 /* Manuale.ttf */; };
 		CD4AEB382A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */; };
 		CD4AEB392A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */; };
-		CD4AEB3A2A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */; };
 		CD4AEB3B2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB362A0D975C0093B6D1 /* FaustinaItalic.ttf */; };
 		CD4AEB3C2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB362A0D975C0093B6D1 /* FaustinaItalic.ttf */; };
-		CD4AEB3D2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB362A0D975C0093B6D1 /* FaustinaItalic.ttf */; };
 		CD4AEB3E2A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB372A0D975C0093B6D1 /* FaustinaBoldItalic.ttf */; };
 		CD4AEB3F2A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB372A0D975C0093B6D1 /* FaustinaBoldItalic.ttf */; };
-		CD4AEB402A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB372A0D975C0093B6D1 /* FaustinaBoldItalic.ttf */; };
 		CD4AEB442A0D99780093B6D1 /* ManualeBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB412A0D99780093B6D1 /* ManualeBold.ttf */; };
 		CD4AEB452A0D99780093B6D1 /* ManualeBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB412A0D99780093B6D1 /* ManualeBold.ttf */; };
-		CD4AEB462A0D99780093B6D1 /* ManualeBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB412A0D99780093B6D1 /* ManualeBold.ttf */; };
 		CD4AEB472A0D99780093B6D1 /* ManualeItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB422A0D99780093B6D1 /* ManualeItalic.ttf */; };
 		CD4AEB482A0D99780093B6D1 /* ManualeItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB422A0D99780093B6D1 /* ManualeItalic.ttf */; };
-		CD4AEB492A0D99780093B6D1 /* ManualeItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB422A0D99780093B6D1 /* ManualeItalic.ttf */; };
 		CD4AEB4A2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB432A0D99780093B6D1 /* ManualeBoldItalic.ttf */; };
 		CD4AEB4B2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB432A0D99780093B6D1 /* ManualeBoldItalic.ttf */; };
-		CD4AEB4C2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB432A0D99780093B6D1 /* ManualeBoldItalic.ttf */; };
 		CD4AEB512A0D99D30093B6D1 /* LatoBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4D2A0D99D30093B6D1 /* LatoBold.ttf */; };
 		CD4AEB522A0D99D30093B6D1 /* LatoBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4D2A0D99D30093B6D1 /* LatoBold.ttf */; };
-		CD4AEB532A0D99D30093B6D1 /* LatoBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4D2A0D99D30093B6D1 /* LatoBold.ttf */; };
 		CD4AEB542A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4E2A0D99D30093B6D1 /* LatoBoldItalic.ttf */; };
 		CD4AEB552A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4E2A0D99D30093B6D1 /* LatoBoldItalic.ttf */; };
-		CD4AEB562A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4E2A0D99D30093B6D1 /* LatoBoldItalic.ttf */; };
 		CD4AEB572A0D99D30093B6D1 /* LatoItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4F2A0D99D30093B6D1 /* LatoItalic.ttf */; };
 		CD4AEB582A0D99D30093B6D1 /* LatoItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4F2A0D99D30093B6D1 /* LatoItalic.ttf */; };
-		CD4AEB592A0D99D30093B6D1 /* LatoItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4F2A0D99D30093B6D1 /* LatoItalic.ttf */; };
 		CD4AEB5A2A0D99D30093B6D1 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB502A0D99D30093B6D1 /* Lato.ttf */; };
 		CD4AEB5B2A0D99D30093B6D1 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB502A0D99D30093B6D1 /* Lato.ttf */; };
-		CD4AEB5C2A0D99D30093B6D1 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB502A0D99D30093B6D1 /* Lato.ttf */; };
 		CD4AEB602A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */; };
 		CD4AEB612A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */; };
-		CD4AEB622A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */; };
 		CD4AEB632A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */; };
 		CD4AEB642A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */; };
-		CD4AEB652A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */; };
 		CD4AEB662A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
 		CD4AEB672A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
-		CD4AEB682A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
 		CD4AEB7D2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
 		CD4AEB7E2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
-		CD4AEB7F2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
 		CD4AEB802A0D9D860093B6D1 /* DMSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */; };
 		CD4AEB812A0D9D860093B6D1 /* DMSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */; };
-		CD4AEB822A0D9D860093B6D1 /* DMSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */; };
 		CD4AEB832A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */; };
 		CD4AEB842A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */; };
-		CD4AEB852A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */; };
 		CD4AEB862A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
 		CD4AEB872A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
-		CD4AEB882A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -209,6 +154,16 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CD6345222A192BF100CB264B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -247,16 +202,8 @@
 		0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		013F32C229E8BA2D00CE8555 /* ConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectService.swift; sourceTree = "<group>"; };
-		0150ACA329F9577400875CF7 /* ReadLessWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReadLessWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0150ACA429F9577400875CF7 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0150ACA629F9577400875CF7 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		0150ACA929F9577400875CF7 /* ReadLessWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidgetBundle.swift; sourceTree = "<group>"; };
-		0150ACAB29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidgetLiveActivity.swift; sourceTree = "<group>"; };
-		0150ACAD29F9577400875CF7 /* ReadLessWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidget.swift; sourceTree = "<group>"; };
-		0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = ReadLessWidget.intentdefinition; sourceTree = "<group>"; };
-		0150ACB029F9577600875CF7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0150ACB229F9577600875CF7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0150ACC529F9582900875CF7 /* SummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryCard.swift; sourceTree = "<group>"; };
 		0150EA1929EDD6C7004FBDFA /* Alegreya.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alegreya.otf; sourceTree = "<group>"; };
 		0150EA1F29EE16D8004FBDFA /* Roboto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Roboto.ttf; sourceTree = "<group>"; };
 		015A19D029EAEB1A0072EEE3 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
@@ -331,15 +278,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0150ACA029F9577400875CF7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0150ACA729F9577400875CF7 /* SwiftUI.framework in Frameworks */,
-				0150ACA529F9577400875CF7 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,34 +413,12 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		0150ACA829F9577400875CF7 /* ReadLessWidget */ = {
-			isa = PBXGroup;
-			children = (
-				0150ACC729F9582F00875CF7 /* Views */,
-				0150ACA929F9577400875CF7 /* ReadLessWidgetBundle.swift */,
-				0150ACAB29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift */,
-				0150ACAD29F9577400875CF7 /* ReadLessWidget.swift */,
-				0150ACAF29F9577400875CF7 /* ReadLessWidget.intentdefinition */,
-				0150ACB029F9577600875CF7 /* Assets.xcassets */,
-				0150ACB229F9577600875CF7 /* Info.plist */,
-			);
-			path = ReadLessWidget;
-			sourceTree = "<group>";
-		};
 		0150ACC229F957E400875CF7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				013F32C229E8BA2D00CE8555 /* ConnectService.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		0150ACC729F9582F00875CF7 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				0150ACC529F9582900875CF7 /* SummaryCard.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		015A19CD29EAE6D70072EEE3 /* Views */ = {
@@ -577,7 +493,6 @@
 				010F0CE229E88D470064DD97 /* ReadLessWatch Watch App */,
 				010F0CF329E88D490064DD97 /* ReadLessWatch Watch AppTests */,
 				010F0CFD29E88D490064DD97 /* ReadLessWatch Watch AppUITests */,
-				0150ACA829F9577400875CF7 /* ReadLessWidget */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -596,7 +511,6 @@
 				010F0CE129E88D470064DD97 /* Read Less.app */,
 				010F0CF029E88D490064DD97 /* ReadLessWatch Watch AppTests.xctest */,
 				010F0CFA29E88D490064DD97 /* ReadLessWatch Watch AppUITests.xctest */,
-				0150ACA329F9577400875CF7 /* ReadLessWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -698,23 +612,6 @@
 			productReference = 010F0CFA29E88D490064DD97 /* ReadLessWatch Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		0150ACA229F9577400875CF7 /* ReadLessWidgetExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0150ACBB29F9577600875CF7 /* Build configuration list for PBXNativeTarget "ReadLessWidgetExtension" */;
-			buildPhases = (
-				0150AC9F29F9577400875CF7 /* Sources */,
-				0150ACA029F9577400875CF7 /* Frameworks */,
-				0150ACA129F9577400875CF7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ReadLessWidgetExtension;
-			productName = ReadLessWidgetExtension;
-			productReference = 0150ACA329F9577400875CF7 /* ReadLessWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		13B07F861A680F5B00A75B9A /* ReadLess */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ReadLess" */;
@@ -728,6 +625,7 @@
 				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
 				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
 				01F6EA7829E6FA3C00F51BBA /* Embed Watch Content */,
+				CD6345222A192BF100CB264B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -765,9 +663,6 @@
 						CreatedOnToolsVersion = 14.3;
 						TestTargetID = 010F0CE029E88D470064DD97;
 					};
-					0150ACA229F9577400875CF7 = {
-						CreatedOnToolsVersion = 14.3;
-					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
 					};
@@ -791,7 +686,6 @@
 				010F0CE029E88D470064DD97 /* ReadLessWatch Watch App */,
 				010F0CEF29E88D490064DD97 /* ReadLessWatch Watch AppTests */,
 				010F0CF929E88D490064DD97 /* ReadLessWatch Watch AppUITests */,
-				0150ACA229F9577400875CF7 /* ReadLessWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -861,51 +755,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0150ACA129F9577400875CF7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0143024229FACEDD00D40293 /* Alegreya.otf in Resources */,
-				0143023F29FACEDD00D40293 /* Foundation.ttf in Resources */,
-				0143023029FACEDD00D40293 /* Roboto.ttf in Resources */,
-				0143023329FACEDD00D40293 /* FontAwesome5_Solid.ttf in Resources */,
-				CD4AEB562A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */,
-				CD4AEB592A0D99D30093B6D1 /* LatoItalic.ttf in Resources */,
-				CD4AEB3D2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */,
-				0143023729FACEDD00D40293 /* Ionicons.ttf in Resources */,
-				0143023C29FACEDD00D40293 /* FontAwesome5_Brands.ttf in Resources */,
-				CD4AEB7F2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */,
-				CD4AEB822A0D9D860093B6D1 /* DMSans.ttf in Resources */,
-				CD4AEB402A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */,
-				CD4AEB532A0D99D30093B6D1 /* LatoBold.ttf in Resources */,
-				CD4AEB622A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */,
-				CD4AEB4C2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */,
-				CD4AEB3A2A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */,
-				CD4AEB682A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */,
-				0143023829FACEDD00D40293 /* Entypo.ttf in Resources */,
-				CD4AEB242A0D93180093B6D1 /* Manuale.ttf in Resources */,
-				CD4AEB652A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */,
-				CD4AEB882A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */,
-				CD4AEB462A0D99780093B6D1 /* ManualeBold.ttf in Resources */,
-				0150ACB129F9577600875CF7 /* Assets.xcassets in Resources */,
-				0143023E29FACEDD00D40293 /* FontAwesome.ttf in Resources */,
-				0143023B29FACEDD00D40293 /* EvilIcons.ttf in Resources */,
-				0143023129FACEDD00D40293 /* Zocial.ttf in Resources */,
-				0143023529FACEDD00D40293 /* AntDesign.ttf in Resources */,
-				CD4AEB492A0D99780093B6D1 /* ManualeItalic.ttf in Resources */,
-				CD4AEB202A0D92DD0093B6D1 /* Faustina.ttf in Resources */,
-				0143022F29FACEDD00D40293 /* FontAwesome5_Regular.ttf in Resources */,
-				0143024629FACEDD00D40293 /* MaterialIcons.ttf in Resources */,
-				0143023929FACEDD00D40293 /* Octicons.ttf in Resources */,
-				CD4AEB852A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */,
-				0143024029FACEDD00D40293 /* Feather.ttf in Resources */,
-				0143023D29FACEDD00D40293 /* SimpleLineIcons.ttf in Resources */,
-				CD4AEB5C2A0D99D30093B6D1 /* Lato.ttf in Resources */,
-				0143023629FACEDD00D40293 /* Fontisto.ttf in Resources */,
-				0143024129FACEDD00D40293 /* MaterialCommunityIcons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1154,27 +1003,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0150AC9F29F9577400875CF7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0150ACAE29F9577400875CF7 /* ReadLessWidget.swift in Sources */,
-				0150ACBC29F957BB00875CF7 /* PublicOutletAttributes.swift in Sources */,
-				0150ACCE29F958A600875CF7 /* Date.swift in Sources */,
-				0150ACAC29F9577400875CF7 /* ReadLessWidgetLiveActivity.swift in Sources */,
-				0150ACCB29F958A600875CF7 /* Color.swift in Sources */,
-				0150ACBF29F957C400875CF7 /* PublicSummaryAttributes.swift in Sources */,
-				0150ACAA29F9577400875CF7 /* ReadLessWidgetBundle.swift in Sources */,
-				0150ACB329F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */,
-				0150ACC029F957D000875CF7 /* BulkResponse.swift in Sources */,
-				0150ACBD29F957BE00875CF7 /* PublicCategoryAttributes.swift in Sources */,
-				0150ACC329F957F200875CF7 /* ConnectService.swift in Sources */,
-				0150ACCC29F958A600875CF7 /* View.swift in Sources */,
-				0150ACCD29F958A600875CF7 /* PressActions.swift in Sources */,
-				0150ACC629F9582900875CF7 /* SummaryCard.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1182,7 +1010,6 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */,
-				0150ACB429F9577600875CF7 /* ReadLessWidget.intentdefinition in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1488,87 +1315,6 @@
 			};
 			name = Release;
 		};
-		0150ACB929F9577600875CF7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = UD23CMJ5W5;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ReadLessWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ReadLessWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.ReadLessWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		0150ACBA29F9577600875CF7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = UD23CMJ5W5;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ReadLessWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ReadLessWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.ReadLessWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-ReadLess.debug.xcconfig */;
@@ -1587,7 +1333,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.7.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1627,7 +1373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.7.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1822,15 +1568,6 @@
 			buildConfigurations = (
 				010F0D0C29E88D490064DD97 /* Debug */,
 				010F0D0D29E88D490064DD97 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0150ACBB29F9577600875CF7 /* Build configuration list for PBXNativeTarget "ReadLessWidgetExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0150ACB929F9577600875CF7 /* Debug */,
-				0150ACBA29F9577600875CF7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

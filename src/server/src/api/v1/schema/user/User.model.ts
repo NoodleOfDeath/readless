@@ -247,7 +247,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       await createInteraction();
     }
     const summary = await Summary.findByPk(targetId);
-    await summary.addUserInteractions(this.toJSON().id);
     return summary;
   }
 

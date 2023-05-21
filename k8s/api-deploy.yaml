@@ -40,6 +40,8 @@ spec:
               value: '$GOOGLE_CLIENT_ID'
             - name: GOOGLE_CLIENT_SECRET
               value: '$GOOGLE_CLIENT_SECRET'
+            - name: GOOGLE_CREDENTIALS
+              value: '$GOOGLE_CREDENTIALS'
             - name: JWT_SECRET
               value: '$JWT_SECRET'
             - name: MAIL_HOST

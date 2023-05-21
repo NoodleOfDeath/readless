@@ -17,8 +17,6 @@ export type SentimentCreationAttributes<T extends SentimentTokenCreationAttribut
 
 export type Sentimental = {
   sentiment: number;
-  // @deprecated
-  averageSentiment: number;
 };
 
 export const PUBLIC_SENTIMENT_ATTRIBUTES = ['id', 'method', 'score'];
