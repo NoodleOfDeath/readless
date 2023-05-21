@@ -17,15 +17,16 @@ import {
 } from 'tsoa';
 
 import { GET_SUMMARIES, GET_SUMMARY_TOKEN_COUNTS } from './queries';
-import { MailService } from '../../../../services';
-import { PayloadWithUserId } from '../../../../services/types';
-import { AuthError, InternalError } from '../../middleware';
 import {
   BulkMetadataResponse,
   BulkResponse,
   DestroyResponse,
   InteractionRequest,
-  InteractionResponse,
+} from '../';
+import { MailService } from '../../../../services';
+import { PayloadWithUserId } from '../../../../services/types';
+import { AuthError, InternalError } from '../../middleware';
+import {
   InteractionType,
   PublicSummaryAttributes,
   PublicTokenAttributes,
@@ -140,6 +141,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
     @Query() interval = '100y',
+    @Query() locale = '',
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page,
@@ -163,6 +165,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         ids: ids.length === 0 ? [-1] : ids,
         interval: pastInterval ?? interval,
         limit: Number(pageSize),
+        locale,
         noCategories,
         noIds,
         noOutlets,
@@ -185,10 +188,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() offset = pageSize * page,
     @Query() order: string[] = ['count:desc']
   ): Promise<BulkResponse<PublicTokenAttributes>> {
-    let filter = `^(?:${type})$`;
-    if (/innovation/i.test(type)) {
-      filter = '^(?:innovation|software/app)$' as TokenTypeName;
-    }
+    const filter = `^(?:${type})$`;
     const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
       nest: true,
       replacements: {
@@ -221,7 +221,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   
   @Get('/topics/groups')
   public static async getTopicGroups(): Promise<BulkResponse<PublicTokenTypeAttributes>> {
-    return await TokenType.scope('raw').findAndCountAll();
+    return await TokenType.scope('public').findAndCountAll();
   }
   
   @Security('jwt')
@@ -230,7 +230,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
-  ): Promise<InteractionResponse> {
+  ): Promise<PublicSummaryAttributes> {
     const { user } = await User.from(body, { ignoreIfNotResolved: true });
     const {
       content, metadata, remoteAddr, 
@@ -250,10 +250,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       });
     }
     const resource = await Summary.scope('public').findByPk(targetId);
-    if (user) {
-      await resource.addUserInteractions(user.id);
-    }
-    return resource.toJSON().interactions;
+    return resource;
   }
   
   @Security('jwt', ['god:*'])

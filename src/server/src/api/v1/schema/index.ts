@@ -1,3 +1,3 @@
-export * from './associations';
-export * from './models';
 export * from './types';
+export * from './models';
+export * from './associations';

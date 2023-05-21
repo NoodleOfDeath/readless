@@ -28,7 +28,7 @@ import {
   AliasType,
   Credential,
   User,
-} from '../../api/v1/schema/';
+} from '../../api/v1/schema';
 import { randomString } from '../../utils';
 import { BaseService } from '../base';
 import { GoogleService } from '../google';
@@ -76,8 +76,7 @@ export class AccountService extends BaseService {
     }
     if (req.thirdParty) {
       if (req.thirdParty.name === 'google') {
-        const google = new GoogleService();
-        const ticket = await google.verify(req.thirdParty.credential);
+        const ticket = await GoogleService.verify(req.thirdParty.credential);
         const { email, email_verified: emailVerified } = ticket.getPayload();
         thirdPartyId = ticket.getPayload().sub;
         if (!email) {

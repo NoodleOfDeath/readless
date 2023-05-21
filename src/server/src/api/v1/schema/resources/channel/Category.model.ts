@@ -1,4 +1,5 @@
 import {
+  AfterFind,
   Column,
   DataType,
   Table,
@@ -25,6 +26,17 @@ export class Category<
   public static async initCategories() {
     for (const category of Object.values(CATEGORIES)) {
       await this.upsert(category);
+    }
+  }
+
+  @AfterFind
+  static async legacySupport(cursor: Category | Category[]) {
+    if (!cursor) {
+      return;
+    }
+    const categories = Array.isArray(cursor) ? cursor : [cursor];
+    for (const category of categories) {
+      category.set('sentiment', 0, { raw: true });
     }
   }
   

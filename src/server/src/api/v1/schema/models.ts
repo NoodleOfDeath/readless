@@ -16,10 +16,8 @@ export * from './user/User.model';
 export * from './user/Alias.model';
 export * from './user/UserMetadata.model';
 export * from './user/RefUserRole.model';
-
-// auth models
-export * from './auth/Credential.model';
-export * from './auth/Role.model';
+export * from './user/Credential.model';
+export * from './user/Role.model';
 
 // resource models
 export * from './resources/nlp/TokenType.model';
@@ -33,3 +31,4 @@ export * from './resources/summary/SummaryToken.model';
 export * from './resources/summary/SummarySentiment.model';
 export * from './resources/summary/SummarySentimentToken.model';
 export * from './resources/summary/SummaryInteraction.model';
+export * from './resources/summary/SummaryTranslation.model';

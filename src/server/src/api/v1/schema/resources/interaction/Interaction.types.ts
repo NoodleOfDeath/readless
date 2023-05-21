@@ -41,27 +41,3 @@ export type InteractionCreationAttributes = {
   metadata?: Record<string, unknown>;
 };
 
-export type InteractionRequest = {
-  userId?: number;
-  remoteAddr?: string;
-  content?: string;
-  metadata?: Record<string, unknown>;
-};
-
-export type InteractionUserVote = 'up' | 'down';
-
-// uh this type exists? forcing rebuild
-export type InteractionResponse = {
-  bookmark: number;
-  userBookmarked?: boolean;
-  favorite: number;
-  userFavorited?: boolean;
-  comment: number;
-  downvote: number;
-  listen: number;
-  read: number;
-  share: number;
-  upvote: number;
-  uservote?: InteractionUserVote;
-  view: number;
-};

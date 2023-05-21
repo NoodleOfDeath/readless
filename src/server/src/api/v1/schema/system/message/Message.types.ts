@@ -13,3 +13,5 @@ export type MessageCreationAttributes = {
   title: string;
   description?: string;
 };
+
+export const PUBLIC_MESSAGE_ATTRIBUTES = ['type', 'title', 'description', 'createdAt'];

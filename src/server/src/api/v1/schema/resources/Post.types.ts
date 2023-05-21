@@ -1,14 +1,12 @@
-import { InteractionResponse } from './interaction/Interaction.types';
 import { DatedAttributes } from '../types';
 
 export type PostAttributes = DatedAttributes & {
   title: string;
   text?: string;
   imageUrl?: string;
-  interactions?: InteractionResponse;
 };
 
-export type PostCreationAttributes = {
+export type PostCreationAttributes = Partial<DatedAttributes> & {
   title: string;
   text?: string;
   imageUrl?: string;

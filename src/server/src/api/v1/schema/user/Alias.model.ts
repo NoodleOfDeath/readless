@@ -15,9 +15,9 @@ import {
   FindAliasOptions,
   ThirdPartyAuth,
 } from './Alias.types';
+import { Credential } from './Credential.model';
 import { GoogleService } from '../../../../services';
 import { AuthError } from '../../middleware';
-import { Credential } from '../auth/Credential.model';
 import { BaseModel } from '../base';
 
 @Table({
@@ -93,8 +93,7 @@ export class Alias<
     const payload = Alias.parsePayload(req);
     if (payload.type === 'thirdParty' && typeof payload.value === 'object') {
       if (payload.value.name === 'google') {
-        const google = new GoogleService();
-        const ticket = await google.verify(payload.value.credential);
+        const ticket = await GoogleService.verify(payload.value.credential);
         const {
           email, email_verified: emailVerified, sub: thirdPartyId, 
         } = ticket.getPayload();

@@ -1,5 +1,6 @@
 import ms from 'ms';
 import {
+  AfterFind,
   Column,
   DataType,
   Table,
@@ -35,7 +36,18 @@ export class Outlet<
     for (const outlet of Object.values(OUTLETS)) {
       await this.upsert(outlet);
     }
-  }  
+  } 
+
+  @AfterFind
+  static async legacySupport(cursor: Outlet | Outlet[]) {
+    if (!cursor) {
+      return;
+    }
+    const outlets = Array.isArray(cursor) ? cursor : [cursor];
+    for (const outlet of outlets) {
+      outlet.set('sentiment', 0, { raw: true });
+    }
+  }
 
   @Column({
     allowNull: false,

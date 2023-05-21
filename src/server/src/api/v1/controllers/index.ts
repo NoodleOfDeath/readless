@@ -1,3 +1,5 @@
+export * from './types';
+
 export * from './Controller';
 
 export * from './account';

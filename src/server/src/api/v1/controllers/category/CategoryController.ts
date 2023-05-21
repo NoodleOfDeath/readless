@@ -8,9 +8,9 @@ import {
   Tags,
 } from 'tsoa';
   
+import { BulkResponse } from '../';
 import { AuthError, InternalError } from '../../middleware';
 import {
-  BulkResponse,
   Category,
   FindAndCountOptions,
   PublicCategoryAttributes,
@@ -32,11 +32,8 @@ export class CategoryController {
     @Query() filter?: string
   ): Promise<BulkResponse<PublicCategoryAttributes>> {
     const options: FindAndCountOptions<Category> = { order: [['name', 'ASC']] };
-    const categories = await Category.scope('public').findAll(options);
-    return {
-      count: categories.length,
-      rows: categories,
-    };
+    const categories = await Category.scope('public').findAndCountAll(options);
+    return categories;
   }
   
 }

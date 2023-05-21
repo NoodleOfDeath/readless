@@ -1,5 +1,5 @@
-import { DestructuredCredentialPayload } from '../../api/v1/schema/auth/Credential.types';
 import { DestructuredAliasPayload  } from '../../api/v1/schema/user/Alias.types';
+import { DestructuredCredentialPayload } from '../../api/v1/schema/user/Credential.types';
 
 export * from './jwt';
 
