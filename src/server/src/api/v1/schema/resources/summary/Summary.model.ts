@@ -15,6 +15,7 @@ import { Post } from '../Post.model';
 import { PublicCategoryAttributes } from '../channel/Category.types';
 import { PublicOutletAttributes } from '../channel/Outlet.types';
 import { InteractionType } from '../interaction/Interaction.types';
+import { PublicTranslationAttributes } from '../localization/Translation.types';
 
 @Table({
   modelName: 'summary',
@@ -93,8 +94,10 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   declare category: PublicCategoryAttributes;
   declare subcategory?: PublicCategoryAttributes;
 
-  declare sentiment: number;
-  declare sentiments: PublicSummarySentimentAttributes[];
+  declare sentiment?: number;
+  declare sentiments?: PublicSummarySentimentAttributes[];
+
+  declare translations?: PublicTranslationAttributes[];
 
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
     if (userId && type) {

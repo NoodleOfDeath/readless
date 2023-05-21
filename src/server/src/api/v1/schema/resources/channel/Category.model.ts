@@ -59,6 +59,6 @@ export class Category<
   })
   declare icon: string;
 
-  declare sentiment: number;
+  declare sentiment?: number;
   
 }
