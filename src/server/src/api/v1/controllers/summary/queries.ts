@@ -1,6 +1,6 @@
 export const GET_SUMMARIES = `
 SELECT
-  "totalCount" AS count,
+  "totalCount"::INT AS count,
   JSONB_BUILD_OBJECT(
     'sentiment', "averageSentiment"
   ) AS metadata,
@@ -132,6 +132,7 @@ FROM (
           OR (summaries.summary ~* :filter)
           OR (summaries.bullets::text ~* :filter)
           OR (summary_tokens.text ~* :filter)
+          OR (summary_translations.value ~* :filter)
         )
       GROUP BY
         summaries.id,
