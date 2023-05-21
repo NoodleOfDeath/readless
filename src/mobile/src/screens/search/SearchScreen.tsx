@@ -2,14 +2,14 @@ import React from 'react';
 import {
   Animated,
   DeviceEventEmitter,
-  Dimensions,
-  Keyboard,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
 
+import { Badge } from 'react-native-paper';
+
+import { DisplaySettingsMenu } from './DisplaySettingsMenu';
 import { SearchMenu } from './SearchMenu';
-import { SpeedDial } from './SpeedDial';
 
 import {
   InteractionType,
@@ -34,9 +34,11 @@ import {
 } from '~/contexts';
 import {
   useLayout,
+  useNavigation,
   useSummaryClient,
   useTheme,
 } from '~/hooks';
+import { getLocale, locales } from '~/locales';
 import { ScreenProps } from '~/screens';
 import { lengthOf, parseKeywords } from '~/utils';
 
@@ -48,9 +50,10 @@ export function SearchScreen({
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
+      bookmarkedSummaries,
+      readSummaries,
       preferredReadingFormat,
       removedSummaries,
-      sortOrder,
     },
     ready,
   } = React.useContext(SessionContext);
@@ -60,6 +63,7 @@ export function SearchScreen({
   const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const { supportsMasterDetail } = useLayout();
+  const { search } = useNavigation();
   const theme = useTheme();
   
   const sampler = React.useMemo(() => route?.params?.sampler, [route?.params?.sampler]);
@@ -85,7 +89,6 @@ export function SearchScreen({
   const [resizing, setResizing] = React.useState(false);
 
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
-  const [speedDialOpen, setSpeedDialOpen] = React.useState(false);
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
@@ -109,7 +112,11 @@ export function SearchScreen({
   
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
-  const _handlePlayAll = React.useCallback(async () => {
+  const bookmarkCount = React.useMemo(() => {
+    return lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((s) => !(s in (readSummaries ?? {}))));
+  }, [bookmarkedSummaries, readSummaries]);
+
+  const handlePlayAll = React.useCallback(async () => {
     if (summaries.length < 1) {
       return;
     }
@@ -141,9 +148,10 @@ export function SearchScreen({
         specificIds ?? excludeIds,
         !specificIds && Boolean(excludeIds),
         undefined,
+        undefined,
+        getLocale(),
         page,
-        pageSize,
-        sortOrder
+        pageSize
       );
       if (error) {
         console.error(error);
@@ -177,22 +185,58 @@ export function SearchScreen({
       setLoading(false);
       setLoaded(true);
     }
-  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, sortOrder]);
+  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
   
   React.useEffect(() => {
+
+    const headerRight = (
+      <View>
+        <View row gap={ 16 }>
+          <View>
+            <Badge
+              size={ 16 }
+              style={ {
+                position: 'absolute',
+                right: -4,
+                top: -4,
+                zIndex: 1,
+              } }
+              onPress={ () => navigation?.navigate('bookmarks') }>
+              { bookmarkCount }
+            </Badge>
+            <Button
+              startIcon="bookmark"
+              iconSize={ 24 }
+              onPress={ () => navigation?.navigate('bookmarks') } />
+          </View>
+          <Button
+            startIcon="volume-high"
+            iconSize={ 24 }
+            onPress={ handlePlayAll }
+            disabled={ summaries.length < 1 } />
+          <DisplaySettingsMenu />
+        </View>
+      </View>
+    );
+
     if (prefilter) {
       setSearchText(prefilter + ' ');
       navigation?.setOptions({ 
         headerBackVisible: true,
+        headerRight: () => headerRight,
         headerShown: true,
         headerTitle: prefilter,
       });
       setKeywords(parseKeywords(prefilter));
     } else {
       setSearchText('');
-      navigation?.setOptions({ headerShown: false });
+      navigation?.setOptions({ 
+        headerBackVisible: false,
+        headerRight: () => headerRight,
+        headerShown: true,
+      });
     }
-  }, [navigation, route, prefilter]);
+  }, [navigation, route, prefilter, handlePlayAll, summaries.length, bookmarkCount]);
   
   const onMount = React.useCallback(() => {
     if (!ready) {
@@ -337,16 +381,8 @@ export function SearchScreen({
 
   return (
     <Screen>
-      <View col gap={ 12 }>
+      <View col gap={ 3 }>
         {sampler && <TopicSampler horizontal />}
-        {averageSentiment && (
-          <View elevated height={ 50 } p={ 12 } justifyCenter>
-            <View row gap={ 12 }>
-              <MeterDial value={ averageSentiment } width={ 50 } />
-              <Text>{`Average sentiment for ${totalResultCount} results: ${averageSentiment.toFixed(2)}`}</Text>
-            </View>
-          </View>
-        )}
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>
@@ -377,7 +413,7 @@ export function SearchScreen({
                   setPage(0);
                   load(0);
                 } }>
-                <View col width="100%" pt={ 12 }>
+                <View col width="100%">
                   {summaryList}
                   {!loading && !noResults && totalResultCount > summaries.length && (
                     <View row justifyCenter p={ 16 } pb={ 24 }>
@@ -451,7 +487,25 @@ export function SearchScreen({
           </View>
         </View>
       </View>
-      <SearchMenu initialValue={ prefilter ?? searchText } />
+      {summaries.length > 0 && (
+        <SearchMenu
+          initialValue={ prefilter ?? searchText }
+          onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) }>
+          {averageSentiment && (
+            <View 
+              elevated 
+              height={ 30 } 
+              p={ 4 }
+              style={ { borderRadius: 12 } }>
+              <View row gap={ 12 } justifyCenter alignCenter>
+                <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
+                <Text caption>{`${averageSentiment >= 0 ? '+' : ''}${averageSentiment.toFixed(2)}`}</Text>
+                <Text caption>{`${totalResultCount} ${locales.results}`}</Text>
+              </View>
+            </View>
+          )}
+        </SearchMenu>
+      )}
     </Screen>
   );
 }

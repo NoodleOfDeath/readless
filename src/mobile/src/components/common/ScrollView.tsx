@@ -27,6 +27,7 @@ export function ScrollView({
   children,
   refreshing = false,
   onRefresh,
+  keyboardShouldPersistTaps = 'always',
   refreshControl = onRefresh && (
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
@@ -38,12 +39,22 @@ export function ScrollView({
   return (
     <SafeAreaView style={ theme.components.flexCol }>
       {keyboardAware ? (
-        <KeyboardAwareScrollView refreshControl={ refreshControl } { ...props }>
-          <View style={ style }>{children}</View>
+        <KeyboardAwareScrollView 
+          refreshControl={ refreshControl } 
+          keyboardShouldPersistTaps={ 'handled' }
+          keyboardDismissMode="on-drag"
+          style={ style }
+          { ...props }>
+          {children}
         </KeyboardAwareScrollView>
       ) : (
-        <RNScrollView refreshControl={ refreshControl } { ...props }>
-          <View style={ style }>{children}</View>
+        <RNScrollView 
+          refreshControl={ refreshControl }
+          keyboardShouldPersistTaps={ 'handled' }
+          keyboardDismissMode="on-drag"
+          style={ style }
+          { ...props }>
+          {children}
         </RNScrollView>
       )}
     </SafeAreaView>

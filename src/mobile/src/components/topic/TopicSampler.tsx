@@ -10,6 +10,7 @@ import {
   ScrollViewProps,
   Text,
   View,
+  ViewProps,
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { 
@@ -19,7 +20,7 @@ import {
   useTheme,
 } from '~/hooks';
 
-export type TopicSamplerProps = ScrollViewProps & {
+export type TopicSamplerProps = ScrollViewProps & ViewProps & {
   initialTopicType?: Partial<PublicTokenTypeAttributes>;
   initialInterval?: string;
 };

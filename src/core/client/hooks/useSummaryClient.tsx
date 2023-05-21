@@ -7,7 +7,7 @@ import {
   API,
   InteractionType,
   PublicSummaryAttributes,
-  TokenType,
+  TokenTypeName,
 } from '~/api';
 import { getUserAgent } from '~/utils';
 
@@ -22,22 +22,23 @@ export function useSummaryClient() {
     ids?: number[],
     excludeIds?: boolean,
     matchType?: 'all' | 'any',
+    interval?: string,
+    locale?: string,
     page = 0,
-    pageSize = 10,
-    order?: string[]
+    pageSize = 10
   ) => {
     try {
       return await withHeaders(API.getSummaries)({
-        excludeIds, filter, ids, matchType, order, page, pageSize,
+        excludeIds, filter, ids, interval, locale, matchType, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
   }, [withHeaders]);
 
-  const getSummary = React.useCallback(async (id: number) => {
+  const getSummary = React.useCallback(async (id: number, locale: string) => {
     try {
-      const { data, error } = await getSummaries(undefined, [id], false, 'all', 0, 1);
+      const { data, error } = await getSummaries(undefined, [id], false, undefined, undefined, locale, 0, 1);
       if (error) {
         return { data: undefined, error };
       }
@@ -59,7 +60,7 @@ export function useSummaryClient() {
   }, [withHeaders]);
   
   const getTopics = React.useCallback(async (
-    type?: TokenType,
+    type?: TokenTypeName,
     interval?: string,
     min?: number,
     page = 0,
@@ -120,19 +121,17 @@ export function useSummaryClient() {
         return (prev = bookmarks);
       });
     } 
-    setTimeout(() => {
-      if (interaction === InteractionType.Read && /original source/i.test(content ?? '')) {
-        setPreference('readSources', (prev) => {
-          const bookmarks = { ...prev };
-          bookmarks[summary.id] = new Bookmark(true);
-          return (prev = bookmarks);
-        });
-      }
-      setPreference('summaryHistory', (prev) => ({
-        ...prev,
-        [summary.id]: new Bookmark(interaction),
-      }));
-    }, 300);
+    if (interaction === InteractionType.Read && /original source/i.test(content ?? '')) {
+      setPreference('readSources', (prev) => {
+        const bookmarks = { ...prev };
+        bookmarks[summary.id] = new Bookmark(true);
+        return (prev = bookmarks);
+      });
+    }
+    setPreference('summaryHistory', (prev) => ({
+      ...prev,
+      [summary.id]: new Bookmark(interaction),
+    }));
     return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, setPreference]);
 

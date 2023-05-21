@@ -41,6 +41,7 @@ export function SessionContextProvider({ children }: Props) {
   const ready = React.useMemo(() => Object.values(readyFlags).every((flag) => flag), [readyFlags]);
 
   const [preferences, setPreferences] = React.useState<Preferences>({});
+  const [prefsNeedSync, setPrefsNeedSync] = React.useState(false);
   const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps>();
   
   const userData = React.useMemo(() => userDataRaw ? new UserData(userDataRaw) : undefined, [userDataRaw]);
@@ -89,10 +90,9 @@ export function SessionContextProvider({ children }: Props) {
         newPrefs[key] =
             value instanceof Function ? value(prev[key]) : value;
       }
-      setCookie(COOKIES.preferences, JSON.stringify(newPrefs))
-        .catch(console.error);
       return (prev = newPrefs);
     });
+    setPrefsNeedSync(true);
   };
 
   const followOutlet = (outlet: PublicOutletAttributes) => {
@@ -166,6 +166,22 @@ export function SessionContextProvider({ children }: Props) {
       setUserData();
     }
   }, [userData?.expired]);
+  
+  const syncPrefs = React.useCallback(async () => {
+    try {
+      await setCookie(COOKIES.preferences, JSON.stringify(preferences));
+    } catch (e) {
+      console.error(e);
+    }
+    setPrefsNeedSync(false);
+  }, [preferences]);
+  
+  React.useEffect(() => {
+    if (!prefsNeedSync) {
+      return;
+    }
+    syncPrefs();
+  }, [syncPrefs, prefsNeedSync]);
   
   return (
     <SessionContext.Provider

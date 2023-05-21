@@ -33,18 +33,15 @@ export function ChannelScreen({
   const type = React.useMemo(() => route?.params?.type, [route]);
   const attributes = React.useMemo(() => route?.params?.attributes, [route]);
 
-  const bookmarked = React.useMemo(() => {
+  const [bookmarked, setBookmarked] = React.useState(false);
+  
+  React.useEffect(() => {
     if (!attributes) {
-      return false;
+      return;
     }
-    switch (type) {
-    case 'category':
-      return bookmarkedCategories?.[attributes.name];
-    case 'outlet':
-      return bookmarkedOutlets?.[attributes.name];
-    default:
-      return false;
-    }
+    type === 'category' ? 
+      setBookmarked(attributes.name in (bookmarkedCategories ?? {})) :
+      setBookmarked(attributes.name in (bookmarkedOutlets ?? {}));
   }, [attributes, type, bookmarkedCategories, bookmarkedOutlets]);
 
   const prefilter = React.useMemo(() => {
@@ -61,6 +58,16 @@ export function ChannelScreen({
     }
   }, [attributes, type]);
 
+  const toggleBookmarked = React.useCallback(() => {
+    if (!attributes) {
+      return;
+    }
+    setBookmarked((prev) => !prev);
+    type === 'category' ? 
+      followCategory(attributes as PublicCategoryAttributes) :
+      followOutlet(attributes);
+  }, [attributes, type, followCategory, followOutlet]);
+  
   return (
     <Screen>
       <View col gap={ 12 } mt={ 12 }>
@@ -76,7 +83,7 @@ export function ChannelScreen({
               body2
               rounded
               p={ 6 }
-              onPress={ () => attributes && (type === 'category' ? followCategory(attributes as PublicCategoryAttributes) : followOutlet(attributes)) }>
+              onPress={ toggleBookmarked }>
               { bookmarked ? 'Unfollow Channel' : 'Follow Channel' }
             </Button>
           </View>
