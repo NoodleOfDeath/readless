@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Endpoints {
-  static let GetSummaries = "https://api.readless.ai/v1/summary/?scope=conservative&order=originalDate%3Adesc"
+  static let GetSummaries = "https://api.readless.ai/v1/summary/?"
 }
 
 class ConnectService: ObservableObject {
@@ -51,7 +51,7 @@ class ConnectService: ObservableObject {
   }
   
   @Sendable func fetchSync() {
-    guard let url = URL(string: Endpoints.GetSummaries + "&locale=" + (Locale.current.identifier.split(separator: "-").first ?? "en")) else {
+    guard let url = URL(string: Endpoints.GetSummaries + "locale=" + (Locale.current.identifier.split(separator: "-").first ?? "en")) else {
       return
     }
     loading = true

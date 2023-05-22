@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, useColorScheme } from 'react-native';
+import { Linking } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -15,7 +15,12 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import { BottomNavigation, adaptNavigationTheme } from 'react-native-paper';
+import {
+  BottomNavigation,
+  MD3DarkTheme,
+  MD3LightTheme,
+  adaptNavigationTheme,
+} from 'react-native-paper';
 import { Badge } from 'react-native-paper';
 
 import {
@@ -31,7 +36,7 @@ import {
   MediaPlayer,
   View,
 } from '~/components';
-import { useNavigation } from '~/hooks';
+import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import {
   BrowseScreen,
@@ -173,8 +178,7 @@ const TABS: TabProps[] = [
 ];
 
 export default function NavigationController() {
-  const colorScheme = useColorScheme();
-  const theme = React.useMemo(() => colorScheme === 'dark' ? adaptNavigationTheme({ reactNavigationDark: DarkTheme }).DarkTheme : adaptNavigationTheme({ reactNavigationLight: DefaultTheme }).LightTheme, [colorScheme]);
+  const theme = useTheme();
   const Tab = createBottomTabNavigator();
   const { ready, preferences } = React.useContext(SessionContext);
   const initialRouteName = React.useMemo(() => {
@@ -182,7 +186,7 @@ export default function NavigationController() {
   }, [preferences.bookmarkedCategories, preferences.bookmarkedOutlets]);
   return (
     <NavigationContainer
-      theme={ theme }
+      theme= { theme.navContainerTheme }
       fallback={ <ActivityIndicator animating /> }
       linking={ NAVIGATION_LINKING_OPTIONS }>
       {!ready ? (

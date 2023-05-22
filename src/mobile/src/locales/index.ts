@@ -75,6 +75,31 @@ const localeMap = {
   'zh-TW': zhTWStrings,
 };
 
+const supportedLocales = [
+  'ar',
+  'de',
+  'en',
+  'es',
+  'fr',
+  'hu',
+  'it',
+  'ja',
+  'ko',
+  'nb',
+  'pt',
+  'pt-BR',
+  'pt-PT',
+  'ru',
+  'th',
+  'uk',
+  'vi',
+  'zh',
+  'zh-CN',
+  'zh-TW',
+] as const;
+
+export type SupportedLocale = typeof supportedLocales[number];
+
 export const strings = new LocalizedStrings(localeMap);
 
 export const fnsLocales: Record<keyof typeof localeMap, Locale> = {
@@ -110,21 +135,22 @@ export const fnsLocales: Record<keyof typeof localeMap, Locale> = {
   'zh-TW': zhTW,
 };
 
-export const getLocale = (): keyof typeof localeMap => {
+export const getLocale = (): SupportedLocale => {
   let lang = strings.getInterfaceLanguage();
   const parts = lang.split('-');
   if (/^zh/i.test(lang) && parts.length > 2) {
     lang = `${parts[0]}-${parts[2].toUpperCase()}`;
   }
-  if (!(lang in localeMap)) {
-    if (parts.length > 1 && parts[0] in localeMap) {
-      return parts[0] as keyof typeof localeMap;
+  if (!supportedLocales.includes(lang as SupportedLocale)) {
+    if (parts.length > 0 && supportedLocales.includes(parts[0] as SupportedLocale)) {
+      lang = parts[0] as SupportedLocale;
+    } else {
+      return 'en';
     }
-    return 'en';
   }
-  return lang as keyof typeof localeMap;
+  return lang as SupportedLocale;
 };
 
 export const getFnsLocale = () => {
-  return fnsLocales[getLocale()];
+  return fnsLocales[strings.getInterfaceLanguage() as keyof typeof fnsLocales];
 };

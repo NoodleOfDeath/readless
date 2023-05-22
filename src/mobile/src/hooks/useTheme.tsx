@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
+
 import { Preferences, SessionContext } from '~/contexts';
 
 const makeTheme = (lightMode: boolean, preferences: Preferences) => {
@@ -108,13 +110,18 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         },
       }),
     isLightMode: lightMode,   
-    navContainerColors: {
-      background: lightMode ? '#eee' : '#1e1e1e',
-      border: lightMode ? '#bdbdbd' : '#757575',
-      card: lightMode ? '#fff' : '#1e1e1e',
-      notification: '#8b0000',
-      primary: '#8b0000',
-      text: lightMode ? '#212121' : '#fff',
+    navContainerTheme: {
+      ...(lightMode ? DefaultTheme : DarkTheme),
+      colors: {
+        ...(lightMode ? DefaultTheme : DarkTheme).colors,
+        background: lightMode ? '#eee' : '#1e1e1e',
+        border: lightMode ? '#bdbdbd' : '#757575',
+        card: lightMode ? '#fff' : '#1e1e1e',
+        notification: '#8b0000',
+        primary: '#8b0000',
+        text: lightMode ? '#212121' : '#fff',
+      },
+      dark: !lightMode,
     },
   };
 };
@@ -128,7 +135,7 @@ export function useTheme() {
   const DARK_THEME = makeTheme(false, preferences);
 
   const colorScheme = useColorScheme();
-  
-  return ((preferences.displayMode ?? colorScheme) === 'light') ? LIGHT_THEME : DARK_THEME;
+
+  return ((preferences.displayMode ?? colorScheme) === 'dark') ? DARK_THEME : LIGHT_THEME;
   
 }

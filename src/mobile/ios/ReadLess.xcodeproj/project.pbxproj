@@ -109,7 +109,6 @@
 		CD4AEB862A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
 		CD4AEB872A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
 		CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */; };
-		CDEE16502A1B9E9C00E15B10 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CDEE15F92A1B944B00E15B10 /* Info.plist */; };
 		CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */; };
 /* End PBXBuildFile section */
 
@@ -233,8 +232,8 @@
 		CD06958B2A1BA96C005C0208 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD06958C2A1BA96F005C0208 /* en-IN */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "en-IN"; path = "en-IN.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		CD06958D2A1BA974005C0208 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-HK"; path = "zh-HK.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
-		CD06958F2A1BAC8D005C0208 /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "it-IT"; path = "it-IT.lproj/Info.plist"; sourceTree = "<group>"; };
 		CD0695902A1BAC95005C0208 /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "it-IT"; path = "it-IT.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CD0695912A1BD9DC005C0208 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Faustina.ttf; sourceTree = "<group>"; };
 		CD4AEB212A0D93180093B6D1 /* Manuale.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Manuale.ttf; sourceTree = "<group>"; };
 		CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FaustinaBold.ttf; sourceTree = "<group>"; };
@@ -254,33 +253,6 @@
 		CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSans.ttf; sourceTree = "<group>"; };
 		CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansBoldItalic.ttf; sourceTree = "<group>"; };
 		CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansItalic.ttf; sourceTree = "<group>"; };
-		CDEE15F82A1B944B00E15B10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE15FA2A1B945B00E15B10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE15FB2A1B945D00E15B10 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ar; path = ar.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE15FC2A1B945D00E15B10 /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = zh; path = zh.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE15FD2A1B945E00E15B10 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-HK"; path = "zh-HK.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE15FE2A1B945E00E15B10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE15FF2A1B945E00E15B10 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE16002A1B945F00E15B10 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant"; path = "zh-Hant.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE16012A1B945F00E15B10 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE16022A1B946000E15B10 /* en-AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "en-AU"; path = "en-AU.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE16032A1B946100E15B10 /* en-IN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "en-IN"; path = "en-IN.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE16042A1B946100E15B10 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "en-GB"; path = "en-GB.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE16052A1B946100E15B10 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = fr.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16072A1B946200E15B10 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = de; path = de.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16092A1B946300E15B10 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = it; path = it.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE160B2A1B946500E15B10 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ko; path = ko.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE160C2A1B946600E15B10 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = nb; path = nb.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE160D2A1B946600E15B10 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "pt-BR"; path = "pt-BR.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE160E2A1B946700E15B10 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "pt-PT"; path = "pt-PT.lproj/Info.plist"; sourceTree = "<group>"; };
-		CDEE160F2A1B946700E15B10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ru; path = ru.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16102A1B946800E15B10 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16112A1B946800E15B10 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = uk; path = uk.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16122A1B946900E15B10 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = vi; path = vi.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16132A1B965F00E15B10 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = th; path = th.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16152A1B988E00E15B10 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ja; path = ja.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16162A1B98CB00E15B10 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = hu; path = hu.lproj/Info.plist; sourceTree = "<group>"; };
-		CDEE16172A1B98E300E15B10 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "fr-CA"; path = "fr-CA.lproj/Info.plist"; sourceTree = "<group>"; };
 		CDEE16192A1B9CCA00E15B10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CDEE16242A1B9CE600E15B10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		CDEE16262A1B9CE600E15B10 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
@@ -500,8 +472,8 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				CD0695912A1BD9DC005C0208 /* Info.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				CDEE15F92A1B944B00E15B10 /* Info.plist */,
 				CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */,
 			);
 			name = ReadLess;
@@ -859,7 +831,6 @@
 				0125BD4B29D791ED00EAC61C /* FontAwesome5_Solid.ttf in Resources */,
 				CD4AEB3B2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */,
 				CD4AEB572A0D99D30093B6D1 /* LatoItalic.ttf in Resources */,
-				CDEE16502A1B9E9C00E15B10 /* Info.plist in Resources */,
 				CD4AEB222A0D93180093B6D1 /* Manuale.ttf in Resources */,
 				CD4AEB512A0D99D30093B6D1 /* LatoBold.ttf in Resources */,
 				01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */,
@@ -1125,42 +1096,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		CDEE15F92A1B944B00E15B10 /* Info.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CDEE15F82A1B944B00E15B10 /* Base */,
-				CDEE15FA2A1B945B00E15B10 /* en */,
-				CDEE15FB2A1B945D00E15B10 /* ar */,
-				CDEE15FC2A1B945D00E15B10 /* zh */,
-				CDEE15FD2A1B945E00E15B10 /* zh-HK */,
-				CDEE15FE2A1B945E00E15B10 /* zh-Hans */,
-				CDEE15FF2A1B945E00E15B10 /* zh-Hans-CN */,
-				CDEE16002A1B945F00E15B10 /* zh-Hant */,
-				CDEE16012A1B945F00E15B10 /* zh-Hant-TW */,
-				CDEE16022A1B946000E15B10 /* en-AU */,
-				CDEE16032A1B946100E15B10 /* en-IN */,
-				CDEE16042A1B946100E15B10 /* en-GB */,
-				CDEE16052A1B946100E15B10 /* fr */,
-				CDEE16072A1B946200E15B10 /* de */,
-				CDEE16092A1B946300E15B10 /* it */,
-				CDEE160B2A1B946500E15B10 /* ko */,
-				CDEE160C2A1B946600E15B10 /* nb */,
-				CDEE160D2A1B946600E15B10 /* pt-BR */,
-				CDEE160E2A1B946700E15B10 /* pt-PT */,
-				CDEE160F2A1B946700E15B10 /* ru */,
-				CDEE16102A1B946800E15B10 /* es */,
-				CDEE16112A1B946800E15B10 /* uk */,
-				CDEE16122A1B946900E15B10 /* vi */,
-				CDEE16132A1B965F00E15B10 /* th */,
-				CDEE16152A1B988E00E15B10 /* ja */,
-				CDEE16162A1B98CB00E15B10 /* hu */,
-				CDEE16172A1B98E300E15B10 /* fr-CA */,
-				CD06958F2A1BAC8D005C0208 /* it-IT */,
-			);
-			name = Info.plist;
-			path = ReadLess;
-			sourceTree = "<group>";
-		};
 		CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1494,7 +1429,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.0;
+				MARKETING_VERSION = 1.7.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1534,7 +1469,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.0;
+				MARKETING_VERSION = 1.7.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
