@@ -23,7 +23,7 @@ import {
   Preferences,
   SessionContext,
 } from './contexts';
-import { locales } from './locales';
+import { lengthOf } from './utils';
 
 import {
   ActivityIndicator,
@@ -32,6 +32,7 @@ import {
   View,
 } from '~/components';
 import { useNavigation } from '~/hooks';
+import { strings } from '~/locales';
 import {
   BrowseScreen,
   ChannelScreen,
@@ -106,21 +107,21 @@ const TABS: TabProps[] = [
         { 
           component: SearchScreen, 
           initialParams: { sampler: true },
-          name:'default', 
-          options: { headerTitle: locales.headlines },
+          name: 'default', 
+          options: { headerTitle: strings.headlines },
         }, 
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
         { component: ChannelScreen, name: 'channel' },
         { component: MyStuffScreen, name: 'bookmarks' },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: locales.browse },
+          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
         },
       ],
       'default'
     ),
     icon: 'newspaper',
-    name: locales.headlines,
+    name: strings.headlines,
   },
   {
     component: TabViewController<StackableTabParams>(
@@ -128,8 +129,8 @@ const TABS: TabProps[] = [
         {
           component: SearchScreen, 
           initialParams: { onlyCustomNews: true }, 
-          name:'default', 
-          options: { headerTitle: locales.myNews },
+          name: 'default', 
+          options: { headerTitle: strings.myNews },
         },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
@@ -138,13 +139,13 @@ const TABS: TabProps[] = [
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
         },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: locales.browse },
+          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
         },
       ],
       'default'
     ),
     icon: 'cards',
-    name: locales.myNews,
+    name: strings.myNews,
   },
   {
     component: TabViewController<StackableTabParams>(
@@ -152,7 +153,7 @@ const TABS: TabProps[] = [
         {
           component: BrowseScreen, 
           name:'default', 
-          options: { headerTitle: locales.headlines },
+          options: { headerTitle: strings.browse },
         },
         { component: SearchScreen, name: 'search' },
         { component: SummaryScreen, name: 'summary' },
@@ -161,13 +162,13 @@ const TABS: TabProps[] = [
           component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
         },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: locales.headlines },
+          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
         },
       ],
       'default'
     ),
     icon: 'bookshelf',
-    name: locales.browse,
+    name: strings.browse,
   },
 ];
 
@@ -176,6 +177,9 @@ export default function NavigationController() {
   const theme = React.useMemo(() => colorScheme === 'dark' ? adaptNavigationTheme({ reactNavigationDark: DarkTheme }).DarkTheme : adaptNavigationTheme({ reactNavigationLight: DefaultTheme }).LightTheme, [colorScheme]);
   const Tab = createBottomTabNavigator();
   const { ready, preferences } = React.useContext(SessionContext);
+  const initialRouteName = React.useMemo(() => {
+    return lengthOf(preferences.bookmarkedCategories, preferences.bookmarkedOutlets) > 0 ? strings.myNews : strings.headlines;
+  }, [preferences.bookmarkedCategories, preferences.bookmarkedOutlets]);
   return (
     <NavigationContainer
       theme={ theme }
@@ -185,6 +189,7 @@ export default function NavigationController() {
         <ActivityIndicator animating />
       ) : (
         <Tab.Navigator
+          initialRouteName={ initialRouteName }
           tabBar={ ({
             navigation, state, descriptors, insets, 
           }) => (

@@ -10,11 +10,7 @@ import {
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-aware-scroll-view';
 
-import {
-  Stylable,
-  View,
-  ViewProps,
-} from '~/components';
+import { Stylable, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type ScrollViewProps = ViewProps & KeyboardAwareScrollViewProps & {
@@ -27,7 +23,7 @@ export function ScrollView({
   children,
   refreshing = false,
   onRefresh,
-  keyboardShouldPersistTaps = 'always',
+  keyboardShouldPersistTaps = 'handled',
   refreshControl = onRefresh && (
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
@@ -41,7 +37,7 @@ export function ScrollView({
       {keyboardAware ? (
         <KeyboardAwareScrollView 
           refreshControl={ refreshControl } 
-          keyboardShouldPersistTaps={ 'handled' }
+          keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
           keyboardDismissMode="on-drag"
           style={ style }
           { ...props }>
@@ -50,7 +46,7 @@ export function ScrollView({
       ) : (
         <RNScrollView 
           refreshControl={ refreshControl }
-          keyboardShouldPersistTaps={ 'handled' }
+          keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
           keyboardDismissMode="on-drag"
           style={ style }
           { ...props }>

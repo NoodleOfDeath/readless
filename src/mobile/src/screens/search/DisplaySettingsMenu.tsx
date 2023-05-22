@@ -1,7 +1,7 @@
 import React from 'react';
 
 import RNFS from 'react-native-fs';
-import { Switch } from 'react-native-paper';
+import { SegmentedButtons, Switch } from 'react-native-paper';
 
 import { ReadingFormat } from '~/api';
 import {
@@ -18,8 +18,8 @@ import {
 } from '~/components';
 import { ColorMode, SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
+import { strings } from '~/locales';
 
-const displayModes = ['light', 'system', 'dark'];
 const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
@@ -45,20 +45,8 @@ export function DisplaySettingsMenu() {
   } = React.useContext(SessionContext);
   
   const [loading, setLoading] = React.useState(false);
-  const [activeDisplayMode, setActiveDisplayMode] = React.useState(displayModes.indexOf(displayMode ?? 'system'));
   const [activeTextScale, setActiveTextScale] = React.useState(textScales.findIndex((s) => s.value == (textScale ?? 1)));
   const [cacheSize, setCacheSize] = React.useState('');
-  
-  const handleDisplayModeChange = React.useCallback((index: number) => {
-    const newDisplayMode = displayModes[index];
-    if (displayMode === newDisplayMode) {
-      setActiveDisplayMode(1);
-      setPreference('displayMode', undefined);
-      return;
-    }
-    setActiveDisplayMode(index);
-    setPreference('displayMode', newDisplayMode === 'system' ? undefined : newDisplayMode as ColorMode);
-  }, [displayMode, setPreference]);
 
   const handleReadingFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (preferredReadingFormat === newFormat) {
@@ -108,31 +96,34 @@ export function DisplaySettingsMenu() {
       <View gap={ 6 } overflow="hidden">
         <View gap={ 16 }>
           <View justifyCenter alignCenter gap={ 6 }>
-            <Text caption>Display Mode</Text>
+            <Text caption>{strings.settings.displayMode}</Text>
             <View row gap={ 6 } alignCenter>
               <View>
                 <Button caption gap={ 4 } startIcon="view-agenda" iconSize={ 24 } bold alignCenter>
-                  Expanded 
+                  {strings.settings.expanded} 
                 </Button>
               </View>
               <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
               <View>
                 <Button caption gap={ 4 } startIcon="view-headline" iconSize={ 24 } bold alignCenter>
-                  Compact
+                  {strings.settings.compact}
                 </Button>
               </View>
             </View>
           </View>
           <View justifyCenter gap={ 6 }>
-            <Text caption textCenter>Color Scheme</Text>
-            <TabSwitcher
-              rounded
-              activeTab={ activeDisplayMode }
-              onTabChange={ handleDisplayModeChange }
-              titles={ [ 'Light', 'System', 'Dark'] } />
+            <Text caption textCenter>{strings.settings.colorScheme}</Text>
+            <SegmentedButtons
+              value={ displayMode ?? 'system' }
+              onValueChange={ (value) => setPreference('displayMode', value as ColorMode) }
+              buttons={ [
+                { label: strings.settings.light, value: 'light' },
+                { label: strings.settings.system, value: 'system' },
+                { label: strings.settings.dark, value: 'dark' },
+              ] } />
           </View>
           <View justifyCenter alignCenter gap={ 6 }>
-            <Text caption textCenter>Short summaries under titles</Text>
+            <Text caption textCenter>{strings.settings.shortSummaries}</Text>
             <Switch 
               color={ theme.colors.primary } 
               value={ showShortSummary }
@@ -141,14 +132,14 @@ export function DisplaySettingsMenu() {
               } } />
           </View>
           <View justifyCenter gap={ 6 }>
-            <Text caption textCenter>Default reading mode on open</Text>
+            <Text caption textCenter>{strings.settings.defaultReadingMode}</Text>
             <ReadingFormatSelector 
               format={ preferredReadingFormat }
               preferredFormat={ preferredReadingFormat }
               onChange={ handleReadingFormatChange } />
           </View>
           <View justifyCenter gap={ 6 }>
-            <Text caption textCenter>Text Scale</Text>
+            <Text caption textCenter>{strings.settings.textScale}</Text>
             <TabSwitcher
               rounded
               activeTab={ activeTextScale }
@@ -156,7 +147,7 @@ export function DisplaySettingsMenu() {
               titles={ textScales.map((s) => s.label) } />
           </View>
           <View gap={ 6 }>
-            <Text caption textCenter>Font</Text>
+            <Text caption textCenter>{strings.settings.font}</Text>
             <ScrollView horizontal style={ { overflow:'visible' } }>
               <View row alignCenter gap={ 8 } mh={ 8 }>
                 {AVAILABLE_FONTS.map((font) => (
@@ -183,8 +174,13 @@ export function DisplaySettingsMenu() {
             rounded
             caption
             p={ 8 }
-            onPress={ () => setPreference('readSummaries', {}) }>
-            Reset Read Summaries to Unread (
+            onPress={ () => {
+              setPreference('readSummaries', {}); 
+              setPreference('readSources', {}); 
+            } }>
+            {strings.settings.resetReadSummaries}
+            {' '}
+            (
             {Object.values(readSummaries ?? {}).length}
             )
           </Button>
@@ -194,7 +190,9 @@ export function DisplaySettingsMenu() {
             caption
             p={ 8 }
             onPress={ () => setPreference('summaryHistory', {}) }>
-            Clear History (
+            {strings.settings.clearHistory}
+            {' '}
+            (
             {Object.values(summaryHistory ?? {}).length}
             )
           </Button>
@@ -204,7 +202,9 @@ export function DisplaySettingsMenu() {
             caption
             p={ 8 }
             onPress={ () => setPreference('removedSummaries', {}) }>
-            Reset Hidden Summaries (
+            {strings.settings.resetHiddenSummaries}
+            {' '}
+            (
             {Object.values(removedSummaries ?? {}).length}
             )
           </Button>
@@ -215,7 +215,9 @@ export function DisplaySettingsMenu() {
               caption
               p={ 8 }
               onPress={ () => handleClearCache() }>
-              Clear Cache (
+              {strings.settings.clearCache}
+              {' '}
+              (
               {cacheSize}
               )
             </Button>

@@ -38,7 +38,7 @@ import {
   useSummaryClient,
   useTheme,
 } from '~/hooks';
-import { getLocale, locales } from '~/locales';
+import { getLocale, strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 import { lengthOf, parseKeywords } from '~/utils';
 
@@ -386,8 +386,7 @@ export function SearchScreen({
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>
-              It seems your filters are too specific. You may want to consider 
-              adding more categories and/or news sources to your follow list.
+              {strings.search.filtersTooSpecific}
             </Text>
             <Button 
               alignCenter
@@ -396,12 +395,12 @@ export function SearchScreen({
               p={ 8 }
               selectable
               onPress={ () => navigation?.getParent()?.navigate('Browse') }>
-              Go to Browse
+              {strings.search.goToBrowse}
             </Button>
           </View>
         )}
         {prefilter && onlyCustomNews && (
-          <Text caption textCenter mb={ 6 } mh={ 12 }>Note: This is searching within only your custom news feed and not all news articles</Text>
+          <Text caption textCenter mb={ 6 } mh={ 12 }>{strings.search.customNewsSearch}</Text>
         )}
         <View col>
           <View row>
@@ -423,7 +422,7 @@ export function SearchScreen({
                         p={ 8 }
                         selectable
                         onPress={ () => loadMore() }>
-                        Load More
+                        {strings.search.loadMore}
                       </Button>
                     </View>
                   )}
@@ -436,7 +435,11 @@ export function SearchScreen({
                   )}
                   {summaries.length === 0 && !loading && (
                     <View col gap={ 12 } alignCenter justifyCenter>
-                      <Text textCenter mh={ 16 }>No results found 🥺</Text>
+                      <Text textCenter mh={ 16 }>
+                        {strings.search.noResults}
+                        {' '}
+                        🥺
+                      </Text>
                       <Button 
                         alignCenter
                         rounded 
@@ -444,7 +447,7 @@ export function SearchScreen({
                         p={ 8 }
                         selectable
                         onPress={ () => load(0) }>
-                        Reload
+                        {strings.search.reload}
                       </Button>
                     </View>
                   )}
@@ -500,7 +503,7 @@ export function SearchScreen({
               <View row gap={ 12 } justifyCenter alignCenter>
                 <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
                 <Text caption>{`${averageSentiment >= 0 ? '+' : ''}${averageSentiment.toFixed(2)}`}</Text>
-                <Text caption>{`${totalResultCount} ${locales.results}`}</Text>
+                <Text caption>{`${totalResultCount} ${strings.search.results}`}</Text>
               </View>
             </View>
           )}

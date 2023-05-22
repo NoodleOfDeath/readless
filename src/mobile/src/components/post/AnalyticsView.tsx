@@ -13,6 +13,7 @@ import {
   ViewProps,
 } from '~/components';
 import { useStyles } from '~/hooks';
+import { strings } from '~/locales';
 import { fixedSentiment } from '~/utils';
 
 export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
@@ -26,7 +27,7 @@ const chartConfig = {
 };
 
 export function AnalyticsView({
-  sentiment,
+  sentiment = 0,
   sentiments,
   ...props  
 }: AnalyticsViewProps) {
@@ -36,17 +37,17 @@ export function AnalyticsView({
   const sentimentLabel = React.useMemo(() => {
     if (sentiment < -0.2) {
       if (sentiment < -0.6) {
-        return 'Very Negative';
+        return strings.summary.veryNegative;
       }
-      return 'Negative';
+      return strings.summary.negative;
     }
     if (sentiment > 0.2) {
       if (sentiment > 0.6) {
-        return 'Very Positive';
+        return strings.summary.veryPositive;
       }
-      return 'Positive';
+      return strings.summary.positive;
     }
-    return 'Neutral';
+    return strings.summary.neutral;
   }, [sentiment]);
   
   const chartData = React.useMemo(() => {
@@ -69,21 +70,21 @@ export function AnalyticsView({
         startCollapsed={ false }
         title={ (
           <View row gap={ 12 }>
-            <Text>
-              Sentiment Analysis
+            <Text subtitle1>
+              {strings.summary.sentimentAnalysis}
             </Text>
             <Menu
               autoAnchor={
                 <Icon size={ 24 } name="information" />
               }>
-              <Text>Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.</Text>
+              <Text>{strings.summary.sentimentAnalysisInfo}</Text>
             </Menu>
           </View>
         ) }>
         <View gap={ 12 }>
           <View row alignStart gap={ 12 }>
             <Text
-              bg={ /negative/i.test(sentimentLabel) ? '#ff0000' : /positive/i.test(sentimentLabel) ? '#00cc00' : '#888' }
+              bg={ sentiment < -0.2 ? '#ff0000' : sentiment > 0.2 ? '#00cc00' : '#888' }
               color="white"
               style={ { overflow: 'hidden' } }
               p={ 4 }>

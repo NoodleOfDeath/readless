@@ -20,6 +20,7 @@ import {
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
+import { strings } from '~/locales';
 import {
   ScreenProps,
   SearchScreen,
@@ -49,7 +50,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
   
   const [unreadPage, setUnreadPage] = React.useState(0);
 
-  const titles = React.useMemo(() => [`Bookmarks (${bookmarks.length})`, `Activity (${history.length})` ], [bookmarks, history]);
+  const titles = React.useMemo(() => [`${strings.myStuff.bookmarks} (${bookmarks.length})`, `${strings.myStuff.activity} (${history.length})` ], [bookmarks, history]);
 
   const historyRoute = React.useMemo<RouteProp<StackableTabParams, 'search'>>(() => ({
     key: 'read',
@@ -111,13 +112,13 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
               <View mh={ 16 } gap={ 6 }>
                 <View row gap={ 6 }>
                   <Text>
-                    Bookmarks are always available offline
+                    {strings.myStuff.bookmarksInfo}
                   </Text>
                   <Menu
                     autoAnchor={
                       <Icon size={ 24 } name="information" />
                     }>
-                    <Text>Note: The original ariticles themselves are not saved for offline reading.</Text>
+                    <Text>{strings.myStuff.bookmarksNote}</Text>
                   </Menu>
                 </View>
                 <View row>
@@ -134,7 +135,7 @@ export function MyStuffScreen({ navigation }: ScreenProps<'search'>) {
                       }
                       return (prev = state);
                     }) }>
-                    Removed Read from Bookmarks
+                    {strings.myStuff.removeReadFromBookmarks}
                   </Button>
                 </View>
               </View>

@@ -12,7 +12,7 @@ import {
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useStyles, useTheme } from '~/hooks';
-import { locales } from '~/locales';
+import { strings } from '~/locales';
 
 export type SearchMenuProps = ViewProps & {
   initialValue?: string;
@@ -25,7 +25,7 @@ export type SearchMenuProps = ViewProps & {
 
 export function SearchMenu({
   initialValue = '',
-  placeholder = locales.search,
+  placeholder = strings.search.search,
   children,
   onChangeText,
   onClear,
@@ -133,12 +133,12 @@ export function SearchMenu({
                   rounded 
                   p={ 4 } 
                   onPress={ () => submit() }>
-                  {locales.search}
+                  {strings.search.search}
                 </Button>
               </View>
               <View gap={ 6 }>
                 <Button caption onPress={ () => setPreference('searchHistory', []) }>
-                  {locales.clearHistory}
+                  {strings.clearSearchHistory}
                 </Button>
                 <Divider />
                 <ScrollView>

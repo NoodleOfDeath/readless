@@ -9,7 +9,6 @@ import ViewShot from 'react-native-view-shot';
 import { 
   InteractionType,
   PublicSummaryAttributes,
-  PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
 import {
@@ -43,7 +42,7 @@ import {
 import {
   getFnsLocale,
   getLocale,
-  locales,
+  strings,
 } from '~/locales';
 import { fixedSentiment } from '~/utils';
 
@@ -138,8 +137,18 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const [translations, setTranslations] = React.useState<Record<string, PublicSummaryTranslationAttributes>>(Object.fromEntries((summary.translations ?? []).map((t) => [t.attribute, t])));
+  const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
+  const [showTranslations, setShowTranslations] = React.useState(Boolean(translations));
   const [isLocalizing, setIsLocalizing] = React.useState(false);
+
+  const localizedStrings = React.useMemo(() => {
+    return showTranslations && translations ? translations : {
+      bullets: summary.bullets.join('\n'),
+      shortSummary: summary.shortSummary,
+      summary: summary.summary,
+      title: summary.title,
+    };
+  }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
 
   const isRead = React.useMemo(() => !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
@@ -147,23 +156,19 @@ export function Summary({
   const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
 
   const timeAgo = React.useMemo(() => {
-    if (new Date(summary.originalDate ?? 0) > lastTick) {
-      return 'just now';
-    }
-    const originalTime = formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true, locale: getFnsLocale() });
-    return originalTime;
+    return formatDistance(new Date(summary.originalDate ?? 0), lastTick, { addSuffix: true, locale: getFnsLocale() });
   }, [summary.originalDate, lastTick]);
   
   const content = React.useMemo(() => {
     if (!format) {
       return;
     }
-    let content = translations?.summary?.value ?? summary.summary;
+    let content = localizedStrings.summary;
     if (format === 'bullets') {
-      content = translations?.bullets?.value ?? summary.bullets.join('\n');
+      content = localizedStrings.bullets;
     }
     return content;
-  }, [format, summary.bullets, summary.summary, translations?.bullets, translations?.summary]);
+  }, [format, localizedStrings.bullets, localizedStrings.summary]);
 
   // update time ago every `tickIntervalMs` milliseconds
   React.useEffect(() => {
@@ -189,14 +194,15 @@ export function Summary({
 
   const handleLocalizeSummary = React.useCallback(async () => {
     setIsLocalizing(true);
-    const { data: localizedSummaries, error } = await localizeSummary(summary, locales.getInterfaceLanguage());
+    const { data: localizedSummaries, error } = await localizeSummary(summary, getLocale());
     if (!localizedSummaries || error) {
       console.log(error);
       setIsLocalizing(false);
       return;
     }
-    setTranslations(Object.fromEntries(localizedSummaries.rows.map((row) => [row.attribute, row])));
+    setTranslations(Object.fromEntries(localizedSummaries.rows.map((row) => [row.attribute, row.value])));
     setIsLocalizing(false);
+    setShowTranslations(true);
   }, [localizeSummary, summary]);
   
   const handlePlayAudio = React.useCallback(async () => {
@@ -232,7 +238,7 @@ export function Summary({
         });
       },
       startIcon: isRead ? 'email-mark-as-unread' : 'email-open',
-      text: isRead ? 'Mark as Unread' : 'Mark as Read',
+      text: isRead ? strings.summary.markAsUnRead : strings.summary.markAsRead,
     }, {
       onPress: () => {
         onInteract?.(InteractionType.Hide, undefined, undefined, () => {
@@ -243,7 +249,7 @@ export function Summary({
         });
       },
       startIcon: 'eye-off',
-      text: 'Hide',
+      text: strings.summary.hide,
     }, {
       onPress: () => { 
         onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
@@ -251,7 +257,7 @@ export function Summary({
         });
       },
       startIcon: 'bug',
-      text: 'Report a Bug',
+      text: strings.summary.reportAtBug,
     }];
     return (
       <RenderActions actions={ actions } />
@@ -269,7 +275,7 @@ export function Summary({
             style={ theme.components.card }
             inactive={ isRead } 
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
-            <View col gap={ 12 }>
+            <View col gap={ 6 }>
               <View row>
                 {!initialFormat && !showShareDialog && selected && (
                   <View
@@ -280,10 +286,10 @@ export function Summary({
                     mt={ -12 }
                     bg={ theme.colors.primary } />
                 )}
-                <View col gap={ 12 }>
+                <View col gap={ 6 }>
                   <View row gap={ 12 }>
                     <View col width="100%">
-                      <View col gap={ 12 }>
+                      <View col gap={ 6 }>
                         <View>
                           <View row alignCenter gap={ 12 }>
                             <Text 
@@ -315,7 +321,7 @@ export function Summary({
                                     </View>
                                   ) }>
                                   <View gap={ 12 }>
-                                    <Text caption>{locales.thisIsNotARealImage}</Text>
+                                    <Text caption>{strings.summary.thisIsNotARealImage}</Text>
                                     <Image
                                       source={ { uri: summary.imageUrl } }  
                                       rounded
@@ -324,7 +330,7 @@ export function Summary({
                                 </Menu>
                               </View>
                             )}
-                            <View col gap={ 6 }>
+                            <View col>
                               <View row alignCenter>
                                 {showShareDialog || keywords.length === 0 ? (
                                   <Text 
@@ -332,7 +338,7 @@ export function Summary({
                                     justifyCenter
                                     subtitle1
                                     color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
-                                    {(compact || compactMode && showShortSummary) ? (translations?.shortSummary?.value ?? summary.shortSummary) : (translations?.title?.value ?? summary.title )}
+                                    {(compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title}
                                   </Text>
                                 ) : (
                                   <Highlighter
@@ -341,17 +347,17 @@ export function Summary({
                                     justifyCenter
                                     highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                     searchWords={ keywords }
-                                    textToHighlight={ (translations?.title?.value ?? summary.title ) } />
+                                    textToHighlight={ localizedStrings.title } />
                                 )}
                               </View>
-                              {getLocale() !== 'en' && Object.values(translations).length === 0 && (
+                              {!/^en/i.test(getLocale()) && !translations && (
                                 !isLocalizing ? (
                                   <Text
-                                    caption 
+                                    subscript 
                                     bold
                                     underline
                                     onPress={ () => handleLocalizeSummary() }>
-                                    {locales.translate}
+                                    {strings.summary.translate}
                                   </Text>
                                 )
                                   : (
@@ -359,6 +365,15 @@ export function Summary({
                                       <ActivityIndicator animating />
                                     </View>
                                   )
+                              )}
+                              {!/^en/i.test(getLocale()) && translations && (
+                                <Text
+                                  subscript 
+                                  bold
+                                  underline
+                                  onPress={ () => setShowTranslations((prev) => !prev) }>
+                                  {showTranslations ? strings.summary.showOriginalText : strings.summary.showTranslatedText}
+                                </Text>
                               )}
                             </View>
                           </View>
@@ -369,11 +384,11 @@ export function Summary({
                   {!(compact || compactMode) && showShortSummary === true && (
                     <View row>
                       <Divider />
-                      {(showShareDialog || keywords.length === 0) ? <Text>{translations?.shortSummary?.value ?? summary.shortSummary}</Text> : (
+                      {(showShareDialog || keywords.length === 0) ? <Text>{localizedStrings.shortSummary}</Text> : (
                         <Highlighter 
                           highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                           searchWords={ keywords }
-                          textToHighlight={ translations?.shortSummary?.value ?? summary.shortSummary ?? '' } />
+                          textToHighlight={ localizedStrings.shortSummary ?? '' } />
                       )}
                     </View>
                   )}
@@ -451,7 +466,7 @@ export function Summary({
                   startCollapsed={ false }
                   indent={ 0 }
                   title={ (
-                    <Text subtitle1>Summary/Bullets</Text>
+                    <Text subtitle1>{strings.summary.summaryBullets}</Text>
                   ) }>
                   {content && (
                     <View gap={ 12 }>

@@ -19,6 +19,7 @@ import {
   useSummaryClient,
   useTheme,
 } from '~/hooks';
+import { strings } from '~/locales';
 
 export type TopicSamplerProps = ScrollViewProps & ViewProps & {
   initialTopicType?: Partial<PublicTokenTypeAttributes>;
@@ -47,7 +48,7 @@ export function TopicSampler({
   const [_topicCount, _setTopicCount] = React.useState(0);
   const [topics, setTopics] = React.useState<PublicTokenAttributes[]>([]);
   
-  const title = React.useMemo(() => `${pluralize(topicType?.displayName || 'Topic')} in the last ${topicInterval}`, [topicType, topicInterval]);
+  const title = React.useMemo(() => `${pluralize(topicType?.displayName || 'Topic')} ${strings.inTheLast} ${topicInterval}`, [topicType, topicInterval]);
   
   const onMount = React.useCallback(async () => {
     if (!ready) {
@@ -118,7 +119,11 @@ export function TopicSampler({
             </View>
           </ScrollView>
         ) : (
-          <Text p={ 2 } textCenter>No results 🥺</Text>
+          <Text p={ 2 } textCenter>
+            {strings.search.noResults}
+            {' '}
+            🥺
+          </Text>
         )}
         <ScrollView horizontal style={ { overflow: 'visible' } }>
           <View row gap={ 12 }>

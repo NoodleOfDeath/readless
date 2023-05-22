@@ -36,7 +36,7 @@ export const useServiceClient = () => {
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
-  });
+  }, [withHeaders]);
 
   return { 
     getServices, 

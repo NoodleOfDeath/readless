@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Dialog as RNDialog } from 'react-native-paper';
 
-import { View, ViewProps } from '~/components';
+import { ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type DialogProps = ViewProps & React.PropsWithChildren<{
@@ -29,14 +29,12 @@ export function Dialog({
     <RNDialog 
       visible={ visible }
       onDismiss={ () => onClose?.() }
-      style={ [theme.components.dialog, style] }>
+      style={ style }>
       {title && (
         <RNDialog.Title style={ { color: theme.colors.text } }>{title}</RNDialog.Title>
       )}
       <RNDialog.Content>
-        <View elevated rounded>
-          {children}
-        </View>
+        {children}
       </RNDialog.Content>
       {dialogActions && dialogActions.length > 0 && (
         <RNDialog.Actions>

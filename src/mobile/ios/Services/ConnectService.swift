@@ -51,7 +51,7 @@ class ConnectService: ObservableObject {
   }
   
   @Sendable func fetchSync() {
-    guard let url = URL(string: Endpoints.GetSummaries) else {
+    guard let url = URL(string: Endpoints.GetSummaries + "&locale=" + (Locale.current.identifier.split(separator: "-").first ?? "en")) else {
       return
     }
     loading = true

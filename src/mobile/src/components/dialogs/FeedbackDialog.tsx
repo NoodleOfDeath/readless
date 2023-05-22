@@ -13,6 +13,7 @@ import {
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
+import { strings } from '~/locales';
 
 export type FeedBackDialogProps = DialogProps & {
   summary: PublicSummaryAttributes;
@@ -27,18 +28,20 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
   const [otherValue, setOtherValue] = React.useState('');
   const [success, setSuccess] = React.useState(false);
-  const [successMessage, setSuccessMessage] = React.useState('Thank you for your feedback!');
+  const [successMessage, setSuccessMessage] = React.useState(strings.feedback.thankYou);
 
   const checkboxes = [
-    { label: 'This is in the wrong category', value: 'wrong-category' },
-    { label: 'This summary is inaccurate', value: 'inaccrurate' },
-    { label: 'This summary is offensive', value: 'offensive' },
-    { label: 'This summary is spam', value: 'spam' },
-    { label: 'This summary is too long', value: 'too long' },
-    { label: 'This summary is too short', value: 'too short' },
-    { label: 'This summary is not about news', value: 'irrelevant' },
-    { label: 'The sentiment is wrong', value: 'sentiment-wrong' },
-    { label: 'I actually found this helpful', value: 'helpful' },
+    { label: strings.feedback.options.wrongCategory, value: 'wrong-category' },
+    { label: strings.feedback.options.inaccurate, value: 'inaccrurate' },
+    { label: strings.feedback.options.offensive, value: 'offensive' },
+    { label: strings.feedback.options.spam, value: 'spam' },
+    { label: strings.feedback.options.tooLong, value: 'too long' },
+    { label: strings.feedback.options.tooShort, value: 'too short' },
+    { label: strings.feedback.options.notNews, value: 'irrelevant' },
+    { label: strings.feedback.options.imageIrrelevant, value: 'irrelevant image' },
+    { label: strings.feedback.options.imageOffensive, value: 'offensive image' },
+    { label: strings.feedback.options.incorrectSentiment, value: 'sentiment-wrong' },
+    { label: strings.feedback.options.helpful, value: 'helpful' },
   ];
   
   const handleCheckboxPress = React.useCallback((checkbox: typeof checkboxes[number]) => {
@@ -68,7 +71,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
         }
         return (prev = summaries);
       });
-      setSuccessMessage('Sorry this was offensive/spammy. The post will no longer be shown for you.');
+      setSuccessMessage(strings.feedback.sorry);
     }
     handleInteraction(summary, InteractionType.Feedback, otherValue, { issues: selectedValues });
     setSelectedValues([]);
@@ -78,7 +81,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
   
   return (
     <Dialog
-      title="Feedback"
+      title={ strings.feedback.feedback }
       actions={
         success ? (
           <Button
@@ -91,9 +94,9 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
             onPress={ () => {
               dialogProps.onClose?.();
               setSuccess(false);
-              setSuccessMessage('Thank you for your feedback!');
+              setSuccessMessage(strings.feedback.thankYou);
             } }>
-            Close
+            {strings.actions.close}
           </Button>
         ) : (
           <Button
@@ -104,36 +107,35 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
             selectable
             p={ 8 }
             onPress={ onSubmit }>
-            Submit Feedback
+            {strings.feedback.submit}
           </Button>
         )
       }
       { ...dialogProps }>
-      <ScrollView p={ 8 }>
-        <React.Fragment>
+      <View height={ 300 } p={ 12 }>
+        <ScrollView>
           {!success ? (
-            <View col justifyCenter>
+            <View col gap={ 6 }>
               {checkboxes.map((checkbox, index) => (
                 <View key={ index } row alignCenter>
                   <Checkbox
-                    mb={ 4 }
                     checked={ selectedValues.includes(checkbox.value) }
                     onPress={ () => handleCheckboxPress(checkbox) } />
-                  <Button alignCenter onPress={ () => handleCheckboxPress(checkbox) }>{ checkbox.label }</Button>
+                  <Button caption alignCenter onPress={ () => handleCheckboxPress(checkbox) }>
+                    {checkbox.label}
+                  </Button>
                 </View>
               ))}
               <TextInput 
-                placeholder='Something else...'
+                placeholder={ strings.feedback.options.other }
                 value={ otherValue } 
                 onChange={ (e) => setOtherValue(e.nativeEvent.text) } />
             </View>
           ) : (
-            <Text>
-              {successMessage}
-            </Text>
+            <Text>{successMessage}</Text>
           )}
-        </React.Fragment>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </Dialog>
   );
 }

@@ -31,12 +31,29 @@
                                     <constraint firstAttribute="height" constant="100" id="OhH-CK-7ez"/>
                                 </constraints>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="oNJ-hZ-dAj">
+                                <rect key="frame" x="0.0" y="353.5" width="375" height="20.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Les Mindre" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qf0-Cq-4e1">
+                                        <rect key="frame" x="145.5" y="0.0" width="84" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20.5" id="q5a-FM-jsc"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="7fs-gg-GTZ" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="DhR-72-PeJ"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="oNJ-hZ-dAj" secondAttribute="trailing" id="XJN-pc-e25"/>
+                            <constraint firstItem="oNJ-hZ-dAj" firstAttribute="top" secondItem="7fs-gg-GTZ" secondAttribute="bottom" constant="20" id="fve-0l-xl2"/>
                             <constraint firstItem="7fs-gg-GTZ" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-50" id="oDa-sC-IEG"/>
+                            <constraint firstItem="oNJ-hZ-dAj" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="oTO-sc-dqy"/>
                         </constraints>
                     </view>
                 </viewController>
