@@ -99,7 +99,13 @@ FROM (
           ON summaries.id = summary_sentiments."parentId"
           AND (summary_sentiments."deletedAt" IS NULL)
       WHERE (summaries."deletedAt" IS NULL)
-        AND (summaries."originalDate" > NOW() - INTERVAL :interval)
+        AND (
+          (summaries."originalDate" > NOW() - INTERVAL :interval)
+          OR (
+            (summaries."originalDate" >= :startDate)
+            AND (summaries."originalDate" <= :endDate)
+          )
+        )
         AND (
           (summaries.id IN (:ids))
           OR :noIds
@@ -200,7 +206,13 @@ FROM (
     WHERE 
       (summary_tokens."deletedAt" IS NULL)
       AND (summary_tokens.type ~* :type)
-      AND (summaries."originalDate" > NOW() - INTERVAL :interval)
+      AND (
+        (summaries."originalDate" > NOW() - INTERVAL :interval)
+        OR (
+          (summaries."originalDate" >= :startDate)
+          AND (summaries."originalDate" <= :endDate)
+        )
+      )
   ) a
   GROUP BY
     text,
