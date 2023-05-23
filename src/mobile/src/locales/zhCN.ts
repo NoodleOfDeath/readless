@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const zhCNStrings: typeof en = {
   actions: { close: '关闭' },
+  bookmarks: {
+    activity: '活动',
+    bookmarks: '书签',
+    bookmarksDetail: '书签始终可以离线使用',
+    bookmarksNote: '注意：原始文章本身不会保存供离线阅读',
+    removeReadFromBookmarks: '从书签中删除阅读',
+  },
   browse: '浏览',
   categories: '分类',
   category: '分类',
@@ -33,15 +40,9 @@ export const zhCNStrings: typeof en = {
   headlines: '头条',
   inTheLast: '在过去',
   myNews: '我的新闻',
-  myStuff: {
-    activity: '活动',
-    bookmarks: '书签',
-    bookmarksInfo: '书签始终可以离线使用',
-    bookmarksNote: '注意：原始文章本身不会保存供离线阅读',
-    removeReadFromBookmarks: '从书签中删除阅读',
-  },
   newsSource: '新闻来源',
-  readless: '少读', search: {
+  readless: '少读', 
+  search: {
     customNewsSearch: '注意：此搜索仅在您的自定义新闻源中进行，不包括所有新闻文章',
     filtersTooSpecific: '看起来您的筛选条件过于具体。您可以考虑在关注列表中添加更多类别和/或新闻来源',
     goToBrowse: '前往浏览',
@@ -65,6 +66,7 @@ export const zhCNStrings: typeof en = {
     light: '亮色',
     resetHiddenSummaries: '重置隐藏摘要',
     resetReadSummaries: '重置为未读摘要',
+    settings: '设置',
     shortSummaries: '标题下的简短摘要',
     system: '系统',
     textScale: '文本缩放',

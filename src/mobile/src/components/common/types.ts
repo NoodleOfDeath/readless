@@ -99,11 +99,12 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   contained?: boolean;
   rounded?: boolean;
   overflow?: string;
+  zIndex?: number;
   // other
   style?: Style;
 };
 
-export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'borderColor', 'backgroundColor', 'opacity', 'borderRadius', 'borderWidth', 'style'];
+export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'borderColor', 'backgroundColor', 'opacity', 'borderRadius', 'borderWidth', 'zIndex', 'style'];
 
 export type Stylable<Style extends ViewStyle = ViewStyle> = 
 TextStyleProps & ViewStyleProps<Style>;

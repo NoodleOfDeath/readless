@@ -6,9 +6,6 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 
-import { Badge } from 'react-native-paper';
-
-import { DisplaySettingsMenu } from './DisplaySettingsMenu';
 import { SearchMenu } from './SearchMenu';
 
 import {
@@ -50,8 +47,6 @@ export function SearchScreen({
     preferences: {
       bookmarkedCategories,
       bookmarkedOutlets,
-      bookmarkedSummaries,
-      readSummaries,
       preferredReadingFormat,
       removedSummaries,
     },
@@ -111,10 +106,6 @@ export function SearchScreen({
   }, [removedSummaries]);
   
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
-
-  const bookmarkCount = React.useMemo(() => {
-    return lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((s) => !(s in (readSummaries ?? {}))));
-  }, [bookmarkedSummaries, readSummaries]);
 
   const handlePlayAll = React.useCallback(async () => {
     if (summaries.length < 1) {
@@ -186,44 +177,12 @@ export function SearchScreen({
       setLoaded(true);
     }
   }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
-  
+
   React.useEffect(() => {
-
-    const headerRight = (
-      <View>
-        <View row gap={ 16 }>
-          <View>
-            <Badge
-              size={ 16 }
-              style={ {
-                position: 'absolute',
-                right: -4,
-                top: -4,
-                zIndex: 1,
-              } }
-              onPress={ () => navigation?.navigate('bookmarks') }>
-              { bookmarkCount }
-            </Badge>
-            <Button
-              startIcon="bookmark"
-              iconSize={ 24 }
-              onPress={ () => navigation?.navigate('bookmarks') } />
-          </View>
-          <Button
-            startIcon="volume-high"
-            iconSize={ 24 }
-            onPress={ handlePlayAll }
-            disabled={ summaries.length < 1 } />
-          <DisplaySettingsMenu />
-        </View>
-      </View>
-    );
-
     if (prefilter) {
       setSearchText(prefilter + ' ');
       navigation?.setOptions({ 
         headerBackVisible: true,
-        headerRight: () => headerRight,
         headerShown: true,
         headerTitle: prefilter,
       });
@@ -232,11 +191,10 @@ export function SearchScreen({
       setSearchText('');
       navigation?.setOptions({ 
         headerBackVisible: false,
-        headerRight: () => headerRight,
         headerShown: true,
       });
     }
-  }, [navigation, route, prefilter, handlePlayAll, summaries.length, bookmarkCount]);
+  }, [navigation, route, prefilter, handlePlayAll, summaries.length]);
   
   const onMount = React.useCallback(() => {
     if (!ready) {
@@ -383,6 +341,18 @@ export function SearchScreen({
     <Screen>
       <View col gap={ 3 }>
         {sampler && <TopicSampler horizontal />}
+        {averageSentiment && (
+          <View 
+            elevated 
+            height={ 30 } 
+            p={ 4 }>
+            <View row gap={ 12 } justifyCenter alignCenter>
+              <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
+              <Text caption>{`${averageSentiment >= 0 ? '+' : ''}${averageSentiment.toFixed(2)}`}</Text>
+              <Text caption>{`${totalResultCount} ${strings.search.results}`}</Text>
+            </View>
+          </View>
+        )}
         {!loading && onlyCustomNews && summaries.length === 0 && (
           <View col justifyCenter p={ 16 }>
             <Text subtitle1 pb={ 8 }>
@@ -491,23 +461,22 @@ export function SearchScreen({
         </View>
       </View>
       {summaries.length > 0 && (
+        <Button
+          absolute
+          left={ 12 }
+          bottom={ 12 }
+          elevated
+          rounded
+          opacity={ 0.95 }
+          p={ 12 }
+          startIcon="volume-high"
+          iconSize={ 32 }
+          onPress={ handlePlayAll } />
+      )}
+      {summaries.length > 0 && (
         <SearchMenu
           initialValue={ prefilter ?? searchText }
-          onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) }>
-          {averageSentiment && (
-            <View 
-              elevated 
-              height={ 30 } 
-              p={ 4 }
-              style={ { borderRadius: 12 } }>
-              <View row gap={ 12 } justifyCenter alignCenter>
-                <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
-                <Text caption>{`${averageSentiment >= 0 ? '+' : ''}${averageSentiment.toFixed(2)}`}</Text>
-                <Text caption>{`${totalResultCount} ${strings.search.results}`}</Text>
-              </View>
-            </View>
-          )}
-        </SearchMenu>
+          onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) } />
       )}
     </Screen>
   );

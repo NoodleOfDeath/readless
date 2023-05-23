@@ -3,9 +3,6 @@ import { Linking } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
-  CommonActions,
-  DarkTheme,
-  DefaultTheme,
   EventMapBase,
   NavigationContainer,
   NavigationState,
@@ -15,12 +12,6 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import {
-  BottomNavigation,
-  MD3DarkTheme,
-  MD3LightTheme,
-  adaptNavigationTheme,
-} from 'react-native-paper';
 import { Badge } from 'react-native-paper';
 
 import {
@@ -28,10 +19,10 @@ import {
   Preferences,
   SessionContext,
 } from './contexts';
-import { lengthOf } from './utils';
 
 import {
   ActivityIndicator,
+  Button,
   Icon,
   MediaPlayer,
   View,
@@ -39,30 +30,68 @@ import {
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import {
+  BookmarksScreen,
   BrowseScreen,
   ChannelScreen,
-  MyStuffScreen,
   NAVIGATION_LINKING_OPTIONS,
   SearchScreen,
+  SettingsScreen,
   StackableTabParams,
   SummaryScreen,
   TabParams,
 } from '~/screens';
+import { lengthOf } from '~/utils';
 
 export function TabViewController<T extends TabParams = TabParams>(
-  tabs: RouteConfig<T,
-  keyof T,
-  NavigationState,
-  NativeStackNavigationOptions,
-  EventMapBase>[], 
+  tabs: RouteConfig<
+    T,
+    keyof T,
+    NavigationState,
+    NativeStackNavigationOptions,
+    EventMapBase
+  >[], 
   initialRouteName?: Extract<keyof T, string>
 ) {
   const Controller = () => {
     const Stack = createNativeStackNavigator<T>();
     const { currentTrack } = React.useContext(MediaContext);
-    const { preferences: { loadedInitialUrl }, setPreference } = React.useContext(SessionContext);
+    const {
+      preferences: { 
+        bookmarkedSummaries,
+        readSummaries,
+        loadedInitialUrl,
+      },
+      setPreference,
+    } = React.useContext(SessionContext);
 
-    const { router } = useNavigation();
+    const { 
+      router, 
+      openBookmarks,
+      openSettings, 
+    } = useNavigation();
+    
+    const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
+    
+    const headerRight = React.useMemo(() => (
+      <View>
+        <View row gap={ 16 } alignCenter>
+          <View onPress={ openBookmarks }>
+            {bookmarkCount > 0 && (
+              <Badge style={ {
+                position: 'absolute', right: -5, top: -5, zIndex: 1,
+              } }>
+                {bookmarkCount}
+              </Badge>
+            )}
+            <Icon name='bookmark' size={ 24 } />
+          </View>
+          <Button
+            startIcon="menu"
+            iconSize={ 24 }
+            onPress={ openSettings } />
+        </View>
+      </View>
+    ), [bookmarkCount, openBookmarks, openSettings]);
 
     React.useEffect(() => {
       const subscriber = Linking.addEventListener('url', router);
@@ -85,6 +114,7 @@ export function TabViewController<T extends TabParams = TabParams>(
               key={ String(tab.name) }
               { ...tab }
               options={ { 
+                headerRight: () => headerRight,
                 headerShown: true,
                 ...tab.options,
               } } />
@@ -116,11 +146,16 @@ const TABS: TabProps[] = [
           options: { headerTitle: strings.headlines },
         }, 
         { component: SearchScreen, name: 'search' },
-        { component: SummaryScreen, name: 'summary' },
-        { component: ChannelScreen, name: 'channel' },
-        { component: MyStuffScreen, name: 'bookmarks' },
         {
           component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
+        },
+        { component: SummaryScreen, name: 'summary' },
+        { component: ChannelScreen, name: 'channel' },
+        {
+          component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
+        },
+        {
+          component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
         },
       ],
       'default'
@@ -138,13 +173,16 @@ const TABS: TabProps[] = [
           options: { headerTitle: strings.myNews },
         },
         { component: SearchScreen, name: 'search' },
+        {
+          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
+        },
         { component: SummaryScreen, name: 'summary' },
         { component: ChannelScreen, name: 'channel' },
         {
-          component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
+          component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
         },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
+          component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
         },
       ],
       'default'
@@ -161,13 +199,16 @@ const TABS: TabProps[] = [
           options: { headerTitle: strings.browse },
         },
         { component: SearchScreen, name: 'search' },
+        {
+          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
+        },
         { component: SummaryScreen, name: 'summary' },
         { component: ChannelScreen, name: 'channel' },
         {
-          component: MyStuffScreen, name: 'bookmarks', options: { headerTitle: 'My Stuff' }, 
+          component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
         },
         {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
+          component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
         },
       ],
       'default'
@@ -192,42 +233,7 @@ export default function NavigationController() {
       {!ready ? (
         <ActivityIndicator animating />
       ) : (
-        <Tab.Navigator
-          initialRouteName={ initialRouteName }
-          tabBar={ ({
-            navigation, state, descriptors, insets, 
-          }) => (
-            <BottomNavigation.Bar
-              navigationState={ state }
-              safeAreaInsets={ insets }
-              onTabPress={ ({ route, preventDefault }) => {
-                const event = navigation.emit({
-                  canPreventDefault: true,
-                  target: route.key,
-                  type: 'tabPress',
-                });
-                if (event.defaultPrevented) {
-                  preventDefault();
-                } else {
-                  navigation.dispatch({
-                    ...CommonActions.navigate(route.name, route.params),
-                    target: state.key,
-                  });
-                }
-              } }
-              renderIcon={ ({
-                route, focused, color, 
-              }) => {
-                const { options } = descriptors[route.key];
-                if (options.tabBarIcon) {
-                  return options.tabBarIcon({
-                    color, focused, size: 24, 
-                  });
-                }
-                return null;
-              } }
-              getLabelText={ ({ route }) => route.name } />
-          ) }>
+        <Tab.Navigator initialRouteName={ initialRouteName }>
           {TABS.filter((tab) => !tab.disabled).map((tab) => (
             <Tab.Screen
               key={ tab.name }

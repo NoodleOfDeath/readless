@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const ptBRStrings: typeof en = {
   actions: { close: 'Fechar' },
+  bookmarks: {
+    activity: 'Atividade',
+    bookmarks: 'Favoritos',
+    bookmarksDetail: 'Os favoritos estão sempre disponíveis offline',
+    bookmarksNote: 'Nota: Os próprios artigos originais não são salvos para leitura offline',
+    removeReadFromBookmarks: 'Remover Lidos dos Favoritos',
+  },
   browse: 'Navegar',
   categories: 'Categorias',
   category: 'Categoria',
@@ -33,15 +40,9 @@ export const ptBRStrings: typeof en = {
   headlines: 'Manchetes',
   inTheLast: 'nos últimos',
   myNews: 'Minhas Notícias',
-  myStuff: {
-    activity: 'Atividade',
-    bookmarks: 'Favoritos',
-    bookmarksInfo: 'Os favoritos estão sempre disponíveis offline',
-    bookmarksNote: 'Nota: Os próprios artigos originais não são salvos para leitura offline',
-    removeReadFromBookmarks: 'Remover Lidos dos Favoritos',
-  },
   newsSource: 'Fonte de Notícias',
-  readless: 'Ler menos', search: {
+  readless: 'Ler menos', 
+  search: {
     customNewsSearch: 'Observação: Isso está pesquisando apenas dentro do seu feed de notícias personalizado e não em todos os artigos de notícias',
     filtersTooSpecific: 'Parece que seus filtros estão muito específicos. Você pode considerar adicionar mais categorias e/ou fontes de notícias à sua lista de seguimento',
     goToBrowse: 'Ir para Navegar',
@@ -65,6 +66,7 @@ export const ptBRStrings: typeof en = {
     light: 'Claro',
     resetHiddenSummaries: 'Redefinir Sumários Ocultos',
     resetReadSummaries: 'Redefinir Sumários como Não Lidos',
+    settings: 'Configurações',
     shortSummaries: 'Resumos Curtos sob os Títulos',
     system: 'Sistema',
     textScale: 'Escala de Texto',

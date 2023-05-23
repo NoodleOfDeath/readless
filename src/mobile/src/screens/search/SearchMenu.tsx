@@ -48,7 +48,7 @@ export function SearchMenu({
   const animation = React.useRef(new Animated.Value(0)).current;
   const childAnimation = React.useRef(new Animated.Value(0)).current;
   
-  const top = React.useMemo(() => focused ? 64 : undefined, [focused]);
+  const top = React.useMemo(() => focused ? 32 : undefined, [focused]);
   const bottom = React.useMemo(() => focused ? undefined : 32, [focused]);
   
   const submit = React.useCallback((text?: string) => {
@@ -79,86 +79,96 @@ export function SearchMenu({
 
   return (
     <React.Fragment>
-      {focused && (
-        <Animated.View
-          style={ {
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            bottom: 0,
-            left: 0,
-            opacity: animation.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 1],
-            }),
-            position: 'absolute',
-            right: 0,
-            top: 0,
-          } }>
-          <View
-            col
-            onPress={ () => {
-              setFocused(false);
-              Keyboard.dismiss();
-            } } />
-        </Animated.View>
-      )}
-      <View 
-        gap={ 8 }
-        absolute
-        opacity={ focused ? 1 : 0.85 }
-        left={ 32 }
-        right={ 32 }
-        top={ top }
-        bottom={ bottom }
-        style={ style }>
-        <Searchbar
-          elevation={ 2 }
-          onFocus={ () => setFocused(true) }
-          onBlur={ () => setFocused(false) }
-          placeholder={ placeholder }
-          onChangeText={ handleChangeText }
-          inputStyle={ theme.components.searchBar }
-          value={ value }
-          onClearIconPress={ () => {
-            handleChangeText('');
-            onClear?.();
-          } } 
-          onSubmitEditing={ () => submit() } />
-        {focused && (
-          <Animated.View style={ [theme.components.card, { transform: [{ scaleY: animation }] }] }>
-            <View gap={ 12 }>
-              <View>
-                <Button 
-                  alignCenter 
-                  elevated 
-                  rounded 
-                  p={ 4 } 
-                  onPress={ () => submit() }>
-                  {strings.search.search}
-                </Button>
-              </View>
-              <View gap={ 6 }>
-                <Button caption onPress={ () => setPreference('searchHistory', []) }>
-                  {strings.clearSearchHistory}
-                </Button>
-                <Divider />
-                <ScrollView>
-                  {searchHistory?.map((item) => (
-                    <Button
-                      key={ item }
-                      underline
-                      onPress={ () => {
-                        submit(item);
-                      } }>
-                      {item}
-                    </Button>
-                  ))}
-                </ScrollView>
-              </View>
-            </View>
+      {focused ? (
+        <React.Fragment>
+          <Animated.View
+            style={ {
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              bottom: 0,
+              left: 0,
+              opacity: animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            } }>
+            <View
+              col
+              onPress={ () => {
+                setFocused(false);
+                Keyboard.dismiss();
+              } } />
           </Animated.View>
-        )}
-        {!focused && children}
-      </View>
+          <View 
+            gap={ 8 }
+            absolute
+            left={ 32 }
+            right={ 32 }
+            top={ top }
+            bottom={ bottom }
+            style={ style }>
+            <Searchbar
+              autoFocus
+              elevation={ 2 }
+              onBlur={ () => setFocused(false) }
+              placeholder={ placeholder }
+              onChangeText={ handleChangeText }
+              inputStyle={ theme.components.searchBar }
+              value={ value }
+              onClearIconPress={ () => {
+                handleChangeText('');
+                onClear?.();
+              } } 
+              onSubmitEditing={ () => submit() } />
+            <Animated.View style={ [theme.components.card, { transform: [{ scaleY: animation }] }] }>
+              <View gap={ 12 }>
+                <View>
+                  <Button 
+                    alignCenter 
+                    elevated 
+                    rounded 
+                    p={ 4 } 
+                    onPress={ () => submit() }>
+                    {strings.search.search}
+                  </Button>
+                </View>
+                <View gap={ 6 }>
+                  <Button caption onPress={ () => setPreference('searchHistory', []) }>
+                    {strings.clearSearchHistory}
+                  </Button>
+                  <Divider />
+                  <ScrollView>
+                    {searchHistory?.map((item) => (
+                      <Button
+                        key={ item }
+                        underline
+                        onPress={ () => {
+                          submit(item);
+                        } }>
+                        {item}
+                      </Button>
+                    ))}
+                  </ScrollView>
+                </View>
+              </View>
+            </Animated.View>
+          </View>
+        </React.Fragment>
+      ) : (
+        <Button
+          absolute
+          elevated
+          rounded
+          opacity={ 0.95 }
+          p={ 12 }
+          bottom={ 12 }
+          right={ 12 }
+          startIcon="magnify"
+          iconSize={ 32 }
+          onPress={ () => setFocused(true) } />
+      )}
     </React.Fragment>
   );
 }

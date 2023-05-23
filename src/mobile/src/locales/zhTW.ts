@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const zhTWStrings: typeof en = {
   actions: { close: '關閉' },
+  bookmarks: {
+    activity: '活動',
+    bookmarks: '書籤',
+    bookmarksDetail: '書籤始終可以離線使用',
+    bookmarksNote: '注意：原始文章本身不會保存供離線閱讀',
+    removeReadFromBookmarks: '從書籤中刪除已讀',
+  },
   browse: '瀏覽',
   categories: '分類',
   category: '分類',
@@ -33,15 +40,9 @@ export const zhTWStrings: typeof en = {
   headlines: '標題',
   inTheLast: '在最近',
   myNews: '我的新聞',
-  myStuff: {
-    activity: '活動',
-    bookmarks: '書籤',
-    bookmarksInfo: '書籤始終可以離線使用',
-    bookmarksNote: '注意：原始文章本身不會保存供離線閱讀',
-    removeReadFromBookmarks: '從書籤中刪除已讀',
-  },
   newsSource: '新聞來源',
-  readless: '少閱讀', search: {
+  readless: '少閱讀', 
+  search: {
     customNewsSearch: '注意：這只在您的自訂新聞源中進行搜尋，並不包括所有新聞文章',
     filtersTooSpecific: '看來您的篩選條件太具體了。您可以考慮將更多的類別和/或新聞來源添加到您的追蹤清單中',
     goToBrowse: '前往瀏覽',
@@ -65,6 +66,7 @@ export const zhTWStrings: typeof en = {
     light: '亮色',
     resetHiddenSummaries: '重設隱藏摘要',
     resetReadSummaries: '重設摘要為未讀狀態',
+    settings: '設定',
     shortSummaries: '標題下的簡短摘要',
     system: '系統',
     textScale: '文字縮放',

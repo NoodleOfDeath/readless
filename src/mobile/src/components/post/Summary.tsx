@@ -135,6 +135,7 @@ export function Summary({
   const viewshot = React.useRef<ViewShot | null>(null);
 
   const [lastTick, setLastTick] = React.useState(new Date());
+  const [isRead, setIsRead] = React.useState(!disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -150,7 +151,6 @@ export function Summary({
     };
   }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
 
-  const isRead = React.useMemo(() => !disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog, [disableInteractions, initialFormat, readSummaries, showShareDialog, summary.id]);
   const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
   
   const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
@@ -179,18 +179,13 @@ export function Summary({
   }, [tickInterval]);
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
-    onFormatChange?.(newFormat);
-    setTimeout(async () => {
-      setPreference('readSummaries', (prev) => ({
-        ...prev,
-        [summary.id]: new Bookmark(true),
-      }));
-    }, 200);
     if (!initialFormat) {
+      onFormatChange?.(newFormat);
+      setIsRead(true);
       return;
     }
     setFormat(newFormat);
-  }, [initialFormat, onFormatChange, setPreference, summary]);
+  }, [initialFormat, onFormatChange]);
 
   const handleLocalizeSummary = React.useCallback(async () => {
     setIsLocalizing(true);
@@ -337,7 +332,7 @@ export function Summary({
                                     bold
                                     justifyCenter
                                     subtitle1
-                                    color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                                    color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
                                     {(compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title}
                                   </Text>
                                 ) : (
@@ -407,7 +402,7 @@ export function Summary({
                             <Text 
                               bold 
                               caption
-                              color={ !initialFormat && !showShareDialog && readSummaries?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }>
+                              color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
                               {timeAgo}
                             </Text>
                           </View>

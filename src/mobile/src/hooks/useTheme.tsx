@@ -101,13 +101,6 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           backgroundColor: lightMode ? '#eee' : '#2a2a2a',
           color: lightMode ? '#000' : '#fff',
         },
-        toastDefault: {
-          backgroundColor: lightMode ? '#ddd' : '#111',
-          borderColor: '#8b0000',
-          borderRadius: 12,
-          borderWidth: 5,
-          color: lightMode ? '#000' : '#fff',
-        },
       }),
     isLightMode: lightMode,   
     navContainerTheme: {

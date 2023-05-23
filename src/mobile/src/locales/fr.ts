@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const frStrings: typeof en = {
   actions: { close: 'Fermer' },
+  bookmarks: {
+    activity: 'Activité',
+    bookmarks: 'Signets',
+    bookmarksDetail: 'Les favoris sont toujours disponibles hors ligne',
+    bookmarksNote: 'Remarque : Les articles originaux eux-mêmes ne sont pas enregistrés pour une lecture hors ligne',
+    removeReadFromBookmarks: 'Supprimer la lecture des signets',
+  },
   browse: 'Parcourir',
   categories: 'Catégories',
   category: 'Catégorie',
@@ -33,13 +40,6 @@ export const frStrings: typeof en = {
   headlines: 'Titres',
   inTheLast: 'au cours des derniers',
   myNews: 'Mes actualités',
-  myStuff: {
-    activity: 'Activité',
-    bookmarks: 'Signets',
-    bookmarksInfo: 'Les favoris sont toujours disponibles hors ligne',
-    bookmarksNote: 'Remarque : Les articles originaux eux-mêmes ne sont pas enregistrés pour une lecture hors ligne',
-    removeReadFromBookmarks: 'Supprimer la lecture des signets',
-  },
   newsSource: 'Source d\'actualités',
   readless: 'Lire moins', search: {
     customNewsSearch: 'Note : Cela effectue une recherche uniquement dans votre flux d\'actualités personnalisé et non dans tous les articles d\'actualités',
@@ -65,6 +65,7 @@ export const frStrings: typeof en = {
     light: 'Clair',
     resetHiddenSummaries: 'Réinitialiser les résumés masqués',
     resetReadSummaries: 'Réinitialiser les résumés comme non lus',
+    settings: 'Paramètres',
     shortSummaries: 'Résumés courts sous les titres',
     system: 'Système',
     textScale: 'Échelle de texte',

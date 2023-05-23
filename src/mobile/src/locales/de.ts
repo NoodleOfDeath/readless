@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const deStrings: typeof en = {
   actions: { close: 'Schließen' },
+  bookmarks: {
+    activity: 'Aktivität',
+    bookmarks: 'Lesezeichen',
+    bookmarksDetail: 'Lesezeichen sind immer offline verfügbar',
+    bookmarksNote: 'Hinweis: Die originalen Artikel selbst werden nicht zum Offline-Lesen gespeichert',
+    removeReadFromBookmarks: 'Gelesenes aus Lesezeichen entfernen',
+  },
   browse: 'Durchsuchen',
   categories: 'Kategorien',
   category: 'Kategorie',
@@ -33,13 +40,6 @@ export const deStrings: typeof en = {
   headlines: 'Schlagzeilen',
   inTheLast: 'in den letzten',
   myNews: 'Meine Nachrichten',
-  myStuff: {
-    activity: 'Aktivität',
-    bookmarks: 'Lesezeichen',
-    bookmarksInfo: 'Lesezeichen sind immer offline verfügbar',
-    bookmarksNote: 'Hinweis: Die originalen Artikel selbst werden nicht zum Offline-Lesen gespeichert',
-    removeReadFromBookmarks: 'Gelesenes aus Lesezeichen entfernen',
-  },
   newsSource: 'Nachrichtenquelle',
   readless: 'Weniger lesen', search: {
     customNewsSearch: 'Hinweis: Dies durchsucht nur Ihren benutzerdefinierten Nachrichten-Feed und nicht alle Nachrichtenartikel',
@@ -65,6 +65,7 @@ export const deStrings: typeof en = {
     light: 'Hell',
     resetHiddenSummaries: 'Versteckte Zusammenfassungen zurücksetzen',
     resetReadSummaries: 'Zusammenfassungen als ungelesen zurücksetzen',
+    settings: 'Einstellungen',
     shortSummaries: 'Kurze Zusammenfassungen unter Titeln',
     system: 'System',
     textScale: 'Textskalierung',

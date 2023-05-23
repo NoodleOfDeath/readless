@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const itStrings: typeof en = {
   actions: { close: 'Chiudi' },
+  bookmarks: {
+    activity: 'Attività',
+    bookmarks: 'Segnalibri',
+    bookmarksDetail: 'I segnalibri sono sempre disponibili offline',
+    bookmarksNote: 'Nota: Gli articoli originali stessi non vengono salvati per la lettura offline',
+    removeReadFromBookmarks: 'Rimuovi letti dai segnalibri',
+  },
   browse: 'Esplora',
   categories: 'Categorie',
   category: 'Categoria',
@@ -33,13 +40,6 @@ export const itStrings: typeof en = {
   headlines: 'Titoli',
   inTheLast: 'negli ultimi',
   myNews: 'Le mie notizie',
-  myStuff: {
-    activity: 'Attività',
-    bookmarks: 'Segnalibri',
-    bookmarksInfo: 'I segnalibri sono sempre disponibili offline',
-    bookmarksNote: 'Nota: Gli articoli originali stessi non vengono salvati per la lettura offline',
-    removeReadFromBookmarks: 'Rimuovi letti dai segnalibri',
-  },
   newsSource: 'Fonte delle notizie',
   readless: 'Leggi meno', search: {
     customNewsSearch: 'Nota: Questa ricerca avviene solo all\'interno del tuo feed personalizzato di notizie e non su tutti gli articoli di notizie',
@@ -65,6 +65,7 @@ export const itStrings: typeof en = {
     light: 'Chiaro',
     resetHiddenSummaries: 'Ripristina riepiloghi nascosti',
     resetReadSummaries: 'Ripristina riepiloghi come non letti',
+    settings: 'Impostazioni',
     shortSummaries: 'Breve riepilogo sotto i titoli',
     system: 'Sistema',
     textScale: 'Scala di testo',

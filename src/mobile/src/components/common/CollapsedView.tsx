@@ -75,7 +75,7 @@ export function CollapsedView({
               onPress={ () => setCollapsed((prev) => !prev) }
               startIcon='chevron-right' />
           </Animated.View>
-          <View row>
+          <View row onPress={ () => setCollapsed((prev) => !prev) }>
             {typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
           </View>
         </View>

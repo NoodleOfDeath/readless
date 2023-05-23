@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const nbStrings: typeof en = {
   actions: { close: 'Lukk' },
+  bookmarks: {
+    activity: 'Aktivitet',
+    bookmarks: 'Bokmerker',
+    bookmarksDetail: 'Bokmerker er alltid tilgjengelige offline',
+    bookmarksNote: 'Merk: De opprinnelige artiklene blir ikke lagret for offline lesing',
+    removeReadFromBookmarks: 'Fjern lest fra bokmerker',
+  },
   browse: 'Bla gjennom',
   categories: 'Kategorier',
   category: 'Kategori',
@@ -33,13 +40,6 @@ export const nbStrings: typeof en = {
   headlines: 'Overskrifter',
   inTheLast: 'i de siste',
   myNews: 'Mine nyheter',
-  myStuff: {
-    activity: 'Aktivitet',
-    bookmarks: 'Bokmerker',
-    bookmarksInfo: 'Bokmerker er alltid tilgjengelige offline',
-    bookmarksNote: 'Merk: De opprinnelige artiklene blir ikke lagret for offline lesing',
-    removeReadFromBookmarks: 'Fjern lest fra bokmerker',
-  },
   newsSource: 'Nyhetskilde',
   readless: 'Les mindre', search: {
     customNewsSearch: 'Merk: Dette søker bare innenfor ditt egendefinerte nyhetsoppdatering og ikke alle nyhetsartikler',
@@ -65,6 +65,7 @@ export const nbStrings: typeof en = {
     light: 'Lys',
     resetHiddenSummaries: 'Tilbakestill skjulte sammendrag',
     resetReadSummaries: 'Tilbakestill sammendrag som ulest',
+    settings: 'Innstillinger',
     shortSummaries: 'Korte sammendrag under overskrifter',
     system: 'System',
     textScale: 'Tekstskala',

@@ -15,7 +15,6 @@ export * from './Image';
 export * from './Menu';
 export * from './Screen';
 export * from './ScrollView';
-export * from './Snackbar';
 export * from './Surface';
 export * from './TabSwitcher';
 export * from './Text';

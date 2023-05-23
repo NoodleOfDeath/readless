@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const koStrings: typeof en = {
   actions: { close: '닫기' },
+  bookmarks: {
+    activity: '활동',
+    bookmarks: '북마크',
+    bookmarksDetail: '즐겨찾기는 항상 오프라인에서 이용할 수 있습니다',
+    bookmarksNote: '참고: 원래 기사 자체는 오프라인으로 저장되지 않습니다',
+    removeReadFromBookmarks: '읽은 항목 북마크에서 제거',
+  },
   browse: '찾아보기',
   categories: '카테고리',
   category: '카테고리',
@@ -33,13 +40,6 @@ export const koStrings: typeof en = {
   headlines: '헤드라인',
   inTheLast: '최근',
   myNews: '내 뉴스',
-  myStuff: {
-    activity: '활동',
-    bookmarks: '북마크',
-    bookmarksInfo: '즐겨찾기는 항상 오프라인에서 이용할 수 있습니다',
-    bookmarksNote: '참고: 원래 기사 자체는 오프라인으로 저장되지 않습니다',
-    removeReadFromBookmarks: '읽은 항목 북마크에서 제거',
-  },
   newsSource: '뉴스 소스',
   readless: '덜 읽기', search: {
     customNewsSearch: '참고: 이는 사용자 정의 뉴스 피드 내에서만 검색되며 모든 뉴스 기사를 대상으로하지 않습니다',
@@ -65,6 +65,7 @@ export const koStrings: typeof en = {
     light: '밝은',
     resetHiddenSummaries: '숨겨진 요약 리셋',
     resetReadSummaries: '읽지 않은 요약 리셋',
+    settings: '설정',
     shortSummaries: '제목 아래 짧은 요약',
     system: '시스템',
     textScale: '텍스트 크기',

@@ -120,18 +120,14 @@ export function useSummaryClient() {
         }
         return (prev = bookmarks);
       });
-    } 
-    if (interaction === InteractionType.Read && /original source/i.test(content ?? '')) {
-      setPreference('readSources', (prev) => {
+    }
+    if (interaction === InteractionType.Read) {
+      setPreference(/original source/i.test(content ?? '') ? 'readSources' : 'readSummaries', (prev) => {
         const bookmarks = { ...prev };
         bookmarks[summary.id] = new Bookmark(true);
         return (prev = bookmarks);
       });
     }
-    setPreference('summaryHistory', (prev) => ({
-      ...prev,
-      [summary.id]: new Bookmark(interaction),
-    }));
     return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, setPreference]);
 

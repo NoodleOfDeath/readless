@@ -6,7 +6,6 @@ import {
   MediaContextProvider,
   PaperProvider,
   SessionContextProvider,
-  ToastContextProvider,
 } from '~/contexts';
 
 export default function App() {
@@ -14,13 +13,11 @@ export default function App() {
   return (
     <SessionContextProvider>
       <PaperProvider>
-        <ToastContextProvider>
-          <MediaContextProvider>
-            <DialogContextProvider>
-              <NavigationController />
-            </DialogContextProvider>
-          </MediaContextProvider>
-        </ToastContextProvider>
+        <MediaContextProvider>
+          <DialogContextProvider>
+            <NavigationController />
+          </DialogContextProvider>
+        </MediaContextProvider>
       </PaperProvider>
     </SessionContextProvider>
   );

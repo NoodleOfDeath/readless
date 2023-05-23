@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const ukStrings: typeof en = {
   actions: { close: 'Закрити' },
+  bookmarks: {
+    activity: 'Активність',
+    bookmarks: 'Закладки',
+    bookmarksDetail: 'Закладки завжди доступні офлайн',
+    bookmarksNote: 'Примітка: Оригінальні статті не зберігаються для офлайн-читання',
+    removeReadFromBookmarks: 'Видалити читання з закладок',
+  },
   browse: 'Перегляд',
   categories: 'Категорії',
   category: 'Категорія',
@@ -33,15 +40,9 @@ export const ukStrings: typeof en = {
   headlines: 'Заголовки',
   inTheLast: 'за останні',
   myNews: 'Мої новини',
-  myStuff: {
-    activity: 'Активність',
-    bookmarks: 'Закладки',
-    bookmarksInfo: 'Закладки завжди доступні офлайн',
-    bookmarksNote: 'Примітка: Оригінальні статті не зберігаються для офлайн-читання',
-    removeReadFromBookmarks: 'Видалити читання з закладок',
-  },
   newsSource: 'Джерело новин',
-  readless: 'Читати менше', search: {
+  readless: 'Читати менше', 
+  search: {
     customNewsSearch: 'Примітка: Це шукає лише у вашому власному каналі новин і не в усіх новинних статтях',
     filtersTooSpecific: 'Здається, ваші фільтри дуже конкретні. Розгляньте можливість додати більше категорій та/або джерел новин до вашого списку підписки',
     goToBrowse: 'Перейти до Перегляду',
@@ -65,6 +66,7 @@ export const ukStrings: typeof en = {
     light: 'Світлий',
     resetHiddenSummaries: 'Скинути сховані підсумки',
     resetReadSummaries: 'Скинути підсумки на непрочитані',
+    settings: 'Налаштування',
     shortSummaries: 'Короткі підсумки під заголовками',
     system: 'Система',
     textScale: 'Масштаб тексту',

@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const arStrings: typeof en = {
   actions: { close: 'إغلاق' },
+  bookmarks: {
+    activity: 'النشاط',
+    bookmarks: 'المرجعية',
+    bookmarksDetail: ' الإشارات المرجعية متاحة دائمًا دون اتصال بالإنترنت',
+    bookmarksNote: 'ملحوظة: لا يتم حفظ المقالات الأصلية نفسها للقراءة في وضع عدم الاتصال بالإنترنت',
+    removeReadFromBookmarks: 'إزالة القراءة من المرجعية',
+  },
   browse: 'تصفح',
   categories: 'الفئات',
   category: 'الفئة',
@@ -33,13 +40,6 @@ export const arStrings: typeof en = {
   headlines: 'العناوين',
   inTheLast: 'في الفترة الأخيرة',
   myNews: 'أخباري',
-  myStuff: {
-    activity: 'النشاط',
-    bookmarks: 'المرجعية',
-    bookmarksInfo: ' الإشارات المرجعية متاحة دائمًا دون اتصال بالإنترنت',
-    bookmarksNote: 'ملحوظة: لا يتم حفظ المقالات الأصلية نفسها للقراءة في وضع عدم الاتصال بالإنترنت',
-    removeReadFromBookmarks: 'إزالة القراءة من المرجعية',
-  },
   newsSource: 'مصدر الأخبار',
   readless: 'أقل قراءة',
   search: {
@@ -66,6 +66,7 @@ export const arStrings: typeof en = {
     light: 'فاتح',
     resetHiddenSummaries: 'إعادة تعيين الملخصات المخفية',
     resetReadSummaries: 'إعادة تعيين الملخصات كغير مقروءة',
+    settings: 'الإعدادات',
     shortSummaries: 'ملخصات قصيرة تحت العناوين',
     system: 'النظام',
     textScale: 'مقياس النص',

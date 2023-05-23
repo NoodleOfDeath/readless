@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const thStrings: typeof en = {
   actions: { close: 'ปิด' },
+  bookmarks: {
+    activity: 'กิจกรรม',
+    bookmarks: 'บุ๊กมาร์ก',
+    bookmarksDetail: 'บุ๊กมาร์กเสมอพร้อมใช้งานแบบออฟไลน์',
+    bookmarksNote: 'หมายเหตุ: บทความต้นฉบับไม่ถูกบันทึกไว้สำหรับการอ่านแบบออฟไลน์',
+    removeReadFromBookmarks: 'ลบการอ่านจากบุ๊กมาร์ก',
+  },
   browse: 'เรียกดู',
   categories: 'หมวดหมู่',
   category: 'หมวดหมู่',
@@ -33,15 +40,9 @@ export const thStrings: typeof en = {
   headlines: 'หัวข้อข่าว',
   inTheLast: 'ในช่วง',
   myNews: 'ข่าวของฉัน',
-  myStuff: {
-    activity: 'กิจกรรม',
-    bookmarks: 'บุ๊กมาร์ก',
-    bookmarksInfo: 'บุ๊กมาร์กเสมอพร้อมใช้งานแบบออฟไลน์',
-    bookmarksNote: 'หมายเหตุ: บทความต้นฉบับไม่ถูกบันทึกไว้สำหรับการอ่านแบบออฟไลน์',
-    removeReadFromBookmarks: 'ลบการอ่านจากบุ๊กมาร์ก',
-  },
   newsSource: 'แหล่งข่าว',
-  readless: 'อ่านน้อยลง', search: {
+  readless: 'อ่านน้อยลง', 
+  search: {
     customNewsSearch: 'หมายเหตุ: การค้นหานี้เฉพาะในฟีดข่าวที่กำหนดเองของคุณเท่านั้น และไม่รวมทุกบทความข่าว',
     filtersTooSpecific: 'ดูเหมือนว่าตัวกรองของคุณมีรายละเอียดมากเกินไป คุณอาจต้องพิจารณาเพิ่มหมวดหมู่และ/หรือแหล่งข่าวเพิ่มเติมในรายการที่คุณติดตาม',
     goToBrowse: 'ไปที่เรียกดู',
@@ -65,6 +66,7 @@ export const thStrings: typeof en = {
     light: 'สว่าง',
     resetHiddenSummaries: 'รีเซ็ตสรุปที่ซ่อน',
     resetReadSummaries: 'รีเซ็ตสรุปเป็นยังไม่ได้อ่าน',
+    settings: 'การตั้งค่า',
     shortSummaries: 'สรุปสั้นภายใต้หัวข้อ',
     system: 'ระบบ',
     textScale: 'มาตราส่วนข้อความ',

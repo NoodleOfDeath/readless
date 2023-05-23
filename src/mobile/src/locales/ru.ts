@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const ruStrings: typeof en = {
   actions: { close: 'Закрыть' },
+  bookmarks: {
+    activity: 'Активность',
+    bookmarks: 'Закладки',
+    bookmarksDetail: 'Закладки всегда доступны в автономном режиме',
+    bookmarksNote: 'Примечание: Самые статьи не сохраняются для офлайн-чтения',
+    removeReadFromBookmarks: 'Удалить чтение из закладок',
+  },
   browse: 'Просмотр',
   categories: 'Категории',
   category: 'Категория',
@@ -33,15 +40,9 @@ export const ruStrings: typeof en = {
   headlines: 'Заголовки',
   inTheLast: 'за последние',
   myNews: 'Мои новости',
-  myStuff: {
-    activity: 'Активность',
-    bookmarks: 'Закладки',
-    bookmarksInfo: 'Закладки всегда доступны в автономном режиме',
-    bookmarksNote: 'Примечание: Самые статьи не сохраняются для офлайн-чтения',
-    removeReadFromBookmarks: 'Удалить чтение из закладок',
-  },
   newsSource: 'Источник новостей',
-  readless: 'Меньше читать', search: {
+  readless: 'Меньше читать', 
+  search: {
     customNewsSearch: 'Примечание: Поиск осуществляется только в вашей пользовательской ленте новостей, а не во всех новостных статьях',
     filtersTooSpecific: 'Похоже, ваши фильтры слишком специфичны. Вы можете добавить больше категорий и/или источников новостей в список подписок',
     goToBrowse: 'Перейти к Просмотру',
@@ -65,6 +66,7 @@ export const ruStrings: typeof en = {
     light: 'Светлый',
     resetHiddenSummaries: 'Сбросить скрытые резюме',
     resetReadSummaries: 'Сбросить резюме как непрочитанные',
+    settings: 'Настройки',
     shortSummaries: 'Краткие резюме под заголовками',
     system: 'Система',
     textScale: 'Масштаб текста',

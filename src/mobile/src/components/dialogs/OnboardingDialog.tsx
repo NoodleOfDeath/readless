@@ -18,7 +18,6 @@ export function OnboardingDialog() {
     return (
       <View 
         col 
-        bg={ theme.navContainerColors.background } 
         alignCenter
         justifyCenter
         p={ 32 }>

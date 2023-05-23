@@ -1,4 +1,5 @@
 import React from 'react';
+import { useColorScheme } from 'react-native';
 
 import {
   MD3DarkTheme,
@@ -6,14 +7,18 @@ import {
   PaperProvider as RNPaperProvider,
 } from 'react-native-paper';
 
-import { useTheme } from '~/hooks';
+import { SessionContext } from '..';
 
 export function PaperProvider({ children }: React.PropsWithChildren) {
 
-  const darkMode = useTheme().navContainerTheme.dark;
-  const theme = React.useMemo(() => darkMode ? MD3DarkTheme : MD3LightTheme, [darkMode]);
+  const { preferences: { displayMode } } = React.useContext(SessionContext);
 
-  React.useEffect(() => console.log(theme.dark), [theme]);
+  const darkMode = useColorScheme() === 'dark';
+  const theme = React.useMemo(() => (displayMode === 'dark' || darkMode) ? MD3DarkTheme : MD3LightTheme, [darkMode, displayMode]);
+
+  React.useEffect(() => {
+    console.log('PaperProvider', theme.dark);
+  }, [theme]);
 
   return (
     <RNPaperProvider theme={ theme }>

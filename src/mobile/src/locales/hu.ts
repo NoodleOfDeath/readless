@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const huStrings: typeof en = {
   actions: { close: 'Bezárás' },
+  bookmarks: {
+    activity: 'Tevékenység',
+    bookmarks: 'Könyvjelzők',
+    bookmarksDetail: 'A könyvjelzők mindig elérhetők offline módban',
+    bookmarksNote: 'Megjegyzés: Az eredeti cikkek maguk nem kerülnek mentésre az offline olvasáshoz',
+    removeReadFromBookmarks: 'Olvasás eltávolítása a könyvjelzőkből',
+  },
   browse: 'Böngészés',
   categories: 'Kategóriák',
   category: 'Kategória',
@@ -33,13 +40,6 @@ export const huStrings: typeof en = {
   headlines: 'Hírek',
   inTheLast: 'az elmúlt',
   myNews: 'Saját hírek',
-  myStuff: {
-    activity: 'Tevékenység',
-    bookmarks: 'Könyvjelzők',
-    bookmarksInfo: 'A könyvjelzők mindig elérhetők offline módban',
-    bookmarksNote: 'Megjegyzés: Az eredeti cikkek maguk nem kerülnek mentésre az offline olvasáshoz',
-    removeReadFromBookmarks: 'Olvasás eltávolítása a könyvjelzőkből',
-  },
   newsSource: 'Hírforrás',
   readless: 'Kevésbé olvas', search: {
     customNewsSearch: 'Megjegyzés: Ez csak a saját testreszabott hírforrásodban keres, nem az összes hírcikkben',
@@ -65,6 +65,7 @@ export const huStrings: typeof en = {
     light: 'Világos',
     resetHiddenSummaries: 'Rejtett összefoglalók visszaállítása',
     resetReadSummaries: 'Összefoglalók visszaállítása olvasatlannak',
+    settings: 'Beállítások',
     shortSummaries: 'Rövid összefoglalók a címek alatt',
     system: 'Rendszer',
     textScale: 'Szöveg nagyítása',

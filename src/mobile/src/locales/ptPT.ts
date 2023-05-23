@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const ptPTStrings: typeof en = {
   actions: { close: 'Fechar' },
+  bookmarks: {
+    activity: 'Atividade',
+    bookmarks: 'Marcadores',
+    bookmarksDetail: 'Os favoritos estão sempre disponíveis offline',
+    bookmarksNote: 'Nota: Os próprios artigos originais não são salvos para leitura offline',
+    removeReadFromBookmarks: 'Remover Lido dos Marcadores',
+  },
   browse: 'Navegar',
   categories: 'Categorias',
   category: 'Categoria',
@@ -33,13 +40,6 @@ export const ptPTStrings: typeof en = {
   headlines: 'Manchetes',
   inTheLast: 'nos últimos',
   myNews: 'Minhas Notícias',
-  myStuff: {
-    activity: 'Atividade',
-    bookmarks: 'Marcadores',
-    bookmarksInfo: 'Os favoritos estão sempre disponíveis offline',
-    bookmarksNote: 'Nota: Os próprios artigos originais não são salvos para leitura offline',
-    removeReadFromBookmarks: 'Remover Lido dos Marcadores',
-  },
   newsSource: 'Fonte de Notícias',
   readless: 'Ler Menos', search: {
     customNewsSearch: 'Nota: Isto está a pesquisar apenas no seu feed de notícias personalizado e não em todos os artigos de notícias',
@@ -65,6 +65,7 @@ export const ptPTStrings: typeof en = {
     light: 'Claro',
     resetHiddenSummaries: 'Redefinir Resumos Ocultos',
     resetReadSummaries: 'Redefinir Resumos como Não Lidos',
+    settings: 'Definições',
     shortSummaries: 'Resumos Curtos sob os Títulos',
     system: 'Sistema',
     textScale: 'Escala de Texto',

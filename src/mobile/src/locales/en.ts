@@ -1,5 +1,12 @@
 export const enStrings = { 
   actions: { close: 'Close' },
+  bookmarks: {
+    activity: 'Activity',
+    bookmarks: 'Bookmarks',
+    bookmarksDetail: 'Bookmarks are always available offline', 
+    bookmarksNote: 'Note: The original articles themselves are not saved for offline reading',
+    removeReadFromBookmarks: 'Remove Read from Bookmarks',
+  },
   browse: 'Browse',
   categories: 'Categories',
   category: 'Category',
@@ -31,13 +38,6 @@ export const enStrings = {
   headlines: 'Headlines',
   inTheLast: 'in the last',
   myNews: 'My News',
-  myStuff: {
-    activity: 'Activity',
-    bookmarks: 'Bookmarks',
-    bookmarksInfo: 'Bookmarks are always available offline', 
-    bookmarksNote: 'Note: The original articles themselves are not saved for offline reading',
-    removeReadFromBookmarks: 'Remove Read from Bookmarks',
-  },
   newsSource: 'News Source',
   readless: 'Readless',
   search: { 
@@ -64,6 +64,7 @@ export const enStrings = {
     light: 'Light',
     resetHiddenSummaries: 'Reset hidden summaries',
     resetReadSummaries: 'Reset summaries to unread',
+    settings: 'Settings',
     shortSummaries: 'Short summaries under titles',
     system: 'System',
     textScale: 'Text Scale',

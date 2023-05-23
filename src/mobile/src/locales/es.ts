@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const esStrings: typeof en = {
   actions: { close: 'Cerrar' },
+  bookmarks: {
+    activity: 'Actividad',
+    bookmarks: 'Marcadores',
+    bookmarksDetail: 'Los marcadores siempre están disponibles sin conexión', 
+    bookmarksNote: 'Nota: Los propios artículos originales no se guardan para leer sin conexión',
+    removeReadFromBookmarks: 'Eliminar lectura de marcadores',
+  },
   browse: 'Explorar',
   categories: 'Categorías',
   category: 'Categoría',
@@ -33,13 +40,6 @@ export const esStrings: typeof en = {
   headlines: 'Titulares',
   inTheLast: 'en los últimos',
   myNews: 'Mis noticias',
-  myStuff: {
-    activity: 'Actividad',
-    bookmarks: 'Marcadores',
-    bookmarksInfo: 'Los marcadores siempre están disponibles sin conexión', 
-    bookmarksNote: 'Nota: Los propios artículos originales no se guardan para leer sin conexión',
-    removeReadFromBookmarks: 'Eliminar lectura de marcadores',
-  },
   newsSource: 'Fuente de noticias',
   readless: 'Leer menos', search: {
     customNewsSearch: 'Nota: Esto busca solo dentro de tu fuente de noticias personalizada y no en todos los artículos de noticias',
@@ -65,6 +65,7 @@ export const esStrings: typeof en = {
     light: 'Claro',
     resetHiddenSummaries: 'Restablecer resúmenes ocultos',
     resetReadSummaries: 'Restablecer resúmenes como no leídos',
+    settings: 'Configuración',
     shortSummaries: 'Resúmenes cortos debajo de los títulos',
     system: 'Sistema',
     textScale: 'Escala de texto',

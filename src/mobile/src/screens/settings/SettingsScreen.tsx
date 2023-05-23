@@ -9,8 +9,8 @@ import {
   ActivityIndicator,
   Button,
   Icon,
-  Menu,
   ReadingFormatSelector,
+  Screen,
   ScrollView,
   TabSwitcher,
   Text,
@@ -19,13 +19,14 @@ import {
 import { ColorMode, SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
+import { ScreenProps } from '~/screens';
 
 const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
   label: `${(s).toFixed(1)}x`,
   value: s,
 }));
 
-export function DisplaySettingsMenu() {
+export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
 
   const theme = useTheme();
 
@@ -76,25 +77,22 @@ export function DisplaySettingsMenu() {
   }, []);
   
   const onMount = React.useCallback(async () => {
+    navigation?.setOptions({ headerRight: () => undefined });
     setLoading(true);
     const files = await RNFS.readDir(RNFS.CachesDirectoryPath);
     const size = files.reduce((acc, file) => acc + file.size, 0);
     setCacheSize(`${(size / 1000000).toFixed(1)}MB`);
     setLoading(false);
-  }, []);
+  }, [navigation]);
 
   React.useEffect(() => {
     onMount();
   }, [onMount]);
 
   return (
-    <Menu
-      width={ 300 }
-      autoAnchor={
-        <Icon name="menu" size={ 24 } />
-      }>
-      <View gap={ 6 } overflow="hidden">
-        <View gap={ 16 }>
+    <Screen>
+      <ScrollView overflow="hidden">
+        <View p={ 16 } gap={ 16 }>
           <View justifyCenter alignCenter gap={ 6 }>
             <Text caption>{strings.settings.displayMode}</Text>
             <View row gap={ 6 } alignCenter>
@@ -223,7 +221,7 @@ export function DisplaySettingsMenu() {
             </Button>
           )}
         </View>
-      </View>
-    </Menu>
+      </ScrollView>
+    </Screen>
   );
 }

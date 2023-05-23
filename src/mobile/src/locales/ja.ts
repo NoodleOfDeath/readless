@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const jaStrings: typeof en = {
   actions: { close: '閉じる' },
+  bookmarks: {
+    activity: 'アクティビティ',
+    bookmarks: 'ブックマーク',
+    bookmarksDetail: 'ブックマークは常にオフラインで利用可能です',
+    bookmarksNote: '注意: 元の記事自体はオフラインで保存されません',
+    removeReadFromBookmarks: 'ブックマークから読み取りを削除',
+  },
   browse: '閲覧',
   categories: 'カテゴリ',
   category: 'カテゴリ',
@@ -33,13 +40,6 @@ export const jaStrings: typeof en = {
   headlines: 'ヘッドライン',
   inTheLast: '過去',
   myNews: 'マイニュース',
-  myStuff: {
-    activity: 'アクティビティ',
-    bookmarks: 'ブックマーク',
-    bookmarksInfo: 'ブックマークは常にオフラインで利用可能です',
-    bookmarksNote: '注意: 元の記事自体はオフラインで保存されません',
-    removeReadFromBookmarks: 'ブックマークから読み取りを削除',
-  },
   newsSource: 'ニュースソース',
   readless: '簡略表示', search: {
     customNewsSearch: '注意：これはカスタムニュースフィード内のみを検索しており、すべてのニュース記事を対象としていません',
@@ -65,6 +65,7 @@ export const jaStrings: typeof en = {
     light: 'ライト',
     resetHiddenSummaries: '非表示の要約をリセット',
     resetReadSummaries: '未読の要約にリセット',
+    settings: '設定',
     shortSummaries: 'タイトルの下に短い要約',
     system: 'システム',
     textScale: 'テキストの拡大縮小',

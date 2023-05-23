@@ -2,6 +2,13 @@ import { enStrings as en } from './en';
 
 export const viStrings: typeof en = {
   actions: { close: 'Đóng' },
+  bookmarks: {
+    activity: 'Hoạt động',
+    bookmarks: 'Dấu trang',
+    bookmarksDetail: 'Đánh dấu trang luôn có sẵn khi ngoại tuyến',
+    bookmarksNote: 'Lưu ý: Các bài viết gốc không được lưu lại để đọc ngoại tuyến',
+    removeReadFromBookmarks: 'Xóa đánh dấu đọc',
+  },
   browse: 'Duyệt',
   categories: 'Danh mục',
   category: 'Danh mục',
@@ -33,15 +40,9 @@ export const viStrings: typeof en = {
   headlines: 'Tiêu đề',
   inTheLast: 'trong khoảng',
   myNews: 'Tin tức của tôi',
-  myStuff: {
-    activity: 'Hoạt động',
-    bookmarks: 'Dấu trang',
-    bookmarksInfo: 'Đánh dấu trang luôn có sẵn khi ngoại tuyến',
-    bookmarksNote: 'Lưu ý: Các bài viết gốc không được lưu lại để đọc ngoại tuyến',
-    removeReadFromBookmarks: 'Xóa đánh dấu đọc',
-  },
   newsSource: 'Nguồn tin',
-  readless: 'Đọc ít hơn', search: {
+  readless: 'Đọc ít hơn', 
+  search: {
     customNewsSearch: 'Lưu ý: Đây chỉ tìm kiếm trong nguồn tin tự tạo của bạn và không tìm kiếm trong tất cả các bài viết tin tức',
     filtersTooSpecific: 'Có vẻ như bộ lọc của bạn quá cụ thể. Bạn có thể xem xét thêm các danh mục và/hoặc nguồn tin tức vào danh sách theo dõi của bạn',
     goToBrowse: 'Đi đến Duyệt',
@@ -65,6 +66,7 @@ export const viStrings: typeof en = {
     light: 'Sáng',
     resetHiddenSummaries: 'Đặt lại tóm tắt ẩn',
     resetReadSummaries: 'Đặt lại tóm tắt thành chưa đọc',
+    settings: 'Cài đặt',
     shortSummaries: 'Tóm tắt ngắn dưới tiêu đề',
     system: 'Hệ thống',
     textScale: 'Tỷ lệ văn bản',
