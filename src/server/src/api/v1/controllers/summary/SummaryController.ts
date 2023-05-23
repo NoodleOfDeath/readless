@@ -154,11 +154,14 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     } = applyFilter(filter, matchType);
     const noOutlets = outlets.length === 0;
     const noCategories = categories.length === 0;
-    const noIds = ids.length === 0;
+    const noIds = ids.length === 0 || excludeIds;
+    const startDate = new Date(0);
+    const endDate = new Date();
     const records = await this.store.query(GET_SUMMARIES, {
       nest: true,
       replacements: {
         categories: categories.length === 0 ? [''] : categories,
+        endDate,
         excludeIds,
         filter: query,
         ids: ids.length === 0 ? [-1] : ids,
@@ -170,6 +173,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         noOutlets,
         offset: Number(offset),
         outlets: outlets.length === 0 ? [''] : outlets,
+        startDate,
       },
       type: QueryTypes.SELECT,
     });
@@ -188,14 +192,18 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() order: string[] = ['count:desc']
   ): Promise<BulkResponse<PublicTokenAttributes>> {
     const filter = `^(?:${type})$`;
+    const startDate = new Date(0);
+    const endDate = new Date();
     const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
       nest: true,
       replacements: {
+        endDate,
         interval,
         limit: Number(pageSize),
         min: Number(min) < 2 ? 2 : Number(min),
         offset,
         order,
+        startDate,
         type: type ? filter : '.',
       },
       type: QueryTypes.SELECT,
