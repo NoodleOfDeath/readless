@@ -53,8 +53,8 @@ FROM (
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
         'method', "sentiment.method",
         'score', "sentiment.score",
-        'description', "sentiment.method.description",
-        'tokens', "sentiment.tokens"
+        'description', '',
+        'tokens', '[]'::JSON
       )) FILTER (WHERE "sentiment.score" IS NOT NULL), '[]'::JSON) AS sentiments,
       COUNT(id) OVER() AS "totalCount"
     FROM (
@@ -79,11 +79,7 @@ FROM (
         summary_translations.attribute AS "translation.attribute",
         summary_translations.value AS "translation.value",
         summary_sentiments.method AS "sentiment.method",
-        summary_sentiments.score AS "sentiment.score",
-        sentiment_methods.description AS "sentiment.method.description",
-        COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
-          'text', summary_sentiment_tokens.text
-        )) FILTER (WHERE summary_sentiment_tokens.text IS NOT NULL), '[]'::JSON) AS "sentiment.tokens"
+        summary_sentiments.score AS "sentiment.score"
       FROM
         summaries
         LEFT OUTER JOIN outlets
@@ -102,12 +98,6 @@ FROM (
         LEFT OUTER JOIN summary_sentiments
           ON summaries.id = summary_sentiments."parentId"
           AND (summary_sentiments."deletedAt" IS NULL)
-        LEFT OUTER JOIN sentiment_methods
-          ON summary_sentiments.method = sentiment_methods.name
-          AND (sentiment_methods."deletedAt" IS NULL)
-        LEFT OUTER JOIN summary_sentiment_tokens
-          ON summary_sentiments.id = summary_sentiment_tokens."parentId"
-          AND (summary_sentiment_tokens."deletedAt" IS NULL)
       WHERE (summaries."deletedAt" IS NULL)
         AND (summaries."originalDate" > NOW() - INTERVAL :interval)
         AND (
@@ -155,8 +145,7 @@ FROM (
         "translation.attribute",
         "translation.value",
         "sentiment.method",
-        "sentiment.score",
-        "sentiment.method.description"
+        "sentiment.score"
     ) a
     GROUP BY
       id,
