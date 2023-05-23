@@ -1,4 +1,4 @@
 export * from './dialog';
 export * from './media';
-export * from './toast';
+export * from './paper';
 export * from '~/core/contexts';

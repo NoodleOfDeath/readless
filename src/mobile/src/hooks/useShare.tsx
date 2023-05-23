@@ -8,8 +8,6 @@ import Share, { Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
 import { InteractionType, PublicSummaryAttributes } from '~/api';
-import { Text } from '~/components';
-import { ToastContext } from '~/contexts';
 import { shareableLink } from '~/utils';
 
 const SocialAppIds: Record<Social, string> = {
@@ -42,18 +40,15 @@ export function useShare({
   callback,
 }: UseShareProps) {
 
-  const toast = React.useContext(ToastContext);
-
-  const copyToClipboard = React.useCallback(async (content: string, message = `Copied "${content}" to clipboard`) => {
+  const copyToClipboard = React.useCallback(async (content: string) => {
     try {
       Clipboard.setString(content);
       onInteract?.(InteractionType.Copy, content);
-      toast.alert(<Text>{message}</Text>);
     } catch (e) {
       console.error(e);
     }
     callback?.();
-  }, [callback, onInteract, toast]);
+  }, [callback, onInteract]);
   
   const shareStandard = React.useCallback(async (summary: PublicSummaryAttributes, viewshot: ViewShot | null) => {
     if (!summary) {

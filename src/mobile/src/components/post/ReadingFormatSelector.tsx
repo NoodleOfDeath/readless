@@ -5,6 +5,7 @@ import { SegmentedButtons } from 'react-native-paper';
 import { ReadingFormat } from '~/api';
 import { ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
+import { strings } from '~/locales';
 
 type Props = ViewProps & {
   format?: ReadingFormat;
@@ -27,12 +28,12 @@ export function ReadingFormatSelector({
       buttons={ [
         {
           icon: 'text-long',
-          label: 'Summary',
+          label: strings.summary.summary,
           value: 'summary',
         },
         {
           icon: 'view-list',
-          label: 'Bullets',
+          label: strings.summary.bullets,
           value: 'bullets',
         },
       ] } />

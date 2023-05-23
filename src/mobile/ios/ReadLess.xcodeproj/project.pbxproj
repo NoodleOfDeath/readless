@@ -70,7 +70,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-ReadLess-ReadLessTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CD4AEB1E2A0D92DD0093B6D1 /* Faustina.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */; };
 		CD4AEB1F2A0D92DD0093B6D1 /* Faustina.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */; };
 		CD4AEB222A0D93180093B6D1 /* Manuale.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB212A0D93180093B6D1 /* Manuale.ttf */; };
@@ -109,6 +108,8 @@
 		CD4AEB842A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */; };
 		CD4AEB862A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
 		CD4AEB872A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
+		CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */; };
+		CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,15 +219,21 @@
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReadLess/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ReadLess/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ReadLess/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReadLess/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ReadLess/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadLess-ReadLessTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-ReadLess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess.debug.xcconfig"; path = "Target Support Files/Pods-ReadLess/Pods-ReadLess.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-ReadLess.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess.release.xcconfig"; path = "Target Support Files/Pods-ReadLess/Pods-ReadLess.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-ReadLess-ReadLessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.debug.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadLess.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReadLess/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-ReadLess-ReadLessTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.release.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.release.xcconfig"; sourceTree = "<group>"; };
+		CD0695842A1BA814005C0208 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CD0695852A1BA820005C0208 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ar; path = ar.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CD0695882A1BA89A005C0208 /* zh */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = zh; path = zh.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CD06958B2A1BA96C005C0208 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = es; path = es.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CD06958C2A1BA96F005C0208 /* en-IN */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "en-IN"; path = "en-IN.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CD06958D2A1BA974005C0208 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-HK"; path = "zh-HK.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CD0695902A1BAC95005C0208 /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "it-IT"; path = "it-IT.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CD0695912A1BD9DC005C0208 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Faustina.ttf; sourceTree = "<group>"; };
 		CD4AEB212A0D93180093B6D1 /* Manuale.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Manuale.ttf; sourceTree = "<group>"; };
 		CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FaustinaBold.ttf; sourceTree = "<group>"; };
@@ -246,6 +253,28 @@
 		CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSans.ttf; sourceTree = "<group>"; };
 		CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansBoldItalic.ttf; sourceTree = "<group>"; };
 		CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansItalic.ttf; sourceTree = "<group>"; };
+		CDEE16192A1B9CCA00E15B10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE16242A1B9CE600E15B10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE16262A1B9CE600E15B10 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE16282A1B9CE700E15B10 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE162A2A1B9CE700E15B10 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE162E2A1B9CE800E15B10 /* en-AU */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "en-AU"; path = "en-AU.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE16302A1B9CE900E15B10 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE16322A1B9CEA00E15B10 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = fr; path = fr.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE16342A1B9CEB00E15B10 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "fr-CA"; path = "fr-CA.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE16362A1B9CEB00E15B10 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = de; path = de.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE16382A1B9CEC00E15B10 /* hu */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = hu; path = hu.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE163A2A1B9CEC00E15B10 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = it; path = it.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE163C2A1B9CEC00E15B10 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ko; path = ko.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE163E2A1B9CED00E15B10 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ja; path = ja.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE16402A1B9CED00E15B10 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = nb; path = nb.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE16422A1B9CEE00E15B10 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE16442A1B9CEE00E15B10 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		CDEE16462A1B9CEF00E15B10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ru; path = ru.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE16482A1B9CF000E15B10 /* th */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = th; path = th.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE164C2A1B9CF100E15B10 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = uk; path = uk.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE164E2A1B9CF100E15B10 /* vi */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = vi; path = vi.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTranslationAttributes.swift; sourceTree = "<group>"; };
 		D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ReadLess-ReadLessTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ReadLess/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -351,6 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */,
+				CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */,
 				010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */,
 				010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */,
 				018CE3AF29E98AB9005E6391 /* BulkResponse.swift */,
@@ -442,9 +472,9 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				CD0695912A1BD9DC005C0208 /* Info.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */,
 			);
 			name = ReadLess;
 			sourceTree = "<group>";
@@ -675,6 +705,32 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-HK",
+				"en-AU",
+				"en-IN",
+				"en-GB",
+				fr,
+				it,
+				de,
+				ko,
+				nb,
+				ar,
+				es,
+				"pt-BR",
+				"pt-PT",
+				ru,
+				uk,
+				vi,
+				zh,
+				"zh-Hant-TW",
+				"zh-Hans-CN",
+				"zh-Hans",
+				"zh-Hant",
+				th,
+				ja,
+				hu,
+				"fr-CA",
+				"it-IT",
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -789,7 +845,7 @@
 				0125BD3D29D791ED00EAC61C /* Feather.ttf in Resources */,
 				CD4AEB862A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */,
 				CD4AEB472A0D99780093B6D1 /* ManualeItalic.ttf in Resources */,
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */,
 				CD4AEB1E2A0D92DD0093B6D1 /* Faustina.ttf in Resources */,
 				CD4AEB802A0D9D860093B6D1 /* DMSans.ttf in Resources */,
 				CD4AEB832A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */,
@@ -976,6 +1032,7 @@
 				018173BF29EA1842006D3509 /* PressActions.swift in Sources */,
 				018173C329EA4833006D3509 /* Date.swift in Sources */,
 				013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */,
+				CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */,
 				018CE3B029E98AB9005E6391 /* BulkResponse.swift in Sources */,
 				010F0D8129E89D770064DD97 /* Color.swift in Sources */,
 				010F0D5C29E88EC40064DD97 /* PublicOutletAttributes.swift in Sources */,
@@ -1037,6 +1094,45 @@
 			targetProxy = 010F0D0229E88D490064DD97 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CDEE16192A1B9CCA00E15B10 /* Base */,
+				CDEE16242A1B9CE600E15B10 /* zh-Hans */,
+				CDEE16262A1B9CE600E15B10 /* zh-Hant */,
+				CDEE16282A1B9CE700E15B10 /* zh-Hans-CN */,
+				CDEE162A2A1B9CE700E15B10 /* zh-Hant-TW */,
+				CDEE162E2A1B9CE800E15B10 /* en-AU */,
+				CDEE16302A1B9CE900E15B10 /* en-GB */,
+				CDEE16322A1B9CEA00E15B10 /* fr */,
+				CDEE16342A1B9CEB00E15B10 /* fr-CA */,
+				CDEE16362A1B9CEB00E15B10 /* de */,
+				CDEE16382A1B9CEC00E15B10 /* hu */,
+				CDEE163A2A1B9CEC00E15B10 /* it */,
+				CDEE163C2A1B9CEC00E15B10 /* ko */,
+				CDEE163E2A1B9CED00E15B10 /* ja */,
+				CDEE16402A1B9CED00E15B10 /* nb */,
+				CDEE16422A1B9CEE00E15B10 /* pt-BR */,
+				CDEE16442A1B9CEE00E15B10 /* pt-PT */,
+				CDEE16462A1B9CEF00E15B10 /* ru */,
+				CDEE16482A1B9CF000E15B10 /* th */,
+				CDEE164C2A1B9CF100E15B10 /* uk */,
+				CDEE164E2A1B9CF100E15B10 /* vi */,
+				CD0695842A1BA814005C0208 /* en */,
+				CD0695852A1BA820005C0208 /* ar */,
+				CD0695882A1BA89A005C0208 /* zh */,
+				CD06958B2A1BA96C005C0208 /* es */,
+				CD06958C2A1BA96F005C0208 /* en-IN */,
+				CD06958D2A1BA974005C0208 /* zh-HK */,
+				CD0695902A1BAC95005C0208 /* it-IT */,
+			);
+			name = LaunchScreen.storyboard;
+			path = ReadLess;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
@@ -1333,7 +1429,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.0;
+				MARKETING_VERSION = 1.7.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1373,7 +1469,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.0;
+				MARKETING_VERSION = 1.7.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -19,7 +19,7 @@ export const FONT_SIZES = {
   h4: 26,
   h5: 24,
   h6: 22,
-  subscript: 8,
+  subscript: 10,
   subtitle1: 20,
   subtitle2: 19,
 } as const;
@@ -99,11 +99,12 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   contained?: boolean;
   rounded?: boolean;
   overflow?: string;
+  zIndex?: number;
   // other
   style?: Style;
 };
 
-export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'borderColor', 'backgroundColor', 'opacity', 'borderRadius', 'borderWidth', 'style'];
+export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'borderColor', 'backgroundColor', 'opacity', 'borderRadius', 'borderWidth', 'zIndex', 'style'];
 
 export type Stylable<Style extends ViewStyle = ViewStyle> = 
 TextStyleProps & ViewStyleProps<Style>;

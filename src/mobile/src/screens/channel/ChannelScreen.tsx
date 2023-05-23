@@ -10,6 +10,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
+import { strings } from '~/locales';
 import {
   ScreenProps,
   SearchScreen,
@@ -74,7 +75,7 @@ export function ChannelScreen({
         <View row alignCenter elevated height={ 80 } p={ 12 } mh={ 12 }>
           <View>
             <Text h6 capitalize>{attributes?.displayName}</Text>
-            <Text subtitle2>{type === 'category' ? 'Category' : 'News Source'}</Text>
+            <Text subtitle2>{type === 'category' ? strings.category : strings.newsSource}</Text>
           </View>
           <View row />
           <View>
@@ -84,7 +85,7 @@ export function ChannelScreen({
               rounded
               p={ 6 }
               onPress={ toggleBookmarked }>
-              { bookmarked ? 'Unfollow Channel' : 'Follow Channel' }
+              { bookmarked ? strings.unfollowChannel : strings.followChannel }
             </Button>
           </View>
         </View>

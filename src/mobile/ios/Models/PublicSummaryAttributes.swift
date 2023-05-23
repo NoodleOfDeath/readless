@@ -20,6 +20,16 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   public var category: PublicCategoryAttributes
   public var imageUrl: String?
   public var originalDate: Date?
+  public var translations: [PublicTranslationAttributes]?
+  
+  public func translationMap() -> [String: String] {
+    guard let translations = self.translations else { return [String: String]() }
+    var map = [String: String]()
+    for translation in translations {
+      map[translation.attribute] = translation.value
+    }
+    return map
+  }
 
   public init(id: Int,
               url: String,
@@ -27,7 +37,8 @@ public struct PublicSummaryAttributes: Codable, Hashable {
               outlet: PublicOutletAttributes,
               category: PublicCategoryAttributes,
               imageUrl: String? = nil,
-              originalDate: Date? = nil) {
+              originalDate: Date? = nil,
+              translations: [PublicTranslationAttributes]? = nil) {
     self.id = id
     self.url = url
     self.title = title
@@ -35,6 +46,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     self.category = category
     self.imageUrl = imageUrl
     self.originalDate = originalDate
+    self.translations = translations
   }
 
   public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -45,6 +57,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     case category
     case imageUrl
     case originalDate
+    case translations
   }
 
   // Encodable protocol methods
@@ -58,6 +71,8 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     try container.encode(category, forKey: .category)
     try container.encodeIfPresent(imageUrl, forKey: .imageUrl)
     try container.encodeIfPresent(originalDate, forKey: .originalDate)
+    try container.encodeIfPresent(translations, forKey: .translations)
   }
+  
 }
 

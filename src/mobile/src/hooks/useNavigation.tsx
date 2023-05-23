@@ -48,18 +48,26 @@ export function useNavigation() {
   }, [navigation, setPreference]);
 
   const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    // (navigation?.push ?? navigation.navigate)('search', { prefilter: `src:${outlet.name}` });
     (navigation?.push ?? navigation.navigate)('channel', { attributes: outlet, type: 'outlet' });
   }, [navigation]);
 
   const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    // (navigation?.push ?? navigation.navigate)('search', { prefilter: `cat:${category.name}` });
     (navigation?.push ?? navigation.navigate)('channel', { attributes: category, type: 'category' });
+  }, [navigation]);
+  
+  const openBookmarks = React.useCallback(() => {
+    (navigation?.push ?? navigation.navigate)('bookmarks');
+  }, [navigation]);
+  
+  const openSettings = React.useCallback(() => {
+    (navigation?.push ?? navigation.navigate)('settings');
   }, [navigation]);
 
   return {
+    openBookmarks,
     openCategory,
     openOutlet,
+    openSettings,
     router,
     search,
   };

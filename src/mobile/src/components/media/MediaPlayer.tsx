@@ -50,10 +50,6 @@ export function MediaPlayer(props: MediaPlayerProps) {
     },
     [handleInteraction, navigation, preferredReadingFormat]
   );
-  
-  const handleReferSearch = React.useCallback((newPrefilter: string) => {
-    navigation?.navigate('search', { prefilter: newPrefilter });
-  }, [navigation]);
 
   return (
     <Banner
