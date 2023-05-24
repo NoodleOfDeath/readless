@@ -1,21 +1,25 @@
 import React from 'react';
-import { Animated } from 'react-native';
+import { Animated, ViewStyle } from 'react-native';
 
 import {
-  Button,
+  Divider,
+  Icon,
+  Menu,
   Text,
   View,
   ViewProps,
 } from '~/components';
 import { useStyles } from '~/hooks';
 
-type CollapseStyle = 'chevron' | 'banner';
+type CollapseStyle = 'banner';
 
 export type CollapsedViewProps = ViewProps & {
   title?: React.ReactNode;
-  banner?: boolean;
+  titleStyle?: ViewStyle;
+  contentStyle?: ViewStyle;
+  info?: React.ReactNode;
   collapseStyle?: CollapseStyle;
-  startCollapsed?: boolean;
+  initiallyCollapsed?: boolean;
   indent?: number;
   onExpand?: () => void;
   onCollapse?: () => void;
@@ -23,10 +27,12 @@ export type CollapsedViewProps = ViewProps & {
 
 export function CollapsedView({
   title,
-  banner,
-  collapseStyle = banner ? 'banner' : 'chevron',
-  startCollapsed = true,
-  indent = 36,
+  titleStyle,
+  contentStyle,
+  info,
+  collapseStyle = 'banner',
+  initiallyCollapsed = true,
+  indent = 0,
   onExpand,
   onCollapse,
   children,
@@ -35,7 +41,7 @@ export function CollapsedView({
 
   const style = useStyles(props);
 
-  const [collapsed, setCollapsed] = React.useState(startCollapsed);
+  const [collapsed, setCollapsed] = React.useState(initiallyCollapsed);
   const animation = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
@@ -54,41 +60,18 @@ export function CollapsedView({
   }, [animation, collapsed, onCollapse, onExpand]);
 
   return (
-    <View style={ style } gap={ 12 }>
-      {collapseStyle === 'chevron' && (
-        <View row gap={ 12 } alignCenter>
-          <Animated.View style={ { 
-            transform: [
-              { 
-                rotate: animation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0deg', '90deg'],
-                }), 
-              },
-            ],
-          } }>
-            <Button
-              elevated
-              p={ 2 }
-              rounded
-              iconSize={ 24 }
-              onPress={ () => setCollapsed((prev) => !prev) }
-              startIcon='chevron-right' />
-          </Animated.View>
-          <View row onPress={ () => setCollapsed((prev) => !prev) }>
-            {typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
-          </View>
-        </View>
-      )}
+    <View 
+      style={ style }
+      gap={ 12 }>
       {collapseStyle === 'banner' && (
-        <Button
+        <View
           elevated
-          height={ 36 }
-          row
+          style={ titleStyle }
+          p={ titleStyle ? undefined : 12 }
           gap={ 12 }
-          pt={ 8 }
+          row
           alignCenter
-          justifyCenter 
+          justifyCenter={ !title }
           onPress={ () => setCollapsed((prev) => !prev) }>
           <Animated.View style={ { 
             alignItems: 'center',
@@ -97,21 +80,31 @@ export function CollapsedView({
               { 
                 rotate: animation.interpolate({
                   inputRange: [0, 1],
-                  outputRange: ['0deg', '-180deg'],
+                  outputRange: [title ? '-90deg' : '0deg', title ? '0deg' : '-180deg'],
                 }), 
               },
             ],
           } }>
-            <Button
-              iconSize={ 24 }
-              startIcon='chevron-down' />
+            <Icon
+              size={ 24 }
+              name='chevron-down' />
           </Animated.View>
-        </Button>
+          {title && <Divider vertical />}
+          {title && typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
+          {info && (
+            <Menu
+              autoAnchor={ <Icon size={ 24 } name='information' /> }>
+              {info}
+            </Menu>
+          )}
+        </View>
       )}
       {!collapsed && (
         <Animated.View style={ { 
           flexGrow: 1,
-          marginLeft: collapseStyle === 'chevron' ? indent : 0,
+          marginLeft: contentStyle ? undefined : indent,
+          paddingLeft: contentStyle ? undefined : 12,
+          paddingRight: contentStyle ? undefined : 12,
           transform: [
             {
               translateY: animation.interpolate({

@@ -97,25 +97,26 @@ export function TopicSampler({
   }, [ready, topicType, topicGroups]);
   
   return (
-    <CollapsedView startCollapsed={ false } banner>
+    <CollapsedView initiallyCollapsed={ false } title={ title }>
       <View
-        height={ 100 } 
+        height={ 80 } 
         ph={ 24 }
         gap={ 6 }
         style={ [theme.components.sampler, style] }>
-        <Text textCenter subtitle1 capitalize bold>{title}</Text>
         {topics.length > 0 ? (
           <ScrollView horizontal style={ { overflow: 'visible' } }>
-            <View row alignCenter mh={ 12 } gap={ 12 }>
-              {topics.map((topic) => (
-                <Button 
-                  key={ topic.text }
-                  elevated
-                  p={ 2 }
-                  onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
-                  {topic.text}
-                </Button>
-              ))}
+            <View>
+              <View row alignCenter mh={ 12 } gap={ 12 }>
+                {topics.map((topic) => (
+                  <Button 
+                    key={ topic.text }
+                    elevated
+                    p={ 2 }
+                    onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
+                    {topic.text}
+                  </Button>
+                ))}
+              </View>
             </View>
           </ScrollView>
         ) : (

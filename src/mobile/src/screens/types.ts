@@ -29,7 +29,6 @@ export type Channel<T extends ChannelType = ChannelType> = {
 
 export type StackableTabParams = TabParams & {
   search: {
-    sampler?: boolean;
     prefilter?: string,
     onlyCustomNews?: boolean;
     specificIds?: number[];

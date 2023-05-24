@@ -67,10 +67,10 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
         menu: {
           backgroundColor: lightMode ? '#fefefe' : '#010101',
           borderColor: '#888',
-          borderRadius: 12,
           borderWidth: 1,
           marginBottom: 12,
           maxWidth: 300,
+          overflow: 'scroll',
           padding: 12,
         },
         outlined: {

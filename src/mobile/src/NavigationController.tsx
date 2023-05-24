@@ -77,13 +77,15 @@ export function TabViewController<T extends TabParams = TabParams>(
         <View row gap={ 16 } alignCenter>
           <View onPress={ openBookmarks }>
             {bookmarkCount > 0 && (
-              <Badge style={ {
-                position: 'absolute', right: -5, top: -5, zIndex: 1,
-              } }>
+              <Badge
+                size={ 18 }
+                style={ {
+                  position: 'absolute', right: -5, top: -5, zIndex: 1,
+                } }>
                 {bookmarkCount}
               </Badge>
             )}
-            <Icon name='bookmark' size={ 24 } />
+            <Icon name='bookmark-outline' size={ 24 } />
           </View>
           <Button
             startIcon="menu"
@@ -141,7 +143,7 @@ const TABS: TabProps[] = [
       [
         { 
           component: SearchScreen, 
-          initialParams: { sampler: true },
+          initialParams: { },
           name: 'default', 
           options: { headerTitle: strings.headlines },
         }, 
