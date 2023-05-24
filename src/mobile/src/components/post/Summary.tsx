@@ -1,8 +1,10 @@
 import React from 'react';
 
+import { useFocusEffect } from '@react-navigation/native';
 import { formatDistance } from 'date-fns';
 import ms from 'ms';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import { List } from 'react-native-paper';
 import { State } from 'react-native-track-player';
 import ViewShot from 'react-native-view-shot';
 
@@ -136,6 +138,7 @@ export function Summary({
 
   const [lastTick, setLastTick] = React.useState(new Date());
   const [isRead, setIsRead] = React.useState(!disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog);
+  const [sourceIsRead, setSourceIsRead] = React.useState(!disableInteractions && Boolean(readSources?.[summary.id]) && !initialFormat &&!showShareDialog);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -165,18 +168,18 @@ export function Summary({
     }
     let content = localizedStrings.summary;
     if (format === 'bullets') {
-      content = localizedStrings.bullets;
+      content = localizedStrings.bullets.replace(/•\s*/g, '');
     }
     return content;
   }, [format, localizedStrings.bullets, localizedStrings.summary]);
 
   // update time ago every `tickIntervalMs` milliseconds
-  React.useEffect(() => {
+  useFocusEffect(React.useCallback(() => {
     const interval = setInterval(() => {
       setLastTick(new Date());
     }, ms(tickInterval));
     return () => clearInterval(interval);
-  }, [tickInterval]);
+  }, [tickInterval]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat) {
@@ -212,23 +215,25 @@ export function Summary({
     const actions = [{
       onPress: () => {
         setPreference('readSummaries', (prev) => {
-          onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !isRead });
+          onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !prev?.[summary.id] });
           const newBookmarks = { ...prev };
-          if (isRead) {
+          if (newBookmarks[summary.id]) {
             delete newBookmarks[summary.id];
           } else {
             newBookmarks[summary.id] = new Bookmark(true);
           }
+          setIsRead((prev) => !prev);
           return (prev = newBookmarks);
         });
         setPreference('readSources', (prev) => {
-          onInteract?.(InteractionType.Read, 'mark-source-unread', { isRead: !isRead });
+          onInteract?.(InteractionType.Read, 'mark-source-unread', { isRead: !prev?.[summary.id] });
           const newBookmarks = { ...prev };
-          if (isRead) {
+          if (newBookmarks[summary.id]) {
             delete newBookmarks[summary.id];
           } else {
             newBookmarks[summary.id] = new Bookmark(true);
           }
+          setSourceIsRead((prev) => !prev);
           return (prev = newBookmarks);
         });
       },
@@ -270,7 +275,7 @@ export function Summary({
             style={ theme.components.card }
             inactive={ isRead } 
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
-            <View col gap={ 6 }>
+            <View col>
               <View row>
                 {!initialFormat && !showShareDialog && selected && (
                   <View
@@ -282,202 +287,227 @@ export function Summary({
                     bg={ theme.colors.primary } />
                 )}
                 <View col gap={ 6 }>
-                  <View row gap={ 12 }>
-                    <View col width="100%">
-                      <View col gap={ 6 }>
-                        <View>
-                          <View row alignCenter gap={ 12 }>
-                            <Text 
-                              italic
-                              onPress={ () => openOutlet(summary.outlet) }>
-                              {summary.outlet.displayName}
-                            </Text>
-                            <View row />
-                            <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
-                            <MeterDial 
-                              value={ summary.sentiment }
-                              width={ 40 } />
-                          </View>
-                        </View>
-                        <View>
-                          <View row gap={ 12 }>
-                            {!(compact || compactMode) && summary.imageUrl && (
+                  <View 
+                    mt={ -12 }
+                    mh={ -12 }
+                    pv={ initialFormat ? 12 : 6 }
+                    ph={ 12 }
+                    flexGrow
+                    elevated
+                    zIndex={ 2 }
+                    inactive={ isRead }>
+                    <View row alignCenter gap={ 12 }>
+                      <Text 
+                        italic
+                        onPress={ () => openOutlet(summary.outlet) }>
+                        {summary.outlet.displayName}
+                      </Text>
+                      <View row gap={ 6 }>
+                        <Text 
+                          bold 
+                          caption
+                          color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
+                          {timeAgo}
+                        </Text>
+                      </View>
+                      <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
+                      <MeterDial 
+                        value={ summary.sentiment }
+                        width={ 40 } />
+                    </View>
+                  </View>
+                  <View>
+                    <View row gap={ 12 }>
+                      {!(compact || compactMode) && summary.imageUrl && (
+                        <View
+                          justifyCenter
+                          flexGrow
+                          maxWidth={ 120 }
+                          width={ '30%' }>
+                          <Menu
+                            width={ 300 }
+                            autoAnchor={ (
                               <View
-                                justifyCenter
-                                width={ '20%' }>
-                                <Menu
-                                  width={ 300 }
-                                  autoAnchor={ (
-                                    <View>
-                                      <Image
-                                        source={ { uri: summary.imageUrl } }  
-                                        rounded
-                                        aspectRatio={ 1 } />
-                                    </View>
-                                  ) }>
-                                  <View gap={ 12 }>
-                                    <Text caption>{strings.summary.thisIsNotARealImage}</Text>
-                                    <Image
-                                      source={ { uri: summary.imageUrl } }  
-                                      rounded
-                                      aspectRatio={ 1 } />
-                                  </View>
-                                </Menu>
+                                mt={ -6 }
+                                mb={ 18 }
+                                ml={ -12 }
+                                minHeight={ 100 }
+                                height="100%"
+                                flexGrow>
+                                <Image
+                                  bg='red'
+                                  col
+                                  fill
+                                  source={ { uri: summary.imageUrl } } />
                               </View>
+                            ) }>
+                            <View
+                              gap={ 6 }>
+                              <Text caption>{strings.summary.thisIsNotARealImage}</Text>
+                              <View
+                                mh={ -12 }
+                                mb={ -12 }>
+                                <Image
+                                  source={ { uri: summary.imageUrl } }  
+                                  aspectRatio={ 1 } />
+                              </View>
+                            </View>
+                          </Menu>
+                        </View>
+                      )}
+                      <View col>
+                        <View row alignCenter>
+                          {showShareDialog || keywords.length === 0 ? (
+                            <Text 
+                              bold
+                              justifyCenter
+                              subtitle1
+                              color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
+                              {(compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title}
+                            </Text>
+                          ) : (
+                            <Highlighter
+                              bold
+                              subtitle1
+                              justifyCenter
+                              highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                              searchWords={ keywords }
+                              textToHighlight={ localizedStrings.title } />
+                          )}
+                        </View>
+                        {!/^en/i.test(getLocale()) && !translations && (
+                          !isLocalizing ? (
+                            <Text
+                              subscript 
+                              bold
+                              underline
+                              onPress={ () => handleLocalizeSummary() }>
+                              {strings.summary.translate}
+                            </Text>
+                          )
+                            : (
+                              <View row>
+                                <ActivityIndicator animating />
+                              </View>
+                            )
+                        )}
+                        {!/^en/i.test(getLocale()) && translations && (
+                          <Text
+                            subscript 
+                            bold
+                            underline
+                            onPress={ () => setShowTranslations((prev) => !prev) }>
+                            {showTranslations ? strings.summary.showOriginalText : strings.summary.showTranslatedText}
+                          </Text>
+                        )}
+                        {!(compact || compactMode) && showShortSummary === true && (
+                          <View row>
+                            <Divider />
+                            {(showShareDialog || keywords.length === 0) ? <Text>{localizedStrings.shortSummary}</Text> : (
+                              <Highlighter 
+                                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                                searchWords={ keywords }
+                                textToHighlight={ localizedStrings.shortSummary ?? '' } />
                             )}
-                            <View col>
-                              <View row alignCenter>
-                                {showShareDialog || keywords.length === 0 ? (
-                                  <Text 
-                                    bold
-                                    justifyCenter
-                                    subtitle1
-                                    color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
-                                    {(compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title}
-                                  </Text>
-                                ) : (
-                                  <Highlighter
-                                    bold
-                                    subtitle1
-                                    justifyCenter
-                                    highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                    searchWords={ keywords }
-                                    textToHighlight={ localizedStrings.title } />
-                                )}
-                              </View>
-                              {!/^en/i.test(getLocale()) && !translations && (
-                                !isLocalizing ? (
-                                  <Text
-                                    subscript 
-                                    bold
-                                    underline
-                                    onPress={ () => handleLocalizeSummary() }>
-                                    {strings.summary.translate}
-                                  </Text>
-                                )
-                                  : (
-                                    <View row>
-                                      <ActivityIndicator animating />
-                                    </View>
-                                  )
-                              )}
-                              {!/^en/i.test(getLocale()) && translations && (
-                                <Text
-                                  subscript 
-                                  bold
+                          </View>
+                        )}
+                        {!(compact || compactMode) && (
+                          <View 
+                            row
+                            alignCenter
+                            gap={ 12 }
+                            mh={ -12 }
+                            pv={ 6 }
+                            ph={ 12 }>
+                            <Button 
+                              elevated
+                              alignCenter
+                              p={ 4 }
+                              startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                              onPress={ () => openCategory(summary.category) } />
+                            <View row>
+                              <View gap={ 0 } width="100%">
+                                <Text 
+                                  row
+                                  numberOfLines={ 1 }
                                   underline
-                                  onPress={ () => setShowTranslations((prev) => !prev) }>
-                                  {showTranslations ? strings.summary.showOriginalText : strings.summary.showTranslatedText}
+                                  caption
+                                  color={ !initialFormat && !showShareDialog && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+                                  onPress={ () => {
+                                    onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
+                                    setSourceIsRead(true);
+                                  } }
+                                  onLongPress={ () => copyToClipboard(summary.url) }>
+                                  {summary.url}
                                 </Text>
-                              )}
+                              </View>
+                            </View>
+                            <View>
+                              <View row alignCenter justifyEnd gap={ 8 }>
+                                <Button
+                                  elevated
+                                  p={ 4 }
+                                  alignCenter
+                                  subtitle2
+                                  color='text'
+                                  startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+                                  onPress={ () => onInteract?.(InteractionType.Bookmark) } />
+                                <Button
+                                  elevated
+                                  p={ 4 }
+                                  subtitle2
+                                  color='text'
+                                  startIcon='share'
+                                  onPress={ () => setShowShareDialog(true, {
+                                    content, format, summary, viewshot: viewshot.current, 
+                                  }) } />
+                                <Button
+                                  elevated
+                                  p={ 4 }
+                                  alignCenter
+                                  subtitle2
+                                  color="text"
+                                  startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                                  onPress={ () => handlePlayAudio() } />
+                              </View>
                             </View>
                           </View>
-                        </View>
+                        )}
                       </View>
                     </View>
                   </View>
-                  {!(compact || compactMode) && showShortSummary === true && (
-                    <View row>
-                      <Divider />
-                      {(showShareDialog || keywords.length === 0) ? <Text>{localizedStrings.shortSummary}</Text> : (
-                        <Highlighter 
-                          highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                          searchWords={ keywords }
-                          textToHighlight={ localizedStrings.shortSummary ?? '' } />
-                      )}
-                    </View>
-                  )}
-                  {!(compact || compactMode) && (
-                    <View row alignCenter gap={ 12 }>
-                      <Button 
-                        elevated
-                        rounded
-                        alignCenter
-                        p={ 4 }
-                        startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                        onPress={ () => openCategory(summary.category) } />
-                      <View row>
-                        <View gap={ 0 } width="100%">
-                          <View row gap={ 6 }>
-                            <Text 
-                              bold 
-                              caption
-                              color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
-                              {timeAgo}
-                            </Text>
-                          </View>
-                          <Text 
-                            row
-                            numberOfLines={ 1 }
-                            underline
-                            rounded
-                            caption
-                            color={ !initialFormat && !showShareDialog && readSources?.[summary.id] ? theme.colors.textDisabled : theme.colors.text }
-                            onPress={ () => onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url)) }
-                            onLongPress={ () => copyToClipboard(summary.url) }>
-                            {summary.url}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <View row alignCenter justifyEnd gap={ 8 }>
-                          <Button
-                            elevated
-                            p={ 4 }
-                            rounded
-                            alignCenter
-                            subtitle2
-                            color='text'
-                            startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-                            onPress={ () => onInteract?.(InteractionType.Bookmark) } />
-                          <Button
-                            elevated
-                            p={ 4 }
-                            rounded
-                            subtitle2
-                            color='text'
-                            startIcon='share'
-                            onPress={ () => setShowShareDialog(true, {
-                              content, format, summary, viewshot: viewshot.current, 
-                            }) } />
-                          <Button
-                            elevated
-                            p={ 4 }
-                            rounded
-                            alignCenter
-                            subtitle2
-                            color="text"
-                            startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                            onPress={ () => handlePlayAudio() } />
-                        </View>
-                      </View>
-                    </View>
-                  )}
                 </View>
               </View>
-              {initialFormat && <Divider />}
               {initialFormat && (
                 <CollapsedView 
-                  startCollapsed={ false }
-                  indent={ 0 }
+                  initiallyCollapsed={ false }
+                  mh={ -12 }
                   title={ (
-                    <Text subtitle1>{strings.summary.summaryBullets}</Text>
+                    <ReadingFormatSelector
+                      mv={ -12 }
+                      elevated={ false }
+                      format={ format } 
+                      preferredFormat={ preferredReadingFormat }
+                      onChange={ handleFormatChange } />
                   ) }>
                   {content && (
                     <View gap={ 12 }>
-                      <ReadingFormatSelector 
-                        format={ format } 
-                        preferredFormat={ preferredReadingFormat }
-                        onChange={ handleFormatChange } />
-                      <View>
-                        {showShareDialog || keywords.length === 0 ? (
-                          <Text>{content}</Text>
-                        ) : (
-                          <Highlighter 
-                            highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                            searchWords={ keywords }
-                            textToHighlight={ content } />
-                        )}
+                      <View gap={ -20 }>
+                        {content.split('\n').map((content, i) => (                         
+                          <List.Item
+                            key={ `${content}-${i}` }
+                            style={ { padding:0 } }
+                            titleStyle={ { margin: 0, padding: 0 } }
+                            left={ (props) => format === 'bullets' ? <List.Icon { ...props } icon="circle" /> : undefined }
+                            title={ showShareDialog || keywords.length === 0 ? (
+                              <Text>{content}</Text>
+                            ) : (
+                              <Highlighter 
+                                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                                searchWords={ keywords }
+                                textToHighlight={ content } />
+                            ) } />
+                        ))}
                       </View>
                     </View>
                   )}

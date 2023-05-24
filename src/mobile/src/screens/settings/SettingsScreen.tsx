@@ -1,17 +1,17 @@
 import React from 'react';
 
 import RNFS from 'react-native-fs';
-import { SegmentedButtons, Switch } from 'react-native-paper';
 
 import { ReadingFormat } from '~/api';
 import {
   AVAILABLE_FONTS,
   ActivityIndicator,
   Button,
-  Icon,
   ReadingFormatSelector,
   Screen,
   ScrollView,
+  SegmentedButtons,
+  Switch,
   TabSwitcher,
   Text,
   View,
@@ -101,7 +101,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
                   {strings.settings.expanded} 
                 </Button>
               </View>
-              <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } color={ theme.colors.primary } />
+              <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } />
               <View>
                 <Button caption gap={ 4 } startIcon="view-headline" iconSize={ 24 } bold alignCenter>
                   {strings.settings.compact}

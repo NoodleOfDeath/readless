@@ -52,6 +52,10 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   aspectRatio?: number;
   width?: number | string;
   height?: number | string;
+  minWidth?: number | string;
+  minHeight?: number | string;
+  maxWidth?: number | string;
+  maxHeight?: number | string;
   // flexbox
   flex?: number;
   flexWrap?: 'wrap' | 'nowrap';
@@ -71,6 +75,7 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   justifyCenter?: boolean;
   justifyStart?: boolean;
   justifyEnd?: boolean;
+  justifyEvenly?: boolean;
   justifySpaced?: boolean;
   inactive?: boolean;
   // margins
@@ -104,7 +109,7 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   style?: Style;
 };
 
-export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'borderColor', 'backgroundColor', 'opacity', 'borderRadius', 'borderWidth', 'zIndex', 'style'];
+export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'backgroundColor', 'opacity', 'borderColor', 'borderRadius', 'borderWidth', 'zIndex', 'style'];
 
 export type Stylable<Style extends ViewStyle = ViewStyle> = 
 TextStyleProps & ViewStyleProps<Style>;

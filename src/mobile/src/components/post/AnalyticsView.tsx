@@ -5,8 +5,6 @@ import { BarChart } from 'react-native-chart-kit';
 import { PublicSummarySentimentAttributes } from '~/api';
 import {
   CollapsedView,
-  Icon,
-  Menu,
   MeterDial,
   Text,
   View,
@@ -28,7 +26,7 @@ const chartConfig = {
 
 export function AnalyticsView({
   sentiment = 0,
-  sentiments,
+  sentiments = [],
   ...props  
 }: AnalyticsViewProps) {
   
@@ -67,29 +65,18 @@ export function AnalyticsView({
   return (
     <View style={ style } gap={ 12 }>
       <CollapsedView
-        startCollapsed={ false }
-        title={ (
-          <View row gap={ 12 }>
-            <Text subtitle1>
-              {strings.summary.sentimentAnalysis}
-            </Text>
-            <Menu
-              autoAnchor={
-                <Icon size={ 24 } name="information" />
-              }>
-              <Text>{strings.summary.sentimentAnalysisInfo}</Text>
-            </Menu>
-          </View>
-        ) }>
+        mh={ -12 }
+        initiallyCollapsed={ false }
+        title={ strings.summary.sentimentAnalysis }
+        info={ strings.summary.sentimentAnalysisInfo }>
         <View gap={ 12 }>
           <View row alignStart gap={ 12 }>
-            <Text
+            <View
+              elevated
               bg={ sentiment < -0.2 ? '#ff0000' : sentiment > 0.2 ? '#00cc00' : '#888' }
-              color="white"
-              style={ { overflow: 'hidden' } }
-              p={ 4 }>
-              {`${ sentimentLabel } ${fixedSentiment(sentiment)}`}
-            </Text>
+              p={ 8 }>
+              <Text color="white">{`${ sentimentLabel } ${fixedSentiment(sentiment)}`}</Text>
+            </View>
             <MeterDial width={ 80 } value={ sentiment } />
           </View>
           <View>

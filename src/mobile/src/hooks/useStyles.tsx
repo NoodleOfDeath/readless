@@ -24,6 +24,10 @@ export function useStyles({
   aspectRatio,
   width,
   height,
+  minWidth,
+  minHeight,
+  maxWidth,
+  maxHeight,
   // typographies
   caption,
   subscript,
@@ -65,6 +69,7 @@ export function useStyles({
   alignStart,
   justifyCenter,
   justifyEnd,
+  justifyEvenly,
   justifyStart,
   justifySpaced,
   // margin
@@ -144,10 +149,13 @@ export function useStyles({
     if (justifyEnd) {
       return { justifyContent: 'flex-end' };
     }
+    if (justifyEvenly) {
+      return { justifyContent: 'space-evenly' };
+    }
     if (justifySpaced) {
       return { justifyContent: 'space-between' };
     }
-  }, [justifyCenter, justifyEnd, justifySpaced, justifyStart]);
+  }, [justifyCenter, justifyEnd, justifySpaced, justifyEvenly, justifyStart]);
   
   const appearance = React.useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -212,6 +220,10 @@ export function useStyles({
     attrs.push(aspectRatio ? { aspectRatio } : undefined);
     attrs.push(width ? { width } : undefined);
     attrs.push(height ? { height } : undefined);
+    attrs.push(minWidth ? { minWidth } : undefined);
+    attrs.push(minHeight ? { minHeight } : undefined);
+    attrs.push(maxWidth ? { maxWidth } : undefined);
+    attrs.push(maxHeight ? { maxHeight } : undefined);
     attrs.push({ fontSize : fontSize * scale });
     attrs.push(borderWidth ? { borderWidth } : undefined);
     attrs.push(borderColor ? { borderColor } : undefined);
@@ -226,6 +238,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
     attrs.push(pr ? { paddingRight: pr * scale } : undefined);
     return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [textScale, position, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle, zIndex, onlyInclude]);
+  }, [textScale, position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle, onlyInclude]);
   return viewStyle;
 }

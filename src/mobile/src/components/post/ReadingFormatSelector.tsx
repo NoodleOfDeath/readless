@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { SegmentedButtons } from 'react-native-paper';
-
 import { ReadingFormat } from '~/api';
-import { ViewProps } from '~/components';
+import { SegmentedButtons, ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -22,6 +20,7 @@ export function ReadingFormatSelector({
   const style = useStyles(props);
   return (
     <SegmentedButtons 
+      { ...props }
       style={ style }
       value={ format ?? preferredFormat }
       onValueChange={ (value) => onChange?.(value as ReadingFormat) }
