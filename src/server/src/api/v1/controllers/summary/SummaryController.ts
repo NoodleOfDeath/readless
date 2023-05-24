@@ -25,6 +25,7 @@ import {
 } from '../';
 import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
+import { parseDate } from '../../../../utils';
 import { AuthError, InternalError } from '../../middleware';
 import {
   InteractionType,
@@ -80,7 +81,7 @@ function applyFilter(
         if (/^(?:outlet|source|src)$/i.test(prefix)) {
           outlets.push(...pf);
         }
-        if (/^past$/i.test(prefix)) {
+        if (/^[lp]ast$/i.test(prefix)) {
           const timeInterval = parseTimeInterval(prefixValues);
           if (timeInterval) {
             interval = timeInterval;
@@ -92,7 +93,7 @@ function applyFilter(
   const parts: string[] = [];
   if (query && query.length > 0) {
     const timeMatches = query.match(/(.*?)(?:in\s+)?(?:the\s+)?[pl]ast\s+(\d+\s*(?:months?|m(?:in(?:ute)?s?)?|h(?:(?:ou)?rs?)?|d(?:ays?)?|w(?:(?:ee)?ks?)?|y(?:(?:ea)?rs?)?))/i);
-    if (timeMatches && timeMatches[2]) {
+    if (!interval && timeMatches && timeMatches[2]) {
       interval = parseTimeInterval(timeMatches[2]);
       if (interval) {
         query = timeMatches[1];
@@ -142,6 +143,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() matchType?: 'all' | 'any',
     @Query() interval = '100y',
     @Query() locale = '',
+    @Query() start?: string,
+    @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
@@ -155,8 +158,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     const noOutlets = outlets.length === 0;
     const noCategories = categories.length === 0;
     const noIds = ids.length === 0 || excludeIds;
-    const startDate = new Date(0);
-    const endDate = new Date();
+    const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : new Date();
+    const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : new Date(0);
     const records = await this.store.query(GET_SUMMARIES, {
       nest: true,
       replacements: {
@@ -165,7 +168,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         excludeIds,
         filter: query,
         ids: ids.length === 0 ? [-1] : ids,
-        interval: pastInterval ?? interval,
+        interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval),
         limit: Number(pageSize),
         locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
         noCategories,

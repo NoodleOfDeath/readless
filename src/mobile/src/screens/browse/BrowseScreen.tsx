@@ -11,6 +11,7 @@ import {
   Screen,
   ScrollView,
   TabSwitcher,
+  TopicSampler,
   View,
 } from '~/components';
 import {  SessionContext } from '~/contexts';
@@ -104,6 +105,7 @@ export function BrowseScreen(_props: ScreenProps<'default'>) {
       {loading ? (<ActivityIndicator animating size={ 24 } />) : 
         (
           <ScrollView col mb={ 16 }>
+            <TopicSampler horizontal />
             <TabSwitcher 
               tabHeight={ 48 }
               activeTab={ activeTab }

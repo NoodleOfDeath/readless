@@ -2,7 +2,11 @@ import React from 'react';
 
 import { Menu as RNMenu, MenuProps as RNMenuProps } from 'react-native-paper';
 
-import { View, ViewProps } from '~/components';
+import {
+  Text,
+  View,
+  ViewProps,
+} from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type MenuProps = Omit<RNMenuProps, 'anchor' | 'theme' | 'visible'> & ViewProps & {
@@ -57,7 +61,7 @@ export function Menu({
       anchor={ props.autoAnchor ? computedAnchor : props.anchor }
       onDismiss= { props.autoAnchor ? () => setVisible(false) : props.onDismiss }
       visible={ visible }>
-      {children}
+      {typeof children === 'string' ? <Text>{children}</Text> : children}
     </RNMenu>
   );
 }

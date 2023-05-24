@@ -92,7 +92,7 @@ export class ScribeService extends BaseService {
     if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
       await this.error('Article too short', [url, loot.content].join('\n\n'));
     }
-    if (Number.isNaN(loot.date.valueOf())) {
+    if (!loot.date || Number.isNaN(loot.date.valueOf())) {
       await this.error('Invalid date found', [url, loot.dateMatches.join('\n-----\n')].join('\n\n'));
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {

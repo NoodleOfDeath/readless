@@ -321,7 +321,7 @@ export class PuppeteerService extends BaseService {
       
       loot.dateMatches = dates;
       loot.date = maxDate(...dates.map((d) => parseDate(d)));
-      if (Number.isNaN(loot.date.valueOf())) {
+      if (!loot.date || Number.isNaN(loot.date.valueOf())) {
         loot.date = parseDate(dates.join(' '));
       }
       loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];

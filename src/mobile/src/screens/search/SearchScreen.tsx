@@ -21,7 +21,6 @@ import {
   ScrollView,
   Summary,
   Text,
-  TopicSampler,
   View,
 } from '~/components';
 import {
@@ -61,7 +60,6 @@ export function SearchScreen({
   const { search } = useNavigation();
   const theme = useTheme();
   
-  const sampler = React.useMemo(() => route?.params?.sampler, [route?.params?.sampler]);
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
   const onlyCustomNews = React.useMemo(() => Boolean(route?.params?.onlyCustomNews), [route]);
   const specificIds = React.useMemo(() => (route?.params?.specificIds), [route]);
@@ -340,7 +338,6 @@ export function SearchScreen({
   return (
     <Screen>
       <View col gap={ 3 }>
-        {sampler && <TopicSampler horizontal />}
         {averageSentiment && (
           <View 
             elevated 
@@ -364,7 +361,7 @@ export function SearchScreen({
               outlined 
               p={ 8 }
               selectable
-              onPress={ () => navigation?.getParent()?.navigate('Browse') }>
+              onPress={ () => navigation?.getParent()?.navigate('browse') }>
               {strings.search.goToBrowse}
             </Button>
           </View>
