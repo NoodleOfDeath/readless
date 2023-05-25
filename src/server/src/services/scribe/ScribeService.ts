@@ -14,7 +14,6 @@ import {
   SentimentMethod,
   Summary,
   SummarySentiment,
-  SummarySentimentToken,
   SummaryToken,
   TokenType,
 } from '../../api/v1/schema/models';
@@ -116,7 +115,6 @@ export class ScribeService extends BaseService {
     });
     let categoryDisplayName: string;
     const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
-    const sentimentTokens: string[] = [];
     const tags: Partial<SummaryTokenCreationAttributes>[] = [];
     const prompts: Prompt[] = [
       {
@@ -132,18 +130,18 @@ export class ScribeService extends BaseService {
         ].join(''),
       },
       {
-        handleReply: async (reply) => { 
-          const { score, tokens } = JSON.parse(reply.text);
+        handleReply: async (reply) => {
+          const match = reply.text.match(/-?\d*\.\d+/);
+          if (!match) {
+            await this.error('Not a valid sentiment score', reply.text);
+          }
+          const score = Number.parseFloat(match[0]);
           if (Number.isNaN(score)) {
             await this.error('Not a valid sentiment score', reply.text);
           }
           sentiment.score = score;
-          if (!Array.isArray(tokens) || !tokens.every((t) => typeof t === 'string')) {
-            await this.error('tokens are in the wrong format', reply.text);
-          }
-          sentimentTokens.push(...new Set<string>(tokens));
         },
-        text: 'For the article/story I just gave you, please provide a floating point sentiment score between -1 and 1 as well as the 10 most notable adjective tokens from the text. Please respond with JSON only using the format: { score: number, tokens: string[] }',
+        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1. Please respond with the score only.',
       },
       {
         handleReply: async (reply) => {
@@ -177,7 +175,7 @@ export class ScribeService extends BaseService {
             await this.error('Bad tags', reply.text, false);
           }
         },
-        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article/story that can be classified under one of the following types: ${this.tokenTypes.join(', ')}. Companies like Apple, Meta, Facebook, OpenAI, Google, etc. should be considered a business not an organization. Only respond with each tag and its respective token type (separated by comma) on its own line like this: King Charles,person\nWales,place\n2024 election,event`,
+        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article that can be classified under one of the following types: ${this.tokenTypes.join(', ')}. Companies like Apple, Meta, Facebook, OpenAI, Google, etc. should be considered a business not an organization. Only respond with each tag and its respective token type (separated by comma) on its own line like this: King Charles,person\nWales,place\n2024 election,event`,
       },
       {
         handleReply: async (reply) => { 
@@ -308,15 +306,7 @@ export class ScribeService extends BaseService {
       
       // Create sentiment
       sentiment.parentId = summary.id;
-      const newSentiment = await SummarySentiment.create(sentiment);
-
-      // Create summary sentiment tokens
-      for (const token of sentimentTokens) {
-        await SummarySentimentToken.create({
-          parentId: newSentiment.id,
-          text: token,
-        });
-      }
+      await SummarySentiment.create(sentiment);
       
       const afinnSentimentScores = SentimentService.sentiment('afinn', loot.content);
       await SummarySentiment.create({

@@ -54,3 +54,7 @@ export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 
 export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'outletId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
+
+export type PublicSummaryGroups = PublicSummaryAttributes & {
+  linkedSummaries?: PublicSummaryAttributes[];
+};
