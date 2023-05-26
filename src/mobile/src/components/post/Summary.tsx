@@ -10,7 +10,7 @@ import ViewShot from 'react-native-view-shot';
 
 import { 
   InteractionType,
-  PublicSummaryAttributes,
+  PublicSummaryGroups,
   ReadingFormat,
 } from '~/api';
 import {
@@ -49,7 +49,7 @@ import {
 import { fixedSentiment } from '~/utils';
 
 type Props = {
-  summary: PublicSummaryAttributes;
+  summary: PublicSummaryGroups;
   tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
@@ -215,25 +215,23 @@ export function Summary({
     const actions = [{
       onPress: () => {
         setPreference('readSummaries', (prev) => {
-          onInteract?.(InteractionType.Read, 'mark-read-unread', { isRead: !prev?.[summary.id] });
           const newBookmarks = { ...prev };
-          if (newBookmarks[summary.id]) {
+          if (isRead || newBookmarks[summary.id]) {
             delete newBookmarks[summary.id];
           } else {
             newBookmarks[summary.id] = new Bookmark(true);
           }
-          setIsRead((prev) => !prev);
+          setIsRead(!isRead);
           return (prev = newBookmarks);
         });
         setPreference('readSources', (prev) => {
-          onInteract?.(InteractionType.Read, 'mark-source-unread', { isRead: !prev?.[summary.id] });
           const newBookmarks = { ...prev };
-          if (newBookmarks[summary.id]) {
+          if (isRead || newBookmarks[summary.id]) {
             delete newBookmarks[summary.id];
           } else {
             newBookmarks[summary.id] = new Bookmark(true);
           }
-          setSourceIsRead((prev) => !prev);
+          setSourceIsRead(!isRead);
           return (prev = newBookmarks);
         });
       },
@@ -263,6 +261,38 @@ export function Summary({
       <RenderActions actions={ actions } />
     );
   }, [isRead, setPreference, onInteract, summary, setShowFeedbackDialog]);
+  
+  const translateToggle = React.useMemo(() => {
+    return (
+      <View>
+        {!/^en/i.test(getLocale()) && !translations && (
+          !isLocalizing ? (
+            <Text
+              subscript 
+              bold
+              underline
+              onPress={ () => handleLocalizeSummary() }>
+              {strings.summary.translate}
+            </Text>
+          )
+            : (
+              <View row>
+                <ActivityIndicator animating />
+              </View>
+            )
+        )}
+        {!/^en/i.test(getLocale()) && translations && (
+          <Text
+            subscript 
+            bold
+            underline
+            onPress={ () => setShowTranslations((prev) => !prev) }>
+            {showTranslations ? strings.summary.showOriginalText : strings.summary.showTranslatedText}
+          </Text>
+        )}
+      </View>
+    );
+  }, [translations, isLocalizing, handleLocalizeSummary, showTranslations]);
   
   return (
     <GestureHandlerRootView>
@@ -335,7 +365,6 @@ export function Summary({
                                 height="100%"
                                 flexGrow>
                                 <Image
-                                  bg='red'
                                   col
                                   fill
                                   source={ { uri: summary.imageUrl } } />
@@ -375,31 +404,7 @@ export function Summary({
                               textToHighlight={ localizedStrings.title } />
                           )}
                         </View>
-                        {!/^en/i.test(getLocale()) && !translations && (
-                          !isLocalizing ? (
-                            <Text
-                              subscript 
-                              bold
-                              underline
-                              onPress={ () => handleLocalizeSummary() }>
-                              {strings.summary.translate}
-                            </Text>
-                          )
-                            : (
-                              <View row>
-                                <ActivityIndicator animating />
-                              </View>
-                            )
-                        )}
-                        {!/^en/i.test(getLocale()) && translations && (
-                          <Text
-                            subscript 
-                            bold
-                            underline
-                            onPress={ () => setShowTranslations((prev) => !prev) }>
-                            {showTranslations ? strings.summary.showOriginalText : strings.summary.showTranslatedText}
-                          </Text>
-                        )}
+                        {translateToggle}
                         {!(compact || compactMode) && showShortSummary === true && (
                           <View row>
                             <Divider />
@@ -491,14 +496,16 @@ export function Summary({
                       onChange={ handleFormatChange } />
                   ) }>
                   {content && (
-                    <View gap={ 12 }>
+                    <View gap={ 6 }>
+                      {translateToggle}
                       <View gap={ -20 }>
                         {content.split('\n').map((content, i) => (                         
                           <List.Item
                             key={ `${content}-${i}` }
+                            left={ (props) => format === 'bullets' ? <List.Icon { ...props } icon="circle" /> : undefined }
                             style={ { padding:0 } }
                             titleStyle={ { margin: 0, padding: 0 } }
-                            left={ (props) => format === 'bullets' ? <List.Icon { ...props } icon="circle" /> : undefined }
+                            titleNumberOfLines={ 100 }
                             title={ showShareDialog || keywords.length === 0 ? (
                               <Text>{content}</Text>
                             ) : (

@@ -42,191 +42,114 @@ import {
 } from '~/screens';
 import { lengthOf } from '~/utils';
 
-export function TabViewController<T extends TabParams = TabParams>(
-  tabs: RouteConfig<
-    T,
-    keyof T,
-    NavigationState,
-    NativeStackNavigationOptions,
-    EventMapBase
-  >[], 
-  initialRouteName?: Extract<keyof T, string>
-) {
-  const Controller = () => {
-    const Stack = createNativeStackNavigator<T>();
-    const { currentTrack } = React.useContext(MediaContext);
-    const {
-      preferences: { 
-        bookmarkedSummaries,
-        readSummaries,
-        loadedInitialUrl,
-      },
-      setPreference,
-    } = React.useContext(SessionContext);
-
-    const { 
-      router, 
-      openBookmarks,
-      openSettings, 
-    } = useNavigation();
-    
-    const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
-    
-    const headerRight = React.useMemo(() => (
-      <View>
-        <View row gap={ 16 } alignCenter>
-          <View onPress={ openBookmarks }>
-            {bookmarkCount > 0 && (
-              <Badge
-                size={ 18 }
-                style={ {
-                  position: 'absolute', right: -5, top: -5, zIndex: 1,
-                } }>
-                {bookmarkCount}
-              </Badge>
-            )}
-            <Icon name='bookmark-outline' size={ 24 } />
-          </View>
-          <Button
-            startIcon="menu"
-            iconSize={ 24 }
-            onPress={ openSettings } />
-        </View>
-      </View>
-    ), [bookmarkCount, openBookmarks, openSettings]);
-
-    React.useEffect(() => {
-      const subscriber = Linking.addEventListener('url', router);
-      if (!loadedInitialUrl) {
-        Linking.getInitialURL().then((url) => {
-          if (url) {
-            router({ url } );
-            setPreference('loadedInitialUrl', true);
-          }
-        });
-      } 
-      return () => subscriber.remove();
-    }, [router, loadedInitialUrl, setPreference]);
-  
-    return (
-      <View col>
-        <Stack.Navigator initialRouteName={ initialRouteName }>
-          {tabs.map((tab) => (
-            <Stack.Screen
-              key={ String(tab.name) }
-              { ...tab }
-              options={ { 
-                headerRight: () => headerRight,
-                headerShown: true,
-                ...tab.options,
-              } } />
-          ))}
-        </Stack.Navigator>
-        <MediaPlayer visible={ Boolean(currentTrack) } />
-      </View>
-    );
-  };
-  return Controller;
-}
-
-type TabProps = {
-  component: ReturnType<typeof TabViewController>;
-  icon: string;
-  name: string;
-  disabled?: boolean;
-  badge?: (preferences: Preferences) => number;
-};
-
-const TABS: TabProps[] = [
+const SCREENS: RouteConfig<
+  TabParams,
+  keyof TabParams,
+  NavigationState,
+  NativeStackNavigationOptions,
+  EventMapBase,
+>[] = [
+  { 
+    component: SearchScreen, 
+    initialParams: { },
+    name: 'default', 
+    options: { headerTitle: strings.headlines },
+  }, 
+  { component: SearchScreen, name: 'search' },
   {
-    component: TabViewController<StackableTabParams>(
-      [
-        { 
-          component: SearchScreen, 
-          initialParams: { },
-          name: 'default', 
-          options: { headerTitle: strings.headlines },
-        }, 
-        { component: SearchScreen, name: 'search' },
-        {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
-        },
-        { component: SummaryScreen, name: 'summary' },
-        { component: ChannelScreen, name: 'channel' },
-        {
-          component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
-        },
-        {
-          component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
-        },
-      ],
-      'default'
-    ),
-    icon: 'newspaper',
-    name: strings.headlines,
+    component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
+  },
+  { component: SummaryScreen, name: 'summary' },
+  { component: ChannelScreen, name: 'channel' },
+  {
+    component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
   },
   {
-    component: TabViewController<StackableTabParams>(
-      [
-        {
-          component: SearchScreen, 
-          initialParams: { onlyCustomNews: true }, 
-          name: 'default', 
-          options: { headerTitle: strings.myNews },
-        },
-        { component: SearchScreen, name: 'search' },
-        {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
-        },
-        { component: SummaryScreen, name: 'summary' },
-        { component: ChannelScreen, name: 'channel' },
-        {
-          component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
-        },
-        {
-          component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
-        },
-      ],
-      'default'
-    ),
-    icon: 'cards',
-    name: strings.myNews,
-  },
-  {
-    component: TabViewController<StackableTabParams>(
-      [
-        {
-          component: BrowseScreen, 
-          name:'default', 
-          options: { headerTitle: strings.browse },
-        },
-        { component: SearchScreen, name: 'search' },
-        {
-          component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
-        },
-        { component: SummaryScreen, name: 'summary' },
-        { component: ChannelScreen, name: 'channel' },
-        {
-          component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
-        },
-        {
-          component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
-        },
-      ],
-      'default'
-    ),
-    icon: 'bookshelf',
-    name: strings.browse,
+    component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
   },
 ];
 
+function Stack() {
+  
+  const Stack = createNativeStackNavigator<T>();
+  const { currentTrack } = React.useContext(MediaContext);
+  const {
+    preferences: { 
+      bookmarkedSummaries,
+      readSummaries,
+      loadedInitialUrl,
+    },
+    setPreference,
+  } = React.useContext(SessionContext);
+
+  const { 
+    router, 
+    openBookmarks,
+    openSettings, 
+  } = useNavigation();
+  
+  const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
+  
+  const headerRight = React.useMemo(() => (
+    <View>
+      <View row gap={ 16 } alignCenter>
+        <View onPress={ openBookmarks }>
+          {bookmarkCount > 0 && (
+            <Badge
+              size={ 18 }
+              style={ {
+                position: 'absolute', right: -5, top: -5, zIndex: 1,
+              } }>
+              {bookmarkCount}
+            </Badge>
+          )}
+          <Icon name='bookmark-outline' size={ 24 } />
+        </View>
+        <Button
+          startIcon="menu"
+          iconSize={ 24 }
+          onPress={ openSettings } />
+      </View>
+    </View>
+  ), [bookmarkCount, openBookmarks, openSettings]);
+  
+  React.useEffect(() => {
+    const subscriber = Linking.addEventListener('url', router);
+    if (!loadedInitialUrl) {
+      Linking.getInitialURL().then((url) => {
+        if (url) {
+          router({ url } );
+          setPreference('loadedInitialUrl', true);
+        }
+      });
+    } 
+    return () => subscriber.remove();
+  }, [router, loadedInitialUrl, setPreference]);
+  
+  return (
+    <View col>
+      <Stack.Navigator initialRouteName={ 'default' }>
+        {SCREENS.map((screen) => (
+          <Stack.Screen
+            key={ String(screen.name) }
+            { ...screen }
+            options={ { 
+              headerRight: () => headerRight,
+              headerShown: true,
+              tabBarStyle: { display: 'none' },
+              ...screen.options,
+            } } />
+        ))}
+      </Stack.Navigator>
+      <MediaPlayer visible={ Boolean(currentTrack) } />
+    </View>
+  );
+  
+}
+
 export default function NavigationController() {
   const theme = useTheme();
-  const Tab = createBottomTabNavigator();
-  const { ready, preferences } = React.useContext(SessionContext);
-  const initialRouteName = React.useMemo(() => {
-    return lengthOf(preferences.bookmarkedCategories, preferences.bookmarkedOutlets) > 0 ? strings.myNews : strings.headlines;
-  }, [preferences.bookmarkedCategories, preferences.bookmarkedOutlets]);
+  const { ready } = React.useContext(SessionContext);
   return (
     <NavigationContainer
       theme= { theme.navContainerTheme }
@@ -235,33 +158,9 @@ export default function NavigationController() {
       {!ready ? (
         <ActivityIndicator animating />
       ) : (
-        <Tab.Navigator initialRouteName={ initialRouteName }>
-          {TABS.filter((tab) => !tab.disabled).map((tab) => (
-            <Tab.Screen
-              key={ tab.name }
-              name={ tab.name }
-              component={ tab.component }
-              options={ {
-                headerShown: false,
-                tabBarIcon: (props) => {
-                  const badge = tab.badge ? tab.badge(preferences) : 0;
-                  return (
-                    <View>
-                      {badge > 0 && (
-                        <Badge style={ {
-                          position: 'absolute', right: -5, top: -5, zIndex: 1,
-                        } }>
-                          {badge}
-                        </Badge>
-                      )}
-                      <Icon name={ tab.icon } { ...props } color="primary" />
-                    </View>
-                  );
-                },
-              } } />
-          ))}
-        </Tab.Navigator>
+        <Stack />
       )}
     </NavigationContainer>
   );
 }
+
