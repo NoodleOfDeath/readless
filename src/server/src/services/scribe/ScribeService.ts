@@ -181,7 +181,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply.text;
         },
         text: [
-          'Please summarize the same article/story using no more than 10 words. Prioritize any important names, places, events, date, or numeric values and try to make the summary as unbiased as possible.',
+          'Please summarize the same article using no more than 10 words to be used as a title. Prioritize any important names, places, events, date, or numeric values and try to make the title as unbiased and mot clickbaity as possible. Respond with just the title.',
         ].join(''),
       },
       {
@@ -192,7 +192,7 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply.text;
         },
         text: [
-          'Please provide another unbiased summary using no more than 30 words. Do not use phrases like "The article/story" or "This article/story".', 
+          'Please provide another unbiased summary using no more than 30 words. Do not use phrases like "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -203,12 +203,13 @@ export class ScribeService extends BaseService {
           newSummary.summary = reply.text;
         },
         text: [
-          'Please provide another longer unbiased summary using no more than 100 words. Do not use phrases like "The article/story" or "This article/story".', 
+          'Please provide another longer unbiased summary using no more than 100 words. Do not use phrases like "The article" or "This article".', 
         ].join(''),
       },
       {
         handleReply: async (reply) => {
           newSummary.bullets = reply.text
+            .replace(/•\s*/g, '')
             .replace(/^\.*?:\s*/, '')
             .replace(/<br\s*\/?>/g, '')
             .split(/\n/)
