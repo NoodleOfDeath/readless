@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const frStrings: typeof en = {
+export const frStrings: typeof enStrings = {
   actions: { close: 'Fermer' },
   bookmarks: {
     activity: 'Activité',
@@ -67,6 +67,7 @@ export const frStrings: typeof en = {
     resetReadSummaries: 'Réinitialiser les résumés comme non lus',
     settings: 'Paramètres',
     shortSummaries: 'Résumés courts sous les titres',
+    shortSummariesInsteadOfTitles: 'Résumés courts au lieu des titres',
     system: 'Système',
     textScale: 'Échelle de texte',
   },

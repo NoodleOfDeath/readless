@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const huStrings: typeof en = {
+export const huStrings: typeof enStrings = {
   actions: { close: 'Bezárás' },
   bookmarks: {
     activity: 'Tevékenység',
@@ -67,6 +67,7 @@ export const huStrings: typeof en = {
     resetReadSummaries: 'Összefoglalók visszaállítása olvasatlannak',
     settings: 'Beállítások',
     shortSummaries: 'Rövid összefoglalók a címek alatt',
+    shortSummariesInsteadOfTitles: 'Rövid összefoglalók a címek helyett',
     system: 'Rendszer',
     textScale: 'Szöveg nagyítása',
   },

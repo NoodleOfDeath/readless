@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const zhTWStrings: typeof en = {
+export const zhTWStrings: typeof enStrings = {
   actions: { close: '關閉' },
   bookmarks: {
     activity: '活動',
@@ -68,6 +68,7 @@ export const zhTWStrings: typeof en = {
     resetReadSummaries: '重設摘要為未讀狀態',
     settings: '設定',
     shortSummaries: '標題下的簡短摘要',
+    shortSummariesInsteadOfTitles: '短摘要而非標題',
     system: '系統',
     textScale: '文字縮放',
   },

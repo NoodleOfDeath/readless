@@ -8,8 +8,8 @@ import {
 import { useStyles } from '~/hooks';
 
 export type SegmentedButtonProps<T> = {
-  icon?: string;
-  label?: string;
+  icon?: React.ReactNode;
+  label?: React.ReactNode;
   value: T;
 };
 
@@ -52,7 +52,7 @@ export const SegmentedButtons = <T = any>({
               selected={ value === props.value }
               startIcon={ icon as string }
               onPress={ () => onValueChange?.(value) }>
-              { label}
+              { label }
             </Button>
           </View>
         ))}

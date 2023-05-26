@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const ruStrings: typeof en = {
+export const ruStrings: typeof enStrings = {
   actions: { close: 'Закрыть' },
   bookmarks: {
     activity: 'Активность',
@@ -68,6 +68,7 @@ export const ruStrings: typeof en = {
     resetReadSummaries: 'Сбросить резюме как непрочитанные',
     settings: 'Настройки',
     shortSummaries: 'Краткие резюме под заголовками',
+    shortSummariesInsteadOfTitles: 'Краткие резюме вместо заголовков',
     system: 'Система',
     textScale: 'Масштаб текста',
   },

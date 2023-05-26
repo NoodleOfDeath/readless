@@ -57,7 +57,7 @@ export type Preferences = {
   readSummaries?: { [key: number]: Bookmark<boolean> };
   readSources?: { [key: number]: Bookmark<boolean> };
   summaryHistory?: { [key: number]: Bookmark<InteractionType> };
-  showOnlyBookmarkedNews?: boolean;
+  showOnlyCustomNews?: boolean;
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { 

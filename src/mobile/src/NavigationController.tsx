@@ -1,7 +1,6 @@
 import React from 'react';
 import { Linking } from 'react-native';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   EventMapBase,
   NavigationContainer,
@@ -14,11 +13,7 @@ import {
 } from '@react-navigation/native-stack';
 import { Badge } from 'react-native-paper';
 
-import {
-  MediaContext,
-  Preferences,
-  SessionContext,
-} from './contexts';
+import { MediaContext, SessionContext } from './contexts';
 
 import {
   ActivityIndicator,
@@ -38,46 +33,19 @@ import {
   SettingsScreen,
   StackableTabParams,
   SummaryScreen,
-  TabParams,
 } from '~/screens';
 import { lengthOf } from '~/utils';
 
-const SCREENS: RouteConfig<
-  TabParams,
-  keyof TabParams,
-  NavigationState,
-  NativeStackNavigationOptions,
-  EventMapBase,
->[] = [
-  { 
-    component: SearchScreen, 
-    initialParams: { },
-    name: 'default', 
-    options: { headerTitle: strings.headlines },
-  }, 
-  { component: SearchScreen, name: 'search' },
-  {
-    component: BrowseScreen, name: 'browse', options: { headerTitle: strings.browse },
-  },
-  { component: SummaryScreen, name: 'summary' },
-  { component: ChannelScreen, name: 'channel' },
-  {
-    component: BookmarksScreen, name: 'bookmarks', options: { headerTitle: strings.bookmarks.bookmarks }, 
-  },
-  {
-    component: SettingsScreen, name: 'settings', options: { headerTitle: strings.settings.settings },
-  },
-];
-
 function Stack() {
   
-  const Stack = createNativeStackNavigator<T>();
+  const Stack = createNativeStackNavigator();
   const { currentTrack } = React.useContext(MediaContext);
   const {
     preferences: { 
       bookmarkedSummaries,
       readSummaries,
       loadedInitialUrl,
+      showOnlyCustomNews,
     },
     setPreference,
   } = React.useContext(SessionContext);
@@ -85,10 +53,67 @@ function Stack() {
   const { 
     router, 
     openBookmarks,
+    openBrowse,
     openSettings, 
   } = useNavigation();
   
   const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
+  
+  const screens: RouteConfig<
+    StackableTabParams,
+    keyof StackableTabParams,
+    NavigationState,
+    NativeStackNavigationOptions,
+    EventMapBase
+  >[] = React.useMemo(() => [
+    { 
+      component: SearchScreen, 
+      name: 'default', 
+      options: {
+        headerBackTitle: '', 
+        headerTitle: strings.headlines, 
+        onlyCustomNews: showOnlyCustomNews,
+      },
+    }, 
+    {
+      component: SearchScreen, 
+      name: 'search',
+      options: { headerBackTitle: '' },
+    },
+    {
+      component: BrowseScreen, 
+      name: 'browse', options: {
+        headerBackTitle: '', 
+        headerTitle: strings.browse, 
+      },
+    },
+    {
+      component: SummaryScreen, 
+      name: 'summary',  
+      options: { headerBackTitle: '' },
+    },
+    {
+      component: ChannelScreen, 
+      name: 'channel',
+      options: { headerBackTitle: '' }, 
+    },
+    {
+      component: BookmarksScreen, 
+      name: 'bookmarks', 
+      options: {
+        headerBackTitle: '', 
+        headerTitle: strings.bookmarks.bookmarks, 
+      }, 
+    },
+    {
+      component: SettingsScreen, 
+      name: 'settings', 
+      options: {
+        headerBackTitle: '', 
+        headerTitle: strings.settings.settings, 
+      },
+    },
+  ], [showOnlyCustomNews]);
   
   const headerRight = React.useMemo(() => (
     <View>
@@ -106,12 +131,16 @@ function Stack() {
           <Icon name='bookmark-outline' size={ 24 } />
         </View>
         <Button
+          startIcon="filter"
+          iconSize={ 24 }
+          onPress={ openBrowse } />
+        <Button
           startIcon="menu"
           iconSize={ 24 }
           onPress={ openSettings } />
       </View>
     </View>
-  ), [bookmarkCount, openBookmarks, openSettings]);
+  ), [bookmarkCount, openBookmarks, openBrowse, openSettings]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);
@@ -128,15 +157,15 @@ function Stack() {
   
   return (
     <View col>
-      <Stack.Navigator initialRouteName={ 'default' }>
-        {SCREENS.map((screen) => (
+      <Stack.Navigator
+        initialRouteName={ 'default' }>
+        {screens.map((screen) => (
           <Stack.Screen
             key={ String(screen.name) }
             { ...screen }
             options={ { 
               headerRight: () => headerRight,
               headerShown: true,
-              tabBarStyle: { display: 'none' },
               ...screen.options,
             } } />
         ))}
@@ -153,10 +182,11 @@ export default function NavigationController() {
   return (
     <NavigationContainer
       theme= { theme.navContainerTheme }
-      fallback={ <ActivityIndicator animating /> }
       linking={ NAVIGATION_LINKING_OPTIONS }>
       {!ready ? (
-        <ActivityIndicator animating />
+        <View>
+          <ActivityIndicator animating />
+        </View>
       ) : (
         <Stack />
       )}

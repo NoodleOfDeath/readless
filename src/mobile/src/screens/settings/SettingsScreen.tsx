@@ -12,7 +12,6 @@ import {
   ScrollView,
   SegmentedButtons,
   Switch,
-  TabSwitcher,
   Text,
   View,
 } from '~/components';
@@ -46,7 +45,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
   } = React.useContext(SessionContext);
   
   const [loading, setLoading] = React.useState(false);
-  const [activeTextScale, setActiveTextScale] = React.useState(textScales.findIndex((s) => s.value == (textScale ?? 1)));
   const [cacheSize, setCacheSize] = React.useState('');
 
   const handleReadingFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
@@ -56,17 +54,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
     }
     setPreference('preferredReadingFormat', newFormat);
   }, [preferredReadingFormat, setPreference]);
-  
-  const handleTextScaleChange = React.useCallback((index: number) => {
-    const newTextScale = textScales[index];
-    if (textScale === newTextScale.value) {
-      setActiveTextScale(textScales.findIndex((s) => s.value == 1));
-      setPreference('textScale', undefined);
-      return;
-    }
-    setActiveTextScale(index);
-    setPreference('textScale', newTextScale.value);
-  }, [textScale, setPreference]);
 
   const handleClearCache = React.useCallback(async () => {
     const files = await RNFS.readDir(RNFS.CachesDirectoryPath);
@@ -91,22 +78,41 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
 
   return (
     <Screen>
-      <ScrollView overflow="hidden">
+      <ScrollView>
         <View p={ 16 } gap={ 16 }>
-          <View justifyCenter alignCenter gap={ 6 }>
-            <Text caption>{strings.settings.displayMode}</Text>
-            <View row gap={ 6 } alignCenter>
-              <View>
-                <Button caption gap={ 4 } startIcon="view-agenda" iconSize={ 24 } bold alignCenter>
-                  {strings.settings.expanded} 
-                </Button>
-              </View>
-              <Switch value={ compactMode } onValueChange={ () => setPreference('compactMode', (prev) => !prev) } />
-              <View>
-                <Button caption gap={ 4 } startIcon="view-headline" iconSize={ 24 } bold alignCenter>
-                  {strings.settings.compact}
-                </Button>
-              </View>
+          <View row justifyCenter flexWrap="wrap" gap={ 16 }>
+            <View alignCenter gap={ 6 }>
+              <Text caption numberOfLines={ 2 }>
+                {strings.settings.displayMode}
+              </Text>
+              <Switch 
+                leftLabel={ (
+                  <View>
+                    <Button caption gap={ 4 } startIcon="view-agenda" iconSize={ 24 } bold alignCenter>
+                      {strings.settings.expanded} 
+                    </Button>
+                  </View>
+                ) }
+                rightLabel={ (
+                  <View>
+                    <Button caption gap={ 4 } startIcon="view-headline" iconSize={ 24 } bold alignCenter>
+                      {strings.settings.compact}
+                    </Button>
+                  </View>
+                ) }
+                value={ compactMode } 
+                onValueChange={ () => setPreference('compactMode', (prev) => !prev) } />
+            </View>
+            <View alignCenter gap={ 6 }>
+              <Text caption numberOfLines={ 2 }>
+                {compactMode ? strings.settings.shortSummariesInsteadOfTitles : strings.settings.shortSummaries}
+              </Text>
+              <Switch 
+                color={ theme.colors.primary } 
+                value={ showShortSummary }
+                onValueChange={ (value) => {
+                  setPreference('showShortSummary', value);
+                } } />
             </View>
           </View>
           <View justifyCenter gap={ 6 }>
@@ -120,15 +126,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
                 { label: strings.settings.dark, value: 'dark' },
               ] } />
           </View>
-          <View justifyCenter alignCenter gap={ 6 }>
-            <Text caption textCenter>{strings.settings.shortSummaries}</Text>
-            <Switch 
-              color={ theme.colors.primary } 
-              value={ showShortSummary }
-              onValueChange={ (value) => {
-                setPreference('showShortSummary', value);
-              } } />
-          </View>
           <View justifyCenter gap={ 6 }>
             <Text caption textCenter>{strings.settings.defaultReadingMode}</Text>
             <ReadingFormatSelector 
@@ -138,11 +135,10 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           </View>
           <View justifyCenter gap={ 6 }>
             <Text caption textCenter>{strings.settings.textScale}</Text>
-            <TabSwitcher
-              rounded
-              activeTab={ activeTextScale }
-              onTabChange={ handleTextScaleChange }
-              titles={ textScales.map((s) => s.label) } />
+            <SegmentedButtons
+              value={ textScale ?? 1 }
+              onValueChange={ (value) => setPreference('textScale', value) }
+              buttons={ textScales } />
           </View>
           <View gap={ 6 }>
             <Text caption textCenter>{strings.settings.font}</Text>
@@ -156,7 +152,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
                     gap={ 4 }
                     key={ font }
                     elevated
-                    rounded
                     p={ 8 }
                     startIcon={ fontFamily === font ? 'check' : undefined } 
                     fontFamily={ font }
@@ -169,7 +164,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           </View>
           <Button
             elevated
-            rounded
             caption
             p={ 8 }
             onPress={ () => {
@@ -184,7 +178,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           </Button>
           <Button
             elevated
-            rounded
             caption
             p={ 8 }
             onPress={ () => setPreference('summaryHistory', {}) }>
@@ -196,7 +189,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           </Button>
           <Button
             elevated
-            rounded
             caption
             p={ 8 }
             onPress={ () => setPreference('removedSummaries', {}) }>
@@ -209,7 +201,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           {loading ? (<ActivityIndicator animating />) : (
             <Button
               elevated
-              rounded
               caption
               p={ 8 }
               onPress={ () => handleClearCache() }>

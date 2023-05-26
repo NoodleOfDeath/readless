@@ -19,7 +19,9 @@ import {
 import {
   clearCookie,
   getCookie,
+  getLocale,
   getUserAgent,
+  lengthOf,
   setCookie,
 } from '~/utils';
 
@@ -95,7 +97,7 @@ export function SessionContextProvider({ children }: Props) {
     setPrefsNeedSync(true);
   };
 
-  const followOutlet = (outlet: PublicOutletAttributes) => {
+  const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
     setPreference('bookmarkedOutlets', (prev) => {
       const state = { ...prev };
       if (state[outlet.name]) {
@@ -103,11 +105,14 @@ export function SessionContextProvider({ children }: Props) {
       } else {
         state[outlet.name] = new Bookmark(outlet);
       }
+      if (lengthOf(preferences.bookmarkedCategories, state).length > 0) {
+        setPreference('showOnlyCustomNews', true);
+      }
       return (prev = state);
     });
-  };
+  }, [preferences.bookmarkedCategories]);
 
-  const followCategory = (category: PublicCategoryAttributes) => {
+  const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
     setPreference('bookmarkedCategories', (prev) => {
       const state = { ...prev };
       if (state[category.name]) {
@@ -115,13 +120,19 @@ export function SessionContextProvider({ children }: Props) {
       } else {
         state[category.name] = new Bookmark(category);
       }
+      if (lengthOf(preferences.bookmarkedOutlets, state).length > 0) {
+        setPreference('showOnlyCustomNews', true);
+      }
       return (prev = state);
     });
-  };
+  }, [preferences.bookmarkedOutlets]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
-    const headers: HeadersInit = { 'X-App-Version': getUserAgent().currentVersion };
+    const headers: RequestInit['headers'] = { 
+      'X-App-Version': getUserAgent().currentVersion,
+      'X-Locale': getLocale(),
+    };
     if (userData?.tokenString) {
       headers.Authorization = `Bearer ${userData.tokenString}`;
     }
