@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const viStrings: typeof en = {
+export const viStrings: typeof enStrings = {
   actions: { close: 'Đóng' },
   bookmarks: {
     activity: 'Hoạt động',
@@ -68,6 +68,7 @@ export const viStrings: typeof en = {
     resetReadSummaries: 'Đặt lại tóm tắt thành chưa đọc',
     settings: 'Cài đặt',
     shortSummaries: 'Tóm tắt ngắn dưới tiêu đề',
+    shortSummariesInsteadOfTitles: 'Tóm tắt ngắn thay vì tiêu đề',
     system: 'Hệ thống',
     textScale: 'Tỷ lệ văn bản',
   },

@@ -2,6 +2,8 @@ import { Platform } from 'react-native';
 
 import VersionCheck from 'react-native-version-check';
 
+import * as Localization from '~/locales';
+
 export function getUserAgent() {
   const userAgent = { 
     ...Platform,
@@ -10,3 +12,5 @@ export function getUserAgent() {
   };
   return userAgent;
 }
+
+export const getLocale = Localization.getLocale;

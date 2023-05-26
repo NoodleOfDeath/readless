@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const deStrings: typeof en = {
+export const deStrings: typeof enStrings = {
   actions: { close: 'Schließen' },
   bookmarks: {
     activity: 'Aktivität',
@@ -67,6 +67,7 @@ export const deStrings: typeof en = {
     resetReadSummaries: 'Zusammenfassungen als ungelesen zurücksetzen',
     settings: 'Einstellungen',
     shortSummaries: 'Kurze Zusammenfassungen unter Titeln',
+    shortSummariesInsteadOfTitles: 'Kurze Zusammenfassungen anstelle von Titeln',
     system: 'System',
     textScale: 'Textskalierung',
   },

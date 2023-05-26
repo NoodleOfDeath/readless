@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const koStrings: typeof en = {
+export const koStrings: typeof enStrings = {
   actions: { close: '닫기' },
   bookmarks: {
     activity: '활동',
@@ -67,6 +67,7 @@ export const koStrings: typeof en = {
     resetReadSummaries: '읽지 않은 요약 리셋',
     settings: '설정',
     shortSummaries: '제목 아래 짧은 요약',
+    shortSummariesInsteadOfTitles: '제목 대신 짧은 요약',
     system: '시스템',
     textScale: '텍스트 크기',
   },

@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const thStrings: typeof en = {
+export const thStrings: typeof enStrings = {
   actions: { close: 'ปิด' },
   bookmarks: {
     activity: 'กิจกรรม',
@@ -68,6 +68,7 @@ export const thStrings: typeof en = {
     resetReadSummaries: 'รีเซ็ตสรุปเป็นยังไม่ได้อ่าน',
     settings: 'การตั้งค่า',
     shortSummaries: 'สรุปสั้นภายใต้หัวข้อ',
+    shortSummariesInsteadOfTitles: 'สรุปย่อแทนหัวข้อ',
     system: 'ระบบ',
     textScale: 'มาตราส่วนข้อความ',
   },

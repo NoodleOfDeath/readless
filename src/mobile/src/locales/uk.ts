@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const ukStrings: typeof en = {
+export const ukStrings: typeof enStrings = {
   actions: { close: 'Закрити' },
   bookmarks: {
     activity: 'Активність',
@@ -68,6 +68,7 @@ export const ukStrings: typeof en = {
     resetReadSummaries: 'Скинути підсумки на непрочитані',
     settings: 'Налаштування',
     shortSummaries: 'Короткі підсумки під заголовками',
+    shortSummariesInsteadOfTitles: 'Короткі резюме замість заголовків',
     system: 'Система',
     textScale: 'Масштаб тексту',
   },

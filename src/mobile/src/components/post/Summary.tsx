@@ -11,6 +11,7 @@ import ViewShot from 'react-native-view-shot';
 import { 
   InteractionType,
   PublicSummaryGroups,
+  PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
 import {
@@ -53,12 +54,15 @@ type Props = {
   tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
+  initiallyTranslated?: boolean;
   keywords?: string[];
   compact?: boolean;
   swipeable?: boolean;
   disableInteractions?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
+  onLocalize?: (translations: PublicSummaryTranslationAttributes[]) => void;
+  onToggleTranslate?: (onOrOff: boolean) => void;
 };
 
 type RenderAction = {
@@ -101,12 +105,15 @@ export function Summary({
   tickInterval = '2m',
   selected,
   initialFormat,
+  initiallyTranslated = true,
   keywords = [],
   compact = false,
   swipeable = true,
   disableInteractions = false,
   onFormatChange,
   onInteract,
+  onLocalize,
+  onToggleTranslate,
 }: Props) {
 
   const { openURL } = useInAppBrowser();
@@ -142,8 +149,12 @@ export function Summary({
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
-  const [showTranslations, setShowTranslations] = React.useState(Boolean(translations));
+  const [showTranslations, setShowTranslations] = React.useState(initiallyTranslated && Boolean(translations));
   const [isLocalizing, setIsLocalizing] = React.useState(false);
+  
+  React.useEffect(() => {
+    setShowTranslations(initiallyTranslated && Boolean(translations));
+  }, [initiallyTranslated, translations]);
 
   const localizedStrings = React.useMemo(() => {
     return showTranslations && translations ? translations : {
@@ -178,8 +189,11 @@ export function Summary({
     const interval = setInterval(() => {
       setLastTick(new Date());
     }, ms(tickInterval));
+    setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
+    setShowTranslations(initiallyTranslated && Boolean(summary.translations));
+    setIsRead(!disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog);
     return () => clearInterval(interval);
-  }, [tickInterval]));
+  }, [disableInteractions, initialFormat, initiallyTranslated, readSummaries, showShareDialog, summary.id, summary.translations, tickInterval]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat) {
@@ -199,9 +213,15 @@ export function Summary({
       return;
     }
     setTranslations(Object.fromEntries(localizedSummaries.rows.map((row) => [row.attribute, row.value])));
+    onLocalize?.(localizedSummaries.rows);
     setIsLocalizing(false);
     setShowTranslations(true);
-  }, [localizeSummary, summary]);
+  }, [localizeSummary, onLocalize, summary]);
+  
+  React.useEffect(() => {
+    onToggleTranslate?.(showTranslations);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showTranslations]);
   
   const handlePlayAudio = React.useCallback(async () => {
     if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
@@ -221,7 +241,6 @@ export function Summary({
           } else {
             newBookmarks[summary.id] = new Bookmark(true);
           }
-          setIsRead(!isRead);
           return (prev = newBookmarks);
         });
         setPreference('readSources', (prev) => {
@@ -231,7 +250,6 @@ export function Summary({
           } else {
             newBookmarks[summary.id] = new Bookmark(true);
           }
-          setSourceIsRead(!isRead);
           return (prev = newBookmarks);
         });
       },
@@ -268,7 +286,7 @@ export function Summary({
         {!/^en/i.test(getLocale()) && !translations && (
           !isLocalizing ? (
             <Text
-              subscript 
+              caption 
               bold
               underline
               onPress={ () => handleLocalizeSummary() }>
@@ -283,7 +301,7 @@ export function Summary({
         )}
         {!/^en/i.test(getLocale()) && translations && (
           <Text
-            subscript 
+            caption 
             bold
             underline
             onPress={ () => setShowTranslations((prev) => !prev) }>
@@ -348,7 +366,7 @@ export function Summary({
                   </View>
                   <View>
                     <View row gap={ 12 }>
-                      {!(compact || compactMode) && summary.imageUrl && (
+                      {(!(compact || compactMode) || initialFormat) && summary.imageUrl && (
                         <View
                           justifyCenter
                           flexGrow
@@ -405,7 +423,7 @@ export function Summary({
                           )}
                         </View>
                         {translateToggle}
-                        {!(compact || compactMode) && showShortSummary === true && (
+                        {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
                           <View row>
                             <Divider />
                             {(showShareDialog || keywords.length === 0) ? <Text>{localizedStrings.shortSummary}</Text> : (
@@ -416,7 +434,7 @@ export function Summary({
                             )}
                           </View>
                         )}
-                        {!(compact || compactMode) && (
+                        {(!(compact || compactMode) || initialFormat) && (
                           <View 
                             row
                             alignCenter

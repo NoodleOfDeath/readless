@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const nbStrings: typeof en = {
+export const nbStrings: typeof enStrings = {
   actions: { close: 'Lukk' },
   bookmarks: {
     activity: 'Aktivitet',
@@ -67,6 +67,7 @@ export const nbStrings: typeof en = {
     resetReadSummaries: 'Tilbakestill sammendrag som ulest',
     settings: 'Innstillinger',
     shortSummaries: 'Korte sammendrag under overskrifter',
+    shortSummariesInsteadOfTitles: 'Korte sammendrag i stedet for titler',
     system: 'System',
     textScale: 'Tekstskala',
   },

@@ -88,7 +88,7 @@ export function Button({
     if (!endIcon) {
       return;
     }
-    if (typeof endIcon === 'string') {
+    if (typeof enStringsdIcon === 'string') {
       return (
         <Icon 
           name={ endIcon } 

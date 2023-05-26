@@ -58,6 +58,10 @@ export function useNavigation() {
   const openBookmarks = React.useCallback(() => {
     (navigation?.push ?? navigation.navigate)('bookmarks');
   }, [navigation]);
+
+  const openBrowse = React.useCallback(() => {
+    (navigation?.push ?? navigation.navigate)('browse');
+  }, [navigation]);
   
   const openSettings = React.useCallback(() => {
     (navigation?.push ?? navigation.navigate)('settings');
@@ -65,6 +69,7 @@ export function useNavigation() {
 
   return {
     openBookmarks,
+    openBrowse,
     openCategory,
     openOutlet,
     openSettings,

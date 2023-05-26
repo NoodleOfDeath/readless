@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const itStrings: typeof en = {
+export const itStrings: typeof enStrings = {
   actions: { close: 'Chiudi' },
   bookmarks: {
     activity: 'Attività',
@@ -67,6 +67,7 @@ export const itStrings: typeof en = {
     resetReadSummaries: 'Ripristina riepiloghi come non letti',
     settings: 'Impostazioni',
     shortSummaries: 'Breve riepilogo sotto i titoli',
+    shortSummariesInsteadOfTitles: 'Brevi riassunti invece dei titoli',
     system: 'Sistema',
     textScale: 'Scala di testo',
   },

@@ -7,16 +7,20 @@ import {
   SafeAreaView,
 } from 'react-native';
 
+import { useFocusEffect } from '@react-navigation/native';
+
 import { SearchMenu } from './SearchMenu';
 
 import {
   InteractionType,
-  PublicSummaryAttributes,
+  PublicSummaryGroups,
+  PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
 import {
   ActivityIndicator,
   Button,
+  Icon,
   MeterDial,
   Screen,
   ScrollView,
@@ -54,8 +58,10 @@ export function SearchScreen({
       bookmarkedOutlets,
       preferredReadingFormat,
       removedSummaries,
+      showOnlyCustomNews,
     },
     ready,
+    setPreference,
   } = React.useContext(SessionContext);
   const {
     queueSummary, currentTrackIndex, preloadCount,
@@ -63,7 +69,7 @@ export function SearchScreen({
   const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const { supportsMasterDetail } = useLayout();
-  const { search } = useNavigation();
+  const { search, openBrowse } = useNavigation();
   const theme = useTheme();
   
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
@@ -71,9 +77,10 @@ export function SearchScreen({
 
   const [onlyCustomNews, setOnlyCustomNews] = React.useState(Boolean(route?.params?.onlyCustomNews));
   const [loading, setLoading] = React.useState(false);
-  const [loaded, setLoaded] = React.useState(false);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
-  const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
+  const [summaries, setSummaries] = React.useState<PublicSummaryGroups[]>([]);
+  const [translations, setTranslations] = React.useState<Record<number, PublicSummaryTranslationAttributes[]>>({});
+  const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [averageSentiment, setAverageSentiment] = React.useState<number>();
   const [pendingReload, setPendingReload] = React.useState(false);
@@ -82,7 +89,7 @@ export function SearchScreen({
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
-  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryAttributes>();
+  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroups>();
 
   const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
   const [resizing, setResizing] = React.useState(false);
@@ -178,23 +185,26 @@ export function SearchScreen({
       setLastFetchFailed(true);
     } finally {
       setLoading(false);
-      setLoaded(true);
     }
   }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
 
   React.useEffect(() => {
     const headerTitle = (
-      <View>
-        <View row alignCenter>
-          <Switch 
-            value={ onlyCustomNews }
-            onValueChange={ () => setOnlyCustomNews((prev) => !prev) } />
-        </View>
-      </View>
+      <Switch 
+        leftLabel={ <Icon name="filter-off" size={ 24 } /> }
+        rightLabel={ <View><Button row startIcon="filter-check" iconSize={ 24 } gap={ 12 } alignCenter>{strings.myNews}</Button></View> }
+        value={ onlyCustomNews }
+        onValueChange={ (value) => {
+          setOnlyCustomNews(value);
+          if (!prefilter) {
+            setPreference('showOnlyCustomNews', value);
+          }
+        } } />
     );
     if (prefilter) {
       setSearchText(prefilter + ' ');
       navigation?.setOptions({ 
+        headerBackTitle: '',
         headerBackVisible: true,
         headerShown: true,
         headerTitle: () => headerTitle,
@@ -208,7 +218,7 @@ export function SearchScreen({
         headerTitle: () => headerTitle,
       });
     }
-  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews]);
+  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference]);
   
   const onMount = React.useCallback(() => {
     if (!ready) {
@@ -223,6 +233,10 @@ export function SearchScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [prefilter, ready, onlyCustomNews]
   );
+
+  useFocusEffect(React.useCallback(() => {
+    setOnlyCustomNews(Boolean(showOnlyCustomNews));
+  }, [showOnlyCustomNews]));
   
   React.useEffect(() => {
     setSummaries((prev) => {
@@ -250,7 +264,7 @@ export function SearchScreen({
   }, [load, loading, page, totalResultCount, summaries]);
 
   const handleFormatChange = React.useCallback(
-    (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
+    (summary: PublicSummaryGroups, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (supportsMasterDetail) {
         setDetailSummary(summary);
@@ -258,13 +272,25 @@ export function SearchScreen({
       } else {
         navigation?.push('summary', {
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
+          initiallyTranslated: Boolean(translationOn[summary.id]),
           keywords: parseKeywords(searchText),
-          summary,
+          summary: {
+            ...summary,
+            translations: translations[summary.id] ?? summary.translations ?? [],
+          },
         });
       }
     },
-    [handleInteraction, navigation, preferredReadingFormat, searchText, supportsMasterDetail]
+    [handleInteraction, navigation, translations, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
   );
+  
+  const onLocalize = React.useCallback((summary: PublicSummaryGroups, translations: PublicSummaryTranslationAttributes[]) => {
+    setTranslations((prev) => {
+      const state = { ...prev };
+      state[summary.id] = translations;
+      return (prev = state);
+    });
+  }, []);
   
   const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setLastFocus('master');
@@ -326,9 +352,15 @@ export function SearchScreen({
         selected={ Boolean(supportsMasterDetail && summary.id === detailSummary?.id) }
         keywords={ showShareDialog ? undefined : keywords }
         onFormatChange={ (format) => handleFormatChange(summary, format) }
-        onInteract={ (...e) => handleInteraction(summary, ...e) } />
+        onInteract={ (...e) => handleInteraction(summary, ...e) }
+        onLocalize={ (translations) => onLocalize(summary, translations) }
+        onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
+          const state = { ...prev };
+          state[summary.id] = onOrOff;
+          return (prev = state);
+        }) } />
     ));
-  }, [detailSummary?.id, handleFormatChange, handleInteraction, keywords, showShareDialog, summaries, supportsMasterDetail]);
+  }, [detailSummary?.id, onLocalize, handleFormatChange, handleInteraction, keywords, showShareDialog, summaries, supportsMasterDetail]);
 
   React.useEffect(() => {
     loadMoreAsNeeded();
@@ -355,7 +387,7 @@ export function SearchScreen({
     <Screen>
       <SafeAreaView style={ { flexGrow: 1 } }>
         <View col gap={ 3 }>
-          {averageSentiment && (
+          {summaries.length > 0 && averageSentiment && (
             <View 
               elevated 
               height={ 30 } 
@@ -378,7 +410,7 @@ export function SearchScreen({
                 outlined 
                 p={ 8 }
                 selectable
-                onPress={ () => navigation?.getParent()?.navigate('browse') }>
+                onPress={ () => openBrowse() }>
                 {strings.search.goToBrowse}
               </Button>
             </View>
@@ -410,7 +442,7 @@ export function SearchScreen({
                         </Button>
                       </View>
                     )}
-                    {loading && (summaries.length > 0 || !loaded) && (
+                    {loading && (
                       <View row mb={ 64 }>
                         <View row justifyCenter p={ 16 } pb={ 24 }>
                           <ActivityIndicator size="large" color={ theme.colors.primary } />

@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const ptBRStrings: typeof en = {
+export const ptBRStrings: typeof enStrings = {
   actions: { close: 'Fechar' },
   bookmarks: {
     activity: 'Atividade',
@@ -68,6 +68,7 @@ export const ptBRStrings: typeof en = {
     resetReadSummaries: 'Redefinir Sumários como Não Lidos',
     settings: 'Configurações',
     shortSummaries: 'Resumos Curtos sob os Títulos',
+    shortSummariesInsteadOfTitles: 'Resumos curtos em vez de títulos',
     system: 'Sistema',
     textScale: 'Escala de Texto',
   },

@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const jaStrings: typeof en = {
+export const jaStrings: typeof enStrings = {
   actions: { close: '閉じる' },
   bookmarks: {
     activity: 'アクティビティ',
@@ -67,6 +67,7 @@ export const jaStrings: typeof en = {
     resetReadSummaries: '未読の要約にリセット',
     settings: '設定',
     shortSummaries: 'タイトルの下に短い要約',
+    shortSummariesInsteadOfTitles: 'タイトルの代わりに短い要約',
     system: 'システム',
     textScale: 'テキストの拡大縮小',
   },

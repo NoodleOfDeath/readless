@@ -66,6 +66,7 @@ export const enStrings = {
     resetReadSummaries: 'Reset summaries to unread',
     settings: 'Settings',
     shortSummaries: 'Short summaries under titles',
+    shortSummariesInsteadOfTitles: 'Short summaries instead of titles',
     system: 'System',
     textScale: 'Text Scale',
   },

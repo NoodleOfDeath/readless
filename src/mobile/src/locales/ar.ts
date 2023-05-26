@@ -1,6 +1,6 @@
-import { enStrings as en } from './en';
+import { enStrings } from './en';
 
-export const arStrings: typeof en = {
+export const arStrings: typeof enStrings = {
   actions: { close: 'إغلاق' },
   bookmarks: {
     activity: 'النشاط',
@@ -68,6 +68,7 @@ export const arStrings: typeof en = {
     resetReadSummaries: 'إعادة تعيين الملخصات كغير مقروءة',
     settings: 'الإعدادات',
     shortSummaries: 'ملخصات قصيرة تحت العناوين',
+    shortSummariesInsteadOfTitles: 'ملخصات قصيرة بدلاً من العناوين',
     system: 'النظام',
     textScale: 'مقياس النص',
   },

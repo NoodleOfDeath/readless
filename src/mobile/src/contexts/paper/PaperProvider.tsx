@@ -16,10 +16,6 @@ export function PaperProvider({ children }: React.PropsWithChildren) {
   const darkMode = useColorScheme() === 'dark';
   const theme = React.useMemo(() => (displayMode === 'dark' || darkMode) ? MD3DarkTheme : MD3LightTheme, [darkMode, displayMode]);
 
-  React.useEffect(() => {
-    console.log('PaperProvider', theme.dark);
-  }, [theme]);
-
   return (
     <RNPaperProvider theme={ theme }>
       {children}

@@ -55,7 +55,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
   
   return (
     <Screen>
-      <ScrollView>
+      <ScrollView pt={ 12 }>
         {Object.entries(bookmarks ?? {}).length === 0 ? (
           <View justifyCenter alignCenter>
             <Button
