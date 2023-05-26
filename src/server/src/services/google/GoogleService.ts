@@ -6,6 +6,9 @@ import { BaseService } from '../base';
 export class GoogleService extends BaseService {
 
   static get credentials() {
+    if (!process.env.GOOGLE_CREDENTIALS) {
+      return {};
+    }
     return JSON.parse(Buffer.from(process.env.GOOGLE_CREDENTIALS, 'base64').toString('ascii'));
   }
 
