@@ -37,7 +37,7 @@ import {
   TokenType,
   User,
 } from '../../schema';
-import { PublicSummaryGroups, TokenTypeName } from '../../schema/types';
+import { TokenTypeName } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 function parseTimeInterval(str: string) {
@@ -148,7 +148,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() pageSize = 10,
     @Query() page = 0,
     @Query() offset = pageSize * page
-  ): Promise<BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>> {
+  ): Promise<BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>> {
     const { 
       categories, 
       outlets,
@@ -180,7 +180,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       },
       type: QueryTypes.SELECT,
     });
-    return (records?.[0] ?? { count: 0, rows: [] }) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+    return (records?.[0] ?? { count: 0, rows: [] }) as BulkMetadataResponse<PublicSummaryAttributes, { sentiment: number }>;
   }
   
   @Get('/topics')
