@@ -131,11 +131,7 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => {
-          const match = reply.text.match(/-?\d*\.\d+/);
-          if (!match) {
-            await this.error('Not a valid sentiment score', reply.text);
-          }
-          const score = Number.parseFloat(match[0]);
+          const score = Number.parseFloat(reply.text);
           if (Number.isNaN(score)) {
             await this.error('Not a valid sentiment score', reply.text);
           }
