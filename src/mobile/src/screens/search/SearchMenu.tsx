@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Animated,
-  Keyboard,
-  SafeAreaView,
-} from 'react-native';
+import { Animated, Keyboard } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
 
@@ -126,7 +122,7 @@ export function SearchMenu({
                 onClear?.();
               } } 
               onSubmitEditing={ () => submit() } />
-            <Animated.View style={ [theme.components.card, { transform: [{ scaleY: animation }], zIndex: 10 }] }>
+            <Animated.View style={ [theme.components.card, { transform: [{ scaleY: animation }] }] }>
               <View gap={ 12 }>
                 <View>
                   <Button 
@@ -161,19 +157,17 @@ export function SearchMenu({
           </View>
         </React.Fragment>
       ) : (
-        <SafeAreaView>
-          <Button
-            absolute
-            elevated
-            rounded
-            opacity={ 0.95 }
-            p={ 12 }
-            bottom={ 12 }
-            right={ 12 }
-            startIcon="magnify"
-            iconSize={ 32 }
-            onPress={ () => setFocused(true) } />
-        </SafeAreaView>
+        <Button
+          absolute
+          elevated
+          rounded
+          opacity={ 0.95 }
+          p={ 12 }
+          bottom={ 12 }
+          right={ 12 }
+          startIcon="magnify"
+          iconSize={ 32 }
+          onPress={ () => setFocused(true) } />
       )}
     </React.Fragment>
   );

@@ -1,10 +1,10 @@
 import React from 'react';
-import { StatusBar, View } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 
-import { Stylable, ViewProps } from '~/components';
+import { ScrollViewProps, Stylable } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type ScreenViewProps = ViewProps & {
+export type SafeScrollViewProps = ScrollViewProps & {
   refreshing?: boolean;
   onRefresh?: () => void;
 };
@@ -12,17 +12,17 @@ export type ScreenViewProps = ViewProps & {
 export function Screen({
   children,
   ...props
-}: ViewProps) {
+}: SafeScrollViewProps) {
   const theme = useTheme();
   const style = useStyles(props as Stylable);
   return (
     <React.Fragment>
       <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
-      <View
+      <SafeAreaView
         style={ [style, theme.components.flexCol] } 
         { ...props }>
         {children}
-      </View>
+      </SafeAreaView>
     </React.Fragment>
   );
 }

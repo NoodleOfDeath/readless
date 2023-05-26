@@ -4,7 +4,6 @@ import {
   DeviceEventEmitter,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  SafeAreaView,
 } from 'react-native';
 
 import { SearchMenu } from './SearchMenu';
@@ -21,7 +20,6 @@ import {
   Screen,
   ScrollView,
   Summary,
-  Switch,
   Text,
   View,
 } from '~/components';
@@ -38,11 +36,7 @@ import {
 } from '~/hooks';
 import { getLocale, strings } from '~/locales';
 import { ScreenProps } from '~/screens';
-import { 
-  fixedSentiment, 
-  lengthOf, 
-  parseKeywords,
-} from '~/utils';
+import { lengthOf, parseKeywords } from '~/utils';
 
 export function SearchScreen({ 
   route,
@@ -67,9 +61,9 @@ export function SearchScreen({
   const theme = useTheme();
   
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
+  const onlyCustomNews = React.useMemo(() => Boolean(route?.params?.onlyCustomNews), [route]);
   const specificIds = React.useMemo(() => (route?.params?.specificIds), [route]);
 
-  const [onlyCustomNews, setOnlyCustomNews] = React.useState(Boolean(route?.params?.onlyCustomNews));
   const [loading, setLoading] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
@@ -183,21 +177,12 @@ export function SearchScreen({
   }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
 
   React.useEffect(() => {
-    const headerTitle = (
-      <View>
-        <View row alignCenter>
-          <Switch 
-            value={ onlyCustomNews }
-            onValueChange={ () => setOnlyCustomNews((prev) => !prev) } />
-        </View>
-      </View>
-    );
     if (prefilter) {
       setSearchText(prefilter + ' ');
       navigation?.setOptions({ 
         headerBackVisible: true,
         headerShown: true,
-        headerTitle: () => headerTitle,
+        headerTitle: prefilter,
       });
       setKeywords(parseKeywords(prefilter));
     } else {
@@ -205,10 +190,9 @@ export function SearchScreen({
       navigation?.setOptions({ 
         headerBackVisible: false,
         headerShown: true,
-        headerTitle: () => headerTitle,
       });
     }
-  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews]);
+  }, [navigation, route, prefilter, handlePlayAll, summaries.length]);
   
   const onMount = React.useCallback(() => {
     if (!ready) {
@@ -221,7 +205,7 @@ export function SearchScreen({
   React.useEffect(
     () => onMount(), 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [prefilter, ready, onlyCustomNews]
+    [prefilter, ready]
   );
   
   React.useEffect(() => {
@@ -353,146 +337,144 @@ export function SearchScreen({
 
   return (
     <Screen>
-      <SafeAreaView style={ { flexGrow: 1 } }>
-        <View col gap={ 3 }>
-          {averageSentiment && (
-            <View 
-              elevated 
-              height={ 30 } 
-              p={ 4 }>
-              <View row gap={ 12 } justifyCenter alignCenter>
-                <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
-                <Text caption>{`${fixedSentiment(averageSentiment)}`}</Text>
-                <Text caption>{`${totalResultCount} ${strings.search.results}`}</Text>
-              </View>
-            </View>
-          )}
-          {!loading && onlyCustomNews && summaries.length === 0 && (
-            <View col justifyCenter p={ 16 }>
-              <Text subtitle1 pb={ 8 }>
-                {strings.search.filtersTooSpecific}
-              </Text>
-              <Button 
-                alignCenter
-                rounded 
-                outlined 
-                p={ 8 }
-                selectable
-                onPress={ () => navigation?.getParent()?.navigate('browse') }>
-                {strings.search.goToBrowse}
-              </Button>
-            </View>
-          )}
-          {prefilter && onlyCustomNews && (
-            <Text caption textCenter mb={ 6 } mh={ 12 }>{strings.search.customNewsSearch}</Text>
-          )}
-          <View col>
-            <View row>
-              <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
-                <ScrollView
-                  refreshing={ loading }
-                  onScroll={ handleMasterScroll }
-                  onRefresh={ () => {
-                    setPage(0);
-                    load(0);
-                  } }>
-                  <View col width="100%">
-                    {summaryList}
-                    {!loading && !noResults && totalResultCount > summaries.length && (
-                      <View row justifyCenter p={ 16 } pb={ 24 }>
-                        <Button 
-                          outlined
-                          rounded
-                          p={ 8 }
-                          selectable
-                          onPress={ () => loadMore() }>
-                          {strings.search.loadMore}
-                        </Button>
-                      </View>
-                    )}
-                    {loading && (summaries.length > 0 || !loaded) && (
-                      <View row mb={ 64 }>
-                        <View row justifyCenter p={ 16 } pb={ 24 }>
-                          <ActivityIndicator size="large" color={ theme.colors.primary } />
-                        </View>
-                      </View>
-                    )}
-                    {summaries.length === 0 && !loading && (
-                      <View col gap={ 12 } alignCenter justifyCenter>
-                        <Text textCenter mh={ 16 }>
-                          {strings.search.noResults}
-                          {' '}
-                          🥺
-                        </Text>
-                        <Button 
-                          alignCenter
-                          rounded 
-                          outlined 
-                          p={ 8 }
-                          selectable
-                          onPress={ () => load(0) }>
-                          {strings.search.reload}
-                        </Button>
-                      </View>
-                    )}
-                  </View>
-                </ScrollView>
-              </Animated.View>
-              <Animated.View style={ {
-                transform: [
-                  { perspective: 1000 }, 
-                  {
-                    rotateY: resizeAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ['0deg', '360deg'],
-                    }),
-                  },
-                  {
-                    scaleX: resizeAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 0],
-                    }),
-                  }, 
-                ],
-                width: '60%',
-              } }>
-                <ScrollView 
-                  refreshing={ loading }
-                  onScroll={ handleDetailScroll }
-                  mt={ 12 }
-                  ph={ 12 }>
-                  {detailSummary && (
-                    <Summary
-                      summary={ detailSummary }
-                      initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                      keywords={ showShareDialog ? undefined : keywords }
-                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
-                      onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
-                  )}
-                </ScrollView>
-              </Animated.View>
+      <View col gap={ 3 }>
+        {averageSentiment && (
+          <View 
+            elevated 
+            height={ 30 } 
+            p={ 4 }>
+            <View row gap={ 12 } justifyCenter alignCenter>
+              <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
+              <Text caption>{`${averageSentiment >= 0 ? '+' : ''}${averageSentiment.toFixed(2)}`}</Text>
+              <Text caption>{`${totalResultCount} ${strings.search.results}`}</Text>
             </View>
           </View>
+        )}
+        {!loading && onlyCustomNews && summaries.length === 0 && (
+          <View col justifyCenter p={ 16 }>
+            <Text subtitle1 pb={ 8 }>
+              {strings.search.filtersTooSpecific}
+            </Text>
+            <Button 
+              alignCenter
+              rounded 
+              outlined 
+              p={ 8 }
+              selectable
+              onPress={ () => navigation?.getParent()?.navigate('browse') }>
+              {strings.search.goToBrowse}
+            </Button>
+          </View>
+        )}
+        {prefilter && onlyCustomNews && (
+          <Text caption textCenter mb={ 6 } mh={ 12 }>{strings.search.customNewsSearch}</Text>
+        )}
+        <View col>
+          <View row>
+            <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
+              <ScrollView
+                refreshing={ loading }
+                onScroll={ handleMasterScroll }
+                onRefresh={ () => {
+                  setPage(0);
+                  load(0);
+                } }>
+                <View col width="100%">
+                  {summaryList}
+                  {!loading && !noResults && totalResultCount > summaries.length && (
+                    <View row justifyCenter p={ 16 } pb={ 24 }>
+                      <Button 
+                        outlined
+                        rounded
+                        p={ 8 }
+                        selectable
+                        onPress={ () => loadMore() }>
+                        {strings.search.loadMore}
+                      </Button>
+                    </View>
+                  )}
+                  {loading && (summaries.length > 0 || !loaded) && (
+                    <View row mb={ 64 }>
+                      <View row justifyCenter p={ 16 } pb={ 24 }>
+                        <ActivityIndicator size="large" color={ theme.colors.primary } />
+                      </View>
+                    </View>
+                  )}
+                  {summaries.length === 0 && !loading && (
+                    <View col gap={ 12 } alignCenter justifyCenter>
+                      <Text textCenter mh={ 16 }>
+                        {strings.search.noResults}
+                        {' '}
+                        🥺
+                      </Text>
+                      <Button 
+                        alignCenter
+                        rounded 
+                        outlined 
+                        p={ 8 }
+                        selectable
+                        onPress={ () => load(0) }>
+                        {strings.search.reload}
+                      </Button>
+                    </View>
+                  )}
+                </View>
+              </ScrollView>
+            </Animated.View>
+            <Animated.View style={ {
+              transform: [
+                { perspective: 1000 }, 
+                {
+                  rotateY: resizeAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '360deg'],
+                  }),
+                },
+                {
+                  scaleX: resizeAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+                }, 
+              ],
+              width: '60%',
+            } }>
+              <ScrollView 
+                refreshing={ loading }
+                onScroll={ handleDetailScroll }
+                mt={ 12 }
+                ph={ 12 }>
+                {detailSummary && (
+                  <Summary
+                    summary={ detailSummary }
+                    initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+                    keywords={ showShareDialog ? undefined : keywords }
+                    onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                    onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
+                )}
+              </ScrollView>
+            </Animated.View>
+          </View>
         </View>
-        {summaries.length > 0 && (
-          <Button
-            absolute
-            right={ 12 }
-            bottom={ 48 }
-            elevated
-            rounded
-            opacity={ 0.95 }
-            p={ 12 }
-            startIcon="volume-high"
-            iconSize={ 32 }
-            onPress={ handlePlayAll } />
-        )}
-        {summaries.length > 0 && (
-          <SearchMenu
-            initialValue={ prefilter ?? searchText }
-            onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) } />
-        )}
-      </SafeAreaView>
+      </View>
+      {summaries.length > 0 && (
+        <Button
+          absolute
+          left={ 12 }
+          bottom={ 12 }
+          elevated
+          rounded
+          opacity={ 0.95 }
+          p={ 12 }
+          startIcon="volume-high"
+          iconSize={ 32 }
+          onPress={ handlePlayAll } />
+      )}
+      {summaries.length > 0 && (
+        <SearchMenu
+          initialValue={ prefilter ?? searchText }
+          onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) } />
+      )}
     </Screen>
   );
 }
