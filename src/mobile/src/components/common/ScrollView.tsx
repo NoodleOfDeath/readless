@@ -1,16 +1,16 @@
 import React from 'react';
-import { ScrollView as RNScrollView, RefreshControl } from 'react-native';
+import {
+  ScrollView as RNScrollView,
+  RefreshControl,
+  SafeAreaView,
+} from 'react-native';
 
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-aware-scroll-view';
 
-import {
-  Stylable,
-  View,
-  ViewProps,
-} from '~/components';
+import { Stylable, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type ScrollViewProps = ViewProps & KeyboardAwareScrollViewProps & {
@@ -33,7 +33,7 @@ export function ScrollView({
   const theme = useTheme();
   const style = useStyles(props as Stylable);
   return (
-    <View style={ theme.components.flexCol }>
+    <SafeAreaView style={ theme.components.flexCol }>
       {keyboardAware ? (
         <KeyboardAwareScrollView 
           refreshControl={ refreshControl } 
@@ -53,6 +53,6 @@ export function ScrollView({
           {children}
         </RNScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
 }

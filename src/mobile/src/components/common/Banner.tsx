@@ -1,5 +1,4 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
 
 import { Button } from './Button';
 import { View } from './View';
@@ -62,28 +61,26 @@ export function Banner({
             </View>
           </View>
           {minimized === false && (
-            <View height={ 200 }>
+            <View height={ 250 }>
               {children}
             </View>
           )}
-          <SafeAreaView>
-            <View height={ 54 } alignCenter>
-              <View row alignCenter gap={ 16 }>
-                {actions.map((action, index) => (
-                  <View key={ index }>
-                    <Button
-                      elevated
-                      rounded
-                      p={ 16 }
-                      iconSize={ 24 }
-                      disabled={ action.disabled }
-                      startIcon={ action.icon }
-                      onPress={ action.onPress } />
-                  </View>
-                ))}
-              </View>
+          <View height={ 54 } alignCenter>
+            <View row alignCenter gap={ 16 }>
+              {actions.map((action, index) => (
+                <View key={ index }>
+                  <Button
+                    elevated
+                    rounded
+                    p={ 16 }
+                    iconSize={ 24 }
+                    disabled={ action.disabled }
+                    startIcon={ action.icon }
+                    onPress={ action.onPress } />
+                </View>
+              ))}
             </View>
-          </SafeAreaView>
+          </View>
         </View>
       )}
     </React.Fragment>
