@@ -778,6 +778,40 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
+  ieeespectrum: {
+    baseUrl: 'https://spectrum.ieee.org',
+    displayName: 'IEEE Spectrum',
+    name: 'ieee-spectrum',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article .social_author a' },
+      date: { selector: 'article .social_date' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[class*="widget__headline-text"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  inews: {
+    baseUrl: 'https://inews.co.uk',
+    displayName: 'inews',
+    name: 'inews',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/author/"]' },
+      date: { selector: 'article .inews__post__pubdate' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/news/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
   inverse: {
     baseUrl: 'https://www.inverse.com',
     displayName: 'Inverse',
@@ -794,6 +828,25 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
           'a[href*="/gaming/"]',
           'a[href*="/science/"]',
           'a[href*="/tech/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  investors: {
+    baseUrl: 'https://www.investors.com/tag/all-news-and-stock-ideas/',
+    displayName: 'Investors\'s Business Daily',
+    name: 'investors',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'a[href*="/author/"]' },
+      date: { selector: 'article header .post-time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/news/"]',
+          'a[href*="/stock-lists/"]',
+          'a[href*="/research/"]',
         ].join(','),
       },
     },
@@ -895,6 +948,23 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
           'a[href*="/fitness/"]',
           'a[href*="/grooming/"]',
           'a[href*="/style/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  morningstar: {
+    baseUrl: 'https://www.morningstar.com',
+    displayName: 'Morning Star',
+    name: 'morningstar',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article header a[href*="/authors/"]' },
+      date: { selector: 'article header time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'article a',
         ].join(','),
       },
     },
