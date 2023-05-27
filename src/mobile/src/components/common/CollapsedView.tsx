@@ -67,10 +67,10 @@ export function CollapsedView({
         <View 
           elevated
           col
-          p={ titleStyle ? undefined : 12 }
-          height={ 60 }>
+          p={ titleStyle?.padding !== undefined ? titleStyle?.padding : 12 }
+          height={ titleStyle?.height !== undefined ? titleStyle?.height : 48 }
+          style={ titleStyle }>
           <View
-            style={ titleStyle }
             gap={ 12 }
             row
             alignCenter

@@ -104,7 +104,6 @@ export function useStyles({
   const theme = useTheme();
   
   const { preferences: { fontFamily: preferredFont = 'Manuale', textScale } } = React.useContext(SessionContext);
-  const newStyle = React.useMemo(() => ({ ...style }), [style]);
 
   const position = React.useMemo(() => {
     if (absolute) {
@@ -193,10 +192,10 @@ export function useStyles({
     const attrs: any[] = [];
     attrs.push(position ? position : undefined);
     attrs.push(zIndex ? zIndex : undefined);
-    attrs.push(top ? { top: typeof top === 'number' ? top * scale : top } : undefined);
-    attrs.push(left ? { left: typeof left === 'number' ? left * scale : left } : undefined);
-    attrs.push(right ? { right: typeof right === 'number' ? right * scale : right } : undefined);
-    attrs.push(bottom ? { bottom: typeof bottom === 'number' ? bottom * scale : bottom } : undefined);
+    attrs.push(top ? { top: typeof top === 'number' ? top : top } : undefined);
+    attrs.push(left ? { left: typeof left === 'number' ? left : left } : undefined);
+    attrs.push(right ? { right: typeof right === 'number' ? right : right } : undefined);
+    attrs.push(bottom ? { bottom: typeof bottom === 'number' ? bottom : bottom } : undefined);
     attrs.push(row ? theme.components.flexRow : undefined);
     attrs.push(col ? theme.components.flexCol : undefined);
     attrs.push(flex ? { flex } : undefined);
@@ -206,8 +205,8 @@ export function useStyles({
     attrs.push(flexRowReverse ? { flexDirection: 'row-reverse' } : undefined);
     attrs.push(flexColumn ? { flexDirection: 'column' } : undefined);
     attrs.push(flexColumnReverse ? { flexDirection: 'column-reverse' } : undefined);
-    attrs.push(rowGap ? { rowGap: rowGap * scale } : undefined);
-    attrs.push(colGap ? { columnGap: colGap * scale } : undefined);
+    attrs.push(rowGap ? { rowGap } : undefined);
+    attrs.push(colGap ? { columnGap: colGap } : undefined);
     attrs.push(textAlign);
     attrs.push(bold ? { fontWeight: 'bold' } : undefined);
     attrs.push(italic ? { fontStyle: 'italic' } : undefined);
@@ -229,15 +228,15 @@ export function useStyles({
     attrs.push(borderColor ? { borderColor } : undefined);
     attrs.push(bg ? { backgroundColor: bg } : undefined);
     attrs.push(rounded ? theme.components.rounded : undefined);
-    attrs.push(mt ? { marginTop: mt * scale } : undefined);
-    attrs.push(mb ? { marginBottom: mb * scale } : undefined);
-    attrs.push(ml ? { marginLeft: ml * scale } : undefined);
-    attrs.push(mr ? { marginRight: mr * scale } : undefined);
-    attrs.push(pt ? { paddingTop: pt * scale } : undefined);
-    attrs.push(pb ? { paddingBottom: pb * scale } : undefined);
-    attrs.push(pl ? { paddingLeft: pl * scale } : undefined);
-    attrs.push(pr ? { paddingRight: pr * scale } : undefined);
-    return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), newStyle ?? {});
-  }, [textScale, position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, newStyle, onlyInclude]);
+    attrs.push(mt ? { marginTop: mt } : undefined);
+    attrs.push(mb ? { marginBottom: mb } : undefined);
+    attrs.push(ml ? { marginLeft: ml } : undefined);
+    attrs.push(mr ? { marginRight: mr } : undefined);
+    attrs.push(pt ? { paddingTop: pt } : undefined);
+    attrs.push(pb ? { paddingBottom: pb } : undefined);
+    attrs.push(pl ? { paddingLeft: pl } : undefined);
+    attrs.push(pr ? { paddingRight: pr } : undefined);
+    return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), style ?? {});
+  }, [textScale, position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, style, onlyInclude]);
   return viewStyle;
 }

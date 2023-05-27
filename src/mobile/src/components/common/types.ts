@@ -79,21 +79,21 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   justifySpaced?: boolean;
   inactive?: boolean;
   // margins
-  m?: number;
-  mh?: number;
-  mv?: number;
-  mt?: number;
-  mb?: number;
-  ml?: number;
-  mr?: number;
+  m?: number | string;
+  mh?: number | string;
+  mv?: number | string;
+  mt?: number | string;
+  mb?: number | string;
+  ml?: number | string;
+  mr?: number | string;
   // padding
-  p?: number;
-  ph?: number;
-  pv?: number;
-  pt?: number;
-  pb?: number;
-  pl?: number;
-  pr?: number;
+  p?: number | string;
+  ph?: number | string;
+  pv?: number | string;
+  pt?: number | string;
+  pb?: number | string;
+  pl?: number | string;
+  pr?: number | string;
   // appearance
   borderWidth?: number;
   borderColor?: string;

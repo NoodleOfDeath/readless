@@ -370,8 +370,8 @@ export function Summary({
                         <View
                           justifyCenter
                           flexGrow
-                          maxWidth={ 120 }
-                          width={ '30%' }>
+                          maxWidth={ initialFormat ? '40%' : 100 }
+                          width={ '25%' }>
                           <Menu
                             width={ 300 }
                             autoAnchor={ (
@@ -379,7 +379,7 @@ export function Summary({
                                 mt={ -6 }
                                 mb={ 18 }
                                 ml={ -12 }
-                                minHeight={ 100 }
+                                minHeight={ 80 }
                                 height="100%"
                                 flexGrow>
                                 <Image

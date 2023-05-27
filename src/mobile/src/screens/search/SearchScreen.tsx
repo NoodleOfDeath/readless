@@ -7,8 +7,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import { useFocusEffect } from '@react-navigation/native';
-
 import { SearchMenu } from './SearchMenu';
 
 import {
