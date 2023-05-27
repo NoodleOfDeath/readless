@@ -16,9 +16,6 @@ import { OutletCreationAttributes } from '../../api/v1/schema';
 import { maxDate, parseDate } from '../../utils';
 import { BaseService } from '../base';
 
-puppeteer.use(RecaptchaPlugin());
-puppeteer.use(StealthPlugin());
-
 type PageOptions = WaitForSelectorOptions & {
   viewport?: Viewport;
   recaptchaSelector?: string;
@@ -96,6 +93,9 @@ export class PuppeteerService extends BaseService {
     let browser: Browser;
     try {
       
+      puppeteer.use(RecaptchaPlugin());
+      puppeteer.use(StealthPlugin());
+            
       browser = await puppeteer.launch({
         args: ['--no-sandbox'], 
         executablePath: process.env.CHROMIUM_EXECUTABLE_PATH, 
