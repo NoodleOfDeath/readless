@@ -59,6 +59,9 @@ export class Category<
   })
   declare icon: string;
 
+  @Column({ type: DataType.BOOLEAN })
+  declare disabled?: boolean;
+
   declare sentiment?: number;
   
 }

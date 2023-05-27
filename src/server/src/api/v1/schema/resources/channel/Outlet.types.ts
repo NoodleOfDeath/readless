@@ -16,6 +16,7 @@ export type Selectors = {
   article: Selector;
   author: Selector;
   date: Selector;
+  recaptcha?: Selector;
   spider: Selector;
   image?: Selector;
   title?: Selector;
@@ -34,6 +35,7 @@ export type OutletAttributes = DatedAttributes & Sentimental & {
   /** fetch policy for this outlet */
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone: string;
+  disabled?: boolean;
 };
 
 export type OutletCreationAttributes = Partial<DatedAttributes & Sentimental> & {
@@ -46,6 +48,7 @@ export type OutletCreationAttributes = Partial<DatedAttributes & Sentimental> & 
   maxAge?: string;
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone?: string;
+  disabled?: boolean;
 };
 
 const DEFAULT_TIMEZONE = process.env.DEFAULT_TIMZONE || 'EST';
@@ -125,6 +128,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   aei: {
     baseUrl: 'https://www.aei.org',
+    disabled: true,
     displayName: 'AEI',
     name: 'aei',
     selectors: {
@@ -518,6 +522,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   economist: {
     baseUrl: 'https://www.economist.com',
+    disabled: true,
     displayName: 'The Economist (Coming Soon)',
     name: 'economist',
     selectors: {
@@ -605,6 +610,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   fbiotech: {
     baseUrl: 'https://www.fiercebiotech.com',
+    disabled: true,
     displayName: 'Fierce Biotech',
     name: 'fbiotech',
     selectors: {
@@ -685,6 +691,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   ft: {
     baseUrl: 'https://www.ft.com',
+    disabled: true,
     displayName: 'Financial Times',
     name: 'ft',
     selectors: {
@@ -1061,13 +1068,14 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   nytimes: {
     baseUrl: 'https://www.nytimes.com',
+    disabled: true,
     displayName: 'New York Times (Coming Soon)',
     name: 'nytimes',
     selectors: {
       article: { selector: 'disabled' },
       author: { selector: 'disabled' },
       date: { selector: 'disabled' },
-      spider:{ selector: 'disbaled' },
+      spider:{ selector: 'disabled' },
     },
     timezone: DEFAULT_TIMEZONE,
   },
@@ -1271,22 +1279,25 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   street: {
     baseUrl: 'https://www.thestreet.com',
+    disabled: true,
     displayName: 'The Street',
     name: 'thestreet',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
       date: { selector: 'article time' },
+      recaptcha: { selector: '' },
       spider:{
         attribute: 'href',
-        selector: [
-          'a[href*="/breaking-news/"]',
-          'a[href*="/restaurants/"]',
-          'a[href*="/investing/"]',
-          'a[href*="/travel/"]',
-          'a[href*="/technology/"]',
-          'a[href*="/taxes/"]',
-        ].join(','),
+        selector: 'disabled',
+        // selector: [
+        //   'a[href*="/breaking-news/"]',
+        //   'a[href*="/restaurants/"]',
+        //   'a[href*="/investing/"]',
+        //   'a[href*="/travel/"]',
+        //   'a[href*="/technology/"]',
+        //   'a[href*="/taxes/"]',
+        // ].join(','),
       },
     },
     timezone: DEFAULT_TIMEZONE,
@@ -1500,6 +1511,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   wapo: {
     baseUrl: 'https://www.washingtonpost.com',
+    disabled: true,
     displayName: 'The Washington Post (Coming Soon)',
     name: 'washington-post',
     selectors: {
@@ -1512,6 +1524,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   },
   wilsoncenter: {
     baseUrl: 'https://www.wilsoncenter.org',
+    disabled: true,
     displayName: 'Wilson Center',
     name: 'wilson-center',
     selectors: {

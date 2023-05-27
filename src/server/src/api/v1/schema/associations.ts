@@ -152,8 +152,17 @@ export function addScopes() {
   
   Message.addScope('public', { attributes: [...PUBLIC_MESSAGE_ATTRIBUTES] });
 
-  Outlet.addScope('public', { attributes: [...PUBLIC_OUTLET_ATTRIBUTES] });
-  Category.addScope('public', { attributes: [...PUBLIC_CATEGORY_ATTRIBUTES] });
+  Outlet.addScope('defaultScope', { where: { disabled: null } });
+  Outlet.addScope('public', { 
+    attributes: [...PUBLIC_OUTLET_ATTRIBUTES],
+    where: { disabled: null },
+  });
+  
+  Category.addScope('defaultScope', { where: { disabled: null } });
+  Category.addScope('public', {
+    attributes: [...PUBLIC_CATEGORY_ATTRIBUTES],
+    where: { disabled: null },
+  });
   
   SummaryToken.addScope('public', { attributes: [...PUBLIC_SUMMARY_TOKEN_ATTRIBUTES] });
   

@@ -95,6 +95,9 @@ export class Outlet<
     type: DataType.STRING,
   })
   declare timezone: string;
+  
+  @Column({ type: DataType.BOOLEAN })
+  declare disabled?: boolean;
 
   declare sentiment?: number;
   

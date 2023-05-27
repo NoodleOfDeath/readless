@@ -5,12 +5,14 @@ export type CategoryAttributes = DatedAttributes & Sentimental & {
   name: string;
   displayName: string;
   icon: string;
+  disabled?: boolean;
 };
 
 export type CategoryCreationAttributes = Partial<DatedAttributes & Sentimental> & {
   name: string;
   displayName: string;
   icon: string;
+  disabled?: boolean;
 };
 
 export const PUBLIC_CATEGORY_ATTRIBUTES = ['name', 'displayName', 'icon'] as const;
