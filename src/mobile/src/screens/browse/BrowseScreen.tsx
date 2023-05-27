@@ -1,4 +1,5 @@
 import React from 'react';
+import { DeviceEventEmitter } from 'react-native';
 
 import {
   InternalError,
@@ -11,7 +12,6 @@ import {
   Screen,
   ScrollView,
   SegmentedButtons,
-  TopicSampler,
   View,
 } from '~/components';
 import {  SessionContext } from '~/contexts';
@@ -23,6 +23,7 @@ import {
 } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
+import { lengthOf } from '~/utils';
 
 export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
 
@@ -91,10 +92,20 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
     setPreference(key, {});
   }, [setPreference]);
 
+  const autoApplyFilter = React.useCallback(() => {
+    const value = lengthOf(bookmarkedOutlets, bookmarkedCategories) > 0;
+    DeviceEventEmitter.emit('apply-filter', value);
+    setPreference('showOnlyCustomNews', value);
+  }, [bookmarkedOutlets, bookmarkedCategories, setPreference]);
+
+  React.useEffect(() => {
+    autoApplyFilter();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookmarkedOutlets, bookmarkedCategories]);
+
   return (
     <Screen>
       <ScrollView col mb={ 16 }>
-        <TopicSampler horizontal />
         <View gap={ 12 }>
           <SegmentedButtons 
             value={ activeTab }

@@ -64,39 +64,43 @@ export function CollapsedView({
       style={ style }
       gap={ 12 }>
       {collapseStyle === 'banner' && (
-        <View
+        <View 
           elevated
-          style={ titleStyle }
+          col
           p={ titleStyle ? undefined : 12 }
-          gap={ 12 }
-          row
-          alignCenter
-          justifyCenter={ !title }
-          onPress={ () => setCollapsed((prev) => !prev) }>
-          <Animated.View style={ { 
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: [
-              { 
-                rotate: animation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [title ? '-90deg' : '0deg', title ? '0deg' : '-180deg'],
-                }), 
-              },
-            ],
-          } }>
-            <Icon
-              size={ 24 }
-              name='chevron-down' />
-          </Animated.View>
-          {title && <Divider vertical />}
-          {title && typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
-          {info && (
-            <Menu
-              autoAnchor={ <Icon size={ 24 } name='information' /> }>
-              {info}
-            </Menu>
-          )}
+          height={ 60 }>
+          <View
+            style={ titleStyle }
+            gap={ 12 }
+            row
+            alignCenter
+            justifyCenter={ !title }
+            onPress={ () => setCollapsed((prev) => !prev) }>
+            <Animated.View style={ { 
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: [
+                { 
+                  rotate: animation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [title ? '-90deg' : '0deg', title ? '0deg' : '-180deg'],
+                  }), 
+                },
+              ],
+            } }>
+              <Icon
+                size={ 24 }
+                name='chevron-down' />
+            </Animated.View>
+            {title && <Divider vertical />}
+            {title && typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
+            {info && (
+              <Menu
+                autoAnchor={ <Icon size={ 24 } name='information' /> }>
+                {info}
+              </Menu>
+            )}
+          </View>
         </View>
       )}
       {!collapsed && (

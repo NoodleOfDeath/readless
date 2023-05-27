@@ -27,6 +27,7 @@ import {
   Summary,
   Switch,
   Text,
+  TopicSampler,
   View,
 } from '~/components';
 import {
@@ -75,7 +76,7 @@ export function SearchScreen({
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
   const specificIds = React.useMemo(() => (route?.params?.specificIds), [route]);
 
-  const [onlyCustomNews, setOnlyCustomNews] = React.useState(Boolean(route?.params?.onlyCustomNews));
+  const [onlyCustomNews, setOnlyCustomNews] = React.useState(Boolean((!prefilter && showOnlyCustomNews) || route?.params?.onlyCustomNews));
   const [loading, setLoading] = React.useState(false);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [summaries, setSummaries] = React.useState<PublicSummaryGroups[]>([]);
@@ -83,7 +84,6 @@ export function SearchScreen({
   const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [averageSentiment, setAverageSentiment] = React.useState<number>();
-  const [pendingReload, setPendingReload] = React.useState(false);
 
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
@@ -129,6 +129,9 @@ export function SearchScreen({
   }, [summaries, queueSummary, handleInteraction]);
 
   const load = React.useCallback(async (page: number) => {
+    if (!ready || loading) {
+      return;
+    }
     setLoading(true);
     if (page === 0) {
       setSummaries([]);
@@ -186,13 +189,19 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
+  }, [ready, loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
 
   React.useEffect(() => {
     const headerTitle = (
       <Switch 
         leftLabel={ <Icon name="filter-off" size={ 24 } /> }
-        rightLabel={ <View><Button row startIcon="filter-check" iconSize={ 24 } gap={ 12 } alignCenter>{strings.myNews}</Button></View> }
+        rightLabel={ (
+          <View>
+            <Button row startIcon="filter-check" iconSize={ 24 } gap={ 12 } alignCenter>
+              {strings.myNews}
+            </Button>
+          </View>
+        ) }
         value={ onlyCustomNews }
         onValueChange={ (value) => {
           setOnlyCustomNews(value);
@@ -227,16 +236,11 @@ export function SearchScreen({
     setPage(0);
     load(0);
   }, [ready, load]);
-  
-  React.useEffect(
-    () => onMount(), 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [prefilter, ready, onlyCustomNews]
-  );
 
-  useFocusEffect(React.useCallback(() => {
-    setOnlyCustomNews(Boolean(showOnlyCustomNews));
-  }, [showOnlyCustomNews]));
+  React.useEffect(() => {
+    onMount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefilter, ready, onlyCustomNews]);
   
   React.useEffect(() => {
     setSummaries((prev) => {
@@ -244,14 +248,6 @@ export function SearchScreen({
       return (prev = newState);
     });
   }, [removedSummaries]);
-  
-  React.useEffect(() => {
-    if (!pendingReload) {
-      return;
-    }
-    setPendingReload(false);
-    load(0);
-  }, [pendingReload, load, removedSummaries, searchText]);
 
   const loadMore = React.useCallback(async (event?: string) => {
     if (loading || totalResultCount <= summaries.length) {
@@ -382,11 +378,21 @@ export function SearchScreen({
       subscriber.remove();
     };
   }, [loadMore]);
+  
+  React.useEffect(() => {
+    const subscriber = DeviceEventEmitter.addListener('apply-filter', (value: boolean) => {
+      setOnlyCustomNews(value); 
+    });
+    return () => { 
+      subscriber.remove();
+    };
+  }, [load]);
 
   return (
     <Screen>
       <SafeAreaView style={ { flexGrow: 1 } }>
         <View col gap={ 3 }>
+          <TopicSampler horizontal />
           {summaries.length > 0 && averageSentiment && (
             <View 
               elevated 

@@ -190,7 +190,6 @@ export function MediaContextProvider({ children }: Props) {
 
   React.useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('media-preload', () =>{
-      console.log('Preload event received');
       if (trackState !== State.Paused) {
         playTrack();
       }

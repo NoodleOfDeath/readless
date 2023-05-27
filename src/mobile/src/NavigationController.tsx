@@ -36,6 +36,61 @@ import {
 } from '~/screens';
 import { lengthOf } from '~/utils';
 
+const screens: RouteConfig<
+StackableTabParams,
+keyof StackableTabParams,
+NavigationState,
+NativeStackNavigationOptions,
+EventMapBase
+>[] = [
+  { 
+    component: SearchScreen, 
+    name: 'default', 
+    options: {
+      headerBackTitle: '', 
+      headerTitle: strings.headlines, 
+    },
+  }, 
+  {
+    component: SearchScreen, 
+    name: 'search',
+    options: { headerBackTitle: '' },
+  },
+  {
+    component: BrowseScreen, 
+    name: 'browse', options: {
+      headerBackTitle: '', 
+      headerTitle: strings.browse, 
+    },
+  },
+  {
+    component: SummaryScreen, 
+    name: 'summary',  
+    options: { headerBackTitle: '' },
+  },
+  {
+    component: ChannelScreen, 
+    name: 'channel',
+    options: { headerBackTitle: '' }, 
+  },
+  {
+    component: BookmarksScreen, 
+    name: 'bookmarks', 
+    options: {
+      headerBackTitle: '', 
+      headerTitle: strings.bookmarks.bookmarks, 
+    }, 
+  },
+  {
+    component: SettingsScreen, 
+    name: 'settings', 
+    options: {
+      headerBackTitle: '', 
+      headerTitle: strings.settings.settings, 
+    },
+  },
+];
+
 function Stack() {
   
   const Stack = createNativeStackNavigator();
@@ -45,7 +100,6 @@ function Stack() {
       bookmarkedSummaries,
       readSummaries,
       loadedInitialUrl,
-      showOnlyCustomNews,
     },
     setPreference,
   } = React.useContext(SessionContext);
@@ -58,62 +112,6 @@ function Stack() {
   } = useNavigation();
   
   const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
-  
-  const screens: RouteConfig<
-    StackableTabParams,
-    keyof StackableTabParams,
-    NavigationState,
-    NativeStackNavigationOptions,
-    EventMapBase
-  >[] = React.useMemo(() => [
-    { 
-      component: SearchScreen, 
-      name: 'default', 
-      options: {
-        headerBackTitle: '', 
-        headerTitle: strings.headlines, 
-        onlyCustomNews: showOnlyCustomNews,
-      },
-    }, 
-    {
-      component: SearchScreen, 
-      name: 'search',
-      options: { headerBackTitle: '' },
-    },
-    {
-      component: BrowseScreen, 
-      name: 'browse', options: {
-        headerBackTitle: '', 
-        headerTitle: strings.browse, 
-      },
-    },
-    {
-      component: SummaryScreen, 
-      name: 'summary',  
-      options: { headerBackTitle: '' },
-    },
-    {
-      component: ChannelScreen, 
-      name: 'channel',
-      options: { headerBackTitle: '' }, 
-    },
-    {
-      component: BookmarksScreen, 
-      name: 'bookmarks', 
-      options: {
-        headerBackTitle: '', 
-        headerTitle: strings.bookmarks.bookmarks, 
-      }, 
-    },
-    {
-      component: SettingsScreen, 
-      name: 'settings', 
-      options: {
-        headerBackTitle: '', 
-        headerTitle: strings.settings.settings, 
-      },
-    },
-  ], [showOnlyCustomNews]);
   
   const headerRight = React.useMemo(() => (
     <View>
@@ -131,7 +129,7 @@ function Stack() {
           <Icon name='bookmark-outline' size={ 24 } />
         </View>
         <Button
-          startIcon="filter"
+          startIcon="bookshelf"
           iconSize={ 24 }
           onPress={ openBrowse } />
         <Button

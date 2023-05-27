@@ -97,7 +97,9 @@ export function TopicSampler({
   }, [ready, topicType, topicGroups]);
   
   return (
-    <CollapsedView initiallyCollapsed={ false } title={ title }>
+    <CollapsedView 
+      initiallyCollapsed={ false }
+      title={ title }>
       <View
         height={ 80 } 
         ph={ 24 }
