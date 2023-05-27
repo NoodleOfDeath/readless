@@ -14,7 +14,6 @@ import {
   Summary,
   SummaryInteraction,
   SummarySentiment,
-  SummarySentimentToken,
   SummaryToken,
   SummaryTranslation,
   TokenType,
@@ -27,7 +26,6 @@ import {
   PUBLIC_MESSAGE_ATTRIBUTES,
   PUBLIC_OUTLET_ATTRIBUTES,
   PUBLIC_SENTIMENT_ATTRIBUTES,
-  PUBLIC_SENTIMENT_TOKEN_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
   PUBLIC_SUMMARY_TOKEN_ATTRIBUTES, 
@@ -93,15 +91,6 @@ export function makeAssociations() {
     foreignKey: 'parentId',
   });
 
-  SummarySentimentToken.belongsTo(SummarySentiment, { 
-    as: 'sentiment',
-    foreignKey: 'parentId',
-  });
-  SummarySentiment.hasMany(SummarySentimentToken, {
-    as: 'tokens',
-    foreignKey: 'parentId',
-  });
-  
   SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
   Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
   
@@ -167,8 +156,6 @@ export function addScopes() {
   SummaryToken.addScope('public', { attributes: [...PUBLIC_SUMMARY_TOKEN_ATTRIBUTES] });
   
   SummarySentiment.addScope('public', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
-  
-  SummarySentimentToken.addScope('public', { attributes: [...PUBLIC_SENTIMENT_TOKEN_ATTRIBUTES] });
 
   Summary.addScope('public', { 
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],

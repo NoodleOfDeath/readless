@@ -52,9 +52,7 @@ FROM (
       AVG("sentiment.score") AS sentiment,
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
         'method', "sentiment.method",
-        'score', "sentiment.score",
-        'description', '',
-        'tokens', '[]'::JSON
+        'score', "sentiment.score"
       )) FILTER (WHERE "sentiment.score" IS NOT NULL), '[]'::JSON) AS sentiments,
       COUNT(id) OVER() AS "totalCount"
     FROM (

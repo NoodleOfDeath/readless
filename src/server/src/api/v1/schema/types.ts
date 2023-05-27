@@ -60,7 +60,6 @@ export * from './resources/localization/Translation.types';
 
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
-export * from './resources/sentiment/SentimentToken.types';
 
 export * from './resources/channel/Outlet.types';
 export * from './resources/channel/Category.types';
@@ -68,6 +67,5 @@ export * from './resources/channel/Category.types';
 export * from './resources/summary/Summary.types';
 export * from './resources/summary/SummaryToken.types';
 export * from './resources/summary/SummarySentiment.types';
-export * from './resources/summary/SummarySentimentToken.types';
 export * from './resources/summary/SummaryInteraction.types';
 export * from './resources/summary/SummaryTranslation.types';

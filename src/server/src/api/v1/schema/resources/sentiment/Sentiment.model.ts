@@ -2,15 +2,12 @@ import { Column, DataType } from 'sequelize-typescript';
 
 import { SentimentAttributes, SentimentCreationAttributes } from './Sentiment.types';
 import { SentimentMethodName } from './SentimentMethod.types';
-import { SentimentTokenAttributes, SentimentTokenCreationAttributes } from './SentimentToken.types';
 import { BaseModel } from '../../base';
 
 export abstract class Sentiment<
-    T extends SentimentTokenAttributes = SentimentTokenAttributes,
-    C extends SentimentTokenCreationAttributes = SentimentTokenCreationAttributes,
-    A extends SentimentAttributes<T> = SentimentAttributes<T>,
-    B extends SentimentCreationAttributes<C> = SentimentCreationAttributes<C>,
-  > extends BaseModel<A, B> implements SentimentAttributes<T> {
+    A extends SentimentAttributes = SentimentAttributes,
+    B extends SentimentCreationAttributes = SentimentCreationAttributes,
+  > extends BaseModel<A, B> implements SentimentAttributes {
     
   @Column({
     allowNull: false,
@@ -29,7 +26,5 @@ export abstract class Sentiment<
     type: DataType.DOUBLE,
   })
   declare score: number;
-  
-  declare tokens: T[];
   
 }

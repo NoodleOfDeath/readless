@@ -4,10 +4,6 @@ import {
   SummarySentimentAttributes,
   SummarySentimentCreationAttributes,
 } from './SummarySentiment.types';
-import {
-  SummarySentimentTokenAttributes,
-  SummarySentimentTokenCreationAttributes,
-} from './SummarySentimentToken.types';
 import { Sentiment } from '../sentiment/Sentiment.model';
 
 @Table({
@@ -18,9 +14,7 @@ import { Sentiment } from '../sentiment/Sentiment.model';
 export class SummarySentiment<
   A extends SummarySentimentAttributes = SummarySentimentAttributes, 
   B extends SummarySentimentCreationAttributes = SummarySentimentCreationAttributes>
-  extends Sentiment<
-    SummarySentimentTokenAttributes, 
-    SummarySentimentTokenCreationAttributes, A, B> 
+  extends Sentiment<A, B> 
   implements SummarySentimentAttributes {
 
 }
