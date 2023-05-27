@@ -390,7 +390,7 @@ export function SearchScreen({
     <Screen>
       <SafeAreaView style={ { flexGrow: 1 } }>
         <View col gap={ 3 }>
-          <TopicSampler horizontal />
+          {!prefilter && <TopicSampler horizontal />}
           {summaries.length > 0 && averageSentiment && (
             <View 
               elevated 
