@@ -195,7 +195,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() order: string[] = ['count:desc']
   ): Promise<BulkResponse<PublicTokenAttributes>> {
     const filter = `^(?:${type})$`;
-    const startDate = new Date(0);
+    const startDate = new Date();
     const endDate = new Date();
     const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
       nest: true,
