@@ -10,7 +10,7 @@ import TrackPlayer, {
   State,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
-import Tts, { Voice } from 'react-native-tts-reborn';
+import Tts, { Voice } from 'react-native-tts-export';
 
 import {
   DEFAULT_MEDIA_CONTEXT,
@@ -190,6 +190,7 @@ export function MediaContextProvider({ children }: Props) {
 
   React.useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('media-preload', () =>{
+      console.log('Preload event received');
       if (trackState !== State.Paused) {
         playTrack();
       }

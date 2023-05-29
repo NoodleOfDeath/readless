@@ -281,9 +281,12 @@ export function Summary({
   }, [isRead, setPreference, onInteract, summary, setShowFeedbackDialog]);
   
   const translateToggle = React.useMemo(() => {
+    if (/^en/i.test(getLocale())) {
+      return; 
+    }
     return (
       <View>
-        {!/^en/i.test(getLocale()) && !translations && (
+        {!translations && (
           !isLocalizing ? (
             <Text
               caption 
@@ -299,7 +302,7 @@ export function Summary({
               </View>
             )
         )}
-        {!/^en/i.test(getLocale()) && translations && (
+        {translations && (
           <Text
             caption 
             bold
@@ -340,7 +343,7 @@ export function Summary({
                     mh={ -12 }
                     pv={ initialFormat ? 12 : 6 }
                     ph={ 12 }
-                    flexGrow
+                    flexGrow={ 1 }
                     elevated
                     zIndex={ 2 }
                     inactive={ isRead }>
@@ -369,7 +372,7 @@ export function Summary({
                       {(!(compact || compactMode) || initialFormat) && summary.imageUrl && (
                         <View
                           justifyCenter
-                          flexGrow
+                          flexGrow={ 1 }
                           maxWidth={ initialFormat ? '40%' : 100 }
                           width={ '25%' }>
                           <Menu
@@ -381,7 +384,7 @@ export function Summary({
                                 ml={ -12 }
                                 minHeight={ 80 }
                                 height="100%"
-                                flexGrow>
+                                flexGrow={ 1 }>
                                 <Image
                                   col
                                   fill
@@ -524,12 +527,11 @@ export function Summary({
                             style={ { padding:0 } }
                             titleStyle={ { margin: 0, padding: 0 } }
                             titleNumberOfLines={ 100 }
-                            title={ showShareDialog || keywords.length === 0 ? (
-                              <Text>{content}</Text>
-                            ) : (
+                            title={ (
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                searchWords={ keywords }
+                                numberOfLines={ 100 }
+                                searchWords={ showShareDialog ? undefined : keywords }
                                 textToHighlight={ content } />
                             ) } />
                         ))}

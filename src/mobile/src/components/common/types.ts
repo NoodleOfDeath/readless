@@ -59,7 +59,7 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   // flexbox
   flex?: number;
   flexWrap?: 'wrap' | 'nowrap';
-  flexGrow?: number | boolean;
+  flexGrow?: number;
   flexRow?: boolean;
   flexRowReverse?: boolean;
   flexColumn?: boolean;

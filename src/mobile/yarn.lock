@@ -7458,10 +7458,10 @@ react-native-track-player@^3.2.0:
   resolved "https://registry.yarnpkg.com/react-native-track-player/-/react-native-track-player-3.2.0.tgz#c7b7a53eaf4c248af2ac876ef349feaee2ef774a"
   integrity sha512-svv6TOgU/quFV1aajG5PskVhgFG0wHQtO+aYs6cIH0D27ckzN8WVoC3jI94m1CVaSgLMw48P911csYuD2fIcqA==
 
-react-native-tts-reborn@^5.1.5:
-  version "5.1.6"
-  resolved "https://registry.yarnpkg.com/react-native-tts-reborn/-/react-native-tts-reborn-5.1.6.tgz#ae3a15888a6ff21b891e77b85373a1a77f9d92f7"
-  integrity sha512-7HIU/W8Vi8LDZi6EMRupXL+41ZYmT5O2Cg+V18fxCA4NsWTgMBR0w9Q6128bulKrwkhEFvpr0lnS0pfIzSoKFA==
+react-native-tts-export@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-tts-export/-/react-native-tts-export-5.2.0.tgz#9b563f128519d29dd111d35bdc84d6b5b307b542"
+  integrity sha512-SyO1rqQpTzttXcDyMXYIXtST3QU4qmoEZz/k/S5+28xPnVOHcVJwDD/RpJB1NvQZj2H657gznjRvh+edk1ESHQ==
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"

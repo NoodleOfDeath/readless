@@ -32,7 +32,7 @@ export const SegmentedButtons = <T = any>({
   return (
     <View 
       { ...props }
-      flexGrow
+      flexGrow={ 1 }
       style={ [style, computedStyles] }>
       <View 
         row

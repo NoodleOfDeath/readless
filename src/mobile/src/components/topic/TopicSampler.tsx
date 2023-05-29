@@ -129,16 +129,18 @@ export function TopicSampler({
           </Text>
         )}
         <ScrollView horizontal style={ { overflow: 'visible' } }>
-          <View row gap={ 12 }>
-            {topicGroups.map((topicGroup) => (
-              <Button
-                key={ topicGroup.name ?? 'Topic' } 
-                onPress={ () => setTopicType(topicGroup) }
-                bold={ topicGroup.name === topicType?.name }
-                underline={ topicGroup.name === topicType?.name }>
-                {pluralize(topicGroup?.displayName ?? '')}
-              </Button>
-            ))}
+          <View>
+            <View row gap={ 12 }>
+              {topicGroups.map((topicGroup) => (
+                <Button
+                  key={ topicGroup.name ?? 'Topic' } 
+                  onPress={ () => setTopicType(topicGroup) }
+                  bold={ topicGroup.name === topicType?.name }
+                  underline={ topicGroup.name === topicType?.name }>
+                  {pluralize(topicGroup?.displayName ?? '')}
+                </Button>
+              ))}
+            </View>
           </View>
         </ScrollView>
       </View>

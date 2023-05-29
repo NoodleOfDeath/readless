@@ -11,6 +11,7 @@
     "start": "react-native start",
     "startr": "react-native start --resetCache",
     "build:ios": "react-native bundle --entry-file='./index.js' --bundle-output='./ios/ReadLess/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
+    "build:android": "react-native bundle --entry-file='./index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --platform='android' --assets-dest='./android/app/src/main/res/'",
     "test": "jest",
     "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen && yarn cp:core",
     "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core && cp -rf ../core/client/* ./src/core",
@@ -50,7 +51,7 @@
     "react-native-share": "^8.2.2",
     "react-native-svg": "^13.9.0",
     "react-native-track-player": "^3.2.0",
-    "react-native-tts-reborn": "^5.1.5",
+    "react-native-tts-export": "^5.2.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-version-check": "^3.4.7",
     "react-native-view-shot": "^3.6.0"

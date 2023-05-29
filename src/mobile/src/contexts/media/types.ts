@@ -2,7 +2,7 @@ import React from 'react';
 import { NativeModules, Platform } from 'react-native';
 
 import { State } from 'react-native-track-player';
-import { Voice } from 'react-native-tts-reborn';
+import { Voice } from 'react-native-tts-export';
 
 import { PublicSummaryAttributes } from '~/api';
 
