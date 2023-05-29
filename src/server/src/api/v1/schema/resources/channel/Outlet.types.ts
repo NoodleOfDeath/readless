@@ -208,8 +208,8 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     name: 'bbc',
     selectors: { 
       article: { selector: 'article p' },
-      author: { selector: 'article *[class*="TextContributorName"]' },
-      date: { selector: 'article time' },
+      author: { selector: 'article *[class*="TextContributorName"], .author-unit' },
+      date: { selector: 'article time, .author-unit' },
       spider:{ attribute: 'href', selector: 'a[class*="media__link"]' }, 
     },
     timezone: 'UTC+1',
@@ -459,7 +459,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
         attribute: 'href',
         selector: [
           '.article a',
-          'a[href*="/2023/"]',
+          `a[href*="/${new Date().getFullYear()}/"]`,
         ].join(','),
       },
     },
@@ -735,7 +735,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'a[href*="/authors/"]' },
-      date: { selector: 'article .flex.text-sm' },
+      date: { selector: 'script#__NEXT_DATA__' },
       spider:{
         attribute: 'href',
         selector: [
@@ -769,8 +769,8 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     name: 'theguardian',
     selectors: {
       article: { selector: 'article p' },
-      author: { selector: 'address a[rel*="author/"]' },
-      date: { selector: 'details summary' },
+      author: { selector: 'address a[rel*="author"]' },
+      date: { selector: 'details summary, article time' },
       spider:{
         attribute: 'href',
         selector: 'a[data-link-name="article"]',
@@ -817,8 +817,8 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     name: 'ieee-spectrum',
     selectors: {
       article: { selector: 'article p' },
-      author: { selector: 'article .social_author a' },
-      date: { selector: 'article .social_date' },
+      author: { selector: 'article .social-author a' },
+      date: { selector: 'article .social-date' },
       spider:{
         attribute: 'href',
         selector: [
@@ -922,7 +922,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .byline .authors .author-name a' },
-      date: { selector: 'aritcle .byline time' },
+      date: { selector: 'article .byline time' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1310,7 +1310,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
-      date: { selector: 'article time' },
+      date: { selector: 'article time.updated, article time.published' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1375,11 +1375,11 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
-      date: { selector: 'article time' },
+      date: { selector: 'article time, article .full-date-time' },
       spider:{
         attribute: 'href',
         selector: [
-          'a[href*="/2023/"]',
+          `a[href*="/${new Date().getFullYear()}/"]`,
         ].join(','),
       },
     },
@@ -1564,12 +1564,12 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .author-name a' },
-      date: { selector: 'aritcle time, .article-timestamp' },
+      date: { selector: 'article time, .article-timestamp' },
       spider:{
         attribute: 'href',
         selector: [
           'a[href*="/article/"]',
-          'a[href*="/2023/"]',
+          `a[href*="/${new Date().getFullYear()}/"]`,
         ].join(','),
       },
     },

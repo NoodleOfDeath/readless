@@ -252,9 +252,28 @@ export class PuppeteerService extends BaseService {
         
         loot.rawText = rawHtml;
         const $ = load(rawHtml);
+        
+        const nextData = $('script#__NEXT_DATA__').text();
+        if (nextData) {
+          try {
+            console.log(nextData.substring(0, 500));
+            const match = nextData.match(/"date"[\s\n]*:[\s\n]*"(.*?)"/m);
+            console.log(match);
+            if (match) {
+              dates.push(match[1]);
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        
         exclude.forEach((tag) => $(tag).remove());
         
-        const extract = (sel: string, attr?: string, first?: boolean): string => {
+        const extract = (
+          sel: string, 
+          attr?: string,
+          first?: boolean
+        ): string => {
           if (attr && clean($(sel)?.attr(attr))) {
             if (first) {
               return clean($(sel)?.first()?.attr(attr));
@@ -264,21 +283,30 @@ export class PuppeteerService extends BaseService {
           if (first) {
             return clean($(sel)?.first()?.text());
           }
-          return clean($(sel)?.get().map((e) => $(e).text()).join(' '));
+          return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ');
+        };
+        
+        const extractAll = (sel: string, attr?: string): string[] => {
+          return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean) ?? [];
         };
         
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         loot.title = extract(title?.selector || 'title', title?.attribute);
         
-        dates.push(...[
-          extract(date.selector),
-          extract(date.selector, 'datetime'),
-        ]);
+        dates.push(
+          ...extractAll(date.selector),
+          ...extractAll(date.selector, 'datetime')
+        );
         if (date.attribute) {
           dates.push(
+            ...extractAll(date.selector, date.attribute),
             extract(date.selector, date.attribute)
           );
         }
+        dates.push(
+          extract(date.selector),
+          extract(date.selector, 'datetime')
+        );
         
         authors.push(...$(author.selector || 'author').map((i, el) => $(el).text()).get());
       }

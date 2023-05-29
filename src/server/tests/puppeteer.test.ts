@@ -151,12 +151,17 @@ const LOOT: { [ Key in keyof typeof OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'd
   fortune: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://fortune.com/2023/04/23/fortune-history-groupthink-trophy-wife-hedge-fund-henry-paypal-mafia/',
+    url: 'https://fortune.com/well/2023/05/26/national-eating-disorder-association-ai-chatbot-tessa/',
   },
   foxnews: {
     authors: [],
     date: new Date('placeholder'),
     url: 'https://www.foxnews.com/media/gen-z-voters-highlight-picks-2024-star-studded-gop-lineup-need-real-leadership#&_intcmp=fnhpbt1,hp1bt',
+  },
+  futurism: {
+    authors: [],
+    date: new Date(),
+    url: 'https://futurism.com/the-byte/organic-biodegradable-mushroom-coffin',
   },
   gizmodo: {
     authors: [],
@@ -166,7 +171,7 @@ const LOOT: { [ Key in keyof typeof OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'd
   guardian: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.theguardian.com/us-news/2023/apr/23/trump-chris-sununu-republican-primary-2024',
+    url: 'https://www.theguardian.com/news/gallery/2023/may/29/burning-flags-and-big-red-lips-mondays-best-photos',
   },
   hill: {
     authors: [],
@@ -365,6 +370,7 @@ describe('loot', () => {
           expect(exp.authors.includes(author)).toBe(true);
         }
       }
+      expect(loot.date).toBeDefined();
       expect(Number.isNaN(loot.date.valueOf())).toBe(false);
       //expect(loot.date.toISOString()).toBe(exp.date.toISOString());
     });

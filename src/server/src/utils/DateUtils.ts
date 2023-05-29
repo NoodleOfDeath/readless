@@ -62,7 +62,7 @@ export function parseDate(context?: string) {
       timezone = timezone2;
     }
   }
-  const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : 'pm'}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/, ($0, $1) => `${$1}ST`)].join(' ');
+  const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : 'pm'}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/i, ($0, $1) => `${$1}ST`)].join(' ');
   const parsedDate = dateOrUndefined(new Date(dateMatch));
   return parsedDate;
 }
