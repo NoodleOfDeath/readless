@@ -52,13 +52,11 @@ export function SearchScreen({
   navigation,
 }: ScreenProps<'search'>) {
   const { 
-    preferences: {
-      bookmarkedCategories,
-      bookmarkedOutlets,
-      preferredReadingFormat,
-      removedSummaries,
-      showOnlyCustomNews,
-    },
+    bookmarkedCategories,
+    bookmarkedOutlets,
+    preferredReadingFormat,
+    removedSummaries,
+    showOnlyCustomNews,
     ready,
     setPreference,
   } = React.useContext(SessionContext);

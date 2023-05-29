@@ -23,10 +23,8 @@ export function ChannelScreen({
 }: ScreenProps<'channel'>) {
 
   const {
-    preferences: {
-      bookmarkedCategories,
-      bookmarkedOutlets,
-    },
+    bookmarkedOutlets,
+    bookmarkedCategories,
     followOutlet,
     followCategory,
   } = React.useContext(SessionContext);
@@ -91,7 +89,7 @@ export function ChannelScreen({
         </View>
         <View col>
           <SearchScreen
-            navigation={ navigation as NativeStackNavigationProp<StackableTabParams, 'search'> }
+            navigation={ navigation as unknown as NativeStackNavigationProp<StackableTabParams, 'search'> }
             route={ {
               key: 'search',
               name: 'search',

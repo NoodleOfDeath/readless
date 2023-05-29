@@ -25,11 +25,9 @@ const pageSize = 10;
 export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
   
   const { 
-    preferences: {
-      bookmarkedSummaries,
-      readSummaries,
-      preferredReadingFormat, 
-    },
+    bookmarkedSummaries,
+    readSummaries,
+    preferredReadingFormat, 
     setPreference,
   } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();

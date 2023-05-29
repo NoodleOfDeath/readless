@@ -96,11 +96,9 @@ function Stack() {
   const Stack = createNativeStackNavigator();
   const { currentTrack } = React.useContext(MediaContext);
   const {
-    preferences: { 
-      bookmarkedSummaries,
-      readSummaries,
-      loadedInitialUrl,
-    },
+    bookmarkedSummaries,
+    readSummaries,
+    loadedInitialUrl,
     setPreference,
   } = React.useContext(SessionContext);
 

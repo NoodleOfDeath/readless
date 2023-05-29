@@ -124,14 +124,13 @@ export function Summary({
   const theme = useTheme();
 
   const {
-    preferences: {
-      compactMode,
-      showShortSummary,
-      preferredReadingFormat, 
-      bookmarkedSummaries,
-      readSummaries,
-      readSources,
-    }, setPreference, 
+    compactMode,
+    showShortSummary,
+    preferredReadingFormat, 
+    bookmarkedSummaries,
+    readSummaries,
+    readSources,
+    setPreference, 
   } = React.useContext(SessionContext);
 
   const {

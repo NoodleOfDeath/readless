@@ -44,7 +44,7 @@ export function useNavigation() {
     if (!searchText) {
       return;
     }
-    setTimeout(() => setPreference('searchHistory', (prev) => [...new Set([searchText, ...(prev ?? [])])].slice(0, 10)), 500);
+    setTimeout(() => setPreference('searchHistory', (prev) => Array.from(new Set([searchText, ...(prev ?? [])])).slice(0, 10)), 500);
   }, [navigation, setPreference]);
 
   const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {

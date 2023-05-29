@@ -31,12 +31,10 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   const { openCategory, openOutlet } = useNavigation();
   const { getCategories, getOutlets } = useCategoryClient();
   const {
-    followCategory,
+    bookmarkedOutlets,
+    bookmarkedCategories,
     followOutlet,
-    preferences: {
-      bookmarkedCategories,
-      bookmarkedOutlets,
-    },
+    followCategory,
     setPreference,
   } = React.useContext(SessionContext);
   

@@ -13,9 +13,7 @@ import { getUserAgent } from '~/utils';
 
 export function useSummaryClient() {
 
-  const {
-    setPreference, userData, withHeaders,
-  } = React.useContext(SessionContext);
+  const { setPreference, withHeaders } = React.useContext(SessionContext);
   
   const getSummaries = React.useCallback(async (
     filter?: string,
@@ -79,14 +77,12 @@ export function useSummaryClient() {
   const interactWithSummary = React.useCallback(
     async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
       try {
-        return await withHeaders(API.interactWithSummary)(summary.id, type, {
-          content, metadata, userId: userData?.userId,
-        });
+        return await withHeaders(API.interactWithSummary)(summary.id, type, { content, metadata });
       } catch (e) {
         return { data: undefined, error: new ClientError('UNKNOWN', e) };
       }
     },
-    [userData, withHeaders] 
+    [withHeaders] 
   );
 
   const handleInteraction = React.useCallback(async (

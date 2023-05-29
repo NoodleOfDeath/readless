@@ -1,10 +1,5 @@
-import React from 'react';
-
-import { UserData, UserDataProps } from './UserData';
-
 import {
   InteractionType,
-  LoginResponse,
   PublicCategoryAttributes,
   PublicOutletAttributes,
   PublicSummaryAttributes,
@@ -39,7 +34,6 @@ export type Preferences = {
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;
-  homeTab?: 'All News' | 'My News',
   fontFamily?: string;
   letterSpacing?: number;
   sortOrder?: string[];
@@ -60,10 +54,7 @@ export type Preferences = {
   showOnlyCustomNews?: boolean;
 };
 
-export const DEFAULT_PREFERENCES: Partial<Preferences> = { 
-  fontFamily: 'Manuale',
-  sortOrder: ['originalDate:desc'], 
-};
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { fontFamily: 'Faustina' };
 
 export const OVERRIDDEN_INITIAL_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
 
@@ -80,13 +71,28 @@ export type SessionSetOptions = {
 
 export type SessionContextType = {
   ready?: boolean;
-  // user data
-  userData?: UserData;
-  setUserData: (state?: UserDataProps | ((state?: UserDataProps) => UserDataProps | undefined), options?: SessionSetOptions) => void;
-  addUserToken: (token: LoginResponse['token']) => void;
-  // preferences
-  preferences: Preferences;
-  setPreference<Key extends keyof Preferences>(key: Key, value: React.SetStateAction<Preferences[Key]>): void;
+  displayMode?: ColorMode;
+  alwaysShowReadingFormatSelector?: boolean;
+  preferredReadingFormat?: ReadingFormat;
+  compactMode?: boolean;
+  textScale?: number;
+  fontFamily?: string;
+  letterSpacing?: number;
+  searchHistory?: string[];
+  showShortSummary?: boolean;
+  loadedInitialUrl?: boolean;
+  bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
+  bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
+  bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
+  excludedOutlets?: { [key: string]: Bookmark<boolean> };
+  excludedCategories?: { [key: string]: Bookmark<boolean> };
+  removedSummaries?: { [key: number]: Bookmark<boolean> };
+  readSummaries?: { [key: number]: Bookmark<boolean> };
+  readSources?: { [key: number]: Bookmark<boolean> };
+  showOnlyCustomNews?: boolean;
+  // state setters
+  setPreference<K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])): void;
+  // convenience functions
   followOutlet: (outlet: PublicOutletAttributes) => void;
   followCategory: (category: PublicCategoryAttributes) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,20 +100,13 @@ export type SessionContextType = {
 };
 
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
-  addUserToken: () => {
-    /* placeholder function */
-  },
   followCategory: () => {
     /* placeholder function */
   },
   followOutlet: () => {
     /* placeholder function */
   },
-  preferences: {},
   setPreference: () => {
-    /* placeholder function */
-  },
-  setUserData: () => {
     /* placeholder function */
   },
   withHeaders: (fn) => (...args) => fn(...args, {}),

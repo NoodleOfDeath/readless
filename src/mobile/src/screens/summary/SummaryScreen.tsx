@@ -14,6 +14,7 @@ import {
   View,
 } from '~/components';
 import { useSummaryClient } from '~/hooks';
+import { getLocale } from '~/locales';
 import { ScreenProps } from '~/screens';
 
 export function SummaryScreen({
@@ -41,7 +42,7 @@ export function SummaryScreen({
       return;
     }
     setLoading(true);
-    const { data: summary, error } = await getSummary(id);
+    const { data: summary, error } = await getSummary(id, getLocale());
     if (error) {
       console.error(error);
     }
@@ -67,10 +68,11 @@ export function SummaryScreen({
   }, [load, route?.params?.summary]);
 
   return (
-    <Screen
-      refreshing={ loading }
-      onRefresh={ () => load(summaryId) }>
-      <ScrollView mt={ 10 }>
+    <Screen>
+      <ScrollView
+        mt={ 10 }
+        refreshing={ loading }
+        onRefresh={ () => load(summaryId) }>
         {loading ? (
           <View alignCenter justifyCenter>
             <ActivityIndicator size="large" />

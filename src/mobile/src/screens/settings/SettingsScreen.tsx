@@ -30,17 +30,14 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
   const theme = useTheme();
 
   const {
-    preferences: {
-      compactMode,
-      textScale, 
-      fontFamily,
-      preferredReadingFormat,
-      showShortSummary,
-      displayMode,
-      removedSummaries,
-      readSummaries,
-      summaryHistory,
-    }, 
+    compactMode,
+    textScale, 
+    fontFamily,
+    preferredReadingFormat,
+    showShortSummary,
+    displayMode,
+    removedSummaries,
+    readSummaries,
     setPreference,
   } = React.useContext(SessionContext);
   
@@ -174,17 +171,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
             {' '}
             (
             {Object.values(readSummaries ?? {}).length}
-            )
-          </Button>
-          <Button
-            elevated
-            caption
-            p={ 8 }
-            onPress={ () => setPreference('summaryHistory', {}) }>
-            {strings.settings.clearHistory}
-            {' '}
-            (
-            {Object.values(summaryHistory ?? {}).length}
             )
           </Button>
           <Button

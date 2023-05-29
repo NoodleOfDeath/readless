@@ -1,131 +1,162 @@
 import React from 'react';
 
-import { UserData, UserDataProps } from './UserData';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { decode } from 'js-base64';
+
 import {
   Bookmark,
+  ColorMode,
   DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
   OVERRIDDEN_INITIAL_PREFERENCES,
   Preferences,
-  SessionSetOptions,
 } from './types';
 
 import {
-  JwtTokenResponse,
   PublicCategoryAttributes,
   PublicOutletAttributes,
+  PublicSummaryAttributes,
+  ReadingFormat,
 } from '~/api';
 import {
-  clearCookie,
-  getCookie,
   getLocale,
   getUserAgent,
   lengthOf,
-  setCookie,
 } from '~/utils';
 
 type Props = React.PropsWithChildren;
 
-export const COOKIES = {
-  preferences: 'preferences',
-  userData: 'userData',
-};
-
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
 
 export function SessionContextProvider({ children }: Props) {
-  
-  const [readyFlags, setReadyFlags] = React.useState({
-    preferences: false,
-    userData: false,
-  });
-  const ready = React.useMemo(() => Object.values(readyFlags).every((flag) => flag), [readyFlags]);
 
-  const [preferences, setPreferences] = React.useState<Preferences>({});
-  const [prefsNeedSync, setPrefsNeedSync] = React.useState(false);
-  const [userDataRaw, setUserDataRaw] = React.useState<UserDataProps>();
-  
-  const userData = React.useMemo(() => userDataRaw ? new UserData(userDataRaw) : undefined, [userDataRaw]);
+  const [ready, setReady] = React.useState(false);
 
-  const setUserData = 
-  (state?: UserDataProps | ((prev?: UserDataProps) => UserDataProps | undefined), options?: SessionSetOptions) => {
-    if (!state) {
-      setUserDataRaw(undefined);
-      clearCookie(COOKIES.userData)
-        .catch(console.error);
-      return;
+  const [displayMode, setDisplayMode] = React.useState<ColorMode>();
+  const [alwaysShowReadingFormatSelector, setAlwaysShowReadingFormatSelector] = React.useState<boolean>();
+  const [preferredReadingFormat, setPreferredReadingFormat] = React.useState<ReadingFormat>();
+  const [compactMode, setCompactMode] = React.useState<boolean>();
+  const [textScale, setTextScale] = React.useState<number>();
+  const [fontFamily, setFontFamily] = React.useState<string>();
+  const [letterSpacing, setLetterSpacing] = React.useState<number>();
+  const [searchHistory, setSearchHistory] = React.useState<string[]>();
+  const [showShortSummary, setShowShortSummary] = React.useState<boolean>();
+  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
+  const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryAttributes> }>();
+  const [bookmarkedOutlets, setBookmarkedOutlets] = React.useState<{ [key: string]: Bookmark<PublicOutletAttributes> }>();
+  const [bookmarkedCategories, setBookmarkedCategories] = React.useState<{ [key: string]: Bookmark<PublicCategoryAttributes> }>();
+  const [excludedOutlets, setExcludedOutlets] = React.useState<{ [key: string]: Bookmark<boolean> }>();
+  const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: Bookmark<boolean> }>();
+  const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
+  const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
+  const [readSources, setReadSources] = React.useState<{ [key: number]: Bookmark<boolean> }>();
+  const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
+
+  const getPreference = React.useCallback(async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
+    const value = await AsyncStorage.getItem(key);
+    if (value) {
+      return JSON.parse(value) as Preferences[K];
     }
-    setUserDataRaw((prev) => {
-      const newData = state instanceof Function ? state(prev) : new UserData(state);
-      if (!newData) {
-        clearCookie(COOKIES.userData)
-          .catch(console.error);
-        return (prev = undefined);
-      }
-      if (options?.updateCookie) {
-        setCookie(COOKIES.userData, JSON.stringify(newData))
-          .catch(console.error);
-      }
-      return (prev = newData);
-    });
-  };
-  
-  const addUserToken = (token: JwtTokenResponse) => {
-    setUserData((prev) => {
-      if (!prev) {
-        return;
-      }
-      const newState = new UserData(prev);
-      newState.addToken(token);
-      return (prev = newState);
-    });
-  };
+    return undefined;
+  }, []);
 
-  // Convenience function to set a preference
-  const setPreference = <Key extends keyof Preferences>(key: Key, value?: Preferences[Key] | ((prev: Preferences[Key]) => Preferences[Key])) => {
-    setPreferences((prev) => {
-      const newPrefs = { ...prev };
-      if (!value) {
-        delete newPrefs[key];
-      } else {
-        newPrefs[key] =
-            value instanceof Function ? value(prev[key]) : value;
-      }
-      return (prev = newPrefs);
-    });
-    setPrefsNeedSync(true);
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const setPreference = React.useCallback(async (key: keyof Preferences, value: any) => {
+    value = value instanceof Function ? value(await getPreference(key)) : value;
+    switch (key) {
+    case 'displayMode':
+      setDisplayMode(value);
+      break;
+    case 'alwaysShowReadingFormatSelector':
+      setAlwaysShowReadingFormatSelector(value);
+      break;
+    case 'preferredReadingFormat':
+      setPreferredReadingFormat(value);
+      break;
+    case 'compactMode':
+      setCompactMode(value);
+      break;
+    case 'textScale':
+      setTextScale(value);
+      break;
+    case 'fontFamily':
+      setFontFamily(value);
+      break;
+    case 'letterSpacing':
+      setLetterSpacing(value);
+      break;
+    case 'searchHistory':
+      setSearchHistory(value);
+      break;
+    case 'showShortSummary':
+      setShowShortSummary(value);
+      break;
+    case 'loadedInitialUrl':
+      setLoadedInitialUrl(value);
+      break;
+    case 'bookmarkedSummaries':
+      setBookmarkedSummaries(value);
+      break;
+    case 'bookmarkedOutlets':
+      setBookmarkedOutlets(value);
+      break;
+    case 'bookmarkedCategories':
+      setBookmarkedCategories(value);
+      break;
+    case 'excludedOutlets':
+      setExcludedOutlets(value);
+      break;
+    case 'excludedCategories':
+      setExcludedCategories(value);
+      break;
+    case 'removedSummaries':
+      setRemovedSummaries(value);
+      break;
+    case 'readSummaries':
+      setReadSummaries(value);
+      break;
+    case 'readSources':
+      setReadSources(value);
+      break;
+    case 'showOnlyCustomNews':
+      setShowOnlyCustomNews(value);
+      break;
+    default:
+      break;
+    }
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+  }, [getPreference]);
 
   const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    setPreference('bookmarkedOutlets', (prev) => {
+    setBookmarkedOutlets((prev) => {
       const state = { ...prev };
       if (state[outlet.name]) {
         delete state[outlet.name];
       } else {
         state[outlet.name] = new Bookmark(outlet);
       }
-      if (lengthOf(preferences.bookmarkedCategories, state).length > 0) {
-        setPreference('showOnlyCustomNews', true);
+      if (lengthOf(bookmarkedCategories, state) > 0) {
+        setShowOnlyCustomNews(true);
       }
       return (prev = state);
     });
-  }, [preferences.bookmarkedCategories]);
+  }, [bookmarkedCategories]);
 
   const followCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    setPreference('bookmarkedCategories', (prev) => {
+    setBookmarkedCategories((prev) => {
       const state = { ...prev };
       if (state[category.name]) {
         delete state[category.name];
       } else {
         state[category.name] = new Bookmark(category);
       }
-      if (lengthOf(preferences.bookmarkedOutlets, state).length > 0) {
-        setPreference('showOnlyCustomNews', true);
+      if (lengthOf(bookmarkedOutlets, state) > 0) {
+        setShowOnlyCustomNews(true);
       }
       return (prev = state);
     });
-  }, [preferences.bookmarkedOutlets]);
+  }, [bookmarkedOutlets]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
@@ -133,78 +164,78 @@ export function SessionContextProvider({ children }: Props) {
       'X-App-Version': getUserAgent().currentVersion,
       'X-Locale': getLocale(),
     };
-    if (userData?.tokenString) {
-      headers.Authorization = `Bearer ${userData.tokenString}`;
-    }
     return (...args: T) => {
       return fn(...args, { headers });
     };
-  }, [userData?.tokenString]);
+  }, []);
 
   // Load preferences on mount
-  React.useEffect(() => {
-    getCookie(COOKIES.preferences)
-      .then((cookie) => { 
-        setPreferences({
-          ...DEFAULT_PREFERENCES, ...JSON.parse(cookie ?? '{}'), ...OVERRIDDEN_INITIAL_PREFERENCES,
-        });
-      })
-      .catch((e) => {
-        console.error(e);
-        setPreferences({});
-      })
-      .finally(() => {
-        setReadyFlags((prev) => ({ ...prev, preferences: true }));
-      });
-  }, []);
-
-  // Load user data on mount
-  React.useEffect(() => {
-    getCookie(COOKIES.userData)
-      .then((cookie) => { 
-        setUserData(JSON.parse(cookie ?? '{}'));
-      })
-      .catch((e) => {
-        console.error(e);
-      })
-      .finally(() => {
-        setReadyFlags((prev) => ({ ...prev, userData: true }));
-      });
-  }, []);
-
-  React.useEffect(() => {
-    if (userData?.expired === true) {
-      setUserData();
-    }
-  }, [userData?.expired]);
-  
-  const syncPrefs = React.useCallback(async () => {
+  const load = React.useCallback(async () => {
+    const rawPrefs = await AsyncStorage.getItem('preferences');
+    let prefs: Preferences;
     try {
-      await setCookie(COOKIES.preferences, JSON.stringify(preferences));
+      prefs = { ...JSON.parse(decode(rawPrefs)), ...OVERRIDDEN_INITIAL_PREFERENCES };
     } catch (e) {
       console.error(e);
+      try {
+        prefs = { ...JSON.parse(rawPrefs), ...OVERRIDDEN_INITIAL_PREFERENCES };
+      } catch (e) {
+        console.error(e);
+        prefs = { ...DEFAULT_PREFERENCES, ...OVERRIDDEN_INITIAL_PREFERENCES };
+      }
     }
-    setPrefsNeedSync(false);
-  }, [preferences]);
-  
+    setDisplayMode(prefs.displayMode ?? await getPreference('displayMode')); 
+    setAlwaysShowReadingFormatSelector(prefs.alwaysShowReadingFormatSelector ?? await getPreference('alwaysShowReadingFormatSelector'));
+    setPreferredReadingFormat(prefs.preferredReadingFormat ?? await getPreference('preferredReadingFormat'));
+    setCompactMode(prefs.compactMode ?? await getPreference('compactMode'));
+    setTextScale(prefs.textScale ?? await getPreference('textScale'));
+    setFontFamily(prefs.fontFamily ?? await getPreference('fontFamily'));
+    setLetterSpacing(prefs.letterSpacing ?? await getPreference('letterSpacing'));
+    setSearchHistory(prefs.searchHistory ?? await getPreference('searchHistory'));
+    setShowShortSummary(prefs.showShortSummary ?? await getPreference('showShortSummary'));
+    setLoadedInitialUrl(prefs.loadedInitialUrl ?? await getPreference('loadedInitialUrl'));
+    setBookmarkedSummaries(prefs.bookmarkedSummaries ?? await getPreference('bookmarkedSummaries'));
+    setBookmarkedOutlets(prefs.bookmarkedOutlets ?? await getPreference('bookmarkedOutlets'));
+    setBookmarkedCategories(prefs.bookmarkedCategories ?? await getPreference('bookmarkedCategories'));
+    setExcludedOutlets(prefs.excludedOutlets ?? await getPreference('excludedOutlets'));
+    setExcludedCategories(prefs.excludedCategories ?? await getPreference('excludedCategories'));
+    setRemovedSummaries(prefs.removedSummaries ?? await getPreference('removedSummaries'));
+    setReadSummaries(prefs.readSummaries ?? await getPreference('readSummaries'));
+    setReadSources(prefs.readSources ?? await getPreference('readSources'));
+    setShowOnlyCustomNews(prefs.showOnlyCustomNews ?? await getPreference('showOnlyCustomNews'));
+    setReady(true);
+  }, [getPreference]);
+
   React.useEffect(() => {
-    if (!prefsNeedSync) {
-      return;
-    }
-    syncPrefs();
-  }, [syncPrefs, prefsNeedSync]);
-  
+    load();
+  }, [load]);
+
   return (
     <SessionContext.Provider
       value={ {
-        addUserToken,
+        alwaysShowReadingFormatSelector,
+        bookmarkedCategories,
+        bookmarkedOutlets,
+        bookmarkedSummaries,
+        compactMode,
+        displayMode,
+        excludedCategories,
+        excludedOutlets,
         followCategory,
         followOutlet,
-        preferences,
+        fontFamily,
+        letterSpacing,
+        loadedInitialUrl,
+        preferredReadingFormat,
+        readSources,
+        readSummaries,
         ready,
+        removedSummaries,
+        searchHistory,
         setPreference,
-        setUserData,
-        userData,
+        showOnlyCustomNews,
+        showShortSummary,
+        textScale,
         withHeaders,
       } }>
       {children}

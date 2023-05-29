@@ -122,7 +122,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function useTheme() {
 
-  const { preferences } = React.useContext(SessionContext);
+  const preferences = React.useContext(SessionContext);
 
   const LIGHT_THEME = makeTheme(true, preferences);
   const DARK_THEME = makeTheme(false, preferences);

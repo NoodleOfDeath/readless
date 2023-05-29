@@ -27,7 +27,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
   const {
     canSkipToPrevious, canSkipToNext, currentTrack, trackState, playTrack, pauseTrack, stopAndClearTracks, 
   } = React.useContext(MediaContext);
-  const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
+  const { preferredReadingFormat } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
 
   const navigation = useNavigation<NativeStackNavigationProp<StackableTabParams>>();

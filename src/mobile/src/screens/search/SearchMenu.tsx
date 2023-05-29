@@ -41,7 +41,7 @@ export function SearchMenu({
   const style = useStyles(props);
   
   const {
-    preferences: { searchHistory },
+    searchHistory,
     setPreference,
   } = React.useContext(SessionContext);
 

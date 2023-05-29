@@ -103,7 +103,7 @@ export function useStyles({
 } : Stylable, { onlyInclude }: UseStylesOptions = {}) {
   const theme = useTheme();
   
-  const { preferences: { fontFamily: preferredFont = 'Manuale', textScale } } = React.useContext(SessionContext);
+  const { fontFamily: preferredFont = 'Faustina', textScale } = React.useContext(SessionContext);
 
   const position = React.useMemo(() => {
     if (absolute) {
