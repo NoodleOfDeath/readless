@@ -3,7 +3,6 @@
 import fs from 'fs';
 
 import { ArgumentParser } from 'argparse';
-import { createCanvas } from 'canvas';
 
 type TargetType = 'phone' | 'tablet';
 type Dimensions = {
@@ -37,31 +36,6 @@ export const TARGETS: Target[] = Object.values({
     width: 1284,
   }),
 });
-
-export function generateAsset({
-  target,
-  title,
-  src,
-  dst,
-}: {
-  target: Target;
-  title: string;
-  src: string;
-  dst: string;
-}) {
-  
-  const { dimensions } = target;
-  
-  const canvas = createCanvas(dimensions.width, dimensions.height);
-  const context = canvas.getContext('2d');
-  
-  context.fillStyle = '#ffffff';
-  context.fillRect(0, 0, dimensions.width, dimensions.height);
-  
-  const buffer = canvas.toBuffer('image/png');
-  fs.writeFileSync(dst, buffer);
-
-}
 
 function main() {
 

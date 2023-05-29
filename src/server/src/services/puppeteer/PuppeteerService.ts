@@ -262,7 +262,7 @@ export class PuppeteerService extends BaseService {
         const nextData = $('script#__NEXT_DATA__').text();
         if (nextData) {
           try {
-            console.log(nextData.substring(0,500))
+            console.log(nextData.substring(0, 500));
             const match = nextData.match(/"date"[\s\n]*:[\s\n]*"(.*?)"/m);
             console.log(match);
             if (match) {
@@ -278,7 +278,7 @@ export class PuppeteerService extends BaseService {
         const extract = (
           sel: string, 
           attr?: string,
-          first?: boolean,
+          first?: boolean
         ): string => {
           if (attr && clean($(sel)?.attr(attr))) {
             if (first) {
@@ -294,24 +294,24 @@ export class PuppeteerService extends BaseService {
         
         const extractAll = (sel: string, attr?: string): string[] => {
           return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean) ?? [];
-        }
+        };
         
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         loot.title = extract(title?.selector || 'title', title?.attribute);
         
         dates.push(
           ...extractAll(date.selector),
-          ...extractAll(date.selector, 'datetime'),
+          ...extractAll(date.selector, 'datetime')
         );
         if (date.attribute) {
           dates.push(
             ...extractAll(date.selector, date.attribute),
-            extract(date.selector, date.attribute),
+            extract(date.selector, date.attribute)
           );
         }
         dates.push(
           extract(date.selector),
-          extract(date.selector, 'datetime'),
+          extract(date.selector, 'datetime')
         );
         
         authors.push(...$(author.selector || 'author').map((i, el) => $(el).text()).get());
