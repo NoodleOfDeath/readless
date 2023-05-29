@@ -608,6 +608,32 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
+  fastmode: {
+    baseUrl: 'https://www.thefastmode.com',
+    displayName: 'The Fast Mode',
+    name: 'fastmode',
+    selectors: {
+      article: { selector: '.itemFullText p' },
+      author: { selector: 'a[href*="/author/"]' },
+      date: { attribute: 'title', selector: '.itemDateCreated' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/business/"]',
+          'a[href*="/technology-solutions/"]',
+          'a[href*="/leadership-and-management/"]',
+          'a[href*="/investments-and-expansions/"]',
+          'a[href*="/growth-and-profitability/"]',
+          'a[href*="/mergers-and-acquisitions/"]',
+          'a[href*="/mobile-network-operators-"]',
+          'a[href*="/solution-vendors-/"]',
+          'a[href*="/startups/"]',
+          'a[href*="/regulations/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
   fbiotech: {
     baseUrl: 'https://www.fiercebiotech.com',
     disabled: true,
@@ -1277,6 +1303,29 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
+  stockhead: {
+    baseUrl: 'https://stockhead.com.au',
+    displayName: 'Stockhead ',
+    name: 'stockhead',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/author/"]' },
+      date: { selector: 'article time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/cryptocurrency/"]',
+          'a[href*="/energy/"]',
+          'a[href*="/experts/"]',
+          'a[href*="/health/"]',
+          'a[href*="/news/"]',
+          'a[href*="/resources/"]',
+          'a[href*="/tech/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
   street: {
     baseUrl: 'https://www.thestreet.com',
     disabled: true,
@@ -1318,6 +1367,23 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
       },
     },
     timezone: 'UTC+1',
+  },
+  techcrunch: {
+    baseUrl: 'https://www.techcrunch.com',
+    displayName: 'TechCrunch ',
+    name: 'techcrunch',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/author/"]' },
+      date: { selector: 'article time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/2023/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
   },
   telegraph: {
     baseUrl: 'https://www.telegraph.co.uk',
