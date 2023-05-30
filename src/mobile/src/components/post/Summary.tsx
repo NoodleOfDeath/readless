@@ -143,17 +143,13 @@ export function Summary({
   const viewshot = React.useRef<ViewShot | null>(null);
 
   const [lastTick, setLastTick] = React.useState(new Date());
-  const [isRead, setIsRead] = React.useState(!disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog);
-  const [sourceIsRead, setSourceIsRead] = React.useState(!disableInteractions && Boolean(readSources?.[summary.id]) && !initialFormat &&!showShareDialog);
+  const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
+  const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
   const [showTranslations, setShowTranslations] = React.useState(initiallyTranslated && Boolean(translations));
   const [isLocalizing, setIsLocalizing] = React.useState(false);
-  
-  React.useEffect(() => {
-    setShowTranslations(initiallyTranslated && Boolean(translations));
-  }, [initiallyTranslated, translations]);
 
   const localizedStrings = React.useMemo(() => {
     return showTranslations && translations ? translations : {
@@ -190,9 +186,10 @@ export function Summary({
     }, ms(tickInterval));
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
-    setIsRead(!disableInteractions && Boolean(readSummaries?.[summary.id]) && !initialFormat &&!showShareDialog);
+    setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
+    setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
     return () => clearInterval(interval);
-  }, [disableInteractions, initialFormat, initiallyTranslated, readSummaries, showShareDialog, summary.id, summary.translations, tickInterval]));
+  }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, showShareDialog, summary.id, summary.translations, tickInterval]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat) {
@@ -406,34 +403,22 @@ export function Summary({
                       )}
                       <View col>
                         <View row alignCenter>
-                          {showShareDialog || keywords.length === 0 ? (
-                            <Text 
-                              bold
-                              justifyCenter
-                              subtitle1
-                              color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
-                              {(compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title}
-                            </Text>
-                          ) : (
-                            <Highlighter
-                              bold
-                              subtitle1
-                              justifyCenter
-                              highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                              searchWords={ keywords }
-                              textToHighlight={ localizedStrings.title } />
-                          )}
+                          <Highlighter
+                            bold
+                            subtitle1
+                            justifyCenter
+                            highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                            searchWords={ showShareDialog ? [] : keywords }
+                            textToHighlight={ (compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title } />
                         </View>
                         {translateToggle}
                         {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
                           <View row>
                             <Divider />
-                            {(showShareDialog || keywords.length === 0) ? <Text>{localizedStrings.shortSummary}</Text> : (
-                              <Highlighter 
-                                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                searchWords={ keywords }
-                                textToHighlight={ localizedStrings.shortSummary ?? '' } />
-                            )}
+                            <Highlighter 
+                              highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                              searchWords={ showShareDialog ? [] : keywords }
+                              textToHighlight={ localizedStrings.shortSummary ?? '' } />
                           </View>
                         )}
                         {(!(compact || compactMode) || initialFormat) && (
@@ -530,7 +515,7 @@ export function Summary({
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                 numberOfLines={ 100 }
-                                searchWords={ showShareDialog ? undefined : keywords }
+                                searchWords={ showShareDialog ? [] : keywords }
                                 textToHighlight={ content } />
                             ) } />
                         ))}

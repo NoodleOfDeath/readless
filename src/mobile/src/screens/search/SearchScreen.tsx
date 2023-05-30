@@ -57,7 +57,6 @@ export function SearchScreen({
     preferredReadingFormat,
     removedSummaries,
     showOnlyCustomNews,
-    ready,
     setPreference,
   } = React.useContext(SessionContext);
   const {
@@ -125,7 +124,7 @@ export function SearchScreen({
   }, [summaries, queueSummary, handleInteraction]);
 
   const load = React.useCallback(async (page: number) => {
-    if (!ready || loading) {
+    if (loading) {
       return;
     }
     setLoading(true);
@@ -185,7 +184,7 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [ready, loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
+  }, [loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
 
   React.useEffect(() => {
     const headerTitle = (
@@ -226,17 +225,14 @@ export function SearchScreen({
   }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference]);
   
   const onMount = React.useCallback(() => {
-    if (!ready) {
-      return;
-    }
     setPage(0);
     load(0);
-  }, [ready, load]);
+  }, [load]);
 
   React.useEffect(() => {
     onMount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prefilter, ready, onlyCustomNews]);
+  }, [prefilter, onlyCustomNews]);
   
   React.useEffect(() => {
     setSummaries((prev) => {

@@ -12,7 +12,6 @@ import {
   View,
   ViewProps,
 } from '~/components';
-import { SessionContext } from '~/contexts';
 import { 
   useNavigation,
   useStyles, 
@@ -37,7 +36,6 @@ export function TopicSampler({
 
   const { getTopicGroups, getTopics } = useSummaryClient();
   const { search } = useNavigation();
-  const { ready } = React.useContext(SessionContext);
   
   const [_loading, setLoading] = React.useState(false);
 
@@ -51,9 +49,6 @@ export function TopicSampler({
   const title = React.useMemo(() => `${pluralize(topicType?.displayName || 'Topic')} ${strings.inTheLast} ${topicInterval}`, [topicType, topicInterval]);
   
   const onMount = React.useCallback(async () => {
-    if (!ready) {
-      return;
-    }
     setLoading(true);
     const { data, error } = await getTopicGroups();
     if (error) {
@@ -64,12 +59,9 @@ export function TopicSampler({
     if (data) {
       setTopicGroups([{ displayName: 'Topic' }, ...data.rows]);
     }
-  }, [getTopicGroups, ready]);
+  }, [getTopicGroups]);
   
   const loadTopics = React.useCallback(async () => {
-    if (!ready) {
-      return;
-    }
     const { data, error } = await getTopics(topicType.name, topicInterval);
     if (error) {
       console.error(error);
@@ -80,12 +72,12 @@ export function TopicSampler({
       setTopics(data.rows);
     }
     setLoading(false);
-  }, [getTopics, topicType, topicInterval, ready]);
+  }, [getTopics, topicType, topicInterval]);
     
   React.useEffect(() => {
     onMount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready]);
+  }, []);
 
   React.useEffect(() => {
     loadTopics();
@@ -94,7 +86,7 @@ export function TopicSampler({
     }, 1000 * 60 * 5);
     return () => clearInterval(refreshInterval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, topicType, topicGroups]);
+  }, [topicType, topicGroups]);
   
   return (
     <CollapsedView 

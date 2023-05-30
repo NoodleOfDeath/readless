@@ -39,6 +39,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   } = React.useContext(SessionContext);
   
   const [activeTab, setActiveTab] = React.useState(0);
+  const [filterCount, setFilterCount] = React.useState(lengthOf(bookmarkedOutlets, bookmarkedCategories));
 
   const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
   const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
@@ -91,10 +92,13 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   }, [setPreference]);
 
   const autoApplyFilter = React.useCallback(() => {
-    const value = lengthOf(bookmarkedOutlets, bookmarkedCategories) > 0;
-    DeviceEventEmitter.emit('apply-filter', value);
-    setPreference('showOnlyCustomNews', value);
-  }, [bookmarkedOutlets, bookmarkedCategories, setPreference]);
+    const value = lengthOf(bookmarkedOutlets, bookmarkedCategories);
+    if (filterCount !== value && value > 0) {
+      DeviceEventEmitter.emit('apply-filter', true);
+      setPreference('showOnlyCustomNews', true);
+    }
+    setFilterCount(value);
+  }, [bookmarkedOutlets, bookmarkedCategories, filterCount, setPreference]);
 
   React.useEffect(() => {
     autoApplyFilter();

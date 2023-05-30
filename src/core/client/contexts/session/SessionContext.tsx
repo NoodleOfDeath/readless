@@ -171,6 +171,7 @@ export function SessionContextProvider({ children }: Props) {
 
   // Load preferences on mount
   const load = React.useCallback(async () => {
+    // legacy support
     const rawPrefs = await AsyncStorage.getItem('preferences');
     let prefs: Preferences;
     try {
@@ -184,25 +185,25 @@ export function SessionContextProvider({ children }: Props) {
         prefs = { ...DEFAULT_PREFERENCES, ...OVERRIDDEN_INITIAL_PREFERENCES };
       }
     }
-    setDisplayMode(prefs.displayMode ?? await getPreference('displayMode')); 
-    setAlwaysShowReadingFormatSelector(prefs.alwaysShowReadingFormatSelector ?? await getPreference('alwaysShowReadingFormatSelector'));
-    setPreferredReadingFormat(prefs.preferredReadingFormat ?? await getPreference('preferredReadingFormat'));
-    setCompactMode(prefs.compactMode ?? await getPreference('compactMode'));
-    setTextScale(prefs.textScale ?? await getPreference('textScale'));
-    setFontFamily(prefs.fontFamily ?? await getPreference('fontFamily'));
-    setLetterSpacing(prefs.letterSpacing ?? await getPreference('letterSpacing'));
-    setSearchHistory(prefs.searchHistory ?? await getPreference('searchHistory'));
-    setShowShortSummary(prefs.showShortSummary ?? await getPreference('showShortSummary'));
-    setLoadedInitialUrl(prefs.loadedInitialUrl ?? await getPreference('loadedInitialUrl'));
-    setBookmarkedSummaries(prefs.bookmarkedSummaries ?? await getPreference('bookmarkedSummaries'));
-    setBookmarkedOutlets(prefs.bookmarkedOutlets ?? await getPreference('bookmarkedOutlets'));
-    setBookmarkedCategories(prefs.bookmarkedCategories ?? await getPreference('bookmarkedCategories'));
-    setExcludedOutlets(prefs.excludedOutlets ?? await getPreference('excludedOutlets'));
-    setExcludedCategories(prefs.excludedCategories ?? await getPreference('excludedCategories'));
-    setRemovedSummaries(prefs.removedSummaries ?? await getPreference('removedSummaries'));
-    setReadSummaries(prefs.readSummaries ?? await getPreference('readSummaries'));
-    setReadSources(prefs.readSources ?? await getPreference('readSources'));
-    setShowOnlyCustomNews(prefs.showOnlyCustomNews ?? await getPreference('showOnlyCustomNews'));
+    setDisplayMode(await getPreference('displayMode') ?? prefs.displayMode); 
+    setAlwaysShowReadingFormatSelector(await getPreference('alwaysShowReadingFormatSelector') ?? prefs.alwaysShowReadingFormatSelector);
+    setPreferredReadingFormat(await getPreference('preferredReadingFormat') ?? prefs.preferredReadingFormat);
+    setCompactMode(await getPreference('compactMode') ?? prefs.compactMode);
+    setTextScale(await getPreference('textScale') ?? prefs.textScale);
+    setFontFamily(await getPreference('fontFamily') ?? prefs.fontFamily);
+    setLetterSpacing(await getPreference('letterSpacing') ?? prefs.letterSpacing);
+    setSearchHistory(await getPreference('searchHistory') ?? prefs.searchHistory);
+    setShowShortSummary(await getPreference('showShortSummary') ?? prefs.showShortSummary);
+    setLoadedInitialUrl(await getPreference('loadedInitialUrl') ?? prefs.loadedInitialUrl);
+    setBookmarkedSummaries(await getPreference('bookmarkedSummaries') ?? prefs.bookmarkedSummaries);
+    setBookmarkedOutlets(await getPreference('bookmarkedOutlets') ?? prefs.bookmarkedOutlets);
+    setBookmarkedCategories(await getPreference('bookmarkedCategories') ?? prefs.bookmarkedCategories);
+    setExcludedOutlets(await getPreference('excludedOutlets') ?? prefs.excludedOutlets);
+    setExcludedCategories(await getPreference('excludedCategories') ?? prefs.excludedCategories);
+    setRemovedSummaries(await getPreference('removedSummaries') ?? prefs.removedSummaries);
+    setReadSummaries(await getPreference('readSummaries') ?? prefs.readSummaries);
+    setReadSources(await getPreference('readSources') ?? prefs.readSources);
+    setShowOnlyCustomNews(await getPreference('showOnlyCustomNews') ?? prefs.showOnlyCustomNews);
     setReady(true);
   }, [getPreference]);
 
