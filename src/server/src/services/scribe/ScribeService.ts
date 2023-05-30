@@ -157,6 +157,7 @@ export class ScribeService extends BaseService {
             const newTags = reply.text
               .replace(/^\.*?:\s*/, '')
               .replace(/\.$/, '')
+              .replace(/<br\s*\/?>/g, '')
               .split('\n')
               .map((t) => {
                 const parts = t.split(/\/*,\s*/);
