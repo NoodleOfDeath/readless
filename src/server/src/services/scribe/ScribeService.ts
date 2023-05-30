@@ -133,7 +133,7 @@ export class ScribeService extends BaseService {
         handleReply: async (reply) => {
           const score = Number.parseFloat(reply.text);
           if (Number.isNaN(score)) {
-            await this.error('Not a valid sentiment score', reply.text);
+            await this.error('Not a valid sentiment score', [url, reply.text, newSummary.filteredText].join('\n\n'));
           }
           sentiment.score = score;
         },
