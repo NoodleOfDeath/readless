@@ -272,10 +272,10 @@ export class ScribeService extends BaseService {
 
       if (this.features.image_generation) {
         
-        const generateImage = async (filter = /\bchild\b/gi) => {
+        const generateImage = async () => {
       
           // Generate image from the title
-          const image = await DeepAiService.textToImage(newSummary.title.replace(filter, ''));
+          const image = await DeepAiService.textToImage(newSummary.title);
           
           // Save image to S3 CDN
           const file = await S3Service.download(image.output_url);
