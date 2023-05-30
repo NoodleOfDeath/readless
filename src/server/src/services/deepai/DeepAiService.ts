@@ -19,15 +19,11 @@ export class DeepAiService extends BaseService {
     const data = new FormData();
     data.append('text', text);
     data.append('grid_size', `${grid_size}`);
-    try {
-      const response = await axios.post(this.baseUrl, data, { headers: { 'api-key': process.env.DEEPAI_API_KEY } });
-      if (!response.data.id || !response.data.output_url) {
-        throw new Error('Bad response');
-      }
-      return response.data as TextToImageResponse;
-    } catch (e) {
-      console.error(e);
+    const response = await axios.post(this.baseUrl, data, { headers: { 'api-key': process.env.DEEPAI_API_KEY } });
+    if (!response.data.id || !response.data.output_url) {
+      throw new Error('Bad response');
     }
+    return response.data as TextToImageResponse;
   }
   
 }

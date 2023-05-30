@@ -275,9 +275,6 @@ export class ScribeService extends BaseService {
       
           // Generate image from the title
           const image = await DeepAiService.textToImage(newSummary.title);
-          if (!image) {
-            throw new Error('Image generation failed');
-          }
           
           // Save image to S3 CDN
           const file = await S3Service.download(image.output_url);
@@ -294,9 +291,13 @@ export class ScribeService extends BaseService {
         try {
           await generateImage();
         } catch (e) {
-          console.error(e);
-          // attempt single retry
-          await generateImage();
+          await this.error('Image generation failed', [url, e.message].join('\n\n'), false);
+          try {
+            // attempt single retry
+            await generateImage();
+          } catch (e) {
+            await this.error('Image generation failed', [url, e.message].join('\n\n'));
+          }
         }
   
       }

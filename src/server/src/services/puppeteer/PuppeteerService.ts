@@ -91,12 +91,10 @@ export class PuppeteerService extends BaseService {
     }: PageOptions = {}
   ) {
     try {
-      
       puppeteer.use(RecaptchaPlugin());
       puppeteer.use(StealthPlugin());
-      
     } catch (e) {
-      console.error(e);
+      // ignore
     }
     
     let browser: Browser;
