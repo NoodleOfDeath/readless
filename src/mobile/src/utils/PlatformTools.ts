@@ -9,8 +9,7 @@ export function getUserAgent() {
     ...Platform,
     currentBuildNumber: VersionCheck.getCurrentBuildNumber(),
     currentVersion: VersionCheck.getCurrentVersion(),
+    locale: Localization.getLocale(),
   };
   return userAgent;
 }
-
-export const getLocale = Localization.getLocale;

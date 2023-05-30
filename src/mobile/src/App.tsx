@@ -11,11 +11,11 @@ export default function App() {
 
   return (
     <SessionContextProvider>
-      <MediaContextProvider>
-        <DialogContextProvider>
+      <DialogContextProvider>
+        <MediaContextProvider>
           <NavigationController />
-        </DialogContextProvider>
-      </MediaContextProvider>
+        </MediaContextProvider>
+      </DialogContextProvider>
     </SessionContextProvider>
   );
 }

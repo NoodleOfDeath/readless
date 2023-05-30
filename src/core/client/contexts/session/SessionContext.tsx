@@ -1,8 +1,5 @@
 import React from 'react';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { decode } from 'js-base64';
-
 import {
   Bookmark,
   ColorMode,
@@ -20,9 +17,11 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
-  getLocale,
+  atob,
+  getItem,
   getUserAgent,
   lengthOf,
+  setItem,
 } from '~/utils';
 
 type Props = React.PropsWithChildren;
@@ -54,7 +53,7 @@ export function SessionContextProvider({ children }: Props) {
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
 
   const getPreference = React.useCallback(async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
-    const value = await AsyncStorage.getItem(key);
+    const value = await getItem(key);
     if (value) {
       return JSON.parse(value) as Preferences[K];
     }
@@ -125,7 +124,7 @@ export function SessionContextProvider({ children }: Props) {
     default:
       break;
     }
-    await AsyncStorage.setItem(key, JSON.stringify(value));
+    await setItem(key, JSON.stringify(value));
   }, [getPreference]);
 
   const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
@@ -160,9 +159,11 @@ export function SessionContextProvider({ children }: Props) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
+    const userAgent = getUserAgent();
     const headers: RequestInit['headers'] = { 
-      'X-App-Version': getUserAgent().currentVersion,
-      'X-Locale': getLocale(),
+      'X-App-Version': userAgent.currentVersion,
+      'X-Locale': userAgent.locale,
+      'X-Platform': userAgent.platform,
     };
     return (...args: T) => {
       return fn(...args, { headers });
@@ -172,16 +173,14 @@ export function SessionContextProvider({ children }: Props) {
   // Load preferences on mount
   const load = React.useCallback(async () => {
     // legacy support
-    const rawPrefs = await AsyncStorage.getItem('preferences');
+    const rawPrefs = await getItem('preferences');
     let prefs: Preferences;
     try {
-      prefs = { ...JSON.parse(decode(rawPrefs)), ...OVERRIDDEN_INITIAL_PREFERENCES };
+      prefs = { ...JSON.parse(atob(rawPrefs)), ...OVERRIDDEN_INITIAL_PREFERENCES };
     } catch (e) {
-      console.error(e);
       try {
         prefs = { ...JSON.parse(rawPrefs), ...OVERRIDDEN_INITIAL_PREFERENCES };
       } catch (e) {
-        console.error(e);
         prefs = { ...DEFAULT_PREFERENCES, ...OVERRIDDEN_INITIAL_PREFERENCES };
       }
     }
