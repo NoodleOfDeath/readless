@@ -51,7 +51,7 @@
     "react-native-share": "^8.2.2",
     "react-native-svg": "^13.9.0",
     "react-native-track-player": "^3.2.0",
-    "react-native-tts-export": "^5.2.0",
+    "react-native-tts-export": "^5.2.3",
     "react-native-vector-icons": "^9.2.0",
     "react-native-version-check": "^3.4.7",
     "react-native-view-shot": "^3.6.0"

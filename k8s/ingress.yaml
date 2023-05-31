@@ -51,35 +51,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: readless-web-login
-  namespace: ingress-nginx
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/auth-type: basic
-    # name of the secret that contains the user/password definitions
-    nginx.ingress.kubernetes.io/auth-secret: dev-auth
-    # message to display with an appropriate context why the authentication is required
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
-spec:
-  tls:
-    - hosts:
-        - www.readless.ai
-      secretName: tls-dev.readless.ai
-  rules:
-    - host: www.readless.ai
-      http:
-        paths:
-          - path: /(login|signup)
-            pathType: Prefix
-            backend:
-              service:
-                name: readless-web-dev
-                port:
-                  number: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: readless-api
   namespace: ingress-nginx
   annotations:
@@ -104,32 +75,56 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: serge
+  name: readless-applink-prod
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.org/websocket-services: serge
-    nginx.ingress.kubernetes.io/auth-type: basic
-    # name of the secret that contains the user/password definitions
-    nginx.ingress.kubernetes.io/auth-secret: serge-auth
-    # message to display with an appropriate context why the authentication is required
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
 spec:
   tls:
     - hosts:
-        - llama.readless.ai
-      secretName: tls-llama.readless.ai
+        - applink.readless.ai
+      secretName: tls-applink.readless.ai
   rules:
-    - host: llama.readless.ai
+    - host: applink.readless.ai
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: serge
+                name: readless-applink-prod
                 port:
-                  number: 8008
+                  number: 80
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: serge
+#   namespace: ingress-nginx
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     nginx.org/websocket-services: serge
+#     nginx.ingress.kubernetes.io/auth-type: basic
+#     # name of the secret that contains the user/password definitions
+#     nginx.ingress.kubernetes.io/auth-secret: serge-auth
+#     # message to display with an appropriate context why the authentication is required
+#     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+# spec:
+#   tls:
+#     - hosts:
+#         - llama.readless.ai
+#       secretName: tls-llama.readless.ai
+#   rules:
+#     - host: llama.readless.ai
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: serge
+#                 port:
+#                   number: 8008
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -183,4 +178,27 @@ spec:
                 name: readless-api-dev
                 port:
                   number: 80
-                  
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: readless-applink-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - applink.dev.readless.ai
+      secretName: tls-applink.dev.readless.ai
+  rules:
+    - host: applink.dev.readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-applink-dev
+                port:
+                  number: 80

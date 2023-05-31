@@ -120,6 +120,8 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [x] Performance improvments
 
 ### v1.8 - Duplicate Article Detection
+- [x] Improve applinks to show OG images
+- [ ] Improve share dialog
 - [ ] AI Duplicate Article Detection
 - [ ] Onboarding less invasive card stacks
 

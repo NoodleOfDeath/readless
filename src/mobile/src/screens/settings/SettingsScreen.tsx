@@ -139,23 +139,25 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           </View>
           <View gap={ 6 }>
             <Text caption textCenter>{strings.settings.font}</Text>
-            <ScrollView horizontal style={ { overflow:'visible' } }>
-              <View row alignCenter gap={ 8 } mh={ 8 }>
-                {AVAILABLE_FONTS.map((font) => (
-                  <Button 
-                    row
-                    caption
-                    alignCenter
-                    gap={ 4 }
-                    key={ font }
-                    elevated
-                    p={ 8 }
-                    startIcon={ fontFamily === font ? 'check' : undefined } 
-                    fontFamily={ font }
-                    onPress={ () => setPreference('fontFamily', font) }>
-                    {font}
-                  </Button>
-                ))}
+            <ScrollView horizontal style={ { overflow: 'visible' } }>
+              <View>
+                <View row alignCenter gap={ 8 } mh={ 8 }>
+                  {AVAILABLE_FONTS.map((font) => (
+                    <Button 
+                      row
+                      caption
+                      alignCenter
+                      gap={ 4 }
+                      key={ font }
+                      elevated
+                      p={ 8 }
+                      startIcon={ fontFamily === font ? 'check' : undefined } 
+                      fontFamily={ font }
+                      onPress={ () => setPreference('fontFamily', font) }>
+                      {font}
+                    </Button>
+                  ))}
+                </View>
               </View>
             </ScrollView>
           </View>

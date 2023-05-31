@@ -54,27 +54,27 @@ export function ShareDialog({
         {
           icon: 'link-variant',
           label: 'Copy link',
-          onPress: () => summary && copyToClipboard(content ?? shareableLink(summary, BASE_DOMAIN, format), `Copied "${shareableLink(summary, BASE_DOMAIN, format)}" to clipboard`),
+          onPress: () => summary && copyToClipboard(content ?? shareableLink(summary, BASE_DOMAIN, format)),
         },
         {
           icon: 'link-variant',
           label: 'Copy original source link',
-          onPress: () => summary && copyToClipboard(summary.url, `Copied "${summary.url}" to clipboard`),
+          onPress: () => summary && copyToClipboard(summary.url),
         },
         {
           icon:'content-copy',
           label: 'Copy summary title',
-          onPress: () => copyToClipboard(content ?? summary?.title ?? '', 'Summary title copied to clipboard'), 
+          onPress: () => copyToClipboard(content ?? summary?.title ?? ''), 
         },
         {
           icon:'content-copy',
           label: 'Copy summary bullets',
-          onPress: () => copyToClipboard(summary?.bullets.join('\n') ?? '', 'Summary bullets copied to clipboard'), 
+          onPress: () => copyToClipboard(summary?.bullets.join('\n') ?? ''), 
         },
         {
           icon:'content-copy',
           label: 'Copy summary paragraph',
-          onPress: () => copyToClipboard(summary?.shortSummary ?? '', 'Summary paragraph copied to clipboard'), 
+          onPress: () => copyToClipboard(summary?.shortSummary ?? ''), 
         },
         {
           icon:'instagram',
