@@ -63,10 +63,7 @@ export function useShare({
       }
       const message = summary.title;
       onInteract?.(InteractionType.Share, 'standard', { message, url }, async () => {
-        await Share.open({ 
-          message,
-          url,
-        });
+        await Share.open({ url });
       });
     } catch (e) {
       console.error(e);

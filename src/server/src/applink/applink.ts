@@ -50,7 +50,7 @@ export async function main() {
           </script>
           <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
             <div style="font-size: 24px; font-weight: bold; text-align: center;">
-              Redirecting to Readless...
+              Redirecting you to Read Less...
             </div>
             <div style="font-size: 24px; font-weight: bold; text-align: center;">
               <a href="${BASE_URL}/read?s=${id}&f=${format}">Click here if you are not redirected.</a>

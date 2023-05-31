@@ -31,5 +31,11 @@ export class Query<A extends QueryAttributes = QueryAttributes, B extends QueryC
   
   @Column({ type: DataType.STRING })
   declare appVersion?: string;
+  
+  @Column({ type: DataType.STRING })
+  declare locale?: string;
+  
+  @Column({ type: DataType.STRING })
+  declare platform?: string;
 
 }

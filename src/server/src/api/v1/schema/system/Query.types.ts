@@ -5,6 +5,8 @@ export type QueryAttributes = DatedAttributes & {
   path: string;
   userAgent?: string;
   appVersion?: string;
+  locale?: string;
+  platform?: string;
 };
 
 export type QueryCreationAttributes = Partial<DatedAttributes> & { 
@@ -12,4 +14,6 @@ export type QueryCreationAttributes = Partial<DatedAttributes> & {
   path: string;
   userAgent?: string;
   appVersion?: string;
+  locale?: string;
+  platform?: string;
 };

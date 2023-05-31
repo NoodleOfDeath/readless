@@ -40,11 +40,15 @@ export const rateLimitMiddleware = (
     try {
       const path = options.path instanceof Function ? options.path(req) : options.path;
       const appVersion = JSON.stringify(req.headers['x-app-version']);
+      const locale = JSON.stringify(req.headers['x-locale']);
+      const platform = JSON.stringify(req.headers['x-platform']);
       const userAgent = JSON.stringify(req.headers['user-agent']);
       if (!/kube-probe/i.test(userAgent)) {
         await Query.create({
           appVersion,
+          locale,
           path,
+          platform,
           remoteAddr: req.ip,
           userAgent,
         });

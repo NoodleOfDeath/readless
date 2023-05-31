@@ -19,7 +19,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
   const { handleInteraction } = useSummaryClient();
 
   const [showShareDialog, setShowShareDialogRaw] = React.useState<boolean>(false);
-  const [shareFabOptions, setShareDialogOptions] = React.useState<ShareDialogProps>();
+  const [shareDialogOptions, setShareDialogOptions] = React.useState<ShareDialogProps>();
   const [showFeedbackDialog, setShowFeedbackDialogRaw] = React.useState<boolean>(false);
   const [feedbackOptions, setFeedbackOptions] = React.useState<FeedBackDialogProps>();
 
@@ -43,13 +43,12 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
       <Provider>
         {children}
         <Portal>
-          {shareFabOptions?.summary && (
+          {shareDialogOptions?.summary && (
             <ShareDialog
-              { ...shareFabOptions }
-              open={ showShareDialog }
+              { ...shareDialogOptions }
               visible={ showShareDialog }
-              onInteract={ (...args) => handleInteraction(shareFabOptions.summary, ...args) }
-              onDismiss={ () => setShowShareDialog(false) } />
+              onInteract={ (...args) => handleInteraction(shareDialogOptions.summary, ...args) }
+              onClose={ () => setShowShareDialog(false) } />
           )}
           {feedbackOptions && showFeedbackDialog && (
             <FeedBackDialog
