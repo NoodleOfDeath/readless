@@ -18,7 +18,7 @@ export default function HomePage() {
   const mdAndDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Page center title="Read &lt; Less">
+    <Page center>
       <Stack spacing={ 2 }>
         <JustNewsHeader />
         <Typography variant="h6">Read Less is a news summarization service that helps you read more in less time</Typography>

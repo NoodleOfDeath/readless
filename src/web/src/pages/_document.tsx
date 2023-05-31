@@ -14,12 +14,8 @@ export default class ReadLessDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta charSet="utf-8" />
-          <meta name="apple-itunes-app" content={ `app-id=${process.env.NEXT_PUBLIC_APPLE_APP_ID}` } />
-          <meta property="og:title" content="Read < Less News" />
-          <meta property="og:image" content="/sms-banner.png" />
-          <link rel="icon" href="/favicon.ico" />
-          <link rel="stylesheet" href="/index.css" />
+          <link key="favicon" rel="icon" href="/favicon.ico" />
+          <link key="index.css" rel="stylesheet" href="/index.css" />
         </Head>
         <body>
           <Main />

@@ -9,7 +9,6 @@ type Props = React.PropsWithChildren<{
   right?: boolean;
   center?: boolean;
   align?: 'left' | 'right' | 'center';
-  headTags?: React.ReactNode[];
 }>;
 
 // eslint-disable-next-line react/display-name
@@ -31,13 +30,17 @@ const StyledContainer = styled('div')<Props>(({
 }));
 
 export default function Page({
-  // eslint-disable-next-line react/jsx-key
-  children, title, headTags = [<title>{title}</title>], ...other 
+  children, title, ...other 
 }: Props) {
   return (
     <StyledContainer { ...other }>
       <Head>
-        {headTags.map((tag, i) => (<React.Fragment key={ i }>{tag}</React.Fragment>))}
+        <title key="title">{title ?? 'Read Less'}</title> 
+        <meta key="charset" charSet="utf-8" />
+        <meta key="og:title" property="og:title" content="Read Less" />
+        <meta key="og:image" property="og:image" content="/sms-banner.png" />
+        <meta key="apple-itunes-app" name="apple-itunes-app" content={ `app-id=${process.env.NEXT_PUBLIC_APPLE_APP_ID}` } />
+        <meta key="viewport" name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       {children}
     </StyledContainer>

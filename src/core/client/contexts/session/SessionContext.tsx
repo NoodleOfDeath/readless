@@ -163,7 +163,7 @@ export function SessionContextProvider({ children }: Props) {
     const headers: RequestInit['headers'] = { 
       'X-App-Version': userAgent.currentVersion,
       'X-Locale': userAgent.locale,
-      'X-Platform': userAgent.platform,
+      'X-Platform': userAgent.OS,
     };
     return (...args: T) => {
       return fn(...args, { headers });
@@ -176,10 +176,10 @@ export function SessionContextProvider({ children }: Props) {
     const rawPrefs = await getItem('preferences');
     let prefs: Preferences;
     try {
-      prefs = { ...JSON.parse(atob(rawPrefs)), ...OVERRIDDEN_INITIAL_PREFERENCES };
+      prefs = { ...JSON.parse(atob(rawPrefs || '')), ...OVERRIDDEN_INITIAL_PREFERENCES };
     } catch (e) {
       try {
-        prefs = { ...JSON.parse(rawPrefs), ...OVERRIDDEN_INITIAL_PREFERENCES };
+        prefs = { ...JSON.parse(rawPrefs || ''), ...OVERRIDDEN_INITIAL_PREFERENCES };
       } catch (e) {
         prefs = { ...DEFAULT_PREFERENCES, ...OVERRIDDEN_INITIAL_PREFERENCES };
       }

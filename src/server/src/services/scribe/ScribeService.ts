@@ -292,12 +292,12 @@ export class ScribeService extends BaseService {
         try {
           await generateImage();
         } catch (e) {
-          await this.error('Image generation failed', [url, e.message].join('\n\n'), false);
+          await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'), false);
           try {
             // attempt single retry
             await generateImage();
           } catch (e) {
-            await this.error('Image generation failed', [url, e.message].join('\n\n'));
+            await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'));
           }
         }
   
@@ -336,11 +336,11 @@ export class ScribeService extends BaseService {
         }
       }
       
-      this.log('Created new summary from', url, newSummary.title);
+      this.log('🥳 Created new summary from', url, newSummary.title);
       return summary;
       
     } catch (e) {
-      await this.error('Unexpected Error Encountered', [url, e.message, JSON.stringify(newSummary, null, 2)].join('\n\n'));
+      await this.error('😤 Unexpected Error Encountered', [url, JSON.stringify(e), JSON.stringify(newSummary, null, 2)].join('\n\n'));
     }
     
   }

@@ -43,7 +43,7 @@ const StyledButton = styled(Button)<{ selected: boolean }>`
 
 export default function LightDarkModeButtons() {
   const {
-    preferences: { displayMode },
+    displayMode,
     setPreference,
   } = React.useContext(SessionContext);
 

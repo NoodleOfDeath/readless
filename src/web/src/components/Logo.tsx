@@ -4,7 +4,7 @@ import { styled } from '@mui/material';
 
 import { hexToFilter } from '~/utils';
 
-const StyledIcon = styled('div')(({ theme }) => ({
+const StyledLogo = styled('div')(({ theme }) => ({
   background: 'transparent',
   filter: hexToFilter(theme.palette.primary.main),
 }));
@@ -24,8 +24,8 @@ export default function Logo({
 }: Props = {}) {
   const src = React.useMemo(() => variant === 'compact' ? '/logo-compact.svg' : '/logo.svg', [variant]);
   return (
-    <StyledIcon>
+    <StyledLogo>
       <img src={ src } alt="logo" height={ height } />
-    </StyledIcon>
+    </StyledLogo>
   );
 }

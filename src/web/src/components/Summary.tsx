@@ -1,17 +1,21 @@
 import React from 'react';
 
+import { mdiCircle } from '@mdi/js';
+import Icon from '@mdi/react';
 import {
   Box,
   Card,
   CardContent,
   Divider,
   Link,
+  List,
+  ListItem,
+  ListItemIcon,
   Stack,
   Typography,
   styled,
 } from '@mui/material';
 import { formatDistance } from 'date-fns';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 import {
   InteractionType,
@@ -19,8 +23,8 @@ import {
   ReadingFormat,
 } from '~/api';
 import ReadingFormatSelector from '~/components/ReadingFormatSelector';
-import TruncatedText from '~/components/common/TruncatedText';
 import { SessionContext } from '~/contexts';
+import { useSummaryClient } from '~/core';
 
 type Props = {
   summary: PublicSummaryAttributes;
@@ -35,7 +39,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   justifyContent: 'left',
   minWidth: 200,
   overflow: 'visible',
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   textAlign: 'left',
 }));
 
@@ -48,16 +52,12 @@ const StyledTitle = styled(Typography)(() => ({
 
 const StyledCategoryBox = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
-  background: theme.palette.primary.main,
-  borderRadius: 8,
-  color: theme.palette.primary.contrastText,
+  flexGrow: 1,
   justifyContent: 'space-between',
-  marginBottom: theme.spacing(1),
   padding: theme.spacing(1),
-  width: '100%',
 }));
 
-const StyledLink = styled(Link)(({ theme }) => ({ color: theme.palette.primary.contrastText }));
+const StyledLink = styled(Link)(({ theme }) => ({ color: theme.palette.text.primary }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({ marginTop: theme.spacing(1) }));
 
@@ -70,21 +70,16 @@ export default function Summary({
   onChange,
 }: Props) {
 
-  const { preferences: { preferredReadingFormat } } = React.useContext(SessionContext);
+  const { handleInteraction } = useSummaryClient();
+  const { preferredReadingFormat } = React.useContext(SessionContext);
 
-  const [format, setFormat] = React.useState(initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary);
+  const [format, setFormat] = React.useState(initialFormat);
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const timeAgo = React.useMemo(
     () =>
       formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true }),
     [summary.originalDate, summary.createdAt, lastTick]
-  );
-
-  const generatedTimeAgo = React.useMemo(
-    () =>
-      formatDistance(new Date(summary.createdAt ?? 0), lastTick, { addSuffix: true }),
-    [summary.createdAt, lastTick]
   );
 
   // update time ago every `tickIntervalMs` milliseconds
@@ -96,66 +91,81 @@ export default function Summary({
   }, [tickIntervalMs]);
 
   const content = React.useMemo(() => {
-    if (!summary) {
+    if (!summary || !initialFormat) {
       return null;
     }
-    let text = '';
-    switch (format) {
-    case 'bullets':
-      text = summary.bullets.join('\n');
-      break;
-    case 'summary':
-      text = summary.shortSummary;
-      break;
+    if (format === ReadingFormat.Summary) {
+      return <Typography>{summary.summary}</Typography>;
     }
     return (
-      <ReactMarkdown>{text}</ReactMarkdown>
+      <List>
+        {summary.bullets.map((bullet, index) => (
+          <ListItem
+            key={ index }>
+            <ListItemIcon><Icon path={ mdiCircle } size={ 1 } /></ListItemIcon>
+            <Typography>{bullet.replace(/^•\s*/, '')}</Typography>
+          </ListItem>
+        ))}
+      </List>
     );
-  }, [summary, format]);
+  }, [summary, initialFormat, format]);
 
   const handleFormatChange = React.useCallback(
-    (newFormat: ReadingFormat) => {
+    async (newFormat: ReadingFormat) => {
       setFormat(newFormat);
       onChange?.(newFormat);
+      await handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
     },
-    [onChange]
+    [handleInteraction, onChange, summary]
   );
 
   return (
-    <StyledCard>
-      <StyledStack>
+    <StyledCard onClick={ initialFormat ? undefined : () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+      <StyledStack spacing={ 2 }>
+        <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
+          <Typography variant="subtitle1">{summary.outlet.displayName}</Typography>
+          <Box flexGrow={ 1 } />
+        </Stack>
         <StyledStack direction='row' spacing={ 2 }>
+          {summary.imageUrl && (
+            <Box>
+              <img src={ summary.imageUrl } alt={ summary.title } width={ 100 } height={ 100 } />
+            </Box>
+          )}
           <StyledStack flexGrow={ 1 }>
+            <StyledTitle variant="h6">
+              {summary.title}
+            </StyledTitle>
+            {initialFormat && (
+              <Typography>{summary.shortSummary}</Typography>
+            )}
+            <Box flexGrow={ 1 } />
             <StyledCategoryBox direction="row" spacing={ 1 }>
-              <Typography variant="subtitle1">{summary.categoryAttributes?.displayName ?? 'category'}</Typography>
-            </StyledCategoryBox>
-            <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
-              <Typography variant="subtitle1">{summary.outletAttributes?.displayName}</Typography>
-              <Box flexGrow={ 1 } />
+              <Typography variant="subtitle1">{summary.category.displayName}</Typography>
               <StyledLink
                 variant="subtitle1"
                 href={ summary.url }
                 target="_blank">
-                View Original Source
+                View Original Article
               </StyledLink>
-            </Stack>
-            <StyledTitle variant="h6" onClick={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-              <TruncatedText maxCharCount={ 200 }>{summary.title}</TruncatedText>
-            </StyledTitle>
+            </StyledCategoryBox>
           </StyledStack>
         </StyledStack>
         <StyledDivider variant="fullWidth" />
         <Stack direction='column' spacing={ 1 }>
           <Stack direction='row' flexGrow={ 1 } alignItems="center">
             <Typography variant="subtitle2">
-              {`${timeAgo}${timeAgo !== generatedTimeAgo ? ` (generated ${generatedTimeAgo})`: ''}`} 
-              {' '}
+              {timeAgo}
             </Typography>
             <Box flexGrow={ 1 } />
           </Stack>
-          <ReadingFormatSelector onChange={ (newFormat) => handleFormatChange(newFormat) } />
+          {initialFormat && (
+            <ReadingFormatSelector 
+              format={ format }
+              onChange={ (newFormat) => handleFormatChange(newFormat) } />
+          )}
         </Stack>
-        {format !== undefined && <CardContent>{content}</CardContent>}
+        {content && <CardContent>{content}</CardContent>}
       </StyledStack>
     </StyledCard>
   );

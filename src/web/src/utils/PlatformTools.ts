@@ -1,6 +1,8 @@
 export function getUserAgent() {
   return {
-    currentVersion: 'web1.4.0',
+    OS: 'web',
+    currentVersion: 'web1.7.10',
+    locale: window.navigator.language,
     userAgent: window.navigator.userAgent,
   };
 }

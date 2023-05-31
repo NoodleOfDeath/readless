@@ -1,7 +1,7 @@
 import { 
   PublicSummaryAttributes,
+  PublicSummarySentimentAttributes,
   ReadingFormat,
-  SummarySentimentAttributes,
 } from '~/api';
 
 export const shareableLink = (
@@ -25,7 +25,7 @@ export const fixedSentiment = (sentiment?: number) => {
   return sentiment ? `${sentiment > 0 ? '+' : ''}${sentiment.toFixed(2)}` : '0.00';
 };
 
-export const averageOfSentiments = (sentiments: SummarySentimentAttributes[] | Record<string, SummarySentimentAttributes>) => {
+export const averageOfSentiments = (sentiments: PublicSummarySentimentAttributes[] | Record<string, PublicSummarySentimentAttributes>) => {
   if (!sentiments) {
     return { score: 0, tokens: [] };
   }
@@ -33,15 +33,8 @@ export const averageOfSentiments = (sentiments: SummarySentimentAttributes[] | R
   if (values.length === 0) {
     return { score: 0, tokens: [] };
   }
-  const tokens: Set<string> = new Set<string>();
   const scores = values.reduce((curr, next) => {
-    Object.values(next.tokens ?? [])?.forEach((t) => tokens.add(t.text), tokens);
     return curr + next.score;
   }, 0);
-  return {
-    score: scores / values.length,
-    tokens: Array.from(tokens).sort((a, b) => 
-      a.toLowerCase() < b.toLowerCase() ? -1 :
-        a.toLowerCase() > b.toLowerCase() ? 1 : 0),
-  };
+  return { score: scores / values.length };
 };

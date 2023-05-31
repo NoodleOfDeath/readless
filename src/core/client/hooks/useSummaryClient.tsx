@@ -118,7 +118,7 @@ export function useSummaryClient() {
       });
     }
     if (interaction === InteractionType.Read) {
-      setPreference(/original source/i.test(content ?? '') ? 'readSources' : 'readSummaries', (prev) => {
+      setPreference(/original source/i.test(content ?? '') ? 'readSources' : 'readSummaries', (prev?: Record<number, Bookmark<boolean>>) => {
         const bookmarks = { ...prev };
         bookmarks[summary.id] = new Bookmark(true);
         return (prev = bookmarks);

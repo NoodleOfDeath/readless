@@ -6,11 +6,13 @@ import {
   Button,
   Stack,
   styled,
+  useTheme,
 } from '@mui/material';
 
 import { ReadingFormat } from '~/api';
 
 type Props = {
+  format?: ReadingFormat;
   onChange?: (format: ReadingFormat) => void;
 };
 
@@ -43,23 +45,29 @@ const FORMAT_ICONS: Record<ReadingFormat, string> = {
   [ReadingFormat.Summary]: mdiTextLong,
 };
 
-export default function ReadingFormatSelector({ onChange }: Props = {}) {
+export default function ReadingFormatSelector({ format, onChange }: Props = {}) {
     
+  const theme = useTheme();
+
   const ReadingFormatButton = React.useCallback((buttonFormat: ReadingFormat) => {
     return (
       <StyledButton
         variant="outlined"
+        sx={ {
+          backgroundColor: format === buttonFormat ? theme.palette.primary.main : undefined,
+          color: format === buttonFormat ? theme.palette.common.white : undefined, 
+        } }
         startIcon={ <Icon path={ FORMAT_ICONS[buttonFormat] } size={ 1 } /> }
         onClick={ () => onChange?.(buttonFormat) }>
         {buttonFormat}
       </StyledButton>
     );
-  }, [onChange]);
+  }, [format, onChange, theme.palette.common.white, theme.palette.primary.main]);
   
   return (
     <StyledStack direction="row">
-      {ReadingFormatButton(ReadingFormat.Bullets)}
       {ReadingFormatButton(ReadingFormat.Summary)}
+      {ReadingFormatButton(ReadingFormat.Bullets)}
     </StyledStack>
   );
 }

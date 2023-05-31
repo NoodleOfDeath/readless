@@ -1,2 +1,2 @@
-export * from './dialog/DialogContext';
+export * from './theme/ThemeContext';
 export * from '~/core/contexts';

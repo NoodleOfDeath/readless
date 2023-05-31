@@ -6,25 +6,22 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import { DEFAULT_DIALOG_CONTEXT } from './types';
+import { DEFAULT_THEME_CONTEXT } from './types';
 
-import LoginDialog from '~/components/login/LoginDialog';
 import { SessionContext } from '~/contexts';
 import { loadTheme } from '~/theme';
 
 type Props = React.PropsWithChildren;
 
-export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
+export const ThemeContext = React.createContext(DEFAULT_THEME_CONTEXT);
 
-export function DialogContextProvider({ children }: Props) {
+export function ThemeContextProvider({ children }: Props) {
   
-  const { preferences: { displayMode } } = React.useContext(SessionContext);
+  const { displayMode } = React.useContext(SessionContext);
   
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
   const [theme, setTheme] = React.useState(loadTheme(prefersDarkMode ? 'dark' : 'light'));
-  const [deferredAction, setDeferredAction] = React.useState<() => void>();
-  const [showLoginDialog, setShowLoginDialog] = React.useState(false);
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchSuggestions, setSearchSuggestions] = React.useState<string[]>([]);
 
@@ -34,29 +31,18 @@ export function DialogContextProvider({ children }: Props) {
   }, [displayMode, prefersDarkMode]);
 
   return (
-    <DialogContext.Provider
+    <ThemeContext.Provider
       value={ {
-        deferredAction,
         searchSuggestions,
         searchText,
-        setDeferredAction,
         setSearchSuggestions,
         setSearchText,
-        setShowLoginDialog,
-        showLoginDialog,
         theme,
       } }>
       <ThemeProvider theme={ theme }>
         <CssBaseline />
         {children}
-        <LoginDialog 
-          defaultAction="logIn" 
-          deferredAction={ deferredAction }
-          alert='PLEASE_LOG_IN' 
-          open={ showLoginDialog } 
-          onClose={ () => setShowLoginDialog(false) } 
-          onSuccess={ () => setShowLoginDialog(false) } />
       </ThemeProvider>
-    </DialogContext.Provider>
+    </ThemeContext.Provider>
   );
 }
