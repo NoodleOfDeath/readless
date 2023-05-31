@@ -1,24 +1,11 @@
 # Read Less <!-- omit in toc -->
 
-<p align="center">
-   <a href="https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml">
-    <img src="https://img.shields.io/github/actions/workflow/status/noodleofdeath/readless/web-ci.yaml" alt="Web Client CI Build Status" />
-  </a>
-   <a href="https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml">
-    <img src="https://img.shields.io/github/actions/workflow/status/noodleofdeath/readless/mobile-ci.yaml" alt="Mobile Client CI Build Status" />
-  </a>
-</p>
-<p align="center">
-   <a href="https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml">
-    <img src="https://img.shields.io/github/actions/workflow/status/noodleofdeath/readless/api-ci.yaml" alt="API CI Build Status" />
-  </a>
-   <a href="https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml">
-    <img src="https://img.shields.io/github/actions/workflow/status/noodleofdeath/readless/cron-ci.yaml" alt="Cron CI Build Status" />
-  </a>
-   <a href="https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml">
-    <img src="https://img.shields.io/github/actions/workflow/status/noodleofdeath/readless/worker-ci.yaml" alt="Worker CI Build Status" />
-  </a>
-</p>
+[![Web Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml)
+[![Mobile Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml)
+
+[![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
+[![Cron CI](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml)
+[![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
 Read Less is the model for a fully automated news aggregation pipeline that is powered by generative AI!
 
