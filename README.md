@@ -4,6 +4,7 @@
 [![Mobile Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml)
 
 [![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
+[![Applink CI](https://github.com/NoodleOfDeath/readless/actions/workflows/applink-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/applink-ci.yaml)
 [![Cron CI](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml)
 [![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 

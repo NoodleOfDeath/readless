@@ -1,4 +1,4 @@
-name: API CI
+name: Applink CI
 
 on:
   push:
