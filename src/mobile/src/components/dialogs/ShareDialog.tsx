@@ -13,7 +13,6 @@ import {
   Button,
   Dialog,
   DialogProps,
-  ScrollView,
   Text,
   View,
 } from '~/components';
