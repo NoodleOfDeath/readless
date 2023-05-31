@@ -1,4 +1,4 @@
-import LocalizedStrings from 'react-localization';
+import LocalizedStrings from 'react-native-localization';
 
 import {
   FNS_LOCALES,
@@ -26,5 +26,5 @@ export const getLocale = (): SupportedLocale => {
 };
 
 export const getFnsLocale = () => {
-  return FNS_LOCALES[strings.getInterfaceLanguage() as keyof typeof FNS_LOCALES];
+  return FNS_LOCALES[strings.getInterfaceLanguage() as keyof typeof FNS_LOCALES] ?? FNS_LOCALES[getLocale() as keyof typeof FNS_LOCALES];
 };
