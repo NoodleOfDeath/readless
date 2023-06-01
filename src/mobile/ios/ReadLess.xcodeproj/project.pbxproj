@@ -108,6 +108,7 @@
 		CD4AEB842A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */; };
 		CD4AEB862A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
 		CD4AEB872A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
+		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
 		CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */; };
 		CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */; };
 /* End PBXBuildFile section */
@@ -291,6 +292,7 @@
 		CD6CC2562A2165AB008B82AA /* ms */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ms; path = ms.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD6CC2572A216641008B82AA /* fa */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD7821782A253DAE00F3B33A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CD7821792A28FA2100F3B33A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTranslationAttributes.swift; sourceTree = "<group>"; };
 		D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ReadLess-ReadLessTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -332,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-ReadLess.a in Frameworks */,
+				CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,6 +502,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CD7821792A28FA2100F3B33A /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */,

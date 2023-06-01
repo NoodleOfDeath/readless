@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import p from 'path';
 
 import {
   describe,
@@ -16,20 +17,25 @@ describe('uploads to the s3 bucket', () => {
   let file: string;
 
   test('download file', async () => {
-    file = await S3Service.download('https://api.deepai.org/job-view-file/8e7d8ebc-85d4-4307-839c-03af31b294bf/outputs/output.jpg');
+    file = await S3Service.download('https://peregrine-results.s3.amazonaws.com/pigeon/rJdGgwtyiCFPUYV9nA_0.mp3', { filetype: 'mp3' });
     console.log(file);
     expect(true).toBe(true);
   });
   
-  test('upload file', async () => {
+  test('put file', async () => {
     const response = await S3Service.uploadObject({
-      ACL: 'public-read',
-      ContentType: 'image/jpeg',
+      ContentType: 'audio/mpeg',
       File: file,
-      Folder: 'img/s',
+      Folder: 'audio/s',
     });
     console.log(response);
-    expect(true).toBe(true);
+    expect(response).toBeDefined();
+  });
+  
+  test('get file', async () => {
+    const response = await S3Service.getObject({ Key: `audio/s/${file ? p.basename(file) : 'test.mp3'}` });
+    console.log(response);
+    expect(response).toBeDefined();
   });
 
 });

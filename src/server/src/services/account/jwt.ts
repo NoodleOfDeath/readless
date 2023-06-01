@@ -10,7 +10,7 @@ export type JwtAccessOperation = JwtBaseAccessOperation | `deny.${JwtBaseAccessO
 export const JWT_REFERSH_THRESHOLD_MS = ms(process.env.JWT_REFERSH_THRESHOLD || '6h');
 
 export type JsonWebToken = {
-  userId: number;
+  userId?: number;
   scope: string[];
   priority: number;
   createdAt: Date;
@@ -20,7 +20,7 @@ export type JsonWebToken = {
 };
 
 export type JwtOptions = {
-  userId: number;
+  userId?: number;
   scope?: string[];
   priority?: number;
   expiresIn?: string;
@@ -30,7 +30,7 @@ export type JwtOptions = {
 
 export class Jwt implements JsonWebToken {
 
-  userId: number; 
+  userId?: number; 
   scope: string[];
   priority: number;
   createdAt: Date;

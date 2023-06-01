@@ -10,18 +10,18 @@ export const AVAILABLE_FONTS = [
 ];
 
 export const FONT_SIZES = {
-  body1: 18,
+  body1: 16,
   body2: 15,
   caption: 14,
-  h1: 36,
-  h2: 32,
-  h3: 28,
-  h4: 26,
-  h5: 24,
-  h6: 22,
+  h1: 30,
+  h2: 28,
+  h3: 26,
+  h4: 24,
+  h5: 22,
+  h6: 20,
   subscript: 10,
-  subtitle1: 20,
-  subtitle2: 19,
+  subtitle1: 18,
+  subtitle2: 17,
 } as const;
 
 export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {

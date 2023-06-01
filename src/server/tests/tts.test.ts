@@ -20,7 +20,7 @@ describe('tests the tts service methods', () => {
   
   test('generate', async () => {
     const clip = await TtsService.generate({
-      text: 'From Fox News - Nebraska prison attack injures five staff members. I want you deep inside me!',
+      text: 'Baby, I want you deep inside me',
       voice: 'charlotte',
     });
     expect(clip).toBeDefined();

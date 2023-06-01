@@ -30,10 +30,10 @@ export abstract class Media<
   })
   declare type: MediaType;
   
-  @Column({ 
-    allowNull: false,
-    type: DataType.STRING(2083),
-  })
-  declare url: string;
+  @Column({ type: DataType.STRING(2083) })
+  declare url?: string;
+  
+  @Column({ type: DataType.TEXT })
+  declare content?: string;
   
 }

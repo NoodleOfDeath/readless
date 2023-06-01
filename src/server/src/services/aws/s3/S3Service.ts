@@ -1,7 +1,10 @@
 import fs from 'fs';
 import p from 'path';
+import { Readable } from 'stream';
 
 import {
+  GetObjectCommand,
+  GetObjectCommandInput,
   PutObjectCommand,
   PutObjectCommandInput,
   S3Client,
@@ -17,7 +20,12 @@ export type DownloadOptions = {
   filepath?: string;
 };
 
-export type UploadOptions = Omit<PutObjectCommandInput, 'Body' | 'Bucket' | 'Key'> & {
+export type GetOptions = Omit<GetObjectCommandInput, 'Bucket'> & {
+  Bucket?: string;
+  Provider?: string;
+};
+
+export type PutOptions = Omit<PutObjectCommandInput, 'Body' | 'Bucket' | 'Key'> & {
   Bucket?: string;
   Body?: string;
   File?: string;
@@ -33,9 +41,9 @@ export class S3Service extends BaseService {
       accessKeyId: process.env.S3_KEY,
       secretAccessKey: process.env.S3_SECRET,
     },
-    endpoint: process.env.S3_SERVICE_ENDPOINT || 'https://nyc3.digitaloceanspaces.com',
+    endpoint: 'https://nyc3.digitaloceanspaces.com',
     forcePathStyle: false,
-    region: process.env.S3_REGION || 'nyc3',
+    region: 'nyc3',
   });
   
   public static async download(url: string, {
@@ -50,8 +58,29 @@ export class S3Service extends BaseService {
         .once('close', () => resolve(filepath));
     });
   }
+  
+  public static async getObject(options: GetOptions, filepath = `/tmp/${uuid()}`): Promise<string> {
+    const params = {
+      ...options,
+      Bucket: options.Bucket ? options.Bucket : process.env.S3_BUCKET,
+      Provider: options.Provider || process.env.S3_PROVIDER || 'nyc3.digitaloceanspaces.com',
+    };
+    if (!params.Bucket) {
+      throw new Error('Malformed bucket');
+    }
+    if (!params.Key) {
+      throw new Error('Malformed key');
+    }
+    const response = await this.s3Client.send(new GetObjectCommand(params));
+    const stream = response.Body as Readable;
+    return new Promise((resolve, reject) => {
+      stream.pipe(fs.createWriteStream(filepath))
+        .on('error', reject)
+        .once('close', () => resolve(filepath));
+    });
+  }
 
-  public static async uploadObject(options: UploadOptions) {
+  public static async uploadObject(options: PutOptions) {
     const params = {
       ...options,
       Body: options.Body ? options.Body : options.File ? fs.readFileSync(options.File) : null,
@@ -75,15 +104,10 @@ export class S3Service extends BaseService {
       url,
     };
   }
-
-  public static async mirror(url: string, options: UploadOptions = {}) {
+  
+  public static async mirror(url: string, options: PutOptions) {
     const file = await this.download(url);
     const response = await this.uploadObject({ ...options, File: file });
-    try {
-      fs.unlinkSync(file);
-    } catch (e) {
-      console.log(e);
-    }
     return response;
   }
 

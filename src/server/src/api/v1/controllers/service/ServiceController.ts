@@ -1,8 +1,12 @@
+import fs from 'fs';
+
 import { Op } from 'sequelize';
 import {
   Body,
   Get,
+  Path,
   Post,
+  Request,
   Response,
   Route,
   Security,
@@ -16,8 +20,9 @@ import {
   TtsRequest,
 } from '../';
 import { 
-  GoogleService, 
+  GoogleService,
   IapService,
+  S3Service,
   TtsService,
 } from '../../../../services';
 import { AuthError, InternalError } from '../../middleware';
@@ -57,6 +62,30 @@ export class ServiceController {
     const options: FindAndCountOptions<Message> = { order: [['createdAt', 'DESC']] };
     const messages = await Message.scope('public').findAndCountAll(options);
     return messages;
+  }
+  
+  @Get('/stream/s/:id')
+  public static async stream(
+    @Request() req,
+    @Path() id: number
+  ) {
+    if (!req.headers.Authorization) {
+      req.res.status(403).json({ message: 'Unauthorized' });
+      return;
+    }
+    const media = await SummaryMedia.findOne(({
+      where: {
+        parentId: id,
+        type: 'audio',
+      },
+    }));
+    if (!media) {
+      req.res.status(404).json({ message: 'Not Found' });
+      return;
+    }
+    const stream = fs.createReadStream(await S3Service.getObject({ Key: `audio/s/${media.key}.mp3` }));
+    req.res.setHeader('content-type', 'audio/mpeg');
+    stream.pipe(req.res);
   }
   
   @Post('/localize')
@@ -104,40 +133,31 @@ export class ServiceController {
     const { 
       resourceType, 
       resourceId,
-      voice = 'charlotte',
+      voice,
     } = req;
     const subscribed = await IapService.authorizePaywallAccess();
     if (!subscribed) {
       throw new AuthError('UNAUTHORIZED');
     }
     if (resourceType === 'summary') {
-
       const summary = await Summary.findByPk(resourceId);
       if (!summary) {
         throw new InternalError('Summary not found');
       }
-
       const media = await SummaryMedia.scope('public').findAndCountAll({ where: { parentId: resourceId } });
       if (media.count > 0) {
         return media;
       }
-      
       const result = await TtsService.generate({
         text: summary.title,
         voice,
       });
-      const obj = await TtsService.mirror(result.url, {
-        ContentType: 'audio/mpeg',
-        Folder: 'audio/s',
-      });
-
       await SummaryMedia.upsert({
         key: 'tts',
         parentId: resourceId,
         type: 'audio',
-        url: obj.url,
+        url: result.url,
       });
-
       return await SummaryMedia.findAndCountAll({ 
         where: {
           key: { [Op.iLike]: 'tts%' },
@@ -145,7 +165,6 @@ export class ServiceController {
           type: 'audio',
         },
       });
-
     } else {
       throw new InternalError('Invalid resource type');
     }
