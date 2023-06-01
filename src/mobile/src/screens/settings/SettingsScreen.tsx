@@ -15,8 +15,12 @@ import {
   Text,
   View,
 } from '~/components';
-import { ColorMode, SessionContext } from '~/contexts';
-import { useInAppPurchase, useTheme } from '~/hooks';
+import { 
+  ColorMode, 
+  DialogContext,
+  SessionContext,
+} from '~/contexts';
+import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
@@ -28,7 +32,7 @@ const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
 export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
 
   const theme = useTheme();
-  const { subscribe } = useInAppPurchase();
+  const { setShowSubscribeDialog } = React.useContext(DialogContext);
 
   const {
     compactMode,
@@ -78,7 +82,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
     <Screen>
       <ScrollView>
         <View p={ 16 } gap={ 16 }>
-          <Button onPress={ () => subscribe('read_less_boost') }>
+          <Button onPress={ () => setShowSubscribeDialog(true) }>
             Subscribe
           </Button>
           <View row justifyCenter flexWrap="wrap" gap={ 16 }>

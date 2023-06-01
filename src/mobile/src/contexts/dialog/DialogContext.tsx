@@ -9,6 +9,7 @@ import {
   FeedBackDialogProps,
   ShareDialog,
   ShareDialogProps,
+  SubscribeDialog,
 } from '~/components';
 import { useSummaryClient } from '~/hooks';
 
@@ -20,14 +21,15 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
 
   const [showShareDialog, setShowShareDialogRaw] = React.useState<boolean>(false);
   const [shareDialogOptions, setShareDialogOptions] = React.useState<ShareDialogProps>();
-  const [showFeedbackDialog, setShowFeedbackDialogRaw] = React.useState<boolean>(false);
-  const [feedbackOptions, setFeedbackOptions] = React.useState<FeedBackDialogProps>();
-
   const setShowShareDialog = React.useCallback((state: boolean | ((prev: boolean) => boolean), options?: ShareDialogProps) => {
     setShowShareDialogRaw(state);
     setShareDialogOptions(options);
   }, []);
-
+    
+  const [showSubscribeDialog, setShowSubscribeDialog] = React.useState(false);
+  
+  const [showFeedbackDialog, setShowFeedbackDialogRaw] = React.useState<boolean>(false);
+  const [feedbackOptions, setFeedbackOptions] = React.useState<FeedBackDialogProps>();
   const setShowFeedbackDialog = React.useCallback((state: boolean | ((prev: boolean) => boolean), options?: FeedBackDialogProps) => {
     setShowFeedbackDialogRaw(state);
     setFeedbackOptions(options);
@@ -37,12 +39,17 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     <DialogContext.Provider value={ {
       setShowFeedbackDialog,
       setShowShareDialog,
+      setShowSubscribeDialog,
       showFeedbackDialog,
       showShareDialog,
+      showSubscribeDialog,
     } }>
       <Provider>
         {children}
         <Portal>
+          <SubscribeDialog
+            visible={ showSubscribeDialog }
+            onClose={ () => setShowSubscribeDialog(false) } />
           {shareDialogOptions?.summary && (
             <ShareDialog
               { ...shareDialogOptions }
