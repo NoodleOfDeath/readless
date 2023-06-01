@@ -57,6 +57,7 @@ export * from './resources/nlp/Token.types';
 export * from './resources/nlp/TokenType.types';
 export * from './resources/sentiment/SentimentMethod.types';
 export * from './resources/localization/Translation.types';
+export * from './resources/media/Media.types';
 
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
@@ -69,3 +70,6 @@ export * from './resources/summary/SummaryToken.types';
 export * from './resources/summary/SummarySentiment.types';
 export * from './resources/summary/SummaryInteraction.types';
 export * from './resources/summary/SummaryTranslation.types';
+export * from './resources/summary/SummaryMedia.types';
+
+export * from './resources/iap/Voucher.types';

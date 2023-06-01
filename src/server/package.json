@@ -32,7 +32,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.282.0",
     "@google-cloud/translate": "^7.2.1",
-    "@resemble/node": "^2.0.2",
     "@tsed/di": "^7.17.0",
     "@types/sentiment": "^5.0.1",
     "aws-sdk": "^2.1334.0",

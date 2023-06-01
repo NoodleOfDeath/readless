@@ -1,34 +1,65 @@
-import { Resemble } from '@resemble/node';
-import { AsyncClipInput } from '@resemble/node/dist/v2/clips';
+import axios from 'axios';
 
 import { BaseService } from '../base';
 
-Resemble.setApiKey(process.env.RESEMBLE_API_TOKEN);
+type GenerateTtsOptions = {
+  text: string;
+  voice: string;
+};
 
 export class TtsService extends BaseService {
   
-  public static async getVoices(page = 1, pageSize = 10) {
-    return await Resemble.v2.voices.all(page, pageSize);
+  public static baseUrl = 'https://play.ht/api/v2';
+  
+  public static api(ep: string) {
+    return `${this.baseUrl}/${ep}`;
   }
   
-  public static async getVoice(
-    uuid: string 
-  ) {
-    return await Resemble.v2.voices.get(uuid);
-  }
-  
-  public static async createClip(
-    clip: AsyncClipInput,
-    projectUuid = process.env.RESEMBLE_DEFAULT_PROJECT_UUID
-  ) {
-    return await Resemble.v2.clips.createAsync(projectUuid, clip);
-  }
-  
-  public static async getClip(
-    uuid: string,
-    projectUuid = process.env.RESEMBLE_DEFAULT_PROJECT_UUID
-  ) {
-    return await Resemble.v2.clips.get(projectUuid, uuid);
+  public static generate({
+    text,
+    voice,
+  }: GenerateTtsOptions) {
+    
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise<string[]>(async (resolve, reject) => {
+      
+      try {
+        const data = new FormData();
+        data.append('text', text);
+        data.append('voice', voice);
+        
+        const response = await axios.post(
+          this.api('tts'), 
+          data,
+          {
+            headers: {
+              Accept: 'application/json',
+              Authorization: `Bearer ${process.env.PLAY_HT_SECRET_KEY}`,
+              'Content-Type': 'application/json',
+              'X-User-Id': process.env.PLAY_HT_USER_ID,
+            },
+            responseType: 'stream',
+          }
+        );
+          
+        const stream = response.data;
+        const buffer: string[] = [];
+        
+        stream.on('data', (data) => {
+          console.log(data);
+          buffer.push(data as string);
+        });
+        
+        stream.on('end', () => {
+          resolve(buffer);
+        });
+        
+      } catch (e) {
+        reject(e);
+      }
+      
+    });
+    
   }
   
 }

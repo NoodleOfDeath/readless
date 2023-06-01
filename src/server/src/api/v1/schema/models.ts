@@ -31,3 +31,6 @@ export * from './resources/summary/SummaryToken.model';
 export * from './resources/summary/SummarySentiment.model';
 export * from './resources/summary/SummaryInteraction.model';
 export * from './resources/summary/SummaryTranslation.model';
+export * from './resources/summary/SummaryMedia.model';
+
+export * from './resources/iap/Voucher.model';

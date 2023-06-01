@@ -13,6 +13,7 @@ import {
   ServiceStatus,
   Summary,
   SummaryInteraction,
+  SummaryMedia,
   SummarySentiment,
   SummaryToken,
   SummaryTranslation,
@@ -28,6 +29,7 @@ import {
   PUBLIC_SENTIMENT_ATTRIBUTES,
   PUBLIC_SUMMARY_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
+  PUBLIC_SUMMARY_MEDIA_ATTRIBUTES,
   PUBLIC_SUMMARY_TOKEN_ATTRIBUTES, 
   PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES, 
   PUBLIC_TOKEN_TYPE_ATTRIBUTES,
@@ -110,6 +112,15 @@ export function makeAssociations() {
     foreignKey: 'parentId',
   });
   
+  SummaryMedia.belongsTo(Summary, { 
+    as: 'media',
+    foreignKey: 'parentId',
+  });
+  Summary.hasMany(SummaryMedia, {
+    as: 'media',
+    foreignKey: 'parentId',
+  });
+  
   // queues
   Queue.hasMany(Job, {
     foreignKey: 'queue',
@@ -175,5 +186,7 @@ export function addScopes() {
   TokenType.addScope('public', { attributes: [...PUBLIC_TOKEN_TYPE_ATTRIBUTES ] });
   
   SummaryTranslation.addScope('public', { attributes: [...PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES] });
+  
+  SummaryMedia.addScope('public', { attributes: [...PUBLIC_SUMMARY_MEDIA_ATTRIBUTES] });
 
 }
