@@ -1310,7 +1310,7 @@
     node-forge "^1.2.1"
     nullthrows "^1.1.1"
 
-"@expo/config-plugins@6.0.2":
+"@expo/config-plugins@6.0.2", "@expo/config-plugins@^6.0.1":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-6.0.2.tgz#cf07319515022ba94d9aa9fa30e0cff43a14256f"
   integrity sha512-Cn01fXMHwjU042EgO9oO3Mna0o/UCrW91MQLMbJa4pXM41CYGjNgVy1EVXiuRRx/upegHhvltBw5D+JaUm8aZQ==
@@ -7473,6 +7473,13 @@ react-native-highlight-words@^1.0.1:
   dependencies:
     highlight-words-core "^1.0.3"
     prop-types "^15.5.7"
+
+react-native-iap@^12.10.5:
+  version "12.10.5"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-12.10.5.tgz#d9def0191bcc8d414a017a9b11f48730fca87155"
+  integrity sha512-KVIgIiz3EE0esPVSZiavKSN2NeUarURA5JJUh6XUGXSsM9YTS3pZaJZpHo8Z62vbsXceg17N5soCnlyvaNmIIQ==
+  dependencies:
+    "@expo/config-plugins" "^6.0.1"
 
 react-native-inappbrowser-reborn@^3.7.0:
   version "3.7.0"
