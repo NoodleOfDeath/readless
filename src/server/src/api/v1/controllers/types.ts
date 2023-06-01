@@ -29,7 +29,9 @@ export type LocalizeRequest = JobRequest & {
   locale: string;
 }; 
 
-export type TtsRequest = JobRequest;
+export type TtsRequest = JobRequest & {
+  voice?: string;
+};
 
 // interactions
 

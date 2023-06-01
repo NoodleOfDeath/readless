@@ -16,7 +16,6 @@ export type Selectors = {
   article: Selector;
   author: Selector;
   date: Selector;
-  recaptcha?: Selector;
   spider: Selector;
   image?: Selector;
   title?: Selector;
@@ -1335,7 +1334,6 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
       date: { selector: 'article time' },
-      recaptcha: { selector: '' },
       spider:{
         attribute: 'href',
         selector: 'disabled',

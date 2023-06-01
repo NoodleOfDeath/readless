@@ -53,6 +53,13 @@ router.post(
 
 router.post(
   '/tts',
+  rateLimitMiddleware('10 per 1m'),
+  body('resourceType').matches(/^(summary)$/i),
+  body('resourceId').isNumeric(),
+  body('voice').isString().optional(),
+  body('quality').isString().matches(/low|medium|high/).optional(),
+  body('speed').isNumeric().optional(),
+  validationMiddleware,
   async (req, res) => {
     try {
       const response = await ServiceController.tts(req.body);

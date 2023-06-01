@@ -26,12 +26,6 @@ export class Voucher<
   
   @Column({
     allowNull: false,
-    type: DataType.INTEGER,
-  })
-  declare credits: number;
-  
-  @Column({
-    allowNull: false,
     type: DataType.STRING,
   })
   declare vendor: 'apple' | 'google';

@@ -33,9 +33,9 @@ export class S3Service extends BaseService {
       accessKeyId: process.env.S3_KEY,
       secretAccessKey: process.env.S3_SECRET,
     },
-    endpoint: 'https://nyc3.digitaloceanspaces.com',
+    endpoint: process.env.S3_SERVICE_ENDPOINT || 'https://nyc3.digitaloceanspaces.com',
     forcePathStyle: false,
-    region: 'nyc3',
+    region: process.env.S3_REGION || 'nyc3',
   });
   
   public static async download(url: string, {
@@ -74,6 +74,17 @@ export class S3Service extends BaseService {
       ...data,
       url,
     };
+  }
+
+  public static async mirror(url: string, options: UploadOptions = {}) {
+    const file = await this.download(url);
+    const response = await this.uploadObject({ ...options, File: file });
+    try {
+      fs.unlinkSync(file);
+    } catch (e) {
+      console.log(e);
+    }
+    return response;
   }
 
 }

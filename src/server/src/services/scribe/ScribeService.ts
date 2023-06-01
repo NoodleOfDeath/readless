@@ -7,7 +7,6 @@ import {
   MailService,
   Prompt,
   PuppeteerService,
-  S3Service,
 } from '../';
 import {
   Category,
@@ -278,11 +277,9 @@ export class ScribeService extends BaseService {
           const image = await DeepAiService.textToImage(newSummary.title);
           
           // Save image to S3 CDN
-          const file = await S3Service.download(image.output_url);
-          const obj = await S3Service.uploadObject({
+          const obj = await DeepAiService.mirror(image.output_url, {
             ACL: 'public-read',
             ContentType: 'image/jpeg',
-            File: file,
             Folder: 'img/s',
           });
           newSummary.imageUrl = obj.url;

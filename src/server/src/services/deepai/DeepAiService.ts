@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { BaseService } from '../base';
+import { S3Service } from '../aws';
 
 export type TextToImageOptions = {
   grid_size?: number;
@@ -11,7 +11,7 @@ export type TextToImageResponse = {
   output_url: string;
 };
 
-export class DeepAiService extends BaseService {
+export class DeepAiService extends S3Service {
   
   public static baseUrl = 'https://api.deepai.org/api/text2img';
   
@@ -25,5 +25,5 @@ export class DeepAiService extends BaseService {
     }
     return response.data as TextToImageResponse;
   }
-  
+
 }

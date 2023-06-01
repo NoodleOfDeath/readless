@@ -3,6 +3,7 @@ export * from './aws';
 export * from './db';
 export * from './deepai';
 export * from './google';
+export * from './iap';
 export * from './mail';
 export * from './openai';
 export * from './puppeteer';

@@ -1,15 +1,12 @@
 import axios from 'axios';
 import { load } from 'cheerio';
 import ms from 'ms';
-import {
+import puppeteer, {
   Browser,
   ElementHandle,
   Viewport,
   WaitForSelectorOptions,
 } from 'puppeteer';
-import puppeteer from 'puppeteer-extra';
-import RecaptchaPlugin from 'puppeteer-extra-plugin-recaptcha';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import UserAgent from 'user-agents';
 
 import { OutletCreationAttributes } from '../../api/v1/schema';
@@ -18,7 +15,6 @@ import { BaseService } from '../base';
 
 type PageOptions = WaitForSelectorOptions & {
   viewport?: Viewport;
-  recaptchaSelector?: string;
 };
 
 type ReplacePattern = string | RegExp | {
@@ -86,17 +82,10 @@ export class PuppeteerService extends BaseService {
     actions: SelectorAction[], 
     { 
       timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('20s'),
-      recaptchaSelector,
       viewport = { height: 1024, width: 1080 },
     }: PageOptions = {}
   ) {
-    try {
-      puppeteer.use(RecaptchaPlugin());
-      puppeteer.use(StealthPlugin());
-    } catch (e) {
-      // ignore
-    }
-    
+
     let browser: Browser;
     try {
       
@@ -109,14 +98,6 @@ export class PuppeteerService extends BaseService {
       const page = await browser.newPage();
       await page.goto(url, { timeout });
       await page.setViewport(viewport);
-      
-      if (recaptchaSelector) {
-        await page.solveRecaptchas();
-        await Promise.all([
-          page.waitForNavigation(),
-          page.click(recaptchaSelector),
-        ]);
-      }
 
       const rawText = await page.evaluate(() => document.body.innerText);
 
@@ -150,7 +131,7 @@ export class PuppeteerService extends BaseService {
   }
 
   public static async crawl(outlet: OutletCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
-    const { baseUrl, selectors: { recaptcha, spider } } = outlet;
+    const { baseUrl, selectors: { spider } } = outlet;
     if (spider.selector === 'disabled') {
       return [];
     }
@@ -194,7 +175,7 @@ export class PuppeteerService extends BaseService {
         selectAll: true,
         selector: spider.selector,
       },
-    ], { recaptchaSelector: recaptcha?.selector });
+    ]);
     return [...new Set(urls)].filter((url) => url.length < 2000);
   }
 
@@ -241,13 +222,10 @@ export class PuppeteerService extends BaseService {
     if (!content) {
       
       const {
-        article, author, date, recaptcha, title, 
+        article, author, date, title, 
       } = outlet.selectors;
-      let rawHtml: string;
       
-      if (!recaptcha) {
-        rawHtml = await PuppeteerService.fetch(url);
-      }
+      const rawHtml = await PuppeteerService.fetch(url);
       
       const authors: string[] = [];
       const dates: string[] = [];
@@ -291,7 +269,7 @@ export class PuppeteerService extends BaseService {
         };
         
         const extractAll = (sel: string, attr?: string): string[] => {
-          return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean) ?? [];
+          return $(sel)?.map((i, el) => clean(attr ? $(el).attr(attr) : $(el).text())).get().filter(Boolean) ?? [];
         };
         
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
@@ -371,7 +349,7 @@ export class PuppeteerService extends BaseService {
         selector: author.selector,
       });
       
-      await PuppeteerService.open(url, actions, { recaptchaSelector: recaptcha?.selector });
+      await PuppeteerService.open(url, actions);
       
       loot.dateMatches = dates;
       loot.date = maxDate(...dates.map((d) => parseDate(d)));
