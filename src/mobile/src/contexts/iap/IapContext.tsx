@@ -2,7 +2,7 @@ import React from 'react';
 import { EmitterSubscription, Platform } from 'react-native';
 
 import {
-  ProductCommon,
+  Subscription,
   endConnection,
   finishTransaction,
   flushFailedPurchasesCachedAsPendingAndroid,
@@ -13,19 +13,18 @@ import {
   requestSubscription,
 } from 'react-native-iap';
 
+import { DEFAULT_IAP_CONTEXT } from './types';
+
 const SKUS = Platform.select({
   android: { skus: [] },
   ios: { skus: ['ai.readless.ReadLess.premium.t1'] },
-});
+}) as { skus: string[] };
 
-export const IapContext = React.createContext({
-  products: [],
-  subscribe: () => Promise<void>,
-});
+export const IapContext = React.createContext(DEFAULT_IAP_CONTEXT);
 
 export function IapContextProvider({ children }: React.PropsWithChildren) {
   
-  const [products, setProducts] = React.useState<ProductCommon[]>([]);
+  const [subscriptions, setSubscriptions] = React.useState<Subscription[]>([]);
   
   const subscribe = React.useCallback(async (sku: string, offerToken = '') => {
     try {
@@ -46,7 +45,7 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
     initConnection()
       .then(async () => {
         const products = await getSubscriptions(SKUS);
-        setProducts(products);
+        setSubscriptions(products);
         if (Platform.OS === 'android') {
           flushFailedPurchasesCachedAsPendingAndroid()
             .catch(() => {
@@ -84,8 +83,8 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
   
   return (
     <IapContext.Provider value={ {
-      products,
       subscribe,
+      subscriptions,
     } }>
       {children}
     </IapContext.Provider>

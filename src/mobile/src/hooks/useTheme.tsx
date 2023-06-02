@@ -33,11 +33,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           color: '#fff',
         },
         buttonText: { padding: 4 },
-        card: {
-          backgroundColor: lightMode ? '#fefefe' : '#010101',
-          marginBottom: 12,
-          padding: 12,
-        },
+        card: { backgroundColor: lightMode ? '#fefefe' : '#010101' },
         dialog: {
           backgroundColor: lightMode ? '#ddd' : '#111',
           borderColor: '#8b0000',
@@ -107,7 +103,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
       ...(lightMode ? DefaultTheme : DarkTheme),
       colors: {
         ...(lightMode ? DefaultTheme : DarkTheme).colors,
-        background: lightMode ? '#eee' : '#1e1e1e',
+        background: lightMode ? '#efefef' : '#1e1e1e',
         border: lightMode ? '#bdbdbd' : '#757575',
         card: lightMode ? '#fff' : '#1e1e1e',
         notification: '#8b0000',

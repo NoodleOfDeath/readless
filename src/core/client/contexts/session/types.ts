@@ -52,6 +52,7 @@ export type Preferences = {
   readSources?: { [key: number]: Bookmark<boolean> };
   summaryHistory?: { [key: number]: Bookmark<InteractionType> };
   showOnlyCustomNews?: boolean;
+  rotationLock?: boolean;
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { fontFamily: 'Faustina' };
@@ -69,27 +70,8 @@ export type SessionSetOptions = {
   updateCookie?: boolean;
 };
 
-export type SessionContextType = {
+export type SessionContextType = Preferences & {
   ready?: boolean;
-  displayMode?: ColorMode;
-  alwaysShowReadingFormatSelector?: boolean;
-  preferredReadingFormat?: ReadingFormat;
-  compactMode?: boolean;
-  textScale?: number;
-  fontFamily?: string;
-  letterSpacing?: number;
-  searchHistory?: string[];
-  showShortSummary?: boolean;
-  loadedInitialUrl?: boolean;
-  bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
-  bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
-  bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
-  excludedOutlets?: { [key: string]: Bookmark<boolean> };
-  excludedCategories?: { [key: string]: Bookmark<boolean> };
-  removedSummaries?: { [key: number]: Bookmark<boolean> };
-  readSummaries?: { [key: number]: Bookmark<boolean> };
-  readSources?: { [key: number]: Bookmark<boolean> };
-  showOnlyCustomNews?: boolean;
   // state setters
   setPreference<K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])): void;
   // convenience functions

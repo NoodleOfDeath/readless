@@ -349,6 +349,8 @@ PODS:
     - React-Core
   - react-native-notifications (4.3.5):
     - React-Core
+  - react-native-orientation-locker (1.5.0):
+    - React-Core
   - react-native-safe-area-context (4.5.3):
     - RCT-Folly
     - RCTRequired
@@ -557,6 +559,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-cloud-store (from `../node_modules/react-native-cloud-store`)
   - react-native-notifications (from `../node_modules/react-native-notifications`)
+  - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-track-player (from `../node_modules/react-native-track-player`)
   - react-native-version-check (from `../node_modules/react-native-version-check`)
@@ -666,6 +669,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-cloud-store"
   react-native-notifications:
     :path: "../node_modules/react-native-notifications"
+  react-native-orientation-locker:
+    :path: "../node_modules/react-native-orientation-locker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-track-player:
@@ -770,6 +775,7 @@ SPEC CHECKSUMS:
   React-logger: 342f358b8decfbf8f272367f4eacf4b6154061be
   react-native-cloud-store: 90ba4db68197c680fb66d62464d65ec28161f4bd
   react-native-notifications: 504143d59f9628c3b0c22fd0ccf34b65b9182d01
+  react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
   react-native-safe-area-context: b8979f5eda6ed5903d4dbc885be3846ea3daa753
   react-native-track-player: 0c26d981b5097910486cbbeb6d8f5352d41be069
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8

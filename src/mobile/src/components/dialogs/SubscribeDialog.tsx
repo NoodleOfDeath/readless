@@ -12,7 +12,7 @@ type Props = DialogProps;
 
 export function SubscribeDialog({ ...props }: Props) {
   
-  const { products, subscribe } = React.useContext(IapContext);
+  const { subscriptions: products, subscribe } = React.useContext(IapContext);
   
   return (
     <Dialog { ...props }>

@@ -13,3 +13,5 @@ export function getUserAgent() {
   };
   return userAgent;
 }
+
+export { decode as atob } from 'js-base64';

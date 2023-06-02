@@ -51,6 +51,7 @@ export function SessionContextProvider({ children }: Props) {
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [readSources, setReadSources] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
+  const [rotationLock, setRotationLock] = React.useState<boolean>();
 
   const getPreference = React.useCallback(async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
     const value = await getItem(key);
@@ -120,6 +121,9 @@ export function SessionContextProvider({ children }: Props) {
       break;
     case 'showOnlyCustomNews':
       setShowOnlyCustomNews(value);
+      break;
+    case 'rotationLock':
+      setRotationLock(value);
       break;
     default:
       break;
@@ -203,6 +207,7 @@ export function SessionContextProvider({ children }: Props) {
     setReadSummaries(await getPreference('readSummaries') ?? prefs.readSummaries);
     setReadSources(await getPreference('readSources') ?? prefs.readSources);
     setShowOnlyCustomNews(await getPreference('showOnlyCustomNews') ?? prefs.showOnlyCustomNews);
+    setRotationLock(await getPreference('rotationLock') ?? prefs.rotationLock);
     setReady(true);
   }, [getPreference]);
 
@@ -231,6 +236,7 @@ export function SessionContextProvider({ children }: Props) {
         readSummaries,
         ready,
         removedSummaries,
+        rotationLock,
         searchHistory,
         setPreference,
         showOnlyCustomNews,

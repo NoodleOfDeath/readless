@@ -136,13 +136,13 @@ export function MediaContextProvider({ children }: Props) {
     Tts.setDefaultPitch(speechPitch);
     Tts.getInitStatus().then(initTts);
     Tts.addEventListener('tts-finish', () => {
-      /* placeholder */
+      // placeholder
     });
     Tts.addEventListener('tts-cancel', () => {
-      /* placeholder */
+      // placeholder
     });
     Tts.addEventListener('tts-start', () => {
-      /* placeholder */
+      // placeholder
     });
   }, [initTts, speechPitch, speechRate]);
   

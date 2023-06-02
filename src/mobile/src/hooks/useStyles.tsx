@@ -88,9 +88,23 @@ export function useStyles({
   pb = pv,
   pl = ph,
   pr = ph,
-  // appearance
+  // border
   borderColor,
+  borderTopColor = borderColor,
+  borderRightColor = borderColor,
+  borderBottomColor = borderColor,
+  borderLeftColor = borderColor,
+  borderRadius,
+  borderRadiusTL: borderTopLeftRadius = borderRadius,
+  borderRadiusTR: borderTopRightRadius = borderRadius,
+  borderRadiusBL: borderBottomLeftRadius = borderRadius,
+  borderRadiusBR: borderBottomRightRadius = borderRadius,
   borderWidth = borderColor ? 1 : undefined,
+  borderTopWidth = borderWidth,
+  borderRightWidth = borderWidth,
+  borderBottomWidth = borderWidth,
+  borderLeftWidth = borderWidth,
+  // appearance
   bg,
   opacity,
   outlined,
@@ -224,8 +238,18 @@ export function useStyles({
     attrs.push(maxWidth ? { maxWidth } : undefined);
     attrs.push(maxHeight ? { maxHeight } : undefined);
     attrs.push({ fontSize : fontSize * scale });
-    attrs.push(borderWidth ? { borderWidth } : undefined);
-    attrs.push(borderColor ? { borderColor } : undefined);
+    attrs.push(borderTopWidth ? { borderTopWidth } : undefined);
+    attrs.push(borderBottomWidth ? { borderBottomWidth } : undefined);
+    attrs.push(borderLeftWidth ? { borderLeftWidth } : undefined);
+    attrs.push(borderRightWidth ? { borderRightWidth } : undefined);
+    attrs.push(borderTopColor ? { borderTopColor } : undefined);
+    attrs.push(borderBottomColor ? { borderBottomColor } : undefined);
+    attrs.push(borderLeftColor ? { borderLeftColor } : undefined);
+    attrs.push(borderRightColor ? { borderRightColor } : undefined);
+    attrs.push(borderTopLeftRadius ? { borderTopLeftRadius } : undefined);
+    attrs.push(borderTopRightRadius ? { borderTopRightRadius } : undefined);
+    attrs.push(borderBottomLeftRadius ? { borderBottomLeftRadius } : undefined);
+    attrs.push(borderBottomRightRadius ? { borderBottomRightRadius } : undefined);
     attrs.push(bg ? { backgroundColor: bg } : undefined);
     attrs.push(rounded ? theme.components.rounded : undefined);
     attrs.push(mt ? { marginTop: mt } : undefined);
@@ -237,6 +261,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl } : undefined);
     attrs.push(pr ? { paddingRight: pr } : undefined);
     return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), style ?? {});
-  }, [textScale, position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, borderWidth, borderColor, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, style, onlyInclude]);
+  }, [textScale, position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, style, onlyInclude]);
   return viewStyle;
 }

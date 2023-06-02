@@ -20,6 +20,7 @@
     "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^4.0.1",
     "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -34,6 +35,7 @@
     "pluralize": "^8.0.0",
     "react": "18.2.0",
     "react-native": "^0.71.8",
+    "react-native-actions-sheet": "^0.8.29",
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-chart-kit": "^6.12.0",
     "react-native-cloud-store": "^0.10.3-alpha.1",
@@ -45,6 +47,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-localization": "^2.3.1",
     "react-native-notifications": "^4.3.3",
+    "react-native-orientation-locker": "^1.5.0",
     "react-native-paper": "^5.8.0",
     "react-native-reanimated": "^3.1.0",
     "react-native-safe-area-context": "^4.5.0",

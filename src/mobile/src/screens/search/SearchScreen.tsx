@@ -30,11 +30,11 @@ import {
 } from '~/components';
 import {
   DialogContext,
+  LayoutContext,
   MediaContext,
   SessionContext,
 } from '~/contexts';
 import {
-  useLayout,
   useNavigation,
   useSummaryClient,
   useTheme,
@@ -64,7 +64,7 @@ export function SearchScreen({
   } = React.useContext(MediaContext);
   const { showShareDialog } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
-  const { supportsMasterDetail } = useLayout();
+  const { supportsMasterDetail } = React.useContext(LayoutContext);
   const { search, openBrowse } = useNavigation();
   const theme = useTheme();
   
@@ -190,13 +190,7 @@ export function SearchScreen({
     const headerTitle = (
       <Switch 
         leftLabel={ <Icon name="filter-off" size={ 24 } /> }
-        rightLabel={ (
-          <View>
-            <Button row startIcon="filter-check" iconSize={ 24 } gap={ 12 } alignCenter>
-              {strings.myNews}
-            </Button>
-          </View>
-        ) }
+        rightLabel={ <Icon name="filter-check" size={ 24 } /> }
         value={ onlyCustomNews }
         onValueChange={ (value) => {
           setOnlyCustomNews(value);
@@ -426,7 +420,7 @@ export function SearchScreen({
                     setPage(0);
                     load(0);
                   } }>
-                  <View col width="100%">
+                  <View col width="100%" pt={ 12 }>
                     {summaryList}
                     {!loading && !noResults && totalResultCount > summaries.length && (
                       <View row justifyCenter p={ 16 } pb={ 24 }>

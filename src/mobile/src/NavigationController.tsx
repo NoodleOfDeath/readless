@@ -13,7 +13,11 @@ import {
 } from '@react-navigation/native-stack';
 import { Badge } from 'react-native-paper';
 
-import { MediaContext, SessionContext } from './contexts';
+import {
+  LayoutContext,
+  MediaContext,
+  SessionContext,
+} from './contexts';
 
 import {
   ActivityIndicator,
@@ -101,6 +105,11 @@ function Stack() {
     loadedInitialUrl,
     setPreference,
   } = React.useContext(SessionContext);
+  
+  const {
+    rotationLock,
+    setRotationLock,
+  } = React.useContext(LayoutContext);
 
   const { 
     router, 
@@ -114,6 +123,26 @@ function Stack() {
   const headerRight = React.useMemo(() => (
     <View>
       <View row gap={ 16 } alignCenter>
+        <Button
+          startIcon={ (
+            <View height={ 24 } width={ 24 }>
+              <Icon 
+                absolute
+                name={ rotationLock ? 'lock-check' : 'lock-open' }
+                size={ rotationLock ? 24 : 16 }
+                top={ rotationLock ? 0 : -1 }
+                right={ rotationLock ? 0 : -1 } />
+              <Icon 
+                absolute
+                name='screen-rotation' 
+                bottom={ -1 }
+                left={ -1 }
+                size={ 16 } />
+            </View>
+          ) }
+          bg={ rotationLock ? 'primary' : 'transparent' }
+          iconSize={ 24 }
+          onPress={ () => setRotationLock((prev) => !prev) } />
         <View onPress={ openBookmarks }>
           {bookmarkCount > 0 && (
             <Badge
@@ -136,7 +165,7 @@ function Stack() {
           onPress={ openSettings } />
       </View>
     </View>
-  ), [bookmarkCount, openBookmarks, openBrowse, openSettings]);
+  ), [bookmarkCount, openBookmarks, openBrowse, openSettings, rotationLock, setRotationLock]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);

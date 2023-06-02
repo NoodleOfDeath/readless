@@ -94,9 +94,23 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   pb?: number | string;
   pl?: number | string;
   pr?: number | string;
-  // appearance
+  // border
   borderWidth?: number;
+  borderTopWidth?: number;
+  borderRightWidth?: number;
+  borderBottomWidth?: number;
+  borderLeftWidth?: number;
   borderColor?: string;
+  borderTopColor?: string;
+  borderRightColor?: string;
+  borderBottomColor?: string;
+  borderLeftColor?: string;
+  borderRadius?: number;
+  borderRadiusTL?: number;
+  borderRadiusTR?: number;
+  borderRadiusBL?: number;
+  borderRadiusBR?: number;
+  // appearance
   bg?: string;
   outlined?: boolean | string | number | [string, number];
   opacity?: number;

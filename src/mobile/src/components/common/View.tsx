@@ -1,26 +1,27 @@
 import React from 'react';
 import {
-  Animated,
   Pressable,
   PressableProps,
   View as RNView,
   ViewProps as RNViewProps,
   StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
 } from 'react-native';
 
 import { Stylable, Surface } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type ViewProps = React.PropsWithChildren<PressableProps & RNViewProps & Stylable> & {
-  animated?: boolean;
+export type ViewProps = React.PropsWithChildren<PressableProps & TouchableOpacityProps & RNViewProps & Stylable> & {
   pressable?: boolean;
+  touchable?: boolean;
   elevated?: boolean;
 };
 
 export function View({ 
   children,
-  animated,
   pressable,
+  touchable,
   elevated,
   inactive,
   ...props
@@ -32,13 +33,18 @@ export function View({
       return (
         <View style={ {
           ...StyleSheet.absoluteFillObject, 
-          backgroundColor: theme.colors.inactive, 
+          backgroundColor: theme.colors.inactive,
+          borderBottomLeftRadius: style.borderBottomLeftRadius ?? 0, 
+          borderBottomRightRadius: style.borderBottomRightRadius ?? 0,
           borderRadius: style.borderRadius ?? 0,
+          borderTopLeftRadius: style.borderTopLeftRadius ?? 0,
+          borderTopRightRadius: style.borderTopRightRadius ?? 0,
           opacity: 0.3,
+          overflow: 'hidden',
         } } />
       );
     }
-  }, [inactive, style.borderRadius, theme.colors.inactive]);
+  }, [inactive, style, theme.colors.inactive]);
   const contents = React.useMemo(() => {
     if (elevated) {
       return (
@@ -60,10 +66,10 @@ export function View({
     <Pressable { ...props } style={ elevated ? undefined : style }>
       {contents}
     </Pressable>
-  ) : animated ? (
-    <Animated.View { ...props } style={ elevated ? undefined : style }>
+  ) : touchable ? (
+    <TouchableOpacity { ...props } style={ elevated ? undefined : style }>
       {contents}
-    </Animated.View>
+    </TouchableOpacity>
   ) : (
     <RNView { ...props } style={ elevated ? undefined : style }>
       {contents}
