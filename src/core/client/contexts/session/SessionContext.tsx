@@ -6,6 +6,7 @@ import {
   DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
+  OrientationType,
   OVERRIDDEN_INITIAL_PREFERENCES,
   Preferences,
 } from './types';
@@ -21,6 +22,7 @@ import {
   getItem,
   getUserAgent,
   lengthOf,
+  removeItem,
   setItem,
 } from '~/utils';
 
@@ -51,7 +53,7 @@ export function SessionContextProvider({ children }: Props) {
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [readSources, setReadSources] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
-  const [rotationLock, setRotationLock] = React.useState<boolean>();
+  const [rotationLock, setRotationLock] = React.useState<OrientationType>();
 
   const getPreference = React.useCallback(async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
     const value = await getItem(key);
@@ -128,7 +130,11 @@ export function SessionContextProvider({ children }: Props) {
     default:
       break;
     }
-    await setItem(key, JSON.stringify(value));
+    if (value === undefined) {
+      await removeItem(key);
+    } else {
+      await setItem(key, JSON.stringify(value));
+    }
   }, [getPreference]);
 
   const followOutlet = React.useCallback((outlet: PublicOutletAttributes) => {

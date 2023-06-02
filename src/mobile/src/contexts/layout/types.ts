@@ -8,13 +8,21 @@ export type LayoutContextType = {
   orientation: OrientationType;
   rotationLock: boolean;
   setRotationLock: React.Dispatch<React.SetStateAction<boolean>>;
+  lockRotation(): void;
+  unlockRotation(): void;
 };
 
 export const DEFAULT_LAYOUT_CONTEXT: LayoutContextType = {
+  lockRotation: () => {
+    // placeholder
+  },
   orientation: Orientation.getInitialOrientation(),
   rotationLock: false,
   setRotationLock: () => {
     // placeholder
   },
   supportsMasterDetail: false,
+  unlockRotation: () => {
+    // placeholder
+  },
 };

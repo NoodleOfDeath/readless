@@ -65,7 +65,6 @@ export function AnalyticsView({
   return (
     <View style={ style } gap={ 12 }>
       <CollapsedView
-        mh={ -12 }
         initiallyCollapsed={ false }
         title={ strings.summary.sentimentAnalysis }
         info={ strings.summary.sentimentAnalysisInfo }>

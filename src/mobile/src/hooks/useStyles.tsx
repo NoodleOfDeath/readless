@@ -225,7 +225,7 @@ export function useStyles({
     attrs.push(bold ? { fontWeight: 'bold' } : undefined);
     attrs.push(italic ? { fontStyle: 'italic' } : undefined);
     attrs.push(underline ? { textDecorationLine: 'underline' } : undefined);
-    attrs.push({ fontFamily : !AVAILABLE_FONTS.includes(fontFamily ?? preferredFont ?? '') ? 'Manuale' : fontFamily ?? preferredFont });
+    attrs.push({ fontFamily : !AVAILABLE_FONTS.includes(fontFamily ?? preferredFont ?? '') ? 'Faustina' : fontFamily ?? preferredFont });
     attrs.push(alignItems);
     attrs.push(justifyContent);
     attrs.push(appearance);

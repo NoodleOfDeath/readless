@@ -8,6 +8,11 @@ import {
 } from '~/api';
 
 export type ColorMode = 'light' | 'dark';
+export type OrientationType = 
+  | 'PORTRAIT' 
+  | 'PORTRAIT-UPSIDEDOWN' 
+  | 'LANDSCAPE-LEFT'
+  | 'LANDSCAPE-RIGHT';
 
 export class Bookmark<T> {
 
@@ -52,7 +57,7 @@ export type Preferences = {
   readSources?: { [key: number]: Bookmark<boolean> };
   summaryHistory?: { [key: number]: Bookmark<InteractionType> };
   showOnlyCustomNews?: boolean;
-  rotationLock?: boolean;
+  rotationLock?: OrientationType;
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { fontFamily: 'Faustina' };

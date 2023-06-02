@@ -187,25 +187,18 @@ export function SearchScreen({
   }, [loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
 
   React.useEffect(() => {
-    const headerTitle = (
-      <Switch 
-        leftLabel={ <Icon name="filter-off" size={ 24 } /> }
-        rightLabel={ <Icon name="filter-check" size={ 24 } /> }
-        value={ onlyCustomNews }
-        onValueChange={ (value) => {
-          setOnlyCustomNews(value);
-          if (!prefilter) {
-            setPreference('showOnlyCustomNews', value);
-          }
-        } } />
-    );
     if (prefilter) {
       setSearchText(prefilter + ' ');
       navigation?.setOptions({ 
         headerBackTitle: '',
         headerBackVisible: true,
         headerShown: true,
-        headerTitle: () => headerTitle,
+        headerTitle: () => (
+          <View row gap={ 6 }>
+            <Icon name="magnify" size={ 24 } />
+            <Text>{prefilter}</Text>
+          </View>
+        ),
       });
       setKeywords(parseKeywords(prefilter));
     } else {
@@ -213,7 +206,18 @@ export function SearchScreen({
       navigation?.setOptions({ 
         headerBackVisible: false,
         headerShown: true,
-        headerTitle: () => headerTitle,
+        headerTitle: () => (
+          <Switch 
+            leftLabel={ <Icon name="filter-off" size={ 24 } /> }
+            rightLabel={ <Icon name="filter-check" size={ 24 } /> }
+            value={ onlyCustomNews }
+            onValueChange={ (value) => {
+              setOnlyCustomNews(value);
+              if (!prefilter) {
+                setPreference('showOnlyCustomNews', value);
+              }
+            } } />
+        ),
       });
     }
   }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference]);

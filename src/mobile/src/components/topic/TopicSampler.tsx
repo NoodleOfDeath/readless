@@ -104,8 +104,9 @@ export function TopicSampler({
                 {topics.map((topic) => (
                   <Button 
                     key={ topic.text }
+                    borderRadius={ 6 }
                     elevated
-                    p={ 2 }
+                    p={ 4 }
                     onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
                     {topic.text}
                   </Button>

@@ -127,7 +127,7 @@ export function SearchMenu({
               } } 
               onSubmitEditing={ () => submit() } />
             <Animated.View style={ [theme.components.card, { transform: [{ scaleY: animation }], zIndex: 10 }] }>
-              <View gap={ 12 }>
+              <View gap={ 12 } p={ 12 }>
                 <View>
                   <Button 
                     alignCenter 

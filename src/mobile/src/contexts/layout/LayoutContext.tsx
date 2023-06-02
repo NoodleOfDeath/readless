@@ -12,7 +12,7 @@ export const LayoutContext = React.createContext(DEFAULT_LAYOUT_CONTEXT);
 export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
   const {
-    rotationLock: initialRotationLock = false, 
+    rotationLock: initialRotationLock, 
     setPreference,
   } = React.useContext(SessionContext);
   
@@ -22,29 +22,35 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
   const supportsMasterDetail = React.useMemo(() => (dimensions?.width ?? Dimensions.get('window').width) > 768, [dimensions?.width]);
 
-  React.useEffect(() => {
-    if (!rotationLock) {
+  const lockRotation = React.useCallback(() => {
+    switch (orientation) {
+    case 'LANDSCAPE-LEFT':
+      Orientation.lockToLandscapeLeft();
+      break;
+    case 'LANDSCAPE-RIGHT':
+      Orientation.lockToLandscapeRight();
+      break;
+    case 'PORTRAIT':
+    case 'PORTRAIT-UPSIDEDOWN':
+      Orientation.lockToPortrait();
+      break;
+    default:
       Orientation.unlockAllOrientations();
-    } else {
-      switch (orientation) {
-      case 'LANDSCAPE-LEFT':
-        Orientation.lockToLandscapeLeft();
-        break;
-      case 'LANDSCAPE-RIGHT':
-        Orientation.lockToLandscapeRight();
-        break;
-      case 'PORTRAIT':
-      case 'PORTRAIT-UPSIDEDOWN':
-        Orientation.lockToPortrait();
-        break;
-      default:
-        break;
-      }
+      setPreference('rotationLock', undefined);
+      return;
     }
-    setPreference('rotationLock', rotationLock);
-  }, [orientation, rotationLock, setPreference]);
+    setRotationLock(orientation as OrientationType);
+    setPreference('rotationLock', orientation as OrientationType);
+  }, [orientation, setPreference]);
+  
+  const unlockRotation = React.useCallback(() => {
+    Orientation.unlockAllOrientations();
+    setRotationLock(undefined);
+    setPreference('rotationLock', undefined);
+  }, [setPreference]);
   
   React.useEffect(() => {
+    Orientation.unlockAllOrientations();
     const subscriber = Dimensions.addEventListener('change', ({ window }) => {
       setDimensions(window);
     });
@@ -58,10 +64,12 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   return (
     <LayoutContext.Provider value={ {
       dimensions,
+      lockRotation,
       orientation,
       rotationLock,
       setRotationLock,
       supportsMasterDetail,
+      unlockRotation,
     } }>
       {children}
     </LayoutContext.Provider>

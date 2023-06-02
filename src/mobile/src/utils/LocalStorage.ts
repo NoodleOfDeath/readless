@@ -4,7 +4,7 @@ export const setItem = async (name: string, value: string) => {
   return await AsyncStorage.setItem(name, value);
 };
   
-export const remoteItem = async (name: string) => {
+export const removeItem = async (name: string) => {
   return await AsyncStorage.removeItem(name);
 };
   

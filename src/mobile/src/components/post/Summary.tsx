@@ -84,7 +84,7 @@ function RenderActions({ actions }: RenderActionsProps) {
         col
         justifyEvenly
         p={ 6 }
-        mr={ 12 }
+        mr={ 18 }
         mb={ 12 }
         gap={ 6 }>
         {actions.map((action) => (
@@ -94,11 +94,12 @@ function RenderActions({ actions }: RenderActionsProps) {
             flex={ 1 }>
             <Button 
               row
-              underline
+              rounded
+              outlined
               flexGrow={ 1 }
               flex={ 1 }
               gap={ 6 }
-              p={ 1 }
+              ph={ 4 }
               alignCenter
               justifyCenter
               caption
@@ -436,6 +437,7 @@ export function Summary({
                               bold
                               subtitle1
                               justifyCenter
+                              color={ !initialFormat && shareTarget?.id !== summary.id && isRead ? theme.colors.textDisabled : theme.colors.text }
                               highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                               searchWords={ shareTarget?.id === summary.id ? [] : keywords }
                               textToHighlight={ (compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title } />
@@ -486,7 +488,6 @@ export function Summary({
                                   SheetManager.show('share', {
                                     payload: {
                                       format,
-                                      onClose: () => SheetManager.hide('share'), 
                                       onInteract, 
                                       summary,
                                       viewshot: viewshot.current,
@@ -509,7 +510,6 @@ export function Summary({
               {initialFormat && (
                 <CollapsedView 
                   initiallyCollapsed={ false }
-                  mh={ -12 }
                   title={ (
                     <ReadingFormatSelector
                       mv={ -12 }
@@ -544,6 +544,7 @@ export function Summary({
               )}
               {initialFormat && summary.sentiment && (
                 <AnalyticsView
+                  mb={ 12 }
                   sentiment={ summary.sentiment }
                   sentiments={ Object.values(summary.sentiments ?? []) } />
               )}

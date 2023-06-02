@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { SheetProvider, registerSheet } from 'react-native-actions-sheet';
+import { Provider } from 'react-native-paper';
 
 import { DEFAULT_DIALOG_CONTEXT } from './types';
 
@@ -28,9 +29,11 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
       setShareTarget,
       shareTarget,
     } }>
-      <SheetProvider>
-        {children}
-      </SheetProvider>
+      <Provider>
+        <SheetProvider>
+          {children}
+        </SheetProvider>
+      </Provider>
     </DialogContext.Provider>
   );
 }

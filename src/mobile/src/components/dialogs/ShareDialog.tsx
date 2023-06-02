@@ -42,7 +42,7 @@ export function ShareDialog({
     format,
     onClose,
     onInteract,
-  } = React.useMemo(() => payload as Partial<ShareDialogProps>, [payload]);
+  } = React.useMemo(() => (payload ?? {}) as Partial<ShareDialogProps>, [payload]);
   
   const {
     copyToClipboard, shareSocial, shareStandard, 

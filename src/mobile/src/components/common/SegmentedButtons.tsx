@@ -50,7 +50,7 @@ export const SegmentedButtons = <T = any>({
               p={ 12 }
               selectable
               selected={ value === props.value }
-              startIcon={ icon as string }
+              startIcon={ icon }
               onPress={ () => onValueChange?.(value) }>
               { label }
             </Button>

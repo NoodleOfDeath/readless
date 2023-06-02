@@ -70,7 +70,6 @@ export function SummaryScreen({
   return (
     <Screen>
       <ScrollView
-        mt={ 10 }
         refreshing={ loading }
         onRefresh={ () => load(summaryId) }>
         {loading ? (

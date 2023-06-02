@@ -107,8 +107,9 @@ function Stack() {
   } = React.useContext(SessionContext);
   
   const {
+    lockRotation,
     rotationLock,
-    setRotationLock,
+    unlockRotation,
   } = React.useContext(LayoutContext);
 
   const { 
@@ -140,9 +141,8 @@ function Stack() {
                 size={ 16 } />
             </View>
           ) }
-          bg={ rotationLock ? 'primary' : 'transparent' }
           iconSize={ 24 }
-          onPress={ () => setRotationLock((prev) => !prev) } />
+          onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
         <View onPress={ openBookmarks }>
           {bookmarkCount > 0 && (
             <Badge
@@ -165,7 +165,7 @@ function Stack() {
           onPress={ openSettings } />
       </View>
     </View>
-  ), [bookmarkCount, openBookmarks, openBrowse, openSettings, rotationLock, setRotationLock]);
+  ), [bookmarkCount, openBookmarks, openBrowse, openSettings, rotationLock, lockRotation, unlockRotation]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);
