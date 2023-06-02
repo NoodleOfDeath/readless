@@ -6,8 +6,8 @@ import {
   DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
-  OrientationType,
   OVERRIDDEN_INITIAL_PREFERENCES,
+  OrientationType,
   Preferences,
 } from './types';
 

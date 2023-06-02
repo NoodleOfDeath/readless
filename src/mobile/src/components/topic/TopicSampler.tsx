@@ -93,7 +93,7 @@ export function TopicSampler({
       initiallyCollapsed={ false }
       title={ title }>
       <View
-        height={ 80 } 
+        height={ 65 } 
         ph={ 24 }
         gap={ 6 }
         style={ [theme.components.sampler, style] }>

@@ -411,8 +411,8 @@ export function SearchScreen({
               </Button>
             </View>
           )}
-          {prefilter && onlyCustomNews && (
-            <Text caption textCenter mb={ 6 } mh={ 12 }>{strings.search.customNewsSearch}</Text>
+          {!prefilter && onlyCustomNews && (
+            <Text caption textCenter mh={ 12 }>{strings.search.customNewsSearch}</Text>
           )}
           <View col>
             <View row>
