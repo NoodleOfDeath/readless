@@ -9,7 +9,7 @@ export const shareableLink = (
   baseUrl: string, 
   format: ReadingFormat = ReadingFormat.Summary
 ) => {
-  return `https://applink.${baseUrl}/s/${summary.id}/${format}`;
+  return `https://open.${baseUrl}/s/${summary.id}/${format}`;
 };
 
 export const readingFormat = (str = ''): ReadingFormat => {

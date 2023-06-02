@@ -62,7 +62,7 @@ export function SearchScreen({
   const {
     queueSummary, currentTrackIndex, preloadCount,
   } = React.useContext(MediaContext);
-  const { showShareDialog } = React.useContext(DialogContext);
+  const { shareTarget } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const { supportsMasterDetail } = React.useContext(LayoutContext);
   const { search, openBrowse } = useNavigation();
@@ -332,7 +332,7 @@ export function SearchScreen({
         key={ summary.id }
         summary={ summary }
         selected={ Boolean(supportsMasterDetail && summary.id === detailSummary?.id) }
-        keywords={ showShareDialog ? undefined : keywords }
+        keywords={ shareTarget?.id === summary.id ? undefined : keywords }
         onFormatChange={ (format) => handleFormatChange(summary, format) }
         onInteract={ (...e) => handleInteraction(summary, ...e) }
         onLocalize={ (translations) => onLocalize(summary, translations) }
@@ -342,7 +342,7 @@ export function SearchScreen({
           return (prev = state);
         }) } />
     ));
-  }, [detailSummary?.id, onLocalize, handleFormatChange, handleInteraction, keywords, showShareDialog, summaries, supportsMasterDetail]);
+  }, [detailSummary?.id, onLocalize, handleFormatChange, handleInteraction, keywords, shareTarget, summaries, supportsMasterDetail]);
 
   React.useEffect(() => {
     loadMoreAsNeeded();
@@ -489,7 +489,7 @@ export function SearchScreen({
                     <Summary
                       summary={ detailSummary }
                       initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                      keywords={ showShareDialog ? undefined : keywords }
+                      keywords={ shareTarget?.id === detailSummary.id ? undefined : keywords }
                       onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
                       onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
                   )}

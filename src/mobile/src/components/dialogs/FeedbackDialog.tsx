@@ -1,12 +1,11 @@
 import React from 'react';
 
+import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
+
 import { InteractionType, PublicSummaryAttributes } from '~/api';
 import {
   Button,
   Checkbox,
-  Dialog,
-  DialogProps,
-  ScrollView,
   Text,
   TextInput,
   View,
@@ -15,11 +14,14 @@ import { Bookmark, SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { strings } from '~/locales';
 
-export type FeedBackDialogProps = DialogProps & {
+export type FeedbackDialogProps = {
   summary: PublicSummaryAttributes;
+  onClose?: () => void;
 };
 
-export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps) {
+export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogProps>) {
+
+  const { summary, onClose } = React.useMemo(() => payload as Partial<FeedbackDialogProps>, [payload]);
   
   const { setPreference } = React.useContext(SessionContext);
 
@@ -55,7 +57,7 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
   }, [selectedValues]);
 
   const onSubmit = React.useCallback(() => {
-    if (selectedValues.length === 0) {
+    if (!summary || selectedValues.length === 0) {
       return;
     }
     if (
@@ -80,19 +82,41 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
   }, [selectedValues, otherValue, handleInteraction, summary, setPreference]);
   
   return (
-    <Dialog
-      title={ strings.feedback.feedback }
-      actions={
-        success ? (
+    <ActionSheet id={ props.sheetId }>
+      <View p={ 12 }>
+        {!success ? (
+          <View gap={ 6 }>
+            {checkboxes.map((checkbox, index) => (
+              <View key={ index }>
+                <View flexRow flexGrow={ 1 } alignCenter>
+                  <Checkbox
+                    checked={ selectedValues.includes(checkbox.value) }
+                    onPress={ () => handleCheckboxPress(checkbox) } />
+                  <Button caption alignCenter onPress={ () => handleCheckboxPress(checkbox) }>
+                    {checkbox.label}
+                  </Button>
+                </View>
+              </View>
+            ))}
+            <TextInput 
+              placeholder={ strings.feedback.options.other }
+              value={ otherValue } 
+              onChange={ (e) => setOtherValue(e.nativeEvent.text) } />
+          </View>
+        ) : (
+          <Text>{successMessage}</Text>
+        )}
+      </View>
+      <View p={ 12 }>
+        {success ? (
           <Button
-            row
             rounded
             outlined
             justifyCenter
             selectable
             p={ 8 }
             onPress={ () => {
-              dialogProps.onClose?.();
+              onClose?.();
               setSuccess(false);
               setSuccessMessage(strings.feedback.thankYou);
             } }>
@@ -100,7 +124,6 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
           </Button>
         ) : (
           <Button
-            row
             rounded
             outlined
             justifyCenter 
@@ -109,33 +132,8 @@ export function FeedBackDialog({ summary, ...dialogProps }: FeedBackDialogProps)
             onPress={ onSubmit }>
             {strings.feedback.submit}
           </Button>
-        )
-      }
-      { ...dialogProps }>
-      <View height={ 300 } p={ 12 }>
-        <ScrollView>
-          {!success ? (
-            <View col gap={ 6 }>
-              {checkboxes.map((checkbox, index) => (
-                <View key={ index } row alignCenter>
-                  <Checkbox
-                    checked={ selectedValues.includes(checkbox.value) }
-                    onPress={ () => handleCheckboxPress(checkbox) } />
-                  <Button caption alignCenter onPress={ () => handleCheckboxPress(checkbox) }>
-                    {checkbox.label}
-                  </Button>
-                </View>
-              ))}
-              <TextInput 
-                placeholder={ strings.feedback.options.other }
-                value={ otherValue } 
-                onChange={ (e) => setOtherValue(e.nativeEvent.text) } />
-            </View>
-          ) : (
-            <Text>{successMessage}</Text>
-          )}
-        </ScrollView>
+        )}
       </View>
-    </Dialog>
+    </ActionSheet>
   );
 }

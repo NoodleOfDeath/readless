@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { SheetManager } from 'react-native-actions-sheet';
 import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
@@ -15,11 +16,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { 
-  ColorMode, 
-  DialogContext,
-  SessionContext,
-} from '~/contexts';
+import { ColorMode, SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
@@ -32,8 +29,7 @@ const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
 export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
 
   const theme = useTheme();
-  const { setShowSubscribeDialog } = React.useContext(DialogContext);
-
+  
   const {
     compactMode,
     textScale, 
@@ -82,7 +78,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
     <Screen>
       <ScrollView>
         <View p={ 16 } gap={ 16 }>
-          <Button onPress={ () => setShowSubscribeDialog(true) }>
+          <Button onPress={ () => SheetManager.show('subscribe') }>
             Subscribe
           </Button>
           <View row justifyCenter flexWrap="wrap" gap={ 16 }>

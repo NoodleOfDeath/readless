@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { BASE_DOMAIN } from '@env';
+import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
 import { Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
@@ -10,33 +11,38 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
-  Button,
-  Dialog,
-  DialogProps,
+  Divider,
+  Icon,
+  ScrollView,
   Text,
   View,
 } from '~/components';
+import { DialogContext } from '~/contexts';
 import {  useShare } from '~/hooks';
 import { shareableLink } from '~/utils';
 
-export type ShareDialogProps = DialogProps & {
+export type ShareDialogProps = {
   summary: PublicSummaryAttributes;
   viewshot: ViewShot | null;
-  content?: string;
   format?: ReadingFormat;
   onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => void;
   onClose?: () => void;
 };
 
 export function ShareDialog({
-  summary,
-  viewshot,
-  content,
-  format,
-  onInteract,
-  onClose,
-  ...other
-}: ShareDialogProps) {
+  payload,
+  ...props
+}: SheetProps<ShareDialogProps>) { 
+  
+  const { setShareTarget } = React.useContext(DialogContext);
+
+  const {
+    summary,
+    viewshot,
+    format,
+    onClose,
+    onInteract,
+  } = React.useMemo(() => payload as Partial<ShareDialogProps>, [payload]);
   
   const {
     copyToClipboard, shareSocial, shareStandard, 
@@ -45,18 +51,30 @@ export function ShareDialog({
     onInteract,
   });
 
-  const actions = React.useMemo(() => {
-    return [
+  React.useEffect(() => {
+    setShareTarget(summary);
+    return () => setShareTarget(undefined);
+  }, [setShareTarget, summary]);
+  
+  const actions = React.useMemo(() => summary && viewshot && [
+    [
       {
-        icon: 'share',
+        icon: 'share-outline',
         label: 'Share as Link',
         onPress: () => shareStandard(summary, null), 
       },
       {
-        icon: 'camera',
-        label: 'Share as Image',
-        onPress: () => shareStandard(summary, viewshot), 
+        icon: 'link-variant',
+        label: 'Copy shareable link',
+        onPress: () => copyToClipboard(shareableLink(summary, BASE_DOMAIN, format)),
       },
+      {
+        icon: 'link-variant',
+        label: 'Copy original source link',
+        onPress: () => copyToClipboard(summary.url),
+      },
+    ],
+    [
       {
         icon:'twitter',
         label: 'Twitter',
@@ -73,58 +91,72 @@ export function ShareDialog({
         onPress: () => shareSocial(summary, viewshot, Social.Instagram), 
       },
       {
-        icon: 'link-variant',
-        label: 'Copy shareable link',
-        onPress: () => copyToClipboard(shareableLink(summary, BASE_DOMAIN, format)),
+        icon: 'camera-outline',
+        label: 'Share as Image',
+        onPress: () => shareStandard(summary, viewshot), 
+      },
+    ],
+    [
+      { 
+        icon:'content-copy',
+        label: 'Copy summary title',
+        onPress: () => copyToClipboard(summary.title), 
       },
       {
-        icon: 'link-variant',
-        label: 'Copy original source link',
-        onPress: () => copyToClipboard(summary.url),
+        icon:'content-copy',
+        label: 'Copy summary snippet',
+        onPress: () => copyToClipboard(summary.shortSummary), 
       },
       {
         icon:'content-copy',
         label: 'Copy summary paragraph',
-        onPress: () => copyToClipboard(summary?.shortSummary ?? ''), 
+        onPress: () => copyToClipboard(summary.summary), 
       },
       {
         icon:'content-copy',
         label: 'Copy summary bullets',
-        onPress: () => copyToClipboard(summary?.bullets.join('\n') ?? ''), 
+        onPress: () => copyToClipboard(summary.bullets.join('\n')), 
       },
-      {
-        icon:'content-copy',
-        label: 'Copy summary title',
-        onPress: () => copyToClipboard(content ?? summary?.title ?? ''), 
-      },
-    ];
-  }, [content, copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
+    ],
+  ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
 
   return (
-    <Dialog { ...other } onClose={ onClose }>
-      <View height={ 320 }>
-        <View row gap={ 12 } flexWrap='wrap'>
-          {actions.map(({
-            icon, label, onPress, 
-          }, index) => (
-            <View key={ index }>
-              <Button
-                outlined
-                rounded
-                p={ 3 }
-                gap={ 6 }
-                width={ 100 }
-                height={ 70 }
-                justifyCenter
-                alignCenter
-                startIcon={ icon }
-                onPress={ onPress }>
-                <Text caption textCenter>{label}</Text>
-              </Button>
-            </View>
-          ))}
-        </View>
+    <ActionSheet id={ props.sheetId }>
+      <View pv={ 12 }>
+        {Object.values(actions).map((subactions, i) => (
+          <View key={ i } height={ 120 } gap={ 12 }>
+            <ScrollView horizontal>
+              {subactions.map(({
+                icon, label, onPress, 
+              }, index) => (
+                <View 
+                  key={ index }
+                  onPress={ onPress }>
+                  <View
+                    gap={ 6 }
+                    width={ 120 }
+                    p={ 12 }
+                    justifyCenter
+                    alignCenter>
+                    <View outlined p={ 12 } borderRadius={ 24 }>
+                      {typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon}
+                    </View>
+                    <Text 
+                      caption 
+                      textCenter
+                      numberOfLines={ 2 }>
+                      {label}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+            {i + 1 < Object.values(actions).length && (
+              <Divider />
+            )}
+          </View>
+        ))}
       </View>
-    </Dialog>
+    </ActionSheet>
   );
 }

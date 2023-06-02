@@ -3,6 +3,7 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { formatDistance } from 'date-fns';
 import ms from 'ms';
+import { SheetManager } from 'react-native-actions-sheet';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { List } from 'react-native-paper';
 import { State } from 'react-native-track-player';
@@ -79,21 +80,33 @@ type RenderActionsProps = {
 function RenderActions({ actions }: RenderActionsProps) {
   return (
     <View>
-      <View col justifyCenter p={ 8 } mb={ 8 } gap={ 8 }>
+      <View 
+        col
+        justifyEvenly
+        p={ 6 }
+        mr={ 12 }
+        mb={ 12 }
+        gap={ 6 }>
         {actions.map((action) => (
-          <Button 
+          <View
             key={ action.text }
-            elevated
             flexGrow={ 1 }
-            flex={ 1 }
-            p={ 8 }
-            alignCenter
-            justifyCenter
-            caption
-            startIcon={ action.startIcon }
-            onPress={ action.onPress }>
-            {action.text}
-          </Button>
+            flex={ 1 }>
+            <Button 
+              row
+              underline
+              flexGrow={ 1 }
+              flex={ 1 }
+              gap={ 6 }
+              p={ 1 }
+              alignCenter
+              justifyCenter
+              caption
+              startIcon={ action.startIcon }
+              onPress={ action.onPress }>
+              {action.text}
+            </Button>
+          </View>
         ))}
       </View>
     </View>
@@ -133,9 +146,7 @@ export function Summary({
     setPreference, 
   } = React.useContext(SessionContext);
 
-  const {
-    showShareDialog, setShowFeedbackDialog, setShowShareDialog, 
-  } = React.useContext(DialogContext);
+  const { shareTarget } = React.useContext(DialogContext);
   const {
     trackState, queueSummary, currentTrack, stopAndClearTracks,
   } = React.useContext(MediaContext);
@@ -143,8 +154,8 @@ export function Summary({
   const viewshot = React.useRef<ViewShot | null>(null);
 
   const [lastTick, setLastTick] = React.useState(new Date());
-  const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
-  const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
+  const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
+  const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -186,10 +197,10 @@ export function Summary({
     }, ms(tickInterval));
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
-    setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
-    setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !showShareDialog);
+    setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
+    setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
     return () => clearInterval(interval);
-  }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, showShareDialog, summary.id, summary.translations, tickInterval]));
+  }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget, summary.id, summary.translations, tickInterval]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat) {
@@ -265,7 +276,7 @@ export function Summary({
     }, {
       onPress: () => { 
         onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
-          setShowFeedbackDialog(true, { summary });
+          SheetManager.show('feedback', { payload: { summary } });
         });
       },
       startIcon: 'bug',
@@ -274,7 +285,7 @@ export function Summary({
     return (
       <RenderActions actions={ actions } />
     );
-  }, [isRead, setPreference, onInteract, summary, setShowFeedbackDialog]);
+  }, [isRead, setPreference, onInteract, summary]);
   
   const translateToggle = React.useMemo(() => {
     if (/^en/i.test(getLocale())) {
@@ -328,13 +339,11 @@ export function Summary({
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
             <View col>
               <View row>
-                {!initialFormat && !showShareDialog && selected && (
+                {!initialFormat && shareTarget?.id !== summary.id && selected && (
                   <View
+                    left={ 0 }
+                    top={ 0 }
                     width={ 12 }
-                    ml={ -12 }
-                    mr={ 12 }
-                    mb={ -12 }
-                    mt={ -12 }
                     bg={ theme.colors.primary } />
                 )}
                 <View
@@ -345,7 +354,7 @@ export function Summary({
                   borderRadiusTR={ initialFormat ? 0 : 12 }>
                   <View 
                     pv={ initialFormat ? 12 : 6 }
-                    ph={ 12 }
+                    ph={ 6 }
                     flexGrow={ 1 }
                     elevated
                     borderRadiusTL={ initialFormat ? 0 : 12 }
@@ -355,7 +364,12 @@ export function Summary({
                     <View
                       row
                       alignCenter
-                      gap={ 12 }>
+                      gap={ 6 }>
+                      <Button 
+                        h5
+                        color='text'
+                        startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                        onPress={ () => openCategory(summary.category) } />
                       <Text
                         italic
                         onPress={ () => openOutlet(summary.outlet) }>
@@ -382,7 +396,7 @@ export function Summary({
                           justifyCenter
                           flexGrow={ 1 }
                           relative
-                          maxWidth={ initialFormat ? 256 : 128 }
+                          maxWidth={ initialFormat ? 200 : 128 }
                           width={ initialFormat ? '40%' : '30%' }>
                           <Menu
                             width={ 300 }
@@ -415,15 +429,15 @@ export function Summary({
                           </Menu>
                         </View>
                       )}
-                      <View col>
-                        <View mh={ 12 }>
+                      <View col gap={ 6 }>
+                        <View col mh={ 12 }>
                           <View row alignCenter>
                             <Highlighter
                               bold
                               subtitle1
                               justifyCenter
                               highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                              searchWords={ showShareDialog ? [] : keywords }
+                              searchWords={ shareTarget?.id === summary.id ? [] : keywords }
                               textToHighlight={ (compact || compactMode && showShortSummary) ? localizedStrings.shortSummary : localizedStrings.title } />
                           </View>
                           {translateToggle}
@@ -432,77 +446,58 @@ export function Summary({
                               <Divider />
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                searchWords={ showShareDialog ? [] : keywords }
+                                searchWords={ shareTarget?.id === summary.id ? [] : keywords }
                                 textToHighlight={ localizedStrings.shortSummary ?? '' } />
                             </View>
                           )}
                         </View>
-                        <View col />
                         {(!(compact || compactMode) || initialFormat) && (
-                          <View>
+                          <View
+                            overflow="hidden"
+                            p={ 6 }>
                             <View 
                               row
-                              overflow='hidden'
-                              borderTopWidth={ 1 }
-                              borderTopColor={ theme.colors.text }
-                              borderRadiusBR={ initialFormat ? 0 : 12 }
-                              inactive={ isRead }
                               alignCenter
-                              gap={ 12 }>
-                              <Button 
-                                elevated
-                                alignCenter
-                                p={ 4 }
-                                h5
-                                color='text'
-                                startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                                onPress={ () => openCategory(summary.category) } />
+                              gap={ 6 }>
                               <View row>
-                                <View gap={ 0 } width="100%">
-                                  <Text 
-                                    row
-                                    numberOfLines={ 1 }
-                                    underline
-                                    caption
-                                    color={ !initialFormat && !showShareDialog && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
-                                    onPress={ () => {
-                                      onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-                                      setSourceIsRead(true);
-                                    } }
-                                    onLongPress={ () => copyToClipboard(summary.url) }>
-                                    {summary.url}
-                                  </Text>
-                                </View>
+                                <Text
+                                  numberOfLines={ 1 }
+                                  underline
+                                  caption
+                                  color={ !initialFormat && shareTarget?.id !== summary.id && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+                                  onPress={ () => {
+                                    onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
+                                    setSourceIsRead(true);
+                                  } }
+                                  onLongPress={ () => copyToClipboard(summary.url) }>
+                                  {summary.url}
+                                </Text>
                               </View>
-                              <View>
-                                <View row alignCenter justifyEnd gap={ 6 }>
-                                  <Button
-                                    elevated
-                                    p={ 4 }
-                                    alignCenter
-                                    h5
-                                    color='text'
-                                    startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-                                    onPress={ () => onInteract?.(InteractionType.Bookmark) } />
-                                  <Button
-                                    elevated
-                                    p={ 4 }
-                                    h5
-                                    color='text'
-                                    startIcon='share'
-                                    onPress={ () => setShowShareDialog(true, {
-                                      content, format, summary, viewshot: viewshot.current, 
-                                    }) } />
-                                  <Button
-                                    elevated
-                                    p={ 4 }
-                                    alignCenter
-                                    h5
-                                    color="text"
-                                    startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                                    onPress={ () => handlePlayAudio() } />
-                                </View>
-                              </View>
+                              <Button
+                                h3
+                                color='text'
+                                startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+                                onPress={ () => onInteract?.(InteractionType.Bookmark) } />
+                              <Button
+                                h3
+                                color='text'
+                                startIcon='share-outline'
+                                onPress={ () => {
+                                  SheetManager.show('share', {
+                                    payload: {
+                                      format,
+                                      onClose: () => SheetManager.hide('share'), 
+                                      onInteract, 
+                                      summary,
+                                      viewshot: viewshot.current,
+                                    },
+                                  });
+                                } } />
+                              <Button
+                                h3
+                                color="text"
+                                startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                                onPress={ () => handlePlayAudio() } />
                             </View>
                           </View>
                         )}
@@ -538,7 +533,7 @@ export function Summary({
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                 numberOfLines={ 100 }
-                                searchWords={ showShareDialog ? [] : keywords }
+                                searchWords={ shareTarget?.id === summary.id ? [] : keywords }
                                 textToHighlight={ content } />
                             ) } />
                         ))}

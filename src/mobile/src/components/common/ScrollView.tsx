@@ -27,7 +27,7 @@ export function ScrollView({
   refreshControl = onRefresh && (
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
-  keyboardAware = true,
+  keyboardAware = false,
   ...props
 }: ScrollViewProps) {
   const theme = useTheme();

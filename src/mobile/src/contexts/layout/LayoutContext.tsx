@@ -5,13 +5,20 @@ import Orientation, { OrientationType } from 'react-native-orientation-locker';
 
 import { DEFAULT_LAYOUT_CONTEXT } from './types';
 
+import { SessionContext } from '~/contexts';
+
 export const LayoutContext = React.createContext(DEFAULT_LAYOUT_CONTEXT);
 
 export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
+  const {
+    rotationLock: initialRotationLock = false, 
+    setPreference,
+  } = React.useContext(SessionContext);
+  
   const [orientation, setOrientation] = React.useState<OrientationType>(Orientation.getInitialOrientation());
   const [dimensions, setDimensions] = React.useState<ScaledSize>();
-  const [rotationLock, setRotationLock] = React.useState(false);
+  const [rotationLock, setRotationLock] = React.useState(initialRotationLock);
   
   const supportsMasterDetail = React.useMemo(() => (dimensions?.width ?? Dimensions.get('window').width) > 768, [dimensions?.width]);
 
@@ -34,7 +41,8 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
         break;
       }
     }
-  }, [orientation, rotationLock]);
+    setPreference('rotationLock', rotationLock);
+  }, [orientation, rotationLock, setPreference]);
   
   React.useEffect(() => {
     const subscriber = Dimensions.addEventListener('change', ({ window }) => {

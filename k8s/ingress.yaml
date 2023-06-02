@@ -84,8 +84,21 @@ spec:
     - hosts:
         - applink.readless.ai
       secretName: tls-applink.readless.ai
+    - hosts:
+        - open.readless.ai
+      secretName: tls-open.readless.ai
   rules:
     - host: applink.readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-applink-prod
+                port:
+                  number: 80
+    - host: open.readless.ai
       http:
         paths:
           - path: /
@@ -191,8 +204,21 @@ spec:
     - hosts:
         - applink.dev.readless.ai
       secretName: tls-applink.dev.readless.ai
+    - hosts:
+        - open.dev.readless.ai
+      secretName: tls-open.dev.readless.ai
   rules:
     - host: applink.dev.readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-applink-dev
+                port:
+                  number: 80
+    - host: open.dev.readless.ai
       http:
         paths:
           - path: /

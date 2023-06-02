@@ -42,8 +42,8 @@ export function useShare({
 
   const copyToClipboard = React.useCallback(async (content: string) => {
     try {
-      Clipboard.setString(content);
-      onInteract?.(InteractionType.Copy, content);
+      await Clipboard.setString(content);
+      await onInteract?.(InteractionType.Copy, content);
     } catch (e) {
       console.error(e);
     }
@@ -61,8 +61,7 @@ export function useShare({
       if (base64ImageUrl) {
         url = base64ImageUrl;
       }
-      const message = summary.title;
-      onInteract?.(InteractionType.Share, 'standard', { message, url }, async () => {
+      await onInteract?.(InteractionType.Share, 'standard', { message: summary.title, url }, async () => {
         await Share.open({ url });
       });
     } catch (e) {
@@ -77,11 +76,9 @@ export function useShare({
     }
     try {
       const url = await viewshot?.capture?.();
-      const message = [
-        summary.title, 
-        url,
-      ].join('\n\n');
-      onInteract?.(InteractionType.Share, 'social', { message, social }, async () => {
+      await onInteract?.(InteractionType.Share, 'social', {
+        message: summary.title, social, url, 
+      }, async () => {
         if (!url) {
           return;
         }
