@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { SheetManager } from 'react-native-actions-sheet';
 import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
@@ -78,9 +77,6 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
     <Screen>
       <ScrollView>
         <View p={ 16 } gap={ 16 }>
-          {/*<Button onPress={ () => SheetManager.show('subscribe') }>
-            Subscribe
-          </Button>*/}
           <View row justifyCenter flexWrap="wrap" gap={ 16 }>
             <View alignCenter gap={ 6 }>
               <Text caption numberOfLines={ 2 }>

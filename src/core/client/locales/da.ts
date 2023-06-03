@@ -80,6 +80,7 @@ export const daStrings: typeof enStrings = {
     negative: 'Negativ',
     neutral: 'Neutral',
     positive: 'Positiv',
+    relatedNews: 'Relaterede nyheder',
     reportAtBug: 'Rapporter en fejl',
     sentimentAnalysis: 'Stemningsanalyse',
     sentimentAnalysisInfo: 'Stemningsanalyse er et værktøj, der hjælper os med at forstå, hvordan folk føler om noget ved at analysere deres sprog. Den undersøger de ord, som folk bruger, og afgør om de er positive, negative eller neutrale. Dette kan være nyttigt i mange sammenhænge, såsom at forstå kundekommentarer eller offentlig mening om et emne.',

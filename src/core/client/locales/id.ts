@@ -80,6 +80,7 @@ export const idStrings: typeof enStrings = {
     negative: 'Negatif',
     neutral: 'Netral',
     positive: 'Positif',
+    relatedNews: 'Berita Terkait',
     reportAtBug: 'Laporkan Bug',
     sentimentAnalysis: 'Analisis Sentimen',
     sentimentAnalysisInfo: 'Analisis sentimen adalah alat yang membantu kami memahami bagaimana perasaan orang tentang sesuatu dengan menganalisis bahasa yang mereka gunakan. Ini memeriksa kata-kata yang digunakan orang dan menentukan apakah mereka bersifat positif, negatif, atau netral. Hal ini dapat berguna dalam banyak hal, seperti memahami komentar pelanggan atau pendapat publik tentang suatu topik.',

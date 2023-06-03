@@ -171,7 +171,10 @@ export function SearchScreen({
         if (page === 0) {
           return (prev = data.rows);
         }
-        return (prev = [...prev, ...data.rows.filter((r) => !prev.some((p) => r.id === p.id))]);
+        const rows = data.rows.filter((n) => {
+          return prev.some((p) => n.id !== p.id || (!prefilter && p.siblings?.some((s) => n.id !== s.id)));
+        });
+        return (prev = [...prev, ...rows]);
       });
       setAverageSentiment(data.metadata?.sentiment);
       setPage((prev) => (page === 0 ? 0 : prev) + 1);

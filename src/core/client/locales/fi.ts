@@ -80,6 +80,7 @@ export const fiStrings: typeof enStrings = {
     negative: 'Negatiivinen',
     neutral: 'Neutraali',
     positive: 'Positiivinen',
+    relatedNews: 'Liittyvät uutiset',
     reportAtBug: 'Ilmoita virheestä',
     sentimentAnalysis: 'Tunnelma-analyysi',
     sentimentAnalysisInfo: 'Tunnelma-analyysi on työkalu, joka auttaa meitä ymmärtämään, miten ihmiset suhtautuvat johonkin analysoimalla heidän kieltään. Se tutkii ihmisten käyttämiä sanoja ja määrittää, ovatko ne positiivisia, negatiivisia vai neutraaleja. Tämä voi olla hyödyllistä monissa eri yhteyksissä, kuten asiakaspalautteen tai julkisen mielipiteen ymmärtämisessä tietystä aiheesta.',

@@ -28,6 +28,8 @@ spec:
           env:
             - name: CHROMIUM_EXECUTABLE_PATH
               value: '$CHROMIUM_EXECUTABLE_PATH'
+            - name: DUPLICATE_LOOKBACK_INTERVAL
+              value: '$DUPLICATE_LOOKBACK_INTERVAL'
             - name: ENABLED_FEATURES
               value: '$ENABLED_FEATURES'
             - name: OLD_NEWS_THRESHOLD
@@ -36,6 +38,8 @@ spec:
               value: '$OPENAI_API_KEY'
             - name: PG_CONNECTION_STRING
               value: '$PG_CONNECTION_STRING'
+            - name: RELATIONSHIP_THRESHOLD
+              value: '$RELATIONSHIP_THRESHOLD'
             - name: SPIDER_FETCH_INTERVAL
               value: '$SPIDER_FETCH_INTERVAL'
           # livenessProbe:

@@ -3,7 +3,11 @@ import React from 'react';
 import { useNavigation as useRNNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { PublicCategoryAttributes, PublicOutletAttributes } from '~/api';
+import { 
+  PublicCategoryAttributes, 
+  PublicOutletAttributes,
+  ReadingFormat,
+} from '~/api';
 import { SessionContext } from '~/contexts';
 import { StackableTabParams } from '~/screens';
 import { readingFormat } from '~/utils';
@@ -11,7 +15,7 @@ import { readingFormat } from '~/utils';
 export function useNavigation() {
 
   const navigation = useRNNavigation<NativeStackNavigationProp<StackableTabParams>>();
-  const { setPreference } = React.useContext(SessionContext);
+  const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
 
   const router = React.useCallback(({ url }: { url: string }) => {
     // http://localhost:6969/read/?s=158&f=casual
@@ -66,6 +70,13 @@ export function useNavigation() {
   const openSettings = React.useCallback(() => {
     (navigation?.push ?? navigation.navigate)('settings');
   }, [navigation]);
+  
+  const openSummary = React.useCallback((props: StackableTabParams['summary']) => {
+    (navigation?.push ?? navigation.navigate)('summary', {
+      ...props,
+      initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary,
+    });
+  }, [navigation, preferredReadingFormat]);
 
   return {
     openBookmarks,
@@ -73,6 +84,7 @@ export function useNavigation() {
     openCategory,
     openOutlet,
     openSettings,
+    openSummary,
     router,
     search,
   };

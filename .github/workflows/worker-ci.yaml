@@ -77,6 +77,8 @@ jobs:
       OUTLET_FETCH_LIMIT: ${{ vars.OUTLET_FETCH_LIMIT }}
       OUTLET_MAX_ATTEMPT_LIMIT: ${{ vars.OUTLET_MAX_ATTEMPT_LIMIT }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
+      PLAY_HT_SECRET_KEY: ${{ secrets.PLAY_HT_SECRET_KEY }}
+      PLAY_HT_USER_ID: ${{ secrets.PLAY_HT_USER_ID }}
       PORT: ${{ vars.PORT }}
       S3_BUCKET: ${{ vars.S3_BUCKET }}
       S3_KEY: ${{ secrets.S3_KEY }}

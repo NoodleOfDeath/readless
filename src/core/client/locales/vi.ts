@@ -80,6 +80,7 @@ export const viStrings: typeof enStrings = {
     negative: 'Tiêu cực',
     neutral: 'Trung lập',
     positive: 'Tích cực',
+    relatedNews: 'Tin liên quan',
     reportAtBug: 'Báo cáo Lỗi',
     sentimentAnalysis: 'Phân tích tình cảm',
     sentimentAnalysisInfo: 'Phân tích tình cảm là một công cụ giúp chúng ta hiểu cảm xúc của mọi người đối với một vấn đề nào đó thông qua việc phân tích ngôn ngữ của họ. Nó xem xét các từ người dùng sử dụng và quyết định xem chúng có tính tích cực, tiêu cực hay trung lập. Điều này có thể hữu ích trong nhiều lĩnh vực, như hiểu phản hồi của khách hàng hay ý kiến công chúng về một chủ đề nào đó.',

@@ -80,6 +80,7 @@ export const zhTWStrings: typeof enStrings = {
     negative: '負面',
     neutral: '中立',
     positive: '正面',
+    relatedNews: '相關新聞',
     reportAtBug: '報告錯誤',
     sentimentAnalysis: '情感分析',
     sentimentAnalysisInfo: '情感分析是一種通過分析語言來了解人們對某事的感受的工具。它查看人們使用的詞語，並判斷它們是正面的、負面的還是中立的。這在許多領域都很有用，例如理解客戶反饋或公眾對某個主題的觀點。',

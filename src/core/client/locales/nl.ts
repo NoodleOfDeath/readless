@@ -80,6 +80,7 @@ export const nlStrings: typeof enStrings = {
     negative: 'Negatief',
     neutral: 'Neutraal',
     positive: 'Positief',
+    relatedNews: 'Gerelateerd nieuws',
     reportAtBug: 'Meld een bug',
     sentimentAnalysis: 'Sentimentanalyse',
     sentimentAnalysisInfo: 'Sentimentanalyse is een tool die ons helpt te begrijpen hoe mensen zich voelen over iets door hun taal te analyseren. Het onderzoekt de woorden die mensen gebruiken en bepaalt of ze positief, negatief of neutraal zijn. Dit kan nuttig zijn in veel verschillende contexten, zoals het begrijpen van klantfeedback of de publieke opinie over een onderwerp.',

@@ -79,6 +79,7 @@ export const huStrings: typeof enStrings = {
     negative: 'Negatív',
     neutral: 'Semleges',
     positive: 'Pozitív',
+    relatedNews: 'Kapcsolódó hírek',
     reportAtBug: 'Hiba jelentése',
     sentimentAnalysis: 'Hangulat elemzés',
     sentimentAnalysisInfo: 'A hangulat elemzés egy olyan eszköz, amely segít megérteni az emberek érzéseit valamiről a nyelvük elemzésével. Megvizsgálja az emberek által használt szavakat, és eldönti, hogy azok pozitívak, negatívak vagy semlegesek-e. Ez sok területen hasznos lehet, például ügyfél visszajelzések vagy a közvélemény megértésében egy témával kapcsolatban.',

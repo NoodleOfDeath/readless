@@ -98,9 +98,24 @@ android {
         applicationId "ai.readless.ReadLess"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 36
-        versionName "1.8.2"
+        versionCode 37
+        versionName "1.9.0"
+        missingDimensionStrategy "store", "play"
     }
+
+//    flavorDimensions "appstore"
+//
+//    productFlavors {
+//        googlePlay {
+//            dimension "appstore"
+//            missingDimensionStrategy "store", "play"
+//        }
+//
+//        amazon {
+//            dimension "appstore"
+//            missingDimensionStrategy "store", "amazon"
+//        }
+//    }
 
     splits {
         abi {

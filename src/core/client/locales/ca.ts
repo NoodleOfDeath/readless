@@ -80,6 +80,7 @@ export const caStrings: typeof enStrings = {
     negative: 'Negatiu',
     neutral: 'Neutral',
     positive: 'Positiu',
+    relatedNews: 'Notícies relacionades',
     reportAtBug: 'Informa d\'un error',
     sentimentAnalysis: 'Anàlisi de sentiment',
     sentimentAnalysisInfo: 'L\'anàlisi de sentiment és una eina que ens ajuda a entendre com es sent la gent sobre alguna cosa analitzant el seu llenguatge. Examina les paraules que la gent utilitza i determina si són positives, negatives o neutrals. Això pot ser útil en molts àmbits, com comprendre els comentaris dels clients o l\'opinió pública sobre un tema.',

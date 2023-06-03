@@ -80,6 +80,7 @@ export const hrStrings: typeof enStrings = {
     negative: 'Negativno',
     neutral: 'Neutralno',
     positive: 'Pozitivno',
+    relatedNews: 'Povezane vijesti',
     reportAtBug: 'Prijavi pogrešku',
     sentimentAnalysis: 'Analiza sentimenta',
     sentimentAnalysisInfo: 'Analiza sentimenta je alat koji nam pomaže razumjeti kako se ljudi osjećaju prema nečemu analizirajući njihov jezik. Pregledava riječi koje ljudi koriste i određuje jesu li one pozitivne, negativne ili neutralne. To može biti korisno u mnogim područjima, poput razumijevanja komentara korisnika ili javnog mišljenja o određenoj temi.',

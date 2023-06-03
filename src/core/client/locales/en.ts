@@ -78,6 +78,7 @@ export const enStrings = {
     negative: 'Negative',
     neutral: 'Neutral',
     positive: 'Positive',
+    relatedNews: 'Related News',
     reportAtBug: 'Report a Bug',
     sentimentAnalysis: 'Sentiment Analysis',
     sentimentAnalysisInfo: 'Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.',

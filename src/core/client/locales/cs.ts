@@ -80,6 +80,7 @@ export const csStrings: typeof enStrings = {
     negative: 'Negativní',
     neutral: 'Neutrální',
     positive: 'Pozitivní',
+    relatedNews: 'Související zprávy',
     reportAtBug: 'Nahlásit chybu',
     sentimentAnalysis: 'Analýza nálady',
     sentimentAnalysisInfo: 'Analýza nálady je nástroj, který nám pomáhá porozumět, jak se lidé cítí k něčemu prostřednictvím analýzy jejich jazyka. Sleduje slova, která lidé používají, a rozhoduje, zda jsou pozitivní, negativní nebo neutrální. Toto může být užitečné v mnoha oblastech, například při porozumění zpětné vazbě zákazníků nebo veřejnému mínění k danému tématu.',

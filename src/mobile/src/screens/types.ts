@@ -36,7 +36,7 @@ export type StackableTabParams = TabParams & {
   },
   settings: undefined;
   summary: {
-    initialFormat: ReadingFormat;
+    initialFormat?: ReadingFormat;
     initiallyTranslated?: boolean;
     keywords?: string[];
     summary: PublicSummaryAttributes | number;
@@ -46,19 +46,16 @@ export type StackableTabParams = TabParams & {
   browse: undefined;
 };
 
-export type RootParamList = {
-  // Tabs
-  headlinesTab: StackableTabParams;
-  myNewsTab: StackableTabParams;
-  browseTab: StackableTabParams;
-};
-
-export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RootParamList> = {
+export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {
   config: {
     screens: {
-      browseTab: { path: 'browse' },
-      headlinesTab: { path: 'headlines' },
-      myNewsTab: { path: 'my-news' },
+      bookmarks: { path: 'bookmarks' },
+      browse: { path: 'browse' },
+      channel: { path: 'channel' },
+      default: { path: '' },
+      search: { path: 'search' },
+      settings: { path: 'settings' },
+      summary: { path: 'summary' },
     },
   },
   prefixes: [

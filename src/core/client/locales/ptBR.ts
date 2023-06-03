@@ -80,6 +80,7 @@ export const ptBRStrings: typeof enStrings = {
     negative: 'Negativo',
     neutral: 'Neutro',
     positive: 'Positivo',
+    relatedNews: 'Notícias relacionadas',
     reportAtBug: 'Reportar um Bug',
     sentimentAnalysis: 'Análise de Sentimento',
     sentimentAnalysisInfo: 'A análise de sentimento é uma ferramenta que nos ajuda a entender como as pessoas se sentem sobre algo, analisando sua linguagem. Ela examina as palavras que as pessoas usam e decide se são positivas, negativas ou neutras. Isso pode ser útil em muitas áreas, como entender o feedback dos clientes ou a opinião pública sobre um tópico.',

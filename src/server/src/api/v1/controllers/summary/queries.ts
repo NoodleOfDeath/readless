@@ -119,7 +119,6 @@ FROM (
           AND (summary_relations."deletedAt" IS NULL)
         LEFT OUTER JOIN outlets AS sibling_outlet
           ON (sibling_outlet.id = sibling."outletId")
-          AND (outlets."deletedAt" IS NULL)
       WHERE (summaries."deletedAt" IS NULL)
         AND (
           (summaries."originalDate" > NOW() - INTERVAL :interval)
@@ -180,6 +179,9 @@ FROM (
         "sibling.originalDate",
         "sibling.outlet.name",
         "sibling.outlet.displayName"
+      ORDER BY 
+        "originalDate" DESC,
+        "sibling.originalDate" DESC
     ) a
     GROUP BY
       id,
@@ -199,7 +201,8 @@ FROM (
       "category.name",
       "category.displayName",
       "category.icon"
-    ORDER BY "originalDate" DESC
+    ORDER BY
+      "originalDate" DESC
   ) b
   LIMIT :limit
   OFFSET :offset

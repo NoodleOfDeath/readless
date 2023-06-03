@@ -11,7 +11,7 @@
     "start": "react-native start",
     "startr": "react-native start --resetCache",
     "build:ios": "react-native bundle --entry-file='./index.js' --bundle-output='./ios/ReadLess/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
-    "build:android": "react-native bundle --entry-file='./index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --platform='android' --assets-dest='./android/app/src/main/res/'",
+    "build:android": "react-native bundle --entry-file='./index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --platform='android' --assets-dest='./android/app/src/main/res/' && rm -rf ./android/app/src/main/res/drawable-*",
     "test": "jest",
     "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen && yarn cp:core",
     "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core && cp -rf ../core/client/* ./src/core",

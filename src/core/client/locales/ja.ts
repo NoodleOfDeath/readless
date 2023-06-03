@@ -79,6 +79,7 @@ export const jaStrings: typeof enStrings = {
     negative: 'ネガティブ',
     neutral: '中立',
     positive: 'ポジティブ',
+    relatedNews: '関連ニュース',
     reportAtBug: 'バグを報告',
     sentimentAnalysis: '感情分析',
     sentimentAnalysisInfo: '感情分析は、人々の言語を分析することによって、何についての感情を人々が持っているかを理解するのに役立つツールです。人々が使用する言葉を調べ、それがポジティブ、ネガティブ、または中立かを判断します。これは、顧客のフィードバックや特定のトピックに対する一般の意見を理解するために役立ちます。',

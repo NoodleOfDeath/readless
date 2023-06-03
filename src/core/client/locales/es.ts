@@ -79,6 +79,7 @@ export const esStrings: typeof enStrings = {
     negative: 'Negativo',
     neutral: 'Neutral',
     positive: 'Positivo',
+    relatedNews: 'Noticias relacionadas',
     reportAtBug: 'Informar un error',
     sentimentAnalysis: 'Análisis de sentimientos',
     sentimentAnalysisInfo: 'El análisis de sentimientos es una herramienta que nos ayuda a entender cómo se siente la gente acerca de algo al analizar su lenguaje. Examina las palabras que las personas utilizan y determina si son positivas, negativas o neutrales. Esto puede ser útil en muchos ámbitos, como la comprensión de los comentarios de los clientes o la opinión pública sobre un tema.',

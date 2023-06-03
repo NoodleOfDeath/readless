@@ -79,6 +79,7 @@ export const koStrings: typeof enStrings = {
     negative: '부정적인',
     neutral: '중립적인',
     positive: '긍정적인',
+    relatedNews: '관련 뉴스',
     reportAtBug: '버그 신고',
     sentimentAnalysis: '감성 분석',
     sentimentAnalysisInfo: '감성 분석은 언어를 분석하여 사람들이 어떤 것에 대해 어떻게 느끼는지 이해하는 데 도움이 되는 도구입니다. 사람들이 사용하는 단어를 살펴보고 그것이 긍정적인지, 부정적인지, 중립적인지 판단합니다. 이는 고객 피드백이나 특정 주제에 대한 대중 의견을 이해하는 데 유용할 수 있습니다.',

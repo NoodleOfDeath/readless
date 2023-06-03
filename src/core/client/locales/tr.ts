@@ -80,6 +80,7 @@ export const trStrings: typeof enStrings = {
     negative: 'Negatif',
     neutral: 'Nötr',
     positive: 'Pozitif',
+    relatedNews: 'İlgili Haberler',
     reportAtBug: 'Hata Bildir',
     sentimentAnalysis: 'Duygu Analizi',
     sentimentAnalysisInfo: 'Duygu analizi, insanların bir şey hakkında nasıl hissettiklerini dil analizi yoluyla anlamamıza yardımcı olan bir araçtır. İnsanların kullandıkları kelimelere bakar ve onların olumlu, olumsuz veya tarafsız olup olmadığına karar verir. Bu, müşteri geri bildirimini veya bir konuda halkın görüşünü anlama gibi birçok alanda faydalı olabilir.',

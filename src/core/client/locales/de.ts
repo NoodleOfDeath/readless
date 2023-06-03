@@ -79,6 +79,7 @@ export const deStrings: typeof enStrings = {
     negative: 'Negativ',
     neutral: 'Neutral',
     positive: 'Positiv',
+    relatedNews: 'Verwandte Nachrichten',
     reportAtBug: 'Fehler melden',
     sentimentAnalysis: 'Sentimentanalyse',
     sentimentAnalysisInfo: 'Die Sentimentanalyse ist ein Tool, das uns hilft, herauszufinden, wie Menschen über etwas denken, indem ihre Sprache analysiert wird. Es betrachtet die verwendeten Wörter und entscheidet, ob sie positiv, negativ oder neutral sind. Dies kann in vielen Bereichen nützlich sein, wie z.B. bei der Interpretation von Kundenfeedback oder der öffentlichen Meinung zu einem Thema.',

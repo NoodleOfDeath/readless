@@ -26,7 +26,7 @@ export function SummaryScreen({
   const [loading, setLoading] = React.useState(false);
   const [summaryId, setSummaryId] = React.useState(0);
   const [summary, setSummary] = React.useState<PublicSummaryAttributes>();
-  const [format, setFormat] = React.useState(route?.params?.initialFormat);
+  const [format, setFormat] = React.useState(route?.params?.initialFormat ?? ReadingFormat.Summary);
   const keywords = React.useMemo(() => route?.params?.keywords ?? [], [route]);
 
   const handleFormatChange = React.useCallback(async (newFormat?: ReadingFormat) => {

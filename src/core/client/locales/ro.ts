@@ -80,6 +80,7 @@ export const roStrings: typeof enStrings = {
     negative: 'Negativ',
     neutral: 'Neutru',
     positive: 'Pozitiv',
+    relatedNews: 'Știri înrudite',
     reportAtBug: 'Raportează o eroare',
     sentimentAnalysis: 'Analiză de sentiment',
     sentimentAnalysisInfo: 'Analiza de sentiment este o unealtă care ne ajută să înțelegem cum se simt oamenii despre ceva prin analiza limbajului lor. Examinează cuvintele pe care oamenii le folosesc și determină dacă sunt pozitive, negative sau neutre. Aceasta poate fi utilă în multe domenii, cum ar fi înțelegerea comentariilor clienților sau a opiniilor publice despre un anumit subiect.',

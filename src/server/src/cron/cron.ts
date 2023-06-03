@@ -21,8 +21,8 @@ async function main() {
   await Queue.initQueues();
   await Outlet.initOutlets();
   bruteForceResolveDuplicates();
-  pollForNews();
-  cleanUpDeadWorkers();
+  // pollForNews();
+  // cleanUpDeadWorkers();
 }
 
 export function generateDynamicUrl(
@@ -113,7 +113,8 @@ export async function cleanUpDeadWorkers() {
   }
 }
 
-const RELATIONSHIP_THRESHOLD = 0.4; // Math.floor(7/16)
+const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.4; // Math.floor(7/16)
+const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '24h';
 
 export async function bruteForceResolveDuplicates() {
   try {
@@ -123,7 +124,7 @@ export async function bruteForceResolveDuplicates() {
       const summaries = await Summary.findAll({
         where: { 
           categoryId: category.id,
-          originalDate: { [Op.gt]: new Date(Date.now() - ms('24h')) },
+          originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) },
         },
       });
       for (const summary of summaries) {
@@ -191,6 +192,9 @@ export async function bruteForceResolveDuplicates() {
   } catch (e) {
     console.error(e);
   } finally {
+    console.log('----------');
+    console.log();
+    console.log('>>> done resolving duplicates');
     setTimeout(bruteForceResolveDuplicates, ms('5m'));
   }
 }

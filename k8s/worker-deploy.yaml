@@ -20,48 +20,52 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              memory: "$K8S_MEMORY_REQUESTS"
-              cpu: "$K8S_CPU_REQUESTS"
+              memory: '$K8S_MEMORY_REQUESTS'
+              cpu: '$K8S_CPU_REQUESTS'
             limits:
-              memory: "$K8S_MEMORY_LIMITS"
-              cpu: "$K8S_CPU_LIMITS"
+              memory: '$K8S_MEMORY_LIMITS'
+              cpu: '$K8S_CPU_LIMITS'
           env:
             - name: CHROMIUM_EXECUTABLE_PATH
-              value: "$CHROMIUM_EXECUTABLE_PATH"
+              value: '$CHROMIUM_EXECUTABLE_PATH'
             - name: DEEPAI_API_KEY
-              value: "$DEEPAI_API_KEY"
+              value: '$DEEPAI_API_KEY'
             - name: ENABLED_FEATURES
               value: '$ENABLED_FEATURES'
             - name: MAIL_HOST
-              value: "$MAIL_HOST"
+              value: '$MAIL_HOST'
             - name: MAIL_PASS
-              value: "$MAIL_PASS"
+              value: '$MAIL_PASS'
             - name: MAIL_PORT
-              value: "$MAIL_PORT"
+              value: '$MAIL_PORT'
             - name: MAIL_USER
-              value: "$MAIL_USER"
+              value: '$MAIL_USER'
             - name: MAX_OPENAI_TOKEN_COUNT
-              value: "$MAX_OPENAI_TOKEN_COUNT"
+              value: '$MAX_OPENAI_TOKEN_COUNT'
             - name: OLD_NEWS_THRESHOLD
-              value: "$OLD_NEWS_THRESHOLD"
+              value: '$OLD_NEWS_THRESHOLD'
             - name: OPENAI_API_KEY
-              value: "$OPENAI_API_KEY"
+              value: '$OPENAI_API_KEY'
             - name: OUTLET_FETCH_INTERVAL
-              value: "$OUTLET_FETCH_INTERVAL"
+              value: '$OUTLET_FETCH_INTERVAL'
             - name: OUTLET_FETCH_LIMIT
-              value: "$OUTLET_FETCH_LIMIT"
+              value: '$OUTLET_FETCH_LIMIT'
             - name: OUTLET_MAX_ATTEMPT_LIMIT
-              value: "$OUTLET_MAX_ATTEMPT_LIMIT"
+              value: '$OUTLET_MAX_ATTEMPT_LIMIT'
             - name: PG_CONNECTION_STRING
-              value: "$PG_CONNECTION_STRING"
+              value: '$PG_CONNECTION_STRING'
+            - name: PLAY_HT_SECRET_KEY
+              value: '$PLAY_HT_SECRET_KEY'
+            - name: PLAY_HT_USER_ID
+              value: '$PLAY_HT_USER_ID'
             - name: S3_BUCKET
-              value: "$S3_BUCKET"
+              value: '$S3_BUCKET'
             - name: S3_KEY
-              value: "$S3_KEY"
+              value: '$S3_KEY'
             - name: S3_SECRET
-              value: "$S3_SECRET"
+              value: '$S3_SECRET'
             - name: WORKER_RETRY_EXPRS
-              value: "$WORKER_RETRY_EXPRS"
+              value: '$WORKER_RETRY_EXPRS'
           # livenessProbe:
           #   httpGet:
           #     path: /v1/healthz

@@ -80,6 +80,7 @@ export const plStrings: typeof enStrings = {
     negative: 'Negatywny',
     neutral: 'Neutralny',
     positive: 'Pozytywny',
+    relatedNews: 'Powiązane wiadomości',
     reportAtBug: 'Zgłoś błąd',
     sentimentAnalysis: 'Analiza sentymentu',
     sentimentAnalysisInfo: 'Analiza sentymentu to narzędzie, które pomaga nam zrozumieć, jak ludzie czują się na temat czegoś, analizując ich język. Badane są słowa, których ludzie używają, i określane, czy są one pozytywne, negatywne czy neutralne. Może to być przydatne w wielu różnych kontekstach, takich jak zrozumienie opinii klientów czy opinii publicznej na temat danego tematu.',

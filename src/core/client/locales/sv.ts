@@ -80,6 +80,7 @@ export const svStrings: typeof enStrings = {
     negative: 'Negativ',
     neutral: 'Neutral',
     positive: 'Positiv',
+    relatedNews: 'Relaterade nyheter',
     reportAtBug: 'Rapportera bugg',
     sentimentAnalysis: 'Sentimentanalys',
     sentimentAnalysisInfo: 'Sentimentanalys är en metod som hjälper oss att förstå hur människor känner om något genom att analysera deras språk. Den undersöker de ord som människor använder och avgör om de är positiva, negativa eller neutrala. Detta kan vara användbart inom många områden, som att förstå kundkommentarer eller allmänhetens åsikt om ett ämne.',

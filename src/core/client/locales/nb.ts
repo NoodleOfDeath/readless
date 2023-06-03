@@ -79,6 +79,7 @@ export const nbStrings: typeof enStrings = {
     negative: 'Negativ',
     neutral: 'Nøytral',
     positive: 'Positiv',
+    relatedNews: 'Relaterte nyheter',
     reportAtBug: 'Rapporter en feil',
     sentimentAnalysis: 'Følelsesanalyse',
     sentimentAnalysisInfo: 'Følelsesanalyse er et verktøy som hjelper oss med å forstå hvordan mennesker føler om noe ved å analysere språket deres. Den ser på ordene folk bruker og avgjør om de er positive, negative eller nøytrale. Dette kan være nyttig innen mange områder, som å forstå tilbakemeldinger fra kunder eller den offentlige opinionen om et emne.',

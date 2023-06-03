@@ -30,6 +30,8 @@ spec:
               value: '$API_RATE_LIMIT'
             - name: API_RATE_LIMIT_DURATION
               value: '$API_RATE_LIMIT_DURATION'
+            - name: APPLE_SECRET_KEY
+              value: '$APPLE_SECRET_KEY'
             - name: BASE_DOMAIN
               value: '$BASE_DOMAIN'
             - name: CORS_ORIGIN
@@ -56,6 +58,10 @@ spec:
               value: '$OPENAI_API_KEY'
             - name: PG_CONNECTION_STRING
               value: '$PG_CONNECTION_STRING'
+            - name: PLAY_HT_SECRET_KEY
+              value: '$PLAY_HT_SECRET_KEY'
+            - name: PLAY_HT_USER_ID
+              value: '$PLAY_HT_USER_ID'
             - name: PORT
               value: '$PORT'
             - name: RECAPTCHA_SECRET_KEY
