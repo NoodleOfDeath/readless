@@ -147,14 +147,11 @@ export async function bruteForceResolveDuplicates() {
           }
           const siblingWords = possibleSibling.title.split(' ').map((w) => w);
           const score = words.map((a) => {
-            if (siblingWords.some((b) => a === b && /[A-Z0-9]/.test(a))) {
+            if (siblingWords.some((b) => a.toLowerCase() === b.toLowerCase())) {
               return 4;
             }
-            if (siblingWords.some((b) => a === b)) {
+            if (siblingWords.some((b) => a.replace(/\W/g, '').length > 0 && new RegExp(`${a.replace(/\W/g, '')}(?:ies|es|s|ed|ing)?`, 'i').test(b))) {
               return 2;
-            }
-            if (siblingWords.some((b) => a.toLowerCase() === b.toLowerCase())) {
-              return 1;
             }
             return 0;
           }).reduce((prev, curr) => curr + prev, 0) / (words.length * 4);
