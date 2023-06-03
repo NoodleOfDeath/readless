@@ -2,9 +2,12 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 
 import {
+  Category,
   Job,
   Outlet,
   Queue,
+  Summary,
+  SummaryRelation,
   Worker,
 } from '../api/v1/schema';
 import { DBService, PuppeteerService } from '../services';
@@ -14,10 +17,12 @@ const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
 async function main() {
   await DBService.initTables();
+  await Category.initCategories();
   await Queue.initQueues();
   await Outlet.initOutlets();
   pollForNews();
   cleanUpDeadWorkers();
+  bruteForceResolveDuplicates();
 }
 
 export function generateDynamicUrl(
@@ -51,7 +56,7 @@ export function generateDynamicUrl(
   });
 }
 
-async function pollForNews() {
+export async function pollForNews() {
   console.log('fetching news!');
   try {
     const { rows: outlets } = await Outlet.findAndCountAll();
@@ -83,7 +88,7 @@ async function pollForNews() {
 
 const RETIRE_IF_NO_RESPONSE_IN_MS = ms('10m');
 
-async function cleanUpDeadWorkers() {
+export async function cleanUpDeadWorkers() {
   try {
     // check up on dead workers
     const [_, rows] = await Worker.update({
@@ -105,6 +110,76 @@ async function cleanUpDeadWorkers() {
     console.error(e);
   } finally {
     setTimeout(cleanUpDeadWorkers, ms('2m'));
+  }
+}
+
+const RELATIONSHIP_THRESHOLD = 0.4;
+
+export async function bruteForceResolveDuplicates() {
+  try {
+    const categories = await Category.findAll();
+    for (const category of categories) {
+      const summaries = await Summary.findAll({ where: { categoryId: category.id } });
+      for (const summary of summaries) {
+        const siblings: {
+          summary: Summary;
+          score: number;
+        }[] = [];
+        const words = summary.title.split(' ').map((w) => w);
+        for (const possibleSibling of summaries) {
+          if (summary.title === possibleSibling.title) {
+            continue;
+          }
+          const siblingWords = possibleSibling.title.split(' ').map((w) => w);
+          const score = words.map((a) => {
+            if (siblingWords.some((b) => a === b && /[A-Z0-9]/.test(a))) {
+              return 4;
+            }
+            if (siblingWords.some((b) => a === b)) {
+              return 2;
+            }
+            if (siblingWords.some((b) => a.toLowerCase() === b.toLowerCase())) {
+              return 1;
+            }
+            return 0;
+          }).reduce((prev, curr) => curr + prev, 0) / (words.length * 4);
+          if (score > RELATIONSHIP_THRESHOLD) {
+            console.log('----------');
+            console.log();
+            console.log('Comparing');
+            console.log(`>>> "${summary.title}"`);
+            console.log('with');
+            console.log(`>>> "${possibleSibling.title}"`);
+            console.log('Score: ', score);
+            console.log();
+            siblings.push({
+              score,
+              summary: possibleSibling,
+            });
+          }
+        }
+        for (const sibling of siblings) {
+          const relation = await SummaryRelation.findOne({
+            where: {
+              parentId: summary.id,
+              siblingId: sibling.summary.id,
+            },
+          });
+          if (relation) {
+            continue;
+          }
+          await SummaryRelation.create({
+            confidence: sibling.score,
+            parentId: summary.id,
+            siblingId: sibling.summary.id,
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setTimeout(bruteForceResolveDuplicates, ms('5m'));
   }
 }
 
