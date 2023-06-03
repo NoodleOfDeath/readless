@@ -69,7 +69,7 @@ export class ServiceController {
     @Request() req,
     @Path() id: number
   ) {
-    if (!req.headers.Authorization) {
+    if (!req.headers.Authorization || 1 === 1) {
       req.res.status(403).json({ message: 'Unauthorized' });
       return;
     }

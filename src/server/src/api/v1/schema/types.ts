@@ -71,5 +71,6 @@ export * from './resources/summary/SummarySentiment.types';
 export * from './resources/summary/SummaryInteraction.types';
 export * from './resources/summary/SummaryTranslation.types';
 export * from './resources/summary/SummaryMedia.types';
+export * from './resources/summary/SummaryRelation.types';
 
 export * from './resources/iap/Voucher.types';

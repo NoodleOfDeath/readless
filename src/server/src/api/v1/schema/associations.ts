@@ -14,6 +14,7 @@ import {
   Summary,
   SummaryInteraction,
   SummaryMedia,
+  SummaryRelation,
   SummarySentiment,
   SummaryToken,
   SummaryTranslation,
@@ -119,6 +120,24 @@ export function makeAssociations() {
   Summary.hasMany(SummaryMedia, {
     as: 'media',
     foreignKey: 'parentId',
+  });
+  
+  SummaryRelation.belongsTo(Summary, { 
+    as: 'parent',
+    foreignKey: 'parentId',
+  });
+  Summary.hasMany(SummaryRelation, {
+    as: 'parent',
+    foreignKey: 'parentId',
+  });
+  
+  SummaryRelation.belongsTo(Summary, { 
+    as: 'sibling',
+    foreignKey: 'siblingId',
+  });
+  Summary.hasMany(SummaryRelation, {
+    as: 'sibling',
+    foreignKey: 'siblingId',
   });
   
   // queues
