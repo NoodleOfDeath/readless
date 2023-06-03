@@ -20,9 +20,9 @@ async function main() {
   await Category.initCategories();
   await Queue.initQueues();
   await Outlet.initOutlets();
+  bruteForceResolveDuplicates();
   pollForNews();
   cleanUpDeadWorkers();
-  bruteForceResolveDuplicates();
 }
 
 export function generateDynamicUrl(
@@ -117,12 +117,13 @@ const RELATIONSHIP_THRESHOLD = 0.4; // Math.floor(7/16)
 
 export async function bruteForceResolveDuplicates() {
   try {
+    console.log('Resolving duplicates...');
     const categories = await Category.findAll();
     for (const category of categories) {
       const summaries = await Summary.findAll({
         where: { 
           categoryId: category.id,
-          originalDate: { [Op.gt]: new Date(Date.now() - ms('13h')) },
+          originalDate: { [Op.gt]: new Date(Date.now() - ms('24h')) },
         },
       });
       for (const summary of summaries) {
