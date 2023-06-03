@@ -21,8 +21,8 @@ async function main() {
   await Queue.initQueues();
   await Outlet.initOutlets();
   bruteForceResolveDuplicates();
-  // pollForNews();
-  // cleanUpDeadWorkers();
+  pollForNews();
+  cleanUpDeadWorkers();
 }
 
 export function generateDynamicUrl(
@@ -132,7 +132,7 @@ export async function bruteForceResolveDuplicates() {
           summary: Summary;
           score: number;
         }[] = [];
-        const words = summary.title.split(' ').map((w) => w);
+        const words = summary.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
         for (const possibleSibling of summaries) {
           if (summary.title === possibleSibling.title) {
             continue;
@@ -146,7 +146,7 @@ export async function bruteForceResolveDuplicates() {
           if (relation) {
             continue;
           }
-          const siblingWords = possibleSibling.title.split(' ').map((w) => w);
+          const siblingWords = possibleSibling.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
           const score = words.map((a) => {
             if (siblingWords.some((b) => a.toLowerCase() === b.toLowerCase())) {
               return 4;
