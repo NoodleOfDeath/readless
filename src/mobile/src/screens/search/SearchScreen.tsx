@@ -172,12 +172,12 @@ export function SearchScreen({
           return (prev = data.rows);
         }
         const rows = data.rows.filter((n) => {
-          return prev.some((p) => n.id !== p.id || (!prefilter && p.siblings?.some((s) => n.id !== s.id)));
+          return !prev.some((p) => p.id === n.id || (!prefilter && p.siblings?.some((s) => n.id === s.id)));
         });
         return (prev = [...prev, ...rows]);
       });
+      setPage(page);
       setAverageSentiment(data.metadata?.sentiment);
-      setPage((prev) => (page === 0 ? 0 : prev) + 1);
       setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
