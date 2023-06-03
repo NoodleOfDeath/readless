@@ -16,7 +16,7 @@
 # misc
 .DS_Store
 swagger.json
-gc.json
+gc.*
 .env
 .env.local
 .env.development.local
