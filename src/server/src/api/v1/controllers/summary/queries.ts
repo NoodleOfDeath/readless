@@ -58,6 +58,7 @@ FROM (
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
          'id', "sibling.id",
          'title', "sibling.title",
+         'originalDate', "sibling.originalDate",
          'outlet', JSONB_BUILD_OBJECT( 
            'name', "sibling.outlet.name",
            'displayName', "sibling.outlet.displayName"
@@ -89,6 +90,7 @@ FROM (
         summary_sentiments.score AS "sentiment.score",
         summary_relations."siblingId" AS "sibling.id",
         sibling.title AS "sibling.title",
+        sibling."originalDate" AS "sibling.originalDate",
         sibling_outlet.name AS "sibling.outlet.name",
         sibling_outlet."displayName" AS "sibling.outlet.displayName"
       FROM
@@ -175,6 +177,7 @@ FROM (
         "sentiment.score",
         "sibling.id",
         "sibling.title",
+        "sibling.originalDate",
         "sibling.outlet.name",
         "sibling.outlet.displayName"
     ) a
