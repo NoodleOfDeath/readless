@@ -145,9 +145,9 @@ FROM (
         )
         AND (
           :noFilter
-          OR summaries.title ~* :filter
+          OR (summaries.title ~* :filter)
           OR (summaries."shortSummary" ~* :filter)
-          OR (summaries.summary ~* '.')
+          OR (summaries.summary ~* :filter)
           OR (summaries.bullets::text ~* :filter)
           OR (summary_tokens.text ~* :filter)
           OR (summary_translations.value ~* :filter)
