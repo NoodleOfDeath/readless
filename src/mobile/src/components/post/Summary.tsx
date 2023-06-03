@@ -158,8 +158,10 @@ export function Summary({
   const viewshot = React.useRef<ViewShot | null>(null);
 
   const [lastTick, setLastTick] = React.useState(new Date());
-  const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
-  const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
+  const [isShareTarget, setIsShareTarget] = React.useState(summary.id === shareTarget?.id);
+  const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+  const [isSiblingRead, setIsSiblingRead] = React.useState(Object.fromEntries(summary.siblings.map((s) => [s.id, Boolean(readSummaries?.[s.id])])));
+  const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -202,12 +204,15 @@ export function Summary({
     const interval = setInterval(() => {
       setLastTick(new Date());
     }, ms(tickInterval));
+    const isShareTarget = summary.id === shareTarget?.id;
+    setIsShareTarget(isShareTarget);
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
-    setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
-    setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && shareTarget?.id !== summary.id);
+    setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+    setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+    setIsSiblingRead(Object.fromEntries(summary.siblings.map((s) => [s.id, Boolean(readSummaries?.[s.id])])));
     return () => clearInterval(interval);
-  }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget, summary.id, summary.translations, tickInterval]));
+  }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget, summary.id, summary.siblings, summary.translations, tickInterval]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat) {
@@ -346,7 +351,7 @@ export function Summary({
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
             <View col>
               <View row>
-                {!initialFormat && shareTarget?.id !== summary.id && selected && (
+                {!initialFormat && !isShareTarget && selected && (
                   <View
                     left={ 0 }
                     top={ 0 }
@@ -378,9 +383,11 @@ export function Summary({
                             h5
                             color='text'
                             startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                            touchable
                             onPress={ () => openCategory(summary.category) } />
                           <Text
                             italic
+                            touchable
                             onPress={ () => openOutlet(summary.outlet) }>
                             {summary.outlet.displayName}
                           </Text>
@@ -398,6 +405,7 @@ export function Summary({
                               p={ 3 }
                               color='text'
                               startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                              touchable
                               onPress={ () => openCategory(summary.category) }>
                               {summary.category.displayName}
                             </Button>
@@ -410,6 +418,7 @@ export function Summary({
                             p={ 3 }
                             borderColor="black"
                             borderRadius={ 4 }
+                            touchable
                             onPress={ () => openOutlet(summary.outlet) }>
                             {summary.outlet.displayName}
                           </Button>
@@ -479,9 +488,9 @@ export function Summary({
                               bold
                               subtitle1
                               justifyCenter
-                              color={ !initialFormat && shareTarget?.id !== summary.id && isRead ? theme.colors.textDisabled : theme.colors.text }
+                              color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
                               highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                              searchWords={ shareTarget?.id === summary.id ? [] : keywords }
+                              searchWords={ isShareTarget ? [] : keywords }
                               textToHighlight={ ((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title } />
                           </View>
                           {translateToggle}
@@ -490,38 +499,54 @@ export function Summary({
                               <Divider />
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                searchWords={ shareTarget?.id === summary.id ? [] : keywords }
+                                searchWords={ isShareTarget ? [] : keywords }
                                 textToHighlight={ localizedStrings.shortSummary ?? '' } />
                             </View>
                           )}
                         </View>
                         {summary?.siblings && summary.siblings.length > 0 && (
                           <View mh={ 12 } gap={ 6 }>
-                            <Text>{strings.summary.relatedNews ?? 'Related News'}</Text>
-                            <ScrollView
-                              height={ 70 }
-                              pagingEnabled>
-                              <View gap={ 6 }>
+                            <Text>
+                              {`${strings.summary.relatedNews} (${summary.siblings.length})`}
+                            </Text>
+                            <ScrollView height={ summary.siblings.length === 1 ? 50 : 70 }>
+                              <View gap={ 5 }>
                                 {summary.siblings.sort((a, b) => new Date(b.originalDate).valueOf() - new Date(a.originalDate).valueOf()).map((sibling) => (
                                   <View 
                                     key={ sibling.id } 
-                                    gap={ 1 }
-                                    height={ 54 }
-                                    outlined
-                                    p={ 3 }
-                                    onPress={ () => openSummary({ summary: sibling.id }) }>
-                                    <View 
-                                      row 
-                                      gap={ 6 }
-                                      alignCenter>
-                                      <Text italic>
-                                        {sibling.outlet.displayName}
-                                      </Text>
-                                      <Text bold caption>
-                                        {formatTime(sibling.originalDate)}
-                                      </Text>
+                                    height={ 50 }>
+                                    <View
+                                      gap={ 1 }
+                                      p={ 3 }
+                                      outlined
+                                      borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
+                                      height={ 50 }
+                                      touchable
+                                      onPress={ () => openSummary({ summary: sibling.id }) }>
+                                      <View 
+                                        row 
+                                        gap={ 2 }
+                                        alignCenter>
+                                        <Text 
+                                          italic
+                                          color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
+                                          {sibling.outlet.displayName}
+                                        </Text>
+                                        <Text 
+                                          bold 
+                                          caption 
+                                          color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
+                                          {formatTime(sibling.originalDate)}
+                                        </Text>
+                                      </View>
+                                      <Highlighter 
+                                        bold 
+                                        numberOfLines={ 1 }
+                                        color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
+                                        highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                                        searchWords={ isShareTarget ? [] : keywords }
+                                        textToHighlight={ sibling.title } />
                                     </View>
-                                    <Text bold numberOfLines={ 1 }>{sibling.title}</Text>
                                   </View>
                                 ))}
                               </View>
@@ -541,7 +566,7 @@ export function Summary({
                                   numberOfLines={ 1 }
                                   underline
                                   caption
-                                  color={ !initialFormat && shareTarget?.id !== summary.id && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+                                  color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
                                   onPress={ () => {
                                     onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
                                     setSourceIsRead(true);
@@ -551,12 +576,14 @@ export function Summary({
                                 </Text>
                               </View>
                               <Button
-                                h3
+                                h4
+                                haptic
                                 color='text'
                                 startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
                                 onPress={ () => onInteract?.(InteractionType.Bookmark) } />
                               <Button
-                                h3
+                                h4
+                                touchable
                                 color='text'
                                 startIcon='share-outline'
                                 onPress={ () => {
@@ -570,7 +597,9 @@ export function Summary({
                                   });
                                 } } />
                               <Button
-                                h3
+                                h4
+                                haptic
+                                touchable
                                 color="text"
                                 startIcon={ playingAudio ? 'stop' : 'volume-source' }
                                 onPress={ () => handlePlayAudio() } />
@@ -608,7 +637,7 @@ export function Summary({
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                 numberOfLines={ 100 }
-                                searchWords={ shareTarget?.id === summary.id ? [] : keywords }
+                                searchWords={ isShareTarget ? [] : keywords }
                                 textToHighlight={ content } />
                             ) } />
                         ))}

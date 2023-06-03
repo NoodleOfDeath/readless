@@ -13,7 +13,6 @@ export function Highlighter(props: HighlighterProps) {
   return (
     <RNHighlighter
       { ...props } 
-      numberOfLines={ 100 }
       style={ style } />
   );
 }

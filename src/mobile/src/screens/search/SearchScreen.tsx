@@ -168,12 +168,13 @@ export function SearchScreen({
         return prev;
       });
       setSummaries((prev) => {
+        const rows = data.rows.reverse().filter((n, i) => {
+          const children = [...data.rows].slice(i).map((r) => r.siblings ?? []).flat();
+          return !(prev.some((p) => p.id === n.id || (!prefilter && p.siblings?.some((s) => n.id === s.id))) || (!prefilter && children.some((c) => n.id === c.id)));
+        }).reverse();
         if (page === 0) {
-          return (prev = data.rows);
+          return (prev = rows);
         }
-        const rows = data.rows.filter((n) => {
-          return !prev.some((p) => p.id === n.id || (!prefilter && p.siblings?.some((s) => n.id === s.id)));
-        });
         return (prev = [...prev, ...rows]);
       });
       setPage(page);
@@ -509,11 +510,13 @@ export function SearchScreen({
           <Button
             absolute
             right={ 12 }
-            bottom={ 48 }
+            bottom={ 84 }
             elevated
             rounded
             opacity={ 0.95 }
             p={ 12 }
+            haptic
+            touchable
             startIcon="volume-high"
             iconSize={ 32 }
             onPress={ handlePlayAll } />

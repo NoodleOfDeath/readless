@@ -142,6 +142,8 @@ function Stack() {
             </View>
           ) }
           iconSize={ 24 }
+          haptic
+          touchable
           onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
         <View onPress={ openBookmarks }>
           {bookmarkCount > 0 && (

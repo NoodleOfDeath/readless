@@ -62,7 +62,7 @@ export function Banner({
             </View>
           </View>
           {minimized === false && (
-            <View height={ 200 }>
+            <View flexGrow={ 1 }>
               {children}
             </View>
           )}
@@ -73,6 +73,7 @@ export function Banner({
                   <View key={ index }>
                     <Button
                       elevated
+                      haptic
                       rounded
                       p={ 16 }
                       iconSize={ 24 }

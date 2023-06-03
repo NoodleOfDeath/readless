@@ -75,7 +75,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
           onPress: handleSkipToNext,
         },
       ] }>
-      <ScrollView>
+      <ScrollView flexGrow={ 1 }>
         {currentTrack && (
           <Summary 
             disableInteractions

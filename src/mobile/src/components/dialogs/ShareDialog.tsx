@@ -131,6 +131,8 @@ export function ShareDialog({
               }, index) => (
                 <View 
                   key={ index }
+                  touchable
+                  haptic
                   onPress={ onPress }>
                   <View
                     gap={ 6 }

@@ -13,6 +13,7 @@ import {
   Summary,
   View,
 } from '~/components';
+import { Bookmark, SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { getLocale } from '~/locales';
 import { ScreenProps } from '~/screens';
@@ -22,6 +23,7 @@ export function SummaryScreen({
   navigation,
 }: ScreenProps<'summary'>) {
   const { getSummary, handleInteraction } = useSummaryClient();
+  const { setPreference } = React.useContext(SessionContext);
 
   const [loading, setLoading] = React.useState(false);
   const [summaryId, setSummaryId] = React.useState(0);
@@ -48,9 +50,14 @@ export function SummaryScreen({
     }
     if (summary) {
       setSummary(summary);
+      setPreference('readSummaries', (prev) => {
+        const state = { ...prev };
+        state[summary?.id] = new Bookmark(true);
+        return (prev = state);
+      });
     }
     setLoading(false);
-  }, [getSummary]);
+  }, [getSummary, setPreference]);
 
   React.useEffect(() => {
     navigation?.setOptions({ headerShown: true, headerTitle: summary?.title });

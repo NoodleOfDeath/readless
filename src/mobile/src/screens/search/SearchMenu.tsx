@@ -166,6 +166,7 @@ export function SearchMenu({
             absolute
             elevated
             rounded
+            touchable
             opacity={ 0.95 }
             p={ 12 }
             bottom={ 12 }

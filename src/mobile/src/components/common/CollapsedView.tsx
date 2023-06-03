@@ -75,6 +75,7 @@ export function CollapsedView({
             row
             alignCenter
             justifyCenter={ !title }
+            touchable
             onPress={ () => setCollapsed((prev) => !prev) }>
             <Animated.View style={ { 
               alignItems: 'center',

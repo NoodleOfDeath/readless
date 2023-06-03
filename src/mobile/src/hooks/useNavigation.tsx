@@ -16,6 +16,13 @@ export function useNavigation() {
 
   const navigation = useRNNavigation<NativeStackNavigationProp<StackableTabParams>>();
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
+  
+  const openSummary = React.useCallback((props: StackableTabParams['summary']) => {
+    (navigation?.push ?? navigation.navigate)('summary', {
+      ...props,
+      initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary,
+    });
+  }, [navigation, preferredReadingFormat]);
 
   const router = React.useCallback(({ url }: { url: string }) => {
     // http://localhost:6969/read/?s=158&f=casual
@@ -38,9 +45,9 @@ export function useNavigation() {
     }
     const initialFormat = readingFormat(params['f']);
     if (route === 'read' && summary) {
-      (navigation?.push ?? navigation.navigate)('summary', { initialFormat, summary });
+      openSummary({ initialFormat, summary });
     }
-  }, [navigation]);
+  }, [openSummary]);
 
   const search = React.useCallback((params: StackableTabParams['search']) => {
     navigation?.push('search', params);
@@ -71,13 +78,6 @@ export function useNavigation() {
     (navigation?.push ?? navigation.navigate)('settings');
   }, [navigation]);
   
-  const openSummary = React.useCallback((props: StackableTabParams['summary']) => {
-    (navigation?.push ?? navigation.navigate)('summary', {
-      ...props,
-      initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary,
-    });
-  }, [navigation, preferredReadingFormat]);
-
   return {
     openBookmarks,
     openBrowse,

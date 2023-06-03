@@ -9,6 +9,8 @@ import {
   TouchableOpacityProps,
 } from 'react-native';
 
+import { trigger } from 'react-native-haptic-feedback';
+
 import { Stylable, Surface } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
@@ -16,6 +18,7 @@ export type ViewProps = React.PropsWithChildren<PressableProps & TouchableOpacit
   pressable?: boolean;
   touchable?: boolean;
   elevated?: boolean;
+  haptic?: boolean;
 };
 
 export function View({ 
@@ -23,11 +26,14 @@ export function View({
   pressable,
   touchable,
   elevated,
+  haptic,
   inactive,
   ...props
 }: ViewProps) {
+  
   const style = useStyles(props);
   const theme = useTheme();
+  
   const overlay = React.useMemo(() => {
     if (inactive) {
       return (
@@ -45,6 +51,7 @@ export function View({
       );
     }
   }, [inactive, style, theme.colors.inactive]);
+  
   const contents = React.useMemo(() => {
     if (elevated) {
       return (
@@ -62,14 +69,34 @@ export function View({
       );
     }
   }, [children, elevated, inactive, overlay, style]);
-  return (pressable || props.onPress) ? (
-    <Pressable { ...props } style={ elevated ? undefined : style }>
-      {contents}
-    </Pressable>
-  ) : touchable ? (
-    <TouchableOpacity { ...props } style={ elevated ? undefined : style }>
+  
+  const onPress = React.useCallback(() => {
+    if (!props.onPress) {
+      return;
+    }
+    if (haptic) {
+      trigger('rigid', {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+    }
+    props.onPress();
+  }, [haptic, props]);
+  
+  return (touchable) ? (
+    <TouchableOpacity
+      { ...props } 
+      style={ elevated ? undefined : style }
+      onPress={ onPress }>
       {contents}
     </TouchableOpacity>
+  ) : pressable || props.onPress ? (
+    <Pressable
+      { ...props } 
+      style={ elevated ? undefined : style }
+      onPress={ onPress }>
+      {contents}
+    </Pressable>
   ) : (
     <RNView { ...props } style={ elevated ? undefined : style }>
       {contents}
