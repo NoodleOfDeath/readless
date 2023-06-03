@@ -20,6 +20,7 @@ FROM (
     translations,
     COALESCE(sentiment, 0) AS sentiment,
     sentiments,
+    siblings,
     AVG(sentiment) OVER() AS "averageSentiment",
     "totalCount"
   FROM (
@@ -54,6 +55,14 @@ FROM (
         'method', "sentiment.method",
         'score', "sentiment.score"
       )) FILTER (WHERE "sentiment.score" IS NOT NULL), '[]'::JSON) AS sentiments,
+      COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
+         'id', "sibling.id",
+         'title', "sibling.title",
+         'outlet', JSONB_BUILD_OBJECT( 
+           'name', "sibling.outlet.name",
+           'displayName', "sibling.outlet.displayName"
+         )
+      )) FILTER (WHERE "sibling.id" IS NOT NULL), '[]'::JSON) AS siblings,
       COUNT(id) OVER() AS "totalCount"
     FROM (
       SELECT
@@ -77,7 +86,11 @@ FROM (
         summary_translations.attribute AS "translation.attribute",
         summary_translations.value AS "translation.value",
         summary_sentiments.method AS "sentiment.method",
-        summary_sentiments.score AS "sentiment.score"
+        summary_sentiments.score AS "sentiment.score",
+        summary_relations."siblingId" AS "sibling.id",
+        sibling.title AS "sibling.title",
+        sibling_outlet.name AS "sibling.outlet.name",
+        sibling_outlet."displayName" AS "sibling.outlet.displayName"
       FROM
         summaries
         LEFT OUTER JOIN outlets
@@ -96,6 +109,15 @@ FROM (
         LEFT OUTER JOIN summary_sentiments
           ON summaries.id = summary_sentiments."parentId"
           AND (summary_sentiments."deletedAt" IS NULL)
+        LEFT OUTER JOIN summary_relations
+          ON summary_relations."parentId" = summaries.id
+          AND (summary_relations."deletedAt" IS NULL)
+        LEFT OUTER JOIN summaries AS sibling
+          ON summary_relations."siblingId" = sibling.id
+          AND (summary_relations."deletedAt" IS NULL)
+        LEFT OUTER JOIN outlets AS sibling_outlet
+          ON (sibling_outlet.id = sibling."outletId")
+          AND (outlets."deletedAt" IS NULL)
       WHERE (summaries."deletedAt" IS NULL)
         AND (
           (summaries."originalDate" > NOW() - INTERVAL :interval)
@@ -109,7 +131,7 @@ FROM (
           OR :noIds
         )
         AND (
-          (:excludeIds AND summaries.id NOT IN (:ids))
+          (false AND summaries.id NOT IN (:ids))
           OR NOT :excludeIds
         )
         AND (
@@ -121,9 +143,10 @@ FROM (
           OR :noCategories
         )
         AND (
-          summaries.title ~* :filter
+          :noFilter
+          OR summaries.title ~* :filter
           OR (summaries."shortSummary" ~* :filter)
-          OR (summaries.summary ~* :filter)
+          OR (summaries.summary ~* '.')
           OR (summaries.bullets::text ~* :filter)
           OR (summary_tokens.text ~* :filter)
           OR (summary_translations.value ~* :filter)
@@ -149,7 +172,11 @@ FROM (
         "translation.attribute",
         "translation.value",
         "sentiment.method",
-        "sentiment.score"
+        "sentiment.score",
+        "sibling.id",
+        "sibling.title",
+        "sibling.outlet.name",
+        "sibling.outlet.displayName"
     ) a
     GROUP BY
       id,

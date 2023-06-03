@@ -152,7 +152,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() offset = pageSize * page
   ): Promise<BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>> {
     const version = req.headers['x-app-version'];
-    if (/^1\.9\.3$/.test(version)) {
+    if (/^2\.\d\.\d$/.test(version)) {
       return {
         count: 0,
         rows: [],
@@ -181,6 +181,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         limit: Number(pageSize),
         locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
         noCategories,
+        noFilter: !query,
         noIds,
         noOutlets,
         offset: Number(offset),
