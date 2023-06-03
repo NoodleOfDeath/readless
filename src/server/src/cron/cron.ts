@@ -113,13 +113,18 @@ export async function cleanUpDeadWorkers() {
   }
 }
 
-const RELATIONSHIP_THRESHOLD = 0.4;
+const RELATIONSHIP_THRESHOLD = 0.4; // Math.floor(7/16)
 
 export async function bruteForceResolveDuplicates() {
   try {
     const categories = await Category.findAll();
     for (const category of categories) {
-      const summaries = await Summary.findAll({ where: { categoryId: category.id } });
+      const summaries = await Summary.findAll({
+        where: { 
+          categoryId: category.id,
+          originalDate: { [Op.gt]: new Date(Date.now() - ms('13h')) },
+        },
+      });
       for (const summary of summaries) {
         const siblings: {
           summary: Summary;
@@ -128,6 +133,15 @@ export async function bruteForceResolveDuplicates() {
         const words = summary.title.split(' ').map((w) => w);
         for (const possibleSibling of summaries) {
           if (summary.title === possibleSibling.title) {
+            continue;
+          }
+          const relation = await SummaryRelation.findOne({
+            where: {
+              parentId: summary.id,
+              siblingId: possibleSibling.id,
+            },
+          });
+          if (relation) {
             continue;
           }
           const siblingWords = possibleSibling.title.split(' ').map((w) => w);

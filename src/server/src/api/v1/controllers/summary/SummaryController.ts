@@ -9,6 +9,7 @@ import {
   Path,
   Post,
   Query,
+  Request,
   Response,
   Route,
   Security,
@@ -135,6 +136,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
 
   @Get('/')
   public static async getSummaries(
+    @Request() req,
     @Query() userId?: number,
     @Query() _scope = 'public',
     @Query() filter = '.',
@@ -149,6 +151,13 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() page = 0,
     @Query() offset = pageSize * page
   ): Promise<BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>> {
+    const version = req.headers['x-app-version'];
+    if (/^1\.9\.3$/.test(version)) {
+      return {
+        count: 0,
+        rows: [],
+      };
+    }
     const { 
       categories, 
       outlets,

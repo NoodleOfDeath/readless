@@ -37,7 +37,7 @@ router.get(
       } = req.query;
       const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
       const excludeIds = exclude === 'false' || exclude === 0 || exclude === 'undefined' ? false : exclude;
-      const response = await SummaryController.getSummaries(userId, scope, filter, ids, excludeIds, matchType, interval, locale, start, end, pageSize, page, offset);
+      const response = await SummaryController.getSummaries(req, userId, scope, filter, ids, excludeIds, matchType, interval, locale, start, end, pageSize, page, offset);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);
