@@ -1,5 +1,6 @@
 import ms from 'ms';
 import { Op } from 'sequelize';
+import similarity from 'similarity';
 
 import {
   Job,
@@ -111,23 +112,18 @@ export async function cleanUpDeadWorkers() {
   }
 }
 
-const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.45; // Math.floor(8/16)
-const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '24h';
+const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.5;
+const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '3d';
 
 export async function bruteForceResolveDuplicates() {
   try {
     console.log('Resolving duplicates...');
-    const summaries = await Summary.findAll({
-      where: { 
-        originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) },
-      },
-    });
+    const summaries = await Summary.findAll({ where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } } });
     for (const summary of summaries) {
       const siblings: {
         summary: Summary;
         score: number;
       }[] = [];
-      const words = summary.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
       for (const possibleSibling of summaries) {
         if (summary.title === possibleSibling.title) {
           continue;
@@ -141,16 +137,9 @@ export async function bruteForceResolveDuplicates() {
         if (relation) {
           continue;
         }
-        const siblingWords = possibleSibling.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
-        const score = words.map((a) => {
-          if (siblingWords.some((b) => a.toLowerCase() === b.toLowerCase())) {
-            return 4;
-          }
-          if (siblingWords.some((b) => a.replace(/\W/g, '').length > 0 && new RegExp(`${a.replace(/\W/g, '')}(?:ies|es|s|ed|ing)?`, 'i').test(b))) {
-            return 2;
-          }
-          return 0;
-        }).reduce((prev, curr) => curr + prev, 0) / (words.length * 4) + (summary.categoryId === possibleSibling.categoryId ? 0.05 : 0.0)
+        const score = 
+          similarity(summary.title, possibleSibling.title)
+          + (summary.categoryId === possibleSibling.categoryId ? 0.05 : 0.0);
         if (score > RELATIONSHIP_THRESHOLD) {
           console.log('----------');
           console.log();
