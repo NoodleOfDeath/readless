@@ -20,8 +20,8 @@ async function main() {
   await Queue.initQueues();
   await Outlet.initOutlets();
   bruteForceResolveDuplicates();
-  pollForNews();
-  cleanUpDeadWorkers();
+  //pollForNews();
+  //cleanUpDeadWorkers();
 }
 
 export function generateDynamicUrl(
@@ -115,9 +115,38 @@ export async function cleanUpDeadWorkers() {
 const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.5;
 const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '3d';
 
+async function associateSiblings(a: number, b: number, score: number) {
+  const relation = await SummaryRelation.findOne({
+    where: {
+      parentId: a,
+      siblingId: b,
+    },
+  });
+  if (!relation) {
+    await SummaryRelation.create({
+      confidence: score,
+      parentId: a,
+      siblingId: b,
+    });
+  }
+  const inverseRelation = await SummaryRelation.findOne({
+    where: {
+      parentId: b,
+      siblingId: a,
+    },
+  });
+  if (!inverseRelation) {
+    await SummaryRelation.create({
+      confidence: score,
+      parentId: b,
+      siblingId: a,
+    });
+  }
+}
+
 export async function bruteForceResolveDuplicates() {
   try {
-    console.log('Resolving duplicates...');
+    console.log('>>> Resolving duplicates...');
     const summaries = await Summary.findAll({ where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } } });
     for (const summary of summaries) {
       const siblings: {
@@ -125,7 +154,7 @@ export async function bruteForceResolveDuplicates() {
         score: number;
       }[] = [];
       for (const possibleSibling of summaries) {
-        if (summary.title === possibleSibling.title) {
+        if (summary.id === possibleSibling.id) {
           continue;
         }
         const relation = await SummaryRelation.findOne({
@@ -138,8 +167,8 @@ export async function bruteForceResolveDuplicates() {
           continue;
         }
         const score = 
-          similarity(summary.title, possibleSibling.title)
-          + (summary.categoryId === possibleSibling.categoryId ? 0.05 : 0.0);
+          similarity(summary.title, possibleSibling.title) +
+          (summary.categoryId === possibleSibling.categoryId ? 0.05 : 0.0);
         if (score > RELATIONSHIP_THRESHOLD) {
           console.log('----------');
           console.log();
@@ -156,20 +185,22 @@ export async function bruteForceResolveDuplicates() {
         }
       }
       for (const sibling of siblings) {
-        const relation = await SummaryRelation.findOne({
-          where: {
-            parentId: summary.id,
-            siblingId: sibling.summary.id,
-          },
-        });
-        if (relation) {
-          continue;
+        associateSiblings(summary.id, sibling.summary.id, sibling.score);
+      }
+    }
+    console.log('----------');
+    console.log();
+    console.log('>>> first pass completed');
+    // brute force associate extended relationships
+    for (const summary of summaries) {
+      const relations = await SummaryRelation.findAll({ where: { parentId: summary.id } });
+      for (const relation of relations) {
+        for (const r of relations) {
+          if (relation.id === r.id) {
+            continue;
+          }
+          associateSiblings(relation.id, r.id, (relation.confidence + r.confidence) / 2);
         }
-        await SummaryRelation.create({
-          confidence: sibling.score,
-          parentId: summary.id,
-          siblingId: sibling.summary.id,
-        });
       }
     }
   } catch (e) {
@@ -178,6 +209,8 @@ export async function bruteForceResolveDuplicates() {
     console.log('----------');
     console.log();
     console.log('>>> done resolving duplicates');
+    console.log('----------');
+    console.log();
     setTimeout(bruteForceResolveDuplicates, ms('5m'));
   }
 }
