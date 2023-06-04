@@ -1,9 +1,10 @@
 import React from 'react';
 
-import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
+import { SheetProps } from 'react-native-actions-sheet';
 
 import { InteractionType, PublicSummaryAttributes } from '~/api';
 import {
+  ActionSheet,
   Button,
   Checkbox,
   Text,

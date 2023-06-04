@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BASE_DOMAIN } from '@env';
-import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
+import { SheetProps } from 'react-native-actions-sheet';
 import { Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
@@ -11,6 +11,7 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
+  ActionSheet,
   Divider,
   Icon,
   ScrollView,

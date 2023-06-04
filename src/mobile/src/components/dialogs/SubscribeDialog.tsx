@@ -1,8 +1,9 @@
 import React from 'react';
 
-import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
+import { SheetProps } from 'react-native-actions-sheet';
 
 import {
+  ActionSheet,
   Button,
   Text,
   View,

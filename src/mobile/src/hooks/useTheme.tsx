@@ -70,7 +70,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           padding: 12,
         },
         outlined: {
-          borderColor: '#8b0000',
+          borderColor: lightMode ? '#8b0000' : '#fff',
           borderWidth: 1,
         },
         rounded: { borderRadius: 12 },

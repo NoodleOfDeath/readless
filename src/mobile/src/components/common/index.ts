@@ -1,4 +1,5 @@
 export * from './types';
+export * from './ActionSheet';
 export * from './ActivityIndicator';
 export * from './Banner';
 export * from './Button';
