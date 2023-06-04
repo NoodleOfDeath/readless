@@ -26,14 +26,17 @@ export abstract class Media<
   
   @Column({
     allowNull: false,
+    type: DataType.STRING(2083),
+  })
+  declare path: string;
+  
+  @Column({
+    allowNull: false,
     type: DataType.STRING,
   })
   declare type: MediaType;
   
   @Column({ type: DataType.STRING(2083) })
   declare url?: string;
-  
-  @Column({ type: DataType.TEXT })
-  declare content?: string;
   
 }

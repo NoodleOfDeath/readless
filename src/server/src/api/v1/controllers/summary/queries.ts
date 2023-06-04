@@ -20,6 +20,7 @@ FROM (
     translations,
     COALESCE(sentiment, 0) AS sentiment,
     sentiments,
+    media,
     siblings,
     AVG(sentiment) OVER() AS "averageSentiment",
     "totalCount"
@@ -56,6 +57,12 @@ FROM (
         'score', "sentiment.score"
       )) FILTER (WHERE "sentiment.score" IS NOT NULL), '[]'::JSON) AS sentiments,
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
+        'key', "media.key", 
+        'url', "media.url",
+        'path', "media.path"
+      ))
+      FILTER (WHERE "media.key" IS NOT NULL), '[]'::JSON) AS media,
+      COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
          'id', "sibling.id",
          'title', "sibling.title",
          'originalDate', "sibling.originalDate",
@@ -88,6 +95,9 @@ FROM (
         summary_translations.value AS "translation.value",
         summary_sentiments.method AS "sentiment.method",
         summary_sentiments.score AS "sentiment.score",
+        summary_media.key AS "media.key",
+        summary_media.url AS "media.url",
+        summary_media.path AS "media.path",
         summary_relations."siblingId" AS "sibling.id",
         sibling.title AS "sibling.title",
         sibling."originalDate" AS "sibling.originalDate",
@@ -111,6 +121,9 @@ FROM (
         LEFT OUTER JOIN summary_sentiments
           ON summaries.id = summary_sentiments."parentId"
           AND (summary_sentiments."deletedAt" IS NULL)
+        LEFT OUTER JOIN summary_media
+          ON summary_media."parentId" = summaries.id
+          AND (summary_media."deletedAt" IS NULL)
         LEFT OUTER JOIN summary_relations
           ON summary_relations."parentId" = summaries.id
           AND (summary_relations."deletedAt" IS NULL)
@@ -145,9 +158,9 @@ FROM (
         )
         AND (
           :noFilter
-          OR (summaries.title ~* :filter)
+          OR summaries.title ~* :filter
           OR (summaries."shortSummary" ~* :filter)
-          OR (summaries.summary ~* :filter)
+          OR (summaries.summary ~* '.')
           OR (summaries.bullets::text ~* :filter)
           OR (summary_tokens.text ~* :filter)
           OR (summary_translations.value ~* :filter)
@@ -174,6 +187,9 @@ FROM (
         "translation.value",
         "sentiment.method",
         "sentiment.score",
+        "media.key",
+        "media.url",
+        "media.path",
         "sibling.id",
         "sibling.title",
         "sibling.originalDate",

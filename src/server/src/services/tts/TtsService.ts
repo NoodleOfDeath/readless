@@ -4,7 +4,7 @@ import { S3Service } from '../aws';
 
 type GenerateTtsOptions = {
   text: string;
-  voice: string;
+  voice?: string;
   quality?: string;
   output_format?: 'mp3' | 'wav' | 'ogg' | 'flac';
   speed?: number;
@@ -63,7 +63,7 @@ export class TtsService extends S3Service {
   
   public static generate({
     text,
-    voice,
+    voice = 'charlotte',
     quality = 'high',
     output_format = 'mp3',
     speed = 1,

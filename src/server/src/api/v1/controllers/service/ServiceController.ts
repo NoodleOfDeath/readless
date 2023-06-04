@@ -69,21 +69,19 @@ export class ServiceController {
     @Request() req,
     @Path() id: number
   ) {
-    if (!req.headers.Authorization || 1 === 1) {
-      req.res.status(403).json({ message: 'Unauthorized' });
-      return;
-    }
+    // not paywall locked... yet
     const media = await SummaryMedia.findOne(({
       where: {
+        key: 'tts',
         parentId: id,
         type: 'audio',
       },
     }));
-    if (!media) {
+    if (!media || !media.path) {
       req.res.status(404).json({ message: 'Not Found' });
       return;
     }
-    const stream = fs.createReadStream(await S3Service.getObject({ Key: `audio/s/${media.key}.mp3` }));
+    const stream = fs.createReadStream(await S3Service.getObject({ Key: media.path }));
     req.res.setHeader('content-type', 'audio/mpeg');
     stream.pipe(req.res);
   }
