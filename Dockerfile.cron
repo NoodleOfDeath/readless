@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install gnupg wget -y && \
   rm -rf /var/lib/apt/lists/*
 
 FROM base AS copy
+WORKDIR /home/node
+COPY src/core ./core
 WORKDIR /home/node/app
 COPY src/server/package.json ./
 COPY src/server/yarn.lock ./

@@ -1,4 +1,6 @@
 FROM node:19.3.0 AS base
+WORKDIR /home/node
+COPY src/core ./core
 WORKDIR /home/node/app
 COPY src/server/package.json ./
 COPY src/server/yarn.lock ./

@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install gnupg wget -y && \
   rm -rf /var/lib/apt/lists/*
 
 FROM base AS copy
+WORKDIR /home/node
+COPY src/core ./core
 RUN apk add chromium
 WORKDIR /home/node/app
 COPY src/server/package.json ./
