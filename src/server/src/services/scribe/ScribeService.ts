@@ -7,11 +7,13 @@ import {
   MailService,
   Prompt,
   PuppeteerService,
+  TtsService,
 } from '../';
 import {
   Category,
   SentimentMethod,
   Summary,
+  SummaryMedia,
   SummarySentiment,
   SummaryToken,
   TokenType,
@@ -261,7 +263,7 @@ export class ScribeService extends BaseService {
           throw e;
         }
       }
-      this.log(reply);
+      this.log(reply.text);
     }
       
     try {
@@ -269,8 +271,9 @@ export class ScribeService extends BaseService {
       const category = await Category.findOne({ where: { displayName: categoryDisplayName } });
       newSummary.categoryId = category.id;
 
-      if (this.features.image_generation) {
+      if (this.features.imageGen) {
         
+        this.log('Generating image');
         const generateImage = async () => {
       
           // Generate image from the title
@@ -331,6 +334,27 @@ export class ScribeService extends BaseService {
         } catch (e) {
           console.error(e);
         }
+      }
+      
+      if (this.features.tts) {
+      
+        this.log('Generating tts');
+        // generate media
+        const result = await TtsService.generate({
+          text: `From ${outlet.displayName}: ${summary.title}`,
+        });
+        const obj = await TtsService.mirror(result.url, {
+          ACL: 'public-read',
+          Folder: 'audio/s',
+        });
+        await SummaryMedia.upsert({
+          key: 'tts',
+          parentId: summary.id,
+          path: obj.key,
+          type: 'audio',
+          url: obj.url,
+        });
+        
       }
       
       this.log('🥳 Created new summary from', url, newSummary.title);

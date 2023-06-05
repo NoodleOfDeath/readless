@@ -19,6 +19,7 @@ import {
 } from './types';
 
 import { PublicSummaryAttributes } from '~/api';
+import { useSummaryClient } from '~/hooks';
 
 export const PlaybackService = async () => {
   try {
@@ -50,6 +51,8 @@ export const MediaContext = React.createContext(DEFAULT_MEDIA_CONTEXT);
 type Props = React.PropsWithChildren;
 
 export function MediaContextProvider({ children }: Props) {
+  
+  const { audioStreamURI } = useSummaryClient();
 
   // TTS
   const [voices, setVoices] = React.useState<Voice[]>([]);
@@ -184,7 +187,7 @@ export function MediaContextProvider({ children }: Props) {
   }, [cacheMap, currentTrackIndex, generateTrack, preloadCount, tracks]);
   
   React.useEffect(() => {
-    preload();
+    //preload();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrackIndex, tracks]);
 
@@ -200,8 +203,7 @@ export function MediaContextProvider({ children }: Props) {
     };
   }, [playTrack, trackState]);
 
-  const queueSummary = React.useCallback(
-    (summary: PublicSummaryAttributes | PublicSummaryAttributes[]) => {
+  const queueSummary = React.useCallback(async (summary: PublicSummaryAttributes | PublicSummaryAttributes[]) => {
       const tracks: Track[] = [];
       const summaries = Array.isArray(summary) ? summary : [summary];
       for (const summary of summaries) {
@@ -210,21 +212,26 @@ export function MediaContextProvider({ children }: Props) {
           `From ${summary.outlet.displayName} ${timeAgo}:`,
           summary.title,
         ].join('\n');
-        tracks.push(
-          {
-            artist: summary.outlet.displayName,
-            artwork: summary.imageUrl ?? 'https://www.readless.ai/AppIcon.png',
-            id: ['summary', summary.id].join('-'),
-            summary,
-            text,
-            title: summary.title,
-          }
-        );
+        const newTrack = {
+          artist: summary.outlet.displayName,
+          artwork: summary.imageUrl ?? 'https://www.readless.ai/AppIcon.png',
+          headers: {
+            
+          },
+          id: ['summary', summary.id].join('-'),
+          summary,
+          text,
+          title: summary.title,
+          url: audioStreamURI(summary) || summary.media?.[0]?.url
+        }
+        tracks.push(newTrack);
+        await TrackPlayer.add(newTrack);
       }
       setTracks((prev) => {
         const state = [...prev, ...tracks.filter((t) => !prev.some((p) => p.id === t.id))];
         return state;
       });
+      playTrack();
     },
     []
   );

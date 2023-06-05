@@ -48,10 +48,10 @@ install_env() {
   PAFF=$(eval echo ${PAFFS[$K - 1]})
   echo
   echo "chatgpt: writing envs to $PAFF"
-  echo "export READLESS_HOME=$(dirs -c && dirs)" >>$PAFF
-  echo "export PATH=\$PATH:\$READLESS_HOME/bin" >>$PAFF
+  echo "export READ_LESS_HOME=$(dirs -c && dirs)" >>$PAFF
+  echo "export PATH=\$PATH:\$READ_LESS_HOME/bin" >>$PAFF
   source $PAFF
-  if [[ -z "$READLESS_HOME" ]]; then
+  if [[ -z "$READ_LESS_HOME" ]]; then
     echo
     echo "chatgpt: ahhh shiz wtf? env setup failed :("
     ((E = E + 1))
@@ -99,7 +99,7 @@ if [[ -z $(echo which docker) ]]; then
   exit 1
 fi
 
-if [[ -z "$READLESS_HOME" ]]; then
+if [[ -z "$READ_LESS_HOME" ]]; then
   echo "chatgpt: yo gang, you need to set the rlctl root. want me to just magically do that for ya? [y|n|hell yea|naaaaah fam]"
   read HELL_YEA
   if [[ "$HELL_YEA" =~ ^y(es)?$ ]]; then

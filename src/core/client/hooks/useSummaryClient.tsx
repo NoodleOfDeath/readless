@@ -49,6 +49,10 @@ export function useSummaryClient() {
     }
   }, [getSummaries]);
   
+  const audioStreamURI = (summmary: PublicSummaryAttributes) => {
+    return `https://${API.baseUrl}/service/stream/s/${summary.id}`;
+  }
+  
   const getTopicGroups = React.useCallback(async () => {
     try {
       return await withHeaders(API.getTopicGroups)();
@@ -128,6 +132,7 @@ export function useSummaryClient() {
   }, [interactWithSummary, setPreference]);
 
   return {
+    audioStreamURI,
     getSummaries,
     getSummary,
     getTopicGroups,
