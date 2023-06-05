@@ -1,5 +1,4 @@
 import {
-  InteractionType,
   PublicCategoryAttributes,
   PublicOutletAttributes,
   PublicSummaryAttributes,
@@ -35,27 +34,23 @@ export class Bookmark<T> {
 
 export type Preferences = {
   displayMode?: ColorMode;
-  alwaysShowReadingFormatSelector?: boolean;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
   textScale?: number;
   fontFamily?: string;
   letterSpacing?: number;
-  sortOrder?: string[];
   searchHistory?: string[];
-  searchCanMatchAny?: boolean;
   showShortSummary?: boolean;
   loadedInitialUrl?: boolean;
+  readSummaries?: { [key: number]: Bookmark<boolean> };
+  readSources?: { [key: number]: Bookmark<boolean> };
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
-  favoritedSummaries?: { [key: number]: Bookmark<boolean> };
+  bookmarkCount: number;
+  removedSummaries?: { [key: number]: Bookmark<boolean> };
   bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
   bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
   excludedOutlets?: { [key: string]: Bookmark<boolean> };
   excludedCategories?: { [key: string]: Bookmark<boolean> };
-  removedSummaries?: { [key: number]: Bookmark<boolean> };
-  readSummaries?: { [key: number]: Bookmark<boolean> };
-  readSources?: { [key: number]: Bookmark<boolean> };
-  summaryHistory?: { [key: number]: Bookmark<InteractionType> };
   showOnlyCustomNews?: boolean;
   rotationLock?: OrientationType;
 };
@@ -87,6 +82,7 @@ export type SessionContextType = Preferences & {
 };
 
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
+  bookmarkCount: 0,
   followCategory: () => {
     /* placeholder function */
   },

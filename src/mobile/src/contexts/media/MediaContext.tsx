@@ -203,7 +203,8 @@ export function MediaContextProvider({ children }: Props) {
     };
   }, [playTrack, trackState]);
 
-  const queueSummary = React.useCallback(async (summary: PublicSummaryAttributes | PublicSummaryAttributes[]) => {
+  const queueSummary = React.useCallback(
+    async (summary: PublicSummaryAttributes | PublicSummaryAttributes[]) => {
       const tracks: Track[] = [];
       const summaries = Array.isArray(summary) ? summary : [summary];
       for (const summary of summaries) {
@@ -215,15 +216,13 @@ export function MediaContextProvider({ children }: Props) {
         const newTrack = {
           artist: summary.outlet.displayName,
           artwork: summary.imageUrl ?? 'https://www.readless.ai/AppIcon.png',
-          headers: {
-            
-          },
+          headers: {},
           id: ['summary', summary.id].join('-'),
           summary,
           text,
           title: summary.title,
-          url: audioStreamURI(summary) || summary.media?.[0]?.url
-        }
+          url: audioStreamURI(summary) || summary.media?.[0]?.url,
+        };
         tracks.push(newTrack);
         await TrackPlayer.add(newTrack);
       }

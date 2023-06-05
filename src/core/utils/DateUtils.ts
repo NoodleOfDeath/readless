@@ -67,10 +67,21 @@ export function parseDate(context?: string) {
   return parsedDate;
 }
 
+export function filterDates(dates: (Date | undefined | null)[], filterOutFutureDatesBy = '1d') {
+  return [...dates].filter((d) => 
+    d != null && 
+    !Number.isNaN(d.valueOf()) && 
+    d < new Date(Date.now() + ms(filterOutFutureDatesBy))) as Date[];
+}
+
+export const DateSorter = (a?: Date | string, b?: Date | string) => { 
+  const lhs = typeof a === 'string' ? parseDate(a) : a;
+  const rhs = typeof b === 'string' ? parseDate(b) : b;
+  return lhs && rhs ? lhs.valueOf() - rhs.valueOf() : 0;
+};
+
 export function sortDates(...dates: (Date | undefined | null)[]) {
-  return [...dates].filter(Boolean).filter((d) => !Number.isNaN(d.valueOf())).sort((a, b) => { 
-    return a.valueOf() - b.valueOf();
-  });
+  return filterDates(dates).sort(DateSorter);
 }
 
 export function minDate(...dates: (Date | undefined | null)[]) {

@@ -9,6 +9,7 @@
 # production
 /build
 /dist
+/src/core
 *.db
 *.pem
 *.crt

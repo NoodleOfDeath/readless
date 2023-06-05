@@ -75,4 +75,16 @@ router.post(
   }
 );
 
+router.post(
+  '/iap',
+  async (req, res) => {
+    try {
+      const response = await ServiceController.processPurchase(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
 export default router;

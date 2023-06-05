@@ -11,13 +11,15 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import { Badge } from 'react-native-paper';
+import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
+import { Badge, Provider } from 'react-native-paper';
 
 import {
   LayoutContext,
   MediaContext,
   SessionContext,
 } from './contexts';
+import { AboutScreen } from './screens/about/AboutScreen';
 
 import {
   ActivityIndicator,
@@ -38,7 +40,6 @@ import {
   StackableTabParams,
   SummaryScreen,
 } from '~/screens';
-import { lengthOf } from '~/utils';
 
 const screens: RouteConfig<
 StackableTabParams,
@@ -47,35 +48,18 @@ NavigationState,
 NativeStackNavigationOptions,
 EventMapBase
 >[] = [
-  { 
-    component: SearchScreen, 
-    name: 'default', 
-    options: {
-      headerBackTitle: '', 
-      headerTitle: strings.headlines, 
-    },
-  }, 
   {
     component: SearchScreen, 
     name: 'search',
     options: { headerBackTitle: '' },
   },
   {
-    component: BrowseScreen, 
-    name: 'browse', options: {
+    component: AboutScreen, 
+    name: 'about', 
+    options: {
       headerBackTitle: '', 
       headerTitle: strings.browse, 
     },
-  },
-  {
-    component: SummaryScreen, 
-    name: 'summary',  
-    options: { headerBackTitle: '' },
-  },
-  {
-    component: ChannelScreen, 
-    name: 'channel',
-    options: { headerBackTitle: '' }, 
   },
   {
     component: BookmarksScreen, 
@@ -86,12 +70,29 @@ EventMapBase
     }, 
   },
   {
+    component: BrowseScreen, 
+    name: 'browse', options: {
+      headerBackTitle: '', 
+      headerTitle: strings.browse, 
+    },
+  },
+  {
+    component: ChannelScreen, 
+    name: 'channel',
+    options: { headerBackTitle: '' }, 
+  },
+  {
     component: SettingsScreen, 
     name: 'settings', 
     options: {
       headerBackTitle: '', 
       headerTitle: strings.settings.settings, 
     },
+  },
+  {
+    component: SummaryScreen, 
+    name: 'summary',  
+    options: { headerBackTitle: '' },
   },
 ];
 
@@ -100,8 +101,7 @@ function Stack() {
   const Stack = createNativeStackNavigator();
   const { currentTrack } = React.useContext(MediaContext);
   const {
-    bookmarkedSummaries,
-    readSummaries,
+    bookmarkCount,
     loadedInitialUrl,
     setPreference,
   } = React.useContext(SessionContext);
@@ -112,19 +112,13 @@ function Stack() {
     unlockRotation,
   } = React.useContext(LayoutContext);
 
-  const { 
-    router, 
-    openBookmarks,
-    openBrowse,
-    openSettings, 
-  } = useNavigation();
-  
-  const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
+  const { router } = useNavigation();
   
   const headerRight = React.useMemo(() => (
     <View>
       <View row gap={ 16 } alignCenter>
         <Button
+          touchable
           startIcon={ (
             <View height={ 24 } width={ 24 }>
               <Icon 
@@ -143,9 +137,14 @@ function Stack() {
           ) }
           iconSize={ 24 }
           haptic
-          touchable
           onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
-        <View onPress={ openBookmarks }>
+        <View touchable onPress={ () => SheetManager.show('subscribe') }>
+          <Icon
+            name="tag"
+            size={ 24 } />
+          <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
+        </View>
+        <View touchable onPress={ () => SheetManager.show('mainMenu') }>
           {bookmarkCount > 0 && (
             <Badge
               size={ 18 }
@@ -155,19 +154,11 @@ function Stack() {
               {bookmarkCount}
             </Badge>
           )}
-          <Icon name='bookmark-outline' size={ 24 } />
+          <Icon name='menu' size={ 24 } />
         </View>
-        <Button
-          startIcon="bookshelf"
-          iconSize={ 24 }
-          onPress={ openBrowse } />
-        <Button
-          startIcon="menu"
-          iconSize={ 24 }
-          onPress={ openSettings } />
       </View>
     </View>
-  ), [bookmarkCount, openBookmarks, openBrowse, openSettings, rotationLock, lockRotation, unlockRotation]);
+  ), [rotationLock, bookmarkCount, unlockRotation, lockRotation]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);
@@ -215,7 +206,11 @@ export default function NavigationController() {
           <ActivityIndicator animating />
         </View>
       ) : (
-        <Stack />
+        <SheetProvider>
+          <Provider>          
+            <Stack />
+          </Provider>
+        </SheetProvider>
       )}
     </NavigationContainer>
   );

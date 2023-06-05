@@ -386,11 +386,13 @@ export function SearchScreen({
     <Screen>
       <SafeAreaView style={ { flexGrow: 1 } }>
         <View col gap={ 3 }>
-          {!prefilter && <TopicSampler horizontal />}
+          {!prefilter && (<TopicSampler horizontal />)}
           {summaries.length > 0 && averageSentiment && (
             <View 
               elevated 
               height={ 30 } 
+              borderRadiusBL={ 16 }
+              borderRadiusBR={ 16 }
               p={ 4 }>
               <View row gap={ 12 } justifyCenter alignCenter>
                 <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
@@ -400,8 +402,8 @@ export function SearchScreen({
             </View>
           )}
           {!loading && onlyCustomNews && summaries.length === 0 && (
-            <View col justifyCenter p={ 16 }>
-              <Text subtitle1 pb={ 8 }>
+            <View col justifyCenter p={ 16 } gap={ 8 }>
+              <Text subtitle1>
                 {strings.search.filtersTooSpecific}
               </Text>
               <Button 
@@ -410,13 +412,33 @@ export function SearchScreen({
                 outlined 
                 p={ 8 }
                 selectable
-                onPress={ () => openBrowse() }>
+                onPress={ openBrowse }>
                 {strings.search.goToBrowse}
+              </Button>
+              <Button 
+                alignCenter
+                rounded 
+                outlined 
+                p={ 8 }
+                selectable
+                onPress={ () => setOnlyCustomNews(false) }>
+                {strings.search.turnOffFilters}
               </Button>
             </View>
           )}
           {!prefilter && onlyCustomNews && (
-            <Text caption textCenter mh={ 12 }>{strings.search.customNewsSearch}</Text>
+            <View>
+              <Text caption textCenter mh={ 12 }>{strings.search.customNewsSearch}</Text>
+              <Button 
+                alignCenter
+                rounded 
+                outlined 
+                p={ 8 }
+                selectable
+                onPress={ () => setOnlyCustomNews(false) }>
+                {strings.search.turnOffFilters}
+              </Button>
+            </View>
           )}
           <View col>
             <View row>
@@ -509,8 +531,8 @@ export function SearchScreen({
         {summaries.length > 0 && (
           <Button
             absolute
-            right={ 12 }
-            bottom={ 84 }
+            right={ 32 }
+            bottom={ 96 }
             elevated
             rounded
             opacity={ 0.95 }

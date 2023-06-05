@@ -35,5 +35,11 @@ export class Voucher<
     type: DataType.TEXT,
   })
   declare data: string;
+
+  @Column({
+    allowNull: false,
+    type: DataType.JSON,
+  })
+  declare rawData: unknown;
   
 }

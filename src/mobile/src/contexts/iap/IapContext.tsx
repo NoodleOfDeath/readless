@@ -15,15 +15,24 @@ import {
 
 import { DEFAULT_IAP_CONTEXT } from './types';
 
+import { useServiceClient } from '~/core';
+
 const SKUS = Platform.select({
   android: { skus: [] },
-  ios: { skus: ['ai.readless.ReadLess.premium.t1'] },
+  ios: {
+    skus: [
+      'ai.readless.ReadLess.premium.t1',
+      'ai.readless.ReadLess.premium.iamrich',
+    ], 
+  },
 }) as { skus: string[] };
 
 export const IapContext = React.createContext(DEFAULT_IAP_CONTEXT);
 
 export function IapContextProvider({ children }: React.PropsWithChildren) {
   
+  const { processPurchase } = useServiceClient();
+
   const [subscriptions, setSubscriptions] = React.useState<Subscription[]>([]);
   
   const subscribe = React.useCallback(async (sku: string, offerToken = '') => {
@@ -60,6 +69,18 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
           async (purchase) => {
             console.log('purchaseUpdatedListener', purchase);
             const receipt = purchase.transactionReceipt;
+            if (Platform.OS === 'ios') {
+              await processPurchase({ platform: 'apple', receipt });
+            } else if (Platform.OS === 'android' && purchase.purchaseStateAndroid === 1 && purchase.purchaseToken) {
+              await processPurchase({
+                platform: 'google', receipt: {
+                  packageName: 'ai.readless.ReadLess',
+                  productId: purchase.productId,
+                  purchaseToken: purchase.purchaseToken,
+                  subscription: true,
+                }, 
+              });
+            }
             if (receipt) {
               await finishTransaction({ isConsumable: false, purchase });
             }
@@ -79,7 +100,7 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
       purchaseErrorSubscription?.remove();
       endConnection();
     };
-  }, []);
+  }, [processPurchase]);
   
   return (
     <IapContext.Provider value={ {

@@ -31,7 +31,7 @@ export function Menu({
   
   const computedAnchor = React.useMemo(() => {
     return (
-      <View rounded onPress={ () => setVisible(true) }>
+      <View onPress={ () => setVisible(true) }>
         {props.autoAnchor}
       </View>
     );

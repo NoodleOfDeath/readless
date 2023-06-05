@@ -169,8 +169,8 @@ export function SearchMenu({
             touchable
             opacity={ 0.95 }
             p={ 12 }
-            bottom={ 12 }
-            right={ 12 }
+            bottom={ 24 }
+            right={ 32 }
             startIcon="magnify"
             iconSize={ 32 }
             onPress={ () => setFocused(true) } />

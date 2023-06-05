@@ -3,7 +3,11 @@ import React from 'react';
 import { ClientError } from './types';
 import { SessionContext } from '../contexts';
 
-import { API, PublicSummaryAttributes } from '~/api';
+import { 
+  API, 
+  ProcessPurchaseRequest,
+  PublicSummaryAttributes,
+} from '~/api';
 
 export const useServiceClient = () => {
 
@@ -38,10 +42,20 @@ export const useServiceClient = () => {
     }
   }, [withHeaders]);
 
+  const processPurchase = React.useCallback(async (purchase: ProcessPurchaseRequest) => {
+    try {
+      const response = await withHeaders(API.processPurchase)(purchase);
+      return response;
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+
   return { 
     getServices, 
     getSystemMessages,
     localizeSummary,
+    processPurchase,
   };
 
 };

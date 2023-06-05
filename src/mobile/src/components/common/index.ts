@@ -6,6 +6,7 @@ export * from './Button';
 export * from './CardStack';
 export * from './Checkbox';
 export * from './CollapsedView';
+export * from './DataTable';
 export * from './Dialog';
 export * from './Divider';
 export * from './FAB';

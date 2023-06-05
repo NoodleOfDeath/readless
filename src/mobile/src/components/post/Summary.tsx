@@ -49,7 +49,7 @@ import {
   getLocale,
   strings,
 } from '~/locales';
-import { fixedSentiment } from '~/utils';
+import { DateSorter, fixedSentiment } from '~/utils';
 
 type Props = {
   summary: PublicSummaryGroups;
@@ -160,7 +160,7 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
   const [isShareTarget, setIsShareTarget] = React.useState(summary.id === shareTarget?.id);
   const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-  const [isSiblingRead, setIsSiblingRead] = React.useState(Object.fromEntries(summary.siblings.map((s) => [s.id, Boolean(readSummaries?.[s.id])])));
+  const [isSiblingRead, setIsSiblingRead] = React.useState(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
   const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
@@ -210,7 +210,7 @@ export function Summary({
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
     setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
     setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-    setIsSiblingRead(Object.fromEntries(summary.siblings.map((s) => [s.id, Boolean(readSummaries?.[s.id])])));
+    setIsSiblingRead(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
     return () => clearInterval(interval);
   }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget, summary.id, summary.siblings, summary.translations, tickInterval]));
 
@@ -387,7 +387,6 @@ export function Summary({
                             onPress={ () => openCategory(summary.category) } />
                           <Text
                             italic
-                            touchable
                             onPress={ () => openOutlet(summary.outlet) }>
                             {summary.outlet.displayName}
                           </Text>
@@ -511,7 +510,7 @@ export function Summary({
                             </Text>
                             <ScrollView height={ summary.siblings.length === 1 ? 50 : 70 }>
                               <View gap={ 5 }>
-                                {summary.siblings.sort((a, b) => new Date(b.originalDate).valueOf() - new Date(a.originalDate).valueOf()).map((sibling) => (
+                                {summary.siblings.sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
                                   <View 
                                     key={ sibling.id } 
                                     height={ 50 }>

@@ -5,14 +5,9 @@ import { BaseService } from '../base';
 
 export class GoogleService extends BaseService {
 
-  static get credentials() {
-    if (!process.env.GOOGLE_CREDENTIALS) {
-      return {};
-    }
-    return JSON.parse(Buffer.from(process.env.GOOGLE_CREDENTIALS, 'base64').toString('ascii'));
+  static client() {
+    return new v2.Translate({ credentials: JSON.parse(Buffer.from(process.env.GOOGLE_CREDENTIALS, 'base64').toString('ascii')) }); 
   }
-
-  static translate: v2.Translate = new v2.Translate({ credentials: this.credentials });
   
   static async verify(accessToken: string) {
     return await (new OAuth2Client({
@@ -25,12 +20,12 @@ export class GoogleService extends BaseService {
   }
   
   static async getLanguages() {
-    const [languages] = await this.translate.getLanguages();
+    const [languages] = await this.client().getLanguages();
     return languages;
   }
     
   static async translateText(text: string, target: string) {
-    const [resp] = await this.translate.translate(text, target);
+    const [resp] = await this.client().translate(text, target);
     if (!resp) {
       return undefined;
     }

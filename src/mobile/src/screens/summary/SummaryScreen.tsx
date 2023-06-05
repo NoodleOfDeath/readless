@@ -60,7 +60,10 @@ export function SummaryScreen({
   }, [getSummary, setPreference]);
 
   React.useEffect(() => {
-    navigation?.setOptions({ headerShown: true, headerTitle: summary?.title });
+    navigation?.setOptions({ 
+      headerShown: true, 
+      headerTitle: summary?.title ?? '',
+    });
   }, [navigation, summary]);
 
   React.useEffect(() => {

@@ -10,4 +10,5 @@ COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 COPY src/server/serve-api.ts ./
 COPY src/server/nodemon.api.json ./
+RUN yarn cp:core
 CMD yarn dev:applink

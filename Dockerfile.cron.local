@@ -24,4 +24,5 @@ COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 COPY src/server/serve-cron.ts ./
 COPY src/server/nodemon.cron.json ./
+RUN yarn cp:core
 CMD yarn dev:cron

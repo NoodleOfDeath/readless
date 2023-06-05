@@ -8,13 +8,15 @@ import { useStyles, useTheme } from '~/hooks';
 
 export type ActionSheetProps = ViewProps & RNActionSheetProps;
 
-export function ActionSheet({ children, ...props }: ActionSheeProps) {
+export function ActionSheet({ children, ...props }: ActionSheetProps) {
   const theme = useTheme();
   const style = useStyles(props);
   return (
     <RNActionSheet
       { ...props }
-      containerStyle={ [theme.components.card, style] }>
+      gestureEnabled
+      headerAlwaysVisible
+      containerStyle={ { ...theme.components.card, ...style } }>
       <SafeAreaView>
         {children}
       </SafeAreaView>

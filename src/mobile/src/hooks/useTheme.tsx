@@ -13,7 +13,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
       inactive: lightMode ? '#aaa' : '#777',
       invertText: lightMode ? '#fff' : '#000',
       primary: '#8b0000',
-      rowEven: lightMode ? '#eaeaea' : '#202020',
+      rowEven: lightMode ? '#efefef' : '#101010',
       rowOdd: lightMode ? '#e9e9e9' : '#222',
       text: lightMode ? '#000' : '#fff',
       textDark: '#000',

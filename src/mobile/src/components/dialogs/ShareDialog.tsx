@@ -20,6 +20,7 @@ import {
 } from '~/components';
 import { DialogContext } from '~/contexts';
 import {  useShare } from '~/hooks';
+import { strings } from '~/locales';
 import { shareableLink } from '~/utils';
 
 export type ShareDialogProps = {
@@ -61,61 +62,61 @@ export function ShareDialog({
     [
       {
         icon: 'share-outline',
-        label: 'Share as Link',
+        label: strings.share.shareAsLink,
         onPress: () => shareStandard(summary, null), 
       },
       {
         icon: 'link-variant',
-        label: 'Copy shareable link',
+        label: strings.share.copyLink,
         onPress: () => copyToClipboard(shareableLink(summary, BASE_DOMAIN, format)),
       },
       {
         icon: 'link-variant',
-        label: 'Copy original source link',
+        label: strings.share.copyOriginalSourceLink,
         onPress: () => copyToClipboard(summary.url),
       },
     ],
     [
       {
         icon:'twitter',
-        label: 'Twitter',
+        label: strings.share.twitter,
         onPress:() => shareSocial(summary, viewshot, Social.Twitter), 
       },
       {
         icon:'instagram',
-        label: 'Instagram Stories',
+        label: strings.share.instagramStories,
         onPress: () => shareSocial(summary, viewshot, Social.InstagramStories), 
       },
       {
         icon:'instagram',
-        label: 'Instagram Feed',
+        label: strings.share.instagram,
         onPress: () => shareSocial(summary, viewshot, Social.Instagram), 
       },
       {
         icon: 'camera-outline',
-        label: 'Share as Image',
+        label: strings.share.shareAsImage,
         onPress: () => shareStandard(summary, viewshot), 
       },
     ],
     [
       { 
         icon:'content-copy',
-        label: 'Copy summary title',
+        label: strings.share.copyTitle,
         onPress: () => copyToClipboard(summary.title), 
       },
       {
         icon:'content-copy',
-        label: 'Copy summary snippet',
+        label: strings.share.copyShortSummary,
         onPress: () => copyToClipboard(summary.shortSummary), 
       },
       {
         icon:'content-copy',
-        label: 'Copy summary paragraph',
+        label: strings.share.copySummary,
         onPress: () => copyToClipboard(summary.summary), 
       },
       {
         icon:'content-copy',
-        label: 'Copy summary bullets',
+        label: strings.share.copyBulletPoints,
         onPress: () => copyToClipboard(summary.bullets.join('\n')), 
       },
     ],

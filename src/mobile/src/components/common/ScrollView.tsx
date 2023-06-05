@@ -24,6 +24,7 @@ export function ScrollView({
   refreshing = false,
   onRefresh,
   keyboardShouldPersistTaps = 'handled',
+  scrollEventThrottle = 16,
   refreshControl = onRefresh && (
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
@@ -38,6 +39,7 @@ export function ScrollView({
         <KeyboardAwareScrollView 
           refreshControl={ refreshControl } 
           keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
+          scrollEventThrottle={ scrollEventThrottle }
           keyboardDismissMode="on-drag"
           style={ style }
           { ...props }>
@@ -47,6 +49,7 @@ export function ScrollView({
         <RNScrollView 
           refreshControl={ refreshControl }
           keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
+          scrollEventThrottle={ scrollEventThrottle }
           keyboardDismissMode="on-drag"
           style={ style }
           { ...props }>

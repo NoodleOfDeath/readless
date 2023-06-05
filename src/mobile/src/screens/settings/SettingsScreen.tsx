@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { SheetManager } from 'react-native-actions-sheet';
 import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
@@ -70,6 +71,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
   }, [navigation]);
 
   React.useEffect(() => {
+    SheetManager.hide('mainMenu');
     onMount();
   }, [onMount]);
 

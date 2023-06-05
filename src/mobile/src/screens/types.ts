@@ -28,6 +28,10 @@ export type Channel<T extends ChannelType = ChannelType> = {
 };
 
 export type StackableTabParams = TabParams & {
+  about: undefined;
+  bookmarks: undefined;
+  browse: undefined;
+  channel: Channel;
   search: {
     prefilter?: string,
     onlyCustomNews?: boolean;
@@ -41,9 +45,6 @@ export type StackableTabParams = TabParams & {
     keywords?: string[];
     summary: PublicSummaryAttributes | number;
   };
-  channel: Channel;
-  bookmarks: undefined;
-  browse: undefined;
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {

@@ -23,4 +23,5 @@ COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 COPY src/server/serve-worker.ts ./
 COPY src/server/nodemon.worker.json ./
+RUN yarn cp:core
 CMD yarn dev:worker

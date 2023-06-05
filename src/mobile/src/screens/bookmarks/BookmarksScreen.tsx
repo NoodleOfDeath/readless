@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { SheetManager } from 'react-native-actions-sheet';
+
 import {
   InteractionType,
   PublicSummaryAttributes,
@@ -26,6 +28,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
   
   const { 
     bookmarkedSummaries,
+    bookmarkCount,
     readSummaries,
     preferredReadingFormat, 
     setPreference,
@@ -48,8 +51,12 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
   );
   
   React.useEffect(() => {
-    navigation?.setOptions({ headerRight: () => undefined });
-  }, [navigation]);
+    navigation?.setOptions({ 
+      headerRight: () => undefined,
+      headerTitle: `${strings.bookmarks.bookmarks} (${bookmarkCount})`,
+    });
+    SheetManager.hide('mainMenu');
+  }, [bookmarkCount, navigation]);
   
   return (
     <Screen>

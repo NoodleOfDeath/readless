@@ -40,8 +40,6 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/services/sentiment/vader/lexicon.xs",
-    "src/services/sentiment/vader/lexicon.js"
   ],
   "exclude": [
     "node_modules",

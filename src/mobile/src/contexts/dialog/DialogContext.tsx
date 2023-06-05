@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SheetProvider, registerSheet } from 'react-native-actions-sheet';
+import { registerSheet } from 'react-native-actions-sheet';
 import { Provider } from 'react-native-paper';
 
 import { DEFAULT_DIALOG_CONTEXT } from './types';
@@ -8,6 +8,7 @@ import { DEFAULT_DIALOG_CONTEXT } from './types';
 import { PublicSummaryAttributes } from '~/api';
 import {
   FeedbackDialog,
+  MainMenuDialog,
   ShareDialog,
   SubscribeDialog,
 } from '~/components';
@@ -19,6 +20,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
   React.useEffect(() => {
     registerSheet('share', ShareDialog);
     registerSheet('feedback', FeedbackDialog);
+    registerSheet('mainMenu', MainMenuDialog);
     registerSheet('subscribe', SubscribeDialog);
   }, []);
 
@@ -30,9 +32,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
       shareTarget,
     } }>
       <Provider>
-        <SheetProvider>
-          {children}
-        </SheetProvider>
+        {children}
       </Provider>
     </DialogContext.Provider>
   );

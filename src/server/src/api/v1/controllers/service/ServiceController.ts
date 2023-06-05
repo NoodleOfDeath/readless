@@ -22,6 +22,7 @@ import {
 import { 
   GoogleService,
   IapService,
+  ProcessPurchaseRequest,
   S3Service,
   TtsService,
 } from '../../../../services';
@@ -33,6 +34,7 @@ import {
   PublicSummaryAttributes,
   PublicSummaryMediaAttributes,
   PublicSummaryTranslationAttributes,
+  PublicVoucherAttributes,
   Service,
   ServiceAttributes,
   Summary,
@@ -166,6 +168,14 @@ export class ServiceController {
     } else {
       throw new InternalError('Invalid resource type');
     }
+  }
+
+  @Post('iap')
+  public static async processPurchase(
+    @Request() req,
+    @Body() body: ProcessPurchaseRequest
+  ): Promise<PublicVoucherAttributes> {
+    return await IapService.processPurchase(body);
   }
   
 }

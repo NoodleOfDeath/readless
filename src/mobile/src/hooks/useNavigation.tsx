@@ -65,7 +65,11 @@ export function useNavigation() {
   const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
     (navigation?.push ?? navigation.navigate)('channel', { attributes: category, type: 'category' });
   }, [navigation]);
-  
+
+  const openAbout = React.useCallback(() => {
+    (navigation?.push ?? navigation.navigate)('about');
+  }, [navigation]);
+
   const openBookmarks = React.useCallback(() => {
     (navigation?.push ?? navigation.navigate)('bookmarks');
   }, [navigation]);
@@ -79,6 +83,8 @@ export function useNavigation() {
   }, [navigation]);
   
   return {
+    navigation,
+    openAbout,
     openBookmarks,
     openBrowse,
     openCategory,

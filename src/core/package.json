@@ -1,0 +1,38 @@
+{
+  "name": "readless-scripts",
+  "version": "0.0.1",
+  "type": "module",
+  "export": "dist/index.cjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .  --ext .ts,.tsx",
+    "format": "eslint .  --ext .ts,.tsx --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/argparse": "^2.0.10",
+    "@types/node": "^20.2.3",
+    "@types/pg": "^8.6.6",
+    "dotenv": "^16.0.3",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "argparse": "^2.0.1",
+    "axios": "^1.3.4",
+    "canvas": "^2.11.2",
+    "fp-ts": "^2.15.0",
+    "io-ts": "^2.2.20",
+    "node-html-parser": "^6.1.5",
+    "node-pre-gyp": "^0.17.0",
+    "pg": "^8.9.0"
+  }
+}

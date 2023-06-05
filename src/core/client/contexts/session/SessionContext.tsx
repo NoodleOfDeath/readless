@@ -35,7 +35,6 @@ export function SessionContextProvider({ children }: Props) {
   const [ready, setReady] = React.useState(false);
 
   const [displayMode, setDisplayMode] = React.useState<ColorMode>();
-  const [alwaysShowReadingFormatSelector, setAlwaysShowReadingFormatSelector] = React.useState<boolean>();
   const [preferredReadingFormat, setPreferredReadingFormat] = React.useState<ReadingFormat>();
   const [compactMode, setCompactMode] = React.useState<boolean>();
   const [textScale, setTextScale] = React.useState<number>();
@@ -55,6 +54,8 @@ export function SessionContextProvider({ children }: Props) {
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
 
+  const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
+
   const getPreference = React.useCallback(async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
     const value = await getItem(key);
     if (value) {
@@ -69,9 +70,6 @@ export function SessionContextProvider({ children }: Props) {
     switch (key) {
     case 'displayMode':
       setDisplayMode(value);
-      break;
-    case 'alwaysShowReadingFormatSelector':
-      setAlwaysShowReadingFormatSelector(value);
       break;
     case 'preferredReadingFormat':
       setPreferredReadingFormat(value);
@@ -195,7 +193,6 @@ export function SessionContextProvider({ children }: Props) {
       }
     }
     setDisplayMode(await getPreference('displayMode') ?? prefs.displayMode); 
-    setAlwaysShowReadingFormatSelector(await getPreference('alwaysShowReadingFormatSelector') ?? prefs.alwaysShowReadingFormatSelector);
     setPreferredReadingFormat(await getPreference('preferredReadingFormat') ?? prefs.preferredReadingFormat);
     setCompactMode(await getPreference('compactMode') ?? prefs.compactMode);
     setTextScale(await getPreference('textScale') ?? prefs.textScale);
@@ -224,7 +221,7 @@ export function SessionContextProvider({ children }: Props) {
   return (
     <SessionContext.Provider
       value={ {
-        alwaysShowReadingFormatSelector,
+        bookmarkCount,
         bookmarkedCategories,
         bookmarkedOutlets,
         bookmarkedSummaries,
