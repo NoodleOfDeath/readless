@@ -114,6 +114,35 @@ export async function cleanUpDeadWorkers() {
 const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.45; // Math.floor(8/16)
 const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '24h';
 
+async function associateSiblings(a: number, b: number, score: number) {
+  const relation = await SummaryRelation.findOne({
+    where: {
+      parentId: a,
+      siblingId: b,
+    },
+  });
+  if (!relation) {
+    await SummaryRelation.create({
+      confidence: score,
+      parentId: a,
+      siblingId: b,
+    });
+  }
+  const inverseRelation = await SummaryRelation.findOne({
+    where: {
+      parentId: b,
+      siblingId: a,
+    },
+  });
+  if (!inverseRelation) {
+    await SummaryRelation.create({
+      confidence: score,
+      parentId: b,
+      siblingId: a,
+    });
+  }
+}
+
 export async function bruteForceResolveDuplicates() {
   try {
     console.log('Resolving duplicates...');
@@ -163,20 +192,19 @@ export async function bruteForceResolveDuplicates() {
         }
       }
       for (const sibling of siblings) {
-        const relation = await SummaryRelation.findOne({
-          where: {
-            parentId: summary.id,
-            siblingId: sibling.summary.id,
-          },
-        });
-        if (relation) {
-          continue;
+        associateSiblings(summary.id, sibling.summary.id, sibling.score);
+      }
+    }
+    // brute force associate extended relationships
+    for (const summary of summaries) {
+      const relations = await SummaryRelation.findAll({ where: { parentId: summary.id } });
+      for (const relation of relations) {
+        for (const r of relations) {
+          if (relation.id === r.id) {
+            continue;
+          }
+          associateSiblings(relation.id, r.id, (relation.confidence + r.confidence) / 2);
         }
-        await SummaryRelation.create({
-          confidence: sibling.score,
-          parentId: summary.id,
-          siblingId: sibling.summary.id,
-        });
       }
     }
   } catch (e) {
