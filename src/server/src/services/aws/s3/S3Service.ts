@@ -1,5 +1,4 @@
 import fs from 'fs';
-import mime from 'mime-types';
 import p from 'path';
 import { Readable } from 'stream';
 

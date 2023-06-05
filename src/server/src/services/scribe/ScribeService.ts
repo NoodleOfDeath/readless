@@ -340,9 +340,7 @@ export class ScribeService extends BaseService {
       
         this.log('Generating tts');
         // generate media
-        const result = await TtsService.generate({
-          text: `From ${outlet.displayName}: ${summary.title}`,
-        });
+        const result = await TtsService.generate({ text: `From ${outlet.displayName}: ${summary.title}` });
         const obj = await TtsService.mirror(result.url, {
           ACL: 'public-read',
           Folder: 'audio/s',
