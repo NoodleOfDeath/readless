@@ -1,3 +1,4 @@
+import { PublicMediaAttributes } from './media/Media.types';
 import { DatedAttributes } from '../types';
 import { PublicMediaAttributes } from './media/Media.types';
 

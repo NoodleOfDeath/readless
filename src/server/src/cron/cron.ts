@@ -1,6 +1,5 @@
 import ms from 'ms';
 import { Op } from 'sequelize';
-import similarity from 'similarity';
 
 import {
   Job,
@@ -20,8 +19,8 @@ async function main() {
   await Queue.initQueues();
   await Outlet.initOutlets();
   bruteForceResolveDuplicates();
-  //pollForNews();
-  //cleanUpDeadWorkers();
+  pollForNews();
+  cleanUpDeadWorkers();
 }
 
 export function generateDynamicUrl(
@@ -112,8 +111,8 @@ export async function cleanUpDeadWorkers() {
   }
 }
 
-const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.5;
-const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '3d';
+const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.45; // Math.floor(8/16)
+const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '24h';
 
 async function associateSiblings(a: number, b: number, score: number) {
   const relation = await SummaryRelation.findOne({
@@ -146,15 +145,16 @@ async function associateSiblings(a: number, b: number, score: number) {
 
 export async function bruteForceResolveDuplicates() {
   try {
-    console.log('>>> Resolving duplicates...');
+    console.log('Resolving duplicates...');
     const summaries = await Summary.findAll({ where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } } });
     for (const summary of summaries) {
       const siblings: {
         summary: Summary;
         score: number;
       }[] = [];
+      const words = summary.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
       for (const possibleSibling of summaries) {
-        if (summary.id === possibleSibling.id) {
+        if (summary.title === possibleSibling.title) {
           continue;
         }
         const relation = await SummaryRelation.findOne({
@@ -166,9 +166,16 @@ export async function bruteForceResolveDuplicates() {
         if (relation) {
           continue;
         }
-        const score = 
-          similarity(summary.title, possibleSibling.title) +
-          (summary.categoryId === possibleSibling.categoryId ? 0.05 : 0.0);
+        const siblingWords = possibleSibling.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
+        const score = words.map((a) => {
+          if (siblingWords.some((b) => a.toLowerCase() === b.toLowerCase())) {
+            return 4;
+          }
+          if (siblingWords.some((b) => a.replace(/\W/g, '').length > 0 && new RegExp(`${a.replace(/\W/g, '')}(?:ies|es|s|ed|ing)?`, 'i').test(b))) {
+            return 2;
+          }
+          return 0;
+        }).reduce((prev, curr) => curr + prev, 0) / (words.length * 4) + (summary.categoryId === possibleSibling.categoryId ? 0.05 : 0.0);
         if (score > RELATIONSHIP_THRESHOLD) {
           console.log('----------');
           console.log();
@@ -188,9 +195,6 @@ export async function bruteForceResolveDuplicates() {
         associateSiblings(summary.id, sibling.summary.id, sibling.score);
       }
     }
-    console.log('----------');
-    console.log();
-    console.log('>>> first pass completed');
     // brute force associate extended relationships
     for (const summary of summaries) {
       const relations = await SummaryRelation.findAll({ where: { parentId: summary.id } });
@@ -209,8 +213,6 @@ export async function bruteForceResolveDuplicates() {
     console.log('----------');
     console.log();
     console.log('>>> done resolving duplicates');
-    console.log('----------');
-    console.log();
     setTimeout(bruteForceResolveDuplicates, ms('5m'));
   }
 }

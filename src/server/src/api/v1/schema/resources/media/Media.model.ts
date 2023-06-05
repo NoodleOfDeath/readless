@@ -39,6 +39,4 @@ export abstract class Media<
   @Column({ type: DataType.STRING(2083) })
   declare url?: string;
   
-  
-  
 }

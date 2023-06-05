@@ -11,6 +11,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import axios from 'axios';
+import mime from 'mime-types';
 import { v1 as uuid } from 'uuid';
 
 import { BaseService } from '../../base';
