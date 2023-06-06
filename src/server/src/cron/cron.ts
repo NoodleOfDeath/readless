@@ -154,7 +154,7 @@ export async function bruteForceResolveDuplicates() {
       }[] = [];
       const words = summary.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
       for (const possibleSibling of summaries) {
-        if (summary.title === possibleSibling.title) {
+        if (summary.id === possibleSibling.id) {
           continue;
         }
         const relation = await SummaryRelation.findOne({
@@ -192,7 +192,7 @@ export async function bruteForceResolveDuplicates() {
         }
       }
       for (const sibling of siblings) {
-        associateSiblings(summary.id, sibling.summary.id, sibling.score);
+        await associateSiblings(summary.id, sibling.summary.id, sibling.score);
       }
     }
     // brute force associate extended relationships
@@ -203,7 +203,7 @@ export async function bruteForceResolveDuplicates() {
           if (relation.id === r.id) {
             continue;
           }
-          associateSiblings(relation.id, r.id, (relation.confidence + r.confidence) / 2);
+          await associateSiblings(relation.id, r.id, (relation.confidence + r.confidence) / 2);
         }
       }
     }
