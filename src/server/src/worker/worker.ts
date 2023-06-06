@@ -62,13 +62,13 @@ export async function doWork() {
               url, 
             }
           );
-          fetchMax.advance();
-          limit.advance();
+          await fetchMax.advance();
+          await limit.advance();
           await job.moveToCompleted();
           return summary;
         } catch (e) {
           console.error(e);
-          fetchMax.advance();
+          await fetchMax.advance();
           await job.moveToFailed(e);
         } finally {
           next();
