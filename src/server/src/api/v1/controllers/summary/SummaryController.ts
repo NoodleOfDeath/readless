@@ -212,7 +212,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     await Cache.upsert({
       halflife: process.env.CACHE_HALFLIFE || '2m',
       key: cacheKey,
-      value: JSON.stringify(records);
+      value: JSON.stringify(records),
     });
     return records as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
   }
