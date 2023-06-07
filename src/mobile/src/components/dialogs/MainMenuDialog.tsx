@@ -38,11 +38,11 @@ export function MainMenuDialog({ ...props }: SheetProps) {
       label: strings.browse,
       onPress: openBrowse,
     },
-    {
-      icon: 'information',
-      label: strings.about,
-      onPress: openAbout,
-    },
+    // {
+    //   icon: 'information',
+    //   label: strings.about,
+    //   onPress: openAbout,
+    // },
   ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings]);
 
   return (

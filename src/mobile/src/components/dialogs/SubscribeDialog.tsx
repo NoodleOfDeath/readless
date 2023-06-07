@@ -134,18 +134,14 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
               key={ label }
               bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
               <DataTableCell 
-                justifyCenter
+                justifyEnd
+                alignCenter
                 bg="transparent">
                 <Provider>
-                  <View row alignCenter justifyStart gap={ 4 }>
-                    <Text>
+                  <View row alignCenter justifyEnd gap={ 4 }>
+                    <Text textRight>
                       {label}
                     </Text>
-                    {description && (
-                      <Menu autoAnchor={ <Icon name="information" /> }>
-                        <Text p={ 12 }>{description}</Text>
-                      </Menu>
-                    )}
                   </View>
                 </Provider>
               </DataTableCell>
@@ -153,6 +149,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                 <DataTableCell
                   key={ tierLabel } 
                   justifyCenter
+                  alignCenter
                   bg="transparent">
                   {availabileTo.includes(id) ? (
                     <Icon 

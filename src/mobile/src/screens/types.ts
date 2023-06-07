@@ -44,6 +44,7 @@ export type StackableTabParams = TabParams & {
     initiallyTranslated?: boolean;
     keywords?: string[];
     summary: PublicSummaryAttributes | number;
+    showAnalytics?: boolean;
   };
 };
 

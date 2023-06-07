@@ -1,11 +1,11 @@
 import React from 'react';
+import { ScrollView as RNScrollView } from 'react-native';
 
 import pluralize from 'pluralize';
 
 import { PublicTokenAttributes, PublicTokenTypeAttributes } from '~/api';
 import {
   Button,
-  CollapsedView,
   ScrollView,
   ScrollViewProps,
   Text,
@@ -37,6 +37,8 @@ export function TopicSampler({
   const { getTopicGroups, getTopics } = useSummaryClient();
   const { search } = useNavigation();
   
+  const refResults = React.useRef<RNScrollView>(null);
+
   const [_loading, setLoading] = React.useState(false);
 
   const [topicGroups, setTopicGroups] = React.useState<Partial<PublicTokenTypeAttributes>[]>([]);
@@ -45,8 +47,6 @@ export function TopicSampler({
 
   const [_topicCount, _setTopicCount] = React.useState(0);
   const [topics, setTopics] = React.useState<PublicTokenAttributes[]>([]);
-  
-  const title = React.useMemo(() => `${pluralize(topicType?.displayName || 'Topic')} ${strings.inTheLast} ${topicInterval}`, [topicType, topicInterval]);
   
   const onMount = React.useCallback(async () => {
     setLoading(true);
@@ -70,9 +70,12 @@ export function TopicSampler({
     }
     if (data) {
       setTopics(data.rows);
+      refResults.current?.scrollTo({
+        animated: true, x: 0, y: 0, 
+      });
     }
     setLoading(false);
-  }, [getTopics, topicType, topicInterval]);
+  }, [getTopics, topicType, topicInterval, refResults]);
     
   React.useEffect(() => {
     onMount();
@@ -89,54 +92,50 @@ export function TopicSampler({
   }, [topicType, topicGroups]);
   
   return (
-    <CollapsedView 
-      initiallyCollapsed={ false }
-      title={ title }>
-      <View
-        height={ 65 } 
-        ph={ 24 }
-        gap={ 6 }
-        style={ [theme.components.sampler, style] }>
-        {topics.length > 0 ? (
-          <ScrollView horizontal style={ { overflow: 'visible' } }>
-            <View>
-              <View row alignCenter mh={ 12 } gap={ 12 }>
-                {topics.map((topic) => (
-                  <Button 
-                    key={ topic.text }
-                    borderRadius={ 6 }
-                    elevated
-                    p={ 4 }
-                    onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
-                    {topic.text}
-                  </Button>
-                ))}
-              </View>
-            </View>
-          </ScrollView>
-        ) : (
-          <Text p={ 2 } textCenter>
-            {strings.search.noResults}
-            {' '}
-            🥺
-          </Text>
-        )}
-        <ScrollView horizontal style={ { overflow: 'visible' } }>
+    <View
+      height={ 72 } 
+      ph={ 24 }
+      p={ 6 }
+      style={ [theme.components.sampler, style] }>
+      <ScrollView horizontal style={ { overflow: 'visible' } }>
+        <View>
+          <View row gap={ 12 }>
+            {topicGroups.map((topicGroup) => (
+              <Button
+                key={ topicGroup.name ?? 'Topic' } 
+                onPress={ () => setTopicType(topicGroup) }
+                bold={ topicGroup.name === topicType?.name }
+                underline={ topicGroup.name === topicType?.name }>
+                {pluralize(topicGroup?.displayName ?? '')}
+              </Button>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+      {topics.length > 0 ? (
+        <ScrollView horizontal style={ { overflow: 'visible' } } ref={ refResults }>
           <View>
-            <View row gap={ 12 }>
-              {topicGroups.map((topicGroup) => (
-                <Button
-                  key={ topicGroup.name ?? 'Topic' } 
-                  onPress={ () => setTopicType(topicGroup) }
-                  bold={ topicGroup.name === topicType?.name }
-                  underline={ topicGroup.name === topicType?.name }>
-                  {pluralize(topicGroup?.displayName ?? '')}
+            <View row alignCenter mh={ 12 } gap={ 12 }>
+              {topics.map((topic) => (
+                <Button 
+                  key={ topic.text }
+                  borderRadius={ 6 }
+                  elevated
+                  p={ 4 }
+                  onPress={ () => search({ prefilter: `"${topic.text.replace(/"/g, ($0) => `\\${$0}`)}"` }) }>
+                  {topic.text}
                 </Button>
               ))}
             </View>
           </View>
         </ScrollView>
-      </View>
-    </CollapsedView>
+      ) : (
+        <Text p={ 2 } textCenter>
+          {strings.search.noResults}
+          {' '}
+          🥺
+        </Text>
+      )}
+    </View>
   );
 }

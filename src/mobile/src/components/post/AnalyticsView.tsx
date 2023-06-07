@@ -5,16 +5,16 @@ import { BarChart } from 'react-native-chart-kit';
 import { PublicSummarySentimentAttributes } from '~/api';
 import {
   CollapsedView,
+  CollapsedViewProps,
   MeterDial,
   Text,
   View,
-  ViewProps,
 } from '~/components';
 import { useStyles } from '~/hooks';
 import { strings } from '~/locales';
 import { fixedSentiment } from '~/utils';
 
-export type AnalyticsViewProps = Omit<ViewProps, 'children'> & {
+export type AnalyticsViewProps = Omit<CollapsedViewProps, 'children'> & {
   sentiment: number;
   sentiments: PublicSummarySentimentAttributes[];
 };
@@ -65,7 +65,7 @@ export function AnalyticsView({
   return (
     <View style={ style } gap={ 12 }>
       <CollapsedView
-        initiallyCollapsed
+        { ...props }
         title={ strings.summary.sentimentAnalysis }
         info={ strings.summary.sentimentAnalysisInfo }>
         <View gap={ 12 }>

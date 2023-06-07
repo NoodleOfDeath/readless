@@ -31,7 +31,7 @@ const SocialAppIds: Record<Social, string> = {
 };
 
 export type UseShareProps = {
-  onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => void;
+  onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => Promise<unknown>;
   callback?: () => void;
 };
 
@@ -42,7 +42,7 @@ export function useShare({
 
   const copyToClipboard = React.useCallback(async (content: string) => {
     try {
-      await Clipboard.setString(content);
+      Clipboard.setString(content);
       await onInteract?.(InteractionType.Copy, content);
     } catch (e) {
       console.error(e);
@@ -85,12 +85,12 @@ export function useShare({
         const base64ImageUrl = `data:image/png;base64,${await RNFS.readFile(url, 'base64')}`;
         await Share.shareSingle({ 
           appId: SocialAppIds[social],
-          backgroundBottomColor: '#fefefe',
-          backgroundTopColor: '#906df4',
+          backgroundImage: base64ImageUrl,
           message: `${summary.title} ${shareableLink(summary, BASE_DOMAIN)}`,
           social,
-          stickerImage: base64ImageUrl,
+          stickerImage: social === Social.InstagramStories ? base64ImageUrl : undefined,
           url,
+          urls: [url],
         });
       });
     } catch (e) {

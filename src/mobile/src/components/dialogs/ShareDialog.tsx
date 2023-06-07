@@ -27,7 +27,7 @@ export type ShareDialogProps = {
   summary: PublicSummaryAttributes;
   viewshot: ViewShot | null;
   format?: ReadingFormat;
-  onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => void;
+  onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => Promise<unknown>;
   onClose?: () => void;
 };
 
@@ -78,20 +78,20 @@ export function ShareDialog({
     ],
     [
       {
-        icon:'twitter',
+        icon: 'twitter',
         label: strings.share.twitter,
         onPress:() => shareSocial(summary, viewshot, Social.Twitter), 
       },
       {
-        icon:'instagram',
+        icon: 'instagram',
         label: strings.share.instagramStories,
         onPress: () => shareSocial(summary, viewshot, Social.InstagramStories), 
       },
-      {
-        icon:'instagram',
-        label: strings.share.instagram,
-        onPress: () => shareSocial(summary, viewshot, Social.Instagram), 
-      },
+      // {
+      //   icon: 'instagram',
+      //   label: strings.share.instagram,
+      //   onPress: () => shareSocial(summary, viewshot, Social.Instagram), 
+      // },
       {
         icon: 'camera-outline',
         label: strings.share.shareAsImage,

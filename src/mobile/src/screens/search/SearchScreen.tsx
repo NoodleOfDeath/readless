@@ -212,8 +212,8 @@ export function SearchScreen({
         headerShown: true,
         headerTitle: () => (
           <Switch 
-            leftLabel={ <Icon name="filter-off" size={ 24 } /> }
-            rightLabel={ <Icon name="filter-check" size={ 24 } /> }
+            leftLabel={ <Icon name="filter-off" /> }
+            rightLabel={ <Icon name="filter-check" /> }
             value={ onlyCustomNews }
             onValueChange={ (value) => {
               setOnlyCustomNews(value);
@@ -385,7 +385,7 @@ export function SearchScreen({
   return (
     <Screen>
       <SafeAreaView style={ { flexGrow: 1 } }>
-        <View col gap={ 3 }>
+        <View col>
           {!prefilter && (<TopicSampler horizontal />)}
           {summaries.length > 0 && averageSentiment && (
             <View 

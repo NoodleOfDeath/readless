@@ -1,10 +1,9 @@
 import React from 'react';
-import { ScrollView as RNScrollView, RefreshControl } from 'react-native';
-
 import {
-  KeyboardAwareScrollView,
-  KeyboardAwareScrollViewProps,
-} from 'react-native-keyboard-aware-scroll-view';
+  ScrollView as RNScrollView,
+  ScrollViewProps as RNScrollViewProps,
+  RefreshControl,
+} from 'react-native';
 
 import {
   Stylable,
@@ -13,10 +12,10 @@ import {
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type ScrollViewProps = ViewProps & KeyboardAwareScrollViewProps & {
+export type ScrollViewProps = ViewProps & RNScrollViewProps & {
   refreshing?: boolean;
   onRefresh?: () => void;
-  keyboardAware?: boolean;
+  ref?: React.RefObject<RNScrollView>;
 };
 
 export function ScrollView({
@@ -28,34 +27,23 @@ export function ScrollView({
   refreshControl = onRefresh && (
     <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } />
   ),
-  keyboardAware = false,
+  ref,
   ...props
 }: ScrollViewProps) {
   const theme = useTheme();
   const style = useStyles(props as Stylable);
   return (
     <View style={ theme.components.flexCol }>
-      {keyboardAware ? (
-        <KeyboardAwareScrollView 
-          refreshControl={ refreshControl } 
-          keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
-          scrollEventThrottle={ scrollEventThrottle }
-          keyboardDismissMode="on-drag"
-          style={ style }
-          { ...props }>
-          {children}
-        </KeyboardAwareScrollView>
-      ) : (
-        <RNScrollView 
-          refreshControl={ refreshControl }
-          keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
-          scrollEventThrottle={ scrollEventThrottle }
-          keyboardDismissMode="on-drag"
-          style={ style }
-          { ...props }>
-          {children}
-        </RNScrollView>
-      )}
+      <RNScrollView 
+        refreshControl={ refreshControl }
+        keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
+        scrollEventThrottle={ scrollEventThrottle }
+        keyboardDismissMode="on-drag"
+        style={ style }
+        ref={ ref as React.RefObject<RNScrollView> }
+        { ...props }>
+        {children}
+      </RNScrollView>
     </View>
   );
 }

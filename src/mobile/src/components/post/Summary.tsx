@@ -61,8 +61,9 @@ type Props = {
   compact?: boolean;
   swipeable?: boolean;
   disableInteractions?: boolean;
+  showAnalytics?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
-  onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => void;
+  onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => Promise<unknown>;
   onLocalize?: (translations: PublicSummaryTranslationAttributes[]) => void;
   onToggleTranslate?: (onOrOff: boolean) => void;
 };
@@ -125,6 +126,7 @@ export function Summary({
   compact = false,
   swipeable = true,
   disableInteractions = false,
+  showAnalytics = false,
   onFormatChange,
   onInteract,
   onLocalize,
@@ -311,7 +313,7 @@ export function Summary({
               caption 
               bold
               underline
-              onPress={ () => handleLocalizeSummary() }>
+              onPress={ handleLocalizeSummary }>
               {strings.summary.translate}
             </Text>
           )
@@ -343,6 +345,7 @@ export function Summary({
           <View 
             elevated
             style={ theme.components.card }
+            mt={ isShareTarget ? 12 : undefined }
             borderRadius={ initialFormat ? 0 : 12 }
             mb={ 12 }
             ml={ initialFormat ? undefined : 12 }
@@ -648,6 +651,7 @@ export function Summary({
               {initialFormat && summary.sentiment && (
                 <AnalyticsView
                   mb={ 12 }
+                  initiallyCollapsed={ !showAnalytics }
                   sentiment={ summary.sentiment }
                   sentiments={ Object.values(summary.sentiments ?? []) } />
               )}

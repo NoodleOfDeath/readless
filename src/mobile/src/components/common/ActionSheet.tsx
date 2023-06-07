@@ -16,6 +16,7 @@ export function ActionSheet({ children, ...props }: ActionSheetProps) {
       { ...props }
       gestureEnabled
       headerAlwaysVisible
+      elevation={ 2 }
       containerStyle={ { ...theme.components.card, ...style } }>
       <SafeAreaView>
         {children}

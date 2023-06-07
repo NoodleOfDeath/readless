@@ -6,9 +6,10 @@ import {
   Svg,
 } from 'react-native-svg';
 
+import { ViewProps } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type MeterDialProps = {
+export type MeterDialProps = ViewProps & {
   min?: number;
   max?: number;
   value?: number;
@@ -54,8 +55,8 @@ export function MeterDial({
     // x = (v / |v|) * sqrt((-90v / min) * (90v / max))
     return value === 0 ? 0 : (value/Math.abs(value)) * Math.sqrt((-90 * value / min) * (90 * value / max));
   }, [min, max, value]);
-  const majorTicks = React.useMemo(() => [...Array((max - min) / majorTick).keys()], [min, max, majorTick]);
-  const minorTicks = React.useMemo(() => [...Array((max - min) / minorTick).keys()], [min, max, minorTick]);
+  const majorTicks = React.useMemo(() => [...Array.from(Array((max - min) / majorTick).keys())], [min, max, majorTick]);
+  const minorTicks = React.useMemo(() => [...Array.from(Array((max - min) / minorTick).keys())], [min, max, minorTick]);
   return (
     <Svg viewBox="0 0 100 60" width={ width } height={ height }>
       {wedgeColors.map((color, i) => {
