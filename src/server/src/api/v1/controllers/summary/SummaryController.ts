@@ -205,7 +205,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         noOutlets,
         offset: Number(offset),
         outlets: outlets.length === 0 ? [''] : outlets,
-        startDated startDate ?? new Date(),
+        startDated: startDate ?? new Date(),
       },
       type: QueryTypes.SELECT,
     }))?.[0] ?? { count: 0, rows: [] };

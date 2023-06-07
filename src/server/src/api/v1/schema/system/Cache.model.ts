@@ -22,6 +22,7 @@ export class Cache<A extends CacheAttributes = CacheAttributes, B extends CacheC
   @Column({
     allowNull: false, 
     type: DataType.STRING(2083), 
+    unique: true,
   })
   declare key: string;
 
