@@ -1,6 +1,7 @@
 // system
 export * from './system/Query.model';
 export * from './system/RateLimit.model';
+export * from './system/Cache.model';
 
 export * from './system/service/Service.model';
 export * from './system/service/ServiceStatus.model';

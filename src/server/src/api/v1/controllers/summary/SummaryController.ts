@@ -29,6 +29,7 @@ import { PayloadWithUserId } from '../../../../services/types';
 import { parseDate } from '../../../../utils';
 import { AuthError, InternalError } from '../../middleware';
 import {
+  Cache,
   InteractionType,
   PublicSummaryAttributes,
   PublicTokenAttributes,
@@ -143,7 +144,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() ids: number[] = [],
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
-    @Query() interval = '100y',
+    @Query() interval?: string,
     @Query() locale = '',
     @Query() start?: string,
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
@@ -167,17 +168,35 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     const noOutlets = outlets.length === 0;
     const noCategories = categories.length === 0;
     const noIds = ids.length === 0 || excludeIds;
-    const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : new Date();
-    const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : new Date(0);
-    const records = await this.store.query(GET_SUMMARIES, {
+    const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
+    const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
+    const cacheKey = [
+      '/getSummaries',
+      JSON.stringify(outlets),
+      JSON.stringify(categories),
+      JSON.stringify(ids),
+      excludeIds,
+      interval,
+      startDate.toISOString(),
+      endDate.toISOString(),
+      limit,
+      offset,
+      locale,
+      filter,
+    ].join('§');
+    const cache = await Cache.fromKey(cacheKey);
+    if (cache && cache.expiresSoon() === false) {
+      return cache.value as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+    }
+    const records = (await this.store.query(GET_SUMMARIES, {
       nest: true,
       replacements: {
         categories: categories.length === 0 ? [''] : categories,
-        endDate,
+        endDate: endDate ?? new Date(0),
         excludeIds,
         filter: query,
         ids: ids.length === 0 ? [-1] : ids,
-        interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval),
+        interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval ?? '100y'),
         limit: Number(pageSize),
         locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
         noCategories,
@@ -186,11 +205,16 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         noOutlets,
         offset: Number(offset),
         outlets: outlets.length === 0 ? [''] : outlets,
-        startDate,
+        startDated startDate ?? new Date(),
       },
       type: QueryTypes.SELECT,
+    }))?.[0] ?? { count: 0, rows: [] };
+    await Cache.upsert({
+      halflife: process.env.CACHE_HALFLIFE || '2m',
+      key: cacheKey,
+      value: JSON.stringify(records);
     });
-    return (records?.[0] ?? { count: 0, rows: [] }) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+    return records as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
   }
   
   @Get('/topics')
