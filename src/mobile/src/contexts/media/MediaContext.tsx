@@ -19,7 +19,6 @@ import {
 } from './types';
 
 import { PublicSummaryAttributes } from '~/api';
-import { useSummaryClient } from '~/hooks';
 
 export const PlaybackService = async () => {
   try {
@@ -52,8 +51,6 @@ type Props = React.PropsWithChildren;
 
 export function MediaContextProvider({ children }: Props) {
   
-  const { audioStreamURI } = useSummaryClient();
-
   // TTS
   const [voices, setVoices] = React.useState<Voice[]>([]);
   const [selectedVoiceIndex, setSelectedVoice] = React.useState(0);
@@ -187,8 +184,8 @@ export function MediaContextProvider({ children }: Props) {
   }, [cacheMap, currentTrackIndex, generateTrack, preloadCount, tracks]);
   
   React.useEffect(() => {
-    //preload();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    preload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrackIndex, tracks]);
 
   React.useEffect(() => {
@@ -221,16 +218,14 @@ export function MediaContextProvider({ children }: Props) {
           summary,
           text,
           title: summary.title,
-          url: audioStreamURI(summary) || summary.media?.[0]?.url,
+          //url: audioStreamURI(summary) || summary.media?.[0]?.url,
         };
         tracks.push(newTrack);
-        await TrackPlayer.add(newTrack);
       }
       setTracks((prev) => {
         const state = [...prev, ...tracks.filter((t) => !prev.some((p) => p.id === t.id))];
         return state;
       });
-      playTrack();
     },
     []
   );

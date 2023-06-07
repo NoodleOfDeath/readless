@@ -506,14 +506,14 @@ export function Summary({
                             </View>
                           )}
                         </View>
-                        {summary?.siblings && summary.siblings.length > 0 && (
+                        {summary.siblings && summary.siblings.length > 0 && (
                           <View mh={ 12 } gap={ 6 }>
                             <Text>
                               {`${strings.summary.relatedNews} (${summary.siblings.length})`}
                             </Text>
                             <ScrollView height={ summary.siblings.length === 1 ? 50 : 70 }>
                               <View gap={ 5 }>
-                                {summary.siblings.sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
+                                {[...summary.siblings].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
                                   <View 
                                     key={ sibling.id } 
                                     height={ 50 }>

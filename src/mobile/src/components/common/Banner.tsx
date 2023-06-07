@@ -62,7 +62,7 @@ export function Banner({
             </View>
           </View>
           {minimized === false && (
-            <View flexGrow={ 1 }>
+            <View height={ 250 }>
               {children}
             </View>
           )}

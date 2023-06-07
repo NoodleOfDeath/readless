@@ -85,10 +85,9 @@ export function useShare({
         const base64ImageUrl = `data:image/png;base64,${await RNFS.readFile(url, 'base64')}`;
         await Share.shareSingle({ 
           appId: SocialAppIds[social],
-          backgroundImage: base64ImageUrl,
           message: `${summary.title} ${shareableLink(summary, BASE_DOMAIN)}`,
           social,
-          stickerImage: social === Social.InstagramStories ? base64ImageUrl : undefined,
+          stickerImage: base64ImageUrl,
           url,
           urls: [url],
         });
