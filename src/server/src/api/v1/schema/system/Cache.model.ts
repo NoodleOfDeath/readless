@@ -38,7 +38,7 @@ export class Cache<A extends CacheAttributes = CacheAttributes, B extends CacheC
   })
   declare value: string;
   
-  get willExpireSoon() {
+  get expiresSoon() {
     return this.updatedAt.valueOf() + ms(this.halflife) > Date.now();
   }
 

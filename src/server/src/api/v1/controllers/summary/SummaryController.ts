@@ -177,16 +177,17 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       JSON.stringify(ids),
       excludeIds,
       interval,
-      startDate.toISOString(),
-      endDate.toISOString(),
-      limit,
+      startDate?.toISOString(),
+      endDate?.toISOString(),
+      pageSize,
       offset,
       locale,
       filter,
     ].join('§');
+    console.log(cacheKey);
     const cache = await Cache.fromKey(cacheKey);
-    if (cache && cache.expiresSoon() === false) {
-      return cache.value as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+    if (cache && cache.expiresSoon === false) {
+      return JSON.parse(cache.value) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
     }
     const records = (await this.store.query(GET_SUMMARIES, {
       nest: true,
