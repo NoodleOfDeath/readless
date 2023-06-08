@@ -1,3 +1,4 @@
+import axios from 'axios';
 import ms from 'ms';
 import { Op } from 'sequelize';
 
@@ -21,6 +22,7 @@ async function main() {
   bruteForceResolveDuplicates();
   pollForNews();
   cleanUpDeadWorkers();
+  cacheApiSummaries();
 }
 
 export function generateDynamicUrl(
@@ -214,6 +216,24 @@ export async function bruteForceResolveDuplicates() {
     console.log();
     console.log('>>> done resolving duplicates');
     setTimeout(bruteForceResolveDuplicates, ms('5m'));
+  }
+}
+
+async function cacheApiSummaries() {
+  try {
+    await axios.get(`${process.env.API_ENDPOINT}/v1/summary`, {
+      headers: { 'user-agent': 'kube-probe' }
+    });
+    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=1`, {
+      headers: { 'user-agent': 'kube-probe' }
+    });
+    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=2`, {
+      headers: { 'user-agent': 'kube-probe' }
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setTimeout(cacheApiSummaries, ms('1m'));
   }
 }
 
