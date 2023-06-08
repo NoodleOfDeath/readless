@@ -105,14 +105,19 @@ const DATES: Test[] = [
     date: 'Presented By Mind ·chatbotsNational Eating Disorder Association replaces human helpline staff with an AI chatbotBYChris MorrisMay 26, 2023, 3:26 PM UTC<img alt="" sizes="100vw" srcSet="https://content.fortune.co',
     expect: new Date('May 26, 2023 3:26 PM EST'),
   },
+  {
+    date: 'Wed 7 Jun 2023 20.19 EDT',
+    expect: new Date('Jun 7, 2023 8:19 PM EDT'),
+  },
 ];
 
 describe('date tests', () => {
   DATES.forEach((date, i) => {
     test(`parse-${i}`, async () => {
       const parsedDate = parseDate(date.date);
-      expect(parsedDate.toLocaleDateString()).toEqual(date.expect.toLocaleDateString());
-      expect(parsedDate.toTimeString()).toEqual(date.expect.toTimeString());
+      expect(parsedDate).toBeDefined();
+      expect(parsedDate?.toLocaleDateString()).toEqual(date.expect.toLocaleDateString());
+      expect(parsedDate?.toTimeString()).toEqual(date.expect.toTimeString());
     });
   });
 });

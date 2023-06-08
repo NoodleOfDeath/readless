@@ -1,8 +1,8 @@
 import ms from 'ms';
 
-export const TIME_EXPR = /(\d\d?)\s*(a\.?m\.?|p\.?m\.?)|(\d\d?)[.:](\d\d?)(?:[.:](\d\d?))?(?:\s*(a\.?m\.?|p\.?m\.?))?(?:.*(?:\s*(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC)))?/i;
+export const TIME_EXPR = /(\d\d?)\s*(a\.?m\.?|p\.?m\.?)|(\d\d?)[.:](\d\d?)(?:[.:](\d\d?))?(?:\s*(a\.?m\.?|p\.?m\.?))?(?:.*(?:\s*\b(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))\b)?/i;
 
-export const DATE_EXPR = /(\d\d?\s*(?:h(?:rs?|ours?)?|m(?:in(?:utes?)?)?|d(?:ays?)?|w(?:ks?|eeks?)?|months?|y(?:rs?|ears?)?))\s*ago|(?:(\d\d?)([-./])(\d\d?)\3(\d{4}|\d{2})|(\d{4})([-./])(\d\d?)\7(\d\d?)|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?(?:[,\s]\s*(\d{4})?))(?:.*(?:\s*(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC)))?|(\d\d\d\d+)/i;
+export const DATE_EXPR = /(\d\d?\s*(?:h(?:rs?|ours?)?|m(?:in(?:utes?)?)?|d(?:ays?)?|w(?:ks?|eeks?)?|months?|y(?:rs?|ears?)?))\s*ago|(?:(\d\d?)([-./])(\d\d?)\3(\d{4}|\d{2})|(\d{4})([-./])(\d\d?)\7(\d\d?)|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?(?:[,\s]\s*(\d{4})?))(?:.*(?:\s*\b(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))\b)?|(\d\d\d\d+)/i;
 
 export function monthToString(month: number | string) {
   const m = parseInt(`${month}`);
@@ -62,7 +62,8 @@ export function parseDate(context?: string) {
       timezone = timezone2;
     }
   }
-  const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : 'pm'}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/i, ($0, $1) => `${$1}ST`)].join(' ');
+  const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : ''}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/i, ($0, $1) => `${$1}ST`)].join(' ');
+  console.log(dateMatch);
   const parsedDate = dateOrUndefined(new Date(dateMatch));
   return parsedDate;
 }

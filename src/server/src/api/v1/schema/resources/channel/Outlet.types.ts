@@ -102,7 +102,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: '.ShareByline a[href*="/author/"]' },
-      date: { selector: '.ShareByline > div  > div :last-child' },
+      date: { selector: '.ShareByline > div  > div :last-child, div[data-testid*="prism-byline"]' },
       spider: {
         attribute: 'href',
         selector: 'a[class*="AnchorLink"]',
@@ -256,7 +256,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'address p[class*="author/"] a' },
-      date: { selector: 'article time' },
+      date: { selector: 'article time[itemprop="datePublished"], article time' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/articles/"]',
@@ -404,7 +404,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'div[role*="article"] .column p' },
       author: { selector: 'article .contributors a' },
-      date: { selector: 'article .contributors :last-child' },
+      date: { selector: 'article .contributors :last-child, main .mb-md' },
       spider:{
         attribute: 'href',
         selector: 'article a',
@@ -434,7 +434,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .author, .author' },
-      date: { selector: 'article .date time' },
+      date: { selector: 'article .date time, .article-timestamp time' },
       spider:{
         attribute: 'href',
         selector: [
@@ -453,7 +453,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: '.article p' },
       author: { selector: '.article .dateline' },
-      date: { selector: '.article .dateline' },
+      date: { selector: '.article .dateline, #Main .smallprint' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1242,7 +1242,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .author-name a' },
-      date: { selector: 'article .author time' },
+      date: { selector: 'article .author time, main time' },
       spider:{
         attribute: 'href',
         selector: [
