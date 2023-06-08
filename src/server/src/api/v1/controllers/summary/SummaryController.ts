@@ -184,7 +184,6 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       locale,
       filter,
     ].join('§');
-    console.log(cacheKey);
     const cache = await Cache.fromKey(cacheKey);
     if (cache && cache.expiresSoon === false) {
       return JSON.parse(cache.value) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;

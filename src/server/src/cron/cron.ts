@@ -221,15 +221,9 @@ export async function bruteForceResolveDuplicates() {
 
 async function cacheApiSummaries() {
   try {
-    await axios.get(`${process.env.API_ENDPOINT}/v1/summary`, {
-      headers: { 'user-agent': 'kube-probe' }
-    });
-    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=1`, {
-      headers: { 'user-agent': 'kube-probe' }
-    });
-    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=2`, {
-      headers: { 'user-agent': 'kube-probe' }
-    });
+    await axios.get(`${process.env.API_ENDPOINT}/v1/summary`, { headers: { 'user-agent': 'kube-probe' } });
+    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=1`, { headers: { 'user-agent': 'kube-probe' } });
+    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=2`, { headers: { 'user-agent': 'kube-probe' } });
   } catch (e) {
     console.error(e);
   } finally {
