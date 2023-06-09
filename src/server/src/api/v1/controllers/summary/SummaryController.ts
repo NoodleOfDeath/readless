@@ -149,7 +149,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
     @Query() pageSize = 10,
     @Query() page = 0,
-    @Query() offset = pageSize * page
+    @Query() offset = pageSize * page,
+    @Query() forceCache = false
   ): Promise<BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>> {
     const version = req?.headers['x-app-version'];
     if (/^2\.\d\.\d$/.test(JSON.stringify(version) || '')) {
@@ -184,7 +185,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       filter,
     ].join('§');
     const cache = await Cache.fromKey(cacheKey);
-    if (cache && cache.expiresSoon === false) {
+    if (!forceCache && cache && cache.expiresSoon === false) {
       return JSON.parse(cache.value) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
     }
     const records = (await this.store.query(GET_SUMMARIES, {

@@ -222,10 +222,10 @@ export async function bruteForceResolveDuplicates() {
 async function cacheApiSummaries() {
   try {
     console.log('caching queries');
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0);
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 1);
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2);
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 3);
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0, undefined, true);
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 1, undefined, true);
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, undefined, true);
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 3, undefined, true);
     console.log('done caching');
   } catch (e) {
     console.error(e);
