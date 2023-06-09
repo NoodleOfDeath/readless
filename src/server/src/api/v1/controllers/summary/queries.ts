@@ -115,9 +115,6 @@ FROM (
           ON summaries.id = summary_translations."parentId"
           AND (summary_translations."deletedAt" IS NULL)
           AND (summary_translations.locale = :locale)
-        LEFT OUTER JOIN summary_tokens
-          ON summaries.id = summary_tokens."parentId"
-          AND (summary_tokens."deletedAt" IS NULL)
         LEFT OUTER JOIN summary_sentiments
           ON summaries.id = summary_sentiments."parentId"
           AND (summary_sentiments."deletedAt" IS NULL)
@@ -162,7 +159,6 @@ FROM (
           OR (summaries."shortSummary" ~* :filter)
           OR (summaries.summary ~* :filter)
           OR (summaries.bullets::text ~* :filter)
-          OR (summary_tokens.text ~* :filter)
           OR (summary_translations.value ~* :filter)
         )
       GROUP BY
