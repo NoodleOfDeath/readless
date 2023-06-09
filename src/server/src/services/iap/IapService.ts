@@ -36,18 +36,10 @@ export class IapService extends BaseService {
       return await this.verifyAppleReceipt(receipt, APPLE_IAP_ENDPOINT_SANDBOX);
     }
     const purchase = new PurchaseResponse('apple', response.data);
-    // Create Voucher
-    const voucher = await Voucher.scope('public').findOne({
-      where: 
-      { uuid: purchase.uuid },
-    });
-    if (voucher) {
-      return {
-        ...voucher.toJSON(),
-        expired: voucher.expired,
-      };
+    if (purchase.expiresAt < new Date()) {
+      throw new Error('Expired receipt');
     }
-    await Voucher.create(purchase);
+    await Voucher.upsert(purchase);
     return await Voucher.scope('public').findOne({
       where: 
       { uuid: purchase.uuid },

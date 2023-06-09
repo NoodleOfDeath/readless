@@ -122,6 +122,7 @@ export class PurchaseResponse<
   
   uuid: string;
   vendor: V;
+  productId: string;
   data: string;
   expiresAt: Date;
   token: string;
@@ -134,9 +135,11 @@ export class PurchaseResponse<
       }
       this.uuid = receipt.original_transaction_id;
       this.vendor = vendor;
+      this.productId = receipt.product_id;
       this.data = JSON.stringify(purchase);
       this.expiresAt = new Date(Number(receipt.expires_date_ms));
       this.token = jwt.sign({
+        productId: receipt.product_id,
         uuid: receipt.original_transaction_id,
         vendor,
       }, process.env.JWT_SECRET, { expiresIn: JWT_TOKEN_LIFESPAN });
