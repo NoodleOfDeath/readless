@@ -1,5 +1,7 @@
 import React from 'react';
 
+import VersionCheck from 'react-native-version-check';
+
 import {
   Screen,
   Text,
@@ -12,6 +14,7 @@ export function AboutScreen() {
     <Screen>
       <View p={ 12 }>
         <Text h1>{strings.readless}</Text>
+        <Text>{VersionCheck.getCurrentVersion()}</Text>
       </View>
     </Screen>
   );

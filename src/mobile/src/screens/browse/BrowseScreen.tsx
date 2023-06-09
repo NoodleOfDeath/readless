@@ -102,7 +102,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
 
   React.useEffect(() => {
     autoApplyFilter();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookmarkedOutlets, bookmarkedCategories]);
 
   return (

@@ -4,7 +4,7 @@ import ms from 'ms';
 import { AuthError } from '../../api/v1/middleware';
 import { Credential, User } from '../../api/v1/schema';
 
-export type JwtBaseAccessOperation = '*' | 'read' | 'write' | 'delete';
+export type JwtBaseAccessOperation = '*' | 'has' | 'read' | 'write' | 'delete';
 export type JwtAccessOperation = JwtBaseAccessOperation | `deny.${JwtBaseAccessOperation}`;
 
 export const JWT_REFERSH_THRESHOLD_MS = ms(process.env.JWT_REFERSH_THRESHOLD || '6h');

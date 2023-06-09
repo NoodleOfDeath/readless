@@ -13,7 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .  --ext .ts,.tsx",
-    "format": "eslint .  --ext .ts,.tsx --fix"
+    "format": "eslint .  --ext .ts,.tsx --fix",
+    "localize": "ts-node ./localize"
   },
   "keywords": [],
   "author": "",

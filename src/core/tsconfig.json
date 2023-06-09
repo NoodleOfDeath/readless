@@ -25,6 +25,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "noImplicitAny": false,
     "removeComments": true,
     "noLib": false,
     "allowSyntheticDefaultImports": true,
@@ -33,8 +34,9 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": ".",
-    "allowJs": true,
-    "resolveJsonModule": true
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true
   },
   "include": [
     "**/*.ts",

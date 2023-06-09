@@ -21,6 +21,7 @@ import {
   TokenType,
   User,
   UserMetadata,
+  Voucher,
   Worker,
 } from './models';
 import { 
@@ -34,6 +35,7 @@ import {
   PUBLIC_SUMMARY_TOKEN_ATTRIBUTES, 
   PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES, 
   PUBLIC_TOKEN_TYPE_ATTRIBUTES,
+  PUBLIC_VOUCHER_ATTRIBUTES,
 } from './types';
 
 export function makeAssociations() {
@@ -207,5 +209,7 @@ export function addScopes() {
   SummaryTranslation.addScope('public', { attributes: [...PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES] });
   
   SummaryMedia.addScope('public', { attributes: [...PUBLIC_SUMMARY_MEDIA_ATTRIBUTES] });
+  
+  Voucher.addScope('public', { attributes: [...PUBLIC_VOUCHER_ATTRIBUTES] });
 
 }

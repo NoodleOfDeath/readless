@@ -68,28 +68,6 @@ router.get(
 );
 
 router.get(
-  '/trends',
-  rateLimitMiddleware('30 per 1m'),
-  query('type').isString().optional(),
-  query('interval').isString().optional(),
-  query('min').isNumeric().optional(),
-  ...paginationMiddleware,
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const {
-        type, interval, min = 0, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
-      } = req.query;
-      const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-      const response = await SummaryController.getTrends(userId, type, interval, min, pageSize, page, offset, order);
-      return res.json(response);
-    } catch (err) {
-      internalErrorHandler(res, err);
-    }
-  }
-);
-
-router.get(
   '/topics/groups',
   rateLimitMiddleware('30 per 1m'),
   async (req, res) => {

@@ -22,7 +22,7 @@ export class Voucher<
     type: DataType.STRING,
     unique: true,
   })
-  declare token: string;
+  declare uuid: string;
   
   @Column({
     allowNull: false,
@@ -38,8 +38,19 @@ export class Voucher<
 
   @Column({
     allowNull: false,
-    type: DataType.JSON,
+    type: DataType.DATE,
   })
-  declare rawData: unknown;
+  declare expiresAt: Date;
+  
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+    unique: true,
+  })
+  declare token: string;
+
+  get expired() {
+    return this.expiresAt.valueOf() < Date.now();
+  }
   
 }

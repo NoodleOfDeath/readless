@@ -138,12 +138,12 @@ function Stack() {
           iconSize={ 24 }
           haptic
           onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
-        {/* <View touchable onPress={ () => SheetManager.show('subscribe') }>
+        <View touchable onPress={ () => SheetManager.show('subscribe') }>
           <Icon
             name="tag"
             size={ 24 } />
           <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
-        </View> */}
+        </View>
         <View touchable onPress={ () => SheetManager.show('mainMenu') }>
           {bookmarkCount > 0 && (
             <Badge

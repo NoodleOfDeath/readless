@@ -7,6 +7,7 @@ import { Provider } from 'react-native-paper';
 
 import {
   ActionSheet,
+  ActivityIndicator,
   Button,
   DataTable,
   DataTableCell,
@@ -87,7 +88,12 @@ const FEATURES = [
 export function SubscribeDialog({ ...props }: SheetProps<Props>) {
   
   const theme = useTheme();
-  const { subscriptions: products, subscribe } = React.useContext(IapContext);
+  const { 
+    activeSubscription,
+    purchasePending,
+    subscriptions: products,
+    subscribe,
+  } = React.useContext(IapContext);
   
   const tiers = React.useMemo(() => {
     return [
@@ -170,19 +176,29 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
           <DataTableRow>
             <DataTableCell>{}</DataTableCell>
             <DataTableCell justifyCenter>
-              <Text>{'Current Plan'}</Text>
+              {activeSubscription === undefined ? (
+                <Text>{'Current Plan'}</Text>
+              ): (
+                <Icon name="minus" size={ 24 } />
+              )}
             </DataTableCell>
             {tiers.filter((tier) => tier.id !== 'free').map((tier) => (
               <DataTableCell key={ tier.id } justifyCenter>
-                <Button
-                  haptic
-                  outlined 
-                  rounded
-                  touchable
-                  p={ 6 }
-                  onPress={ () => subscribe(tier.id) }>
-                  {strings.subscribe.subscribe}
-                </Button>
+                {purchasePending ? (
+                  <ActivityIndicator animating />
+                ) : activeSubscription?.productId === tier.id ? (
+                  <Text>{'Current Plan'}</Text>
+                ): (
+                  <Button
+                    haptic
+                    outlined 
+                    rounded
+                    touchable
+                    p={ 6 }
+                    onPress={ () => subscribe(tier.id) }>
+                    {strings.subscribe.subscribe}
+                  </Button>
+                )}
               </DataTableCell>
             ))}
           </DataTableRow>

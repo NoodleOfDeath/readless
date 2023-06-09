@@ -1,5 +1,6 @@
 import fs from 'fs';
 
+import { Request as ExpressRequest } from 'express';
 import { Op } from 'sequelize';
 import {
   Body,
@@ -22,7 +23,7 @@ import {
 import { 
   GoogleService,
   IapService,
-  ProcessPurchaseRequest,
+  PurchaseRequest,
   S3Service,
   TtsService,
 } from '../../../../services';
@@ -68,7 +69,7 @@ export class ServiceController {
   
   @Get('/stream/s/:id')
   public static async stream(
-    @Request() req,
+    @Request() req: ExpressRequest,
     @Path() id: number
   ) {
     // not paywall locked... yet
@@ -90,11 +91,12 @@ export class ServiceController {
   
   @Post('/localize')
   public static async localize(
-    @Body() req: LocalizeRequest
+    @Request() req: ExpressRequest,
+    @Body() body: LocalizeRequest
   ): Promise<BulkResponse<PublicSummaryTranslationAttributes>> {
     const {
       resourceId, resourceType, locale, 
-    } = req;
+    } = body;
     const languages = (await GoogleService.getLanguages()).map((language) => language.code);
     if (!languages.includes(locale)) {
       throw new InternalError('Invalid locale');
@@ -111,7 +113,7 @@ export class ServiceController {
         const attributes = ['title', 'shortSummary', 'summary', 'bullets'] as (keyof PublicSummaryAttributes)[];
         for (const attribute of attributes) {
           const property = summary[attribute];
-          const translatedString = await GoogleService.translateText(Array.isArray(property) ? property.join('\n') : property, req.locale);
+          const translatedString = await GoogleService.translateText(Array.isArray(property) ? property.join('\n') : property, body.locale);
           await SummaryTranslation.upsert({
             attribute,
             locale,
@@ -128,14 +130,16 @@ export class ServiceController {
   
   @Post('/tts')
   public static async tts(
-    @Body() req: TtsRequest
+    @Request() req: ExpressRequest,
+    @Body() body: TtsRequest
   ): Promise<BulkResponse<PublicSummaryMediaAttributes>> {
+    const jwt = req.headers.authorization.split(' ')[1];
     const { 
       resourceType, 
       resourceId,
       voice,
-    } = req;
-    const subscribed = await IapService.authorizePaywallAccess();
+    } = body;
+    const subscribed = await IapService.validateSubscription(jwt);
     if (!subscribed) {
       throw new AuthError('UNAUTHORIZED');
     }
@@ -173,7 +177,7 @@ export class ServiceController {
   @Post('iap')
   public static async processPurchase(
     @Request() req,
-    @Body() body: ProcessPurchaseRequest
+    @Body() body: PurchaseRequest
   ): Promise<PublicVoucherAttributes> {
     return await IapService.processPurchase(body);
   }

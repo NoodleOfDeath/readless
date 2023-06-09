@@ -14,7 +14,8 @@ import {
 } from 'react-native-iap';
 
 import { DEFAULT_IAP_CONTEXT } from './types';
-
+ 
+import { PublicVoucherAttributes } from '~/api';
 import { useServiceClient } from '~/core';
 
 const SKUS = Platform.select({
@@ -34,9 +35,12 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
   const { processPurchase } = useServiceClient();
 
   const [subscriptions, setSubscriptions] = React.useState<Subscription[]>([]);
+  const [activeSubscription, setActiveSubscription] = React.useState<Subscription>();
+  const [purchasePending, setPurchasePending] = React.useState(false);
   
   const subscribe = React.useCallback(async (sku: string, offerToken = '') => {
     try {
+      setPurchasePending(true);
       await requestSubscription(
         {
           sku,
@@ -69,10 +73,11 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
           async (purchase) => {
             console.log('purchaseUpdatedListener', purchase);
             const receipt = purchase.transactionReceipt;
+            let voucher: PublicVoucherAttributes;
             if (Platform.OS === 'ios') {
-              await processPurchase({ platform: 'apple', receipt });
+              voucher = await processPurchase({ platform: 'apple', receipt });
             } else if (Platform.OS === 'android' && purchase.purchaseStateAndroid === 1 && purchase.purchaseToken) {
-              await processPurchase({
+              voucher = await processPurchase({
                 platform: 'google', receipt: {
                   packageName: 'ai.readless.ReadLess',
                   productId: purchase.productId,
@@ -81,7 +86,8 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
                 }, 
               });
             }
-            if (receipt) {
+            if (receipt && voucher) {
+              setActiveSubscription(purchase);
               await finishTransaction({ isConsumable: false, purchase });
             }
           }
@@ -89,11 +95,15 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
         purchaseErrorSubscription = purchaseErrorListener(
           (error) => {
             console.warn('purchaseErrorListener', error);
+            setPurchasePending(false);
           }
         );
       })
       .catch((error) => {
         console.warn(error);
+      })
+      .finally(() => {
+        setPurchasePending(false);
       });
     return () => {
       purchaseUpdateSubscription?.remove();
@@ -104,6 +114,8 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
   
   return (
     <IapContext.Provider value={ {
+      activeSubscription,
+      purchasePending,
       subscribe,
       subscriptions,
     } }>

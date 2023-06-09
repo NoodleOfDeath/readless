@@ -15,6 +15,7 @@ on:
       - "src/server/src/services/**"
       - "src/server/src/utils/**"
       - "src/server/src/api/v1/schema/**"
+      - "src/server/src/api/v1/controllers/**"
 
 concurrency:
   group: ${{ github.ref }}-cron

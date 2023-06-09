@@ -8,6 +8,7 @@ import {
   Button,
   Divider,
   Icon,
+  Text,
   View,
 } from '~/components';
 import { SessionContext } from '~/core';
@@ -38,11 +39,11 @@ export function MainMenuDialog({ ...props }: SheetProps) {
       label: strings.browse,
       onPress: openBrowse,
     },
-    // {
-    //   icon: 'information',
-    //   label: strings.about,
-    //   onPress: openAbout,
-    // },
+    {
+      icon: 'information',
+      label: strings.about,
+      onPress: openAbout,
+    },
   ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings]);
 
   return (
@@ -51,7 +52,7 @@ export function MainMenuDialog({ ...props }: SheetProps) {
         {items.map(({
           badge, icon, label, onPress, 
         }, i) => (
-          <View key={ label }>
+          <View key={ i }>
             <Button
               horizontal
               p={ 12 }
@@ -59,7 +60,7 @@ export function MainMenuDialog({ ...props }: SheetProps) {
               h3
               startIcon={ (
                 <View>
-                  {badge && badge > 0 && (
+                  {badge !== undefined && badge > 0 && (
                     <Badge
                       size={ 18 }
                       style={ {
@@ -68,7 +69,7 @@ export function MainMenuDialog({ ...props }: SheetProps) {
                       {badge}
                     </Badge>
                   )}
-                  {typeof icon === 'string' ? <Icon name={ icon } /> : icon}
+                  <Icon name={ icon } />
                 </View>
               ) }
               onPress={ onPress }>

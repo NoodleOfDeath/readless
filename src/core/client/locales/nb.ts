@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const nbStrings: typeof enStrings = {
+  about: '',
   actions: { close: 'Lukk' },
   bookmarks: {
     activity: 'Aktivitet',
@@ -74,6 +75,7 @@ export const nbStrings: typeof enStrings = {
     system: 'System',
     textScale: 'Tekstskala',
   },
+  share: undefined,
   subscribe: {
     boost: 'Øke',
     features: {

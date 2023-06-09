@@ -55,7 +55,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await ServiceController.localize(req.body);
+      const response = await ServiceController.localize(req, req.body);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);
@@ -67,7 +67,7 @@ router.post(
   '/tts',
   async (req, res) => {
     try {
-      const response = await ServiceController.tts(req.body);
+      const response = await ServiceController.tts(req, req.body);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

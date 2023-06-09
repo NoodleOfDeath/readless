@@ -37,8 +37,6 @@ export function TopicSampler({
   const { getTopicGroups, getTopics } = useSummaryClient();
   const { search } = useNavigation();
   
-  const refResults = React.useRef<RNScrollView>(null);
-
   const [_loading, setLoading] = React.useState(false);
 
   const [topicGroups, setTopicGroups] = React.useState<Partial<PublicTokenTypeAttributes>[]>([]);
@@ -70,12 +68,9 @@ export function TopicSampler({
     }
     if (data) {
       setTopics(data.rows);
-      refResults.current?.scrollTo({
-        animated: true, x: 0, y: 0, 
-      });
     }
     setLoading(false);
-  }, [getTopics, topicType, topicInterval, refResults]);
+  }, [getTopics, topicType, topicInterval]);
     
   React.useEffect(() => {
     onMount();
@@ -113,7 +108,7 @@ export function TopicSampler({
         </View>
       </ScrollView>
       {topics.length > 0 ? (
-        <ScrollView horizontal style={ { overflow: 'visible' } } ref={ refResults }>
+        <ScrollView horizontal style={ { overflow: 'visible' } }>
           <View>
             <View row alignCenter mh={ 12 } gap={ 12 }>
               {topics.map((topic) => (

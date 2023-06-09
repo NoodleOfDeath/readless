@@ -25,7 +25,8 @@
     "start:native": "(cd src/mobile && yarn start)",
     "start:native:reset": "(cd src/mobile && yarn start --reset-cache)",
     "lint": "eslint src  --ext .js,.jsx,.ts,.tsx",
-    "format": "eslint src  --ext .js,.jsx,.ts,.tsx --fix"
+    "format": "eslint src  --ext .js,.jsx,.ts,.tsx --fix",
+    "localize": "(cd src/core && yarn localize)"
   },
   "keywords": [],
   "author": "",

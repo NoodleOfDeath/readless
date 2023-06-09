@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { SheetManager } from 'react-native-actions-sheet';
-
 import {
   InteractionType,
   PublicSummaryAttributes,
@@ -18,7 +16,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/hooks';
+import { useNavigation, useSummaryClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
@@ -34,6 +32,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     setPreference,
   } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
+  const { openBrowse } = useNavigation();
   
   const bookmarks = React.useMemo(() => Object.entries({ ...bookmarkedSummaries }), [bookmarkedSummaries]);
   
@@ -55,7 +54,6 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
       headerRight: () => undefined,
       headerTitle: `${strings.bookmarks.bookmarks} (${bookmarkCount})`,
     });
-    SheetManager.hide('mainMenu');
   }, [bookmarkCount, navigation]);
   
   return (
@@ -70,7 +68,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               p={ 8 }
               m={ 8 }
               textCenter
-              onPress={ () => navigation?.getParent()?.navigate('search') }>
+              onPress={ openBrowse }>
               {strings.browse}
             </Button>
           </View>

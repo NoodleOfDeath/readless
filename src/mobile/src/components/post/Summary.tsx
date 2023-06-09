@@ -453,8 +453,8 @@ export function Summary({
                             width={ 300 }
                             autoAnchor={ (
                               <View
-                                mt={ -12 }
-                                mb={ 20 }
+                                mt={ -18 }
+                                mb={ 30 }
                                 minHeight={ 80 }
                                 height="100%"
                                 overflow='hidden'

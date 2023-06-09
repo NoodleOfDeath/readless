@@ -1,7 +1,7 @@
-import axios from 'axios';
 import ms from 'ms';
 import { Op } from 'sequelize';
 
+import { SummaryController } from '../api/v1/controllers';
 import {
   Job,
   Outlet,
@@ -221,13 +221,16 @@ export async function bruteForceResolveDuplicates() {
 
 async function cacheApiSummaries() {
   try {
-    await axios.get(`${process.env.API_ENDPOINT}/v1/summary`, { headers: { 'user-agent': 'kube-probe' } });
-    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=1`, { headers: { 'user-agent': 'kube-probe' } });
-    await axios.get(`${process.env.API_ENDPOINT}/v1/summary?page=2`, { headers: { 'user-agent': 'kube-probe' } });
+    console.log('caching queries');
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0);
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 1);
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2);
+    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 3);
+    console.log('done caching');
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(cacheApiSummaries, ms('1m'));
+    setTimeout(cacheApiSummaries, ms('30s'));
   }
 }
 

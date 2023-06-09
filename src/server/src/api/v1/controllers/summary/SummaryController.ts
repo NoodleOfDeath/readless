@@ -1,9 +1,8 @@
-//import ms from 'ms';
+import { Request as ExpressRequest } from 'express';
 import { QueryTypes } from 'sequelize';
 import {
   Body,
   Delete,
-  Deprecated,
   Get,
   Patch,
   Path,
@@ -137,7 +136,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
 
   @Get('/')
   public static async getSummaries(
-    @Request() req,
+    @Request() req?: ExpressRequest,
     @Query() userId?: number,
     @Query() _scope = 'public',
     @Query() filter?: string,
@@ -152,8 +151,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() page = 0,
     @Query() offset = pageSize * page
   ): Promise<BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>> {
-    const version = req.headers['x-app-version'];
-    if (/^2\.\d\.\d$/.test(version)) {
+    const version = req?.headers['x-app-version'];
+    if (/^2\.\d\.\d$/.test(JSON.stringify(version) || '')) {
       return {
         count: 0,
         rows: [],
@@ -246,21 +245,6 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       type: QueryTypes.SELECT,
     });
     return (records?.[0] ?? { count: 0, rows: [] }) as BulkResponse<PublicTokenAttributes>;
-  }
-  
-  @Get('/trends')
-  @Deprecated()
-  public static async getTrends(
-    @Query() userId?: number,
-    @Query() type?: TokenTypeName,
-    @Query() interval = '1d',
-    @Query() min = 0,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page,
-    @Query() order: string[] = ['count:desc']
-  ): Promise<BulkResponse<PublicTokenAttributes>> {
-    return await this.getTopics(userId, type, interval, min, pageSize, page, offset, order);
   }
   
   @Get('/topics/groups')
