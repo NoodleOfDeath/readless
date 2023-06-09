@@ -224,18 +224,22 @@ async function cacheApiSummaries() {
     console.log('caching queries');
     await SummaryController.getSummariesInternal({
       forceCache: true,
+      locale: 'en',
       page: 0,
     });
     await SummaryController.getSummariesInternal({
       forceCache: true,
+      locale: 'en',
       page: 1,
     });
     await SummaryController.getSummariesInternal({
       forceCache: true,
+      locale: 'en',
       page: 2,
     });
     await SummaryController.getSummariesInternal({
       forceCache: true,
+      locale: 'en',
       page: 3,
     });
     console.log('done caching');
