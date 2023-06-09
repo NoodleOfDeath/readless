@@ -220,26 +220,28 @@ export async function bruteForceResolveDuplicates() {
   }
 }
 
+async function cacheLocale(locale: string) {
+  await SummaryController.getSummariesInternal({
+    forceCache: true,
+    locale,
+    page: 0,
+  });
+  await SummaryController.getSummariesInternal({
+    forceCache: true,
+    locale,
+    page: 1,
+  });
+  await SummaryController.getSummariesInternal({
+    forceCache: true,
+    locale,
+    page: 2,
+  });
+}
+
 async function cacheApiSummaries() {
   try {
     console.log('caching queries');
-    for (const locale of SUPPORTED_LOCALES) {
-      await SummaryController.getSummariesInternal({
-        forceCache: true,
-        locale,
-        page: 0,
-      });
-      await SummaryController.getSummariesInternal({
-        forceCache: true,
-        locale,
-        page: 1,
-      });
-      await SummaryController.getSummariesInternal({
-        forceCache: true,
-        locale,
-        page: 2,
-      });
-    }
+    await Promise.all(SUPPORTED_LOCALES.map(async (locale) => await cacheLocale(locale)));
     console.log('done caching');
   } catch (e) {
     console.error(e);
