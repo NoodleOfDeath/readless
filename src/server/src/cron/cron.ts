@@ -10,6 +10,7 @@ import {
   SummaryRelation,
   Worker,
 } from '../api/v1/schema';
+import { SUPPORTED_LOCALES } from '../core/locales';
 import { DBService, PuppeteerService } from '../services';
 
 const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
@@ -222,31 +223,28 @@ export async function bruteForceResolveDuplicates() {
 async function cacheApiSummaries() {
   try {
     console.log('caching queries');
-    await SummaryController.getSummariesInternal({
-      forceCache: true,
-      locale: 'en',
-      page: 0,
-    });
-    await SummaryController.getSummariesInternal({
-      forceCache: true,
-      locale: 'en',
-      page: 1,
-    });
-    await SummaryController.getSummariesInternal({
-      forceCache: true,
-      locale: 'en',
-      page: 2,
-    });
-    await SummaryController.getSummariesInternal({
-      forceCache: true,
-      locale: 'en',
-      page: 3,
-    });
+    for (const locale of SUPPORTED_LOCALES) {
+      await SummaryController.getSummariesInternal({
+        forceCache: true,
+        locale,
+        page: 0,
+      });
+      await SummaryController.getSummariesInternal({
+        forceCache: true,
+        locale,
+        page: 1,
+      });
+      await SummaryController.getSummariesInternal({
+        forceCache: true,
+        locale,
+        page: 2,
+      });
+    }
     console.log('done caching');
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(cacheApiSummaries, ms('30s'));
+    setTimeout(cacheApiSummaries, ms('1m'));
   }
 }
 
