@@ -29,6 +29,12 @@ export class Voucher<
     type: DataType.STRING,
   })
   declare vendor: 'apple' | 'google';
+
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+  })
+  declare productId: string;
   
   @Column({
     allowNull: false,
@@ -44,7 +50,7 @@ export class Voucher<
   
   @Column({
     allowNull: false,
-    type: DataType.STRING,
+    type: DataType.TEXT,
     unique: true,
   })
   declare token: string;
