@@ -84,9 +84,13 @@ export class ServiceController {
       req.res.status(404).json({ message: 'Not Found' });
       return;
     }
-    const stream = fs.createReadStream(await S3Service.getObject({ Key: media.path }));
-    req.res.setHeader('content-type', 'audio/mpeg');
-    stream.pipe(req.res);
+    try {
+      const stream = fs.createReadStream(await S3Service.getObject({ Key: media.path }));
+      req.res.setHeader('content-type', 'audio/mpeg');
+      stream.pipe(req.res);
+    } catch (e) {
+      req.res.status(500).end();
+    }
   }
   
   @Post('/localize')

@@ -68,6 +68,12 @@ spec:
               value: '$PORT'
             - name: RECAPTCHA_SECRET_KEY
               value: '$RECAPTCHA_SECRET_KEY'
+            - name: S3_BUCKET
+              value: '$S3_BUCKET'
+            - name: S3_KEY
+              value: '$S3_KEY'
+            - name: S3_SECRET
+              value: '$S3_SECRET'
             - name: SSL
               value: '$SSL'
           livenessProbe:
