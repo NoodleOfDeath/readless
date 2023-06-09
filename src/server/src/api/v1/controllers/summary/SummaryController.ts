@@ -47,7 +47,7 @@ type GetSummariesPayload = {
   page?: number;
   pageSize?: number;
   offset?: number;
-  ids?: number[];
+  ids?: number | number[];
   excludeIds?: boolean;
   interval?: string;
   locale?: string;
@@ -210,18 +210,19 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     } = applyFilter(filter, matchType);
     const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
     const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
+    const idArray = typeof ids === 'number' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
     const replacements = {
       categories: categories.length === 0 ? [''] : categories,
       endDate: endDate ?? new Date(0),
       excludeIds,
       filter: query,
-      ids: !ids || ids.length === 0 ? [-1] : ids,
+      ids: idArray,
       interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval ?? '100y'),
       limit: Number(pageSize),
       locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
       noCategories: categories.length === 0,
       noFilter: !filter,
-      noIds: !ids || ids.length === 0 || excludeIds,
+      noIds: !ids || excludeIds,
       noOutlets: outlets.length === 0,
       offset: Number(offset),
       outlets: outlets.length === 0 ? [''] : outlets,
@@ -230,7 +231,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     const cacheKey = [
       'getSummaries',
       filter,
-      ids?.join(','),
+      idArray?.join(','),
       excludeIds,
       matchType,
       interval,
