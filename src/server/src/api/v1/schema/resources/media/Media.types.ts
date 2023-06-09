@@ -25,7 +25,6 @@ export const PUBLIC_MEDIA_ATTRIBUTES = ['key', 'path', 'type', 'url'];
 
 export type PublicMediaAttributes = {
   key: string;
-  path: string;
   type: MediaType;
   url?: string;
 };
