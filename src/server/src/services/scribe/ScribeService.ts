@@ -15,10 +15,7 @@ import {
   Summary,
   SummaryMedia,
   SummarySentiment,
-  SummaryToken,
-  TokenType,
 } from '../../api/v1/schema/models';
-import { SummaryTokenCreationAttributes, TokenTypeName } from '../../api/v1/schema/types';
 import { BaseService } from '../base';
 import { SentimentService } from '../sentiment';
 
@@ -36,16 +33,12 @@ export function abbreviate(str: string, len: number) {
 export class ScribeService extends BaseService {
   
   static categories: string[] = [];
-  static tokenTypes: string[] = [];
   
   public static async init() {
     await Category.initCategories();
     const categories = await Category.findAll();
     this.categories = categories.map((c) => c.displayName);
     await SentimentMethod.initSentimentMethods();
-    await TokenType.initTokenTypes();
-    const tokenTypes = await TokenType.findAll();
-    this.tokenTypes = tokenTypes.map((t) => t.name);
   }
 
   public static async error(subject: string, text: string, throws = true): Promise<void> {
@@ -116,7 +109,6 @@ export class ScribeService extends BaseService {
     });
     let categoryDisplayName: string;
     const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
-    const tags: Partial<SummaryTokenCreationAttributes>[] = [];
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -151,44 +143,6 @@ export class ScribeService extends BaseService {
           }
         },
         text: `Please select a best category for this article from the following choices: ${this.categories.join(',')}. Respond with only the category name`,
-      },
-      {
-        handleReply: async (reply) => {
-          try {
-            const newTags = reply.text
-              .replace(/^\.*?:\s*/, '')
-              .replace(/\.$/, '')
-              .replace(/<br\s*\/?>/g, '')
-              .split('\n')
-              .map((t) => {
-                const parts = t.split(/\/*,\s*/);
-                if (parts.length !== 2) {
-                  return undefined;
-                }
-                const text = parts[0].trim();
-                const type = parts[1]
-                  .replace(/-/g, '_')
-                  .replace(/\W/g, '')
-                  .replace(/_/g, '-')
-                  .toLowerCase() as TokenTypeName;
-                if (!this.tokenTypes.includes(type)) {
-                  console.error('Unknown token type', type);
-                  return undefined;
-                }
-                return {
-                  text,
-                  type,
-                };
-              }).filter(Boolean);
-            tags.push(...newTags);
-          } catch (e) {
-            await this.error('Bad tags', [url, reply.text].join('\n\n'), false);
-          }
-          if (tags.length < 3) {
-            await this.error('Bad tags', [url, reply.text].join('\n\n'), false);
-          }
-        },
-        text: `Please provide a list of the 10 most important tags/phrases directly mentioned in this article that can be classified under one of the following types: ${this.tokenTypes.join(', ')}. Companies like Apple, Meta, Facebook, OpenAI, Google, etc. should be considered a business not an organization. Only respond with each tag and its respective token type (separated by comma) on its own line like this: King Charles,person\nWales,place\n2024 election,event`,
       },
       {
         handleReply: async (reply) => { 
@@ -323,18 +277,6 @@ export class ScribeService extends BaseService {
         parentId: summary.id,
         score: vaderSentimentScores.compound,
       });
-      
-      for (const tag of tags) {
-        try {
-          await SummaryToken.create({
-            parentId: summary.id,
-            text: tag.text,
-            type: tag.type,
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      }
       
       if (this.features.tts) {
       
