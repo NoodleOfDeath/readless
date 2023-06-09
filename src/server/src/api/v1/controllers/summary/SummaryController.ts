@@ -256,7 +256,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       type: QueryTypes.SELECT,
     }))?.[0] ?? { count: 0, rows: [] };
     await Cache.upsert({
-      halflife: process.env.CACHE_HALFLIFE || '2m',
+      halflife: process.env.CACHE_HALFLIFE || '10m',
       key: cacheKey,
       value: JSON.stringify(records),
     });

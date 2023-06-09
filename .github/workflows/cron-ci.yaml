@@ -59,6 +59,7 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       API_ENDPOINT: ${{ vars.API_ENDPOINT }}
+      CACHE_HALFLIFE: ${{ vars.CACHE_HALFLIFE }}
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
       DUPLICATE_LOOKBACK_INTERVAL: ${{ vars.DUPLICATE_LOOKBACK_INTERVAL }}
       ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}

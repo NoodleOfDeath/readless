@@ -28,6 +28,8 @@ spec:
           env:
             - name: API_ENDPOINT
               value: '$API_ENDPOINT'
+            - name: CACHE_HALFLIFE
+              value: '$CACHE_HALFLIFE'
             - name: CHROMIUM_EXECUTABLE_PATH
               value: '$CHROMIUM_EXECUTABLE_PATH'
             - name: DUPLICATE_LOOKBACK_INTERVAL
