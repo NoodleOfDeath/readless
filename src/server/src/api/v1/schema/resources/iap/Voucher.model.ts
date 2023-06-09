@@ -1,18 +1,9 @@
-import { 
-  Column,
-  DataType,
-  Table,
-} from 'sequelize-typescript';
+import { Column, DataType } from 'sequelize-typescript';
 
 import { VoucherAttributes, VoucherCreationAttributes } from './Voucher.types';
 import { BaseModel } from '../../base';
 
-@Table({
-  modelName: 'voucher',
-  paranoid: true,
-  timestamps: true,
-})
-export class Voucher<
+export abstract class Voucher<
     A extends VoucherAttributes = VoucherAttributes,
     B extends VoucherCreationAttributes = VoucherCreationAttributes,
   > extends BaseModel<A, B> implements VoucherAttributes {

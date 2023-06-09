@@ -9,8 +9,11 @@ import { PublicSummaryAttributes } from '~/api';
 import {
   FeedbackDialog,
   MainMenuDialog,
+  OnboardingWalkthrough,
+  SentimentWalkthrough,
   ShareDialog,
   SubscribeDialog,
+  TriggerWarningWalkthrough,
 } from '~/components';
 
 export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
@@ -18,10 +21,16 @@ export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
 export function DialogContextProvider({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
+    // global
+    registerSheet('main-menu', MainMenuDialog);
+    registerSheet('subscribe', SubscribeDialog);
+    // onboarding/features
+    registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
+    registerSheet('sentiment-walkthrough', SentimentWalkthrough);
+    registerSheet('trigger-warning-walkthrough', TriggerWarningWalkthrough);
+    // summary specific
     registerSheet('share', ShareDialog);
     registerSheet('feedback', FeedbackDialog);
-    registerSheet('mainMenu', MainMenuDialog);
-    registerSheet('subscribe', SubscribeDialog);
   }, []);
 
   const [shareTarget, setShareTarget] = React.useState<PublicSummaryAttributes>();

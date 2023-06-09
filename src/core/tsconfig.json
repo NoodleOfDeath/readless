@@ -36,10 +36,12 @@
     "baseUrl": ".",
     "allowJs": false,
     "resolveJsonModule": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "jsx": "react-jsx"
   },
   "include": [
     "**/*.ts",
+    "**/*.tsx",
   ],
   "exclude": [
     "node_modules",

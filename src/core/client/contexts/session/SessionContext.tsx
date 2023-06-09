@@ -22,6 +22,7 @@ import {
   getItem,
   getUserAgent,
   lengthOf,
+  removeAll,
   removeItem,
   setItem,
 } from '~/utils';
@@ -53,6 +54,9 @@ export function SessionContextProvider({ children }: Props) {
   const [readSources, setReadSources] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
+  const [triggerWords, setTriggerWords] = React.useState<{ [key: number]: Bookmark<string>}>();
+  const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: number]: Bookmark<boolean>}>();
+  const [sentimentEnabled, setSentimentEnabled] = React.useState<boolean>();
 
   const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);
 
@@ -125,6 +129,15 @@ export function SessionContextProvider({ children }: Props) {
     case 'rotationLock':
       setRotationLock(value);
       break;
+    case 'triggerWords':
+      setTriggerWords(value);
+      break;
+    case 'viewedFeatures':
+      setViewedFeatures(value);
+      break;
+    case 'sentimentEnabled':
+      setSentimentEnabled(value);
+      break;
     default:
       break;
     }
@@ -189,7 +202,11 @@ export function SessionContextProvider({ children }: Props) {
       try {
         prefs = { ...JSON.parse(rawPrefs || ''), ...OVERRIDDEN_INITIAL_PREFERENCES };
       } catch (e) {
-        prefs = { ...DEFAULT_PREFERENCES, ...OVERRIDDEN_INITIAL_PREFERENCES };
+        prefs = { 
+          ...DEFAULT_PREFERENCES, 
+          ...OVERRIDDEN_INITIAL_PREFERENCES,
+          bookmarkCount: 0,
+        };
       }
     }
     setDisplayMode(await getPreference('displayMode') ?? prefs.displayMode); 
@@ -211,10 +228,18 @@ export function SessionContextProvider({ children }: Props) {
     setReadSources(await getPreference('readSources') ?? prefs.readSources);
     setShowOnlyCustomNews(await getPreference('showOnlyCustomNews') ?? prefs.showOnlyCustomNews);
     setRotationLock(await getPreference('rotationLock') ?? prefs.rotationLock);
+    setTriggerWords(await getPreference('triggerWords') ?? prefs.triggerWords);
+    setViewedFeatures(await getPreference('viewedFeatures') ?? prefs.viewedFeatures);
+    setSentimentEnabled(await getPreference('sentimentEnabled') ?? prefs.sentimentEnabled);
     setReady(true);
   }, [getPreference]);
 
   React.useEffect(() => {
+    load();
+  }, [load]);
+  
+  const resetPreferences = React.useCallback(async () => {
+    await removeAll();
     load();
   }, [load]);
 
@@ -239,12 +264,16 @@ export function SessionContextProvider({ children }: Props) {
         readSummaries,
         ready,
         removedSummaries,
+        resetPreferences,
         rotationLock,
         searchHistory,
+        sentimentEnabled,
         setPreference,
         showOnlyCustomNews,
         showShortSummary,
         textScale,
+        triggerWords,
+        viewedFeatures,
         withHeaders,
       } }>
       {children}

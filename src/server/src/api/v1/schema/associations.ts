@@ -2,6 +2,7 @@ import {
   Alias,
   Category,
   Credential,
+  IapVoucher,
   Job,
   Message,
   Outlet,
@@ -21,21 +22,20 @@ import {
   TokenType,
   User,
   UserMetadata,
-  Voucher,
   Worker,
 } from './models';
 import { 
   PUBLIC_CATEGORY_ATTRIBUTES,
+  PUBLIC_IAP_VOUCHER_ATTRIBUTES,
   PUBLIC_MESSAGE_ATTRIBUTES,
   PUBLIC_OUTLET_ATTRIBUTES,
-  PUBLIC_SENTIMENT_ATTRIBUTES,
-  PUBLIC_SUMMARY_ATTRIBUTES, 
+  PUBLIC_SENTIMENT_ATTRIBUTES, 
+  PUBLIC_SUMMARY_ATTRIBUTES,
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
-  PUBLIC_SUMMARY_MEDIA_ATTRIBUTES,
+  PUBLIC_SUMMARY_MEDIA_ATTRIBUTES, 
   PUBLIC_SUMMARY_TOKEN_ATTRIBUTES, 
-  PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES, 
+  PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES,
   PUBLIC_TOKEN_TYPE_ATTRIBUTES,
-  PUBLIC_VOUCHER_ATTRIBUTES,
 } from './types';
 
 export function makeAssociations() {
@@ -210,6 +210,6 @@ export function addScopes() {
   
   SummaryMedia.addScope('public', { attributes: [...PUBLIC_SUMMARY_MEDIA_ATTRIBUTES] });
   
-  Voucher.addScope('public', { attributes: [...PUBLIC_VOUCHER_ATTRIBUTES] });
+  IapVoucher.addScope('public', { attributes: [...PUBLIC_IAP_VOUCHER_ATTRIBUTES] });
 
 }

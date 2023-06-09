@@ -53,7 +53,7 @@ export function MediaContextProvider({ children }: Props) {
   
   // TTS
   const [voices, setVoices] = React.useState<Voice[]>([]);
-  const [selectedVoiceIndex, setSelectedVoice] = React.useState(0);
+  const [selectedVoice, setSelectedVoice] = React.useState<Voice>();
   const [speechRate, setSpeechRate] = React.useState(0.5);
   const [speechPitch, setSpeechPitch] = React.useState(1);
   const [speechVolume, setSpeechVolume] = React.useState(1);
@@ -94,10 +94,14 @@ export function MediaContextProvider({ children }: Props) {
   });
   
   const initTts = React.useCallback(async () => {
+    await Tts.setDefaultRate(speechRate);
+    await Tts.setDefaultPitch(speechPitch);
+    await Tts.getInitStatus();
     const voices = await Tts.voices();
     const availableVoices = voices?.filter((v) => 
-      !v.networkConnectionRequired && !v.notInstalled && v.language === deviceLanguage);
+      !v.networkConnectionRequired && !v.notInstalled);
     if (availableVoices && availableVoices.length > 0) {
+      console.log(availableVoices);
       try {
         await Tts.setDefaultLanguage(deviceLanguage);
       } catch (err) {
@@ -106,10 +110,12 @@ export function MediaContextProvider({ children }: Props) {
         console.error('setDefaultLanguage error ', err);
       }
       setVoices(availableVoices);
-      const defaultVoice = voices?.findIndex((v) => /Aaron/i.test(v.name)) ?? 0;
-      setSelectedVoice(defaultVoice);
+      const defaultVoice = selectedVoice ?? voices?.find((v) => /aaron/i.test(v.name));
+      if (defaultVoice) {
+        await Tts.setDefaultVoice(defaultVoice.id);
+      }
     }
-  }, []);
+  }, [speechPitch, speechRate, selectedVoice]);
 
   const playTrack = React.useCallback(async () => {
     setTrackState(State.Playing);
@@ -132,31 +138,26 @@ export function MediaContextProvider({ children }: Props) {
 
   React.useEffect(() => {
     // Set up TTS player
-    Tts.setDefaultRate(speechRate);
-    Tts.setDefaultPitch(speechPitch);
-    Tts.getInitStatus().then(initTts);
-    Tts.addEventListener('tts-finish', () => {
+    initTts();
+    const listener = () => {
       // placeholder
-    });
-    Tts.addEventListener('tts-cancel', () => {
-      // placeholder
-    });
-    Tts.addEventListener('tts-start', () => {
-      // placeholder
-    });
-  }, [initTts, speechPitch, speechRate]);
+    };
+    Tts.addEventListener('tts-finish', listener);
+    Tts.addEventListener('tts-cancel', listener);
+    Tts.addEventListener('tts-start', listener);
+  }, [initTts]);
   
   const generateTrack = React.useCallback(async (
     track: Track
   ): Promise<RNTrack> => {
     const file = await Tts.export(track.text, {
       filename: track.id, 
-      overwrite: true, 
+      overwrite: true,
     } );
     return {
       cached: true,
-      url: file,
       ...track,
+      url: file,
     };
   }, []);
 
@@ -166,6 +167,11 @@ export function MediaContextProvider({ children }: Props) {
     const updatedTracks: string[] = [];
     for (let i = trackIndex; i < Math.min(tracks.length, trackIndex + preloadCount); i++) {
       const track = tracks[i];
+      if (track.url) {
+        updatedTracks.push(track.id);
+        await TrackPlayer.add(track as RNTrack);
+        continue;
+      }
       if (!cacheMap[track.id]) {
         const newTrack = await generateTrack(track);
         updatedTracks.push(newTrack.id);
@@ -210,7 +216,7 @@ export function MediaContextProvider({ children }: Props) {
           `From ${summary.outlet.displayName} ${timeAgo}:`,
           summary.title,
         ].join('\n');
-        const newTrack = {
+        const newTrack: Track = {
           artist: summary.outlet.displayName,
           artwork: summary.imageUrl ?? 'https://www.readless.ai/AppIcon.png',
           headers: {},
@@ -218,7 +224,6 @@ export function MediaContextProvider({ children }: Props) {
           summary,
           text,
           title: summary.title,
-          //url: audioStreamURI(summary) || summary.media?.[0]?.url,
         };
         tracks.push(newTrack);
       }
@@ -242,8 +247,7 @@ export function MediaContextProvider({ children }: Props) {
       playTrack,
       preloadCount,
       queueSummary,
-      selectedVoice: voices[selectedVoiceIndex],
-      selectedVoiceIndex,
+      selectedVoice,
       setSelectedVoice,
       setSpeechPitch,
       setSpeechRate,

@@ -2,6 +2,7 @@ import React from 'react';
 import { EmitterSubscription, Platform } from 'react-native';
 
 import {
+  Purchase,
   Subscription,
   endConnection,
   finishTransaction,
@@ -15,8 +16,8 @@ import {
 
 import { DEFAULT_IAP_CONTEXT } from './types';
  
-import { PublicVoucherAttributes } from '~/api';
-import { useServiceClient } from '~/core';
+import { PublicIapVoucherAttributes } from '~/api';
+import { useIapClient } from '~/core';
 
 const SKUS = Platform.select({
   android: { skus: [] },
@@ -32,10 +33,10 @@ export const IapContext = React.createContext(DEFAULT_IAP_CONTEXT);
 
 export function IapContextProvider({ children }: React.PropsWithChildren) {
   
-  const { processPurchase } = useServiceClient();
+  const { processPurchase } = useIapClient();
 
   const [subscriptions, setSubscriptions] = React.useState<Subscription[]>([]);
-  const [activeSubscription, setActiveSubscription] = React.useState<Subscription>();
+  const [activeSubscription, setActiveSubscription] = React.useState<Purchase>();
   const [purchasePending, setPurchasePending] = React.useState(false);
   
   const subscribe = React.useCallback(async (sku: string, offerToken = '') => {
@@ -71,24 +72,37 @@ export function IapContextProvider({ children }: React.PropsWithChildren) {
       .then(() => {
         purchaseUpdateSubscription = purchaseUpdatedListener(
           async (purchase) => {
-            console.log('purchaseUpdatedListener', purchase);
-            const receipt = purchase.transactionReceipt;
-            let voucher: PublicVoucherAttributes;
-            if (Platform.OS === 'ios') {
-              voucher = await processPurchase({ platform: 'apple', receipt });
-            } else if (Platform.OS === 'android' && purchase.purchaseStateAndroid === 1 && purchase.purchaseToken) {
-              voucher = await processPurchase({
-                platform: 'google', receipt: {
-                  packageName: 'ai.readless.ReadLess',
-                  productId: purchase.productId,
-                  purchaseToken: purchase.purchaseToken,
-                  subscription: true,
-                }, 
-              });
-            }
-            if (receipt && voucher) {
-              setActiveSubscription(purchase);
-              await finishTransaction({ isConsumable: false, purchase });
+            try {
+              const receipt = purchase.transactionReceipt;
+              let voucher: PublicIapVoucherAttributes | undefined;
+              if (Platform.OS === 'ios') {
+                const { data, error } = await processPurchase({ platform: 'apple', receipt });
+                if (error) {
+                  console.error(error);
+                }
+                voucher = data;
+              } else if (Platform.OS === 'android' && purchase.purchaseStateAndroid === 1 && purchase.purchaseToken) {
+                const { data, error } = await processPurchase({
+                  platform: 'google', receipt: {
+                    packageName: 'ai.readless.ReadLess',
+                    productId: purchase.productId,
+                    purchaseToken: purchase.purchaseToken,
+                    subscription: true,
+                  }, 
+                });
+                if (error) {
+                  console.error(error);
+                }
+                voucher = data;
+              }
+              if (receipt && voucher) {
+                setActiveSubscription(purchase);
+                await finishTransaction({ isConsumable: false, purchase });
+              }
+            } catch (err) {
+              console.error(err);
+            } finally {
+              setPurchasePending(false);
             }
           }
         );

@@ -19,7 +19,7 @@ export function Screen({
   const style = useStyles(props as Stylable);
   
   React.useEffect(() => {
-    SheetManager.hide('mainMenu');
+    SheetManager.hide('main-menu');
   }, []);
   
   return (

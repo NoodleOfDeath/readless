@@ -8,14 +8,13 @@ import {
   Button,
   Divider,
   Icon,
-  Text,
   View,
 } from '~/components';
 import { SessionContext } from '~/core';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
-export function MainMenuDialog({ ...props }: SheetProps) {
+export function MainMenuDialog(props: SheetProps) {
 
   const {
     openAbout, openBookmarks, openBrowse, openSettings, 

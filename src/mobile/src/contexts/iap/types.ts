@@ -1,7 +1,8 @@
-import { Subscription } from 'react-native-iap';
+import { Purchase, Subscription } from 'react-native-iap';
 
 export type IapContextType = {
-  activeSubscription?: Subscription;
+  activeSubscription?: Purchase;
+  purchasePending?: boolean;
   setPurchasePending?: boolean;
   subscriptions: Subscription[];
   subscribe: (sku: string, offerToken?: string) => Promise<void>;

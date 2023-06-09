@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
 import { PurchaseRequest, PurchaseResponse } from './types';
-import { PublicVoucherAttributes, Voucher } from '../../api/v1/schema';
+import { IapVoucher, PublicIapVoucherAttributes } from '../../api/v1/schema';
 import { BaseService } from '../base';
 
 const APPLE_IAP_ENDPOINT_PROD = 'https://buy.itunes.apple.com/verifyReceipt';
@@ -22,7 +22,7 @@ export class IapService extends BaseService {
   public static async verifyAppleReceipt(
     receipt: string, 
     endpoint = APPLE_IAP_ENDPOINT_PROD
-  ): Promise<PublicVoucherAttributes> {
+  ): Promise<PublicIapVoucherAttributes> {
     const response = await axios.post(
       endpoint, 
       {
@@ -39,8 +39,8 @@ export class IapService extends BaseService {
     if (purchase.expiresAt < new Date()) {
       throw new Error('Expired receipt');
     }
-    await Voucher.upsert(purchase);
-    return await Voucher.scope('public').findOne({
+    await IapVoucher.upsert(purchase);
+    return await IapVoucher.scope('public').findOne({
       where: 
       { uuid: purchase.uuid },
     });
@@ -48,7 +48,7 @@ export class IapService extends BaseService {
 
   public static async validateSubscription(token: string) {
     const { uuid, vendor } = jwt.verify(token, process.env.JWT_SECRET) as { uuid: string, vendor: 'apple' | 'google' };
-    const voucher = await Voucher.findOne({
+    const voucher = await IapVoucher.findOne({
       where: 
       { uuid },
     });

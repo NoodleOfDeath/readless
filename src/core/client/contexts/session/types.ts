@@ -53,6 +53,9 @@ export type Preferences = {
   excludedCategories?: { [key: string]: Bookmark<boolean> };
   showOnlyCustomNews?: boolean;
   rotationLock?: OrientationType;
+  triggerWords?: { [key: string]: Bookmark<string> };
+  viewedFeatures?: { [key: string]: Bookmark<boolean> };
+  sentimentEnabled?: boolean;
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { fontFamily: 'Faustina' };
@@ -74,6 +77,7 @@ export type SessionContextType = Preferences & {
   ready?: boolean;
   // state setters
   setPreference<K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])): void;
+  resetPreferences: () => void;
   // convenience functions
   followOutlet: (outlet: PublicOutletAttributes) => void;
   followCategory: (category: PublicCategoryAttributes) => void;
@@ -87,6 +91,9 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
     /* placeholder function */
   },
   followOutlet: () => {
+    /* placeholder function */
+  },
+  resetPreferences: () => {
     /* placeholder function */
   },
   setPreference: () => {

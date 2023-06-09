@@ -150,6 +150,7 @@ export function Summary({
     readSummaries,
     readSources,
     setPreference, 
+    triggerWords = { 'trump': new Bookmark('🐱') },
   } = React.useContext(SessionContext);
 
   const { shareTarget } = React.useContext(DialogContext);
@@ -200,6 +201,20 @@ export function Summary({
     }
     return content;
   }, [format, localizedStrings.bullets, localizedStrings.summary]);
+  
+  const containsTrigger = React.useMemo(() => {
+    return Object.keys(triggerWords).some((k) => {
+      const expr = new RegExp(k, 'i');
+      return Object.values(localizedStrings).some((v) => expr.test(v));
+    });
+  }, [localizedStrings, triggerWords]);
+  
+  const cleanString = React.useCallback((str: string) => {
+    for (const [word, repl] of Object.entries(triggerWords)) {
+      str = str.replace(new RegExp(word, 'ig'), repl.item);
+    }
+    return str;
+  }, [triggerWords]);
 
   // update time ago every `tickIntervalMs` milliseconds
   useFocusEffect(React.useCallback(() => {
@@ -460,10 +475,19 @@ export function Summary({
                                 overflow='hidden'
                                 borderRadiusTL={ initialFormat ? 0 : 12 }
                                 borderRadiusBL={ initialFormat ? 0 : 12 }>
-                                <Image
-                                  col
-                                  fill
-                                  source={ { uri: summary.imageUrl } } />
+                                {containsTrigger ? (
+                                  <Text 
+                                    absolute
+                                    zIndex={ 20 } 
+                                    fontSize={ 120 }>
+                                    🐥
+                                  </Text>
+                                ) : (
+                                  <Image
+                                    col
+                                    fill
+                                    source={ { uri: summary.imageUrl } } />
+                                )}
                               </View>
                             ) }>
                             <View
@@ -493,7 +517,7 @@ export function Summary({
                               color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
                               highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                               searchWords={ isShareTarget ? [] : keywords }
-                              textToHighlight={ ((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title } />
+                              textToHighlight={ cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) } />
                           </View>
                           {translateToggle}
                           {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
@@ -502,7 +526,7 @@ export function Summary({
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                 searchWords={ isShareTarget ? [] : keywords }
-                                textToHighlight={ localizedStrings.shortSummary ?? '' } />
+                                textToHighlight={ cleanString(localizedStrings.shortSummary ?? '') } />
                             </View>
                           )}
                         </View>
@@ -511,18 +535,18 @@ export function Summary({
                             <Text>
                               {`${strings.summary.relatedNews} (${summary.siblings.length})`}
                             </Text>
-                            <ScrollView height={ summary.siblings.length === 1 ? 50 : 70 }>
+                            <ScrollView height={ summary.siblings.length === 1 ? 55 : 70 }>
                               <View gap={ 5 }>
                                 {[...summary.siblings].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
                                   <View 
                                     key={ sibling.id } 
-                                    height={ 50 }>
+                                    height={ 55 }>
                                     <View
                                       gap={ 1 }
                                       p={ 3 }
                                       outlined
                                       borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                                      height={ 50 }
+                                      height={ 55 }
                                       touchable
                                       onPress={ () => openSummary({ summary: sibling.id }) }>
                                       <View 
@@ -547,7 +571,7 @@ export function Summary({
                                         color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
                                         highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                         searchWords={ isShareTarget ? [] : keywords }
-                                        textToHighlight={ sibling.title } />
+                                        textToHighlight={ cleanString(sibling.title) } />
                                     </View>
                                   </View>
                                 ))}
@@ -640,7 +664,7 @@ export function Summary({
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                 numberOfLines={ 100 }
                                 searchWords={ isShareTarget ? [] : keywords }
-                                textToHighlight={ content } />
+                                textToHighlight={ cleanString(content) } />
                             ) } />
                         ))}
                       </View>

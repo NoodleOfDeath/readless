@@ -241,12 +241,13 @@ async function cacheLocale(locale: string) {
 async function cacheApiSummaries() {
   try {
     console.log('caching queries');
-    await Promise.all(SUPPORTED_LOCALES.map(async (locale) => await cacheLocale(locale)));
+    console.log(SUPPORTED_LOCALES);
+    await cacheLocale('en');
     console.log('done caching');
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(cacheApiSummaries, ms('1m'));
+    setTimeout(cacheApiSummaries, ms('30s'));
   }
 }
 

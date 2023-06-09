@@ -1,8 +1,8 @@
 import React from 'react';
 import { NativeModules, Platform } from 'react-native';
 
-import { State } from 'react-native-track-player';
-import { Voice } from 'react-native-tts-export';
+import { Track as RNTrack, State } from 'react-native-track-player';
+import {  Voice } from 'react-native-tts-export';
 
 import { PublicSummaryAttributes } from '~/api';
 
@@ -11,20 +11,17 @@ export const deviceLanguage = (
     : NativeModules.I18nManager.localeIdentifier
 ).replace(/_/g, '-');
 
-export type Track = {
+export type Track = Omit<RNTrack, 'url'> & {
   id: string;
-  title: string;
   text: string;
   summary: PublicSummaryAttributes;
   altText?: string;
-  artist?: string;
-  artwork?: string;
+  url?: string;
 };
 
 export type MediaContextType = {
   deviceLanguage: string;
   selectedVoice?: Voice;
-  selectedVoiceIndex: number;
   speechRate: number;
   speechPitch: number;
   speechVolume: number;
@@ -44,7 +41,7 @@ export type MediaContextType = {
   setSpeechRate: React.Dispatch<React.SetStateAction<number>>;
   setSpeechPitch: React.Dispatch<React.SetStateAction<number>>;
   setSpeechVolume: React.Dispatch<React.SetStateAction<number>>;
-  setSelectedVoice: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedVoice: React.Dispatch<React.SetStateAction<Voice | undefined>>;
 };
 
 export const DEFAULT_MEDIA_CONTEXT: MediaContextType = {
@@ -58,7 +55,6 @@ export const DEFAULT_MEDIA_CONTEXT: MediaContextType = {
   queueSummary: () => {
     /** placeholder */
   },
-  selectedVoiceIndex: 0,
   setSelectedVoice: () => {
     /** placeholder */
   },

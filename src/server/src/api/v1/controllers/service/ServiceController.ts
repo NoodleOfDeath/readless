@@ -1,7 +1,6 @@
 import fs from 'fs';
 
 import { Request as ExpressRequest } from 'express';
-import { Op } from 'sequelize';
 import {
   Body,
   Get,
@@ -15,17 +14,12 @@ import {
   Tags,
 } from 'tsoa';
 
-import { 
-  BulkResponse,
-  LocalizeRequest,
-  TtsRequest,
-} from '../';
+import { BulkResponse, LocalizeRequest } from '../';
 import { 
   GoogleService,
   IapService,
   PurchaseRequest,
   S3Service,
-  TtsService,
 } from '../../../../services';
 import { AuthError, InternalError } from '../../middleware';
 import {
@@ -33,7 +27,6 @@ import {
   Message,
   MessageAttributes,
   PublicSummaryAttributes,
-  PublicSummaryMediaAttributes,
   PublicSummaryTranslationAttributes,
   PublicVoucherAttributes,
   Service,
@@ -88,6 +81,9 @@ export class ServiceController {
       const stream = fs.createReadStream(await S3Service.getObject({ Key: media.path }));
       req.res.setHeader('content-type', 'audio/mpeg');
       stream.pipe(req.res);
+      stream.on('end', () => {
+        req.res.status(200).end();
+      });
     } catch (e) {
       req.res.status(500).end();
     }
@@ -131,56 +127,10 @@ export class ServiceController {
       throw new InternalError('Invalid resource type');
     }
   }
-  
-  @Post('/tts')
-  public static async tts(
-    @Request() req: ExpressRequest,
-    @Body() body: TtsRequest
-  ): Promise<BulkResponse<PublicSummaryMediaAttributes>> {
-    const jwt = req.headers.authorization.split(' ')[1];
-    const { 
-      resourceType, 
-      resourceId,
-      voice,
-    } = body;
-    const subscribed = await IapService.validateSubscription(jwt);
-    if (!subscribed) {
-      throw new AuthError('UNAUTHORIZED');
-    }
-    if (resourceType === 'summary') {
-      const summary = await Summary.findByPk(resourceId);
-      if (!summary) {
-        throw new InternalError('Summary not found');
-      }
-      const media = await SummaryMedia.scope('public').findAndCountAll({ where: { parentId: resourceId } });
-      if (media.count > 0) {
-        return media;
-      }
-      const result = await TtsService.generate({
-        text: summary.title,
-        voice,
-      });
-      await SummaryMedia.upsert({
-        key: 'tts',
-        parentId: resourceId,
-        type: 'audio',
-        url: result.url,
-      });
-      return await SummaryMedia.findAndCountAll({ 
-        where: {
-          key: { [Op.iLike]: 'tts%' },
-          parentId: resourceId, 
-          type: 'audio',
-        },
-      });
-    } else {
-      throw new InternalError('Invalid resource type');
-    }
-  }
 
   @Post('iap')
   public static async processPurchase(
-    @Request() req,
+    @Request() req: ExpressRequest,
     @Body() body: PurchaseRequest
   ): Promise<PublicVoucherAttributes> {
     return await IapService.processPurchase(body);

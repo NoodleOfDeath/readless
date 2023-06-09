@@ -1,6 +1,11 @@
 export const enStrings = { 
   about: 'About',
-  actions: { close: 'Close' },
+  actions: {
+    close: 'Close', 
+    next: 'Next ',
+    save: 'Save', 
+    tapToEnable: 'Tap to enable', 
+  },
   bookmarks: {
     activity: 'Activity',
     bookmarks: 'Bookmarks',
@@ -14,6 +19,16 @@ export const enStrings = {
   channels: 'Channels',
   clearSearchHistory: 'Clear Search History',
   clearSelection: 'Clear Selection',
+  features: {
+    sentiment: {
+      description: 'Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.',
+      sentiment: 'What is Sentiment Analysis?',
+    },
+    triggerWarning: {
+      setTriggerWords: 'Set trigger words to be replaced with 🐱 so you can read the news without being triggered',
+      triggerWarning: '#TriggerWarning',
+    },
+  },
   feedback: {
     feedback: 'Feedback',
     options: {

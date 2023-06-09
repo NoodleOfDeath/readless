@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 
 import { ServiceController } from '../../controllers';
 import {
@@ -36,6 +36,8 @@ router.get(
 
 router.get(
   '/stream/s/:id',
+  query('locale').isString().optional(),
+  validationMiddleware,
   async (req, res) => {
     try {
       const { id } = req.params;
@@ -56,18 +58,6 @@ router.post(
   async (req, res) => {
     try {
       const response = await ServiceController.localize(req, req.body);
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.post(
-  '/tts',
-  async (req, res) => {
-    try {
-      const response = await ServiceController.tts(req, req.body);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

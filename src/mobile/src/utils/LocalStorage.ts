@@ -15,3 +15,8 @@ export const getItem = async (name: string) => {
   }
   return value;
 };
+
+export const removeAll = async () => {
+  const keys = await AsyncStorage.getAllKeys();
+  await AsyncStorage.multiRemove(keys);
+};

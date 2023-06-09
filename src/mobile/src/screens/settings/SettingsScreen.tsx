@@ -15,7 +15,11 @@ import {
   Text,
   View,
 } from '~/components';
-import { ColorMode, SessionContext } from '~/contexts';
+import { 
+  ColorMode, 
+  MediaContext,
+  SessionContext,
+} from '~/contexts';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
@@ -39,7 +43,14 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
     removedSummaries,
     readSummaries,
     setPreference,
+    resetPreferences,
   } = React.useContext(SessionContext);
+  
+  const {
+    selectedVoice,
+    setSelectedVoice,
+    voices,
+  } = React.useContext(MediaContext);
   
   const [loading, setLoading] = React.useState(false);
   const [cacheSize, setCacheSize] = React.useState('');
@@ -161,6 +172,35 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
               </View>
             </ScrollView>
           </View>
+          {voices && (
+            <React.Fragment>
+              <Text caption textCenter>{strings.settings.font}</Text>
+              <ScrollView horizontal style={ { overflow: 'visible' } }>
+                <View>
+                  <View row alignCenter gap={ 8 } mh={ 8 }>
+                    {voices?.map((voice) => (
+                      <Button
+                        row
+                        caption
+                        alignCenter
+                        gap={ 4 }
+                        key={ voice.id }
+                        elevated
+                        p={ 8 }
+                        startIcon={ voice.id === selectedVoice?.id ? 'check' : undefined }
+                        onPress={
+                          () => {
+                            setSelectedVoice(voice);
+                          }
+                        }>
+                        {voice.name}
+                      </Button>
+                    ))}
+                  </View>
+                </View>
+              </ScrollView>
+            </React.Fragment>
+          )}
           <Button
             elevated
             caption
@@ -185,6 +225,9 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
             (
             {Object.values(removedSummaries ?? {}).length}
             )
+          </Button>
+          <Button onPress={ () => resetPreferences() }>
+            Reset All Settings
           </Button>
           {loading ? (<ActivityIndicator animating />) : (
             <Button

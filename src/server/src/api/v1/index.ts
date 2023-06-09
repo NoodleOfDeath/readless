@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import accountRouter from './routes/account';
 import categoryRouter from './routes/category';
+import iapRouter from './routes/iap';
 import openapiRouter from './routes/openapi';
 import outletRouter from './routes/outlet';
 import serviceRouter from './routes/service';
@@ -11,6 +12,7 @@ const router = Router();
 
 router.use('/account', accountRouter);
 router.use('/category', categoryRouter);
+router.use('/iap', iapRouter);
 router.use('/openapi', openapiRouter);
 router.use('/outlet', outletRouter);
 router.use('/service', serviceRouter);

@@ -7,6 +7,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 
+import { FeatureStack } from './FeatureStack';
 import { SearchMenu } from './SearchMenu';
 
 import {
@@ -57,6 +58,7 @@ export function SearchScreen({
     preferredReadingFormat,
     removedSummaries,
     showOnlyCustomNews,
+    sentimentEnabled,
     setPreference,
   } = React.useContext(SessionContext);
   const {
@@ -386,7 +388,8 @@ export function SearchScreen({
     <Screen>
       <SafeAreaView style={ { flexGrow: 1 } }>
         <View col>
-          {summaries.length > 0 && averageSentiment && (
+          {!prefilter && <FeatureStack />}
+          {sentimentEnabled && summaries.length > 0 && averageSentiment && (
             <View 
               elevated 
               height={ 30 } 
@@ -444,7 +447,7 @@ export function SearchScreen({
             <View row>
               <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
                 <ScrollView
-                  refreshing={ loading }
+                  refreshing={ summaries.length === 0 && loading }
                   onScroll={ handleMasterScroll }
                   onRefresh={ () => {
                     setPage(0);
@@ -511,7 +514,7 @@ export function SearchScreen({
                 width: '60%',
               } }>
                 <ScrollView 
-                  refreshing={ loading }
+                  refreshing={ summaries.length === 0 && loading }
                   onScroll={ handleDetailScroll }
                   mt={ 12 }
                   ph={ 12 }>

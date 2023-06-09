@@ -75,3 +75,4 @@ export * from './resources/summary/SummaryMedia.types';
 export * from './resources/summary/SummaryRelation.types';
 
 export * from './resources/iap/Voucher.types';
+export * from './resources/iap/IapVoucher.types';

@@ -144,7 +144,7 @@ function Stack() {
             size={ 24 } />
           <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
         </View>
-        <View touchable onPress={ () => SheetManager.show('mainMenu') }>
+        <View touchable onPress={ () => SheetManager.show('main-menu') }>
           {bookmarkCount > 0 && (
             <Badge
               size={ 18 }
