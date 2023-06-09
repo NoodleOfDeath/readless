@@ -41,6 +41,21 @@ import {
 import { PublicSummaryGroups, TokenTypeName } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
+type GetSummariesPayload = {
+  filter?: string;
+  matchType?: 'any' | 'all';
+  page?: number;
+  pageSize?: number;
+  offset?: number;
+  ids?: number[];
+  excludeIds?: boolean;
+  interval?: string;
+  locale?: string;
+  start?: string;
+  end?: string;
+  forceCache?: boolean;
+};
+
 function parseTimeInterval(str: string) {
   const matches = str.match(/(\d+)\s*(months?|m(?:in(?:ute)?s?)?|h(?:(?:ou)?rs?)?|d(?:ays?)?|w(?:(?:ee)?ks?)?|y(?:(?:ea)?rs?)?)/i);
   if (matches && matches[1] && matches[2]) {
@@ -137,14 +152,12 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Get('/')
   public static async getSummaries(
     @Request() req?: ExpressRequest,
-    @Query() userId?: number,
-    @Query() _scope = 'public',
     @Query() filter?: string,
-    @Query() ids: number[] = [],
+    @Query() ids?: number[],
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
     @Query() interval?: string,
-    @Query() locale = '',
+    @Query() locale?: string,
     @Query() start?: string,
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
     @Query() pageSize = 10,
@@ -159,58 +172,91 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         rows: [],
       };
     }
+    return await this.getSummariesInternal({
+      end,
+      excludeIds,
+      filter,
+      forceCache,
+      ids,
+      interval,
+      locale,
+      matchType,
+      offset,
+      page,
+      pageSize,
+      start,
+    });
+  }
+
+  public static async getSummariesInternal({
+    filter,
+    ids,
+    excludeIds = false,
+    matchType,
+    interval,
+    locale,
+    start,
+    end = start !== undefined ? new Date().toISOString() : undefined,
+    pageSize = 10,
+    page = 0,
+    offset = pageSize * page,
+    forceCache = false,
+  }: GetSummariesPayload) {
     const { 
       categories, 
       outlets,
       interval: pastInterval,
       filter: query,
     } = applyFilter(filter, matchType);
-    const noOutlets = outlets.length === 0;
-    const noCategories = categories.length === 0;
-    const noIds = ids.length === 0 || excludeIds;
     const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
     const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
-    const cacheKey = [
-      '/getSummaries',
-      JSON.stringify(outlets),
-      JSON.stringify(categories),
-      JSON.stringify(ids),
+    const replacements = {
+      categories: categories.length === 0 ? [''] : categories,
+      endDate: endDate ?? new Date(0),
       excludeIds,
-      interval,
-      startDate?.toISOString(),
-      endDate?.toISOString(),
-      pageSize,
-      offset,
-      locale,
+      filter: query,
+      ids: !ids || ids.length === 0 ? [-1] : ids,
+      interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval ?? '100y'),
+      limit: Number(pageSize),
+      locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
+      noCategories: categories.length === 0,
+      noFilter: !filter,
+      noIds: !ids || ids.length === 0 || excludeIds,
+      noOutlets: outlets.length === 0,
+      offset: Number(offset),
+      outlets: outlets.length === 0 ? [''] : outlets,
+      startDate: startDate ?? new Date(),
+    };
+    const cacheKey = [
+      'getSummaries',
       filter,
-    ].join('§');
-    const cache = await Cache.fromKey(cacheKey);
-    if (!forceCache && cache && cache.expiresSoon === false) {
-      return JSON.parse(cache.value) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+      ids?.join(','),
+      excludeIds,
+      matchType,
+      interval,
+      locale,
+      start,
+      end,
+      pageSize,
+      page,
+    ].join(':');
+    if (!forceCache) {
+      const cache = await Cache.fromKey(cacheKey);
+      if (cache && cache.expiresSoon === false) {
+        try {
+          return JSON.parse(cache.value) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+        } catch (err) {
+          console.error(err);
+        }
+      }
     }
     const records = (await this.store.query(GET_SUMMARIES, {
       nest: true,
-      replacements: {
-        categories: categories.length === 0 ? [''] : categories,
-        endDate: endDate ?? new Date(0),
-        excludeIds,
-        filter: query,
-        ids: ids.length === 0 ? [-1] : ids,
-        interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval ?? '100y'),
-        limit: Number(pageSize),
-        locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
-        noCategories,
-        noFilter: !filter,
-        noIds,
-        noOutlets,
-        offset: Number(offset),
-        outlets: outlets.length === 0 ? [''] : outlets,
-        startDate: startDate ?? new Date(),
-      },
+      replacements,
       type: QueryTypes.SELECT,
     }))?.[0] ?? { count: 0, rows: [] };
     await Cache.upsert({
-      halflife: process.env.CACHE_HALFLIFE || '5m',
+      halflife: process.env.CACHE_HALFLIFE || '2m',
       key: cacheKey,
       value: JSON.stringify(records),
     });

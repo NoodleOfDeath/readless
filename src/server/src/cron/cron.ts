@@ -222,10 +222,22 @@ export async function bruteForceResolveDuplicates() {
 async function cacheApiSummaries() {
   try {
     console.log('caching queries');
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0, undefined, true);
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 1, undefined, true);
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2, undefined, true);
-    await SummaryController.getSummaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 3, undefined, true);
+    await SummaryController.getSummariesInternal({
+      forceCache: true,
+      page: 0,
+    });
+    await SummaryController.getSummariesInternal({
+      forceCache: true,
+      page: 1,
+    });
+    await SummaryController.getSummariesInternal({
+      forceCache: true,
+      page: 2,
+    });
+    await SummaryController.getSummariesInternal({
+      forceCache: true,
+      page: 3,
+    });
     console.log('done caching');
   } catch (e) {
     console.error(e);

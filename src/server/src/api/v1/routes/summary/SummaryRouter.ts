@@ -18,8 +18,7 @@ const router = Router();
 
 router.get(
   '/',
-  rateLimitMiddleware('15 per 1m'),
-  query('scope').isString().matches(/^(?:conservative|public)$/).optional(),
+  rateLimitMiddleware('20 per 1m'),
   query('filter').isString().optional(),
   query('ids').optional(),
   query('excludeIds').isBoolean().optional(),
@@ -32,12 +31,8 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     try {
-      const {
-        scope, filter, ids, excludeIds: exclude, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, matchType, interval, locale, start, end,
-      } = req.query;
-      const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-      const excludeIds = exclude === 'false' || exclude === 0 || exclude === 'undefined' ? false : exclude;
-      const response = await SummaryController.getSummaries(req, userId, scope, filter, ids, excludeIds, matchType, interval, locale, start, end, pageSize, page, offset);
+      const params = SummaryController.serializeParams(req.query);
+      const response = await SummaryController.getSummariesInternal(params);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);
