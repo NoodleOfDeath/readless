@@ -142,7 +142,7 @@ FROM (
           OR :noIds
         )
         AND (
-          (false AND summaries.id NOT IN (:ids))
+          (:excludeIds AND summaries.id NOT IN (:ids))
           OR NOT :excludeIds
         )
         AND (
@@ -155,7 +155,7 @@ FROM (
         )
         AND (
           :noFilter
-          OR summaries.title ~* :filter
+          OR (summaries.title ~* :filter)
           OR (summaries."shortSummary" ~* :filter)
           OR (summaries.summary ~* :filter)
           OR (summaries.bullets::text ~* :filter)
