@@ -39,8 +39,8 @@ export async function main() {
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <meta property="og:image" content="${summary?.imageUrl}" />
-          <meta property="og:title" content="${summary?.title}" />
-          <meta property="og:description" content="${summary?.shortSummary}" />
+          <meta property="og:title" content="${summary?.title.replace(/"/g, '&quot;')}" />
+          <meta property="og:description" content="${summary?.shortSummary.replace(/"/g, '&quot;')}}" />
         </head>
         <body>
           <script type="text/javascript">
