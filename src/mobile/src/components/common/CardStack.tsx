@@ -27,11 +27,17 @@ export function CardStack({
       return [];
     }
     return (Array.isArray(children) ? children : [children]).map((child, i) => (
-      <View key={ i }>
+      <React.Fragment key={ i }>
         {child}
-      </View>
+      </React.Fragment>
     ));
   }, [children]);
+  
+  React.useEffect(() => {
+    if (cardIndex + 1 > cards.length) {
+      setCardIndex(Math.max(cards.length - 1, 0));
+    }
+  }, [cardIndex, cards]);
 
   return (
     <View 
@@ -62,11 +68,8 @@ export function CardStack({
           onPress={ cardIndex > 0 ? () => setCardIndex((cardIndex - 1)) : undefined } />
         <View
           alignCenter
-          justifyCenter
-          gap={ 12 }>
-          <View>
-            {cards[cardIndex]}
-          </View>
+          justifyCenter>
+          {cards[cardIndex]}
         </View>
         <Button
           touchable

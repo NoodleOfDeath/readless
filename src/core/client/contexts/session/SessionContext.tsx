@@ -54,8 +54,8 @@ export function SessionContextProvider({ children }: Props) {
   const [readSources, setReadSources] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
-  const [triggerWords, setTriggerWords] = React.useState<{ [key: number]: Bookmark<string>}>();
-  const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: number]: Bookmark<boolean>}>();
+  const [triggerWords, setTriggerWords] = React.useState<{ [key: string]: Bookmark<string>}>();
+  const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: string]: Bookmark<boolean>}>();
   const [sentimentEnabled, setSentimentEnabled] = React.useState<boolean>();
 
   const bookmarkCount = React.useMemo(() => lengthOf(Object.keys(bookmarkedSummaries ?? {}).filter((k) => !(k in (readSummaries ?? {})))), [bookmarkedSummaries, readSummaries]);

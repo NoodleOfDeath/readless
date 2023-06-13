@@ -13,8 +13,14 @@ import {
 } from '~/components';
 import { useTheme } from '~/hooks';
 
+export type WalkthroughStep = React.ReactNode | {
+  title?: React.ReactNode;
+  body?: React.ReactNode;
+  image?: string;
+};
+
 export type WalkthroughProps = {
-  steps: React.ReactNode[];
+  steps: WalkthroughStep[];
   onDone?: () => void;
 };
 
@@ -24,23 +30,31 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
 
   const { steps = [], onDone } = React.useMemo(() => ({ ...payload }), [payload]);
   
+  const computedSteps = React.useMemo(() => steps.map((step, i) => (
+    <View flexWrap="wrap" key={ i }>
+      {React.isValidElement(step) ? step : (
+        <React.Fragment>
+          {step.title && <Text h5 bold textCenter>{step.title}</Text>}
+          {typeof step.body === 'string' ? (
+            <Text>{step.body}</Text>
+          ) : step.body}
+        </React.Fragment>
+      )}
+    </View>
+  )), [steps]);
+  
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<React.ReactNode>) => {
     return (
-      <View 
-        col 
+      <View
+        flexGrow={ 1 }
+        p={ 32 }
+        gap={ 12 }
         alignCenter
-        justifyCenter
-        p={ 32 }>
-        <View
-          p={ 32 }
-          style={ theme.components.card }
-          alignCenter
-          justifyCenter>
-          {item}
-        </View>
+        justifyCenter>
+        {item}
       </View>
     );
-  }, [theme]);
+  }, []);
   
   const renderPrevButton = React.useCallback(() => {
     return (
@@ -76,36 +90,49 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
     );
   }, [theme]);
   
-  const renderDoneButton = React.useCallback(() => {
+  const renderSkipButton = React.useCallback(() => {
     return (
       <View 
         elevated
-        width={ 40 }
+        ph={ 10 }
         height={ 40 }
         justifyCenter
         alignCenter
         borderRadius={ 24 }>
-        <Icon
-          name="check"
-          color={ theme.colors.text }
-          size={ 24 } />
+        <Text>Skip</Text>
+      </View>
+    );
+  }, [theme]);
+  
+  const renderDoneButton = React.useCallback(() => {
+    return (
+      <View 
+        elevated
+        ph={ 10 }
+        height={ 40 }
+        justifyCenter
+        alignCenter
+        borderRadius={ 24 }>
+        <Text>Got it!</Text>
       </View>
     );
   }, [theme]);
   
   return (
     <ActionSheet id={ props.sheetId }>
-      <View height={ 500 }>
+      <View height="100%">
         <AppIntroSlider
           renderItem={ renderItem }
           renderPrevButton={ renderPrevButton }
           renderNextButton={ renderNextButton }
+          renderSkipButton={ renderSkipButton }
           renderDoneButton={ renderDoneButton }
           onDone={ onDone }
           showPrevButton
+          showSkipButton
           dotStyle={ { backgroundColor: theme.colors.textDisabled } }
           activeDotStyle={ { backgroundColor: theme.colors.text } }
-          data={ steps } />
+          data={ computedSteps } />
       </View>
     </ActionSheet>
   );

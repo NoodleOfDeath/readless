@@ -4,7 +4,7 @@ export const enStrings = {
     close: 'Close', 
     next: 'Next ',
     save: 'Save', 
-    tapToEnable: 'Tap to enable', 
+    tapToEnable: 'Tap to learn more and enable', 
   },
   bookmarks: {
     activity: 'Activity',
@@ -142,4 +142,5 @@ export const enStrings = {
   },
   unfollow: 'Unfollow',
   unfollowChannel: 'Unfollow Channel',
+  walkthroughs: 'Walkthroughs',
 };

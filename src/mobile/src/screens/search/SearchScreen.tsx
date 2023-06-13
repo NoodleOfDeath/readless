@@ -87,6 +87,7 @@ export function SearchScreen({
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroups>();
+  const [showWalkthroughs, setShowWalkthroughs] = React.useState(true);
 
   const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
   const [resizing, setResizing] = React.useState(false);
@@ -388,7 +389,6 @@ export function SearchScreen({
     <Screen>
       <SafeAreaView style={ { flexGrow: 1 } }>
         <View col>
-          {!prefilter && <FeatureStack />}
           {sentimentEnabled && summaries.length > 0 && averageSentiment && (
             <View 
               elevated 
@@ -454,6 +454,7 @@ export function SearchScreen({
                     load(0);
                   } }>
                   <View col width="100%" pt={ 12 }>
+                    {!prefilter && showWalkthroughs && <FeatureStack onClose={ () => setShowWalkthroughs(false) } />}
                     {summaryList}
                     {!loading && !noResults && totalResultCount > summaries.length && (
                       <View row justifyCenter p={ 16 } pb={ 24 }>

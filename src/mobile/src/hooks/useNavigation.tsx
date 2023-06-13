@@ -82,6 +82,10 @@ export function useNavigation() {
     (navigation?.push ?? navigation.navigate)('settings');
   }, [navigation]);
   
+  const openWalkthroughs = React.useCallback(() => {
+    (navigation?.push ?? navigation.navigate)('walkthroughs');
+  }, [navigation]);
+  
   return {
     navigation,
     openAbout,
@@ -91,6 +95,7 @@ export function useNavigation() {
     openOutlet,
     openSettings,
     openSummary,
+    openWalkthroughs,
     router,
     search,
   };

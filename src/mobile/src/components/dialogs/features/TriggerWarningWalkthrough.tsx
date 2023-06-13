@@ -14,24 +14,34 @@ import { strings } from '~/locales';
 
 export function TriggerWarningWalkthrough(props: SheetProps) {
   
-  const { setPreference } = React.useContext(SessionContext);
+  const { triggerWords, setPreference } = React.useContext(SessionContext);
+  
+  const [words, setWords] = React.useState(Object.keys({ ...triggerWords }).join(', '));
 
+  const onSubmit = React.useCallback(() => {
+    setPreference('triggerWords', (prev) => (prev = Object.fromEntries(words.split(',').map((word) => [word.toLowerCase().replace(/[\n\s\t]+/g, ' '), new Bookmark('🐱')]))));
+  }, [setPreference, words]);
+  
   const steps = React.useMemo(() => [
-    (
-      <View key='1'>
-        <Text>{strings.features.triggerWarning.setTriggerWords}</Text>
-      </View>
-    ),
-    (
-      <View key='2'>
-        <Text>{strings.features.triggerWarning.setTriggerWords}</Text>
-        <View flexRow gap={ 4 }>
-          <TextInput />
-          <TextInput />
-        </View>
-      </View>
-    ),
-  ], []);
+    {
+      body: strings.features.triggerWarning.setTriggerWords,
+      title: strings.features.triggerWarning.triggerWarning,
+    },
+    {
+      body: (
+        <React.Fragment>
+          <Text>{strings.features.triggerWarning.setTriggerWords}</Text>
+          <TextInput
+            width="100%"
+            placeholder={ 'comma, separated trigger words, or phrases' }
+            value={ words }
+            onChange={ (value) => setWords(value) }
+            onSubmitEditing={ onSubmit } />
+        </React.Fragment>
+      ),
+      title: strings.features.triggerWarning.setTriggerWords,
+    },
+  ], [words, onSubmit]);
 
   const onDone = React.useCallback(async () => {
     setPreference('viewedFeatures', (prev) => {

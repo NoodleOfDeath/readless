@@ -116,8 +116,40 @@ function RenderActions({ actions }: RenderActionsProps) {
   );
 }
 
+const DEFAULT_PROPS: Props = {
+  summary: {
+    bullets: [
+      'Example bullet 1',
+      'Example bullet 2',
+    ],
+    category: {
+      displayName: 'Entertainment',
+      icon: 'popcorn',
+      name: 'entertainment',
+    },
+    id: 0,
+    imageUrl: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg',
+    media: [],
+    originalDate: new Date(Date.now() - ms('5m')),
+    outlet: {
+      displayName: 'News Source',
+      name: '',
+    },
+    sentiment: 0.3,
+    sentiments: [{
+      method: 'openai',
+      score: 0.3,
+    }],
+    shortSummmary: 'This is a short summary',
+    siblings: [],
+    summary: 'This is a summary',
+    title: 'This is an example summary',
+    translations: [],
+  },
+};
+
 export function Summary({
-  summary,
+  summary = DEFAULT_PROPS.summary,
   tickInterval = '2m',
   selected,
   initialFormat,
@@ -149,8 +181,9 @@ export function Summary({
     bookmarkedSummaries,
     readSummaries,
     readSources,
+    sentimentEnabled,
     setPreference, 
-    triggerWords = { 'trump': new Bookmark('🐱') },
+    triggerWords,
   } = React.useContext(SessionContext);
 
   const { shareTarget } = React.useContext(DialogContext);
@@ -203,14 +236,14 @@ export function Summary({
   }, [format, localizedStrings.bullets, localizedStrings.summary]);
   
   const containsTrigger = React.useMemo(() => {
-    return Object.keys(triggerWords).some((k) => {
-      const expr = new RegExp(k, 'i');
-      return Object.values(localizedStrings).some((v) => expr.test(v));
+    return Object.keys({ ...triggerWords }).some((word) => {
+      const expr = new RegExp(word, 'i');
+      return Object.values(localizedStrings).some((s) => expr.test(s));
     });
   }, [localizedStrings, triggerWords]);
   
   const cleanString = React.useCallback((str: string) => {
-    for (const [word, repl] of Object.entries(triggerWords)) {
+    for (const [word, repl] of Object.entries({ ...triggerWords })) {
       str = str.replace(new RegExp(word, 'ig'), repl.item);
     }
     return str;
@@ -449,10 +482,14 @@ export function Summary({
                           {formatTime(summary.originalDate)}
                         </Text>
                       </View>
-                      <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
-                      <MeterDial 
-                        value={ summary.sentiment }
-                        width={ 40 } />
+                      {sentimentEnabled && (
+                        <React.Fragment>
+                          <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
+                          <MeterDial 
+                            value={ summary.sentiment }
+                            width={ 40 } />
+                        </React.Fragment>
+                      )}
                     </View>
                   </View>
                   <View>

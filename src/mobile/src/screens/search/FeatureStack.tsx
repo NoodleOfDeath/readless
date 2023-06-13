@@ -12,11 +12,11 @@ type Feature = {
   onPress?: () => void;
 };
 
-const FEATURES: Feature[] = [
+export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.features.sentiment.sentiment}</Text>
+        <Text h6 numberOfLines={ 2 }>{strings.features.sentiment.sentiment}</Text>
         <Text bold underline>{strings.actions.tapToEnable}</Text>
       </React.Fragment>
     ),
@@ -39,14 +39,20 @@ const FEATURES: Feature[] = [
   },
 ];
 
-export function FeatureStack() {
+type Props = {
+  onClose?: () => void;
+};
+
+export function FeatureStack({ onClose }: Props = {}) {
   
   const { viewedFeatures } = React.useContext(SessionContext);
   const cards = React.useMemo(() => FEATURES.filter((feature) => !(feature.id in (viewedFeatures ?? {}))), [viewedFeatures]);
   
-  return (
-    <CardStack 
-      m={ 12 }
+  return cards.length > 0 && (
+    <CardStack
+      mh={ 12 }
+      mb={ 12 }
+      onClose={ onClose }
       onPressItem={ (index) => cards[index].onPress?.() }>
       {cards.map((card) => (
         <React.Fragment key={ card.id }>

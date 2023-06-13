@@ -24,12 +24,10 @@ export const Switch = ({
   const theme = useTheme();
   const style = useStyles(props);
   return (
-    <View col style={ style }>
-      <View row style={ style } gap={ gap } alignCenter>
-        { typeof leftLabel === 'string' ? <Text>{ leftLabel }</Text> : leftLabel }
-        <RNSwitch { ...props } color={ theme.colors.primary } />
-        { typeof rightLabel === 'string' ? <Text>{ rightLabel }</Text> : rightLabel }
-      </View>
+    <View flexRow style={ style } gap={ gap } alignCenter>
+      { typeof leftLabel === 'string' ? <Text>{ leftLabel }</Text> : leftLabel }
+      <RNSwitch { ...props } color={ theme.colors.primary } />
+      { typeof rightLabel === 'string' ? <Text>{ rightLabel }</Text> : rightLabel }
     </View>
   );
 };

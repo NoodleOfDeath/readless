@@ -17,7 +17,7 @@ import { strings } from '~/locales';
 export function MainMenuDialog(props: SheetProps) {
 
   const {
-    openAbout, openBookmarks, openBrowse, openSettings, 
+    openAbout, openBookmarks, openBrowse, openSettings, openWalkthroughs,
   } = useNavigation();
   const { bookmarkCount } = React.useContext(SessionContext);
 
@@ -39,11 +39,16 @@ export function MainMenuDialog(props: SheetProps) {
       onPress: openBrowse,
     },
     {
+      icon: 'map-legend',
+      label: strings.walkthroughs,
+      onPress: openWalkthroughs,
+    },
+    {
       icon: 'information',
       label: strings.about,
       onPress: openAbout,
     },
-  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings]);
+  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings, openWalkthroughs]);
 
   return (
     <ActionSheet id={ props.sheetId }>
