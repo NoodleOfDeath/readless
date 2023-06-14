@@ -30,31 +30,30 @@ export const SegmentedButtons = <T = any>({
   const style = useStyles(props);
   const computedStyles = React.useMemo(() => elevated ? {} : { backgroundColor: '#000' }, [elevated]);
   return (
-    <View 
+    <View
       { ...props }
-      flexGrow={ 1 }
       style={ [style, computedStyles] }>
       <View 
-        row
+        flexRow
         elevated={ elevated }
         gap={ 12 }>
         {buttons.map(({
           icon, label, value,
         }, index) => (
-          <View row key={ `${value}${index}` }>
-            <Button 
-              row
-              alignCenter
-              justifyCenter
-              gap={ 6 }
-              p={ 12 }
-              selectable
-              selected={ value === props.value }
-              startIcon={ icon }
-              onPress={ () => onValueChange?.(value) }>
-              { label }
-            </Button>
-          </View>
+          <Button 
+            key={ `${value}${index}` }
+            flexRow
+            flexGrow={ 1 }
+            alignCenter
+            justifyCenter
+            gap={ 6 }
+            p={ 12 }
+            selectable
+            selected={ value === props.value }
+            startIcon={ icon }
+            onPress={ () => onValueChange?.(value) }>
+            { label }
+          </Button>
         ))}
       </View>
     </View>

@@ -7,8 +7,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import { FeatureStack } from './FeatureStack';
 import { SearchMenu } from './SearchMenu';
+import { WalkthroughStack } from './WalkthroughStack';
 
 import {
   InteractionType,
@@ -454,7 +454,7 @@ export function SearchScreen({
                     load(0);
                   } }>
                   <View col width="100%" pt={ 12 }>
-                    {!prefilter && showWalkthroughs && <FeatureStack onClose={ () => setShowWalkthroughs(false) } />}
+                    {!prefilter && showWalkthroughs && <WalkthroughStack onClose={ () => setShowWalkthroughs(false) } />}
                     {summaryList}
                     {!loading && !noResults && totalResultCount > summaries.length && (
                       <View row justifyCenter p={ 16 } pb={ 24 }>

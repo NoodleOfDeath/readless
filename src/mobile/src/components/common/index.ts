@@ -18,6 +18,7 @@ export * from './Menu';
 export * from './Screen';
 export * from './ScrollView';
 export * from './SegmentedButtons';
+export * from './Slider';
 export * from './Surface';
 export * from './Switch';
 export * from './TabSwitcher';

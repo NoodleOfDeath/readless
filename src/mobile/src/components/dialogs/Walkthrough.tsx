@@ -8,14 +8,17 @@ import {
   ActionSheet,
   Button,
   Icon,
+  ScrollView,
   Text,
   View,
 } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type WalkthroughStep = React.ReactNode | {
+export type WalkthroughStep = {
   title?: React.ReactNode;
   body?: React.ReactNode;
+  actions?: React.ReactNode;
+  doneLabel?: React.ReactNode;
   image?: string;
 };
 
@@ -31,25 +34,22 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
   const { steps = [], onDone } = React.useMemo(() => ({ ...payload }), [payload]);
   
   const computedSteps = React.useMemo(() => steps.map((step, i) => (
-    <View flexWrap="wrap" key={ i }>
-      {React.isValidElement(step) ? step : (
-        <React.Fragment>
-          {step.title && <Text h5 bold textCenter>{step.title}</Text>}
-          {typeof step.body === 'string' ? (
-            <Text>{step.body}</Text>
-          ) : step.body}
-        </React.Fragment>
+    <View gap={ 12 } key={ i }>
+      {step.title && <Text h5 bold textCenter>{step.title}</Text>}
+      {typeof step.body === 'string' ? (
+        <Text>{step.body}</Text>
+      ) : (
+        <ScrollView>{step.body}</ScrollView>
       )}
+      {step.actions}
     </View>
   )), [steps]);
   
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<React.ReactNode>) => {
     return (
-      <View
+      <View 
         flexGrow={ 1 }
         p={ 32 }
-        gap={ 12 }
-        alignCenter
         justifyCenter>
         {item}
       </View>
@@ -108,18 +108,21 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
     return (
       <View 
         elevated
-        ph={ 10 }
+        width={ 40 }
         height={ 40 }
         justifyCenter
         alignCenter
         borderRadius={ 24 }>
-        <Text>Got it!</Text>
+        <Icon
+          name="check"
+          color={ theme.colors.text }
+          size={ 24 } />
       </View>
     );
   }, [theme]);
   
   return (
-    <ActionSheet id={ props.sheetId }>
+    <ActionSheet id={ props.sheetId } gestureEnabled={ false }>
       <View height="100%">
         <AppIntroSlider
           renderItem={ renderItem }

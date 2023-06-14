@@ -30,6 +30,7 @@ import {
   ScrollView,
   Text,
   View,
+  ViewProps,
 } from '~/components';
 import {
   Bookmark,
@@ -42,6 +43,7 @@ import {
   useNavigation,
   useServiceClient,
   useShare,
+  useStyles,
   useTheme,
 } from '~/hooks';
 import {
@@ -51,7 +53,7 @@ import {
 } from '~/locales';
 import { DateSorter, fixedSentiment } from '~/utils';
 
-type Props = {
+type Props = Omit<ViewProps, 'children'> & {
   summary: PublicSummaryGroups;
   tickInterval?: string;
   selected?: boolean;
@@ -61,7 +63,8 @@ type Props = {
   compact?: boolean;
   swipeable?: boolean;
   disableInteractions?: boolean;
-  showAnalytics?: boolean;
+  hideCard?: boolean;
+  hideAnalytics?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => Promise<unknown>;
   onLocalize?: (translations: PublicSummaryTranslationAttributes[]) => void;
@@ -83,7 +86,8 @@ function RenderActions({ actions }: RenderActionsProps) {
   return (
     <View>
       <View 
-        col
+        flex={ 1 }
+        flexGrow={ 1 }
         justifyEvenly
         p={ 6 }
         mr={ 18 }
@@ -95,7 +99,7 @@ function RenderActions({ actions }: RenderActionsProps) {
             flexGrow={ 1 }
             flex={ 1 }>
             <Button 
-              row
+              flexRow
               rounded
               outlined
               flexGrow={ 1 }
@@ -140,29 +144,32 @@ const DEFAULT_PROPS: Props = {
       method: 'openai',
       score: 0.3,
     }],
-    shortSummmary: 'This is a short summary',
+    shortSummary: 'This is a short one sentence summary that usually be no more than 30 words.',
     siblings: [],
-    summary: 'This is a summary',
+    summary: 'This is a longer summary. This will usually be between 3-5 sentences long. You can also view bullet form.',
     title: 'This is an example summary',
     translations: [],
+    url: 'https://readless.ai',
   },
 };
 
 export function Summary({
-  summary = DEFAULT_PROPS.summary,
+  summary: summary0,
   tickInterval = '2m',
   selected,
   initialFormat,
   initiallyTranslated = true,
   keywords = [],
   compact = false,
-  swipeable = true,
-  disableInteractions = false,
-  showAnalytics = false,
+  swipeable = Boolean(summary0),
+  disableInteractions = !summary0,
+  hideCard,
+  hideAnalytics,
   onFormatChange,
   onInteract,
   onLocalize,
   onToggleTranslate,
+  ...props
 }: Props) {
 
   const { openURL } = useInAppBrowser();
@@ -173,6 +180,7 @@ export function Summary({
   const { localizeSummary } = useServiceClient();
 
   const theme = useTheme();
+  const style = useStyles(props);
 
   const {
     compactMode,
@@ -191,6 +199,7 @@ export function Summary({
     trackState, queueSummary, currentTrack, stopAndClearTracks,
   } = React.useContext(MediaContext);
   
+  const summary = React.useMemo((() => summary0 ?? DEFAULT_PROPS.summary), [summary0]);
   const viewshot = React.useRef<ViewShot | null>(null);
 
   const [lastTick, setLastTick] = React.useState(new Date());
@@ -391,8 +400,9 @@ export function Summary({
         renderRightActions={ renderRightActions }>
         <ViewShot ref={ viewshot }>
           <View 
+            flexGrow={ 1 }
             elevated
-            style={ theme.components.card }
+            style={ { ...theme.components.card, ...style } }
             mt={ isShareTarget ? 12 : undefined }
             borderRadius={ initialFormat ? 0 : 12 }
             mb={ 12 }
@@ -400,280 +410,305 @@ export function Summary({
             mr={ initialFormat ? undefined : 12 }
             inactive={ isRead } 
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
-            <View col>
-              <View row>
-                {!initialFormat && !isShareTarget && selected && (
-                  <View
-                    left={ 0 }
-                    top={ 0 }
-                    width={ 12 }
-                    bg={ theme.colors.primary } />
-                )}
-                <View
-                  col
-                  gap={ 6 }
-                  overflow='hidden'
-                  borderRadiusTL={ initialFormat ? 0 : 12 }
-                  borderRadiusTR={ initialFormat ? 0 : 12 }>
-                  <View 
-                    pv={ initialFormat ? 12 : 6 }
-                    ph={ 6 }
-                    flexGrow={ 1 }
-                    elevated
-                    borderRadiusTL={ initialFormat ? 0 : 12 }
-                    borderRadiusTR={ initialFormat ? 0 : 12 }
-                    zIndex={ 2 }
-                    inactive={ isRead }>
+            <View flexGrow={ 1 }>
+              {!hideCard && (
+                <View flexRow flexGrow={ 1 }>
+                  {!initialFormat && !isShareTarget && selected && (
                     <View
-                      row
-                      alignCenter
-                      gap={ 6 }>
-                      {!initialFormat ? (
-                        <React.Fragment>
-                          <Button 
-                            h5
-                            color='text'
-                            startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                            touchable
-                            onPress={ () => openCategory(summary.category) } />
-                          <Text
-                            italic
-                            onPress={ () => openOutlet(summary.outlet) }>
-                            {summary.outlet.displayName}
-                          </Text>
-                        </React.Fragment>
-                      ) : (
-                        <View gap={ 3 }>
-                          <View>
+                      left={ 0 }
+                      top={ 0 }
+                      width={ 12 }
+                      bg={ theme.colors.primary } />
+                  )}
+                  <View
+                    flex={ 1 }
+                    flexGrow={ 1 }
+                    gap={ 6 }
+                    overflow='hidden'
+                    borderRadiusTL={ initialFormat ? 0 : 12 }
+                    borderRadiusTR={ initialFormat ? 0 : 12 }>
+                    <View 
+                      pv={ initialFormat ? 12 : 6 }
+                      ph={ 6 }
+                      flexGrow={ 1 }
+                      elevated
+                      borderRadiusTL={ initialFormat ? 0 : 12 }
+                      borderRadiusTR={ initialFormat ? 0 : 12 }
+                      zIndex={ 2 }
+                      inactive={ isRead }>
+                      <View
+                        flexRow
+                        flexGrow={ 1 }
+                        alignCenter
+                        gap={ 6 }>
+                        {!initialFormat ? (
+                          <React.Fragment>
                             <Button 
                               h5
-                              gap={ 3 }
-                              row
-                              outlined
-                              alignCenter
-                              borderRadius={ 4 }
-                              p={ 3 }
                               color='text'
                               startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
                               touchable
-                              onPress={ () => openCategory(summary.category) }>
-                              {summary.category.displayName}
+                              onPress={ () => openCategory(summary.category) } />
+                            <Text
+                              italic
+                              onPress={ () => openOutlet(summary.outlet) }>
+                              {summary.outlet.displayName}
+                            </Text>
+                          </React.Fragment>
+                        ) : (
+                          <View gap={ 3 }>
+                            <View>
+                              <Button 
+                                h5
+                                gap={ 3 }
+                                flexRow
+                                flexGrow={ 1 }
+                                outlined
+                                alignCenter
+                                borderRadius={ 4 }
+                                p={ 3 }
+                                color='text'
+                                startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                                touchable
+                                onPress={ () => openCategory(summary.category) }>
+                                {summary.category.displayName}
+                              </Button>
+                            </View>
+                            <Button
+                              italic
+                              underline
+                              alignCenter
+                              outlined
+                              p={ 3 }
+                              borderColor="black"
+                              borderRadius={ 4 }
+                              touchable
+                              onPress={ () => openOutlet(summary.outlet) }>
+                              {summary.outlet.displayName}
                             </Button>
                           </View>
-                          <Button
-                            italic
-                            underline
-                            alignCenter
-                            outlined
-                            p={ 3 }
-                            borderColor="black"
-                            borderRadius={ 4 }
-                            touchable
-                            onPress={ () => openOutlet(summary.outlet) }>
-                            {summary.outlet.displayName}
-                          </Button>
+                        )}
+                        <View flexRow flexGrow={ 1 } gap={ 6 }>
+                          <Text 
+                            bold 
+                            caption
+                            color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
+                            {formatTime(summary.originalDate)}
+                          </Text>
                         </View>
-                      )}
-                      <View row gap={ 6 }>
-                        <Text 
-                          bold 
-                          caption
-                          color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
-                          {formatTime(summary.originalDate)}
-                        </Text>
+                        {sentimentEnabled && (
+                          <React.Fragment>
+                            <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
+                            <MeterDial 
+                              value={ summary.sentiment }
+                              width={ 40 } />
+                          </React.Fragment>
+                        )}
                       </View>
-                      {sentimentEnabled && (
-                        <React.Fragment>
-                          <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
-                          <MeterDial 
-                            value={ summary.sentiment }
-                            width={ 40 } />
-                        </React.Fragment>
-                      )}
                     </View>
-                  </View>
-                  <View>
-                    <View row>
-                      {(!(compact || compactMode) || initialFormat) && summary.imageUrl && (
-                        <View
-                          justifyCenter
-                          flexGrow={ 1 }
-                          relative
-                          maxWidth={ initialFormat ? 200 : 128 }
-                          width={ initialFormat ? '40%' : '30%' }>
-                          <Menu
-                            width={ 300 }
-                            autoAnchor={ (
+                    <View>
+                      <View row>
+                        {(!(compact || compactMode) || initialFormat) && summary.imageUrl && (
+                          <View
+                            justifyCenter
+                            flexGrow={ 1 }
+                            relative
+                            maxWidth={ initialFormat ? 200 : 128 }
+                            width={ initialFormat ? '40%' : '30%' }>
+                            <Menu
+                              width={ 300 }
+                              autoAnchor={ (
+                                <View
+                                  mt={ -18 }
+                                  mb={ 30 }
+                                  minHeight={ 80 }
+                                  height="100%"
+                                  overflow='hidden'
+                                  borderRadiusTL={ initialFormat ? 0 : 12 }
+                                  borderRadiusBL={ initialFormat ? 0 : 12 }>
+                                  {containsTrigger ? (
+                                    <Text 
+                                      absolute
+                                      zIndex={ 20 } 
+                                      fontSize={ 120 }>
+                                      🐥
+                                    </Text>
+                                  ) : (
+                                    <Image
+                                      flex={ 1 }
+                                      flexGrow={ 1 }
+                                      fill
+                                      source={ { uri: summary.imageUrl } } />
+                                  )}
+                                </View>
+                              ) }>
                               <View
-                                mt={ -18 }
-                                mb={ 30 }
-                                minHeight={ 80 }
-                                height="100%"
-                                overflow='hidden'
-                                borderRadiusTL={ initialFormat ? 0 : 12 }
-                                borderRadiusBL={ initialFormat ? 0 : 12 }>
-                                {containsTrigger ? (
-                                  <Text 
-                                    absolute
-                                    zIndex={ 20 } 
-                                    fontSize={ 120 }>
-                                    🐥
-                                  </Text>
-                                ) : (
+                                gap={ 6 }>
+                                <Text caption>{strings.summary.thisIsNotARealImage}</Text>
+                                <View
+                                  mh={ -12 }
+                                  mb={ -12 }>
                                   <Image
-                                    col
-                                    fill
-                                    source={ { uri: summary.imageUrl } } />
-                                )}
+                                    source={ { uri: summary.imageUrl } }  
+                                    aspectRatio={ 1 } />
+                                </View>
                               </View>
-                            ) }>
-                            <View
-                              gap={ 6 }>
-                              <Text caption>{strings.summary.thisIsNotARealImage}</Text>
-                              <View
-                                mh={ -12 }
-                                mb={ -12 }>
-                                <Image
-                                  source={ { uri: summary.imageUrl } }  
-                                  aspectRatio={ 1 } />
-                              </View>
-                            </View>
-                          </Menu>
-                        </View>
-                      )}
-                      <View
-                        col
-                        gap={ 6 }
-                        pb={ (compact || compactMode) ? 12 : 0 }>
-                        <View col mh={ 12 }>
-                          <View row alignCenter>
-                            <Highlighter
-                              bold
-                              subtitle1
-                              justifyCenter
-                              color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
-                              highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                              searchWords={ isShareTarget ? [] : keywords }
-                              textToHighlight={ cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) } />
+                            </Menu>
                           </View>
-                          {translateToggle}
-                          {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
-                            <View row>
-                              <Divider />
-                              <Highlighter 
+                        )}
+                        <View
+                          flex={ 1 }
+                          flexGrow={ 1 }
+                          gap={ 6 }
+                          pb={ (compact || compactMode) ? 12 : 0 }>
+                          <View flex={ 1 } flexGrow={ 1 } mh={ 12 }>
+                            <View flexRow flexGrow={ 1 } alignCenter>
+                              <Highlighter
+                                bold
+                                subtitle1
+                                justifyCenter
+                                color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                 searchWords={ isShareTarget ? [] : keywords }
-                                textToHighlight={ cleanString(localizedStrings.shortSummary ?? '') } />
+                                textToHighlight={ cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) } />
+                            </View>
+                            {translateToggle}
+                            {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
+                              <View row>
+                                <Divider />
+                                <Highlighter 
+                                  highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                                  searchWords={ isShareTarget ? [] : keywords }
+                                  textToHighlight={ cleanString(localizedStrings.shortSummary ?? '') } />
+                              </View>
+                            )}
+                          </View>
+                          {summary.siblings && summary.siblings.length > 0 && (
+                            <View mh={ 12 } gap={ 6 }>
+                              <Text>
+                                {`${strings.summary.relatedNews} (${summary.siblings.length})`}
+                              </Text>
+                              <ScrollView height={ summary.siblings.length === 1 ? 55 : 70 }>
+                                <View gap={ 5 }>
+                                  {[...summary.siblings].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
+                                    <View 
+                                      key={ sibling.id } 
+                                      height={ 55 }>
+                                      <View
+                                        gap={ 1 }
+                                        p={ 3 }
+                                        outlined
+                                        borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
+                                        height={ 55 }
+                                        touchable
+                                        onPress={ () => openSummary({ summary: sibling.id }) }>
+                                        <View 
+                                          flexRow
+                                          flexGrow={ 1 } 
+                                          gap={ 2 }
+                                          alignCenter>
+                                          <Text 
+                                            italic
+                                            color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
+                                            {sibling.outlet.displayName}
+                                          </Text>
+                                          <Text 
+                                            bold 
+                                            caption 
+                                            color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
+                                            {formatTime(sibling.originalDate)}
+                                          </Text>
+                                        </View>
+                                        <Highlighter 
+                                          bold 
+                                          numberOfLines={ 1 }
+                                          color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
+                                          highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                                          searchWords={ isShareTarget ? [] : keywords }
+                                          textToHighlight={ cleanString(sibling.title) } />
+                                      </View>
+                                    </View>
+                                  ))}
+                                </View>
+                              </ScrollView>
+                            </View>
+                          )}
+                          {(!(compact || compactMode) || initialFormat) && (
+                            <View
+                              overflow="hidden"
+                              p={ 6 }>
+                              <View 
+                                flexRow
+                                flexGrow={ 1 }
+                                alignCenter
+                                gap={ 6 }>
+                                <View row>
+                                  <Text
+                                    numberOfLines={ 1 }
+                                    underline
+                                    caption
+                                    color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+                                    onPress={ () => {
+                                      if (disableInteractions) {
+                                        return;
+                                      }
+                                      onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
+                                      setSourceIsRead(true);
+                                    } }
+                                    onLongPress={ () => copyToClipboard(summary.url) }>
+                                    {summary.url}
+                                  </Text>
+                                </View>
+                                <Button
+                                  h4
+                                  haptic
+                                  color='text'
+                                  startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+                                  onPress={ () => {
+                                    if (disableInteractions) {
+                                      return;
+                                    }
+                                    onInteract?.(InteractionType.Bookmark); 
+                                  } } />
+                                <Button
+                                  h4
+                                  touchable
+                                  color='text'
+                                  startIcon='share-outline'
+                                  onPress={ () => {
+                                    if (disableInteractions) {
+                                      return;
+                                    }
+                                    SheetManager.show('share', {
+                                      payload: {
+                                        format,
+                                        onInteract, 
+                                        summary,
+                                        viewshot: viewshot.current,
+                                      },
+                                    });
+                                  } } />
+                                <Button
+                                  h4
+                                  haptic
+                                  touchable
+                                  color="text"
+                                  startIcon={ playingAudio ? 'stop' : 'volume-source' }
+                                  onPress={ () => {
+                                    if (disableInteractions) {
+                                      return;
+                                    }
+                                    handlePlayAudio(); 
+                                  } } />
+                              </View>
                             </View>
                           )}
                         </View>
-                        {summary.siblings && summary.siblings.length > 0 && (
-                          <View mh={ 12 } gap={ 6 }>
-                            <Text>
-                              {`${strings.summary.relatedNews} (${summary.siblings.length})`}
-                            </Text>
-                            <ScrollView height={ summary.siblings.length === 1 ? 55 : 70 }>
-                              <View gap={ 5 }>
-                                {[...summary.siblings].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
-                                  <View 
-                                    key={ sibling.id } 
-                                    height={ 55 }>
-                                    <View
-                                      gap={ 1 }
-                                      p={ 3 }
-                                      outlined
-                                      borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                                      height={ 55 }
-                                      touchable
-                                      onPress={ () => openSummary({ summary: sibling.id }) }>
-                                      <View 
-                                        row 
-                                        gap={ 2 }
-                                        alignCenter>
-                                        <Text 
-                                          italic
-                                          color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
-                                          {sibling.outlet.displayName}
-                                        </Text>
-                                        <Text 
-                                          bold 
-                                          caption 
-                                          color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
-                                          {formatTime(sibling.originalDate)}
-                                        </Text>
-                                      </View>
-                                      <Highlighter 
-                                        bold 
-                                        numberOfLines={ 1 }
-                                        color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                                        highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                        searchWords={ isShareTarget ? [] : keywords }
-                                        textToHighlight={ cleanString(sibling.title) } />
-                                    </View>
-                                  </View>
-                                ))}
-                              </View>
-                            </ScrollView>
-                          </View>
-                        )}
-                        {(!(compact || compactMode) || initialFormat) && (
-                          <View
-                            overflow="hidden"
-                            p={ 6 }>
-                            <View 
-                              row
-                              alignCenter
-                              gap={ 6 }>
-                              <View row>
-                                <Text
-                                  numberOfLines={ 1 }
-                                  underline
-                                  caption
-                                  color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
-                                  onPress={ () => {
-                                    onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-                                    setSourceIsRead(true);
-                                  } }
-                                  onLongPress={ () => copyToClipboard(summary.url) }>
-                                  {summary.url}
-                                </Text>
-                              </View>
-                              <Button
-                                h4
-                                haptic
-                                color='text'
-                                startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-                                onPress={ () => onInteract?.(InteractionType.Bookmark) } />
-                              <Button
-                                h4
-                                touchable
-                                color='text'
-                                startIcon='share-outline'
-                                onPress={ () => {
-                                  SheetManager.show('share', {
-                                    payload: {
-                                      format,
-                                      onInteract, 
-                                      summary,
-                                      viewshot: viewshot.current,
-                                    },
-                                  });
-                                } } />
-                              <Button
-                                h4
-                                haptic
-                                touchable
-                                color="text"
-                                startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                                onPress={ () => handlePlayAudio() } />
-                            </View>
-                          </View>
-                        )}
                       </View>
                     </View>
                   </View>
                 </View>
-              </View>
+              )}
               {initialFormat && (
                 <CollapsedView 
                   initiallyCollapsed={ false }
@@ -709,10 +744,10 @@ export function Summary({
                   )}
                 </CollapsedView>
               )}
-              {initialFormat && summary.sentiment && (
+              {!hideAnalytics && initialFormat && summary.sentiment && (
                 <AnalyticsView
                   mb={ 12 }
-                  initiallyCollapsed={ !showAnalytics }
+                  initiallyCollapsed
                   sentiment={ summary.sentiment }
                   sentiments={ Object.values(summary.sentiments ?? []) } />
               )}

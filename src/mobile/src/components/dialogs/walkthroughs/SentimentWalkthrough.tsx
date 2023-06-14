@@ -5,8 +5,8 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import {
   Button,
   Image,
+  MeterDial,
   ScrollView,
-  Summary,
   Switch,
   Text,
   View,
@@ -22,6 +22,15 @@ export function SentimentWalkthrough(props: SheetProps) {
 
   const [isEnabled, setIsEnabled] = React.useState(sentimentEnabled);
 
+  const onDone = React.useCallback(async () => {
+    setPreference('viewedFeatures', (prev) => {
+      const state = { ...prev };
+      state[props.sheetId] = new Bookmark(true);
+      return (prev = state);
+    });
+    await SheetManager.hide(props.sheetId);
+  }, [props.sheetId, setPreference]);
+  
   const steps: WalkthroughStep[] = React.useMemo(() => [
     {
       body: strings.features.sentiment.description,
@@ -32,38 +41,39 @@ export function SentimentWalkthrough(props: SheetProps) {
       title: 'How Can Sentiment Be Measured?',
     },
     {
-      body: (
+      actions: (
         <View alignCenter justifyCenter gap={ 12 }>
           <Text>
             Each article summary has a sentiment score. This is not shown by default to reduce clutter, but you may enable it if you find this measurement helpful in deciding whether, or not, an article is worth reading.
           </Text>
-          <Image
-            aspectRatio={ 1 }
-            width={ 200 }
-            source={ { uri: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg' } } />
-          <Switch 
-            value={ isEnabled }
-            onValueChange={ (value) => {
-              setIsEnabled(value);
-              setPreference('sentimentEnabled', value);
-            } }
-            leftLabel={ 'Leave Off' }
-            rightLabel={ 'Enable Sentiments' } />
+          <Button
+            elevated
+            rounded
+            p={ 6 }
+            m={ 3 }
+            onPress={ () => {
+              setPreference('sentimentEnabled', true);
+              onDone();
+            } }>
+            Enable Sentiments
+          </Button>
+          <Button 
+            elevated
+            rounded
+            p={ 6 }
+            m={ 3 }
+            onPress={ () => {
+              onDone();
+            } }>
+            I&apos;m good for now.
+          </Button>
         </View>
       ),
+      body: <MeterDial value={ 0.3 } />,
       title: 'Enable Sentiments?',
     },
-  ], [isEnabled, setPreference]);
+  ], [isEnabled, setPreference, onDone]);
   
-  const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
-      const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
-      return (prev = state);
-    });
-    await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
-
   return (
     <Walkthrough
       { ...props }

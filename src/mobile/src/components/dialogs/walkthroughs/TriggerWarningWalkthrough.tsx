@@ -19,7 +19,11 @@ export function TriggerWarningWalkthrough(props: SheetProps) {
   const [words, setWords] = React.useState(Object.keys({ ...triggerWords }).join(', '));
 
   const onSubmit = React.useCallback(() => {
-    setPreference('triggerWords', (prev) => (prev = Object.fromEntries(words.split(',').map((word) => [word.toLowerCase().replace(/[\n\s\t]+/g, ' '), new Bookmark('🐱')]))));
+    setPreference('triggerWords', (prev) => {
+      const state = Object.fromEntries(words.split(',').map((word) => [word.toLowerCase().replace(/[\n\s\t]+/g, ' '), new Bookmark('🐱')]));
+      alert(state);
+      return (prev = state);
+    });
   }, [setPreference, words]);
   
   const steps = React.useMemo(() => [
@@ -29,7 +33,7 @@ export function TriggerWarningWalkthrough(props: SheetProps) {
     },
     {
       body: (
-        <React.Fragment>
+        <View gap={ 12 }>
           <Text>{strings.features.triggerWarning.setTriggerWords}</Text>
           <TextInput
             width="100%"
@@ -37,7 +41,7 @@ export function TriggerWarningWalkthrough(props: SheetProps) {
             value={ words }
             onChange={ (value) => setWords(value) }
             onSubmitEditing={ onSubmit } />
-        </React.Fragment>
+        </View>
       ),
       title: strings.features.triggerWarning.setTriggerWords,
     },

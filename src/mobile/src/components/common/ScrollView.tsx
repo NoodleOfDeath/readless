@@ -33,17 +33,15 @@ export function ScrollView({
   const theme = useTheme();
   const style = useStyles(props as Stylable);
   return (
-    <View style={ theme.components.flexCol }>
-      <RNScrollView 
-        refreshControl={ refreshControl }
-        keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
-        scrollEventThrottle={ scrollEventThrottle }
-        keyboardDismissMode="on-drag"
-        style={ style }
-        ref={ ref as React.RefObject<RNScrollView> }
-        { ...props }>
-        {children}
-      </RNScrollView>
-    </View>
+    <RNScrollView 
+      refreshControl={ refreshControl }
+      keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
+      scrollEventThrottle={ scrollEventThrottle }
+      keyboardDismissMode="on-drag"
+      style={ style }
+      ref={ ref as React.RefObject<RNScrollView> }
+      { ...props }>
+      {children}
+    </RNScrollView>
   );
 }

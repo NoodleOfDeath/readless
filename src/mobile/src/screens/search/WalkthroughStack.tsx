@@ -16,6 +16,18 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
+        <Text h6 numberOfLines={ 2 }>{'Customize your experience'}</Text>
+        <Text bold underline>{strings.actions.tapToEnable}</Text>
+      </React.Fragment>
+    ),
+    id: 'appearance-walkthrough',
+    onPress: async () => {
+      await SheetManager.show('appearance-walkthrough');
+    },
+  },
+  {
+    content: (
+      <React.Fragment>
         <Text h6 numberOfLines={ 2 }>{strings.features.sentiment.sentiment}</Text>
         <Text bold underline>{strings.actions.tapToEnable}</Text>
       </React.Fragment>
@@ -43,7 +55,7 @@ type Props = {
   onClose?: () => void;
 };
 
-export function FeatureStack({ onClose }: Props = {}) {
+export function WalkthroughStack({ onClose }: Props = {}) {
   
   const { viewedFeatures } = React.useContext(SessionContext);
   const cards = React.useMemo(() => FEATURES.filter((feature) => !(feature.id in (viewedFeatures ?? {}))), [viewedFeatures]);

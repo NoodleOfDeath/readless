@@ -7,6 +7,7 @@ import { DEFAULT_DIALOG_CONTEXT } from './types';
 
 import { PublicSummaryAttributes } from '~/api';
 import {
+  AppearanceWalkthrough,
   FeedbackDialog,
   MainMenuDialog,
   OnboardingWalkthrough,
@@ -25,6 +26,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('main-menu', MainMenuDialog);
     registerSheet('subscribe', SubscribeDialog);
     // onboarding/features
+    registerSheet('appearance-walkthrough', AppearanceWalkthrough);
     registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
     registerSheet('sentiment-walkthrough', SentimentWalkthrough);
     registerSheet('trigger-warning-walkthrough', TriggerWarningWalkthrough);
