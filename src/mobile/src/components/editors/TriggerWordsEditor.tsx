@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   Button,
-  Markdown,
   ScrollView,
   TextInput,
   View,
@@ -27,10 +26,7 @@ export function TriggerWordEditor({ onSubmit }: TriggerWordEditorProps) {
   }, [setPreference, words, onSubmit]);
 
   return (
-    <View>
-      <Markdown>
-        {strings.walkthroughs_triggerWords_description}
-      </Markdown>
+    <View gap={ 12 }>
       <ScrollView>
         {words.map(([word, replacement], i) => (
           <View key={ i } row gap={ 6 } alignCenter>
