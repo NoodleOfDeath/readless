@@ -132,14 +132,14 @@ export function SentimentWalkthrough(props: SheetProps) {
     },
     {
       body: (
-        <View alignCenter justifyCenter gap={ 12 }>
-          <Text>
+        <View gap={ 12 }>
+          <Text textCenter>
             {strings.walkthroughs_sentiment_score}
           </Text>
           <ScrollView scrollEnabled={ false }>
             <Summary forceSentiment disableInteractions />
           </ScrollView>
-          <View flexRow alignCenter gap={ 3 }>
+          <View flexRow justifyCenter gap={ 3 }>
             <Button
               elevated
               rounded

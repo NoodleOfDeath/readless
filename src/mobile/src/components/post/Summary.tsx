@@ -672,7 +672,7 @@ export function Summary({
                             )}
                           </View>
                           {summary.siblings && summary.siblings.length > 0 && (
-                            <View mh={ 12 } gap={ 6 }>
+                            <View mh={ 12 } gap={ 6 } mb={ 12 }>
                               <Text>
                                 {`${strings.summary_relatedNews} (${summary.siblings.length})`}
                               </Text>
