@@ -6,7 +6,7 @@ import {
   Divider,
   Markdown,
   Text,
-  TriggerWordEditor,
+  TriggersWordPicker,
   View,
   Walkthrough,
 } from '~/components';
@@ -38,7 +38,7 @@ export function TriggerWordsWalkthrough(props: SheetProps) {
       title: strings.walkthroughs_triggerWords,
     },
     {
-      body: <TriggerWordEditor onSubmit={ onDone } />,
+      body: <TriggersWordPicker onSubmit={ onDone } />,
       title: strings.walkthroughs_triggerWords_enableTriggerWords,
     },
   ], [onDone]);

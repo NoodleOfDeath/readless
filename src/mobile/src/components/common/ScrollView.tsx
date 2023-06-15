@@ -5,12 +5,8 @@ import {
   RefreshControl,
 } from 'react-native';
 
-import {
-  Stylable,
-  View,
-  ViewProps,
-} from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { Stylable, ViewProps } from '~/components';
+import { useStyles } from '~/hooks';
 
 export type ScrollViewProps = ViewProps & RNScrollViewProps & {
   refreshing?: boolean;
@@ -30,7 +26,6 @@ export function ScrollView({
   ref,
   ...props
 }: ScrollViewProps) {
-  const theme = useTheme();
   const style = useStyles(props as Stylable);
   return (
     <RNScrollView 

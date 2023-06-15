@@ -4,58 +4,33 @@ import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
 import {
-  AVAILABLE_FONTS,
   ActivityIndicator,
   Button,
-  CompactModeSelector,
-  DisplayModeSelector,
+  CompactModePicker,
+  DisplayModePicker,
   Divider,
-  FontSelector,
-  FontSizeSelector,
-  ReadingFormatSelector,
+  FontPicker,
+  FontSizePicker,
+  ReadingFormatPicker,
   Screen,
   ScrollView,
-  SegmentedButtons,
-  Switch,
   Text,
   View,
+  VoicePicker,
 } from '~/components';
-import { 
-  ColorMode, 
-  MediaContext,
-  SessionContext,
-} from '~/contexts';
-import { useTheme } from '~/hooks';
+import { SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
-const textScales = [0.8, 0.9, 1.0, 1.1, 1.2].map((s) => ({
-  label: `${(s).toFixed(1)}x`,
-  value: s,
-}));
-
 export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
 
-  const theme = useTheme();
-  
   const {
-    compactMode,
-    textScale, 
-    fontFamily,
     preferredReadingFormat,
-    showShortSummary,
-    displayMode,
     removedSummaries,
     readSummaries,
     setPreference,
     resetPreferences,
   } = React.useContext(SessionContext);
-  
-  const {
-    selectedVoice,
-    setSelectedVoice,
-    voices,
-  } = React.useContext(MediaContext);
   
   const [loading, setLoading] = React.useState(false);
   const [cacheSize, setCacheSize] = React.useState('');
@@ -93,15 +68,15 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
     <Screen>
       <ScrollView>
         <View p={ 16 } gap={ 16 }>
-          <DisplayModeSelector />
+          <DisplayModePicker />
           <Divider />
-          <CompactModeSelector />
+          <CompactModePicker />
           <Divider />
           <View justifyCenter gap={ 6 }>
             <Text caption textCenter>
               {strings.settings_preferredReadingFormat}
             </Text>
-            <ReadingFormatSelector 
+            <ReadingFormatPicker 
               format={ preferredReadingFormat }
               preferredFormat={ preferredReadingFormat }
               onChange={ handleReadingFormatChange } />
@@ -111,44 +86,21 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
             <Text caption textCenter>
               {strings.settings_textScale}
             </Text>
-            <FontSizeSelector />
+            <FontSizePicker />
           </View>
           <View justifyCenter gap={ 6 }>
             <Text caption textCenter>
-              {strings.settings_fontFamily}
+              {strings.settings_font}
             </Text>
-            <FontSelector />
+            <FontPicker />
           </View>
           <Divider />
-          {voices && (
-            <React.Fragment>
-              <Text caption textCenter>{strings.settings_voice}</Text>
-              <ScrollView horizontal style={ { overflow: 'visible' } }>
-                <View>
-                  <View row alignCenter gap={ 8 } mh={ 8 }>
-                    {voices?.map((voice) => (
-                      <Button
-                        row
-                        caption
-                        alignCenter
-                        gap={ 4 }
-                        key={ voice.id }
-                        elevated
-                        p={ 8 }
-                        startIcon={ voice.id === selectedVoice?.id ? 'check' : undefined }
-                        onPress={
-                          () => {
-                            setSelectedVoice(voice);
-                          }
-                        }>
-                        {voice.name}
-                      </Button>
-                    ))}
-                  </View>
-                </View>
-              </ScrollView>
-            </React.Fragment>
-          )}
+          <View justifyCenter gap={ 6 }>
+            <Text caption textCenter>
+              {strings.settings_voice}
+            </Text>
+            <VoicePicker />
+          </View>
           <Divider />
           <Button
             elevated

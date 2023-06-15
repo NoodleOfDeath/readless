@@ -1,8 +1,12 @@
 import React from 'react';
 
-import { Highlighter, HighlighterProps } from '~/components';
+import {
+  Highlighter,
+  HighlighterProps,
+  ViewProps,
+} from '~/components';
 
-export type MarkdownProps = Omit<HighlighterProps, 'searchWords'>;
+export type MarkdownProps = Omit<ViewProps & HighlighterProps, 'searchWords'>;
 
 export function Markdown({
   children,
@@ -21,7 +25,7 @@ export function Markdown({
     if (!matches) {
       return;
     }
-    for (const match of matches) {
+    for (const match of Array.from(matches)) {
       boldWords.push(match[1]);
     }
     setWords(boldWords);

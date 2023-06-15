@@ -146,7 +146,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                 <Provider>
                   <View row alignCenter justifyEnd gap={ 4 }>
                     <Menu
-                      autoAnchor={ (
+                      anchor={ (
                         <Text textRight>
                           {label}
                         </Text>

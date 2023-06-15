@@ -83,6 +83,7 @@ export const enStrings = {
   settings_shortSummariesInsteadOfTitles: 'Short summaries instead of titles',
   settings_system: 'System',
   settings_textScale: 'Font Size',
+  settings_voice: 'Text-to-Speech Voice',
 
   // share
   share_copyBulletPoints: 'Copy Bullet Points',
@@ -153,6 +154,11 @@ export const enStrings = {
   walkthroughs_appearance_preferredReadingFormatDescription: 'Try tapping on **Bullets** below to see how they work',
   walkthroughs_appearance_selectFont: 'Select a font and size that is easiest to read',
   walkthroughs_appearance_selectTheme: 'Light or dark mode?',
+  
+  walkthroughs_onboarding_addCategories: 'Add categories',
+  // walkthroughs - onboarding
+  walkthroughs_onboarding_addNewsSources: 'Add news sources',
+  walkthroughs_onboarding_welcome: 'Welcome to Read Less!',
 
   // walkthroughs - sentiment
   walkthroughs_sentiment_dontEnable: 'I\'m good for now',

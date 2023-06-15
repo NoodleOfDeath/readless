@@ -4,10 +4,10 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import { ReadingFormat } from '~/api';
 import { 
-  CompactModeSelector,
-  DisplayModeSelector,
-  FontSelector,
-  FontSizeSelector,
+  CompactModePicker,
+  DisplayModePicker,
+  FontPicker,
+  FontSizePicker,
   Markdown,
   ScrollView,
   Summary,
@@ -29,8 +29,8 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <FontSelector />
-            <FontSizeSelector />
+            <FontPicker />
+            <FontSizePicker />
           </View>
         ),
         title: strings.walkthroughs_appearance_selectFont,
@@ -41,7 +41,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <CompactModeSelector />
+            <CompactModePicker />
           </View>
         ),
         title: strings.walkthroughs_appearance_compactModeDescription,
@@ -69,7 +69,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <DisplayModeSelector />
+            <DisplayModePicker />
           </View>
         ),
         title: strings.walkthroughs_appearance_selectTheme,

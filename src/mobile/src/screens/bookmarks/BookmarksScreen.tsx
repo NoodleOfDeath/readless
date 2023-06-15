@@ -80,7 +80,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                   {strings.bookmarks_bookmarksAvailableOffline}
                 </Text>
                 <Menu
-                  autoAnchor={
+                  anchor={
                     <Icon size={ 24 } name="information" />
                   }>
                   <Text>{strings.bookmarks_bookmarkArticlesAreNotSaved}</Text>

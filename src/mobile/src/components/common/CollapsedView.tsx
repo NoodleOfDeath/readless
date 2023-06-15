@@ -68,9 +68,8 @@ export function CollapsedView({
       {collapseStyle === 'banner' && (
         <View 
           elevated
-          col
+          flexGrow={ 1 }
           p={ titleStyle?.padding !== undefined ? titleStyle?.padding : 12 }
-          height={ titleStyle?.height !== undefined ? titleStyle?.height : 48 }
           style={ titleStyle }>
           <View
             gap={ 12 }
@@ -99,7 +98,7 @@ export function CollapsedView({
             {title && typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
             {info && (
               <Menu
-                autoAnchor={ <Icon size={ 24 } name='information' /> }>
+                anchor={ <Icon size={ 24 } name='information' /> }>
                 {info}
               </Menu>
             )}

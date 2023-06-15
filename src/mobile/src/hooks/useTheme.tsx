@@ -66,7 +66,6 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           backgroundColor: lightMode ? '#fefefe' : '#010101',
           borderColor: '#888',
           borderWidth: 1,
-          marginBottom: 12,
           maxWidth: 300,
           overflow: 'scroll',
           padding: 12,

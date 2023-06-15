@@ -1,6 +1,7 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 
-import { Menu as RNMenu, MenuProps as RNMenuProps } from 'react-native-paper';
+import Popover, { PopoverProps } from 'react-native-popover-view';
 
 import {
   Text,
@@ -9,18 +10,13 @@ import {
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type MenuProps = Omit<RNMenuProps, 'anchor' | 'theme' | 'visible'> & ViewProps & {
+export type MenuProps = PopoverProps & ViewProps & {
   anchor?: React.ReactNode;
-  autoAnchor?: React.ReactNode;
-  width?: number;
-  visible?: boolean;
-  onAppear?: () => void;
 };
 
 export function Menu({
   children,
-  onAppear,
-  width = 200,
+  anchor,
   ...props
 }: MenuProps) {
 
@@ -28,40 +24,21 @@ export function Menu({
   const style = useStyles(props);
 
   const [visible, setVisible] = React.useState(false);
-  
-  const computedAnchor = React.useMemo(() => {
-    return (
-      <View onPress={ () => setVisible(true) }>
-        {props.autoAnchor}
-      </View>
-    );
-  }, [props.autoAnchor]);
-  
+
   React.useEffect(() => {
-    if (props.visible !== undefined) { 
-      setVisible(props.visible);
-    }
-  }, [props.visible]);
-  
-  React.useEffect(() => {
-    if (!visible) {
-      return; 
-    }
-    onAppear?.();
-  }, [visible, onAppear]);
+    setTimeout(() => setVisible(false), 3000);
+  }, [visible]);
 
   return (
-    <RNMenu
-      contentStyle={ { 
-        ...theme.components.menu,
-        width,
-        ...style,
-      } }
-      { ...props } 
-      anchor={ props.autoAnchor ? computedAnchor : props.anchor }
-      onDismiss= { props.autoAnchor ? () => setVisible(false) : props.onDismiss }
-      visible={ visible }>
-      {typeof children === 'string' ? <Text>{children}</Text> : children}
-    </RNMenu>
+    <Popover
+      from={ (
+        <TouchableOpacity style={ style }>
+          {anchor}
+        </TouchableOpacity>
+      ) }>
+      <View style={ theme.components.menu }>
+        {typeof children === 'string' ? <Text>{children}</Text> : children}
+      </View>
+    </Popover>
   );
 }

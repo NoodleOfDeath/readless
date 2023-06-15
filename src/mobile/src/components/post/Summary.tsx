@@ -26,7 +26,7 @@ import {
   Image,
   Menu,
   MeterDial,
-  ReadingFormatSelector,
+  ReadingFormatPicker,
   ScrollView,
   Text,
   View,
@@ -475,11 +475,56 @@ export function Summary({
       </View>
     );
   }, [bookmarked, playingAudio, initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, summary, disableInteractions, onInteract, format, handlePlayAudio, openURL, copyToClipboard]);
+
+  const siblingCards = React.useMemo(() => {
+    return (
+      <View gap={ 6 }>
+        {[...summary.siblings].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
+          <View 
+            key={ sibling.id }>
+            <View
+              gap={ 1 }
+              p={ 3 }
+              outlined
+              borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
+              touchable
+              onPress={ () => openSummary({ summary: sibling.id }) }>
+              <View 
+                flexRow
+                flexGrow={ 1 } 
+                gap={ 2 }
+                alignCenter>
+                <Text 
+                  italic
+                  color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
+                  {sibling.outlet.displayName}
+                </Text>
+                <Text 
+                  bold 
+                  caption 
+                  color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
+                  {formatTime(sibling.originalDate)}
+                </Text>
+              </View>
+              <Highlighter 
+                bold 
+                numberOfLines={ 1 }
+                color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
+                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                searchWords={ isShareTarget ? [] : keywords }>
+                { cleanString(sibling.title) }
+              </Highlighter>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, formatTime, keywords, cleanString, openSummary]);
   
   return (
     <GestureHandlerRootView>
-      <Swipeable 
-        enabled={ swipeable && !initialFormat && !disableInteractions }
+      <Swipeable
+        enabled={ swipeable && !disableInteractions && !initialFormat && !isShareTarget }
         renderRightActions={ renderRightActions }>
         <ViewShot ref={ viewshot }>
           <View 
@@ -589,7 +634,7 @@ export function Summary({
                         )}
                         {initialFormat ? menuActions : (
                           <Menu
-                            autoAnchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
+                            anchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
                             {menuActions}
                           </Menu>
                         )}
@@ -605,11 +650,10 @@ export function Summary({
                             maxWidth={ initialFormat ? 200 : 128 }
                             width={ initialFormat ? '40%' : '30%' }>
                             <Menu
-                              width={ 300 }
-                              autoAnchor={ (
+                              anchor={ (
                                 <View
-                                  mt={ -18 }
-                                  mb={ 30 }
+                                  top={ -6 }
+                                  mb={ 12 }
                                   minHeight={ 80 }
                                   height="100%"
                                   overflow='hidden'
@@ -631,15 +675,15 @@ export function Summary({
                                   )}
                                 </View>
                               ) }>
-                              <View
-                                gap={ 6 }>
+                              <View gap={ 6 }>
                                 <Text caption>{strings.summary_thisIsNotARealImage}</Text>
                                 <View
                                   mh={ -12 }
                                   mb={ -12 }>
                                   <Image
                                     source={ { uri: summary.imageUrl } }  
-                                    aspectRatio={ 1 } />
+                                    aspectRatio={ 1 }
+                                    width={ 300 } />
                                 </View>
                               </View>
                             </Menu>
@@ -649,7 +693,7 @@ export function Summary({
                           flex={ 1 }
                           flexGrow={ 1 }
                           gap={ 6 }
-                          pb={ (compact || compactMode) ? 12 : 0 }>
+                          pb={ 12 }>
                           <View flex={ 1 } flexGrow={ 1 } mh={ 12 }>
                             <View flexRow flexGrow={ 1 }>
                               <Highlighter
@@ -675,54 +719,16 @@ export function Summary({
                             )}
                           </View>
                           {summary.siblings && summary.siblings.length > 0 && (
-                            <View mh={ 12 } gap={ 6 } mb={ 12 }>
+                            <View mh={ 12 } gap={ 6 }>
                               <Text>
                                 {`${strings.summary_relatedNews} (${summary.siblings.length})`}
                               </Text>
-                              <ScrollView height={ summary.siblings.length === 1 ? 55 : 70 }>
-                                <View gap={ 5 }>
-                                  {[...summary.siblings].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
-                                    <View 
-                                      key={ sibling.id } 
-                                      height={ 55 }>
-                                      <View
-                                        gap={ 1 }
-                                        p={ 3 }
-                                        outlined
-                                        borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                                        height={ 55 }
-                                        touchable
-                                        onPress={ () => openSummary({ summary: sibling.id }) }>
-                                        <View 
-                                          flexRow
-                                          flexGrow={ 1 } 
-                                          gap={ 2 }
-                                          alignCenter>
-                                          <Text 
-                                            italic
-                                            color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
-                                            {sibling.outlet.displayName}
-                                          </Text>
-                                          <Text 
-                                            bold 
-                                            caption 
-                                            color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
-                                            {formatTime(sibling.originalDate)}
-                                          </Text>
-                                        </View>
-                                        <Highlighter 
-                                          bold 
-                                          numberOfLines={ 1 }
-                                          color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                                          highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                          searchWords={ isShareTarget ? [] : keywords }>
-                                          { cleanString(sibling.title) }
-                                        </Highlighter>
-                                      </View>
-                                    </View>
-                                  ))}
-                                </View>
-                              </ScrollView>
+                              {summary.siblings.length === 1 ? 
+                                siblingCards : (
+                                  <ScrollView height={ summary.siblings.length === 1 ? 45 : 70 }>
+                                    {siblingCards}
+                                  </ScrollView>
+                                )}
                             </View>
                           )}
                         </View>
@@ -736,7 +742,7 @@ export function Summary({
                   disabled={ hideCard }
                   initiallyCollapsed={ false }
                   title={ (
-                    <ReadingFormatSelector
+                    <ReadingFormatPicker
                       mv={ -12 }
                       elevated={ false }
                       format={ format } 
@@ -770,7 +776,6 @@ export function Summary({
               )}
               {!hideAnalytics && initialFormat && summary.sentiment && (
                 <AnalyticsView
-                  mb={ 12 }
                   initiallyCollapsed
                   sentiment={ summary.sentiment }
                   sentiments={ Object.values(summary.sentiments ?? []) } />

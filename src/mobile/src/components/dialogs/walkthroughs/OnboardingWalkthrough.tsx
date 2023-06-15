@@ -2,8 +2,14 @@ import React from 'react';
 
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
-import { Walkthrough } from '~/components';
+import {
+  Markdown,
+  Text,
+  View,
+  Walkthrough,
+} from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
+import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
@@ -20,19 +26,43 @@ export function OnboardingWalkthrough(props: SheetProps) {
   
   const steps = React.useMemo(() => [
     {
-      body: 'Read Less uses...',
-      title: 'Welcome',
+      body: (
+        <View>
+          <Markdown textCenter>
+            Read Less uses **large language models** to summarize news articles and provide **sentiment analysis.**
+          </Markdown>
+        </View>
+      ),
+      title: strings.walkthroughs_onboarding_welcome,
     },
     {
-      body: 'Read Less uses...',
-      title: 'Accessibility',
+      body: (
+        <View>
+          <Markdown textCenter>
+            Read Less uses **large language models** to summarize news articles and provide **sentiment analysis.**
+          </Markdown>
+        </View>
+      ),
+      title: strings.walkthroughs_onboarding_addCategories,
     },
     {
-      body: 'Read Less uses...',
-      title: 'Sentiment',
+      body: (
+        <View>
+          <Markdown textCenter>
+            Read Less uses **large language models** to summarize news articles and provide **sentiment analysis.**
+          </Markdown>
+        </View>
+      ),
+      title: strings.walkthroughs_onboarding_addNewsSources,
     },
     {
-      body: 'Read Less uses...',
+      body: (
+        <View>
+          <Markdown textCenter>
+            The news will always be free because being informed is a **human right**, but as we scale up, you can enjoy enteraining features like daily/weekly/monthly recaps and premium text-to-speech voices through a subscription.
+          </Markdown>
+        </View>
+      ),
       title: 'Subscriptions',
     },
   ], []);

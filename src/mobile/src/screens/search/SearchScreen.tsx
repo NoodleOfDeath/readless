@@ -26,7 +26,6 @@ import {
   Summary,
   Switch,
   Text,
-  TopicSampler,
   View,
 } from '~/components';
 import {
