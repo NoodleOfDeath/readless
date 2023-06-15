@@ -17,7 +17,7 @@ export const FEATURES: Feature[] = [
     content: (
       <React.Fragment>
         <Text h6>{strings.walkthroughs_appearance_customizeYourExperience}</Text>
-        <Text bold underline>{strings.action_tapToLearnMoreAndEnable}</Text>
+        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'appearance-walkthrough',
@@ -29,7 +29,7 @@ export const FEATURES: Feature[] = [
     content: (
       <React.Fragment>
         <Text h6>{strings.walkthroughs_sentiment_whatIsSentimentAnalysis}</Text>
-        <Text bold underline>{strings.action_tapToLearnMoreAndEnable}</Text>
+        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'sentiment-walkthrough',
@@ -41,12 +41,12 @@ export const FEATURES: Feature[] = [
     content: (
       <React.Fragment>
         <Text h6>{strings.walkthroughs_triggerWords}</Text>
-        <Text bold underline>{strings.action_tapToLearnMoreAndEnable}</Text>
+        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
-    id: 'trigger-warning-walkthrough',
+    id: 'trigger-words-walkthrough',
     onPress: async () => {
-      await SheetManager.show('trigger-warning-walkthrough');
+      await SheetManager.show('trigger-words-walkthrough');
     },
   },
 ];

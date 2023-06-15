@@ -16,6 +16,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
       primary: '#8b0000',
       rowEven: lightMode ? '#efefef' : '#101010',
       rowOdd: lightMode ? '#e9e9e9' : '#222',
+      success: '#4caf50',
       text: lightMode ? '#000' : '#fff',
       textDark: '#000',
       textDisabled: lightMode ? '#aaa' : '#888',

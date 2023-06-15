@@ -40,6 +40,8 @@ export function Button({
   bold,
   italic,
   underline,
+  letterSpacing, 
+  lineHeight,
   flexRow = horizontal,
   flexGrow = horizontal ? 1 : undefined,
   alignCenter = horizontal,
@@ -49,7 +51,7 @@ export function Button({
   const theme = useTheme();
   
   const textStyle = useStyles({
-    body1, body2, bold, caption, fontFamily, fontSize, h1, h2, h3, h4, h5, h6, italic, subtitle1, subtitle2, underline,
+    body1, body2, bold, caption, fontFamily, fontSize, h1, h2, h3, h4, h5, h6, italic, letterSpacing, lineHeight, subtitle1, subtitle2, underline,
   });
   const style = useStyles({
     ...textStyle, ...pressableProps, alignCenter, flexGrow, flexRow,
@@ -122,7 +124,7 @@ export function Button({
       style={ buttonStyle }>
       {startIconComponent && <View>{startIconComponent }</View>}
       {children && (
-        <Text style={ textStyle } color={ buttonStyle.color ?? textStyle.color }>
+        <Text { ...textStyle } color={ buttonStyle.color ?? textStyle.color }>
           { children }
         </Text>
       )}

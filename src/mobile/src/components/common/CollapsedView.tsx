@@ -20,6 +20,7 @@ export type CollapsedViewProps = ViewProps & {
   info?: React.ReactNode;
   collapseStyle?: CollapseStyle;
   initiallyCollapsed?: boolean;
+  disabled?: boolean;
   indent?: number;
   onExpand?: () => void;
   onCollapse?: () => void;
@@ -32,6 +33,7 @@ export function CollapsedView({
   info,
   collapseStyle = 'banner',
   initiallyCollapsed = true,
+  disabled = false,
   indent = 0,
   onExpand,
   onCollapse,
@@ -76,7 +78,7 @@ export function CollapsedView({
             alignCenter
             justifyCenter={ !title }
             touchable
-            onPress={ () => setCollapsed((prev) => !prev) }>
+            onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
             <Animated.View style={ { 
               alignItems: 'center',
               justifyContent: 'center',

@@ -124,8 +124,11 @@ function RenderActions({ actions }: RenderActionsProps) {
 const DEFAULT_PROPS = {
   summary: {
     bullets: [
-      'Example bullet 1',
-      'Example bullet 2',
+      strings.summary_example_bullet1,
+      strings.summary_example_bullet2,
+      strings.summary_example_bullet3,
+      strings.summary_example_bullet4,
+      strings.summary_example_bullet5,
     ],
     category: {
       displayName: 'Entertainment',
@@ -137,9 +140,9 @@ const DEFAULT_PROPS = {
     imageUrl: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg',
     media: [],
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
-    originalTitle: 'This is an example summary',
+    originalTitle: '',
     outlet: {
-      displayName: 'News Source',
+      displayName: strings.misc_newsSource,
       name: '',
     },
     outletId: 0,
@@ -148,10 +151,10 @@ const DEFAULT_PROPS = {
       method: 'openai',
       score: 0.3,
     }],
-    shortSummary: 'This is a short one sentence summary that usually be no more than 30 words.',
+    shortSummary: strings.summary_example_shortSummary,
     siblings: [],
-    summary: 'This is a longer summary. This will usually be between 3-5 sentences long. You can also view bullet form.',
-    title: 'This is an example summary',
+    summary: [strings.summary_example_summary, strings.summary_example_summary, strings.summary_example_summary].join('\n'),
+    title: strings.summary_example_title,
     translations: [],
     url: 'https://readless.ai',
   },
@@ -730,6 +733,7 @@ export function Summary({
               )}
               {initialFormat && (
                 <CollapsedView 
+                  disabled={ hideCard }
                   initiallyCollapsed={ false }
                   title={ (
                     <ReadingFormatSelector

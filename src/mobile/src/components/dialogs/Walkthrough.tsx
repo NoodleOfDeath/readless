@@ -121,7 +121,7 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
   return (
     <ActionSheet id={ props.sheetId } gestureEnabled={ false }>
       <View height="100%">
-        <View flexRow mh={ 12 }>
+        <View flexRow m={ 12 }>
           <View flexGrow={ 1 } />
           <Button
             elevated
@@ -129,6 +129,7 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
             ph={ 8 }
             height={ 40 }
             justifyCenter
+            touchable
             alignCenter
             borderRadius={ 24 }
             onPress={ () => SheetManager.hide(props.sheetId) }

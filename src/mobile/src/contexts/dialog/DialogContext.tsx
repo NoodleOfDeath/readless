@@ -14,7 +14,7 @@ import {
   SentimentWalkthrough,
   ShareDialog,
   SubscribeDialog,
-  TriggerWarningWalkthrough,
+  TriggerWordsWalkthrough,
 } from '~/components';
 
 export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
@@ -29,7 +29,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('appearance-walkthrough', AppearanceWalkthrough);
     registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
     registerSheet('sentiment-walkthrough', SentimentWalkthrough);
-    registerSheet('trigger-warning-walkthrough', TriggerWarningWalkthrough);
+    registerSheet('trigger-words-walkthrough', TriggerWordsWalkthrough);
     // summary specific
     registerSheet('share', ShareDialog);
     registerSheet('feedback', FeedbackDialog);

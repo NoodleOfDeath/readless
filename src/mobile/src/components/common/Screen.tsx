@@ -1,8 +1,6 @@
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
 
-import { SheetManager } from 'react-native-actions-sheet';
-
 import { Stylable, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
@@ -17,10 +15,6 @@ export function Screen({
 }: ViewProps) {
   const theme = useTheme();
   const style = useStyles(props as Stylable);
-  
-  React.useEffect(() => {
-    SheetManager.hide('main-menu');
-  }, []);
   
   return (
     <React.Fragment>

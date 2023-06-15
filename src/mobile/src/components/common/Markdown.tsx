@@ -9,7 +9,7 @@ export function Markdown({
   ...props
 }: MarkdownProps) {
 
-  const [boldWords, setBoldWords] = React.useState<string[]>([]);
+  const [words, setWords] = React.useState<string[]>([]);
 
   const computedChildren = React.useMemo(() => {
     return children?.replace(/\*\*(.*?)\*\*/g, (_, word) => word);
@@ -24,14 +24,14 @@ export function Markdown({
     for (const match of matches) {
       boldWords.push(match[1]);
     }
-    setBoldWords(boldWords);
+    setWords(boldWords);
   }, [children]);
 
   return (
     <Highlighter
       { ...props }
       highlightStyle={ props.highlightStyle ?? { fontWeight: 'bold' } }
-      searchWords={ boldWords }>
+      searchWords={ words }>
       {computedChildren}
     </Highlighter>
   );

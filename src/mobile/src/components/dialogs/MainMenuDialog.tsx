@@ -25,24 +25,34 @@ export function MainMenuDialog(props: SheetProps) {
     {
       icon: 'cog',
       label: strings.menu_settings,
-      onPress: openSettings,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        openSettings();
+      },
     },
     {
       badge: bookmarkCount,
       icon: 'bookmark-outline',
       label: strings.menu_bookmarks,
-      onPress: openBookmarks,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        openBookmarks();
+      },
     },
     {
       icon: 'bookshelf',
       label: strings.menu_browse,
-      onPress: openBrowse,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        openBrowse();
+      },
     },
     {
       icon: 'map-legend',
       label: strings.menu_walkthroughs,
-      onPress: () => {
-        SheetManager.show('onboarding-walkthrough'); 
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        await SheetManager.show('onboarding-walkthrough'); 
       },
     },
     {
@@ -50,7 +60,7 @@ export function MainMenuDialog(props: SheetProps) {
       label: strings.menu_about,
       onPress: openAbout,
     },
-  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings]);
+  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings, props.sheetId]);
 
   return (
     <ActionSheet id={ props.sheetId }>
@@ -60,10 +70,11 @@ export function MainMenuDialog(props: SheetProps) {
         }, i) => (
           <View key={ i }>
             <Button
+              touchable
               horizontal
               p={ 12 }
               gap={ 12 }
-              h3
+              h6
               startIcon={ (
                 <View>
                   {badge !== undefined && badge > 0 && (

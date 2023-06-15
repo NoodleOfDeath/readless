@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
+import { Ellipse, Svg } from 'react-native-svg';
 
 import {
   Button,
@@ -37,13 +38,15 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View elevated p={ 12 }>
-          <View flexRow flexWrap="wrap" alignCenter gap={ 3 }>
-            <Text>&quot;I absolutely</Text>
+          <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
+            <Text bold>&quot;</Text>
+            <Text>I absolutely</Text>
             <Text bold underline color="green">loved</Text>
             <Text>the new movie, it was a</Text>
             <Text bold underline color="green">captivating</Text>
-            <Text>and emotional experience.</Text>
-            <Text>&quot;</Text>
+            <Text>and emotional experience!</Text>
+            <Text bold underline color="green">UwU</Text>
+            <Text bold>&quot;</Text>
           </View>
         </View>
       ),
@@ -53,18 +56,19 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Markdown>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
+          <Markdown textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
           <View elevated p={ 12 }>
-            <View flexRow flexWrap="wrap" alignCenter gap={ 3 }>
-              <Text>&quot;</Text>
-              <Text bold underline color="green">lol</Text>
-              <Text>most news is really</Text>
-              <Text bold underline color="red">sad</Text>
+            <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
+              <Text bold>&quot;</Text>
+              <Text>The customer service was</Text>
+              <Text bold underline color="red">terrible</Text>
+              <Text>my child was</Text>
+              <Text bold underline color="red">not happy</Text>
               <Text bold underline color="red">😡</Text>
-              <Text>&quot;</Text>
+              <Text bold>&quot;</Text>
             </View>
           </View>
-          <Markdown>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
+          <Markdown textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
         </View>
       ),
       title: strings.walkthroughs_sentiment_whatIsSentimentUsedFor,
@@ -72,7 +76,9 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View alignCenter gap={ 12 }>
-          <Text>{strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription}</Text>
+          <Markdown textCenter>
+            {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription}
+          </Markdown>
           <View alignCenter flexRow>
             <View alignCenter>
               <Text h4 color="red">-1</Text>
@@ -119,7 +125,7 @@ export function SentimentWalkthrough(props: SheetProps) {
               VADER
             </Text>
           </View>
-          <Text>
+          <Text textCenter>
             {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP2}
           </Text>
           <Divider bg={ theme.colors.text } />
@@ -137,22 +143,25 @@ export function SentimentWalkthrough(props: SheetProps) {
             {strings.walkthroughs_sentiment_score}
           </Text>
           <ScrollView scrollEnabled={ false }>
+            <View
+              absolute
+              top={ -10 }
+              right={ 15 }
+              zIndex={ 20 }>
+              <Svg viewBox="0 0 100 100" width={ 150 } height={ 60 }>
+                <Ellipse
+                  cx={ 50 }
+                  cy={ 50 }
+                  rx={ 100 }
+                  ry={ 30 }
+                  fill="transparent"
+                  stroke={ theme.colors.text }
+                  strokeWidth={ 5 } />
+              </Svg>
+            </View>
             <Summary forceSentiment disableInteractions />
           </ScrollView>
-          <View flexRow justifyCenter gap={ 3 }>
-            <Button
-              elevated
-              rounded
-              touchable
-              haptic
-              p={ 6 }
-              m={ 3 }
-              onPress={ () => {
-                setPreference('sentimentEnabled', true);
-                onDone();
-              } }>
-              {strings.walkthroughs_sentiment_enable}
-            </Button>
+          <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
             <Button 
               elevated
               rounded
@@ -165,12 +174,27 @@ export function SentimentWalkthrough(props: SheetProps) {
               } }>
               {strings.walkthroughs_sentiment_dontEnable}
             </Button>
+            <Button
+              elevated
+              rounded
+              bg={ theme.colors.success }
+              color={ 'white' }
+              touchable
+              haptic
+              p={ 6 }
+              m={ 3 }
+              onPress={ () => {
+                setPreference('sentimentEnabled', true);
+                onDone();
+              } }>
+              {strings.walkthroughs_sentiment_enable}
+            </Button>
           </View>
         </View>
       ),
       title: strings.walkthroughs_sentiment_enableQuestion,
     },
-  ], [theme.colors.link, theme.colors.text, openURL, setPreference, onDone]);
+  ], [theme.colors.link, theme.colors.text, theme.colors.success, openURL, onDone, setPreference]);
   
   return (
     <Walkthrough
