@@ -28,13 +28,13 @@ export function TriggerWarningWalkthrough(props: SheetProps) {
   
   const steps = React.useMemo(() => [
     {
-      body: strings.features.triggerWarning.setTriggerWords,
-      title: strings.features.triggerWarning.triggerWarning,
+      body: strings.walkthroughs_triggerWords_setTriggerWords,
+      title: strings.walkthroughs_triggerWords,
     },
     {
       body: (
         <View gap={ 12 }>
-          <Text>{strings.features.triggerWarning.setTriggerWords}</Text>
+          <Text>{strings.walkthroughs_triggerWords_setTriggerWords}</Text>
           <TextInput
             width="100%"
             placeholder={ 'comma, separated trigger words, or phrases' }
@@ -43,7 +43,7 @@ export function TriggerWarningWalkthrough(props: SheetProps) {
             onSubmitEditing={ onSubmit } />
         </View>
       ),
-      title: strings.features.triggerWarning.setTriggerWords,
+      title: strings.walkthroughs_triggerWords_setTriggerWords,
     },
   ], [words, onSubmit]);
 

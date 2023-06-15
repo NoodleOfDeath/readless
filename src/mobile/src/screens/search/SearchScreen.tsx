@@ -400,14 +400,14 @@ export function SearchScreen({
               <View row gap={ 12 } justifyCenter alignCenter>
                 <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
                 <Text caption>{`${fixedSentiment(averageSentiment)}`}</Text>
-                <Text caption>{`${totalResultCount} ${strings.search.results}`}</Text>
+                <Text caption>{`${totalResultCount} ${strings.search_results}`}</Text>
               </View>
             </View>
           )}
           {!loading && onlyCustomNews && summaries.length === 0 && (
             <View col justifyCenter p={ 16 } gap={ 8 }>
               <Text subtitle1>
-                {strings.search.filtersTooSpecific}
+                {strings.search_filtersTooSpecific}
               </Text>
               <Button 
                 alignCenter
@@ -416,7 +416,7 @@ export function SearchScreen({
                 p={ 8 }
                 selectable
                 onPress={ openBrowse }>
-                {strings.search.goToBrowse}
+                {strings.search_goToBrowse}
               </Button>
               <Button 
                 alignCenter
@@ -425,13 +425,13 @@ export function SearchScreen({
                 p={ 8 }
                 selectable
                 onPress={ () => setOnlyCustomNews(false) }>
-                {strings.search.turnOffFilters}
+                {strings.search_turnOffFilters}
               </Button>
             </View>
           )}
           {!prefilter && onlyCustomNews && (
             <View>
-              <Text caption textCenter mh={ 12 }>{strings.search.customNewsSearch}</Text>
+              <Text caption textCenter mh={ 12 }>{strings.search_customNewsSearch}</Text>
               <Button 
                 alignCenter
                 rounded 
@@ -439,7 +439,7 @@ export function SearchScreen({
                 p={ 8 }
                 selectable
                 onPress={ () => setOnlyCustomNews(false) }>
-                {strings.search.turnOffFilters}
+                {strings.search_turnOffFilters}
               </Button>
             </View>
           )}
@@ -464,7 +464,7 @@ export function SearchScreen({
                           p={ 8 }
                           selectable
                           onPress={ () => loadMore() }>
-                          {strings.search.loadMore}
+                          {strings.search_loadMore}
                         </Button>
                       </View>
                     )}
@@ -478,7 +478,7 @@ export function SearchScreen({
                     {summaries.length === 0 && !loading && (
                       <View col gap={ 12 } alignCenter justifyCenter>
                         <Text textCenter mh={ 16 }>
-                          {strings.search.noResults}
+                          {strings.search_noResults}
                           {' '}
                           🥺
                         </Text>
@@ -489,7 +489,7 @@ export function SearchScreen({
                           p={ 8 }
                           selectable
                           onPress={ () => load(0) }>
-                          {strings.search.reload}
+                          {strings.search_reload}
                         </Button>
                       </View>
                     )}

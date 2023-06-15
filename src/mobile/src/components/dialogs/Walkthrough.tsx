@@ -1,23 +1,24 @@
 import React from 'react';
 import { ListRenderItemInfo } from 'react-native';
 
-import { SheetProps } from 'react-native-actions-sheet';
+import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import AppIntroSlider from 'react-native-app-intro-slider';
 
 import { 
   ActionSheet,
   Button,
   Icon,
-  ScrollView,
+  Markdown,
   Text,
   View,
 } from '~/components';
 import { useTheme } from '~/hooks';
+import { strings } from '~/locales';
 
 export type WalkthroughStep = {
   title?: React.ReactNode;
   body?: React.ReactNode;
-  actions?: React.ReactNode;
+  footer?: React.ReactNode;
   doneLabel?: React.ReactNode;
   image?: string;
 };
@@ -35,13 +36,9 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
   
   const computedSteps = React.useMemo(() => steps.map((step, i) => (
     <View gap={ 12 } key={ i }>
-      {step.title && <Text h5 bold textCenter>{step.title}</Text>}
-      {typeof step.body === 'string' ? (
-        <Text>{step.body}</Text>
-      ) : (
-        <ScrollView>{step.body}</ScrollView>
-      )}
-      {step.actions}
+      {typeof step.title === 'string' ? <Text h5 bold textCenter>{step.title}</Text> : step.title}
+      {typeof step.body === 'string' ? <Markdown>{step.body}</Markdown> : step.body}
+      {typeof step.footer === 'string' ? <Markdown>{step.footer}</Markdown> : step.footer}
     </View>
   )), [steps]);
   
@@ -99,10 +96,10 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
         justifyCenter
         alignCenter
         borderRadius={ 24 }>
-        <Text>Skip</Text>
+        <Text>{strings.action_skip}</Text>
       </View>
     );
-  }, [theme]);
+  }, []);
   
   const renderDoneButton = React.useCallback(() => {
     return (
@@ -124,6 +121,21 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
   return (
     <ActionSheet id={ props.sheetId } gestureEnabled={ false }>
       <View height="100%">
+        <View flexRow mh={ 12 }>
+          <View flexGrow={ 1 } />
+          <Button
+            elevated
+            flexRow
+            ph={ 8 }
+            height={ 40 }
+            justifyCenter
+            alignCenter
+            borderRadius={ 24 }
+            onPress={ () => SheetManager.hide(props.sheetId) }
+            startIcon={ <Icon name="close" size={ 24 } /> }>
+            {strings.action_close}
+          </Button>
+        </View>
         <AppIntroSlider
           renderItem={ renderItem }
           renderPrevButton={ renderPrevButton }

@@ -8,76 +8,74 @@ import {
   DisplayModeSelector,
   FontSelector,
   FontSizeSelector,
-  Image,
-  ReadingFormatSelector,
+  Markdown,
+  ScrollView,
   Summary,
-  Text,
   View,
   Walkthrough,
 } from '~/components';
-import {
-  Bookmark,
-  LayoutContext,
-  SessionContext,
-} from '~/contexts';
+import { Bookmark, SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
 export function AppearanceWalkthrough(props: SheetProps) {
   
-  const { orientation } = React.useContext(LayoutContext);
   const { setPreference } = React.useContext(SessionContext);
   
   const steps = React.useMemo(() => {
     return [
       {
-        actions: (
+        body: (
           <View gap={ 12 }>
-            <Text textCenter>Select a font and size that is easiest to read</Text>
+            <ScrollView scrollEnabled={ false }>
+              <Summary disableInteractions />
+            </ScrollView>
             <FontSelector />
             <FontSizeSelector />
           </View>
         ),
-        body: <Summary />,
-        title: strings.settings.font,
+        title: strings.walkthroughs_appearance_selectFont,
       },
       {
-        actions: (
+        body: (
           <View gap={ 12 }>
-            <Text textCenter>
-              By default, summaries will appear in expanded mode with a short title. You have the option to display additional short summaries under each title in expanded mode, or instead of the title in compact mode.
-            </Text>
+            <ScrollView scrollEnabled={ false }>
+              <Summary disableInteractions />
+            </ScrollView>
             <CompactModeSelector />
           </View>
         ),
-        body: <Summary />,
-        title: strings.settings.compactMode ?? 'Compact Mode',
+        title: strings.walkthroughs_appearance_compactModeDescription,
       },
       {
-        actions: (
-          <View>
-            <Text textCenter>
-              Tap above to select the one you prefer, then press next.
-            </Text>
+        body: (
+          <View gap={ 12 }>
+            <Markdown subtitle1 textCenter>
+              {strings.walkthroughs_appearance_preferredReadingFormatDescription}
+            </Markdown>
+            <ScrollView scrollEnabled={ false }>
+              <Summary 
+                hideAnalytics
+                hideCard
+                initialFormat={ ReadingFormat.Summary }
+                onFormatChange={ (format) => setPreference('preferredReadingFormat', format) } />
+            </ScrollView>
           </View>
         ),
-        body: <Summary 
-          hideAnalytics
-          hideCard
-          initialFormat={ ReadingFormat.Summary }
-          onFormatChange={ (format) => setPreferencd('preferredReadingFormat', format) } />,
-        title: strings.settings.preferredReadingFormat ?? 'Summary or Bullets?',
+        title: strings.walkthroughs_appearance_preferredReadingFormat,
       },
       {
-        actions: (
+        body: (
           <View gap={ 12 }>
+            <ScrollView scrollEnabled={ false }>
+              <Summary disableInteractions />
+            </ScrollView>
             <DisplayModeSelector />
           </View>
         ),
-        body: <Summary />,
-        title: 'Light or Dark Mode?',
+        title: strings.walkthroughs_appearance_selectTheme,
       },
     ];
-  }, [orientation, setPreference]);
+  }, [setPreference]);
   
   const onDone = React.useCallback(async () => {
     setPreference('viewedFeatures', (prev) => {

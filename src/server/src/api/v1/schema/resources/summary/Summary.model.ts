@@ -4,11 +4,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { 
-  READING_FORMATS,
-  SummaryAttributes,
-  SummaryCreationAttributes,
-} from './Summary.types';
+import { SummaryAttributes, SummaryCreationAttributes } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import { Post } from '../Post.model';
@@ -87,8 +83,6 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     type: DataType.ARRAY(DataType.STRING(1024)),
   })
   declare bullets: string[];
-
-  formats = Object.values(READING_FORMATS);
 
   declare outlet: PublicOutletAttributes;
   declare category: PublicCategoryAttributes;

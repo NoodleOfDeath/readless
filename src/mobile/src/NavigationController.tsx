@@ -58,7 +58,7 @@ EventMapBase
     name: 'about', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.browse, 
+      headerTitle: strings.menu_browse, 
     },
   },
   {
@@ -66,14 +66,14 @@ EventMapBase
     name: 'bookmarks', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.bookmarks.bookmarks, 
+      headerTitle: strings.bookmarks_header, 
     }, 
   },
   {
     component: BrowseScreen, 
     name: 'browse', options: {
       headerBackTitle: '', 
-      headerTitle: strings.browse, 
+      headerTitle: strings.menu_browse, 
     },
   },
   {
@@ -86,7 +86,7 @@ EventMapBase
     name: 'settings', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.settings.settings, 
+      headerTitle: strings.settings_settings, 
     },
   },
   {

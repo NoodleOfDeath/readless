@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SheetProps } from 'react-native-actions-sheet';
+import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import { Badge } from 'react-native-paper';
 
 import {
@@ -24,31 +24,33 @@ export function MainMenuDialog(props: SheetProps) {
   const items = React.useMemo(() => [
     {
       icon: 'cog',
-      label: strings.settings.settings,
+      label: strings.menu_settings,
       onPress: openSettings,
     },
     {
       badge: bookmarkCount,
       icon: 'bookmark-outline',
-      label: strings.bookmarks.bookmarks,
+      label: strings.menu_bookmarks,
       onPress: openBookmarks,
     },
     {
       icon: 'bookshelf',
-      label: strings.browse,
+      label: strings.menu_browse,
       onPress: openBrowse,
     },
     {
       icon: 'map-legend',
-      label: strings.walkthroughs,
-      onPress: openWalkthroughs,
+      label: strings.menu_walkthroughs,
+      onPress: () => {
+        SheetManager.show('onboarding-walkthrough'); 
+      },
     },
     {
       icon: 'information',
-      label: strings.about,
+      label: strings.menu_about,
       onPress: openAbout,
     },
-  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings, openWalkthroughs]);
+  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings]);
 
   return (
     <ActionSheet id={ props.sheetId }>

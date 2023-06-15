@@ -31,7 +31,7 @@ export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
   summary: string;
   shortSummary: string;
   bullets: string[];
-  formats: ReadingFormat[];
+  formats?: ReadingFormat[];
   sentiments?: PublicSummarySentimentAttributes[];
 };
 

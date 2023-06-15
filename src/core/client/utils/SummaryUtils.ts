@@ -6,7 +6,7 @@ import {
 
 export const shareableLink = (
   summary: PublicSummaryAttributes, 
-  baseUrl: string = process.env.BASE_DOMAIN,
+  baseUrl: string,
   format: ReadingFormat = ReadingFormat.Summary
 ) => {
   return `https://open.${baseUrl}/s/${summary.id}/${format}`;
@@ -14,7 +14,7 @@ export const shareableLink = (
 
 export const audioStreamUri = (
   summary: PublicSummaryAttributes,
-  baseUrl: string = process.env.API_ENDPOINT,
+  baseUrl: string,
   locale = 'en'
 ) => {
   return `${baseUrl}/v1/service/stream/s/${summary.id}?locale=${locale}`;

@@ -4,23 +4,25 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import {
   Button,
-  Image,
+  Divider,
+  Markdown,
   MeterDial,
   ScrollView,
-  Switch,
+  Summary,
   Text,
   View,
   Walkthrough,
   WalkthroughStep,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
+import { useInAppBrowser, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function SentimentWalkthrough(props: SheetProps) {
   
-  const { sentimentEnabled, setPreference } = React.useContext(SessionContext);
-
-  const [isEnabled, setIsEnabled] = React.useState(sentimentEnabled);
+  const { setPreference } = React.useContext(SessionContext);
+  const { openURL } = useInAppBrowser();
+  const theme = useTheme();
 
   const onDone = React.useCallback(async () => {
     setPreference('viewedFeatures', (prev) => {
@@ -33,46 +35,142 @@ export function SentimentWalkthrough(props: SheetProps) {
   
   const steps: WalkthroughStep[] = React.useMemo(() => [
     {
-      body: strings.features.sentiment.description,
-      title: strings.features.sentiment.sentiment,
-    },
-    {
-      body: 'Sentiment can be measured in a number of ways. Read Less currently uses 3 sentiment measures. Two of these are statistically based, while the third is derived from a large language model. It is important to recognize the potential for predisposed biases when measuring sentiment, such as the openai sentiment scores we collect, which are sometimes skewed with a political bias.',
-      title: 'How Can Sentiment Be Measured?',
-    },
-    {
-      actions: (
-        <View alignCenter justifyCenter gap={ 12 }>
-          <Text>
-            Each article summary has a sentiment score. This is not shown by default to reduce clutter, but you may enable it if you find this measurement helpful in deciding whether, or not, an article is worth reading.
-          </Text>
-          <Button
-            elevated
-            rounded
-            p={ 6 }
-            m={ 3 }
-            onPress={ () => {
-              setPreference('sentimentEnabled', true);
-              onDone();
-            } }>
-            Enable Sentiments
-          </Button>
-          <Button 
-            elevated
-            rounded
-            p={ 6 }
-            m={ 3 }
-            onPress={ () => {
-              onDone();
-            } }>
-            I&apos;m good for now.
-          </Button>
+      body: (
+        <View elevated p={ 12 }>
+          <View flexRow flexWrap="wrap" alignCenter gap={ 3 }>
+            <Text>&quot;I absolutely</Text>
+            <Text bold underline color="green">loved</Text>
+            <Text>the new movie, it was a</Text>
+            <Text bold underline color="green">captivating</Text>
+            <Text>and emotional experience.</Text>
+            <Text>&quot;</Text>
+          </View>
         </View>
       ),
-      body: <MeterDial value={ 0.3 } />,
-      title: 'Enable Sentiments?',
+      footer: strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription,
+      title: strings.walkthroughs_sentiment_whatIsSentimentAnalysis,
     },
-  ], [isEnabled, setPreference, onDone]);
+    {
+      body: (
+        <View gap={ 12 }>
+          <Markdown>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
+          <View elevated p={ 12 }>
+            <View flexRow flexWrap="wrap" alignCenter gap={ 3 }>
+              <Text>&quot;</Text>
+              <Text bold underline color="green">lol</Text>
+              <Text>most news is really</Text>
+              <Text bold underline color="red">sad</Text>
+              <Text bold underline color="red">😡</Text>
+              <Text>&quot;</Text>
+            </View>
+          </View>
+          <Markdown>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
+        </View>
+      ),
+      title: strings.walkthroughs_sentiment_whatIsSentimentUsedFor,
+    },
+    {
+      body: (
+        <View alignCenter gap={ 12 }>
+          <Text>{strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription}</Text>
+          <View alignCenter flexRow>
+            <View alignCenter>
+              <Text h4 color="red">-1</Text>
+              <Text textCenter color="red">{strings.summary_veryNegative}</Text>
+            </View>
+            <MeterDial value={ 0.3 } />
+            <View alignCenter>
+              <Text h4 color="green">+1</Text>
+              <Text textCenter color="green">{strings.summary_veryPositive}</Text>
+            </View>
+          </View>
+          <View alignCenter>
+            <Text h4>+0</Text>
+            <Text textCenter>{strings.summary_neutral}</Text>
+          </View>
+        </View>
+      ),
+      title: strings.walkthroughs_sentiment_howIsSentimetMeasured,
+    },
+    {
+      body: (
+        <View alignCenter gap={ 12 }>
+          <Markdown 
+            highlightStyle={ {
+              color: theme.colors.link, fontWeight: 'bold', textDecorationLine: 'underline', 
+            } }
+            onPress={ () => openURL('https://en.wikipedia.org/wiki/Lexical_analysis') }>
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP1}
+          </Markdown>
+          <View flexRow alignCenter gap={ 3 }>
+            <Text 
+              color="link"
+              onPress={ () => openURL('http://corpustext.com/reference/sentiment_afinn.html') }
+              underline
+              bold>
+              AFINN
+            </Text>
+            <Text>{strings.misc_and}</Text>
+            <Text 
+              color="link"
+              onPress={ () => openURL('https://medium.com/@piocalderon/vader-sentiment-analysis-explained-f1c4f9101cd9#:~:text=VADER%20(Valence%20Aware%20Dictionary%20for,intensity%20(strength)%20of%20emotion.') }
+              underline
+              bold>
+              VADER
+            </Text>
+          </View>
+          <Text>
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP2}
+          </Text>
+          <Divider bg={ theme.colors.text } />
+          <Markdown>
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP3}
+          </Markdown>
+        </View>
+      ),
+      title: strings.walkthroughs_sentiment_howDoWeMeasureSentiment,
+    },
+    {
+      body: (
+        <View alignCenter justifyCenter gap={ 12 }>
+          <Text>
+            {strings.walkthroughs_sentiment_score}
+          </Text>
+          <ScrollView scrollEnabled={ false }>
+            <Summary forceSentiment disableInteractions />
+          </ScrollView>
+          <View flexRow alignCenter gap={ 3 }>
+            <Button
+              elevated
+              rounded
+              touchable
+              haptic
+              p={ 6 }
+              m={ 3 }
+              onPress={ () => {
+                setPreference('sentimentEnabled', true);
+                onDone();
+              } }>
+              {strings.walkthroughs_sentiment_enable}
+            </Button>
+            <Button 
+              elevated
+              rounded
+              touchable
+              haptic
+              p={ 6 }
+              m={ 3 }
+              onPress={ () => {
+                onDone();
+              } }>
+              {strings.walkthroughs_sentiment_dontEnable}
+            </Button>
+          </View>
+        </View>
+      ),
+      title: strings.walkthroughs_sentiment_enableQuestion,
+    },
+  ], [theme.colors.link, theme.colors.text, openURL, setPreference, onDone]);
   
   return (
     <Walkthrough

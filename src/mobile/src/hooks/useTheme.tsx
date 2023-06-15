@@ -12,6 +12,7 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
       error: '#f44336',
       inactive: lightMode ? '#aaa' : '#777',
       invertText: lightMode ? '#fff' : '#000',
+      link: lightMode ? '#8888ee' : '#aaaaee',
       primary: '#8b0000',
       rowEven: lightMode ? '#efefef' : '#101010',
       rowOdd: lightMode ? '#e9e9e9' : '#222',

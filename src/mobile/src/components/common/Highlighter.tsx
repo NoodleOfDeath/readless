@@ -6,13 +6,16 @@ import { HighlighterProps as RNHighlighterProps } from 'react-native-highlight-w
 import { ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type HighlighterProps = RNHighlighterProps & Omit<ViewProps, 'children'>;
+export type HighlighterProps = Omit<RNHighlighterProps & ViewProps, 'children' | 'textToHighlight'> & {
+  children?: string;
+};
 
-export function Highlighter(props: HighlighterProps) {
+export function Highlighter({ children, ...props }: HighlighterProps) {
   const style = useStyles(props);
   return (
     <RNHighlighter
       { ...props } 
+      textToHighlight={ children ?? '' }
       style={ style } />
   );
 }

@@ -27,12 +27,12 @@ export function ReadingFormatSelector({
       buttons={ [
         {
           icon: 'text-long',
-          label: strings.summary.summary,
+          label: strings.summary_summary,
           value: 'summary',
         },
         {
           icon: 'view-list',
-          label: strings.summary.bullets,
+          label: strings.summary_bullets,
           value: 'bullets',
         },
       ] } />

@@ -3,17 +3,24 @@ import { StyleSheet } from 'react-native';
 
 import { Divider as RNDivider, DividerProps as RNDividerProps } from 'react-native-paper';
 
-import { useTheme } from '~/hooks';
+import { ViewProps } from '~/components';
+import { useStyles, useTheme } from '~/hooks';
 
-export type DividerProps = RNDividerProps & {
+export type DividerProps = RNDividerProps & ViewProps & {
   vertical?: boolean;
 };
 
 export function Divider({ vertical, ...dividerProps }: DividerProps = {}) {
   const theme = useTheme();
+  const style = useStyles(dividerProps);
   return (
     <RNDivider 
       { ...dividerProps }
-      style={ [theme.components.divider, vertical ? { height: '100%', width: StyleSheet.hairlineWidth } : {}] } />
+      style={ {
+        ...theme.components.divider, 
+        height: vertical ? '100%' : StyleSheet.hairlineWidth, 
+        width: vertical ? StyleSheet.hairlineWidth : '100%', 
+        ...style, 
+      } } />
   );
 }

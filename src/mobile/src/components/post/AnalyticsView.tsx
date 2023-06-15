@@ -35,17 +35,17 @@ export function AnalyticsView({
   const sentimentLabel = React.useMemo(() => {
     if (sentiment < -0.2) {
       if (sentiment < -0.6) {
-        return strings.summary.veryNegative;
+        return strings.summary_veryNegative;
       }
-      return strings.summary.negative;
+      return strings.summary_negative;
     }
     if (sentiment > 0.2) {
       if (sentiment > 0.6) {
-        return strings.summary.veryPositive;
+        return strings.summary_veryPositive;
       }
-      return strings.summary.positive;
+      return strings.summary_positive;
     }
-    return strings.summary.neutral;
+    return strings.summary_neutral;
   }, [sentiment]);
   
   const chartData = React.useMemo(() => {
@@ -66,8 +66,8 @@ export function AnalyticsView({
     <View style={ style } gap={ 12 }>
       <CollapsedView
         { ...props }
-        title={ strings.summary.sentimentAnalysis }
-        info={ strings.summary.sentimentAnalysisInfo }>
+        title={ strings.summary_sentimentAnalysis }
+        info={ strings.summary_sentimentAnalysisInfo }>
         <View gap={ 12 }>
           <View row alignStart gap={ 12 }>
             <View

@@ -54,7 +54,7 @@ import {
 import { DateSorter, fixedSentiment } from '~/utils';
 
 type Props = Omit<ViewProps, 'children'> & {
-  summary: PublicSummaryGroups;
+  summary?: PublicSummaryGroups;
   tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
@@ -63,6 +63,7 @@ type Props = Omit<ViewProps, 'children'> & {
   compact?: boolean;
   swipeable?: boolean;
   disableInteractions?: boolean;
+  forceSentiment?: boolean;
   hideCard?: boolean;
   hideAnalytics?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
@@ -120,7 +121,7 @@ function RenderActions({ actions }: RenderActionsProps) {
   );
 }
 
-const DEFAULT_PROPS: Props = {
+const DEFAULT_PROPS = {
   summary: {
     bullets: [
       'Example bullet 1',
@@ -131,14 +132,17 @@ const DEFAULT_PROPS: Props = {
       icon: 'popcorn',
       name: 'entertainment',
     },
+    categoryId: 0,
     id: 0,
     imageUrl: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg',
     media: [],
-    originalDate: new Date(Date.now() - ms('5m')),
+    originalDate: new Date(Date.now() - ms('5m')).toISOString(),
+    originalTitle: 'This is an example summary',
     outlet: {
       displayName: 'News Source',
       name: '',
     },
+    outletId: 0,
     sentiment: 0.3,
     sentiments: [{
       method: 'openai',
@@ -165,6 +169,7 @@ export function Summary({
   disableInteractions = !summary0,
   hideCard,
   hideAnalytics,
+  forceSentiment,
   onFormatChange,
   onInteract,
   onLocalize,
@@ -274,13 +279,13 @@ export function Summary({
   }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget, summary.id, summary.siblings, summary.translations, tickInterval]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
-    if (!initialFormat) {
+    if (!initialFormat && !disableInteractions && !isShareTarget) {
       onFormatChange?.(newFormat);
       setIsRead(true);
       return;
     }
     setFormat(newFormat);
-  }, [initialFormat, onFormatChange]);
+  }, [disableInteractions, initialFormat, isShareTarget, onFormatChange]);
 
   const handleLocalizeSummary = React.useCallback(async () => {
     setIsLocalizing(true);
@@ -332,7 +337,7 @@ export function Summary({
         });
       },
       startIcon: isRead ? 'email-mark-as-unread' : 'email-open',
-      text: isRead ? strings.summary.markAsUnRead : strings.summary.markAsRead,
+      text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
     }, {
       onPress: () => {
         onInteract?.(InteractionType.Hide, undefined, undefined, () => {
@@ -343,7 +348,7 @@ export function Summary({
         });
       },
       startIcon: 'eye-off',
-      text: strings.summary.hide,
+      text: strings.summary_hide,
     }, {
       onPress: () => { 
         onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
@@ -351,7 +356,7 @@ export function Summary({
         });
       },
       startIcon: 'bug',
-      text: strings.summary.reportAtBug,
+      text: strings.summary_reportAtBug,
     }];
     return (
       <RenderActions actions={ actions } />
@@ -371,7 +376,7 @@ export function Summary({
               bold
               underline
               onPress={ handleLocalizeSummary }>
-              {strings.summary.translate}
+              {strings.summary_translate}
             </Text>
           )
             : (
@@ -386,12 +391,87 @@ export function Summary({
             bold
             underline
             onPress={ () => setShowTranslations((prev) => !prev) }>
-            {showTranslations ? strings.summary.showOriginalText : strings.summary.showTranslatedText}
+            {showTranslations ? strings.summary_showOriginalText : strings.summary_showTranslatedText}
           </Text>
         )}
       </View>
     );
   }, [translations, isLocalizing, handleLocalizeSummary, showTranslations]);
+  
+  const menuActions = React.useMemo(() => {
+    return (
+      <View
+        overflow="hidden"
+        gap={ 6 }
+        p={ 6 }>
+        <View 
+          flexRow
+          flexGrow={ 1 }
+          alignCenter
+          gap={ 6 }>
+          <Button
+            h4
+            haptic
+            color='text'
+            startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+            onPress={ () => {
+              if (disableInteractions) {
+                return;
+              }
+              onInteract?.(InteractionType.Bookmark); 
+            } } />
+          <Button
+            h4
+            touchable
+            color='text'
+            startIcon='share-outline'
+            onPress={ () => {
+              if (disableInteractions) {
+                return;
+              }
+              SheetManager.show('share', {
+                payload: {
+                  format,
+                  onInteract, 
+                  summary,
+                  viewshot: viewshot.current,
+                },
+              });
+            } } />
+          <Button
+            h4
+            haptic
+            touchable
+            color="text"
+            startIcon={ playingAudio ? 'stop' : 'volume-source' }
+            onPress={ () => {
+              if (disableInteractions) {
+                return;
+              }
+              handlePlayAudio(); 
+            } } />
+        </View>
+        <View>
+          <Text
+            row
+            numberOfLines={ 1 }
+            underline
+            caption
+            color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+            onPress={ () => {
+              if (disableInteractions) {
+                return;
+              }
+              onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
+              setSourceIsRead(true);
+            } }
+            onLongPress={ () => copyToClipboard(summary.url) }>
+            {summary.url}
+          </Text>
+        </View>
+      </View>
+    );
+  }, [bookmarked, playingAudio, initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, summary, disableInteractions, onInteract, format, handlePlayAudio, openURL, copyToClipboard]);
   
   return (
     <GestureHandlerRootView>
@@ -496,13 +576,19 @@ export function Summary({
                             {formatTime(summary.originalDate)}
                           </Text>
                         </View>
-                        {sentimentEnabled && (
+                        {(forceSentiment || sentimentEnabled) && (
                           <React.Fragment>
                             <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
                             <MeterDial 
                               value={ summary.sentiment }
                               width={ 40 } />
                           </React.Fragment>
+                        )}
+                        {initialFormat ? menuActions : (
+                          <Menu
+                            autoAnchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
+                            {menuActions}
+                          </Menu>
                         )}
                       </View>
                     </View>
@@ -544,7 +630,7 @@ export function Summary({
                               ) }>
                               <View
                                 gap={ 6 }>
-                                <Text caption>{strings.summary.thisIsNotARealImage}</Text>
+                                <Text caption>{strings.summary_thisIsNotARealImage}</Text>
                                 <View
                                   mh={ -12 }
                                   mb={ -12 }>
@@ -562,31 +648,33 @@ export function Summary({
                           gap={ 6 }
                           pb={ (compact || compactMode) ? 12 : 0 }>
                           <View flex={ 1 } flexGrow={ 1 } mh={ 12 }>
-                            <View flexRow flexGrow={ 1 } alignCenter>
+                            <View flexRow flexGrow={ 1 }>
                               <Highlighter
                                 bold
                                 subtitle1
                                 justifyCenter
                                 color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                searchWords={ isShareTarget ? [] : keywords }
-                                textToHighlight={ cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) } />
+                                searchWords={ isShareTarget ? [] : keywords }>
+                                {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
+                              </Highlighter>
                             </View>
                             {translateToggle}
                             {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
-                              <View row>
+                              <View pb={ 12 }>
                                 <Divider />
                                 <Highlighter 
                                   highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                  searchWords={ isShareTarget ? [] : keywords }
-                                  textToHighlight={ cleanString(localizedStrings.shortSummary ?? '') } />
+                                  searchWords={ isShareTarget ? [] : keywords }>
+                                  { cleanString(localizedStrings.shortSummary ?? '') }
+                                </Highlighter>
                               </View>
                             )}
                           </View>
                           {summary.siblings && summary.siblings.length > 0 && (
                             <View mh={ 12 } gap={ 6 }>
                               <Text>
-                                {`${strings.summary.relatedNews} (${summary.siblings.length})`}
+                                {`${strings.summary_relatedNews} (${summary.siblings.length})`}
                               </Text>
                               <ScrollView height={ summary.siblings.length === 1 ? 55 : 70 }>
                                 <View gap={ 5 }>
@@ -624,83 +712,14 @@ export function Summary({
                                           numberOfLines={ 1 }
                                           color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
                                           highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                          searchWords={ isShareTarget ? [] : keywords }
-                                          textToHighlight={ cleanString(sibling.title) } />
+                                          searchWords={ isShareTarget ? [] : keywords }>
+                                          { cleanString(sibling.title) }
+                                        </Highlighter>
                                       </View>
                                     </View>
                                   ))}
                                 </View>
                               </ScrollView>
-                            </View>
-                          )}
-                          {(!(compact || compactMode) || initialFormat) && (
-                            <View
-                              overflow="hidden"
-                              p={ 6 }>
-                              <View 
-                                flexRow
-                                flexGrow={ 1 }
-                                alignCenter
-                                gap={ 6 }>
-                                <View row>
-                                  <Text
-                                    numberOfLines={ 1 }
-                                    underline
-                                    caption
-                                    color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
-                                    onPress={ () => {
-                                      if (disableInteractions) {
-                                        return;
-                                      }
-                                      onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-                                      setSourceIsRead(true);
-                                    } }
-                                    onLongPress={ () => copyToClipboard(summary.url) }>
-                                    {summary.url}
-                                  </Text>
-                                </View>
-                                <Button
-                                  h4
-                                  haptic
-                                  color='text'
-                                  startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-                                  onPress={ () => {
-                                    if (disableInteractions) {
-                                      return;
-                                    }
-                                    onInteract?.(InteractionType.Bookmark); 
-                                  } } />
-                                <Button
-                                  h4
-                                  touchable
-                                  color='text'
-                                  startIcon='share-outline'
-                                  onPress={ () => {
-                                    if (disableInteractions) {
-                                      return;
-                                    }
-                                    SheetManager.show('share', {
-                                      payload: {
-                                        format,
-                                        onInteract, 
-                                        summary,
-                                        viewshot: viewshot.current,
-                                      },
-                                    });
-                                  } } />
-                                <Button
-                                  h4
-                                  haptic
-                                  touchable
-                                  color="text"
-                                  startIcon={ playingAudio ? 'stop' : 'volume-source' }
-                                  onPress={ () => {
-                                    if (disableInteractions) {
-                                      return;
-                                    }
-                                    handlePlayAudio(); 
-                                  } } />
-                              </View>
                             </View>
                           )}
                         </View>
@@ -735,8 +754,9 @@ export function Summary({
                               <Highlighter 
                                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                                 numberOfLines={ 100 }
-                                searchWords={ isShareTarget ? [] : keywords }
-                                textToHighlight={ cleanString(content) } />
+                                searchWords={ isShareTarget ? [] : keywords }>
+                                { cleanString(content) }
+                              </Highlighter>
                             ) } />
                         ))}
                       </View>

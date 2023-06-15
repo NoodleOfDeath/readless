@@ -30,14 +30,14 @@ export function CompactModeSelector() {
           leftLabel={ (
             <View>
               <Button caption gap={ 4 } startIcon="view-agenda" iconSize={ 24 } bold alignCenter>
-                {strings.settings.expanded} 
+                {strings.settings_expanded} 
               </Button>
             </View>
           ) }
           rightLabel={ (
             <View>
               <Button caption gap={ 4 } startIcon="view-headline" iconSize={ 24 } bold alignCenter>
-                {strings.settings.compact}
+                {strings.settings_compactMode}
               </Button>
             </View>
           ) }
@@ -49,7 +49,7 @@ export function CompactModeSelector() {
       </View>
       <View alignCenter gap={ 6 }>
         <Text caption numberOfLines={ 2 }>
-          {compactMode ? strings.settings.shortSummariesInsteadOfTitles : strings.settings.shortSummaries}
+          {compactMode ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries}
         </Text>
         <Switch 
           color={ theme.colors.primary } 

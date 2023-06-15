@@ -49,8 +49,8 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
   
   const buttons = React.useMemo(() => [
-    { label: categories.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : `${strings.categories} (${categoryCount === 0 ? categories.length : categoryCount}/${categories.length})`, value: 0 },
-    { label: outlets.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : `${strings.channels} (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`, value: 1 },
+    { label: categories.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : `${strings.misc_categories} (${categoryCount === 0 ? categories.length : categoryCount}/${categories.length})`, value: 0 },
+    { label: outlets.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : `${strings.misc_channels} (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`, value: 1 },
   ], [categoryCount, categories.length, outletCount, outlets.length]);
 
   const loadCategories = React.useCallback(async () => {
@@ -125,7 +125,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                   gap={ 8 }
                   p={ 8 }
                   onPress={ () => clearBookmarks('bookmarkedCategories') }>
-                  {strings.clearSelection}
+                  {strings.action_clearSelection}
                 </Button>
               </View>
               {categories.map((category, i) => (
@@ -157,7 +157,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     elevated
                     startIcon={ bookmarkedCategories?.[category.name] ? 'check' : undefined }
                     onPress={ () => followCategory(category) }>
-                    {bookmarkedCategories?.[category.name] ? strings.unfollow : strings.follow}
+                    {bookmarkedCategories?.[category.name] ? strings.action_unfollow : strings.action_follow}
                   </Button>
                 </View>
               ))}
@@ -176,7 +176,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     gap={ 8 }
                     p={ 8 }
                     onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
-                    {strings.clearSelection}
+                    {strings.action_clearSelection}
                   </Button>
                 </View>
               </View>
@@ -208,7 +208,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     elevated
                     startIcon={ bookmarkedOutlets?.[outlet.name] ? 'check' : undefined }
                     onPress={ () => followOutlet(outlet) }>
-                    {bookmarkedOutlets?.[outlet.name] ? strings.unfollow : strings.follow}
+                    {bookmarkedOutlets?.[outlet.name] ? strings.action_unfollow : strings.action_follow}
                   </Button>
                 </View>
               ))}

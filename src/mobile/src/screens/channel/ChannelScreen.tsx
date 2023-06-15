@@ -73,7 +73,7 @@ export function ChannelScreen({
         <View row alignCenter elevated height={ 80 } p={ 12 } mh={ 12 }>
           <View>
             <Text h6 capitalize>{attributes?.displayName}</Text>
-            <Text subtitle2>{type === 'category' ? strings.category : strings.newsSource}</Text>
+            <Text subtitle2>{type === 'category' ? strings.misc_category : strings.misc_newsSource}</Text>
           </View>
           <View row />
           <View>
@@ -83,7 +83,7 @@ export function ChannelScreen({
               rounded
               p={ 6 }
               onPress={ toggleBookmarked }>
-              { bookmarked ? strings.unfollowChannel : strings.followChannel }
+              { bookmarked ? strings.action_unfollowChannel : strings.action_followChannel }
             </Button>
           </View>
         </View>

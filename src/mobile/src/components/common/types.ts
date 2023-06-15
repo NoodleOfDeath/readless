@@ -32,6 +32,8 @@ export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
   textRight?: boolean;
   fontFamily?: string;
   fontSize?: number;
+  letterSpacing?: number;
+  lineHeight?: number;
   bold?: boolean;
   italic?: boolean;
   underline?: boolean;

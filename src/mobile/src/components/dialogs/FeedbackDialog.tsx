@@ -31,20 +31,20 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
   const [otherValue, setOtherValue] = React.useState('');
   const [success, setSuccess] = React.useState(false);
-  const [successMessage, setSuccessMessage] = React.useState(strings.feedback.thankYou);
+  const [successMessage, setSuccessMessage] = React.useState(strings.feedback_thankYou);
 
   const checkboxes = [
-    { label: strings.feedback.options.wrongCategory, value: 'wrong-category' },
-    { label: strings.feedback.options.inaccurate, value: 'inaccrurate' },
-    { label: strings.feedback.options.offensive, value: 'offensive' },
-    { label: strings.feedback.options.spam, value: 'spam' },
-    { label: strings.feedback.options.tooLong, value: 'too long' },
-    { label: strings.feedback.options.tooShort, value: 'too short' },
-    { label: strings.feedback.options.notNews, value: 'irrelevant' },
-    { label: strings.feedback.options.imageIrrelevant, value: 'irrelevant image' },
-    { label: strings.feedback.options.imageOffensive, value: 'offensive image' },
-    { label: strings.feedback.options.incorrectSentiment, value: 'sentiment-wrong' },
-    { label: strings.feedback.options.helpful, value: 'helpful' },
+    { label: strings.feedback_option_wrongCategory, value: 'wrong-category' },
+    { label: strings.feedback_option_inaccurate, value: 'inaccrurate' },
+    { label: strings.feedback_option_offensive, value: 'offensive' },
+    { label: strings.feedback_option_spam, value: 'spam' },
+    { label: strings.feedback_option_tooLong, value: 'too long' },
+    { label: strings.feedback_option_tooShort, value: 'too short' },
+    { label: strings.feedback_option_notNews, value: 'irrelevant' },
+    { label: strings.feedback_option_imageIrrelevant, value: 'irrelevant image' },
+    { label: strings.feedback_option_imageOffensive, value: 'offensive image' },
+    { label: strings.feedback_option_incorrectSentiment, value: 'sentiment-wrong' },
+    { label: strings.feedback_option_helpful, value: 'helpful' },
   ];
   
   const handleCheckboxPress = React.useCallback((checkbox: typeof checkboxes[number]) => {
@@ -74,7 +74,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
         }
         return (prev = summaries);
       });
-      setSuccessMessage(strings.feedback.sorry);
+      setSuccessMessage(strings.feedback_sorry);
     }
     handleInteraction(summary, InteractionType.Feedback, otherValue, { issues: selectedValues });
     setSelectedValues([]);
@@ -100,7 +100,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
               </View>
             ))}
             <TextInput 
-              placeholder={ strings.feedback.options.other }
+              placeholder={ strings.feedback_option_other }
               value={ otherValue } 
               onChange={ (e) => setOtherValue(e.nativeEvent.text) } />
           </View>
@@ -119,9 +119,9 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
             onPress={ () => {
               onClose?.();
               setSuccess(false);
-              setSuccessMessage(strings.feedback.thankYou);
+              setSuccessMessage(strings.feedback_thankYou);
             } }>
-            {strings.actions.close}
+            {strings.action_close}
           </Button>
         ) : (
           <Button
@@ -131,7 +131,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
             selectable
             p={ 8 }
             onPress={ onSubmit }>
-            {strings.feedback.submit}
+            {strings.feedback_submit}
           </Button>
         )}
       </View>

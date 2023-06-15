@@ -126,7 +126,7 @@ export function TopicSampler({
         </ScrollView>
       ) : (
         <Text p={ 2 } textCenter>
-          {strings.search.noResults}
+          {strings.search_noResults}
           {' '}
           🥺
         </Text>

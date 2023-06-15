@@ -29,8 +29,10 @@ export function Text({
   endIcon,
   ...textProps
 }: TextProps) {
+
   const style = useStyles({ ...textProps, color });
   const computedChildren = React.useMemo(() => capitalize && typeof children === 'string' ? children.replace(/^./, ($0) => $0.toUpperCase()) : children, [capitalize, children]);
+
   return (
     <View style={ style }>
       {startIcon && <Icon name={ startIcon } size={ iconSize } />}

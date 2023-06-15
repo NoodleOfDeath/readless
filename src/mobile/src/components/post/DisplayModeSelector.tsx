@@ -13,9 +13,9 @@ export function DisplayModeSelector() {
       value={ displayMode ?? 'system' }
       onValueChange={ (value) => setPreference('displayMode', value as ColorMode) }
       buttons={ [
-        { label: strings.settings.light, value: 'light' },
-        { label: strings.settings.system, value: 'system' },
-        { label: strings.settings.dark, value: 'dark' },
+        { label: strings.settings_light, value: 'light' },
+        { label: strings.settings_system, value: 'system' },
+        { label: strings.settings_dark, value: 'dark' },
       ] } />
   );
 }

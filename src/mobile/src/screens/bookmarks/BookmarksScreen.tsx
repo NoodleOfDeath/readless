@@ -52,7 +52,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
   React.useEffect(() => {
     navigation?.setOptions({ 
       headerRight: () => undefined,
-      headerTitle: `${strings.bookmarks.bookmarks} (${bookmarkCount})`,
+      headerTitle: `${strings.bookmarks_header} (${bookmarkCount})`,
     });
   }, [bookmarkCount, navigation]);
   
@@ -69,7 +69,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               m={ 8 }
               textCenter
               onPress={ openBrowse }>
-              {strings.browse}
+              {strings.menu_browse}
             </Button>
           </View>
         ) : (
@@ -77,13 +77,13 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
             <View mh={ 16 } gap={ 6 }>
               <View row gap={ 6 }>
                 <Text>
-                  {strings.bookmarks.bookmarksDetail}
+                  {strings.bookmarks_bookmarksAvailableOffline}
                 </Text>
                 <Menu
                   autoAnchor={
                     <Icon size={ 24 } name="information" />
                   }>
-                  <Text>{strings.bookmarks.bookmarksNote}</Text>
+                  <Text>{strings.bookmarks_bookmarkArticlesAreNotSaved}</Text>
                 </Menu>
               </View>
               <View row>
@@ -100,7 +100,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                     }
                     return (prev = state);
                   }) }>
-                  {strings.bookmarks.removeReadFromBookmarks}
+                  {strings.bookmarks_removeReadFromBookmarks}
                 </Button>
               </View>
             </View>

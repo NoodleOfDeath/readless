@@ -99,7 +99,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           <Divider />
           <View justifyCenter gap={ 6 }>
             <Text caption textCenter>
-              {strings.settings.defaultReadingMode}
+              {strings.settings_preferredReadingFormat}
             </Text>
             <ReadingFormatSelector 
               format={ preferredReadingFormat }
@@ -109,20 +109,20 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
           <Divider />
           <View justifyCenter gap={ 6 }>
             <Text caption textCenter>
-              {strings.settings.textScale}
+              {strings.settings_textScale}
             </Text>
             <FontSizeSelector />
           </View>
           <View justifyCenter gap={ 6 }>
             <Text caption textCenter>
-              {strings.settings.fontFamily}
+              {strings.settings_fontFamily}
             </Text>
             <FontSelector />
           </View>
           <Divider />
           {voices && (
             <React.Fragment>
-              <Text caption textCenter>{strings.settings.voice}</Text>
+              <Text caption textCenter>{strings.settings_voice}</Text>
               <ScrollView horizontal style={ { overflow: 'visible' } }>
                 <View>
                   <View row alignCenter gap={ 8 } mh={ 8 }>
@@ -158,7 +158,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
               setPreference('readSummaries', {}); 
               setPreference('readSources', {}); 
             } }>
-            {strings.settings.resetReadSummaries}
+            {strings.settings_resetReadSummaries}
             {' '}
             (
             {Object.values(readSummaries ?? {}).length}
@@ -169,7 +169,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
             caption
             p={ 8 }
             onPress={ () => setPreference('removedSummaries', {}) }>
-            {strings.settings.resetHiddenSummaries}
+            {strings.settings_resetHiddenSummaries}
             {' '}
             (
             {Object.values(removedSummaries ?? {}).length}
@@ -184,7 +184,7 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
               caption
               p={ 8 }
               onPress={ () => handleClearCache() }>
-              {strings.settings.clearCache}
+              {strings.settings_clearCache}
               {' '}
               (
               {cacheSize}

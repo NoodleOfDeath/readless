@@ -16,8 +16,8 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6 numberOfLines={ 2 }>{'Customize your experience'}</Text>
-        <Text bold underline>{strings.actions.tapToEnable}</Text>
+        <Text h6>{strings.walkthroughs_appearance_customizeYourExperience}</Text>
+        <Text bold underline>{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'appearance-walkthrough',
@@ -28,8 +28,8 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6 numberOfLines={ 2 }>{strings.features.sentiment.sentiment}</Text>
-        <Text bold underline>{strings.actions.tapToEnable}</Text>
+        <Text h6>{strings.walkthroughs_sentiment_whatIsSentimentAnalysis}</Text>
+        <Text bold underline>{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'sentiment-walkthrough',
@@ -40,8 +40,8 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.features.triggerWarning.triggerWarning}</Text>
-        <Text bold underline>{strings.actions.tapToEnable}</Text>
+        <Text h6>{strings.walkthroughs_triggerWords}</Text>
+        <Text bold underline>{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'trigger-warning-walkthrough',

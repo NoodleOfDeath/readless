@@ -29,7 +29,7 @@ export type SearchMenuProps = ViewProps & {
 
 export function SearchMenu({
   initialValue = '',
-  placeholder = strings.search.search,
+  placeholder = strings.search_title,
   children,
   onChangeText,
   onClear,
@@ -135,12 +135,12 @@ export function SearchMenu({
                     rounded 
                     p={ 4 } 
                     onPress={ () => submit() }>
-                    {strings.search.search}
+                    {strings.action_search}
                   </Button>
                 </View>
                 <View gap={ 6 }>
                   <Button caption onPress={ () => setPreference('searchHistory', []) }>
-                    {strings.clearSearchHistory}
+                    {strings.action_clearSearchHistory}
                   </Button>
                   <Divider />
                   <ScrollView>
