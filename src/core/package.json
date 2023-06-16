@@ -14,7 +14,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .  --ext .ts,.tsx",
     "format": "eslint .  --ext .ts,.tsx --fix",
-    "localize": "ts-node ./localize"
+    "localize": "ts-node ./localize",
+    "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen",
+    "tsoa": "(cd ../server && yarn tsoa) && cp ../server/swagger.json . && yarn gen"
   },
   "keywords": [],
   "author": "",

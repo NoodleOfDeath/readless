@@ -4,9 +4,7 @@ import {
   AVAILABLE_FONTS,
   Button,
   ScrollView,
-  TableView,
-  TableViewCell,
-  TableViewSection,
+  TablePicker,
   View,
   ViewProps,
 } from '~/components';
@@ -28,18 +26,11 @@ export function FontPicker({
   const style = useStyles(props);
   
   return variant === 'table' ? (
-    <TableView>
-      <TableViewSection>
-        {AVAILABLE_FONTS.map((font) => (
-          <TableViewCell
-            key={ font }
-            accessory={ font === fontFamily ? 'Checkmark' : undefined }
-            title={ font }
-            titleTextStyle={ { fontFamily: font } }
-            onPress={ () => setPreference('fontFamily', font) } />
-        ))}
-      </TableViewSection>
-    </TableView>
+    <TablePicker
+      options={ AVAILABLE_FONTS }
+      initialOption={ fontFamily }
+      conditionalProps={ (font) => ({ titleTextStyle: { fontFamily: font } }) }
+      onValueChange={ (font) => setPreference('fontFamily', font) } />
   ) : (
     <ScrollView 
       horizontal
@@ -56,7 +47,7 @@ export function FontPicker({
             key={ font }
             elevated
             p={ 8 }
-            startIcon={ fontFamily === font ? 'check' : undefined } 
+            leftIcon={ fontFamily === font ? 'check' : undefined } 
             fontFamily={ font }
             onPress={ () => setPreference('fontFamily', font) }>
             {font}

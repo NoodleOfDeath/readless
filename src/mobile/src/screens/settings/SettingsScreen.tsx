@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { Screen, SettingsTable } from '~/components';
+import {
+  Screen,
+  ScrollView,
+  SettingsTable,
+} from '~/components';
 import { ScreenProps } from '~/screens';
 
 export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
@@ -9,7 +13,9 @@ export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
   }, [navigation]);
   return (
     <Screen>
-      <SettingsTable />
+      <ScrollView>
+        <SettingsTable />
+      </ScrollView>
     </Screen>
   );
 }

@@ -4,7 +4,7 @@ import { Animated, ViewStyle } from 'react-native';
 import {
   Divider,
   Icon,
-  Menu,
+  Popover,
   Text,
   View,
   ViewProps,
@@ -97,10 +97,10 @@ export function CollapsedView({
             {title && <Divider vertical />}
             {title && typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
             {info && (
-              <Menu
+              <Popover
                 anchor={ <Icon size={ 24 } name='information' /> }>
                 {info}
-              </Menu>
+              </Popover>
             )}
           </View>
         </View>

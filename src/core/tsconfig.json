@@ -1,50 +1,25 @@
 {
-  "ts-node": {
-    "esm": true,
-    "files": true,
-    "experimentalSpecifierResolution": "node",
-    "experimentalModules": true,
-    "compilerOptions": {}
-  },
-  "esbuild": {
-    "esm": true,
-    "files": true,
-    "experimentalSpecifierResolution": "node",
-    "experimentalModules": true,
-    "compilerOptions": {
-      "transpileOnly": true
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": false,
+    "jsx": "react",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ]
     }
   },
-  "compilerOptions": {
-    "target": "esnext",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
-    "declaration": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noImplicitAny": false,
-    "removeComments": true,
-    "noLib": false,
-    "allowSyntheticDefaultImports": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": ".",
-    "allowJs": false,
-    "resolveJsonModule": true,
-    "noUnusedLocals": true,
-    "jsx": "react-jsx"
-  },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "index.js",
+    "src/**/*.ts",
+    "src/**/*.tsx",
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "metro.config.js",
+    "jest.config.js",
+    "react-native.config.js"
   ]
 }

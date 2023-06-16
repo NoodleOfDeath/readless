@@ -76,7 +76,7 @@ export function MainMenuDialog(props: SheetProps) {
               p={ 12 }
               gap={ 12 }
               h6
-              startIcon={ (
+              leftIcon={ (
                 <View>
                   {badge !== undefined && badge > 0 && (
                     <Badge

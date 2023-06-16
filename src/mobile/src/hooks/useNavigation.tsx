@@ -19,7 +19,7 @@ export function useNavigation() {
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
   
   const navigate = React.useCallback(<R extends keyof StackableTabParams>(route: R, params?: StackableTabParams[R]) => {
-    (navigation?.push ?? navigation.navigate)(route, params);
+    return (navigation?.push ?? navigation.navigate)(route, params as StackableTabParams[R]);
   }, [navigation]);
 
   const search = React.useCallback((params: StackableTabParams['search']) => {

@@ -31,7 +31,7 @@ export function Checkbox({
       style={ style }
       onPress={ onPress }
       { ...other }
-      startIcon={ checked && (
+      leftIcon={ checked && (
         <Icon name='check' color={ theme.colors.primary } />
       ) } />
   );

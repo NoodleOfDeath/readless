@@ -12,7 +12,7 @@ import { WalkthroughStack } from './WalkthroughStack';
 
 import {
   InteractionType,
-  PublicSummaryGroups,
+  PublicSummaryGroup,
   PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
@@ -66,7 +66,7 @@ export function SearchScreen({
   const { shareTarget } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const { supportsMasterDetail } = React.useContext(LayoutContext);
-  const { search, openBrowse } = useNavigation();
+  const { search, navigate } = useNavigation();
   const theme = useTheme();
   
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
@@ -75,7 +75,7 @@ export function SearchScreen({
   const [onlyCustomNews, setOnlyCustomNews] = React.useState(Boolean((!prefilter && showOnlyCustomNews) || route?.params?.onlyCustomNews));
   const [loading, setLoading] = React.useState(false);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
-  const [summaries, setSummaries] = React.useState<PublicSummaryGroups[]>([]);
+  const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
   const [translations, setTranslations] = React.useState<Record<number, PublicSummaryTranslationAttributes[]>>({});
   const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
   const [totalResultCount, setTotalResultCount] = React.useState(0);
@@ -85,7 +85,7 @@ export function SearchScreen({
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
-  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroups>();
+  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [showWalkthroughs, setShowWalkthroughs] = React.useState(true);
 
   const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
@@ -256,7 +256,7 @@ export function SearchScreen({
   }, [load, loading, page, totalResultCount, summaries]);
 
   const handleFormatChange = React.useCallback(
-    (summary: PublicSummaryGroups, format?: ReadingFormat) => {
+    (summary: PublicSummaryGroup, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (supportsMasterDetail) {
         setDetailSummary(summary);
@@ -276,7 +276,7 @@ export function SearchScreen({
     [handleInteraction, navigation, translations, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
   );
   
-  const onLocalize = React.useCallback((summary: PublicSummaryGroups, translations: PublicSummaryTranslationAttributes[]) => {
+  const onLocalize = React.useCallback((summary: PublicSummaryGroup, translations: PublicSummaryTranslationAttributes[]) => {
     setTranslations((prev) => {
       const state = { ...prev };
       state[summary.id] = translations;
@@ -414,7 +414,7 @@ export function SearchScreen({
                 outlined 
                 p={ 8 }
                 selectable
-                onPress={ openBrowse }>
+                onPress={ () => navigate('browse') }>
                 {strings.search_goToBrowse}
               </Button>
               <Button 
@@ -534,7 +534,7 @@ export function SearchScreen({
         {summaries.length > 0 && (
           <Button
             absolute
-            right={ 32 }
+            right={ 24 }
             bottom={ 96 }
             elevated
             rounded
@@ -542,7 +542,7 @@ export function SearchScreen({
             p={ 12 }
             haptic
             touchable
-            startIcon="volume-high"
+            leftIcon="volume-high"
             iconSize={ 32 }
             onPress={ handlePlayAll } />
         )}

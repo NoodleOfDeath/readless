@@ -1,10 +1,8 @@
 import React from 'react';
 
-import {
-  FONT_SIZES,
-  Slider,
-  Stepper,
-} from '~/components';
+import { Slider } from 'native-base';
+
+import { FONT_SIZES, Stepper } from '~/components';
 import { SessionContext } from '~/contexts';
 
 export type FontSizePickerProps = {
@@ -47,9 +45,8 @@ export function FontSizePicker({
   ) : (
     <Slider
       value={ value }
-      minimumValue={ MIN_FONT_OFFSET }
-      maximumValue={ MAX_FONT_OFFSET }
-      onValueChange={ onValueChange }
-      animationType={ 'spring' } />
+      minValue={ MIN_FONT_OFFSET }
+      maxValue={ MAX_FONT_OFFSET }
+      onChange={ onValueChange } />
   );
 }

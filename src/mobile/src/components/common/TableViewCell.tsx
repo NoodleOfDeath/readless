@@ -25,7 +25,7 @@ export function TableViewCellImage({
   ...props
 }: TableViewCellImageProps) {
   const style = useStyles(props);
-  return (
+  return icon && (
     <View
       outlined
       p={ 4 }
@@ -84,7 +84,7 @@ export type TableViewCellProps = ChildlessViewProps & {
 export function TableViewCell(props: TableViewCellProps) {
   const theme= useTheme();
   const style = useStyles(props);
-  const stylesWithoutFontScaling = { ...style };
+  const stylesWithoutFontScaling = { ...style, fontSizeFixed: true };
   delete stylesWithoutFontScaling.fontSize;
   return (
     <Cell
@@ -107,6 +107,5 @@ const styles = StyleSheet.create({
   container: {
     borderBottomWidth: StyleSheet.hairlineWidth * 2,
     borderColor: '#E0E0E0',
-    height: 44,
   },
 });

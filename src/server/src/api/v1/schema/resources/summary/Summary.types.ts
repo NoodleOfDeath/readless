@@ -55,6 +55,6 @@ export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
 
-export type PublicSummaryGroups = PublicSummaryAttributes & {
+export type PublicSummaryGroup = PublicSummaryAttributes & {
   siblings?: PublicSummaryAttributes[];
 };

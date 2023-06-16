@@ -133,7 +133,7 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
             alignCenter
             borderRadius={ 24 }
             onPress={ () => SheetManager.hide(props.sheetId) }
-            startIcon={ <Icon name="close" size={ 24 } /> }>
+            leftIcon={ <Icon name="close" size={ 24 } /> }>
             {strings.action_close}
           </Button>
         </View>

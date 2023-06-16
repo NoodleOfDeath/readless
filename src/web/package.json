@@ -8,7 +8,7 @@
     "test": "jest",
     "eject": "next eject",
     "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen",
-    "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core && cp -rf ../core/client/* ./src/core",
+    "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core && cp -rf ../core/src/client/* ./src/core",
     "tsoa": "(cd ../server && yarn tsoa) && cp ../server/swagger.json ./swagger.json && yarn gen",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"

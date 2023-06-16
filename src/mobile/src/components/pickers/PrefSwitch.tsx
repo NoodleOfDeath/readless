@@ -1,17 +1,13 @@
 import React from 'react';
 
-import {
-  Switch,
-  SwitchProps,
-  ViewProps,
-} from '~/components';
+import { Switch, SwitchProps } from '~/components';
 import { Preferences, SessionContext } from '~/contexts';
 
 type ValueOf<T> = T[keyof T];
-type BooleanPreferencesKeys = ValueOf<{ [I in keyof Preferences]: Preferences[I] extends boolean ? I : never }>;
+type BooleanPreferencesKeys = NonNullable<ValueOf<{ [I in keyof Preferences]: Preferences[I] extends (boolean | undefined) ? I : never }>>;
 type BooleanPreferences = { [I in BooleanPreferencesKeys]: Preferences[I] };
 
-type PrefSwitchProps<K extends keyof BooleanPreferences> = Omit<SwitchProps, 'value'> & ViewProps & {
+type PrefSwitchProps<K extends keyof BooleanPreferences> = Omit<SwitchProps, 'value'> & {
   prefKey: K;
   onValueChange?: (value?: BooleanPreferences[K]) => void;
 };

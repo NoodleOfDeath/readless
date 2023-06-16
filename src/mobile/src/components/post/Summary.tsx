@@ -11,7 +11,7 @@ import ViewShot from 'react-native-view-shot';
 
 import { 
   InteractionType,
-  PublicSummaryGroups,
+  PublicSummaryGroup,
   PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
@@ -25,8 +25,8 @@ import {
   Highlighter,
   Icon,
   Image,
-  Menu,
   MeterDial,
+  Popover,
   ReadingFormatPicker,
   ScrollView,
   Text,
@@ -54,7 +54,7 @@ import {
 import { DateSorter, fixedSentiment } from '~/utils';
 
 type Props = ChildlessViewProps & {
-  summary?: PublicSummaryGroups;
+  summary?: PublicSummaryGroup;
   tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
@@ -74,7 +74,7 @@ type Props = ChildlessViewProps & {
 
 type RenderAction = {
   text: string;
-  startIcon?: string;
+  leftIcon?: string;
   onPress: () => void;
 };
 
@@ -110,7 +110,7 @@ function RenderActions({ actions }: RenderActionsProps) {
               alignCenter
               justifyCenter
               caption
-              startIcon={ action.startIcon }
+              leftIcon={ action.leftIcon }
               onPress={ action.onPress }>
               {action.text}
             </Button>
@@ -121,7 +121,7 @@ function RenderActions({ actions }: RenderActionsProps) {
   );
 }
 
-const DEFAULT_PROPS = {
+const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
   summary: {
     bullets: [
       strings.summary_example_bullet1,
@@ -287,6 +287,7 @@ export function Summary({
       setIsRead(true);
       return;
     }
+    onFormatChange?.(newFormat);
     setFormat(newFormat);
   }, [disableInteractions, initialFormat, isShareTarget, onFormatChange]);
 
@@ -317,8 +318,169 @@ export function Summary({
     queueSummary(summary);
   }, [trackState, currentTrack?.id, summary, queueSummary, stopAndClearTracks]);
   
+  const menuActions = React.useMemo(() => {
+    return (
+      <View
+        overflow="hidden"
+        gap={ 6 }
+        p={ 6 }>
+        <View 
+          flexRow
+          flexGrow={ 1 }
+          alignCenter
+          gap={ 6 }>
+          <Button
+            h4
+            haptic
+            color='text'
+            leftIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+            onPress={ () => !disableInteractions && onInteract?.(InteractionType.Bookmark) } />
+          <Button
+            h4
+            touchable
+            color='text'
+            leftIcon='share-outline'
+            onPress={ async () => {
+              if (disableInteractions) {
+                return;
+              }
+              SheetManager.show('share', {
+                payload: {
+                  format,
+                  onInteract, 
+                  summary,
+                  viewshot: viewshot.current,
+                },
+              });
+            } } />
+          <Button
+            h4
+            haptic
+            touchable
+            color="text"
+            leftIcon={ playingAudio ? 'stop' : 'volume-source' }
+            onPress={ () => !disableInteractions && handlePlayAudio() } />
+        </View>
+        <View>
+          <Text
+            row
+            numberOfLines={ 1 }
+            underline
+            caption
+            color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+            onPress={ () => {
+              if (disableInteractions) {
+                return;
+              }
+              onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
+              setSourceIsRead(true);
+            } }
+            onLongPress={ () => copyToClipboard(summary.url) }>
+            {summary.url}
+          </Text>
+        </View>
+      </View>
+    );
+  }, [bookmarked, playingAudio, initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, summary, disableInteractions, onInteract, format, handlePlayAudio, openURL, copyToClipboard]);
+  
+  const header = React.useMemo(() => (
+    <View 
+      pv={ initialFormat ? 12 : 6 }
+      ph={ 6 }
+      flexGrow={ 1 }
+      elevated
+      borderRadiusTL={ initialFormat ? 0 : 12 }
+      borderRadiusTR={ initialFormat ? 0 : 12 }
+      zIndex={ 2 }
+      inactive={ isRead }>
+      <View
+        flexRow
+        flexGrow={ 1 }
+        alignCenter
+        gap={ 6 }>
+        {!initialFormat ? (
+          <React.Fragment>
+            <Button 
+              h5
+              color='text'
+              leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+              touchable
+              onPress={ () => !disableInteractions && openCategory(summary.category) } />
+            <Text
+              italic
+              onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
+              {summary.outlet.displayName}
+            </Text>
+          </React.Fragment>
+        ) : (
+          <View gap={ 3 }>
+            <View>
+              <Button 
+                h5
+                gap={ 3 }
+                flexRow
+                flexGrow={ 1 }
+                outlined
+                alignCenter
+                borderRadius={ 4 }
+                adjustsFontSizeToFit
+                p={ 3 }
+                color='text'
+                leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                touchable
+                onPress={ () => !disableInteractions && openCategory(summary.category) }>
+                {summary.category.displayName}
+              </Button>
+            </View>
+            <Button
+              italic
+              underline
+              alignCenter
+              outlined
+              p={ 3 }
+              adjustsFontSizeToFit
+              borderColor="black"
+              borderRadius={ 4 }
+              touchable
+              onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
+              {summary.outlet.displayName}
+            </Button>
+          </View>
+        )}
+        <View flex={ 1 } flexGrow={ 1 }>
+          <Text 
+            bold 
+            adjustsFontSizeToFit
+            caption
+            color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
+            {formatTime(summary.originalDate)}
+          </Text>
+        </View>
+        {(forceSentiment || sentimentEnabled) && (
+          <React.Fragment>
+            <Text
+              caption
+              adjustsFontSizeToFit>
+              { fixedSentiment(summary.sentiment) }
+            </Text>
+            <MeterDial 
+              value={ summary.sentiment }
+              width={ 40 } />
+          </React.Fragment>
+        )}
+        {initialFormat ? menuActions : (
+          <Popover
+            anchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
+            {menuActions}
+          </Popover>
+        )}
+      </View>
+    </View>
+  ), [initialFormat, isRead, summary.category, summary.outlet, summary.originalDate, summary.sentiment, theme.colors.textDisabled, theme.colors.text, formatTime, forceSentiment, sentimentEnabled, menuActions, disableInteractions, openCategory, openOutlet]);
+
   const renderRightActions = React.useCallback(() => {
     const actions = [{
+      leftIcon: isRead ? 'email-mark-as-unread' : 'email-open',
       onPress: () => {
         setPreference('readSummaries', (prev) => {
           const newBookmarks = { ...prev };
@@ -339,9 +501,9 @@ export function Summary({
           return (prev = newBookmarks);
         });
       },
-      startIcon: isRead ? 'email-mark-as-unread' : 'email-open',
       text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
     }, {
+      leftIcon: 'eye-off',
       onPress: () => {
         onInteract?.(InteractionType.Hide, undefined, undefined, () => {
           setPreference('removedSummaries', (prev) => ({
@@ -350,15 +512,14 @@ export function Summary({
           }));
         });
       },
-      startIcon: 'eye-off',
       text: strings.summary_hide,
     }, {
+      leftIcon: 'bug',
       onPress: () => { 
         onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
           SheetManager.show('feedback', { payload: { summary } });
         });
       },
-      startIcon: 'bug',
       text: strings.summary_reportAtBug,
     }];
     return (
@@ -400,86 +561,11 @@ export function Summary({
       </View>
     );
   }, [translations, isLocalizing, handleLocalizeSummary, showTranslations]);
-  
-  const menuActions = React.useMemo(() => {
-    return (
-      <View
-        overflow="hidden"
-        gap={ 6 }
-        p={ 6 }>
-        <View 
-          flexRow
-          flexGrow={ 1 }
-          alignCenter
-          gap={ 6 }>
-          <Button
-            h4
-            haptic
-            color='text'
-            startIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
-            onPress={ () => {
-              if (disableInteractions) {
-                return;
-              }
-              onInteract?.(InteractionType.Bookmark); 
-            } } />
-          <Button
-            h4
-            touchable
-            color='text'
-            startIcon='share-outline'
-            onPress={ () => {
-              if (disableInteractions) {
-                return;
-              }
-              SheetManager.show('share', {
-                payload: {
-                  format,
-                  onInteract, 
-                  summary,
-                  viewshot: viewshot.current,
-                },
-              });
-            } } />
-          <Button
-            h4
-            haptic
-            touchable
-            color="text"
-            startIcon={ playingAudio ? 'stop' : 'volume-source' }
-            onPress={ () => {
-              if (disableInteractions) {
-                return;
-              }
-              handlePlayAudio(); 
-            } } />
-        </View>
-        <View>
-          <Text
-            row
-            numberOfLines={ 1 }
-            underline
-            caption
-            color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
-            onPress={ () => {
-              if (disableInteractions) {
-                return;
-              }
-              onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-              setSourceIsRead(true);
-            } }
-            onLongPress={ () => copyToClipboard(summary.url) }>
-            {summary.url}
-          </Text>
-        </View>
-      </View>
-    );
-  }, [bookmarked, playingAudio, initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, summary, disableInteractions, onInteract, format, handlePlayAudio, openURL, copyToClipboard]);
 
   const siblingCards = React.useMemo(() => {
     return (
       <View gap={ 6 }>
-        {[...summary.siblings].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
+        {[...(summary.siblings ?? [])].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
           <View 
             key={ sibling.id }>
             <View
@@ -488,10 +574,9 @@ export function Summary({
               outlined
               borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
               touchable
-              onPress={ () => openSummary({ summary: sibling.id }) }>
+              onPress={ () => !disableInteractions && openSummary({ summary: sibling.id }) }>
               <View 
                 flexRow
-                flexGrow={ 1 } 
                 gap={ 2 }
                 alignCenter>
                 <Text 
@@ -502,7 +587,8 @@ export function Summary({
                 <Text 
                   bold 
                   caption 
-                  color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
+                  color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
+                  numberOfLines={ 1 }>
                   {formatTime(sibling.originalDate)}
                 </Text>
               </View>
@@ -519,7 +605,104 @@ export function Summary({
         ))}
       </View>
     );
-  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, formatTime, keywords, cleanString, openSummary]);
+  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, disableInteractions, formatTime, keywords, cleanString, openSummary]);
+
+  const coverContent = React.useMemo(() => (
+    <View>
+      <View row>
+        {(!(compact || compactMode) || initialFormat) && summary.imageUrl && (
+          <View
+            justifyCenter
+            flexGrow={ 1 }
+            relative
+            maxWidth={ initialFormat ? 200 : 128 }
+            width={ initialFormat ? '40%' : '30%' }>
+            <Popover
+              anchor={ (
+                <View
+                  top={ -6 }
+                  mb={ 12 }
+                  minHeight={ 80 }
+                  height="100%"
+                  overflow='hidden'
+                  borderRadiusTL={ initialFormat ? 0 : 12 }
+                  borderRadiusBL={ initialFormat ? 0 : 12 }>
+                  {containsTrigger ? (
+                    <Text 
+                      absolute
+                      zIndex={ 20 } 
+                      fontSize={ 120 }>
+                      🐥
+                    </Text>
+                  ) : (
+                    <Image
+                      flex={ 1 }
+                      flexGrow={ 1 }
+                      fill
+                      source={ { uri: summary.imageUrl } } />
+                  )}
+                </View>
+              ) }>
+              <View gap={ 6 }>
+                <Text caption>{strings.summary_thisIsNotARealImage}</Text>
+                <View
+                  mh={ -12 }
+                  mb={ -12 }>
+                  <Image
+                    source={ { uri: summary.imageUrl } }  
+                    aspectRatio={ 1 }
+                    width={ 300 } />
+                </View>
+              </View>
+            </Popover>
+          </View>
+        )}
+        <View
+          flex={ 1 }
+          flexGrow={ 1 }
+          gap={ 6 }
+          pb={ 12 }>
+          <View flex={ 1 } flexGrow={ 1 } mh={ 12 }>
+            <View flexRow flexGrow={ 1 }>
+              <Highlighter
+                bold
+                subtitle1
+                justifyCenter
+                color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
+                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                searchWords={ isShareTarget ? [] : keywords }>
+                {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
+              </Highlighter>
+            </View>
+            {translateToggle}
+            {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
+              <View pb={ 12 }>
+                <Divider />
+                <Highlighter 
+                  highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                  searchWords={ isShareTarget ? [] : keywords }>
+                  { cleanString(localizedStrings.shortSummary ?? '') }
+                </Highlighter>
+              </View>
+            )}
+          </View>
+          {summary.siblings && summary.siblings.length > 0 && (
+            <View mh={ 12 } gap={ 6 }>
+              <Text>
+                {`${strings.summary_relatedNews} (${summary.siblings.length})`}
+              </Text>
+              {summary.siblings.length === 1 ? 
+                siblingCards : (
+                  <ScrollView height={ summary.siblings.length === 1 ? 45 : 70 }>
+                    {siblingCards}
+                  </ScrollView>
+                )}
+            </View>
+          )}
+        </View>
+      </View>
+    </View>
+  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title, translateToggle, siblingCards]);
   
   return (
     <GestureHandlerRootView>
@@ -555,185 +738,8 @@ export function Summary({
                     overflow='hidden'
                     borderRadiusTL={ initialFormat ? 0 : 12 }
                     borderRadiusTR={ initialFormat ? 0 : 12 }>
-                    <View 
-                      pv={ initialFormat ? 12 : 6 }
-                      ph={ 6 }
-                      flexGrow={ 1 }
-                      elevated
-                      borderRadiusTL={ initialFormat ? 0 : 12 }
-                      borderRadiusTR={ initialFormat ? 0 : 12 }
-                      zIndex={ 2 }
-                      inactive={ isRead }>
-                      <View
-                        flexRow
-                        flexGrow={ 1 }
-                        alignCenter
-                        gap={ 6 }>
-                        {!initialFormat ? (
-                          <React.Fragment>
-                            <Button 
-                              h5
-                              color='text'
-                              startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                              touchable
-                              onPress={ () => openCategory(summary.category) } />
-                            <Text
-                              italic
-                              onPress={ () => openOutlet(summary.outlet) }>
-                              {summary.outlet.displayName}
-                            </Text>
-                          </React.Fragment>
-                        ) : (
-                          <View gap={ 3 }>
-                            <View>
-                              <Button 
-                                h5
-                                gap={ 3 }
-                                flexRow
-                                flexGrow={ 1 }
-                                outlined
-                                alignCenter
-                                borderRadius={ 4 }
-                                p={ 3 }
-                                color='text'
-                                startIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                                touchable
-                                onPress={ () => openCategory(summary.category) }>
-                                {summary.category.displayName}
-                              </Button>
-                            </View>
-                            <Button
-                              italic
-                              underline
-                              alignCenter
-                              outlined
-                              p={ 3 }
-                              borderColor="black"
-                              borderRadius={ 4 }
-                              touchable
-                              onPress={ () => openOutlet(summary.outlet) }>
-                              {summary.outlet.displayName}
-                            </Button>
-                          </View>
-                        )}
-                        <View flexRow flexGrow={ 1 } gap={ 6 }>
-                          <Text 
-                            bold 
-                            caption
-                            color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
-                            {formatTime(summary.originalDate)}
-                          </Text>
-                        </View>
-                        {(forceSentiment || sentimentEnabled) && (
-                          <React.Fragment>
-                            <Text caption>{ fixedSentiment(summary.sentiment) }</Text>
-                            <MeterDial 
-                              value={ summary.sentiment }
-                              width={ 40 } />
-                          </React.Fragment>
-                        )}
-                        {initialFormat ? menuActions : (
-                          <Menu
-                            anchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
-                            {menuActions}
-                          </Menu>
-                        )}
-                      </View>
-                    </View>
-                    <View>
-                      <View row>
-                        {(!(compact || compactMode) || initialFormat) && summary.imageUrl && (
-                          <View
-                            justifyCenter
-                            flexGrow={ 1 }
-                            relative
-                            maxWidth={ initialFormat ? 200 : 128 }
-                            width={ initialFormat ? '40%' : '30%' }>
-                            <Menu
-                              anchor={ (
-                                <View
-                                  top={ -6 }
-                                  mb={ 12 }
-                                  minHeight={ 80 }
-                                  height="100%"
-                                  overflow='hidden'
-                                  borderRadiusTL={ initialFormat ? 0 : 12 }
-                                  borderRadiusBL={ initialFormat ? 0 : 12 }>
-                                  {containsTrigger ? (
-                                    <Text 
-                                      absolute
-                                      zIndex={ 20 } 
-                                      fontSize={ 120 }>
-                                      🐥
-                                    </Text>
-                                  ) : (
-                                    <Image
-                                      flex={ 1 }
-                                      flexGrow={ 1 }
-                                      fill
-                                      source={ { uri: summary.imageUrl } } />
-                                  )}
-                                </View>
-                              ) }>
-                              <View gap={ 6 }>
-                                <Text caption>{strings.summary_thisIsNotARealImage}</Text>
-                                <View
-                                  mh={ -12 }
-                                  mb={ -12 }>
-                                  <Image
-                                    source={ { uri: summary.imageUrl } }  
-                                    aspectRatio={ 1 }
-                                    width={ 300 } />
-                                </View>
-                              </View>
-                            </Menu>
-                          </View>
-                        )}
-                        <View
-                          flex={ 1 }
-                          flexGrow={ 1 }
-                          gap={ 6 }
-                          pb={ 12 }>
-                          <View flex={ 1 } flexGrow={ 1 } mh={ 12 }>
-                            <View flexRow flexGrow={ 1 }>
-                              <Highlighter
-                                bold
-                                subtitle1
-                                justifyCenter
-                                color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
-                                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                searchWords={ isShareTarget ? [] : keywords }>
-                                {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
-                              </Highlighter>
-                            </View>
-                            {translateToggle}
-                            {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
-                              <View pb={ 12 }>
-                                <Divider />
-                                <Highlighter 
-                                  highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                  searchWords={ isShareTarget ? [] : keywords }>
-                                  { cleanString(localizedStrings.shortSummary ?? '') }
-                                </Highlighter>
-                              </View>
-                            )}
-                          </View>
-                          {summary.siblings && summary.siblings.length > 0 && (
-                            <View mh={ 12 } gap={ 6 }>
-                              <Text>
-                                {`${strings.summary_relatedNews} (${summary.siblings.length})`}
-                              </Text>
-                              {summary.siblings.length === 1 ? 
-                                siblingCards : (
-                                  <ScrollView height={ summary.siblings.length === 1 ? 45 : 70 }>
-                                    {siblingCards}
-                                  </ScrollView>
-                                )}
-                            </View>
-                          )}
-                        </View>
-                      </View>
-                    </View>
+                    {header}
+                    {coverContent}
                   </View>
                 </View>
               )}

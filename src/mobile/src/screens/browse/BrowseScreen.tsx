@@ -142,7 +142,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     alignCenter
                     rounded
                     gap={ 8 }
-                    startIcon={ category.icon }
+                    leftIcon={ category.icon }
                     p={ 8 }
                     onPress={ () => openCategory(category) }>
                     {category.displayName}
@@ -155,7 +155,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     gap={ 8 }
                     p={ 8 }
                     elevated
-                    startIcon={ bookmarkedCategories?.[category.name] ? 'check' : undefined }
+                    leftIcon={ bookmarkedCategories?.[category.name] ? 'check' : undefined }
                     onPress={ () => followCategory(category) }>
                     {bookmarkedCategories?.[category.name] ? strings.action_unfollow : strings.action_follow}
                   </Button>
@@ -206,7 +206,7 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     gap={ 8 }
                     p={ 8 }
                     elevated
-                    startIcon={ bookmarkedOutlets?.[outlet.name] ? 'check' : undefined }
+                    leftIcon={ bookmarkedOutlets?.[outlet.name] ? 'check' : undefined }
                     onPress={ () => followOutlet(outlet) }>
                     {bookmarkedOutlets?.[outlet.name] ? strings.action_unfollow : strings.action_follow}
                   </Button>

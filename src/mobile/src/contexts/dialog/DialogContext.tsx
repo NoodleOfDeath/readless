@@ -3,7 +3,7 @@ import React from 'react';
 import { registerSheet } from 'react-native-actions-sheet';
 import { Provider } from 'react-native-paper';
 
-import { DEFAULT_DIALOG_CONTEXT } from './types';
+import { DEFAULT_DIALOG_CONTEXT, Responder } from './types';
 
 import { PublicSummaryAttributes } from '~/api';
 import {
@@ -35,10 +35,17 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('feedback', FeedbackDialog);
   }, []);
 
+  const [firstResponder, setFirstResponder] = React.useState<Responder>();
+  const [lastResponder, setLastResponder] = React.useState<Responder>();
+
   const [shareTarget, setShareTarget] = React.useState<PublicSummaryAttributes>();
 
   return (
     <DialogContext.Provider value={ {
+      firstResponder,
+      lastResponder,
+      setFirstResponder,
+      setLastResponder,
       setShareTarget,
       shareTarget,
     } }>

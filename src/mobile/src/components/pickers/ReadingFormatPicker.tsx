@@ -23,17 +23,17 @@ export function ReadingFormatPicker({
       { ...props }
       style={ style }
       value={ format ?? preferredFormat }
-      onValueChange={ (value) => onChange?.(value as ReadingFormat) }
+      onValueChange={ (value) => onChange?.(value) }
       buttons={ [
         {
           icon: 'text-long',
           label: strings.summary_summary,
-          value: 'summary',
+          value: ReadingFormat.Summary,
         },
         {
           icon: 'view-list',
           label: strings.summary_bullets,
-          value: 'bullets',
+          value: ReadingFormat.Bullets,
         },
       ] } />
   );

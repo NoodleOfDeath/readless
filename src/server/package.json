@@ -24,7 +24,7 @@
     "build:applink": "rimraf dist/serve-applink.cjs && esbuild ./src/applink --bundle --platform=node --outfile=./dist/serve-applink.cjs",
     "build:cron": "rimraf dist/serve-cron.cjs && esbuild ./src/cron --bundle --platform=node --outfile=./dist/serve-cron.cjs",
     "build:worker": "rimraf dist/serve-worker.cjs && esbuild ./src/worker --bundle --platform=node --outfile=./dist/serve-worker.cjs",
-    "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core/utils && cp -rf ../core/utils/* ./src/core/utils && cp -rf ../core/client/locales ./src/core/locales",
+    "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core/utils && cp -rf ../core/src/utils/* ./src/core/utils && cp -rf ../core/src/client/locales ./src/core/locales",
     "test": "jest",
     "tsoa": "tsoa spec -c tsoa.config.json",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Button as NBButton } from 'native-base';
+
 import {
   Button,
   ChildlessViewProps,
@@ -7,14 +9,14 @@ import {
 } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type SegmentedButtonProps<T> = {
+export type SegmentedButtonProps<T extends string | number = string> = {
   icon?: React.ReactNode;
   label?: React.ReactNode;
   style?: ChildlessViewProps['style'];
   value: T;
 };
 
-export type SegmentedButtonsProps<T> = ChildlessViewProps & {
+export type SegmentedButtonsProps<T extends string | number = string> = ChildlessViewProps & {
   buttons: SegmentedButtonProps<T>[];
   buttonStyle?: ChildlessViewProps['style'];
   onValueChange?: (value: T) => void;
@@ -23,43 +25,33 @@ export type SegmentedButtonsProps<T> = ChildlessViewProps & {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SegmentedButtons = <T = any>({
+export const SegmentedButtons = <T extends string | number = string>({
   buttons,
   buttonStyle,
   onValueChange,
-  elevated = true,
   ...props
 }: SegmentedButtonsProps<T>) => {
-  const style = useStyles(props);
-  const computedStyles = React.useMemo(() => elevated ? {} : { backgroundColor: '#000' }, [elevated]);
   return (
-    <View
-      { ...props }
-      style={ [style, computedStyles] }>
-      <View 
-        flexRow
-        elevated={ elevated }
-        gap={ 12 }>
-        {buttons.map(({
-          icon, label, value, style,
-        }, index) => (
-          <Button 
-            key={ `${value}${index}` }
-            style={ [style, buttonStyle] }
-            flexRow
-            flexGrow={ 1 }
-            alignCenter
-            justifyCenter
-            gap={ 6 }
-            p={ 12 }
-            selectable
-            selected={ value === props.value }
-            startIcon={ icon }
-            onPress={ () => onValueChange?.(value) }>
-            { label }
-          </Button>
-        ))}
-      </View>
-    </View>
+    <NBButton.Group>
+      {buttons.map(({
+        icon, label, value, style,
+      }, index) => (
+        <Button 
+          key={ `${value}${index}` }
+          style={ [style, buttonStyle] }
+          flexRow
+          flexGrow={ 1 }
+          alignCenter
+          justifyCenter
+          gap={ 6 }
+          p={ 12 }
+          selectable
+          selected={ value === props.value }
+          leftIcon={ icon }
+          onPress={ () => onValueChange?.(value) }>
+          { label }
+        </Button>
+      ))}
+    </NBButton.Group>
   );
 };

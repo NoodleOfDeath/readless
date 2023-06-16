@@ -15,7 +15,7 @@ import {
   DataTableRow,
   DataTableTitle,
   Icon,
-  Menu,
+  Popover,
   Text,
   View,
   ViewProps,
@@ -145,14 +145,14 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                 bg="transparent">
                 <Provider>
                   <View row alignCenter justifyEnd gap={ 4 }>
-                    <Menu
+                    <Popover
                       anchor={ (
                         <Text textRight>
                           {label}
                         </Text>
                       ) }>
                       {description}
-                    </Menu>
+                    </Popover>
                   </View>
                 </Provider>
               </DataTableCell>

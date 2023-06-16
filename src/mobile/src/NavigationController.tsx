@@ -11,8 +11,8 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import { Badge } from 'native-base';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
-import { Badge } from 'react-native-paper';
 
 import {
   LayoutContext,
@@ -124,8 +124,7 @@ function Stack() {
     <View>
       <View row gap={ 16 } alignCenter>
         <Button
-          touchable
-          startIcon={ (
+          leftIcon={ (
             <View height={ 24 } width={ 24 }>
               <Icon 
                 absolute
@@ -141,7 +140,6 @@ function Stack() {
                 size={ 16 } />
             </View>
           ) }
-          iconSize={ 24 }
           haptic
           onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
         {/* <View touchable onPress={ () => SheetManager.show('subscribe') }>

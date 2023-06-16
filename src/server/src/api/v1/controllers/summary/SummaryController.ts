@@ -38,7 +38,7 @@ import {
   TokenType,
   User,
 } from '../../schema';
-import { PublicSummaryGroups, TokenTypeName } from '../../schema/types';
+import { PublicSummaryGroup, TokenTypeName } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 type GetSummariesPayload = {
@@ -164,7 +164,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() page = 0,
     @Query() offset = pageSize * page,
     @Query() forceCache = false
-  ): Promise<BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>> {
+  ): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
     const version = req?.headers['x-app-version'];
     if (/^2\.\d\.\d$/.test(JSON.stringify(version) || '')) {
       return {
@@ -245,7 +245,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       const cache = await Cache.fromKey(cacheKey);
       if (cache && cache.expiresSoon === false) {
         try {
-          return JSON.parse(cache.value) as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+          return JSON.parse(cache.value) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
         } catch (err) {
           console.error(err);
         }
@@ -261,7 +261,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       key: cacheKey,
       value: JSON.stringify(records),
     });
-    return records as BulkMetadataResponse<PublicSummaryGroups, { sentiment: number }>;
+    return records as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
   }
   
   @Get('/topics')

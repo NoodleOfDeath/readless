@@ -13,7 +13,7 @@ export type StepperProps = ChildlessViewProps & {
   minimumValue?: number;
   maximumValue?: number;
   stepValue?: number;
-  onValueChange?: (value: number) => void;
+  onValueChange?: (value?: number) => void;
 };
 
 export function Stepper({
@@ -49,14 +49,14 @@ export function Stepper({
         } } />
       <View flexRow gap={ 6 } alignCenter>
         <Button
-          startIcon="minus"
+          leftIcon="minus"
           elevated
           haptic
           p={ 8 }
           disabled={ value <= minimumValue }
           onPress={ () => onValueChange?.(value - stepValue) } />
         <Button
-          startIcon="plus"
+          leftIcon="plus"
           elevated
           haptic
           p={ 8 }

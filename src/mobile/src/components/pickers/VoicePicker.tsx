@@ -29,7 +29,7 @@ export function VoicePicker() {
               key={ voice.id }
               elevated
               p={ 8 }
-              startIcon={ voice.id === selectedVoice?.id ? 'check' : undefined }
+              leftIcon={ voice.id === selectedVoice?.id ? 'check' : undefined }
               onPress={ () => setSelectedVoice(voice) }>
               {voice.name}
             </Button>

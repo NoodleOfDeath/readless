@@ -8,7 +8,7 @@ import {
 import { 
   Button,
   Icon,
-  Menu,
+  Popover,
   Screen,
   ScrollView,
   Summary,
@@ -79,12 +79,12 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                 <Text>
                   {strings.bookmarks_bookmarksAvailableOffline}
                 </Text>
-                <Menu
+                <Popover
                   anchor={
                     <Icon size={ 24 } name="information" />
                   }>
                   <Text>{strings.bookmarks_bookmarkArticlesAreNotSaved}</Text>
-                </Menu>
+                </Popover>
               </View>
               <View row>
                 <Button

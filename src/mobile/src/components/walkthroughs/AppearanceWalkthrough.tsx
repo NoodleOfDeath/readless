@@ -25,7 +25,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
     return [
       {
         body: (
-          <View gap={ 12 }>
+          <View alignCenter justifyCenter gap={ 12 }>
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
@@ -41,7 +41,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <CompactModePicker />
+            <CompactModePicker labeled />
           </View>
         ),
         title: strings.walkthroughs_appearance_compactModeDescription,
