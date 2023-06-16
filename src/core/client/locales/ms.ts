@@ -66,6 +66,7 @@ export const msStrings: typeof enStrings = {
     displayMode: 'Mod Paparan',
     expanded: 'Dikembangkan',
     font: 'fon',
+    fontSizeOffset: 'Skala Teks',
     light: 'Cahaya',
     resetHiddenSummaries: 'Tetapkan semula ringkasan tersembunyi',
     resetReadSummaries: 'Tetapkan semula ringkasan kepada belum dibaca',
@@ -73,7 +74,6 @@ export const msStrings: typeof enStrings = {
     shortSummaries: 'Ringkasan ringkas di bawah tajuk',
     shortSummariesInsteadOfTitles: 'Ringkasan ringkas dan bukannya tajuk',
     system: 'Sistem',
-    textScale: 'Skala Teks',
   },
   share: {
     copyBulletPoints: 'Salin Mata Bullet',

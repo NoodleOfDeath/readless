@@ -66,6 +66,7 @@ export const zhCNStrings: typeof enStrings = {
     displayMode: '显示模式',
     expanded: '展开',
     font: '字体',
+    fontSizeOffset: '文本比例',
     light: '光',
     resetHiddenSummaries: '重置隐藏摘要',
     resetReadSummaries: '将摘要重置为未读',
@@ -73,7 +74,6 @@ export const zhCNStrings: typeof enStrings = {
     shortSummaries: '标题下的简短摘要',
     shortSummariesInsteadOfTitles: '简短的摘要而不是标题',
     system: '系统',
-    textScale: '文本比例',
   },
   share: {
     copyBulletPoints: '复制项目符号点',

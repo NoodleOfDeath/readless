@@ -7,7 +7,6 @@ import {
   API,
   InteractionType,
   PublicSummaryAttributes,
-  TokenTypeName,
 } from '~/api';
 import { getUserAgent } from '~/utils';
 
@@ -48,35 +47,6 @@ export function useSummaryClient() {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
   }, [getSummaries]);
-  
-  const audioStreamURI = (summmary: PublicSummaryAttributes) => {
-    return `https://${API.baseUrl}/service/stream/s/${summary.id}`;
-  };
-  
-  const getTopicGroups = React.useCallback(async () => {
-    try {
-      return await withHeaders(API.getTopicGroups)();
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
-  }, [withHeaders]);
-  
-  const getTopics = React.useCallback(async (
-    type?: TokenTypeName,
-    interval?: string,
-    min?: number,
-    page = 0,
-    pageSize = 10,
-    order?: string[]
-  ) => {
-    try {
-      return await withHeaders(API.getTopics)({
-        interval, min, order, page, pageSize, type,
-      });
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
-  }, [withHeaders]);
   
   const interactWithSummary = React.useCallback(
     async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
@@ -132,11 +102,8 @@ export function useSummaryClient() {
   }, [interactWithSummary, setPreference]);
 
   return {
-    audioStreamURI,
     getSummaries,
     getSummary,
-    getTopicGroups,
-    getTopics,
     handleInteraction,
     interactWithSummary,
   };

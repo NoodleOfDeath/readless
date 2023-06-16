@@ -66,6 +66,7 @@ export const ukStrings: typeof enStrings = {
     displayMode: 'Режим відображення',
     expanded: 'Розширений',
     font: 'Шрифт',
+    fontSizeOffset: 'Масштаб тексту',
     light: 'світло',
     resetHiddenSummaries: 'Скинути приховані підсумки',
     resetReadSummaries: 'Скинути підсумки до непрочитаних',
@@ -73,7 +74,6 @@ export const ukStrings: typeof enStrings = {
     shortSummaries: 'Короткі анотації під заголовками',
     shortSummariesInsteadOfTitles: 'Короткі анотації замість заголовків',
     system: 'система',
-    textScale: 'Масштаб тексту',
   },
   share: {
     copyBulletPoints: 'Копіювати маркери',

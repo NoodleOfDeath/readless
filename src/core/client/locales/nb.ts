@@ -66,6 +66,7 @@ export const nbStrings: typeof enStrings = {
     displayMode: 'Visningsmodus',
     expanded: 'Utvidet',
     font: 'Font',
+    fontSizeOffset: 'Tekstskala',
     light: 'Lys',
     resetHiddenSummaries: 'Tilbakestill skjulte sammendrag',
     resetReadSummaries: 'Tilbakestill sammendrag til ulest',
@@ -73,7 +74,6 @@ export const nbStrings: typeof enStrings = {
     shortSummaries: 'Korte oppsummeringer under titler',
     shortSummariesInsteadOfTitles: 'Korte sammendrag i stedet for titler',
     system: 'System',
-    textScale: 'Tekstskala',
   },
   share: undefined,
   subscribe: {

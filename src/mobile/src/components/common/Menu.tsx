@@ -1,7 +1,8 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
-import Popover, { PopoverProps } from 'react-native-popover-view';
+import Popover from 'react-native-popover-view';
+import { PublicPopoverProps } from 'react-native-popover-view/dist/Popover.d';
 
 import {
   Text,
@@ -10,7 +11,7 @@ import {
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type MenuProps = PopoverProps & ViewProps & {
+export type MenuProps = ViewProps & PublicPopoverProps & {
   anchor?: React.ReactNode;
 };
 
@@ -22,12 +23,6 @@ export function Menu({
 
   const theme = useTheme();
   const style = useStyles(props);
-
-  const [visible, setVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    setTimeout(() => setVisible(false), 3000);
-  }, [visible]);
 
   return (
     <Popover

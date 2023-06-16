@@ -66,6 +66,7 @@ export const daStrings: typeof enStrings = {
     displayMode: 'Visningstilstand',
     expanded: 'Udvidet',
     font: 'Skrifttype',
+    fontSizeOffset: 'Tekstskala',
     light: 'Lys',
     resetHiddenSummaries: 'Nulstil skjulte oversigter',
     resetReadSummaries: 'Nulstil oversigter til ulæste',
@@ -73,7 +74,6 @@ export const daStrings: typeof enStrings = {
     shortSummaries: 'Korte resuméer under titler',
     shortSummariesInsteadOfTitles: 'Korte resuméer i stedet for titler',
     system: 'System',
-    textScale: 'Tekstskala',
   },
   share: {
     copyBulletPoints: 'Kopier punkttegn',

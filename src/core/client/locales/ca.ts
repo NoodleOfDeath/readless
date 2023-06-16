@@ -66,6 +66,7 @@ export const caStrings: typeof enStrings = {
     displayMode: 'Mode de visualització',
     expanded: 'Ampliat',
     font: 'Font',
+    fontSizeOffset: 'Escala de text',
     light: 'Llum',
     resetHiddenSummaries: 'Restableix els resums ocults',
     resetReadSummaries: 'Restableix els resums a no llegits',
@@ -73,7 +74,6 @@ export const caStrings: typeof enStrings = {
     shortSummaries: 'Breus resums sota títols',
     shortSummariesInsteadOfTitles: 'Resums breus en comptes de títols',
     system: 'Sistema',
-    textScale: 'Escala de text',
   },
   share: {
     copyBulletPoints: 'Copia els punts',

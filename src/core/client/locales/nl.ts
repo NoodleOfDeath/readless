@@ -66,6 +66,7 @@ export const nlStrings: typeof enStrings = {
     displayMode: 'Weergavemodus',
     expanded: 'uitgebreid',
     font: 'Lettertype',
+    fontSizeOffset: 'Tekst schaal',
     light: 'Licht',
     resetHiddenSummaries: 'Reset verborgen samenvattingen',
     resetReadSummaries: 'Stel samenvattingen terug op ongelezen',
@@ -73,7 +74,6 @@ export const nlStrings: typeof enStrings = {
     shortSummaries: 'Korte samenvattingen onder titels',
     shortSummariesInsteadOfTitles: 'Korte samenvattingen in plaats van titels',
     system: 'Systeem',
-    textScale: 'Tekst schaal',
   },
   share: {
     copyBulletPoints: 'Kopieer opsommingstekens',

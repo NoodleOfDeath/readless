@@ -66,6 +66,7 @@ export const plStrings: typeof enStrings = {
     displayMode: 'Tryb wyświetlania',
     expanded: 'Rozszerzony',
     font: 'Czcionka',
+    fontSizeOffset: 'Skala tekstu',
     light: 'Światło',
     resetHiddenSummaries: 'Zresetuj ukryte podsumowania',
     resetReadSummaries: 'Zresetuj podsumowania do nieprzeczytanych',
@@ -73,7 +74,6 @@ export const plStrings: typeof enStrings = {
     shortSummaries: 'Krótkie streszczenia pod tytułami',
     shortSummariesInsteadOfTitles: 'Krótkie streszczenia zamiast tytułów',
     system: 'System',
-    textScale: 'Skala tekstu',
   },
   share: {
     copyBulletPoints: 'Skopiuj punktory',

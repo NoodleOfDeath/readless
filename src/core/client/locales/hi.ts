@@ -66,6 +66,7 @@ export const hiStrings: typeof enStrings = {
     displayMode: 'प्रदर्शन प्रणाली',
     expanded: 'विस्तारित',
     font: 'फ़ॉन्ट',
+    fontSizeOffset: 'टेक्स्ट स्केल',
     light: 'रोशनी',
     resetHiddenSummaries: 'छिपे हुए सारांश को रीसेट करें',
     resetReadSummaries: 'सारांश को अपठित पर रीसेट करें',
@@ -73,7 +74,6 @@ export const hiStrings: typeof enStrings = {
     shortSummaries: 'शीर्षकों के अंतर्गत संक्षिप्त सारांश',
     shortSummariesInsteadOfTitles: 'शीर्षकों के बजाय संक्षिप्त सारांश',
     system: 'प्रणाली',
-    textScale: 'टेक्स्ट स्केल',
   },
   share: {
     copyBulletPoints: 'बुलेट पॉइंट कॉपी करें',

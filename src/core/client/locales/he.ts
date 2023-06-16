@@ -66,6 +66,7 @@ export const heStrings: typeof enStrings = {
     displayMode: 'מצב תצוגה',
     expanded: 'מוּרחָב',
     font: 'גוֹפָן',
+    fontSizeOffset: 'סולם טקסט',
     light: 'אוֹר',
     resetHiddenSummaries: 'אפס סיכומים נסתרים',
     resetReadSummaries: 'אפס סיכומים לא נקראו',
@@ -73,7 +74,6 @@ export const heStrings: typeof enStrings = {
     shortSummaries: 'סיכומים קצרים תחת כותרות',
     shortSummariesInsteadOfTitles: 'סיכומים קצרים במקום כותרות',
     system: 'מערכת',
-    textScale: 'סולם טקסט',
   },
   share: {
     copyBulletPoints: 'העתק נקודות תבליטים',

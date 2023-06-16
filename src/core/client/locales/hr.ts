@@ -66,6 +66,7 @@ export const hrStrings: typeof enStrings = {
     displayMode: 'Način prikaza',
     expanded: 'Prošireno',
     font: 'Font',
+    fontSizeOffset: 'Skala teksta',
     light: 'Svjetlo',
     resetHiddenSummaries: 'Poništi skrivene sažetke',
     resetReadSummaries: 'Vrati sažetke na nepročitane',
@@ -73,7 +74,6 @@ export const hrStrings: typeof enStrings = {
     shortSummaries: 'Kratki sažeci pod naslovima',
     shortSummariesInsteadOfTitles: 'Umjesto naslova kratki sažeci',
     system: 'Sustav',
-    textScale: 'Skala teksta',
   },
   share: {
     copyBulletPoints: 'Kopiraj grafičke oznake',

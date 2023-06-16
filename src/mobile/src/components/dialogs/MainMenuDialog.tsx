@@ -16,9 +16,7 @@ import { strings } from '~/locales';
 
 export function MainMenuDialog(props: SheetProps) {
 
-  const {
-    openAbout, openBookmarks, openBrowse, openSettings, openWalkthroughs,
-  } = useNavigation();
+  const { navigate } = useNavigation();
   const { bookmarkCount } = React.useContext(SessionContext);
 
   const items = React.useMemo(() => [
@@ -27,7 +25,7 @@ export function MainMenuDialog(props: SheetProps) {
       label: strings.menu_settings,
       onPress: async () => {
         await SheetManager.hide(props.sheetId);
-        openSettings();
+        navigate('settings');
       },
     },
     {
@@ -36,7 +34,7 @@ export function MainMenuDialog(props: SheetProps) {
       label: strings.menu_bookmarks,
       onPress: async () => {
         await SheetManager.hide(props.sheetId);
-        openBookmarks();
+        navigate('bookmarks');
       },
     },
     {
@@ -44,7 +42,7 @@ export function MainMenuDialog(props: SheetProps) {
       label: strings.menu_browse,
       onPress: async () => {
         await SheetManager.hide(props.sheetId);
-        openBrowse();
+        navigate('browse');
       },
     },
     {
@@ -58,9 +56,12 @@ export function MainMenuDialog(props: SheetProps) {
     {
       icon: 'information',
       label: strings.menu_about,
-      onPress: openAbout,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        navigate('about');
+      },
     },
-  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings, props.sheetId]);
+  ], [bookmarkCount, navigate, props.sheetId]);
 
   return (
     <ActionSheet id={ props.sheetId }>

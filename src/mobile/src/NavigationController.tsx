@@ -12,7 +12,7 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
-import { Badge, Provider } from 'react-native-paper';
+import { Badge } from 'react-native-paper';
 
 import {
   LayoutContext,
@@ -34,6 +34,7 @@ import {
   BookmarksScreen,
   BrowseScreen,
   ChannelScreen,
+  GenericScreen,
   NAVIGATION_LINKING_OPTIONS,
   SearchScreen,
   SettingsScreen,
@@ -79,6 +80,11 @@ EventMapBase
   {
     component: ChannelScreen, 
     name: 'channel',
+    options: { headerBackTitle: '' }, 
+  },
+  {
+    component: GenericScreen, 
+    name: 'generic',
     options: { headerBackTitle: '' }, 
   },
   {
@@ -207,9 +213,7 @@ export default function NavigationController() {
         </View>
       ) : (
         <SheetProvider>
-          <Provider>          
-            <Stack />
-          </Provider>
+          <Stack />
         </SheetProvider>
       )}
     </NavigationContainer>

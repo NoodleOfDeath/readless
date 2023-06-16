@@ -19,6 +19,7 @@ import {
   ActivityIndicator,
   AnalyticsView,
   Button,
+  ChildlessViewProps,
   CollapsedView,
   Divider,
   Highlighter,
@@ -30,7 +31,6 @@ import {
   ScrollView,
   Text,
   View,
-  ViewProps,
 } from '~/components';
 import {
   Bookmark,
@@ -53,7 +53,7 @@ import {
 } from '~/locales';
 import { DateSorter, fixedSentiment } from '~/utils';
 
-type Props = Omit<ViewProps, 'children'> & {
+type Props = ChildlessViewProps & {
   summary?: PublicSummaryGroups;
   tickInterval?: string;
   selected?: boolean;

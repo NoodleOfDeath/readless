@@ -66,6 +66,7 @@ export const koStrings: typeof enStrings = {
     displayMode: '디스플레이 모드',
     expanded: '퍼지는',
     font: '폰트',
+    fontSizeOffset: '텍스트 축척',
     light: '빛',
     resetHiddenSummaries: '숨겨진 요약 재설정',
     resetReadSummaries: '요약을 읽지 않은 상태로 재설정',
@@ -73,7 +74,6 @@ export const koStrings: typeof enStrings = {
     shortSummaries: '제목 아래 짧은 요약',
     shortSummariesInsteadOfTitles: '제목 대신 짧은 요약',
     system: '체계',
-    textScale: '텍스트 축척',
   },
   share: {
     copyBulletPoints: '글머리 기호 복사',

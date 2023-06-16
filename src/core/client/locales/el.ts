@@ -66,6 +66,7 @@ export const elStrings: typeof enStrings = {
     displayMode: 'Λειτουργία προβολής',
     expanded: 'Αναπτυγμένος',
     font: 'Γραμματοσειρά',
+    fontSizeOffset: 'Κλίμακα κειμένου',
     light: 'Φως',
     resetHiddenSummaries: 'Επαναφορά κρυφών περιλήψεων',
     resetReadSummaries: 'Επαναφορά των περιλήψεων σε μη αναγνωσμένες',
@@ -73,7 +74,6 @@ export const elStrings: typeof enStrings = {
     shortSummaries: 'Σύντομες περιλήψεις κάτω από τίτλους',
     shortSummariesInsteadOfTitles: 'Σύντομες περιλήψεις αντί για τίτλους',
     system: 'Σύστημα',
-    textScale: 'Κλίμακα κειμένου',
   },
   share: {
     copyBulletPoints: 'Αντιγραφή κουκκίδων',

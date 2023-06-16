@@ -66,6 +66,7 @@ export const faStrings: typeof enStrings = {
     displayMode: 'حالت نمایش',
     expanded: 'منبسط',
     font: 'فونت',
+    fontSizeOffset: 'مقیاس متن',
     light: 'سبک',
     resetHiddenSummaries: 'بازنشانی خلاصه های پنهان',
     resetReadSummaries: 'خلاصه ها را به خوانده نشده بازنشانی کنید',
@@ -73,7 +74,6 @@ export const faStrings: typeof enStrings = {
     shortSummaries: 'خلاصه های کوتاه تحت عنوان',
     shortSummariesInsteadOfTitles: 'خلاصه های کوتاه به جای عنوان',
     system: 'سیستم',
-    textScale: 'مقیاس متن',
   },
   share: {
     copyBulletPoints: 'نقاط گلوله را کپی کنید',

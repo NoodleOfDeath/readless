@@ -32,6 +32,7 @@ export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
   textRight?: boolean;
   fontFamily?: string;
   fontSize?: number;
+  fontSizeFixed?: boolean;
   letterSpacing?: number;
   lineHeight?: number;
   bold?: boolean;
@@ -40,7 +41,7 @@ export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
   code?: boolean;
 };
  
-export const TEXT_STYLE_PROPS = ['color', 'textCenter', 'textLeft', 'textRight', 'fontFamily', 'fontSize', 'bold', 'italic', 'underline', 'code', ...Object.keys(FONT_SIZES)];
+export const TEXT_STYLE_PROPS = ['color', 'textCenter', 'textLeft', 'textRight', 'fontFamily', 'fontSize', 'fontSizeFixed', 'bold', 'italic', 'underline', 'code', ...Object.keys(FONT_SIZES)];
 
 export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   // position

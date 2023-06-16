@@ -62,6 +62,7 @@
     "react-native-share": "^8.2.2",
     "react-native-shimmer": "^0.6.0",
     "react-native-svg": "^13.9.0",
+    "react-native-tableview-simple": "^4.4.0",
     "react-native-track-player": "^4.0.0-rc04",
     "react-native-tts-export": "^5.2.3",
     "react-native-vector-icons": "^9.2.0",

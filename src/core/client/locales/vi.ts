@@ -66,6 +66,7 @@ export const viStrings: typeof enStrings = {
     displayMode: 'Chế độ hiển thị',
     expanded: 'mở rộng',
     font: 'Nét chữ',
+    fontSizeOffset: 'Quy mô văn bản',
     light: 'Ánh sáng',
     resetHiddenSummaries: 'Đặt lại tóm tắt ẩn',
     resetReadSummaries: 'Đặt lại tóm tắt thành chưa đọc',
@@ -73,7 +74,6 @@ export const viStrings: typeof enStrings = {
     shortSummaries: 'Tóm tắt ngắn dưới tiêu đề',
     shortSummariesInsteadOfTitles: 'Tóm tắt ngắn thay cho tiêu đề',
     system: 'Hệ thống',
-    textScale: 'Quy mô văn bản',
   },
   share: {
     copyBulletPoints: 'Sao chép dấu đầu dòng',

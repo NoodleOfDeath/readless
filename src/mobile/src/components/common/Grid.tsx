@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { View, ViewProps } from '~/components';
+import { ChildlessViewProps, View } from '~/components';
 
 type GridStyle = {
   tesselate?: boolean;
   table?: boolean;
 };
 
-type Props = Omit<ViewProps, 'children'> & {
+type Props = ChildlessViewProps & {
   row?: number;
   col?: number;
   gridStyle?: GridStyle;

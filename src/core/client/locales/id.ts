@@ -66,6 +66,7 @@ export const idStrings: typeof enStrings = {
     displayMode: 'Mode tampilan',
     expanded: 'Diperluas',
     font: 'Fon',
+    fontSizeOffset: 'Skala Teks',
     light: 'Lampu',
     resetHiddenSummaries: 'Setel ulang ringkasan tersembunyi',
     resetReadSummaries: 'Setel ulang ringkasan menjadi belum dibaca',
@@ -73,7 +74,6 @@ export const idStrings: typeof enStrings = {
     shortSummaries: 'Ringkasan singkat di bawah judul',
     shortSummariesInsteadOfTitles: 'Ringkasan singkat, bukan judul',
     system: 'Sistem',
-    textScale: 'Skala Teks',
   },
   share: {
     copyBulletPoints: 'Salin Poin Peluru',

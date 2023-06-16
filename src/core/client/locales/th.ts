@@ -66,6 +66,7 @@ export const thStrings: typeof enStrings = {
     displayMode: 'โหมดการแสดงผล',
     expanded: 'ขยาย',
     font: 'แบบอักษร',
+    fontSizeOffset: 'มาตราส่วนข้อความ',
     light: 'แสงสว่าง',
     resetHiddenSummaries: 'รีเซ็ตบทสรุปที่ซ่อนอยู่',
     resetReadSummaries: 'รีเซ็ตข้อมูลสรุปเป็นยังไม่ได้อ่าน',
@@ -73,7 +74,6 @@ export const thStrings: typeof enStrings = {
     shortSummaries: 'บทสรุปสั้น ๆ ภายใต้ชื่อเรื่อง',
     shortSummariesInsteadOfTitles: 'บทสรุปสั้น ๆ แทนชื่อเรื่อง',
     system: 'ระบบ',
-    textScale: 'มาตราส่วนข้อความ',
   },
   share: {
     copyBulletPoints: 'คัดลอกสัญลักษณ์แสดงหัวข้อย่อย',

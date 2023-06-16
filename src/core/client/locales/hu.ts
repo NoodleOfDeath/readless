@@ -66,6 +66,7 @@ export const huStrings: typeof enStrings = {
     displayMode: 'Megjelenítési mód',
     expanded: 'Kiterjesztett',
     font: 'Betűtípus',
+    fontSizeOffset: 'Szöveg skála',
     light: 'Fény',
     resetHiddenSummaries: 'Rejtett összefoglalók visszaállítása',
     resetReadSummaries: 'Összefoglalók visszaállítása olvasatlanra',
@@ -73,7 +74,6 @@ export const huStrings: typeof enStrings = {
     shortSummaries: 'Rövid összefoglalók címek alatt',
     shortSummariesInsteadOfTitles: 'Címek helyett rövid összefoglalók',
     system: 'Rendszer',
-    textScale: 'Szöveg skála',
   },
   share: {
     copyBulletPoints: 'Felsoroláspontok másolása',

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  GestureResponderEvent,
   Pressable,
   PressableProps,
   View as RNView,
@@ -20,6 +21,8 @@ export type ViewProps = React.PropsWithChildren<PressableProps & TouchableOpacit
   elevated?: boolean;
   haptic?: boolean;
 };
+
+export type ChildlessViewProps = Omit<ViewProps, 'children'>;
 
 export function View({ 
   children,
@@ -70,7 +73,7 @@ export function View({
     }
   }, [children, elevated, inactive, overlay, style]);
   
-  const onPress = React.useCallback(() => {
+  const onPress = React.useCallback((event: GestureResponderEvent) => {
     if (!props.onPress) {
       return;
     }
@@ -80,7 +83,7 @@ export function View({
         ignoreAndroidSystemSettings: false,
       });
     }
-    props.onPress();
+    props.onPress(event);
   }, [haptic, props]);
   
   return (touchable) ? (

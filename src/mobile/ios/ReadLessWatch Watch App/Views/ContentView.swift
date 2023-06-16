@@ -24,6 +24,10 @@ struct ContentView: View {
           VStack {
             if self.service.loading {
               ProgressView()
+            } else
+            if self.service.error != nil {
+              Text("Error loading")
+              Text(self.service.error)
             } else {
               List(self.service.summaries, id: \.id) { summary in
                 NavigationLink(

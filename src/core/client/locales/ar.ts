@@ -66,6 +66,7 @@ export const arStrings: typeof enStrings = {
     displayMode: 'وضع العرض',
     expanded: 'موسع',
     font: 'الخط',
+    fontSizeOffset: 'مقياس النص',
     light: 'ضوء',
     resetHiddenSummaries: 'إعادة تعيين الملخصات المخفية',
     resetReadSummaries: 'إعادة تعيين الملخصات إلى غير مقروءة',
@@ -73,7 +74,6 @@ export const arStrings: typeof enStrings = {
     shortSummaries: 'ملخصات قصيرة تحت العناوين',
     shortSummariesInsteadOfTitles: 'ملخصات قصيرة بدلاً من العناوين',
     system: 'نظام',
-    textScale: 'مقياس النص',
   },
   share: {
     copyBulletPoints: 'نسخ نقاط التعداد',

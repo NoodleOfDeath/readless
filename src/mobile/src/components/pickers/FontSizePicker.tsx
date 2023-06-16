@@ -1,18 +1,55 @@
 import React from 'react';
 
-import { Slider } from '~/components';
+import {
+  FONT_SIZES,
+  Slider,
+  Stepper,
+} from '~/components';
 import { SessionContext } from '~/contexts';
 
-export function FontSizePicker() {
+export type FontSizePickerProps = {
+  variant?: 'slider' | 'stepper';
+  slider?: boolean;
+};
+
+const MIN_FONT_OFFSET = -5;
+const MAX_FONT_OFFSET = 5;
+const FONT_SIZE_STEP = 0.5;
+
+export function FontSizePicker({
+  slider,
+  variant = slider ? 'slider' : 'stepper',
+}: FontSizePickerProps = {}) {
   
-  const { textScale = 1, setPreference } = React.useContext(SessionContext);  
+  const { fontSizeOffset = 0, setPreference } = React.useContext(SessionContext);  
   
-  return (
+  const [value, setValue] = React.useState(fontSizeOffset);
+
+  const onValueChange = React.useCallback((values: number | number[]) => {
+    let newValue = typeof values === 'number' ? values : values[0];
+    if (newValue < MIN_FONT_OFFSET) {
+      newValue = MIN_FONT_OFFSET;
+    } else if (newValue > MAX_FONT_OFFSET) {
+      newValue = MAX_FONT_OFFSET;
+    }
+    setValue(newValue);
+    setPreference('fontSizeOffset', newValue);
+  }, [setPreference]);
+
+  return variant === 'stepper' ? (
+    <Stepper
+      value={ value }
+      offset={ FONT_SIZES.body1 }
+      minimumValue={ MIN_FONT_OFFSET }
+      maximumValue={ MAX_FONT_OFFSET }
+      stepValue={ FONT_SIZE_STEP }
+      onValueChange={ onValueChange } />
+  ) : (
     <Slider
-      minimumValue={ 0.75 }
-      maximumValue={ 1.5 }
-      value={ textScale }
-      onValueChange={ (value) => setPreference('textScale', typeof value === 'number' ? value : value[0]) }
+      value={ value }
+      minimumValue={ MIN_FONT_OFFSET }
+      maximumValue={ MAX_FONT_OFFSET }
+      onValueChange={ onValueChange }
       animationType={ 'spring' } />
   );
 }

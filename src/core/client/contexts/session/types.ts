@@ -36,7 +36,7 @@ export type Preferences = {
   displayMode?: ColorMode;
   preferredReadingFormat?: ReadingFormat;
   compactMode?: boolean;
-  textScale?: number;
+  fontSizeOffset?: number;
   fontFamily?: string;
   letterSpacing?: number;
   searchHistory?: string[];
@@ -77,6 +77,7 @@ export type SessionContextType = Preferences & {
   ready?: boolean;
   // state setters
   setPreference<K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])): void;
+  getPreference<K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined>;
   resetPreferences: () => void;
   // convenience functions
   followOutlet: (outlet: PublicOutletAttributes) => void;
@@ -93,6 +94,7 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   followOutlet: () => {
     /* placeholder function */
   },
+  getPreference: () => Promise.resolve(undefined),
   resetPreferences: () => {
     /* placeholder function */
   },

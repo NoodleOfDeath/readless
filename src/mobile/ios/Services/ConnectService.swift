@@ -14,6 +14,7 @@ struct Endpoints {
 class ConnectService: ObservableObject {
   @Published var summaries = [PublicSummaryAttributes]()
   @Published var loading = false
+  @Published var error: String?
 
   init(summaries: [PublicSummaryAttributes] = [PublicSummaryAttributes]()) {
     self.summaries = summaries
@@ -43,6 +44,7 @@ class ConnectService: ObservableObject {
            self.summaries = decodedResponse.rows
          } catch {
            print(error)
+           self.error = error.localizedDescription
          }
         self.loading = false
       }
@@ -55,6 +57,7 @@ class ConnectService: ObservableObject {
       return
     }
     loading = true
+    error = nil
     let request = URLRequest(url: url)
     URLSession.shared.dataTask(with: request) { data, _, _ in
       self.fetchHandler(data)
@@ -66,6 +69,7 @@ class ConnectService: ObservableObject {
       return
     }
     loading = true
+    error = nil
     let (data, response) = try await URLSession.shared.data(for: URLRequest(url: url))
     guard let httpResponse = response as? HTTPURLResponse, (200 ... 299).contains(httpResponse.statusCode) else {
       throw URLError(.badServerResponse)

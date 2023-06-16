@@ -3,13 +3,13 @@ import React from 'react';
 import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native-paper';
 
 import {
+  ChildlessViewProps,
   Text,
   View,
-  ViewProps,
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type SwitchProps = ViewProps & RNSwitchProps & {
+export type SwitchProps = ChildlessViewProps & RNSwitchProps & {
   leftLabel?: React.ReactNode;
   rightLabel?: React.ReactNode;
   spacing?: number;

@@ -66,6 +66,7 @@ export const frStrings: typeof enStrings = {
     displayMode: 'Mode d\'affichage',
     expanded: 'Étendu',
     font: 'Police de caractère',
+    fontSizeOffset: 'Échelle du texte',
     light: 'Lumière',
     resetHiddenSummaries: 'Réinitialiser les résumés masqués',
     resetReadSummaries: 'Réinitialiser les résumés comme non lus',
@@ -73,7 +74,6 @@ export const frStrings: typeof enStrings = {
     shortSummaries: 'Courts résumés sous les titres',
     shortSummariesInsteadOfTitles: 'Des résumés courts au lieu de titres',
     system: 'Système',
-    textScale: 'Échelle du texte',
   },
   share: {
     copyBulletPoints: 'Copier les puces',

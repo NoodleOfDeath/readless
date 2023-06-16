@@ -74,6 +74,8 @@ export const enStrings = {
   settings_displayMode: 'Display Mode',
   settings_expanded: 'Expanded',
   settings_font: 'Font',
+  settings_fontSize: 'Font Size',
+  settings_fontSizeOffset: 'Font Size',
   settings_light: 'Light',
   settings_preferredReadingFormat: 'Default reading mode on open',
   settings_resetHiddenSummaries: 'Reset hidden summaries',
@@ -82,7 +84,6 @@ export const enStrings = {
   settings_shortSummaries: 'Short summaries under titles',
   settings_shortSummariesInsteadOfTitles: 'Short summaries instead of titles',
   settings_system: 'System',
-  settings_textScale: 'Font Size',
   settings_voice: 'Text-to-Speech Voice',
 
   // share

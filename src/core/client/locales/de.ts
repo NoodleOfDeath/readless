@@ -66,6 +66,7 @@ export const deStrings: typeof enStrings = {
     displayMode: 'Anzeigemodus',
     expanded: 'Erweitert',
     font: 'Schriftart',
+    fontSizeOffset: 'Textskalierung',
     light: 'Licht',
     resetHiddenSummaries: 'Ausgeblendete Zusammenfassungen zurücksetzen',
     resetReadSummaries: 'Zusammenfassungen auf ungelesen zurücksetzen',
@@ -73,7 +74,6 @@ export const deStrings: typeof enStrings = {
     shortSummaries: 'Kurze Zusammenfassungen unter Titeln',
     shortSummariesInsteadOfTitles: 'Kurze Zusammenfassungen statt Titel',
     system: 'System',
-    textScale: 'Textskalierung',
   },
   share: {
     copyBulletPoints: 'Aufzählungspunkte kopieren',

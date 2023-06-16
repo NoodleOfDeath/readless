@@ -6,10 +6,10 @@ import {
   Svg,
 } from 'react-native-svg';
 
-import { ViewProps } from '~/components';
+import { ChildlessViewProps } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type MeterDialProps = ViewProps & {
+export type MeterDialProps = ChildlessViewProps & {
   min?: number;
   max?: number;
   value?: number;

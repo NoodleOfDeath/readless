@@ -2,12 +2,12 @@ import React from 'react';
 
 import {
   Button,
+  ChildlessViewProps,
   Text,
   View,
-  ViewProps,
 } from '~/components';
 
-export type CardStackProps = Omit<ViewProps, 'children'> & {
+export type CardStackProps = ChildlessViewProps & {
   children?: React.ReactNode | React.ReactNode[];
   onPressItem?: (index: number) => void;
   onClose?: () => void;

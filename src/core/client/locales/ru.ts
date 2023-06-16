@@ -66,6 +66,7 @@ export const ruStrings: typeof enStrings = {
     displayMode: 'Режим отображения',
     expanded: 'Расширенный',
     font: 'Шрифт',
+    fontSizeOffset: 'Масштаб текста',
     light: 'Свет',
     resetHiddenSummaries: 'Сбросить скрытые сводки',
     resetReadSummaries: 'Сбросить сводки как непрочитанные',
@@ -73,7 +74,6 @@ export const ruStrings: typeof enStrings = {
     shortSummaries: 'Краткие резюме под заголовками',
     shortSummariesInsteadOfTitles: 'Краткие резюме вместо заголовков',
     system: 'Система',
-    textScale: 'Масштаб текста',
   },
   share: {
     copyBulletPoints: 'Копировать маркеры',

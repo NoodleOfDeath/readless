@@ -66,6 +66,7 @@ export const svStrings: typeof enStrings = {
     displayMode: 'Visningsläge',
     expanded: 'Expanderat',
     font: 'Font',
+    fontSizeOffset: 'Text Skala',
     light: 'Ljus',
     resetHiddenSummaries: 'Återställ dolda sammanfattningar',
     resetReadSummaries: 'Återställ sammanfattningar till olästa',
@@ -73,7 +74,6 @@ export const svStrings: typeof enStrings = {
     shortSummaries: 'Korta sammanfattningar under rubriker',
     shortSummariesInsteadOfTitles: 'Korta sammanfattningar istället för titlar',
     system: 'Systemet',
-    textScale: 'Text Skala',
   },
   share: {
     copyBulletPoints: 'Kopiera punktpunkter',

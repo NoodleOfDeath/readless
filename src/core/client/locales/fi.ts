@@ -66,6 +66,7 @@ export const fiStrings: typeof enStrings = {
     displayMode: 'Näyttötila',
     expanded: 'Laajennettu',
     font: 'Fontti',
+    fontSizeOffset: 'Tekstin asteikko',
     light: 'Kevyt',
     resetHiddenSummaries: 'Nollaa piilotetut yhteenvedot',
     resetReadSummaries: 'Palauta yhteenvedot lukemattomiksi',
@@ -73,7 +74,6 @@ export const fiStrings: typeof enStrings = {
     shortSummaries: 'Lyhyet yhteenvedot otsikoiden alla',
     shortSummariesInsteadOfTitles: 'Lyhyet yhteenvedot otsikoiden sijaan',
     system: 'Järjestelmä',
-    textScale: 'Tekstin asteikko',
   },
   share: {
     copyBulletPoints: 'Kopioi Bullet Points',

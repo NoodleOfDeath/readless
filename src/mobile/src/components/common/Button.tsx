@@ -24,6 +24,7 @@ export function Button({
   horizontal,
   fontSize,
   fontFamily,
+  fontSizeFixed,
   iconSize,
   selected,
   h1,
@@ -45,16 +46,17 @@ export function Button({
   flexRow = horizontal,
   flexGrow = horizontal ? 1 : undefined,
   alignCenter = horizontal,
+  touchable = true,
   ...pressableProps
 }: ButtonProps) {
   
   const theme = useTheme();
   
   const textStyle = useStyles({
-    body1, body2, bold, caption, fontFamily, fontSize, h1, h2, h3, h4, h5, h6, italic, letterSpacing, lineHeight, subtitle1, subtitle2, underline,
+    body1, body2, bold, caption, fontFamily, fontSize, fontSizeFixed, h1, h2, h3, h4, h5, h6, italic, letterSpacing, lineHeight, subtitle1, subtitle2, underline,
   });
   const style = useStyles({
-    ...textStyle, ...pressableProps, alignCenter, flexGrow, flexRow,
+    ...textStyle, touchable, ...pressableProps, alignCenter, flexGrow, flexRow,
   });
   const [isPressed, setIsPressed] = React.useState(false);
   

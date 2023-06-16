@@ -3,10 +3,10 @@ import React from 'react';
 import RNHighlighter from 'react-native-highlight-words';
 import { HighlighterProps as RNHighlighterProps } from 'react-native-highlight-words';
 
-import { ViewProps } from '~/components';
+import { ChildlessViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type HighlighterProps = Omit<RNHighlighterProps & ViewProps, 'children' | 'textToHighlight'> & {
+export type HighlighterProps = Omit<RNHighlighterProps & ChildlessViewProps, 'children' | 'textToHighlight'> & {
   children?: string;
 };
 

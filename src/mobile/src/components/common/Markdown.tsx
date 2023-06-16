@@ -1,12 +1,12 @@
 import React from 'react';
 
 import {
+  ChildlessViewProps,
   Highlighter,
   HighlighterProps,
-  ViewProps,
 } from '~/components';
 
-export type MarkdownProps = Omit<ViewProps & HighlighterProps, 'searchWords'>;
+export type MarkdownProps = Omit<ChildlessViewProps & HighlighterProps, 'searchWords'>;
 
 export function Markdown({
   children,

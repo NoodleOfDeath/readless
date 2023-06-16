@@ -48,6 +48,7 @@ export function useStyles({
   textRight,
   fontFamily,
   fontSize = caption ? FONT_SIZES.caption : subscript ? FONT_SIZES.subscript : subtitle1 ? FONT_SIZES.subtitle1 : subtitle2 ? FONT_SIZES.subtitle2 : body1 ? FONT_SIZES.body1 : body2 ? FONT_SIZES.body2 : h1 ? FONT_SIZES.h1 : h2 ? FONT_SIZES.h2 : h3 ? FONT_SIZES.h3 : h4 ? FONT_SIZES.h4 : h5 ? FONT_SIZES.h5 : h6 ? FONT_SIZES.h6 : FONT_SIZES.body1,
+  fontSizeFixed,
   letterSpacing = 0.15,
   lineHeight = fontSize * 1.35,
   bold,
@@ -119,7 +120,7 @@ export function useStyles({
 } : Stylable, { onlyInclude }: UseStylesOptions = {}) {
   const theme = useTheme();
   
-  const { fontFamily: preferredFont = 'Faustina', textScale } = React.useContext(SessionContext);
+  const { fontFamily: preferredFont = 'Faustina', fontSizeOffset = 0 } = React.useContext(SessionContext);
 
   const position = React.useMemo(() => {
     if (absolute) {
@@ -203,7 +204,6 @@ export function useStyles({
   }, [opacity, outlined, contained, theme, overflow]);
 
   const viewStyle = React.useMemo(() => {
-    const scale = ((((textScale ?? 1) - 1) / 2) + 1);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
     attrs.push(position ? position : undefined);
@@ -228,8 +228,8 @@ export function useStyles({
     attrs.push(italic ? { fontStyle: 'italic' } : undefined);
     attrs.push(underline ? { textDecorationLine: 'underline' } : undefined);
     attrs.push({ fontFamily : !AVAILABLE_FONTS.includes(fontFamily ?? preferredFont ?? '') ? 'Faustina' : fontFamily ?? preferredFont });
-    attrs.push({ lineHeight : lineHeight * scale });
-    attrs.push({ letterSpacing : letterSpacing * scale });
+    attrs.push({ lineHeight });
+    attrs.push({ letterSpacing });
     attrs.push(alignItems);
     attrs.push(justifyContent);
     attrs.push(appearance);
@@ -241,7 +241,7 @@ export function useStyles({
     attrs.push(minHeight ? { minHeight } : undefined);
     attrs.push(maxWidth ? { maxWidth } : undefined);
     attrs.push(maxHeight ? { maxHeight } : undefined);
-    attrs.push({ fontSize : fontSize * scale });
+    attrs.push({ fontSize : fontSize + (fontSizeFixed ? 0 : fontSizeOffset) });
     attrs.push(borderTopWidth ? { borderTopWidth } : undefined);
     attrs.push(borderBottomWidth ? { borderBottomWidth } : undefined);
     attrs.push(borderLeftWidth ? { borderLeftWidth } : undefined);
@@ -265,6 +265,6 @@ export function useStyles({
     attrs.push(pl ? { paddingLeft: pl } : undefined);
     attrs.push(pr ? { paddingRight: pr } : undefined);
     return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), style ?? {});
-  }, [textScale, position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, lineHeight, letterSpacing, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, style, onlyInclude]);
+  }, [position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, lineHeight, letterSpacing, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, fontSizeFixed, fontSizeOffset, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, style, onlyInclude]);
   return viewStyle;
 }

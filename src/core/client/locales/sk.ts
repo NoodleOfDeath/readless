@@ -66,6 +66,7 @@ export const skStrings: typeof enStrings = {
     displayMode: 'Režim zobrazenia',
     expanded: 'Rozšírené',
     font: 'Písmo',
+    fontSizeOffset: 'Textová mierka',
     light: 'Svetlo',
     resetHiddenSummaries: 'Obnoviť skryté súhrny',
     resetReadSummaries: 'Resetovať súhrny na neprečítané',
@@ -73,7 +74,6 @@ export const skStrings: typeof enStrings = {
     shortSummaries: 'Krátke zhrnutia pod nadpismi',
     shortSummariesInsteadOfTitles: 'Krátke zhrnutia namiesto názvov',
     system: 'Systém',
-    textScale: 'Textová mierka',
   },
   share: {
     copyBulletPoints: 'Kopírovať odrážky',

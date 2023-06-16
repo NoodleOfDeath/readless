@@ -66,6 +66,7 @@ export const itStrings: typeof enStrings = {
     displayMode: 'Modalità display',
     expanded: 'allargato',
     font: 'Font',
+    fontSizeOffset: 'Scala del testo',
     light: 'Leggero',
     resetHiddenSummaries: 'Reimposta i riepiloghi nascosti',
     resetReadSummaries: 'Reimposta i riepiloghi su Da leggere',
@@ -73,7 +74,6 @@ export const itStrings: typeof enStrings = {
     shortSummaries: 'Brevi riassunti sotto i titoli',
     shortSummariesInsteadOfTitles: 'Brevi riassunti al posto dei titoli',
     system: 'Sistema',
-    textScale: 'Scala del testo',
   },
   share: {
     copyBulletPoints: 'Copia punti elenco',

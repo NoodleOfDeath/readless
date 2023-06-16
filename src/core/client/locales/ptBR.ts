@@ -66,6 +66,7 @@ export const ptBRStrings: typeof enStrings = {
     displayMode: 'Modo de exibição',
     expanded: 'expandido',
     font: 'Fonte',
+    fontSizeOffset: 'Escala de texto',
     light: 'Luz',
     resetHiddenSummaries: 'Redefinir resumos ocultos',
     resetReadSummaries: 'Redefinir resumos como não lidos',
@@ -73,7 +74,6 @@ export const ptBRStrings: typeof enStrings = {
     shortSummaries: 'Resumos curtos sob títulos',
     shortSummariesInsteadOfTitles: 'Resumos curtos em vez de títulos',
     system: 'Sistema',
-    textScale: 'Escala de texto',
   },
   share: {
     copyBulletPoints: 'Copiar marcadores',

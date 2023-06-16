@@ -66,6 +66,7 @@ export const csStrings: typeof enStrings = {
     displayMode: 'Zobrazovací mód',
     expanded: 'Rozšířený',
     font: 'Písmo',
+    fontSizeOffset: 'Měřítko textu',
     light: 'Světlo',
     resetHiddenSummaries: 'Obnovit skryté souhrny',
     resetReadSummaries: 'Resetovat souhrny na nepřečtené',
@@ -73,7 +74,6 @@ export const csStrings: typeof enStrings = {
     shortSummaries: 'Krátké shrnutí pod názvy',
     shortSummariesInsteadOfTitles: 'Krátká shrnutí místo názvů',
     system: 'Systém',
-    textScale: 'Měřítko textu',
   },
   share: {
     copyBulletPoints: 'Kopírovat odrážky',

@@ -66,6 +66,7 @@ export const zhTWStrings: typeof enStrings = {
     displayMode: '顯示模式',
     expanded: '展開',
     font: '字體',
+    fontSizeOffset: '文本比例',
     light: '光',
     resetHiddenSummaries: '重置隱藏摘要',
     resetReadSummaries: '將摘要重置為未讀',
@@ -73,7 +74,6 @@ export const zhTWStrings: typeof enStrings = {
     shortSummaries: '標題下的簡短摘要',
     shortSummariesInsteadOfTitles: '簡短的摘要而不是標題',
     system: '系統',
-    textScale: '文本比例',
   },
   share: {
     copyBulletPoints: '複製項目符號點',

@@ -2,19 +2,21 @@ import React from 'react';
 
 import {
   Button,
+  ChildlessViewProps,
   View,
-  ViewProps,
 } from '~/components';
 import { useStyles } from '~/hooks';
 
 export type SegmentedButtonProps<T> = {
   icon?: React.ReactNode;
   label?: React.ReactNode;
+  style?: ChildlessViewProps['style'];
   value: T;
 };
 
-export type SegmentedButtonsProps<T> = ViewProps & {
+export type SegmentedButtonsProps<T> = ChildlessViewProps & {
   buttons: SegmentedButtonProps<T>[];
+  buttonStyle?: ChildlessViewProps['style'];
   onValueChange?: (value: T) => void;
   value?: T;
   elevated?: boolean;
@@ -23,6 +25,7 @@ export type SegmentedButtonsProps<T> = ViewProps & {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SegmentedButtons = <T = any>({
   buttons,
+  buttonStyle,
   onValueChange,
   elevated = true,
   ...props
@@ -38,10 +41,11 @@ export const SegmentedButtons = <T = any>({
         elevated={ elevated }
         gap={ 12 }>
         {buttons.map(({
-          icon, label, value,
+          icon, label, value, style,
         }, index) => (
           <Button 
             key={ `${value}${index}` }
+            style={ [style, buttonStyle] }
             flexRow
             flexGrow={ 1 }
             alignCenter

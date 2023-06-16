@@ -66,6 +66,7 @@ export const roStrings: typeof enStrings = {
     displayMode: 'Modul de afișare',
     expanded: 'Extins',
     font: 'Font',
+    fontSizeOffset: 'Scala textului',
     light: 'Ușoară',
     resetHiddenSummaries: 'Resetați rezumatele ascunse',
     resetReadSummaries: 'Resetați rezumatele la necitite',
@@ -73,7 +74,6 @@ export const roStrings: typeof enStrings = {
     shortSummaries: 'Scurte rezumate sub titluri',
     shortSummariesInsteadOfTitles: 'Rezumate scurte în loc de titluri',
     system: 'Sistem',
-    textScale: 'Scala textului',
   },
   share: {
     copyBulletPoints: 'Copiați punctele marcante',

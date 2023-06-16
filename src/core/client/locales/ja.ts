@@ -66,6 +66,7 @@ export const jaStrings: typeof enStrings = {
     displayMode: 'ディスプレイモード',
     expanded: '拡張された',
     font: 'フォント',
+    fontSizeOffset: 'テキストスケール',
     light: 'ライト',
     resetHiddenSummaries: '非表示の概要をリセットする',
     resetReadSummaries: '概要を未読にリセット',
@@ -73,7 +74,6 @@ export const jaStrings: typeof enStrings = {
     shortSummaries: 'タイトルの下に短い概要を記載',
     shortSummariesInsteadOfTitles: 'タイトルではなく短い要約',
     system: 'システム',
-    textScale: 'テキストスケール',
   },
   share: {
     copyBulletPoints: '箇条書きのコピー',

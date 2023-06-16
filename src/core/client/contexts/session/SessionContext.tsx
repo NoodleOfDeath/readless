@@ -38,7 +38,7 @@ export function SessionContextProvider({ children }: Props) {
   const [displayMode, setDisplayMode] = React.useState<ColorMode>();
   const [preferredReadingFormat, setPreferredReadingFormat] = React.useState<ReadingFormat>();
   const [compactMode, setCompactMode] = React.useState<boolean>();
-  const [textScale, setTextScale] = React.useState<number>();
+  const [fontSizeOffset, setFontSizeOffset] = React.useState<number>();
   const [fontFamily, setFontFamily] = React.useState<string>();
   const [letterSpacing, setLetterSpacing] = React.useState<number>();
   const [searchHistory, setSearchHistory] = React.useState<string[]>();
@@ -81,8 +81,8 @@ export function SessionContextProvider({ children }: Props) {
     case 'compactMode':
       setCompactMode(value);
       break;
-    case 'textScale':
-      setTextScale(value);
+    case 'fontSizeOffset':
+      setFontSizeOffset(value);
       break;
     case 'fontFamily':
       setFontFamily(value);
@@ -212,7 +212,7 @@ export function SessionContextProvider({ children }: Props) {
     setDisplayMode(await getPreference('displayMode') ?? prefs.displayMode); 
     setPreferredReadingFormat(await getPreference('preferredReadingFormat') ?? prefs.preferredReadingFormat);
     setCompactMode(await getPreference('compactMode') ?? prefs.compactMode);
-    setTextScale(await getPreference('textScale') ?? prefs.textScale);
+    setFontSizeOffset(await getPreference('fontSizeOffset') ?? prefs.fontSizeOffset);
     setFontFamily(await getPreference('fontFamily') ?? prefs.fontFamily);
     setLetterSpacing(await getPreference('letterSpacing') ?? prefs.letterSpacing);
     setSearchHistory(await getPreference('searchHistory') ?? prefs.searchHistory);
@@ -257,6 +257,8 @@ export function SessionContextProvider({ children }: Props) {
         followCategory,
         followOutlet,
         fontFamily,
+        fontSizeOffset,
+        getPreference,
         letterSpacing,
         loadedInitialUrl,
         preferredReadingFormat,
@@ -271,7 +273,6 @@ export function SessionContextProvider({ children }: Props) {
         setPreference,
         showOnlyCustomNews,
         showShortSummary,
-        textScale,
         triggerWords,
         viewedFeatures,
         withHeaders,

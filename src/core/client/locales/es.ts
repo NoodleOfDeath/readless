@@ -66,6 +66,7 @@ export const esStrings: typeof enStrings = {
     displayMode: 'Modo de visualización',
     expanded: 'Expandido',
     font: 'Fuente',
+    fontSizeOffset: 'Escala de texto',
     light: 'Luz',
     resetHiddenSummaries: 'Restablecer resúmenes ocultos',
     resetReadSummaries: 'Restablecer resúmenes a no leídos',
@@ -73,7 +74,6 @@ export const esStrings: typeof enStrings = {
     shortSummaries: 'Breves resúmenes debajo de los títulos',
     shortSummariesInsteadOfTitles: 'Breves resúmenes en lugar de títulos',
     system: 'Sistema',
-    textScale: 'Escala de texto',
   },
   share: {
     copyBulletPoints: 'Copiar viñetas',

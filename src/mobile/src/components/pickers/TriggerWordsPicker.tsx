@@ -2,15 +2,15 @@ import React from 'react';
 
 import {
   Button,
+  ChildlessViewProps,
   ScrollView,
   TextInput,
   View,
-  ViewProps,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
-type TriggerWordPickerProps = Omit<ViewProps, 'children'> & {
+type TriggerWordPickerProps = ChildlessViewProps & {
   onSubmit: () => void;
 };
 

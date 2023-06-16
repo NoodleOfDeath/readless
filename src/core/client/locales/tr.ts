@@ -66,6 +66,7 @@ export const trStrings: typeof enStrings = {
     displayMode: 'Ekran modu',
     expanded: 'Genişletilmiş',
     font: 'Yazı tipi',
+    fontSizeOffset: 'Metin Ölçeği',
     light: 'Işık',
     resetHiddenSummaries: 'Gizli özetleri sıfırla',
     resetReadSummaries: 'Özetleri okunmamış olarak sıfırla',
@@ -73,7 +74,6 @@ export const trStrings: typeof enStrings = {
     shortSummaries: 'Başlıklar altında kısa özetler',
     shortSummariesInsteadOfTitles: 'Başlıklar yerine kısa özetler',
     system: 'sistem',
-    textScale: 'Metin Ölçeği',
   },
   share: {
     copyBulletPoints: 'Madde İşaretlerini Kopyala',
