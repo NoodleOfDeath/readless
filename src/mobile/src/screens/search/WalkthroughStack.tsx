@@ -8,7 +8,7 @@ import { strings } from '~/locales';
 
 type Feature = {
   id: string;
-  content?: JSX.Element | JSX.Element[];
+  content?: React.ReactNode;
   onPress?: () => void;
 };
 
@@ -16,13 +16,25 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.walkthroughs_appearance_customizeYourExperience}</Text>
+        <Text h6>{strings.walkthroughs_appearance_stackTitle ?? 'Customize the Look and Feed'}</Text>
         <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'appearance-walkthrough',
     onPress: async () => {
       await SheetManager.show('appearance-walkthrough');
+    },
+  },
+  {
+    content: (
+      <React.Fragment>
+        <Text h6>{strings.walkthroughs_customFeed_stackTitle ?? 'Customize Your Feed'}</Text>
+        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
+      </React.Fragment>
+    ),
+    id: 'custom-feed-walkthrough',
+    onPress: async () => {
+      await SheetManager.show('custom-feed-walkthrough');
     },
   },
   {

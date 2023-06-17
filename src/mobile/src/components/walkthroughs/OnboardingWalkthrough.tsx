@@ -3,7 +3,10 @@ import React from 'react';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import {
+  Button,
+  Icon,
   Markdown,
+  MeterDial,
   Text,
   View,
   Walkthrough,
@@ -27,45 +30,88 @@ export function OnboardingWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => [
     {
       body: (
-        <View>
+        <View gap={ 12 }>
           <Markdown textCenter>
-            Read Less uses **large language models** to summarize news articles and provide **sentiment analysis.**
+            Being informed is a human right. Today, it is easy for us to forget this in the face of ad popups, clickbait titles, and irreverent paywalls.
+          </Markdown>
+          <Markdown textCenter>
+            Despite this, by downloading this app it tells me you still have hope to find a source for news that provides the whole picture, efficiently, in realtime, and as unbiased as possible.
           </Markdown>
         </View>
       ),
-      title: strings.walkthroughs_onboarding_welcome,
+      title: 'Welcome to Read Less',
     },
     {
       body: (
-        <View>
+        <View gap={ 24 }>
           <Markdown textCenter>
-            Read Less uses **large language models** to summarize news articles and provide **sentiment analysis.**
+            to **minimize bias** and
+            **reduce clickbait** in news headlines.
+          </Markdown>
+          <View
+            alignCenter
+            mx={ 32 }
+            gap={ 12 }>
+            <View elevated rounded p={ 12 }>
+              <Text subtitle1 bold textCenter>
+                &quot;Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!&quot;
+              </Text>
+            </View>
+            <Icon name="arrow-down-bold" size={ 48 } />
+            <View elevated rounded p={ 12 }>
+              <Text subtitle1 bold textCenter>
+                &quot;Neanderthal DNA linked to common hand condition (Dupuytren&apos; contracture)&quot;
+              </Text>
+            </View>
+          </View>
+        </View>
+      ),
+      title: 'Read Less uses\nLarge Language Models',
+    },
+    {
+      body: (
+        <View gap={ 12 }>
+          <Markdown textCenter>
+            However, **too much sensationalism** can detract from the content or misconstrue the facts.
+          </Markdown>
+          <View alignCenter>
+            <MeterDial value={ 0.3 } />
+          </View>
+          <Markdown textCenter>
+            Instead of removing sentiment altogether, Read Less aims to **measure sentiment** instead.
           </Markdown>
         </View>
       ),
-      title: strings.walkthroughs_onboarding_addCategories,
+      title: 'Sentiment is a big part of what makes news, news',
     },
     {
       body: (
-        <View>
+        <View gap={ 12 }>
           <Markdown textCenter>
-            Read Less uses **large language models** to summarize news articles and provide **sentiment analysis.**
+            As more features continue to roll out aimed to improve the efficiency of your news intake, the ultimate goal is to streamline and integrate the process seamlessly into any routine and not detract from your mental health or prey addiction.
           </Markdown>
         </View>
       ),
-      title: strings.walkthroughs_onboarding_addNewsSources,
+      title: 'This is not a social media app',
     },
     {
       body: (
-        <View>
+        <View gap={ 12 }>
           <Markdown textCenter>
-            The news will always be free because being informed is a **human right**, but as we scale up, you can enjoy enteraining features like daily/weekly/monthly recaps and premium text-to-speech voices through a subscription.
+            Access to news will **always be free** because being informed is a **human right**, but as we scale up, you may enjoy entertainment features like weekly recaps and premium text-to-speech voices through a subscription.
           </Markdown>
+          <Markdown textCenter>
+            Are you ready to streamline your news consumption experience?
+          </Markdown>
+          <Button
+            onPress={ onDone }>
+            Let&apos;s Go!
+          </Button>
         </View>
       ),
       title: 'Subscriptions',
     },
-  ], []);
+  ], [onDone]);
   
   return (
     <Walkthrough

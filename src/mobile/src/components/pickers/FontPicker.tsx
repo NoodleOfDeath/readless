@@ -29,7 +29,7 @@ export function FontPicker({
     <TablePicker
       options={ AVAILABLE_FONTS }
       initialOption={ fontFamily }
-      conditionalProps={ (font) => ({ titleTextStyle: { fontFamily: font } }) }
+      cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
       onValueChange={ (font) => setPreference('fontFamily', font) } />
   ) : (
     <ScrollView 

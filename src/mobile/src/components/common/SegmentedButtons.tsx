@@ -5,14 +5,14 @@ import { Button as NBButton } from 'native-base';
 import { Button, ChildlessViewProps } from '~/components';
 
 export type SegmentedButtonProps<T extends string | number = string> = {
-  icon?: string | JSX.Element | JSX.Element[];
-  label?: string | JSX.Element | JSX.Element[];
+  icon?: React.ReactNode;
+  label?: React.ReactNode;
   style?: ChildlessViewProps['style'];
   value: T;
 };
 
 export type SegmentedButtonsProps<T extends string | number = string> = ChildlessViewProps & {
-  buttons: SegmentedButtonProps<T>[];
+  options: SegmentedButtonProps<T>[];
   initialValue?: T;
   onValueChange?: (value: T) => void;
   elevated?: boolean;
@@ -21,7 +21,7 @@ export type SegmentedButtonsProps<T extends string | number = string> = Childles
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SegmentedButtons = <T extends string | number = string>({
   initialValue,
-  buttons,
+  options: buttons,
   onValueChange,
 }: SegmentedButtonsProps<T>) => {
   const [value, setValue] = React.useState<T>(initialValue);

@@ -6,8 +6,8 @@ import { Text, View } from '~/components';
 import { useTheme } from '~/hooks';
 
 export type SwitchProps = RNSwitchProps & {
-  leftLabel?: JSX.Element | JSX.Element[];
-  rightLabel?: JSX.Element | JSX.Element[];
+  leftLabel?: React.ReactNode;
+  rightLabel?: React.ReactNode;
   spacing?: number;
 };
 

@@ -33,7 +33,7 @@ export type StackableTabParams = {
   channel: Channel;
   default: undefined;
   generic: Partial<NativeStackNavigationOptions> & {
-    component: JSX.Element | JSX.Element[];
+    component: React.ReactNode;
   }
   search: {
     prefilter?: string,
@@ -94,7 +94,7 @@ export type ScreenProps<Path extends keyof StackableTabParams = keyof StackableT
         tintColor?: string;
         pressColor?: string;
         pressOpacity?: number;
-      }) => JSX.Element | JSX.Element[])
+      }) => React.ReactNode)
     ;
   route?: RouteProp<StackableTabParams, Path> 
   navigation?: NativeStackNavigationProp<StackableTabParams, Path>

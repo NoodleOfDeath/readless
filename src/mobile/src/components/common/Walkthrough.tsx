@@ -2,7 +2,6 @@ import React from 'react';
 import { ListRenderItemInfo } from 'react-native';
 
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
-import AppIntroSlider from 'react-native-app-intro-slider';
 
 import { 
   ActionSheet,
@@ -11,14 +10,15 @@ import {
   Markdown,
   Text,
   View,
+  WalkthroughSlider,
 } from '~/components';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export type WalkthroughStep = {
-  title?: string | JSX.Element | JSX.Element[];
-  body?: JSX.Element | JSX.Element[];
-  footer?: JSX.Element | JSX.Element[];
+  title?: React.ReactNode;
+  body?: React.ReactNode;
+  footer?: React.ReactNode;
   image?: string;
 };
 
@@ -31,22 +31,29 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
   
   const theme = useTheme();
 
-  const { steps = [], onDone } = React.useMemo(() => ({ ...payload }), [payload]);
+  const { 
+    steps = [], 
+    onDone,
+  } = React.useMemo(() => ({ ...payload }), [payload]);
   
-  const computedSteps = React.useMemo(() => steps.map((step, i) => (
-    <View gap={ 12 } key={ i }>
-      {typeof step.title === 'string' ? <Text h5 bold textCenter>{step.title}</Text> : step.title}
-      {typeof step.body === 'string' ? <Markdown>{step.body}</Markdown> : step.body}
-      {typeof step.footer === 'string' ? <Markdown>{step.footer}</Markdown> : step.footer}
-    </View>
-  )), [steps]);
+  const computedSteps = React.useMemo(() => {
+    return steps.map((step, i) => (
+      <View gap={ 12 } key={ i }>
+        {typeof step.title === 'string' ? <Text h5 bold textCenter>{step.title}</Text> : step.title}
+        <View col />
+        {typeof step.body === 'string' ? <Markdown>{step.body}</Markdown> : step.body}
+        <View col />
+        {typeof step.footer === 'string' ? <Markdown>{step.footer}</Markdown> : step.footer}
+      </View>
+    ));
+  }, [steps]);
   
-  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<JSX.Element | JSX.Element[]>) => {
+  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<React.ReactNode>) => {
     return (
       <View 
         flexGrow={ 1 }
         p={ 32 }
-        justifyCenter>
+        justifyStart>
         {item}
       </View>
     );
@@ -136,7 +143,7 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
             {strings.action_close}
           </Button>
         </View>
-        <AppIntroSlider
+        <WalkthroughSlider
           renderItem={ renderItem }
           renderPrevButton={ renderPrevButton }
           renderNextButton={ renderNextButton }

@@ -24,7 +24,7 @@ export function ReadingFormatPicker({
       style={ style }
       initialValue={ format ?? preferredFormat }
       onValueChange={ (value) => onChange?.(value) }
-      buttons={ [
+      options={ [
         {
           icon: 'text-long',
           label: strings.summary_summary,

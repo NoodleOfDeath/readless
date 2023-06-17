@@ -8,7 +8,7 @@ import {
 import { ColorMode, SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
-type DisplayModePickerProps = Omit<SegmentedButtonsProps, 'buttons'> & {
+type DisplayModePickerProps = Omit<SegmentedButtonsProps, 'options'> & {
   variant?: 'table' | 'buttons';
   buttons?: boolean;
 };
@@ -30,7 +30,7 @@ export function DisplayModePicker({
           { label: strings.settings_dark, value: 'dark' as ColorMode },
         ] }
         initialOption={ displayMode ?? 'system' }
-        onValueChange={ (value) => setPreference('displayMode', value as ColorMode) } />
+        onValueChange={ (value) => setPreference('displayMode', value) } />
     );
   }
   
@@ -38,8 +38,8 @@ export function DisplayModePicker({
     <SegmentedButtons
       { ...props }
       initialValue={ displayMode ?? 'system' }
-      onValueChange={ (value) => setPreference('displayMode', value as ColorMode) }
-      buttons={ [
+      onValueChange={ (value) => setPreference('displayMode', value) }
+      options={ [
         { label: strings.settings_light, value: 'light' as ColorMode },
         { label: strings.settings_system, value: 'system' as ColorMode },
         { label: strings.settings_dark, value: 'dark' as ColorMode },

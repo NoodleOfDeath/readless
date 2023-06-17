@@ -21,7 +21,7 @@ import { strings } from '~/locales';
 export type SearchMenuProps = ViewProps & {
   initialValue?: string;
   placeholder?: string;
-  subview?: JSX.Element | JSX.Element[];
+  subview?: React.ReactNode;
   onChangeText?: (value: string) => void;
   onClear?: () => void;
   onSubmit?: (value: string) => void;

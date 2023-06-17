@@ -8,10 +8,10 @@ import { Text } from '~/components';
 import { useTheme } from '~/hooks';
 
 export type PopoverProps = Omit<IPopoverProps, 'trigger'> & {
-  anchor?: JSX.Element | JSX.Element[];
+  anchor?: React.ReactNode;
   modal?: boolean;
-  header?: JSX.Element | JSX.Element[];
-  footer?: JSX.Element | JSX.Element[];
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
 };
 
 export function Popover({

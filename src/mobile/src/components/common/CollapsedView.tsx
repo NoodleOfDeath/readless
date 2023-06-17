@@ -14,10 +14,10 @@ import { useStyles } from '~/hooks';
 type CollapseStyle = 'banner';
 
 export type CollapsedViewProps = ViewProps & {
-  title?: JSX.Element | JSX.Element[];
+  title?: React.ReactNode;
   titleStyle?: ViewStyle;
   contentStyle?: ViewStyle;
-  info?: JSX.Element | JSX.Element[];
+  info?: React.ReactNode;
   collapseStyle?: CollapseStyle;
   initiallyCollapsed?: boolean;
   disabled?: boolean;

@@ -8,7 +8,7 @@ import {
 } from '~/components';
 
 export type CardStackProps = ChildlessViewProps & {
-  children?: JSX.Element | JSX.Element[] | JSX.Element | JSX.Element[][];
+  children?: React.ReactNode | React.ReactNode[];
   onPressItem?: (index: number) => void;
   onClose?: () => void;
 };

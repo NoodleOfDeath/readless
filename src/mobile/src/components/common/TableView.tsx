@@ -7,8 +7,13 @@ import { TableView as RNTableView, THEME_APPEARANCE } from 'react-native-tablevi
 import { ChildlessViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
+export type TableIndex = {
+  section: number;
+  index: number;
+};
+
 export type TableViewProps = ChildlessViewProps & {
-  children?: JSX.Element | JSX.Element[];
+  children?: React.ReactNode;
   appearance?: 'auto' | 'dark' | 'light' | string;
   customAppearances?: {
     [key: string]: THEME_APPEARANCE;

@@ -11,9 +11,9 @@ export type TableViewSectionProps = ViewProps & {
     grouped?: boolean;
 } & {
   allowFontScaling?: boolean;
-  children?: JSX.Element | JSX.Element[];
-  footerComponent?: JSX.Element | JSX.Element[];
-  headerComponent?: JSX.Element | JSX.Element[];
+  children?: React.ReactNode;
+  footerComponent?: React.ReactNode;
+  headerComponent?: React.ReactNode;
   footer?: string;
   footerTextColor?: TextStyle['color'];
   footerTextStyle?: TextStyle;

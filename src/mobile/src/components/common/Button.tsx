@@ -10,8 +10,8 @@ import {
 import { useStyles, useTheme } from '~/hooks';
 
 export type ButtonProps = PressableProps & ViewProps & {
-  leftIcon?: string | JSX.Element | JSX.Element[];
-  rightIcon?: string | JSX.Element | JSX.Element[];
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   horizontal?: boolean;
   iconSize?: number;
   selected?: boolean;

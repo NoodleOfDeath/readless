@@ -2,7 +2,7 @@ import React from 'react';
 
 import { View } from '~/components';
 
-export function NewsSourcePicker() {
+export function OutletPicker() {
   return (
     <View />
   );

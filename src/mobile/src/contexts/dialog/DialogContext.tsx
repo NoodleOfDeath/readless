@@ -8,6 +8,7 @@ import { DEFAULT_DIALOG_CONTEXT, Responder } from './types';
 import { PublicSummaryAttributes } from '~/api';
 import {
   AppearanceWalkthrough,
+  CustomFeedWalkthrough,
   FeedbackDialog,
   MainMenuDialog,
   OnboardingWalkthrough,
@@ -27,6 +28,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('subscribe', SubscribeDialog);
     // onboarding/features
     registerSheet('appearance-walkthrough', AppearanceWalkthrough);
+    registerSheet('custom-feed-walkthrough', CustomFeedWalkthrough);
     registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
     registerSheet('sentiment-walkthrough', SentimentWalkthrough);
     registerSheet('trigger-words-walkthrough', TriggerWordsWalkthrough);
@@ -35,17 +37,10 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('feedback', FeedbackDialog);
   }, []);
 
-  const [firstResponder, setFirstResponder] = React.useState<Responder>();
-  const [lastResponder, setLastResponder] = React.useState<Responder>();
-
   const [shareTarget, setShareTarget] = React.useState<PublicSummaryAttributes>();
 
   return (
     <DialogContext.Provider value={ {
-      firstResponder,
-      lastResponder,
-      setFirstResponder,
-      setLastResponder,
       setShareTarget,
       shareTarget,
     } }>
