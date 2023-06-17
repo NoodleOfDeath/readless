@@ -17,7 +17,7 @@ import {
 import { useStyles, useTheme } from '~/hooks';
 
 type TableViewCellImageProps = ChildlessViewProps & {
-  icon?: React.ReactNode;
+  icon?: JSX.Element | JSX.Element[];
 };
 
 export function TableViewCellImage({
@@ -48,11 +48,11 @@ export type TableViewCellProps = ChildlessViewProps & {
   allowFontScaling?: boolean;
   backgroundColor?: ViewStyle['backgroundColor'];
   cellStyle?: 'Basic' | 'RightDetail' | 'LeftDetail' | 'Subtitle';
-  cellAccessoryView?: React.ReactNode;
-  cellContentView?: React.ReactNode;
-  cellImageView?: React.ReactNode;
-  cellIcon?: React.ReactNode;
-  children?: React.ReactNode;
+  cellAccessoryView?: JSX.Element | JSX.Element[];
+  cellContentView?: JSX.Element | JSX.Element[];
+  cellImageView?: JSX.Element | JSX.Element[];
+  cellIcon?: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[];
   contentContainerStyle?: StyleProp<ViewStyle>;
   detail?: string | number;
   detailTextStyle?: StyleProp<TextStyle>;
@@ -73,7 +73,7 @@ export type TableViewCellProps = ChildlessViewProps & {
   subtitleColor?: TextStyle['color'];
   subtitleTextStyle?: StyleProp<TextStyle>;
   testID?: string;
-  title?: React.ReactNode;
+  title?: JSX.Element | JSX.Element[];
   titleTextProps?: TextProps;
   titleTextStyle?: StyleProp<TextStyle>;
   titleTextStyleDisabled?: StyleProp<TextStyle>;

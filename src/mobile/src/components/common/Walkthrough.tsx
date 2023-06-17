@@ -16,10 +16,9 @@ import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export type WalkthroughStep = {
-  title?: React.ReactNode;
-  body?: React.ReactNode;
-  footer?: React.ReactNode;
-  doneLabel?: React.ReactNode;
+  title?: string | JSX.Element | JSX.Element[];
+  body?: JSX.Element | JSX.Element[];
+  footer?: JSX.Element | JSX.Element[];
   image?: string;
 };
 
@@ -42,7 +41,7 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
     </View>
   )), [steps]);
   
-  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<React.ReactNode>) => {
+  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<JSX.Element | JSX.Element[]>) => {
     return (
       <View 
         flexGrow={ 1 }
@@ -91,7 +90,7 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
     return (
       <View 
         elevated
-        ph={ 10 }
+        px={ 10 }
         height={ 40 }
         justifyCenter
         alignCenter
@@ -126,7 +125,7 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
           <Button
             elevated
             flexRow
-            ph={ 8 }
+            px={ 8 }
             height={ 40 }
             justifyCenter
             touchable

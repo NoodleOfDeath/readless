@@ -393,7 +393,7 @@ export function SearchScreen({
               elevated 
               height={ 30 } 
               zIndex={ 10 }
-              borderRadiusBL={ 16 }
+              borderBottomLeftRadius={ 16 }
               borderRadiusBR={ 16 }
               p={ 4 }>
               <View row gap={ 12 } justifyCenter alignCenter>
@@ -430,7 +430,7 @@ export function SearchScreen({
           )}
           {!prefilter && onlyCustomNews && (
             <View>
-              <Text caption textCenter mh={ 12 }>{strings.search_customNewsSearch}</Text>
+              <Text caption textCenter mx={ 12 }>{strings.search_customNewsSearch}</Text>
               <Button 
                 alignCenter
                 rounded 
@@ -476,7 +476,7 @@ export function SearchScreen({
                     )}
                     {summaries.length === 0 && !loading && (
                       <View col gap={ 12 } alignCenter justifyCenter>
-                        <Text textCenter mh={ 16 }>
+                        <Text textCenter mx={ 16 }>
                           {strings.search_noResults}
                           {' '}
                           🥺
@@ -517,7 +517,7 @@ export function SearchScreen({
                   refreshing={ summaries.length === 0 && loading }
                   onScroll={ handleDetailScroll }
                   mt={ 12 }
-                  ph={ 12 }>
+                  px={ 12 }>
                   {detailSummary && (
                     <Summary
                       summary={ detailSummary }
@@ -534,8 +534,8 @@ export function SearchScreen({
         {summaries.length > 0 && (
           <Button
             absolute
-            right={ 24 }
-            bottom={ 96 }
+            right={ 16 }
+            bottom={ 64 }
             elevated
             rounded
             opacity={ 0.95 }

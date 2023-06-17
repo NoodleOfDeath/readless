@@ -75,7 +75,7 @@ export function TriggerWordPicker({ onSubmit }: TriggerWordPickerProps) {
         justifyCenter
         flexRow
         rounded
-        pv={ 4 }
+        py={ 4 }
         elevated
         fontSize={ 24 }
         disabled={ words.filter(([word, replacement]) => word && replacement).length === 0 }

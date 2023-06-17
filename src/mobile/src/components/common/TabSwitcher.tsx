@@ -10,9 +10,9 @@ import {
 import { useStyles, useTheme } from '~/hooks';
 
 type Props = {
-  titles?: React.ReactNode[];
+  titles?: JSX.Element | JSX.Element[][];
   tabHeight?: number;
-  children?: React.ReactNode | React.ReactNode[];
+  children?: JSX.Element | JSX.Element[] | JSX.Element | JSX.Element[][];
   activeTab?: number;
   onTabChange?: (tab: number, prev: number) => void;
 } & ViewProps;

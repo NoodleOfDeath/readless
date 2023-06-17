@@ -74,7 +74,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
           </View>
         ) : (
           <View gap={ 12 }>
-            <View mh={ 16 } gap={ 6 }>
+            <View mx={ 16 } gap={ 6 }>
               <View row gap={ 6 }>
                 <Text>
                   {strings.bookmarks_bookmarksAvailableOffline}

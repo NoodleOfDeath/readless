@@ -19,7 +19,7 @@ export function VoicePicker() {
   return (
     <ScrollView horizontal style={ { overflow: 'visible' } }>
       <View>
-        <View row alignCenter gap={ 8 } mh={ 8 }>
+        <View row alignCenter gap={ 8 } mx={ 8 }>
           {voices?.map((voice) => (
             <Button
               row

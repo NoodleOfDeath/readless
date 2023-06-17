@@ -29,6 +29,7 @@ export function ScrollView({
   const style = useStyles(props as Stylable);
   return (
     <RNScrollView 
+      nestedScrollEnabled
       refreshControl={ refreshControl }
       keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
       scrollEventThrottle={ scrollEventThrottle }

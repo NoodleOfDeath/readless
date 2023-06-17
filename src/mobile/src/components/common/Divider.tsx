@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Divider as RNDivider, DividerProps as RNDividerProps } from 'react-native-paper';
+import { IDividerProps, Divider as RNDivider } from 'native-base';
 
 import { ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type DividerProps = RNDividerProps & ViewProps & {
+export type DividerProps = IDividerProps & ViewProps & {
   vertical?: boolean;
 };
 

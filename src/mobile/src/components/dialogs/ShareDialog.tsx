@@ -124,7 +124,7 @@ export function ShareDialog({
 
   return (
     <ActionSheet id={ props.sheetId }>
-      <View pv={ 12 }>
+      <View py={ 12 }>
         {Object.values(actions).map((subactions, i) => (
           <View key={ i } height={ 120 } gap={ 12 }>
             <ScrollView horizontal>

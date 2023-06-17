@@ -33,6 +33,7 @@ export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
   fontFamily?: string;
   fontSize?: number;
   fontSizeFixed?: boolean;
+  adjustsFontSizeToFit?: boolean;
   letterSpacing?: number;
   lineHeight?: number;
   bold?: boolean;
@@ -83,16 +84,16 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   inactive?: boolean;
   // margins
   m?: number | string;
-  mh?: number | string;
-  mv?: number | string;
+  mx?: number | string;
+  my?: number | string;
   mt?: number | string;
   mb?: number | string;
   ml?: number | string;
   mr?: number | string;
   // padding
   p?: number | string;
-  ph?: number | string;
-  pv?: number | string;
+  px?: number | string;
+  py?: number | string;
   pt?: number | string;
   pb?: number | string;
   pl?: number | string;
@@ -109,9 +110,9 @@ export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
   borderBottomColor?: string;
   borderLeftColor?: string;
   borderRadius?: number;
-  borderRadiusTL?: number;
+  borderTopLeftRadius?: number;
   borderRadiusTR?: number;
-  borderRadiusBL?: number;
+  borderBottomLeftRadius?: number;
   borderRadiusBR?: number;
   // appearance
   bg?: string;

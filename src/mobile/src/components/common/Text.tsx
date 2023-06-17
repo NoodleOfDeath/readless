@@ -17,11 +17,12 @@ export function Text({
   children,
   color = 'text',
   capitalize,
+  fontSizeFixed,
   ...textProps
 }: TextProps) {
 
   const style = useStyles({
-    ...textProps, color, fontSizeFixed: textProps.fontSizeFixed || textProps.adjustsFontSizeToFit, 
+    ...textProps, color, fontSizeFixed: fontSizeFixed || textProps.adjustsFontSizeToFit, 
   });
   const computedChildren = React.useMemo(() => capitalize && typeof children === 'string' ? children.replace(/^./, ($0) => $0.toUpperCase()) : children, [capitalize, children]);
 

@@ -37,7 +37,7 @@ export function DisplayModePicker({
   return (
     <SegmentedButtons
       { ...props }
-      value={ displayMode ?? 'system' }
+      initialValue={ displayMode ?? 'system' }
       onValueChange={ (value) => setPreference('displayMode', value as ColorMode) }
       buttons={ [
         { label: strings.settings_light, value: 'light' as ColorMode },

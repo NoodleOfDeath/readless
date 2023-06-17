@@ -1,27 +1,23 @@
 import React from 'react';
 import { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 
-import { TextInput as RNPTextInput, TextInputProps as RNPTextInputProps } from 'react-native-paper';
+import { IInputProps, Input } from 'native-base';
 
 import { ChildlessViewProps, View } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type TextInputProps = RNPTextInputProps & ChildlessViewProps & {
+export type TextInputProps = IInputProps & ChildlessViewProps & {
   flat?: boolean;
 };
 
 export type InputEvent = NativeSyntheticEvent<TextInputKeyPressEventData>;
 
-export function TextInput({
-  flat,
-  ...props
-}: TextInputProps) {
+export function TextInput(props: TextInputProps) {
   const theme = useTheme();
   const style = useStyles(props);
   return (
     <View style={ style }>
-      <RNPTextInput
-        mode={ flat ? 'flat' : 'outlined' }
+      <Input
         { ...props } 
         style={ [theme.components.input, style.color ? { color: style.color } : {} ] } />
     </View>

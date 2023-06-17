@@ -11,9 +11,9 @@ export type TableViewSectionProps = ViewProps & {
     grouped?: boolean;
 } & {
   allowFontScaling?: boolean;
-  children?: React.ReactNode;
-  footerComponent?: React.ReactNode;
-  headerComponent?: React.ReactNode;
+  children?: JSX.Element | JSX.Element[];
+  footerComponent?: JSX.Element | JSX.Element[];
+  headerComponent?: JSX.Element | JSX.Element[];
   footer?: string;
   footerTextColor?: TextStyle['color'];
   footerTextStyle?: TextStyle;
@@ -42,7 +42,7 @@ export function TableViewSection({
   const style = useStyles(props);
 
   return (
-    <View mh={ grouped ? 24 : 0 }>
+    <View mx={ grouped ? 24 : 0 }>
       <Section
         { ...props }
         hideSeparator={ grouped }

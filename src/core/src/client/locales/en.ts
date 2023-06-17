@@ -158,8 +158,8 @@ export const enStrings = {
   walkthroughs_appearance_selectFont: 'Select a font and size that is easiest to read',
   walkthroughs_appearance_selectTheme: 'Light or dark mode?',
   
-  walkthroughs_onboarding_addCategories: 'Add categories',
   // walkthroughs - onboarding
+  walkthroughs_onboarding_addCategories: 'Add categories',
   walkthroughs_onboarding_addNewsSources: 'Add news sources',
   walkthroughs_onboarding_welcome: 'Welcome to Read Less!',
 

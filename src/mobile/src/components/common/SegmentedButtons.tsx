@@ -2,53 +2,46 @@ import React from 'react';
 
 import { Button as NBButton } from 'native-base';
 
-import {
-  Button,
-  ChildlessViewProps,
-  View,
-} from '~/components';
-import { useStyles } from '~/hooks';
+import { Button, ChildlessViewProps } from '~/components';
 
 export type SegmentedButtonProps<T extends string | number = string> = {
-  icon?: React.ReactNode;
-  label?: React.ReactNode;
+  icon?: string | JSX.Element | JSX.Element[];
+  label?: string | JSX.Element | JSX.Element[];
   style?: ChildlessViewProps['style'];
   value: T;
 };
 
 export type SegmentedButtonsProps<T extends string | number = string> = ChildlessViewProps & {
   buttons: SegmentedButtonProps<T>[];
-  buttonStyle?: ChildlessViewProps['style'];
+  initialValue?: T;
   onValueChange?: (value: T) => void;
-  value?: T;
   elevated?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SegmentedButtons = <T extends string | number = string>({
+  initialValue,
   buttons,
-  buttonStyle,
   onValueChange,
-  ...props
 }: SegmentedButtonsProps<T>) => {
+  const [value, setValue] = React.useState<T>(initialValue);
   return (
-    <NBButton.Group>
+    <NBButton.Group isAttached mr={ 12 }>
       {buttons.map(({
-        icon, label, value, style,
+        icon, label, value: v,
       }, index) => (
-        <Button 
-          key={ `${value}${index}` }
-          style={ [style, buttonStyle] }
-          flexRow
-          flexGrow={ 1 }
-          alignCenter
-          justifyCenter
-          gap={ 6 }
-          p={ 12 }
+        <Button
+          key={ `${v}${index}` }
+          horizontal
           selectable
-          selected={ value === props.value }
+          px={ 12 }
+          my={ -24 } 
           leftIcon={ icon }
-          onPress={ () => onValueChange?.(value) }>
+          selected={ value === v }
+          onPress={ () => {
+            setValue(v);
+            onValueChange?.(v);
+          } }>
           { label }
         </Button>
       ))}

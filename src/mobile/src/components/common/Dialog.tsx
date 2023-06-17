@@ -9,7 +9,7 @@ export type DialogProps = ViewProps & React.PropsWithChildren<{
   visible?: boolean;
   onClose?: () => void;
   title?: string;
-  actions?: React.ReactNode | React.ReactNode[];
+  actions?: JSX.Element | JSX.Element[] | JSX.Element | JSX.Element[][];
 }>;
 
 export function Dialog({

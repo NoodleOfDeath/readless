@@ -8,7 +8,7 @@ import { ChildlessViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type TableViewProps = ChildlessViewProps & {
-  children?: React.ReactNode;
+  children?: JSX.Element | JSX.Element[];
   appearance?: 'auto' | 'dark' | 'light' | string;
   customAppearances?: {
     [key: string]: THEME_APPEARANCE;

@@ -21,7 +21,7 @@ import { strings } from '~/locales';
 export type SearchMenuProps = ViewProps & {
   initialValue?: string;
   placeholder?: string;
-  subview?: React.ReactNode;
+  subview?: JSX.Element | JSX.Element[];
   onChangeText?: (value: string) => void;
   onClear?: () => void;
   onSubmit?: (value: string) => void;
@@ -170,7 +170,7 @@ export function SearchMenu({
             opacity={ 0.95 }
             p={ 12 }
             bottom={ 24 }
-            right={ 24 }
+            right={ 16 }
             leftIcon="magnify"
             iconSize={ 32 }
             onPress={ () => setFocused(true) } />

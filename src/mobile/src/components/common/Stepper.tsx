@@ -34,9 +34,8 @@ export function Stepper({
       <TextInput
         flat
         value={ `${value + offset}` }
-        contentStyle={ { textAlign: 'center' } }
-        dense
-        width={ 80 }
+        size={ 'sm' }
+        w={ 70 }
         inputMode='numeric'
         keyboardType="numeric"
         onChangeText={ (text) => {

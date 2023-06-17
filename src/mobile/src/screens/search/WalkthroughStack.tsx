@@ -8,7 +8,7 @@ import { strings } from '~/locales';
 
 type Feature = {
   id: string;
-  content?: React.ReactNode;
+  content?: JSX.Element | JSX.Element[];
   onPress?: () => void;
 };
 
@@ -62,7 +62,7 @@ export function WalkthroughStack({ onClose }: Props = {}) {
   
   return cards.length > 0 && (
     <CardStack
-      mh={ 12 }
+      mx={ 12 }
       mb={ 12 }
       onClose={ onClose }
       onPressItem={ (index) => cards[index].onPress?.() }>

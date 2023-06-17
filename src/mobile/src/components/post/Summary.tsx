@@ -106,7 +106,7 @@ function RenderActions({ actions }: RenderActionsProps) {
               flexGrow={ 1 }
               flex={ 1 }
               gap={ 6 }
-              ph={ 4 }
+              px={ 4 }
               alignCenter
               justifyCenter
               caption
@@ -385,11 +385,11 @@ export function Summary({
   
   const header = React.useMemo(() => (
     <View 
-      pv={ initialFormat ? 12 : 6 }
-      ph={ 6 }
+      py={ initialFormat ? 12 : 6 }
+      px={ 6 }
       flexGrow={ 1 }
       elevated
-      borderRadiusTL={ initialFormat ? 0 : 12 }
+      borderTopLeftRadius={ initialFormat ? 0 : 12 }
       borderRadiusTR={ initialFormat ? 0 : 12 }
       zIndex={ 2 }
       inactive={ isRead }>
@@ -618,6 +618,7 @@ export function Summary({
             maxWidth={ initialFormat ? 200 : 128 }
             width={ initialFormat ? '40%' : '30%' }>
             <Popover
+              modal
               anchor={ (
                 <View
                   top={ -6 }
@@ -625,8 +626,8 @@ export function Summary({
                   minHeight={ 80 }
                   height="100%"
                   overflow='hidden'
-                  borderRadiusTL={ initialFormat ? 0 : 12 }
-                  borderRadiusBL={ initialFormat ? 0 : 12 }>
+                  borderTopLeftRadius={ initialFormat ? 0 : 12 }
+                  borderBottomLeftRadius={ initialFormat ? 0 : 12 }>
                   {containsTrigger ? (
                     <Text 
                       absolute
@@ -643,10 +644,10 @@ export function Summary({
                   )}
                 </View>
               ) }>
-              <View gap={ 6 }>
+              <View width={ 300 } p={ 12 } gap={ 6 }>
                 <Text caption>{strings.summary_thisIsNotARealImage}</Text>
                 <View
-                  mh={ -12 }
+                  mx={ -12 }
                   mb={ -12 }>
                   <Image
                     source={ { uri: summary.imageUrl } }  
@@ -662,7 +663,7 @@ export function Summary({
           flexGrow={ 1 }
           gap={ 6 }
           pb={ 12 }>
-          <View flex={ 1 } flexGrow={ 1 } mh={ 12 }>
+          <View flex={ 1 } flexGrow={ 1 } mx={ 12 }>
             <View flexRow flexGrow={ 1 }>
               <Highlighter
                 bold
@@ -687,7 +688,7 @@ export function Summary({
             )}
           </View>
           {summary.siblings && summary.siblings.length > 0 && (
-            <View mh={ 12 } gap={ 6 }>
+            <View mx={ 12 } gap={ 6 }>
               <Text>
                 {`${strings.summary_relatedNews} (${summary.siblings.length})`}
               </Text>
@@ -736,7 +737,7 @@ export function Summary({
                     flexGrow={ 1 }
                     gap={ 6 }
                     overflow='hidden'
-                    borderRadiusTL={ initialFormat ? 0 : 12 }
+                    borderTopLeftRadius={ initialFormat ? 0 : 12 }
                     borderRadiusTR={ initialFormat ? 0 : 12 }>
                     {header}
                     {coverContent}
@@ -749,7 +750,7 @@ export function Summary({
                   initiallyCollapsed={ false }
                   title={ (
                     <ReadingFormatPicker
-                      mv={ -12 }
+                      my={ -12 }
                       elevated={ false }
                       format={ format } 
                       preferredFormat={ preferredReadingFormat }

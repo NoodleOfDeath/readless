@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Center } from 'native-base';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import { ReadingFormat } from '~/api';
@@ -25,12 +26,14 @@ export function AppearanceWalkthrough(props: SheetProps) {
     return [
       {
         body: (
-          <View alignCenter justifyCenter gap={ 12 }>
+          <View justifyCenter gap={ 12 }>
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <FontPicker horizontal />
-            <FontSizePicker />
+            <Center>
+              <FontPicker horizontal />
+              <FontSizePicker />
+            </Center>
           </View>
         ),
         title: strings.walkthroughs_appearance_selectFont,
@@ -69,7 +72,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <DisplayModePicker />
+            <DisplayModePicker buttons />
           </View>
         ),
         title: strings.walkthroughs_appearance_selectTheme,

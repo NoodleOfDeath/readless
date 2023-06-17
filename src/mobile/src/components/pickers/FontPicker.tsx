@@ -37,7 +37,7 @@ export function FontPicker({
       style={ {
         overflow: 'hidden', padding: 8, ...style, 
       } }>
-      <View flexRow alignCenter gap={ 8 } mh={ 8 }>
+      <View flexRow alignCenter gap={ 8 } mx={ 8 }>
         {AVAILABLE_FONTS.map((font) => (
           <Button 
             flexRow

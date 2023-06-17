@@ -1,17 +1,13 @@
 import React from 'react';
 
-import {
-  HStack,
-  ISwitchProps,
-  Switch as RNSwitch,
-  Text,
-} from 'native-base';
+import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native-paper';
 
+import { Text, View } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type SwitchProps = ISwitchProps & {
-  leftLabel?: React.ReactNode;
-  rightLabel?: React.ReactNode;
+export type SwitchProps = RNSwitchProps & {
+  leftLabel?: JSX.Element | JSX.Element[];
+  rightLabel?: JSX.Element | JSX.Element[];
   spacing?: number;
 };
 
@@ -22,10 +18,10 @@ export const Switch = ({
 }: SwitchProps) => {
   const theme = useTheme();
   return (
-    <HStack>
+    <View flexRow alignCenter gap={ 12 }>
       { typeof leftLabel === 'string' ? <Text>{ leftLabel }</Text> : leftLabel }
       <RNSwitch { ...props } color={ theme.colors.primary } />
       { typeof rightLabel === 'string' ? <Text>{ rightLabel }</Text> : rightLabel }
-    </HStack>
+    </View>
   );
 };

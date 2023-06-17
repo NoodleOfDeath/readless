@@ -25,9 +25,9 @@ struct ContentView: View {
             if self.service.loading {
               ProgressView()
             } else
-            if self.service.error != nil {
+            if let error = self.service.error {
               Text("Error loading")
-              Text(self.service.error)
+              Text(error)
             } else {
               List(self.service.summaries, id: \.id) { summary in
                 NavigationLink(
