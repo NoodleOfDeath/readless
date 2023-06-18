@@ -20,6 +20,9 @@ import {
   SessionContext,
 } from './contexts';
 import { AboutScreen } from './screens/about/AboutScreen';
+import { FontPickerScreen } from './screens/settings/FontPickerScreen';
+import { ReadingFormatPickerScreen } from './screens/settings/ReadingFormatPickerScreen';
+import { TriggerWordPickerScreen } from './screens/settings/TriggerWordPickerScreen';
 
 import {
   ActivityIndicator,
@@ -34,7 +37,7 @@ import {
   BookmarksScreen,
   BrowseScreen,
   ChannelScreen,
-  GenericScreen,
+  DisplayModePickerScreen,
   NAVIGATION_LINKING_OPTIONS,
   SearchScreen,
   SettingsScreen,
@@ -83,11 +86,6 @@ EventMapBase
     options: { headerBackTitle: '' }, 
   },
   {
-    component: GenericScreen, 
-    name: 'generic',
-    options: { headerBackTitle: '' }, 
-  },
-  {
     component: SettingsScreen, 
     name: 'settings', 
     options: {
@@ -99,6 +97,38 @@ EventMapBase
     component: SummaryScreen, 
     name: 'summary',  
     options: { headerBackTitle: '' },
+  },
+  {
+    component: DisplayModePickerScreen, 
+    name: 'displayModePicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_displayMode, 
+    },
+  },
+  {
+    component: FontPickerScreen,
+    name: 'fontPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_font, 
+    },
+  },
+  {
+    component: TriggerWordPickerScreen,
+    name: 'triggerWordPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_triggerWords, 
+    },
+  },
+  {
+    component: ReadingFormatPickerScreen,
+    name: 'readingFormatPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_preferredReadingFormat, 
+    },
   },
 ];
 
@@ -200,7 +230,15 @@ function Stack() {
 
 export default function NavigationController() {
   const theme = useTheme();
-  const { ready } = React.useContext(SessionContext);
+  const { ready, viewedFeatures } = React.useContext(SessionContext);
+  React.useEffect(() => {
+    if (!ready) {
+      return;
+    }
+    if (!viewedFeatures || !('onboarding-walkthrough' in viewedFeatures)) {
+      SheetManager.show('onboarding-walkthrough');
+    }
+  }, [viewedFeatures, ready]);
   return (
     <NavigationContainer
       theme= { theme.navContainerTheme }

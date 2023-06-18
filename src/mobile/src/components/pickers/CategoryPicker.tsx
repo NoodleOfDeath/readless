@@ -1,67 +1,38 @@
 import React from 'react';
 
-import { PublicCategoryAttributes } from '~/api';
-import {
-  ActivityIndicator,
-  Button,
-  GridPicker,
-  View,
-} from '~/components';
+import { ChildlessViewProps, GridPicker } from '~/components';
 import {
   Bookmark,
   SessionContext,
   useCategoryClient,
 } from '~/core';
 
-export function CategoryPicker() {
+export type CategoryPickerProps = ChildlessViewProps;
 
+export function CategoryPicker(props: CategoryPickerProps) {
   const { getCategories } = useCategoryClient();
-
   const { bookmarkedCategories, setPreference } = React.useContext(SessionContext);
-
-  const [loading, setLoading] = React.useState(false);
-  const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
-  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(Object.keys({ ...bookmarkedCategories }));
-
-  const onMount = React.useCallback(async () => {
-    setLoading(true);
-    const { data: categories, error } = await getCategories();
-    if (error) {
-      console.log(error);
-    } else {
-      setCategories(categories.rows);
-    }
-    setLoading(false);
+  const [selectedCategories] = React.useState<string[]>(Object.keys({ ...bookmarkedCategories }));
+  const fetch = React.useCallback(async () => {
+    const { data } = await getCategories();
+    return data.rows.map((category) => ({
+      label: category.displayName,
+      payload: category,
+      value: category.name,
+    }));
   }, [getCategories]);
-
-  React.useEffect(() => {
-    onMount();
-  }, [onMount]);
-
   return (
-    <View>
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <GridPicker
-          options={ categories.map((category) => ({
-            label: category.displayName,
-            value: category.name,
-          }
-          )) }
-          multi
-          onValueChange={ (value) => setSelectedCategories(value) } />
-      )}
-      {!loading && selectedCategories.length > 0 && (
-        <Button onPress={ () => {
-          setPreference(
-            'bookmarkedCategories',
-            Object.fromEntries(selectedCategories.map((category) => [category, new Bookmark(categories.find((c) => c.name === category) as PublicCategoryAttributes)]))
-          );
-        } }>
-          Save
-        </Button>
-      )}
-    </View>
+    <GridPicker
+      { ...props }
+      searchable
+      options={ fetch }
+      multi
+      initialValue={ selectedCategories }
+      onSave={ 
+        (states) => setPreference(
+          'bookmarkedCategories', 
+          Object.fromEntries(states.map((state) => [state.value, new Bookmark(state.payload)]))
+        )
+      } />
   );
 }

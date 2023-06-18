@@ -535,7 +535,7 @@ export function SearchScreen({
           <Button
             absolute
             right={ 16 }
-            bottom={ 64 }
+            bottom={ 96 }
             elevated
             rounded
             opacity={ 0.95 }

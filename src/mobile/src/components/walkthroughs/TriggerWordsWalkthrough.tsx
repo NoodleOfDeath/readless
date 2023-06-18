@@ -39,13 +39,15 @@ export function TriggerWordsWalkthrough(props: SheetProps) {
     },
     {
       body: <TriggerWordPicker onSubmit={ onDone } />,
-      title: strings.walkthroughs_triggerWords_enableTriggerWord,
+      title: strings.walkthroughs_triggerWords,
     },
   ], [onDone]);
 
   return (
     <Walkthrough
       { ...props }
-      payload={ { onDone, steps } } />
+      payload={ {
+        closable: true, onDone, steps, 
+      } } />
   );
 }

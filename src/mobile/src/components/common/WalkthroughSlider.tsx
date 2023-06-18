@@ -46,7 +46,7 @@ function mergeExtraData(...newArgs: unknown[]): number {
 
 const isAndroidRTL = I18nManager.isRTL && Platform.OS === 'android';
 
-export type WalkthroughSliderProps<ItemT> = {
+export type WalkthroughSliderProps<ItemT> = FlatListProps<ItemT> & {
   data: ItemT[];
   renderItem: (
     info: ListRenderItemInfo<ItemT> & {
@@ -81,6 +81,7 @@ type State = {
   activeIndex: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class WalkthroughSlider<ItemT = any> extends React.Component<
   WalkthroughSliderProps<ItemT>,
   State
@@ -126,6 +127,7 @@ export class WalkthroughSlider<ItemT = any> extends React.Component<
     isAndroidRTL ? this.props.data.length - 1 - i : i;
 
   // Render a slide
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _renderItem = (flatListArgs: any) => {
     const { width, height } = this.state;
     const props = { ...flatListArgs, dimensions: { height, width } };

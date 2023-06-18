@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {
+  Picker,
+  PickerProps,
   SelectOption,
   SelectOptionState,
   TableIndex,
@@ -13,73 +15,63 @@ import {
 } from '~/components';
   
 export type TablePickerProps<
-  T extends string = string, 
-  Multi extends boolean = false,
-  I extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-> = TableViewProps & {
-  options: T[] | SelectOption<T>[];
-  initialOption?: I;
-  onValueChange?: (value?: I) => void;
-  multi?: Multi;
+  T extends string,
+  P,
+  Multi extends true | false = false,
+  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+> = TableViewProps & Omit<PickerProps<T, P, Multi, InitialValue, CurrentValue>, 'render'> & {
   sectionProps?: Partial<TableViewSectionProps> | ((state: Omit<SelectOptionState<T, Pick<TableIndex, 'section'>>, 'option' | 'selected'>) => Partial<TableViewSectionProps>);
   cellProps?: Partial<TableViewCellProps> | ((state: SelectOptionState<T, TableIndex>) => Partial<TableViewCellProps>);
 };
 
 export function TablePicker<
-  T extends string = string, 
-  Multi extends boolean = false,
-  I extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  T extends string,
+  P,
+  Multi extends true | false = false,
+  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
 >({
-  options: options0,
-  initialOption,
-  onValueChange,
-  multi,
-  sectionProps,
-  cellProps,
+  sectionProps: sectionProps0,
+  cellProps: cellProps0,
   ...props
-}: TablePickerProps<T, Multi>) {
+}: TablePickerProps<T, P, Multi, InitialValue, CurrentValue>) {
 
-  const options = React.useMemo(() => SelectOption.options(options0), [options0]);
-  const [value, setValue] = React.useState<T[]>(Array.isArray(initialOption) ? initialOption : (initialOption ? [initialOption] : []) as T[]);
+  const sectionProps = React.useCallback((value: T[]) => {
+    return sectionProps0 instanceof Function ? sectionProps0({
+      currentValue: value,
+      section: 0,
+    }) : sectionProps0;
+  }, [sectionProps0]);
 
-  const handlePress = React.useCallback((option: T) => {
-    setValue((prev) => {
-      let state = [ ...prev ];
-      if (multi) {
-        if (state.includes(option)) {
-          state = state.filter((v) => v !== option);
-        } else {
-          state = [...state, option];
-        }
-      }
-      onValueChange?.(state as I);
-      return (prev = state);
-    });
-  }, [multi, onValueChange]);
+  const cellProps = React.useCallback((option: SelectOption<T, P>, value: T[], index: number) => {
+    return cellProps0 instanceof Function ? cellProps0({
+      currentValue: props.multi ? value : value[0] ? value[0] as T : undefined,
+      index,
+      option,
+      section: 0,
+      selected: value.includes(option.value),
+    }) : cellProps0;
+  }, [cellProps0, props.multi]);
 
   return (
-    <TableView { ...props }>
-      <TableViewSection { ...(sectionProps instanceof Function ? sectionProps({
-        currentValue: value,
-        section: 0,
-      }) : sectionProps) }>
-        {options.map((option, index) => {
-          return (
-            <TableViewCell
-              key={ option.value }
-              accessory={ value.includes(option.value) ? 'Checkmark' : undefined }
-              title={ option.label }
-              { ...(cellProps instanceof Function ? cellProps({
-                currentValue: multi ? value : value[0] ? value[0] as T : undefined,
-                index,
-                option,
-                section: 0,
-                selected: value.includes(option.value),
-              }) : cellProps) }
-              onPress={ () => handlePress(option.value) } />
-          );
-        })}
-      </TableViewSection>
-    </TableView>
+    <Picker
+      { ...props }
+      render={ (options, value, handlePress) => (
+        <TableView { ...props }>
+          <TableViewSection { ...sectionProps(value) }>
+            {options.map((option, index) => {
+              return (
+                <TableViewCell
+                  key={ option.value }
+                  accessory={ value.includes(option.value) ? 'Checkmark' : undefined }
+                  title={ option.label }
+                  { ...cellProps(option, value, index) }
+                  onPress={ () => handlePress(option.value) } />
+              );
+            })}
+          </TableViewSection>
+        </TableView>
+      ) } />
   );
 }

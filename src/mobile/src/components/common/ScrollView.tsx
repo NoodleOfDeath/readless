@@ -18,6 +18,7 @@ export function ScrollView({
   children,
   refreshing = false,
   onRefresh,
+  keyboardDismissMode = 'on-drag',
   keyboardShouldPersistTaps = 'handled',
   scrollEventThrottle = 16,
   refreshControl = onRefresh && (
@@ -31,9 +32,9 @@ export function ScrollView({
     <RNScrollView 
       nestedScrollEnabled
       refreshControl={ refreshControl }
+      keyboardDismissMode={ keyboardDismissMode }
       keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
       scrollEventThrottle={ scrollEventThrottle }
-      keyboardDismissMode="on-drag"
       style={ style }
       ref={ ref as React.RefObject<RNScrollView> }
       { ...props }>

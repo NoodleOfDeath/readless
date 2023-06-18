@@ -3,86 +3,86 @@ import React from 'react';
 import {
   Button,
   ButtonProps,
-  ChildlessViewProps,
+  Picker,
+  PickerProps,
   ScrollView,
+  ScrollViewProps,
   SelectOption,
   SelectOptionState,
   View,
 } from '~/components';
+import { useTheme } from '~/hooks';
 
 export type GridPickerProps<
-  T extends string = string,
+  T extends string,
+  P,
   Multi extends true | false = false,
-  I extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-> = ChildlessViewProps & {
-  options: T[] | SelectOption<T>[];
-  multi?: Multi;
-  initialValue?: I;
-  onValueChange?: (value?: I) => void;
+  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+> = Omit<PickerProps<T, P, Multi, InitialValue, CurrentValue>, 'render'> & {
+  scrollViewProps?: Partial<ScrollViewProps>;
   buttonProps?: Partial<ButtonProps> | ((state: SelectOptionState<T>) => Partial<ButtonProps>);
 };
 
 export function GridPicker<
-  T extends string = string,
-  Multi extends boolean = false,
-  I extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  T extends string,
+  P,
+  Multi extends true | false = false,
+  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
 >({
-  options: options0,
-  initialValue,
-  onValueChange,
-  multi,
-  buttonProps = (state) => ({ 
-    bold: state.selected,
-    leftIcon: state.selected ? 'check' : undefined,
-  }),
+  scrollViewProps,
+  buttonProps: buttonProps0,
   ...props
-}: GridPickerProps<T, Multi>) {
+}: GridPickerProps<T, P, Multi, InitialValue, CurrentValue>) {
 
-  const options = React.useMemo(() => SelectOption.options(options0), [options0]);
-  const [value, setValue] = React.useState<T[]>(Array.isArray(initialValue) ? initialValue : (initialValue ? [initialValue] : []) as T[]);
+  const theme = useTheme();
 
-  const handlePress = React.useCallback((option: T) => {
-    setValue((prev) => {
-      let state = [ ...prev ];
-      if (multi) {
-        if (state.includes(option)) {
-          state = state.filter((v) => v !== option);
-        } else {
-          state = [...state, option];
-        }
-      }
-      onValueChange?.(state as I);
-      return (prev = state);
-    });
-  }, [multi, onValueChange]);
+  const buttonProps = React.useMemo(() => {
+    if (!buttonProps0) {
+      return (state: SelectOptionState<T>) => ({
+        bg: state.selected ? theme.colors.selectedBackground : undefined,
+        color: state.selected ? theme.colors.invertText : undefined,
+        underline: state.selected,
+      });
+    }
+  }, [buttonProps0, theme.colors.invertText, theme.colors.selectedBackground]);
 
   return (
-    <ScrollView { ...props }>
-      <View
-        flexRow
-        flexGrow={ 1 }
-        flexWrap="wrap"
-        p={ 8 }
-        colGap={ 8 }
-        rowGap={ 8 }>
-        {options.map((option) => (
-          <Button
-            key={ option.value }
-            elevated
-            horizontal
-            rounded
-            gap={ 6 }
-            p={ 6 }
-            { ...(buttonProps instanceof Function ? buttonProps({ 
-              currentValue: multi ? value : value[0] ? value[0] as T : undefined,
-              option, 
-              selected: value.includes(option.value), 
-            }) : buttonProps) }
-            onPress={ () => handlePress(option.value) }>
-            {option.label}
-          </Button>
-        ))}
-      </View>
-    </ScrollView>
+    <Picker
+      { ...props }
+      render={ (options, value, handlePress) => (
+        <ScrollView
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps={ 'always' }
+          { ...scrollViewProps }>
+          <View
+            flexRow
+            flexGrow={ 1 }
+            flexWrap="wrap"
+            p={ 8 }
+            colGap={ 8 }
+            rowGap={ 8 }>
+            {options.map((option) => (
+              <Button
+                key={ option.value }
+                elevated
+                horizontal
+                haptic
+                rounded
+                gap={ 6 }
+                p={ 6 }
+                { ...(buttonProps instanceof Function ? buttonProps({ 
+                  currentValue: props.multi ? value : value[0] ? value[0] as T : undefined,
+                  option, 
+                  selected: value.includes(option.value), 
+                }) : buttonProps) }
+                onPress={ () => handlePress(option.value) }>
+                {option.label}
+              </Button>
+            ))}
+          </View>
+        </ScrollView>
+      ) } />
   );
 }

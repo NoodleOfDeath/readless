@@ -22,24 +22,28 @@ export type WalkthroughStep = {
   image?: string;
 };
 
-export type WalkthroughProps = {
-  steps: WalkthroughStep[];
+export type WalkthroughProps<Step extends WalkthroughStep = WalkthroughStep> = {
+  steps: Step[];
   onDone?: () => void;
+  closable?: boolean;
+  closeLabel?: string;
 };
 
-export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>) {
+export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ payload, ...props }: SheetProps<WalkthroughProps<Step>>) {
   
   const theme = useTheme();
 
   const { 
     steps = [], 
     onDone,
+    closable,
+    closeLabel = strings.action_close,
   } = React.useMemo(() => ({ ...payload }), [payload]);
   
   const computedSteps = React.useMemo(() => {
     return steps.map((step, i) => (
       <View gap={ 12 } key={ i }>
-        {typeof step.title === 'string' ? <Text h5 bold textCenter>{step.title}</Text> : step.title}
+        {typeof step.title === 'string' ? <Text h4 bold textCenter>{step.title}</Text> : step.title}
         <View col />
         {typeof step.body === 'string' ? <Markdown>{step.body}</Markdown> : step.body}
         <View col />
@@ -125,24 +129,28 @@ export function Walkthrough({ payload, ...props }: SheetProps<WalkthroughProps>)
   }, [theme]);
   
   return (
-    <ActionSheet id={ props.sheetId } gestureEnabled={ false }>
+    <ActionSheet 
+      id={ props.sheetId }
+      gestureEnabled={ false }>
       <View height="100%">
-        <View flexRow m={ 12 }>
-          <View flexGrow={ 1 } />
-          <Button
-            elevated
-            flexRow
-            px={ 8 }
-            height={ 40 }
-            justifyCenter
-            touchable
-            alignCenter
-            borderRadius={ 24 }
-            onPress={ () => SheetManager.hide(props.sheetId) }
-            leftIcon={ <Icon name="close" size={ 24 } /> }>
-            {strings.action_close}
-          </Button>
-        </View>
+        {closable && (
+          <View flexRow m={ 12 }>
+            <View flexGrow={ 1 } />
+            <Button
+              elevated
+              flexRow
+              px={ 8 }
+              height={ 40 }
+              justifyCenter
+              touchable
+              alignCenter
+              borderRadius={ 24 }
+              onPress={ () => SheetManager.hide(props.sheetId) }
+              leftIcon={ <Icon name="close" size={ 24 } /> }>
+              {closeLabel}
+            </Button>
+          </View>
+        )}
         <WalkthroughSlider
           renderItem={ renderItem }
           renderPrevButton={ renderPrevButton }

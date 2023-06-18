@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { useKeyboardBottomInset } from 'native-base';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import {
-  Button,
   CategoryPicker,
   Markdown,
   OutletPicker,
@@ -16,6 +16,7 @@ import { strings } from '~/locales';
 export function CustomFeedWalkthrough(props: SheetProps) {
   
   const { setPreference } = React.useContext(SessionContext);
+  const offset = useKeyboardBottomInset();
   
   const onDone = React.useCallback(async () => {
     setPreference('viewedFeatures', (prev) => {
@@ -29,33 +30,33 @@ export function CustomFeedWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => [
     {
       body: (
-        <View>
+        <View gap={ 12 }>
           <Markdown textCenter>
-            Let&apos; get started by choosing any of the follow categories that may interest you
+            Let&apos; get started by choosing any of the following categories that may interest you
           </Markdown>
-          <CategoryPicker />
-          <Button>Skip</Button>
+          <CategoryPicker height={ offset > 0 ? 200 : 300 } />
         </View>
       ),
       title: strings.walkthroughs_onboarding_addCategories,
     },
     {
       body: (
-        <View>
+        <View gap={ 12 }>
           <Markdown textCenter>
             Read Less pulls from over 80 reputable news sources. Do you have any favorites?
           </Markdown>
-          <OutletPicker />
-          <Button>Skip</Button>
+          <OutletPicker height={ offset > 0 ? 200 : 300 } />
         </View>
       ),
       title: strings.walkthroughs_onboarding_addNewsSources,
     },
-  ], []);
+  ], [offset]);
   
   return (
     <Walkthrough
       { ...props }
-      payload={ { onDone, steps } } />
+      payload={ {
+        closable: true, onDone, steps, 
+      } } />
   );
 }

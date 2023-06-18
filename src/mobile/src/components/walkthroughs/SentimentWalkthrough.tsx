@@ -37,6 +37,22 @@ export function SentimentWalkthrough(props: SheetProps) {
   const steps: WalkthroughStep[] = React.useMemo(() => [
     {
       body: (
+        <View gap={ 12 }>
+          <Markdown textCenter>
+            However, **too much sensationalism** can be misleading or even harmful.
+          </Markdown>
+          <View alignCenter>
+            <MeterDial value={ 0.3 } />
+          </View>
+          <Markdown textCenter>
+            **Instead of removing sentiment altogether**, Read Less aims to **measure sentiment** over time.
+          </Markdown>
+        </View>
+      ),
+      title: 'Sentiment is a big part of what makes news, news',
+    },
+    {
+      body: (
         <View elevated p={ 12 }>
           <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
             <Text bold>&quot;</Text>
@@ -199,6 +215,8 @@ export function SentimentWalkthrough(props: SheetProps) {
   return (
     <Walkthrough
       { ...props }
-      payload={ { onDone, steps } } />
+      payload={ {
+        closable: true, onDone, steps, 
+      } } />
   );
 }

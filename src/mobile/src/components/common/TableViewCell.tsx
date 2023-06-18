@@ -83,8 +83,8 @@ export type TableViewCellProps = ChildlessViewProps & {
 
 export function TableViewCell(props: TableViewCellProps) {
   const theme= useTheme();
-  const style = useStyles(props);
-  const stylesWithoutFontScaling = { ...style, fontSizeFixed: true };
+  const style = useStyles({ ...props, fontSizeFixed: true });
+  const stylesWithoutFontScaling = { ...style };
   delete stylesWithoutFontScaling.fontSize;
   return (
     <Cell

@@ -22,6 +22,7 @@ export function Button({
   leftIcon,
   rightIcon,
   horizontal,
+  color,
   fontSize,
   fontFamily,
   adjustsFontSizeToFit,
@@ -47,23 +48,23 @@ export function Button({
   flexGrow = horizontal ? 1 : undefined,
   alignCenter = horizontal,
   touchable = true,
-  ...pressableProps
+  ...props
 }: ButtonProps) {
   
   const theme = useTheme();
   
-  const textStyle = useStyles({
-    adjustsFontSizeToFit, body1, body2, bold, caption, fontFamily, fontSize, h1, h2, h3, h4, h5, h6, italic, letterSpacing, lineHeight, subtitle1, subtitle2, underline,
-  });
+  const textStyle = {
+    adjustsFontSizeToFit, body1, body2, bold, caption, color, fontFamily, fontSize, h1, h2, h3, h4, h5, h6, italic, letterSpacing, lineHeight, subtitle1, subtitle2, underline,
+  };
   const style = useStyles({
-    ...textStyle, touchable, ...pressableProps, alignCenter, flexGrow, flexRow,
+    ...textStyle, ...props, alignCenter, flexGrow, flexRow,
   });
   const [isPressed, setIsPressed] = React.useState(false);
   
   const buttonStyle = React.useMemo(
     () => {
-      let newStyle = pressableProps.elevated ? { ...theme.components.button, ...style } : { ...style };
-      if (pressableProps.selectable) {
+      let newStyle = props.elevated ? { ...theme.components.button, ...style } : { ...style };
+      if (props.selectable) {
         if (selected || isPressed) {
           newStyle = {
             ...newStyle,
@@ -71,7 +72,7 @@ export function Button({
           };
         }
       }
-      if (pressableProps.disabled) {
+      if (props.disabled) {
         newStyle = {
           ...newStyle,
           ...theme.components.buttonDisabled,
@@ -79,7 +80,7 @@ export function Button({
       }
       return newStyle;
     }
-    , [pressableProps.elevated, pressableProps.selectable, pressableProps.disabled, theme.components.button, theme.components.buttonSelected, theme.components.buttonDisabled, style, selected, isPressed]
+    , [props.elevated, props.selectable, props.disabled, theme.components.button, theme.components.buttonSelected, theme.components.buttonDisabled, style, selected, isPressed]
   );
   
   const leftIconComponent = React.useMemo(() => {
@@ -109,18 +110,19 @@ export function Button({
   const handlePress = React.useCallback((e: GestureResponderEvent) => {
     setIsPressed(true);
     setTimeout(() => setIsPressed(false), 100);
-    pressableProps.onPress?.(e);
-  }, [pressableProps]);
+    props.onPress?.(e);
+  }, [props]);
 
   const handlePressOut = React.useCallback((e: GestureResponderEvent) => {
     setIsPressed(false);
-    pressableProps.onPressOut?.(e);
-  }, [pressableProps]);
+    props.onPressOut?.(e);
+  }, [props]);
 
   return (
     <View 
       pressable 
-      { ...pressableProps } 
+      touchable={ touchable }
+      { ...props } 
       onPress={ handlePress } 
       onPressOut={ handlePressOut } 
       style={ buttonStyle }>

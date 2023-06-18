@@ -639,7 +639,6 @@ export function Summary({
                     <Image
                       flex={ 1 }
                       flexGrow={ 1 }
-                      fill
                       source={ { uri: summary.imageUrl } } />
                   )}
                 </View>

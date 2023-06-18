@@ -4,8 +4,6 @@ import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
 import {
-  DisplayModePicker,
-  FontPicker,
   FontSizePicker,
   PrefSwitch,
   ScrollView,
@@ -13,8 +11,6 @@ import {
   TableView,
   TableViewCell,
   TableViewSection,
-  TriggerWordPicker,
-  View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
@@ -71,7 +67,7 @@ export function SettingsTable() {
           detail={ displayMode === 'light' ? strings.settings_light : displayMode === 'dark' ? strings.settings_dark : strings.settings_system }
           accessory="DisclosureIndicator"
           cellIcon="theme-light-dark"
-          onPress={ () => navigate('generic', { component: <DisplayModePicker /> }) } />
+          onPress={ () => navigate('displayModePicker') } />
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -79,7 +75,7 @@ export function SettingsTable() {
           detail={ fontFamily }
           accessory="DisclosureIndicator"
           cellIcon="format-font"
-          onPress={ () => navigate('generic', { component: <FontPicker /> }) } />
+          onPress={ () => navigate('fontPicker') } />
         <TableViewCell
           bold
           title={ strings.settings_fontSize }
@@ -116,17 +112,7 @@ export function SettingsTable() {
           detail={ preferredReadingFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_summary }
           accessory="DisclosureIndicator"
           cellIcon="view-list"
-          onPress={ () => navigate('generic', {
-            component: (
-              <ScrollView>
-                <Summary
-                  hideCard
-                  hideAnalytics
-                  initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                  onFormatChange={ (format) => setPreference('preferredReadingFormat', format) } />
-              </ScrollView>
-            ), 
-          }) } />
+          onPress={ () => navigate('readingFormatPicker') } />
       </TableViewSection>
       <TableViewSection
         header="Customization">
@@ -137,13 +123,7 @@ export function SettingsTable() {
           detail={ Object.keys({ ...triggerWords }).length }
           accessory="DisclosureIndicator"
           cellIcon="alphabetical-off"
-          onPress={ () => navigate('generic', {
-            component: (
-              <View p={ 12 }>
-                <TriggerWordPicker />
-              </View>
-            ),
-          }) } />
+          onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
       <TableViewSection
         header="General">

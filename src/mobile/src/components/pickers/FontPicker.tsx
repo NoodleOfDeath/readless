@@ -28,9 +28,9 @@ export function FontPicker({
   return variant === 'table' ? (
     <TablePicker
       options={ AVAILABLE_FONTS }
-      initialOption={ fontFamily }
+      initialValue={ fontFamily }
       cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
-      onValueChange={ (font) => setPreference('fontFamily', font) } />
+      onValueChange={ (state) => setPreference('fontFamily', state.value) } />
   ) : (
     <ScrollView 
       horizontal

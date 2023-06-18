@@ -29,8 +29,8 @@ export function DisplayModePicker({
           { label: strings.settings_system, value: 'system' as ColorMode },
           { label: strings.settings_dark, value: 'dark' as ColorMode },
         ] }
-        initialOption={ displayMode ?? 'system' }
-        onValueChange={ (value) => setPreference('displayMode', value) } />
+        initialValue={ displayMode ?? 'system' }
+        onValueChange={ (state) => setPreference('displayMode', state.value) } />
     );
   }
   

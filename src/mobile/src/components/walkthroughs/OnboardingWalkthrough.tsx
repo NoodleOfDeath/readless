@@ -4,15 +4,15 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import {
   Button,
+  Divider,
   Icon,
+  Image,
   Markdown,
-  MeterDial,
   Text,
   View,
   Walkthrough,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
-import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
@@ -30,24 +30,47 @@ export function OnboardingWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => [
     {
       body: (
-        <View gap={ 12 }>
-          <Markdown textCenter>
-            Being informed is a human right. Today, it is easy for us to forget this in the face of ad popups, clickbait titles, and irreverent paywalls.
+        <View gap={ 12 } alignCenter>
+          <View>
+            <Image 
+              rounded
+              overflow='hidden'
+              elevated
+              width={ 300 }
+              height={ 200 }
+              resizeMode="contain"
+              source={ { uri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/meme.jpg' } } />
+            <Text subscript>Image courtesy of ImageFlip</Text>
+          </View>
+          <Divider />
+          <Markdown subtitle1 textCenter>
+            Being informed is a **human right**.
           </Markdown>
-          <Markdown textCenter>
-            Despite this, by downloading this app it tells me you still have hope to find a source for news that provides the whole picture, efficiently, in realtime, and as unbiased as possible.
+          <Markdown subtitle1 textCenter>
+            In today&apos;s world, it is easy for us to forget this in the face of overly sensational **clickbait** titles, obnoxious ad **popups**, and defiant **paywalls**.
           </Markdown>
+          <View col />
         </View>
       ),
-      title: 'Welcome to Read Less',
+      title: 'News should be \n cheap and accessible',
     },
     {
       body: (
         <View gap={ 24 }>
-          <Markdown textCenter>
-            to **minimize bias** and
-            **reduce clickbait** in news headlines.
-          </Markdown>
+          <View>
+            <Text h5 bold textLeft>
+              minimize bias...
+            </Text>
+            <Text h5 bold textCenter>
+              reduce clickbait...
+            </Text>
+            <Text h5 bold textRight>
+              ...and extract the facts
+            </Text>
+            <Text subtitle1 textCenter>
+              from news headlines.
+            </Text>
+          </View>
           <View
             alignCenter
             mx={ 32 }
@@ -66,50 +89,38 @@ export function OnboardingWalkthrough(props: SheetProps) {
           </View>
         </View>
       ),
-      title: 'Read Less uses\nLarge Language Models',
+      title: 'Read Less uses\nLarge Language Models to...',
     },
     {
       body: (
-        <View gap={ 12 }>
-          <Markdown textCenter>
-            However, **too much sensationalism** can detract from the content or misconstrue the facts.
+        <View gap={ 24 }>
+          <Markdown subtitle1 textLeft mr={ 64 }>
+            {'with infinite **granular control** \nover your news experience'}
           </Markdown>
-          <View alignCenter>
-            <MeterDial value={ 0.3 } />
+          <Markdown subtitle1 textRight ml={ 64 }>
+            {'kept separate from social media and other distractions'}
+          </Markdown>
+          <Markdown subtitle1 textLeft mr={ 64 }>
+            {'and all **without needing to even create an account**'}
+          </Markdown>
+          <View alignCenter gap={ 24 }>
+            <View elevated rounded p={ 12 }>
+              <Markdown h4 textCenter>
+                {'Are you ready to start \n **reading less**?'}
+              </Markdown>
+            </View>
+            <Button
+              h4
+              elevated
+              rounded
+              p={ 6 }
+              onPress={ onDone }>
+              Let&apos;s Go!
+            </Button>
           </View>
-          <Markdown textCenter>
-            Instead of removing sentiment altogether, Read Less aims to **measure sentiment** instead.
-          </Markdown>
         </View>
       ),
-      title: 'Sentiment is a big part of what makes news, news',
-    },
-    {
-      body: (
-        <View gap={ 12 }>
-          <Markdown textCenter>
-            As more features continue to roll out aimed to improve the efficiency of your news intake, the ultimate goal is to streamline and integrate the process seamlessly into any routine and not detract from your mental health or prey addiction.
-          </Markdown>
-        </View>
-      ),
-      title: 'This is not a social media app',
-    },
-    {
-      body: (
-        <View gap={ 12 }>
-          <Markdown textCenter>
-            Access to news will **always be free** because being informed is a **human right**, but as we scale up, you may enjoy entertainment features like weekly recaps and premium text-to-speech voices through a subscription.
-          </Markdown>
-          <Markdown textCenter>
-            Are you ready to streamline your news consumption experience?
-          </Markdown>
-          <Button
-            onPress={ onDone }>
-            Let&apos;s Go!
-          </Button>
-        </View>
-      ),
-      title: 'Subscriptions',
+      title: 'Read Less is designed \n with you in mind',
     },
   ], [onDone]);
   

@@ -92,7 +92,9 @@ export function AppearanceWalkthrough(props: SheetProps) {
   return (
     <Walkthrough
       { ...props }
-      payload={ { onDone, steps } } />
+      payload={ {
+        closable: true, onDone, steps, 
+      } } />
   );
   
 }

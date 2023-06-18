@@ -49,6 +49,10 @@ export type StackableTabParams = {
     summary: PublicSummaryAttributes | number;
     showAnalytics?: boolean;
   };
+  displayModePicker: undefined;
+  fontPicker: undefined;
+  triggerWordPicker: undefined;
+  readingFormatPicker: undefined;
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {

@@ -20,12 +20,10 @@ export function Text({
   fontSizeFixed,
   ...textProps
 }: TextProps) {
-
   const style = useStyles({
     ...textProps, color, fontSizeFixed: fontSizeFixed || textProps.adjustsFontSizeToFit, 
   });
   const computedChildren = React.useMemo(() => capitalize && typeof children === 'string' ? children.replace(/^./, ($0) => $0.toUpperCase()) : children, [capitalize, children]);
-
   return (
     <View style={ style }>
       <RNText { ...textProps } style={ style }>{computedChildren}</RNText>
