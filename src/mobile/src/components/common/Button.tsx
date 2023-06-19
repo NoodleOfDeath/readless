@@ -1,20 +1,26 @@
 import React from 'react';
-import { GestureResponderEvent, PressableProps } from 'react-native';
+import { GestureResponderEvent } from 'react-native';
 
 import { 
   Icon,
   Text,
+  TextProps,
   View,
   ViewProps,
 } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { 
+  useStyles, 
+  useTextStyles, 
+  useTheme,
+} from '~/hooks';
 
-export type ButtonProps = PressableProps & ViewProps & {
+export type ButtonProps = TextProps & ViewProps & {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   horizontal?: boolean;
   iconSize?: number;
   selected?: boolean;
+  textStyles?: TextProps;
 };
 
 export function Button({
@@ -22,66 +28,39 @@ export function Button({
   leftIcon,
   rightIcon,
   horizontal,
-  color,
-  fontSize,
-  fontFamily,
-  adjustsFontSizeToFit,
   iconSize,
   selected,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  body1,
-  body2,
-  caption,
-  subtitle1,
-  subtitle2,
-  bold,
-  italic,
-  underline,
-  letterSpacing, 
-  lineHeight,
+  itemsCenter = horizontal,
   flexRow = horizontal,
-  flexGrow = horizontal ? 1 : undefined,
-  alignCenter = horizontal,
   touchable = true,
   ...props
 }: ButtonProps) {
   
   const theme = useTheme();
   
-  const textStyle = {
-    adjustsFontSizeToFit, body1, body2, bold, caption, color, fontFamily, fontSize, h1, h2, h3, h4, h5, h6, italic, letterSpacing, lineHeight, subtitle1, subtitle2, underline,
-  };
+  const textStyle = useTextStyles(props);
   const style = useStyles({
-    ...textStyle, ...props, alignCenter, flexGrow, flexRow,
+    ...props, flexRow, itemsCenter,
   });
   const [isPressed, setIsPressed] = React.useState(false);
   
-  const buttonStyle = React.useMemo(
-    () => {
-      let newStyle = props.elevated ? { ...theme.components.button, ...style } : { ...style };
-      if (props.selectable) {
-        if (selected || isPressed) {
-          newStyle = {
-            ...newStyle,
-            ...theme.components.buttonSelected,
-          };
-        }
-      }
-      if (props.disabled) {
-        newStyle = {
-          ...newStyle,
-          ...theme.components.buttonDisabled,
-        };
-      }
-      return newStyle;
+  const buttonStyle = React.useMemo(() => {
+    let newStyle = props.elevated ? { ...theme.components.button, ...style } : { ...style };
+    if (selected || isPressed) {
+      newStyle = {
+        ...newStyle,
+        backgroundColor: theme.colors.selectedBackground,
+        color: theme.colors.contrastText,
+      };
     }
-    , [props.elevated, props.selectable, props.disabled, theme.components.button, theme.components.buttonSelected, theme.components.buttonDisabled, style, selected, isPressed]
-  );
+    if (props.disabled) {
+      newStyle = {
+        ...newStyle,
+        ...theme.components.buttonDisabled,
+      };
+    }
+    return newStyle;
+  }, [props.elevated, props.disabled, theme.components.button, theme.components.buttonDisabled, theme.colors.selectedBackground, theme.colors.contrastText, style, selected, isPressed]);
   
   const leftIconComponent = React.useMemo(() => {
     if (typeof leftIcon === 'string') {
@@ -120,18 +99,18 @@ export function Button({
 
   return (
     <View 
+      { ...props } 
+      { ...buttonStyle }
       pressable 
       touchable={ touchable }
-      { ...props } 
       onPress={ handlePress } 
-      onPressOut={ handlePressOut } 
-      style={ buttonStyle }>
+      onPressOut={ handlePressOut }>
       {leftIconComponent && <View>{leftIconComponent }</View>}
-      {children && (
+      {typeof children === 'string' ? (
         <Text { ...textStyle } color={ buttonStyle.color ?? textStyle.color }>
           { children }
         </Text>
-      )}
+      ) : children}
       {rightIconComponent && <View>{ rightIconComponent }</View>}
     </View>
   );

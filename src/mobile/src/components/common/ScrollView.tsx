@@ -5,7 +5,7 @@ import {
   RefreshControl,
 } from 'react-native';
 
-import { Stylable, ViewProps } from '~/components';
+import { ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
 export type ScrollViewProps = ViewProps & RNScrollViewProps & {
@@ -27,7 +27,7 @@ export function ScrollView({
   ref,
   ...props
 }: ScrollViewProps) {
-  const style = useStyles(props as Stylable);
+  const style = useStyles(props);
   return (
     <RNScrollView 
       nestedScrollEnabled

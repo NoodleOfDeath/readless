@@ -53,7 +53,7 @@ export function Picker<
   const [loading, setLoading] = React.useState(options0 instanceof Function);
 
   const [options, setOptions] = React.useState(SelectOption.options<T, P>(options0 instanceof Function ? [] as T[] : options0));
-  const [value, setValue] = React.useState<T[]>((Array.isArray(initialValue) ? initialValue : initialValue ? [initialValue] : []) as T[]);
+  const [value, setValue] = React.useState<T[]>((Array.isArray(initialValue) ? initialValue : initialValue != null ? [initialValue] : []) as T[]);
   const [state, setState] = React.useState<CurrentValue>();
 
   const [filter, setFilter] = React.useState('');
@@ -66,13 +66,16 @@ export function Picker<
   }, [options, filter]);
 
   const loadOptions = React.useCallback(async () => {
+    if (options.length > 0) {
+      return;
+    }
     if (options0 instanceof Function) {
       setLoading(true);
       const options = await options0();
       setLoading(false);
       setOptions(SelectOption.options(options));
     }
-  }, [options0]);
+  }, [options, options0]);
 
   React.useEffect(() => {
     loadOptions();
@@ -104,7 +107,7 @@ export function Picker<
 
   return (
     <View 
-      alignCenter
+      itemsCenter
       gap={ 12 }
       { ...props }>
       <React.Fragment>

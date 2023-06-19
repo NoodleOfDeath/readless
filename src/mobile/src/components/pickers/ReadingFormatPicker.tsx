@@ -1,11 +1,10 @@
 import React from 'react';
 
 import { ReadingFormat } from '~/api';
-import { SegmentedButtons, ViewProps } from '~/components';
-import { useStyles } from '~/hooks';
+import { ChildlessViewProps, SegmentedButtons } from '~/components';
 import { strings } from '~/locales';
 
-type Props = ViewProps & {
+type Props = ChildlessViewProps & {
   format?: ReadingFormat;
   preferredFormat?: ReadingFormat;
   onChange?: (mode?: ReadingFormat) => void;
@@ -17,11 +16,10 @@ export function ReadingFormatPicker({
   onChange,
   ...props
 }: Props = {}) {
-  const style = useStyles(props);
   return (
     <SegmentedButtons 
       { ...props }
-      style={ style }
+      buttonProps={ { my: -24 } }
       initialValue={ format ?? preferredFormat }
       onValueChange={ (value) => onChange?.(value) }
       options={ [

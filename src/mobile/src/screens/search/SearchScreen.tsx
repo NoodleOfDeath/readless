@@ -7,6 +7,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 
+import ms from 'ms';
+import useAppState from 'react-native-appstate-hook';
+
 import { SearchMenu } from './SearchMenu';
 import { WalkthroughStack } from './WalkthroughStack';
 
@@ -52,8 +55,8 @@ export function SearchScreen({
   navigation,
 }: ScreenProps<'search'>) {
   const { 
-    bookmarkedCategories,
-    bookmarkedOutlets,
+    followedCategories,
+    followedOutlets,
     preferredReadingFormat,
     removedSummaries,
     showOnlyCustomNews,
@@ -92,19 +95,19 @@ export function SearchScreen({
   const [resizing, setResizing] = React.useState(false);
 
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
+  
+  const [lastActive, setLastActive] = React.useState(Date.now());
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
-    if (lengthOf(bookmarkedCategories) > 0) {
-      filters.push(['cat', Object.values(bookmarkedCategories ?? {})
-        .map((c) => c?.item?.name).filter(Boolean).join(',')].join(':'));
+    if (lengthOf(followedCategories) > 0) {
+      filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
     }
-    if (lengthOf(bookmarkedOutlets) > 0) {
-      filters.push(['src', Object.values(bookmarkedOutlets ?? {})
-        .map((o) => o?.item?.name).filter(Boolean).join(',')].join(':'));
+    if (lengthOf(followedOutlets) > 0) {
+      filters.push(['src', Object.keys({ ...followedOutlets }).join(',')].join(':'));
     }
     return filters.join(' ');
-  }, [bookmarkedCategories, bookmarkedOutlets]);
+  }, [followedCategories, followedOutlets]);
   
   const excludeIds = React.useMemo(() => {
     if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
@@ -191,7 +194,7 @@ export function SearchScreen({
       setLoading(false);
     }
   }, [loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
-
+  
   React.useEffect(() => {
     if (prefilter) {
       setSearchText(prefilter + ' ');
@@ -240,7 +243,7 @@ export function SearchScreen({
   
   React.useEffect(() => {
     setSummaries((prev) => {
-      const newState = prev.filter((p) => !(p.id in (removedSummaries ?? {})));
+      const newState = prev.filter((p) => !(p.id in ({ ...removedSummaries })));
       return (prev = newState);
     });
   }, [removedSummaries]);
@@ -383,6 +386,11 @@ export function SearchScreen({
       subscriber.remove();
     };
   }, [load]);
+  
+  useAppState({ 
+    onBackground: () => setLastActive(Date.now()),
+    onForeground: React.useCallback(() => Date.now() - lastActive.valueOf() > ms('10m') && load(0), [lastActive, load]),
+  });
 
   return (
     <Screen>
@@ -393,10 +401,10 @@ export function SearchScreen({
               elevated 
               height={ 30 } 
               zIndex={ 10 }
-              borderBottomLeftRadius={ 16 }
-              borderRadiusBR={ 16 }
+              brBottomLeft={ 16 }
+              brBottomRight={ 16 }
               p={ 4 }>
-              <View row gap={ 12 } justifyCenter alignCenter>
+              <View row gap={ 12 } justifyCenter itemsCenter>
                 <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
                 <Text caption>{`${fixedSentiment(averageSentiment)}`}</Text>
                 <Text caption>{`${totalResultCount} ${strings.search_results}`}</Text>
@@ -409,34 +417,31 @@ export function SearchScreen({
                 {strings.search_filtersTooSpecific}
               </Text>
               <Button 
-                alignCenter
+                itemsCenter
                 rounded 
                 outlined 
                 p={ 8 }
-                selectable
                 onPress={ () => navigate('browse') }>
                 {strings.search_goToBrowse}
               </Button>
               <Button 
-                alignCenter
+                itemsCenter
                 rounded 
                 outlined 
                 p={ 8 }
-                selectable
                 onPress={ () => setOnlyCustomNews(false) }>
                 {strings.search_turnOffFilters}
               </Button>
             </View>
           )}
-          {!prefilter && onlyCustomNews && (
+          {prefilter && onlyCustomNews && (
             <View>
               <Text caption textCenter mx={ 12 }>{strings.search_customNewsSearch}</Text>
               <Button 
-                alignCenter
+                itemsCenter
                 rounded 
                 outlined 
                 p={ 8 }
-                selectable
                 onPress={ () => setOnlyCustomNews(false) }>
                 {strings.search_turnOffFilters}
               </Button>
@@ -461,7 +466,6 @@ export function SearchScreen({
                           outlined
                           rounded
                           p={ 8 }
-                          selectable
                           onPress={ () => loadMore() }>
                           {strings.search_loadMore}
                         </Button>
@@ -475,18 +479,17 @@ export function SearchScreen({
                       </View>
                     )}
                     {summaries.length === 0 && !loading && (
-                      <View col gap={ 12 } alignCenter justifyCenter>
+                      <View col gap={ 12 } itemsCenter justifyCenter>
                         <Text textCenter mx={ 16 }>
                           {strings.search_noResults}
                           {' '}
                           🥺
                         </Text>
                         <Button 
-                          alignCenter
+                          itemsCenter
                           rounded 
                           outlined 
                           p={ 8 }
-                          selectable
                           onPress={ () => load(0) }>
                           {strings.search_reload}
                         </Button>

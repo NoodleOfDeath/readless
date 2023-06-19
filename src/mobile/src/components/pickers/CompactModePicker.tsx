@@ -29,14 +29,14 @@ export function CompactModePicker({
       <PrefSwitch
         leftLabel={ labeled && (
           <View>
-            <Button caption gap={ 4 } leftIcon="view-agenda" iconSize={ 24 } bold alignCenter>
+            <Button caption gap={ 4 } leftIcon="view-agenda" iconSize={ 24 } bold itemsCenter>
               {strings.settings_expanded}
             </Button>
           </View>
         ) }
         rightLabel={ labeled && (
           <View>
-            <Button caption gap={ 4 } leftIcon="view-headline" iconSize={ 24 } bold alignCenter>
+            <Button caption gap={ 4 } leftIcon="view-headline" iconSize={ 24 } bold itemsCenter>
               {strings.settings_compactMode}
             </Button>
           </View>
@@ -55,10 +55,10 @@ export function CompactModePicker({
   
   return (
     <View flexRow justifyCenter flexWrap="wrap" gap={ 16 }>
-      <View alignCenter gap={ 6 }>
+      <View itemsCenter gap={ 6 }>
         {compactModeSwitch}
       </View>
-      <View alignCenter gap={ 6 }>
+      <View itemsCenter gap={ 6 }>
         <Text caption numberOfLines={ 2 }>
           {compactMode ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries}
         </Text>

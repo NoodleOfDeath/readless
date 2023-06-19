@@ -1,17 +1,10 @@
 import {
   PublicCategoryAttributes,
   PublicOutletAttributes,
-  PublicSummaryAttributes,
+  PublicSummaryGroup,
   ReadingFormat,
   RequestParams,
 } from '~/api';
-
-export type ColorMode = 'light' | 'dark' | 'system';
-export type OrientationType = 
-  | 'PORTRAIT' 
-  | 'PORTRAIT-UPSIDEDOWN' 
-  | 'LANDSCAPE-LEFT'
-  | 'LANDSCAPE-RIGHT';
 
 export class Bookmark<T> {
 
@@ -32,74 +25,94 @@ export class Bookmark<T> {
 
 }
 
+export type ColorScheme = 'light' | 'dark' | 'system';
+
+export type OrientationType = 
+  | 'PORTRAIT' 
+  | 'PORTRAIT-UPSIDEDOWN' 
+  | 'LANDSCAPE-LEFT'
+  | 'LANDSCAPE-RIGHT';
+  
 export type Preferences = {
-  displayMode?: ColorMode;
-  preferredReadingFormat?: ReadingFormat;
-  compactMode?: boolean;
-  fontSizeOffset?: number;
+  // system settings
+  colorScheme?: ColorScheme;
   fontFamily?: string;
+  fontSizeOffset?: number;
   letterSpacing?: number;
-  searchHistory?: string[];
+  lineHeightMultiplier?: number;
+  
+  // display settings
+  compactMode?: boolean;
   showShortSummary?: boolean;
+  preferredReadingFormat?: ReadingFormat;
+  sourceLinks?: boolean;
+  sentimentEnabled?: boolean;
+  triggerWords?: { [key: string]: string };
+  
+  // app state
   loadedInitialUrl?: boolean;
+  rotationLock?: OrientationType;  
+  searchHistory?: string[];
+  showOnlyCustomNews?: boolean;
+  viewedFeatures?: { [key: string]: Bookmark<boolean> };
+  
+  // sunmary state
   readSummaries?: { [key: number]: Bookmark<boolean> };
   readSources?: { [key: number]: Bookmark<boolean> };
-  bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryAttributes> };
+  bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryGroup> };
   bookmarkCount: number;
-  removedSummaries?: { [key: number]: Bookmark<boolean> };
-  bookmarkedOutlets?: { [key: string]: Bookmark<PublicOutletAttributes> };
-  bookmarkedCategories?: { [key: string]: Bookmark<PublicCategoryAttributes> };
-  excludedOutlets?: { [key: string]: Bookmark<boolean> };
-  excludedCategories?: { [key: string]: Bookmark<boolean> };
-  showOnlyCustomNews?: boolean;
-  rotationLock?: OrientationType;
-  triggerWords?: { [key: string]: Bookmark<string> };
-  viewedFeatures?: { [key: string]: Bookmark<boolean> };
-  sentimentEnabled?: boolean;
+  unreadBookmarkCount: number;
+  removedSummaries?: { [key: number]: boolean };
+  
+  // outlet/category state
+  followedOutlets?: { [key: string]: boolean };
+  followedCategories?: { [key: string]: boolean };
+  excludedOutlets?: { [key: string]: boolean };
+  excludedCategories?: { [key: string]: boolean };
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { fontFamily: 'Faustina' };
 
 export const OVERRIDDEN_INITIAL_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
 
-// Headers
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
 
-// Context
-
-export type SessionSetOptions = {
-  updateCookie?: boolean;
-};
-
 export type SessionContextType = Preferences & {
   ready?: boolean;
+  
   // state setters
-  setPreference<K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])): void;
-  getPreference<K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined>;
-  resetPreferences: () => void;
+  setPreference: <K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])) => Promise<void>;
+  getPreference: <K extends keyof Preferences>(key: K) => Promise<Preferences[K] | undefined>;
+  resetPreferences: () => Promise<void>;
+  
   // convenience functions
-  followOutlet: (outlet: PublicOutletAttributes) => void;
-  followCategory: (category: PublicCategoryAttributes) => void;
+  bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  readSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  readSource: (summary: PublicSummaryGroup) => Promise<void>;
+  removeSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  followOutlet: (outlet: PublicOutletAttributes) => Promise<void>;
+  excludeOutlet: (outlet: PublicOutletAttributes) => Promise<void>;
+  followCategory: (category: PublicCategoryAttributes) => Promise<void>;
+  excludeCategory: (category: PublicCategoryAttributes) => Promise<void>;
+  
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
 
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   bookmarkCount: 0,
-  followCategory: () => {
-    /* placeholder function */
-  },
-  followOutlet: () => {
-    /* placeholder function */
-  },
+  bookmarkSummary: () => Promise.resolve(),
+  excludeCategory: () => Promise.resolve(),
+  excludeOutlet: () => Promise.resolve(),
+  followCategory: () => Promise.resolve(),
+  followOutlet: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
-  resetPreferences: () => {
-    /* placeholder function */
-  },
-  setPreference: () => {
-    /* placeholder function */
-  },
+  readSource: () => Promise.resolve(),
+  readSummary: () => Promise.resolve(),
+  removeSummary: () => Promise.resolve(),
+  resetPreferences: () => Promise.resolve(),
+  setPreference: () => Promise.resolve(),
+  unreadBookmarkCount: 0,
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };

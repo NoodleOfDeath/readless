@@ -83,7 +83,7 @@ export function SummaryScreen({
         refreshing={ loading }
         onRefresh={ () => load(summaryId) }>
         {loading ? (
-          <View alignCenter justifyCenter>
+          <View itemsCenter justifyCenter>
             <ActivityIndicator size="large" />
           </View>
         ) : (summary && (

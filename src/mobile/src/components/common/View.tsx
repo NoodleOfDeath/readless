@@ -2,27 +2,15 @@ import React from 'react';
 import {
   GestureResponderEvent,
   Pressable,
-  PressableProps,
   View as RNView,
-  ViewProps as RNViewProps,
   StyleSheet,
   TouchableOpacity,
-  TouchableOpacityProps,
 } from 'react-native';
 
 import { trigger } from 'react-native-haptic-feedback';
 
-import { Stylable, Surface } from '~/components';
+import { Surface, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
-
-export type ViewProps = React.PropsWithChildren<PressableProps & TouchableOpacityProps & RNViewProps & Stylable> & {
-  pressable?: boolean;
-  touchable?: boolean;
-  elevated?: boolean;
-  haptic?: boolean;
-};
-
-export type ChildlessViewProps = Omit<ViewProps, 'children'>;
 
 export function View({ 
   children,

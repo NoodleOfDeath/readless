@@ -74,7 +74,7 @@ export function CollapsedView({
           <View
             gap={ 12 }
             row
-            alignCenter
+            itemsCenter
             justifyCenter={ !title }
             touchable
             onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
@@ -99,7 +99,7 @@ export function CollapsedView({
             {info && (
               <Popover
                 anchor={ <Icon size={ 24 } name='information' /> }>
-                {info}
+                <Text p={ 12 }>{info}</Text>
               </Popover>
             )}
           </View>

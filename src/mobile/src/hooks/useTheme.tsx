@@ -31,10 +31,6 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           backgroundColor: lightMode ? '#ddd' : '#333',
           color: lightMode ? '#888' : '#999',
         },
-        buttonSelected: {
-          backgroundColor: '#8b0000',
-          color: '#fff',
-        },
         buttonText: { padding: 4 },
         card: { backgroundColor: lightMode ? '#fefefe' : '#010101' },
         dialog: {
@@ -49,16 +45,6 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           marginBottom: 3,
           marginTop: 3,
         },
-        flexCol: {
-          flex: 1,
-          flexDirection: 'column',
-          flexGrow: 1,
-        },
-        flexRow: {
-          flex: 1,
-          flexDirection: 'row',
-          flexGrow: 1,
-        },
         input: { 
           backgroundColor: lightMode ? '#ddd' : '#111',
           color: lightMode ? '#000' : '#fff',
@@ -72,31 +58,17 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           padding: 12,
         },
         outlined: {
-          borderColor: lightMode ? '#8b0000' : '#fff',
+          borderColor: lightMode ? '#000' : '#fff',
           borderWidth: 1,
         },
-        rounded: { borderRadius: 12 },
-        sampler: { backgroundColor: lightMode ? '#aaa' : '#444' },
         searchBar: {
           fontFamily: preferences.fontFamily,
           overflow: 'visible',
           padding: 0,
           width: '100%',
         },
-        speedDialButton: {
-          backgroundColor: lightMode ? '#eee' : '#2a2a2a',
-          bottom: 32,
-          padding: 12,
-          position: 'absolute',
-          right: 32,
-          zIndex: 300,
-        },
         surface: {
           backgroundColor: lightMode ? '#fff' : '#000',
-          color: lightMode ? '#000' : '#fff',
-        },
-        tabSwitcher: {
-          backgroundColor: lightMode ? '#eee' : '#2a2a2a',
           color: lightMode ? '#000' : '#fff',
         },
       }),
@@ -127,6 +99,6 @@ export function useTheme() {
 
   const colorScheme = useColorScheme();
 
-  return ((preferences.displayMode ?? colorScheme) === 'dark') ? DARK_THEME : LIGHT_THEME;
+  return ((preferences.colorScheme ?? colorScheme) === 'dark') ? DARK_THEME : LIGHT_THEME;
   
 }

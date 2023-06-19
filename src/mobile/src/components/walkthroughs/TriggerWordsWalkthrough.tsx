@@ -29,8 +29,12 @@ export function TriggerWordsWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => [
     {
       body: (
-        <View>
-          <Markdown>{strings.walkthroughs_triggerWords_description}</Markdown>
+        <View gap={ 12 }>
+          <Markdown
+            subtitle1
+            textCenter>
+            {strings.walkthroughs_triggerWords_description}
+          </Markdown>
           <Divider />
           <Text caption>{strings.walkthroughs_triggerWords_limitedLocalizationSupport}</Text>
         </View>
@@ -38,7 +42,9 @@ export function TriggerWordsWalkthrough(props: SheetProps) {
       title: strings.walkthroughs_triggerWords,
     },
     {
-      body: <TriggerWordPicker onSubmit={ onDone } />,
+      body: <TriggerWordPicker 
+        saveLabel={ strings.action_saveAndClose }
+        onSubmit={ onDone } />,
       title: strings.walkthroughs_triggerWords,
     },
   ], [onDone]);

@@ -1,8 +1,11 @@
 import React from 'react';
 
-import { Button as NBButton } from 'native-base';
-
-import { Button, ChildlessViewProps } from '~/components';
+import { 
+  Button, 
+  ButtonProps,
+  ChildlessViewProps,
+  View,
+} from '~/components';
 
 export type SegmentedButtonProps<T extends string | number = string> = {
   icon?: React.ReactNode;
@@ -15,7 +18,7 @@ export type SegmentedButtonsProps<T extends string | number = string> = Childles
   options: SegmentedButtonProps<T>[];
   initialValue?: T;
   onValueChange?: (value: T) => void;
-  elevated?: boolean;
+  buttonProps?: Partial<ButtonProps> | ((index: number, selected: boolean) => Partial<ButtonProps>);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,21 +26,23 @@ export const SegmentedButtons = <T extends string | number = string>({
   initialValue,
   options: buttons,
   onValueChange,
+  buttonProps,
+  ...props
 }: SegmentedButtonsProps<T>) => {
-  const [value, setValue] = React.useState<T>(initialValue);
+  const [value, setValue] = React.useState<T | undefined>(initialValue);
   return (
-    <NBButton.Group isAttached mr={ 12 }>
+    <View flexRow { ...props }>
       {buttons.map(({
         icon, label, value: v,
       }, index) => (
         <Button
           key={ `${v}${index}` }
           horizontal
-          selectable
           px={ 12 }
-          my={ -24 } 
+          gap={ 6 }
           leftIcon={ icon }
           selected={ value === v }
+          { ...(buttonProps instanceof Function ? buttonProps(index, value === v) : buttonProps) }
           onPress={ () => {
             setValue(v);
             onValueChange?.(v);
@@ -45,6 +50,6 @@ export const SegmentedButtons = <T extends string | number = string>({
           { label }
         </Button>
       ))}
-    </NBButton.Group>
+    </View>
   );
 };

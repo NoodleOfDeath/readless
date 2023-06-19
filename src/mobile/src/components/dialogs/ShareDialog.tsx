@@ -141,7 +141,7 @@ export function ShareDialog({
                     width={ 120 }
                     p={ 12 }
                     justifyCenter
-                    alignCenter>
+                    itemsCenter>
                     <View outlined p={ 12 } borderRadius={ 24 }>
                       {typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon}
                     </View>

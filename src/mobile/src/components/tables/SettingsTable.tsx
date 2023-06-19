@@ -4,7 +4,8 @@ import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
 import {
-  FontSizePicker,
+  FONT_SIZES,
+  NumericPrefPicker,
   PrefSwitch,
   ScrollView,
   Summary,
@@ -22,7 +23,7 @@ export function SettingsTable() {
   
   const {
     compactMode,
-    displayMode, 
+    colorScheme, 
     fontFamily, 
     preferredReadingFormat,
     resetPreferences, 
@@ -64,10 +65,10 @@ export function SettingsTable() {
           bold
           cellStyle="RightDetail"
           title={ strings.settings_colorScheme }
-          detail={ displayMode === 'light' ? strings.settings_light : displayMode === 'dark' ? strings.settings_dark : strings.settings_system }
+          detail={ colorScheme === 'light' ? strings.settings_light : colorScheme === 'dark' ? strings.settings_dark : strings.settings_system }
           accessory="DisclosureIndicator"
           cellIcon="theme-light-dark"
-          onPress={ () => navigate('displayModePicker') } />
+          onPress={ () => navigate('colorSchemePicker') } />
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -80,7 +81,38 @@ export function SettingsTable() {
           bold
           title={ strings.settings_fontSize }
           cellIcon="format-size"
-          cellAccessoryView={ <FontSizePicker /> } />
+          cellAccessoryView={ (
+            <NumericPrefPicker
+              prefKey='fontSizeOffset'
+              offset={ FONT_SIZES.body1 }
+              min={ -5 }
+              max={ 5 }
+              step={ 0.5 } />
+          ) } />
+        <TableViewCell
+          bold
+          title={ 'Line Height' }
+          cellIcon="format-line-spacing"
+          cellAccessoryView={ (
+            <NumericPrefPicker
+              prefKey='lineHeightMultiplier'
+              offset={ 1.35 }
+              min={ -0.35 }
+              max={ 0.65 }
+              step={ 0.05 } />
+          ) } />
+        <TableViewCell
+          bold
+          title={ 'Letter Spacing' }
+          cellIcon="format-letter-spacing"
+          cellAccessoryView={ (
+            <NumericPrefPicker
+              prefKey='letterSpacing'
+              offset={ 0.4 }
+              min={ -0.1 }
+              max={ 1 }
+              step={ 0.1 } />
+          ) } />
       </TableViewSection>
       <TableViewSection
         header="Summary Display">
@@ -113,13 +145,18 @@ export function SettingsTable() {
           accessory="DisclosureIndicator"
           cellIcon="view-list"
           onPress={ () => navigate('readingFormatPicker') } />
+        <TableViewCell
+          bold
+          title={ strings.settings_showSourceLinks }
+          cellIcon="link-variant"
+          cellAccessoryView={ <PrefSwitch prefKey='sourceLinks' /> } />
       </TableViewSection>
       <TableViewSection
         header="Customization">
         <TableViewCell
           bold
           cellStyle="RightDetail"
-          title={ strings.settings_triggerWords ?? 'Trigger Words' }
+          title={ strings.settings_triggerWords }
           detail={ Object.keys({ ...triggerWords }).length }
           accessory="DisclosureIndicator"
           cellIcon="alphabetical-off"
@@ -130,21 +167,27 @@ export function SettingsTable() {
         <TableViewCell
           bold
           title={ `Reset read summaries (${Object.keys({ ...readSummaries }).length})` }
-          onPress={ () => setPreference('readSummaries', {}) } />
+          onPress={ () => {
+            setPreference('readSummaries', {}); 
+          } } />
         <TableViewCell
           bold
           title={ `Reset hidden summaries (${Object.keys({ ...removedSummaries }).length})` }
-          onPress={ () => setPreference('removedSummaries', {}) } />
+          onPress={ () => {
+            setPreference('removedSummaries', {}); 
+          } } />
         <TableViewCell
           bold
-          title={ loading ? strings.action_loading : `Clear Cache (${cacheSize})` }
+          title={ loading ? strings.action_loading : `${strings.settings_clearCache} (${cacheSize})` }
           onPress={ () => {
             clearCache(); 
           } } />
         <TableViewCell
           bold
           title={ 'Reset All Settings' }
-          onPress={ () => resetPreferences() } />
+          onPress={ () => {
+            resetPreferences(); 
+          } } />
       </TableViewSection>
     </TableView>
   );

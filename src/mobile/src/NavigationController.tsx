@@ -11,8 +11,9 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import { Badge } from 'native-base';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
+import { addScreenshotListener } from 'react-native-detector';
+import { Badge } from 'react-native-paper';
 
 import {
   LayoutContext,
@@ -20,6 +21,7 @@ import {
   SessionContext,
 } from './contexts';
 import { AboutScreen } from './screens/about/AboutScreen';
+import { FEATURES } from './screens/search/WalkthroughStack';
 import { FontPickerScreen } from './screens/settings/FontPickerScreen';
 import { ReadingFormatPickerScreen } from './screens/settings/ReadingFormatPickerScreen';
 import { TriggerWordPickerScreen } from './screens/settings/TriggerWordPickerScreen';
@@ -37,7 +39,7 @@ import {
   BookmarksScreen,
   BrowseScreen,
   ChannelScreen,
-  DisplayModePickerScreen,
+  ColorSchemePickerScreen,
   NAVIGATION_LINKING_OPTIONS,
   SearchScreen,
   SettingsScreen,
@@ -99,11 +101,11 @@ EventMapBase
     options: { headerBackTitle: '' },
   },
   {
-    component: DisplayModePickerScreen, 
-    name: 'displayModePicker',  
+    component: ColorSchemePickerScreen, 
+    name: 'colorSchemePicker',  
     options: {
       headerRight: () => undefined, 
-      headerTitle: strings.settings_displayMode, 
+      headerTitle: strings.settings_colorScheme, 
     },
   },
   {
@@ -133,12 +135,16 @@ EventMapBase
 ];
 
 function Stack() {
-  
-  const Stack = createNativeStackNavigator();
+
+  const { router } = useNavigation();
+
   const { currentTrack } = React.useContext(MediaContext);
+
   const {
     bookmarkCount,
+    unreadBookmarkCount,
     loadedInitialUrl,
+    viewedFeatures,
     setPreference,
   } = React.useContext(SessionContext);
   
@@ -148,11 +154,37 @@ function Stack() {
     unlockRotation,
   } = React.useContext(LayoutContext);
 
-  const { router } = useNavigation();
+  React.useEffect(() => {
+    if (bookmarkCount > 0 && !('bookmark-walkthrough' in { ...viewedFeatures })) {
+      SheetManager.show('bookmark-walkthrough');
+    }
+  }, [bookmarkCount, viewedFeatures]);
+
+  React.useEffect(() => {
+    if (!('sharing-walkthrough' in { ...viewedFeatures })) {
+      const unsubscribe = addScreenshotListener(() => {
+        if (!('sharing-walkthrough' in { ...viewedFeatures })) {
+          SheetManager.show('sharing-walkthrough');
+        }
+        return () => {
+          unsubscribe();
+        };
+      });
+    }
+  }, [viewedFeatures]);
+
+  React.useEffect(() => {
+    const viewed = { ...viewedFeatures };
+    if (!('promo-code-walkthrough' in viewed) && FEATURES.every((f) => f.id in viewed)) {
+      setTimeout(() => SheetManager.show('promo-code-walkthrough'), 2_000);
+    }
+  }, [viewedFeatures]);
+
+  const Stack = createNativeStackNavigator();
   
   const headerRight = React.useMemo(() => (
     <View>
-      <View row gap={ 16 } alignCenter>
+      <View row gap={ 16 } itemsCenter>
         <Button
           leftIcon={ (
             <View height={ 24 } width={ 24 }>
@@ -179,20 +211,20 @@ function Stack() {
           <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
         </View> */}
         <View touchable onPress={ () => SheetManager.show('main-menu') }>
-          {bookmarkCount > 0 && (
+          {unreadBookmarkCount > 0 && (
             <Badge
               size={ 18 }
               style={ {
                 position: 'absolute', right: -5, top: -5, zIndex: 1,
               } }>
-              {bookmarkCount}
+              {unreadBookmarkCount}
             </Badge>
           )}
           <Icon name='menu' size={ 24 } />
         </View>
       </View>
     </View>
-  ), [rotationLock, bookmarkCount, unlockRotation, lockRotation]);
+  ), [rotationLock, unreadBookmarkCount, unlockRotation, lockRotation]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);

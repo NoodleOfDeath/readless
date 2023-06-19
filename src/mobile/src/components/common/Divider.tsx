@@ -1,26 +1,26 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { IDividerProps, Divider as RNDivider } from 'native-base';
+import { Divider as RNDivider, DividerProps as RNDividerProps } from 'react-native-paper';
 
-import { ViewProps } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { ChildlessViewProps, View } from '~/components';
+import { useTheme } from '~/hooks';
 
-export type DividerProps = IDividerProps & ViewProps & {
+export type DividerProps = RNDividerProps & ChildlessViewProps & {
   vertical?: boolean;
 };
 
-export function Divider({ vertical, ...dividerProps }: DividerProps = {}) {
+export function Divider({ vertical, ...props }: DividerProps = {}) {
   const theme = useTheme();
-  const style = useStyles(dividerProps);
   return (
-    <RNDivider 
-      { ...dividerProps }
-      style={ {
-        ...theme.components.divider, 
-        height: vertical ? '100%' : StyleSheet.hairlineWidth, 
-        width: vertical ? StyleSheet.hairlineWidth : '100%', 
-        ...style, 
-      } } />
+    <View { ...props }>
+      <RNDivider 
+        { ...props }
+        style={ {
+          ...theme.components.divider, 
+          height: vertical ? '100%' : StyleSheet.hairlineWidth, 
+          width: vertical ? StyleSheet.hairlineWidth : '100%', 
+        } } />
+    </View>
   );
 }

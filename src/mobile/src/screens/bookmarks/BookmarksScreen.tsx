@@ -60,7 +60,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     <Screen>
       <ScrollView pt={ 12 }>
         {Object.entries(bookmarks ?? {}).length === 0 ? (
-          <View justifyCenter alignCenter>
+          <View justifyCenter itemsCenter>
             <Button
               rounded
               outlined
@@ -116,7 +116,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                   );
                 })}
               {(bookmarks ?? []).length > unreadPage * pageSize + pageSize && (
-                <View justifyCenter alignCenter>
+                <View justifyCenter itemsCenter>
                   <Button
                     rounded
                     outlined

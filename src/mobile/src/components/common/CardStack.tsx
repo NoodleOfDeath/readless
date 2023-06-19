@@ -57,8 +57,8 @@ export function CardStack({
       </View>
       <View 
         flexRow
-        alignCenter
-        justifySpaced
+        itemsCenter
+        justifyBetween
         gap={ 6 }>
         <Button
           touchable
@@ -67,7 +67,7 @@ export function CardStack({
           color={ cardIndex > 0 ? 'text' : 'textDisabled' }
           onPress={ cardIndex > 0 ? () => setCardIndex((cardIndex - 1)) : undefined } />
         <View
-          alignCenter
+          itemsCenter
           justifyCenter>
           {cards[cardIndex]}
         </View>

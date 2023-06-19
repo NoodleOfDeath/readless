@@ -31,27 +31,27 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
   const { openCategory, openOutlet } = useNavigation();
   const { getCategories, getOutlets } = useCategoryClient();
   const {
-    bookmarkedOutlets,
-    bookmarkedCategories,
+    followedOutlets,
+    followedCategories,
     followOutlet,
     followCategory,
     setPreference,
   } = React.useContext(SessionContext);
   
   const [activeTab, setActiveTab] = React.useState(0);
-  const [filterCount, setFilterCount] = React.useState(lengthOf(bookmarkedOutlets, bookmarkedCategories));
+  const [filterCount, setFilterCount] = React.useState(lengthOf(followedOutlets, followedCategories));
 
-  const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
   const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
+  const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
+  const [selectedOutlets, setSelectedOutlets] = React.useState(followedOutlets);
+  const [selectedCategories, setSelectedCategories] = React.useState(followedCategories);
+  
   const [_error, setError] = React.useState<InternalError>();
   
-  const categoryCount = React.useMemo(() => Object.values(bookmarkedCategories ?? {}).length, [bookmarkedCategories]);
-  const outletCount = React.useMemo(() => Object.values(bookmarkedOutlets ?? {}).length, [bookmarkedOutlets]);
-  
   const buttons = React.useMemo(() => [
-    { label: categories.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : `${strings.misc_categories} (${categoryCount === 0 ? categories.length : categoryCount}/${categories.length})`, value: 0 },
-    { label: outlets.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : `${strings.misc_channels} (${outletCount === 0 ? outlets.length : outletCount}/${outlets.length})`, value: 1 },
-  ], [categoryCount, categories.length, outletCount, outlets.length]);
+    { label: categories.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : strings.misc_categories, value: 0 },
+    { label: outlets.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : strings.misc_channels, value: 1 },
+  ], [categories.length, outlets.length]);
 
   const loadCategories = React.useCallback(async () => {
     setError(undefined);
@@ -87,27 +87,27 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
     loadOutlets();
   }, [navigation, loadCategories, loadOutlets]);
   
-  const clearBookmarks = React.useCallback((key: 'bookmarkedCategories' | 'bookmarkedOutlets') => {
+  const clearBookmarks = React.useCallback((key: 'followedCategories' | 'followedOutlets') => {
     setPreference(key, {});
   }, [setPreference]);
 
   const autoApplyFilter = React.useCallback(() => {
-    const value = lengthOf(bookmarkedOutlets, bookmarkedCategories);
+    const value = lengthOf(followedOutlets, followedCategories);
     if (filterCount !== value && value > 0) {
       DeviceEventEmitter.emit('apply-filter', true);
       setPreference('showOnlyCustomNews', true);
     }
     setFilterCount(value);
-  }, [bookmarkedOutlets, bookmarkedCategories, filterCount, setPreference]);
+  }, [followedOutlets, followedCategories, filterCount, setPreference]);
 
   React.useEffect(() => {
     autoApplyFilter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bookmarkedOutlets, bookmarkedCategories]);
+  }, [followedOutlets, followedCategories]);
 
   return (
     <Screen>
-      <ScrollView col mb={ 16 }>
+      <ScrollView>
         <View gap={ 12 }>
           <SegmentedButtons 
             initialValue={ activeTab }
@@ -120,11 +120,11 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                 <Button 
                   elevated
                   selectable
-                  alignCenter
+                  itemsCenter
                   rounded
                   gap={ 8 }
                   p={ 8 }
-                  onPress={ () => clearBookmarks('bookmarkedCategories') }>
+                  onPress={ () => clearBookmarks('followedCategories') }>
                   {strings.action_clearSelection}
                 </Button>
               </View>
@@ -132,14 +132,14 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                 <View 
                   key={ category.name }
                   row
-                  alignCenter
+                  itemsCenter
                   rounded
                   bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
                   <Button 
                     row
                     elevated
                     selectable
-                    alignCenter
+                    itemsCenter
                     rounded
                     gap={ 8 }
                     leftIcon={ category.icon }
@@ -150,14 +150,26 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                   <View row />
                   <Button
                     row
-                    alignCenter
+                    itemsCenter
                     rounded
                     gap={ 8 }
                     p={ 8 }
                     elevated
-                    leftIcon={ bookmarkedCategories?.[category.name] ? 'check' : undefined }
-                    onPress={ () => followCategory(category) }>
-                    {bookmarkedCategories?.[category.name] ? strings.action_unfollow : strings.action_follow}
+                    leftIcon={ selectedCategories?.[category.name] ? 'check' : undefined }
+                    haptic
+                    onPress={ () => {
+                      setSelectedCategories((prev) => {
+                        const state = { ...prev };
+                        if (category.name in state) {
+                          delete state[category.name];
+                        } else {
+                          state[category.name] = true;
+                        }
+                        return (prev = state);
+                      });
+                      followCategory(category);
+                    } }>
+                    {selectedCategories?.[category.name] ? strings.action_unfollow : strings.action_follow}
                   </Button>
                 </View>
               ))}
@@ -171,11 +183,11 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                   <Button
                     elevated
                     selectable
-                    alignCenter
+                    itemsCenter
                     rounded
                     gap={ 8 }
                     p={ 8 }
-                    onPress={ ()=> clearBookmarks('bookmarkedOutlets') }>
+                    onPress={ ()=> clearBookmarks('followedOutlets') }>
                     {strings.action_clearSelection}
                   </Button>
                 </View>
@@ -184,14 +196,14 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                 <View 
                   key={ outlet.name }
                   row
-                  alignCenter
+                  itemsCenter
                   rounded
                   bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
                   <Button 
                     row
                     elevated
                     selectable
-                    alignCenter
+                    itemsCenter
                     rounded
                     gap={ 8 }
                     p={ 8 }
@@ -201,14 +213,26 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                   <View row />
                   <Button
                     row
-                    alignCenter
+                    itemsCenter
                     rounded
                     gap={ 8 }
                     p={ 8 }
                     elevated
-                    leftIcon={ bookmarkedOutlets?.[outlet.name] ? 'check' : undefined }
-                    onPress={ () => followOutlet(outlet) }>
-                    {bookmarkedOutlets?.[outlet.name] ? strings.action_unfollow : strings.action_follow}
+                    leftIcon={ selectedOutlets?.[outlet.name] ? 'check' : undefined }
+                    haptic
+                    onPress={ () => {
+                      setSelectedOutlets((prev) => {
+                        const state = { ...prev };
+                        if (outlet.name in state) {
+                          delete state[outlet.name];
+                        } else {
+                          state[outlet.name] = true;
+                        }
+                        return (prev = state);
+                      });
+                      followOutlet(outlet);
+                    } }>
+                    {selectedOutlets?.[outlet.name] ? strings.action_unfollow : strings.action_follow}
                   </Button>
                 </View>
               ))}

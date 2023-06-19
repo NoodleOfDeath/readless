@@ -1,58 +1,71 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
-import { IPopoverProps, Popover as NBPopover } from 'native-base';
+import { Menu } from 'react-native-paper';
 import  RNPopover from 'react-native-popover-view';
+import { PublicPopoverProps } from 'react-native-popover-view/dist/Popover';
 
-import { Text } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type PopoverProps = Omit<IPopoverProps, 'trigger'> & {
+export type PopoverProps = PublicPopoverProps & {
   anchor?: React.ReactNode;
-  modal?: boolean;
-  header?: React.ReactNode;
-  footer?: React.ReactNode;
+  disabled?: boolean;
+  onPress?: () => void;
+  longPress?: boolean;
+  variant?: 'default' | 'menu';
+  menu?: boolean;
 };
 
 export function Popover({
   children,
   anchor,
-  modal,
-  header,
-  footer,
+  disabled,
+  onPress,
+  longPress,
+  menu,
+  variant = menu ? 'menu' : 'default',
   ...props
 }: PopoverProps) {
-  
   const theme = useTheme();
-  
-  if (modal) {
+
+  const [visible, setVisible] = React.useState(false);
+
+  if (disabled) {
+    return <TouchableOpacity disabled>{anchor}</TouchableOpacity>;
+  }
+
+  if (variant === 'menu') {
     return (
-      <RNPopover
-        from={ <TouchableOpacity>{anchor}</TouchableOpacity> }
-        popoverStyle={ theme.components.card }>
+      <Menu
+        anchor={ (
+          <TouchableOpacity
+            onPress={ () => onPress?.() && !longPress && setVisible(true) }
+            onLongPress={ () => longPress && setVisible(true) }>
+            {anchor}
+          </TouchableOpacity>
+        ) }
+        visible={ visible }
+        onDismiss={ () => setVisible(false) }
+        style={ theme.components.card }>
         {children}
-      </RNPopover>
+      </Menu>
     );
   }
-  
+
   return (
-    <NBPopover
+    <RNPopover
       { ...props }
-      trigger={ (props) => (
-        <TouchableOpacity { ...props }>{anchor}</TouchableOpacity>
-      ) }>
-      <NBPopover.Content>
-        <NBPopover.Arrow />
-        {header && (
-          <NBPopover.Header>{header}</NBPopover.Header>
-        )}
-        <NBPopover.Body>
-          {typeof children === 'string' ? <Text>{children}</Text> : children}
-        </NBPopover.Body>
-        {footer && (
-          <NBPopover.Footer>{footer}</NBPopover.Footer>
-        )}
-      </NBPopover.Content>
-    </NBPopover>
+      isVisible={ visible }
+      onRequestClose={ () => setVisible(false) }
+      from={ (
+        <TouchableOpacity
+          onPress={ () => onPress?.() && !longPress && setVisible(true) }
+          onLongPress={ () => longPress && setVisible(true) }>
+          {anchor}
+        </TouchableOpacity>
+      ) }
+      popoverStyle={ theme.components.card }>
+      {children}
+    </RNPopover>
   );
 }

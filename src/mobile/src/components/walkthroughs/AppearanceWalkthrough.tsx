@@ -1,15 +1,17 @@
 import React from 'react';
 
-import { Center } from 'native-base';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import { ReadingFormat } from '~/api';
 import { 
+  Button,
+  ColorSchemePicker,
   CompactModePicker,
-  DisplayModePicker,
+  FONT_SIZES,
   FontPicker,
-  FontSizePicker,
   Markdown,
+  NumericPrefPicker,
+  PrefSwitch,
   ScrollView,
   Summary,
   View,
@@ -22,6 +24,15 @@ export function AppearanceWalkthrough(props: SheetProps) {
   
   const { setPreference } = React.useContext(SessionContext);
   
+  const onDone = React.useCallback(async () => {
+    setPreference('viewedFeatures', (prev) => {
+      const state = { ...prev };
+      state[props.sheetId] = new Bookmark(true);
+      return (prev = state);
+    });
+    await SheetManager.hide(props.sheetId);
+  }, [props.sheetId, setPreference]);
+  
   const steps = React.useMemo(() => {
     return [
       {
@@ -30,10 +41,15 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <Center>
-              <FontPicker horizontal />
-              <FontSizePicker />
-            </Center>
+            <View itemsCenter gap={ 12 }>
+              <FontPicker grid />
+              <NumericPrefPicker
+                prefKey='fontSizeOffset'
+                offset={ FONT_SIZES.body1 }
+                min={ -5 }
+                max={ 5 }
+                step={ 0.5 } />
+            </View>
           </View>
         ),
         title: strings.walkthroughs_appearance_selectFont,
@@ -52,9 +68,6 @@ export function AppearanceWalkthrough(props: SheetProps) {
       {
         body: (
           <View gap={ 12 }>
-            <Markdown subtitle1 textCenter>
-              {strings.walkthroughs_appearance_preferredReadingFormatDescription}
-            </Markdown>
             <ScrollView scrollEnabled={ false }>
               <Summary 
                 hideAnalytics
@@ -69,25 +82,46 @@ export function AppearanceWalkthrough(props: SheetProps) {
       {
         body: (
           <View gap={ 12 }>
+            <View alignCenter>
+              <PrefSwitch prefKey="sourceLinks" />
+            </View>
             <ScrollView scrollEnabled={ false }>
               <Summary disableInteractions />
             </ScrollView>
-            <DisplayModePicker buttons />
+            <Markdown subtitle1 textCenter>
+              {strings.walkthroughs_appearance_sourceLinksDescription}
+            </Markdown>
+            <Markdown textCenter>
+              {strings.walkthroughs_appearance_youCanAlwaysSee}
+            </Markdown>
+          </View>
+        ),
+        title: strings.walkthroughs_appearance_sourceLinks,
+      },
+      {
+        body: (
+          <View gap={ 12 }>
+            <ScrollView scrollEnabled={ false }>
+              <Summary disableInteractions />
+            </ScrollView>
+            <View flexRow justifyCenter>
+              <ColorSchemePicker buttons />
+            </View>
+            <View itemsCenter>
+              <Button
+                elevated
+                onPress={ onDone }
+                p={ 4 }
+                rounded>
+                {strings.action_allDone}
+              </Button>
+            </View>
           </View>
         ),
         title: strings.walkthroughs_appearance_selectTheme,
       },
     ];
-  }, [setPreference]);
-  
-  const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
-      const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
-      return (prev = state);
-    });
-    await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
+  }, [onDone, setPreference]);
   
   return (
     <Walkthrough

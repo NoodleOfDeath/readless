@@ -67,8 +67,8 @@ export function Banner({
             </View>
           )}
           <SafeAreaView>
-            <View height={ 54 } alignCenter>
-              <View row alignCenter gap={ 16 }>
+            <View height={ 54 } itemsCenter>
+              <View row itemsCenter gap={ 16 }>
                 {actions.map((action, index) => (
                   <View key={ index }>
                     <Button

@@ -1,8 +1,9 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView, StatusBar } from 'react-native';
 
-import { Stylable, ViewProps } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { ViewProps } from '~/components';
+import { useTheme } from '~/hooks';
 
 export type ScreenViewProps = ViewProps & {
   refreshing?: boolean;
@@ -14,16 +15,16 @@ export function Screen({
   ...props
 }: ViewProps) {
   const theme = useTheme();
-  const style = useStyles(props as Stylable);
-  
   return (
     <React.Fragment>
       <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
       <SafeAreaView
-        style={ [style, theme.components.flexCol] } 
+        style={ styles.SafeAreaView }
         { ...props }>
         {children}
       </SafeAreaView>
     </React.Fragment>
   );
 }
+
+const styles = StyleSheet.create({ SafeAreaView: { flex: 1 } });

@@ -3,10 +3,14 @@ import { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 
 import { TextInput as RNTextInput, TextInputProps as RNTextInputProps } from 'react-native-paper';
 
-import { ChildlessViewProps, View } from '~/components';
+import {
+  ChildlessViewProps,
+  TextProps,
+  View,
+} from '~/components';
 import { useTheme } from '~/hooks';
 
-export type TextInputProps = RNTextInputProps & ChildlessViewProps & {
+export type TextInputProps = RNTextInputProps & TextProps & ChildlessViewProps & {
   flat?: boolean;
 };
 

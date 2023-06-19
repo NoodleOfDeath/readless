@@ -13,6 +13,7 @@ import {
   Walkthrough,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
+import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
@@ -40,35 +41,35 @@ export function OnboardingWalkthrough(props: SheetProps) {
               height={ 200 }
               resizeMode="contain"
               source={ { uri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/meme.jpg' } } />
-            <Text subscript>Image courtesy of ImageFlip</Text>
+            <Text subscript>{`${strings.walkthroughs_onboarding_imageCourtesyOf} ImageFlip`}</Text>
           </View>
           <Divider />
           <Markdown subtitle1 textCenter>
-            Being informed is a **human right**.
+            {strings.walkthroughs_onboarding_beingInformed}
           </Markdown>
           <Markdown subtitle1 textCenter>
-            In today&apos;s world, it is easy for us to forget this in the face of overly sensational **clickbait** titles, obnoxious ad **popups**, and defiant **paywalls**.
+            {strings.walkthroughs_onboarding_inTodaysWorld}
           </Markdown>
           <View col />
         </View>
       ),
-      title: 'News should be \n cheap and accessible',
+      title: strings.walkthroughs_onboarding_newsShouldBeAccessible,
     },
     {
       body: (
         <View gap={ 24 }>
           <View>
             <Text h5 bold textLeft>
-              minimize bias...
+              {strings.walkthroughs_onboarding_minimizeBias}
             </Text>
             <Text h5 bold textCenter>
-              reduce clickbait...
+              {strings.walkthroughs_onboarding_reduceClickbait}
             </Text>
             <Text h5 bold textRight>
-              ...and extract the facts
+              {strings.walkthroughs_onboarding_extractTheFacts}
             </Text>
             <Text subtitle1 textCenter>
-              from news headlines.
+              {strings.walkthroughs_onboarding_fromNewsHeadlines}
             </Text>
           </View>
           <View
@@ -77,36 +78,36 @@ export function OnboardingWalkthrough(props: SheetProps) {
             gap={ 12 }>
             <View elevated rounded p={ 12 }>
               <Text subtitle1 bold textCenter>
-                &quot;Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!&quot;
+                {'"Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!"'}
               </Text>
             </View>
             <Icon name="arrow-down-bold" size={ 48 } />
             <View elevated rounded p={ 12 }>
               <Text subtitle1 bold textCenter>
-                &quot;Neanderthal DNA linked to common hand condition (Dupuytren&apos; contracture)&quot;
+                {'Neanderthal DNA linked to common hand condition (Dupuytren&apos; contracture)'}
               </Text>
             </View>
           </View>
         </View>
       ),
-      title: 'Read Less uses\nLarge Language Models to...',
+      title: strings.walkthroughs_onboarding_readlessUses,
     },
     {
       body: (
         <View gap={ 24 }>
           <Markdown subtitle1 textLeft mr={ 64 }>
-            {'with infinite **granular control** \nover your news experience'}
+            {strings.walkthroughs_onboarding_granularControl}
           </Markdown>
           <Markdown subtitle1 textRight ml={ 64 }>
-            {'kept separate from social media and other distractions'}
+            {strings.walkthroughs_onboarding_separateFromSocialMedia}
           </Markdown>
           <Markdown subtitle1 textLeft mr={ 64 }>
-            {'and all **without needing to even create an account**'}
+            {strings.walkthroughs_onboarding_withoughtNeedingAnAccount}
           </Markdown>
           <View alignCenter gap={ 24 }>
             <View elevated rounded p={ 12 }>
               <Markdown h4 textCenter>
-                {'Are you ready to start \n **reading less**?'}
+                {strings.walkthroughs_onboarding_areYouReady}
               </Markdown>
             </View>
             <Button
@@ -115,12 +116,12 @@ export function OnboardingWalkthrough(props: SheetProps) {
               rounded
               p={ 6 }
               onPress={ onDone }>
-              Let&apos;s Go!
+              {strings.walkthroughs_onboarding_yesLetsGetStarted}
             </Button>
           </View>
         </View>
       ),
-      title: 'Read Less is designed \n with you in mind',
+      title: strings.walkthroughs_onboarding_madeWithYouInMind,
     },
   ], [onDone]);
   

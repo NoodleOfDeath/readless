@@ -49,7 +49,7 @@ export type StackableTabParams = {
     summary: PublicSummaryAttributes | number;
     showAnalytics?: boolean;
   };
-  displayModePicker: undefined;
+  colorSchemePicker: undefined;
   fontPicker: undefined;
   triggerWordPicker: undefined;
   readingFormatPicker: undefined;

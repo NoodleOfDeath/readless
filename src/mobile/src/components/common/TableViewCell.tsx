@@ -41,7 +41,7 @@ export function TableViewCellImage({
   );
 }
 
-export type TableViewCellProps = ChildlessViewProps & {
+export type TableViewCellProps = TextProps & ChildlessViewProps & {
   accessory?: false | 'DisclosureIndicator' | 'Detail' | 'DetailDisclosure' | 'Checkmark';
   accessoryColor?: ViewStyle['borderColor'] | TextStyle['color'];
   accessoryColorDisclosureIndicator?: ViewStyle['borderColor'];

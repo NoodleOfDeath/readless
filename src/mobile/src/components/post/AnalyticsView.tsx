@@ -69,7 +69,7 @@ export function AnalyticsView({
         title={ strings.summary_sentimentAnalysis }
         info={ strings.summary_sentimentAnalysisInfo }>
         <View gap={ 12 }>
-          <View row alignStart gap={ 12 }>
+          <View row itemsStart gap={ 12 }>
             <View
               elevated
               bg={ sentiment < -0.2 ? '#ff0000' : sentiment > 0.2 ? '#00cc00' : '#888' }

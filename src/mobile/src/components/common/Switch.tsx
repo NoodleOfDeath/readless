@@ -18,7 +18,7 @@ export const Switch = ({
 }: SwitchProps) => {
   const theme = useTheme();
   return (
-    <View flexRow alignCenter gap={ 12 }>
+    <View flexRow itemsCenter gap={ 12 }>
       { typeof leftLabel === 'string' ? <Text>{ leftLabel }</Text> : leftLabel }
       <RNSwitch { ...props } color={ theme.colors.primary } />
       { typeof rightLabel === 'string' ? <Text>{ rightLabel }</Text> : rightLabel }

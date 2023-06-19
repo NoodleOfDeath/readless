@@ -29,11 +29,11 @@ export function Stepper({
     <View
       flexRow
       gap={ 6 }
-      alignCenter
+      itemsCenter
       { ...props }>
       <TextInput
         flat
-        value={ `${value + offset}` }
+        value={ `${(value + offset).toFixed(2)}` }
         inputMode='numeric'
         keyboardType="numeric"
         onChangeText={ (text) => {
@@ -44,7 +44,7 @@ export function Stepper({
             onValueChange?.(undefined);
           }
         } } />
-      <View flexRow gap={ 6 } alignCenter>
+      <View flexRow gap={ 6 } itemsCenter>
         <Button
           leftIcon="minus"
           elevated

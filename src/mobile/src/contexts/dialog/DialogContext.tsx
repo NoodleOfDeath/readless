@@ -3,17 +3,20 @@ import React from 'react';
 import { registerSheet } from 'react-native-actions-sheet';
 import { Provider } from 'react-native-paper';
 
-import { DEFAULT_DIALOG_CONTEXT, Responder } from './types';
+import { DEFAULT_DIALOG_CONTEXT } from './types';
 
 import { PublicSummaryAttributes } from '~/api';
 import {
   AppearanceWalkthrough,
+  BookmarkWalkthrough,
   CustomFeedWalkthrough,
   FeedbackDialog,
   MainMenuDialog,
   OnboardingWalkthrough,
+  PromoCodeWalkthrough,
   SentimentWalkthrough,
   ShareDialog,
+  SharingWalkthrough,
   SubscribeDialog,
   TriggerWordsWalkthrough,
 } from '~/components';
@@ -28,9 +31,12 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('subscribe', SubscribeDialog);
     // onboarding/features
     registerSheet('appearance-walkthrough', AppearanceWalkthrough);
+    registerSheet('bookmark-walkthrough', BookmarkWalkthrough);
     registerSheet('custom-feed-walkthrough', CustomFeedWalkthrough);
     registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
+    registerSheet('promo-code-walkthrough', PromoCodeWalkthrough);
     registerSheet('sentiment-walkthrough', SentimentWalkthrough);
+    registerSheet('sharing-walkthrough', SharingWalkthrough);
     registerSheet('trigger-words-walkthrough', TriggerWordsWalkthrough);
     // summary specific
     registerSheet('share', ShareDialog);

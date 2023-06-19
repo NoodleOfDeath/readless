@@ -130,7 +130,7 @@ export function SearchMenu({
               <View gap={ 12 } p={ 12 }>
                 <View>
                   <Button 
-                    alignCenter 
+                    itemsCenter 
                     elevated 
                     rounded 
                     p={ 4 } 

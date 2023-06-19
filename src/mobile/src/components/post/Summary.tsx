@@ -92,7 +92,7 @@ function RenderActions({ actions }: RenderActionsProps) {
         justifyEvenly
         p={ 6 }
         mr={ 18 }
-        mb={ 12 }
+        my={ 12 }
         gap={ 6 }>
         {actions.map((action) => (
           <View
@@ -107,7 +107,7 @@ function RenderActions({ actions }: RenderActionsProps) {
               flex={ 1 }
               gap={ 6 }
               px={ 4 }
-              alignCenter
+              itemsCenter
               justifyCenter
               caption
               leftIcon={ action.leftIcon }
@@ -170,9 +170,9 @@ export function Summary({
   compact = false,
   swipeable = Boolean(summary0),
   disableInteractions = !summary0,
+  forceSentiment,
   hideCard,
   hideAnalytics,
-  forceSentiment,
   onFormatChange,
   onInteract,
   onLocalize,
@@ -194,12 +194,13 @@ export function Summary({
     compactMode,
     showShortSummary,
     preferredReadingFormat, 
+    sourceLinks,
+    sentimentEnabled,
+    triggerWords,
     bookmarkedSummaries,
     readSummaries,
     readSources,
-    sentimentEnabled,
-    setPreference, 
-    triggerWords,
+    setPreference,
   } = React.useContext(SessionContext);
 
   const { shareTarget } = React.useContext(DialogContext);
@@ -261,7 +262,7 @@ export function Summary({
   
   const cleanString = React.useCallback((str: string) => {
     for (const [word, repl] of Object.entries({ ...triggerWords })) {
-      str = str.replace(new RegExp(word, 'ig'), repl.item);
+      str = str.replace(new RegExp(word, 'ig'), repl);
     }
     return str;
   }, [triggerWords]);
@@ -318,16 +319,42 @@ export function Summary({
     queueSummary(summary);
   }, [trackState, currentTrack?.id, summary, queueSummary, stopAndClearTracks]);
   
+  const sourceLink = React.useMemo(() => {
+    return (
+      <Text
+        flex={ 1 }
+        flexRow
+        numberOfLines={ 1 }
+        underline
+        caption
+        color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+        onPress={ () => {
+          if (disableInteractions) {
+            return;
+          }
+          onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
+          setSourceIsRead(true);
+        } }
+        onLongPress={ () => copyToClipboard(summary.url) }>
+        {summary.url}
+      </Text>
+    );
+  }, [initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, disableInteractions, onInteract, summary.url, openURL, copyToClipboard]);
+  
   const menuActions = React.useMemo(() => {
     return (
       <View
         overflow="hidden"
+        flexRow={ !initialFormat }
+        flexGrow={ !initialFormat ? 1 : undefined }
         gap={ 6 }
-        p={ 6 }>
+        mx={ !(compact || compactMode) ? 12 : 0 }>
+        {(!(compact || compactMode) && (!summary.siblings || summary.siblings.length === 0)) && (initialFormat || sourceLinks) && sourceLink}
         <View 
           flexRow
-          flexGrow={ 1 }
-          alignCenter
+          flexGrow={ !sourceLinks ? 1 : undefined }
+          itemsCenter
+          justifyEnd
           gap={ 6 }>
           <Button
             h4
@@ -361,42 +388,53 @@ export function Summary({
             leftIcon={ playingAudio ? 'stop' : 'volume-source' }
             onPress={ () => !disableInteractions && handlePlayAudio() } />
         </View>
-        <View>
-          <Text
-            row
-            numberOfLines={ 1 }
-            underline
-            caption
-            color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
-            onPress={ () => {
-              if (disableInteractions) {
-                return;
-              }
-              onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-              setSourceIsRead(true);
-            } }
-            onLongPress={ () => copyToClipboard(summary.url) }>
-            {summary.url}
-          </Text>
-        </View>
       </View>
     );
-  }, [bookmarked, playingAudio, initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, summary, disableInteractions, onInteract, format, handlePlayAudio, openURL, copyToClipboard]);
+  }, [initialFormat, compact, compactMode, summary, sourceLinks, sourceLink, bookmarked, playingAudio, disableInteractions, onInteract, format, handlePlayAudio]);
+  
+  const timestamp = React.useMemo(() => {
+    return (
+      <View flex={ 1 } flexGrow={ 1 }>
+        <Text 
+          bold 
+          adjustsFontSizeToFit
+          caption
+          color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
+          {formatTime(summary.originalDate)}
+        </Text>
+      </View>
+    );
+  }, [isRead, theme.colors.textDisabled, theme.colors.text, formatTime, summary.originalDate]);
+  
+  const sentimentMeter = React.useMemo(() => {
+    return (
+      <View flexRow gap={ 3 }>
+        <Text
+          caption
+          adjustsFontSizeToFit>
+          { fixedSentiment(summary.sentiment) }
+        </Text>
+        <MeterDial 
+          value={ summary.sentiment }
+          width={ 40 } />
+      </View>
+    );
+  }, [summary.sentiment]);
   
   const header = React.useMemo(() => (
     <View 
-      py={ initialFormat ? 12 : 6 }
-      px={ 6 }
+      p={ initialFormat ? 12 : 6 }
       flexGrow={ 1 }
       elevated
-      borderTopLeftRadius={ initialFormat ? 0 : 12 }
-      borderRadiusTR={ initialFormat ? 0 : 12 }
+      brTopLeft={ initialFormat ? 0 : 12 }
+      brTopRight={ initialFormat ? 0 : 12 }
       zIndex={ 2 }
-      inactive={ isRead }>
+      inactive={ isRead }
+      bg={ containsTrigger ? '#eecccc' : undefined }>
       <View
         flexRow
         flexGrow={ 1 }
-        alignCenter
+        itemsCenter
         gap={ 6 }>
         {!initialFormat ? (
           <React.Fragment>
@@ -408,75 +446,66 @@ export function Summary({
               onPress={ () => !disableInteractions && openCategory(summary.category) } />
             <Text
               italic
+              adjustsFontSizeToFit
               onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
               {summary.outlet.displayName}
             </Text>
+            {timestamp}
+            {(forceSentiment || sentimentEnabled) && sentimentMeter}
           </React.Fragment>
         ) : (
-          <View gap={ 3 }>
-            <View>
-              <Button 
+          <React.Fragment>
+            <View itemsCenter gap={ 3 }>
+              {sentimentMeter}
+              {timestamp}
+            </View>
+            <View row />
+            <View gap={ 3 }>
+              <View>
+                <Button 
+                  h5
+                  gap={ 3 }
+                  horizontal
+                  outlined
+                  itemsCenter
+                  justifyBetween
+                  borderRadius={ 4 }
+                  adjustsFontSizeToFit
+                  px={ 12 }
+                  leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                  rightIcon="chevron-right"
+                  onPress={ () => !disableInteractions && openCategory(summary.category) }>
+                  {summary.category.displayName}
+                </Button>
+              </View>
+              <Button
+                italic
                 h5
+                itemsCenter
+                justifyBetween
+                horizontal
                 gap={ 3 }
-                flexRow
-                flexGrow={ 1 }
                 outlined
-                alignCenter
-                borderRadius={ 4 }
+                rightIcon="chevron-right"
+                px={ 12 }
                 adjustsFontSizeToFit
-                p={ 3 }
-                color='text'
-                leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                touchable
-                onPress={ () => !disableInteractions && openCategory(summary.category) }>
-                {summary.category.displayName}
+                borderRadius={ 4 }
+                onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
+                {summary.outlet.displayName}
               </Button>
             </View>
-            <Button
-              italic
-              underline
-              alignCenter
-              outlined
-              p={ 3 }
-              adjustsFontSizeToFit
-              borderColor="black"
-              borderRadius={ 4 }
-              touchable
-              onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
-              {summary.outlet.displayName}
-            </Button>
-          </View>
-        )}
-        <View flex={ 1 } flexGrow={ 1 }>
-          <Text 
-            bold 
-            adjustsFontSizeToFit
-            caption
-            color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
-            {formatTime(summary.originalDate)}
-          </Text>
-        </View>
-        {(forceSentiment || sentimentEnabled) && (
-          <React.Fragment>
-            <Text
-              caption
-              adjustsFontSizeToFit>
-              { fixedSentiment(summary.sentiment) }
-            </Text>
-            <MeterDial 
-              value={ summary.sentiment }
-              width={ 40 } />
           </React.Fragment>
         )}
-        {initialFormat ? menuActions : (
+        {((compact || compactMode) && (
           <Popover
+            menu
             anchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
             {menuActions}
           </Popover>
-        )}
+        ))}
       </View>
     </View>
-  ), [initialFormat, isRead, summary.category, summary.outlet, summary.originalDate, summary.sentiment, theme.colors.textDisabled, theme.colors.text, formatTime, forceSentiment, sentimentEnabled, menuActions, disableInteractions, openCategory, openOutlet]);
+  ), [initialFormat, isRead, containsTrigger, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, compact, compactMode, menuActions, disableInteractions, openCategory, openOutlet]);
 
   const renderRightActions = React.useCallback(() => {
     const actions = [{
@@ -508,7 +537,7 @@ export function Summary({
         onInteract?.(InteractionType.Hide, undefined, undefined, () => {
           setPreference('removedSummaries', (prev) => ({
             ...prev,
-            [summary.id]: new Bookmark(true),
+            [summary.id]: true,
           }));
         });
       },
@@ -566,8 +595,7 @@ export function Summary({
     return (
       <View gap={ 6 }>
         {[...(summary.siblings ?? [])].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
-          <View 
-            key={ sibling.id }>
+          <View key={ sibling.id }>
             <View
               gap={ 1 }
               p={ 3 }
@@ -577,15 +605,17 @@ export function Summary({
               onPress={ () => !disableInteractions && openSummary({ summary: sibling.id }) }>
               <View 
                 flexRow
-                gap={ 2 }
-                alignCenter>
+                gap={ 6 }
+                itemsCenter>
                 <Text 
                   italic
+                  adjustsFontSizeToFit
                   color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
                   {sibling.outlet.displayName}
                 </Text>
                 <Text 
                   bold 
+                  adjustsFontSizeToFit
                   caption 
                   color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
                   numberOfLines={ 1 }>
@@ -618,7 +648,8 @@ export function Summary({
             maxWidth={ initialFormat ? 200 : 128 }
             width={ initialFormat ? '40%' : '30%' }>
             <Popover
-              modal
+              onPress={ () => !disableInteractions && handleFormatChange() }
+              longPress={ !initialFormat }
               anchor={ (
                 <View
                   top={ -6 }
@@ -626,15 +657,14 @@ export function Summary({
                   minHeight={ 80 }
                   height="100%"
                   overflow='hidden'
-                  borderTopLeftRadius={ initialFormat ? 0 : 12 }
-                  borderBottomLeftRadius={ initialFormat ? 0 : 12 }>
+                  brTopLeft={ initialFormat ? 0 : 12 }
+                  brBottomLeft={ initialFormat ? 0 : 12 }>
                   {containsTrigger ? (
-                    <Text 
+                    <Icon
+                      name="cancel"
                       absolute
                       zIndex={ 20 } 
-                      fontSize={ 120 }>
-                      🐥
-                    </Text>
+                      size={ 120 } />
                   ) : (
                     <Image
                       flex={ 1 }
@@ -666,7 +696,8 @@ export function Summary({
             <View flexRow flexGrow={ 1 }>
               <Highlighter
                 bold
-                subtitle1
+                subtitle1={ Boolean(!(compact || compactMode) || initialFormat) }
+                body1={ (compact || compactMode) && !initialFormat }
                 justifyCenter
                 color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
                 highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
@@ -686,11 +717,16 @@ export function Summary({
               </View>
             )}
           </View>
+          {((!(compact || compactMode) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : sourceLinks && (<View mx={ 12 }>{sourceLink}</View>))}
           {summary.siblings && summary.siblings.length > 0 && (
             <View mx={ 12 } gap={ 6 }>
-              <Text>
-                {`${strings.summary_relatedNews} (${summary.siblings.length})`}
-              </Text>
+              <View flexRow>
+                <Text>
+                  {`${strings.summary_relatedNews} (${summary.siblings.length})`}
+                </Text>
+                <View row />
+                {menuActions}
+              </View>
               {summary.siblings.length === 1 ? 
                 siblingCards : (
                   <ScrollView height={ summary.siblings.length === 1 ? 45 : 70 }>
@@ -702,7 +738,7 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title, translateToggle, siblingCards]);
+  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title, translateToggle, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
   
   return (
     <GestureHandlerRootView>
@@ -714,12 +750,12 @@ export function Summary({
             flexGrow={ 1 }
             elevated
             style={ { ...theme.components.card, ...style } }
-            mt={ isShareTarget ? 12 : undefined }
             borderRadius={ initialFormat ? 0 : 12 }
-            mb={ 12 }
+            my={ 6 }
             ml={ initialFormat ? undefined : 12 }
             mr={ initialFormat ? undefined : 12 }
-            inactive={ isRead } 
+            inactive={ isRead }
+            bg={ containsTrigger ? '#eecccc' : undefined }
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
             <View flexGrow={ 1 }>
               {!hideCard && (
@@ -736,8 +772,8 @@ export function Summary({
                     flexGrow={ 1 }
                     gap={ 6 }
                     overflow='hidden'
-                    borderTopLeftRadius={ initialFormat ? 0 : 12 }
-                    borderRadiusTR={ initialFormat ? 0 : 12 }>
+                    brTopLeft={ initialFormat ? 0 : 12 }
+                    brTopRight={ initialFormat ? 0 : 12 }>
                     {header}
                     {coverContent}
                   </View>

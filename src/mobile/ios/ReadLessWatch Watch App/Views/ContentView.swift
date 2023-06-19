@@ -28,6 +28,7 @@ struct ContentView: View {
             if let error = self.service.error {
               Text("Error loading")
               Text(error)
+              Button("Reload", action: self.service.fetchSync)
             } else {
               List(self.service.summaries, id: \.id) { summary in
                 NavigationLink(

@@ -8,6 +8,7 @@ import {
   Divider,
   Markdown,
   MeterDial,
+  Pulse,
   ScrollView,
   Summary,
   Text,
@@ -38,14 +39,14 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Markdown textCenter>
-            However, **too much sensationalism** can be misleading or even harmful.
+          <Markdown subtitle1 textCenter>
+            {strings.walkthroughs_sentiment_tooMuchSentiment}
           </Markdown>
-          <View alignCenter>
+          <View itemsCenter>
             <MeterDial value={ 0.3 } />
           </View>
-          <Markdown textCenter>
-            **Instead of removing sentiment altogether**, Read Less aims to **measure sentiment** over time.
+          <Markdown subtitle1 textCenter>
+            {strings.walkthroughs_sentiment_insteadOfRemoving}
           </Markdown>
         </View>
       ),
@@ -53,60 +54,80 @@ export function SentimentWalkthrough(props: SheetProps) {
     },
     {
       body: (
-        <View elevated p={ 12 }>
-          <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
-            <Text bold>&quot;</Text>
-            <Text>I absolutely</Text>
-            <Text bold underline color="green">loved</Text>
-            <Text>the new movie, it was a</Text>
-            <Text bold underline color="green">captivating</Text>
-            <Text>and emotional experience!</Text>
-            <Text bold underline color="green">UwU</Text>
-            <Text bold>&quot;</Text>
+        <View gap={ 12 }>
+          <View elevated p={ 12 } rounded>
+            <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
+              <Text bold>&quot;</Text>
+              <Text h5>
+                I absolutely
+              </Text>
+              <Text h5 bold underline color="green">loved</Text>
+              <Text h5>the new movie, it was a</Text>
+              <Text h5 bold underline color="green">captivating</Text>
+              <Text h5>and emotional experience!</Text>
+              <Text h5 bold underline color="green">
+                UwU
+                <Text h5 bold>&quot;</Text>
+              </Text>
+            </View>
           </View>
+          <Markdown subtitle1 textCenter>
+            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription}
+          </Markdown>
         </View>
       ),
-      footer: strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription,
       title: strings.walkthroughs_sentiment_whatIsSentimentAnalysis,
     },
     {
       body: (
         <View gap={ 12 }>
-          <Markdown textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
-          <View elevated p={ 12 }>
+          <Markdown subtitle1 textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
+          <View elevated p={ 12 } rounded>
             <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
-              <Text bold>&quot;</Text>
-              <Text>The customer service was</Text>
-              <Text bold underline color="red">terrible</Text>
-              <Text>my child was</Text>
-              <Text bold underline color="red">not happy</Text>
-              <Text bold underline color="red">😡</Text>
-              <Text bold>&quot;</Text>
+              <Text h5 bold>&quot;</Text>
+              <Text h5>
+                The customer service was
+              </Text>
+              <Text h5 bold underline color="red">terrible</Text>
+              <Text h5>my child was</Text>
+              <Text h5 bold underline color="red">not happy</Text>
+              <Text h5 bold underline color="red">
+                😡
+                <Text h5 bold>&quot;</Text>
+              </Text>
             </View>
           </View>
-          <Markdown textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
+          <Markdown subtitle1 textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
         </View>
       ),
       title: strings.walkthroughs_sentiment_whatIsSentimentUsedFor,
     },
     {
       body: (
-        <View alignCenter gap={ 12 }>
-          <Markdown textCenter>
+        <View itemsCenter gap={ 12 }>
+          <Markdown subtitle1 textCenter>
             {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription}
           </Markdown>
-          <View alignCenter flexRow>
-            <View alignCenter>
+          <View itemsCenter flexRow>
+            <View itemsCenter>
               <Text h4 color="red">-1</Text>
-              <Text textCenter color="red">{strings.summary_veryNegative}</Text>
+              <Text 
+                textCenter
+                color="red">
+                {strings.summary_veryNegative}
+              </Text>
             </View>
             <MeterDial value={ 0.3 } />
-            <View alignCenter>
+            <View itemsCenter>
               <Text h4 color="green">+1</Text>
-              <Text textCenter color="green">{strings.summary_veryPositive}</Text>
+              <Text 
+                textCenter
+                color="green">
+                {strings.summary_veryPositive}
+              </Text>
             </View>
           </View>
-          <View alignCenter>
+          <View itemsCenter>
             <Text h4>+0</Text>
             <Text textCenter>{strings.summary_neutral}</Text>
           </View>
@@ -116,24 +137,28 @@ export function SentimentWalkthrough(props: SheetProps) {
     },
     {
       body: (
-        <View alignCenter gap={ 12 }>
-          <Markdown 
+        <View itemsCenter gap={ 12 }>
+          <Markdown
+            textCenter
+            subtitle1 
             highlightStyle={ {
               color: theme.colors.link, fontWeight: 'bold', textDecorationLine: 'underline', 
             } }
             onPress={ () => openURL('https://en.wikipedia.org/wiki/Lexical_analysis') }>
             {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP1}
           </Markdown>
-          <View flexRow alignCenter gap={ 3 }>
-            <Text 
+          <View flexRow itemsCenter gap={ 3 }>
+            <Text
+              subtitle1 
               color="link"
               onPress={ () => openURL('http://corpustext.com/reference/sentiment_afinn.html') }
               underline
               bold>
               AFINN
             </Text>
-            <Text>{strings.misc_and}</Text>
-            <Text 
+            <Text subtitle1>{strings.misc_and}</Text>
+            <Text
+              subtitle1 
               color="link"
               onPress={ () => openURL('https://medium.com/@piocalderon/vader-sentiment-analysis-explained-f1c4f9101cd9#:~:text=VADER%20(Valence%20Aware%20Dictionary%20for,intensity%20(strength)%20of%20emotion.') }
               underline
@@ -141,11 +166,11 @@ export function SentimentWalkthrough(props: SheetProps) {
               VADER
             </Text>
           </View>
-          <Text textCenter>
+          <Text subtitle1 textCenter>
             {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP2}
           </Text>
           <Divider bg={ theme.colors.text } />
-          <Markdown>
+          <Markdown textCenter>
             {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP3}
           </Markdown>
         </View>
@@ -155,31 +180,34 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Text textCenter>
+          <Text subtitle1 textCenter>
             {strings.walkthroughs_sentiment_score}
           </Text>
           <ScrollView scrollEnabled={ false }>
             <View
               absolute
-              top={ -10 }
-              right={ 15 }
+              top={ -5 }
+              right={ -10 }
               zIndex={ 20 }>
-              <Svg viewBox="0 0 100 100" width={ 150 } height={ 60 }>
-                <Ellipse
-                  cx={ 50 }
-                  cy={ 50 }
-                  rx={ 100 }
-                  ry={ 30 }
-                  fill="transparent"
-                  stroke={ theme.colors.text }
-                  strokeWidth={ 5 } />
-              </Svg>
+              <Pulse>
+                <Svg viewBox="0 0 100 100" width={ 150 } height={ 60 }>
+                  <Ellipse
+                    cx={ 50 }
+                    cy={ 50 }
+                    rx={ 80 }
+                    ry={ 30 }
+                    fill="transparent"
+                    stroke={ theme.colors.text }
+                    strokeWidth={ 5 } />
+                </Svg>
+              </Pulse>
             </View>
             <Summary forceSentiment disableInteractions />
           </ScrollView>
           <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
             <Button 
               elevated
+              subtitle1
               rounded
               touchable
               haptic
@@ -192,6 +220,7 @@ export function SentimentWalkthrough(props: SheetProps) {
             </Button>
             <Button
               elevated
+              subtitle1
               rounded
               bg={ theme.colors.success }
               color={ 'white' }

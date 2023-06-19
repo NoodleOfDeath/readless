@@ -43,11 +43,11 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   const computedSteps = React.useMemo(() => {
     return steps.map((step, i) => (
       <View gap={ 12 } key={ i }>
-        {typeof step.title === 'string' ? <Text h4 bold textCenter>{step.title}</Text> : step.title}
+        {typeof step.title === 'string' ? <Markdown h4 bold textCenter highlightStyle={ { textDecorationLine: 'underline' } }>{step.title}</Markdown> : step.title}
         <View col />
-        {typeof step.body === 'string' ? <Markdown>{step.body}</Markdown> : step.body}
+        {typeof step.body === 'string' ? <Markdown subtitle1>{step.body}</Markdown> : step.body}
         <View col />
-        {typeof step.footer === 'string' ? <Markdown>{step.footer}</Markdown> : step.footer}
+        {typeof step.footer === 'string' ? <Markdown subtitle1>{step.footer}</Markdown> : step.footer}
       </View>
     ));
   }, [steps]);
@@ -70,7 +70,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
         width={ 40 }
         height={ 40 }
         justifyCenter
-        alignCenter
+        itemsCenter
         borderRadius={ 24 }>
         <Icon
           name="arrow-left"
@@ -87,7 +87,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
         width={ 40 }
         height={ 40 }
         justifyCenter
-        alignCenter
+        itemsCenter
         borderRadius={ 24 }>
         <Icon
           name="arrow-right"
@@ -104,7 +104,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
         px={ 10 }
         height={ 40 }
         justifyCenter
-        alignCenter
+        itemsCenter
         borderRadius={ 24 }>
         <Text>{strings.action_skip}</Text>
       </View>
@@ -118,7 +118,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
         width={ 40 }
         height={ 40 }
         justifyCenter
-        alignCenter
+        itemsCenter
         borderRadius={ 24 }>
         <Icon
           name="check"
@@ -143,7 +143,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
               height={ 40 }
               justifyCenter
               touchable
-              alignCenter
+              itemsCenter
               borderRadius={ 24 }
               onPress={ () => SheetManager.hide(props.sheetId) }
               leftIcon={ <Icon name="close" size={ 24 } /> }>

@@ -1,5 +1,6 @@
 export const enStrings = {
   // actions
+  action_allDone: 'All Done!',
   action_clearSearchHistory: 'Clear Search History', 
   action_clearSelection: 'Clear Selection',
   action_close: 'Close', 
@@ -8,6 +9,7 @@ export const enStrings = {
   action_loading: 'Loading...',
   action_next: 'Next ', 
   action_save: 'Save',
+  action_saveAndClose: 'Save & Close',
   action_search: 'Search',
   action_skip: 'Skip',
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
@@ -47,12 +49,15 @@ export const enStrings = {
   
   // misc
   misc_and: 'and',
+  misc_awesome: 'Awesome!',
   misc_categories: 'Categories',
   misc_category: 'Category',
   misc_channels: 'Channels',
+  misc_duhIAlreadyKnow: 'Duh, I already know',
   misc_inTheLast: 'in the last',
   misc_newsSource: 'News Source',
   misc_readless: 'Read Less',
+  mise_sweetGotIt: 'Sweet, got it!',
 
   // search
   search_customNewsSearch: 'Note: This is searching only within your custom news feed and not all news articles',
@@ -73,18 +78,22 @@ export const enStrings = {
   settings_compactMode: 'Compact',
   settings_dark: 'Dark',
   settings_displayMode: 'Display Mode',
+  settings_enterYourTriggerWords: 'Enter and/or remove your trigger words below',
   settings_expanded: 'Expanded',
   settings_font: 'Font',
   settings_fontSize: 'Font Size',
   settings_fontSizeOffset: 'Font Size',
   settings_light: 'Light',
   settings_preferredReadingFormat: 'Default reading mode on open',
+  settings_replacement: 'Replacement',
   settings_resetHiddenSummaries: 'Reset hidden summaries',
   settings_resetReadSummaries: 'Reset summaries to unread',
   settings_settings: 'Settings',
   settings_shortSummaries: 'Short summaries under titles',
   settings_shortSummariesInsteadOfTitles: 'Short summaries instead of titles',
+  settings_showSourceLinks: 'Show Source Links',
   settings_system: 'System',
+  settings_triggerWord: 'Trigger Word',
   settings_triggerWords: 'Trigger Words',
   settings_voice: 'Text-to-Speech Voice',
 
@@ -149,43 +158,80 @@ export const enStrings = {
   
   // walkthroughs
   walkthroughs: 'Walkthroughs',
-  
+
   // walkthroughs - appearance
-  walkthroughs_appearance_compactModeDescription: 'Try toggling the expanded/compact mode to see which you prefer',
+  walkthroughs_appearance_compactModeDescription: 'Toggle the switches below to see which you prefer',
   walkthroughs_appearance_customizeYourExperience: 'Customize your experience',
-  walkthroughs_appearance_preferredReadingFormat: 'Do you prefer reading summaries or bullet points?',
-  walkthroughs_appearance_preferredReadingFormatDescription: 'Try tapping on **Bullets** below to see how they work',
+  walkthroughs_appearance_preferredReadingFormat: 'Tap on **Summary** or **Bullets** to choose your default reading format',
   walkthroughs_appearance_selectFont: 'Select a font and size that is easiest to read',
   walkthroughs_appearance_selectTheme: 'Light or dark mode?',
+  walkthroughs_appearance_sourceLinks: 'Tap the toggle to see what appearance you prefer',
+  walkthroughs_appearance_sourceLinksDescription: 'Tapping on the source links will open the original article in a browser',
+  walkthroughs_appearance_stackTitle: 'Customize the Look and Feel',
+  walkthroughs_appearance_youCanAlwaysSee: 'You can always see the source links after tapping a card itself.\n\nLong pressing will also copy the url.',
+
+  // walkthroughs - bookmark
+  walkthroughs_bookmark_happyReading: 'Happy Reading!',
+  walkthroughs_bookmark_niceJob: 'Nice! You can view always your bookmarks offline by opening the menu!',
+
+  // walkthroughs - custom feed
+  walkthroughs_customFeed_addCategories: 'Add categories',
+  walkthroughs_customFeed_addNewsSources: 'Add news sources',
+  walkthroughs_customFeed_letsStart: 'Let\'s start by choosing any of the following categories that may interest you',
+  walkthroughs_customFeed_readlessPulls: 'Read Less pulls from over 80 reputable news sources. Do you have any favorites? (more added weekly)',
+  walkthroughs_customFeed_stackTitle: 'Customize Your Feed',
+  walkthroughs_customFeed_toggleFilters: 'You can switch between custom news and all news by tapping the toggle at the top of the app',
   
   // walkthroughs - onboarding
-  walkthroughs_onboarding_addCategories: 'Add categories',
-  walkthroughs_onboarding_addNewsSources: 'Add news sources',
-  walkthroughs_onboarding_welcome: 'Welcome to Read Less!',
+  walkthroughs_onboarding_areYouReady: 'Are you ready to\nRead Less?',
+  walkthroughs_onboarding_beingInformed: 'Being informed is a **human right**.',
+  walkthroughs_onboarding_extractTheFacts: '...extract the facts',
+  walkthroughs_onboarding_fromNewsHeadlines: 'from news headlines',
+  walkthroughs_onboarding_granularControl: 'with infinite **granular control** \nover your news experience',
+  walkthroughs_onboarding_imageCourtesyOf: 'Image courtesy of',
+  walkthroughs_onboarding_inTodaysWorld: 'In today\'s world, it is easy for us to forget this in the face of overly sensational **clickbait** titles, obnoxious ad **popups**, and defiant **paywalls**.',
+  walkthroughs_onboarding_madeWithYouInMind: 'Read Less is designed \n with you in mind',
+  walkthroughs_onboarding_minimizeBias: 'minimize bias...',
+  walkthroughs_onboarding_newsShouldBeAccessible: 'News should be \n cheap and accessible',
+  walkthroughs_onboarding_readlessUses: 'Read Less uses\nLarge Language Models to...',
+  walkthroughs_onboarding_reduceClickbait: 'reduce clickbait...',
+  walkthroughs_onboarding_separateFromSocialMedia: 'kept **separate from social media** and other distractions',
+  walkthroughs_onboarding_withoughtNeedingAnAccount: 'and all **without needing to even create an account**',
+  walkthroughs_onboarding_yesLetsGetStarted: 'Yes, let\'s get started!',
+  
+  // Promo Codes
+  walkthroughs_promoCodeDescription: 'Save this promo code for when subscriptions roll out! Only the **first 500** redemptions will get **3 months FREE** of Boost membership',
+  walkthroughs_promoCodeTitle: 'Great Job! You finished all walkthroughs!',
 
   // walkthroughs - sentiment
   walkthroughs_sentiment_dontEnable: 'I\'m good for now',
   walkthroughs_sentiment_enable: 'Enable Quick Sentiments',
   walkthroughs_sentiment_enableQuestion: 'Enable Quick Sentiments?',
   walkthroughs_sentiment_howDoWeMeasureSentiment: 'How does Read Less measure sentiment?',
-  walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP1: 'Read Less uses two **lexicon-based** measures',
+  walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP1: 'Read Less uses\ntwo **lexicon-based** measures',
   walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP2: 'As well as insights from large language models (OpenAI\'s ChatGPT)',
   walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP3: 'However, it\'s important to be aware of **potential biases**, including political skew, in sentiment measurement especially from large language models.',
   walkthroughs_sentiment_howIsSentimetMeasured: 'How is sentiment measured?',
   walkthroughs_sentiment_howIsSentimetMeasuredDescription: 'Sentiment is measured using a scale from **-1** to **1**.\n**-1** is very negative, **0** is neutral, and **1** is very positive.',
+  walkthroughs_sentiment_insteadOfRemoving: '**Instead of removing sentiment altogether**, Read Less aims to **measure sentiment** over time.',
   walkthroughs_sentiment_lexiconBased: 'lexicon-based',
   walkthroughs_sentiment_score: 'Each article summary has a sentiment score, which can be shown in its header for quick reference',
+  walkthroughs_sentiment_tooMuchSentiment: 'However, **too much sensationalism** can be misleading or even harmful.',
   walkthroughs_sentiment_whatIsSentimentAnalysis: 'What is Sentiment Analysis?',
   walkthroughs_sentiment_whatIsSentimentAnalysisDescription: 'Sentiment analysis measures the **emotional tone** expressed in a given text, enabling a deeper understanding of the underlying sentiment.',
   walkthroughs_sentiment_whatIsSentimentUsedFor: 'Sentiment Analysis is used in...',
   walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1: 'brand management, market research, options trading, and understanding customer feedback',
   walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2: 'It also **empowers** readers like **you** to make data-driven decisions and gauge public perception effectively.',
 
+  // walkthroughs - sharing
+  walkthroughs_sharing_noteworthyArticle: 'Noteworthy article?',
+  walkthroughs_sharing_shareArticles: 'Did you know you can directly share an interesting article by pressing the share button?',
+  walkthroughs_sharing_shareArticlesDescription: 'You can also expand images by long pressing on a card\'s image',
+
   // walkthroughs - trigger words
   walkthroughs_triggerWords: 'Trigger Words',
-  walkthroughs_triggerWords_description: 'Read Less lets you set **trigger words** that will be replaced with emojis, or excluded altogether, so you can read the news with **less anxiety**.',
-  walkthroughs_triggerWords_emoji: 'Replacement',
+  walkthroughs_triggerWords_description: 'Read Less lets you set **trigger words** to be replaced with emojis or words of your choice, so you may read the news with **less anxiety**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Enable trigger words by entering them below',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Support for languages other than English is limited at this time.',
-  walkthroughs_triggerWords_word: 'Trigger Word',
+
 };

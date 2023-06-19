@@ -4,35 +4,47 @@ import {
   Button,
   ChildlessViewProps,
   ScrollView,
+  Text,
   TextInput,
   View,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
 type TriggerWordPickerProps = ChildlessViewProps & {
   onSubmit?: () => void;
+  saveLabel?: string;
 };
 
-export function TriggerWordPicker({ onSubmit }: TriggerWordPickerProps) {
+export function TriggerWordPicker({ 
+  onSubmit,
+  saveLabel = strings.action_save,
+}: TriggerWordPickerProps) {
 
   const { triggerWords, setPreference } = React.useContext(SessionContext);
   
-  const [words, setWords] = React.useState([...Object.entries({ ...triggerWords }).map(([word, replacement]) => [word, replacement.item]), ['', '']]);
+  const [words, setWords] = React.useState([...Object.entries({ ...triggerWords }).map(([word, replacement]) => [word, replacement]), ['', '']]);
 
   const save = React.useCallback(() => {
-    setPreference('triggerWords', Object.fromEntries(words.map(([word, replacement]) => [word.toLowerCase().replace(/[\n\s\t]+/g, ' '), new Bookmark(replacement)])));
+    if (words.every(([word, replacement]) => !word && !replacement)) {
+      setPreference('triggerWords', undefined);
+      onSubmit?.();
+    }
+    setPreference('triggerWords', Object.fromEntries(words.map(([word, replacement]) => [word.toLowerCase().replace(/[\n\s\t]+/g, ' '), replacement])));
     onSubmit?.();
   }, [setPreference, words, onSubmit]);
 
   return (
     <View gap={ 12 }>
+      <Text>
+        {strings.settings_enterYourTriggerWords}
+      </Text>
       <ScrollView>
         {words.map(([word, replacement], i) => (
-          <View key={ i } row gap={ 6 } alignCenter>
+          <View key={ i } row gap={ 6 } itemsCenter>
             <TextInput
               flex={ 1 }
-              label={ strings.walkthroughs_triggerWords_word }
+              label={ strings.settings_triggerWord }
               onChangeText={ (text) => setWords((prev) => {
                 const state = [ ...prev ];
                 state[i][0] = text;
@@ -41,7 +53,7 @@ export function TriggerWordPicker({ onSubmit }: TriggerWordPickerProps) {
               value={ word } />
             <TextInput
               flex={ 1 }
-              label={ strings.walkthroughs_triggerWords_emoji }
+              label={ strings.settings_replacement }
               onChangeText={ (text) => setWords((prev) => {
                 const state = [ ...prev ];
                 state[i][1] = text;
@@ -71,16 +83,15 @@ export function TriggerWordPicker({ onSubmit }: TriggerWordPickerProps) {
         ))}
       </ScrollView>
       <Button
-        alignCenter
+        itemsCenter
         justifyCenter
         flexRow
         rounded
         py={ 4 }
         elevated
         fontSize={ 24 }
-        disabled={ words.filter(([word, replacement]) => word && replacement).length === 0 }
         onPress={ save }>
-        { strings.action_save }
+        { saveLabel }
       </Button>
     </View>
   );

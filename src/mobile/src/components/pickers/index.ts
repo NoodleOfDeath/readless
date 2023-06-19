@@ -1,10 +1,10 @@
 export * from './generic';
 
 export * from './CategoryPicker';
+export * from './ColorSchemePicker';
 export * from './CompactModePicker';
-export * from './DisplayModePicker';
 export * from './FontPicker';
-export * from './FontSizePicker';
+export * from './NumericPrefPicker';
 export * from './OutletPicker';
 export * from './PrefSwitch';
 export * from './ReadingFormatPicker';

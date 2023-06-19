@@ -1,18 +1,14 @@
 import React from 'react';
 
 import { ChildlessViewProps, GridPicker } from '~/components';
-import {
-  Bookmark,
-  SessionContext,
-  useCategoryClient,
-} from '~/core';
+import { SessionContext, useCategoryClient } from '~/core';
 
 export type CategoryPickerProps = ChildlessViewProps;
 
 export function CategoryPicker(props: CategoryPickerProps) {
   const { getCategories } = useCategoryClient();
-  const { bookmarkedCategories, setPreference } = React.useContext(SessionContext);
-  const [selectedCategories] = React.useState<string[]>(Object.keys({ ...bookmarkedCategories }));
+  const { followedCategories, setPreference } = React.useContext(SessionContext);
+  const [selectedCategories] = React.useState<string[]>(Object.keys({ ...followedCategories }));
   const fetch = React.useCallback(async () => {
     const { data } = await getCategories();
     return data.rows.map((category) => ({
@@ -28,10 +24,10 @@ export function CategoryPicker(props: CategoryPickerProps) {
       options={ fetch }
       multi
       initialValue={ selectedCategories }
-      onSave={ 
+      onValueChange={ 
         (states) => setPreference(
-          'bookmarkedCategories', 
-          Object.fromEntries(states.map((state) => [state.value, new Bookmark(state.payload)]))
+          'followedCategories', 
+          states && Object.fromEntries(states.map((state) => [state.value, true]))
         )
       } />
   );

@@ -5,7 +5,7 @@ import { TextStyle, ViewStyle } from 'react-native';
 import { Section } from 'react-native-tableview-simple';
 
 import { View, ViewProps } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { useStyles } from '~/hooks';
 
 export type TableViewSectionProps = ViewProps & {
     grouped?: boolean;
@@ -37,10 +37,7 @@ export function TableViewSection({
   grouped,
   ...props 
 }: TableViewSectionProps) {
-
-  const theme = useTheme();
   const style = useStyles(props);
-
   return (
     <View mx={ grouped ? 24 : 0 }>
       <Section

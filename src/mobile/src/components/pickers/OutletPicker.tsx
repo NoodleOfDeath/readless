@@ -1,18 +1,14 @@
 import React from 'react';
 
 import { ChildlessViewProps, GridPicker } from '~/components';
-import {
-  Bookmark,
-  SessionContext,
-  useCategoryClient,
-} from '~/core';
+import { SessionContext, useCategoryClient } from '~/core';
 
 export type OutletPickerProps = ChildlessViewProps;
 
 export function OutletPicker(props: OutletPickerProps) {
   const { getOutlets } = useCategoryClient();
-  const { bookmarkedOutlets, setPreference } = React.useContext(SessionContext);
-  const [selectedOutlets] = React.useState<string[]>(Object.keys({ ...bookmarkedOutlets }));
+  const { followedOutlets, setPreference } = React.useContext(SessionContext);
+  const [selectedOutlets] = React.useState<string[]>(Object.keys({ ...followedOutlets }));
   const fetch = React.useCallback(async () => {
     const { data } = await getOutlets();
     return data.rows.map((outlet) => ({
@@ -27,10 +23,11 @@ export function OutletPicker(props: OutletPickerProps) {
       options={ fetch }
       multi
       initialValue={ selectedOutlets }
-      onSave={ 
+      searchable
+      onValueChange={ 
         (states) => setPreference(
-          'bookmarkedOutlets', 
-          Object.fromEntries(states.map((state) => [state.value, new Bookmark(state.payload)]))
+          'followedOutlets', 
+          states && Object.fromEntries(states.map((state) => [state.value, true]))
         )
       } />
   );

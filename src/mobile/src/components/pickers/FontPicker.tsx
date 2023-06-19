@@ -3,6 +3,8 @@ import React from 'react';
 import {
   AVAILABLE_FONTS,
   Button,
+  FontFamily,
+  GridPicker,
   ScrollView,
   TablePicker,
   View,
@@ -12,48 +14,63 @@ import { SessionContext } from '~/contexts';
 import { useStyles } from '~/hooks';
 
 export type FontPickerProps = ViewProps & {
-  variant?: 'horizontal' | 'table';
+  variant?: 'grid' | 'horizontal' | 'table';
+  grid?: boolean;
   horizontal?: boolean;
 };
 
 export function FontPicker({
+  grid,
   horizontal,
-  variant = horizontal ? 'horizontal' : 'table',
+  variant = grid ? 'grid' : horizontal ? 'horizontal' : 'table',
   ...props
 }: FontPickerProps = {}) {
   
   const { fontFamily, setPreference } = React.useContext(SessionContext);
   const style = useStyles(props);
   
-  return variant === 'table' ? (
+  if (variant === 'grid') {
+    return (
+      <GridPicker
+        options={ [...AVAILABLE_FONTS] }
+        initialValue={ fontFamily as FontFamily }
+        buttonProps={ ({ option }) => ({ fontFamily: option.value }) }
+        onValueChange={ (state) => setPreference('fontFamily', state?.value) } />
+    );
+  } else
+  if (variant === 'horizontal') {
+    return (
+      <ScrollView 
+        horizontal
+        style={ {
+          overflow: 'hidden', padding: 8, ...style, 
+        } }>
+        <View flexRow itemsCenter gap={ 8 } mx={ 8 }>
+          {AVAILABLE_FONTS.map((font) => (
+            <Button 
+              flexRow
+              caption
+              itemsCenter
+              gap={ 4 }
+              key={ font }
+              elevated
+              p={ 8 }
+              leftIcon={ fontFamily === font ? 'check' : undefined } 
+              fontFamily={ font }
+              onPress={ () => setPreference('fontFamily', font) }>
+              {font}
+            </Button>
+          ))}
+        </View>
+      </ScrollView>
+    );
+  }
+  
+  return (
     <TablePicker
-      options={ AVAILABLE_FONTS }
-      initialValue={ fontFamily }
+      options={ [...AVAILABLE_FONTS] }
+      initialValue={ fontFamily as FontFamily }
       cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
-      onValueChange={ (state) => setPreference('fontFamily', state.value) } />
-  ) : (
-    <ScrollView 
-      horizontal
-      style={ {
-        overflow: 'hidden', padding: 8, ...style, 
-      } }>
-      <View flexRow alignCenter gap={ 8 } mx={ 8 }>
-        {AVAILABLE_FONTS.map((font) => (
-          <Button 
-            flexRow
-            caption
-            alignCenter
-            gap={ 4 }
-            key={ font }
-            elevated
-            p={ 8 }
-            leftIcon={ fontFamily === font ? 'check' : undefined } 
-            fontFamily={ font }
-            onPress={ () => setPreference('fontFamily', font) }>
-            {font}
-          </Button>
-        ))}
-      </View>
-    </ScrollView>
+      onValueChange={ (state) => setPreference('fontFamily', state?.value) } />
   );
 }

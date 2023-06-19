@@ -89,11 +89,11 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
           <View gap={ 6 }>
             {checkboxes.map((checkbox, index) => (
               <View key={ index }>
-                <View flexRow flexGrow={ 1 } alignCenter>
+                <View flexRow flexGrow={ 1 } itemsCenter>
                   <Checkbox
                     checked={ selectedValues.includes(checkbox.value) }
                     onPress={ () => handleCheckboxPress(checkbox) } />
-                  <Button caption alignCenter onPress={ () => handleCheckboxPress(checkbox) }>
+                  <Button caption itemsCenter onPress={ () => handleCheckboxPress(checkbox) }>
                     {checkbox.label}
                   </Button>
                 </View>

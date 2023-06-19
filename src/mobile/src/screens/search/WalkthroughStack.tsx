@@ -16,7 +16,7 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.walkthroughs_appearance_stackTitle ?? 'Customize the Look and Feed'}</Text>
+        <Text h6>{strings.walkthroughs_appearance_stackTitle}</Text>
         <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
@@ -28,7 +28,7 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.walkthroughs_customFeed_stackTitle ?? 'Customize Your Feed'}</Text>
+        <Text h6>{strings.walkthroughs_customFeed_stackTitle}</Text>
         <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
@@ -75,7 +75,7 @@ export function WalkthroughStack({ onClose }: Props = {}) {
   return cards.length > 0 && (
     <CardStack
       mx={ 12 }
-      mb={ 12 }
+      mb={ 6 }
       onClose={ onClose }
       onPressItem={ (index) => cards[index].onPress?.() }>
       {cards.map((card) => (

@@ -8,4 +8,4 @@ export * from './search/SearchScreen';
 export * from './summary/SummaryScreen';
 
 export * from './settings/SettingsScreen';
-export * from './settings/DisplayModePickerScreen';
+export * from './settings/ColorSchemePickerScreen';

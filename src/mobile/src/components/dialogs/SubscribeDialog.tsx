@@ -123,7 +123,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
             <DataTableTitle>{}</DataTableTitle>
             {tiers.map(({ label, price }) => (
               <DataTableTitle key={ label } justifyCenter>
-                <View alignCenter justifyCenter>
+                <View itemsCenter justifyCenter>
                   <Text h5 bold>{label}</Text>
                   <Text bold>
                     $
@@ -141,10 +141,10 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
               bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
               <DataTableCell 
                 justifyEnd
-                alignCenter
+                itemsCenter
                 bg="transparent">
                 <Provider>
-                  <View row alignCenter justifyEnd gap={ 4 }>
+                  <View row itemsCenter justifyEnd gap={ 4 }>
                     <Popover
                       anchor={ (
                         <Text textRight>
@@ -160,7 +160,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                 <DataTableCell
                   key={ tierLabel } 
                   justifyCenter
-                  alignCenter
+                  itemsCenter
                   bg="transparent">
                   {availabileTo.includes(id) ? (
                     <Icon 
