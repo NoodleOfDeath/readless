@@ -495,7 +495,7 @@ export function Summary({
             </View>
           </React.Fragment>
         )}
-        {((compact || compactMode) && (
+        {((compact || compactMode) && !initialFormat && (
           <Popover
             menu
             anchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
@@ -716,7 +716,7 @@ export function Summary({
               </View>
             )}
           </View>
-          {((!(compact || compactMode) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : sourceLinks && (<View mx={ 12 }>{sourceLink}</View>))}
+          {(((!(compact || compactMode) || initialFormat) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : sourceLinks && (<View mx={ 12 }>{sourceLink}</View>))}
           {summary.siblings && summary.siblings.length > 0 && (
             <View mx={ 12 } gap={ 6 }>
               <View flexRow>
