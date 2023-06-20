@@ -53,7 +53,8 @@ async function sync({
     }
     console.log(`Translating ${target}`);
     let toTranslate: Partial<typeof enStrings> = enStrings;
-    const oldStrings: any = {};
+    let oldStrings: any = {};
+    oldStrings = {};
     if (!force) {
       const lines = await execSync('git diff src/client/locales/en.ts').toString().split(/\n/);
       const add = lines.filter((l) => /^\+ /.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);

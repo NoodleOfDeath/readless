@@ -59,8 +59,7 @@ export function SettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
-      <TableViewSection
-        header="System">
+      <TableViewSection header={ strings.settings_system }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -114,8 +113,7 @@ export function SettingsTable() {
               step={ 0.1 } />
           ) } />
       </TableViewSection>
-      <TableViewSection
-        header="Summary Display">
+      <TableViewSection header={ strings.settings_summaryDisplay }>
         <TableViewCell
           cellContentView={ (
             <ScrollView scrollEnabled={ false }>
@@ -151,8 +149,7 @@ export function SettingsTable() {
           cellIcon="link-variant"
           cellAccessoryView={ <PrefSwitch prefKey='sourceLinks' /> } />
       </TableViewSection>
-      <TableViewSection
-        header="Customization">
+      <TableViewSection header={ strings.settings_customization }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -162,8 +159,7 @@ export function SettingsTable() {
           cellIcon="alphabetical-off"
           onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
-      <TableViewSection
-        header="General">
+      <TableViewSection header={ strings.settings_general }>
         <TableViewCell
           bold
           title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
