@@ -91,7 +91,7 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ 'Line Height' }
+          title={ strings.settings_lineHeight }
           cellIcon="format-line-spacing"
           cellAccessoryView={ (
             <NumericPrefPicker
@@ -103,7 +103,7 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ 'Letter Spacing' }
+          title={ strings.settings_letterSpacing }
           cellIcon="format-letter-spacing"
           cellAccessoryView={ (
             <NumericPrefPicker
@@ -166,13 +166,13 @@ export function SettingsTable() {
         header="General">
         <TableViewCell
           bold
-          title={ `Reset read summaries (${Object.keys({ ...readSummaries }).length})` }
+          title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
           onPress={ () => {
             setPreference('readSummaries', {}); 
           } } />
         <TableViewCell
           bold
-          title={ `Reset hidden summaries (${Object.keys({ ...removedSummaries }).length})` }
+          title={ `${strings.settings_resetHiddenSummaries} (${Object.keys({ ...removedSummaries }).length})` }
           onPress={ () => {
             setPreference('removedSummaries', {}); 
           } } />
@@ -184,7 +184,7 @@ export function SettingsTable() {
           } } />
         <TableViewCell
           bold
-          title={ 'Reset All Settings' }
+          title={ strings.settings_resetAllSettings }
           onPress={ () => {
             resetPreferences(); 
           } }

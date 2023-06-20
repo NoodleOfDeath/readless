@@ -17,7 +17,7 @@ import { strings } from '~/locales';
 export function MainMenuDialog(props: SheetProps) {
 
   const { navigate } = useNavigation();
-  const { bookmarkCount } = React.useContext(SessionContext);
+  const { bookmarkCount, unreadBookmarkCount } = React.useContext(SessionContext);
 
   const items = React.useMemo(() => [
     {
@@ -29,9 +29,9 @@ export function MainMenuDialog(props: SheetProps) {
       },
     },
     {
-      badge: bookmarkCount,
+      badge: unreadBookmarkCount,
       icon: 'bookmark-outline',
-      label: strings.menu_bookmarks,
+      label: `${strings.menu_bookmarks} (${bookmarkCount})`,
       onPress: async () => {
         await SheetManager.hide(props.sheetId);
         navigate('bookmarks');
@@ -53,7 +53,7 @@ export function MainMenuDialog(props: SheetProps) {
         navigate('about');
       },
     },
-  ], [bookmarkCount, navigate, props.sheetId]);
+  ], [bookmarkCount, unreadBookmarkCount, navigate, props.sheetId]);
 
   return (
     <ActionSheet id={ props.sheetId }>
