@@ -24,6 +24,11 @@ struct ContentView: View {
           VStack {
             if self.service.loading {
               ProgressView()
+            } else
+            if let error = self.service.error {
+              Text("Error loading")
+              Text(error)
+              Button("Reload", action: self.service.fetchSync)
             } else {
               List(self.service.summaries, id: \.id) { summary in
                 NavigationLink(
@@ -34,7 +39,7 @@ struct ContentView: View {
                     SummaryCard(summary: summary, compact: true)
                   }
               }.refreshable {
-                try? await self.service.fetch()
+                self.service.fetchSync()
               }
             }
           }

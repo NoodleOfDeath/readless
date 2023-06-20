@@ -49,12 +49,12 @@ struct SummaryCard: View {
             Text("Loading Image...")
                 .onAppear(perform: loadImage)
         }
-        Text(summary.translationMap()["title"] ?? summary.title)
+        Text(compact ? (summary.translationMap()["title"] ?? summary.title) : (summary.translationMap()["shortSummary"] ?? summary.shortSummary))
           .padding(3)
           .if(compact) { view in
             view
               .truncationMode(.tail)
-              .lineLimit(3)
+              .lineLimit(compact ? 3 : 10)
           }
       }
       .frame(maxWidth: .infinity)

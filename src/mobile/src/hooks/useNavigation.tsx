@@ -15,14 +15,36 @@ import { readingFormat } from '~/utils';
 export function useNavigation() {
 
   const navigation = useRNNavigation<NativeStackNavigationProp<StackableTabParams>>();
+  
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
   
+  const navigate = React.useCallback(<R extends keyof StackableTabParams>(route: R, params?: StackableTabParams[R]) => {
+    return (navigation?.push ?? navigation.navigate)(route, params as StackableTabParams[R]);
+  }, [navigation]);
+
+  const search = React.useCallback((params: StackableTabParams['search']) => {
+    navigate('search', params);
+    const searchText = params.prefilter;
+    if (!searchText) {
+      return;
+    }
+    setTimeout(() => setPreference('searchHistory', (prev) => Array.from(new Set([searchText, ...(prev ?? [])])).slice(0, 10)), 500);
+  }, [navigate, setPreference]);
+  
   const openSummary = React.useCallback((props: StackableTabParams['summary']) => {
-    (navigation?.push ?? navigation.navigate)('summary', {
+    navigate('summary', {
       ...props,
       initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary,
     });
-  }, [navigation, preferredReadingFormat]);
+  }, [navigate, preferredReadingFormat]);
+
+  const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
+    navigate('channel', { attributes: outlet, type: 'outlet' });
+  }, [navigate]);
+
+  const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
+    navigate('channel', { attributes: category, type: 'category' });
+  }, [navigate]);
 
   const router = React.useCallback(({ url }: { url: string }) => {
     // http://localhost:6969/read/?s=158&f=casual
@@ -48,54 +70,13 @@ export function useNavigation() {
       openSummary({ initialFormat, summary });
     }
   }, [openSummary]);
-
-  const search = React.useCallback((params: StackableTabParams['search']) => {
-    navigation?.push('search', params);
-    const searchText = params.prefilter;
-    if (!searchText) {
-      return;
-    }
-    setTimeout(() => setPreference('searchHistory', (prev) => Array.from(new Set([searchText, ...(prev ?? [])])).slice(0, 10)), 500);
-  }, [navigation, setPreference]);
-
-  const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    (navigation?.push ?? navigation.navigate)('channel', { attributes: outlet, type: 'outlet' });
-  }, [navigation]);
-
-  const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    (navigation?.push ?? navigation.navigate)('channel', { attributes: category, type: 'category' });
-  }, [navigation]);
-
-  const openAbout = React.useCallback(() => {
-    (navigation?.push ?? navigation.navigate)('about');
-  }, [navigation]);
-
-  const openBookmarks = React.useCallback(() => {
-    (navigation?.push ?? navigation.navigate)('bookmarks');
-  }, [navigation]);
-
-  const openBrowse = React.useCallback(() => {
-    (navigation?.push ?? navigation.navigate)('browse');
-  }, [navigation]);
-  
-  const openSettings = React.useCallback(() => {
-    (navigation?.push ?? navigation.navigate)('settings');
-  }, [navigation]);
-  
-  const openWalkthroughs = React.useCallback(() => {
-    (navigation?.push ?? navigation.navigate)('walkthroughs');
-  }, [navigation]);
   
   return {
+    navigate,
     navigation,
-    openAbout,
-    openBookmarks,
-    openBrowse,
     openCategory,
     openOutlet,
-    openSettings,
     openSummary,
-    openWalkthroughs,
     router,
     search,
   };

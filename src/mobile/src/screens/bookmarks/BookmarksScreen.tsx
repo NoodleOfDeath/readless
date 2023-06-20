@@ -8,7 +8,7 @@ import {
 import { 
   Button,
   Icon,
-  Menu,
+  Popover,
   Screen,
   ScrollView,
   Summary,
@@ -32,7 +32,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     setPreference,
   } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
-  const { openBrowse } = useNavigation();
+  const { navigate } = useNavigation();
   
   const bookmarks = React.useMemo(() => Object.entries({ ...bookmarkedSummaries }), [bookmarkedSummaries]);
   
@@ -52,7 +52,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
   React.useEffect(() => {
     navigation?.setOptions({ 
       headerRight: () => undefined,
-      headerTitle: `${strings.bookmarks.bookmarks} (${bookmarkCount})`,
+      headerTitle: `${strings.bookmarks_header} (${bookmarkCount})`,
     });
   }, [bookmarkCount, navigation]);
   
@@ -60,7 +60,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     <Screen>
       <ScrollView pt={ 12 }>
         {Object.entries(bookmarks ?? {}).length === 0 ? (
-          <View justifyCenter alignCenter>
+          <View justifyCenter itemsCenter>
             <Button
               rounded
               outlined
@@ -68,23 +68,23 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               p={ 8 }
               m={ 8 }
               textCenter
-              onPress={ openBrowse }>
-              {strings.browse}
+              onPress={ () => navigate('browse') }>
+              {strings.menu_browse}
             </Button>
           </View>
         ) : (
           <View gap={ 12 }>
-            <View mh={ 16 } gap={ 6 }>
+            <View mx={ 16 } gap={ 6 }>
               <View row gap={ 6 }>
                 <Text>
-                  {strings.bookmarks.bookmarksDetail}
+                  {strings.bookmarks_bookmarksAvailableOffline}
                 </Text>
-                <Menu
-                  autoAnchor={
+                <Popover
+                  anchor={
                     <Icon size={ 24 } name="information" />
                   }>
-                  <Text>{strings.bookmarks.bookmarksNote}</Text>
-                </Menu>
+                  <Text>{strings.bookmarks_bookmarkArticlesAreNotSaved}</Text>
+                </Popover>
               </View>
               <View row>
                 <Button
@@ -100,7 +100,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                     }
                     return (prev = state);
                   }) }>
-                  {strings.bookmarks.removeReadFromBookmarks}
+                  {strings.bookmarks_removeReadFromBookmarks}
                 </Button>
               </View>
             </View>
@@ -116,7 +116,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                   );
                 })}
               {(bookmarks ?? []).length > unreadPage * pageSize + pageSize && (
-                <View justifyCenter alignCenter>
+                <View justifyCenter itemsCenter>
                   <Button
                     rounded
                     outlined

@@ -7,12 +7,15 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import { FeatureStack } from './FeatureStack';
-import { SearchMenu } from './SearchMenu';
+import ms from 'ms';
+import useAppState from 'react-native-appstate-hook';
+
+import { SearchMenu, TextInputHandles } from './SearchMenu';
+import { WalkthroughStack } from './WalkthroughStack';
 
 import {
   InteractionType,
-  PublicSummaryGroups,
+  PublicSummaryGroup,
   PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
@@ -26,7 +29,6 @@ import {
   Summary,
   Switch,
   Text,
-  TopicSampler,
   View,
 } from '~/components';
 import {
@@ -53,8 +55,8 @@ export function SearchScreen({
   navigation,
 }: ScreenProps<'search'>) {
   const { 
-    bookmarkedCategories,
-    bookmarkedOutlets,
+    followedCategories,
+    followedOutlets,
     preferredReadingFormat,
     removedSummaries,
     showOnlyCustomNews,
@@ -67,7 +69,7 @@ export function SearchScreen({
   const { shareTarget } = React.useContext(DialogContext);
   const { getSummaries, handleInteraction } = useSummaryClient();
   const { supportsMasterDetail } = React.useContext(LayoutContext);
-  const { search, openBrowse } = useNavigation();
+  const { search, navigate } = useNavigation();
   const theme = useTheme();
   
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
@@ -76,7 +78,7 @@ export function SearchScreen({
   const [onlyCustomNews, setOnlyCustomNews] = React.useState(Boolean((!prefilter && showOnlyCustomNews) || route?.params?.onlyCustomNews));
   const [loading, setLoading] = React.useState(false);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
-  const [summaries, setSummaries] = React.useState<PublicSummaryGroups[]>([]);
+  const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
   const [translations, setTranslations] = React.useState<Record<number, PublicSummaryTranslationAttributes[]>>({});
   const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
   const [totalResultCount, setTotalResultCount] = React.useState(0);
@@ -86,26 +88,28 @@ export function SearchScreen({
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
-  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroups>();
+  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [showWalkthroughs, setShowWalkthroughs] = React.useState(true);
 
   const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
   const [resizing, setResizing] = React.useState(false);
 
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
+  
+  const [lastActive, setLastActive] = React.useState(Date.now());
+
+  const searchInputRef = React.useRef<TextInputHandles>(null);
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
-    if (lengthOf(bookmarkedCategories) > 0) {
-      filters.push(['cat', Object.values(bookmarkedCategories ?? {})
-        .map((c) => c?.item?.name).filter(Boolean).join(',')].join(':'));
+    if (lengthOf(followedCategories) > 0) {
+      filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
     }
-    if (lengthOf(bookmarkedOutlets) > 0) {
-      filters.push(['src', Object.values(bookmarkedOutlets ?? {})
-        .map((o) => o?.item?.name).filter(Boolean).join(',')].join(':'));
+    if (lengthOf(followedOutlets) > 0) {
+      filters.push(['src', Object.keys({ ...followedOutlets }).join(',')].join(':'));
     }
     return filters.join(' ');
-  }, [bookmarkedCategories, bookmarkedOutlets]);
+  }, [followedCategories, followedOutlets]);
   
   const excludeIds = React.useMemo(() => {
     if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
@@ -192,7 +196,7 @@ export function SearchScreen({
       setLoading(false);
     }
   }, [loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
-
+  
   React.useEffect(() => {
     if (prefilter) {
       setSearchText(prefilter + ' ');
@@ -201,7 +205,7 @@ export function SearchScreen({
         headerBackVisible: true,
         headerShown: true,
         headerTitle: () => (
-          <View row gap={ 6 }>
+          <View row gap={ 6 } onPress={ () => searchInputRef.current?.focus() }>
             <Icon name="magnify" size={ 24 } />
             <Text>{prefilter}</Text>
           </View>
@@ -227,7 +231,7 @@ export function SearchScreen({
         ),
       });
     }
-  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference]);
+  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference, searchInputRef]);
   
   const onMount = React.useCallback(() => {
     setPage(0);
@@ -241,7 +245,7 @@ export function SearchScreen({
   
   React.useEffect(() => {
     setSummaries((prev) => {
-      const newState = prev.filter((p) => !(p.id in (removedSummaries ?? {})));
+      const newState = prev.filter((p) => !(p.id in ({ ...removedSummaries })));
       return (prev = newState);
     });
   }, [removedSummaries]);
@@ -257,7 +261,7 @@ export function SearchScreen({
   }, [load, loading, page, totalResultCount, summaries]);
 
   const handleFormatChange = React.useCallback(
-    (summary: PublicSummaryGroups, format?: ReadingFormat) => {
+    (summary: PublicSummaryGroup, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       if (supportsMasterDetail) {
         setDetailSummary(summary);
@@ -277,7 +281,7 @@ export function SearchScreen({
     [handleInteraction, navigation, translations, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
   );
   
-  const onLocalize = React.useCallback((summary: PublicSummaryGroups, translations: PublicSummaryTranslationAttributes[]) => {
+  const onLocalize = React.useCallback((summary: PublicSummaryGroup, translations: PublicSummaryTranslationAttributes[]) => {
     setTranslations((prev) => {
       const state = { ...prev };
       state[summary.id] = translations;
@@ -384,6 +388,15 @@ export function SearchScreen({
       subscriber.remove();
     };
   }, [load]);
+  
+  useAppState({ 
+    onBackground: () => setLastActive(Date.now()),
+    onForeground: React.useCallback(() => {
+      if (Date.now() - lastActive.valueOf() > ms('10m')) {
+        load(0);
+      }
+    }, [lastActive, load]),
+  });
 
   return (
     <Screen>
@@ -394,52 +407,49 @@ export function SearchScreen({
               elevated 
               height={ 30 } 
               zIndex={ 10 }
-              borderRadiusBL={ 16 }
-              borderRadiusBR={ 16 }
+              brBottomLeft={ 16 }
+              brBottomRight={ 16 }
               p={ 4 }>
-              <View row gap={ 12 } justifyCenter alignCenter>
+              <View row gap={ 12 } justifyCenter itemsCenter>
                 <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
                 <Text caption>{`${fixedSentiment(averageSentiment)}`}</Text>
-                <Text caption>{`${totalResultCount} ${strings.search.results}`}</Text>
+                <Text caption>{`${totalResultCount} ${strings.search_results}`}</Text>
               </View>
             </View>
           )}
           {!loading && onlyCustomNews && summaries.length === 0 && (
             <View col justifyCenter p={ 16 } gap={ 8 }>
               <Text subtitle1>
-                {strings.search.filtersTooSpecific}
+                {strings.search_filtersTooSpecific}
               </Text>
               <Button 
-                alignCenter
+                itemsCenter
                 rounded 
                 outlined 
                 p={ 8 }
-                selectable
-                onPress={ openBrowse }>
-                {strings.search.goToBrowse}
+                onPress={ () => navigate('browse') }>
+                {strings.search_goToBrowse}
               </Button>
               <Button 
-                alignCenter
+                itemsCenter
                 rounded 
                 outlined 
                 p={ 8 }
-                selectable
                 onPress={ () => setOnlyCustomNews(false) }>
-                {strings.search.turnOffFilters}
+                {strings.search_turnOffFilters}
               </Button>
             </View>
           )}
-          {!prefilter && onlyCustomNews && (
+          {prefilter && onlyCustomNews && (
             <View>
-              <Text caption textCenter mh={ 12 }>{strings.search.customNewsSearch}</Text>
+              <Text caption textCenter mx={ 12 }>{strings.search_customNewsSearch}</Text>
               <Button 
-                alignCenter
+                itemsCenter
                 rounded 
                 outlined 
                 p={ 8 }
-                selectable
                 onPress={ () => setOnlyCustomNews(false) }>
-                {strings.search.turnOffFilters}
+                {strings.search_turnOffFilters}
               </Button>
             </View>
           )}
@@ -454,7 +464,7 @@ export function SearchScreen({
                     load(0);
                   } }>
                   <View col width="100%" pt={ 12 }>
-                    {!prefilter && showWalkthroughs && <FeatureStack onClose={ () => setShowWalkthroughs(false) } />}
+                    {!prefilter && showWalkthroughs && <WalkthroughStack onClose={ () => setShowWalkthroughs(false) } />}
                     {summaryList}
                     {!loading && !noResults && totalResultCount > summaries.length && (
                       <View row justifyCenter p={ 16 } pb={ 24 }>
@@ -462,9 +472,8 @@ export function SearchScreen({
                           outlined
                           rounded
                           p={ 8 }
-                          selectable
                           onPress={ () => loadMore() }>
-                          {strings.search.loadMore}
+                          {strings.search_loadMore}
                         </Button>
                       </View>
                     )}
@@ -476,20 +485,19 @@ export function SearchScreen({
                       </View>
                     )}
                     {summaries.length === 0 && !loading && (
-                      <View col gap={ 12 } alignCenter justifyCenter>
-                        <Text textCenter mh={ 16 }>
-                          {strings.search.noResults}
+                      <View col gap={ 12 } itemsCenter justifyCenter>
+                        <Text textCenter mx={ 16 }>
+                          {strings.search_noResults}
                           {' '}
                           🥺
                         </Text>
                         <Button 
-                          alignCenter
+                          itemsCenter
                           rounded 
                           outlined 
                           p={ 8 }
-                          selectable
                           onPress={ () => load(0) }>
-                          {strings.search.reload}
+                          {strings.search_reload}
                         </Button>
                       </View>
                     )}
@@ -518,7 +526,7 @@ export function SearchScreen({
                   refreshing={ summaries.length === 0 && loading }
                   onScroll={ handleDetailScroll }
                   mt={ 12 }
-                  ph={ 12 }>
+                  px={ 12 }>
                   {detailSummary && (
                     <Summary
                       summary={ detailSummary }
@@ -535,7 +543,7 @@ export function SearchScreen({
         {summaries.length > 0 && (
           <Button
             absolute
-            right={ 32 }
+            right={ 16 }
             bottom={ 96 }
             elevated
             rounded
@@ -543,7 +551,7 @@ export function SearchScreen({
             p={ 12 }
             haptic
             touchable
-            startIcon="volume-high"
+            leftIcon="volume-high"
             iconSize={ 32 }
             onPress={ handlePlayAll } />
         )}

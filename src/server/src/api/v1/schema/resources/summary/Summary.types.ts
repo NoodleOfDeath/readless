@@ -31,7 +31,7 @@ export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
   summary: string;
   shortSummary: string;
   bullets: string[];
-  formats: ReadingFormat[];
+  formats?: ReadingFormat[];
   sentiments?: PublicSummarySentimentAttributes[];
 };
 
@@ -55,6 +55,6 @@ export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
 
-export type PublicSummaryGroups = PublicSummaryAttributes & {
+export type PublicSummaryGroup = PublicSummaryAttributes & {
   siblings?: PublicSummaryAttributes[];
 };

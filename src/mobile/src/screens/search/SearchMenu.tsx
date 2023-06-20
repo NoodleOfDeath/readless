@@ -3,9 +3,15 @@ import {
   Animated,
   Keyboard,
   SafeAreaView,
+  TextInput,
 } from 'react-native';
 
-import { Searchbar } from 'react-native-paper';
+import { Searchbar  } from 'react-native-paper';
+
+export type TextInputHandles = Pick<
+  TextInput,
+  'focus'
+>;
 
 import { 
   Button,
@@ -29,7 +35,7 @@ export type SearchMenuProps = ViewProps & {
 
 export function SearchMenu({
   initialValue = '',
-  placeholder = strings.search.search,
+  placeholder = strings.search_title,
   children,
   onChangeText,
   onClear,
@@ -54,7 +60,7 @@ export function SearchMenu({
   
   const top = React.useMemo(() => focused ? 32 : undefined, [focused]);
   const bottom = React.useMemo(() => focused ? undefined : 32, [focused]);
-  
+
   const submit = React.useCallback((text?: string) => {
     if (text) {
       setValue(text);
@@ -130,17 +136,17 @@ export function SearchMenu({
               <View gap={ 12 } p={ 12 }>
                 <View>
                   <Button 
-                    alignCenter 
+                    itemsCenter 
                     elevated 
                     rounded 
                     p={ 4 } 
                     onPress={ () => submit() }>
-                    {strings.search.search}
+                    {strings.action_search}
                   </Button>
                 </View>
                 <View gap={ 6 }>
                   <Button caption onPress={ () => setPreference('searchHistory', []) }>
-                    {strings.clearSearchHistory}
+                    {strings.action_clearSearchHistory}
                   </Button>
                   <Divider />
                   <ScrollView>
@@ -170,8 +176,8 @@ export function SearchMenu({
             opacity={ 0.95 }
             p={ 12 }
             bottom={ 24 }
-            right={ 32 }
-            startIcon="magnify"
+            right={ 16 }
+            leftIcon="magnify"
             iconSize={ 32 }
             onPress={ () => setFocused(true) } />
         </SafeAreaView>

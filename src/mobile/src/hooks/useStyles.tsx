@@ -3,32 +3,16 @@ import React from 'react';
 import {
   AVAILABLE_FONTS,
   FONT_SIZES,
-  Stylable,
+  FontFamily,
+  TextProps,
+  ViewProps,
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
-export type UseStylesOptions = {
-  onlyInclude?: string[];
-};
-
-export function useStyles({
-  // position
-  absolute,
-  relative,
-  top,
-  bottom,
-  left,
-  right,
-  // dimensions
-  aspectRatio,
-  width,
-  height,
-  minWidth,
-  minHeight,
-  maxWidth,
-  maxHeight,
-  // typographies
+export function useTextStyles({
+  
+  // typographies (aka variants)
   caption,
   subscript,
   subtitle1,
@@ -41,195 +25,270 @@ export function useStyles({
   h4,
   h5,
   h6,
-  // text styles
-  color = 'text',
+  
+  // font and size
+  font,
+  fontFamily = font,
+  fontSize = caption ? FONT_SIZES.caption : subscript ? FONT_SIZES.subscript : subtitle1 ? FONT_SIZES.subtitle1 : subtitle2 ? FONT_SIZES.subtitle2 : body1 ? FONT_SIZES.body1 : body2 ? FONT_SIZES.body2 : h1 ? FONT_SIZES.h1 : h2 ? FONT_SIZES.h2 : h3 ? FONT_SIZES.h3 : h4 ? FONT_SIZES.h4 : h5 ? FONT_SIZES.h5 : h6 ? FONT_SIZES.h6 : FONT_SIZES.body1,
+  adaptive,
+  adjustsFontSizeToFit = adaptive,
+  fontSizeFixed = adjustsFontSizeToFit,
+  
+  // Spacing and height
+  letterSpacing,
+  lineHeight,
+  
+  // alignment
   textCenter,
   textLeft,
   textRight,
-  fontFamily,
-  fontSize = caption ? FONT_SIZES.caption : subscript ? FONT_SIZES.subscript : subtitle1 ? FONT_SIZES.subtitle1 : subtitle2 ? FONT_SIZES.subtitle2 : body1 ? FONT_SIZES.body1 : body2 ? FONT_SIZES.body2 : h1 ? FONT_SIZES.h1 : h2 ? FONT_SIZES.h2 : h3 ? FONT_SIZES.h3 : h4 ? FONT_SIZES.h4 : h5 ? FONT_SIZES.h5 : h6 ? FONT_SIZES.h6 : FONT_SIZES.body1,
+  textAlign = textCenter ? 'center' : textLeft ? 'left' : textRight ? 'right' : undefined,
+  
+  // style and color
   bold,
   italic,
   underline,
-  // flex styles
-  flex,
-  flexWrap,
-  flexGrow,
-  flexRow,
-  flexRowReverse,
-  flexColumn,
-  flexColumnReverse,
-  gap,
-  rowGap = gap,
-  colGap = gap,
-  col,
-  row,
-  alignCenter,
-  alignEnd,
-  alignStart,
-  justifyCenter,
-  justifyEnd,
-  justifyEvenly,
-  justifyStart,
-  justifySpaced,
-  // margin
-  m,
-  mh = m,
-  mv = m,
-  mt = mv,
-  mb = mv,
-  ml = mh,
-  mr = mh,
-  // padding
-  p,
-  ph = p,
-  pv = p,
-  pt = pv,
-  pb = pv,
-  pl = ph,
-  pr = ph,
-  // border
-  borderColor,
-  borderTopColor = borderColor,
-  borderRightColor = borderColor,
-  borderBottomColor = borderColor,
-  borderLeftColor = borderColor,
-  borderRadius,
-  borderRadiusTL: borderTopLeftRadius = borderRadius,
-  borderRadiusTR: borderTopRightRadius = borderRadius,
-  borderRadiusBL: borderBottomLeftRadius = borderRadius,
-  borderRadiusBR: borderBottomRightRadius = borderRadius,
-  borderWidth = borderColor ? 1 : undefined,
-  borderTopWidth = borderWidth,
-  borderRightWidth = borderWidth,
-  borderBottomWidth = borderWidth,
-  borderLeftWidth = borderWidth,
-  // appearance
-  bg,
-  opacity,
-  outlined,
-  contained,
-  rounded,
-  overflow,
-  zIndex,
-  // other
-  style,
-} : Stylable, { onlyInclude }: UseStylesOptions = {}) {
+  capitalize,
+
+  textTransform = capitalize ? 'capitalize' : undefined,
+
+  color = 'text',
+}: TextProps) {
+  
+  const { 
+    fontFamily: fontFamily0 = 'Faustina', 
+    fontSizeOffset = 0,
+    letterSpacing: letterSpacing0 = 0,
+    lineHeightMultiplier = 0,
+  } = React.useContext(SessionContext);
+  
   const theme = useTheme();
   
-  const { fontFamily: preferredFont = 'Faustina', textScale } = React.useContext(SessionContext);
-
-  const position = React.useMemo(() => {
-    if (absolute) {
-      return { position: 'absolute' };
-    }
-    if (relative) {
-      return { position: 'relative' };
-    }
-  }, [absolute, relative]);
-  
-  const textAlign = React.useMemo(() => {
-    if (textLeft) {
-      return { textAlign: 'left' };
-    }
-    if (textCenter) {
-      return { textAlign: 'center' };
-    } 
-    if (textRight) {
-      return { textAlign: 'right' };
-    }
-  }, [textLeft, textCenter, textRight]);
-  
-  const alignItems = React.useMemo(() => {
-    if (alignCenter) {
-      return { alignItems: 'center' };
-    }
-    if (alignStart) {
-      return { alignItems: 'flex-start' };
-    }
-    if (alignEnd) {
-      return { alignItems: 'flex-end' };
-    }
-  }, [alignCenter, alignEnd, alignStart]);
-
-  const justifyContent = React.useMemo(() => {
-    if (justifyCenter) {
-      return { justifyContent: 'center' };
-    }
-    if (justifyStart) {
-      return { justifyContent: 'flex-start' };
-    }
-    if (justifyEnd) {
-      return { justifyContent: 'flex-end' };
-    }
-    if (justifyEvenly) {
-      return { justifyContent: 'space-evenly' };
-    }
-    if (justifySpaced) {
-      return { justifyContent: 'space-between' };
-    }
-  }, [justifyCenter, justifyEnd, justifySpaced, justifyEvenly, justifyStart]);
-  
-  const appearance = React.useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const appearance: any[] = [];
-    if (outlined === true) {
-      appearance.push(theme.components.outlined);
-    } else
-    if (typeof outlined === 'string') {
-      appearance.push({ borderColor: outlined, borderWidth: 1 });
-    } else
-    if (typeof outlined === 'number') {
-      appearance.push({ borderColor: theme.colors.primary, borderWidth: outlined });
-    } else
-    if (Array.isArray(outlined) && outlined.length === 2 && typeof outlined[0] === 'string' && typeof outlined[1] === 'number') {
-      appearance.push({
-        borderColor: outlined[0],
-        borderWidth: outlined[1],
-      });
-    } else
-    if (contained) {
-      appearance.push(theme.components.buttonSelected);
-    }
-    if (opacity) {
-      appearance.push({ opacity });
-    }
-    if (overflow) {
-      appearance.push({ overflow });
-    }
-    return appearance.reduce((cur, n) => ({ ...cur, ...n }), {});
-  }, [opacity, outlined, contained, theme, overflow]);
-
-  const viewStyle = React.useMemo(() => {
-    const scale = ((((textScale ?? 1) - 1) / 2) + 1);
+  return React.useMemo(() => {
+    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
-    attrs.push(position ? position : undefined);
-    attrs.push(zIndex ? zIndex : undefined);
-    attrs.push(top ? { top: typeof top === 'number' ? top : top } : undefined);
-    attrs.push(left ? { left: typeof left === 'number' ? left : left } : undefined);
-    attrs.push(right ? { right: typeof right === 'number' ? right : right } : undefined);
-    attrs.push(bottom ? { bottom: typeof bottom === 'number' ? bottom : bottom } : undefined);
-    attrs.push(row ? theme.components.flexRow : undefined);
-    attrs.push(col ? theme.components.flexCol : undefined);
-    attrs.push(flex ? { flex } : undefined);
-    attrs.push(flexWrap ? { flexWrap } : undefined);
-    attrs.push(flexGrow ? { flexGrow } : undefined);
-    attrs.push(flexRow ? { flexDirection: 'row' } : undefined);
-    attrs.push(flexRowReverse ? { flexDirection: 'row-reverse' } : undefined);
-    attrs.push(flexColumn ? { flexDirection: 'column' } : undefined);
-    attrs.push(flexColumnReverse ? { flexDirection: 'column-reverse' } : undefined);
-    attrs.push(rowGap ? { rowGap } : undefined);
-    attrs.push(colGap ? { columnGap: colGap } : undefined);
-    attrs.push(textAlign);
+    const offsetFontSize = fontSize + (fontSizeFixed ? 0 : fontSizeOffset);
+    
+    attrs.push({ fontFamily : !AVAILABLE_FONTS.includes(fontFamily ?? fontFamily0 as FontFamily) ? 'Faustina' : fontFamily ?? fontFamily0 });
+    attrs.push({ fontSize : offsetFontSize });
+    
+    attrs.push({ letterSpacing: 0.3 + (letterSpacing ?? letterSpacing0) });
+    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (1.35 + lineHeightMultiplier)) });
+    
+    attrs.push(textAlign ? { textAlign } : undefined);
+    
     attrs.push(bold ? { fontWeight: 'bold' } : undefined);
     attrs.push(italic ? { fontStyle: 'italic' } : undefined);
     attrs.push(underline ? { textDecorationLine: 'underline' } : undefined);
-    attrs.push({ fontFamily : !AVAILABLE_FONTS.includes(fontFamily ?? preferredFont ?? '') ? 'Faustina' : fontFamily ?? preferredFont });
-    attrs.push(alignItems);
-    attrs.push(justifyContent);
-    attrs.push(appearance);
-    attrs.push(color ? { color: Object.keys(theme.colors).includes(color) ? theme.colors[color as keyof typeof theme.colors] : color } : undefined);
+
+    attrs.push(textTransform ? { textTransform } : undefined);
+
+    attrs.push(color ? { color: Object.keys(theme.colors).includes(color as keyof typeof theme.colors) ? theme.colors[color as keyof typeof theme.colors] : color } : undefined);
+  
+    return attrs.filter((v) => v !== undefined).reduce((acc, val) => ({ ...acc, ...val }), {});
+    
+  }, [fontSize, fontSizeFixed, fontSizeOffset, fontFamily, fontFamily0, letterSpacing, letterSpacing0, lineHeight, lineHeightMultiplier, textAlign, bold, italic, underline, textTransform, color, theme]);
+  
+}
+
+export function useStyles({
+  
+  // preset variants
+  outlined,
+  rounded,
+  
+  // position
+  absolute,
+  relative,
+  pos = absolute ? 'absolute' : relative ? 'relative' : undefined,
+  position = pos,
+  t,
+  top = t,
+  b,
+  bottom = b,
+  l,
+  left = l,
+  r,
+  right = r,
+  z,
+  zIndex = z,
+  
+  // dimensions
+  aspect,
+  aspectRatio = aspect,
+  w,
+  width = w,
+  h,
+  height = h,
+  minW,
+  minWidth = minW,
+  minH,
+  minHeight = minH,
+  maxW,
+  maxWidth = maxW,
+  maxH,
+  maxHeight = maxH,
+  
+  // margin
+  m,
+  margin = m,
+  mx = margin,
+  my = margin,
+  ml = mx,
+  marginLeft = ml,
+  mr = mx,
+  marginRight = mr,
+  mt = my,
+  marginTop = mt,
+  mb = my,
+  marginBottom = mb,
+  
+  // padding
+  p,
+  padding = p,
+  px = padding,
+  py = padding,
+  pl = px,
+  paddingLeft = pl,
+  pr = px,
+  paddingRight = pr,
+  pt = py,
+  paddingTop = pt,
+  pb = py,
+  paddingBottom = pb,
+  
+  // appearance
+  bg,
+  bgColor = bg,
+  backgroundColor = bgColor,
+  opacity,
+  overflow,
+  
+  // border color
+  bColor,
+  borderColor = bColor,
+  bcTop = borderColor,
+  borderTopColor = bcTop,
+  bcRight = borderColor,
+  borderRightColor = bcRight,
+  bcBottom = borderColor,
+  borderBottomColor = bcBottom,
+  bcLeft = borderColor,
+  borderLeftColor = bcLeft,
+  
+  // border radius
+  bRadius = rounded ? 6 : undefined,
+  borderRadius = bRadius,
+  brTopLeft = borderRadius,
+  borderTopLeftRadius = brTopLeft,
+  brTopRight = borderRadius,
+  borderTopRightRadius = brTopRight,
+  brBottomLeft = borderRadius,
+  borderBottomLeftRadius = brBottomLeft,
+  brBottomRight = borderRadius,
+  borderBottomRightRadius = brBottomRight,
+  
+  // border width
+  bWidth = outlined || borderColor ? 1 : undefined,
+  borderWidth = bWidth,
+  bwTop = borderWidth,
+  borderTopWidth = bwTop,
+  bwRight = borderWidth,
+  borderRightWidth = bwRight,
+  bwBottom = borderWidth,
+  borderBottomWidth = bwBottom,
+  bwLeft = borderWidth,
+  borderLeftWidth = bwLeft,
+  
+  // flex
+  col,
+  colRev,
+  row,
+  rowRev,
+  
+  flexRow = row,
+  flexRowRev = rowRev,
+  flexRowReverse = flexRowRev,
+  
+  flexCol = col,
+  flexColumn = flexCol,
+  flexColRev = colRev,
+  flexColumnRev = flexColRev,
+  flexColumnReverse = flexColumnRev,
+  
+  flexDir = flexRow ? 'row' : flexRowReverse ? 'row-reverse' : flexColumn ? 'column' : flexColumnReverse ? 'column-reverse' : undefined,
+  flexDirection = flexDir,
+  
+  flex = col || colRev || row || rowRev ? 1 : undefined,
+  flexWrap,
+  flexGrow = flex,
+  flexShrink = undefined,
+  flexBasis = flex ? 0 : undefined,
+  
+  itemsCenter,
+  itemsEnd,
+  itemsStart,
+  itemsStretch,
+  alignItems = itemsCenter ? 'center' : itemsEnd ? 'flex-end' : itemsStart ? 'flex-start' : itemsStretch ? 'stretch' : undefined,
+  
+  alignCenter,
+  alignEnd,
+  alignStart,
+  alignStretch,
+  alignSelf = alignCenter ? 'center' : alignEnd ? 'flex-end' : alignStart ? 'flex-start' : alignStretch ? 'stretch' : undefined,
+  
+  jAround,
+  justifyAround = jAround,
+  justifySpaceAround = justifyAround,
+  jCenter,
+  justifyCenter = jCenter,
+  jEnd,
+  justifyEnd = jEnd,
+  jEvenly,
+  justifyEvenly = jEvenly,
+  justifySpaceEvenly = justifyEvenly,
+  jStart,
+  justifyStart = jStart,
+  jBetween,
+  justifyBetween = jBetween,
+  justifySpaceBetween = justifyBetween,
+  justify = justifySpaceAround ? 'space-around' : justifyCenter ? 'center' : justifyEnd ? 'flex-end' : justifySpaceEvenly ? 'space-evenly' : justifyStart ? 'flex-start' : justifySpaceBetween ? 'space-between' : undefined,
+  justifyContent = justify,
+  
+  gap,
+  rowGap = gap,
+  colGap = gap,
+  columnGap = colGap,
+  
+  // other
+  style,
+  ...props
+} : TextProps & ViewProps) {
+
+  const textStyle = useTextStyles(props);
+  
+  const theme = useTheme();
+  
+  const outlineStyle = React.useMemo(() => {
+    if (!outlined) {
+      return undefined; 
+    }
+    return theme.components.outlined;
+  }, [outlined, theme.components.outlined]);
+  
+  const viewStyle = React.useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const attrs: any[] = [];
+    // position
+    attrs.push(position ? { position } : undefined);
+    attrs.push(top ? { top } : undefined);
+    attrs.push(left ? { left } : undefined);
+    attrs.push(right ? { right } : undefined);
+    attrs.push(bottom ? { bottom } : undefined);
+    attrs.push(zIndex ? { zIndex }: undefined);
+    
+    // dimensions
     attrs.push(aspectRatio ? { aspectRatio } : undefined);
     attrs.push(width ? { width } : undefined);
     attrs.push(height ? { height } : undefined);
@@ -237,30 +296,68 @@ export function useStyles({
     attrs.push(minHeight ? { minHeight } : undefined);
     attrs.push(maxWidth ? { maxWidth } : undefined);
     attrs.push(maxHeight ? { maxHeight } : undefined);
-    attrs.push({ fontSize : fontSize * scale });
+    
+    // margin
+    attrs.push(marginTop ? { marginTop } : undefined);
+    attrs.push(marginBottom ? { marginBottom } : undefined);
+    attrs.push(marginLeft ? { marginLeft } : undefined);
+    attrs.push(marginRight ? { marginRight } : undefined);
+    
+    // padding
+    attrs.push(paddingTop ? { paddingTop } : undefined);
+    attrs.push(paddingBottom ? { paddingBottom } : undefined);
+    attrs.push(paddingLeft ? { paddingLeft } : undefined);
+    attrs.push(paddingRight ? { paddingRight } : undefined);
+    
+    // appearance
+    attrs.push(backgroundColor ? { backgroundColor } : undefined);
+    attrs.push(opacity ? { opacity } : undefined);
+    attrs.push(overflow ? { overflow } : undefined);
+    
+    // border width
     attrs.push(borderTopWidth ? { borderTopWidth } : undefined);
     attrs.push(borderBottomWidth ? { borderBottomWidth } : undefined);
     attrs.push(borderLeftWidth ? { borderLeftWidth } : undefined);
     attrs.push(borderRightWidth ? { borderRightWidth } : undefined);
+    
+    // border color
     attrs.push(borderTopColor ? { borderTopColor } : undefined);
     attrs.push(borderBottomColor ? { borderBottomColor } : undefined);
     attrs.push(borderLeftColor ? { borderLeftColor } : undefined);
     attrs.push(borderRightColor ? { borderRightColor } : undefined);
+    
+    // border radius
     attrs.push(borderTopLeftRadius ? { borderTopLeftRadius } : undefined);
     attrs.push(borderTopRightRadius ? { borderTopRightRadius } : undefined);
     attrs.push(borderBottomLeftRadius ? { borderBottomLeftRadius } : undefined);
     attrs.push(borderBottomRightRadius ? { borderBottomRightRadius } : undefined);
-    attrs.push(bg ? { backgroundColor: bg } : undefined);
-    attrs.push(rounded ? theme.components.rounded : undefined);
-    attrs.push(mt ? { marginTop: mt } : undefined);
-    attrs.push(mb ? { marginBottom: mb } : undefined);
-    attrs.push(ml ? { marginLeft: ml } : undefined);
-    attrs.push(mr ? { marginRight: mr } : undefined);
-    attrs.push(pt ? { paddingTop: pt } : undefined);
-    attrs.push(pb ? { paddingBottom: pb } : undefined);
-    attrs.push(pl ? { paddingLeft: pl } : undefined);
-    attrs.push(pr ? { paddingRight: pr } : undefined);
-    return attrs.filter((v) => v !== undefined && ((onlyInclude && Object.keys(v).every((e) => onlyInclude.includes(e))) || !onlyInclude)).reduce((acc, val) => ({ ...acc, ...val }), style ?? {});
-  }, [textScale, position, zIndex, top, left, right, bottom, row, theme, col, flex, flexWrap, flexGrow, flexRow, flexRowReverse, flexColumn, flexColumnReverse, rowGap, colGap, textAlign, bold, italic, underline, fontFamily, preferredFont, alignItems, justifyContent, appearance, color, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, fontSize, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, bg, rounded, mt, mb, ml, mr, pt, pb, pl, pr, style, onlyInclude]);
-  return viewStyle;
+    
+    // flex
+    attrs.push(flexDirection ? { flexDirection } : undefined);
+    
+    attrs.push(flex ? { flex } : undefined);
+    attrs.push(flexWrap ? { flexWrap } : undefined);
+    attrs.push(flexGrow ? { flexGrow } : undefined);
+    attrs.push(flexShrink ? { flexShrink } : undefined);
+    attrs.push(flexBasis ? { flexBasis } : undefined);
+    
+    attrs.push(alignItems ? { alignItems } : undefined);
+    attrs.push(alignSelf ? { alignSelf } : undefined);
+    attrs.push(justifyContent ? { justifyContent } : undefined);
+    
+    attrs.push(rowGap ? { rowGap } : undefined);
+    attrs.push(columnGap ? { columnGap } : undefined);
+    
+    return attrs.filter((v) => v !== undefined).reduce((acc, val) => ({ ...acc, ...val }), style ?? {});
+    
+  }, [position, top, left, right, bottom, zIndex, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, marginTop, marginBottom, marginLeft, marginRight, paddingTop, paddingBottom, paddingLeft, paddingRight, backgroundColor, opacity, overflow, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, flexDirection, flex, flexWrap, flexGrow, flexShrink, flexBasis, alignItems, alignSelf, justifyContent, rowGap, columnGap, style]);
+
+  const allStyles = React.useMemo(() => {
+    return {
+      ...viewStyle, ...outlineStyle, ...textStyle, 
+    };
+  }, [textStyle, viewStyle, outlineStyle]);
+
+  return allStyles;
+
 }

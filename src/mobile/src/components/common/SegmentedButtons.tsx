@@ -1,62 +1,55 @@
 import React from 'react';
 
-import {
-  Button,
+import { 
+  Button, 
+  ButtonProps,
+  ChildlessViewProps,
   View,
-  ViewProps,
 } from '~/components';
-import { useStyles } from '~/hooks';
 
-export type SegmentedButtonProps<T> = {
+export type SegmentedButtonProps<T extends string | number = string> = {
   icon?: React.ReactNode;
   label?: React.ReactNode;
+  style?: ChildlessViewProps['style'];
   value: T;
 };
 
-export type SegmentedButtonsProps<T> = ViewProps & {
-  buttons: SegmentedButtonProps<T>[];
+export type SegmentedButtonsProps<T extends string | number = string> = ChildlessViewProps & {
+  options: SegmentedButtonProps<T>[];
+  initialValue?: T;
   onValueChange?: (value: T) => void;
-  value?: T;
-  elevated?: boolean;
+  buttonProps?: Partial<ButtonProps> | ((index: number, selected: boolean) => Partial<ButtonProps>);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SegmentedButtons = <T = any>({
-  buttons,
+export const SegmentedButtons = <T extends string | number = string>({
+  initialValue,
+  options: buttons,
   onValueChange,
-  elevated = true,
+  buttonProps,
   ...props
 }: SegmentedButtonsProps<T>) => {
-  const style = useStyles(props);
-  const computedStyles = React.useMemo(() => elevated ? {} : { backgroundColor: '#000' }, [elevated]);
+  const [value, setValue] = React.useState<T | undefined>(initialValue);
   return (
-    <View 
-      { ...props }
-      flexGrow={ 1 }
-      style={ [style, computedStyles] }>
-      <View 
-        row
-        elevated={ elevated }
-        gap={ 12 }>
-        {buttons.map(({
-          icon, label, value,
-        }, index) => (
-          <View row key={ `${value}${index}` }>
-            <Button 
-              row
-              alignCenter
-              justifyCenter
-              gap={ 6 }
-              p={ 12 }
-              selectable
-              selected={ value === props.value }
-              startIcon={ icon }
-              onPress={ () => onValueChange?.(value) }>
-              { label }
-            </Button>
-          </View>
-        ))}
-      </View>
+    <View flexRow { ...props }>
+      {buttons.map(({
+        icon, label, value: v,
+      }, index) => (
+        <Button
+          key={ `${v}${index}` }
+          horizontal
+          px={ 12 }
+          gap={ 6 }
+          leftIcon={ icon }
+          selected={ value === v }
+          { ...(buttonProps instanceof Function ? buttonProps(index, value === v) : buttonProps) }
+          onPress={ () => {
+            setValue(v);
+            onValueChange?.(v);
+          } }>
+          { label }
+        </Button>
+      ))}
     </View>
   );
 };

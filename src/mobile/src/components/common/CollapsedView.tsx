@@ -4,7 +4,7 @@ import { Animated, ViewStyle } from 'react-native';
 import {
   Divider,
   Icon,
-  Menu,
+  Popover,
   Text,
   View,
   ViewProps,
@@ -20,6 +20,7 @@ export type CollapsedViewProps = ViewProps & {
   info?: React.ReactNode;
   collapseStyle?: CollapseStyle;
   initiallyCollapsed?: boolean;
+  disabled?: boolean;
   indent?: number;
   onExpand?: () => void;
   onCollapse?: () => void;
@@ -32,6 +33,7 @@ export function CollapsedView({
   info,
   collapseStyle = 'banner',
   initiallyCollapsed = true,
+  disabled = false,
   indent = 0,
   onExpand,
   onCollapse,
@@ -66,17 +68,16 @@ export function CollapsedView({
       {collapseStyle === 'banner' && (
         <View 
           elevated
-          col
+          flexGrow={ 1 }
           p={ titleStyle?.padding !== undefined ? titleStyle?.padding : 12 }
-          height={ titleStyle?.height !== undefined ? titleStyle?.height : 48 }
           style={ titleStyle }>
           <View
             gap={ 12 }
             row
-            alignCenter
+            itemsCenter
             justifyCenter={ !title }
             touchable
-            onPress={ () => setCollapsed((prev) => !prev) }>
+            onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
             <Animated.View style={ { 
               alignItems: 'center',
               justifyContent: 'center',
@@ -96,10 +97,10 @@ export function CollapsedView({
             {title && <Divider vertical />}
             {title && typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
             {info && (
-              <Menu
-                autoAnchor={ <Icon size={ 24 } name='information' /> }>
-                {info}
-              </Menu>
+              <Popover
+                anchor={ <Icon size={ 24 } name='information' /> }>
+                <Text p={ 12 }>{info}</Text>
+              </Popover>
             )}
           </View>
         </View>

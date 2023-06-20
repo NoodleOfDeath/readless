@@ -27,13 +27,12 @@ export function Checkbox({
       justifyCenter
       width={ 24 }
       height={ 24 }
-      mh={ 8 }
+      mx={ 8 }
       style={ style }
       onPress={ onPress }
       { ...other }
-      startIcon={ checked && (
+      leftIcon={ checked && (
         <Icon name='check' color={ theme.colors.primary } />
       ) } />
   );
 }
-

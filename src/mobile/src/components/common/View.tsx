@@ -1,25 +1,16 @@
 import React from 'react';
 import {
+  GestureResponderEvent,
   Pressable,
-  PressableProps,
   View as RNView,
-  ViewProps as RNViewProps,
   StyleSheet,
   TouchableOpacity,
-  TouchableOpacityProps,
 } from 'react-native';
 
 import { trigger } from 'react-native-haptic-feedback';
 
-import { Stylable, Surface } from '~/components';
+import { Surface, ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
-
-export type ViewProps = React.PropsWithChildren<PressableProps & TouchableOpacityProps & RNViewProps & Stylable> & {
-  pressable?: boolean;
-  touchable?: boolean;
-  elevated?: boolean;
-  haptic?: boolean;
-};
 
 export function View({ 
   children,
@@ -70,7 +61,7 @@ export function View({
     }
   }, [children, elevated, inactive, overlay, style]);
   
-  const onPress = React.useCallback(() => {
+  const onPress = React.useCallback((event: GestureResponderEvent) => {
     if (!props.onPress) {
       return;
     }
@@ -80,7 +71,7 @@ export function View({
         ignoreAndroidSystemSettings: false,
       });
     }
-    props.onPress();
+    props.onPress(event);
   }, [haptic, props]);
   
   return (touchable) ? (

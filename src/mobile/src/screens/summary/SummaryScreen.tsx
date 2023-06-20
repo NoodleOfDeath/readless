@@ -67,15 +67,18 @@ export function SummaryScreen({
   }, [navigation, summary]);
 
   React.useEffect(() => {
-    const summary = route?.params?.summary;
-    if (typeof summary === 'number' || typeof summary === 'string') {
-      setSummaryId(summary);
-      load(summary);
-    } else {
-      setSummaryId(summary?.id ?? 0);
-      setSummary(summary);
+    if (summary) {
+      return;
     }
-  }, [load, route?.params?.summary]);
+    const summaryIdentifier = route?.params?.summary;
+    if (typeof summaryIdentifier === 'number' || typeof summaryIdentifier === 'string') {
+      setSummaryId(summaryIdentifier);
+      load(summaryIdentifier);
+    } else {
+      setSummaryId(summaryIdentifier?.id ?? 0);
+      setSummary(summaryIdentifier);
+    }
+  }, [load, summary, route?.params?.summary]);
 
   return (
     <Screen>
@@ -83,7 +86,7 @@ export function SummaryScreen({
         refreshing={ loading }
         onRefresh={ () => load(summaryId) }>
         {loading ? (
-          <View alignCenter justifyCenter>
+          <View itemsCenter justifyCenter>
             <ActivityIndicator size="large" />
           </View>
         ) : (summary && (

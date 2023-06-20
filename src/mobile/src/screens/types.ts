@@ -5,7 +5,10 @@ import {
   ParamListBase,
   RouteProp,
 } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 
 import {
   PublicCategoryAttributes,
@@ -13,10 +16,6 @@ import {
   PublicSummaryAttributes,
   ReadingFormat,
 } from '~/api';
-
-export type TabParams = {
-  default: undefined;
-};
 
 export type ChannelType = 'outlet' | 'category';
 
@@ -27,11 +26,15 @@ export type Channel<T extends ChannelType = ChannelType> = {
     : PublicCategoryAttributes;
 };
 
-export type StackableTabParams = TabParams & {
+export type StackableTabParams = {
   about: undefined;
   bookmarks: undefined;
   browse: undefined;
   channel: Channel;
+  default: undefined;
+  generic: Partial<NativeStackNavigationOptions> & {
+    component: React.ReactNode;
+  }
   search: {
     prefilter?: string,
     onlyCustomNews?: boolean;
@@ -46,6 +49,10 @@ export type StackableTabParams = TabParams & {
     summary: PublicSummaryAttributes | number;
     showAnalytics?: boolean;
   };
+  colorSchemePicker: undefined;
+  fontPicker: undefined;
+  triggerWordPicker: undefined;
+  readingFormatPicker: undefined;
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {
@@ -55,6 +62,7 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {
       browse: { path: 'browse' },
       channel: { path: 'channel' },
       default: { path: '' },
+      generic: { path: '' },
       search: { path: 'search' },
       settings: { path: 'settings' },
       summary: { path: 'summary' },

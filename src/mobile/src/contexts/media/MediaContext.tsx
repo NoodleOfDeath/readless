@@ -101,7 +101,6 @@ export function MediaContextProvider({ children }: Props) {
     const availableVoices = voices?.filter((v) => 
       !v.networkConnectionRequired && !v.notInstalled);
     if (availableVoices && availableVoices.length > 0) {
-      console.log(availableVoices);
       try {
         await Tts.setDefaultLanguage(deviceLanguage);
       } catch (err) {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SheetProps } from 'react-native-actions-sheet';
+import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import { Badge } from 'react-native-paper';
 
 import {
@@ -16,39 +16,44 @@ import { strings } from '~/locales';
 
 export function MainMenuDialog(props: SheetProps) {
 
-  const {
-    openAbout, openBookmarks, openBrowse, openSettings, openWalkthroughs,
-  } = useNavigation();
+  const { navigate } = useNavigation();
   const { bookmarkCount } = React.useContext(SessionContext);
 
   const items = React.useMemo(() => [
     {
       icon: 'cog',
-      label: strings.settings.settings,
-      onPress: openSettings,
+      label: strings.menu_settings,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        navigate('settings');
+      },
     },
     {
       badge: bookmarkCount,
       icon: 'bookmark-outline',
-      label: strings.bookmarks.bookmarks,
-      onPress: openBookmarks,
+      label: strings.menu_bookmarks,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        navigate('bookmarks');
+      },
     },
     {
       icon: 'bookshelf',
-      label: strings.browse,
-      onPress: openBrowse,
-    },
-    {
-      icon: 'map-legend',
-      label: strings.walkthroughs,
-      onPress: openWalkthroughs,
+      label: strings.menu_browse,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        navigate('browse');
+      },
     },
     {
       icon: 'information',
-      label: strings.about,
-      onPress: openAbout,
+      label: strings.menu_about,
+      onPress: async () => {
+        await SheetManager.hide(props.sheetId);
+        navigate('about');
+      },
     },
-  ], [bookmarkCount, openAbout, openBookmarks, openBrowse, openSettings, openWalkthroughs]);
+  ], [bookmarkCount, navigate, props.sheetId]);
 
   return (
     <ActionSheet id={ props.sheetId }>
@@ -58,11 +63,12 @@ export function MainMenuDialog(props: SheetProps) {
         }, i) => (
           <View key={ i }>
             <Button
+              touchable
               horizontal
               p={ 12 }
               gap={ 12 }
-              h3
-              startIcon={ (
+              h6
+              leftIcon={ (
                 <View>
                   {badge !== undefined && badge > 0 && (
                     <Badge

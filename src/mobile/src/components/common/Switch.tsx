@@ -2,14 +2,10 @@ import React from 'react';
 
 import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native-paper';
 
-import {
-  Text,
-  View,
-  ViewProps,
-} from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { Text, View } from '~/components';
+import { useTheme } from '~/hooks';
 
-export type SwitchProps = ViewProps & RNSwitchProps & {
+export type SwitchProps = RNSwitchProps & {
   leftLabel?: React.ReactNode;
   rightLabel?: React.ReactNode;
   spacing?: number;
@@ -18,13 +14,11 @@ export type SwitchProps = ViewProps & RNSwitchProps & {
 export const Switch = ({
   leftLabel,
   rightLabel,
-  gap = 10,
   ...props
 }: SwitchProps) => {
   const theme = useTheme();
-  const style = useStyles(props);
   return (
-    <View flexRow style={ style } gap={ gap } alignCenter>
+    <View flexRow itemsCenter gap={ 12 }>
       { typeof leftLabel === 'string' ? <Text>{ leftLabel }</Text> : leftLabel }
       <RNSwitch { ...props } color={ theme.colors.primary } />
       { typeof rightLabel === 'string' ? <Text>{ rightLabel }</Text> : rightLabel }

@@ -15,7 +15,7 @@ import {
   DataTableRow,
   DataTableTitle,
   Icon,
-  Menu,
+  Popover,
   Text,
   View,
   ViewProps,
@@ -29,59 +29,59 @@ type Props = ViewProps;
 const FEATURES = [
   {
     availabileTo: ['free', 'ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
-    label: strings.subscribe.features.accessAllNews,
+    label: strings.subscribe_feature_accessAllNews,
   },
   {
     availabileTo: ['free', 'ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
-    label: strings.subscribe.features.basicTts,
+    label: strings.subscribe_feature_basicTts,
   },
   {
     availabileTo: ['free', 'ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Take quizzes and earn rewards for reading the news',
-    label: strings.subscribe.features.quizzes,
+    label: strings.subscribe_feature_quizzes,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Gain access to concise daily, weekly, monthly, and annual news Recaps',
-    label: strings.subscribe.features.recaps,
+    label: strings.subscribe_feature_recaps,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Access to premium TTS voices including celebirty voice clones',
-    label: strings.subscribe.features.premiumTts,
+    label: strings.subscribe_feature_premiumTts,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Create custom news alerts to get notified when news certain stories are published',
-    label: strings.subscribe.features.newsAlerts,
+    label: strings.subscribe_feature_newsAlerts,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Upload documents for sumarrization and sentiment analysis',
-    label: strings.subscribe.features.documentAnalysis,
+    label: strings.subscribe_feature_documentAnalysis,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Access to detailed metrics and data mining tools',
-    label: strings.subscribe.features.dataMining,
+    label: strings.subscribe_feature_dataMining,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Get access to local news stories from your area',
-    label: strings.subscribe.features.localNews,
+    label: strings.subscribe_feature_localNews,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
-    label: strings.subscribe.features.customIcon,
+    label: strings.subscribe_feature_customIcon,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.t1', 'ai.readless.ReadLess.premium.iamrich'],
     description: 'Ask follow up questions to get more details about a news story',
-    label: strings.subscribe.features.followUpQuestions,
+    label: strings.subscribe_feature_followUpQuestions,
   },
   {
     availabileTo: ['ai.readless.ReadLess.premium.iamrich'],
-    label: strings.subscribe.features.iamrich,
+    label: strings.subscribe_feature_iamrich,
   },
 ];
 
@@ -100,7 +100,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
       {
         description: 'Base subscription',
         id: 'free',
-        label: strings.subscribe.free,
+        label: strings.subscribe_free,
         price: '0.00',
       },
       ...products.map((product) => ({
@@ -123,7 +123,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
             <DataTableTitle>{}</DataTableTitle>
             {tiers.map(({ label, price }) => (
               <DataTableTitle key={ label } justifyCenter>
-                <View alignCenter justifyCenter>
+                <View itemsCenter justifyCenter>
                   <Text h5 bold>{label}</Text>
                   <Text bold>
                     $
@@ -141,18 +141,18 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
               bg={ i % 2 === 0 ? theme.colors.rowEven : theme.colors.rowOdd }>
               <DataTableCell 
                 justifyEnd
-                alignCenter
+                itemsCenter
                 bg="transparent">
                 <Provider>
-                  <View row alignCenter justifyEnd gap={ 4 }>
-                    <Menu
-                      autoAnchor={ (
+                  <View row itemsCenter justifyEnd gap={ 4 }>
+                    <Popover
+                      anchor={ (
                         <Text textRight>
                           {label}
                         </Text>
                       ) }>
                       {description}
-                    </Menu>
+                    </Popover>
                   </View>
                 </Provider>
               </DataTableCell>
@@ -160,7 +160,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                 <DataTableCell
                   key={ tierLabel } 
                   justifyCenter
-                  alignCenter
+                  itemsCenter
                   bg="transparent">
                   {availabileTo.includes(id) ? (
                     <Icon 
@@ -201,7 +201,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                     touchable
                     p={ 6 }
                     onPress={ () => subscribe(tier.id) }>
-                    {strings.subscribe.subscribe}
+                    {strings.subscribe_subscribe}
                   </Button>
                 )}
               </DataTableCell>

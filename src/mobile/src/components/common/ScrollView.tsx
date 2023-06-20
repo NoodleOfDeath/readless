@@ -5,12 +5,8 @@ import {
   RefreshControl,
 } from 'react-native';
 
-import {
-  Stylable,
-  View,
-  ViewProps,
-} from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { ViewProps } from '~/components';
+import { useStyles } from '~/hooks';
 
 export type ScrollViewProps = ViewProps & RNScrollViewProps & {
   refreshing?: boolean;
@@ -22,6 +18,7 @@ export function ScrollView({
   children,
   refreshing = false,
   onRefresh,
+  keyboardDismissMode = 'on-drag',
   keyboardShouldPersistTaps = 'handled',
   scrollEventThrottle = 16,
   refreshControl = onRefresh && (
@@ -30,20 +27,18 @@ export function ScrollView({
   ref,
   ...props
 }: ScrollViewProps) {
-  const theme = useTheme();
-  const style = useStyles(props as Stylable);
+  const style = useStyles(props);
   return (
-    <View style={ theme.components.flexCol }>
-      <RNScrollView 
-        refreshControl={ refreshControl }
-        keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
-        scrollEventThrottle={ scrollEventThrottle }
-        keyboardDismissMode="on-drag"
-        style={ style }
-        ref={ ref as React.RefObject<RNScrollView> }
-        { ...props }>
-        {children}
-      </RNScrollView>
-    </View>
+    <RNScrollView 
+      nestedScrollEnabled
+      refreshControl={ refreshControl }
+      keyboardDismissMode={ keyboardDismissMode }
+      keyboardShouldPersistTaps={ keyboardShouldPersistTaps }
+      scrollEventThrottle={ scrollEventThrottle }
+      style={ style }
+      ref={ ref as React.RefObject<RNScrollView> }
+      { ...props }>
+      {children}
+    </RNScrollView>
   );
 }

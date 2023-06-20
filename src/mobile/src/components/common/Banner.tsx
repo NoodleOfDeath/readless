@@ -45,7 +45,7 @@ export function Banner({
               <View>
                 <Button 
                   onPress={ ()=> setMinimized(!minimized) }
-                  startIcon={ minimized ? 'chevron-up' : 'chevron-down' }
+                  leftIcon={ minimized ? 'chevron-up' : 'chevron-down' }
                   elevated
                   p={ 4 }
                   rounded />
@@ -54,7 +54,7 @@ export function Banner({
               <View>
                 <Button 
                   onPress={ ()=> onDismiss?.() }
-                  startIcon={ 'close' }
+                  leftIcon={ 'close' }
                   elevated
                   p={ 4 }
                   rounded />
@@ -67,8 +67,8 @@ export function Banner({
             </View>
           )}
           <SafeAreaView>
-            <View height={ 54 } alignCenter>
-              <View row alignCenter gap={ 16 }>
+            <View height={ 54 } itemsCenter>
+              <View row itemsCenter gap={ 16 }>
                 {actions.map((action, index) => (
                   <View key={ index }>
                     <Button
@@ -78,7 +78,7 @@ export function Banner({
                       p={ 16 }
                       iconSize={ 24 }
                       disabled={ action.disabled }
-                      startIcon={ action.icon }
+                      leftIcon={ action.icon }
                       onPress={ action.onPress } />
                   </View>
                 ))}

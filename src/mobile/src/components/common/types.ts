@@ -1,4 +1,12 @@
-import { ViewStyle } from 'react-native';
+import {
+  PressableProps,
+  TextProps as RNTextProps,
+  ViewProps as RNViewProps,
+  StyleProp,
+  TextStyle,
+  TouchableOpacityProps,
+  ViewStyle,
+} from 'react-native';
 
 export const AVAILABLE_FONTS = [
   'Alegreya', 
@@ -7,11 +15,13 @@ export const AVAILABLE_FONTS = [
   'Lato',
   'Manuale',
   'Roboto',
-];
+] as const;
+
+export type FontFamily = (typeof AVAILABLE_FONTS[number]);
 
 export const FONT_SIZES = {
-  body1: 16,
-  body2: 15,
+  body1: 17,
+  body2: 16,
   caption: 14,
   h1: 30,
   h2: 28,
@@ -20,110 +30,227 @@ export const FONT_SIZES = {
   h5: 22,
   h6: 20,
   subscript: 10,
-  subtitle1: 18,
-  subtitle2: 17,
+  subtitle1: 19,
+  subtitle2: 18,
 } as const;
 
-export type TextStyleProps = { [key in keyof typeof FONT_SIZES]?: boolean } & {
-  // text styling
-  color?: string;
+export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextProps & TextStyle & {
+  
+  // font and size
+  /** alias for {@link TextProps.fontFamily} */
+  font?: FontFamily;
+  fontFamily?: FontFamily;
+  fontSize?: TextStyle['fontSize'];
+  /** alias for {@link TextProps.adjustFontSizeToFit} */
+  adaptive?: RNTextProps['adjustsFontSizeToFit'];
+  adjustsFontSizeToFit?: RNTextProps['adjustsFontSizeToFit'];
+  /** set `true` to make font not scale to preference */
+  fontSizeFixed?: boolean;
+  
+  // Spacing and height
+  letterSpacing?: TextStyle['letterSpacing'];
+  lineHeight?: TextStyle['lineHeight'];
+  
+  // alignment
+  /** alias for {@link textAlign} = `"center"` **/
   textCenter?: boolean;
+  /** alias for {@link textAlign} = `"left"` **/
   textLeft?: boolean;
+  /** alias for {@link textAlign} = `"right"` **/
   textRight?: boolean;
-  fontFamily?: string;
-  fontSize?: number;
+  textAlign?: TextStyle['textAlign'];
+  
+  // style and color
+  /** alias for {@link fontWeight} = `"bold"` **/
   bold?: boolean;
+  /** alias for {@link fontStyle} = `"italic"` **/
   italic?: boolean;
+  /** alias for {@link textDecorationLine} = `"underline"` **/
   underline?: boolean;
-  code?: boolean;
-};
- 
-export const TEXT_STYLE_PROPS = ['color', 'textCenter', 'textLeft', 'textRight', 'fontFamily', 'fontSize', 'bold', 'italic', 'underline', 'code', ...Object.keys(FONT_SIZES)];
+  color?: TextStyle['color'];
 
-export type ViewStyleProps<Style extends ViewStyle = ViewStyle> = {
+  capitalize?: boolean;
+};
+
+export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & ViewStyle & {
+  
+  // preset variants
+  outlined?: boolean;
+  rounded?: boolean;
+  
   // position
   absolute?: boolean;
   relative?: boolean;
-  top?: number | string;
-  bottom?: number | string;
-  left?: number | string;
-  right?: number | string;
+  pos?: ViewStyle['position'];
+  position?: ViewStyle['position'];
+  t?: ViewStyle['top'];
+  top?: ViewStyle['top'];
+  b?: ViewStyle['bottom'];
+  bottom?: ViewStyle['bottom'];
+  l?: ViewStyle['left'];
+  left?: ViewStyle['left'];
+  r?: ViewStyle['right'];
+  right?: ViewStyle['right'];
+  z?: ViewStyle['zIndex'];
+  zIndex?: ViewStyle['zIndex'];
+  
   // dimensions
-  aspectRatio?: number;
-  width?: number | string;
-  height?: number | string;
-  minWidth?: number | string;
-  minHeight?: number | string;
-  maxWidth?: number | string;
-  maxHeight?: number | string;
-  // flexbox
-  flex?: number;
-  flexWrap?: 'wrap' | 'nowrap';
-  flexGrow?: number;
-  flexRow?: boolean;
-  flexRowReverse?: boolean;
-  flexColumn?: boolean;
-  flexColumnReverse?: boolean;
-  gap?: number;
-  rowGap?: number;
-  colGap?: number;
-  col?: boolean;
-  row?: boolean;
-  alignCenter?: boolean;
-  alignStart?: boolean;
-  alignEnd?: boolean;
-  justifyCenter?: boolean;
-  justifyStart?: boolean;
-  justifyEnd?: boolean;
-  justifyEvenly?: boolean;
-  justifySpaced?: boolean;
-  inactive?: boolean;
-  // margins
-  m?: number | string;
-  mh?: number | string;
-  mv?: number | string;
-  mt?: number | string;
-  mb?: number | string;
-  ml?: number | string;
-  mr?: number | string;
+  aspect?: ViewStyle['aspectRatio'];
+  aspectRatio?: ViewStyle['aspectRatio'];
+  w?: ViewStyle['width'];
+  width?: ViewStyle['width'];
+  h?: ViewStyle['height'];
+  height?: ViewStyle['height'];
+  minW?: ViewStyle['minWidth'];
+  minWidth?: ViewStyle['minWidth'];
+  minH?: ViewStyle['minHeight'];
+  minHeight?: ViewStyle['minHeight'];
+  maxW?: ViewStyle['maxWidth'];
+  maxWidth?: ViewStyle['maxWidth'];
+  maxH?: ViewStyle['maxHeight'];
+  maxHeight?: ViewStyle['maxHeight'];
+  
+  // margin
+  m?: ViewStyle['margin']
+  margin?: ViewStyle['margin']
+  mx?: ViewStyle['marginHorizontal']
+  my?: ViewStyle['marginVertical']
+  ml?: ViewStyle['marginLeft']
+  marginLeft?: ViewStyle['marginLeft']
+  mr?: ViewStyle['marginRight']
+  marginRight?: ViewStyle['marginRight']
+  mt?: ViewStyle['marginTop']
+  marginTop?: ViewStyle['marginTop']
+  mb?: ViewStyle['marginBottom']
+  marginBottom?: ViewStyle['marginBottom']
+  
   // padding
-  p?: number | string;
-  ph?: number | string;
-  pv?: number | string;
-  pt?: number | string;
-  pb?: number | string;
-  pl?: number | string;
-  pr?: number | string;
-  // border
-  borderWidth?: number;
-  borderTopWidth?: number;
-  borderRightWidth?: number;
-  borderBottomWidth?: number;
-  borderLeftWidth?: number;
-  borderColor?: string;
-  borderTopColor?: string;
-  borderRightColor?: string;
-  borderBottomColor?: string;
-  borderLeftColor?: string;
-  borderRadius?: number;
-  borderRadiusTL?: number;
-  borderRadiusTR?: number;
-  borderRadiusBL?: number;
-  borderRadiusBR?: number;
+  p?: ViewStyle['padding']
+  padding?: ViewStyle['padding']
+  px?: ViewStyle['paddingHorizontal']
+  py?: ViewStyle['paddingVertical']
+  pl?: ViewStyle['paddingLeft']
+  paddingLeft?: ViewStyle['paddingLeft']
+  pr?: ViewStyle['paddingRight']
+  paddingRight?: ViewStyle['paddingRight']
+  pt?: ViewStyle['paddingTop']
+  paddingTop?: ViewStyle['paddingTop']
+  pb?: ViewStyle['paddingBottom']
+  paddingBottom?: ViewStyle['paddingBottom']
+  
   // appearance
-  bg?: string;
-  outlined?: boolean | string | number | [string, number];
-  opacity?: number;
-  selectable?: boolean;
-  contained?: boolean;
-  rounded?: boolean;
-  overflow?: string;
-  zIndex?: number;
+  bg?: ViewStyle['backgroundColor'];
+  bgColor?: ViewStyle['backgroundColor'];
+  backgroundColor?: ViewStyle['backgroundColor'];
+  opacity?: ViewStyle['opacity'];
+  overflow?: ViewStyle['overflow'];
+  
+  // border color
+  bColor?: ViewStyle['borderColor'];
+  borderColor?: ViewStyle['borderColor'];
+  bcTop?: ViewStyle['borderTopColor'];
+  borderTopColor?: ViewStyle['borderTopColor'];
+  bcRight?: ViewStyle['borderRightColor'];
+  borderRightColor?: ViewStyle['borderRightColor'];
+  bcBottom?: ViewStyle['borderBottomColor'];
+  borderBottomColor?: ViewStyle['borderBottomColor'];
+  bcLeft?: ViewStyle['borderLeftColor'];
+  borderLeftColor?: ViewStyle['borderLeftColor'];
+  
+  // border radius
+  bRadius?: ViewStyle['borderRadius'];
+  borderRadius?: ViewStyle['borderRadius'];
+  brTopLeft?: ViewStyle['borderTopLeftRadius'];
+  borderTopLeftRadius?: ViewStyle['borderTopLeftRadius'];
+  brTopRight?: ViewStyle['borderTopRightRadius'];
+  borderTopRightRadius?: ViewStyle['borderTopRightRadius'];
+  brBottomLeft?: ViewStyle['borderBottomLeftRadius'];
+  borderBottomLeftRadius?: ViewStyle['borderBottomLeftRadius'];
+  brBottomRight?: ViewStyle['borderBottomRightRadius'];
+  borderBottomRightRadius?: ViewStyle['borderBottomRightRadius'];
+  
+  // border width
+  bWidth?: ViewStyle['borderWidth'];
+  borderWidth?: ViewStyle['borderWidth'];
+  bwTop?: ViewStyle['borderTopWidth'];
+  borderTopWidth?: ViewStyle['borderTopWidth'];
+  bwRight?: ViewStyle['borderRightWidth'];
+  borderRightWidth?: ViewStyle['borderRightWidth'];
+  bwBottom?: ViewStyle['borderBottomWidth'];
+  borderBottomWidth?: ViewStyle['borderBottomWidth'];
+  bwLeft?: ViewStyle['borderLeftWidth'];
+  borderLeftWidth?: ViewStyle['borderLeftWidth'];
+  
+  // flex
+  col?: boolean;
+  colRev?: boolean;
+  row?: boolean;
+  rowRev?: boolean;
+  
+  flexRow?: boolean;
+  flexRowRev?: boolean;
+  flexRowReverse?: boolean;
+  
+  flexCol?: boolean;
+  flexColumn?: boolean;
+  flexColRev?: boolean;
+  flexColumnRev?: boolean;
+  flexColumnReverse?: boolean;
+  
+  flexDir?: ViewStyle['flexDirection'];
+  flexDirection?: ViewStyle['flexDirection'];
+  
+  flex?: ViewStyle['flex'];
+  flexWrap?: ViewStyle['flexWrap'];
+  flexGrow?: ViewStyle['flexGrow'];
+  flexShrink?: ViewStyle['flexShrink'];
+  flexBasis?: ViewStyle['flexBasis'];
+  
+  itemsCenter?: boolean;
+  itemsEnd?: boolean;
+  itemsStart?: boolean;
+  itemsStretch?: boolean;
+  alignItems?: ViewStyle['alignItems'];
+  
+  alignCenter?: boolean;
+  alignEnd?: boolean;
+  alignStart?: boolean;
+  alignStretch?: boolean;
+  alignSelf?: ViewStyle['alignSelf'];
+  
+  jAround?: boolean;
+  justifyAround?: boolean;
+  justifySpaceAround?: boolean;
+  jCenter?: boolean;
+  justifyCenter?: boolean;
+  jEnd?: boolean;
+  justifyEnd?: boolean;
+  jEvenly?: boolean;
+  justifyEvenly?: boolean;
+  justifySpaceEvenly?: boolean;
+  jStart?: boolean;
+  justifyStart?: boolean;
+  jBetween?: boolean;
+  justifyBetween?: boolean;
+  justifySpaceBetween?: boolean;
+  justify?: ViewStyle['justifyContent'];
+  justifyContent?: ViewStyle['justifyContent'];
+  
+  gap?: ViewStyle['gap'];
+  rowGap?: ViewStyle['rowGap'];
+  colGap?: ViewStyle['columnGap'];
+  columnGap?: ViewStyle['columnGap'];
+  
+  // custom
+  pressable?: boolean;
+  touchable?: boolean;
+  elevated?: boolean;
+  haptic?: boolean;
+  inactive?: boolean;
+  
   // other
-  style?: Style;
+  style?: StyleProp<ViewStyle> | undefined;
+
 };
 
-export const VIEW_STYLE_PROPS = ['position', 'top', 'bottom', 'left', 'right', 'aspectRatio', 'width', 'height', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight', 'flex', 'flexWrap', 'flexGrow', 'flexDirection', 'gap', 'rowGap', 'columnGap', 'col', 'row', 'backgroundColor', 'opacity', 'borderColor', 'borderRadius', 'borderWidth', 'zIndex', 'style'];
-
-export type Stylable<Style extends ViewStyle = ViewStyle> = 
-TextStyleProps & ViewStyleProps<Style>;
+export type ChildlessViewProps = Omit<ViewProps, 'children'>;

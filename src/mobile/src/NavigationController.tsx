@@ -12,7 +12,8 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
-import { Badge, Provider } from 'react-native-paper';
+import { addScreenshotListener } from 'react-native-detector';
+import { Badge } from 'react-native-paper';
 
 import {
   LayoutContext,
@@ -20,6 +21,10 @@ import {
   SessionContext,
 } from './contexts';
 import { AboutScreen } from './screens/about/AboutScreen';
+import { FEATURES } from './screens/search/WalkthroughStack';
+import { FontPickerScreen } from './screens/settings/FontPickerScreen';
+import { ReadingFormatPickerScreen } from './screens/settings/ReadingFormatPickerScreen';
+import { TriggerWordPickerScreen } from './screens/settings/TriggerWordPickerScreen';
 
 import {
   ActivityIndicator,
@@ -34,6 +39,7 @@ import {
   BookmarksScreen,
   BrowseScreen,
   ChannelScreen,
+  ColorSchemePickerScreen,
   NAVIGATION_LINKING_OPTIONS,
   SearchScreen,
   SettingsScreen,
@@ -58,7 +64,7 @@ EventMapBase
     name: 'about', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.browse, 
+      headerTitle: strings.menu_browse, 
     },
   },
   {
@@ -66,14 +72,14 @@ EventMapBase
     name: 'bookmarks', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.bookmarks.bookmarks, 
+      headerTitle: strings.bookmarks_header, 
     }, 
   },
   {
     component: BrowseScreen, 
     name: 'browse', options: {
       headerBackTitle: '', 
-      headerTitle: strings.browse, 
+      headerTitle: strings.menu_browse, 
     },
   },
   {
@@ -86,7 +92,7 @@ EventMapBase
     name: 'settings', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.settings.settings, 
+      headerTitle: strings.settings_settings, 
     },
   },
   {
@@ -94,15 +100,51 @@ EventMapBase
     name: 'summary',  
     options: { headerBackTitle: '' },
   },
+  {
+    component: ColorSchemePickerScreen, 
+    name: 'colorSchemePicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_colorScheme, 
+    },
+  },
+  {
+    component: FontPickerScreen,
+    name: 'fontPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_font, 
+    },
+  },
+  {
+    component: TriggerWordPickerScreen,
+    name: 'triggerWordPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_triggerWords, 
+    },
+  },
+  {
+    component: ReadingFormatPickerScreen,
+    name: 'readingFormatPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.settings_preferredReadingFormat, 
+    },
+  },
 ];
 
 function Stack() {
-  
-  const Stack = createNativeStackNavigator();
+
+  const { router } = useNavigation();
+
   const { currentTrack } = React.useContext(MediaContext);
+
   const {
     bookmarkCount,
+    unreadBookmarkCount,
     loadedInitialUrl,
+    viewedFeatures,
     setPreference,
   } = React.useContext(SessionContext);
   
@@ -112,14 +154,40 @@ function Stack() {
     unlockRotation,
   } = React.useContext(LayoutContext);
 
-  const { router } = useNavigation();
+  React.useEffect(() => {
+    if (bookmarkCount > 0 && !('bookmark-walkthrough' in { ...viewedFeatures })) {
+      SheetManager.show('bookmark-walkthrough');
+    }
+  }, [bookmarkCount, viewedFeatures]);
+
+  React.useEffect(() => {
+    if (!('sharing-walkthrough' in { ...viewedFeatures })) {
+      const unsubscribe = addScreenshotListener(async () => {
+        if (!('sharing-walkthrough' in { ...viewedFeatures })) {
+          SheetManager.hideAll();
+          setTimeout(() => SheetManager.show('sharing-walkthrough'), 1000);
+        }
+        return () => {
+          unsubscribe();
+        };
+      });
+    }
+  }, [viewedFeatures]);
+
+  React.useEffect(() => {
+    const viewed = { ...viewedFeatures };
+    if (!('promo-code-walkthrough' in viewed) && FEATURES.every((f) => f.id in viewed)) {
+      setTimeout(() => SheetManager.show('promo-code-walkthrough'), 2_000);
+    }
+  }, [viewedFeatures]);
+
+  const Stack = createNativeStackNavigator();
   
   const headerRight = React.useMemo(() => (
     <View>
-      <View row gap={ 16 } alignCenter>
+      <View row gap={ 16 } itemsCenter>
         <Button
-          touchable
-          startIcon={ (
+          leftIcon={ (
             <View height={ 24 } width={ 24 }>
               <Icon 
                 absolute
@@ -135,30 +203,29 @@ function Stack() {
                 size={ 16 } />
             </View>
           ) }
-          iconSize={ 24 }
           haptic
           onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
-        <View touchable onPress={ () => SheetManager.show('subscribe') }>
+        {/* <View touchable onPress={ () => SheetManager.show('subscribe') }>
           <Icon
             name="tag"
             size={ 24 } />
           <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
-        </View>
+        </View> */}
         <View touchable onPress={ () => SheetManager.show('main-menu') }>
-          {bookmarkCount > 0 && (
+          {unreadBookmarkCount > 0 && (
             <Badge
               size={ 18 }
               style={ {
                 position: 'absolute', right: -5, top: -5, zIndex: 1,
               } }>
-              {bookmarkCount}
+              {unreadBookmarkCount}
             </Badge>
           )}
           <Icon name='menu' size={ 24 } />
         </View>
       </View>
     </View>
-  ), [rotationLock, bookmarkCount, unlockRotation, lockRotation]);
+  ), [rotationLock, unreadBookmarkCount, unlockRotation, lockRotation]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);
@@ -196,7 +263,15 @@ function Stack() {
 
 export default function NavigationController() {
   const theme = useTheme();
-  const { ready } = React.useContext(SessionContext);
+  const { ready, viewedFeatures } = React.useContext(SessionContext);
+  React.useEffect(() => {
+    if (!ready) {
+      return;
+    }
+    if (!viewedFeatures || !('onboarding-walkthrough' in viewedFeatures)) {
+      SheetManager.show('onboarding-walkthrough');
+    }
+  }, [viewedFeatures, ready]);
   return (
     <NavigationContainer
       theme= { theme.navContainerTheme }
@@ -207,9 +282,7 @@ export default function NavigationController() {
         </View>
       ) : (
         <SheetProvider>
-          <Provider>          
-            <Stack />
-          </Provider>
+          <Stack />
         </SheetProvider>
       )}
     </NavigationContainer>

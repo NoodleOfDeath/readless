@@ -1,25 +1,28 @@
 import React from 'react';
-import {
-  ImageBackground,
-  Image as RNImage,
-  ImageProps as RNImageProps,
-} from 'react-native';
 
-import { VIEW_STYLE_PROPS, ViewStyleProps } from '~/components';
+import FastImage, { FastImageProps } from 'react-native-fast-image';
+
+import { ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type ImageProps = RNImageProps & Omit<ViewStyleProps, 'children'> & {
-  fill?: boolean;
+export type ImageProps = FastImageProps & Omit<ViewProps, 'children' | 'center'> & {
+  contain?: boolean;
+  stretch?: boolean;
+  center?: boolean;
 };
 
-export function Image({ fill, ...props }: ImageProps) {
-  const style = useStyles(props, { onlyInclude: VIEW_STYLE_PROPS });
-  return fill ? (
-    <ImageBackground 
-      { ...props } 
-      resizeMode="cover"
+export function Image({ 
+  contain, 
+  stretch,
+  center,
+  resizeMode = contain ? 'contain' : stretch ? 'stretch' : center ? 'center' : 'cover',
+  ...props 
+}: ImageProps) {
+  const style = useStyles(props);
+  return (
+    <FastImage 
+      { ...props }
+      resizeMode={ resizeMode }
       style={ style } />
-  ) : (
-    <RNImage { ...props } style={ style } />
   );
 }

@@ -7,13 +7,18 @@ import { DEFAULT_DIALOG_CONTEXT } from './types';
 
 import { PublicSummaryAttributes } from '~/api';
 import {
+  AppearanceWalkthrough,
+  BookmarkWalkthrough,
+  CustomFeedWalkthrough,
   FeedbackDialog,
   MainMenuDialog,
   OnboardingWalkthrough,
+  PromoCodeWalkthrough,
   SentimentWalkthrough,
   ShareDialog,
+  SharingWalkthrough,
   SubscribeDialog,
-  TriggerWarningWalkthrough,
+  TriggerWordsWalkthrough,
 } from '~/components';
 
 export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
@@ -25,9 +30,14 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('main-menu', MainMenuDialog);
     registerSheet('subscribe', SubscribeDialog);
     // onboarding/features
+    registerSheet('appearance-walkthrough', AppearanceWalkthrough);
+    registerSheet('bookmark-walkthrough', BookmarkWalkthrough);
+    registerSheet('custom-feed-walkthrough', CustomFeedWalkthrough);
     registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
+    registerSheet('promo-code-walkthrough', PromoCodeWalkthrough);
     registerSheet('sentiment-walkthrough', SentimentWalkthrough);
-    registerSheet('trigger-warning-walkthrough', TriggerWarningWalkthrough);
+    registerSheet('sharing-walkthrough', SharingWalkthrough);
+    registerSheet('trigger-words-walkthrough', TriggerWordsWalkthrough);
     // summary specific
     registerSheet('share', ShareDialog);
     registerSheet('feedback', FeedbackDialog);

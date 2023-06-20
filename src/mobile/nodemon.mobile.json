@@ -1,0 +1,9 @@
+{
+  "verbose": true,
+  "watch": ["nodemon.mobile.json", "../core/src/client", "../core/src/utils"],
+  "ext": "css,html,js,jsx,json,ts,tsx",
+  "exclude": [],
+  "execMap": {
+    "ts": "node --inspect=0.0.0.0:9229 --nolazy"
+  }
+}

@@ -2,12 +2,12 @@ import React from 'react';
 
 import {
   Button,
+  ChildlessViewProps,
   Text,
   View,
-  ViewProps,
 } from '~/components';
 
-export type CardStackProps = Omit<ViewProps, 'children'> & {
+export type CardStackProps = ChildlessViewProps & {
   children?: React.ReactNode | React.ReactNode[];
   onPressItem?: (index: number) => void;
   onClose?: () => void;
@@ -51,29 +51,29 @@ export function CardStack({
         <View row />
         <Button
           touchable
-          startIcon="close"
+          leftIcon="close"
           iconSize={ 18 }
           onPress={ () => onClose?.() } />
       </View>
       <View 
         flexRow
-        alignCenter
-        justifySpaced
+        itemsCenter
+        justifyBetween
         gap={ 6 }>
         <Button
           touchable
-          startIcon="chevron-left"
+          leftIcon="chevron-left"
           iconSize={ 32 }
           color={ cardIndex > 0 ? 'text' : 'textDisabled' }
           onPress={ cardIndex > 0 ? () => setCardIndex((cardIndex - 1)) : undefined } />
         <View
-          alignCenter
+          itemsCenter
           justifyCenter>
           {cards[cardIndex]}
         </View>
         <Button
           touchable
-          startIcon="chevron-right"
+          leftIcon="chevron-right"
           iconSize={ 32 }
           color={ cardIndex + 1 < cards.length ? 'text' : 'textDisabled' }
           onPress={ cardIndex + 1 < cards.length ? () => setCardIndex((cardIndex + 1)) : undefined } />

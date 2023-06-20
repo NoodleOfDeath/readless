@@ -1,1 +1,0 @@
-export type LoginAction = 'logIn' | 'signUp' | 'forgotPassword';

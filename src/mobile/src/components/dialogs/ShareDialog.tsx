@@ -62,61 +62,61 @@ export function ShareDialog({
     [
       {
         icon: 'share-outline',
-        label: strings.share.shareAsLink,
+        label: strings.share_shareAsLink,
         onPress: () => shareStandard(summary, null), 
       },
       {
         icon: 'link-variant',
-        label: strings.share.copyLink,
+        label: strings.share_copyLink,
         onPress: () => copyToClipboard(shareableLink(summary, BASE_DOMAIN, format)),
       },
       {
         icon: 'link-variant',
-        label: strings.share.copyOriginalSourceLink,
+        label: strings.share_copyOriginalSourceLink,
         onPress: () => copyToClipboard(summary.url),
       },
     ],
     [
       {
         icon: 'twitter',
-        label: strings.share.twitter,
+        label: strings.share_twitter,
         onPress:() => shareSocial(summary, viewshot, Social.Twitter), 
       },
       {
         icon: 'instagram',
-        label: strings.share.instagramStories,
+        label: strings.share_instagramStories,
         onPress: () => shareSocial(summary, viewshot, Social.InstagramStories), 
       },
       // {
       //   icon: 'instagram',
-      //   label: strings.share.instagram,
+      //   label: strings.share_instagram,
       //   onPress: () => shareSocial(summary, viewshot, Social.Instagram), 
       // },
       {
         icon: 'camera-outline',
-        label: strings.share.shareAsImage,
+        label: strings.share_shareAsImage,
         onPress: () => shareStandard(summary, viewshot), 
       },
     ],
     [
       { 
         icon:'content-copy',
-        label: strings.share.copyTitle,
+        label: strings.share_copyTitle,
         onPress: () => copyToClipboard(summary.title), 
       },
       {
         icon:'content-copy',
-        label: strings.share.copyShortSummary,
+        label: strings.share_copyShortSummary,
         onPress: () => copyToClipboard(summary.shortSummary), 
       },
       {
         icon:'content-copy',
-        label: strings.share.copySummary,
+        label: strings.share_copySummary,
         onPress: () => copyToClipboard(summary.summary), 
       },
       {
         icon:'content-copy',
-        label: strings.share.copyBulletPoints,
+        label: strings.share_copyBulletPoints,
         onPress: () => copyToClipboard(summary.bullets.join('\n')), 
       },
     ],
@@ -124,7 +124,7 @@ export function ShareDialog({
 
   return (
     <ActionSheet id={ props.sheetId }>
-      <View pv={ 12 }>
+      <View py={ 12 }>
         {Object.values(actions).map((subactions, i) => (
           <View key={ i } height={ 120 } gap={ 12 }>
             <ScrollView horizontal>
@@ -141,7 +141,7 @@ export function ShareDialog({
                     width={ 120 }
                     p={ 12 }
                     justifyCenter
-                    alignCenter>
+                    itemsCenter>
                     <View outlined p={ 12 } borderRadius={ 24 }>
                       {typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon}
                     </View>
