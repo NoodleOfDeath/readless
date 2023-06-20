@@ -19,7 +19,7 @@ export function Highlighter({ children, ...props }: HighlighterProps) {
   return (
     <View { ...props }>
       <RNHighlighter
-        { ...props } 
+        { ...props }
         textToHighlight={ children ?? '' }
         style={ textStyle } />
     </View>

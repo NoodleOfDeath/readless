@@ -5,7 +5,6 @@ import { formatDistance } from 'date-fns';
 import ms from 'ms';
 import { SheetManager } from 'react-native-actions-sheet';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
-import { List } from 'react-native-paper';
 import { State } from 'react-native-track-player';
 import ViewShot from 'react-native-view-shot';
 
@@ -794,22 +793,28 @@ export function Summary({
                   {content && (
                     <View gap={ 6 } pb={ 12 }>
                       {translateToggle}
-                      <View gap={ -20 }>
+                      <View gap={ 12 } p={ 12 }>
                         {content.split('\n').map((content, i) => (                         
-                          <List.Item
+                          <View
                             key={ `${content}-${i}` }
-                            left={ (props) => format === 'bullets' ? <List.Icon { ...props } icon="circle" /> : undefined }
-                            style={ { padding:0 } }
-                            titleStyle={ { margin: 0, padding: 0 } }
-                            titleNumberOfLines={ 100 }
-                            title={ (
-                              <Highlighter 
-                                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                                numberOfLines={ 100 }
-                                searchWords={ isShareTarget ? [] : keywords }>
-                                { cleanString(content) }
-                              </Highlighter>
-                            ) } />
+                            itemsCenter
+                            gap={ 12 }
+                            flexRow>
+                            {format === 'bullets' && (
+                              <Icon
+                                name="circle"
+                                size={ 24 }
+                                flexRow
+                                flex={ 1 } />
+                            )}
+                            <Highlighter 
+                              flex={ format === 'bullets' ? 9 : 1 }
+                              flexRow
+                              highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                              searchWords={ isShareTarget ? [] : keywords }>
+                              { cleanString(content) }
+                            </Highlighter>
+                          </View>
                         ))}
                       </View>
                     </View>
