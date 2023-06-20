@@ -187,6 +187,9 @@ export function SettingsTable() {
           title={ 'Reset All Settings' }
           onPress={ () => {
             resetPreferences(); 
+          } }
+          onLongPress={ () => {
+            resetPreferences(true);
           } } />
       </TableViewSection>
     </TableView>

@@ -32,7 +32,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     setPreference,
   } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
-  const { openBrowse } = useNavigation();
+  const { navigate } = useNavigation();
   
   const bookmarks = React.useMemo(() => Object.entries({ ...bookmarkedSummaries }), [bookmarkedSummaries]);
   
@@ -68,7 +68,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               p={ 8 }
               m={ 8 }
               textCenter
-              onPress={ openBrowse }>
+              onPress={ () => navigate('browse') }>
               {strings.menu_browse}
             </Button>
           </View>

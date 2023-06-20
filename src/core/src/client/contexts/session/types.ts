@@ -84,7 +84,7 @@ export type SessionContextType = Preferences & {
   // state setters
   setPreference: <K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])) => Promise<void>;
   getPreference: <K extends keyof Preferences>(key: K) => Promise<Preferences[K] | undefined>;
-  resetPreferences: () => Promise<void>;
+  resetPreferences: (hard?: boolean) => Promise<void>;
   
   // convenience functions
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;

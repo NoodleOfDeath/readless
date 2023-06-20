@@ -57,8 +57,6 @@ export function PromoCodeWalkthrough(props: SheetProps) {
   return (
     <Walkthrough
       { ...props }
-      payload={ {
-        closable: true, onDone, steps, 
-      } } />
+      payload={ { onDone, steps } } />
   );
 }

@@ -16,8 +16,10 @@ export const getItem = async (name: string) => {
   return value;
 };
 
-export const removeAll = async () => {
+export const removeAll = async (hard = false) => {
   const keys = (await AsyncStorage.getAllKeys()).filter((k) => !/viewedFeatures/.test(k));
-  await AsyncStorage.setItem('viewedFeatures', JSON.stringify({ 'onboarding-walkthrough': true }));
+  if (!hard) {
+    await AsyncStorage.setItem('viewedFeatures', JSON.stringify({ 'onboarding-walkthrough': true }));
+  }
   await AsyncStorage.multiRemove(keys);
 };

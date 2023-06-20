@@ -3,9 +3,15 @@ import {
   Animated,
   Keyboard,
   SafeAreaView,
+  TextInput,
 } from 'react-native';
 
-import { Searchbar } from 'react-native-paper';
+import { Searchbar  } from 'react-native-paper';
+
+export type TextInputHandles = Pick<
+  TextInput,
+  'setNativeProps' | 'isFocused' | 'clear' | 'blur' | 'focus'
+>;
 
 import { 
   Button,
@@ -22,6 +28,7 @@ export type SearchMenuProps = ViewProps & {
   initialValue?: string;
   placeholder?: string;
   subview?: React.ReactNode;
+  inputRef?: React.RefObject<TextInputHandles>;
   onChangeText?: (value: string) => void;
   onClear?: () => void;
   onSubmit?: (value: string) => void;
@@ -31,6 +38,7 @@ export function SearchMenu({
   initialValue = '',
   placeholder = strings.search_title,
   children,
+  inputRef,
   onChangeText,
   onClear,
   onSubmit,
@@ -114,6 +122,7 @@ export function SearchMenu({
             bottom={ bottom }
             style={ style }>
             <Searchbar
+              ref={ inputRef }
               autoFocus
               elevation={ 2 }
               onBlur={ () => setFocused(false) }

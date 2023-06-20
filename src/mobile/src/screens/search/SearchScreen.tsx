@@ -10,7 +10,7 @@ import {
 import ms from 'ms';
 import useAppState from 'react-native-appstate-hook';
 
-import { SearchMenu } from './SearchMenu';
+import { SearchMenu, TextInputHandles } from './SearchMenu';
 import { WalkthroughStack } from './WalkthroughStack';
 
 import {
@@ -97,6 +97,8 @@ export function SearchScreen({
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   
   const [lastActive, setLastActive] = React.useState(Date.now());
+
+  const searchInputRef = React.useRef<TextInputHandles>(null);
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
@@ -203,7 +205,7 @@ export function SearchScreen({
         headerBackVisible: true,
         headerShown: true,
         headerTitle: () => (
-          <View row gap={ 6 }>
+          <View row gap={ 6 } onPress={ () => searchInputRef.current?.focus() }>
             <Icon name="magnify" size={ 24 } />
             <Text>{prefilter}</Text>
           </View>
@@ -229,7 +231,7 @@ export function SearchScreen({
         ),
       });
     }
-  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference]);
+  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference, searchInputRef]);
   
   const onMount = React.useCallback(() => {
     setPage(0);
@@ -551,6 +553,7 @@ export function SearchScreen({
         )}
         {summaries.length > 0 && (
           <SearchMenu
+            inputRef={ searchInputRef }
             initialValue={ prefilter ?? searchText }
             onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) } />
         )}

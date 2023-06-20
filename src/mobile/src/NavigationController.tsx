@@ -162,9 +162,10 @@ function Stack() {
 
   React.useEffect(() => {
     if (!('sharing-walkthrough' in { ...viewedFeatures })) {
-      const unsubscribe = addScreenshotListener(() => {
+      const unsubscribe = addScreenshotListener(async () => {
         if (!('sharing-walkthrough' in { ...viewedFeatures })) {
-          SheetManager.show('sharing-walkthrough');
+          SheetManager.hideAll();
+          setTimeout(() => SheetManager.show('sharing-walkthrough'), 1000);
         }
         return () => {
           unsubscribe();

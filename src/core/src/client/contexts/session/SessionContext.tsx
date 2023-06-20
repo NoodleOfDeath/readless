@@ -44,7 +44,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [sentimentEnabled, setSentimentEnabled] = React.useState<boolean>();
   const [triggerWords, setTriggerWords] = React.useState<{ [key: string]: string}>();
   
-  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>(OVERRIDDEN_INITIAL_PREFERENCES.loadedInitialUrl);
+  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
   const [searchHistory, setSearchHistory] = React.useState<string[]>();
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
@@ -294,7 +294,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setTriggerWords(await getPreference('triggerWords'));
     
     // app state
-    setLoadedInitialUrl(false);
+    setLoadedInitialUrl(OVERRIDDEN_INITIAL_PREFERENCES.loadedInitialUrl);
     setRotationLock(await getPreference('rotationLock'));
     setSearchHistory(await getPreference('searchHistory'));
     setShowOnlyCustomNews(await getPreference('showOnlyCustomNews'));
@@ -319,8 +319,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     load();
   }, []);
   
-  const resetPreferences = async () => {
-    await removeAll();
+  const resetPreferences = async (hard = false) => {
+    await removeAll(hard);
     load();
   };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { ListRenderItemInfo } from 'react-native';
 
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
+import Orientation from 'react-native-orientation-locker';
 
 import { 
   ActionSheet,
@@ -127,10 +128,18 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
       </View>
     );
   }, [theme]);
+
+  React.useEffect(() => {
+    Orientation.lockToPortrait();
+    return () => {
+      Orientation.unlockAllOrientations();
+    };
+  }, []);
   
   return (
     <ActionSheet 
       id={ props.sheetId }
+      closable={ closable }
       gestureEnabled={ false }>
       <View height="100%">
         {closable && (

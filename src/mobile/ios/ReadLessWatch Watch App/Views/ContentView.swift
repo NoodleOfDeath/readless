@@ -39,7 +39,7 @@ struct ContentView: View {
                     SummaryCard(summary: summary, compact: true)
                   }
               }.refreshable {
-                try? await self.service.fetch()
+                self.service.fetchSync()
               }
             }
           }

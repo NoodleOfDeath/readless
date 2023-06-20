@@ -41,11 +41,11 @@ export function GridPicker<
   const buttonProps = React.useMemo(() => {
     return (state: SelectOptionState<T>) => ({
       bg: state.selected ? theme.colors.selectedBackground : undefined,
-      color: state.selected ? theme.colors.invertText : undefined,
+      color: state.selected ? theme.colors.contrastText : undefined,
       underline: state.selected,
       ...(buttonProps0 instanceof Function ? buttonProps0(state) : buttonProps0),
     });
-  }, [buttonProps0, theme.colors.invertText, theme.colors.selectedBackground]);
+  }, [buttonProps0, theme.colors.contrastText, theme.colors.selectedBackground]);
 
   return (
     <Picker

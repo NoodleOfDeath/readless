@@ -39,7 +39,10 @@ export function Popover({
       <Menu
         anchor={ (
           <TouchableOpacity
-            onPress={ () => onPress?.() && !longPress && setVisible(true) }
+            onPress={ () => {
+              onPress?.();
+              longPress && setVisible(true); 
+            } }
             onLongPress={ () => longPress && setVisible(true) }>
             {anchor}
           </TouchableOpacity>
@@ -59,7 +62,10 @@ export function Popover({
       onRequestClose={ () => setVisible(false) }
       from={ (
         <TouchableOpacity
-          onPress={ () => onPress?.() && !longPress && setVisible(true) }
+          onPress={ () => {
+            onPress?.();
+            !longPress && setVisible(true);
+          } }
           onLongPress={ () => longPress && setVisible(true) }>
           {anchor}
         </TouchableOpacity>

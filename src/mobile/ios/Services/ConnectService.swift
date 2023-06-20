@@ -63,17 +63,4 @@ class ConnectService: ObservableObject {
       self.fetchHandler(data)
     }.resume()
   }
-
-  func fetch() async throws {
-    guard let url = URL(string: Endpoints.GetSummaries) else {
-      return
-    }
-    loading = true
-    error = nil
-    let (data, response) = try await URLSession.shared.data(for: URLRequest(url: url))
-    guard let httpResponse = response as? HTTPURLResponse, (200 ... 299).contains(httpResponse.statusCode) else {
-      throw URLError(.badServerResponse)
-    }
-    self.fetchHandler(data)
-  }
 }

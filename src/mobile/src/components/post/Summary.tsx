@@ -648,8 +648,8 @@ export function Summary({
             maxWidth={ initialFormat ? 200 : 128 }
             width={ initialFormat ? '40%' : '30%' }>
             <Popover
-              onPress={ () => !disableInteractions && handleFormatChange() }
-              longPress={ !initialFormat }
+              onPress={ () => !disableInteractions && !initialFormat && handleFormatChange() }
+              longPress
               anchor={ (
                 <View
                   top={ -6 }
