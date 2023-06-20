@@ -41,7 +41,7 @@ export function Popover({
           <TouchableOpacity
             onPress={ () => {
               onPress?.();
-              longPress && setVisible(true); 
+              !longPress && setVisible(true); 
             } }
             onLongPress={ () => longPress && setVisible(true) }>
             {anchor}

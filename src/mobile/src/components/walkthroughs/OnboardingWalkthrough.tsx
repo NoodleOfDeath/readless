@@ -84,7 +84,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Icon name="arrow-down-bold" size={ 48 } />
             <View elevated rounded p={ 12 }>
               <Text subtitle1 bold textCenter>
-                {'Neanderthal DNA linked to common hand condition (Dupuytren&apos; contracture)'}
+                {'"Neanderthal DNA linked to common hand condition (Dupuytren\'s contracture)"'}
               </Text>
             </View>
           </View>

@@ -391,7 +391,11 @@ export function SearchScreen({
   
   useAppState({ 
     onBackground: () => setLastActive(Date.now()),
-    onForeground: React.useCallback(() => Date.now() - lastActive.valueOf() > ms('10m') && load(0), [lastActive, load]),
+    onForeground: React.useCallback(() => {
+      if (Date.now() - lastActive.valueOf() > ms('10m')) {
+        load(0);
+      }
+    }, [lastActive, load]),
   });
 
   return (
@@ -553,7 +557,6 @@ export function SearchScreen({
         )}
         {summaries.length > 0 && (
           <SearchMenu
-            inputRef={ searchInputRef }
             initialValue={ prefilter ?? searchText }
             onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) } />
         )}

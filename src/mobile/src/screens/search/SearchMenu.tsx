@@ -10,7 +10,7 @@ import { Searchbar  } from 'react-native-paper';
 
 export type TextInputHandles = Pick<
   TextInput,
-  'setNativeProps' | 'isFocused' | 'clear' | 'blur' | 'focus'
+  'focus'
 >;
 
 import { 
@@ -28,7 +28,6 @@ export type SearchMenuProps = ViewProps & {
   initialValue?: string;
   placeholder?: string;
   subview?: React.ReactNode;
-  inputRef?: React.RefObject<TextInputHandles>;
   onChangeText?: (value: string) => void;
   onClear?: () => void;
   onSubmit?: (value: string) => void;
@@ -38,7 +37,6 @@ export function SearchMenu({
   initialValue = '',
   placeholder = strings.search_title,
   children,
-  inputRef,
   onChangeText,
   onClear,
   onSubmit,
@@ -62,7 +60,7 @@ export function SearchMenu({
   
   const top = React.useMemo(() => focused ? 32 : undefined, [focused]);
   const bottom = React.useMemo(() => focused ? undefined : 32, [focused]);
-  
+
   const submit = React.useCallback((text?: string) => {
     if (text) {
       setValue(text);
@@ -122,7 +120,6 @@ export function SearchMenu({
             bottom={ bottom }
             style={ style }>
             <Searchbar
-              ref={ inputRef }
               autoFocus
               elevation={ 2 }
               onBlur={ () => setFocused(false) }
