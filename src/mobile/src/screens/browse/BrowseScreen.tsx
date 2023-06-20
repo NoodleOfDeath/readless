@@ -110,8 +110,9 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
       <ScrollView>
         <View gap={ 12 }>
           <SegmentedButtons 
+            buttonProps={ { padding: 8 } }
             initialValue={ activeTab }
-            onValueChange={ setActiveTab }
+            onValueChange={ (value) => setActiveTab(value as number) }
             options={ buttons } />
           {activeTab === 0 && (
             <View col height='100%' mx={ 16 } gap={ 8 }>

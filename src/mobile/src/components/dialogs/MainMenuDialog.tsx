@@ -46,14 +46,6 @@ export function MainMenuDialog(props: SheetProps) {
       },
     },
     {
-      icon: 'map-legend',
-      label: strings.menu_walkthroughs,
-      onPress: async () => {
-        await SheetManager.hide(props.sheetId);
-        await SheetManager.show('onboarding-walkthrough'); 
-      },
-    },
-    {
       icon: 'information',
       label: strings.menu_about,
       onPress: async () => {

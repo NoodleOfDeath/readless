@@ -42,7 +42,7 @@ export function useTextStyles({
   textCenter,
   textLeft,
   textRight,
-  textAlign = textCenter ? 'center' : textLeft ? 'right' : textRight ? 'right' : undefined,
+  textAlign = textCenter ? 'center' : textLeft ? 'left' : textRight ? 'right' : undefined,
   
   // style and color
   bold,

@@ -17,7 +17,7 @@ export const getItem = async (name: string) => {
 };
 
 export const removeAll = async (hard = false) => {
-  const keys = (await AsyncStorage.getAllKeys()).filter((k) => !/viewedFeatures/.test(k));
+  const keys = (await AsyncStorage.getAllKeys()).filter((k) => !hard && !/viewedFeatures/.test(k) || hard);
   if (!hard) {
     await AsyncStorage.setItem('viewedFeatures', JSON.stringify({ 'onboarding-walkthrough': true }));
   }

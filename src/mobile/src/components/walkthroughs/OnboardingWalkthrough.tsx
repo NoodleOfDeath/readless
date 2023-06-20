@@ -31,7 +31,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => [
     {
       body: (
-        <View gap={ 12 } alignCenter>
+        <View gap={ 12 } itemsCenter>
           <View>
             <Image 
               rounded
@@ -58,7 +58,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 24 }>
-          <View>
+          <View bg="red">
             <Text h5 bold textLeft>
               {strings.walkthroughs_onboarding_minimizeBias}
             </Text>
@@ -73,7 +73,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             </Text>
           </View>
           <View
-            alignCenter
+            itemsCenter
             mx={ 32 }
             gap={ 12 }>
             <View elevated rounded p={ 12 }>
@@ -104,7 +104,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textLeft mr={ 64 }>
             {strings.walkthroughs_onboarding_withoughtNeedingAnAccount}
           </Markdown>
-          <View alignCenter gap={ 24 }>
+          <View itemsCenter gap={ 24 }>
             <View elevated rounded p={ 12 }>
               <Markdown h4 textCenter>
                 {strings.walkthroughs_onboarding_areYouReady}
