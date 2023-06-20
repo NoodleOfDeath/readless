@@ -58,7 +58,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 24 }>
-          <View bg="red">
+          <View>
             <Text h5 bold textLeft>
               {strings.walkthroughs_onboarding_minimizeBias}
             </Text>
