@@ -75,8 +75,8 @@ export function MediaContextProvider({ children }: Props) {
     Event.PlaybackState,
   ], async (event) => {
     if (event.type === Event.PlaybackState) {
-      const state = await TrackPlayer.getState();
-      const currentTrack = await TrackPlayer.getCurrentTrack() ?? undefined;
+      const { state } = await TrackPlayer.getPlaybackState();
+      const currentTrack = await TrackPlayer.getActiveTrackIndex() ?? undefined;
       const track = currentTrack != null ? tracks[currentTrack] : undefined;
       if (state) {
         setTrackState(state);
@@ -110,9 +110,7 @@ export function MediaContextProvider({ children }: Props) {
       }
       setVoices(availableVoices);
       const defaultVoice = selectedVoice ?? voices?.find((v) => /aaron/i.test(v.name));
-      if (defaultVoice) {
-        await Tts.setDefaultVoice(defaultVoice.id);
-      }
+      await Tts.setDefaultVoice(defaultVoice?.id ?? availableVoices[0].id);
     }
   }, [speechPitch, speechRate, selectedVoice]);
 
