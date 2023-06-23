@@ -176,6 +176,7 @@ export const skStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Prečítajte si Menej použitia\nVeľké jazykové modely na...',
   walkthroughs_onboarding_reduceClickbait: 'znížiť clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'uchovávané **oddelene od sociálnych médií** a iných rušivých prvkov',
+  walkthroughs_onboarding_subscribe: 'Ak ste nás našli prostredníctvom našich marketingových reklám a máte záujem prihlásiť sa na odber, uvedenie funkcie môžete očakávať v najbližších týždňoch. Zostaňte naladení!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'a to všetko **bez potreby vytvorenia účtu**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Áno, začnime!',
   walkthroughs_promoCodeDescription: 'Uložte si tento promo kód, keď budú predplatné spustené! Len **prvých 500** uplatnení získa **3 mesiace ZDARMA** členstva Boost',

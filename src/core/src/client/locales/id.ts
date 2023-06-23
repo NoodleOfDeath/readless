@@ -176,6 +176,7 @@ export const idStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Baca Lebih Sedikit Penggunaan\nModel Bahasa Besar untuk...',
   walkthroughs_onboarding_reduceClickbait: 'kurangi clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'disimpan **terpisah dari media sosial** dan gangguan lainnya',
+  walkthroughs_onboarding_subscribe: 'Jika Anda menemukan kami melalui iklan pemasaran kami dan tertarik untuk berlangganan, Anda dapat mengharapkan fitur tersebut diluncurkan dalam beberapa minggu ke depan. Jadi tunggu saja!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'dan semuanya **bahkan tanpa perlu membuat akun**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Ya, mari kita mulai!',
   walkthroughs_promoCodeDescription: 'Simpan kode promo ini saat langganan diluncurkan! Hanya penukaran **500** pertama yang akan mendapatkan **3 bulan GRATIS** keanggotaan Boost',

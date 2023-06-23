@@ -176,6 +176,7 @@ export const viStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Đọc Ít sử dụng hơn\nCác mô hình ngôn ngữ lớn để...',
   walkthroughs_onboarding_reduceClickbait: 'giảm clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'giữ **tách biệt khỏi phương tiện truyền thông xã hội** và các phiền nhiễu khác',
+  walkthroughs_onboarding_subscribe: 'Nếu bạn tìm thấy chúng tôi thông qua các quảng cáo tiếp thị của chúng tôi và quan tâm đến việc đăng ký, bạn có thể mong đợi tính năng này sẽ ra mắt trong vài tuần tới. Vậy nên hãy chờ trong giây lát!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'và tất cả ** mà không cần tạo tài khoản **',
   walkthroughs_onboarding_yesLetsGetStarted: 'Vâng, chúng ta hãy bắt đầu!',
   walkthroughs_promoCodeDescription: 'Lưu mã khuyến mãi này khi triển khai đăng ký! Chỉ **500 lần đổi đầu tiên** mới nhận được **3 tháng MIỄN PHÍ** tư cách thành viên Boost',

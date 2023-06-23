@@ -176,6 +176,7 @@ export const frStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Lire moins d\'utilisations\nGrands modèles de langage pour...',
   walkthroughs_onboarding_reduceClickbait: 'réduire le clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'tenu **séparé des réseaux sociaux** et autres distractions',
+  walkthroughs_onboarding_subscribe: 'Si vous nous avez trouvés grâce à nos publicités marketing et que vous souhaitez vous abonner, vous pouvez vous attendre à ce que la fonctionnalité soit déployée dans les prochaines semaines. Alors restez à l\'écoute!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'et tout **sans même avoir besoin de créer un compte**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Oui, commençons !',
   walkthroughs_promoCodeDescription: 'Conservez ce code promotionnel pour le lancement des abonnements ! Seuls les **500 premiers** échanges bénéficieront de **3 mois GRATUITS** d\'abonnement Boost',

@@ -176,6 +176,7 @@ export const thStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'อ่านการใช้งานน้อยลง\nโมเดลภาษาขนาดใหญ่เพื่อ...',
   walkthroughs_onboarding_reduceClickbait: 'ลดคลิกเบต...',
   walkthroughs_onboarding_separateFromSocialMedia: 'เก็บ **แยกจากสื่อสังคมออนไลน์** และสิ่งรบกวนอื่นๆ',
+  walkthroughs_onboarding_subscribe: 'หากคุณพบเราผ่านโฆษณาการตลาดของเราและสนใจที่จะสมัครรับข้อมูล คุณสามารถคาดหวังว่าคุณลักษณะนี้จะเปิดตัวในอีกไม่กี่สัปดาห์ข้างหน้า คอยติดตาม!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'และทั้งหมด **โดยไม่จำเป็นต้องสร้างบัญชีด้วยซ้ำ**',
   walkthroughs_onboarding_yesLetsGetStarted: 'ใช่ มาเริ่มกันเลย!',
   walkthroughs_promoCodeDescription: 'บันทึกรหัสโปรโมชันนี้ไว้ใช้เมื่อเริ่มสมัครรับข้อมูล! เฉพาะการแลกรางวัล **500 ครั้งแรก** จะได้รับ **3 เดือนฟรี** ของการเป็นสมาชิก Boost',

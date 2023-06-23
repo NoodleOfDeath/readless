@@ -176,6 +176,7 @@ export const msStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Baca Kurang kegunaan\nModel Bahasa Besar untuk...',
   walkthroughs_onboarding_reduceClickbait: 'kurangkan clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'disimpan **diasingkan daripada media sosial** dan gangguan lain',
+  walkthroughs_onboarding_subscribe: 'Jika anda menemui kami melalui iklan pemasaran kami dan berminat untuk melanggan, anda boleh menjangkakan ciri ini akan dilancarkan dalam beberapa minggu akan datang. Jadi nantikan!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'dan semua **tanpa perlu membuat akaun**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Ya, mari kita mulakan!',
   walkthroughs_promoCodeDescription: 'Simpan kod promosi ini apabila langganan dilancarkan! Hanya penebusan **500** pertama akan mendapat **3 bulan PERCUMA** keahlian Boost',

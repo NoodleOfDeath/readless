@@ -176,6 +176,7 @@ export const jaStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: '読む回数を減らして使用する\n大規模な言語モデルを使用して...',
   walkthroughs_onboarding_reduceClickbait: 'クリックベイトを減らす...',
   walkthroughs_onboarding_separateFromSocialMedia: '**ソーシャルメディア**やその他の気を散らすものから隔離してください',
+  walkthroughs_onboarding_subscribe: 'マーケティング広告を通じて当社を見つけ、購読に興味がある場合は、今後数週間以内にこの機能が展開されることを期待してください。乞うご期待！',
   walkthroughs_onboarding_withoughtNeedingAnAccount: '**アカウントを作成する必要さえなく**',
   walkthroughs_onboarding_yesLetsGetStarted: 'はい、始めましょう!',
   walkthroughs_promoCodeDescription: 'サブスクリプションが展開されるときのために、このプロモーション コードを保存してください。 **最初の 500** の引き換えのみに、**3 か月間無料**の Boost メンバーシップが付与されます',

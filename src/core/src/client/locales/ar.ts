@@ -176,6 +176,7 @@ export const arStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'اقرأ أقل الاستخدامات\nنماذج اللغات الكبيرة ...',
   walkthroughs_onboarding_reduceClickbait: 'تقليل اصطياد النقرات ...',
   walkthroughs_onboarding_separateFromSocialMedia: '** منفصلة عن وسائل التواصل الاجتماعي ** وغيرها من عوامل التشتيت',
+  walkthroughs_onboarding_subscribe: 'إذا عثرت علينا من خلال إعلاناتنا التسويقية وكنت مهتمًا بالاشتراك ، فيمكنك توقع طرح الميزة في الأسابيع القليلة المقبلة. ابقي على اتصال!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'وكل شيء ** دون الحاجة إلى إنشاء حساب **',
   walkthroughs_onboarding_yesLetsGetStarted: 'نعم ، لنبدأ!',
   walkthroughs_promoCodeDescription: 'احفظ هذا الرمز الترويجي عندما يتم طرح الاشتراكات! فقط ** أول 500 ** استرداد ستحصل على ** 3 أشهر مجانًا ** من عضوية Boost',

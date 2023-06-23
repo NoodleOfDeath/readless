@@ -176,6 +176,7 @@ export const ruStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Читать меньше использует\nБольшие языковые модели для...',
   walkthroughs_onboarding_reduceClickbait: 'уменьшить кликбейт...',
   walkthroughs_onboarding_separateFromSocialMedia: 'хранится **отдельно от социальных сетей** и других отвлекающих факторов',
+  walkthroughs_onboarding_subscribe: 'Если вы нашли нас через нашу маркетинговую рекламу и заинтересованы в подписке, вы можете ожидать, что эта функция будет запущена в ближайшие несколько недель. Так что следите за обновлениями!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'и все **даже не нужно создавать учетную запись**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Да, приступим!',
   walkthroughs_promoCodeDescription: 'Сохраните этот промокод, когда появятся подписки! Только **первые 500** погашений получат **3 месяца БЕСПЛАТНОЙ** подписки Boost.',

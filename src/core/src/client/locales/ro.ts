@@ -176,6 +176,7 @@ export const roStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Citiți mai puțin utilizări\nModele lingvistice mari pentru...',
   walkthroughs_onboarding_reduceClickbait: 'reduce clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'menținut **separat de rețelele sociale** și alte distrageri',
+  walkthroughs_onboarding_subscribe: 'Dacă ne-ați găsit prin anunțurile noastre de marketing și sunteți interesat să vă abonați, vă puteți aștepta ca funcția să fie lansată în următoarele câteva săptămâni. Așa că rămâneți pe fază!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'și toate **fără a fi nevoie să creați măcar un cont**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Da, să începem!',
   walkthroughs_promoCodeDescription: 'Păstrați acest cod promoțional pentru când se lansează abonamentele! Doar **primele 500** de răscumpărări vor primi **3 luni GRATUIT** de membru Boost',

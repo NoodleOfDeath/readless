@@ -32,9 +32,6 @@ export type StackableTabParams = {
   browse: undefined;
   channel: Channel;
   default: undefined;
-  generic: Partial<NativeStackNavigationOptions> & {
-    component: React.ReactNode;
-  }
   search: {
     prefilter?: string,
     onlyCustomNews?: boolean;
@@ -62,7 +59,6 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {
       browse: { path: 'browse' },
       channel: { path: 'channel' },
       default: { path: '' },
-      generic: { path: '' },
       search: { path: 'search' },
       settings: { path: 'settings' },
       summary: { path: 'summary' },

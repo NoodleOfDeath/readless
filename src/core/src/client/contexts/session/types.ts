@@ -27,11 +27,15 @@ export class Bookmark<T> {
 
 export type ColorScheme = 'light' | 'dark' | 'system';
 
-export type OrientationType = 
-  | 'PORTRAIT' 
-  | 'PORTRAIT-UPSIDEDOWN' 
-  | 'LANDSCAPE-LEFT'
-  | 'LANDSCAPE-RIGHT';
+export enum OrientationType {
+  'PORTRAIT' = 'PORTRAIT',
+  'PORTRAIT-UPSIDEDOWN' = 'PORTRAIT-UPSIDEDOWN',
+  'LANDSCAPE-LEFT' = 'LANDSCAPE-LEFT',
+  'LANDSCAPE-RIGHT' = 'LANDSCAPE-RIGHT',
+  'FACE-UP' = 'FACE-UP',
+  'FACE-DOWN' = 'FACE-DOWN',
+  'UNKNOWN' = 'UNKNOWN',
+}
   
 export type Preferences = {
   // system settings

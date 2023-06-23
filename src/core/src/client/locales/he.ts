@@ -176,6 +176,7 @@ export const heStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'קרא פחות שימושים\nדגמי שפה גדולים ל...',
   walkthroughs_onboarding_reduceClickbait: 'להפחית קליקבייט...',
   walkthroughs_onboarding_separateFromSocialMedia: 'נשמר **מופרד ממדיה חברתית** ומסחות דעת אחרות',
+  walkthroughs_onboarding_subscribe: 'אם מצאת אותנו דרך המודעות השיווקיות שלנו ואתה מעוניין להירשם, אתה יכול לצפות שהתכונה תושק במהלך השבועות הקרובים. אז הישארו מעודכנים!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'והכל **בלי צורך אפילו ליצור חשבון**',
   walkthroughs_onboarding_yesLetsGetStarted: 'כן, בואו נתחיל!',
   walkthroughs_promoCodeDescription: 'שמור את קוד ההטבה הזה לזמן יציאת המנויים! רק **500** המימושים הראשונים יקבלו **3 חודשים בחינם** של חברות ב-Boost',

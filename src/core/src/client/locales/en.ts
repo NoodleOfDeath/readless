@@ -202,6 +202,7 @@ export const enStrings = {
   walkthroughs_onboarding_readlessUses: 'Read Less uses\nLarge Language Models to...',
   walkthroughs_onboarding_reduceClickbait: 'reduce clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'kept **separate from social media** and other distractions',
+  walkthroughs_onboarding_subscribe: 'If you found us through our marketing ads and are interested in subscribing, you can expect the feature to rollout in the next few weeks. So stay tuned!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'and all **without needing to even create an account**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Yes, let\'s get started!',
   

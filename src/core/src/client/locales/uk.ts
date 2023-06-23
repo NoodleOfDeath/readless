@@ -176,6 +176,7 @@ export const ukStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Read Less використовує\nВеликі мовні моделі для...',
   walkthroughs_onboarding_reduceClickbait: 'зменшити клікбейт...',
   walkthroughs_onboarding_separateFromSocialMedia: 'зберігається **окремо від соціальних мереж** та інших відволікаючих факторів',
+  walkthroughs_onboarding_subscribe: 'Якщо ви знайшли нас через нашу маркетингову рекламу та зацікавлені в підписці, ви можете очікувати, що ця функція стане доступною протягом наступних кількох тижнів. Тож слідкуйте за оновленнями!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'і все **навіть без необхідності створювати обліковий запис**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Так, почнемо!',
   walkthroughs_promoCodeDescription: 'Збережіть цей промокод, коли підписка стане доступною! Лише **перші 500** активацій отримають **3 місяці БЕЗКОШТОВНО** членства Boost',

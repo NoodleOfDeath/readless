@@ -176,6 +176,7 @@ export const trStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Daha az kullanım oku\nGeniş Dil Modelleri...',
   walkthroughs_onboarding_reduceClickbait: 'tıklama tuzağını azalt...',
   walkthroughs_onboarding_separateFromSocialMedia: '**sosyal medyadan** ve diğer dikkat dağıtıcı unsurlardan ayrı tutulur',
+  walkthroughs_onboarding_subscribe: 'Bizi pazarlama reklamlarımız aracılığıyla bulduysanız ve abone olmakla ilgileniyorsanız, özelliğin önümüzdeki birkaç hafta içinde kullanıma sunulmasını bekleyebilirsiniz. Bizi izlemeye devam edin!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 've hepsi **hesap oluşturmaya bile gerek kalmadan**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Evet, başlayalım!',
   walkthroughs_promoCodeDescription: 'Abonelikler kullanıma sunulduğunda kullanmak üzere bu promosyon kodunu kaydedin! Yalnızca **ilk 500** kullanım **3 ay ÜCRETSİZ** Boost üyeliği alacak',

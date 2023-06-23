@@ -176,6 +176,7 @@ export const zhCNStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: '少读用途\n大型语言模型...',
   walkthroughs_onboarding_reduceClickbait: '减少点击诱饵...',
   walkthroughs_onboarding_separateFromSocialMedia: '保持**与社交媒体**和其他干扰分开',
+  walkthroughs_onboarding_subscribe: '如果您通过我们的营销广告找到了我们并且有兴趣订阅，那么该功能将在未来几周内推出。所以敬请期待！',
   walkthroughs_onboarding_withoughtNeedingAnAccount: '和所有**甚至不需要创建帐户**',
   walkthroughs_onboarding_yesLetsGetStarted: '是的，让我们开始吧！',
   walkthroughs_promoCodeDescription: '订阅推出时保存此促销代码！只有**前 500 名**兑换者才能获得**3 个月免费**的 Boost 会员资格',

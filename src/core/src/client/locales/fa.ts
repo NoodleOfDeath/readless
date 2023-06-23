@@ -176,6 +176,7 @@ export const faStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'استفاده کمتر بخوانید\nمدل های زبان بزرگ برای ...',
   walkthroughs_onboarding_reduceClickbait: 'کاهش طعمه کلیکی...',
   walkthroughs_onboarding_separateFromSocialMedia: '** جدا از رسانه های اجتماعی ** و سایر عوامل حواس پرتی نگه داشته شود',
+  walkthroughs_onboarding_subscribe: 'اگر ما را از طریق تبلیغات بازاریابی ما پیدا کردید و علاقه مند به مشترک شدن هستید، می توانید انتظار داشته باشید که این ویژگی در چند هفته آینده عرضه شود. پس با ما همراه باشید!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'و همه **بدون نیاز به ایجاد حساب**',
   walkthroughs_onboarding_yesLetsGetStarted: 'بله، بیایید شروع کنیم!',
   walkthroughs_promoCodeDescription: 'این کد تبلیغاتی را برای زمانی که اشتراک‌ها تکمیل می‌شوند ذخیره کنید! فقط **500** اول بازخرید **3 ماه عضویت Boost رایگان** دریافت می‌کند.',

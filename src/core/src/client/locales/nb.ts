@@ -176,6 +176,7 @@ export const nbStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Les mindre bruk\nStore språkmodeller til...',
   walkthroughs_onboarding_reduceClickbait: 'reduser clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'holdes **atskilt fra sosiale medier** og andre distraksjoner',
+  walkthroughs_onboarding_subscribe: 'Hvis du fant oss gjennom markedsføringsannonsene våre og er interessert i å abonnere, kan du forvente at funksjonen lanseres i løpet av de neste ukene. Så følg med!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'og alt **uten å måtte opprette en konto i det hele tatt**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Ja, la oss komme i gang!',
   walkthroughs_promoCodeDescription: 'Lagre denne kampanjekoden for når abonnementene ruller ut! Bare de **første 500** innløsningene vil få **3 måneder GRATIS** med Boost-medlemskap',

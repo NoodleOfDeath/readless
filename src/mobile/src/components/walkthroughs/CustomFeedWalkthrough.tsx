@@ -39,7 +39,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textCenter>
             {strings.walkthroughs_customFeed_letsStart}
           </Markdown>
-          <CategoryPicker height={ 200 } />
+          <CategoryPicker height={ 500 } />
         </View>
       ),
       title: strings.walkthroughs_customFeed_addCategories,
@@ -50,7 +50,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textCenter>
             {strings.walkthroughs_customFeed_readlessPulls}
           </Markdown>
-          <OutletPicker height={ 200 } />
+          <OutletPicker height={ 500 } />
         </View>
       ),
       title: strings.walkthroughs_customFeed_addNewsSources,
@@ -111,6 +111,8 @@ export function CustomFeedWalkthrough(props: SheetProps) {
   return (
     <Walkthrough
       { ...props }
-      payload={ { onDone, steps } } />
+      payload={ {
+        closable: true, onDone, steps, 
+      } } />
   );
 }

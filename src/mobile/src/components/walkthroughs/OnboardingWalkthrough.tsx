@@ -56,8 +56,27 @@ export function OnboardingWalkthrough(props: SheetProps) {
       title: strings.walkthroughs_onboarding_newsShouldBeAccessible,
     },
     {
+      artwork: (
+        <View
+          mt={ 24 }
+          itemsCenter
+          mx={ 32 }
+          gap={ 12 }>
+          <View elevated rounded p={ 12 }>
+            <Text subtitle1 bold textCenter>
+              {'"Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!"'}
+            </Text>
+          </View>
+          <Icon name="arrow-down-bold" size={ 48 } />
+          <View elevated rounded p={ 12 }>
+            <Text subtitle1 bold textCenter>
+              {'"Neanderthal DNA linked to common hand condition (Dupuytren\'s contracture)"'}
+            </Text>
+          </View>
+        </View>
+      ),
       body: (
-        <View gap={ 24 }>
+        <View gap={ 48 }>
           <View>
             <Text h5 bold textLeft>
               {strings.walkthroughs_onboarding_minimizeBias}
@@ -71,22 +90,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Text subtitle1 textCenter>
               {strings.walkthroughs_onboarding_fromNewsHeadlines}
             </Text>
-          </View>
-          <View
-            itemsCenter
-            mx={ 32 }
-            gap={ 12 }>
-            <View elevated rounded p={ 12 }>
-              <Text subtitle1 bold textCenter>
-                {'"Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!"'}
-              </Text>
-            </View>
-            <Icon name="arrow-down-bold" size={ 48 } />
-            <View elevated rounded p={ 12 }>
-              <Text subtitle1 bold textCenter>
-                {'"Neanderthal DNA linked to common hand condition (Dupuytren\'s contracture)"'}
-              </Text>
-            </View>
           </View>
         </View>
       ),
@@ -104,24 +107,28 @@ export function OnboardingWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textLeft mr={ 64 }>
             {strings.walkthroughs_onboarding_withoughtNeedingAnAccount}
           </Markdown>
-          <View itemsCenter gap={ 24 }>
-            <View elevated rounded p={ 12 }>
-              <Markdown h4 textCenter>
-                {strings.walkthroughs_onboarding_areYouReady}
-              </Markdown>
-            </View>
-            <Button
-              h4
-              elevated
-              rounded
-              p={ 6 }
-              onPress={ onDone }>
-              {strings.walkthroughs_onboarding_yesLetsGetStarted}
-            </Button>
-          </View>
         </View>
       ),
       title: strings.walkthroughs_onboarding_madeWithYouInMind,
+    },
+    {
+      body: (
+        <View itemsCenter gap={ 24 }>
+          <Button
+            h4
+            elevated
+            rounded
+            p={ 6 }
+            onPress={ onDone }>
+            {strings.walkthroughs_onboarding_yesLetsGetStarted}
+          </Button>
+          <Divider />
+          <Text subtitle1 textCenter>
+            {strings.walkthroughs_onboarding_subscribe}
+          </Text>
+        </View>
+      ),
+      title: strings.walkthroughs_onboarding_areYouReady,
     },
   ], [onDone]);
   

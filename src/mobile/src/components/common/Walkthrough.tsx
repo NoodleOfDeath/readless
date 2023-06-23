@@ -13,10 +13,12 @@ import {
   View,
   WalkthroughSlider,
 } from '~/components';
+import { LayoutContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export type WalkthroughStep = {
+  artwork?: React.ReactNode;
   title?: React.ReactNode;
   body?: React.ReactNode;
   footer?: React.ReactNode;
@@ -33,6 +35,7 @@ export type WalkthroughProps<Step extends WalkthroughStep = WalkthroughStep> = {
 export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ payload, ...props }: SheetProps<WalkthroughProps<Step>>) {
   
   const theme = useTheme();
+  const { isTablet } = React.useContext(LayoutContext);
 
   const { 
     steps = [], 
@@ -44,6 +47,8 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   const computedSteps = React.useMemo(() => {
     return steps.map((step, i) => (
       <View gap={ 12 } key={ i }>
+        {typeof step.artwork === 'string' ? <Markdown subtitle1>{step.artwork}</Markdown> : step.artwork}
+        <View col />
         {typeof step.title === 'string' ? <Markdown h4 bold textCenter highlightStyle={ { textDecorationLine: 'underline' } }>{step.title}</Markdown> : step.title}
         <View col />
         {typeof step.body === 'string' ? <Markdown subtitle1>{step.body}</Markdown> : step.body}
@@ -58,7 +63,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
       <View 
         flexGrow={ 1 }
         p={ 32 }
-        justifyStart>
+        justifyCenter>
         {item}
       </View>
     );
@@ -130,11 +135,14 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   }, [theme]);
 
   React.useEffect(() => {
+    if (isTablet) {
+      return;
+    }
     Orientation.lockToPortrait();
     return () => {
       Orientation.unlockAllOrientations();
     };
-  }, []);
+  }, [isTablet]);
   
   return (
     <ActionSheet 

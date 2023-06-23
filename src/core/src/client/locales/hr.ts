@@ -176,6 +176,7 @@ export const hrStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Read Less koristi\nVeliki jezični modeli za...',
   walkthroughs_onboarding_reduceClickbait: 'smanji mamac za klikove...',
   walkthroughs_onboarding_separateFromSocialMedia: 'držati **odvojeno od društvenih medija** i drugih smetnji',
+  walkthroughs_onboarding_subscribe: 'Ako ste nas pronašli putem naših marketinških oglasa i zainteresirani ste za pretplatu, možete očekivati da će značajka biti uvedena u sljedećih nekoliko tjedana. Stoga ostanite s nama!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'i sve to **bez potrebe za stvaranjem računa**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Da, počnimo!',
   walkthroughs_promoCodeDescription: 'Sačuvajte ovaj promotivni kod kada se pretplate pokrenu! Samo **prvih 500** otkupa dobit će **3 mjeseca BESPLATNO** Boost članstva',

@@ -176,6 +176,7 @@ export const koStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: '덜 읽기 사용\n대규모 언어 모델을...',
   walkthroughs_onboarding_reduceClickbait: '클릭베이트 줄이기...',
   walkthroughs_onboarding_separateFromSocialMedia: '**소셜 미디어** 및 기타 산만함과 분리하여 보관',
+  walkthroughs_onboarding_subscribe: '마케팅 광고를 통해 우리를 찾았고 구독에 관심이 있다면 앞으로 몇 주 안에 기능이 출시될 것으로 예상할 수 있습니다. 계속 지켜봐주세요!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: '그리고 **계정을 생성할 필요 없이**',
   walkthroughs_onboarding_yesLetsGetStarted: '예, 시작하겠습니다!',
   walkthroughs_promoCodeDescription: '구독이 출시될 때를 위해 이 프로모션 코드를 저장하세요! **선착순 500**명에게만 **3개월 무료** 부스트 멤버십이 제공됩니다.',

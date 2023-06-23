@@ -16,8 +16,8 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.walkthroughs_appearance_stackTitle}</Text>
-        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
+        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_appearance_stackTitle}</Text>
+        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'appearance-walkthrough',
@@ -28,8 +28,8 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.walkthroughs_customFeed_stackTitle}</Text>
-        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
+        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_customFeed_stackTitle}</Text>
+        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'custom-feed-walkthrough',
@@ -40,8 +40,8 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.walkthroughs_sentiment_whatIsSentimentAnalysis}</Text>
-        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
+        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_sentiment_whatIsSentimentAnalysis}</Text>
+        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'sentiment-walkthrough',
@@ -52,8 +52,8 @@ export const FEATURES: Feature[] = [
   {
     content: (
       <React.Fragment>
-        <Text h6>{strings.walkthroughs_triggerWords}</Text>
-        <Text bold underline color="link">{strings.action_tapToLearnMoreAndEnable}</Text>
+        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_triggerWords}</Text>
+        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
       </React.Fragment>
     ),
     id: 'trigger-words-walkthrough',

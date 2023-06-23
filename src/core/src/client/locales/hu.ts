@@ -176,6 +176,7 @@ export const huStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Olvassa el a Kevesebb felhasználást\nNagy nyelvű modellek a...',
   walkthroughs_onboarding_reduceClickbait: 'a kattintáscsali csökkentése...',
   walkthroughs_onboarding_separateFromSocialMedia: '**elkülönítve a közösségi médiától** és más zavaró tényezőktől',
+  walkthroughs_onboarding_subscribe: 'Ha marketinghirdetéseinken keresztül talált ránk, és szeretne előfizetni, a funkció a következő hetekben várható. Szóval maradj velünk!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'és mindezt **anélkül, hogy fiókot kellene létrehozni**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Igen, kezdjük!',
   walkthroughs_promoCodeDescription: 'Mentse el ezt a promóciós kódot az előfizetések megjelenéséhez! Csak az **első 500** beváltás esetén jár **3 hónap INGYENES** Boost-tagság',

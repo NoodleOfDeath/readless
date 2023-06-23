@@ -176,6 +176,7 @@ export const caStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Llegir menys usos\nGrans models lingüístics per...',
   walkthroughs_onboarding_reduceClickbait: 'reduir el clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: '**separat de les xarxes socials** i altres distraccions',
+  walkthroughs_onboarding_subscribe: 'Si ens heu trobat a través dels nostres anuncis de màrqueting i esteu interessats a subscriure-us, podeu esperar que la funció es desplegarà en les properes setmanes. Així que estigueu atents!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'i tot **sense necessitat ni tan sols de crear un compte**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Sí, comencem!',
   walkthroughs_promoCodeDescription: 'Desa aquest codi promocional per quan s\'iniciïn les subscripcions! Només els **primers 500** bescanvis tindran **3 mesos GRATIS** de subscripció a Boost',

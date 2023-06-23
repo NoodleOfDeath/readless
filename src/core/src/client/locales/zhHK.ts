@@ -176,6 +176,7 @@ export const zhHKStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: '少讀用途\n大型語言模型...',
   walkthroughs_onboarding_reduceClickbait: '減少點擊誘餌...',
   walkthroughs_onboarding_separateFromSocialMedia: '保持**與社交媒體**和其他干擾分開',
+  walkthroughs_onboarding_subscribe: '如果您通過我們的營銷廣告找到了我們並且有興趣訂閱，那麼該功能將在未來幾週內推出。所以敬請期待！',
   walkthroughs_onboarding_withoughtNeedingAnAccount: '和所有**甚至不需要創建帳戶**',
   walkthroughs_onboarding_yesLetsGetStarted: '是的，讓我們開始吧！',
   walkthroughs_promoCodeDescription: '訂閱推出時保存此促銷代碼！只有**前 500 名**兌換者才能獲得**3 個月免費**的 Boost 會員資格',

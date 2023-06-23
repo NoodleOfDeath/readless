@@ -176,6 +176,7 @@ export const nlStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Lees Minder gebruikt\nGrote taalmodellen om...',
   walkthroughs_onboarding_reduceClickbait: 'minder clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: '**gescheiden gehouden van sociale media** en andere afleidingen',
+  walkthroughs_onboarding_subscribe: 'Als u ons via onze marketingadvertenties heeft gevonden en geïnteresseerd bent om u te abonneren, kunt u de uitrol van de functie in de komende weken verwachten. Dus blijf op de hoogte!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'en allemaal **zonder dat je zelfs maar een account hoeft aan te maken**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Ja, laten we beginnen!',
   walkthroughs_promoCodeDescription: 'Bewaar deze promotiecode voor wanneer abonnementen uitrollen! Alleen de **eerste 500** verzilveringen krijgen **3 maanden GRATIS** Boost-lidmaatschap',

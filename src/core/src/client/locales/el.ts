@@ -176,6 +176,7 @@ export const elStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Διαβάστε λιγότερες χρήσεις\nΜεγάλα μοντέλα γλώσσας για...',
   walkthroughs_onboarding_reduceClickbait: 'μειώστε το clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'διατηρούνται **χωριστά από τα μέσα κοινωνικής δικτύωσης** και άλλα περισπασμούς',
+  walkthroughs_onboarding_subscribe: 'Αν μας βρήκατε μέσω των διαφημίσεων μάρκετινγκ και σας ενδιαφέρει να εγγραφείτε, μπορείτε να περιμένετε να κυκλοφορήσει η λειτουργία τις επόμενες εβδομάδες. Μείνετε συντονισμένοι λοιπόν!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'και όλα **χωρίς να χρειάζεται καν να δημιουργήσετε λογαριασμό**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Ναι, ας ξεκινήσουμε!',
   walkthroughs_promoCodeDescription: 'Αποθηκεύστε αυτόν τον κωδικό προσφοράς για την έναρξη των συνδρομών! Μόνο οι **πρώτες 500** εξαργυρώσεις θα λάβουν **3 μήνες ΔΩΡΕΑΝ** συνδρομής Boost',

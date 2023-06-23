@@ -176,6 +176,7 @@ export const svStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Läs Mindre användningsområden\nStora språkmodeller för att...',
   walkthroughs_onboarding_reduceClickbait: 'minska clickbait...',
   walkthroughs_onboarding_separateFromSocialMedia: 'hålls **avskild från sociala medier** och andra distraktioner',
+  walkthroughs_onboarding_subscribe: 'Om du hittade oss genom våra marknadsföringsannonser och är intresserad av att prenumerera kan du förvänta dig att funktionen kommer att lanseras under de närmaste veckorna. Så håll utkik!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'och allt **utan att ens behöva skapa ett konto**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Ja, låt oss börja!',
   walkthroughs_promoCodeDescription: 'Spara denna kampanjkod för när prenumerationer rullar ut! Endast de **första 500** inlösen kommer att få **3 månader GRATIS** av Boost-medlemskap',

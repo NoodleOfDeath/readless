@@ -7697,11 +7697,6 @@ react-native-actions-sheet@^0.8.29:
   resolved "https://registry.yarnpkg.com/react-native-actions-sheet/-/react-native-actions-sheet-0.8.29.tgz#a2913b04a23ff1d1a1b4a38e5f66c6738dabeaf2"
   integrity sha512-5ybScHjE1abdJD+w3rHaxCD4ldKouagl6NdoE/oyxLtDzoVP6dSnO/VlMjWqn52xbfQXyElwpPA8Ur2ujWEGdQ==
 
-react-native-appstate-hook@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-appstate-hook/-/react-native-appstate-hook-1.0.6.tgz#cbc16e7b89cfaea034cabd999f00e99053cabd06"
-  integrity sha512-0hPVyf5yLxCSVrrNEuGqN1ZnSSj3Ye2gZex0NtcK/AHYwMc0rXWFNZjBKOoZSouspqu3hXBbQ6NOUSTzrME1AQ==
-
 react-native-chart-kit@^6.12.0:
   version "6.12.0"
   resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.12.0.tgz#187a4987a668a85b7e93588c248ed2c33b3a06f6"

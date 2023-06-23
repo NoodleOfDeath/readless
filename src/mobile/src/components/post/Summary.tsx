@@ -212,9 +212,11 @@ export function Summary({
 
   const [lastTick, setLastTick] = React.useState(new Date());
   const [isShareTarget, setIsShareTarget] = React.useState(summary.id === shareTarget?.id);
+  const [isBookmarked, setIsBookmarked] = React.useState(Boolean(bookmarkedSummaries?.[summary.id]));
   const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+  const [isSourceRead, setIsSourceRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
   const [isSiblingRead, setIsSiblingRead] = React.useState(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
-  const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+  const [isPlayingAudio, setIsPlayingAudio] = React.useState(trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'));
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -229,10 +231,6 @@ export function Summary({
       title: summary.title,
     };
   }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
-
-  const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
-  
-  const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
 
   const formatTime = React.useCallback((time?: string) => {
     if (!time) {
@@ -275,11 +273,13 @@ export function Summary({
     setIsShareTarget(isShareTarget);
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
+    setIsBookmarked(Boolean(bookmarkedSummaries?.[summary.id]));
     setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-    setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+    setIsSourceRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
     setIsSiblingRead(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
+    setIsPlayingAudio(trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'));
     return () => clearInterval(interval);
-  }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget, summary.id, summary.siblings, summary.translations, tickInterval]));
+  }, [bookmarkedSummaries, currentTrack?.id, disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget?.id, summary.id, summary.siblings, summary.translations, tickInterval, trackState]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat && !disableInteractions && !isShareTarget) {
@@ -326,19 +326,19 @@ export function Summary({
         numberOfLines={ 1 }
         underline
         caption
-        color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+        color={ !initialFormat && !isShareTarget && isSourceRead ? theme.colors.textDisabled : theme.colors.text }
         onPress={ () => {
           if (disableInteractions) {
             return;
           }
           onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-          setSourceIsRead(true);
+          setIsSourceRead(true);
         } }
         onLongPress={ () => copyToClipboard(summary.url) }>
         {summary.url}
       </Text>
     );
-  }, [initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, disableInteractions, onInteract, summary.url, openURL, copyToClipboard]);
+  }, [initialFormat, isShareTarget, isSourceRead, theme.colors.textDisabled, theme.colors.text, disableInteractions, onInteract, summary.url, openURL, copyToClipboard]);
   
   const menuActions = React.useMemo(() => {
     return (
@@ -359,7 +359,7 @@ export function Summary({
             h4
             haptic
             color='text'
-            leftIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+            leftIcon={ isBookmarked ? 'bookmark' : 'bookmark-outline' }
             onPress={ () => !disableInteractions && onInteract?.(InteractionType.Bookmark) } />
           <Button
             h4
@@ -384,12 +384,12 @@ export function Summary({
             haptic
             touchable
             color="text"
-            leftIcon={ playingAudio ? 'stop' : 'volume-source' }
+            leftIcon={ isPlayingAudio ? 'stop' : 'volume-source' }
             onPress={ () => !disableInteractions && handlePlayAudio() } />
         </View>
       </View>
     );
-  }, [initialFormat, compact, compactMode, summary, sourceLinks, sourceLink, bookmarked, playingAudio, disableInteractions, onInteract, format, handlePlayAudio]);
+  }, [initialFormat, compact, compactMode, summary, sourceLinks, sourceLink, isBookmarked, isPlayingAudio, disableInteractions, onInteract, format, handlePlayAudio]);
   
   const timestamp = React.useMemo(() => {
     return (
@@ -454,32 +454,34 @@ export function Summary({
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <View itemsCenter gap={ 3 }>
+            <View 
+              flexGrow={ 1 }
+              justifyCenter
+              itemsCenter
+              gap={ 3 }>
               {sentimentMeter}
               {timestamp}
             </View>
             <View row />
             <View gap={ 3 }>
-              <View>
-                <Button 
-                  h5
-                  gap={ 3 }
-                  horizontal
-                  outlined
-                  itemsCenter
-                  justifyBetween
-                  borderRadius={ 4 }
-                  adjustsFontSizeToFit
-                  px={ 12 }
-                  leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-                  rightIcon="chevron-right"
-                  onPress={ () => !disableInteractions && openCategory(summary.category) }>
-                  {summary.category.displayName}
-                </Button>
-              </View>
+              <Button 
+                subtitle1
+                gap={ 3 }
+                horizontal
+                outlined
+                itemsCenter
+                justifyBetween
+                borderRadius={ 4 }
+                adjustsFontSizeToFit
+                px={ 12 }
+                leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                rightIcon="chevron-right"
+                onPress={ () => !disableInteractions && openCategory(summary.category) }>
+                {summary.category.displayName}
+              </Button>
               <Button
                 italic
-                h5
+                subtitle1
                 itemsCenter
                 justifyBetween
                 horizontal
@@ -716,7 +718,7 @@ export function Summary({
               </View>
             )}
           </View>
-          {(((!(compact || compactMode) || initialFormat) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : sourceLinks && (<View mx={ 12 }>{sourceLink}</View>))}
+          {(((!(compact || compactMode) || initialFormat) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : (sourceLinks || initialFormat) && (<View mx={ 12 }>{sourceLink}</View>))}
           {summary.siblings && summary.siblings.length > 0 && (
             <View mx={ 12 } gap={ 6 }>
               <View flexRow>

@@ -61,18 +61,19 @@ export function CardStack({
         justifyBetween
         gap={ 6 }>
         <Button
-          touchable
+          row
           leftIcon="chevron-left"
           iconSize={ 32 }
           color={ cardIndex > 0 ? 'text' : 'textDisabled' }
           onPress={ cardIndex > 0 ? () => setCardIndex((cardIndex - 1)) : undefined } />
         <View
+          flex={ 10 }
           itemsCenter
           justifyCenter>
           {cards[cardIndex]}
         </View>
         <Button
-          touchable
+          row
           leftIcon="chevron-right"
           iconSize={ 32 }
           color={ cardIndex + 1 < cards.length ? 'text' : 'textDisabled' }

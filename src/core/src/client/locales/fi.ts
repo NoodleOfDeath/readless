@@ -176,6 +176,7 @@ export const fiStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Lue Vähemmän käyttöjä\nSuuret kielimallit...',
   walkthroughs_onboarding_reduceClickbait: 'vähennä napsautussyöttiä...',
   walkthroughs_onboarding_separateFromSocialMedia: 'pidetään **erillään sosiaalisessa mediassa** ja muista häiriötekijöistä',
+  walkthroughs_onboarding_subscribe: 'Jos löysit meidät markkinointimainosten kautta ja olet kiinnostunut tilaamaan, voit odottaa, että ominaisuus otetaan käyttöön muutaman seuraavan viikon aikana. Pysy siis kuulolla!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'ja kaikki **ilman, että sinun tarvitsee edes luoda tiliä**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Kyllä, aloitetaan!',
   walkthroughs_promoCodeDescription: 'Tallenna tämä tarjouskoodi, kun tilaukset julkaistaan! Vain **ensimmäiset 500** lunastusta saavat **3 kuukautta ILMAISEKSI** Boost-jäsenyyden',

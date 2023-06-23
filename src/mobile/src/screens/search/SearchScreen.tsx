@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 
 import ms from 'ms';
-import useAppState from 'react-native-appstate-hook';
 
 import { SearchMenu, TextInputHandles } from './SearchMenu';
 import { WalkthroughStack } from './WalkthroughStack';
@@ -38,6 +37,7 @@ import {
   SessionContext,
 } from '~/contexts';
 import {
+  useAppState,
   useNavigation,
   useSummaryClient,
   useTheme,
@@ -176,8 +176,11 @@ export function SearchScreen({
       });
       setSummaries((prev) => {
         const rows = data.rows.reverse().filter((n, i) => {
+          if (prefilter) {
+            return !(prev.some((p) => p.id === n.id));
+          }
           const children = [...data.rows].slice(i).map((r) => r.siblings ?? []).flat();
-          return !(prev.some((p) => p.id === n.id || (!prefilter && p.siblings?.some((s) => n.id === s.id))) || (!prefilter && children.some((c) => n.id === c.id)));
+          return !(prev.some((p) => p.id === n.id || (p.siblings?.some((s) => n.id === s.id))) || children.some((c) => n.id === c.id));
         }).reverse();
         if (page === 0) {
           return (prev = rows);
@@ -390,12 +393,14 @@ export function SearchScreen({
   }, [load]);
   
   useAppState({ 
-    onBackground: () => setLastActive(Date.now()),
+    onBackground: () => {
+      setLastActive(Date.now());
+    },
     onForeground: React.useCallback(() => {
-      if (Date.now() - lastActive.valueOf() > ms('10m')) {
+      if (!prefilter && Date.now() - lastActive.valueOf() > ms('10m')) {
         load(0);
       }
-    }, [lastActive, load]),
+    }, [lastActive, load, prefilter]),
   });
 
   return (

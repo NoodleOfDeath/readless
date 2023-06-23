@@ -176,6 +176,7 @@ export const ptBRStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'Leia menos usa\nGrandes modelos de linguagem para...',
   walkthroughs_onboarding_reduceClickbait: 'reduza a isca de cliques...',
   walkthroughs_onboarding_separateFromSocialMedia: 'mantido **separado das mídias sociais** e outras distrações',
+  walkthroughs_onboarding_subscribe: 'Se você nos encontrou por meio de nossos anúncios de marketing e está interessado em assinar, pode esperar que o recurso seja lançado nas próximas semanas. Então fique ligado!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'e tudo **sem precisar nem criar uma conta**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Sim, vamos começar!',
   walkthroughs_promoCodeDescription: 'Salve este código promocional para quando as assinaturas forem lançadas! Apenas os **primeiros 500** resgates receberão **3 meses GRATUITOS** de assinatura do Boost',

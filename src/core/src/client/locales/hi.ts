@@ -176,6 +176,7 @@ export const hiStrings: typeof enStrings = {
   walkthroughs_onboarding_readlessUses: 'कम उपयोग पढ़ें\nबड़े भाषा मॉडल के लिए...',
   walkthroughs_onboarding_reduceClickbait: 'क्लिकबेट कम करें...',
   walkthroughs_onboarding_separateFromSocialMedia: '**सोशल मीडिया** और अन्य विकर्षणों से अलग रखा गया',
+  walkthroughs_onboarding_subscribe: 'यदि आपने हमें हमारे मार्केटिंग विज्ञापनों के माध्यम से पाया है और सदस्यता लेने में रुचि रखते हैं, तो आप अगले कुछ हफ्तों में इस सुविधा के शुरू होने की उम्मीद कर सकते हैं। तो मिले रहें!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'और सभी **खाता बनाने की आवश्यकता के बिना भी**',
   walkthroughs_onboarding_yesLetsGetStarted: 'हाँ, चलो शुरू करें!',
   walkthroughs_promoCodeDescription: 'सब्सक्रिप्शन रोल आउट होने के लिए इस प्रोमो कोड को सेव करें! केवल **पहले 500** रिडीम करने पर **3 महीने की मुफ़्त** बूस्ट सदस्यता मिलेगी',
