@@ -85,7 +85,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = "ReadLess";
+			remoteInfo = ReadLess;
 		};
 		010F0CF129E88D490064DD97 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -135,10 +135,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* ReadLessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ReadLessTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* ReadLessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReadLessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* ReadLessTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ReadLessTests.m"; sourceTree = "<group>"; };
-		010F0CE129E88D470064DD97 /* Read Less.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Read Less.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356F21AD99517003FC87E /* ReadLessTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReadLessTests.m; sourceTree = "<group>"; };
+		010F0CE129E88D470064DD97 /* Read Less.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Read Less.app"; path = ReadLess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		010F0CE329E88D470064DD97 /* ReadLessWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWatchApp.swift; sourceTree = "<group>"; };
 		010F0CE529E88D470064DD97 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		010F0CE729E88D480064DD97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -180,11 +180,11 @@
 		018CE3AE29E989F5005E6391 /* ReadLessWatch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ReadLessWatch Watch App.entitlements"; sourceTree = "<group>"; };
 		018CE3AF29E98AB9005E6391 /* BulkResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponse.swift; sourceTree = "<group>"; };
 		01BC567B29DCF36700C69F9A /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ReadLess/main.jsbundle; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* ReadLess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ReadLess.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "ReadLess/AppDelegate.h"; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = "ReadLess/AppDelegate.mm"; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "ReadLess/Images.xcassets"; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "ReadLess/main.m"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* ReadLess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReadLess.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReadLess/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ReadLess/AppDelegate.mm; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ReadLess/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ReadLess/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadLess-ReadLessTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-ReadLess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess.debug.xcconfig"; path = "Target Support Files/Pods-ReadLess/Pods-ReadLess.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-ReadLess.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess.release.xcconfig"; path = "Target Support Files/Pods-ReadLess/Pods-ReadLess.release.xcconfig"; sourceTree = "<group>"; };
@@ -296,7 +296,7 @@
 				00E356F21AD99517003FC87E /* ReadLessTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = "ReadLessTests";
+			path = ReadLessTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -428,7 +428,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */,
 			);
-			name = "ReadLess";
+			name = ReadLess;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -449,7 +449,7 @@
 			children = (
 				D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */,
 			);
-			name = "ReadLessTests";
+			name = ReadLessTests;
 			sourceTree = "<group>";
 		};
 		80787AD2B0B9BD3B4E769CBD /* ReadLess */ = {
@@ -457,7 +457,7 @@
 			children = (
 				FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */,
 			);
-			name = "ReadLess";
+			name = ReadLess;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -537,8 +537,8 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = "ReadLessTests";
-			productname = "ReadLessTests";
+			name = ReadLessTests;
+			productName = ReadLessTests;
 			productReference = 00E356EE1AD99517003FC87E /* ReadLessTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -615,8 +615,8 @@
 			dependencies = (
 				010F0D0329E88D490064DD97 /* PBXTargetDependency */,
 			);
-			name = "ReadLess";
-			productName = "ReadLess";
+			name = ReadLess;
+			productName = ReadLess;
 			productReference = 13B07F961A680F5B00A75B9A /* ReadLess.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -1099,7 +1099,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "ReadLessTests/Info.plist";
+				INFOPLIST_FILE = ReadLessTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1126,7 +1126,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
-				INFOPLIST_FILE = "ReadLessTests/Info.plist";
+				INFOPLIST_FILE = ReadLessTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1177,7 +1177,7 @@
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.watchkitapp;
-				PRODUCT_NAME = "ReadLess";
+				PRODUCT_NAME = ReadLess;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1221,7 +1221,7 @@
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.watchkitapp;
-				PRODUCT_NAME = "ReadLess";
+				PRODUCT_NAME = ReadLess;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1372,11 +1372,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "ReadLess/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "ReadLess";
+				INFOPLIST_FILE = ReadLess/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadLess;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1390,7 +1390,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios;
-				PRODUCT_NAME = "ReadLess";
+				PRODUCT_NAME = ReadLess;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1413,10 +1413,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
-				INFOPLIST_FILE = "ReadLess/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "ReadLess";
+				INFOPLIST_FILE = ReadLess/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadLess;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1430,7 +1430,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios;
-				PRODUCT_NAME = "ReadLess";
+				PRODUCT_NAME = ReadLess;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;

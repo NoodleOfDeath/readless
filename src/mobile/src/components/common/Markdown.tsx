@@ -34,7 +34,7 @@ export function Markdown({
   return (
     <Highlighter
       { ...props }
-      highlightStyle={ props.highlightStyle ?? { fontWeight: 'bold' } }
+      highlightStyle={ props.highlightStyle ?? { fontWeight: '500' } }
       searchWords={ words }>
       {computedChildren}
     </Highlighter>

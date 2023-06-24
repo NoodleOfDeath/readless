@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "yarn tsoa && yarn pod:fix",
+    "postinstall": "yarn tsoa && yarn pod:fix && npx patch-package",
     "pod:fix": "sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 13.0/' ios/Pods/Pods.xcodeproj/project.pbxproj",
     "pod": "npx pod-install && yarn pod:fix",
     "android": "react-native run-android",

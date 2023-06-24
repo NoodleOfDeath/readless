@@ -134,7 +134,7 @@ export function CardStack({
               loop
               autoplay
               autoplayDelay={ 500 }
-              autoplayInterval={ 5_000 }
+              autoplayInterval={ 7_000 }
               onSnapToItem={ setActiveSlide } />
             <Pagination
               dotsLength={ cards.length }

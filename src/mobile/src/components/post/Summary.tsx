@@ -20,7 +20,6 @@ import {
   Button,
   ChildlessViewProps,
   CollapsedView,
-  Divider,
   Highlighter,
   Icon,
   Image,
@@ -411,6 +410,19 @@ export function Summary({
       </View>
     );
   }, [summary.sentiment]);
+
+  const title = React.useMemo(() => (
+    <Highlighter
+      bold
+      subtitle1={ Boolean(!(compact || compactMode) || initialFormat) }
+      body1={ (compact || compactMode) && !initialFormat }
+      justifyCenter
+      color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
+      highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+      searchWords={ isShareTarget ? [] : keywords }>
+      {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
+    </Highlighter>
+  ), [compact, compactMode, initialFormat, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const header = React.useMemo(() => (
     <View 
@@ -423,7 +435,6 @@ export function Summary({
       inactive={ isRead }>
       <View
         flexRow
-        flexGrow={ 1 }
         itemsCenter
         gap={ 6 }>
         {!initialFormat ? (
@@ -443,15 +454,12 @@ export function Summary({
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <View 
-              flexGrow={ 1 }
-              justifyCenter
-              itemsCenter
-              gap={ 3 }>
+            <View gap={ 3 } flex={ 2 }>
+              {title}
+              <View col />
               {sentimentMeter}
               {timestamp}
             </View>
-            <View row />
             <View gap={ 3 }>
               <Button 
                 gap={ 3 }
@@ -486,7 +494,7 @@ export function Summary({
         ))}
       </View>
     </View>
-  ), [isRead, theme.colors.contrastText, initialFormat, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, compact, compactMode, menuActions, disableInteractions, openCategory, openOutlet]);
+  ), [initialFormat, isRead, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, compact, compactMode, theme.colors.contrastText, menuActions, disableInteractions, openCategory, openOutlet]);
 
   const renderRightActions = React.useCallback(() => {
     const actions = [{
@@ -675,22 +683,14 @@ export function Summary({
           gap={ 6 }
           pb={ 12 }>
           <View flex={ 1 } flexGrow={ 1 } mx={ 12 }>
-            <View flexRow flexGrow={ 1 }>
-              <Highlighter
-                bold
-                subtitle1={ Boolean(!(compact || compactMode) || initialFormat) }
-                body1={ (compact || compactMode) && !initialFormat }
-                justifyCenter
-                color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
-                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                searchWords={ isShareTarget ? [] : keywords }>
-                {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
-              </Highlighter>
-            </View>
+            {!initialFormat && (
+              <View flexRow flexGrow={ 1 }>
+                {title}
+              </View>
+            )}
             {translateToggle}
             {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
-              <View pb={ 12 }>
-                <Divider />
+              <View>
                 <Highlighter 
                   highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
                   searchWords={ isShareTarget ? [] : keywords }>
@@ -720,7 +720,7 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title, translateToggle, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
+  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, title, translateToggle, showShortSummary, theme.colors.textDark, isShareTarget, keywords, cleanString, localizedStrings.shortSummary, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
   
   return (
     <GestureHandlerRootView>
@@ -737,6 +737,7 @@ export function Summary({
             ml={ initialFormat ? undefined : 12 }
             mr={ initialFormat ? undefined : 12 }
             bg={ containsTrigger ? '#eecccc' : undefined }
+            opacity={ isRead ? 0.75 : 1 }
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
             <View flexGrow={ 1 }>
               {!hideCard && (

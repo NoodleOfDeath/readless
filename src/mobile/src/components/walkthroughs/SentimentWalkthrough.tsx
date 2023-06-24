@@ -149,7 +149,7 @@ export function SentimentWalkthrough(props: SheetProps) {
             textCenter
             subtitle1 
             highlightStyle={ {
-              color: theme.colors.link, fontWeight: 'bold', textDecorationLine: 'underline', 
+              color: theme.colors.link, fontWeight: '500', textDecorationLine: 'underline', 
             } }
             onPress={ () => openURL('https://en.wikipedia.org/wiki/Lexical_analysis') }>
             {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP1}
