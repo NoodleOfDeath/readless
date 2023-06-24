@@ -124,20 +124,17 @@ export function CardStack({
               data={ cards }
               layout={ 'tinder' } 
               renderItem={ renderItem }
+              sliderWidth={ layout.width }
+              itemWidth={ layout.width }
               hasParallaxImages
               firstItem={ activeSlide }
               inactiveSlideScale={ 0.94 }
-              inactiveSlideOpacity={ 0.7 }
-              // inactiveSlideShift={20}
+              inactiveSlideOpacity={ 0.3 }
               containerCustomStyle={ { overflow: 'visible' } }
-              contentContainerCustomStyle={ { overflow: 'visible' } }
               loop
-              loopClonesPerSide={ 2 }
               autoplay
               autoplayDelay={ 500 }
               autoplayInterval={ 5_000 }
-              sliderWidth={ layout.width }
-              itemWidth={ layout.width }
               onSnapToItem={ setActiveSlide } />
             <Pagination
               dotsLength={ cards.length }
