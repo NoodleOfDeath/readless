@@ -432,7 +432,7 @@ export function Summary({
       brTopLeft={ initialFormat ? 0 : 6 }
       brTopRight={ initialFormat ? 0 : 6 }
       zIndex={ 2 }
-      inactive={ isRead }>
+      inactive>
       <View
         flexRow
         itemsCenter
@@ -488,13 +488,13 @@ export function Summary({
         {((compact || compactMode) && !initialFormat && (
           <Popover
             menu
-            anchor={ <Icon name="dots-horizontal" color={ theme.colors.contrastText } size={ 24 } /> }>
+            anchor={ <Icon name="dots-horizontal" color={ theme.colors.text } size={ 24 } /> }>
             {menuActions}
           </Popover>
         ))}
       </View>
     </View>
-  ), [initialFormat, isRead, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, compact, compactMode, theme.colors.contrastText, menuActions, disableInteractions, openCategory, openOutlet]);
+  ), [initialFormat, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, compact, compactMode, theme.colors.text, menuActions, disableInteractions, openCategory, openOutlet]);
 
   const renderRightActions = React.useCallback(() => {
     const actions = [{
