@@ -6,7 +6,6 @@ import {
   DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
-  OVERRIDDEN_INITIAL_PREFERENCES,
   OrientationType,
   Preferences,
 } from './types';
@@ -280,7 +279,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const load = async () => {
     // system
     setColorScheme(await getPreference('colorScheme')); 
-    setFontFamily(await getPreference('fontFamily') ?? DEFAULT_PREFERENCES.fontFamily);
+    setFontFamily(await getPreference('fontFamily'));
     setFontSizeOffset(await getPreference('fontSizeOffset'));
     setLetterSpacing(await getPreference('letterSpacing'));
     setLineHeightMultiplier(await getPreference('lineHeightMultiplier'));
@@ -294,7 +293,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setTriggerWords(await getPreference('triggerWords'));
     
     // app state
-    setLoadedInitialUrl(OVERRIDDEN_INITIAL_PREFERENCES.loadedInitialUrl);
+    setLoadedInitialUrl(DEFAULT_PREFERENCES.loadedInitialUrl);
     setRotationLock(await getPreference('rotationLock'));
     setSearchHistory(await getPreference('searchHistory'));
     setShowOnlyCustomNews(await getPreference('showOnlyCustomNews'));

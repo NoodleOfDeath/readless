@@ -469,7 +469,10 @@ export function SearchScreen({
                     load(0);
                   } }>
                   <View col width="100%" pt={ 12 }>
-                    {!prefilter && showWalkthroughs && <WalkthroughStack onClose={ () => setShowWalkthroughs(false) } />}
+                    {!prefilter && showWalkthroughs && (
+                      <WalkthroughStack 
+                        onClose={ () => setShowWalkthroughs(false) } />
+                    )}
                     {summaryList}
                     {!loading && !noResults && totalResultCount > summaries.length && (
                       <View row justifyCenter p={ 16 } pb={ 24 }>
@@ -549,13 +552,12 @@ export function SearchScreen({
           <Button
             absolute
             right={ 16 }
-            bottom={ 96 }
+            bottom={ 64 }
             elevated
-            rounded
-            opacity={ 0.95 }
+            contained
+            opacity={ 0.9 }
             p={ 12 }
             haptic
-            touchable
             leftIcon="volume-high"
             iconSize={ 32 }
             onPress={ handlePlayAll } />

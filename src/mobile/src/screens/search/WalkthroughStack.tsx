@@ -2,87 +2,63 @@ import React from 'react';
 
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { CardStack, Text } from '~/components';
+import {
+  CardStack,
+  CardStackEntryProps,
+  CardStackProps,
+} from '~/components';
 import { SessionContext } from '~/core';
 import { strings } from '~/locales';
 
-type Feature = {
-  id: string;
-  content?: React.ReactNode;
-  onPress?: () => void;
-};
-
-export const FEATURES: Feature[] = [
+export const FEATURES: CardStackEntryProps[] = [
   {
-    content: (
-      <React.Fragment>
-        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_appearance_stackTitle}</Text>
-        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
-      </React.Fragment>
-    ),
     id: 'appearance-walkthrough',
+    image: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-customize-appearance.png',
     onPress: async () => {
       await SheetManager.show('appearance-walkthrough');
     },
+    title: strings.walkthroughs_appearance_stackTitle,
   },
   {
-    content: (
-      <React.Fragment>
-        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_customFeed_stackTitle}</Text>
-        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
-      </React.Fragment>
-    ),
     id: 'custom-feed-walkthrough',
+    image: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-customize-feed.PNG',
     onPress: async () => {
       await SheetManager.show('custom-feed-walkthrough');
     },
+    title:  strings.walkthroughs_customFeed_stackTitle,
   },
   {
-    content: (
-      <React.Fragment>
-        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_sentiment_whatIsSentimentAnalysis}</Text>
-        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
-      </React.Fragment>
-    ),
-    id: 'sentiment-walkthrough',
+    id: 'sentiment-walkthrough', 
+    image: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-sentiment.png',
     onPress: async () => {
       await SheetManager.show('sentiment-walkthrough');
     },
+    title: strings.walkthroughs_sentiment_whatIsSentimentAnalysis,
   },
   {
-    content: (
-      <React.Fragment>
-        <Text adjustsFontSizeToFit h6 textCenter>{strings.walkthroughs_triggerWords}</Text>
-        <Text adjustsFontSizeToFit bold underline color="link" textCenter>{strings.action_tapToLearnMoreAndEnable}</Text>
-      </React.Fragment>
-    ),
     id: 'trigger-words-walkthrough',
+    image: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-trigger-words.png',
     onPress: async () => {
       await SheetManager.show('trigger-words-walkthrough');
     },
+    title: strings.walkthroughs_triggerWords,
   },
 ];
 
-type Props = {
+type Props = CardStackProps & {
   onClose?: () => void;
 };
 
-export function WalkthroughStack({ onClose }: Props = {}) {
+export function WalkthroughStack({ onClose, ...props }: Props = {}) {
   
   const { viewedFeatures } = React.useContext(SessionContext);
   const cards = React.useMemo(() => FEATURES.filter((feature) => !(feature.id in (viewedFeatures ?? {}))), [viewedFeatures]);
   
   return cards.length > 0 && (
     <CardStack
-      mx={ 12 }
-      mb={ 6 }
+      { ...props }
       onClose={ onClose }
-      onPressItem={ (index) => cards[index].onPress?.() }>
-      {cards.map((card) => (
-        <React.Fragment key={ card.id }>
-          {card.content}
-        </React.Fragment>
-      ))}
-    </CardStack>
+      onPressItem={ (index) => cards[index].onPress?.() }
+      cards={ cards } />
   );
 }

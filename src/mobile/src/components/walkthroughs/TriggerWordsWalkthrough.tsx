@@ -28,6 +28,7 @@ export function TriggerWordsWalkthrough(props: SheetProps) {
   
   const steps = React.useMemo(() => [
     {
+      artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-trigger-words.png',
       body: (
         <View gap={ 12 }>
           <Markdown

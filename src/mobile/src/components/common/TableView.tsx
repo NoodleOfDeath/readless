@@ -26,7 +26,7 @@ export function TableView({ children, ...props }: TableViewProps) {
   const style = useStyles(props);
   return (
     <RNTableView
-      appearance={ theme.isLightMode ? 'light' : 'dark' }
+      appearance={ theme.isDarkMode ? 'dark' : 'light' }
       { ...props }
       style={ [style, { flex: 1, flexGrow: 1 }] }>
       {children}

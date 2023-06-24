@@ -17,7 +17,7 @@ export function Screen({
   const theme = useTheme();
   return (
     <React.Fragment>
-      <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
+      <StatusBar barStyle={ theme.isDarkMode ? 'light-content' : 'dark-content' } />
       <SafeAreaView
         style={ styles.SafeAreaView }
         { ...props }>

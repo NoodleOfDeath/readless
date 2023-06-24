@@ -136,10 +136,8 @@ export function SearchMenu({
               <View gap={ 12 } p={ 12 }>
                 <View>
                   <Button 
-                    itemsCenter 
                     elevated 
-                    rounded 
-                    p={ 4 } 
+                    contained
                     onPress={ () => submit() }>
                     {strings.action_search}
                   </Button>
@@ -171,9 +169,8 @@ export function SearchMenu({
           <Button
             absolute
             elevated
-            rounded
-            touchable
-            opacity={ 0.95 }
+            contained
+            opacity={ 0.9 }
             p={ 12 }
             bottom={ 24 }
             right={ 16 }

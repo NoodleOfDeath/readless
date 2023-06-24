@@ -32,6 +32,7 @@ export function FontPicker({
   if (variant === 'grid') {
     return (
       <GridPicker
+        centered
         options={ [...AVAILABLE_FONTS] }
         initialValue={ fontFamily as FontFamily }
         buttonProps={ ({ option }) => ({ fontFamily: option.value }) }
@@ -48,13 +49,10 @@ export function FontPicker({
         <View flexRow itemsCenter gap={ 8 } mx={ 8 }>
           {AVAILABLE_FONTS.map((font) => (
             <Button 
-              flexRow
               caption
-              itemsCenter
+              contained
               gap={ 4 }
               key={ font }
-              elevated
-              p={ 8 }
               leftIcon={ fontFamily === font ? 'check' : undefined } 
               fontFamily={ font }
               onPress={ () => setPreference('fontFamily', font) }>

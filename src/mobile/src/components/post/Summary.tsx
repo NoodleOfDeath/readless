@@ -99,15 +99,8 @@ function RenderActions({ actions }: RenderActionsProps) {
             flexGrow={ 1 }
             flex={ 1 }>
             <Button 
-              flexRow
-              rounded
-              outlined
-              flexGrow={ 1 }
-              flex={ 1 }
               gap={ 6 }
-              px={ 4 }
-              itemsCenter
-              justifyCenter
+              contained
               caption
               leftIcon={ action.leftIcon }
               onPress={ action.onPress }>
@@ -397,13 +390,12 @@ export function Summary({
         <Text 
           bold 
           adjustsFontSizeToFit
-          caption
-          color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
+          caption>
           {formatTime(summary.originalDate)}
         </Text>
       </View>
     );
-  }, [isRead, theme.colors.textDisabled, theme.colors.text, formatTime, summary.originalDate]);
+  }, [formatTime, summary.originalDate]);
   
   const sentimentMeter = React.useMemo(() => {
     return (
@@ -425,11 +417,10 @@ export function Summary({
       p={ initialFormat ? 12 : 6 }
       flexGrow={ 1 }
       elevated
-      brTopLeft={ initialFormat ? 0 : 12 }
-      brTopRight={ initialFormat ? 0 : 12 }
+      brTopLeft={ initialFormat ? 0 : 6 }
+      brTopRight={ initialFormat ? 0 : 6 }
       zIndex={ 2 }
-      inactive={ isRead }
-      bg={ containsTrigger ? '#eecccc' : undefined }>
+      inactive={ isRead }>
       <View
         flexRow
         flexGrow={ 1 }
@@ -439,9 +430,7 @@ export function Summary({
           <React.Fragment>
             <Button 
               h5
-              color='text'
-              leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-              touchable
+              leftIcon={ summary.category.icon && summary.category.icon }
               onPress={ () => !disableInteractions && openCategory(summary.category) } />
             <Text
               italic
@@ -465,32 +454,23 @@ export function Summary({
             <View row />
             <View gap={ 3 }>
               <Button 
-                subtitle1
                 gap={ 3 }
-                horizontal
-                outlined
-                itemsCenter
+                contained
                 justifyBetween
-                borderRadius={ 4 }
                 adjustsFontSizeToFit
                 px={ 12 }
-                leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                leftIcon={ summary.category.icon && summary.category.icon }
                 rightIcon="chevron-right"
                 onPress={ () => !disableInteractions && openCategory(summary.category) }>
                 {summary.category.displayName}
               </Button>
               <Button
-                italic
-                subtitle1
-                itemsCenter
+                contained
                 justifyBetween
-                horizontal
                 gap={ 3 }
-                outlined
                 rightIcon="chevron-right"
                 px={ 12 }
                 adjustsFontSizeToFit
-                borderRadius={ 4 }
                 onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
                 {summary.outlet.displayName}
               </Button>
@@ -500,13 +480,13 @@ export function Summary({
         {((compact || compactMode) && !initialFormat && (
           <Popover
             menu
-            anchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
+            anchor={ <Icon name="dots-horizontal" color={ theme.colors.contrastText } size={ 24 } /> }>
             {menuActions}
           </Popover>
         ))}
       </View>
     </View>
-  ), [initialFormat, isRead, containsTrigger, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, compact, compactMode, menuActions, disableInteractions, openCategory, openOutlet]);
+  ), [isRead, theme.colors.contrastText, initialFormat, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, compact, compactMode, menuActions, disableInteractions, openCategory, openOutlet]);
 
   const renderRightActions = React.useCallback(() => {
     const actions = [{
@@ -601,6 +581,7 @@ export function Summary({
               gap={ 1 }
               p={ 3 }
               outlined
+              rounded
               borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
               touchable
               onPress={ () => !disableInteractions && openSummary({ summary: sibling.id }) }>
@@ -658,8 +639,8 @@ export function Summary({
                   minHeight={ 80 }
                   height="100%"
                   overflow='hidden'
-                  brTopLeft={ initialFormat ? 0 : 12 }
-                  brBottomLeft={ initialFormat ? 0 : 12 }>
+                  brTopLeft={ initialFormat ? 0 : 6 }
+                  brBottomLeft={ initialFormat ? 0 : 6 }>
                   {containsTrigger ? (
                     <Icon
                       name="cancel"
@@ -722,7 +703,7 @@ export function Summary({
           {summary.siblings && summary.siblings.length > 0 && (
             <View mx={ 12 } gap={ 6 }>
               <View flexRow>
-                <Text>
+                <Text justifyCenter>
                   {`${strings.summary_relatedNews} (${summary.siblings.length})`}
                 </Text>
                 <View row />
@@ -751,11 +732,10 @@ export function Summary({
             flexGrow={ 1 }
             elevated
             style={ { ...theme.components.card, ...style } }
-            borderRadius={ initialFormat ? 0 : 12 }
+            borderRadius={ initialFormat ? 0 : 6 }
             my={ 6 }
             ml={ initialFormat ? undefined : 12 }
             mr={ initialFormat ? undefined : 12 }
-            inactive={ isRead }
             bg={ containsTrigger ? '#eecccc' : undefined }
             onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
             <View flexGrow={ 1 }>
@@ -773,8 +753,8 @@ export function Summary({
                     flexGrow={ 1 }
                     gap={ 6 }
                     overflow='hidden'
-                    brTopLeft={ initialFormat ? 0 : 12 }
-                    brTopRight={ initialFormat ? 0 : 12 }>
+                    brTopLeft={ initialFormat ? 0 : 6 }
+                    brTopRight={ initialFormat ? 0 : 6 }>
                     {header}
                     {coverContent}
                   </View>

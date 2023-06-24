@@ -63,11 +63,11 @@ export function MainMenuDialog(props: SheetProps) {
         }, i) => (
           <View key={ i }>
             <Button
-              touchable
-              horizontal
               p={ 12 }
               gap={ 12 }
               h6
+              system
+              justifyStart
               leftIcon={ (
                 <View>
                   {badge !== undefined && badge > 0 && (

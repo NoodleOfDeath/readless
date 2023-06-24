@@ -73,6 +73,7 @@ export function SettingsTable() {
           cellStyle="RightDetail"
           title={ strings.settings_font }
           detail={ fontFamily }
+          detailTextStyle={ { fontFamily } }
           accessory="DisclosureIndicator"
           cellIcon="format-font"
           onPress={ () => navigate('fontPicker') } />

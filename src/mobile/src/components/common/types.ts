@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 
 export const AVAILABLE_FONTS = [
-  'Alegreya', 
-  'DM Sans',
-  'Faustina',
-  'Lato',
-  'Manuale',
-  'Roboto',
+  'Anek Latin',
+  'Pitagon Serif',
+  'Newsreader',
+  'Roboto Serif',
 ] as const;
+
+export const SYSTEM_FONT = 'Anek Latin';
+export const DEFAULT_PREFERRED_FONT = 'Anek Latin';
 
 export type FontFamily = (typeof AVAILABLE_FONTS[number]);
 
@@ -37,6 +38,7 @@ export const FONT_SIZES = {
 export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextProps & TextStyle & {
   
   // font and size
+  system?: boolean;
   /** alias for {@link TextProps.fontFamily} */
   font?: FontFamily;
   fontFamily?: FontFamily;
@@ -242,14 +244,13 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   columnGap?: ViewStyle['columnGap'];
   
   // custom
-  pressable?: boolean;
   touchable?: boolean;
   elevated?: boolean;
   haptic?: boolean;
   inactive?: boolean;
   
   // other
-  style?: StyleProp<ViewStyle> | undefined;
+  style?: StyleProp<ViewStyle>;
 
 };
 

@@ -36,30 +36,34 @@ export function AppearanceWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => {
     return [
       {
+        artwork:( 
+          <ScrollView scrollEnabled={ false }>
+            <Summary disableInteractions />
+          </ScrollView>
+        ),
+        artworkBelow: true,
         body: (
-          <View justifyCenter gap={ 12 }>
-            <ScrollView scrollEnabled={ false }>
-              <Summary disableInteractions />
-            </ScrollView>
-            <View itemsCenter gap={ 12 }>
-              <FontPicker grid />
-              <NumericPrefPicker
-                prefKey='fontSizeOffset'
-                offset={ FONT_SIZES.body1 }
-                min={ -5 }
-                max={ 5 }
-                step={ 0.5 } />
-            </View>
+          <View itemsCenter gap={ 12 }>
+            <FontPicker grid />
+            <NumericPrefPicker
+              prefKey='fontSizeOffset'
+              offset={ FONT_SIZES.body1 }
+              min={ -5 }
+              max={ 5 }
+              step={ 0.5 } />
           </View>
         ),
         title: strings.walkthroughs_appearance_selectFont,
       },
       {
+        artwork:( 
+          <ScrollView scrollEnabled={ false }>
+            <Summary disableInteractions />
+          </ScrollView>
+        ),
+        artworkBelow: true,
         body: (
           <View gap={ 12 }>
-            <ScrollView scrollEnabled={ false }>
-              <Summary disableInteractions />
-            </ScrollView>
             <CompactModePicker labeled />
           </View>
         ),
@@ -80,18 +84,21 @@ export function AppearanceWalkthrough(props: SheetProps) {
         title: strings.walkthroughs_appearance_preferredReadingFormat,
       },
       {
+        artwork:( 
+          <ScrollView scrollEnabled={ false }>
+            <Summary disableInteractions />
+          </ScrollView>
+        ),
+        artworkBelow: true,
         body: (
           <View gap={ 12 }>
             <View alignCenter>
               <PrefSwitch prefKey="sourceLinks" />
             </View>
-            <ScrollView scrollEnabled={ false }>
-              <Summary disableInteractions />
-            </ScrollView>
-            <Markdown subtitle1 textCenter>
+            <Markdown subtitle1 textCenter system>
               {strings.walkthroughs_appearance_sourceLinksDescription}
             </Markdown>
-            <Markdown textCenter>
+            <Markdown subtitle1 textCenter system>
               {strings.walkthroughs_appearance_youCanAlwaysSee}
             </Markdown>
           </View>
@@ -99,20 +106,22 @@ export function AppearanceWalkthrough(props: SheetProps) {
         title: strings.walkthroughs_appearance_sourceLinks,
       },
       {
+        artwork:( 
+          <ScrollView scrollEnabled={ false }>
+            <Summary disableInteractions />
+          </ScrollView>
+        ),
+        artworkBelow: true,
         body: (
-          <View gap={ 12 }>
-            <ScrollView scrollEnabled={ false }>
-              <Summary disableInteractions />
-            </ScrollView>
+          <View gap={ 24 }>
             <View flexRow justifyCenter>
               <ColorSchemePicker buttons />
             </View>
             <View itemsCenter>
               <Button
-                elevated
-                onPress={ onDone }
-                p={ 4 }
-                rounded>
+                h5
+                contained
+                onPress={ onDone }>
                 {strings.action_allDone}
               </Button>
             </View>

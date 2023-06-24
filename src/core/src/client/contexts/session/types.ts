@@ -75,9 +75,7 @@ export type Preferences = {
   excludedCategories?: { [key: string]: boolean };
 };
 
-export const DEFAULT_PREFERENCES: Partial<Preferences> = { fontFamily: 'Faustina' };
-
-export const OVERRIDDEN_INITIAL_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);

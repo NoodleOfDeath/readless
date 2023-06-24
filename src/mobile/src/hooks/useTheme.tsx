@@ -5,60 +5,69 @@ import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
 import { Preferences, SessionContext } from '~/contexts';
 
-const makeTheme = (lightMode: boolean, preferences: Preferences) => {
+const makeTheme = (darkMode: boolean, preferences: Preferences) => {
   return {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
-      inactive: lightMode ? '#aaa' : '#777',
-      invertText: lightMode ? '#fff' : '#000',
-      link: lightMode ? '#8888ee' : '#aaaaee',
+      inactive: darkMode ? '#777' : '#aaa',
+      invertText: darkMode ? '#000' : '#fff',
+      link: darkMode ? '#aaaaee' : '#8888ee',
+      paper: darkMode ? '#424242' : '#fff',
       primary: '#8b0000',
-      rowEven: lightMode ? '#efefef' : '#101010',
-      rowOdd: lightMode ? '#e9e9e9' : '#222',
-      selectedBackground: lightMode ? '#888' : '#444',
+      primaryDark: '#610000',
+      primaryLight: '#a00000',
+      rowEven: darkMode ? '#101010' : '#efefef',
+      rowOdd: darkMode ? '#222' : '#e9e9e9',
+      secondary: '#F73378',
       success: '#4caf50',
-      text: lightMode ? '#000' : '#fff',
+      text: darkMode ? '#fff' : '#000',
       textDark: '#000',
-      textDisabled: lightMode ? '#aaa' : '#888',
-      textSecondary: lightMode ? '#888' : '#999',
+      textDisabled: darkMode ? '#888' : '#aaa',
+      textSecondary: darkMode ? '#999' : '#888',
     },
     // containers
     components: 
       StyleSheet.create({
-        button: { backgroundColor: lightMode ? '#eee' : '#2a2a2a' },
-        buttonDisabled: { 
-          backgroundColor: lightMode ? '#ddd' : '#333',
-          color: lightMode ? '#888' : '#999',
+        card: { backgroundColor: darkMode ? '#424242' : '#fff' },
+        chip: {
+          alignItems: 'center',
+          fontWeight: 'bold',
+          justifyContent: 'center',
         },
-        buttonText: { padding: 4 },
-        card: { backgroundColor: lightMode ? '#fefefe' : '#010101' },
-        dialog: {
-          backgroundColor: lightMode ? '#ddd' : '#111',
-          borderColor: '#8b0000',
-          borderRadius: 12,
-          borderWidth: 5,
+        chipContained: {
+          backgroundColor: darkMode ? '#8b0000' : '#8b0000',
+          borderRadius: 500,
+          color: '#fff',
+          paddingBottom: 8,
+          paddingLeft: 24,
+          paddingRight: 24,
+          paddingTop: 8,
+          textTransform: 'uppercase',
+        },
+        chipDisabled: { 
+          backgroundColor: darkMode ? '#A23333' : '#A23333',
+          color: darkMode ? '#999' : '#888',
+        },
+        chipSelected: {
+          backgroundColor: darkMode ? '#610000' : '#610000',
+          borderRadius: 500,
+          color: '#fff',
+          fontWeight: 'bold',
+          textDecorationLine: 'underline',
         },
         divider: {
-          backgroundColor: lightMode ? '#222' : '#ddd',
+          backgroundColor: darkMode ? '#BDBDBD' : '#222',
           height: StyleSheet.hairlineWidth,
           marginBottom: 3,
           marginTop: 3,
         },
         input: { 
-          backgroundColor: lightMode ? '#ddd' : '#111',
-          color: lightMode ? '#000' : '#fff',
+          backgroundColor: darkMode ? '#111' : '#ddd',
+          color: darkMode ? '#fff' : '#000',
         }, 
-        menu: {
-          backgroundColor: lightMode ? '#fefefe' : '#010101',
-          borderColor: '#888',
-          borderWidth: 1,
-          maxWidth: 300,
-          overflow: 'scroll',
-          padding: 12,
-        },
         outlined: {
-          borderColor: lightMode ? '#000' : '#fff',
+          borderColor: darkMode ? '#fff' : '#000',
           borderWidth: 1,
         },
         searchBar: {
@@ -68,23 +77,23 @@ const makeTheme = (lightMode: boolean, preferences: Preferences) => {
           width: '100%',
         },
         surface: {
-          backgroundColor: lightMode ? '#fff' : '#000',
-          color: lightMode ? '#000' : '#fff',
+          backgroundColor: darkMode ? '#000' : '#fff',
+          color: darkMode ? '#fff' : '#000',
         },
       }),
-    isLightMode: lightMode,   
+    isDarkMode: darkMode,   
     navContainerTheme: {
-      ...(lightMode ? DefaultTheme : DarkTheme),
+      ...(darkMode ? DarkTheme : DefaultTheme),
       colors: {
-        ...(lightMode ? DefaultTheme : DarkTheme).colors,
-        background: lightMode ? '#efefef' : '#1e1e1e',
-        border: lightMode ? '#bdbdbd' : '#757575',
-        card: lightMode ? '#fff' : '#1e1e1e',
+        ...(darkMode ? DarkTheme.colors : DefaultTheme),
+        background: darkMode ? '#303030' : '#fafafa',
+        border: darkMode ? '#757575' : '#bdbdbd',
+        card: darkMode ? '#1e1e1e' : '#fff',
         notification: '#8b0000',
         primary: '#8b0000',
-        text: lightMode ? '#212121' : '#fff',
+        text: darkMode ? '#fff' : '#212121',
       },
-      dark: !lightMode,
+      dark: darkMode,
     },
   };
 };
@@ -94,8 +103,8 @@ export function useTheme() {
 
   const preferences = React.useContext(SessionContext);
 
-  const LIGHT_THEME = makeTheme(true, preferences);
-  const DARK_THEME = makeTheme(false, preferences);
+  const LIGHT_THEME = makeTheme(false, preferences);
+  const DARK_THEME = makeTheme(true, preferences);
 
   const colorScheme = useColorScheme();
 

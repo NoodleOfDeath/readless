@@ -53,10 +53,6 @@
 		0143022A29FACEDC00D40293 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1D29D791EC00EAC61C /* Feather.ttf */; };
 		0143022B29FACEDC00D40293 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */; };
 		0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
-		0150EA1A29EDD6C7004FBDFA /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
-		0150EA1B29EDD6C7004FBDFA /* Alegreya.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1929EDD6C7004FBDFA /* Alegreya.otf */; };
-		0150EA2029EE16D8004FBDFA /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto.ttf */; };
-		0150EA2129EE16D8004FBDFA /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0150EA1F29EE16D8004FBDFA /* Roboto.ttf */; };
 		015A19D129EAEB1A0072EEE3 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A19D029EAEB1A0072EEE3 /* View.swift */; };
 		018173BF29EA1842006D3509 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
 		018173C129EA4529006D3509 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C029EA4529006D3509 /* SummaryCard.swift */; };
@@ -70,45 +66,15 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-ReadLess-ReadLessTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */; };
-		CD4AEB1E2A0D92DD0093B6D1 /* Faustina.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */; };
-		CD4AEB1F2A0D92DD0093B6D1 /* Faustina.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */; };
-		CD4AEB222A0D93180093B6D1 /* Manuale.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB212A0D93180093B6D1 /* Manuale.ttf */; };
-		CD4AEB232A0D93180093B6D1 /* Manuale.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB212A0D93180093B6D1 /* Manuale.ttf */; };
-		CD4AEB382A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */; };
-		CD4AEB392A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */; };
-		CD4AEB3B2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB362A0D975C0093B6D1 /* FaustinaItalic.ttf */; };
-		CD4AEB3C2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB362A0D975C0093B6D1 /* FaustinaItalic.ttf */; };
-		CD4AEB3E2A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB372A0D975C0093B6D1 /* FaustinaBoldItalic.ttf */; };
-		CD4AEB3F2A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB372A0D975C0093B6D1 /* FaustinaBoldItalic.ttf */; };
-		CD4AEB442A0D99780093B6D1 /* ManualeBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB412A0D99780093B6D1 /* ManualeBold.ttf */; };
-		CD4AEB452A0D99780093B6D1 /* ManualeBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB412A0D99780093B6D1 /* ManualeBold.ttf */; };
-		CD4AEB472A0D99780093B6D1 /* ManualeItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB422A0D99780093B6D1 /* ManualeItalic.ttf */; };
-		CD4AEB482A0D99780093B6D1 /* ManualeItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB422A0D99780093B6D1 /* ManualeItalic.ttf */; };
-		CD4AEB4A2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB432A0D99780093B6D1 /* ManualeBoldItalic.ttf */; };
-		CD4AEB4B2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB432A0D99780093B6D1 /* ManualeBoldItalic.ttf */; };
-		CD4AEB512A0D99D30093B6D1 /* LatoBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4D2A0D99D30093B6D1 /* LatoBold.ttf */; };
-		CD4AEB522A0D99D30093B6D1 /* LatoBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4D2A0D99D30093B6D1 /* LatoBold.ttf */; };
-		CD4AEB542A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4E2A0D99D30093B6D1 /* LatoBoldItalic.ttf */; };
-		CD4AEB552A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4E2A0D99D30093B6D1 /* LatoBoldItalic.ttf */; };
-		CD4AEB572A0D99D30093B6D1 /* LatoItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4F2A0D99D30093B6D1 /* LatoItalic.ttf */; };
-		CD4AEB582A0D99D30093B6D1 /* LatoItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB4F2A0D99D30093B6D1 /* LatoItalic.ttf */; };
-		CD4AEB5A2A0D99D30093B6D1 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB502A0D99D30093B6D1 /* Lato.ttf */; };
-		CD4AEB5B2A0D99D30093B6D1 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB502A0D99D30093B6D1 /* Lato.ttf */; };
-		CD4AEB602A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */; };
-		CD4AEB612A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */; };
-		CD4AEB632A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */; };
-		CD4AEB642A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */; };
-		CD4AEB662A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
-		CD4AEB672A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */; };
-		CD4AEB7D2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
-		CD4AEB7E2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */; };
-		CD4AEB802A0D9D860093B6D1 /* DMSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */; };
-		CD4AEB812A0D9D860093B6D1 /* DMSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */; };
-		CD4AEB832A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */; };
-		CD4AEB842A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */; };
-		CD4AEB862A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
-		CD4AEB872A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */; };
 		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
+		CDE9EB322A47431C0057217B /* PitagonSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB312A47431C0057217B /* PitagonSerif.ttf */; };
+		CDE9EB332A47431C0057217B /* PitagonSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB312A47431C0057217B /* PitagonSerif.ttf */; };
+		CDE9EB382A47499D0057217B /* AnekLatin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB372A47499D0057217B /* AnekLatin.ttf */; };
+		CDE9EB392A47499D0057217B /* AnekLatin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB372A47499D0057217B /* AnekLatin.ttf */; };
+		CDE9EB3B2A474AD90057217B /* Newsreader.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3A2A474AD90057217B /* Newsreader.ttf */; };
+		CDE9EB3C2A474AD90057217B /* Newsreader.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3A2A474AD90057217B /* Newsreader.ttf */; };
+		CDE9EB3E2A474B050057217B /* RobotoSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */; };
+		CDE9EB3F2A474B050057217B /* RobotoSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */; };
 		CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */; };
 		CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */; };
 /* End PBXBuildFile section */
@@ -206,8 +172,6 @@
 		013F32C229E8BA2D00CE8555 /* ConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectService.swift; sourceTree = "<group>"; };
 		0150ACA429F9577400875CF7 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0150ACA629F9577400875CF7 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		0150EA1929EDD6C7004FBDFA /* Alegreya.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alegreya.otf; sourceTree = "<group>"; };
-		0150EA1F29EE16D8004FBDFA /* Roboto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Roboto.ttf; sourceTree = "<group>"; };
 		015A19D029EAEB1A0072EEE3 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		018173BE29EA1842006D3509 /* PressActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressActions.swift; sourceTree = "<group>"; };
 		018173C029EA4529006D3509 /* SummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryCard.swift; sourceTree = "<group>"; };
@@ -228,25 +192,6 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadLess.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-ReadLess-ReadLessTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.release.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.release.xcconfig"; sourceTree = "<group>"; };
 		CD0695912A1BD9DC005C0208 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Faustina.ttf; sourceTree = "<group>"; };
-		CD4AEB212A0D93180093B6D1 /* Manuale.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Manuale.ttf; sourceTree = "<group>"; };
-		CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FaustinaBold.ttf; sourceTree = "<group>"; };
-		CD4AEB362A0D975C0093B6D1 /* FaustinaItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FaustinaItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB372A0D975C0093B6D1 /* FaustinaBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FaustinaBoldItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB412A0D99780093B6D1 /* ManualeBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ManualeBold.ttf; sourceTree = "<group>"; };
-		CD4AEB422A0D99780093B6D1 /* ManualeItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ManualeItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB432A0D99780093B6D1 /* ManualeBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ManualeBoldItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB4D2A0D99D30093B6D1 /* LatoBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LatoBold.ttf; sourceTree = "<group>"; };
-		CD4AEB4E2A0D99D30093B6D1 /* LatoBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LatoBoldItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB4F2A0D99D30093B6D1 /* LatoItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LatoItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB502A0D99D30093B6D1 /* Lato.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lato.ttf; sourceTree = "<group>"; };
-		CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AlegreyaBoldItalic.otf; sourceTree = "<group>"; };
-		CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AlegreyaItalic.otf; sourceTree = "<group>"; };
-		CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AlegreyaBold.otf; sourceTree = "<group>"; };
-		CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansBold.ttf; sourceTree = "<group>"; };
-		CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSans.ttf; sourceTree = "<group>"; };
-		CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansBoldItalic.ttf; sourceTree = "<group>"; };
-		CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DMSansItalic.ttf; sourceTree = "<group>"; };
 		CD6CC2102A216147008B82AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD6CC2122A216148008B82AA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD6CC2142A216149008B82AA /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -293,6 +238,10 @@
 		CD6CC2572A216641008B82AA /* fa */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD7821782A253DAE00F3B33A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD7821792A28FA2100F3B33A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		CDE9EB312A47431C0057217B /* PitagonSerif.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PitagonSerif.ttf; sourceTree = "<group>"; };
+		CDE9EB372A47499D0057217B /* AnekLatin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AnekLatin.ttf; sourceTree = "<group>"; };
+		CDE9EB3A2A474AD90057217B /* Newsreader.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Newsreader.ttf; sourceTree = "<group>"; };
+		CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RobotoSerif.ttf; sourceTree = "<group>"; };
 		CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTranslationAttributes.swift; sourceTree = "<group>"; };
 		D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ReadLess-ReadLessTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -411,21 +360,10 @@
 		0125BD1929D791EC00EAC61C /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				0150EA1929EDD6C7004FBDFA /* Alegreya.otf */,
-				CD4AEB5F2A0D9D2C0093B6D1 /* AlegreyaBold.otf */,
-				CD4AEB5D2A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf */,
-				CD4AEB5E2A0D9D2C0093B6D1 /* AlegreyaItalic.otf */,
+				CDE9EB372A47499D0057217B /* AnekLatin.ttf */,
 				0125BD2529D791EC00EAC61C /* AntDesign.ttf */,
-				CD4AEB7A2A0D9D860093B6D1 /* DMSans.ttf */,
-				CD4AEB792A0D9D860093B6D1 /* DMSansBold.ttf */,
-				CD4AEB7B2A0D9D860093B6D1 /* DMSansBoldItalic.ttf */,
-				CD4AEB7C2A0D9D860093B6D1 /* DMSansItalic.ttf */,
 				0125BD2029D791EC00EAC61C /* Entypo.ttf */,
 				0125BD3229D791EC00EAC61C /* EvilIcons.ttf */,
-				CD4AEB1D2A0D92DD0093B6D1 /* Faustina.ttf */,
-				CD4AEB352A0D975C0093B6D1 /* FaustinaBold.ttf */,
-				CD4AEB372A0D975C0093B6D1 /* FaustinaBoldItalic.ttf */,
-				CD4AEB362A0D975C0093B6D1 /* FaustinaItalic.ttf */,
 				0125BD1D29D791EC00EAC61C /* Feather.ttf */,
 				0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */,
 				0125BD2329D791EC00EAC61C /* FontAwesome5_Brands.ttf */,
@@ -434,18 +372,12 @@
 				0125BD1A29D791EC00EAC61C /* Fontisto.ttf */,
 				0125BD2929D791EC00EAC61C /* Foundation.ttf */,
 				0125BD2A29D791EC00EAC61C /* Ionicons.ttf */,
-				CD4AEB502A0D99D30093B6D1 /* Lato.ttf */,
-				CD4AEB4D2A0D99D30093B6D1 /* LatoBold.ttf */,
-				CD4AEB4E2A0D99D30093B6D1 /* LatoBoldItalic.ttf */,
-				CD4AEB4F2A0D99D30093B6D1 /* LatoItalic.ttf */,
-				CD4AEB212A0D93180093B6D1 /* Manuale.ttf */,
-				CD4AEB412A0D99780093B6D1 /* ManualeBold.ttf */,
-				CD4AEB432A0D99780093B6D1 /* ManualeBoldItalic.ttf */,
-				CD4AEB422A0D99780093B6D1 /* ManualeItalic.ttf */,
 				0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */,
 				0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */,
+				CDE9EB3A2A474AD90057217B /* Newsreader.ttf */,
 				0125BD1C29D791EC00EAC61C /* Octicons.ttf */,
-				0150EA1F29EE16D8004FBDFA /* Roboto.ttf */,
+				CDE9EB312A47431C0057217B /* PitagonSerif.ttf */,
+				CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */,
 				0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */,
 				0125BD3129D791EC00EAC61C /* Zocial.ttf */,
 			);
@@ -796,43 +728,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD4AEB1F2A0D92DD0093B6D1 /* Faustina.ttf in Resources */,
 				0143022329FACEDC00D40293 /* Octicons.ttf in Resources */,
-				CD4AEB452A0D99780093B6D1 /* ManualeBold.ttf in Resources */,
+				CDE9EB332A47431C0057217B /* PitagonSerif.ttf in Resources */,
 				0143022929FACEDC00D40293 /* Foundation.ttf in Resources */,
+				CDE9EB392A47499D0057217B /* AnekLatin.ttf in Resources */,
 				010F0CEB29E88D480064DD97 /* Preview Assets.xcassets in Resources */,
 				0143022229FACEDC00D40293 /* Entypo.ttf in Resources */,
-				CD4AEB232A0D93180093B6D1 /* Manuale.ttf in Resources */,
 				0143022629FACEDC00D40293 /* FontAwesome5_Brands.ttf in Resources */,
-				0150EA2129EE16D8004FBDFA /* Roboto.ttf in Resources */,
 				0143021F29FACEDC00D40293 /* AntDesign.ttf in Resources */,
 				0143022A29FACEDC00D40293 /* Feather.ttf in Resources */,
-				CD4AEB872A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */,
-				CD4AEB392A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */,
-				CD4AEB482A0D99780093B6D1 /* ManualeItalic.ttf in Resources */,
-				CD4AEB3F2A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */,
-				CD4AEB7E2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */,
-				CD4AEB552A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */,
 				0143021D29FACEDC00D40293 /* Zocial.ttf in Resources */,
-				CD4AEB642A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */,
 				0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */,
-				CD4AEB812A0D9D860093B6D1 /* DMSans.ttf in Resources */,
 				0143022B29FACEDC00D40293 /* MaterialCommunityIcons.ttf in Resources */,
 				0143022529FACEDC00D40293 /* EvilIcons.ttf in Resources */,
-				CD4AEB582A0D99D30093B6D1 /* LatoItalic.ttf in Resources */,
-				CD4AEB672A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */,
 				0143022729FACEDC00D40293 /* SimpleLineIcons.ttf in Resources */,
-				CD4AEB3C2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */,
-				CD4AEB612A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */,
-				CD4AEB842A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */,
-				CD4AEB4B2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */,
+				CDE9EB3C2A474AD90057217B /* Newsreader.ttf in Resources */,
 				0143022129FACEDC00D40293 /* Ionicons.ttf in Resources */,
 				0143022029FACEDC00D40293 /* Fontisto.ttf in Resources */,
-				CD4AEB522A0D99D30093B6D1 /* LatoBold.ttf in Resources */,
-				0150EA1B29EDD6C7004FBDFA /* Alegreya.otf in Resources */,
-				CD4AEB5B2A0D99D30093B6D1 /* Lato.ttf in Resources */,
 				0143021C29FACEDC00D40293 /* FontAwesome5_Regular.ttf in Resources */,
 				0143022829FACEDC00D40293 /* FontAwesome.ttf in Resources */,
+				CDE9EB3F2A474B050057217B /* RobotoSerif.ttf in Resources */,
 				010F0CE829E88D480064DD97 /* Assets.xcassets in Resources */,
 				0143021E29FACEDC00D40293 /* FontAwesome5_Solid.ttf in Resources */,
 			);
@@ -856,43 +771,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0150EA1A29EDD6C7004FBDFA /* Alegreya.otf in Resources */,
+				CDE9EB382A47499D0057217B /* AnekLatin.ttf in Resources */,
 				0125BD4C29D791ED00EAC61C /* FontAwesome5_Regular.ttf in Resources */,
-				0150EA2029EE16D8004FBDFA /* Roboto.ttf in Resources */,
-				CD4AEB542A0D99D30093B6D1 /* LatoBoldItalic.ttf in Resources */,
 				0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */,
 				0125BD4A29D791ED00EAC61C /* Ionicons.ttf in Resources */,
-				CD4AEB632A0D9D2C0093B6D1 /* AlegreyaItalic.otf in Resources */,
 				0125BD5129D791ED00EAC61C /* Zocial.ttf in Resources */,
 				0125BD5229D791ED00EAC61C /* EvilIcons.ttf in Resources */,
 				0125BD4929D791ED00EAC61C /* Foundation.ttf in Resources */,
 				0125BD4B29D791ED00EAC61C /* FontAwesome5_Solid.ttf in Resources */,
-				CD4AEB3B2A0D975C0093B6D1 /* FaustinaItalic.ttf in Resources */,
-				CD4AEB572A0D99D30093B6D1 /* LatoItalic.ttf in Resources */,
-				CD4AEB222A0D93180093B6D1 /* Manuale.ttf in Resources */,
-				CD4AEB512A0D99D30093B6D1 /* LatoBold.ttf in Resources */,
 				01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */,
 				0125BD4529D791ED00EAC61C /* AntDesign.ttf in Resources */,
+				CDE9EB3B2A474AD90057217B /* Newsreader.ttf in Resources */,
+				CDE9EB322A47431C0057217B /* PitagonSerif.ttf in Resources */,
+				CDE9EB3E2A474B050057217B /* RobotoSerif.ttf in Resources */,
 				0125BD3A29D791ED00EAC61C /* Fontisto.ttf in Resources */,
-				CD4AEB3E2A0D975C0093B6D1 /* FaustinaBoldItalic.ttf in Resources */,
-				CD4AEB662A0D9D2C0093B6D1 /* AlegreyaBold.otf in Resources */,
-				CD4AEB5A2A0D99D30093B6D1 /* Lato.ttf in Resources */,
-				CD4AEB7D2A0D9D860093B6D1 /* DMSansBold.ttf in Resources */,
 				0125BD4F29D791ED00EAC61C /* FontAwesome.ttf in Resources */,
-				CD4AEB602A0D9D2C0093B6D1 /* AlegreyaBoldItalic.otf in Resources */,
 				0125BD3D29D791ED00EAC61C /* Feather.ttf in Resources */,
-				CD4AEB862A0D9D860093B6D1 /* DMSansItalic.ttf in Resources */,
-				CD4AEB472A0D99780093B6D1 /* ManualeItalic.ttf in Resources */,
 				CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */,
-				CD4AEB1E2A0D92DD0093B6D1 /* Faustina.ttf in Resources */,
-				CD4AEB802A0D9D860093B6D1 /* DMSans.ttf in Resources */,
-				CD4AEB832A0D9D860093B6D1 /* DMSansBoldItalic.ttf in Resources */,
-				CD4AEB382A0D975C0093B6D1 /* FaustinaBold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0125BD4329D791ED00EAC61C /* FontAwesome5_Brands.ttf in Resources */,
 				0125BD5829D791ED00EAC61C /* SimpleLineIcons.ttf in Resources */,
-				CD4AEB4A2A0D99780093B6D1 /* ManualeBoldItalic.ttf in Resources */,
-				CD4AEB442A0D99780093B6D1 /* ManualeBold.ttf in Resources */,
 				0125BD4429D791ED00EAC61C /* MaterialCommunityIcons.ttf in Resources */,
 				0125BD5929D791ED00EAC61C /* MaterialIcons.ttf in Resources */,
 				0125BD4029D791ED00EAC61C /* Entypo.ttf in Resources */,
@@ -1474,7 +1372,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
@@ -1484,7 +1382,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.10.3;
+				MARKETING_VERSION = 1.10.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1515,7 +1413,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Read Less";
@@ -1524,7 +1422,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.10.3;
+				MARKETING_VERSION = 1.10.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

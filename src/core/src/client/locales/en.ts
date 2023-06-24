@@ -173,7 +173,7 @@ export const enStrings = {
   walkthroughs_appearance_selectTheme: 'Light or dark mode?',
   walkthroughs_appearance_sourceLinks: 'Tap the toggle to see what appearance you prefer',
   walkthroughs_appearance_sourceLinksDescription: 'Tapping on the source links will open the original article in a browser',
-  walkthroughs_appearance_stackTitle: 'Customize the Look and Feel',
+  walkthroughs_appearance_stackTitle: 'Customize Appearance',
   walkthroughs_appearance_youCanAlwaysSee: 'You can always see the source links after tapping a card itself.\n\nLong pressing will also copy the url.',
 
   // walkthroughs - bookmark
@@ -219,7 +219,8 @@ export const enStrings = {
   walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP2: 'As well as insights from large language models (OpenAI\'s ChatGPT)',
   walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP3: 'However, it\'s important to be aware of **potential biases**, including political skew, in sentiment measurement especially from large language models.',
   walkthroughs_sentiment_howIsSentimetMeasured: 'How is sentiment measured?',
-  walkthroughs_sentiment_howIsSentimetMeasuredDescription: 'Sentiment is measured using a scale from **-1** to **1**.\n**-1** is very negative, **0** is neutral, and **1** is very positive.',
+  walkthroughs_sentiment_howIsSentimetMeasuredDescription1: 'Sentiment is measured using a scale from **-1** to **1**.',
+  walkthroughs_sentiment_howIsSentimetMeasuredDescription2: ' **-1** is very negative, **0** is neutral, and **1** is very positive.',
   walkthroughs_sentiment_insteadOfRemoving: '**Instead of removing sentiment altogether**, Read Less aims to **measure sentiment** over time.',
   walkthroughs_sentiment_lexiconBased: 'lexicon-based',
   walkthroughs_sentiment_score: 'Each article summary has a sentiment score, which can be shown in its header for quick reference',

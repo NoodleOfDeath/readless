@@ -17,6 +17,7 @@ export function Text({
   const textStyle = useTextStyles({
     ...props, 
     fontSizeFixed: fontSizeFixed || props.adjustsFontSizeToFit, 
+    textTransform: capitalize ? 'capitalize' : props.textTransform,
   });
   return (
     <View { ...props }>

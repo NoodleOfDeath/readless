@@ -37,10 +37,13 @@ export function ColorSchemePicker({
   return (
     <SegmentedButtons
       { ...props }
+      borderRadius={ 100 }
+      overflow='hidden'
+      outlined
       buttonProps={ { 
         justifyCenter: true, 
-        outlined: true,
         p: 12,
+        system: true,
         textCenter: true,
       } }
       initialValue={ colorScheme ?? 'system' }

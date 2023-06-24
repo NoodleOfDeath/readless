@@ -29,14 +29,24 @@ export function CompactModePicker({
       <PrefSwitch
         leftLabel={ labeled && (
           <View>
-            <Button caption gap={ 4 } leftIcon="view-agenda" iconSize={ 24 } bold itemsCenter>
+            <Button 
+              caption
+              gap={ 4 }
+              leftIcon="view-agenda"
+              iconSize={ 24 }
+              itemsCenter>
               {strings.settings_expanded}
             </Button>
           </View>
         ) }
         rightLabel={ labeled && (
           <View>
-            <Button caption gap={ 4 } leftIcon="view-headline" iconSize={ 24 } bold itemsCenter>
+            <Button 
+              caption
+              gap={ 4 }
+              leftIcon="view-headline"
+              iconSize={ 24 }
+              itemsCenter>
               {strings.settings_compactMode}
             </Button>
           </View>

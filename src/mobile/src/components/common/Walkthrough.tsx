@@ -7,9 +7,9 @@ import Orientation from 'react-native-orientation-locker';
 import { 
   ActionSheet,
   Button,
-  Icon,
+  Chip,
+  Image,
   Markdown,
-  Text,
   View,
   WalkthroughSlider,
 } from '~/components';
@@ -19,6 +19,7 @@ import { strings } from '~/locales';
 
 export type WalkthroughStep = {
   artwork?: React.ReactNode;
+  artworkBelow?: boolean;
   title?: React.ReactNode;
   body?: React.ReactNode;
   footer?: React.ReactNode;
@@ -45,17 +46,48 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   } = React.useMemo(() => ({ ...payload }), [payload]);
   
   const computedSteps = React.useMemo(() => {
-    return steps.map((step, i) => (
-      <View gap={ 12 } key={ i }>
-        {typeof step.artwork === 'string' ? <Markdown subtitle1>{step.artwork}</Markdown> : step.artwork}
-        <View col />
-        {typeof step.title === 'string' ? <Markdown h4 bold textCenter highlightStyle={ { textDecorationLine: 'underline' } }>{step.title}</Markdown> : step.title}
-        <View col />
-        {typeof step.body === 'string' ? <Markdown subtitle1>{step.body}</Markdown> : step.body}
-        <View col />
-        {typeof step.footer === 'string' ? <Markdown subtitle1>{step.footer}</Markdown> : step.footer}
-      </View>
-    ));
+    return steps.map((step, i) => {
+      const image = 
+    typeof step.artwork === 'string' ? (
+      <Image 
+        rounded
+        overflow='hidden'
+        elevated
+        width='100%'
+        height={ 200 }
+        source={ { uri: step.artwork } } />
+    ) : step.artwork;
+      return (
+        <View gap={ 12 } key={ i }>
+          {!step.artworkBelow && image}
+          {typeof step.title === 'string' ? (
+            <Markdown 
+              h4
+              bold
+              textCenter
+              system
+              highlightStyle={ { textDecorationLine: 'underline' } }>
+              {step.title}
+            </Markdown>
+          ) : step.title}
+          {step.artworkBelow && image}
+          {typeof step.body === 'string' ? (
+            <Markdown 
+              subtitle1
+              system>
+              {step.body}
+            </Markdown>
+          ) : step.body}
+          {typeof step.footer === 'string' ? (
+            <Markdown 
+              subtitle1
+              system>
+              {step.footer}
+            </Markdown>
+          ) : step.footer}
+        </View>
+      );
+    });
   }, [steps]);
   
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<React.ReactNode>) => {
@@ -71,68 +103,43 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   
   const renderPrevButton = React.useCallback(() => {
     return (
-      <View 
-        elevated
-        width={ 40 }
-        height={ 40 }
-        justifyCenter
-        itemsCenter
-        borderRadius={ 24 }>
-        <Icon
-          name="arrow-left"
-          color={ theme.colors.text }
-          size={ 24 } />
-      </View>
+      <Chip 
+        contained
+        system
+        leftIcon="arrow-left"
+        iconSize={ 24 } />
     );
-  }, [theme]);
+  }, []);
   
   const renderNextButton = React.useCallback(() => {
     return (
-      <View 
-        elevated
-        width={ 40 }
-        height={ 40 }
-        justifyCenter
-        itemsCenter
-        borderRadius={ 24 }>
-        <Icon
-          name="arrow-right"
-          color={ theme.colors.text }
-          size={ 24 } />
-      </View>
+      <Chip 
+        contained
+        system
+        leftIcon="arrow-right"
+        iconSize={ 24 } />
     );
-  }, [theme]);
+  }, []);
   
   const renderSkipButton = React.useCallback(() => {
     return (
-      <View 
-        elevated
-        px={ 10 }
-        height={ 40 }
-        justifyCenter
-        itemsCenter
-        borderRadius={ 24 }>
-        <Text>{strings.action_skip}</Text>
-      </View>
+      <Chip
+        contained
+        system>
+        {strings.action_skip}
+      </Chip>
     );
   }, []);
   
   const renderDoneButton = React.useCallback(() => {
     return (
-      <View 
-        elevated
-        width={ 40 }
-        height={ 40 }
-        justifyCenter
-        itemsCenter
-        borderRadius={ 24 }>
-        <Icon
-          name="check"
-          color={ theme.colors.text }
-          size={ 24 } />
-      </View>
+      <Chip 
+        contained
+        system
+        leftIcon="check"
+        iconSize={ 24 } />
     );
-  }, [theme]);
+  }, []);
 
   React.useEffect(() => {
     if (isTablet) {
@@ -154,16 +161,11 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
           <View flexRow m={ 12 }>
             <View flexGrow={ 1 } />
             <Button
-              elevated
-              flexRow
-              px={ 8 }
-              height={ 40 }
-              justifyCenter
-              touchable
-              itemsCenter
-              borderRadius={ 24 }
+              system
+              contained
               onPress={ () => SheetManager.hide(props.sheetId) }
-              leftIcon={ <Icon name="close" size={ 24 } /> }>
+              leftIcon='close'
+              iconSize={ 24 }>
               {closeLabel}
             </Button>
           </View>

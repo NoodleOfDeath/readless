@@ -5,6 +5,7 @@ export * from './Banner';
 export * from './Button';
 export * from './CardStack';
 export * from './Checkbox';
+export * from './Chip';
 export * from './CollapsedView';
 export * from './DataTable';
 export * from './Dialog';

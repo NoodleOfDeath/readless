@@ -36,7 +36,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter>
+          <Markdown subtitle1 textCenter system>
             {strings.walkthroughs_customFeed_letsStart}
           </Markdown>
           <CategoryPicker height={ 500 } />
@@ -47,7 +47,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter>
+          <Markdown subtitle1 textCenter system>
             {strings.walkthroughs_customFeed_readlessPulls}
           </Markdown>
           <OutletPicker height={ 500 } />
@@ -96,9 +96,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
             </View>
           </View>
           <Button
-            elevated
-            rounded
-            p={ 6 }
+            contained
             onPress={ onDone }>
             {strings.mise_sweetGotIt}
           </Button>

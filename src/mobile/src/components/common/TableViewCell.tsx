@@ -14,7 +14,11 @@ import {
   TextProps,
   View,
 } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import {
+  useStyles,
+  useTextStyles,
+  useTheme,
+} from '~/hooks';
 
 type TableViewCellImageProps = ChildlessViewProps & {
   icon?: React.ReactNode;
@@ -83,8 +87,11 @@ export type TableViewCellProps = TextProps & ChildlessViewProps & {
 
 export function TableViewCell(props: TableViewCellProps) {
   const theme= useTheme();
-  const style = useStyles({ ...props, fontSizeFixed: true });
-  const stylesWithoutFontScaling = { ...style };
+  const style = useStyles(props);
+  const textStyles = useTextStyles({
+    ...props, fontSizeFixed: true, system: true, 
+  });
+  const stylesWithoutFontScaling = { ...textStyles };
   delete stylesWithoutFontScaling.fontSize;
   return (
     <Cell

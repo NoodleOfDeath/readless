@@ -20,6 +20,7 @@ export type GridPickerProps<
   InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
   CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
 > = Omit<PickerProps<T, P, Multi, InitialValue, CurrentValue>, 'render'> & {
+  centered?: boolean;
   scrollViewProps?: Partial<ScrollViewProps>;
   buttonProps?: Partial<ButtonProps> | ((state: SelectOptionState<T>) => Partial<ButtonProps>);
 };
@@ -31,6 +32,7 @@ export function GridPicker<
   InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
   CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
 >({
+  centered,
   scrollViewProps,
   buttonProps: buttonProps0,
   ...props
@@ -40,12 +42,10 @@ export function GridPicker<
 
   const buttonProps = React.useMemo(() => {
     return (state: SelectOptionState<T>) => ({
-      bg: state.selected ? theme.colors.selectedBackground : undefined,
-      color: state.selected ? theme.colors.contrastText : undefined,
-      underline: state.selected,
+      ...(state.selected ? theme.components.chipSelected : undefined),
       ...(buttonProps0 instanceof Function ? buttonProps0(state) : buttonProps0),
     });
-  }, [buttonProps0, theme.colors.contrastText, theme.colors.selectedBackground]);
+  }, [buttonProps0, theme.components.chipSelected]);
 
   return (
     <Picker
@@ -60,17 +60,16 @@ export function GridPicker<
             flexGrow={ 1 }
             flexWrap="wrap"
             p={ 8 }
+            itemsCenter={ centered }
+            justifyCenter={ centered }
             colGap={ 8 }
             rowGap={ 8 }>
             {options.map((option) => (
               <Button
                 key={ option.value }
-                elevated
-                horizontal
+                contained
                 haptic
-                rounded
                 gap={ 6 }
-                p={ 6 }
                 { ...(buttonProps instanceof Function ? buttonProps({ 
                   currentValue: props.multi ? value : value[0] != null ? value[0] as T : undefined,
                   option, 
