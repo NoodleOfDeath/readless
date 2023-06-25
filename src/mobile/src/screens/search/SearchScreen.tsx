@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 
 import ms from 'ms';
+import { SheetManager } from 'react-native-actions-sheet';
 
-import { SearchMenu, TextInputHandles } from './SearchMenu';
 import { WalkthroughStack } from './WalkthroughStack';
 
 import {
@@ -54,6 +54,18 @@ export function SearchScreen({
   route,
   navigation,
 }: ScreenProps<'search'>) {
+
+  // hooks
+  const { search, navigate } = useNavigation();
+  const { getSummaries, handleInteraction } = useSummaryClient();
+  const theme = useTheme();
+
+  // contexts
+  const { shareTarget } = React.useContext(DialogContext);
+  const { supportsMasterDetail } = React.useContext(LayoutContext);
+  const {
+    queueSummary, currentTrackIndex, preloadCount,
+  } = React.useContext(MediaContext);
   const { 
     followedCategories,
     followedOutlets,
@@ -63,42 +75,17 @@ export function SearchScreen({
     sentimentEnabled,
     setPreference,
   } = React.useContext(SessionContext);
-  const {
-    queueSummary, currentTrackIndex, preloadCount,
-  } = React.useContext(MediaContext);
-  const { shareTarget } = React.useContext(DialogContext);
-  const { getSummaries, handleInteraction } = useSummaryClient();
-  const { supportsMasterDetail } = React.useContext(LayoutContext);
-  const { search, navigate } = useNavigation();
-  const theme = useTheme();
   
+  // search state
   const prefilter = React.useMemo(() => route?.params?.prefilter, [route?.params?.prefilter]);
   const specificIds = React.useMemo(() => (route?.params?.specificIds), [route]);
-
   const [onlyCustomNews, setOnlyCustomNews] = React.useState(Boolean((!prefilter && showOnlyCustomNews) || route?.params?.onlyCustomNews));
   const [loading, setLoading] = React.useState(false);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
-  const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
-  const [translations, setTranslations] = React.useState<Record<number, PublicSummaryTranslationAttributes[]>>({});
-  const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
-  const [totalResultCount, setTotalResultCount] = React.useState(0);
-  const [averageSentiment, setAverageSentiment] = React.useState<number>();
-
   const [pageSize] = React.useState(10);
   const [page, setPage] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
   const [keywords, setKeywords] = React.useState<string[]>([]);
-  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
-  const [showWalkthroughs, setShowWalkthroughs] = React.useState(true);
-
-  const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
-  const [resizing, setResizing] = React.useState(false);
-
-  const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
-  
-  const [lastActive, setLastActive] = React.useState(Date.now());
-
-  const searchInputRef = React.useRef<TextInputHandles>(null);
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
@@ -120,15 +107,22 @@ export function SearchScreen({
   
   const noResults = React.useMemo(() => onlyCustomNews && !followFilter, [onlyCustomNews, followFilter]);
 
-  const handlePlayAll = React.useCallback(async () => {
-    if (summaries.length < 1) {
-      return;
-    }
-    queueSummary(summaries);
-    summaries.forEach((summary) => {
-      handleInteraction(summary, InteractionType.Listen);
-    });
-  }, [summaries, queueSummary, handleInteraction]);
+  // display state
+  const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
+  const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
+  const [translations, setTranslations] = React.useState<Record<number, PublicSummaryTranslationAttributes[]>>({});
+  const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
+  const [totalResultCount, setTotalResultCount] = React.useState(0);
+  const [averageSentiment, setAverageSentiment] = React.useState<number>();
+  const [showWalkthroughs, setShowWalkthroughs] = React.useState(true);
+  const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
+  const [lastActive, setLastActive] = React.useState(Date.now());
+
+  // animation state
+  const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
+  const [resizing, setResizing] = React.useState(false);
+
+  // callbacks
 
   const load = React.useCallback(async (page: number) => {
     if (loading) {
@@ -177,10 +171,10 @@ export function SearchScreen({
       setSummaries((prev) => {
         const rows = data.rows.reverse().filter((n, i) => {
           if (prefilter) {
-            return !(prev.some((p) => p.id === n.id));
+            return !(prev.some((p) => p.id === n.id)) && !(n.id in ({ ...removedSummaries })) ;
           }
           const children = [...data.rows].slice(i).map((r) => r.siblings ?? []).flat();
-          return !(prev.some((p) => p.id === n.id || (p.siblings?.some((s) => n.id === s.id))) || children.some((c) => n.id === c.id));
+          return !(prev.some((p) => p.id === n.id || (p.siblings?.some((s) => n.id === s.id))) || children.some((c) => n.id === c.id)) && !(n.id in ({ ...removedSummaries }));
         }).reverse();
         if (page === 0) {
           return (prev = rows);
@@ -198,60 +192,17 @@ export function SearchScreen({
     } finally {
       setLoading(false);
     }
-  }, [loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize]);
+  }, [loading, onlyCustomNews, followFilter, searchText, prefilter, getSummaries, specificIds, excludeIds, pageSize, removedSummaries]);
   
-  React.useEffect(() => {
-    if (prefilter) {
-      setSearchText(prefilter + ' ');
-      navigation?.setOptions({ 
-        headerBackTitle: '',
-        headerBackVisible: true,
-        headerShown: true,
-        headerTitle: () => (
-          <View row gap={ 6 } onPress={ () => searchInputRef.current?.focus() }>
-            <Icon name="magnify" size={ 24 } />
-            <Text>{prefilter}</Text>
-          </View>
-        ),
-      });
-      setKeywords(parseKeywords(prefilter));
-    } else {
-      setSearchText('');
-      navigation?.setOptions({ 
-        headerBackVisible: false,
-        headerShown: true,
-        headerTitle: () => (
-          <Switch 
-            leftLabel={ <Icon name="filter-off" /> }
-            rightLabel={ <Icon name="filter-check" /> }
-            value={ onlyCustomNews }
-            onValueChange={ (value) => {
-              setOnlyCustomNews(value);
-              if (!prefilter) {
-                setPreference('showOnlyCustomNews', value);
-              }
-            } } />
-        ),
-      });
+  const handlePlayAll = React.useCallback(async () => {
+    if (summaries.length < 1) {
+      return;
     }
-  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference, searchInputRef]);
-  
-  const onMount = React.useCallback(() => {
-    setPage(0);
-    load(0);
-  }, [load]);
-
-  React.useEffect(() => {
-    onMount();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prefilter, onlyCustomNews]);
-  
-  React.useEffect(() => {
-    setSummaries((prev) => {
-      const newState = prev.filter((p) => !(p.id in ({ ...removedSummaries })));
-      return (prev = newState);
+    queueSummary(summaries);
+    summaries.forEach((summary) => {
+      handleInteraction(summary, InteractionType.Listen);
     });
-  }, [removedSummaries]);
+  }, [summaries, queueSummary, handleInteraction]);
 
   const loadMore = React.useCallback(async (event?: string) => {
     if (loading || totalResultCount <= summaries.length) {
@@ -326,15 +277,6 @@ export function SearchScreen({
     });
   }, [resizing, resizeAnimation, supportsMasterDetail]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => handleResize(), [
-    handleResize,
-    supportsMasterDetail, 
-    detailSummary, 
-    loading,
-    summaries,
-  ]);
-
   const loadMoreAsNeeded = React.useCallback(async () => {
     if (!currentTrackIndex) {
       return;
@@ -343,24 +285,77 @@ export function SearchScreen({
       await loadMore('autoloaded-for-track');
     }
   }, [currentTrackIndex, loadMore, preloadCount, summaries]);
+  
+  const showSearch = React.useCallback(() => {
+    SheetManager.show('search', ({
+      payload: {
+        initialValue:  prefilter ?? searchText,
+        onSubmit: (text?: string) => text?.trim() && search({ onlyCustomNews, prefilter: text }),
+      },
+    }));
+  }, [search, onlyCustomNews, prefilter, searchText]);
 
-  const summaryList = React.useMemo(() => {
-    return summaries.map((summary) => (
-      <Summary
-        key={ summary.id }
-        summary={ summary }
-        selected={ Boolean(supportsMasterDetail && summary.id === detailSummary?.id) }
-        keywords={ shareTarget?.id === summary.id ? undefined : keywords }
-        onFormatChange={ (format) => handleFormatChange(summary, format) }
-        onInteract={ (...e) => handleInteraction(summary, ...e) }
-        onLocalize={ (translations) => onLocalize(summary, translations) }
-        onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
-          const state = { ...prev };
-          state[summary.id] = onOrOff;
-          return (prev = state);
-        }) } />
-    ));
-  }, [detailSummary?.id, onLocalize, handleFormatChange, handleInteraction, keywords, shareTarget, summaries, supportsMasterDetail]);
+  const onMount = React.useCallback(() => {
+    setPage(0);
+    load(0);
+  }, [load]);
+
+  // effects
+  
+  React.useEffect(() => {
+    if (prefilter) {
+      setSearchText(prefilter + ' ');
+      navigation?.setOptions({ 
+        headerBackTitle: '',
+        headerBackVisible: true,
+        headerShown: true,
+        headerTitle: () => (
+          <Button
+            flexRow
+            gap={ 6 }
+            leftIcon="magnify"
+            iconSize={ 24 }
+            contained
+            onPress={ showSearch }>
+            {prefilter}
+          </Button>
+        ),
+      });
+      setKeywords(parseKeywords(prefilter));
+    } else {
+      setSearchText('');
+      navigation?.setOptions({ 
+        headerBackVisible: false,
+        headerShown: true,
+        headerTitle: () => (
+          <Switch 
+            leftLabel={ <Icon name="filter-off" /> }
+            rightLabel={ <Icon name="filter-check" /> }
+            value={ onlyCustomNews }
+            onValueChange={ (value) => {
+              setOnlyCustomNews(value);
+              if (!prefilter) {
+                setPreference('showOnlyCustomNews', value);
+              }
+            } } />
+        ),
+      });
+    }
+  }, [navigation, route, prefilter, handlePlayAll, summaries.length, onlyCustomNews, setPreference, showSearch]);
+  
+  React.useEffect(() => {
+    onMount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefilter, onlyCustomNews]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => handleResize(), [
+    handleResize,
+    supportsMasterDetail, 
+    detailSummary, 
+    loading,
+    summaries,
+  ]);
 
   React.useEffect(() => {
     loadMoreAsNeeded();
@@ -403,171 +398,194 @@ export function SearchScreen({
     }, [lastActive, load, prefilter]),
   });
 
+  // components
+
+  const summaryList = React.useMemo(() => {
+    return summaries.map((summary) => (
+      <Summary
+        key={ summary.id }
+        summary={ summary }
+        selected={ Boolean(supportsMasterDetail && summary.id === detailSummary?.id) }
+        keywords={ shareTarget?.id === summary.id ? undefined : keywords }
+        onFormatChange={ (format) => handleFormatChange(summary, format) }
+        onInteract={ (...e) => handleInteraction(summary, ...e) }
+        onLocalize={ (translations) => onLocalize(summary, translations) }
+        onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
+          const state = { ...prev };
+          state[summary.id] = onOrOff;
+          return (prev = state);
+        }) } />
+    ));
+  }, [detailSummary?.id, onLocalize, handleFormatChange, handleInteraction, keywords, shareTarget, summaries, supportsMasterDetail]);
+
   return (
     <Screen>
-      <SafeAreaView style={ { flexGrow: 1 } }>
-        <View col>
-          {sentimentEnabled && summaries.length > 0 && averageSentiment && (
-            <View 
-              elevated 
-              height={ 30 } 
-              zIndex={ 10 }
-              brBottomLeft={ 16 }
-              brBottomRight={ 16 }
-              p={ 4 }>
-              <View row gap={ 12 } justifyCenter itemsCenter>
-                <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
-                <Text caption>{`${fixedSentiment(averageSentiment)}`}</Text>
-                <Text caption>{`${totalResultCount} ${strings.search_results}`}</Text>
-              </View>
-            </View>
-          )}
-          {!loading && onlyCustomNews && summaries.length === 0 && (
-            <View col justifyCenter p={ 16 } gap={ 8 }>
-              <Text subtitle1>
-                {strings.search_filtersTooSpecific}
-              </Text>
-              <Button 
-                itemsCenter
-                rounded 
-                outlined 
-                p={ 8 }
-                onPress={ () => navigate('browse') }>
-                {strings.search_goToBrowse}
-              </Button>
-              <Button 
-                itemsCenter
-                rounded 
-                outlined 
-                p={ 8 }
-                onPress={ () => setOnlyCustomNews(false) }>
-                {strings.search_turnOffFilters}
-              </Button>
-            </View>
-          )}
-          {prefilter && onlyCustomNews && (
-            <View>
-              <Text caption textCenter mx={ 12 }>{strings.search_customNewsSearch}</Text>
-              <Button 
-                itemsCenter
-                rounded 
-                outlined 
-                p={ 8 }
-                onPress={ () => setOnlyCustomNews(false) }>
-                {strings.search_turnOffFilters}
-              </Button>
-            </View>
-          )}
-          <View col>
-            <View row>
-              <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
-                <ScrollView
-                  refreshing={ summaries.length === 0 && loading }
-                  onScroll={ handleMasterScroll }
-                  onRefresh={ () => {
-                    setPage(0);
-                    load(0);
-                  } }>
-                  <View col width="100%" pt={ 12 }>
-                    {!prefilter && showWalkthroughs && (
-                      <WalkthroughStack 
-                        onClose={ () => setShowWalkthroughs(false) } />
-                    )}
-                    {summaryList}
-                    {!loading && !noResults && totalResultCount > summaries.length && (
-                      <View row justifyCenter p={ 16 } pb={ 24 }>
-                        <Button 
-                          outlined
-                          rounded
-                          p={ 8 }
-                          onPress={ () => loadMore() }>
-                          {strings.search_loadMore}
-                        </Button>
-                      </View>
-                    )}
-                    {loading && (
-                      <View row mb={ 64 }>
-                        <View row justifyCenter p={ 16 } pb={ 24 }>
-                          <ActivityIndicator size="large" color={ theme.colors.primary } />
-                        </View>
-                      </View>
-                    )}
-                    {summaries.length === 0 && !loading && (
-                      <View col gap={ 12 } itemsCenter justifyCenter>
-                        <Text textCenter mx={ 16 }>
-                          {strings.search_noResults}
-                          {' '}
-                          🥺
-                        </Text>
-                        <Button 
-                          itemsCenter
-                          rounded 
-                          outlined 
-                          p={ 8 }
-                          onPress={ () => load(0) }>
-                          {strings.search_reload}
-                        </Button>
-                      </View>
-                    )}
-                  </View>
-                </ScrollView>
-              </Animated.View>
-              <Animated.View style={ {
-                transform: [
-                  { perspective: 1000 }, 
-                  {
-                    rotateY: resizeAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ['0deg', '360deg'],
-                    }),
-                  },
-                  {
-                    scaleX: resizeAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 0],
-                    }),
-                  }, 
-                ],
-                width: '60%',
-              } }>
-                <ScrollView 
-                  refreshing={ summaries.length === 0 && loading }
-                  onScroll={ handleDetailScroll }
-                  mt={ 12 }
-                  px={ 12 }>
-                  {detailSummary && (
-                    <Summary
-                      summary={ detailSummary }
-                      initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                      keywords={ shareTarget?.id === detailSummary.id ? undefined : keywords }
-                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
-                      onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
-                  )}
-                </ScrollView>
-              </Animated.View>
+      <View col>
+        {sentimentEnabled && summaries.length > 0 && averageSentiment && (
+          <View 
+            elevated 
+            height={ 30 } 
+            zIndex={ 10 }
+            brBottomLeft={ 16 }
+            brBottomRight={ 16 }
+            p={ 4 }>
+            <View row gap={ 12 } justifyCenter itemsCenter>
+              <MeterDial value={ averageSentiment } width={ 30 } height={ 20 } />
+              <Text caption>{`${fixedSentiment(averageSentiment)}`}</Text>
+              <Text caption>{`${totalResultCount} ${strings.search_results}`}</Text>
             </View>
           </View>
+        )}
+        {!loading && onlyCustomNews && summaries.length === 0 && (
+          <View col justifyCenter p={ 16 } gap={ 8 }>
+            <Text subtitle1>
+              {strings.search_filtersTooSpecific}
+            </Text>
+            <Button 
+              itemsCenter
+              rounded 
+              outlined 
+              p={ 8 }
+              onPress={ () => navigate('browse') }>
+              {strings.search_goToBrowse}
+            </Button>
+            <Button 
+              itemsCenter
+              rounded 
+              outlined 
+              p={ 8 }
+              onPress={ () => setOnlyCustomNews(false) }>
+              {strings.search_turnOffFilters}
+            </Button>
+          </View>
+        )}
+        {prefilter && onlyCustomNews && (
+          <View>
+            <Text caption textCenter mx={ 12 }>{strings.search_customNewsSearch}</Text>
+            <Button 
+              itemsCenter
+              rounded 
+              outlined 
+              p={ 8 }
+              onPress={ () => setOnlyCustomNews(false) }>
+              {strings.search_turnOffFilters}
+            </Button>
+          </View>
+        )}
+        <View col>
+          <View row>
+            <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
+              <ScrollView
+                refreshing={ summaries.length === 0 && loading }
+                onScroll={ handleMasterScroll }
+                onRefresh={ () => {
+                  setPage(0);
+                  load(0);
+                } }>
+                <View col width="100%" pt={ 12 }>
+                  {!prefilter && showWalkthroughs && (
+                    <WalkthroughStack 
+                      onClose={ () => setShowWalkthroughs(false) } />
+                  )}
+                  {summaryList}
+                  {!loading && !noResults && totalResultCount > summaries.length && (
+                    <View row justifyCenter p={ 16 } pb={ 24 }>
+                      <Button 
+                        outlined
+                        rounded
+                        p={ 8 }
+                        onPress={ () => loadMore() }>
+                        {strings.search_loadMore}
+                      </Button>
+                    </View>
+                  )}
+                  {loading && (
+                    <View row mb={ 64 }>
+                      <View row justifyCenter p={ 16 } pb={ 24 }>
+                        <ActivityIndicator size="large" color={ theme.colors.primary } />
+                      </View>
+                    </View>
+                  )}
+                  {summaries.length === 0 && !loading && (
+                    <View col gap={ 12 } itemsCenter justifyCenter>
+                      <Text textCenter mx={ 16 }>
+                        {strings.search_noResults}
+                        {' '}
+                        🥺
+                      </Text>
+                      <Button 
+                        itemsCenter
+                        rounded 
+                        outlined 
+                        p={ 8 }
+                        onPress={ () => load(0) }>
+                        {strings.search_reload}
+                      </Button>
+                    </View>
+                  )}
+                </View>
+              </ScrollView>
+            </Animated.View>
+            <Animated.View style={ {
+              transform: [
+                { perspective: 1000 }, 
+                {
+                  rotateY: resizeAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '360deg'],
+                  }),
+                },
+                {
+                  scaleX: resizeAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+                }, 
+              ],
+              width: '60%',
+            } }>
+              <ScrollView 
+                refreshing={ summaries.length === 0 && loading }
+                onScroll={ handleDetailScroll }
+                mt={ 12 }
+                px={ 12 }>
+                {detailSummary && (
+                  <Summary
+                    summary={ detailSummary }
+                    initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+                    keywords={ shareTarget?.id === detailSummary.id ? undefined : keywords }
+                    onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                    onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
+                )}
+              </ScrollView>
+            </Animated.View>
+          </View>
         </View>
-        {summaries.length > 0 && (
-          <Button
-            absolute
-            right={ 16 }
-            bottom={ 64 }
-            elevated
-            contained
-            opacity={ 0.9 }
-            p={ 12 }
-            haptic
-            leftIcon="volume-high"
-            iconSize={ 32 }
-            onPress={ handlePlayAll } />
-        )}
-        {summaries.length > 0 && (
-          <SearchMenu
-            initialValue={ prefilter ?? searchText }
-            onSubmit={ (text) => text?.trim() && search({ onlyCustomNews, prefilter: text }) } />
-        )}
-      </SafeAreaView>
+      </View>
+      {summaries.length > 0 && (
+        <SafeAreaView>
+          <View absolute right={ 16 } bottom={ 24 } gap={ 12 }>          
+            <Button
+              elevated
+              contained
+              opacity={ 0.9 }
+              p={ 12 }
+              haptic
+              leftIcon="volume-high"
+              iconSize={ 32 }
+              onPress={ handlePlayAll } />
+            <Button
+              elevated
+              contained
+              opacity={ 0.9 }
+              p={ 12 }
+              haptic
+              leftIcon="magnify"
+              iconSize={ 32 }
+              onPress={ showSearch } />
+          </View>
+        </SafeAreaView>
+      )}
     </Screen>
   );
 }

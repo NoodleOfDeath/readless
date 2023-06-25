@@ -14,6 +14,7 @@ import {
   MainMenuDialog,
   OnboardingWalkthrough,
   PromoCodeWalkthrough,
+  SearchDialog,
   SentimentWalkthrough,
   ShareDialog,
   SharingWalkthrough,
@@ -28,6 +29,7 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
   React.useEffect(() => {
     // global
     registerSheet('main-menu', MainMenuDialog);
+    registerSheet('search', SearchDialog);
     registerSheet('subscribe', SubscribeDialog);
     // onboarding/features
     registerSheet('appearance-walkthrough', AppearanceWalkthrough);

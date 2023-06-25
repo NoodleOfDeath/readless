@@ -4,8 +4,13 @@ import { Chip, ChipProps } from '~/components';
 
 export type ButtonProps = ChipProps; 
 
-export function Button(props: ButtonProps) {
+export function Button({
+  touchable = true,
+  ...props
+}: ButtonProps) {
   return (
-    <Chip { ...props } />
+    <Chip 
+      touchable={ touchable }
+      { ...props } />
   );
 }

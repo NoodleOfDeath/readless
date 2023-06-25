@@ -1,7 +1,10 @@
 import React from 'react';
+import { Platform } from 'react-native';
 
 import {
   AVAILABLE_FONTS,
+  BASE_LETTER_SPACING,
+  BASE_LINE_HEIGHT_MULTIPLIER,
   DEFAULT_PREFERRED_FONT,
   FONT_SIZES,
   FontFamily,
@@ -74,18 +77,35 @@ export function useTextStyles({
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
+    
     const offsetFontSize = fontSize + (fontSizeFixed ? 0 : fontSizeOffset);
+    const computedFont = system ? SYSTEM_FONT : !AVAILABLE_FONTS.includes(fontFamily ?? fontFamily0 as FontFamily) ? DEFAULT_PREFERRED_FONT : fontFamily ?? fontFamily0;
     
-    attrs.push({ fontFamily : system ? SYSTEM_FONT : !AVAILABLE_FONTS.includes(fontFamily ?? fontFamily0 as FontFamily) ? DEFAULT_PREFERRED_FONT : fontFamily ?? fontFamily0 });
-    attrs.push({ fontSize : offsetFontSize });
+    const platformFont = Platform.select({
+      android: [computedFont, fontWeight ? 'bold' : undefined, fontStyle ? 'italic' : undefined].filter(Boolean).join('-'),
+      ios: computedFont,
+    }) ?? computedFont;
     
-    attrs.push({ letterSpacing: 0 + (letterSpacing ?? letterSpacing0) });
-    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (1.2 + lineHeightMultiplier)) });
+    const platformWeight = Platform.select({
+      android: undefined,
+      ios: fontWeight,
+    });
+    
+    const platformStyle = Platform.select({
+      android: undefined,
+      ios: fontStyle,
+    });
+    
+    attrs.push({ fontFamily: platformFont });
+    attrs.push({ fontSize: offsetFontSize });
+    
+    attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
+    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
     
     attrs.push(textAlign ? { textAlign } : undefined);
     
-    attrs.push(fontWeight ? { fontWeight } : undefined);
-    attrs.push(fontStyle ? { fontStyle } : undefined);
+    attrs.push(platformWeight ? { fontWeight: platformWeight } : undefined);
+    attrs.push(platformStyle ? { fontStyle: platformStyle } : undefined);
     attrs.push(textDecorationLine ? { textDecorationLine } : undefined);
 
     attrs.push(textTransform ? { textTransform } : undefined);

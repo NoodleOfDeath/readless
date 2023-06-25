@@ -4,6 +4,8 @@ import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
 import {
+  BASE_LETTER_SPACING,
+  BASE_LINE_HEIGHT_MULTIPLIER,
   FONT_SIZES,
   NumericPrefPicker,
   PrefSwitch,
@@ -48,7 +50,7 @@ export function SettingsTable() {
     setLoading(true);
     const files = await RNFS.readDir(RNFS.CachesDirectoryPath);
     const size = files.reduce((acc, file) => acc + file.size, 0);
-    setCacheSize(`${(size / 1000000).toFixed(1)}MB`);
+    setCacheSize(`${(size / 1_000_000).toFixed(1)}MB`);
     setLoading(false);
   }, []);
 
@@ -91,27 +93,27 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ strings.settings_lineHeight }
-          cellIcon="format-line-spacing"
-          cellAccessoryView={ (
-            <NumericPrefPicker
-              prefKey='lineHeightMultiplier'
-              offset={ 1.35 }
-              min={ -0.35 }
-              max={ 0.65 }
-              step={ 0.05 } />
-          ) } />
-        <TableViewCell
-          bold
           title={ strings.settings_letterSpacing }
           cellIcon="format-letter-spacing"
           cellAccessoryView={ (
             <NumericPrefPicker
               prefKey='letterSpacing'
-              offset={ 0.4 }
+              offset={ BASE_LETTER_SPACING }
               min={ -0.1 }
               max={ 1 }
               step={ 0.1 } />
+          ) } />
+        <TableViewCell
+          bold
+          title={ strings.settings_lineHeight }
+          cellIcon="format-line-spacing"
+          cellAccessoryView={ (
+            <NumericPrefPicker
+              prefKey='lineHeightMultiplier'
+              offset={ BASE_LINE_HEIGHT_MULTIPLER }
+              min={ -0.35 }
+              max={ 0.65 }
+              step={ 0.05 } />
           ) } />
       </TableViewSection>
       <TableViewSection header={ strings.settings_summaryDisplay }>

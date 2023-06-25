@@ -8,6 +8,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { PulseProps } from '~/components';
+
 export const AVAILABLE_FONTS = [
   'Anek Latin',
   'Pitagon Serif',
@@ -17,6 +19,9 @@ export const AVAILABLE_FONTS = [
 
 export const SYSTEM_FONT = 'Anek Latin';
 export const DEFAULT_PREFERRED_FONT = 'Anek Latin';
+
+export const BASE_LETTER_SPACING = 0;
+export const BASE_LINE_HEIGHT_MULTIPLIER = 1.2;
 
 export type FontFamily = (typeof AVAILABLE_FONTS[number]);
 
@@ -79,6 +84,9 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   // preset variants
   outlined?: boolean;
   rounded?: boolean;
+  
+  // preset animations
+  pulse?: boolean | PulseProps;
   
   // position
   absolute?: boolean;
