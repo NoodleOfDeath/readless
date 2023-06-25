@@ -82,7 +82,7 @@ export function useTextStyles({
     const computedFont = system ? SYSTEM_FONT : !AVAILABLE_FONTS.includes(fontFamily ?? fontFamily0 as FontFamily) ? DEFAULT_PREFERRED_FONT : fontFamily ?? fontFamily0;
     
     const platformFont = Platform.select({
-      android: [computedFont, fontWeight ? 'bold' : undefined, fontStyle ? 'italic' : undefined].filter(Boolean).join('-'),
+      android: [computedFont, [fontWeight ? 'Bold' : undefined, fontStyle ? 'Italic' : undefined].filter(Boolean).join('') || 'Regular'].join('-'),
       ios: computedFont,
     }) ?? computedFont;
     

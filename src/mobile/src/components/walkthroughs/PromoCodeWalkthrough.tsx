@@ -30,7 +30,7 @@ export function PromoCodeWalkthrough(props: SheetProps) {
     {
       body: (
         <View itemsCenter gap={ 24 }>
-          <Markdown subtitle1 textCenter system>{strings.walkthroughs_promoCodeDescription}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_promoCodeDescription}</Markdown>
           <Divider />
           <Chip
             h4
@@ -41,6 +41,7 @@ export function PromoCodeWalkthrough(props: SheetProps) {
             READLESSFIRST500
           </Chip>
           <Button
+            system
             contained
             onPress={ onDone }>
             {strings.misc_awesome}

@@ -12,9 +12,9 @@ import { PulseProps } from '~/components';
 
 export const AVAILABLE_FONTS = [
   'Anek Latin',
+  'Faustina',
   'Pitagon Serif',
-  'Newsreader',
-  'Roboto Serif',
+  'Newsreader 72pt',
 ] as const;
 
 export const SYSTEM_FONT = 'Anek Latin';

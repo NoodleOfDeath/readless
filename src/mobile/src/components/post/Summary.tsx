@@ -27,6 +27,7 @@ import {
   Popover,
   ReadingFormatPicker,
   ScrollView,
+  ScrollViewProps,
   Text,
   View,
 } from '~/components';
@@ -51,7 +52,7 @@ import {
 } from '~/locales';
 import { DateSorter, fixedSentiment } from '~/utils';
 
-type Props = ChildlessViewProps & {
+type Props = ChildlessViewProps & ScrollViewProps & {
   summary?: PublicSummaryGroup;
   tickInterval?: string;
   selected?: boolean;
@@ -99,6 +100,7 @@ function RenderActions({ actions }: RenderActionsProps) {
             flex={ 1 }>
             <Button 
               gap={ 6 }
+              system
               contained
               caption
               leftIcon={ action.leftIcon }
@@ -385,20 +387,19 @@ export function Summary({
   
   const timestamp = React.useMemo(() => {
     return (
-      <View flex={ 1 } flexGrow={ 1 }>
-        <Text 
-          bold 
-          adjustsFontSizeToFit
-          caption>
-          {formatTime(summary.originalDate)}
-        </Text>
-      </View>
+      <Text 
+        bold 
+        adjustsFontSizeToFit
+        textCenter
+        caption>
+        {formatTime(summary.originalDate)}
+      </Text>
     );
   }, [formatTime, summary.originalDate]);
   
   const sentimentMeter = React.useMemo(() => {
     return (
-      <View flexRow gap={ 3 }>
+      <View flexRow itemsCenter gap={ 3 }>
         <Text
           caption
           adjustsFontSizeToFit>
@@ -414,15 +415,17 @@ export function Summary({
   const title = React.useMemo(() => (
     <Highlighter
       bold
-      subtitle1={ Boolean(!(compact || compactMode) || initialFormat) }
+      h5={ Boolean(initialFormat) }
+      subtitle1={ Boolean(!(compact || compactMode) && !initialFormat) }
       body1={ (compact || compactMode) && !initialFormat }
       justifyCenter
+      adjustsFontSizeToFit
       color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
-      highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+      highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
       searchWords={ isShareTarget ? [] : keywords }>
       {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
     </Highlighter>
-  ), [compact, compactMode, initialFormat, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
+  ), [initialFormat, compact, compactMode, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const header = React.useMemo(() => (
     <View 
@@ -432,15 +435,13 @@ export function Summary({
       brTopLeft={ initialFormat ? 0 : 6 }
       brTopRight={ initialFormat ? 0 : 6 }
       zIndex={ 2 }
-      inactive>
-      <View
-        flexRow
-        itemsCenter
-        gap={ 6 }>
+      bg={ theme.colors.headerBackground }>
+      <View>
         {!initialFormat ? (
-          <React.Fragment>
+          <View flexRow itemsCenter gap={ 6 }>
             <Button 
               h5
+              adjustsFontSizeToFit
               leftIcon={ summary.category.icon && summary.category.icon }
               onPress={ () => !disableInteractions && openCategory(summary.category) } />
             <Text
@@ -450,51 +451,60 @@ export function Summary({
               {summary.outlet.displayName}
             </Text>
             {timestamp}
+            <View row />
             {(forceSentiment || sentimentEnabled) && sentimentMeter}
-          </React.Fragment>
+            {((compact || compactMode) && (
+              <Popover
+                menu
+                anchor={ <Icon name="dots-horizontal" color={ theme.colors.text } size={ 24 } /> }>
+                {menuActions}
+              </Popover>
+            ))}
+          </View>
         ) : (
-          <React.Fragment>
-            <View gap={ 3 } flex={ 2 }>
-              {title}
-              <View col />
-              {sentimentMeter}
-              {timestamp}
+          <View gap={ 6 }>
+            <View flexRow>
+              <View flex={ 10 } itemsCenter justifyCenter>
+                {title}
+              </View>
+              <View flex={ 4 } itemsCenter justifyCenter>
+                {sentimentMeter}
+                {timestamp}
+              </View>
             </View>
-            <View gap={ 3 }>
-              <Button 
-                gap={ 3 }
-                contained
-                justifyBetween
-                adjustsFontSizeToFit
-                px={ 12 }
-                leftIcon={ summary.category.icon && summary.category.icon }
-                rightIcon="chevron-right"
-                onPress={ () => !disableInteractions && openCategory(summary.category) }>
-                {summary.category.displayName}
-              </Button>
-              <Button
-                contained
-                justifyBetween
-                gap={ 3 }
-                rightIcon="chevron-right"
-                px={ 12 }
-                adjustsFontSizeToFit
-                onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
-                {summary.outlet.displayName}
-              </Button>
+            <View flexRow itemsCenter justifyCenter>
+              <View row />
+              <View flexRow gap={ 6 }>
+                <Button 
+                  gap={ 3 }
+                  system
+                  contained
+                  justifyBetween
+                  adjustsFontSizeToFit
+                  px={ 12 }
+                  leftIcon={ summary.category.icon && summary.category.icon }
+                  rightIcon="chevron-right"
+                  onPress={ () => !disableInteractions && openCategory(summary.category) }>
+                  {summary.category.displayName}
+                </Button>
+                <Button
+                  system
+                  contained
+                  justifyBetween
+                  gap={ 3 }
+                  rightIcon="chevron-right"
+                  px={ 12 }
+                  adjustsFontSizeToFit
+                  onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
+                  {summary.outlet.displayName}
+                </Button>
+              </View>
             </View>
-          </React.Fragment>
+          </View>
         )}
-        {((compact || compactMode) && !initialFormat && (
-          <Popover
-            menu
-            anchor={ <Icon name="dots-horizontal" color={ theme.colors.text } size={ 24 } /> }>
-            {menuActions}
-          </Popover>
-        ))}
       </View>
     </View>
-  ), [initialFormat, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, compact, compactMode, theme.colors.text, menuActions, disableInteractions, openCategory, openOutlet]);
+  ), [initialFormat, theme.colors.headerBackground, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, compact, compactMode, theme.colors.text, menuActions, disableInteractions, openCategory, openOutlet]);
 
   const renderRightActions = React.useCallback(() => {
     const actions = [{
@@ -616,7 +626,7 @@ export function Summary({
                 bold 
                 numberOfLines={ 1 }
                 color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
                 searchWords={ isShareTarget ? [] : keywords }>
                 { cleanString(sibling.title) }
               </Highlighter>
@@ -625,7 +635,7 @@ export function Summary({
         ))}
       </View>
     );
-  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, disableInteractions, formatTime, keywords, cleanString, openSummary]);
+  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, disableInteractions, formatTime, keywords, cleanString, openSummary]);
 
   const coverContent = React.useMemo(() => (
     <View>
@@ -681,8 +691,9 @@ export function Summary({
           flex={ 1 }
           flexGrow={ 1 }
           gap={ 6 }
-          pb={ 12 }>
-          <View flex={ 1 } flexGrow={ 1 } mx={ 12 }>
+          pt={ initialFormat ? 12 : undefined }
+          pb={ 6 }>
+          <View flex={ 1 } flexGrow={ 1 } gap={ 6 } mx={ 12 }>
             {!initialFormat && (
               <View flexRow flexGrow={ 1 }>
                 {title}
@@ -692,7 +703,7 @@ export function Summary({
             {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
               <View>
                 <Highlighter 
-                  highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                  highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
                   searchWords={ isShareTarget ? [] : keywords }>
                   { cleanString(localizedStrings.shortSummary ?? '') }
                 </Highlighter>
@@ -720,100 +731,119 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, title, translateToggle, showShortSummary, theme.colors.textDark, isShareTarget, keywords, cleanString, localizedStrings.shortSummary, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
+  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, title, translateToggle, showShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, isShareTarget, keywords, cleanString, localizedStrings.shortSummary, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
   
-  return (
-    <GestureHandlerRootView>
-      <Swipeable
-        enabled={ swipeable && !disableInteractions && !initialFormat && !isShareTarget }
-        renderRightActions={ renderRightActions }>
-        <ViewShot ref={ viewshot }>
-          <View 
-            flexGrow={ 1 }
-            elevated
-            style={ { ...theme.components.card, ...style } }
-            borderRadius={ initialFormat ? 0 : 6 }
-            my={ 6 }
-            ml={ initialFormat ? undefined : 12 }
-            mr={ initialFormat ? undefined : 12 }
-            bg={ containsTrigger ? '#eecccc' : undefined }
-            opacity={ isRead ? 0.75 : 1 }
-            onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
-            <View flexGrow={ 1 }>
-              {!hideCard && (
-                <View flexRow flexGrow={ 1 }>
-                  {!initialFormat && !isShareTarget && selected && (
-                    <View
-                      left={ 0 }
-                      top={ 0 }
-                      width={ 12 }
-                      bg={ theme.colors.primary } />
+  const cardBody = React.useMemo(() => (
+    <View flexGrow={ 1 }>
+      <CollapsedView 
+        disabled={ hideCard }
+        initiallyCollapsed={ false }
+        title={ (
+          <ReadingFormatPicker
+            my={ -12 }
+            elevated={ false }
+            format={ format } 
+            preferredFormat={ preferredReadingFormat }
+            onChange={ handleFormatChange } />
+        ) }>
+        {content && (
+          <View gap={ 6 } pb={ 12 }>
+            {translateToggle}
+            <View gap={ 12 } p={ 12 }>
+              {content.split('\n').map((content, i) => (                         
+                <View
+                  key={ `${content}-${i}` }
+                  itemsCenter
+                  gap={ 12 }
+                  flexRow>
+                  {format === 'bullets' && (
+                    <Icon
+                      name="circle"
+                      size={ 24 }
+                      flexRow
+                      flex={ 1 } />
                   )}
-                  <View
-                    flex={ 1 }
-                    flexGrow={ 1 }
-                    gap={ 6 }
-                    overflow='hidden'
-                    brTopLeft={ initialFormat ? 0 : 6 }
-                    brTopRight={ initialFormat ? 0 : 6 }>
-                    {header}
-                    {coverContent}
-                  </View>
+                  <Highlighter 
+                    flex={ format === 'bullets' ? 9 : 1 }
+                    flexRow
+                    highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+                    searchWords={ isShareTarget ? [] : keywords }>
+                    { cleanString(content) }
+                  </Highlighter>
                 </View>
-              )}
-              {initialFormat && (
-                <CollapsedView 
-                  disabled={ hideCard }
-                  initiallyCollapsed={ false }
-                  title={ (
-                    <ReadingFormatPicker
-                      my={ -12 }
-                      elevated={ false }
-                      format={ format } 
-                      preferredFormat={ preferredReadingFormat }
-                      onChange={ handleFormatChange } />
-                  ) }>
-                  {content && (
-                    <View gap={ 6 } pb={ 12 }>
-                      {translateToggle}
-                      <View gap={ 12 } p={ 12 }>
-                        {content.split('\n').map((content, i) => (                         
-                          <View
-                            key={ `${content}-${i}` }
-                            itemsCenter
-                            gap={ 12 }
-                            flexRow>
-                            {format === 'bullets' && (
-                              <Icon
-                                name="circle"
-                                size={ 24 }
-                                flexRow
-                                flex={ 1 } />
-                            )}
-                            <Highlighter 
-                              flex={ format === 'bullets' ? 9 : 1 }
-                              flexRow
-                              highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                              searchWords={ isShareTarget ? [] : keywords }>
-                              { cleanString(content) }
-                            </Highlighter>
-                          </View>
-                        ))}
-                      </View>
-                    </View>
-                  )}
-                </CollapsedView>
-              )}
-              {!hideAnalytics && initialFormat && summary.sentiment && (
-                <AnalyticsView
-                  initiallyCollapsed
-                  sentiment={ summary.sentiment }
-                  sentiments={ Object.values(summary.sentiments ?? []) } />
-              )}
+              ))}
             </View>
           </View>
-        </ViewShot>
-      </Swipeable>
-    </GestureHandlerRootView>
+        )}
+      </CollapsedView>
+      {!hideAnalytics && summary.sentiment && (
+        <AnalyticsView
+          initiallyCollapsed
+          sentiment={ summary.sentiment }
+          sentiments={ Object.values(summary.sentiments ?? []) } />
+      )}
+    </View>
+  ), [hideCard, format, preferredReadingFormat, handleFormatChange, content, translateToggle, theme.colors.textHighlightBackground, theme.colors.textDark, isShareTarget, keywords, cleanString, hideAnalytics, summary.sentiment, summary.sentiments]);
+  
+  return (
+    <ViewShot ref={ viewshot }>
+      <View 
+        flexGrow={ 1 }
+        elevated
+        style={ { ...theme.components.card, ...style } }
+        borderRadius={ initialFormat ? 0 : 6 }
+        my={ initialFormat ? undefined : 6 }
+        ml={ initialFormat ? undefined : 12 }
+        mr={ initialFormat ? undefined : 12 }
+        bg={ containsTrigger ? '#eecccc' : undefined }
+        opacity={ isRead ? 0.75 : 1 }
+        onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
+        {!initialFormat ? (
+          <GestureHandlerRootView>
+            <Swipeable
+              enabled={ swipeable && !disableInteractions && !isShareTarget }
+              renderRightActions={ renderRightActions }>
+              <View flexGrow={ 1 }>
+                {!hideCard && (
+                  <View flexRow flexGrow={ 1 }>
+                    {!isShareTarget && selected && (
+                      <View
+                        left={ 0 }
+                        top={ 0 }
+                        width={ 12 }
+                        bg={ theme.colors.primary } />
+                    )}
+                    <View
+                      flex={ 1 }
+                      flexGrow={ 1 }
+                      gap={ 6 }
+                      overflow='hidden'
+                      brTopLeft={ 6 }
+                      brTopRight={ 6 }>
+                      {header}
+                      {coverContent}
+                    </View>
+                  </View>
+                )}
+              </View>
+            </Swipeable>
+          </GestureHandlerRootView>
+        ) : (
+          <View height='100%'>
+            {!hideCard && (
+              <View>
+                {header}
+              </View>
+            )}
+            <ScrollView flexGrow={ 1 } { ...props }>
+              <View>
+                {!hideCard && coverContent}
+                {cardBody}
+              </View>
+            </ScrollView>
+          </View>
+        )}
+      </View>
+    </ViewShot>
   );
 }

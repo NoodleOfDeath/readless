@@ -2,11 +2,7 @@ import React from 'react';
 
 import { PrefSwitch } from './PrefSwitch';
 
-import {
-  Button,
-  Text,
-  View,
-} from '~/components';
+import { Chip, View } from '~/components';
 import { SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
@@ -25,37 +21,28 @@ export function CompactModePicker({
   const { compactMode } = React.useContext(SessionContext);
 
   const compactModeSwitch = React.useMemo(() => {
-    return (
-      <PrefSwitch
-        leftLabel={ labeled && (
-          <View>
-            <Button 
-              caption
-              gap={ 4 }
-              leftIcon="view-agenda"
-              iconSize={ 24 }
-              itemsCenter>
-              {strings.settings_expanded}
-            </Button>
-          </View>
-        ) }
-        rightLabel={ labeled && (
-          <View>
-            <Button 
-              caption
-              gap={ 4 }
-              leftIcon="view-headline"
-              iconSize={ 24 }
-              itemsCenter>
-              {strings.settings_compactMode}
-            </Button>
-          </View>
-        ) }
-        prefKey={ 'compactMode' } />
+    return labeled ? (
+      <Chip system contained gap={ 12 }>
+        {strings.settings_compactMode}
+        <View row />
+        <PrefSwitch prefKey={ 'compactMode' } />
+      </Chip>
+    ) : (
+      <PrefSwitch prefKey={ 'compactMode' } />
     );
   }, [labeled]);
-
-  const shortSummarySwitch = React.useMemo(() => <PrefSwitch prefKey='showShortSummary' />, []);
+  
+  const shortSummarySwitch = React.useMemo(() => {
+    return labeled ? (
+      <Chip system contained gap={ 12 }>
+        {compactMode ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries}
+        <View row />
+        <PrefSwitch prefKey={ 'showShortSummary' } />
+      </Chip>
+    ) : (
+      <PrefSwitch prefKey={ 'showShortSummary' } />
+    );
+  }, [compactMode, labeled]);
 
   if (compactSwitchOnly) {
     return compactModeSwitch;
@@ -65,15 +52,8 @@ export function CompactModePicker({
   
   return (
     <View flexRow justifyCenter flexWrap="wrap" gap={ 16 }>
-      <View itemsCenter gap={ 6 }>
-        {compactModeSwitch}
-      </View>
-      <View itemsCenter gap={ 6 }>
-        <Text caption numberOfLines={ 2 }>
-          {compactMode ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries}
-        </Text>
-        {shortSummarySwitch}
-      </View>
+      {compactModeSwitch}
+      {shortSummarySwitch}
     </View>
   );
 }

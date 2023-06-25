@@ -1,8 +1,10 @@
 import React from 'react';
 
 import { 
+  ScrollView,
   SegmentedButtons, 
   SegmentedButtonsProps,
+  Summary,
   TablePicker,
 } from '~/components';
 import { ColorScheme, SessionContext } from '~/contexts';
@@ -30,7 +32,11 @@ export function ColorSchemePicker({
           { label: strings.settings_dark, value: 'dark' as ColorScheme },
         ] }
         initialValue={ colorScheme ?? 'system' }
-        onValueChange={ (state) => setPreference('colorScheme', state?.value) } />
+        onValueChange={ (state) => setPreference('colorScheme', state?.value) }>
+        <ScrollView scrollEnabled={ false }>
+          <Summary mt={ 12 } disableInteractions /> 
+        </ScrollView>
+      </TablePicker>
     );
   }
   

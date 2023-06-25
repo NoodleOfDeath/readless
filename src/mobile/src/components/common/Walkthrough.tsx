@@ -7,7 +7,6 @@ import Orientation from 'react-native-orientation-locker';
 import { 
   ActionSheet,
   Button,
-  Chip,
   Image,
   Markdown,
   View,
@@ -20,6 +19,7 @@ import { strings } from '~/locales';
 export type WalkthroughStep = {
   artwork?: React.ReactNode;
   artworkBelow?: boolean;
+  elevateArtwork?: boolean;
   title?: React.ReactNode;
   body?: React.ReactNode;
   footer?: React.ReactNode;
@@ -47,16 +47,21 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   
   const computedSteps = React.useMemo(() => {
     return steps.map((step, i) => {
-      const image = 
-    typeof step.artwork === 'string' ? (
-      <Image 
-        rounded
-        overflow='hidden'
-        elevated
-        width='100%'
-        height={ 200 }
-        source={ { uri: step.artwork } } />
-    ) : step.artwork;
+      const image = step.artwork && (
+        <View 
+          elevated={ step.elevateArtwork || typeof step.artwork === 'string' }
+          rounded={ step.elevateArtwork || typeof step.artwork === 'string' }>
+          {typeof step.artwork === 'string' ? (
+            <Image 
+              rounded
+              width='100%'
+              height={ 200 }
+              source={ { uri: step.artwork } } />
+          ) : (
+            <View p={ 12 }>{step.artwork}</View>
+          )}
+        </View>
+      );
       return (
         <View gap={ 12 } key={ i }>
           {!step.artworkBelow && image}
@@ -103,7 +108,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   
   const renderPrevButton = React.useCallback(() => {
     return (
-      <Chip 
+      <Button 
         contained
         system
         leftIcon="arrow-left"
@@ -113,7 +118,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   
   const renderNextButton = React.useCallback(() => {
     return (
-      <Chip 
+      <Button 
         contained
         system
         leftIcon="arrow-right"
@@ -123,17 +128,17 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
   
   const renderSkipButton = React.useCallback(() => {
     return (
-      <Chip
+      <Button
         contained
         system>
         {strings.action_skip}
-      </Chip>
+      </Button>
     );
   }, []);
   
   const renderDoneButton = React.useCallback(() => {
     return (
-      <Chip 
+      <Button 
         contained
         system
         leftIcon="check"

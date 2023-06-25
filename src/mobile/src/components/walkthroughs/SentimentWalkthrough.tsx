@@ -5,6 +5,7 @@ import { Ellipse, Svg } from 'react-native-svg';
 
 import {
   Button,
+  Chip,
   Divider,
   Markdown,
   MeterDial,
@@ -40,15 +41,15 @@ export function SentimentWalkthrough(props: SheetProps) {
       artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-sentiment.png',
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter system>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_tooMuchSentiment}
           </Markdown>
-          <Markdown subtitle1 textCenter system>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_insteadOfRemoving}
           </Markdown>
         </View>
       ),
-      title: 'Sentiment is a big part of what makes news, news',
+      title: strings.walkthroughs_sentiment_whatMakesNews,
     },
     {
       body: (
@@ -69,8 +70,11 @@ export function SentimentWalkthrough(props: SheetProps) {
               </Text>
             </View>
           </View>
-          <Markdown subtitle1 textCenter system>
-            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription}
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription1}
+          </Markdown>
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription2}
           </Markdown>
         </View>
       ),
@@ -79,7 +83,7 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter system>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
           <View elevated p={ 12 } rounded>
             <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
               <Text h5 bold>&quot;</Text>
@@ -95,7 +99,7 @@ export function SentimentWalkthrough(props: SheetProps) {
               </Text>
             </View>
           </View>
-          <Markdown subtitle1 textCenter system>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
         </View>
       ),
       title: strings.walkthroughs_sentiment_whatIsSentimentUsedFor,
@@ -131,11 +135,11 @@ export function SentimentWalkthrough(props: SheetProps) {
         </View>
       ),
       body: (
-        <View itemsCenter gap={ 12 }>
-          <Markdown subtitle1 textCenter system>
+        <View gap={ 12 }>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription1}
           </Markdown>
-          <Markdown subtitle1 textCenter system>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription2}
           </Markdown>
         </View>
@@ -144,17 +148,18 @@ export function SentimentWalkthrough(props: SheetProps) {
     },
     {
       body: (
-        <View itemsCenter gap={ 12 }>
+        <View gap={ 12 }>
           <Markdown
             textCenter
             subtitle1 
+            contained
             highlightStyle={ {
               color: theme.colors.link, fontWeight: '500', textDecorationLine: 'underline', 
             } }
             onPress={ () => openURL('https://en.wikipedia.org/wiki/Lexical_analysis') }>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP1}
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription1}
           </Markdown>
-          <View flexRow itemsCenter gap={ 3 }>
+          <Chip contained itemsCenter gap={ 3 }>
             <Text
               subtitle1 
               color="link"
@@ -172,13 +177,13 @@ export function SentimentWalkthrough(props: SheetProps) {
               bold>
               VADER
             </Text>
-          </View>
-          <Text subtitle1 textCenter system>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP2}
-          </Text>
-          <Divider bg={ theme.colors.text } />
+          </Chip>
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription2}
+          </Markdown>
+          <Divider />
           <Markdown textCenter system>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP3}
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription3}
           </Markdown>
         </View>
       ),
@@ -187,9 +192,9 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Text subtitle1 textCenter system>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_score}
-          </Text>
+          </Markdown>
           <ScrollView scrollEnabled={ false }>
             <View
               absolute
@@ -211,30 +216,21 @@ export function SentimentWalkthrough(props: SheetProps) {
             </View>
             <Summary forceSentiment disableInteractions />
           </ScrollView>
-          <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
+          <View justifyCenter gap={ 12 }>
             <Button 
-              elevated
               subtitle1
-              rounded
-              touchable
-              haptic
-              p={ 6 }
-              m={ 3 }
+              contained
               onPress={ () => {
                 onDone();
               } }>
               {strings.walkthroughs_sentiment_dontEnable}
             </Button>
             <Button
-              elevated
               subtitle1
-              rounded
+              contained
               bg={ theme.colors.success }
               color={ 'white' }
-              touchable
               haptic
-              p={ 6 }
-              m={ 3 }
               onPress={ () => {
                 setPreference('sentimentEnabled', true);
                 onDone();

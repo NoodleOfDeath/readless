@@ -3,8 +3,8 @@ import React from 'react';
 import {
   Button,
   ChildlessViewProps,
+  Chip,
   ScrollView,
-  Text,
   TextInput,
   View,
 } from '~/components';
@@ -36,9 +36,9 @@ export function TriggerWordPicker({
 
   return (
     <View gap={ 12 }>
-      <Text>
+      <Chip system contained>
         {strings.settings_enterYourTriggerWords}
-      </Text>
+      </Chip>
       <ScrollView>
         {words.map(([word, replacement], i) => (
           <View key={ i } row gap={ 6 } itemsCenter>
@@ -65,30 +65,30 @@ export function TriggerWordPicker({
               leftIcon="trash-can"
               iconSize={ 24 }
               haptic
+              system
+              contained
               onPress={ () => setWords((prev) => {
                 const state = [ ...prev ];
                 state.splice(i, 1);
-                return (prev = state);
-              }) } />
-            <Button
-              leftIcon="plus"
-              iconSize={ 24 }
-              haptic
-              onPress={ () => setWords((prev) => {
-                const state = [ ...prev ];
-                state.push([ '', '' ]);
                 return (prev = state);
               }) } />
           </View>
         ))}
       </ScrollView>
       <Button
-        itemsCenter
-        justifyCenter
-        flexRow
-        rounded
-        py={ 4 }
-        elevated
+        leftIcon="plus"
+        iconSize={ 24 }
+        haptic
+        system
+        contained
+        onPress={ () => setWords((prev) => {
+          const state = [ ...prev ];
+          state.push([ '', '' ]);
+          return (prev = state);
+        }) } />
+      <Button
+        system
+        contained
         fontSize={ 24 }
         onPress={ save }>
         { saveLabel }

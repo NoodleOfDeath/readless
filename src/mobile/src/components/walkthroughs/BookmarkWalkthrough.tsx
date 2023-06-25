@@ -10,7 +10,6 @@ import {
   Markdown,
   Pulse,
   Switch,
-  Text,
   View,
   Walkthrough,
 } from '~/components';
@@ -36,7 +35,7 @@ export function BookmarkWalkthrough(props: SheetProps) {
     {
       body: (
         <View itemsCenter gap={ 12 }>
-          <Markdown subtitle1 textCenter system>{strings.walkthroughs_bookmark_niceJob}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_bookmark_niceJob}</Markdown>
           <View width="100%">
             <View
               absolute
@@ -75,8 +74,9 @@ export function BookmarkWalkthrough(props: SheetProps) {
             </View>
           </View>
           <Divider />
-          <Text system>{strings.walkthroughs_bookmark_happyReading}</Text>
+          <Markdown system contained>{strings.walkthroughs_bookmark_happyReading}</Markdown>
           <Button
+            system
             contained
             onPress={ onDone }>
             {strings.misc_awesome}

@@ -76,6 +76,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
               <Summary 
                 hideAnalytics
                 hideCard
+                scrollEnabled={ false }
                 initialFormat={ ReadingFormat.Summary }
                 onFormatChange={ (format) => setPreference('preferredReadingFormat', format) } />
             </ScrollView>
@@ -95,10 +96,10 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <View alignCenter>
               <PrefSwitch prefKey="sourceLinks" />
             </View>
-            <Markdown subtitle1 textCenter system>
+            <Markdown subtitle1 textCenter system contained>
               {strings.walkthroughs_appearance_sourceLinksDescription}
             </Markdown>
-            <Markdown subtitle1 textCenter system>
+            <Markdown subtitle1 textCenter system contained>
               {strings.walkthroughs_appearance_youCanAlwaysSee}
             </Markdown>
           </View>
@@ -119,7 +120,8 @@ export function AppearanceWalkthrough(props: SheetProps) {
             </View>
             <View itemsCenter>
               <Button
-                h5
+                h4
+                system
                 contained
                 onPress={ onDone }>
                 {strings.action_allDone}

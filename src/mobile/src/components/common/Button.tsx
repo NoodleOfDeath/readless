@@ -11,6 +11,7 @@ export function Button({
   return (
     <Chip 
       touchable={ touchable }
+      primary
       { ...props } />
   );
 }

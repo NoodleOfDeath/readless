@@ -68,11 +68,16 @@
 	<string>Providing location can help ReadLess find news that is more local and relevant to you. We do not store you location data.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>AnekLatin.ttf</string>
+		<string>AnekLatin-Regular.ttf</string>
+		<string>AnekLatin-Bold.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
+		<string>Faustina-Regular.ttf</string>
+		<string>Faustina-Bold.ttf</string>
+		<string>Faustina-Italic.ttf</string>
+		<string>Fausting-BoldItalic.ttf</string>
 		<string>FontAwesome.ttf</string>
 		<string>FontAwesome5_Regular.ttf</string>
 		<string>FontAwesome5_Solid.ttf</string>
@@ -81,10 +86,15 @@
 		<string>Ionicons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
 		<string>MaterialIcons.ttf</string>
-		<string>Newsreader.ttf</string>
+		<string>Newsreader72pt-Regular.ttf</string>
+		<string>Newsreader72pt-Bold.ttf</string>
+		<string>Newsreader72pt-Italic.ttf</string>
+		<string>Newsreader72pt-BoldItalic.ttf</string>
 		<string>Octicons.ttf</string>
-		<string>PitagonSerif.ttf</string>
-		<string>RobotoSerif.ttf</string>
+		<string>PitagonSerif-Regular.ttf</string>
+		<string>PitagonSerif-Bold.ttf</string>
+		<string>PitagonSerif-Italic.ttf</string>
+		<string>PitagonSerif-BoldItalic.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>

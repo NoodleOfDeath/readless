@@ -57,8 +57,8 @@ async function sync({
     oldStrings = {};
     if (!force) {
       const lines = await execSync('git diff src/client/locales/en.ts').toString().split(/\n/);
-      const add = lines.filter((l) => /^\+ /.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
-      const sub = lines.filter((l) => /^- /.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
+      const add = lines.filter((l) => /^\+ .*\w+:/.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
+      const sub = lines.filter((l) => /^- .*\w+:/.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
       const contents = fs.readFileSync(target, 'utf8');
       const match = contents.match(/typeof enStrings = (\{[\s\S]*\});/);
       if (match && match[1]) {

@@ -67,6 +67,7 @@ export function GridPicker<
             {options.map((option) => (
               <Button
                 key={ option.value }
+                system
                 contained
                 haptic
                 gap={ 6 }

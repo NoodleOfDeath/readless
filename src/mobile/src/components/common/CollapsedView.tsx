@@ -9,7 +9,7 @@ import {
   View,
   ViewProps,
 } from '~/components';
-import { useStyles } from '~/hooks';
+import { useStyles, useTheme } from '~/hooks';
 
 type CollapseStyle = 'banner';
 
@@ -42,6 +42,7 @@ export function CollapsedView({
 }: CollapsedViewProps) {
 
   const style = useStyles(props);
+  const theme = useTheme();
 
   const [collapsed, setCollapsed] = React.useState(initiallyCollapsed);
   const animation = React.useRef(new Animated.Value(0)).current;
@@ -68,6 +69,7 @@ export function CollapsedView({
       {collapseStyle === 'banner' && (
         <View 
           elevated
+          bg={ theme.colors.headerBackground }
           flexGrow={ 1 }
           p={ titleStyle?.padding !== undefined ? titleStyle?.padding : 12 }
           style={ titleStyle }>
@@ -95,7 +97,7 @@ export function CollapsedView({
                 name='chevron-down' />
             </Animated.View>
             {title && <Divider vertical />}
-            {title && typeof title === 'string' ? <Text subtitle1>{title}</Text> : title}
+            {title && typeof title === 'string' ? <Text subtitle1 system>{title}</Text> : title}
             {info && (
               <Popover
                 anchor={ <Icon size={ 24 } name='information' /> }>

@@ -35,7 +35,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
       artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-accessible-news.png',
       body: (
         <View gap={ 12 } itemsCenter>
-          <Markdown subtitle1 textCenter system>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_onboarding_beingInformed}
           </Markdown>
           <Markdown subtitle1 textCenter system>
@@ -56,8 +56,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
           <Chip
             contained
             subtitle1
-            bg={ theme.colors.paper }
-            color={ theme.colors.text }
             textCenter
             py={ 24 }>
             {'"Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!"'}
@@ -66,8 +64,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
           <Chip
             contained
             textCenter
-            bg={ theme.colors.paper }
-            color={ theme.colors.text }
             subtitle1
             py={ 24 }>
             {'"Neanderthal DNA linked to common hand condition (Dupuytren\'s contracture)"'}
@@ -117,13 +113,13 @@ export function OnboardingWalkthrough(props: SheetProps) {
       artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-granular-control.png',
       body: (
         <View gap={ 24 }>
-          <Markdown subtitle1 textLeft mr={ 64 } system>
+          <Markdown subtitle1 textLeft mr={ 64 } system contained>
             {strings.walkthroughs_onboarding_granularControl}
           </Markdown>
-          <Markdown subtitle1 textRight ml={ 64 } system>
+          <Markdown subtitle1 textRight ml={ 64 } system contained>
             {strings.walkthroughs_onboarding_separateFromSocialMedia}
           </Markdown>
-          <Markdown subtitle1 textLeft mr={ 64 } system>
+          <Markdown subtitle1 textLeft mr={ 64 } system contained>
             {strings.walkthroughs_onboarding_withoughtNeedingAnAccount}
           </Markdown>
         </View>
@@ -141,9 +137,9 @@ export function OnboardingWalkthrough(props: SheetProps) {
             {strings.walkthroughs_onboarding_yesLetsGetStarted}
           </Button>
           <Divider />
-          <Text bold subtitle1 textCenter system>
+          <Chip bold subtitle1 textCenter system contained>
             {strings.walkthroughs_onboarding_subscribe}
-          </Text>
+          </Chip>
         </View>
       ),
       title: strings.walkthroughs_onboarding_areYouReady,

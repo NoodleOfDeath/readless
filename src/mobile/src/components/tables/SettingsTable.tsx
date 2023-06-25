@@ -110,7 +110,7 @@ export function SettingsTable() {
           cellAccessoryView={ (
             <NumericPrefPicker
               prefKey='lineHeightMultiplier'
-              offset={ BASE_LINE_HEIGHT_MULTIPLER }
+              offset={ BASE_LINE_HEIGHT_MULTIPLIER }
               min={ -0.35 }
               max={ 0.65 }
               step={ 0.05 } />
@@ -163,6 +163,14 @@ export function SettingsTable() {
           onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
       <TableViewSection header={ strings.settings_general }>
+        <TableViewCell
+          bold
+          title={ strings.settings_about }
+          onPress={ () => navigate('about') } />
+        <TableViewCell
+          bold
+          title={ strings.screens_bookmarks }
+          onPress={ () => navigate('bookmarks') } />
         <TableViewCell
           bold
           title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }

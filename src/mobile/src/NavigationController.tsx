@@ -13,7 +13,6 @@ import {
 } from '@react-navigation/native-stack';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import { addScreenshotListener } from 'react-native-detector';
-import { Badge } from 'react-native-paper';
 
 import {
   LayoutContext,
@@ -64,7 +63,7 @@ EventMapBase
     name: 'about', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.menu_browse, 
+      headerTitle: strings.screens_about, 
     },
   },
   {
@@ -72,14 +71,14 @@ EventMapBase
     name: 'bookmarks', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.bookmarks_header, 
+      headerTitle: strings.screens_bookmarks, 
     }, 
   },
   {
     component: BrowseScreen, 
     name: 'browse', options: {
       headerBackTitle: '', 
-      headerTitle: strings.menu_browse, 
+      headerTitle: strings.screens_browse, 
     },
   },
   {
@@ -92,7 +91,7 @@ EventMapBase
     name: 'settings', 
     options: {
       headerBackTitle: '', 
-      headerTitle: strings.settings_settings, 
+      headerTitle: strings.screens_settings, 
     },
   },
   {
@@ -105,7 +104,7 @@ EventMapBase
     name: 'colorSchemePicker',  
     options: {
       headerRight: () => undefined, 
-      headerTitle: strings.settings_colorScheme, 
+      headerTitle: strings.screens_colorScheme, 
     },
   },
   {
@@ -113,7 +112,7 @@ EventMapBase
     name: 'fontPicker',  
     options: {
       headerRight: () => undefined, 
-      headerTitle: strings.settings_font, 
+      headerTitle: strings.screens_font, 
     },
   },
   {
@@ -121,7 +120,7 @@ EventMapBase
     name: 'triggerWordPicker',  
     options: {
       headerRight: () => undefined, 
-      headerTitle: strings.settings_triggerWords, 
+      headerTitle: strings.screens_triggerWords, 
     },
   },
   {
@@ -129,20 +128,19 @@ EventMapBase
     name: 'readingFormatPicker',  
     options: {
       headerRight: () => undefined, 
-      headerTitle: strings.settings_preferredReadingFormat, 
+      headerTitle: strings.screens_preferredReadingFormat, 
     },
   },
 ];
 
 function Stack() {
 
-  const { router } = useNavigation();
+  const { navigate, router } = useNavigation();
 
   const { currentTrack } = React.useContext(MediaContext);
 
   const {
     bookmarkCount,
-    unreadBookmarkCount,
     loadedInitialUrl,
     viewedFeatures,
     setPreference,
@@ -211,21 +209,13 @@ function Stack() {
             size={ 24 } />
           <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
         </View> */}
-        <View touchable onPress={ () => SheetManager.show('main-menu') }>
-          {unreadBookmarkCount > 0 && (
-            <Badge
-              size={ 18 }
-              style={ {
-                position: 'absolute', right: -5, top: -5, zIndex: 1,
-              } }>
-              {unreadBookmarkCount}
-            </Badge>
-          )}
-          <Icon name='menu' size={ 24 } />
-        </View>
+        <Button 
+          leftIcon='menu'
+          iconSize={ 24 }
+          onPress={ () => navigate('settings') } />
       </View>
     </View>
-  ), [rotationLock, unreadBookmarkCount, unlockRotation, lockRotation]);
+  ), [rotationLock, unlockRotation, lockRotation, navigate]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);

@@ -9,13 +9,13 @@ export type SurfaceProps = ViewProps & RNPSurfaceProps & React.PropsWithChildren
 
 export function Surface({
   children,
-  ...surfaceProps
+  ...props
 }: SurfaceProps) {
   const theme = useTheme();
-  const style = { ...theme.components.surface, ...useStyles(surfaceProps) };
+  const style = { ...theme.components.surface, ...useStyles(props) };
   return (
     <RNPSurface 
-      { ...surfaceProps }
+      { ...props }
       style={ style }>
       {children}
     </RNPSurface>

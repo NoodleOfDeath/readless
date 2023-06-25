@@ -6,6 +6,7 @@ import {
   FontFamily,
   GridPicker,
   ScrollView,
+  Summary,
   TablePicker,
   View,
   ViewProps,
@@ -69,6 +70,10 @@ export function FontPicker({
       options={ [...AVAILABLE_FONTS] }
       initialValue={ fontFamily as FontFamily }
       cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
-      onValueChange={ (state) => setPreference('fontFamily', state?.value) } />
+      onValueChange={ (state) => setPreference('fontFamily', state?.value) }>
+      <ScrollView scrollEnabled={ false }>
+        <Summary mt={ 12 } disableInteractions /> 
+      </ScrollView>
+    </TablePicker>
   );
 }

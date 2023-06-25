@@ -10,13 +10,15 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
     colors: {
       contrastText: '#fff',
       error: '#f44336',
+      headerBackground: darkMode ? '#242424' : '#eee',
       inactive: darkMode ? '#777' : '#aaa',
       invertText: darkMode ? '#000' : '#fff',
       link: darkMode ? '#aaaaee' : '#8888ee',
       paper: darkMode ? '#424242' : '#fff',
-      primary: '#8b0000',
-      primaryDark: '#610000',
-      primaryLight: '#a00000',
+      primary: '#c00000',
+      primaryDark: '#8b0000',
+      primaryDisabled: '#A23333',
+      primaryLight: '#d90000',
       rowEven: darkMode ? '#101010' : '#efefef',
       rowOdd: darkMode ? '#222' : '#e9e9e9',
       secondary: '#F73378',
@@ -24,6 +26,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
       text: darkMode ? '#fff' : '#000',
       textDark: '#000',
       textDisabled: darkMode ? '#888' : '#aaa',
+      textHighlightBackground: 'yellow',
       textSecondary: darkMode ? '#999' : '#888',
     },
     // containers
@@ -32,13 +35,12 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
         card: { backgroundColor: darkMode ? '#424242' : '#fff' },
         chip: {
           alignItems: 'center',
-          fontWeight: 'bold',
           justifyContent: 'center',
         },
         chipContained: {
-          backgroundColor: darkMode ? '#8b0000' : '#8b0000',
+          backgroundColor: darkMode ? '#424242' : '#fff',
           borderRadius: 500,
-          color: '#fff',
+          color: darkMode ? '#fff' : '#000',
           paddingBottom: 8,
           paddingLeft: 24,
           paddingRight: 24,
@@ -50,11 +52,9 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
           color: darkMode ? '#999' : '#888',
         },
         chipSelected: {
-          backgroundColor: darkMode ? '#610000' : '#610000',
+          backgroundColor: darkMode ? '#800000' : '#800000',
           borderRadius: 500,
           color: '#fff',
-          fontWeight: 'bold',
-          textDecorationLine: 'underline',
         },
         divider: {
           backgroundColor: darkMode ? '#BDBDBD' : '#222',
@@ -64,6 +64,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
         },
         input: { 
           backgroundColor: darkMode ? '#111' : '#ddd',
+          borderRadius: 500,
           color: darkMode ? '#fff' : '#000',
         }, 
         outlined: {
@@ -77,7 +78,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
           width: '100%',
         },
         surface: {
-          backgroundColor: darkMode ? '#000' : '#fff',
+          backgroundColor: darkMode ? '#424242' : '#fff',
           color: darkMode ? '#fff' : '#000',
         },
       }),
@@ -89,8 +90,8 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
         background: darkMode ? '#303030' : '#fafafa',
         border: darkMode ? '#757575' : '#bdbdbd',
         card: darkMode ? '#1e1e1e' : '#fff',
-        notification: '#8b0000',
-        primary: '#8b0000',
+        notification: '#c00000',
+        primary: '#c00000',
         text: darkMode ? '#fff' : '#212121',
       },
       dark: darkMode,

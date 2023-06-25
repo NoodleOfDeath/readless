@@ -67,14 +67,34 @@
 		5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-ReadLess-ReadLessTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */; };
 		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
-		CDE9EB322A47431C0057217B /* PitagonSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB312A47431C0057217B /* PitagonSerif.ttf */; };
-		CDE9EB332A47431C0057217B /* PitagonSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB312A47431C0057217B /* PitagonSerif.ttf */; };
-		CDE9EB382A47499D0057217B /* AnekLatin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB372A47499D0057217B /* AnekLatin.ttf */; };
-		CDE9EB392A47499D0057217B /* AnekLatin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB372A47499D0057217B /* AnekLatin.ttf */; };
-		CDE9EB3B2A474AD90057217B /* Newsreader.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3A2A474AD90057217B /* Newsreader.ttf */; };
-		CDE9EB3C2A474AD90057217B /* Newsreader.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3A2A474AD90057217B /* Newsreader.ttf */; };
-		CDE9EB3E2A474B050057217B /* RobotoSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */; };
-		CDE9EB3F2A474B050057217B /* RobotoSerif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */; };
+		CDE9EB4E2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
+		CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
+		CDE9EB502A48A3770057217B /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
+		CDE9EB512A48A3770057217B /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
+		CDE9EB522A48A3770057217B /* AnekLatin-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */; };
+		CDE9EB532A48A3770057217B /* AnekLatin-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */; };
+		CDE9EB542A48A3770057217B /* PitagonSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB432A48A3770057217B /* PitagonSerif-Regular.ttf */; };
+		CDE9EB552A48A3770057217B /* PitagonSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB432A48A3770057217B /* PitagonSerif-Regular.ttf */; };
+		CDE9EB562A48A3770057217B /* Faustina-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB442A48A3770057217B /* Faustina-Regular.ttf */; };
+		CDE9EB572A48A3770057217B /* Faustina-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB442A48A3770057217B /* Faustina-Regular.ttf */; };
+		CDE9EB582A48A3770057217B /* Faustina-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB452A48A3770057217B /* Faustina-BoldItalic.ttf */; };
+		CDE9EB592A48A3770057217B /* Faustina-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB452A48A3770057217B /* Faustina-BoldItalic.ttf */; };
+		CDE9EB5A2A48A3770057217B /* Newsreader72pt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB462A48A3770057217B /* Newsreader72pt-Bold.ttf */; };
+		CDE9EB5B2A48A3770057217B /* Newsreader72pt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB462A48A3770057217B /* Newsreader72pt-Bold.ttf */; };
+		CDE9EB5C2A48A3770057217B /* AnekLatin-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB472A48A3770057217B /* AnekLatin-Bold.ttf */; };
+		CDE9EB5D2A48A3770057217B /* AnekLatin-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB472A48A3770057217B /* AnekLatin-Bold.ttf */; };
+		CDE9EB5E2A48A3770057217B /* PitagonSerif-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB482A48A3770057217B /* PitagonSerif-BoldItalic.ttf */; };
+		CDE9EB5F2A48A3770057217B /* PitagonSerif-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB482A48A3770057217B /* PitagonSerif-BoldItalic.ttf */; };
+		CDE9EB602A48A3770057217B /* Newsreader72pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB492A48A3770057217B /* Newsreader72pt-Regular.ttf */; };
+		CDE9EB612A48A3770057217B /* Newsreader72pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB492A48A3770057217B /* Newsreader72pt-Regular.ttf */; };
+		CDE9EB622A48A3770057217B /* PitagonSerif-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4A2A48A3770057217B /* PitagonSerif-Italic.ttf */; };
+		CDE9EB632A48A3770057217B /* PitagonSerif-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4A2A48A3770057217B /* PitagonSerif-Italic.ttf */; };
+		CDE9EB642A48A3770057217B /* Newsreader72pt-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4B2A48A3770057217B /* Newsreader72pt-Italic.ttf */; };
+		CDE9EB652A48A3770057217B /* Newsreader72pt-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4B2A48A3770057217B /* Newsreader72pt-Italic.ttf */; };
+		CDE9EB662A48A3770057217B /* Faustina-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4C2A48A3770057217B /* Faustina-Bold.ttf */; };
+		CDE9EB672A48A3770057217B /* Faustina-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4C2A48A3770057217B /* Faustina-Bold.ttf */; };
+		CDE9EB682A48A3770057217B /* PitagonSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4D2A48A3770057217B /* PitagonSerif-Bold.ttf */; };
+		CDE9EB692A48A3770057217B /* PitagonSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4D2A48A3770057217B /* PitagonSerif-Bold.ttf */; };
 		CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */; };
 		CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */; };
 /* End PBXBuildFile section */
@@ -191,7 +211,7 @@
 		5B7EB9410499542E8C5724F5 /* Pods-ReadLess-ReadLessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.debug.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadLess.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-ReadLess-ReadLessTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.release.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.release.xcconfig"; sourceTree = "<group>"; };
-		CD0695912A1BD9DC005C0208 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CD0695912A1BD9DC005C0208 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReadLess/Info.plist; sourceTree = "<group>"; };
 		CD6CC2102A216147008B82AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD6CC2122A216148008B82AA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD6CC2142A216149008B82AA /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -238,10 +258,20 @@
 		CD6CC2572A216641008B82AA /* fa */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CD7821782A253DAE00F3B33A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD7821792A28FA2100F3B33A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		CDE9EB312A47431C0057217B /* PitagonSerif.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PitagonSerif.ttf; sourceTree = "<group>"; };
-		CDE9EB372A47499D0057217B /* AnekLatin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AnekLatin.ttf; sourceTree = "<group>"; };
-		CDE9EB3A2A474AD90057217B /* Newsreader.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Newsreader.ttf; sourceTree = "<group>"; };
-		CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RobotoSerif.ttf; sourceTree = "<group>"; };
+		CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-BoldItalic.ttf"; sourceTree = "<group>"; };
+		CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Italic.ttf"; sourceTree = "<group>"; };
+		CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekLatin-Regular.ttf"; sourceTree = "<group>"; };
+		CDE9EB432A48A3770057217B /* PitagonSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PitagonSerif-Regular.ttf"; sourceTree = "<group>"; };
+		CDE9EB442A48A3770057217B /* Faustina-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Regular.ttf"; sourceTree = "<group>"; };
+		CDE9EB452A48A3770057217B /* Faustina-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-BoldItalic.ttf"; sourceTree = "<group>"; };
+		CDE9EB462A48A3770057217B /* Newsreader72pt-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-Bold.ttf"; sourceTree = "<group>"; };
+		CDE9EB472A48A3770057217B /* AnekLatin-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekLatin-Bold.ttf"; sourceTree = "<group>"; };
+		CDE9EB482A48A3770057217B /* PitagonSerif-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PitagonSerif-BoldItalic.ttf"; sourceTree = "<group>"; };
+		CDE9EB492A48A3770057217B /* Newsreader72pt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-Regular.ttf"; sourceTree = "<group>"; };
+		CDE9EB4A2A48A3770057217B /* PitagonSerif-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PitagonSerif-Italic.ttf"; sourceTree = "<group>"; };
+		CDE9EB4B2A48A3770057217B /* Newsreader72pt-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-Italic.ttf"; sourceTree = "<group>"; };
+		CDE9EB4C2A48A3770057217B /* Faustina-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Bold.ttf"; sourceTree = "<group>"; };
+		CDE9EB4D2A48A3770057217B /* PitagonSerif-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PitagonSerif-Bold.ttf"; sourceTree = "<group>"; };
 		CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTranslationAttributes.swift; sourceTree = "<group>"; };
 		D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ReadLess-ReadLessTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -360,10 +390,15 @@
 		0125BD1929D791EC00EAC61C /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				CDE9EB372A47499D0057217B /* AnekLatin.ttf */,
+				CDE9EB472A48A3770057217B /* AnekLatin-Bold.ttf */,
+				CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */,
 				0125BD2529D791EC00EAC61C /* AntDesign.ttf */,
 				0125BD2029D791EC00EAC61C /* Entypo.ttf */,
 				0125BD3229D791EC00EAC61C /* EvilIcons.ttf */,
+				CDE9EB4C2A48A3770057217B /* Faustina-Bold.ttf */,
+				CDE9EB452A48A3770057217B /* Faustina-BoldItalic.ttf */,
+				CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */,
+				CDE9EB442A48A3770057217B /* Faustina-Regular.ttf */,
 				0125BD1D29D791EC00EAC61C /* Feather.ttf */,
 				0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */,
 				0125BD2329D791EC00EAC61C /* FontAwesome5_Brands.ttf */,
@@ -374,10 +409,15 @@
 				0125BD2A29D791EC00EAC61C /* Ionicons.ttf */,
 				0125BD2429D791EC00EAC61C /* MaterialCommunityIcons.ttf */,
 				0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */,
-				CDE9EB3A2A474AD90057217B /* Newsreader.ttf */,
+				CDE9EB462A48A3770057217B /* Newsreader72pt-Bold.ttf */,
+				CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */,
+				CDE9EB4B2A48A3770057217B /* Newsreader72pt-Italic.ttf */,
+				CDE9EB492A48A3770057217B /* Newsreader72pt-Regular.ttf */,
 				0125BD1C29D791EC00EAC61C /* Octicons.ttf */,
-				CDE9EB312A47431C0057217B /* PitagonSerif.ttf */,
-				CDE9EB3D2A474B050057217B /* RobotoSerif.ttf */,
+				CDE9EB4D2A48A3770057217B /* PitagonSerif-Bold.ttf */,
+				CDE9EB482A48A3770057217B /* PitagonSerif-BoldItalic.ttf */,
+				CDE9EB4A2A48A3770057217B /* PitagonSerif-Italic.ttf */,
+				CDE9EB432A48A3770057217B /* PitagonSerif-Regular.ttf */,
 				0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */,
 				0125BD3129D791EC00EAC61C /* Zocial.ttf */,
 			);
@@ -729,27 +769,37 @@
 			buildActionMask = 2147483647;
 			files = (
 				0143022329FACEDC00D40293 /* Octicons.ttf in Resources */,
-				CDE9EB332A47431C0057217B /* PitagonSerif.ttf in Resources */,
 				0143022929FACEDC00D40293 /* Foundation.ttf in Resources */,
-				CDE9EB392A47499D0057217B /* AnekLatin.ttf in Resources */,
 				010F0CEB29E88D480064DD97 /* Preview Assets.xcassets in Resources */,
 				0143022229FACEDC00D40293 /* Entypo.ttf in Resources */,
 				0143022629FACEDC00D40293 /* FontAwesome5_Brands.ttf in Resources */,
+				CDE9EB592A48A3770057217B /* Faustina-BoldItalic.ttf in Resources */,
 				0143021F29FACEDC00D40293 /* AntDesign.ttf in Resources */,
 				0143022A29FACEDC00D40293 /* Feather.ttf in Resources */,
+				CDE9EB612A48A3770057217B /* Newsreader72pt-Regular.ttf in Resources */,
+				CDE9EB5F2A48A3770057217B /* PitagonSerif-BoldItalic.ttf in Resources */,
 				0143021D29FACEDC00D40293 /* Zocial.ttf in Resources */,
+				CDE9EB512A48A3770057217B /* Faustina-Italic.ttf in Resources */,
+				CDE9EB5B2A48A3770057217B /* Newsreader72pt-Bold.ttf in Resources */,
 				0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */,
 				0143022B29FACEDC00D40293 /* MaterialCommunityIcons.ttf in Resources */,
+				CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */,
 				0143022529FACEDC00D40293 /* EvilIcons.ttf in Resources */,
+				CDE9EB5D2A48A3770057217B /* AnekLatin-Bold.ttf in Resources */,
 				0143022729FACEDC00D40293 /* SimpleLineIcons.ttf in Resources */,
-				CDE9EB3C2A474AD90057217B /* Newsreader.ttf in Resources */,
+				CDE9EB692A48A3770057217B /* PitagonSerif-Bold.ttf in Resources */,
+				CDE9EB552A48A3770057217B /* PitagonSerif-Regular.ttf in Resources */,
 				0143022129FACEDC00D40293 /* Ionicons.ttf in Resources */,
+				CDE9EB672A48A3770057217B /* Faustina-Bold.ttf in Resources */,
 				0143022029FACEDC00D40293 /* Fontisto.ttf in Resources */,
+				CDE9EB652A48A3770057217B /* Newsreader72pt-Italic.ttf in Resources */,
+				CDE9EB572A48A3770057217B /* Faustina-Regular.ttf in Resources */,
 				0143021C29FACEDC00D40293 /* FontAwesome5_Regular.ttf in Resources */,
+				CDE9EB632A48A3770057217B /* PitagonSerif-Italic.ttf in Resources */,
 				0143022829FACEDC00D40293 /* FontAwesome.ttf in Resources */,
-				CDE9EB3F2A474B050057217B /* RobotoSerif.ttf in Resources */,
 				010F0CE829E88D480064DD97 /* Assets.xcassets in Resources */,
 				0143021E29FACEDC00D40293 /* FontAwesome5_Solid.ttf in Resources */,
+				CDE9EB532A48A3770057217B /* AnekLatin-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -771,29 +821,39 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDE9EB382A47499D0057217B /* AnekLatin.ttf in Resources */,
 				0125BD4C29D791ED00EAC61C /* FontAwesome5_Regular.ttf in Resources */,
 				0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */,
 				0125BD4A29D791ED00EAC61C /* Ionicons.ttf in Resources */,
+				CDE9EB562A48A3770057217B /* Faustina-Regular.ttf in Resources */,
 				0125BD5129D791ED00EAC61C /* Zocial.ttf in Resources */,
 				0125BD5229D791ED00EAC61C /* EvilIcons.ttf in Resources */,
+				CDE9EB682A48A3770057217B /* PitagonSerif-Bold.ttf in Resources */,
 				0125BD4929D791ED00EAC61C /* Foundation.ttf in Resources */,
 				0125BD4B29D791ED00EAC61C /* FontAwesome5_Solid.ttf in Resources */,
 				01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */,
 				0125BD4529D791ED00EAC61C /* AntDesign.ttf in Resources */,
-				CDE9EB3B2A474AD90057217B /* Newsreader.ttf in Resources */,
-				CDE9EB322A47431C0057217B /* PitagonSerif.ttf in Resources */,
-				CDE9EB3E2A474B050057217B /* RobotoSerif.ttf in Resources */,
+				CDE9EB582A48A3770057217B /* Faustina-BoldItalic.ttf in Resources */,
+				CDE9EB542A48A3770057217B /* PitagonSerif-Regular.ttf in Resources */,
 				0125BD3A29D791ED00EAC61C /* Fontisto.ttf in Resources */,
+				CDE9EB4E2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */,
+				CDE9EB5A2A48A3770057217B /* Newsreader72pt-Bold.ttf in Resources */,
+				CDE9EB5E2A48A3770057217B /* PitagonSerif-BoldItalic.ttf in Resources */,
+				CDE9EB622A48A3770057217B /* PitagonSerif-Italic.ttf in Resources */,
 				0125BD4F29D791ED00EAC61C /* FontAwesome.ttf in Resources */,
+				CDE9EB502A48A3770057217B /* Faustina-Italic.ttf in Resources */,
 				0125BD3D29D791ED00EAC61C /* Feather.ttf in Resources */,
+				CDE9EB642A48A3770057217B /* Newsreader72pt-Italic.ttf in Resources */,
 				CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */,
+				CDE9EB522A48A3770057217B /* AnekLatin-Regular.ttf in Resources */,
+				CDE9EB662A48A3770057217B /* Faustina-Bold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0125BD4329D791ED00EAC61C /* FontAwesome5_Brands.ttf in Resources */,
 				0125BD5829D791ED00EAC61C /* SimpleLineIcons.ttf in Resources */,
 				0125BD4429D791ED00EAC61C /* MaterialCommunityIcons.ttf in Resources */,
+				CDE9EB602A48A3770057217B /* Newsreader72pt-Regular.ttf in Resources */,
 				0125BD5929D791ED00EAC61C /* MaterialIcons.ttf in Resources */,
 				0125BD4029D791ED00EAC61C /* Entypo.ttf in Resources */,
+				CDE9EB5C2A48A3770057217B /* AnekLatin-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1382,7 +1442,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.10.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1422,7 +1482,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.10.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

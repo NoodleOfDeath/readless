@@ -4,24 +4,25 @@ import RNHighlighter from 'react-native-highlight-words';
 import { HighlighterProps as RNHighlighterProps } from 'react-native-highlight-words';
 
 import {
-  ChildlessViewProps,
+  Chip,
+  ChipProps,
   TextProps,
   View,
 } from '~/components';
 import { useTextStyles } from '~/hooks';
 
-export type HighlighterProps = Omit<RNHighlighterProps & TextProps & ChildlessViewProps, 'children' | 'textToHighlight'> & {
+export type HighlighterProps = Omit<RNHighlighterProps & TextProps & ChipProps, 'children' | 'textToHighlight'> & {
   children?: string;
 };
 
 export function Highlighter({ children, ...props }: HighlighterProps) {
   const textStyle = useTextStyles(props);
   return (
-    <View { ...props }>
+    <Chip { ...props }>
       <RNHighlighter
         { ...props }
         textToHighlight={ children ?? '' }
         style={ textStyle } />
-    </View>
+    </Chip>
   );
 }
