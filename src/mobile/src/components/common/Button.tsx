@@ -5,7 +5,8 @@ import { Chip, ChipProps } from '~/components';
 export type ButtonProps = ChipProps; 
 
 export function Button({
-  touchable = true,
+  untouchable,
+  touchable = !untouchable,
   ...props
 }: ButtonProps) {
   return (

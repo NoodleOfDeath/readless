@@ -110,6 +110,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
     return (
       <Button 
         contained
+        untouchable
         system
         leftIcon="arrow-left"
         iconSize={ 24 } />
@@ -120,6 +121,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
     return (
       <Button 
         contained
+        untouchable
         system
         leftIcon="arrow-right"
         iconSize={ 24 } />
@@ -130,6 +132,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
     return (
       <Button
         contained
+        untouchable
         system>
         {strings.action_skip}
       </Button>
@@ -140,6 +143,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
     return (
       <Button 
         contained
+        untouchable
         system
         leftIcon="check"
         iconSize={ 24 } />

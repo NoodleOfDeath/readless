@@ -1,5 +1,3 @@
-export * from './generic';
-
 export * from './CategoryPicker';
 export * from './ColorSchemePicker';
 export * from './CompactModePicker';

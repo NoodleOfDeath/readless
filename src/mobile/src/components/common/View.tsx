@@ -14,7 +14,8 @@ import { useStyles, useTheme } from '~/hooks';
 
 export function View({ 
   children,
-  touchable,
+  untouchable,
+  touchable = untouchable ? false : undefined,
   elevated,
   haptic,
   inactive,

@@ -158,19 +158,23 @@ function Stack() {
     }
   }, [bookmarkCount, viewedFeatures]);
 
-  React.useEffect(() => {
-    if (!('sharing-walkthrough' in { ...viewedFeatures })) {
-      const unsubscribe = addScreenshotListener(async () => {
-        if (!('sharing-walkthrough' in { ...viewedFeatures })) {
-          SheetManager.hideAll();
-          setTimeout(() => SheetManager.show('sharing-walkthrough'), 1000);
-        }
-        return () => {
-          unsubscribe();
-        };
-      });
+  const screenshotListener = React.useCallback(async () => {
+    if ('sharing-walkthrough' in { ...viewedFeatures }) {
+      return;
     }
+    SheetManager.hideAll();
+    setTimeout(() => SheetManager.show('sharing-walkthrough'), 1000);
   }, [viewedFeatures]);
+
+  React.useEffect(() => {
+    if ('sharing-walkthrough' in { ...viewedFeatures }) {
+      return;
+    }
+    const unsubscribe = addScreenshotListener(screenshotListener);
+    return () => {
+      unsubscribe();
+    };
+  }, [screenshotListener, viewedFeatures]);
 
   React.useEffect(() => {
     const viewed = { ...viewedFeatures };

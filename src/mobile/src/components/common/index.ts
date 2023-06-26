@@ -32,3 +32,5 @@ export * from './TextInput';
 export * from './View';
 export * from './Walkthrough';
 export * from './WalkthroughSlider';
+
+export * from './picker';

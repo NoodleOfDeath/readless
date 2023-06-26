@@ -1,13 +1,7 @@
 import React from 'react';
-import { TextInput } from 'react-native';
 
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import { Searchbar  } from 'react-native-paper';
-
-export type TextInputHandles = Pick<
-  TextInput,
-  'setNativeProps' | 'isFocused' | 'clear' | 'blur' | 'focus'
->;
 
 import { 
   ActionSheet,

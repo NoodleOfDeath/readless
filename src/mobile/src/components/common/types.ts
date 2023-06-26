@@ -253,6 +253,7 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   
   // custom
   touchable?: boolean;
+  untouchable?: boolean;
   elevated?: boolean;
   haptic?: boolean;
   inactive?: boolean;

@@ -3,6 +3,7 @@ import React from 'react';
 import {
   AVAILABLE_FONTS,
   Button,
+  DEFAULT_PREFERRED_FONT,
   FontFamily,
   GridPicker,
   ScrollView,
@@ -27,7 +28,7 @@ export function FontPicker({
   ...props
 }: FontPickerProps = {}) {
   
-  const { fontFamily, setPreference } = React.useContext(SessionContext);
+  const { fontFamily = DEFAULT_PREFERRED_FONT, setPreference } = React.useContext(SessionContext);
   const style = useStyles(props);
   
   if (variant === 'grid') {

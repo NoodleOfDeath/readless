@@ -64,22 +64,25 @@ export function GridPicker<
             justifyCenter={ centered }
             colGap={ 8 }
             rowGap={ 8 }>
-            {options.map((option) => (
-              <Button
-                key={ option.value }
-                system
-                contained
-                haptic
-                gap={ 6 }
-                { ...(buttonProps instanceof Function ? buttonProps({ 
-                  currentValue: props.multi ? value : value[0] != null ? value[0] as T : undefined,
-                  option, 
-                  selected: value.includes(option.value), 
-                }) : buttonProps) }
-                onPress={ () => handlePress(option.value) }>
-                {option.label}
-              </Button>
-            ))}
+            {options.map((option) => {
+              const computedButtonProps = buttonProps instanceof Function ? buttonProps({ 
+                currentValue: props.multi ? value : value[0] != null ? value[0] as T : undefined,
+                option, 
+                selected: value.includes(option.value), 
+              }) : buttonProps;
+              return (
+                <Button
+                  key={ option.value }
+                  system={ !computedButtonProps.fontFamily }
+                  contained
+                  haptic
+                  gap={ 6 }
+                  { ...computedButtonProps }
+                  onPress={ () => handlePress(option.value) }>
+                  {option.label}
+                </Button>
+              );
+            })}
           </View>
         </ScrollView>
       ) } />
