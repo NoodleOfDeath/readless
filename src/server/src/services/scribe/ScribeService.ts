@@ -311,15 +311,21 @@ export class ScribeService extends BaseService {
     
   }
   
-  public static async writeRecap(payload: RecapPayload = {}) {
+  public static async writeRecap({
+    start: start0,
+    end: end0,
+    duration = '1d',
+    key: key0,
+    force,
+  }: RecapPayload = {}) {
     try {
       
       const {
-        key, start, end, 
-      } = Recap.key(payload);
+        key = key0, start, end, 
+      } = Recap.key(start0, end0 || duration);
       
       const exists = await Recap.exists(key);
-      if (exists && !payload.force) {
+      if (exists && !force) {
         await this.error('Recap already exists');
       }
       
@@ -337,13 +343,13 @@ export class ScribeService extends BaseService {
       }
       
       const mainPrompt = [
-        `The following is a list of news that occurred between ${start.toString()} and ${end.toString()}. Please summarize everything in two to three paragraphs making sure to prioritize topics that seem urgent and/or were covered by multiple news sources. Try to make the summary concise but easy, engaging, and entertaining to read:\n`,
+        `The following is a list of news that occurred between ${start.toString()} and ${end.toString()}. Please summarize the highlights in two to three paragraphs making sure to prioritize topics that seem urgent and/or were covered by multiple news sources. Try to make the summary concise but easy, engaging, and entertaining to read:\n`,
         ...(await Promise.all(summaries.map(async (summary) => `${(await summary.getOutlet()).displayName}: ${summary.title}`))),
       ].join('\n');
       
       const newRecap = Recap.json<Recap>({ 
         key,
-        length: payload.duration,
+        length: duration,
       });
       const prompts: Prompt[] = [
         {
@@ -409,6 +415,13 @@ export class ScribeService extends BaseService {
           score: scores.reduce((prev, curr) => prev + curr, 0) / scores.length,
         });
       }
+      
+      await new MailService().sendMail({
+        from: 'thecakeisalie@readless.ai',
+        subject: `Read Less - Today's Highlights: ${newRecap.title}`,
+        text: newRecap.text,
+        to: 'thom@readless.ai',
+      });
 
       return recap;
       
