@@ -1,4 +1,4 @@
-name: Cron CI
+name: Scheduler CI
 
 on:
   push:
@@ -6,29 +6,29 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/cron-ci.yaml"
+      - ".github/workflows/scheduler-ci.yaml"
       - "package.json"
-      - "Dockerfile.cron"
-      - "k8s/cron-deploy.yaml"
+      - "Dockerfile.scheduler"
+      - "k8s/scheduler-deploy.yaml"
       - "src/server/package.json"
-      - "src/server/src/cron/**"
+      - "src/server/src/scheduler/**"
       - "src/server/src/services/**"
       - "src/server/src/utils/**"
       - "src/server/src/api/v1/schema/**"
       - "src/server/src/api/v1/controllers/**"
 
 concurrency:
-  group: ${{ github.ref }}-cron
+  group: ${{ github.ref }}-scheduler
   cancel-in-progress: true
 
 env:
-  IMAGE: ${{ github.event.repository.name }}-cron-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+  IMAGE: ${{ github.event.repository.name }}-scheduler-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
   REGISTRY: ${{ vars.REGISTRY }}
 
 jobs:
-  build-cron:
+  build-scheduler:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~cron') && !contains(github.event.head_commit.message, '~skip') }}
+    if: ${{ !contains(github.event.head_commit.message, '~scheduler') && !contains(github.event.head_commit.message, '~skip') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description
@@ -41,7 +41,7 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          docker build . --file Dockerfile.cron --tag $IMAGE:latest
+          docker build . --file Dockerfile.scheduler --tag $IMAGE:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -53,8 +53,8 @@ jobs:
       - name: Push Docker Image
         run: docker push $REGISTRY/$IMAGE:latest
 
-  deploy-cron:
-    needs: build-cron
+  deploy-scheduler:
+    needs: build-scheduler
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
@@ -90,7 +90,7 @@ jobs:
       - name: Add kubectl cert
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/cron-deploy.yaml | kubectl apply -f -
+        run: envsubst < $GITHUB_WORKSPACE/k8s/scheduler-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$IMAGE --namespace $K8S_NAMESPACE
       - name: Verify deployment

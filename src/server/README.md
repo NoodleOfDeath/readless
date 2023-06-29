@@ -1,7 +1,7 @@
 # TheSkoop Backend
 
 [![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
-[![Cron CI](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml)
+[![scheduler CI](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml)
 [![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
 This is the backend API, CronJob manager (responsible for periodically seeking and queuing jobs) and Worker containers (responsible for processing jobs) for the TheSkoop project
@@ -13,7 +13,7 @@ If you want to skip the workspace setup process, you can run the local docker im
 ```bash
 src/server $ cat .env-example > .env
 src/server $ docker compose up api-local
-src/server $ docker compose up cron-local
+src/server $ docker compose up scheduler-local
 src/server $ docker compose up worker-local
 ```
 
@@ -33,7 +33,7 @@ This project also is fully ESM so make sure your node version is >= 18.
 src/server $ yarn install
 src/server $ cat .env-example > .env
 src/server $ yarn dev:api
-src/server $ yarn dev:cron
+src/server $ yarn dev:scheduler
 src/server $ yarn dev:worker
 ```
 

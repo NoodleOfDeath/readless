@@ -5,7 +5,7 @@
 
 [![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
 [![Applink CI](https://github.com/NoodleOfDeath/readless/actions/workflows/applink-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/applink-ci.yaml)
-[![Cron CI](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/cron-ci.yaml)
+[![Scheduler CI](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml)
 [![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
 Read Less is the model for a fully automated news aggregation pipeline that is powered by generative AI!
@@ -39,7 +39,7 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [Develoment - Getting Started](#develoment---getting-started)
   - [Web Client](#web-client)
   - [Server API](#server-api)
-  - [Server Cron](#server-cron)
+  - [Server Scheduler](#server-scheduler)
   - [Server Worker](#server-worker)
 - [Contribution](#contribution)
 
@@ -189,12 +189,12 @@ readless $ rless web --local
 readless $ rless api --local
 ```
 
-### Server Cron
+### Server Scheduler
 
 [See the README](src/server/README.md)
 
 ```bash
-readless $ rless cron --local
+readless $ rless scheduler --local
 ```
 
 ### Server Worker

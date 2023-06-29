@@ -12,7 +12,7 @@ usage() {
   echo "shorthand for 'docker compose...' to launch"
   echo "rlctl containers!"
   echo
-  echo "usage: $THIS [options] <web | mobile | api | cron | work | worker>"
+  echo "usage: $THIS [options] <web | mobile | api | scheduler | work | worker>"
   echo
   echo "  -h | --help          show this help msg"
   echo "  -e | --env-file      specify env file"
@@ -69,7 +69,7 @@ mob | mobile)
   MODULE="mobile"
   ENV=src/mobile/.env
   ;;
-api | cron)
+api | scheduler)
   ENV=src/server/.env
   ;;
 work | worker)

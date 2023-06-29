@@ -2,10 +2,10 @@
   "verbose": true,
   "watch": [
     ".env",
-    "nodemon.cron.json",
+    "nodemon.scheduler.json",
     "package.json",
     "tsconfig.json",
-    "src/cron/*",
+    "src/scheduler/*",
     "src/services/*",
     "src/api/v1/controllers/*",
     "src/api/v1/schema/*",

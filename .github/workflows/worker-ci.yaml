@@ -99,12 +99,12 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Add kubectl cert
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
-      - name: Temp change environment
-        run: | 
+      - name: Apply deployment changes
+        run: |
           export CONTAINER_NAME=$IMAGE-sitemaps
           export WORKER_QUEUE=sitemaps
-      - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/worker-deploy.yaml | kubectl apply -f -
+          echo $CONTAINER_NAME
+          envsubst < $GITHUB_WORKSPACE/k8s/worker-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$CONTAINER_NAME --namespace $K8S_NAMESPACE
       - name: Verify deployment
@@ -113,8 +113,7 @@ jobs:
         run: | 
           export CONTAINER_NAME=$IMAGE-recaps
           export WORKER_QUEUE=recaps
-      - name: Apply deployment changes
-        run: envsubst < $GITHUB_WORKSPACE/k8s/worker-deploy.yaml | kubectl apply -f -
+          envsubst < $GITHUB_WORKSPACE/k8s/worker-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$CONTAINER_NAME --namespace $K8S_NAMESPACE
       - name: Verify deployment
