@@ -34,7 +34,7 @@ export function SearchDialog({
     onChangeText,
     onClear,
     onSubmit,
-  } = payload;
+  } = { ...payload };
 
   const theme = useTheme();
   

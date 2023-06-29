@@ -16,7 +16,7 @@ import {
   Tags,
 } from 'tsoa';
 
-import { GET_SUMMARIES, GET_SUMMARY_TOKEN_COUNTS } from './queries';
+import { GET_SUMMARIES } from './queries';
 import {
   BulkMetadataResponse,
   BulkResponse,
@@ -30,15 +30,14 @@ import { AuthError, InternalError } from '../../middleware';
 import {
   Cache,
   InteractionType,
+  PublicRecapAttributes,
   PublicSummaryAttributes,
-  PublicTokenAttributes,
-  PublicTokenTypeAttributes,
+  Recap,
   Summary,
   SummaryInteraction,
-  TokenType,
   User,
 } from '../../schema';
-import { PublicSummaryGroup, TokenTypeName } from '../../schema/types';
+import { PublicSummaryGroup } from '../../schema/types';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 type GetSummariesPayload = {
@@ -264,42 +263,6 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     return records as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
   }
   
-  @Get('/topics')
-  public static async getTopics(
-    @Query() userId?: number,
-    @Query() type?: TokenTypeName,
-    @Query() interval = '1d',
-    @Query() min = 0,
-    @Query() pageSize = 10,
-    @Query() page = 0,
-    @Query() offset = pageSize * page,
-    @Query() order: string[] = ['count:desc']
-  ): Promise<BulkResponse<PublicTokenAttributes>> {
-    const filter = `^(?:${type})$`;
-    const startDate = new Date();
-    const endDate = new Date();
-    const records = await this.store.query(GET_SUMMARY_TOKEN_COUNTS, {
-      nest: true,
-      replacements: {
-        endDate,
-        interval,
-        limit: Number(pageSize),
-        min: Number(min) < 2 ? 2 : Number(min),
-        offset,
-        order,
-        startDate,
-        type: type ? filter : '.',
-      },
-      type: QueryTypes.SELECT,
-    });
-    return (records?.[0] ?? { count: 0, rows: [] }) as BulkResponse<PublicTokenAttributes>;
-  }
-  
-  @Get('/topics/groups')
-  public static async getTopicGroups(): Promise<BulkResponse<PublicTokenTypeAttributes>> {
-    return await TokenType.scope('public').findAndCountAll();
-  }
-  
   @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
@@ -349,6 +312,15 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     const { user } = await User.from(body);
     await user.restoreSummary(targetId);
     return { success: true };
+  }
+  
+  @Get('/recap')
+  public static async getRecaps(
+    @Request() request: ExpressRequest,
+    @Query() filter?: string
+  ): Promise<BulkResponse<PublicRecapAttributes>> {
+    const recaps = await Recap.scope('public').findAndCountAll();
+    return recaps;
   }
 
 }

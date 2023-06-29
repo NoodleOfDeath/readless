@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: $IMAGE
+  name: $CONTAINER_NAME
   namespace: $K8S_NAMESPACE
 spec:
   replicas: $K8S_REPLICA_COUNT_WORKER
   selector:
     matchLabels:
-      app: $IMAGE
+      app: $CONTAINER_NAME
   template:
     metadata:
       labels:
-        app: $IMAGE
+        app: $CONTAINER_NAME
     spec:
       containers:
-        - name: $IMAGE
+        - name: $CONTAINER_NAME
           image: $REGISTRY/$IMAGE
           ports:
             - containerPort: 80
@@ -64,6 +64,8 @@ spec:
               value: '$S3_KEY'
             - name: S3_SECRET
               value: '$S3_SECRET'
+            - name: WORKER_QUEUE
+              value: '$WORKER_QUEUE'
             - name: WORKER_RETRY_EXPRS
               value: '$WORKER_RETRY_EXPRS'
           # livenessProbe:
@@ -82,11 +84,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: $IMAGE
+  name: $CONTAINER_NAME
   namespace: $K8S_NAMESPACE
 spec:
   type: ClusterIP
   ports:
     - port: 80
   selector:
-    app: $IMAGE
+    app: $CONTAINER_NAME
+---

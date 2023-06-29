@@ -6,6 +6,7 @@ import {
 
 import { SummaryAttributes, SummaryCreationAttributes } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
+import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import { Post } from '../Post.model';
 import { PublicCategoryAttributes } from '../channel/Category.types';
@@ -104,6 +105,10 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       return await SummaryInteraction.findAll({ where: { targetId: this.id, userId } });
     }
     return await SummaryInteraction.findAll({ where: { targetId: this.id } });
+  }
+  
+  async getSentiments() {
+    return await SummarySentiment.findAll({ where: { parentId: this.id } });
   }
 
 }

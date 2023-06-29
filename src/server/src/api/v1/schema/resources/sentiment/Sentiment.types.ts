@@ -12,13 +12,14 @@ export type SentimentCreationAttributes = Partial<DatedAttributes> & {
   score: number;
 };
 
-export type Sentimental = {
-  sentiment?: number;
-};
-
 export const PUBLIC_SENTIMENT_ATTRIBUTES = ['id', 'method', 'score'];
 
 export type PublicSentimentAttributes = {
   method: string;
   score: number;
+};
+
+export type Sentimental = {
+  sentiment?: number;
+  sentiments?: PublicSentimentAttributes[];
 };

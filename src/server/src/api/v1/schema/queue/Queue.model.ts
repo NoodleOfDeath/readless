@@ -5,7 +5,7 @@ import {
 } from 'sequelize-typescript';
 
 import { Job } from './Job.model';
-import { SiteMapJobData } from './Job.types';
+import { RecapJobData, SiteMapJobData } from './Job.types';
 import {
   QueueAttributes,
   QueueCreationAttributes,
@@ -14,7 +14,7 @@ import {
 } from './Queue.types';
 import { Serializable } from '../../../../types';
 import { BaseModel } from '../base';
-import { Summary } from '../resources/summary/Summary.model';
+import { Recap, Summary } from '../models';
 
 @Table({
   modelName: 'queue',
@@ -25,7 +25,10 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   extends BaseModel<A, B>
   implements QueueAttributes<DataType, ReturnType, QueueName> {
     
-  public static QUEUES = { siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps') };
+  public static QUEUES = { 
+    recaps: new QueueSpecifier<RecapJobData, Recap>('recaps'),
+    siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps'),
+  };
   
   static async initQueues() {
     for (const queue of Object.values(this.QUEUES)) {

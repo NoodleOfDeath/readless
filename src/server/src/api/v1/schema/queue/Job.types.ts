@@ -31,6 +31,12 @@ export type JobCreationAttributes<DataType extends Serializable, ReturnType, Que
   retryPolicy?: RetryPolicy;
 };
 
+export type RecapJobData = {
+  lookback?: string;
+  start?: string;
+  end?: string;
+};
+
 export type SiteMapJobData = {
   outlet: string;
   url: string; 

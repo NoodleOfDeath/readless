@@ -1,6 +1,7 @@
 import ms from 'ms';
+import { Op } from 'sequelize';
 
-import { ReadAndSummarizePayload } from './types';
+import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
   ChatGPTService,
   DeepAiService,
@@ -11,11 +12,15 @@ import {
 } from '../';
 import {
   Category,
+  Recap,
+  RecapSentiment,
+  RecapSummary,
   SentimentMethod,
+  SentimentMethodName,
   Summary,
   SummaryMedia,
   SummarySentiment,
-} from '../../api/v1/schema/models';
+} from '../../api/v1/schema';
 import { BaseService } from '../base';
 import { SentimentService } from '../sentiment';
 
@@ -41,7 +46,7 @@ export class ScribeService extends BaseService {
     await SentimentMethod.initSentimentMethods();
   }
 
-  public static async error(subject: string, text: string, throws = true): Promise<void> {
+  public static async error(subject: string, text = subject, throws = true): Promise<void> {
     await new MailService().sendMail({
       from: 'debug@readless.ai',
       subject,
@@ -304,6 +309,107 @@ export class ScribeService extends BaseService {
       await this.error('😤 Unexpected Error Encountered', [url, JSON.stringify(e), JSON.stringify(newSummary, null, 2)].join('\n\n'));
     }
     
+  }
+  
+  public static async writeRecap({
+    lookback: lookback0 = '1d',
+    start: start0,
+    end: end0,
+    key: key0,
+    force,
+  }: RecapPayload = {}) {
+    try {
+      
+      const start = start0 ? new Date(start0) : null;
+      const end = end0 ? new Date(end0) : null;
+      const lookback = new Date(Date.now() - ms(lookback0));
+
+      const key = key0 || (start && end) ? [start.toDateString(), end.toDateString()].join('-') : [
+        lookback.toDateString(), 
+        lookback0,
+      ].join('-');
+      
+      const exists = await Recap.findOne({ where: { key } });
+      if (exists && !force) {
+        await this.error('Recap already exists');
+      }
+      
+      const summaries = await Summary.findAll({ where: { originalDate: { [Op.lt]: lookback } } });
+      
+      if (summaries.length === 0) {
+        this.error('no summaries to recap');
+      }
+      
+      const newRecap = Recap.json<Recap>({ key });
+      const prompts: Prompt[] = [
+        {
+          handleReply: async (reply) => {
+            newRecap.text = reply.text;
+          },
+          text: [
+            `The following is a list of all news headlines in the past ${lookback0}. Please summarize this in no more than 10 sentences making sure to prioritize topics that were most prominent or covered by multiple news sources:\n`,
+            ...summaries.map((summary) => `${summary.outlet.displayName}: ${summary.title}`),
+          ].join('\n'),
+        },
+        {
+          handleReply: async (reply) => {
+            newRecap.title = reply.text;
+          },
+          text: 'Give this recap a 10-15 word title',
+        },
+      ];
+      
+      // initialize chat service
+      const chatgpt = new ChatGPTService();
+      // iterate through each summary prompt and send them to chatgpt
+      for (const prompt of prompts) {
+        let reply = await chatgpt.send(prompt.text);
+        if (BAD_RESPONSE_EXPR.test(reply.text)) {
+          // attempt single retry
+          reply = await chatgpt.send(prompt.text);
+          if (BAD_RESPONSE_EXPR.test(reply.text)) {
+            this.error('Bad response from chatgpt', ['--repl--', reply.text, '--prompt--', prompt.text].join('\n'));
+          }
+        }
+        try {
+          await prompt.handleReply(reply);
+        } catch (e) {
+          if (/too long|sentiment|category/i.test(e.message)) {
+            reply = await chatgpt.send(prompt.text);
+            console.error(e);
+            // attempt single retry
+            await prompt.handleReply(reply);
+          } else {
+            throw e;
+          }
+        }
+        this.log(reply.text);
+      }
+      
+      const recap = await Recap.create(newRecap);
+      
+      const sentiments: { [key in keyof SentimentMethodName]?: number[] } = {};
+      for (const summary of summaries) {
+        await RecapSummary.create({
+          parentId: recap.id,
+          summaryId: summary.id,
+        });
+        (await summary.getSentiments()).forEach((sentiment) => sentiments[sentiment.method] = [...sentiments[sentiment.method], sentiment.score]);
+      }
+      
+      for (const [method, scores] of Object.entries(sentiments)) {
+        await RecapSentiment.create({
+          method: method as SentimentMethodName,
+          parentId: recap.id,
+          score: scores.reduce((prev, curr) => prev + curr, 0) / scores.length,
+        });
+      }
+
+      return recap;
+      
+    } catch {
+      await this.error('Unexpected error writing recap');
+    }
   }
   
 }

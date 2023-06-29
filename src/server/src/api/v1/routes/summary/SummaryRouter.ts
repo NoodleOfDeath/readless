@@ -40,41 +40,6 @@ router.get(
   }
 );
 
-router.get(
-  '/topics',
-  rateLimitMiddleware('30 per 1m'),
-  query('type').isString().optional(),
-  query('interval').isString().optional(),
-  query('min').isNumeric().optional(),
-  ...paginationMiddleware,
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const {
-        type, interval, min = 0, pageSize = 10, page = 0, offset = page * pageSize, userId: userIdStr, order,
-      } = req.query;
-      const userId = !Number.isNaN(parseInt(userIdStr)) ? parseInt(userIdStr) : undefined;
-      const response = await SummaryController.getTopics(userId, type, interval, min, pageSize, page, offset, order);
-      return res.json(response);
-    } catch (err) {
-      internalErrorHandler(res, err);
-    }
-  }
-);
-
-router.get(
-  '/topics/groups',
-  rateLimitMiddleware('30 per 1m'),
-  async (req, res) => {
-    try {
-      const response = await SummaryController.getTopicGroups();
-      return res.json(response);
-    } catch (err) {
-      internalErrorHandler(res, err);
-    }
-  }
-);
-
 router.post(
   '/interact/:targetId/:type',
   rateLimitMiddleware('1 per 2s'),
@@ -121,6 +86,22 @@ router.patch(
     try {
       const { targetId } = req.params;
       const response = await SummaryController.restoreSummary(targetId, req.body);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
+  '/recap',
+  rateLimitMiddleware('20 per 1m'),
+  query('filter').isString().optional(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const { filter } = req.params;
+      const response = await SummaryController.getRecaps(req, filter);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);
