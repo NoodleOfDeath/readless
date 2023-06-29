@@ -58,7 +58,7 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
-      CONTAINER_NAME: $IMAGE-sitemaps
+      CONTAINER_NAME: ${{ env.IMAGE }}-sitemaps
       DEEPAI_API_KEY: ${{ secrets.DEEPAI_API_KEY }}
       ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
@@ -115,7 +115,7 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
-      CONTAINER_NAME: $IMAGE-recaps
+      CONTAINER_NAME: ${{ env.IMAGE }}-recaps
       DEEPAI_API_KEY: ${{ secrets.DEEPAI_API_KEY }}
       ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
