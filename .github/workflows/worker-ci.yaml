@@ -52,12 +52,13 @@ jobs:
       - name: Push Docker Image
         run: docker push $REGISTRY/$IMAGE:latest
 
-  deploy-worker:
+  deploy-worker-sitemaps:
     needs: build-worker
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
+      CONTAINER_NAME: $IMAGE-sitemaps
       DEEPAI_API_KEY: ${{ secrets.DEEPAI_API_KEY }}
       ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
@@ -84,6 +85,7 @@ jobs:
       S3_KEY: ${{ secrets.S3_KEY }}
       S3_SECRET: ${{ secrets.S3_SECRET }}
       WORKER_RETRY_EXPRS: ${{ vars.WORKER_RETRY_EXPRS }}
+      WORKER_QUEUE: sitemaps
     steps:
       - name: Print Job Description
         run: |
@@ -101,18 +103,63 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
       - name: Apply deployment changes
         run: |
-          export CONTAINER_NAME=$IMAGE-sitemaps
-          export WORKER_QUEUE=sitemaps
-          echo $CONTAINER_NAME
           envsubst < $GITHUB_WORKSPACE/k8s/worker-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$CONTAINER_NAME --namespace $K8S_NAMESPACE
       - name: Verify deployment
         run: kubectl rollout status deployment/$CONTAINER_NAME --namespace $K8S_NAMESPACE
-      - name: Temp change environment
-        run: | 
-          export CONTAINER_NAME=$IMAGE-recaps
-          export WORKER_QUEUE=recaps
+
+  deploy-worker-recaps:
+    needs: build-worker
+    runs-on: ubuntu-latest
+    environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+    env:
+      CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
+      CONTAINER_NAME: $IMAGE-recaps
+      DEEPAI_API_KEY: ${{ secrets.DEEPAI_API_KEY }}
+      ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}
+      K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
+      K8S_MEMORY_REQUESTS: ${{ vars.K8S_MEMORY_REQUESTS }}
+      K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
+      K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
+      K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
+      K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER }}
+      MAIL_HOST: ${{ vars.MAIL_HOST }}
+      MAIL_PASS: ${{ secrets.MAIL_PASS }}
+      MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_USER: ${{ secrets.MAIL_USER }}
+      MAX_OPENAI_TOKEN_COUNT: ${{ vars.MAX_OPENAI_TOKEN_COUNT }}
+      OLD_NEWS_THRESHOLD: ${{ vars.OLD_NEWS_THRESHOLD }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OUTLET_FETCH_INTERVAL: ${{ vars.OUTLET_FETCH_INTERVAL }}
+      OUTLET_FETCH_LIMIT: ${{ vars.OUTLET_FETCH_LIMIT }}
+      OUTLET_MAX_ATTEMPT_LIMIT: ${{ vars.OUTLET_MAX_ATTEMPT_LIMIT }}
+      PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
+      PLAY_HT_SECRET_KEY: ${{ secrets.PLAY_HT_SECRET_KEY }}
+      PLAY_HT_USER_ID: ${{ secrets.PLAY_HT_USER_ID }}
+      PORT: ${{ vars.PORT }}
+      S3_BUCKET: ${{ vars.S3_BUCKET }}
+      S3_KEY: ${{ secrets.S3_KEY }}
+      S3_SECRET: ${{ secrets.S3_SECRET }}
+      WORKER_RETRY_EXPRS: ${{ vars.WORKER_RETRY_EXPRS }}
+      WORKER_QUEUE: recaps
+    steps:
+      - name: Print Job Description
+        run: |
+          echo deploying \"$IMAGE\" from branch \"${{ github.ref_name }}\"
+      - name: Git Checkout
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.GIT_SSH_KEY }}
+          submodules: recursive
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Add kubectl cert
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_CLUSTER_ID }}
+      - name: Apply deployment changes
+        run: |
           envsubst < $GITHUB_WORKSPACE/k8s/worker-deploy.yaml | kubectl apply -f -
       - name: Deploy Rollout
         run: kubectl rollout restart deployment/$CONTAINER_NAME --namespace $K8S_NAMESPACE
