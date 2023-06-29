@@ -1,9 +1,14 @@
 import React from 'react';
+import { Platform } from 'react-native';
 
 import {
   AVAILABLE_FONTS,
+  BASE_LETTER_SPACING,
+  BASE_LINE_HEIGHT_MULTIPLIER,
+  DEFAULT_PREFERRED_FONT,
   FONT_SIZES,
   FontFamily,
+  SYSTEM_FONT,
   TextProps,
   ViewProps,
 } from '~/components';
@@ -27,6 +32,7 @@ export function useTextStyles({
   h6,
   
   // font and size
+  system,
   font,
   fontFamily = font,
   fontSize = caption ? FONT_SIZES.caption : subscript ? FONT_SIZES.subscript : subtitle1 ? FONT_SIZES.subtitle1 : subtitle2 ? FONT_SIZES.subtitle2 : body1 ? FONT_SIZES.body1 : body2 ? FONT_SIZES.body2 : h1 ? FONT_SIZES.h1 : h2 ? FONT_SIZES.h2 : h3 ? FONT_SIZES.h3 : h4 ? FONT_SIZES.h4 : h5 ? FONT_SIZES.h5 : h6 ? FONT_SIZES.h6 : FONT_SIZES.body1,
@@ -50,13 +56,16 @@ export function useTextStyles({
   underline,
   capitalize,
 
+  fontWeight = bold ? 'bold' : undefined,
   textTransform = capitalize ? 'capitalize' : undefined,
+  textDecorationLine = underline ? 'underline' : undefined,
+  fontStyle = italic ? 'italic' : undefined,
 
   color = 'text',
 }: TextProps) {
   
   const { 
-    fontFamily: fontFamily0 = 'Faustina', 
+    fontFamily: fontFamily0 = DEFAULT_PREFERRED_FONT, 
     fontSizeOffset = 0,
     letterSpacing: letterSpacing0 = 0,
     lineHeightMultiplier = 0,
@@ -68,19 +77,36 @@ export function useTextStyles({
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
+    
     const offsetFontSize = fontSize + (fontSizeFixed ? 0 : fontSizeOffset);
+    const computedFont = system ? SYSTEM_FONT : !AVAILABLE_FONTS.includes(fontFamily ?? fontFamily0 as FontFamily) ? DEFAULT_PREFERRED_FONT : fontFamily ?? fontFamily0;
     
-    attrs.push({ fontFamily : !AVAILABLE_FONTS.includes(fontFamily ?? fontFamily0 as FontFamily) ? 'Faustina' : fontFamily ?? fontFamily0 });
-    attrs.push({ fontSize : offsetFontSize });
+    const platformFont = Platform.select({
+      android: [computedFont, [fontWeight ? 'Bold' : undefined, fontStyle ? 'Italic' : undefined].filter(Boolean).join('') || 'Regular'].join('-'),
+      ios: computedFont,
+    }) ?? computedFont;
     
-    attrs.push({ letterSpacing: 0.3 + (letterSpacing ?? letterSpacing0) });
-    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (1.35 + lineHeightMultiplier)) });
+    const platformWeight = Platform.select({
+      android: undefined,
+      ios: fontWeight,
+    });
+    
+    const platformStyle = Platform.select({
+      android: undefined,
+      ios: fontStyle,
+    });
+    
+    attrs.push({ fontFamily: platformFont });
+    attrs.push({ fontSize: offsetFontSize });
+    
+    attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
+    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
     
     attrs.push(textAlign ? { textAlign } : undefined);
     
-    attrs.push(bold ? { fontWeight: 'bold' } : undefined);
-    attrs.push(italic ? { fontStyle: 'italic' } : undefined);
-    attrs.push(underline ? { textDecorationLine: 'underline' } : undefined);
+    attrs.push(platformWeight ? { fontWeight: platformWeight } : undefined);
+    attrs.push(platformStyle ? { fontStyle: platformStyle } : undefined);
+    attrs.push(textDecorationLine ? { textDecorationLine } : undefined);
 
     attrs.push(textTransform ? { textTransform } : undefined);
 
@@ -88,7 +114,7 @@ export function useTextStyles({
   
     return attrs.filter((v) => v !== undefined).reduce((acc, val) => ({ ...acc, ...val }), {});
     
-  }, [fontSize, fontSizeFixed, fontSizeOffset, fontFamily, fontFamily0, letterSpacing, letterSpacing0, lineHeight, lineHeightMultiplier, textAlign, bold, italic, underline, textTransform, color, theme]);
+  }, [fontSize, fontSizeFixed, fontSizeOffset, system, fontFamily, fontFamily0, letterSpacing, letterSpacing0, lineHeight, lineHeightMultiplier, textAlign, fontWeight, fontStyle, textDecorationLine, textTransform, color, theme]);
   
 }
 
@@ -263,11 +289,8 @@ export function useStyles({
   
   // other
   style,
-  ...props
-} : TextProps & ViewProps) {
+} : ViewProps) {
 
-  const textStyle = useTextStyles(props);
-  
   const theme = useTheme();
   
   const outlineStyle = React.useMemo(() => {
@@ -353,10 +376,8 @@ export function useStyles({
   }, [position, top, left, right, bottom, zIndex, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, marginTop, marginBottom, marginLeft, marginRight, paddingTop, paddingBottom, paddingLeft, paddingRight, backgroundColor, opacity, overflow, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, flexDirection, flex, flexWrap, flexGrow, flexShrink, flexBasis, alignItems, alignSelf, justifyContent, rowGap, columnGap, style]);
 
   const allStyles = React.useMemo(() => {
-    return {
-      ...viewStyle, ...outlineStyle, ...textStyle, 
-    };
-  }, [textStyle, viewStyle, outlineStyle]);
+    return { ...viewStyle, ...outlineStyle };
+  }, [viewStyle, outlineStyle]);
 
   return allStyles;
 

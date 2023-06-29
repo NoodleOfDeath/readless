@@ -35,22 +35,22 @@ export function CustomFeedWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => [
     {
       body: (
-        <View gap={ 12 }>
-          <Markdown subtitle1 textCenter>
+        <View gap={ 12 } mb={ 24 }>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_customFeed_letsStart}
           </Markdown>
-          <CategoryPicker height={ 200 } />
+          <CategoryPicker height={ 500 } />
         </View>
       ),
       title: strings.walkthroughs_customFeed_addCategories,
     },
     {
       body: (
-        <View gap={ 12 }>
-          <Markdown subtitle1 textCenter>
+        <View gap={ 12 } mb={ 24 }>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_customFeed_readlessPulls}
           </Markdown>
-          <OutletPicker height={ 200 } />
+          <OutletPicker height={ 500 } />
         </View>
       ),
       title: strings.walkthroughs_customFeed_addNewsSources,
@@ -96,9 +96,9 @@ export function CustomFeedWalkthrough(props: SheetProps) {
             </View>
           </View>
           <Button
-            elevated
-            rounded
-            p={ 6 }
+            h4
+            system
+            contained
             onPress={ onDone }>
             {strings.mise_sweetGotIt}
           </Button>
@@ -111,6 +111,8 @@ export function CustomFeedWalkthrough(props: SheetProps) {
   return (
     <Walkthrough
       { ...props }
-      payload={ { onDone, steps } } />
+      payload={ {
+        closable: true, onDone, steps, 
+      } } />
   );
 }

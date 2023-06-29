@@ -2,29 +2,37 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView, StatusBar } from 'react-native';
 
-import { ViewProps } from '~/components';
+import { View, ViewProps } from '~/components';
 import { useTheme } from '~/hooks';
 
 export type ScreenViewProps = ViewProps & {
-  refreshing?: boolean;
-  onRefresh?: () => void;
+  safeArea?: boolean;
 };
 
 export function Screen({
   children,
+  safeArea = true,
   ...props
-}: ViewProps) {
+}: ScreenViewProps) {
   const theme = useTheme();
   return (
     <React.Fragment>
-      <StatusBar barStyle={ theme.isLightMode ? 'dark-content' : 'light-content' } />
-      <SafeAreaView
-        style={ styles.SafeAreaView }
-        { ...props }>
-        {children}
-      </SafeAreaView>
+      <StatusBar barStyle={ theme.isDarkMode ? 'light-content' : 'dark-content' } />
+      {safeArea ? (
+        <SafeAreaView
+          style={ styles.ContentView }
+          { ...props }>
+          {children}
+        </SafeAreaView>
+      ) : (
+        <View
+          style={ styles.ContentView }
+          { ...props }>
+          {children}
+        </View>
+      )}
     </React.Fragment>
   );
 }
 
-const styles = StyleSheet.create({ SafeAreaView: { flex: 1 } });
+const styles = StyleSheet.create({ ContentView: { flex: 1 } });

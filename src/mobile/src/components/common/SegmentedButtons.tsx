@@ -37,7 +37,6 @@ export const SegmentedButtons = <T extends string | number = string>({
       }, index) => (
         <Button
           key={ `${v}${index}` }
-          horizontal
           px={ 12 }
           gap={ 6 }
           leftIcon={ icon }

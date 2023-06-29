@@ -1,86 +1,155 @@
 import React from 'react';
+import { LayoutRectangle } from 'react-native';
+
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import {
   Button,
   ChildlessViewProps,
+  Image,
   Text,
   View,
 } from '~/components';
+import { useTheme } from '~/hooks';
+
+export type CardStackEntryProps = {
+  id: string;
+  image?: string | React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  onPress?: () => void;
+  onClose?: () => void;
+};
+
+export function CardStackEntry({
+  image: imageUri, 
+  title, 
+  subtitle, 
+  onPress,
+  onClose,
+}: CardStackEntryProps) {
+
+  const theme = useTheme();
+
+  const image = React.useMemo(() => {
+    if (typeof imageUri !== 'string') {
+      return imageUri;
+    }
+    return (
+      <Image 
+        width="100%"
+        height="100%"
+        source={ { uri: imageUri } } />
+    );
+  }, [imageUri]);
+
+  return (
+    <View
+      touchable
+      elevated
+      p={ 12 }
+      rounded
+      gap={ 12 }
+      bg={ theme.colors.primary }
+      onPress={ onPress }>
+      <View
+        height={ 220 }
+        mt={ -12 }
+        mx={ -12 }
+        brTopLeft={ 6 }
+        brTopRight={ 6 }
+        overflow='hidden'>
+        <View flexRow absolute z={ 3 } p={ 6 }>
+          <View row />
+          <Button
+            leftIcon="close"
+            onPress={ onClose } />
+        </View>
+        { image }
+      </View>
+      <View>
+        <Text system color={ theme.colors.contrastText }>{ title }</Text>
+        {subtitle && (
+          <Text color={ theme.colors.contrastText } system numberOfLines={ 2 }>
+            { subtitle }
+          </Text>
+        )}
+      </View>
+    </View>
+  );
+}
 
 export type CardStackProps = ChildlessViewProps & {
-  children?: React.ReactNode | React.ReactNode[];
+  cards?: CardStackEntryProps[];
   onPressItem?: (index: number) => void;
   onClose?: () => void;
 };
 
 export function CardStack({ 
-  children, 
+  cards = [], 
   onPressItem,
   onClose,
   ...props
 }: CardStackProps = {}) {
   
-  const [cardIndex, setCardIndex] = React.useState(0);
+  const theme = useTheme();
 
-  const cards = React.useMemo(() => {
-    if (!children) {
-      return [];
-    }
-    return (Array.isArray(children) ? children : [children]).map((child, i) => (
-      <React.Fragment key={ i }>
-        {child}
-      </React.Fragment>
-    ));
-  }, [children]);
+  const [layout, setLayout] = React.useState<LayoutRectangle>();
+  const refCarousel = React.useRef<Carousel<CardStackEntryProps>>(null);
+  const [activeSlide, setActiveSlide] = React.useState(0);
   
-  React.useEffect(() => {
-    if (cardIndex + 1 > cards.length) {
-      setCardIndex(Math.max(cards.length - 1, 0));
-    }
-  }, [cardIndex, cards]);
+  const renderItem = React.useCallback(({ item, index }: {item: CardStackEntryProps, index: number}) => (
+    <View 
+      touchable
+      overflow='visible'
+      onPress={ () => onPressItem?.(index) }>
+      <CardStackEntry 
+        { ...item }
+        onClose={ onClose } />
+    </View>
+  ), [onClose, onPressItem]);
 
   return (
     <View 
-      elevated
-      touchable
-      rounded
-      p={ 12 }
-      onPress={ () => onPressItem?.(cardIndex) }
+      px={ 18 }
+      overflow='visible'
       { ...props }>
-      <View flexRow>
-        <View row />
-        <Button
-          touchable
-          leftIcon="close"
-          iconSize={ 18 }
-          onPress={ () => onClose?.() } />
-      </View>
-      <View 
-        flexRow
-        itemsCenter
-        justifyBetween
-        gap={ 6 }>
-        <Button
-          touchable
-          leftIcon="chevron-left"
-          iconSize={ 32 }
-          color={ cardIndex > 0 ? 'text' : 'textDisabled' }
-          onPress={ cardIndex > 0 ? () => setCardIndex((cardIndex - 1)) : undefined } />
-        <View
-          itemsCenter
-          justifyCenter>
-          {cards[cardIndex]}
-        </View>
-        <Button
-          touchable
-          leftIcon="chevron-right"
-          iconSize={ 32 }
-          color={ cardIndex + 1 < cards.length ? 'text' : 'textDisabled' }
-          onPress={ cardIndex + 1 < cards.length ? () => setCardIndex((cardIndex + 1)) : undefined } />
-      </View>
-      <View flexRow>
-        <View row />
-        <Text>{`${cardIndex + 1} / ${cards.length}`}</Text>
+      <View
+        onLayout={ (e) => setLayout(e.nativeEvent.layout) }
+        overflow='visible'>
+        {layout && (
+          <React.Fragment>
+            <Carousel
+              ref={ refCarousel }
+              data={ cards }
+              layout={ 'tinder' } 
+              renderItem={ renderItem }
+              sliderWidth={ layout.width }
+              itemWidth={ layout.width }
+              hasParallaxImages
+              firstItem={ activeSlide }
+              inactiveSlideScale={ 0.94 }
+              inactiveSlideOpacity={ 0.3 }
+              containerCustomStyle={ { overflow: 'visible' } }
+              loop
+              autoplay
+              autoplayDelay={ 500 }
+              autoplayInterval={ 7_000 }
+              onSnapToItem={ setActiveSlide } />
+            <Pagination
+              dotsLength={ cards.length }
+              activeDotIndex={ activeSlide }
+              containerStyle={ {} }
+              dotColor={ theme.colors.text }
+              dotStyle={ {} }
+              inactiveDotColor={ theme.colors.textSecondary }
+              inactiveDotOpacity={ 0.8 }
+              inactiveDotScale={ 0.6 }
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              carouselRef={ refCarousel as any }
+              tappableDots={ Boolean(refCarousel) } />
+          </React.Fragment>
+        )}
       </View>
     </View>
   );

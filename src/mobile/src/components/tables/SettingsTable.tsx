@@ -4,6 +4,8 @@ import RNFS from 'react-native-fs';
 
 import { ReadingFormat } from '~/api';
 import {
+  BASE_LETTER_SPACING,
+  BASE_LINE_HEIGHT_MULTIPLIER,
   FONT_SIZES,
   NumericPrefPicker,
   PrefSwitch,
@@ -48,7 +50,7 @@ export function SettingsTable() {
     setLoading(true);
     const files = await RNFS.readDir(RNFS.CachesDirectoryPath);
     const size = files.reduce((acc, file) => acc + file.size, 0);
-    setCacheSize(`${(size / 1000000).toFixed(1)}MB`);
+    setCacheSize(`${(size / 1_000_000).toFixed(1)}MB`);
     setLoading(false);
   }, []);
 
@@ -59,8 +61,7 @@ export function SettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
-      <TableViewSection
-        header="System">
+      <TableViewSection header={ strings.settings_system }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -74,6 +75,7 @@ export function SettingsTable() {
           cellStyle="RightDetail"
           title={ strings.settings_font }
           detail={ fontFamily }
+          detailTextStyle={ { fontFamily } }
           accessory="DisclosureIndicator"
           cellIcon="format-font"
           onPress={ () => navigate('fontPicker') } />
@@ -91,31 +93,30 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ 'Line Height' }
-          cellIcon="format-line-spacing"
-          cellAccessoryView={ (
-            <NumericPrefPicker
-              prefKey='lineHeightMultiplier'
-              offset={ 1.35 }
-              min={ -0.35 }
-              max={ 0.65 }
-              step={ 0.05 } />
-          ) } />
-        <TableViewCell
-          bold
-          title={ 'Letter Spacing' }
+          title={ strings.settings_letterSpacing }
           cellIcon="format-letter-spacing"
           cellAccessoryView={ (
             <NumericPrefPicker
               prefKey='letterSpacing'
-              offset={ 0.4 }
+              offset={ BASE_LETTER_SPACING }
               min={ -0.1 }
               max={ 1 }
               step={ 0.1 } />
           ) } />
+        <TableViewCell
+          bold
+          title={ strings.settings_lineHeight }
+          cellIcon="format-line-spacing"
+          cellAccessoryView={ (
+            <NumericPrefPicker
+              prefKey='lineHeightMultiplier'
+              offset={ BASE_LINE_HEIGHT_MULTIPLIER }
+              min={ -0.35 }
+              max={ 0.65 }
+              step={ 0.05 } />
+          ) } />
       </TableViewSection>
-      <TableViewSection
-        header="Summary Display">
+      <TableViewSection header={ strings.settings_summaryDisplay }>
         <TableViewCell
           cellContentView={ (
             <ScrollView scrollEnabled={ false }>
@@ -151,8 +152,7 @@ export function SettingsTable() {
           cellIcon="link-variant"
           cellAccessoryView={ <PrefSwitch prefKey='sourceLinks' /> } />
       </TableViewSection>
-      <TableViewSection
-        header="Customization">
+      <TableViewSection header={ strings.settings_customization }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -162,17 +162,24 @@ export function SettingsTable() {
           cellIcon="alphabetical-off"
           onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
-      <TableViewSection
-        header="General">
+      <TableViewSection header={ strings.settings_general }>
         <TableViewCell
           bold
-          title={ `Reset read summaries (${Object.keys({ ...readSummaries }).length})` }
+          title={ strings.settings_about }
+          onPress={ () => navigate('about') } />
+        <TableViewCell
+          bold
+          title={ strings.screens_bookmarks }
+          onPress={ () => navigate('bookmarks') } />
+        <TableViewCell
+          bold
+          title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
           onPress={ () => {
             setPreference('readSummaries', {}); 
           } } />
         <TableViewCell
           bold
-          title={ `Reset hidden summaries (${Object.keys({ ...removedSummaries }).length})` }
+          title={ `${strings.settings_resetHiddenSummaries} (${Object.keys({ ...removedSummaries }).length})` }
           onPress={ () => {
             setPreference('removedSummaries', {}); 
           } } />
@@ -184,7 +191,7 @@ export function SettingsTable() {
           } } />
         <TableViewCell
           bold
-          title={ 'Reset All Settings' }
+          title={ strings.settings_resetAllSettings }
           onPress={ () => {
             resetPreferences(); 
           } }

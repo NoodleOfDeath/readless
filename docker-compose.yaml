@@ -66,19 +66,19 @@ services:
       - ./src/server:/home/node/app
       - ./src/server/node_modules:/home/node/app/node_modules
 
-  cron:
+  scheduler:
     build:
       context: .
-      dockerfile: Dockerfile.cron
+      dockerfile: Dockerfile.scheduler
     env_file:
       - src/server/.env
     environment:
       - CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome
 
-  cron-local:
+  scheduler-local:
     build:
       context: .
-      dockerfile: Dockerfile.cron.local
+      dockerfile: Dockerfile.scheduler.local
     env_file:
       - src/server/.env
     environment:

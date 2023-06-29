@@ -19,7 +19,7 @@ export type InputEvent = NativeSyntheticEvent<TextInputKeyPressEventData>;
 export function TextInput(props: TextInputProps) {
   const theme = useTheme();
   return (
-    <View { ...props }>
+    <View borderRadius={ 500 } overflow='hidden' { ...props }>
       <RNTextInput
         dense
         { ...props }

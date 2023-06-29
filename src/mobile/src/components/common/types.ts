@@ -8,14 +8,20 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { PulseProps } from '~/components';
+
 export const AVAILABLE_FONTS = [
-  'Alegreya', 
-  'DM Sans',
+  'Anek Latin',
   'Faustina',
-  'Lato',
-  'Manuale',
-  'Roboto',
+  'Pitagon Serif',
+  'Newsreader 72pt',
 ] as const;
+
+export const SYSTEM_FONT = 'Anek Latin';
+export const DEFAULT_PREFERRED_FONT = 'Anek Latin';
+
+export const BASE_LETTER_SPACING = 0;
+export const BASE_LINE_HEIGHT_MULTIPLIER = 1.2;
 
 export type FontFamily = (typeof AVAILABLE_FONTS[number]);
 
@@ -37,6 +43,7 @@ export const FONT_SIZES = {
 export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextProps & TextStyle & {
   
   // font and size
+  system?: boolean;
   /** alias for {@link TextProps.fontFamily} */
   font?: FontFamily;
   fontFamily?: FontFamily;
@@ -77,6 +84,9 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   // preset variants
   outlined?: boolean;
   rounded?: boolean;
+  
+  // preset animations
+  pulse?: boolean | PulseProps;
   
   // position
   absolute?: boolean;
@@ -242,14 +252,14 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   columnGap?: ViewStyle['columnGap'];
   
   // custom
-  pressable?: boolean;
   touchable?: boolean;
+  untouchable?: boolean;
   elevated?: boolean;
   haptic?: boolean;
   inactive?: boolean;
   
   // other
-  style?: StyleProp<ViewStyle> | undefined;
+  style?: StyleProp<ViewStyle>;
 
 };
 

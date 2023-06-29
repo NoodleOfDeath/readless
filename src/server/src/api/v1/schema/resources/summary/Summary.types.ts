@@ -53,8 +53,10 @@ export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentime
 export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'outletId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
 export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'outletId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
 
-export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText'>;
+export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText' | 'originalTitle'>;
+
+export type PublicSummaryAttributesConservative = Omit<PublicSummaryAttributes, 'shortSummary' | 'summary' | 'bullets' | 'sentiments'>;
 
 export type PublicSummaryGroup = PublicSummaryAttributes & {
-  siblings?: PublicSummaryAttributes[];
+  siblings?: PublicSummaryAttributesConservative[];
 };

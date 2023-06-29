@@ -27,11 +27,15 @@ export class Bookmark<T> {
 
 export type ColorScheme = 'light' | 'dark' | 'system';
 
-export type OrientationType = 
-  | 'PORTRAIT' 
-  | 'PORTRAIT-UPSIDEDOWN' 
-  | 'LANDSCAPE-LEFT'
-  | 'LANDSCAPE-RIGHT';
+export enum OrientationType {
+  'PORTRAIT' = 'PORTRAIT',
+  'PORTRAIT-UPSIDEDOWN' = 'PORTRAIT-UPSIDEDOWN',
+  'LANDSCAPE-LEFT' = 'LANDSCAPE-LEFT',
+  'LANDSCAPE-RIGHT' = 'LANDSCAPE-RIGHT',
+  'FACE-UP' = 'FACE-UP',
+  'FACE-DOWN' = 'FACE-DOWN',
+  'UNKNOWN' = 'UNKNOWN',
+}
   
 export type Preferences = {
   // system settings
@@ -71,9 +75,7 @@ export type Preferences = {
   excludedCategories?: { [key: string]: boolean };
 };
 
-export const DEFAULT_PREFERENCES: Partial<Preferences> = { fontFamily: 'Faustina' };
-
-export const OVERRIDDEN_INITIAL_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
+export const DEFAULT_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);

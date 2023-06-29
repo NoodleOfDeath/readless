@@ -14,8 +14,8 @@ import { useStyles, useTheme } from '~/hooks';
 
 export function View({ 
   children,
-  pressable,
-  touchable,
+  untouchable,
+  touchable = untouchable ? false : undefined,
   elevated,
   haptic,
   inactive,
@@ -81,7 +81,7 @@ export function View({
       onPress={ onPress }>
       {contents}
     </TouchableOpacity>
-  ) : pressable || props.onPress ? (
+  ) : props.onPress ? (
     <Pressable
       { ...props } 
       style={ elevated ? undefined : style }

@@ -20,7 +20,6 @@ import {
   Button,
   ChildlessViewProps,
   CollapsedView,
-  Divider,
   Highlighter,
   Icon,
   Image,
@@ -28,6 +27,7 @@ import {
   Popover,
   ReadingFormatPicker,
   ScrollView,
+  ScrollViewProps,
   Text,
   View,
 } from '~/components';
@@ -52,7 +52,7 @@ import {
 } from '~/locales';
 import { DateSorter, fixedSentiment } from '~/utils';
 
-type Props = ChildlessViewProps & {
+type Props = ChildlessViewProps & ScrollViewProps & {
   summary?: PublicSummaryGroup;
   tickInterval?: string;
   selected?: boolean;
@@ -99,15 +99,9 @@ function RenderActions({ actions }: RenderActionsProps) {
             flexGrow={ 1 }
             flex={ 1 }>
             <Button 
-              flexRow
-              rounded
-              outlined
-              flexGrow={ 1 }
-              flex={ 1 }
               gap={ 6 }
-              px={ 4 }
-              itemsCenter
-              justifyCenter
+              system
+              contained
               caption
               leftIcon={ action.leftIcon }
               onPress={ action.onPress }>
@@ -212,9 +206,11 @@ export function Summary({
 
   const [lastTick, setLastTick] = React.useState(new Date());
   const [isShareTarget, setIsShareTarget] = React.useState(summary.id === shareTarget?.id);
+  const [isBookmarked, setIsBookmarked] = React.useState(Boolean(bookmarkedSummaries?.[summary.id]));
   const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+  const [isSourceRead, setIsSourceRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
   const [isSiblingRead, setIsSiblingRead] = React.useState(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
-  const [sourceIsRead, setSourceIsRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+  const [isPlayingAudio, setIsPlayingAudio] = React.useState(trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'));
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -229,10 +225,6 @@ export function Summary({
       title: summary.title,
     };
   }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
-
-  const bookmarked = React.useMemo(() => Boolean(bookmarkedSummaries?.[summary.id]), [bookmarkedSummaries, summary]);
-  
-  const playingAudio = React.useMemo(() => trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'), [currentTrack?.id, summary.id, trackState]);
 
   const formatTime = React.useCallback((time?: string) => {
     if (!time) {
@@ -275,11 +267,13 @@ export function Summary({
     setIsShareTarget(isShareTarget);
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
+    setIsBookmarked(Boolean(bookmarkedSummaries?.[summary.id]));
     setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-    setSourceIsRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
+    setIsSourceRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
     setIsSiblingRead(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
+    setIsPlayingAudio(trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'));
     return () => clearInterval(interval);
-  }, [disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget, summary.id, summary.siblings, summary.translations, tickInterval]));
+  }, [bookmarkedSummaries, currentTrack?.id, disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget?.id, summary.id, summary.siblings, summary.translations, tickInterval, trackState]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat && !disableInteractions && !isShareTarget) {
@@ -326,19 +320,19 @@ export function Summary({
         numberOfLines={ 1 }
         underline
         caption
-        color={ !initialFormat && !isShareTarget && sourceIsRead ? theme.colors.textDisabled : theme.colors.text }
+        color={ !initialFormat && !isShareTarget && isSourceRead ? theme.colors.textDisabled : theme.colors.text }
         onPress={ () => {
           if (disableInteractions) {
             return;
           }
           onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-          setSourceIsRead(true);
+          setIsSourceRead(true);
         } }
         onLongPress={ () => copyToClipboard(summary.url) }>
         {summary.url}
       </Text>
     );
-  }, [initialFormat, isShareTarget, sourceIsRead, theme.colors.textDisabled, theme.colors.text, disableInteractions, onInteract, summary.url, openURL, copyToClipboard]);
+  }, [initialFormat, isShareTarget, isSourceRead, theme.colors.textDisabled, theme.colors.text, disableInteractions, onInteract, summary.url, openURL, copyToClipboard]);
   
   const menuActions = React.useMemo(() => {
     return (
@@ -359,7 +353,7 @@ export function Summary({
             h4
             haptic
             color='text'
-            leftIcon={ bookmarked ? 'bookmark' : 'bookmark-outline' }
+            leftIcon={ isBookmarked ? 'bookmark' : 'bookmark-outline' }
             onPress={ () => !disableInteractions && onInteract?.(InteractionType.Bookmark) } />
           <Button
             h4
@@ -384,30 +378,28 @@ export function Summary({
             haptic
             touchable
             color="text"
-            leftIcon={ playingAudio ? 'stop' : 'volume-source' }
+            leftIcon={ isPlayingAudio ? 'stop' : 'volume-source' }
             onPress={ () => !disableInteractions && handlePlayAudio() } />
         </View>
       </View>
     );
-  }, [initialFormat, compact, compactMode, summary, sourceLinks, sourceLink, bookmarked, playingAudio, disableInteractions, onInteract, format, handlePlayAudio]);
+  }, [initialFormat, compact, compactMode, summary, sourceLinks, sourceLink, isBookmarked, isPlayingAudio, disableInteractions, onInteract, format, handlePlayAudio]);
   
   const timestamp = React.useMemo(() => {
     return (
-      <View flex={ 1 } flexGrow={ 1 }>
-        <Text 
-          bold 
-          adjustsFontSizeToFit
-          caption
-          color={ isRead ? theme.colors.textDisabled : theme.colors.text }>
-          {formatTime(summary.originalDate)}
-        </Text>
-      </View>
+      <Text 
+        bold 
+        adjustsFontSizeToFit
+        textCenter
+        caption>
+        {formatTime(summary.originalDate)}
+      </Text>
     );
-  }, [isRead, theme.colors.textDisabled, theme.colors.text, formatTime, summary.originalDate]);
+  }, [formatTime, summary.originalDate]);
   
   const sentimentMeter = React.useMemo(() => {
     return (
-      <View flexRow gap={ 3 }>
+      <View flexRow itemsCenter gap={ 3 }>
         <Text
           caption
           adjustsFontSizeToFit>
@@ -419,29 +411,38 @@ export function Summary({
       </View>
     );
   }, [summary.sentiment]);
+
+  const title = React.useMemo(() => (
+    <Highlighter
+      bold
+      h5={ Boolean(initialFormat) }
+      subtitle1={ Boolean(!(compact || compactMode) && !initialFormat) }
+      body1={ (compact || compactMode) && !initialFormat }
+      justifyCenter
+      adjustsFontSizeToFit
+      color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
+      highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+      searchWords={ isShareTarget ? [] : keywords }>
+      {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
+    </Highlighter>
+  ), [initialFormat, compact, compactMode, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const header = React.useMemo(() => (
     <View 
       p={ initialFormat ? 12 : 6 }
       flexGrow={ 1 }
       elevated
-      brTopLeft={ initialFormat ? 0 : 12 }
-      brTopRight={ initialFormat ? 0 : 12 }
+      brTopLeft={ initialFormat ? 0 : 6 }
+      brTopRight={ initialFormat ? 0 : 6 }
       zIndex={ 2 }
-      inactive={ isRead }
-      bg={ containsTrigger ? '#eecccc' : undefined }>
-      <View
-        flexRow
-        flexGrow={ 1 }
-        itemsCenter
-        gap={ 6 }>
+      bg={ theme.colors.headerBackground }>
+      <View>
         {!initialFormat ? (
-          <React.Fragment>
+          <View flexRow itemsCenter gap={ 6 }>
             <Button 
               h5
-              color='text'
-              leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
-              touchable
+              adjustsFontSizeToFit
+              leftIcon={ summary.category.icon && summary.category.icon }
               onPress={ () => !disableInteractions && openCategory(summary.category) } />
             <Text
               italic
@@ -450,61 +451,60 @@ export function Summary({
               {summary.outlet.displayName}
             </Text>
             {timestamp}
-            {(forceSentiment || sentimentEnabled) && sentimentMeter}
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <View itemsCenter gap={ 3 }>
-              {sentimentMeter}
-              {timestamp}
-            </View>
             <View row />
-            <View gap={ 3 }>
-              <View>
+            {(forceSentiment || sentimentEnabled) && sentimentMeter}
+            {((compact || compactMode) && (
+              <Popover
+                menu
+                anchor={ <Icon name="dots-horizontal" color={ theme.colors.text } size={ 24 } /> }>
+                {menuActions}
+              </Popover>
+            ))}
+          </View>
+        ) : (
+          <View gap={ 6 }>
+            <View flexRow>
+              <View flex={ 10 } itemsCenter justifyCenter>
+                {title}
+              </View>
+              <View flex={ 4 } itemsCenter justifyCenter>
+                {sentimentMeter}
+                {timestamp}
+              </View>
+            </View>
+            <View flexRow itemsCenter justifyCenter>
+              <View row />
+              <View flexRow gap={ 6 }>
                 <Button 
-                  h5
                   gap={ 3 }
-                  horizontal
-                  outlined
-                  itemsCenter
+                  system
+                  contained
                   justifyBetween
-                  borderRadius={ 4 }
                   adjustsFontSizeToFit
                   px={ 12 }
-                  leftIcon={ summary.category.icon && <Icon name={ summary.category.icon } color="text" /> }
+                  leftIcon={ summary.category.icon && summary.category.icon }
                   rightIcon="chevron-right"
                   onPress={ () => !disableInteractions && openCategory(summary.category) }>
                   {summary.category.displayName}
                 </Button>
+                <Button
+                  system
+                  contained
+                  justifyBetween
+                  gap={ 3 }
+                  rightIcon="chevron-right"
+                  px={ 12 }
+                  adjustsFontSizeToFit
+                  onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
+                  {summary.outlet.displayName}
+                </Button>
               </View>
-              <Button
-                italic
-                h5
-                itemsCenter
-                justifyBetween
-                horizontal
-                gap={ 3 }
-                outlined
-                rightIcon="chevron-right"
-                px={ 12 }
-                adjustsFontSizeToFit
-                borderRadius={ 4 }
-                onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
-                {summary.outlet.displayName}
-              </Button>
             </View>
-          </React.Fragment>
+          </View>
         )}
-        {((compact || compactMode) && !initialFormat && (
-          <Popover
-            menu
-            anchor={ <Icon name="dots-horizontal" size={ 24 } /> }>
-            {menuActions}
-          </Popover>
-        ))}
       </View>
     </View>
-  ), [initialFormat, isRead, containsTrigger, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, compact, compactMode, menuActions, disableInteractions, openCategory, openOutlet]);
+  ), [initialFormat, theme.colors.headerBackground, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, compact, compactMode, theme.colors.text, menuActions, disableInteractions, openCategory, openOutlet]);
 
   const renderRightActions = React.useCallback(() => {
     const actions = [{
@@ -599,6 +599,7 @@ export function Summary({
               gap={ 1 }
               p={ 3 }
               outlined
+              rounded
               borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
               touchable
               onPress={ () => !disableInteractions && openSummary({ summary: sibling.id }) }>
@@ -625,7 +626,7 @@ export function Summary({
                 bold 
                 numberOfLines={ 1 }
                 color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
                 searchWords={ isShareTarget ? [] : keywords }>
                 { cleanString(sibling.title) }
               </Highlighter>
@@ -634,7 +635,7 @@ export function Summary({
         ))}
       </View>
     );
-  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, disableInteractions, formatTime, keywords, cleanString, openSummary]);
+  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, disableInteractions, formatTime, keywords, cleanString, openSummary]);
 
   const coverContent = React.useMemo(() => (
     <View>
@@ -656,8 +657,8 @@ export function Summary({
                   minHeight={ 80 }
                   height="100%"
                   overflow='hidden'
-                  brTopLeft={ initialFormat ? 0 : 12 }
-                  brBottomLeft={ initialFormat ? 0 : 12 }>
+                  brTopLeft={ initialFormat ? 0 : 6 }
+                  brBottomLeft={ initialFormat ? 0 : 6 }>
                   {containsTrigger ? (
                     <Icon
                       name="cancel"
@@ -690,37 +691,30 @@ export function Summary({
           flex={ 1 }
           flexGrow={ 1 }
           gap={ 6 }
-          pb={ 12 }>
-          <View flex={ 1 } flexGrow={ 1 } mx={ 12 }>
-            <View flexRow flexGrow={ 1 }>
-              <Highlighter
-                bold
-                subtitle1={ Boolean(!(compact || compactMode) || initialFormat) }
-                body1={ (compact || compactMode) && !initialFormat }
-                justifyCenter
-                color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
-                highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                searchWords={ isShareTarget ? [] : keywords }>
-                {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
-              </Highlighter>
-            </View>
+          pt={ initialFormat ? 12 : undefined }
+          pb={ 6 }>
+          <View flex={ 1 } flexGrow={ 1 } gap={ 6 } mx={ 12 }>
+            {!initialFormat && (
+              <View flexRow flexGrow={ 1 }>
+                {title}
+              </View>
+            )}
             {translateToggle}
             {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
-              <View pb={ 12 }>
-                <Divider />
+              <View>
                 <Highlighter 
-                  highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
+                  highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
                   searchWords={ isShareTarget ? [] : keywords }>
                   { cleanString(localizedStrings.shortSummary ?? '') }
                 </Highlighter>
               </View>
             )}
           </View>
-          {(((!(compact || compactMode) || initialFormat) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : sourceLinks && (<View mx={ 12 }>{sourceLink}</View>))}
+          {(((!(compact || compactMode) || initialFormat) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : (sourceLinks || initialFormat) && (<View mx={ 12 }>{sourceLink}</View>))}
           {summary.siblings && summary.siblings.length > 0 && (
             <View mx={ 12 } gap={ 6 }>
               <View flexRow>
-                <Text>
+                <Text justifyCenter>
                   {`${strings.summary_relatedNews} (${summary.siblings.length})`}
                 </Text>
                 <View row />
@@ -737,29 +731,80 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title, translateToggle, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
+  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, title, translateToggle, showShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, isShareTarget, keywords, cleanString, localizedStrings.shortSummary, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
+  
+  const cardBody = React.useMemo(() => (
+    <View flexGrow={ 1 }>
+      <CollapsedView 
+        disabled={ hideCard }
+        initiallyCollapsed={ false }
+        title={ (
+          <ReadingFormatPicker
+            my={ -12 }
+            elevated={ false }
+            format={ format } 
+            preferredFormat={ preferredReadingFormat }
+            onChange={ handleFormatChange } />
+        ) }>
+        {content && (
+          <View gap={ 6 } pb={ 12 }>
+            {translateToggle}
+            <View gap={ 12 } p={ 12 }>
+              {content.split('\n').map((content, i) => (                         
+                <View
+                  key={ `${content}-${i}` }
+                  itemsCenter
+                  gap={ 12 }
+                  flexRow>
+                  {format === 'bullets' && (
+                    <Icon
+                      name="circle"
+                      size={ 24 }
+                      flexRow
+                      flex={ 1 } />
+                  )}
+                  <Highlighter 
+                    flex={ format === 'bullets' ? 9 : 1 }
+                    flexRow
+                    highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+                    searchWords={ isShareTarget ? [] : keywords }>
+                    { cleanString(content) }
+                  </Highlighter>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+      </CollapsedView>
+      {!hideAnalytics && summary.sentiment && (
+        <AnalyticsView
+          initiallyCollapsed
+          sentiment={ summary.sentiment }
+          sentiments={ Object.values(summary.sentiments ?? []) } />
+      )}
+    </View>
+  ), [hideCard, format, preferredReadingFormat, handleFormatChange, content, translateToggle, theme.colors.textHighlightBackground, theme.colors.textDark, isShareTarget, keywords, cleanString, hideAnalytics, summary.sentiment, summary.sentiments]);
   
   return (
-    <GestureHandlerRootView>
-      <Swipeable
-        enabled={ swipeable && !disableInteractions && !initialFormat && !isShareTarget }
-        renderRightActions={ renderRightActions }>
-        <ViewShot ref={ viewshot }>
-          <View 
-            flexGrow={ 1 }
-            elevated
-            style={ { ...theme.components.card, ...style } }
-            borderRadius={ initialFormat ? 0 : 12 }
-            my={ 6 }
-            ml={ initialFormat ? undefined : 12 }
-            mr={ initialFormat ? undefined : 12 }
-            inactive={ isRead }
-            bg={ containsTrigger ? '#eecccc' : undefined }
-            onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
-            <View flexGrow={ 1 }>
-              {!hideCard && (
+    <ViewShot ref={ viewshot }>
+      <View flexGrow={ 1 }>
+        {!initialFormat ? (
+          <GestureHandlerRootView>
+            <Swipeable
+              enabled={ swipeable && !disableInteractions && !isShareTarget }
+              renderRightActions={ renderRightActions }>
+              <View
+                flexGrow={ 1 } 
+                elevated
+                style={ { ...theme.components.card, ...style } }
+                borderRadius={ 6 }
+                mx={ 12 }
+                my={ 6 }
+                bg={ containsTrigger ? '#eecccc' : undefined }
+                opacity={ isRead ? 0.75 : 1 }
+                onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
                 <View flexRow flexGrow={ 1 }>
-                  {!initialFormat && !isShareTarget && selected && (
+                  {!isShareTarget && selected && (
                     <View
                       left={ 0 }
                       top={ 0 }
@@ -771,66 +816,33 @@ export function Summary({
                     flexGrow={ 1 }
                     gap={ 6 }
                     overflow='hidden'
-                    brTopLeft={ initialFormat ? 0 : 12 }
-                    brTopRight={ initialFormat ? 0 : 12 }>
+                    brTopLeft={ 6 }
+                    brTopRight={ 6 }>
                     {header}
                     {coverContent}
                   </View>
                 </View>
-              )}
-              {initialFormat && (
-                <CollapsedView 
-                  disabled={ hideCard }
-                  initiallyCollapsed={ false }
-                  title={ (
-                    <ReadingFormatPicker
-                      my={ -12 }
-                      elevated={ false }
-                      format={ format } 
-                      preferredFormat={ preferredReadingFormat }
-                      onChange={ handleFormatChange } />
-                  ) }>
-                  {content && (
-                    <View gap={ 6 } pb={ 12 }>
-                      {translateToggle}
-                      <View gap={ 12 } p={ 12 }>
-                        {content.split('\n').map((content, i) => (                         
-                          <View
-                            key={ `${content}-${i}` }
-                            itemsCenter
-                            gap={ 12 }
-                            flexRow>
-                            {format === 'bullets' && (
-                              <Icon
-                                name="circle"
-                                size={ 24 }
-                                flexRow
-                                flex={ 1 } />
-                            )}
-                            <Highlighter 
-                              flex={ format === 'bullets' ? 9 : 1 }
-                              flexRow
-                              highlightStyle={ { backgroundColor: 'yellow', color: theme.colors.textDark } }
-                              searchWords={ isShareTarget ? [] : keywords }>
-                              { cleanString(content) }
-                            </Highlighter>
-                          </View>
-                        ))}
-                      </View>
-                    </View>
-                  )}
-                </CollapsedView>
-              )}
-              {!hideAnalytics && initialFormat && summary.sentiment && (
-                <AnalyticsView
-                  initiallyCollapsed
-                  sentiment={ summary.sentiment }
-                  sentiments={ Object.values(summary.sentiments ?? []) } />
-              )}
-            </View>
+              </View>
+            </Swipeable>
+          </GestureHandlerRootView>
+        ) : (
+          <View
+            style={ { ...theme.components.card, ...style } }
+            height='100%'>
+            {!hideCard && (
+              <View>
+                {header}
+              </View>
+            )}
+            <ScrollView flexGrow={ 1 } { ...props }>
+              <View>
+                {!hideCard && coverContent}
+                {cardBody}
+              </View>
+            </ScrollView>
           </View>
-        </ViewShot>
-      </Swipeable>
-    </GestureHandlerRootView>
+        )}
+      </View>
+    </ViewShot>
   );
 }

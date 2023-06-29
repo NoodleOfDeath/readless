@@ -3,9 +3,11 @@ import React from 'react';
 import {
   AVAILABLE_FONTS,
   Button,
+  DEFAULT_PREFERRED_FONT,
   FontFamily,
   GridPicker,
   ScrollView,
+  Summary,
   TablePicker,
   View,
   ViewProps,
@@ -26,12 +28,13 @@ export function FontPicker({
   ...props
 }: FontPickerProps = {}) {
   
-  const { fontFamily, setPreference } = React.useContext(SessionContext);
+  const { fontFamily = DEFAULT_PREFERRED_FONT, setPreference } = React.useContext(SessionContext);
   const style = useStyles(props);
   
   if (variant === 'grid') {
     return (
       <GridPicker
+        centered
         options={ [...AVAILABLE_FONTS] }
         initialValue={ fontFamily as FontFamily }
         buttonProps={ ({ option }) => ({ fontFamily: option.value }) }
@@ -48,13 +51,10 @@ export function FontPicker({
         <View flexRow itemsCenter gap={ 8 } mx={ 8 }>
           {AVAILABLE_FONTS.map((font) => (
             <Button 
-              flexRow
               caption
-              itemsCenter
+              contained
               gap={ 4 }
               key={ font }
-              elevated
-              p={ 8 }
               leftIcon={ fontFamily === font ? 'check' : undefined } 
               fontFamily={ font }
               onPress={ () => setPreference('fontFamily', font) }>
@@ -71,6 +71,10 @@ export function FontPicker({
       options={ [...AVAILABLE_FONTS] }
       initialValue={ fontFamily as FontFamily }
       cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
-      onValueChange={ (state) => setPreference('fontFamily', state?.value) } />
+      onValueChange={ (state) => setPreference('fontFamily', state?.value) }>
+      <ScrollView scrollEnabled={ false }>
+        <Summary mt={ 12 } disableInteractions /> 
+      </ScrollView>
+    </TablePicker>
   );
 }

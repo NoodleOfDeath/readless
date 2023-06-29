@@ -1,8 +1,10 @@
 import React from 'react';
 
 import { 
+  ScrollView,
   SegmentedButtons, 
   SegmentedButtonsProps,
+  Summary,
   TablePicker,
 } from '~/components';
 import { ColorScheme, SessionContext } from '~/contexts';
@@ -30,17 +32,24 @@ export function ColorSchemePicker({
           { label: strings.settings_dark, value: 'dark' as ColorScheme },
         ] }
         initialValue={ colorScheme ?? 'system' }
-        onValueChange={ (state) => setPreference('colorScheme', state?.value) } />
+        onValueChange={ (state) => setPreference('colorScheme', state?.value) }>
+        <ScrollView scrollEnabled={ false }>
+          <Summary mt={ 12 } disableInteractions /> 
+        </ScrollView>
+      </TablePicker>
     );
   }
   
   return (
     <SegmentedButtons
       { ...props }
+      borderRadius={ 100 }
+      overflow='hidden'
+      outlined
       buttonProps={ { 
         justifyCenter: true, 
-        outlined: true,
         p: 12,
+        system: true,
         textCenter: true,
       } }
       initialValue={ colorScheme ?? 'system' }

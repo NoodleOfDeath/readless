@@ -5,6 +5,7 @@ export * from './Banner';
 export * from './Button';
 export * from './CardStack';
 export * from './Checkbox';
+export * from './Chip';
 export * from './CollapsedView';
 export * from './DataTable';
 export * from './Dialog';
@@ -31,3 +32,5 @@ export * from './TextInput';
 export * from './View';
 export * from './Walkthrough';
 export * from './WalkthroughSlider';
+
+export * from './picker';

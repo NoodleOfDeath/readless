@@ -68,42 +68,33 @@
 	<string>Providing location can help ReadLess find news that is more local and relevant to you. We do not store you location data.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Alegreya.otf</string>
-		<string>AlegreyaBold.otf</string>
-		<string>AlegreyaBoldItalic.otf</string>
-		<string>AlegreyaItalic.otf</string>
+		<string>AnekLatin-Regular.ttf</string>
+		<string>AnekLatin-Bold.ttf</string>
 		<string>AntDesign.ttf</string>
-		<string>DMSans.ttf</string>
-		<string>DMSansBold.ttf</string>
-		<string>DMSansBoldItalic.ttf</string>
-		<string>DMSansItalic.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
-		<string>Faustina.ttf</string>
-		<string>FaustinaBold.ttf</string>
-		<string>FaustinaBoldItalic.ttf</string>
-		<string>FaustinaItalic.ttf</string>
 		<string>Feather.ttf</string>
+		<string>Faustina-Regular.ttf</string>
+		<string>Faustina-Bold.ttf</string>
+		<string>Faustina-Italic.ttf</string>
+		<string>Fausting-BoldItalic.ttf</string>
 		<string>FontAwesome.ttf</string>
 		<string>FontAwesome5_Regular.ttf</string>
 		<string>FontAwesome5_Solid.ttf</string>
 		<string>Fontisto.ttf</string>
 		<string>Foundation.ttf</string>
 		<string>Ionicons.ttf</string>
-		<string>Lato.ttf</string>
-		<string>LatoBold.ttf</string>
-		<string>LatoBoldItalic.ttf</string>
-		<string>LatoItalic.ttf</string>
-		<string>Manuale.ttf</string>
-		<string>ManualeBold.ttf</string>
-		<string>ManualeBoldItalic.ttf</string>
-		<string>ManualeBold.ttf</string>
-		<string>ManualeItalic.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
 		<string>MaterialIcons.ttf</string>
+		<string>Newsreader72pt-Regular.ttf</string>
+		<string>Newsreader72pt-Bold.ttf</string>
+		<string>Newsreader72pt-Italic.ttf</string>
+		<string>Newsreader72pt-BoldItalic.ttf</string>
 		<string>Octicons.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Roboto.ttf</string>
+		<string>PitagonSerif-Regular.ttf</string>
+		<string>PitagonSerif-Bold.ttf</string>
+		<string>PitagonSerif-Italic.ttf</string>
+		<string>PitagonSerif-BoldItalic.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
@@ -118,6 +109,12 @@
 		<string>armv7</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>

@@ -18,8 +18,9 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
   const [orientation, setOrientation] = React.useState<OrientationType>(Orientation.getInitialOrientation());
   const [dimensions, setDimensions] = React.useState<ScaledSize>();
-  const [rotationLock, setRotationLock] = React.useState(initialRotationLock);
+  const [rotationLock, setRotationLock] = React.useState<OrientationType | undefined>(initialRotationLock);
   
+  const isTablet = React.useMemo(() => (dimensions?.width ?? Dimensions.get('window').width) > 1024, [dimensions?.width]);
   const supportsMasterDetail = React.useMemo(() => (dimensions?.width ?? Dimensions.get('window').width) > 768, [dimensions?.width]);
 
   const lockRotation = React.useCallback(() => {
@@ -39,8 +40,8 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
       setPreference('rotationLock', undefined);
       return;
     }
-    setRotationLock(orientation as OrientationType);
-    setPreference('rotationLock', orientation as OrientationType);
+    setRotationLock(orientation);
+    setPreference('rotationLock', orientation);
   }, [orientation, setPreference]);
   
   const unlockRotation = React.useCallback(() => {
@@ -64,6 +65,7 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   return (
     <LayoutContext.Provider value={ {
       dimensions,
+      isTablet,
       lockRotation,
       orientation,
       rotationLock,

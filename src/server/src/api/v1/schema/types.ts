@@ -74,5 +74,12 @@ export * from './resources/summary/SummaryTranslation.types';
 export * from './resources/summary/SummaryMedia.types';
 export * from './resources/summary/SummaryRelation.types';
 
+export * from './resources/recap/Recap.types';
+export * from './resources/recap/RecapSentiment.types';
+export * from './resources/recap/RecapInteraction.types';
+export * from './resources/recap/RecapTranslation.types';
+export * from './resources/recap/RecapMedia.types';
+export * from './resources/recap/RecapSummary.types';
+
 export * from './resources/iap/Voucher.types';
 export * from './resources/iap/IapVoucher.types';

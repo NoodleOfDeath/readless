@@ -35,4 +35,11 @@ export * from './resources/summary/SummaryTranslation.model';
 export * from './resources/summary/SummaryMedia.model';
 export * from './resources/summary/SummaryRelation.model';
 
+export * from './resources/recap/Recap.model';
+export * from './resources/recap/RecapSentiment.model';
+export * from './resources/recap/RecapInteraction.model';
+export * from './resources/recap/RecapTranslation.model';
+export * from './resources/recap/RecapMedia.model';
+export * from './resources/recap/RecapSummary.model';
+
 export * from './resources/iap/IapVoucher.model';

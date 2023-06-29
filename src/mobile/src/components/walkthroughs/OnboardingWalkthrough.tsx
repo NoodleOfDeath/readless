@@ -4,19 +4,21 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import {
   Button,
+  Chip,
   Divider,
   Icon,
-  Image,
   Markdown,
   Text,
   View,
   Walkthrough,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
+  const theme = useTheme();
   const { setPreference } = React.useContext(SessionContext);
   
   const onDone = React.useCallback(async () => {
@@ -30,24 +32,13 @@ export function OnboardingWalkthrough(props: SheetProps) {
   
   const steps = React.useMemo(() => [
     {
+      artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-accessible-news.png',
       body: (
         <View gap={ 12 } itemsCenter>
-          <View>
-            <Image 
-              rounded
-              overflow='hidden'
-              elevated
-              width={ 300 }
-              height={ 200 }
-              resizeMode="contain"
-              source={ { uri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/meme.jpg' } } />
-            <Text subscript>{`${strings.walkthroughs_onboarding_imageCourtesyOf} ImageFlip`}</Text>
-          </View>
-          <Divider />
-          <Markdown subtitle1 textCenter>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_onboarding_beingInformed}
           </Markdown>
-          <Markdown subtitle1 textCenter>
+          <Markdown subtitle1 textCenter system>
             {strings.walkthroughs_onboarding_inTodaysWorld}
           </Markdown>
           <View col />
@@ -56,74 +47,104 @@ export function OnboardingWalkthrough(props: SheetProps) {
       title: strings.walkthroughs_onboarding_newsShouldBeAccessible,
     },
     {
+      artwork: (
+        <View
+          width="100%"
+          mt={ 24 }
+          itemsCenter
+          gap={ 12 }>
+          <Chip
+            contained
+            subtitle1
+            textCenter
+            py={ 24 }>
+            {'"Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!"'}
+          </Chip>
+          <Icon name="arrow-down-bold" size={ 48 } />
+          <Chip
+            contained
+            textCenter
+            subtitle1
+            py={ 24 }>
+            {'"Neanderthal DNA linked to common hand condition (Dupuytren\'s contracture)"'}
+          </Chip>
+        </View>
+      ),
       body: (
-        <View gap={ 24 }>
-          <View>
-            <Text h5 bold textLeft>
-              {strings.walkthroughs_onboarding_minimizeBias}
-            </Text>
-            <Text h5 bold textCenter>
-              {strings.walkthroughs_onboarding_reduceClickbait}
-            </Text>
-            <Text h5 bold textRight>
-              {strings.walkthroughs_onboarding_extractTheFacts}
-            </Text>
-            <Text subtitle1 textCenter>
-              {strings.walkthroughs_onboarding_fromNewsHeadlines}
-            </Text>
-          </View>
-          <View
-            itemsCenter
-            mx={ 32 }
-            gap={ 12 }>
-            <View elevated rounded p={ 12 }>
-              <Text subtitle1 bold textCenter>
-                {'"Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!"'}
-              </Text>
-            </View>
-            <Icon name="arrow-down-bold" size={ 48 } />
-            <View elevated rounded p={ 12 }>
-              <Text subtitle1 bold textCenter>
-                {'"Neanderthal DNA linked to common hand condition (Dupuytren\'s contracture)"'}
-              </Text>
-            </View>
-          </View>
+        <View gap={ 12 }>
+          <Chip 
+            subtitle1
+            bold
+            contained
+            justifyStart
+            leftIcon="check"
+            gap={ 6 }
+            system>
+            {strings.walkthroughs_onboarding_minimizeBias}
+          </Chip>
+          <Chip 
+            subtitle1
+            bold
+            contained
+            leftIcon="check"
+            gap={ 6 }
+            justifyStart
+            system>
+            {strings.walkthroughs_onboarding_reduceClickbait}
+          </Chip>
+          <Chip 
+            subtitle1
+            bold
+            contained
+            leftIcon="check"
+            gap={ 6 }
+            justifyStart
+            system>
+            {strings.walkthroughs_onboarding_extractTheFacts}
+          </Chip>
+          <Text subtitle1 textCenter system>
+            {strings.walkthroughs_onboarding_fromNewsHeadlines}
+          </Text>
         </View>
       ),
       title: strings.walkthroughs_onboarding_readlessUses,
     },
     {
+      artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-granular-control.png',
       body: (
         <View gap={ 24 }>
-          <Markdown subtitle1 textLeft mr={ 64 }>
+          <Markdown subtitle1 textLeft mr={ 64 } system contained>
             {strings.walkthroughs_onboarding_granularControl}
           </Markdown>
-          <Markdown subtitle1 textRight ml={ 64 }>
+          <Markdown subtitle1 textRight ml={ 64 } system contained>
             {strings.walkthroughs_onboarding_separateFromSocialMedia}
           </Markdown>
-          <Markdown subtitle1 textLeft mr={ 64 }>
+          <Markdown subtitle1 textLeft mr={ 64 } system contained>
             {strings.walkthroughs_onboarding_withoughtNeedingAnAccount}
           </Markdown>
-          <View itemsCenter gap={ 24 }>
-            <View elevated rounded p={ 12 }>
-              <Markdown h4 textCenter>
-                {strings.walkthroughs_onboarding_areYouReady}
-              </Markdown>
-            </View>
-            <Button
-              h4
-              elevated
-              rounded
-              p={ 6 }
-              onPress={ onDone }>
-              {strings.walkthroughs_onboarding_yesLetsGetStarted}
-            </Button>
-          </View>
         </View>
       ),
       title: strings.walkthroughs_onboarding_madeWithYouInMind,
     },
-  ], [onDone]);
+    {
+      artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-start-reading.png',
+      body: (
+        <View itemsCenter gap={ 12 }>
+          <Button
+            h4
+            contained
+            onPress={ onDone }>
+            {strings.walkthroughs_onboarding_yesLetsGetStarted}
+          </Button>
+          <Divider />
+          <Chip bold subtitle1 textCenter system contained>
+            {strings.walkthroughs_onboarding_subscribe}
+          </Chip>
+        </View>
+      ),
+      title: strings.walkthroughs_onboarding_areYouReady,
+    },
+  ], [onDone, theme.colors.paper, theme.colors.text]);
   
   return (
     <Walkthrough

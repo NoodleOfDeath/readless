@@ -1,6 +1,7 @@
 import ms from 'ms';
+import { Op } from 'sequelize';
 
-import { ReadAndSummarizePayload } from './types';
+import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
   ChatGPTService,
   DeepAiService,
@@ -11,11 +12,15 @@ import {
 } from '../';
 import {
   Category,
+  Recap,
+  RecapSentiment,
+  RecapSummary,
   SentimentMethod,
+  SentimentMethodName,
   Summary,
   SummaryMedia,
   SummarySentiment,
-} from '../../api/v1/schema/models';
+} from '../../api/v1/schema';
 import { BaseService } from '../base';
 import { SentimentService } from '../sentiment';
 
@@ -41,7 +46,7 @@ export class ScribeService extends BaseService {
     await SentimentMethod.initSentimentMethods();
   }
 
-  public static async error(subject: string, text: string, throws = true): Promise<void> {
+  public static async error(subject: string, text = subject, throws = true): Promise<void> {
     await new MailService().sendMail({
       from: 'debug@readless.ai',
       subject,
@@ -304,6 +309,126 @@ export class ScribeService extends BaseService {
       await this.error('😤 Unexpected Error Encountered', [url, JSON.stringify(e), JSON.stringify(newSummary, null, 2)].join('\n\n'));
     }
     
+  }
+  
+  public static async writeRecap({
+    start: start0,
+    end: end0,
+    duration = '1d',
+    key: key0,
+    force,
+  }: RecapPayload = {}) {
+    try {
+      
+      const {
+        key = key0, start, end, 
+      } = Recap.key(start0, end0 || duration);
+      
+      const exists = await Recap.exists(key);
+      if (exists && !force) {
+        await this.error('Recap already exists');
+      }
+      
+      const summaries = await Summary.findAll({ 
+        where: { 
+          [Op.and]: [
+            { originalDate: { [Op.gte]: start } },
+            { originalDate: { [Op.lte]: end } },
+          ],
+        },
+      });
+      
+      if (summaries.length === 0) {
+        this.error('no summaries to recap');
+      }
+      
+      const mainPrompt = [
+        `The following is a list of news that occurred between ${start.toString()} and ${end.toString()}. Please summarize the highlights in two to three paragraphs making sure to prioritize topics that seem urgent and/or were covered by multiple news sources. Try to make the summary concise but easy, engaging, and entertaining to read:\n`,
+        ...(await Promise.all(summaries.map(async (summary) => `${(await summary.getOutlet()).displayName}: ${summary.title}`))),
+      ].join('\n');
+      
+      const newRecap = Recap.json<Recap>({ 
+        key,
+        length: duration,
+      });
+      const prompts: Prompt[] = [
+        {
+          handleReply: async (reply) => {
+            newRecap.text = reply.text;
+          },
+          text: mainPrompt,
+        },
+        {
+          handleReply: async (reply) => {
+            newRecap.title = reply.text;
+          },
+          text: 'Give this recap a 10-15 word title',
+        },
+      ];
+      
+      // initialize chat service
+      const chatgpt = new ChatGPTService();
+      // iterate through each summary prompt and send them to chatgpt
+      for (const prompt of prompts) {
+        let reply = await chatgpt.send(prompt.text);
+        if (BAD_RESPONSE_EXPR.test(reply.text)) {
+          // attempt single retry
+          reply = await chatgpt.send(prompt.text);
+          if (BAD_RESPONSE_EXPR.test(reply.text)) {
+            this.error('Bad response from chatgpt', ['--repl--', reply.text, '--prompt--', prompt.text].join('\n'));
+          }
+        }
+        try {
+          await prompt.handleReply(reply);
+        } catch (e) {
+          if (/too long|sentiment|category/i.test(e.message)) {
+            reply = await chatgpt.send(prompt.text);
+            console.error(e);
+            // attempt single retry
+            await prompt.handleReply(reply);
+          } else {
+            throw e;
+          }
+        }
+        this.log(reply.text);
+      }
+      
+      const recap = await Recap.create(newRecap);
+      
+      const sentiments: { [key in keyof SentimentMethodName]?: number[] } = {};
+      for (const summary of summaries) {
+        await RecapSummary.create({
+          parentId: recap.id,
+          summaryId: summary.id,
+        });
+        (await summary.getSentiments()).forEach((sentiment) => {
+          const scores = sentiments[sentiment.method] ?? [];
+          scores.push(sentiment.score);
+          sentiments[sentiment.method] = scores;
+        });
+      }
+      
+      for (const [method, scores] of Object.entries(sentiments)) {
+        await RecapSentiment.create({
+          method: method as SentimentMethodName,
+          parentId: recap.id,
+          score: scores.reduce((prev, curr) => prev + curr, 0) / scores.length,
+        });
+      }
+      
+      await new MailService().sendMail({
+        from: 'thecakeisalie@readless.ai',
+        subject: `Read Less - Today's Highlights: ${newRecap.title}`,
+        text: newRecap.text,
+        to: 'thom@readless.ai',
+      });
+
+      return recap;
+      
+    } catch (e) {
+      console.log(e);
+      await this.error('Unexpected error writing recap');
+    }
   }
   
 }

@@ -4,9 +4,9 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import {
   Button,
+  Chip,
   Divider,
   Markdown,
-  Text,
   View,
   Walkthrough,
 } from '~/components';
@@ -30,23 +30,21 @@ export function PromoCodeWalkthrough(props: SheetProps) {
     {
       body: (
         <View itemsCenter gap={ 24 }>
-          <Markdown subtitle1 textCenter>{strings.walkthroughs_promoCodeDescription}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_promoCodeDescription}</Markdown>
           <Divider />
-          <Text
+          <Chip
             h4
-            elevated
-            p={ 6 }
-            rounded
+            contained
+            system
             bold
             textCenter>
             READLESSFIRST500
-          </Text>
+          </Chip>
           <Button
-            elevated
-            p={ 6 }
-            rounded
+            system
+            contained
             onPress={ onDone }>
-            {'Awesome!'}
+            {strings.misc_awesome}
           </Button>
         </View>
       ),

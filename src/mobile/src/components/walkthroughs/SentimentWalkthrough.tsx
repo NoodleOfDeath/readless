@@ -5,6 +5,7 @@ import { Ellipse, Svg } from 'react-native-svg';
 
 import {
   Button,
+  Chip,
   Divider,
   Markdown,
   MeterDial,
@@ -37,20 +38,18 @@ export function SentimentWalkthrough(props: SheetProps) {
   
   const steps: WalkthroughStep[] = React.useMemo(() => [
     {
+      artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-sentiment.png',
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_tooMuchSentiment}
           </Markdown>
-          <View itemsCenter>
-            <MeterDial value={ 0.3 } />
-          </View>
-          <Markdown subtitle1 textCenter>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_insteadOfRemoving}
           </Markdown>
         </View>
       ),
-      title: 'Sentiment is a big part of what makes news, news',
+      title: strings.walkthroughs_sentiment_whatMakesNews,
     },
     {
       body: (
@@ -71,8 +70,11 @@ export function SentimentWalkthrough(props: SheetProps) {
               </Text>
             </View>
           </View>
-          <Markdown subtitle1 textCenter>
-            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription}
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription1}
+          </Markdown>
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription2}
           </Markdown>
         </View>
       ),
@@ -81,7 +83,7 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
           <View elevated p={ 12 } rounded>
             <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
               <Text h5 bold>&quot;</Text>
@@ -97,57 +99,67 @@ export function SentimentWalkthrough(props: SheetProps) {
               </Text>
             </View>
           </View>
-          <Markdown subtitle1 textCenter>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
         </View>
       ),
       title: strings.walkthroughs_sentiment_whatIsSentimentUsedFor,
     },
     {
-      body: (
-        <View itemsCenter gap={ 12 }>
-          <Markdown subtitle1 textCenter>
-            {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription}
-          </Markdown>
+      artwork: (
+        <View itemsCenter>
           <View itemsCenter flexRow>
-            <View itemsCenter>
-              <Text h4 color="red">-1</Text>
+            <View itemsCenter left={ 18 }>
+              <Text h4 color="red" system>-1</Text>
               <Text 
                 textCenter
+                system
                 color="red">
                 {strings.summary_veryNegative}
               </Text>
             </View>
             <MeterDial value={ 0.3 } />
-            <View itemsCenter>
-              <Text h4 color="green">+1</Text>
+            <View itemsCenter right={ 18 }>
+              <Text h4 color="green" system>+1</Text>
               <Text 
                 textCenter
+                system
                 color="green">
                 {strings.summary_veryPositive}
               </Text>
             </View>
           </View>
           <View itemsCenter>
-            <Text h4>+0</Text>
-            <Text textCenter>{strings.summary_neutral}</Text>
+            <Text h4 system>+0</Text>
+            <Text textCenter system>{strings.summary_neutral}</Text>
           </View>
+        </View>
+      ),
+      body: (
+        <View gap={ 12 }>
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription1}
+          </Markdown>
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription2}
+          </Markdown>
         </View>
       ),
       title: strings.walkthroughs_sentiment_howIsSentimetMeasured,
     },
     {
       body: (
-        <View itemsCenter gap={ 12 }>
+        <View gap={ 12 }>
           <Markdown
             textCenter
             subtitle1 
+            contained
             highlightStyle={ {
-              color: theme.colors.link, fontWeight: 'bold', textDecorationLine: 'underline', 
+              color: theme.colors.link, fontWeight: '500', textDecorationLine: 'underline', 
             } }
             onPress={ () => openURL('https://en.wikipedia.org/wiki/Lexical_analysis') }>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP1}
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription1}
           </Markdown>
-          <View flexRow itemsCenter gap={ 3 }>
+          <Chip contained itemsCenter gap={ 3 }>
             <Text
               subtitle1 
               color="link"
@@ -165,13 +177,13 @@ export function SentimentWalkthrough(props: SheetProps) {
               bold>
               VADER
             </Text>
-          </View>
-          <Text subtitle1 textCenter>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP2}
-          </Text>
-          <Divider bg={ theme.colors.text } />
-          <Markdown textCenter>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescriptionP3}
+          </Chip>
+          <Markdown subtitle1 textCenter system contained>
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription2}
+          </Markdown>
+          <Divider />
+          <Markdown textCenter system>
+            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription3}
           </Markdown>
         </View>
       ),
@@ -180,9 +192,9 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Text subtitle1 textCenter>
+          <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_score}
-          </Text>
+          </Markdown>
           <ScrollView scrollEnabled={ false }>
             <View
               absolute
@@ -204,30 +216,21 @@ export function SentimentWalkthrough(props: SheetProps) {
             </View>
             <Summary forceSentiment disableInteractions />
           </ScrollView>
-          <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
+          <View justifyCenter gap={ 12 }>
             <Button 
-              elevated
               subtitle1
-              rounded
-              touchable
-              haptic
-              p={ 6 }
-              m={ 3 }
+              contained
               onPress={ () => {
                 onDone();
               } }>
               {strings.walkthroughs_sentiment_dontEnable}
             </Button>
             <Button
-              elevated
               subtitle1
-              rounded
+              contained
               bg={ theme.colors.success }
               color={ 'white' }
-              touchable
               haptic
-              p={ 6 }
-              m={ 3 }
               onPress={ () => {
                 setPreference('sentimentEnabled', true);
                 onDone();

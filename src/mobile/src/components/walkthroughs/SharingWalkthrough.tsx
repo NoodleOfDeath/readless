@@ -10,7 +10,6 @@ import {
   Pulse,
   ScrollView,
   Summary,
-  Text,
   View,
   Walkthrough,
 } from '~/components';
@@ -36,7 +35,7 @@ export function SharingWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter>
+          <Markdown subtitle1 textCenter contained system>
             {strings.walkthroughs_sharing_shareArticles}
           </Markdown>
           <ScrollView scrollEnabled={ false }>
@@ -64,15 +63,13 @@ export function SharingWalkthrough(props: SheetProps) {
             <Summary disableInteractions />
           </ScrollView>
           <Divider />
-          <Text
-            textCenter>
+          <Markdown textCenter contained system>
             {strings.walkthroughs_sharing_shareArticlesDescription}
-          </Text>
+          </Markdown>
           <View itemsCenter>
             <Button
-              elevated
-              p={ 6 }
-              rounded
+              contained
+              system
               onPress={ onDone }>
               {strings.misc_duhIAlreadyKnow}
             </Button>

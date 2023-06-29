@@ -7,6 +7,12 @@ import {
   Message,
   Outlet,
   Queue,
+  Recap,
+  RecapInteraction,
+  RecapMedia,
+  RecapSentiment,
+  RecapSummary,
+  RecapTranslation,
   RefUserRole,
   Role,
   SentimentMethod,
@@ -29,6 +35,9 @@ import {
   PUBLIC_IAP_VOUCHER_ATTRIBUTES,
   PUBLIC_MESSAGE_ATTRIBUTES,
   PUBLIC_OUTLET_ATTRIBUTES,
+  PUBLIC_RECAP_ATTRIBUTES,
+  PUBLIC_RECAP_MEDIA_ATTRIBUTES, 
+  PUBLIC_RECAP_TRANSLATION_ATTRIBUTES,
   PUBLIC_SENTIMENT_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES,
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
@@ -95,16 +104,6 @@ export function makeAssociations() {
     as: 'sentiments',
     foreignKey: 'parentId',
   });
-
-  SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
-  Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
-  
-  SummaryInteraction.belongsTo(User, {
-    foreignKey: {
-      allowNull: true,
-      name: 'userId',
-    },
-  });
   
   SummaryTranslation.belongsTo(Summary, { 
     as: 'translations',
@@ -140,6 +139,83 @@ export function makeAssociations() {
   Summary.hasMany(SummaryRelation, {
     as: 'sibling',
     foreignKey: 'siblingId',
+  });
+
+  SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
+  Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
+  
+  SummaryInteraction.belongsTo(User, {
+    foreignKey: {
+      allowNull: true,
+      name: 'userId',
+    },
+  });
+  
+  RecapSummary.belongsTo(Summary, {
+    as: 'child',
+    foreignKey: 'summaryId',
+  });
+  Summary.hasMany(RecapSummary, {
+    as: 'child',
+    foreignKey: 'summaryId',
+  });
+  
+  RecapSummary.belongsTo(Recap, {
+    as: 'parent',
+    foreignKey: 'parentId',
+  });
+  Recap.hasMany(RecapSummary, {
+    as: 'parent',
+    foreignKey: 'parentId',
+  });
+  Summary.belongsToMany(Recap, {
+    as: 'summaries',
+    foreignKey: 'summaryId',
+    through: RecapSummary,
+  });
+  Recap.belongsToMany(Summary, {
+    as: 'summaries',
+    foreignKey: 'parentId',
+    through: RecapSummary,
+  });
+  
+  RecapTranslation.belongsTo(Recap, {
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  Recap.hasMany(RecapTranslation, {
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  
+  SentimentMethod.hasMany(RecapSentiment, { foreignKey: 'method', sourceKey: 'name' });
+  
+  RecapSentiment.belongsTo(Recap, {
+    as: 'recap',
+    foreignKey: 'parentId',
+  });
+  Recap.hasMany(RecapSentiment, {
+    as: 'sentiments',
+    foreignKey: 'parentId',
+  });
+  
+  RecapMedia.belongsTo(Recap, { 
+    as: 'media',
+    foreignKey: 'parentId',
+  });
+  Recap.hasMany(RecapMedia, {
+    as: 'media',
+    foreignKey: 'parentId',
+  });
+  
+  RecapInteraction.belongsTo(Recap, { foreignKey: 'targetId' });
+  Recap.hasMany(RecapInteraction, { foreignKey: 'targetId' });
+  
+  RecapInteraction.belongsTo(User, {
+    foreignKey: {
+      allowNull: true,
+      name: 'userId',
+    },
   });
   
   // queues
@@ -209,6 +285,14 @@ export function addScopes() {
   SummaryTranslation.addScope('public', { attributes: [...PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES] });
   
   SummaryMedia.addScope('public', { attributes: [...PUBLIC_SUMMARY_MEDIA_ATTRIBUTES] });
+  
+  RecapSentiment.addScope('public', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
+  
+  Recap.addScope('public', { attributes: [...PUBLIC_RECAP_ATTRIBUTES] });
+  
+  RecapTranslation.addScope('public', { attributes: [...PUBLIC_RECAP_TRANSLATION_ATTRIBUTES] });
+  
+  RecapMedia.addScope('public', { attributes: [...PUBLIC_RECAP_MEDIA_ATTRIBUTES] });
   
   IapVoucher.addScope('public', { attributes: [...PUBLIC_IAP_VOUCHER_ATTRIBUTES] });
 

@@ -6,3 +6,11 @@ export type ReadAndSummarizePayload = {
   outlet?: Outlet;
   force?: boolean;
 };
+
+export type RecapPayload = {
+  start?: string;
+  end?: string;
+  duration?: string;
+  key?: string;
+  force?: boolean;
+};

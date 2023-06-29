@@ -47,14 +47,14 @@ export function Stepper({
       <View flexRow gap={ 6 } itemsCenter>
         <Button
           leftIcon="minus"
-          elevated
+          contained
           haptic
           p={ 8 }
           disabled={ value <= minimumValue }
           onPress={ () => onValueChange?.(value - stepValue) } />
         <Button
           leftIcon="plus"
-          elevated
+          contained
           haptic
           p={ 8 }
           disabled={ value >= maximumValue }

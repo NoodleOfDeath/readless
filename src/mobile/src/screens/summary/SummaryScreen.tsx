@@ -9,7 +9,6 @@ import {
 } from '~/api';
 import {
   Screen,
-  ScrollView,
   Summary,
   View,
 } from '~/components';
@@ -22,6 +21,7 @@ export function SummaryScreen({
   route,
   navigation,
 }: ScreenProps<'summary'>) {
+
   const { getSummary, handleInteraction } = useSummaryClient();
   const { setPreference } = React.useContext(SessionContext);
 
@@ -60,10 +60,7 @@ export function SummaryScreen({
   }, [getSummary, setPreference]);
 
   React.useEffect(() => {
-    navigation?.setOptions({ 
-      headerShown: true, 
-      headerTitle: summary?.title ?? '',
-    });
+    navigation?.setOptions({ headerTitle: '' });
   }, [navigation, summary]);
 
   React.useEffect(() => {
@@ -82,22 +79,20 @@ export function SummaryScreen({
 
   return (
     <Screen>
-      <ScrollView
-        refreshing={ loading }
-        onRefresh={ () => load(summaryId) }>
-        {loading ? (
-          <View itemsCenter justifyCenter>
-            <ActivityIndicator size="large" />
-          </View>
-        ) : (summary && (
-          <Summary
-            summary={ summary }
-            initialFormat={ format }
-            keywords={ keywords }
-            onFormatChange={ (format) => handleFormatChange(format) }
-            onInteract={ (...e) => handleInteraction(summary, ...e) } />
-        ))}
-      </ScrollView>
+      {loading ? (
+        <View itemsCenter justifyCenter>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (summary && (
+        <Summary
+          refreshing={ loading }
+          onRefresh={ () => load(summaryId) }
+          summary={ summary }
+          initialFormat={ format }
+          keywords={ keywords }
+          onFormatChange={ (format) => handleFormatChange(format) }
+          onInteract={ (...e) => handleInteraction(summary, ...e) } />
+      ))}
     </Screen>
   );
 }
