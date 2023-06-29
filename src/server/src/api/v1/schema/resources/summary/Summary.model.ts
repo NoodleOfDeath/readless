@@ -9,7 +9,9 @@ import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import { Post } from '../Post.model';
+import { Category } from '../channel/Category.model';
 import { PublicCategoryAttributes } from '../channel/Category.types';
+import { Outlet } from '../channel/Outlet.model';
 import { PublicOutletAttributes } from '../channel/Outlet.types';
 import { InteractionType } from '../interaction/Interaction.types';
 import { PublicTranslationAttributes } from '../localization/Translation.types';
@@ -109,6 +111,14 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   
   async getSentiments() {
     return await SummarySentiment.findAll({ where: { parentId: this.id } });
+  }
+  
+  async getOutlet() {
+    return await Outlet.findByPk(this.outletId);
+  }
+  
+  async getCategory() {
+    return await Category.findByPk(this.categoryId);
   }
 
 }

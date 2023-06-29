@@ -312,44 +312,51 @@ export class ScribeService extends BaseService {
   }
   
   public static async writeRecap({
-    lookback: lookback0 = '1d',
     start: start0,
     end: end0,
+    duration = '1d',
     key: key0,
     force,
   }: RecapPayload = {}) {
     try {
       
-      const start = start0 ? new Date(start0) : null;
-      const end = end0 ? new Date(end0) : null;
-      const lookback = new Date(Date.now() - ms(lookback0));
-
-      const key = key0 || (start && end) ? [start.toDateString(), end.toDateString()].join('-') : [
-        lookback.toDateString(), 
-        lookback0,
-      ].join('-');
+      const {
+        key = key0, start, end, 
+      } = Recap.key(start0, end0 || duration);
       
-      const exists = await Recap.findOne({ where: { key } });
+      const exists = await Recap.exists(key);
       if (exists && !force) {
         await this.error('Recap already exists');
       }
       
-      const summaries = await Summary.findAll({ where: { originalDate: { [Op.lt]: lookback } } });
+      const summaries = await Summary.findAll({ 
+        where: { 
+          [Op.and]: [
+            { originalDate: { [Op.gte]: start } },
+            { originalDate: { [Op.lte]: end } },
+          ],
+        },
+      });
       
       if (summaries.length === 0) {
         this.error('no summaries to recap');
       }
       
-      const newRecap = Recap.json<Recap>({ key });
+      const mainPrompt = [
+        `The following is a list of news that occurred between ${start.toString()} and ${end.toString()}. Please summarize everything in two to three paragraphs making sure to prioritize topics that seem urgent and/or were covered by multiple news sources. Try to make the summary concise but easy, engaging, and entertaining to read:\n`,
+        ...(await Promise.all(summaries.map(async (summary) => `${(await summary.getOutlet()).displayName}: ${summary.title}`))),
+      ].join('\n');
+      
+      const newRecap = Recap.json<Recap>({ 
+        key,
+        length: duration,
+      });
       const prompts: Prompt[] = [
         {
           handleReply: async (reply) => {
             newRecap.text = reply.text;
           },
-          text: [
-            `The following is a list of all news headlines in the past ${lookback0}. Please summarize this in no more than 10 sentences making sure to prioritize topics that were most prominent or covered by multiple news sources:\n`,
-            ...summaries.map((summary) => `${summary.outlet.displayName}: ${summary.title}`),
-          ].join('\n'),
+          text: mainPrompt,
         },
         {
           handleReply: async (reply) => {
@@ -394,7 +401,11 @@ export class ScribeService extends BaseService {
           parentId: recap.id,
           summaryId: summary.id,
         });
-        (await summary.getSentiments()).forEach((sentiment) => sentiments[sentiment.method] = [...sentiments[sentiment.method], sentiment.score]);
+        (await summary.getSentiments()).forEach((sentiment) => {
+          const scores = sentiments[sentiment.method] ?? [];
+          scores.push(sentiment.score);
+          sentiments[sentiment.method] = scores;
+        });
       }
       
       for (const [method, scores] of Object.entries(sentiments)) {
@@ -407,7 +418,8 @@ export class ScribeService extends BaseService {
 
       return recap;
       
-    } catch {
+    } catch (e) {
+      console.log(e);
       await this.error('Unexpected error writing recap');
     }
   }

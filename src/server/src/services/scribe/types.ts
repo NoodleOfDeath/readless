@@ -8,9 +8,9 @@ export type ReadAndSummarizePayload = {
 };
 
 export type RecapPayload = {
-  lookback?: string;
   start?: string;
   end?: string;
+  duration?: string;
   key?: string;
   force?: boolean;
 };

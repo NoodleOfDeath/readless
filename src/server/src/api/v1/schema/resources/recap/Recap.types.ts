@@ -10,12 +10,14 @@ import { PublicSummaryAttributesConservative } from '../summary/Summary.types';
 
 export type RecapAttributes = PostAttributes & Sentimental & Translatable & {
   key: string;
+  length: string;
   summaries?: PublicSummaryAttributesConservative[];
   sentiments?: PublicRecapSentimentAttributes[];
 };
 
 export type RecapCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {
   key: string;
+  length: string;
 };
 
 /** light weight record for a summary post */

@@ -10,7 +10,7 @@ export async function main() {
 
 export async function doWork() {
   try {
-  // Worker that processes site maps and generates new summaries
+    // Worker that processes site maps and generates new summaries
     await Worker.from(
       Queue.QUEUES.recaps,
       async (job, next) => {
