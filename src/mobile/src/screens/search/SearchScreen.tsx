@@ -544,9 +544,7 @@ export function SearchScreen({
               ],
               width: '60%',
             } }>
-              <ScrollView 
-                refreshing={ summaries.length === 0 && loading }
-                onScroll={ handleDetailScroll }
+              <View
                 mt={ 12 }
                 px={ 12 }>
                 {detailSummary && (
@@ -557,7 +555,7 @@ export function SearchScreen({
                     onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
                     onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
                 )}
-              </ScrollView>
+              </View>
             </Animated.View>
           </View>
         </View>

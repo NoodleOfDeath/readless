@@ -787,49 +787,48 @@ export function Summary({
   
   return (
     <ViewShot ref={ viewshot }>
-      <View 
-        flexGrow={ 1 }
-        elevated
-        style={ { ...theme.components.card, ...style } }
-        borderRadius={ initialFormat ? 0 : 6 }
-        my={ initialFormat ? undefined : 6 }
-        ml={ initialFormat ? undefined : 12 }
-        mr={ initialFormat ? undefined : 12 }
-        bg={ containsTrigger ? '#eecccc' : undefined }
-        opacity={ isRead ? 0.75 : 1 }
-        onPress={ !initialFormat ? () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) : undefined }>
+      <View flexGrow={ 1 }>
         {!initialFormat ? (
           <GestureHandlerRootView>
             <Swipeable
               enabled={ swipeable && !disableInteractions && !isShareTarget }
               renderRightActions={ renderRightActions }>
-              <View flexGrow={ 1 }>
-                {!hideCard && (
-                  <View flexRow flexGrow={ 1 }>
-                    {!isShareTarget && selected && (
-                      <View
-                        left={ 0 }
-                        top={ 0 }
-                        width={ 12 }
-                        bg={ theme.colors.primary } />
-                    )}
+              <View
+                flexGrow={ 1 } 
+                elevated
+                style={ { ...theme.components.card, ...style } }
+                borderRadius={ 6 }
+                mx={ 12 }
+                my={ 6 }
+                bg={ containsTrigger ? '#eecccc' : undefined }
+                opacity={ isRead ? 0.75 : 1 }
+                onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+                <View flexRow flexGrow={ 1 }>
+                  {!isShareTarget && selected && (
                     <View
-                      flex={ 1 }
-                      flexGrow={ 1 }
-                      gap={ 6 }
-                      overflow='hidden'
-                      brTopLeft={ 6 }
-                      brTopRight={ 6 }>
-                      {header}
-                      {coverContent}
-                    </View>
+                      left={ 0 }
+                      top={ 0 }
+                      width={ 12 }
+                      bg={ theme.colors.primary } />
+                  )}
+                  <View
+                    flex={ 1 }
+                    flexGrow={ 1 }
+                    gap={ 6 }
+                    overflow='hidden'
+                    brTopLeft={ 6 }
+                    brTopRight={ 6 }>
+                    {header}
+                    {coverContent}
                   </View>
-                )}
+                </View>
               </View>
             </Swipeable>
           </GestureHandlerRootView>
         ) : (
-          <View height='100%'>
+          <View
+            style={ { ...theme.components.card, ...style } }
+            height='100%'>
             {!hideCard && (
               <View>
                 {header}
