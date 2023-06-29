@@ -5,13 +5,14 @@ import {
 } from 'sequelize-typescript';
 
 import { Job } from './Job.model';
-import { RecapJobData, SiteMapJobData } from './Job.types';
+import { SiteMapJobData } from './Job.types';
 import {
   QueueAttributes,
   QueueCreationAttributes,
   QueueSpecifier,
   QueueState,
 } from './Queue.types';
+import { RecapPayload } from '../../../../services/types';
 import { Serializable } from '../../../../types';
 import { BaseModel } from '../base';
 import { Recap, Summary } from '../models';
@@ -25,8 +26,8 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   extends BaseModel<A, B>
   implements QueueAttributes<DataType, ReturnType, QueueName> {
     
-  public static QUEUES = { 
-    recaps: new QueueSpecifier<RecapJobData, Recap>('recaps'),
+  public static QUEUES = {
+    recaps: new QueueSpecifier<RecapPayload, Recap>('recaps'),
     siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps'),
   };
   
@@ -56,17 +57,21 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   data?: DataType;
   resp?: ReturnType;
 
-  async add(jobName: string, payload: DataType, group?: string) {
-    const job = await Job.findOne({ where: { name: jobName } });
-    if (job) {
-      return job;
+  async add(jobName: string, payload: DataType, group?: string, schedule?: Date) {
+    const existingJob = await Job.findOne({ where: { name: jobName } });
+    if (existingJob) {
+      return existingJob;
     }
-    return await Job.create({
+    const job = await Job.create({
       data: payload,
       group,
       name: jobName,
       queue: this.toJSON().name,
     });
+    if (schedule) {
+      await job.schedule(schedule);
+    }
+    return job;
   }
 
 }

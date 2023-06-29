@@ -288,15 +288,7 @@ export function addScopes() {
   
   RecapSentiment.addScope('public', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
   
-  Recap.addScope('public', { 
-    attributes: [...PUBLIC_RECAP_ATTRIBUTES],
-    include: [
-      {
-        as: 'summaries',
-        model: Summary.scope('public'),
-      },
-    ],
-  });
+  Recap.addScope('public', { attributes: [...PUBLIC_RECAP_ATTRIBUTES] });
   
   RecapTranslation.addScope('public', { attributes: [...PUBLIC_RECAP_TRANSLATION_ATTRIBUTES] });
   

@@ -311,21 +311,15 @@ export class ScribeService extends BaseService {
     
   }
   
-  public static async writeRecap({
-    start: start0,
-    end: end0,
-    duration = '1d',
-    key: key0,
-    force,
-  }: RecapPayload = {}) {
+  public static async writeRecap(payload: RecapPayload = {}) {
     try {
       
       const {
-        key = key0, start, end, 
-      } = Recap.key(start0, end0 || duration);
+        key, start, end, 
+      } = Recap.key(payload);
       
       const exists = await Recap.exists(key);
-      if (exists && !force) {
+      if (exists && !payload.force) {
         await this.error('Recap already exists');
       }
       
@@ -349,7 +343,7 @@ export class ScribeService extends BaseService {
       
       const newRecap = Recap.json<Recap>({ 
         key,
-        length: duration,
+        length: payload.duration,
       });
       const prompts: Prompt[] = [
         {

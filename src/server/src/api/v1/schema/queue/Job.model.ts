@@ -94,6 +94,13 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     this.set('delayedUntil', new Date(Date.now() + offset));
     await this.save();
   }
+
+  async schedule(at: Date) {
+    this.set('lockedBy', null);
+    this.set('startedAt', null);
+    this.set('delayedUntil', at);
+    await this.save();
+  }
   
   async begin(pid: number) {
     this.set('lockedBy', pid);

@@ -6,6 +6,7 @@ import {
   Job,
   Outlet,
   Queue,
+  Recap,
   Summary,
   SummaryRelation,
   Worker,
@@ -24,6 +25,7 @@ async function main() {
   pollForNews();
   cleanUpDeadWorkers();
   cacheApiSummaries();
+  scheduleRecaps();
 }
 
 export function generateDynamicUrl(
@@ -106,6 +108,7 @@ export async function cleanUpDeadWorkers() {
         startedAt: null,
       }, { where: { lockedBy: deadWorkers } });
     }
+    // clean up stale sitemaps jobs
     await Job.destroy({ where: { queue: 'siteMaps', [Op.or]: [ { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }] } });
   } catch (e) {
     console.error(e);
@@ -246,6 +249,37 @@ async function cacheApiSummaries() {
     console.error(e);
   } finally {
     setTimeout(cacheApiSummaries, ms('30s'));
+  }
+}
+
+async function scheduleRecap(offset?: string) {
+  const queue = await Queue.from(Queue.QUEUES.recaps);
+  const {
+    key, start, end, duration, 
+  } = Recap.key({ start: offset });
+  if (!(await Recap.exists(key))) {
+    await queue.add(
+      key, 
+      {
+        duration,
+        end,
+        start,
+      },
+      'daily',
+      new Date(new Date(new Date().toDateString()).valueOf() + ms(offset ?? '0m') + ms(duration))
+    );
+  }
+}
+
+async function scheduleRecaps() {
+  try {
+    console.log('scheduling recaps');
+    scheduleRecap();
+    scheduleRecap('1d');
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setTimeout(scheduleRecaps, ms('10m'));
   }
 }
 
