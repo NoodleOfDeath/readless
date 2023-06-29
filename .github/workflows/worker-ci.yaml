@@ -66,7 +66,7 @@ jobs:
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
       K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
       K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
-      K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER }}
+      K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER_SITEMAPS || 1 }}
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
@@ -123,7 +123,7 @@ jobs:
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
       K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
       K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
-      K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER }}
+      K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER_RECAPS || 1 }}
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
