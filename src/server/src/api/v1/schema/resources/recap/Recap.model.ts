@@ -10,7 +10,7 @@ import { RecapAttributes, RecapCreationAttributes } from './Recap.types';
 import { PublicRecapSentimentAttributes } from './RecapSentiment.types';
 import { Post } from '../Post.model';
 import { PublicTranslationAttributes } from '../localization/Translation.types';
-import { PublicSummaryAttributesConservative } from '../summary/Summary.types';
+import { PublicSummaryAttributes } from '../summary/Summary.types';
 
 @Table({
   modelName: 'recap',
@@ -32,18 +32,18 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
   })
   declare length: string;
   
-  declare summaries?: PublicSummaryAttributesConservative[];
+  declare summaries?: PublicSummaryAttributes[];
   
   declare sentiment?: number;
   declare sentiments?: PublicRecapSentimentAttributes[];
   
   declare translations?: PublicTranslationAttributes[];
   
-  public static key({
+  public static objectKey({
     start: start0,
     end: end0,
     duration = '1d',
-  }: RecapPayload = {}): RecapPayload {
+  }: RecapPayload = {}) {
     const start = !Number.isNaN(new Date(start0).valueOf()) ?
       new Date(start0) :
       typeof start0 === 'string' ?
@@ -64,9 +64,21 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
     ].filter(Boolean).join(' -- ');
     return {
       duration,
-      end: end.toISOString(),
+      end,
       key,
-      start: start.toISOString(),
+      start,
+    };
+  }
+  
+  public static key(payload: RecapPayload = {}): RecapPayload {
+    const {
+      duration, end, key, start, 
+    } = this.objectKey(payload);
+    return {
+      duration,
+      end: end.toLocaleString(),
+      key,
+      start: start.toLocaleString(),
     };
   }
   
@@ -75,6 +87,36 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
       return await Recap.findOne({ where: { key: payload } });
     }
     return await Recap.findOne({ where: { key: this.key(payload).key } });
+  }
+
+  public async formatAsHTML(summaries0: PublicSummaryAttributes[] = [], baseUrl = process.env.BASE_DOMAIN) {
+    console.log('fuck', this.summaries);
+    const summaries = Object.fromEntries(summaries0.map((s) => [s.id, s]));
+    const sources: string[] = [];
+    const body = this.text.replace(/\[([\d,\s]+)\]/g, (_, $1) => {
+      const ids = $1.replace(/\s/g, '').split(',').map(Number) as number[];
+      if (ids.length === 0 || !ids.every((id) => id in summaries)) {
+        return `[${$1}]`;
+      }
+      const links: string[] = [];
+      ids.forEach((id) => {
+        sources.push(`[${sources.length + 1}] <a href="https://open.${baseUrl}/s/${id}">${summaries[id].outlet.displayName}: ${summaries[id].title}</a>`);
+        links.push(`<a href="https://open.${baseUrl}/s/${id}">${sources.length}</a>`);
+      });
+      return `[${links.join(', ')}]`;
+    }).replace(/\n/g, '<br />');
+    return `
+    <html>
+      <body>
+        <p>
+        ${body}
+        </p>
+        <hr />
+        <p>
+          ${sources.join('<br />')}
+        </p>
+      </body>
+    </html>`;
   }
 
 }

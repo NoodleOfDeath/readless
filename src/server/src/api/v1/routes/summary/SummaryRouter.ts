@@ -97,11 +97,14 @@ router.get(
   '/recap',
   rateLimitMiddleware('20 per 1m'),
   query('filter').isString().optional(),
+  ...paginationMiddleware,
   validationMiddleware,
   async (req, res) => {
     try {
-      const { filter } = req.params;
-      const response = await SummaryController.getRecaps(req, filter);
+      const {
+        filter, page, pageSize, 
+      } = req.params;
+      const response = await SummaryController.getRecaps(req, filter, pageSize, page);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

@@ -42,4 +42,6 @@ export * from './resources/recap/RecapTranslation.model';
 export * from './resources/recap/RecapMedia.model';
 export * from './resources/recap/RecapSummary.model';
 
+export * from './resources/subscription/Subscription.model';
+
 export * from './resources/iap/IapVoucher.model';

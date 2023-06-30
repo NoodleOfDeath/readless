@@ -1,2 +1,1 @@
-export * from './chatgpt';
-export * from './openai';
+export * from './OpenAIService';

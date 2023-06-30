@@ -3,9 +3,9 @@ import { Op } from 'sequelize';
 
 import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
-  ChatGPTService,
   DeepAiService,
   MailService,
+  OpenAIService,
   Prompt,
   PuppeteerService,
   TtsService,
@@ -17,6 +17,7 @@ import {
   RecapSummary,
   SentimentMethod,
   SentimentMethodName,
+  Subscription,
   Summary,
   SummaryMedia,
   SummarySentiment,
@@ -83,7 +84,7 @@ export class ScribeService extends BaseService {
     }
     // fetch web content with the spider
     const loot = await PuppeteerService.loot(url, outlet, { content });
-    // create the prompt onReply map to be sent to chatgpt
+    // create the prompt onReply map to be sentto ChatGPT
     if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
     }
@@ -117,10 +118,10 @@ export class ScribeService extends BaseService {
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
-          if (/no/i.test(reply.text)) {
+          if (/no/i.test(reply)) {
             throw new Error('Not an actual article');
           }
-          newSummary.title = reply.text;
+          newSummary.title = reply;
         },
         text: [
           'Does the following appear to be a news article or story? A collection of article headlines, pictures, videos, advertisements, description of a news website, or subscription program should not be considered a news article/story. Please respond with just "yes" or "no"\n\n', 
@@ -129,9 +130,9 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => {
-          const score = Number.parseFloat(reply.text);
+          const score = Number.parseFloat(reply);
           if (Number.isNaN(score)) {
-            await this.error('Not a valid sentiment score', [url, reply.text, newSummary.filteredText].join('\n\n'));
+            await this.error('Not a valid sentiment score', [url, reply, newSummary.filteredText].join('\n\n'));
           }
           sentiment.score = score;
         },
@@ -139,22 +140,22 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          categoryDisplayName = reply.text
+          categoryDisplayName = reply
             .replace(/^.*?:\s*/, '')
             .replace(/\.$/, '')
             .trim();
           if (!this.categories.some((c) => new RegExp(`^${c}$`, 'i').test(categoryDisplayName))) {
-            await this.error('Bad category', [url, categoryDisplayName, reply.text].join('\n\n'));
+            await this.error('Bad category', [url, categoryDisplayName, reply].join('\n\n'));
           }
         },
         text: `Please select a best category for this article from the following choices: ${this.categories.join(',')}. Respond with only the category name`,
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 15) {
-            await this.error('Title too long', `Title too long for ${url}\n\n${reply.text}`);
+          if (reply.split(' ').length > 15) {
+            await this.error('Title too long', `Title too long for ${url}\n\n${reply}`);
           }
-          newSummary.title = reply.text;
+          newSummary.title = reply;
         },
         text: [
           'Please summarize the same article using no more than 10 words to be used as a title. Prioritize any important names, places, events, date, or numeric values and try to make the title as unbiased and mot clickbaity as possible. Respond with just the title.',
@@ -162,10 +163,10 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 40) {
-            await this.error('Short summary too long', `Short summary too long for ${url}\n\n${reply.text}`);
+          if (reply.split(' ').length > 40) {
+            await this.error('Short summary too long', `Short summary too long for ${url}\n\n${reply}`);
           }
-          newSummary.shortSummary = reply.text;
+          newSummary.shortSummary = reply;
         },
         text: [
           'Please provide another unbiased summary using no more than 30 words. Do not use phrases like "The article" or "This article".', 
@@ -173,10 +174,10 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => { 
-          if (reply.text.split(' ').length > 120) {
-            await this.error('Summary too long', `Summary too long for ${url}\n\n${reply.text}`);
+          if (reply.split(' ').length > 120) {
+            await this.error('Summary too long', `Summary too long for ${url}\n\n${reply}`);
           }
-          newSummary.summary = reply.text;
+          newSummary.summary = reply;
         },
         text: [
           'Please provide another longer unbiased summary using no more than 100 words. Do not use phrases like "The article" or "This article".', 
@@ -184,7 +185,7 @@ export class ScribeService extends BaseService {
       },
       {
         handleReply: async (reply) => {
-          newSummary.bullets = reply.text
+          newSummary.bullets = reply
             .replace(/•\s*/g, '')
             .replace(/^\.*?:\s*/, '')
             .replace(/<br\s*\/?>/g, '')
@@ -198,23 +199,23 @@ export class ScribeService extends BaseService {
       },
     ];
       
-    // initialize chatgpt service and send the prompt
-    const chatgpt = new ChatGPTService();
-    // iterate through each summary prompt and send them to chatgpt
+    // initialize chatService service and send the prompt
+    const chatService = new OpenAIService();
+    // iterate through each summary prompt and send themto ChatGPT
     for (const prompt of prompts) {
-      let reply = await chatgpt.send(prompt.text);
-      if (BAD_RESPONSE_EXPR.test(reply.text)) {
+      let reply = await chatService.send(prompt.text);
+      if (BAD_RESPONSE_EXPR.test(reply)) {
         // attempt single retry
-        reply = await chatgpt.send(prompt.text);
-        if (BAD_RESPONSE_EXPR.test(reply.text)) {
-          this.error('Bad response from chatgpt', ['--repl--', reply.text, '--prompt--', prompt.text].join('\n'));
+        reply = await chatService.send(prompt.text);
+        if (BAD_RESPONSE_EXPR.test(reply)) {
+          await this.error('Bad response from chatService', ['--repl--', reply, '--prompt--', prompt.text].join('\n'));
         }
       }
       try {
         await prompt.handleReply(reply);
       } catch (e) {
         if (/too long|sentiment|category/i.test(e.message)) {
-          reply = await chatgpt.send(prompt.text);
+          reply = await chatService.send(prompt.text);
           console.error(e);
           // attempt single retry
           await prompt.handleReply(reply);
@@ -222,7 +223,7 @@ export class ScribeService extends BaseService {
           throw e;
         }
       }
-      this.log(reply.text);
+      this.log(reply);
     }
       
     try {
@@ -311,25 +312,21 @@ export class ScribeService extends BaseService {
     
   }
   
-  public static async writeRecap({
-    start: start0,
-    end: end0,
-    duration = '1d',
-    key: key0,
-    force,
-  }: RecapPayload = {}) {
+  public static async writeRecap(payload: RecapPayload = {}) {
     try {
       
       const {
-        key = key0, start, end, 
-      } = Recap.key(start0, end0 || duration);
+        key, start, end, duration,
+      } = Recap.objectKey(payload);
       
       const exists = await Recap.exists(key);
-      if (exists && !force) {
+      if (exists && !payload.force) {
         await this.error('Recap already exists');
       }
       
-      const summaries = await Summary.findAll({ 
+      console.log(start, end);
+
+      const summaries = await Summary.scope('public').findAll({ 
         where: { 
           [Op.and]: [
             { originalDate: { [Op.gte]: start } },
@@ -339,14 +336,32 @@ export class ScribeService extends BaseService {
       });
       
       if (summaries.length === 0) {
-        this.error('no summaries to recap');
+        await this.error('no summaries to recap');
       }
-      
+
+      const sources = await Promise.all(summaries.map(async (summary) => 
+        `[${summary.id}] ${(await summary.getOutlet()).displayName}: ${summary.title} - ${summary.shortSummary}`));
+
       const mainPrompt = [
-        `The following is a list of news that occurred between ${start.toString()} and ${end.toString()}. Please summarize the highlights in two to three paragraphs making sure to prioritize topics that seem urgent and/or were covered by multiple news sources. Try to make the summary concise but easy, engaging, and entertaining to read:\n`,
-        ...(await Promise.all(summaries.map(async (summary) => `${(await summary.getOutlet()).displayName}: ${summary.title}`))),
+        `I will provide you with a list of news events that occurred on ${start.toLocaleString()}. Please summarize the highlights in two to three paragraphs, blog form, making sure to prioritize topics that seem like breaking news and/or were covered by multiple news sources. 
+
+        Try to make the summary concise, engaging, and entertaining to read. Do not make up facts and do not respons with a list of bullet points. Just cover what seems most important.
+
+        Please also site from the list of events using the number of each headline as its reference code. For example, if the list of events were:
+        [88] CNN: Trump impeached - Trump was impeached by the House of Representatives. The Senate will now hold a trial to determine whether or not he will be removed from office.
+        [2793] Fox News: Trump impeached - Former President Donald Trump has been impeached by the House of Representatives for the second time in his presidency.
+        [12476] MSNBC: Wildfires in California - Wildfires are raging in California, destroying thousands of homes and forcing hundreds of thousands of people to evacuate.
+
+        Then you would write:
+        **${new Date().toLocaleDateString()}**
+
+        In today's news, Trump was impeached [88,2793] and wildfires are raging in California [12476].
+
+        Here is the list of events:
+        `,
+        ...sources,
       ].join('\n');
-      
+
       const newRecap = Recap.json<Recap>({ 
         key,
         length: duration,
@@ -354,35 +369,35 @@ export class ScribeService extends BaseService {
       const prompts: Prompt[] = [
         {
           handleReply: async (reply) => {
-            newRecap.text = reply.text;
+            newRecap.text = reply;
           },
           text: mainPrompt,
         },
         {
           handleReply: async (reply) => {
-            newRecap.title = reply.text;
+            newRecap.title = reply;
           },
           text: 'Give this recap a 10-15 word title',
         },
       ];
       
       // initialize chat service
-      const chatgpt = new ChatGPTService();
-      // iterate through each summary prompt and send them to chatgpt
+      const chatService = new OpenAIService();
+      // iterate through each summary prompt and send themto ChatGPT
       for (const prompt of prompts) {
-        let reply = await chatgpt.send(prompt.text);
-        if (BAD_RESPONSE_EXPR.test(reply.text)) {
+        let reply = await chatService.send(prompt.text);
+        if (BAD_RESPONSE_EXPR.test(reply)) {
           // attempt single retry
-          reply = await chatgpt.send(prompt.text);
-          if (BAD_RESPONSE_EXPR.test(reply.text)) {
-            this.error('Bad response from chatgpt', ['--repl--', reply.text, '--prompt--', prompt.text].join('\n'));
+          reply = await chatService.send(prompt.text);
+          if (BAD_RESPONSE_EXPR.test(reply)) {
+            await this.error('Bad response from chatService', ['--repl--', reply, '--prompt--', prompt.text].join('\n'));
           }
         }
         try {
           await prompt.handleReply(reply);
         } catch (e) {
           if (/too long|sentiment|category/i.test(e.message)) {
-            reply = await chatgpt.send(prompt.text);
+            reply = await chatService.send(prompt.text);
             console.error(e);
             // attempt single retry
             await prompt.handleReply(reply);
@@ -390,7 +405,7 @@ export class ScribeService extends BaseService {
             throw e;
           }
         }
-        this.log(reply.text);
+        this.log(reply);
       }
       
       const recap = await Recap.create(newRecap);
@@ -401,7 +416,8 @@ export class ScribeService extends BaseService {
           parentId: recap.id,
           summaryId: summary.id,
         });
-        (await summary.getSentiments()).forEach((sentiment) => {
+        const summarySentiments = await summary.getSentiments();
+        summarySentiments.forEach((sentiment) => {
           const scores = sentiments[sentiment.method] ?? [];
           scores.push(sentiment.score);
           sentiments[sentiment.method] = scores;
@@ -415,12 +431,10 @@ export class ScribeService extends BaseService {
           score: scores.reduce((prev, curr) => prev + curr, 0) / scores.length,
         });
       }
-      
-      await new MailService().sendMail({
-        from: 'thecakeisalie@readless.ai',
-        subject: `Read Less - Today's Highlights: ${newRecap.title}`,
-        text: newRecap.text,
-        to: 'thom@readless.ai',
+
+      await Subscription.notify('daily-recap', 'email', {
+        html: await recap.formatAsHTML(summaries),
+        subject: `Daily Highlights: ${recap.title}`,
       });
 
       return recap;

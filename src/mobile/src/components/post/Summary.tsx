@@ -418,7 +418,6 @@ export function Summary({
       h5={ Boolean(initialFormat) }
       subtitle1={ Boolean(!(compact || compactMode) && !initialFormat) }
       body1={ (compact || compactMode) && !initialFormat }
-      justifyCenter
       adjustsFontSizeToFit
       color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
       highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
@@ -464,10 +463,10 @@ export function Summary({
         ) : (
           <View gap={ 6 }>
             <View flexRow>
-              <View flex={ 10 } itemsCenter justifyCenter>
+              <View flex={ 1 } justifyCenter>
                 {title}
               </View>
-              <View flex={ 4 } itemsCenter justifyCenter>
+              <View width={ 120 } itemsCenter justifyCenter>
                 {sentimentMeter}
                 {timestamp}
               </View>
