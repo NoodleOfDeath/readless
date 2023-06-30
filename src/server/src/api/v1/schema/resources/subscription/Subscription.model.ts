@@ -74,6 +74,52 @@ export class Subscription<
   @Column({ type: DataType.DATE })
   declare verifiedAt?: Date;
 
+  public static async subscribe({
+    channel,
+    uuid,
+    event,
+    locale,
+  }: SubscriptionCreationAttributes): Promise<Subscription> {
+    const verifyToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const subscription = await Subscription.create({
+      channel,
+      event,
+      locale,
+      uuid,
+      verifyToken,
+    });
+    switch (subscription.channel) {
+    case 'email':
+      await new MailService().sendMail({
+        subject: 'Verify Subscription',
+        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/subscribe/verify?t=${subscription.verifyToken}`,
+        to: subscription.uuid,
+      });
+      break;
+    default:
+      throw new InternalError('invalid subscription channel');
+    }
+    return subscription;
+  }
+  
+  public static async unsubscribe({
+    channel,
+    uuid,
+    event,
+  }: SubscriptionCreationAttributes): Promise<void> {
+    const subscription = await Subscription.findOne({
+      where: {
+        channel,
+        event,
+        uuid,
+      },
+    });
+    if (!subscription) {
+      throw new InternalError('invalid subscription');
+    }
+    await subscription.destroy();
+  }
+
   public static async verify(
     channel: SubscriptionChannel,
     uuid: string,

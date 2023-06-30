@@ -19,3 +19,5 @@ export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
   verifyToken?: string;
   verifiedAt?: Date;
 };
+
+export type PublicSubscriptionAttributes = Omit<SubscriptionAttributes, 'verifyToken'>;

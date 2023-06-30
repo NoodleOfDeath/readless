@@ -8,3 +8,4 @@ export * from './iap';
 export * from './outlet';
 export * from './service';
 export * from './summary';
+export * from './subscribe';
