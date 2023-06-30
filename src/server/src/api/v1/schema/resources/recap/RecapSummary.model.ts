@@ -7,6 +7,7 @@ import {
 
 import { RecapSummaryAttributes, RecapSummaryCreationAttributes } from './RecapSummary.types';
 import { BaseModel } from '../../base';
+import { Summary } from '../summary/Summary.model';
 
 @Table({
   modelName: 'recap_summary',
@@ -36,5 +37,9 @@ export class RecapSummary<A extends RecapSummaryAttributes = RecapSummaryAttribu
     type: DataType.INTEGER,
   })
   declare summaryId: number;
+
+  public async getSummary() {
+    return await Summary.scope('public').findByPk(this.summaryId);
+  }
   
 }

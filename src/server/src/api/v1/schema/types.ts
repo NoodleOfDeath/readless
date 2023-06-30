@@ -81,5 +81,7 @@ export * from './resources/recap/RecapTranslation.types';
 export * from './resources/recap/RecapMedia.types';
 export * from './resources/recap/RecapSummary.types';
 
+export * from './resources/subscription/Subscription.types';
+
 export * from './resources/iap/Voucher.types';
 export * from './resources/iap/IapVoucher.types';

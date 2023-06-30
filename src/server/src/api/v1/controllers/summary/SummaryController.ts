@@ -317,9 +317,15 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Get('/recap')
   public static async getRecaps(
     @Request() _request: ExpressRequest,
-    @Query() _filter?: string
+    @Query() _filter?: string,
+    @Query() pageSize = 10,
+    @Query() page = 0
   ): Promise<BulkResponse<PublicRecapAttributes>> {
-    const recaps = await Recap.scope('public').findAndCountAll();
+    const recaps = await Recap.scope('public').findAndCountAll({
+      limit: pageSize,
+      offset: pageSize * page,
+      order: [['createdAt', 'DESC']],
+    });
     return recaps;
   }
 

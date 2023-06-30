@@ -266,7 +266,7 @@ async function scheduleRecap(offset?: string) {
         start,
       },
       'daily',
-      new Date(new Date(new Date().toDateString()).valueOf() + ms(offset ?? '0m') + ms(duration))
+      new Date(new Date(new Date().toDateString()).valueOf() + ms(offset ?? '0m') + ms(duration) - ms('4h'))
     );
   }
 }

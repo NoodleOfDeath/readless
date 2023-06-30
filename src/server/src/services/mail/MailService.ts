@@ -9,7 +9,7 @@ import { VerifyEmailProps, VerifyEmailTemplate } from './templates/verifyEmail/V
 import { Optional } from '../../types';
 import { BaseService } from '../base';
 
-type MailServiceOptions = SMTPTransport.Options;
+export type MailServiceOptions = SMTPTransport.Options;
 
 const TEMPLATES = { 
   resetPassword: ResetPasswordTemplate,
