@@ -36,7 +36,7 @@ export class SubscribeController {
     return subscription;
   }
   
-  @Post('/')
+  @Post('/unsubscribe')
   public static async unsubscribe(
     @Request() req?: ExpressRequest,
     @Body() body?: SubscriptionCreationAttributes
