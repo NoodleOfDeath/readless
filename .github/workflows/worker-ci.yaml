@@ -11,6 +11,7 @@ on:
       - "Dockerfile.worker"
       - "k8s/worker-deploy.yaml"
       - "src/server/package.json"
+      - "src/server/src/core/**"
       - "src/server/src/worker/**"
       - "src/server/src/services/**"
       - "src/server/src/utils/**"
