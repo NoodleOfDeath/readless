@@ -115,6 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
+      BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
       CONTAINER_NAME: ${{ github.event.repository.name }}-worker-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}-recaps
       DEEPAI_API_KEY: ${{ secrets.DEEPAI_API_KEY }}
