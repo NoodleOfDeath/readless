@@ -16,6 +16,7 @@ export async function doWork() {
       async (job, next) => {
         try {
           const recap = await ScribeService.writeRecap(job.data);
+          await job.moveToCompleted();
           return recap;
         } catch (e) {
           console.error(e);

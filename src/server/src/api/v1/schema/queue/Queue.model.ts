@@ -5,7 +5,11 @@ import {
 } from 'sequelize-typescript';
 
 import { Job } from './Job.model';
-import { SiteMapJobData } from './Job.types';
+import {
+  JobNameOptions, 
+  SiteMapJobData,
+  TopicResolutionJobData,
+} from './Job.types';
 import {
   QueueAttributes,
   QueueCreationAttributes,
@@ -29,6 +33,7 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   public static QUEUES = {
     recaps: new QueueSpecifier<RecapPayload, Recap>('recaps'),
     siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps'),
+    topics: new QueueSpecifier<TopicResolutionJobData, any>('topics'),
   };
   
   static async initQueues() {
@@ -54,8 +59,15 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   })
   declare state: QueueState;
 
-  data?: DataType;
-  resp?: ReturnType;
+  declare data?: DataType;
+  declare resp?: ReturnType;
+  
+  generateJobName(options?: JobNameOptions) {
+    return Job.generateJobName({
+      prefix: this.toJSON().name,
+      ...options,
+    });
+  }
 
   async add(jobName: string, payload: DataType, group?: string, schedule?: Date) {
     const existingJob = await Job.findOne({ where: { name: jobName } });
@@ -72,6 +84,10 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
       await job.schedule(schedule);
     }
     return job;
+  }
+  
+  async clear() {
+    await Job.destroy({ where: { queue: this.toJSON().name } });
   }
 
 }

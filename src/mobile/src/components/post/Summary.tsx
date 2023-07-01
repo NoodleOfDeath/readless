@@ -133,7 +133,6 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     imageUrl: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg',
     media: [],
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
-    originalTitle: '',
     outlet: {
       displayName: strings.misc_newsSource,
       name: '',

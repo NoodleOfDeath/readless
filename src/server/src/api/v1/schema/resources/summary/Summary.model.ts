@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import {
   Column,
   DataType,
@@ -6,6 +7,7 @@ import {
 
 import { SummaryAttributes, SummaryCreationAttributes } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
+import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import { Post } from '../Post.model';
@@ -119,6 +121,61 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   
   async getCategory() {
     return await Category.findByPk(this.categoryId);
+  }
+  
+  async getSiblings<
+    Deep extends boolean = false,
+    R extends Deep extends true ? Summary[] : number[] = Deep extends true ? Summary[] : number[]
+  >(deep?: Deep): Promise<R> {
+    const siblings = (await SummaryRelation.findAll({ where: { parentId: this.id } })).map((r) => r.siblingId);
+    if (deep) {
+      return await Promise.all(siblings.map(async (r) => await Summary.findByPk(r))) as R;
+    }
+    return siblings as R;
+  }
+  
+  async dropAllSiblings() {
+    await SummaryRelation.destroy({
+      where: {
+        [Op.or]: [
+          { parentId: this.id },
+          { siblingId: this.id },
+        ],
+      },
+    });
+  }
+  
+  async associateWith(sibling: number | SummaryAttributes, recurse = true) {
+    const id = typeof sibling === 'number' ? sibling : sibling.id;
+    if (recurse) {
+      const relations = await SummaryRelation.findAll({
+        where: { 
+          [Op.or]: [
+            { parentId: [this.id, id] },
+          ],
+        },
+      });
+      for (const relation of relations) {
+        if (relation.siblingId === this.id || relation.siblingId === id) {
+          continue;
+        }
+        const siblingSummary = await Summary.scope('public').findByPk(relation.siblingId);
+        await siblingSummary.associateWith(id, false);
+        await siblingSummary.associateWith(this.id, false);
+      }
+    }
+    await SummaryRelation.findOrCreate({
+      where: {
+        parentId: this.id,
+        siblingId: id,
+      },
+    });
+    await SummaryRelation.findOrCreate({
+      where: {
+        parentId: id,
+        siblingId: this.id,
+      },
+    });
   }
 
 }

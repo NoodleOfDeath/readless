@@ -31,9 +31,22 @@ export type JobCreationAttributes<DataType extends Serializable, ReturnType, Que
   retryPolicy?: RetryPolicy;
 };
 
+export type JobNameOptions = {
+  delimiter?: string;
+  prefix?: string;
+  timeBased?: boolean;
+  timeOffset?: string;
+  timeInterval?: string;
+};
+
 export type SiteMapJobData = {
   outlet: string;
   url: string; 
   content?: string;
   force?: boolean;
+};
+
+export type TopicResolutionJobData = {
+  summary: number;
+  lookback?: string;
 };

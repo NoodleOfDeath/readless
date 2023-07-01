@@ -7,6 +7,7 @@ import {
   API,
   InteractionType,
   PublicSummaryAttributes,
+  SubscriptionChannel,
 } from '~/api';
 import { getUserAgent } from '~/utils';
 
@@ -101,11 +102,52 @@ export function useSummaryClient() {
     return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, setPreference]);
 
+  const getRecaps = React.useCallback(async (
+    filter?: string,
+    page = 0, 
+    pageSize = 10
+  ) => {
+    try {
+      return await withHeaders(API.getRecaps)({
+        filter, page, pageSize,
+      });
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+
+  const subscribeToRecap = React.useCallback(async (
+    event: string,
+    channel: SubscriptionChannel,
+    uuid: string
+  ) => {
+    try {
+      return await withHeaders(API.subscribeToRecap)(event, channel, uuid);
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+
+  const unsubscribeFromRecap = React.useCallback(async (
+    event: string,
+    channel: SubscriptionChannel,
+    uuid: string
+  ) => {
+    try {
+      return await withHeaders(API.unsubscribeFromRecap)(event, channel, uuid);
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+
   return {
+    getRecaps,
     getSummaries,
     getSummary,
     handleInteraction,
     interactWithSummary,
+    subscribeToRecap,
+    unsubscribeFromRecap,
   };
 
 }

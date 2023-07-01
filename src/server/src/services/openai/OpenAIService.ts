@@ -19,6 +19,22 @@ export type OpenAIServiceInitProps = {
   apiKey?: string;
 };
 
+export function encodePrompt(prompt: string) {
+  const prompts: string[] = [];
+  let remainingPrompt = prompt;
+  while (remainingPrompt.length) {
+    if (remainingPrompt.length > 2048) {
+      const splitIndex = remainingPrompt.lastIndexOf('.', 2048);
+      prompts.push(remainingPrompt.slice(0, splitIndex + 1));
+      remainingPrompt = remainingPrompt.slice(splitIndex + 1);
+    } else {
+      prompts.push(remainingPrompt);
+      remainingPrompt = '';
+    }
+  }
+  return prompts.map((prompt, i) => `----- Part ${i + 1} of ${prompts.length} -----\n\n${prompt}`);
+}
+
 export class OpenAIService extends BaseService {
 
   api: OpenAIApi;
@@ -30,10 +46,10 @@ export class OpenAIService extends BaseService {
   }
   
   async send(prompt: string, { model = 'gpt-3.5-turbo-0613' }: Partial<CreateCompletionRequest> = {}) {
-    this.messages.push({
-      content: prompt,
-      role: 'user',
-    });
+    this.messages.push(({
+      content: prompt.slice(0, 4096),
+      role: 'user' as const,
+    }));
     const response = await this.api.createChatCompletion({
       messages: this.messages,
       model,
