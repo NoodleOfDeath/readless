@@ -10,7 +10,7 @@ import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
-import { GET_SUMMARIES } from './queries';
+import { GET_TOPICS, SEARCH_SUMMARIES } from './queries';
 import { parseDate } from '../../../../../utils';
 import { Cache } from '../../system/Cache.model';
 import { Post } from '../Post.model';
@@ -199,7 +199,111 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
 
   declare translations?: PublicTranslationAttributes[];
   
-  public static async searchSummariesInternal({
+  public static async getTopics({
+    filter,
+    ids,
+    excludeIds = false,
+    matchType,
+    interval,
+    locale,
+    start,
+    end = start !== undefined ? new Date().toISOString() : undefined,
+    pageSize = 10,
+    page = 0,
+    offset = pageSize * page,
+    forceCache = false,
+  }: SearchSummariesPayload) {
+    const { 
+      categories, 
+      outlets,
+      interval: pastInterval,
+      filter: query,
+    } = applyFilter(filter, matchType);
+    const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
+    const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
+    const idArray = typeof ids === 'number' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
+    const replacements = {
+      categories: categories.length === 0 ? [''] : categories,
+      endDate: endDate ?? new Date(0),
+      excludeIds,
+      filter: query,
+      ids: idArray,
+      interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval ?? '100y'),
+      limit: Number(pageSize),
+      locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
+      noCategories: categories.length === 0,
+      noFilter: !filter,
+      noIds: !ids || excludeIds,
+      noOutlets: outlets.length === 0,
+      offset: Number(offset),
+      outlets: outlets.length === 0 ? [''] : outlets,
+      startDate: startDate ?? new Date(),
+    };
+    const cacheKey = [
+      'getTopics',
+      filter,
+      idArray?.join(','),
+      excludeIds,
+      matchType,
+      interval,
+      locale,
+      start,
+      end,
+      pageSize,
+      page,
+    ].join(':');
+    if (!forceCache) {
+      const cache = await Cache.fromKey(cacheKey);
+      if (cache && cache.expiresSoon === false) {
+        try {
+          return JSON.parse(cache.value);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+    
+    const fetch = async () => {
+      
+      const records = (await this.store.query(GET_TOPICS, {
+        nest: true,
+        replacements,
+        type: QueryTypes.SELECT,
+      })) as any[];
+      
+      if (records.length < replacements.limit) {
+        return records;
+      }
+      
+      const filteredRecords = records.reverse().filter((a, i) => {
+        return ![...records].slice(i).some((b) => b.siblings.some((s) => s.id === a.id));
+      }).reverse();
+      
+      if (filteredRecords.length < replacements.limit) {
+        replacements.offset += replacements.limit;
+        replacements.limit -= filteredRecords.length;
+        return [...filteredRecords, ...(await fetch())];
+      }
+    
+      return filteredRecords;
+    };
+    
+    const filteredRecords = await fetch();
+    
+    const response = {
+      count: filteredRecords.length,
+      rows: filteredRecords,
+    };
+    
+    await Cache.upsert({
+      halflife: process.env.CACHE_HALFLIFE || '2m',
+      key: cacheKey,
+      value: JSON.stringify(response),
+    });
+    return response;
+  }
+  
+  public static async searchSummaries({
     filter,
     ids,
     excludeIds = false,
@@ -262,7 +366,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         }
       }
     }
-    const records = (await this.store.query(GET_SUMMARIES, {
+    const records = (await this.store.query(SEARCH_SUMMARIES, {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,

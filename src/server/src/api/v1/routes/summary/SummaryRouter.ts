@@ -40,6 +40,30 @@ router.get(
   }
 );
 
+router.get(
+  '/topics',
+  rateLimitMiddleware('20 per 1m'),
+  query('filter').isString().optional(),
+  query('ids').optional(),
+  query('excludeIds').isBoolean().optional(),
+  query('matchType').isString().matches(/^(?:any|all)$/).optional(),
+  query('interval').isString().matches(/^\d+(?:d(?:ays?)?|h(?:ours?)?|m(?:in(?:utes?)?)?|w(?:eeks?)?|month|y(?:ears?)?)$/i).optional(),
+  query('locale').isString().optional(),
+  query('start').isString().optional(),
+  query('end').isString().optional(),
+  ...paginationMiddleware,
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const params = SummaryController.serializeParams(req.query);
+      const response = await SummaryController.getTopicsInternal(params);
+      return res.json(response);
+    } catch (err) {
+      internalErrorHandler(res, err);
+    }
+  }
+);
+
 router.post(
   '/interact/:targetId/:type',
   rateLimitMiddleware('1 per 2s'),

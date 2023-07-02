@@ -1,4 +1,4 @@
-export const GET_SUMMARIES = `
+export const SEARCH_SUMMARIES = `
 SELECT
   "totalCount"::INT AS count,
   JSONB_BUILD_OBJECT(
@@ -223,49 +223,3 @@ GROUP BY
   "averageSentiment",
   "totalCount"
 `;
-
-export const GET_SUMMARY_TOKEN_COUNTS = `
-SELECT 
-  "totalCount" AS count,
-  COALESCE(JSON_AGG(JSONB_BUILD_OBJECT(
-    'text', text,
-    'type', type,
-    'count', count
-  ) ORDER BY count DESC), '[]'::JSON) AS rows
-FROM (
-  SELECT
-    COUNT(*) OVER() AS "totalCount",
-    COUNT(*) AS count,
-    text,
-    type
-  FROM (
-    SELECT
-      summary_tokens.text, 
-      summary_tokens.type
-    FROM summary_tokens
-    LEFT OUTER JOIN summaries 
-      ON summaries.id = summary_tokens."parentId"
-      AND (summaries."deletedAt" IS NULL)
-    WHERE 
-      (summary_tokens."deletedAt" IS NULL)
-      AND (summary_tokens.type ~* :type)
-      AND (
-        (summaries."originalDate" > NOW() - INTERVAL :interval)
-        OR (
-          (summaries."originalDate" >= :startDate)
-          AND (summaries."originalDate" <= :endDate)
-        )
-      )
-  ) a
-  GROUP BY
-    text,
-    type
-  HAVING COUNT(*) >= :min
-  ORDER BY count DESC
-  LIMIT :limit
-  OFFSET :offset
-) b
-GROUP BY 
-  "totalCount";
-`;
-
