@@ -116,7 +116,7 @@ export async function cleanUpDeadWorkers() {
 
 async function cacheLocale(locale: string, depth = 1) {
   for (let page = 0; page < depth; page++) {
-    await SummaryController.getSummariesInternal({
+    await SummaryController.searchSummariesInternal({
       forceCache: true,
       locale,
       page,
