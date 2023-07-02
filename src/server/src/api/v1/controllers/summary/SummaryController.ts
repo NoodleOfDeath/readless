@@ -70,7 +70,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
         rows: [],
       };
     }
-    return await Summary.searchSummariesInternal({
+    return await Summary.searchSummaries({
       end,
       excludeIds,
       filter,
@@ -87,7 +87,50 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   }
   
   public static async searchSummariesInternal(payload: SearchSummariesPayload) {
-    return await Summary.searchSummariesInternal(payload) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
+    return await Summary.searchSummaries(payload) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
+  }
+
+  @Get('/topics')
+  public static async getTopics(
+    @Request() req?: ExpressRequest,
+    @Query() filter?: string,
+    @Query() ids?: number[],
+    @Query() excludeIds = false,
+    @Query() matchType?: 'all' | 'any',
+    @Query() interval?: string,
+    @Query() locale?: string,
+    @Query() start?: string,
+    @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
+    @Query() pageSize = 10,
+    @Query() page = 0,
+    @Query() offset = pageSize * page,
+    @Query() forceCache = false
+  ): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
+    const version = req?.headers['x-app-version'];
+    if (/^2\.\d\.\d$/.test(JSON.stringify(version) || '')) {
+      return {
+        count: 0,
+        rows: [],
+      };
+    }
+    return await Summary.getTopics({
+      end,
+      excludeIds,
+      filter,
+      forceCache,
+      ids,
+      interval,
+      locale,
+      matchType,
+      offset,
+      page,
+      pageSize,
+      start,
+    });
+  }
+  
+  public static async getTopicsInternal(payload: SearchSummariesPayload) {
+    return await Summary.getTopics(payload) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
   }
   
   @Security('jwt')
