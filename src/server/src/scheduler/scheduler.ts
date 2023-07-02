@@ -143,7 +143,7 @@ async function cacheApiSummaries() {
   }
 }
 
-async function scheduleRecapJob(offset?: string) {
+async function scheduleRecapJob(offset = '1d') {
   const queue = await Queue.from(Queue.QUEUES.recaps);
   const {
     key, start, end, duration, 
@@ -166,7 +166,6 @@ async function scheduleRecapJobs() {
   try {
     console.log('scheduling recaps');
     scheduleRecapJob();
-    scheduleRecapJob('1d');
   } catch (e) {
     console.error(e);
   } finally {

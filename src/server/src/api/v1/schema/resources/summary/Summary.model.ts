@@ -204,7 +204,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     ids,
     excludeIds = false,
     matchType,
-    interval,
+    interval = '1d',
     locale,
     start,
     end = start !== undefined ? new Date().toISOString() : undefined,

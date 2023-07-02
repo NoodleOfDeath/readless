@@ -1,5 +1,4 @@
 import ms from 'ms';
-import { Op } from 'sequelize';
 
 import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
@@ -326,14 +325,7 @@ export class ScribeService extends BaseService {
       
       console.log(start, end);
 
-      const summaries = await Summary.scope('public').findAll({ 
-        where: { 
-          [Op.and]: [
-            { originalDate: { [Op.gte]: start } },
-            { originalDate: { [Op.lte]: end } },
-          ],
-        },
-      });
+      const summaries = (await Summary.getTopics({ interval: duration })).rows;
       
       if (summaries.length === 0) {
         await this.error('no summaries to recap');
@@ -408,26 +400,30 @@ export class ScribeService extends BaseService {
       
       const recap = await Recap.create(newRecap);
       
-      const sentiments: { [key in keyof SentimentMethodName]?: number[] } = {};
-      for (const summary of summaries) {
-        await RecapSummary.create({
-          parentId: recap.id,
-          summaryId: summary.id,
-        });
-        const summarySentiments = await summary.getSentiments();
-        summarySentiments.forEach((sentiment) => {
-          const scores = sentiments[sentiment.method] ?? [];
-          scores.push(sentiment.score);
-          sentiments[sentiment.method] = scores;
-        });
-      }
+      if (this.features.recapSentiments) {
       
-      for (const [method, scores] of Object.entries(sentiments)) {
-        await RecapSentiment.create({
-          method: method as SentimentMethodName,
-          parentId: recap.id,
-          score: scores.reduce((prev, curr) => prev + curr, 0) / scores.length,
-        });
+        const sentiments: { [key in keyof SentimentMethodName]?: number[] } = {};
+        for (const summary of summaries) {
+          await RecapSummary.create({
+            parentId: recap.id,
+            summaryId: summary.id,
+          });
+          const summarySentiments = await summary.getSentiments();
+          summarySentiments.forEach((sentiment) => {
+            const scores = sentiments[sentiment.method] ?? [];
+            scores.push(sentiment.score);
+            sentiments[sentiment.method] = scores;
+          });
+        }
+        
+        for (const [method, scores] of Object.entries(sentiments)) {
+          await RecapSentiment.create({
+            method: method as SentimentMethodName,
+            parentId: recap.id,
+            score: scores.reduce((prev, curr) => prev + curr, 0) / scores.length,
+          });
+        }
+        
       }
 
       await Subscription.notify('daily-recap', 'email', {
