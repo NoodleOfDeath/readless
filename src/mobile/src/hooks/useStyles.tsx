@@ -97,10 +97,10 @@ export function useTextStyles({
     });
     
     attrs.push({ fontFamily: platformFont });
-    attrs.push({ fontSize: offsetFontSize });
+    attrs.push({ fontSize });
     
-    attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
-    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
+    //attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
+    //attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
     
     attrs.push(textAlign ? { textAlign } : undefined);
     

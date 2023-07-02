@@ -10,8 +10,6 @@ import {
 import ms from 'ms';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { WalkthroughStack } from './WalkthroughStack';
-
 import {
   InteractionType,
   PublicSummaryGroup,
@@ -29,6 +27,7 @@ import {
   Switch,
   Text,
   View,
+  WalkthroughStack,
 } from '~/components';
 import {
   DialogContext,

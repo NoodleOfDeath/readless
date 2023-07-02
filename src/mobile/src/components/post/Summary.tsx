@@ -218,7 +218,7 @@ export function Summary({
 
   const localizedStrings = React.useMemo(() => {
     return showTranslations && translations ? translations : {
-      bullets: summary.bullets.join('\n'),
+      bullets: (summary.bullets ?? []).join('\n'),
       shortSummary: summary.shortSummary,
       summary: summary.summary,
       title: summary.title,

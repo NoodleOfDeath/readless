@@ -26,7 +26,7 @@ export const BASE_LINE_HEIGHT_MULTIPLIER = 1.2;
 export type FontFamily = (typeof AVAILABLE_FONTS[number]);
 
 export const FONT_SIZES = {
-  body1: 17,
+  body1: 18,
   body2: 16,
   caption: 14,
   h1: 30,
@@ -37,7 +37,7 @@ export const FONT_SIZES = {
   h6: 20,
   subscript: 10,
   subtitle1: 19,
-  subtitle2: 18,
+  subtitle2: 20,
 } as const;
 
 export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextProps & TextStyle & {

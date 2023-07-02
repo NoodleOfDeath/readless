@@ -15,6 +15,25 @@ export function useSummaryClient() {
 
   const { setPreference, withHeaders } = React.useContext(SessionContext);
   
+  const getTopics = React.useCallback(async (
+    filter?: string,
+    ids?: number[],
+    excludeIds?: boolean,
+    matchType?: 'all' | 'any',
+    interval?: string,
+    locale?: string,
+    page = 0,
+    pageSize = 10
+  ) => {
+    try {
+      return await withHeaders(API.getTopics)({
+        excludeIds, filter, ids, interval, locale, matchType, page, pageSize,
+      });
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+  
   const getSummaries = React.useCallback(async (
     filter?: string,
     ids?: number[],
@@ -26,7 +45,7 @@ export function useSummaryClient() {
     pageSize = 10
   ) => {
     try {
-      return await withHeaders(API.getSummaries)({
+      return await withHeaders(API.searchSummaries)({
         excludeIds, filter, ids, interval, locale, matchType, page, pageSize,
       });
     } catch (e) {
@@ -144,6 +163,7 @@ export function useSummaryClient() {
     getRecaps,
     getSummaries,
     getSummary,
+    getTopics,
     handleInteraction,
     interactWithSummary,
     subscribeToRecap,

@@ -56,6 +56,7 @@ jobs:
   deploy-worker-sitemaps:
     needs: build-worker
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '~sitemaps') && !contains(github.event.head_commit.message, '~skip')}}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
@@ -114,6 +115,7 @@ jobs:
   deploy-worker-topics:
     needs: build-worker
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '~topics') && !contains(github.event.head_commit.message, '~skip')}}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
@@ -174,6 +176,7 @@ jobs:
   deploy-worker-recaps:
     needs: build-worker
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '~recaps') && !contains(github.event.head_commit.message, '~skip')}}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}

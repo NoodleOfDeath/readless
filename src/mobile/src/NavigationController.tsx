@@ -1,6 +1,7 @@
 import React from 'react';
 import { Linking } from 'react-native';
 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   EventMapBase,
   NavigationContainer,
@@ -19,41 +20,48 @@ import {
   MediaContext,
   SessionContext,
 } from './contexts';
-import { AboutScreen } from './screens/about/AboutScreen';
-import { RecapScreen } from './screens/recaps/RecapScreen';
-import { FEATURES } from './screens/search/WalkthroughStack';
-import { FontPickerScreen } from './screens/settings/FontPickerScreen';
-import { ReadingFormatPickerScreen } from './screens/settings/ReadingFormatPickerScreen';
-import { TriggerWordPickerScreen } from './screens/settings/TriggerWordPickerScreen';
 
 import {
   ActivityIndicator,
   Button,
+  FEATURES,
   Icon,
   MediaPlayer,
+  Screen,
   View,
 } from '~/components';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import {
+  AboutScreen,
   BookmarksScreen,
   BrowseScreen,
   ChannelScreen,
   ColorSchemePickerScreen,
+  FontPickerScreen,
+  HomeScreen,
   NAVIGATION_LINKING_OPTIONS,
+  ReadingFormatPickerScreen,
+  RecapScreen,
   SearchScreen,
   SettingsScreen,
   StackableTabParams,
   SummaryScreen,
+  TriggerWordPickerScreen,
 } from '~/screens';
 
 const screens: RouteConfig<
-StackableTabParams,
-keyof StackableTabParams,
-NavigationState,
-NativeStackNavigationOptions,
-EventMapBase
+  StackableTabParams,
+  keyof StackableTabParams,
+  NavigationState,
+  NativeStackNavigationOptions,
+  EventMapBase
 >[] = [
+  {
+    component: HomeScreen, 
+    name: 'home',
+    options: { headerBackTitle: '' },
+  },
   {
     component: SearchScreen, 
     name: 'search',
@@ -142,7 +150,9 @@ EventMapBase
   },
 ];
 
-function Stack() {
+const Stack = createNativeStackNavigator();
+
+function StackNavigation({ initialRouteName = 'default' }: { initialRouteName: string }) {
 
   const { navigate, router } = useNavigation();
 
@@ -191,8 +201,6 @@ function Stack() {
       setTimeout(() => SheetManager.show('promo-code-walkthrough'), 2_000);
     }
   }, [viewedFeatures]);
-
-  const Stack = createNativeStackNavigator();
   
   const headerRight = React.useMemo(() => (
     <View>
@@ -246,7 +254,7 @@ function Stack() {
   return (
     <View col>
       <Stack.Navigator
-        initialRouteName={ 'default' }>
+        initialRouteName={ initialRouteName }>
         {screens.map((screen) => (
           <Stack.Screen
             key={ String(screen.name) }
@@ -263,6 +271,28 @@ function Stack() {
   );
   
 }
+
+function TabScreen({ initialRouteName }: { initialRouteName: string }) {
+  return (
+    <Screen>
+      <StackNavigation initialRouteName={ initialRouteName } />
+    </Screen>
+  );
+}
+
+function HomeTab() {
+  return <TabScreen />; 
+}
+function ProfileTab() {
+  return <TabScreen initialRouteName="settings" />; 
+}
+
+const TAB_ICONS = {
+  [strings.screens_home]: 'home',
+  [strings.screens_profile]: 'account',
+};
+
+const Tab = createBottomTabNavigator();
 
 export default function NavigationController() {
   const theme = useTheme();
@@ -285,7 +315,29 @@ export default function NavigationController() {
         </View>
       ) : (
         <SheetProvider>
-          <Stack />
+          <Tab.Navigator
+            screenOptions={ ({ route }) => ({
+              headerShown: false,
+              tabBarActiveTintColor: 'tomato',
+              tabBarIcon: ({
+                focused, color, size, 
+              }) => {
+                return (
+                  <Icon 
+                    name={ TAB_ICONS[route.name] } 
+                    size={ size } 
+                    color={ color } />
+                );
+              },
+              tabBarInactiveTintColor: 'gray',
+            }) }>
+            <Tab.Screen 
+              name={ strings.screens_home } 
+              component={ HomeTab } />
+            <Tab.Screen 
+              name={ strings.screens_profile } 
+              component={ ProfileTab } />
+          </Tab.Navigator>
         </SheetProvider>
       )}
     </NavigationContainer>

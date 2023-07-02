@@ -65,7 +65,9 @@ export const enStrings = {
   screens_browse: 'Browse',
   screens_colorScheme: 'Color Scheme',
   screens_font: 'Font',
+  screens_home: 'Home',
   screens_preferredReadingFormat: 'Preferred Reading Format',
+  screens_profile: 'Profile',
   screens_settings: 'Settings',
   screens_triggerWords: 'Trigger Words',
 
