@@ -5,10 +5,12 @@ import {
   Index,
   Table,
 } from 'sequelize-typescript';
+import { v1 } from 'uuid';
 
 import {
   JobAttributes,
   JobCreationAttributes,
+  JobNameOptions,
   RetryPolicy,
 } from './Job.types';
 import { Serializable } from '../../../../types';
@@ -86,6 +88,23 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
 
   @Column({ type: DataType.DATE })
   declare delayedUntil?: Date;
+  
+  public static generateJobName({
+    delimiter = '-',
+    prefix = '',
+    timeBased = true,
+    timeInterval = '5m',
+    timeOffset = '0m',
+  }: JobNameOptions = {}) {
+    if (timeBased) {
+      const interval = ms(timeInterval);
+      return [
+        prefix,
+        Math.floor((Date.now() + ms(timeOffset)) / interval) * interval,
+      ].filter(Boolean).join(delimiter);
+    }
+    return v1();
+  }
 
   async delay(byMs: number | string) {
     const offset = typeof byMs === 'string' ? ms(byMs) : byMs;

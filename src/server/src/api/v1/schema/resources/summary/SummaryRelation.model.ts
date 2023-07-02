@@ -20,8 +20,8 @@ export class SummaryRelation<A extends SummaryRelationAttributes = SummaryRelati
 
   @Index({
     name: 'summary_relations_sibling_key',
-    type: 'UNIQUE',
     unique: true,
+    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -31,8 +31,8 @@ export class SummaryRelation<A extends SummaryRelationAttributes = SummaryRelati
 
   @Index({
     name: 'summary_relations_sibling_key',
-    type: 'UNIQUE',
     unique: true,
+    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -41,9 +41,9 @@ export class SummaryRelation<A extends SummaryRelationAttributes = SummaryRelati
   declare siblingId: number;
   
   @Column({
-    allowNull: false,
+    defaultValue: 1,
     type: DataType.DOUBLE,
   })
-  declare confidence: number;
+  declare confidence?: number;
   
 }

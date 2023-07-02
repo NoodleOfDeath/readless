@@ -5,10 +5,7 @@ import {
   ParamListBase,
   RouteProp,
 } from '@react-navigation/native';
-import {
-  NativeStackNavigationOptions,
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import {
   PublicCategoryAttributes,
@@ -32,6 +29,7 @@ export type StackableTabParams = {
   browse: undefined;
   channel: Channel;
   default: undefined;
+  recaps: undefined;
   search: {
     prefilter?: string,
     onlyCustomNews?: boolean;

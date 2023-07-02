@@ -20,6 +20,7 @@ import {
   SessionContext,
 } from './contexts';
 import { AboutScreen } from './screens/about/AboutScreen';
+import { RecapScreen } from './screens/recaps/RecapScreen';
 import { FEATURES } from './screens/search/WalkthroughStack';
 import { FontPickerScreen } from './screens/settings/FontPickerScreen';
 import { ReadingFormatPickerScreen } from './screens/settings/ReadingFormatPickerScreen';
@@ -131,6 +132,14 @@ EventMapBase
       headerTitle: strings.screens_preferredReadingFormat, 
     },
   },
+  {
+    component: RecapScreen,
+    name: 'recaps',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_recaps, 
+    },
+  },
 ];
 
 function Stack() {
@@ -207,12 +216,12 @@ function Stack() {
           ) }
           haptic
           onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
-        {/* <View touchable onPress={ () => SheetManager.show('subscribe') }>
+        <View touchable onPress={ () => navigate('recaps') }>
           <Icon
             name="tag"
             size={ 24 } />
           <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
-        </View> */}
+        </View>
         <Button 
           leftIcon='menu'
           iconSize={ 24 }

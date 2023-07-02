@@ -339,10 +339,10 @@ export class ScribeService extends BaseService {
         await this.error('no summaries to recap');
       }
 
-      const sources = await Promise.all(summaries.map(async (summary) => 
-        `[${summary.id}] ${(await summary.getOutlet()).displayName}: ${summary.title} - ${summary.shortSummary}`));
+      const sourceSummaries = summaries.map((summary) => 
+        `[${summary.id}] ${summary.outlet.displayName}: ${summary.title} - ${summary.shortSummary}`);
 
-      const mainPrompt = [
+      const mainPrompt = 
         `I will provide you with a list of news events that occurred on ${start.toLocaleString()}. Please summarize the highlights in two to three paragraphs, blog form, making sure to prioritize topics that seem like breaking news and/or were covered by multiple news sources. 
 
         Try to make the summary concise, engaging, and entertaining to read. Do not make up facts and do not respons with a list of bullet points. Just cover what seems most important.
@@ -358,9 +358,7 @@ export class ScribeService extends BaseService {
         In today's news, Trump was impeached [88,2793] and wildfires are raging in California [12476].
 
         Here is the list of events:
-        `,
-        ...sources,
-      ].join('\n');
+        ${sourceSummaries.join('\n')}`;
 
       const newRecap = Recap.json<Recap>({ 
         key,
@@ -383,7 +381,7 @@ export class ScribeService extends BaseService {
       
       // initialize chat service
       const chatService = new OpenAIService();
-      // iterate through each summary prompt and send themto ChatGPT
+      // iterate through each summary prompt and send them to ChatGPT
       for (const prompt of prompts) {
         let reply = await chatService.send(prompt.text);
         if (BAD_RESPONSE_EXPR.test(reply)) {

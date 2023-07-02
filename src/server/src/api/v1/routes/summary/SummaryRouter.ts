@@ -32,7 +32,7 @@ router.get(
   async (req, res) => {
     try {
       const params = SummaryController.serializeParams(req.query);
-      const response = await SummaryController.getSummariesInternal(params);
+      const response = await SummaryController.searchSummariesInternal(params);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);
