@@ -127,6 +127,7 @@ export function ShareDialog({
                 <View rounded style={ theme.components.card } overflow='hidden'>
                   <Summary 
                     disableInteractions
+                    forceShortSummary
                     summary={ summary } />
                   <Divider mx={ 12 } />
                   <View height={ 20 } my={ 3 }>

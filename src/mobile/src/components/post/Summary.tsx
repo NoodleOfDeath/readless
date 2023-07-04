@@ -58,6 +58,7 @@ type Props = ChildlessViewProps & ScrollViewProps & {
   compact?: boolean;
   disableInteractions?: boolean;
   forceSentiment?: boolean;
+  forceShortSummary?: boolean;
   hideCard?: boolean;
   hideAnalytics?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
@@ -115,6 +116,7 @@ export function Summary({
   compact = false,
   disableInteractions = !summary0,
   forceSentiment,
+  forceShortSummary: forceShortSummary0,
   hideCard,
   hideAnalytics,
   onFormatChange,
@@ -149,12 +151,15 @@ export function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
   const [isRead, setIsRead] = React.useState(summary.id in { ...readSummaries } && !initialFormat && !disableInteractions);
   const [isBookmarked, setIsBookmarked] = React.useState(summary.id in { ...bookmarkedSummaries });
+  const [isSentimentEnabled, setIsSentimentEnabled] = React.useState(sentimentEnabled);
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
   const [showTranslations, setShowTranslations] = React.useState(initiallyTranslated && Boolean(translations));
   const [isLocalizing, setIsLocalizing] = React.useState(false);
 
+  const [forceShortSummary, setForceShortSummary] = React.useState(showShortSummary || forceShortSummary0);
+  
   const localizedStrings = React.useMemo(() => {
     return showTranslations && translations ? translations : {
       bullets: (summary.bullets ?? []).join('\n'),
@@ -204,8 +209,9 @@ export function Summary({
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
     setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions);
+    setIsSentimentEnabled(sentimentEnabled);
     return () => clearInterval(interval);
-  }, [tickInterval, summary.translations, summary.id, initiallyTranslated, readSummaries, initialFormat, disableInteractions]));
+  }, [tickInterval, summary.translations, summary.id, initiallyTranslated, readSummaries, initialFormat, disableInteractions, sentimentEnabled]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (!initialFormat && !disableInteractions) {
@@ -271,9 +277,9 @@ export function Summary({
       color={ !initialFormat && isRead ? theme.colors.textDisabled : theme.colors.text }
       highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
       searchWords={ keywords }>
-      {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
+      {cleanString(((compact || compactMode) && (showShortSummary || forceShortSummary) && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
     </Highlighter>
-  ), [initialFormat, compact, compactMode, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
+  ), [initialFormat, compact, compactMode, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const header = React.useMemo(() => (
     <View 
@@ -320,7 +326,7 @@ export function Summary({
             </View>
             {timestamp}
             <View row />
-            {(forceSentiment || sentimentEnabled) && sentimentMeter}
+            {(forceSentiment || isSentimentEnabled) && sentimentMeter}
           </View>
         ) : (
           <View gap={ 6 }>
@@ -365,7 +371,7 @@ export function Summary({
         )}
       </View>
     </View>
-  ), [initialFormat, theme.colors.headerBackground, theme.colors.primaryLight, theme.colors.contrastText, theme.colors.textSecondary, summary.outlet, summary.category, summary.url, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, disableInteractions, openOutlet, openCategory, openURL]);
+  ), [initialFormat, theme.colors.headerBackground, theme.colors.primaryLight, theme.colors.contrastText, theme.colors.textSecondary, summary.outlet, summary.category, summary.url, timestamp, forceSentiment, isSentimentEnabled, sentimentMeter, title, disableInteractions, openOutlet, openCategory, openURL]);
   
   const translateToggle = React.useMemo(() => {
     if (/^en/i.test(getLocale())) {
@@ -494,7 +500,7 @@ export function Summary({
           <View flex={ 1 } flexGrow={ 1 } gap={ 6 } mx={ 12 }>
             {!initialFormat && title}
             {translateToggle}
-            {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
+            {((!(compact || compactMode) && (showShortSummary || forceShortSummary) === true) || initialFormat) && (
               <View>
                 <Highlighter 
                   highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
@@ -509,7 +515,7 @@ export function Summary({
         {!(big) && image}
       </View>
     </View>
-  ), [initialFormat, title, translateToggle, compact, compactMode, showShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, siblingCards, big, image]);
+  ), [initialFormat, title, translateToggle, compact, compactMode, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, siblingCards, big, image]);
   
   const cardBody = React.useMemo(() => (
     <View flexGrow={ 1 }>
@@ -692,7 +698,9 @@ export function Summary({
     <View flexGrow={ 1 }>
       {!initialFormat ? 
         disableInteractions ? card : (
-          <HoldItem items={ menuItems } closeOnTap>
+          <HoldItem 
+            items={ menuItems } 
+            closeOnTap>
             {card}
           </HoldItem>
         )
