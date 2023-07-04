@@ -145,7 +145,7 @@ async function scheduleCacheJobs() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleCacheJobs, ms('30s'));
+    setTimeout(scheduleCacheJobs, ms('5s'));
   }
 }
 
