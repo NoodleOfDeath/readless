@@ -55,9 +55,10 @@ export function useTextStyles({
   italic,
   underline,
   capitalize,
+  uppercase,
 
   fontWeight = bold ? 'bold' : undefined,
-  textTransform = capitalize ? 'capitalize' : undefined,
+  textTransform = capitalize ? 'capitalize' : uppercase ? 'uppercase' : undefined,
   textDecorationLine = underline ? 'underline' : undefined,
   fontStyle = italic ? 'italic' : undefined,
 

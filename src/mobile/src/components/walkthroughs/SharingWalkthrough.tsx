@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
-import { Ellipse, Svg } from 'react-native-svg';
 
 import {
   Button,
   Divider,
+  Icon,
   Markdown,
   Pulse,
   ScrollView,
@@ -14,12 +14,10 @@ import {
   Walkthrough,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/core';
-import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function SharingWalkthrough(props: SheetProps) {
   
-  const theme = useTheme();
   const { setPreference } = React.useContext(SessionContext);
 
   const onDone = React.useCallback(async () => {
@@ -38,34 +36,20 @@ export function SharingWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textCenter contained system>
             {strings.walkthroughs_sharing_shareArticles}
           </Markdown>
+          <View
+            absolute
+            top={ 130 }
+            right={ 130 }
+            zIndex={ 20 }>
+            <Pulse>
+              <Icon name="cursor-pointer" size={ 120 } />
+            </Pulse>
+          </View>
           <ScrollView scrollEnabled={ false }>
-            <View
-              absolute
-              bottom={ 0 }
-              right={ -10 }
-              zIndex={ 20 }>
-              <Pulse>
-                <Svg 
-                  viewBox="0 0 100 100"
-                  width={ 150 }
-                  height={ 60 }>
-                  <Ellipse
-                    cx={ 50 }
-                    cy={ 50 }
-                    rx={ 35 }
-                    ry={ 35 }
-                    fill="transparent"
-                    stroke={ theme.colors.text }
-                    strokeWidth={ 5 } />
-                </Svg>
-              </Pulse>
-            </View>
             <Summary disableInteractions />
           </ScrollView>
+          <View height={ 50 } />
           <Divider />
-          <Markdown textCenter contained system>
-            {strings.walkthroughs_sharing_shareArticlesDescription}
-          </Markdown>
           <View itemsCenter>
             <Button
               contained
@@ -78,7 +62,7 @@ export function SharingWalkthrough(props: SheetProps) {
       ),
       title: strings.walkthroughs_sharing_noteworthyArticle,
     },
-  ], [onDone, theme.colors.text]);
+  ], [onDone]);
 
   return (
     <Walkthrough

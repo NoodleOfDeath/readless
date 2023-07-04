@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableHighlight } from 'react-native';
 
 import { Menu } from 'react-native-paper';
 import  RNPopover from 'react-native-popover-view';
@@ -31,21 +31,22 @@ export function Popover({
   const [visible, setVisible] = React.useState(false);
 
   if (disabled) {
-    return <TouchableOpacity disabled>{anchor}</TouchableOpacity>;
+    return <TouchableHighlight disabled>{anchor}</TouchableHighlight>;
   }
 
   if (variant === 'menu') {
     return (
       <Menu
         anchor={ (
-          <TouchableOpacity
+          <TouchableHighlight
             onPress={ () => {
               onPress?.();
               !longPress && setVisible(true); 
             } }
-            onLongPress={ () => longPress && setVisible(true) }>
+            onLongPress={ () => longPress && setVisible(true) }
+            delayLongPress={ 200 }>
             {anchor}
-          </TouchableOpacity>
+          </TouchableHighlight>
         ) }
         visible={ visible }
         onDismiss={ () => setVisible(false) }
@@ -61,14 +62,15 @@ export function Popover({
       isVisible={ visible }
       onRequestClose={ () => setVisible(false) }
       from={ (
-        <TouchableOpacity
+        <TouchableHighlight
           onPress={ () => {
             onPress?.();
             !longPress && setVisible(true);
           } }
-          onLongPress={ () => longPress && setVisible(true) }>
+          onLongPress={ () => longPress && setVisible(true) }
+          delayLongPress={ 200 }>
           {anchor}
-        </TouchableOpacity>
+        </TouchableHighlight>
       ) }
       popoverStyle={ theme.components.card }>
       {children}

@@ -9,7 +9,6 @@ import {
   Icon,
   Markdown,
   Pulse,
-  Switch,
   View,
   Walkthrough,
 } from '~/components';
@@ -39,8 +38,8 @@ export function BookmarkWalkthrough(props: SheetProps) {
           <View width="100%">
             <View
               absolute
-              bottom={ 0 }
-              right={ -55 }
+              bottom={ -10 }
+              right={ 45 }
               zIndex={ 20 }>
               <Pulse>
                 <Svg 
@@ -58,26 +57,17 @@ export function BookmarkWalkthrough(props: SheetProps) {
                 </Svg>
               </Pulse>
             </View>
-            <View flexRow elevated p={ 8 } itemsCenter>
-              <View 
-                flexRow
-                gap={ 6 }
-                p={ 6 }
-                rounded
-                itemsCenter>
-                <Icon name="filter" />
-                <Switch />
-                <Icon name="filter-off" />
-              </View>
-              <View row />
-              <Icon name="menu" size={ 24 } />
+            <View flexRow elevated p={ 8 } itemsCenter justifyEvenly>
+              <Icon name="home" size={ 24 } />
+              <Icon name="account" size={ 24 } />
             </View>
           </View>
           <Divider />
-          <Markdown system contained>{strings.walkthroughs_bookmark_happyReading}</Markdown>
+          <Markdown system subtitle1 contained>{strings.walkthroughs_bookmark_happyReading}</Markdown>
           <Button
             system
             contained
+            h4
             onPress={ onDone }>
             {strings.misc_awesome}
           </Button>

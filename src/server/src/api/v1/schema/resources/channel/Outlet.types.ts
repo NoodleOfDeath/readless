@@ -27,7 +27,7 @@ export type OutletAttributes = DatedAttributes & Sentimental & {
   name: string;
   /** xml site maps for this outlet and selector for extracting urls */
   displayName: string;
-  brandImageUrl?: string;
+  imageUrl?: string;
   description?: string;
   selectors: Selectors;
   maxAge: string;
@@ -41,7 +41,7 @@ export type OutletCreationAttributes = Partial<DatedAttributes & Sentimental> & 
   baseUrl: string;
   name: string;
   displayName: string;
-  brandImageUrl?: string;
+  imageUrl?: string;
   description?: string;
   selectors: Selectors;
   maxAge?: string;
@@ -55,14 +55,14 @@ const DEFAULT_TIMEZONE = process.env.DEFAULT_TIMZONE || 'EST';
 export const PUBLIC_OUTLET_ATTRIBUTES = [
   'name',
   'displayName',
-  'brandImageUrl',
+  'imageUrl',
   'description',
 ] as const;
 
 export type PublicOutletAttributes = Sentimental & {
   name: string;
   displayName: string;
-  brandImageUrl?: string;
+  imageUrl?: string;
   description?: string;
 };
 

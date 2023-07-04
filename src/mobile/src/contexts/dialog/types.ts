@@ -1,14 +1,5 @@
-import React from 'react';
 
-import { PublicSummaryAttributes } from '~/api';
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type DialogContextType = {};
 
-export type DialogContextType = {
-  shareTarget?: PublicSummaryAttributes;
-  setShareTarget: React.Dispatch<React.SetStateAction<PublicSummaryAttributes | undefined>>;
-};
-
-export const DEFAULT_DIALOG_CONTEXT: DialogContextType = {
-  setShareTarget: () => {
-    // placeholder
-  },
-};
+export const DEFAULT_DIALOG_CONTEXT: DialogContextType = {};

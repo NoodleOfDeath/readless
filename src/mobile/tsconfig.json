@@ -10,7 +10,7 @@
       "dom",
       "dom.iterable"
     ],
-    "allowJs": true,
+    "allowJs": false,
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {

@@ -6,3 +6,5 @@ export * from './PromoCodeWalkthrough';
 export * from './SentimentWalkthrough';
 export * from './SharingWalkthrough';
 export * from './TriggerWordsWalkthrough';
+
+export * from './WalkthroughStack';

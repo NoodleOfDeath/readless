@@ -15,6 +15,25 @@ export function useSummaryClient() {
 
   const { setPreference, withHeaders } = React.useContext(SessionContext);
   
+  const getTopics = React.useCallback(async (
+    filter?: string,
+    ids?: number[],
+    excludeIds?: boolean,
+    matchType?: 'all' | 'any',
+    interval?: string,
+    locale?: string,
+    page = 0,
+    pageSize = 10
+  ) => {
+    try {
+      return await withHeaders(API.getTopics)({
+        excludeIds, filter, ids, interval, locale, matchType, page, pageSize,
+      });
+    } catch (e) {
+      return { data: undefined, error: new ClientError('UNKNOWN', e) };
+    }
+  }, [withHeaders]);
+  
   const getSummaries = React.useCallback(async (
     filter?: string,
     ids?: number[],
@@ -26,7 +45,7 @@ export function useSummaryClient() {
     pageSize = 10
   ) => {
     try {
-      return await withHeaders(API.getSummaries)({
+      return await withHeaders(API.searchSummaries)({
         excludeIds, filter, ids, interval, locale, matchType, page, pageSize,
       });
     } catch (e) {
@@ -108,9 +127,7 @@ export function useSummaryClient() {
     pageSize = 10
   ) => {
     try {
-      return await withHeaders(API.getRecaps)({
-        filter, page, pageSize,
-      });
+      return await withHeaders(API.getRecaps)({ page, pageSize });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
@@ -122,7 +139,9 @@ export function useSummaryClient() {
     uuid: string
   ) => {
     try {
-      return await withHeaders(API.subscribeToRecap)(event, channel, uuid);
+      return await withHeaders(API.subscribe)({
+        channel, event, uuid, 
+      });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
@@ -134,7 +153,9 @@ export function useSummaryClient() {
     uuid: string
   ) => {
     try {
-      return await withHeaders(API.unsubscribeFromRecap)(event, channel, uuid);
+      return await withHeaders(API.unsubscribe)({
+        channel, event, uuid, 
+      });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
@@ -144,6 +165,7 @@ export function useSummaryClient() {
     getRecaps,
     getSummaries,
     getSummary,
+    getTopics,
     handleInteraction,
     interactWithSummary,
     subscribeToRecap,

@@ -26,8 +26,8 @@ export const BASE_LINE_HEIGHT_MULTIPLIER = 1.2;
 export type FontFamily = (typeof AVAILABLE_FONTS[number]);
 
 export const FONT_SIZES = {
-  body1: 17,
-  body2: 16,
+  body1: 16,
+  body2: 15,
   caption: 14,
   h1: 30,
   h2: 28,
@@ -36,8 +36,8 @@ export const FONT_SIZES = {
   h5: 22,
   h6: 20,
   subscript: 10,
-  subtitle1: 19,
-  subtitle2: 18,
+  subtitle1: 18,
+  subtitle2: 17,
 } as const;
 
 export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextProps & TextStyle & {
@@ -77,6 +77,7 @@ export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextP
   color?: TextStyle['color'];
 
   capitalize?: boolean;
+  uppercase?: boolean;
 };
 
 export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & ViewStyle & {

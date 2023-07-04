@@ -1,11 +1,18 @@
 export * from './types';
 
-export * from './about/AboutScreen';
-export * from './browse/BrowseScreen';
-export * from './bookmarks/BookmarksScreen';
-export * from './channel/ChannelScreen';
-export * from './search/SearchScreen';
-export * from './summary/SummaryScreen';
+export * from './AboutScreen';
+export * from './BrowseScreen';
+export * from './BookmarksScreen';
+export * from './ChannelScreen';
+export * from './HomeScreen';
+export * from './RecapScreen';
+export * from './SearchScreen';
+export * from './SummaryScreen';
 
-export * from './settings/SettingsScreen';
-export * from './settings/ColorSchemePickerScreen';
+export * from './SettingsScreen';
+export * from './ColorSchemePickerScreen';
+export * from './FontPickerScreen';
+export * from './ReadingFormatPickerScreen';
+export * from './TriggerWordPickerScreen';
+
+export * from './TestScreen';

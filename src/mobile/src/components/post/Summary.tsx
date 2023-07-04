@@ -3,10 +3,10 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { formatDistance } from 'date-fns';
 import ms from 'ms';
+import pluralize from 'pluralize';
 import { SheetManager } from 'react-native-actions-sheet';
-import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
-import { State } from 'react-native-track-player';
-import ViewShot from 'react-native-view-shot';
+import { HoldItem } from 'react-native-hold-menu';
+import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 
 import { 
   InteractionType,
@@ -19,30 +19,25 @@ import {
   AnalyticsView,
   Button,
   ChildlessViewProps,
+  Chip,
   CollapsedView,
   Highlighter,
   Icon,
   Image,
   MeterDial,
-  Popover,
   ReadingFormatPicker,
   ScrollView,
   ScrollViewProps,
   Text,
   View,
 } from '~/components';
+import { Bookmark, SessionContext } from '~/contexts';
+import { useInAppBrowser } from '~/hooks';
 import {
-  Bookmark,
-  DialogContext,
-  MediaContext,
-  SessionContext,
-} from '~/contexts';
-import {
-  useInAppBrowser,
   useNavigation,
   useServiceClient,
-  useShare,
   useStyles,
+  useSummaryClient,
   useTheme,
 } from '~/hooks';
 import {
@@ -50,9 +45,10 @@ import {
   getLocale,
   strings,
 } from '~/locales';
-import { DateSorter, fixedSentiment } from '~/utils';
+import { fixedSentiment } from '~/utils';
 
 type Props = ChildlessViewProps & ScrollViewProps & {
+  big?: boolean;
   summary?: PublicSummaryGroup;
   tickInterval?: string;
   selected?: boolean;
@@ -60,7 +56,6 @@ type Props = ChildlessViewProps & ScrollViewProps & {
   initiallyTranslated?: boolean;
   keywords?: string[];
   compact?: boolean;
-  swipeable?: boolean;
   disableInteractions?: boolean;
   forceSentiment?: boolean;
   hideCard?: boolean;
@@ -70,49 +65,6 @@ type Props = ChildlessViewProps & ScrollViewProps & {
   onLocalize?: (translations: PublicSummaryTranslationAttributes[]) => void;
   onToggleTranslate?: (onOrOff: boolean) => void;
 };
-
-type RenderAction = {
-  text: string;
-  leftIcon?: string;
-  onPress: () => void;
-};
-
-type RenderActionsProps = {
-  actions: RenderAction[];
-  side?: 'left' | 'right';
-};
-
-function RenderActions({ actions }: RenderActionsProps) {
-  return (
-    <View>
-      <View 
-        flex={ 1 }
-        flexGrow={ 1 }
-        justifyEvenly
-        p={ 6 }
-        mr={ 18 }
-        my={ 12 }
-        gap={ 6 }>
-        {actions.map((action) => (
-          <View
-            key={ action.text }
-            flexGrow={ 1 }
-            flex={ 1 }>
-            <Button 
-              gap={ 6 }
-              system
-              contained
-              caption
-              leftIcon={ action.leftIcon }
-              onPress={ action.onPress }>
-              {action.text}
-            </Button>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
 
 const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
   summary: {
@@ -134,7 +86,7 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     media: [],
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
     outlet: {
-      displayName: strings.misc_newsSource,
+      displayName: strings.misc_publisher,
       name: '',
     },
     outletId: 0,
@@ -157,10 +109,10 @@ export function Summary({
   tickInterval = '2m',
   selected,
   initialFormat,
+  big = Boolean(initialFormat),
   initiallyTranslated = true,
   keywords = [],
   compact = false,
-  swipeable = Boolean(summary0),
   disableInteractions = !summary0,
   forceSentiment,
   hideCard,
@@ -172,12 +124,10 @@ export function Summary({
   ...props
 }: Props) {
 
-  const { openURL } = useInAppBrowser();
-  const {
-    openOutlet, openCategory, openSummary, 
-  } = useNavigation();
-  const { copyToClipboard } = useShare({ onInteract });
+  const { openOutlet, openCategory } = useNavigation();
   const { localizeSummary } = useServiceClient();
+  const { getSummary } = useSummaryClient();
+  const { openURL } = useInAppBrowser();
 
   const theme = useTheme();
   const style = useStyles(props);
@@ -186,30 +136,19 @@ export function Summary({
     compactMode,
     showShortSummary,
     preferredReadingFormat, 
-    sourceLinks,
     sentimentEnabled,
     triggerWords,
-    bookmarkedSummaries,
     readSummaries,
-    readSources,
+    bookmarkedSummaries,
+    bookmarkSummary,
     setPreference,
   } = React.useContext(SessionContext);
 
-  const { shareTarget } = React.useContext(DialogContext);
-  const {
-    trackState, queueSummary, currentTrack, stopAndClearTracks,
-  } = React.useContext(MediaContext);
-  
   const summary = React.useMemo((() => summary0 ?? DEFAULT_PROPS.summary), [summary0]);
-  const viewshot = React.useRef<ViewShot | null>(null);
 
   const [lastTick, setLastTick] = React.useState(new Date());
-  const [isShareTarget, setIsShareTarget] = React.useState(summary.id === shareTarget?.id);
-  const [isBookmarked, setIsBookmarked] = React.useState(Boolean(bookmarkedSummaries?.[summary.id]));
-  const [isRead, setIsRead] = React.useState(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-  const [isSourceRead, setIsSourceRead] = React.useState(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-  const [isSiblingRead, setIsSiblingRead] = React.useState(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
-  const [isPlayingAudio, setIsPlayingAudio] = React.useState(trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'));
+  const [isRead, setIsRead] = React.useState(summary.id in { ...readSummaries } && !initialFormat && !disableInteractions);
+  const [isBookmarked, setIsBookmarked] = React.useState(summary.id in { ...bookmarkedSummaries });
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -218,7 +157,7 @@ export function Summary({
 
   const localizedStrings = React.useMemo(() => {
     return showTranslations && translations ? translations : {
-      bullets: summary.bullets.join('\n'),
+      bullets: (summary.bullets ?? []).join('\n'),
       shortSummary: summary.shortSummary,
       summary: summary.summary,
       title: summary.title,
@@ -262,27 +201,21 @@ export function Summary({
     const interval = setInterval(() => {
       setLastTick(new Date());
     }, ms(tickInterval));
-    const isShareTarget = summary.id === shareTarget?.id;
-    setIsShareTarget(isShareTarget);
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
-    setIsBookmarked(Boolean(bookmarkedSummaries?.[summary.id]));
-    setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-    setIsSourceRead(Boolean(readSources?.[summary.id]) && !initialFormat && !disableInteractions && !isShareTarget);
-    setIsSiblingRead(Object.fromEntries(summary.siblings?.map((s) => [s.id, Boolean(readSummaries?.[s.id])]) ?? []));
-    setIsPlayingAudio(trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-'));
+    setIsRead(Boolean(readSummaries?.[summary.id]) && !initialFormat && !disableInteractions);
     return () => clearInterval(interval);
-  }, [bookmarkedSummaries, currentTrack?.id, disableInteractions, initialFormat, initiallyTranslated, readSources, readSummaries, shareTarget?.id, summary.id, summary.siblings, summary.translations, tickInterval, trackState]));
+  }, [tickInterval, summary.translations, summary.id, initiallyTranslated, readSummaries, initialFormat, disableInteractions]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
-    if (!initialFormat && !disableInteractions && !isShareTarget) {
+    if (!initialFormat && !disableInteractions) {
       onFormatChange?.(newFormat);
       setIsRead(true);
       return;
     }
     onFormatChange?.(newFormat);
     setFormat(newFormat);
-  }, [disableInteractions, initialFormat, isShareTarget, onFormatChange]);
+  }, [disableInteractions, initialFormat, onFormatChange]);
 
   const handleLocalizeSummary = React.useCallback(async () => {
     setIsLocalizing(true);
@@ -303,98 +236,17 @@ export function Summary({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showTranslations]);
   
-  const handlePlayAudio = React.useCallback(async () => {
-    if (trackState === State.Playing && currentTrack?.id === ['summary', summary.id].join('-')) {
-      await stopAndClearTracks();
-      return;
-    }
-    queueSummary(summary);
-  }, [trackState, currentTrack?.id, summary, queueSummary, stopAndClearTracks]);
-  
-  const sourceLink = React.useMemo(() => {
-    return (
-      <Text
-        flex={ 1 }
-        flexRow
-        numberOfLines={ 1 }
-        underline
-        caption
-        color={ !initialFormat && !isShareTarget && isSourceRead ? theme.colors.textDisabled : theme.colors.text }
-        onPress={ () => {
-          if (disableInteractions) {
-            return;
-          }
-          onInteract?.(InteractionType.Read, 'original source', { url: summary.url }, () => openURL(summary.url));
-          setIsSourceRead(true);
-        } }
-        onLongPress={ () => copyToClipboard(summary.url) }>
-        {summary.url}
-      </Text>
-    );
-  }, [initialFormat, isShareTarget, isSourceRead, theme.colors.textDisabled, theme.colors.text, disableInteractions, onInteract, summary.url, openURL, copyToClipboard]);
-  
-  const menuActions = React.useMemo(() => {
-    return (
-      <View
-        overflow="hidden"
-        flexRow={ !initialFormat }
-        flexGrow={ !initialFormat ? 1 : undefined }
-        gap={ 6 }
-        mx={ !(compact || compactMode) ? 12 : 0 }>
-        {(!(compact || compactMode) && (!summary.siblings || summary.siblings.length === 0)) && (initialFormat || sourceLinks) && sourceLink}
-        <View 
-          flexRow
-          flexGrow={ !sourceLinks ? 1 : undefined }
-          itemsCenter
-          justifyEnd
-          gap={ 6 }>
-          <Button
-            h4
-            haptic
-            color='text'
-            leftIcon={ isBookmarked ? 'bookmark' : 'bookmark-outline' }
-            onPress={ () => !disableInteractions && onInteract?.(InteractionType.Bookmark) } />
-          <Button
-            h4
-            touchable
-            color='text'
-            leftIcon='share-outline'
-            onPress={ async () => {
-              if (disableInteractions) {
-                return;
-              }
-              SheetManager.show('share', {
-                payload: {
-                  format,
-                  onInteract, 
-                  summary,
-                  viewshot: viewshot.current,
-                },
-              });
-            } } />
-          <Button
-            h4
-            haptic
-            touchable
-            color="text"
-            leftIcon={ isPlayingAudio ? 'stop' : 'volume-source' }
-            onPress={ () => !disableInteractions && handlePlayAudio() } />
-        </View>
-      </View>
-    );
-  }, [initialFormat, compact, compactMode, summary, sourceLinks, sourceLink, isBookmarked, isPlayingAudio, disableInteractions, onInteract, format, handlePlayAudio]);
-  
   const timestamp = React.useMemo(() => {
     return (
-      <Text 
-        bold 
+      <Text  
         adjustsFontSizeToFit
+        color={ theme.colors.textSecondary }
         textCenter
         caption>
         {formatTime(summary.originalDate)}
       </Text>
     );
-  }, [formatTime, summary.originalDate]);
+  }, [formatTime, summary.originalDate, theme.colors.textSecondary]);
   
   const sentimentMeter = React.useMemo(() => {
     return (
@@ -414,50 +266,61 @@ export function Summary({
   const title = React.useMemo(() => (
     <Highlighter
       bold
-      h5={ Boolean(initialFormat) }
-      subtitle1={ Boolean(!(compact || compactMode) && !initialFormat) }
+      subtitle2={ Boolean(!(compact || compactMode) && !initialFormat) }
       body1={ (compact || compactMode) && !initialFormat }
-      adjustsFontSizeToFit
-      color={ !initialFormat && !isShareTarget && isRead ? theme.colors.textDisabled : theme.colors.text }
+      color={ !initialFormat && isRead ? theme.colors.textDisabled : theme.colors.text }
       highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-      searchWords={ isShareTarget ? [] : keywords }>
+      searchWords={ keywords }>
       {cleanString(((compact || compactMode) && showShortSummary && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
     </Highlighter>
-  ), [initialFormat, compact, compactMode, isShareTarget, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
+  ), [initialFormat, compact, compactMode, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const header = React.useMemo(() => (
     <View 
       p={ initialFormat ? 12 : 6 }
       flexGrow={ 1 }
-      elevated
-      brTopLeft={ initialFormat ? 0 : 6 }
-      brTopRight={ initialFormat ? 0 : 6 }
+      elevated={ Boolean(initialFormat) }
       zIndex={ 2 }
       bg={ theme.colors.headerBackground }>
       <View>
         {!initialFormat ? (
           <View flexRow itemsCenter gap={ 6 }>
-            <Button 
-              h5
-              adjustsFontSizeToFit
-              leftIcon={ summary.category.icon && summary.category.icon }
-              onPress={ () => !disableInteractions && openCategory(summary.category) } />
-            <Text
-              italic
-              adjustsFontSizeToFit
+            <View
+              flexRow
+              itemsCenter
+              gap={ 6 }
               onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
-              {summary.outlet.displayName}
-            </Text>
+              <View
+                borderRadius={ 3 }
+                overflow="hidden">
+                <Image 
+                  fallbackComponent={ (
+                    <Chip
+                      bg={ theme.colors.primaryLight }
+                      color={ theme.colors.contrastText }
+                      itemsCenter
+                      justifyCenter
+                      adjustsFontSizeToFit
+                      textCenter
+                      width={ 20 }
+                      height={ 20 }>
+                      {summary.outlet.displayName[0]}
+                    </Chip>
+                  ) }
+                  source={ { uri: `https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/${summary.outlet.name}.png` } }
+                  width={ 20 }
+                  height={ 20 } />
+              </View>
+              <Text 
+                bold
+                caption
+                color={ theme.colors.textSecondary }>
+                {summary.outlet.displayName}
+              </Text>
+            </View>
             {timestamp}
             <View row />
             {(forceSentiment || sentimentEnabled) && sentimentMeter}
-            {((compact || compactMode) && (
-              <Popover
-                menu
-                anchor={ <Icon name="dots-horizontal" color={ theme.colors.text } size={ 24 } /> }>
-                {menuActions}
-              </Popover>
-            ))}
           </View>
         ) : (
           <View gap={ 6 }>
@@ -493,7 +356,7 @@ export function Summary({
                   rightIcon="chevron-right"
                   px={ 12 }
                   adjustsFontSizeToFit
-                  onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
+                  onPress={ () => !disableInteractions && openURL(summary.url) }>
                   {summary.outlet.displayName}
                 </Button>
               </View>
@@ -502,56 +365,7 @@ export function Summary({
         )}
       </View>
     </View>
-  ), [initialFormat, theme.colors.headerBackground, summary.category, summary.outlet, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, compact, compactMode, theme.colors.text, menuActions, disableInteractions, openCategory, openOutlet]);
-
-  const renderRightActions = React.useCallback(() => {
-    const actions = [{
-      leftIcon: isRead ? 'email-mark-as-unread' : 'email-open',
-      onPress: () => {
-        setPreference('readSummaries', (prev) => {
-          const newBookmarks = { ...prev };
-          if (isRead || newBookmarks[summary.id]) {
-            delete newBookmarks[summary.id];
-          } else {
-            newBookmarks[summary.id] = new Bookmark(true);
-          }
-          return (prev = newBookmarks);
-        });
-        setPreference('readSources', (prev) => {
-          const newBookmarks = { ...prev };
-          if (isRead || newBookmarks[summary.id]) {
-            delete newBookmarks[summary.id];
-          } else {
-            newBookmarks[summary.id] = new Bookmark(true);
-          }
-          return (prev = newBookmarks);
-        });
-      },
-      text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
-    }, {
-      leftIcon: 'eye-off',
-      onPress: () => {
-        onInteract?.(InteractionType.Hide, undefined, undefined, () => {
-          setPreference('removedSummaries', (prev) => ({
-            ...prev,
-            [summary.id]: true,
-          }));
-        });
-      },
-      text: strings.summary_hide,
-    }, {
-      leftIcon: 'bug',
-      onPress: () => { 
-        onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
-          SheetManager.show('feedback', { payload: { summary } });
-        });
-      },
-      text: strings.summary_reportAtBug,
-    }];
-    return (
-      <RenderActions actions={ actions } />
-    );
-  }, [isRead, setPreference, onInteract, summary]);
+  ), [initialFormat, theme.colors.headerBackground, theme.colors.primaryLight, theme.colors.contrastText, theme.colors.textSecondary, summary.outlet, summary.category, summary.url, timestamp, forceSentiment, sentimentEnabled, sentimentMeter, title, disableInteractions, openOutlet, openCategory, openURL]);
   
   const translateToggle = React.useMemo(() => {
     if (/^en/i.test(getLocale())) {
@@ -590,146 +404,112 @@ export function Summary({
 
   const siblingCards = React.useMemo(() => {
     return (
-      <View gap={ 6 }>
-        {[...(summary.siblings ?? [])].sort((a, b) => DateSorter(b.originalDate, a.originalDate)).map((sibling) => (
-          <View key={ sibling.id }>
-            <View
-              gap={ 1 }
-              p={ 3 }
-              outlined
-              rounded
-              borderColor={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-              touchable
-              onPress={ () => !disableInteractions && openSummary({ summary: sibling.id }) }>
-              <View 
-                flexRow
-                gap={ 6 }
-                itemsCenter>
-                <Text 
-                  italic
-                  adjustsFontSizeToFit
-                  color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }>
-                  {sibling.outlet.displayName}
-                </Text>
-                <Text 
-                  bold 
-                  adjustsFontSizeToFit
-                  caption 
-                  color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                  numberOfLines={ 1 }>
-                  {formatTime(sibling.originalDate)}
-                </Text>
-              </View>
-              <Highlighter 
-                bold 
-                numberOfLines={ 1 }
-                color={ !isShareTarget && isSiblingRead[sibling.id] ? theme.colors.textDisabled : theme.colors.text }
-                highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-                searchWords={ isShareTarget ? [] : keywords }>
-                { cleanString(sibling.title) }
-              </Highlighter>
-            </View>
-          </View>
-        ))}
+      <View
+        flexRow
+        gap={ 6 }
+        itemsCenter>
+        <Chip
+          caption
+          color={ theme.colors.textSecondary }
+          itemsCenter
+          leftIcon={ summary.category.icon }
+          gap={ 3 }
+          onPress={ () => openCategory(summary.category) }>
+          {summary.category.displayName}
+        </Chip>
+        {summary.siblings && summary.siblings.length > 0 && (
+          <React.Fragment>
+            <Text
+              caption
+              color={ theme.colors.textSecondary }>
+              •
+            </Text>
+            <Text
+              caption
+              color={ theme.colors.textSecondary }>
+              {summary.siblings?.length && `${summary.siblings.length} ${pluralize(strings.misc_article, summary.siblings.length)}`}
+            </Text>
+          </React.Fragment>
+        )}
       </View>
     );
-  }, [summary.siblings, isShareTarget, isSiblingRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, disableInteractions, formatTime, keywords, cleanString, openSummary]);
+  }, [openCategory, summary.category, summary.siblings, theme.colors.textSecondary]);
+  
+  const image = React.useMemo(() => {
+    if (compact || compactMode || !summary.imageUrl) {
+      return null;
+    }
+    return (
+      <View
+        justifyCenter
+        flexGrow={ 1 }
+        maxWidth={ big ? undefined : 64 }
+        mx={ big ? undefined : 12 }>
+        <View
+          brTopLeft={ big && !initialFormat ? 6 : 0 }
+          brTopRight={ big && !initialFormat ? 6 : 0 }
+          borderRadius={ big ? undefined : 6 }
+          aspectRatio={ big ? 3/1.75 : 1 }
+          overflow="hidden"
+          zIndex={ 20 }>
+          {containsTrigger ? (
+            <Icon
+              name="cancel"
+              absolute
+              zIndex={ 20 } 
+              size={ 120 } />
+          ) : (
+            <Image
+              flex={ 1 }
+              flexGrow={ 1 }
+              source={ { uri: summary.imageUrl } } />
+          )}
+          {big && (
+            <Text 
+              subscript
+              absolute
+              bottom={ 0 }
+              left={ 0 }
+              right={ 0 }
+              color={ theme.colors.textDark }
+              bg={ theme.colors.backgroundTranslucent }
+              p={ 6 }>
+              {strings.summary_thisIsNotARealImage}
+            </Text>
+          )}
+        </View>
+      </View>
+    );
+  }, [compact, compactMode, summary.imageUrl, big, initialFormat, containsTrigger, theme.colors.textDark, theme.colors.backgroundTranslucent]);
 
   const coverContent = React.useMemo(() => (
-    <View>
+    <View flex={ 1 } mb={ 6 }>
       <View row>
-        {(!(compact || compactMode) || initialFormat) && summary.imageUrl && (
-          <View
-            justifyCenter
-            flexGrow={ 1 }
-            relative
-            maxWidth={ initialFormat ? 200 : 128 }
-            width={ initialFormat ? '40%' : '30%' }>
-            <Popover
-              onPress={ () => !disableInteractions && !initialFormat && handleFormatChange() }
-              longPress
-              anchor={ (
-                <View
-                  top={ -6 }
-                  mb={ 12 }
-                  minHeight={ 80 }
-                  height="100%"
-                  overflow='hidden'
-                  brTopLeft={ initialFormat ? 0 : 6 }
-                  brBottomLeft={ initialFormat ? 0 : 6 }>
-                  {containsTrigger ? (
-                    <Icon
-                      name="cancel"
-                      absolute
-                      zIndex={ 20 } 
-                      size={ 120 } />
-                  ) : (
-                    <Image
-                      flex={ 1 }
-                      flexGrow={ 1 }
-                      source={ { uri: summary.imageUrl } } />
-                  )}
-                </View>
-              ) }>
-              <View width={ 300 } p={ 12 } gap={ 6 }>
-                <Text caption>{strings.summary_thisIsNotARealImage}</Text>
-                <View
-                  mx={ -12 }
-                  mb={ -12 }>
-                  <Image
-                    source={ { uri: summary.imageUrl } }  
-                    aspectRatio={ 1 }
-                    width={ 300 } />
-                </View>
-              </View>
-            </Popover>
-          </View>
-        )}
         <View
           flex={ 1 }
           flexGrow={ 1 }
           gap={ 6 }
-          pt={ initialFormat ? 12 : undefined }
-          pb={ 6 }>
+          pb={ 6 }
+          pt={ initialFormat ? 12 : undefined }>
           <View flex={ 1 } flexGrow={ 1 } gap={ 6 } mx={ 12 }>
-            {!initialFormat && (
-              <View flexRow flexGrow={ 1 }>
-                {title}
-              </View>
-            )}
+            {!initialFormat && title}
             {translateToggle}
             {((!(compact || compactMode) && showShortSummary === true) || initialFormat) && (
               <View>
                 <Highlighter 
                   highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-                  searchWords={ isShareTarget ? [] : keywords }>
+                  searchWords={ keywords }>
                   { cleanString(localizedStrings.shortSummary ?? '') }
                 </Highlighter>
               </View>
             )}
+            {siblingCards}
           </View>
-          {(((!(compact || compactMode) || initialFormat) && (!summary.siblings || summary.siblings.length === 0)) ? menuActions : (sourceLinks || initialFormat) && (<View mx={ 12 }>{sourceLink}</View>))}
-          {summary.siblings && summary.siblings.length > 0 && (
-            <View mx={ 12 } gap={ 6 }>
-              <View flexRow>
-                <Text justifyCenter>
-                  {`${strings.summary_relatedNews} (${summary.siblings.length})`}
-                </Text>
-                <View row />
-                {menuActions}
-              </View>
-              {summary.siblings.length === 1 ? 
-                siblingCards : (
-                  <ScrollView height={ summary.siblings.length === 1 ? 45 : 70 }>
-                    {siblingCards}
-                  </ScrollView>
-                )}
-            </View>
-          )}
         </View>
+        {!(big) && image}
       </View>
     </View>
-  ), [compact, compactMode, initialFormat, summary.imageUrl, summary.siblings, containsTrigger, title, translateToggle, showShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, isShareTarget, keywords, cleanString, localizedStrings.shortSummary, menuActions, sourceLinks, sourceLink, siblingCards, disableInteractions, handleFormatChange]);
+  ), [initialFormat, title, translateToggle, compact, compactMode, showShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, siblingCards, big, image]);
   
   const cardBody = React.useMemo(() => (
     <View flexGrow={ 1 }>
@@ -748,7 +528,7 @@ export function Summary({
           <View gap={ 6 } pb={ 12 }>
             {translateToggle}
             <View gap={ 12 } p={ 12 }>
-              {content.split('\n').map((content, i) => (                         
+              {content.split('\n').map((content, i) => (
                 <View
                   key={ `${content}-${i}` }
                   itemsCenter
@@ -763,9 +543,8 @@ export function Summary({
                   )}
                   <Highlighter 
                     flex={ format === 'bullets' ? 9 : 1 }
-                    flexRow
                     highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-                    searchWords={ isShareTarget ? [] : keywords }>
+                    searchWords={ keywords }>
                     { cleanString(content) }
                   </Highlighter>
                 </View>
@@ -781,66 +560,145 @@ export function Summary({
           sentiments={ Object.values(summary.sentiments ?? []) } />
       )}
     </View>
-  ), [hideCard, format, preferredReadingFormat, handleFormatChange, content, translateToggle, theme.colors.textHighlightBackground, theme.colors.textDark, isShareTarget, keywords, cleanString, hideAnalytics, summary.sentiment, summary.sentiments]);
+  ), [hideCard, format, preferredReadingFormat, handleFormatChange, content, translateToggle, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, hideAnalytics, summary.sentiment, summary.sentiments]);
+  
+  const menuItems = React.useMemo(() => {
+    const actions: MenuItemProps[] = [
+      {
+        icon: () => <Icon name="share" />,
+        key: `share-${summary.id}`,
+        onPress: async () => {
+          await SheetManager.show('share', {
+            payload: {
+              onInteract,
+              summary,
+            },
+          });
+        },
+        text: strings.action_share,
+        withSeparator: true,
+      },
+      {
+        icon: () => <Icon name={ isBookmarked ? 'bookmark' : 'bookmark-outline' } />,
+        key: `${isBookmarked ? 'unbookmark' : 'bookmark'}-${summary.id}`,
+        onPress: async () => {
+          setIsBookmarked(!isBookmarked);
+          const newBookmark = await getSummary(summary.id, getLocale());
+          if (!newBookmark.data || newBookmark.error) {
+            setIsBookmarked(!isBookmarked);
+            return;
+          }
+          bookmarkSummary(newBookmark.data);
+        },
+        text: isBookmarked ? strings.summary_unbookmark : strings.summary_bookmark,
+      },
+      {
+        icon: () => <Icon name={ isRead ? 'email-mark-as-unread' : 'email-open' } />,
+        key: `mark-as-${isRead ? 'unread' : 'read'}-${summary.id}`,
+        onPress: () => {
+          setPreference('readSummaries', (prev) => {
+            const newBookmarks = { ...prev };
+            if (isRead || summary.id in newBookmarks) {
+              delete newBookmarks[summary.id];
+            } else {
+              newBookmarks[summary.id] = new Bookmark(true);
+            }
+            return (prev = newBookmarks);
+          });
+        },
+        text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
+      },
+      {
+        icon: () => <Icon name='bug' />,
+        key: `bug-${summary.id}`,
+        onPress: () => { 
+          onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
+            SheetManager.show('feedback', { payload: { summary } });
+          });
+        },
+        text: strings.summary_reportAtBug,
+      },
+      {
+        icon: () => <Icon name='eye-off' />,
+        key: `hide-${summary.id}`,
+        onPress: () => {
+          onInteract?.(InteractionType.Hide, undefined, undefined, () => {
+            setPreference('removedSummaries', (prev) => ({
+              ...prev,
+              [summary.id]: true,
+            }));
+          });
+        },
+        text: strings.summary_hide,
+      },
+    ];
+    return actions;
+  }, [summary, isBookmarked, isRead, onInteract, getSummary, bookmarkSummary, setPreference]);
+
+  const card = React.useMemo(() => (
+    <View
+      flexGrow={ 1 }
+      style={ { ...theme.components.card, ...style } }
+      borderRadius={ 6 }
+      overflow="hidden"
+      bg={ containsTrigger ? '#eecccc' : undefined }
+      opacity={ isRead ? 0.75 : 1 }
+      onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+      <View flexRow flexGrow={ 1 }>
+        {selected && (
+          <View
+            left={ 0 }
+            top={ 0 }
+            width={ 12 }
+            bg={ theme.colors.primary } />
+        )}
+        <View
+          flex={ 1 }
+          flexGrow={ 1 }
+          gap={ 6 }
+          overflow='hidden'
+          brTopLeft={ 6 }
+          brTopRight={ 6 }>
+          <View>
+            {big && image}
+            {header}
+          </View>
+          {coverContent}
+        </View>
+      </View>
+    </View>
+  ), [theme.components.card, theme.colors.primary, style, containsTrigger, isRead, selected, big, image, header, coverContent, handleFormatChange, preferredReadingFormat]);
+
+  const fullCard = React.useMemo(() => (
+    <View
+      style={ { ...theme.components.card, ...style } }
+      height='100%'>
+      {!hideCard && (
+        <View>
+          {header}
+        </View>
+      )}
+      <ScrollView flexGrow={ 1 } { ...props }>
+        <View>
+          {!hideCard && image}
+          {!hideCard && coverContent}
+          {cardBody}
+        </View>
+      </ScrollView>
+    </View>
+  ), [theme.components.card, style, hideCard, header, image, coverContent, cardBody, props]);
   
   return (
-    <ViewShot ref={ viewshot }>
-      <View flexGrow={ 1 }>
-        {!initialFormat ? (
-          <GestureHandlerRootView>
-            <Swipeable
-              enabled={ swipeable && !disableInteractions && !isShareTarget }
-              renderRightActions={ renderRightActions }>
-              <View
-                flexGrow={ 1 } 
-                elevated
-                style={ { ...theme.components.card, ...style } }
-                borderRadius={ 6 }
-                mx={ 12 }
-                my={ 6 }
-                bg={ containsTrigger ? '#eecccc' : undefined }
-                opacity={ isRead ? 0.75 : 1 }
-                onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-                <View flexRow flexGrow={ 1 }>
-                  {!isShareTarget && selected && (
-                    <View
-                      left={ 0 }
-                      top={ 0 }
-                      width={ 12 }
-                      bg={ theme.colors.primary } />
-                  )}
-                  <View
-                    flex={ 1 }
-                    flexGrow={ 1 }
-                    gap={ 6 }
-                    overflow='hidden'
-                    brTopLeft={ 6 }
-                    brTopRight={ 6 }>
-                    {header}
-                    {coverContent}
-                  </View>
-                </View>
-              </View>
-            </Swipeable>
-          </GestureHandlerRootView>
-        ) : (
-          <View
-            style={ { ...theme.components.card, ...style } }
-            height='100%'>
-            {!hideCard && (
-              <View>
-                {header}
-              </View>
-            )}
-            <ScrollView flexGrow={ 1 } { ...props }>
-              <View>
-                {!hideCard && coverContent}
-                {cardBody}
-              </View>
-            </ScrollView>
-          </View>
+    <View flexGrow={ 1 }>
+      {!initialFormat ? 
+        disableInteractions ? card : (
+          <HoldItem items={ menuItems } closeOnTap>
+            {card}
+          </HoldItem>
+        )
+        : (
+          fullCard
         )}
-      </View>
-    </ViewShot>
+    </View>
   );
 }

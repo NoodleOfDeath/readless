@@ -10,6 +10,7 @@ export * from './CollapsedView';
 export * from './DataTable';
 export * from './Dialog';
 export * from './Divider';
+export * from './Header';
 export * from './Highlighter';
 export * from './Icon';
 export * from './Image';

@@ -6,7 +6,9 @@ import {
 
 import { Job } from './Job.model';
 import {
-  JobNameOptions, 
+  CacheJobData,
+  CrawlJobData,
+  JobNameOptions,
   SiteMapJobData,
   TopicResolutionJobData,
 } from './Job.types';
@@ -31,6 +33,8 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   implements QueueAttributes<DataType, ReturnType, QueueName> {
     
   public static QUEUES = {
+    caches: new QueueSpecifier<CacheJobData, any>('caches'),
+    crawler: new QueueSpecifier<CrawlJobData, any>('crawler'),
     recaps: new QueueSpecifier<RecapPayload, Recap>('recaps'),
     siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps'),
     topics: new QueueSpecifier<TopicResolutionJobData, any>('topics'),

@@ -56,8 +56,21 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   const [followedOutlets, setFollowedOutlets] = React.useState<{ [key: string]: boolean }>();
   const [excludedOutlets, setExcludedOutlets] = React.useState<{ [key: string]: boolean }>();
-  const [followedCategories, setFollowedCategories] = React.useState<{ [key: string]: boolean }>();
-  const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: boolean }>();
+  const [followedCategories, setFollowedCategories] = React.useState<{ [key: string]: PublicCategoryAttributes }>();
+  const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: PublicCategoryAttributes }>();
+
+  const followCount = React.useMemo(() => Object.keys({ ...followedOutlets }).length + Object.keys({ ...followedCategories }).length, [followedOutlets, followedCategories]);
+
+  const followFilter = React.useMemo(() => {
+    const filters: string[] = [];
+    if (Object.keys({ ...followedCategories }).length > 0) {
+      filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
+    }
+    if (Object.keys({ ...followedOutlets }).length > 0) {
+      filters.push(['src', Object.keys({ ...followedOutlets }).join(',')].join(':'));
+    }
+    return filters.join(' ');
+  }, [followedCategories, followedOutlets]);
   
   const bookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).length, [bookmarkedSummaries]);
   const unreadBookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).filter((k) => !(k in ({ ...readSummaries }))).length, [bookmarkedSummaries, readSummaries]);
@@ -244,7 +257,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       if (category.name in state) {
         delete state[category.name];
       } else {
-        state[category.name] = true;
+        state[category.name] = category;
       }
       return (prev = state);
     });
@@ -256,7 +269,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       if (category.name in state) {
         delete state[category.name];
       } else {
-        state[category.name] = true;
+        state[category.name] = category;
       }
       return (prev = state);
     });
@@ -336,6 +349,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         excludedCategories,
         excludedOutlets,
         followCategory,
+        followCount,
+        followFilter,
         followOutlet,
         followedCategories,
         followedOutlets,

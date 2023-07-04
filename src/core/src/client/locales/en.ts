@@ -5,16 +5,15 @@ export const enStrings = {
   action_clearSelection: 'Clear Selection',
   action_close: 'Close', 
   action_follow: 'Follow',
-  action_followChannel: 'Follow Channel',
   action_loading: 'Loading...',
   action_next: 'Next ', 
   action_save: 'Save',
   action_saveAndClose: 'Save & Close',
   action_search: 'Search',
+  action_share: 'Share',
   action_skip: 'Skip',
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
   action_unfollow: 'Unfollow',
-  action_unfollowChannel: 'Unfollow Channel',
 
   // bookmarks
   bookmarks_bookmarkArticlesAreNotSaved: 'Note: The original articles themselves are not saved for offline reading',
@@ -49,13 +48,14 @@ export const enStrings = {
   
   // misc
   misc_and: 'and',
+  misc_article: 'Article',
   misc_awesome: 'Awesome!',
   misc_categories: 'Categories',
   misc_category: 'Category',
   misc_channels: 'Channels',
   misc_duhIAlreadyKnow: 'Duh, I already know',
   misc_inTheLast: 'in the last',
-  misc_newsSource: 'News Source',
+  misc_publisher: 'Publisher',
   misc_readless: 'Read Less',
   mise_sweetGotIt: 'Sweet, got it!',
   
@@ -65,7 +65,11 @@ export const enStrings = {
   screens_browse: 'Browse',
   screens_colorScheme: 'Color Scheme',
   screens_font: 'Font',
+  screens_home: 'Home',
   screens_preferredReadingFormat: 'Preferred Reading Format',
+  screens_profile: 'Profile',
+  screens_recaps: 'Recaps',
+  screens_search: 'Search',
   screens_settings: 'Settings',
   screens_triggerWords: 'Trigger Words',
 
@@ -143,6 +147,7 @@ export const enStrings = {
   subscribe_subscribe: 'Subscribe',
 
   // summary
+  summary_bookmark: 'Bookmark',
   summary_bullets: 'Bullets',
   summary_example_bullet1: 'This is an example bullet point',
   summary_example_bullet2: 'This is another example bullet point',
@@ -167,8 +172,10 @@ export const enStrings = {
   summary_summary: 'Summary',
   summary_thisIsNotARealImage: 'This image was generated using AI and is not a real photo of a real event, place, thing, or person.',
   summary_translate: 'Translate',
+  summary_unbookmark: 'Remove Bookmark',
   summary_veryNegative: 'Very Negative',
   summary_veryPositive: 'Very Positive',
+  summary_viewSource: 'View original source',
   
   // walkthroughs
   walkthroughs: 'Walkthroughs',
@@ -186,7 +193,7 @@ export const enStrings = {
 
   // walkthroughs - bookmark
   walkthroughs_bookmark_happyReading: 'Happy Reading!',
-  walkthroughs_bookmark_niceJob: 'Nice! You can view always your bookmarks offline by opening the menu!',
+  walkthroughs_bookmark_niceJob: 'Nice! You can view always your bookmarks offline in your account tab!',
 
   // walkthroughs - custom feed
   walkthroughs_customFeed_addCategories: 'Add categories',
@@ -243,8 +250,7 @@ export const enStrings = {
 
   // walkthroughs - sharing
   walkthroughs_sharing_noteworthyArticle: 'Noteworthy article?',
-  walkthroughs_sharing_shareArticles: 'Did you know you can directly share an interesting article by pressing the share button?',
-  walkthroughs_sharing_shareArticlesDescription: 'You can also expand images by long pressing on a card\'s image',
+  walkthroughs_sharing_shareArticles: 'Did you know you can directly share an interesting article by **pressing and holding** on the card itself?',
 
   // walkthroughs - trigger words
   walkthroughs_triggerWords: 'Trigger Words',

@@ -1,14 +1,14 @@
 import React from 'react';
 
 import {
-  ChildlessViewProps,
+  ChipProps,
   Highlighter,
   HighlighterProps,
 } from '~/components';
 
 export const MarkdownSearchPattern = { default: /\*\*(.*?)\*\*/g };
 
-export type MarkdownProps = Omit<ChildlessViewProps & HighlighterProps, 'searchWords'> & {
+export type MarkdownProps = Omit<ChipProps & HighlighterProps, 'searchWords'> & {
   searchPattern?: string | RegExp;
 };
 
@@ -26,7 +26,7 @@ export function Markdown({
 
   React.useEffect(() => {
     const boldWords: string[] = [];
-    const matches = children?.matchAll(searchPattern);
+    const matches = children?.matchAll(typeof searchPattern === 'string' ? new RegExp(searchPattern, 'g') : searchPattern);
     if (!matches) {
       return;
     }

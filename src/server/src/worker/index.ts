@@ -5,6 +5,8 @@ export async function main() {
     await import('./TopicWorker');
   } else if (process.env.WORKER_QUEUE === 'recaps') {
     await import('./RecapWorker');
+  } else if (process.env.WORKER_QUEUE === 'caches') {
+    await import('./CacheWorker');
   } else {
     console.error('No worker queue specified');
     process.exit(1);

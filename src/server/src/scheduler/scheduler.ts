@@ -1,7 +1,6 @@
 import ms from 'ms';
 import { Op } from 'sequelize';
 
-import { SummaryController } from '../api/v1/controllers';
 import {
   Job,
   Outlet,
@@ -19,10 +18,10 @@ async function main() {
   await DBService.initTables();
   await Queue.initQueues();
   await Outlet.initOutlets();
-  pollForNews();
   cleanUpDeadWorkers();
-  cacheApiSummaries();
+  scheduleCacheJobs();
   scheduleRecapJobs();
+  pollForNews();
 }
 
 export function generateDynamicUrl(
@@ -114,32 +113,38 @@ export async function cleanUpDeadWorkers() {
   }
 }
 
-async function cacheLocale(locale: string, depth = 1) {
-  for (let page = 0; page < depth; page++) {
-    await SummaryController.searchSummariesInternal({
-      forceCache: true,
-      locale,
-      page,
-    });
-  }
-}
-
-async function cacheApiSummaries() {
+async function scheduleCacheJobs() {
   try {
-    console.log('caching queries');
+    console.log('scheduling cache jobs');
     console.log(SUPPORTED_LOCALES);
-    await cacheLocale('en', 3);
+    const queue = await Queue.from(Queue.QUEUES.caches);
+    await queue.add(
+      'cache-getSummaries-en', 
+      {
+        depth: 3,
+        endpoint: 'getSummaries',
+        locale: 'en',
+      },
+      'caches'
+    );
     for (const locale of SUPPORTED_LOCALES) {
       if (/^en/.test(locale)) {
         continue;
       }
-      await cacheLocale(locale);
+      await queue.add(
+        `cache-getSummaries-${locale}`,
+        {
+          endpoint: 'getSummaries',
+          locale,
+        },
+        'caches'
+      );
     }
-    console.log('done caching');
+    console.log('done scheduling cache jobs');
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(cacheApiSummaries, ms('30s'));
+    setTimeout(scheduleCacheJobs, ms('30s'));
   }
 }
 
@@ -165,7 +170,8 @@ async function scheduleRecapJob(offset = '1d') {
 async function scheduleRecapJobs() {
   try {
     console.log('scheduling recaps');
-    scheduleRecapJob();
+    await scheduleRecapJob();
+    console.log('done scheduling recap jobs');
   } catch (e) {
     console.error(e);
   } finally {

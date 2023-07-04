@@ -5,7 +5,6 @@ import { Provider } from 'react-native-paper';
 
 import { DEFAULT_DIALOG_CONTEXT } from './types';
 
-import { PublicSummaryAttributes } from '~/api';
 import {
   AppearanceWalkthrough,
   BookmarkWalkthrough,
@@ -45,13 +44,8 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('feedback', FeedbackDialog);
   }, []);
 
-  const [shareTarget, setShareTarget] = React.useState<PublicSummaryAttributes>();
-
   return (
-    <DialogContext.Provider value={ {
-      setShareTarget,
-      shareTarget,
-    } }>
+    <DialogContext.Provider value={ {} }>
       <Provider>
         {children}
       </Provider>
