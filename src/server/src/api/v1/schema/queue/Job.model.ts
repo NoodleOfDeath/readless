@@ -130,10 +130,13 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     this.save();
   }
 
-  async moveToCompleted() {
+  async moveToCompleted(destroy = false) {
     this.set('lockedBy', null);
     this.set('startedAt', null);
     this.set('completedAt', new Date());
+    if (destroy) {
+      this.set('deletedAt', new Date());
+    }
     await this.save();
   }
     
