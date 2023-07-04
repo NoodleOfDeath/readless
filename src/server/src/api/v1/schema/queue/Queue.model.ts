@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import {
   Column,
   DataType,
@@ -91,7 +92,12 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   }
   
   async clear() {
-    await Job.destroy({ where: { queue: this.toJSON().name } });
+    await Job.destroy({
+      where: {
+        completedAt: { [Op.ne]: null },
+        queue: this.toJSON().name,
+      }, 
+    });
   }
 
 }
