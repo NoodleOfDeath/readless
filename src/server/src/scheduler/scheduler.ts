@@ -118,6 +118,7 @@ async function scheduleCacheJobs() {
     console.log('scheduling cache jobs');
     console.log(SUPPORTED_LOCALES);
     const queue = await Queue.from(Queue.QUEUES.caches);
+    await queue.clear();
     await queue.add(
       'cache-getSummaries-en', 
       {
