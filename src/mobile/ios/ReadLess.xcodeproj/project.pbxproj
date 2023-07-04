@@ -1435,6 +1435,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ReadLess;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";
@@ -1475,6 +1476,7 @@
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
+				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ReadLess;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";

@@ -3,6 +3,7 @@ import React from 'react';
 import { BASE_DOMAIN } from '@env';
 import { SheetProps } from 'react-native-actions-sheet';
 import { Social } from 'react-native-share';
+import { SvgUri } from 'react-native-svg';
 import ViewShot from 'react-native-view-shot';
 
 import {
@@ -15,17 +16,16 @@ import {
   Divider,
   Icon,
   ScrollView,
+  Summary,
   Text,
   View,
 } from '~/components';
-import { DialogContext } from '~/contexts';
-import {  useShare } from '~/hooks';
+import {  useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { shareableLink } from '~/utils';
 
 export type ShareDialogProps = {
   summary: PublicSummaryAttributes;
-  viewshot: ViewShot | null;
   format?: ReadingFormat;
   onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => Promise<unknown>;
   onClose?: () => void;
@@ -35,12 +35,12 @@ export function ShareDialog({
   payload,
   ...props
 }: SheetProps<ShareDialogProps>) { 
-  
-  const { setShareTarget } = React.useContext(DialogContext);
+ 
+  const theme = useTheme();
+  const viewshot = React.useRef<ViewShot>(null);
 
   const {
     summary,
-    viewshot,
     format,
     onClose,
     onInteract,
@@ -53,11 +53,6 @@ export function ShareDialog({
     onInteract,
   });
 
-  React.useEffect(() => {
-    setShareTarget(summary);
-    return () => setShareTarget(undefined);
-  }, [setShareTarget, summary]);
-  
   const actions = React.useMemo(() => summary && viewshot && [
     [
       {
@@ -80,12 +75,12 @@ export function ShareDialog({
       {
         icon: 'twitter',
         label: strings.share_twitter,
-        onPress:() => shareSocial(summary, viewshot, Social.Twitter), 
+        onPress:() => shareSocial(summary, viewshot.current, Social.Twitter), 
       },
       {
         icon: 'instagram',
         label: strings.share_instagramStories,
-        onPress: () => shareSocial(summary, viewshot, Social.InstagramStories), 
+        onPress: () => shareSocial(summary, viewshot.current, Social.InstagramStories), 
       },
       // {
       //   icon: 'instagram',
@@ -95,7 +90,7 @@ export function ShareDialog({
       {
         icon: 'camera-outline',
         label: strings.share_shareAsImage,
-        onPress: () => shareStandard(summary, viewshot), 
+        onPress: () => shareStandard(summary, viewshot.current), 
       },
     ],
     [
@@ -124,6 +119,28 @@ export function ShareDialog({
 
   return (
     <ActionSheet id={ props.sheetId }>
+      {summary && (
+        <ScrollView scrollEnabled={ false }>
+          <View bg={ theme.colors.headerBackground } inactive>
+            <View m={ 12 }>
+              <ViewShot ref={ viewshot }>
+                <View rounded style={ theme.components.card } overflow='hidden'>
+                  <Summary 
+                    disableInteractions
+                    summary={ summary } />
+                  <Divider mx={ 12 } />
+                  <View height={ 20 } my={ 3 }>
+                    <SvgUri
+                      viewBox='328 0 724 338'
+                      uri='https://www.readless.ai/logo.svg' 
+                      height={ 20 } /> 
+                  </View>
+                </View>
+              </ViewShot>
+            </View>
+          </View>
+        </ScrollView>
+      )}
       <View py={ 12 }>
         {Object.values(actions).map((subactions, i) => (
           <View key={ i } height={ 120 } gap={ 12 }>

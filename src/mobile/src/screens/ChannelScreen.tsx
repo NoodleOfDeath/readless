@@ -2,14 +2,18 @@ import React from 'react';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { PublicCategoryAttributes } from '~/api';
+import { PublicCategoryAttributes, PublicOutletAttributes } from '~/api';
 import {
   Button,
+  Chip,
+  Icon,
+  Image,
   Screen,
   Text,
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import {
   ScreenProps,
@@ -22,9 +26,11 @@ export function ChannelScreen({
   navigation,
 }: ScreenProps<'channel'>) {
 
+  const theme = useTheme();
+
   const {
-    bookmarkedOutlets,
-    bookmarkedCategories,
+    followedOutlets,
+    followedCategories,
     followOutlet,
     followCategory,
   } = React.useContext(SessionContext);
@@ -32,16 +38,16 @@ export function ChannelScreen({
   const type = React.useMemo(() => route?.params?.type, [route]);
   const attributes = React.useMemo(() => route?.params?.attributes, [route]);
 
-  const [bookmarked, setBookmarked] = React.useState(false);
+  const [followed, setBookmarked] = React.useState(false);
   
   React.useEffect(() => {
     if (!attributes) {
       return;
     }
     type === 'category' ? 
-      setBookmarked(attributes.name in (bookmarkedCategories ?? {})) :
-      setBookmarked(attributes.name in (bookmarkedOutlets ?? {}));
-  }, [attributes, type, bookmarkedCategories, bookmarkedOutlets]);
+      setBookmarked(attributes.name in (followedCategories ?? {})) :
+      setBookmarked(attributes.name in (followedOutlets ?? {}));
+  }, [attributes, type, followedCategories, followedOutlets]);
 
   const prefilter = React.useMemo(() => {
     if (!attributes) {
@@ -70,10 +76,49 @@ export function ChannelScreen({
   return (
     <Screen>
       <View col>
-        <View row itemsCenter elevated height={ 80 } p={ 12 }>
-          <View>
-            <Text h6 capitalize>{attributes?.displayName}</Text>
-            <Text subtitle2>{type === 'category' ? strings.misc_category : strings.misc_newsSource}</Text>
+        <View 
+          row 
+          itemsCenter
+          elevated
+          zIndex={ 100 }
+          height={ 80 } 
+          p={ 12 }>
+          <View flexRow gap={ 12 } itemsCenter>
+            <View
+              borderRadius={ 6 }
+              overflow="hidden">
+              { type === 'category' && (
+                <Icon name={ (attributes as PublicCategoryAttributes).icon } size={ 24 } />
+              )}
+              { type === 'outlet' && (
+                <Image 
+                  fallbackComponent={ (
+                    <Chip
+                      bg={ theme.colors.primaryLight }
+                      color={ theme.colors.contrastText }
+                      itemsCenter
+                      justifyCenter
+                      textCenter
+                      h5
+                      width={ 40 }
+                      height={ 40 }>
+                      {attributes?.displayName[0]}
+                    </Chip>
+                  ) }
+                  source={ { uri: `https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/${(attributes as PublicOutletAttributes).name}.png` } }
+                  width={ 40 }
+                  height={ 40 } />
+              )}
+            </View>
+            <View>
+              <Text 
+                h6 
+                bold
+                uppercase>
+                {attributes?.displayName}
+              </Text>
+              <Text subtitle2>{type === 'category' ? strings.misc_category : strings.misc_publisher}</Text>
+            </View>
           </View>
           <View row />
           <View>
@@ -81,7 +126,7 @@ export function ChannelScreen({
               body2
               contained
               onPress={ toggleBookmarked }>
-              { bookmarked ? strings.action_unfollowChannel : strings.action_followChannel }
+              {`${ followed ? strings.action_unfollow : strings.action_follow } ${ type === 'category' ? strings.misc_category : strings.misc_publisher }`}
             </Button>
           </View>
         </View>

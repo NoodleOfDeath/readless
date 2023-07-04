@@ -9,9 +9,7 @@ import {
   CompactModePicker,
   FONT_SIZES,
   FontPicker,
-  Markdown,
   NumericPrefPicker,
-  PrefSwitch,
   ScrollView,
   Summary,
   View,
@@ -83,28 +81,6 @@ export function AppearanceWalkthrough(props: SheetProps) {
           </View>
         ),
         title: strings.walkthroughs_appearance_preferredReadingFormat,
-      },
-      {
-        artwork:( 
-          <ScrollView scrollEnabled={ false }>
-            <Summary disableInteractions />
-          </ScrollView>
-        ),
-        artworkBelow: true,
-        body: (
-          <View gap={ 12 }>
-            <View alignCenter>
-              <PrefSwitch prefKey="sourceLinks" />
-            </View>
-            <Markdown subtitle1 textCenter system contained>
-              {strings.walkthroughs_appearance_sourceLinksDescription}
-            </Markdown>
-            <Markdown subtitle1 textCenter system contained>
-              {strings.walkthroughs_appearance_youCanAlwaysSee}
-            </Markdown>
-          </View>
-        ),
-        title: strings.walkthroughs_appearance_sourceLinks,
       },
       {
         artwork:( 

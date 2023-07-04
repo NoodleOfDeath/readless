@@ -9,6 +9,7 @@ export type ImageProps = FastImageProps & Omit<ViewProps, 'children' | 'center'>
   contain?: boolean;
   stretch?: boolean;
   center?: boolean;
+  fallbackComponent?: React.ReactNode;
 };
 
 export function Image({ 
@@ -16,11 +17,14 @@ export function Image({
   stretch,
   center,
   resizeMode = contain ? 'contain' : stretch ? 'stretch' : center ? 'center' : 'cover',
+  fallbackComponent,
   ...props 
 }: ImageProps) {
   const style = useStyles(props);
-  return (
+  const [shouldFallback, setShouldFallback] = React.useState(false);
+  return shouldFallback ? fallbackComponent : (
     <FastImage 
+      onError={ () => setShouldFallback(true) }
       { ...props }
       resizeMode={ resizeMode }
       style={ style } />

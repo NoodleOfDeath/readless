@@ -8,9 +8,10 @@ import { Preferences, SessionContext } from '~/contexts';
 const makeTheme = (darkMode: boolean, preferences: Preferences) => {
   return {
     colors: {
+      backgroundTranslucent: 'rgba(255, 255, 255, 0.3)',
       contrastText: '#fff',
       error: '#f44336',
-      headerBackground: darkMode ? '#242424' : '#eee',
+      headerBackground: darkMode ? '#282828' : '#eee',
       inactive: darkMode ? '#777' : '#aaa',
       invertText: darkMode ? '#000' : '#fff',
       link: darkMode ? '#aaaaee' : '#8888ee',
@@ -27,7 +28,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
       textDark: '#000',
       textDisabled: darkMode ? '#888' : '#aaa',
       textHighlightBackground: 'yellow',
-      textSecondary: darkMode ? '#999' : '#888',
+      textSecondary: darkMode ? '#ccc' : '#888',
     },
     // containers
     components: 
@@ -57,10 +58,10 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
           color: '#fff',
         },
         divider: {
-          backgroundColor: darkMode ? '#BDBDBD' : '#222',
+          backgroundColor: darkMode ? '#888' : '#888',
           height: StyleSheet.hairlineWidth,
-          marginBottom: 3,
-          marginTop: 3,
+          marginBottom: 2,
+          marginTop: 2,
         },
         input: { 
           backgroundColor: darkMode ? '#111' : '#ddd',
@@ -87,7 +88,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
       ...(darkMode ? DarkTheme : DefaultTheme),
       colors: {
         ...(darkMode ? DarkTheme.colors : DefaultTheme),
-        background: darkMode ? '#303030' : '#fafafa',
+        background: darkMode ? '#424242' : '#fff',
         border: darkMode ? '#757575' : '#bdbdbd',
         card: darkMode ? '#1e1e1e' : '#fff',
         notification: '#c00000',

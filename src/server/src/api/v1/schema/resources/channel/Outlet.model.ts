@@ -69,7 +69,7 @@ export class Outlet<
   declare baseUrl: string;
   
   @Column({ type: DataType.STRING(2083) })
-  declare brandImageUrl?: string;
+  declare imageUrl?: string;
   
   @Column({ type: DataType.TEXT })
   declare description?: string;

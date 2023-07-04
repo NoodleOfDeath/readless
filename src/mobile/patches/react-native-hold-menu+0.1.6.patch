@@ -1,0 +1,49 @@
+diff --git a/node_modules/react-native-hold-menu/lib/typescript/components/menu/types.d.ts b/node_modules/react-native-hold-menu/lib/typescript/components/menu/types.d.ts
+index 514e5c9..0f5fe94 100644
+--- a/node_modules/react-native-hold-menu/lib/typescript/components/menu/types.d.ts
++++ b/node_modules/react-native-hold-menu/lib/typescript/components/menu/types.d.ts
+@@ -1,6 +1,7 @@
+ import { TransformOriginAnchorPosition } from '../../utils/calculations';
+ 
+ export type MenuItemProps = {
++  key?: string;
+   text: string;
+   icon?: string | (() => React.ReactElement);
+   onPress?: (...args: any[]) => void;
+diff --git a/node_modules/react-native-hold-menu/src/components/backdrop/Backdrop.tsx b/node_modules/react-native-hold-menu/src/components/backdrop/Backdrop.tsx
+index dc5fa35..0048038 100644
+--- a/node_modules/react-native-hold-menu/src/components/backdrop/Backdrop.tsx
++++ b/node_modules/react-native-hold-menu/src/components/backdrop/Backdrop.tsx
+@@ -121,6 +121,7 @@ const BackdropComponent = () => {
+         style={[styles.container, animatedContainerStyle]}
+       >
+         <Animated.View
++          onTouchStart={() => state.value = CONTEXT_MENU_STATE.END}
+           style={[
+             { ...StyleSheet.absoluteFillObject },
+             animatedInnerContainerStyle,
+diff --git a/node_modules/react-native-hold-menu/src/components/menu/MenuItems.tsx b/node_modules/react-native-hold-menu/src/components/menu/MenuItems.tsx
+index bef7a30..92ed606 100644
+--- a/node_modules/react-native-hold-menu/src/components/menu/MenuItems.tsx
++++ b/node_modules/react-native-hold-menu/src/components/menu/MenuItems.tsx
+@@ -11,7 +11,7 @@ const MenuItemsComponent = ({ items }: { items: MenuItemProps[] }) => {
+       {items.map((item: MenuItemProps, index: number) => {
+         return (
+           <MenuItem
+-            key={index}
++            key={item.key || item.text || index}
+             item={item}
+             isLast={items.length === index + 1}
+           />
+diff --git a/node_modules/react-native-hold-menu/src/components/menu/types.d.ts b/node_modules/react-native-hold-menu/src/components/menu/types.d.ts
+index 514e5c9..0f5fe94 100644
+--- a/node_modules/react-native-hold-menu/src/components/menu/types.d.ts
++++ b/node_modules/react-native-hold-menu/src/components/menu/types.d.ts
+@@ -1,6 +1,7 @@
+ import { TransformOriginAnchorPosition } from '../../utils/calculations';
+ 
+ export type MenuItemProps = {
++  key?: string;
+   text: string;
+   icon?: string | (() => React.ReactElement);
+   onPress?: (...args: any[]) => void;

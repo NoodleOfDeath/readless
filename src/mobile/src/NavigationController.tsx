@@ -14,6 +14,7 @@ import {
 } from '@react-navigation/native-stack';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import { addScreenshotListener } from 'react-native-detector';
+import { HoldMenuProvider } from 'react-native-hold-menu';
 
 import {
   LayoutContext,
@@ -24,7 +25,6 @@ import {
 import {
   ActivityIndicator,
   Button,
-  FEATURES,
   Icon,
   MediaPlayer,
   Screen,
@@ -47,6 +47,7 @@ import {
   SettingsScreen,
   StackableTabParams,
   SummaryScreen,
+  TestScreen,
   TriggerWordPickerScreen,
 } from '~/screens';
 
@@ -72,6 +73,7 @@ const screens: RouteConfig<
     name: 'about', 
     options: {
       headerBackTitle: '', 
+      headerRight: () => undefined, 
       headerTitle: strings.screens_about, 
     },
   },
@@ -80,6 +82,7 @@ const screens: RouteConfig<
     name: 'bookmarks', 
     options: {
       headerBackTitle: '', 
+      headerRight: () => undefined, 
       headerTitle: strings.screens_bookmarks, 
     }, 
   },
@@ -87,26 +90,34 @@ const screens: RouteConfig<
     component: BrowseScreen, 
     name: 'browse', options: {
       headerBackTitle: '', 
+      headerRight: () => undefined, 
       headerTitle: strings.screens_browse, 
     },
   },
   {
     component: ChannelScreen, 
     name: 'channel',
-    options: { headerBackTitle: '' }, 
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+    }, 
   },
   {
     component: SettingsScreen, 
     name: 'settings', 
     options: {
       headerBackTitle: '', 
+      headerRight: () => undefined, 
       headerTitle: strings.screens_settings, 
     },
   },
   {
     component: SummaryScreen, 
     name: 'summary',  
-    options: { headerBackTitle: '' },
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+    },
   },
   {
     component: ColorSchemePickerScreen, 
@@ -148,15 +159,22 @@ const screens: RouteConfig<
       headerTitle: strings.screens_recaps, 
     },
   },
+  {
+    component: TestScreen,
+    name: 'test',
+    options: {
+      headerBackTitle: '', 
+      headerRight: () => undefined,
+      headerTitle: 'test', 
+    },
+  },
 ];
 
 const Stack = createNativeStackNavigator();
 
-function StackNavigation({ initialRouteName = 'default' }: { initialRouteName: string }) {
+function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
 
-  const { navigate, router } = useNavigation();
-
-  const { currentTrack } = React.useContext(MediaContext);
+  const { router } = useNavigation();
 
   const {
     bookmarkCount,
@@ -194,13 +212,6 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName: s
       unsubscribe();
     };
   }, [screenshotListener, viewedFeatures]);
-
-  React.useEffect(() => {
-    const viewed = { ...viewedFeatures };
-    if (!('promo-code-walkthrough' in viewed) && FEATURES.every((f) => f.id in viewed)) {
-      setTimeout(() => SheetManager.show('promo-code-walkthrough'), 2_000);
-    }
-  }, [viewedFeatures]);
   
   const headerRight = React.useMemo(() => (
     <View>
@@ -224,19 +235,9 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName: s
           ) }
           haptic
           onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
-        <View touchable onPress={ () => navigate('recaps') }>
-          <Icon
-            name="tag"
-            size={ 24 } />
-          <Icon absolute name="currency-usd" size={ 12 } bottom={ -1 } left={ -3 } />
-        </View>
-        <Button 
-          leftIcon='menu'
-          iconSize={ 24 }
-          onPress={ () => navigate('settings') } />
       </View>
     </View>
-  ), [rotationLock, unlockRotation, lockRotation, navigate]);
+  ), [rotationLock, unlockRotation, lockRotation]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);
@@ -266,13 +267,12 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName: s
             } } />
         ))}
       </Stack.Navigator>
-      <MediaPlayer visible={ Boolean(currentTrack) } />
     </View>
   );
   
 }
 
-function TabScreen({ initialRouteName }: { initialRouteName: string }) {
+function TabScreen({ initialRouteName }: { initialRouteName?: string } = {}) {
   return (
     <Screen>
       <StackNavigation initialRouteName={ initialRouteName } />
@@ -283,6 +283,7 @@ function TabScreen({ initialRouteName }: { initialRouteName: string }) {
 function HomeTab() {
   return <TabScreen />; 
 }
+
 function ProfileTab() {
   return <TabScreen initialRouteName="settings" />; 
 }
@@ -294,8 +295,36 @@ const TAB_ICONS = {
 
 const Tab = createBottomTabNavigator();
 
+function TabNavigation() {
+  return (
+    <Tab.Navigator
+      screenOptions={ ({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: 'tomato',
+        tabBarIcon: ({ color, size }) => {
+          return (
+            <Icon 
+              name={ TAB_ICONS[route.name] } 
+              size={ size } 
+              color={ color } />
+          );
+        },
+        tabBarInactiveTintColor: 'gray',
+        tabBarShowLabel: false,
+      }) }>
+      <Tab.Screen 
+        name={ strings.screens_home } 
+        component={ HomeTab } />
+      <Tab.Screen 
+        name={ strings.screens_profile } 
+        component={ ProfileTab } />
+    </Tab.Navigator>
+  );
+}
+
 export default function NavigationController() {
   const theme = useTheme();
+  const { currentTrack } = React.useContext(MediaContext);
   const { ready, viewedFeatures } = React.useContext(SessionContext);
   React.useEffect(() => {
     if (!ready) {
@@ -314,31 +343,19 @@ export default function NavigationController() {
           <ActivityIndicator animating />
         </View>
       ) : (
-        <SheetProvider>
-          <Tab.Navigator
-            screenOptions={ ({ route }) => ({
-              headerShown: false,
-              tabBarActiveTintColor: 'tomato',
-              tabBarIcon: ({
-                focused, color, size, 
-              }) => {
-                return (
-                  <Icon 
-                    name={ TAB_ICONS[route.name] } 
-                    size={ size } 
-                    color={ color } />
-                );
-              },
-              tabBarInactiveTintColor: 'gray',
-            }) }>
-            <Tab.Screen 
-              name={ strings.screens_home } 
-              component={ HomeTab } />
-            <Tab.Screen 
-              name={ strings.screens_profile } 
-              component={ ProfileTab } />
-          </Tab.Navigator>
-        </SheetProvider>
+        <HoldMenuProvider
+          theme={ theme.isDarkMode ? 'dark' : 'light' }
+          safeAreaInsets={ {
+            bottom: 0,
+            left: 0,
+            right: 0,
+            top: 0,
+          } }>
+          <SheetProvider>
+            <TabNavigation />
+            <MediaPlayer visible={ Boolean(currentTrack) } />
+          </SheetProvider>
+        </HoldMenuProvider>
       )}
     </NavigationContainer>
   );

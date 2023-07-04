@@ -14,3 +14,5 @@ export * from './ColorSchemePickerScreen';
 export * from './FontPickerScreen';
 export * from './ReadingFormatPickerScreen';
 export * from './TriggerWordPickerScreen';
+
+export * from './TestScreen';

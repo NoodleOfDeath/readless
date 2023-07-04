@@ -29,6 +29,7 @@ export type StackableTabParams = {
   browse: undefined;
   channel: Channel;
   default: undefined;
+  home: undefined;
   recaps: undefined;
   search: {
     prefilter?: string,
@@ -48,6 +49,7 @@ export type StackableTabParams = {
   fontPicker: undefined;
   triggerWordPicker: undefined;
   readingFormatPicker: undefined;
+  test: undefined;
 };
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {

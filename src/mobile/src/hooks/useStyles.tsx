@@ -55,9 +55,10 @@ export function useTextStyles({
   italic,
   underline,
   capitalize,
+  uppercase,
 
   fontWeight = bold ? 'bold' : undefined,
-  textTransform = capitalize ? 'capitalize' : undefined,
+  textTransform = capitalize ? 'capitalize' : uppercase ? 'uppercase' : undefined,
   textDecorationLine = underline ? 'underline' : undefined,
   fontStyle = italic ? 'italic' : undefined,
 
@@ -97,10 +98,10 @@ export function useTextStyles({
     });
     
     attrs.push({ fontFamily: platformFont });
-    attrs.push({ fontSize });
+    attrs.push({ fontSize: offsetFontSize });
     
-    //attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
-    //attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
+    attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
+    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
     
     attrs.push(textAlign ? { textAlign } : undefined);
     

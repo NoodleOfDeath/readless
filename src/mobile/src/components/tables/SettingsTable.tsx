@@ -120,7 +120,7 @@ export function SettingsTable() {
         <TableViewCell
           cellContentView={ (
             <ScrollView scrollEnabled={ false }>
-              <Summary mt={ 12 } disableInteractions /> 
+              <Summary my={ 12 } disableInteractions /> 
             </ScrollView>
           ) } />
         <TableViewCell

@@ -10,14 +10,12 @@ import { useTextStyles } from '~/hooks';
 
 export function Text({
   children,
-  capitalize,
   fontSizeFixed,
   ...props
 }: ViewProps & TextProps) {
   const textStyle = useTextStyles({
     ...props, 
     fontSizeFixed: fontSizeFixed || props.adjustsFontSizeToFit, 
-    textTransform: capitalize ? 'capitalize' : props.textTransform,
   });
   return (
     <View { ...props }>

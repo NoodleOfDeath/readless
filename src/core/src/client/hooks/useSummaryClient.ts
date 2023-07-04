@@ -127,9 +127,7 @@ export function useSummaryClient() {
     pageSize = 10
   ) => {
     try {
-      return await withHeaders(API.getRecaps)({
-        filter, page, pageSize,
-      });
+      return await withHeaders(API.getRecaps)({ page, pageSize });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
@@ -141,7 +139,9 @@ export function useSummaryClient() {
     uuid: string
   ) => {
     try {
-      return await withHeaders(API.subscribeToRecap)(event, channel, uuid);
+      return await withHeaders(API.subscribe)({
+        channel, event, uuid, 
+      });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }
@@ -153,7 +153,9 @@ export function useSummaryClient() {
     uuid: string
   ) => {
     try {
-      return await withHeaders(API.unsubscribeFromRecap)(event, channel, uuid);
+      return await withHeaders(API.unsubscribe)({
+        channel, event, uuid, 
+      });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
     }

@@ -70,9 +70,13 @@ export type Preferences = {
   
   // outlet/category state
   followedOutlets?: { [key: string]: boolean };
-  followedCategories?: { [key: string]: boolean };
+  followedCategories?: { [key: string]: PublicCategoryAttributes };
+
+  followCount: number;
+  followFilter: string;
+
   excludedOutlets?: { [key: string]: boolean };
-  excludedCategories?: { [key: string]: boolean };
+  excludedCategories?: { [key: string]: PublicCategoryAttributes };
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
@@ -108,6 +112,8 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   excludeCategory: () => Promise.resolve(),
   excludeOutlet: () => Promise.resolve(),
   followCategory: () => Promise.resolve(),
+  followCount: 0,
+  followFilter: '',
   followOutlet: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
   readSource: () => Promise.resolve(),

@@ -1,28 +1,42 @@
 import React from 'react';
+import { Text as RNText, TextStyle } from 'react-native';
 
-import RNHighlighter from 'react-native-highlight-words';
-import { HighlighterProps as RNHighlighterProps } from 'react-native-highlight-words';
+import { findAll } from 'highlight-words-core';
 
-import {
-  Chip,
-  ChipProps,
-  TextProps,
-  View,
-} from '~/components';
-import { useTextStyles } from '~/hooks';
+import { Text, TextProps } from '~/components';
 
-export type HighlighterProps = Omit<RNHighlighterProps & TextProps & ChipProps, 'children' | 'textToHighlight'> & {
+export type HighlighterProps = Omit<TextProps, 'children'> & {
   children?: string;
+  autoEscape?: boolean;
+  highlightStyle?: TextStyle
+  searchWords?: string[],
+  sanitize?: () => string,
 };
 
-export function Highlighter({ children, ...props }: HighlighterProps) {
-  const textStyle = useTextStyles(props);
+export function Highlighter({ 
+  children: textToHighlight = '', 
+  searchWords = [],
+  ...props
+}: HighlighterProps) {
+  const chunks = findAll({
+    searchWords, textToHighlight, ...props, 
+  });
   return (
-    <Chip { ...props }>
-      <RNHighlighter
-        { ...props }
-        textToHighlight={ children ?? '' }
-        style={ textStyle } />
-    </Chip>
+    <Text { ...props }>
+      <RNText>
+        {chunks.map((chunk, index) => {
+          const text = textToHighlight?.slice(chunk.start, chunk.end);
+          return (!chunk.highlight)
+            ? text
+            : (
+              <RNText
+                key={ index }
+                style={ props.highlightStyle }>
+                {text}
+              </RNText>
+            );
+        })}
+      </RNText>
+    </Text>
   );
 }
