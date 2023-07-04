@@ -39,6 +39,17 @@ export type JobNameOptions = {
   timeInterval?: string;
 };
 
+export type CacheJobData = {
+  endpoint: string;
+  locale?: string;
+  page?: number;
+  depth?: number;
+};
+
+export type CrawlJobData = {
+  outlet: number;
+};
+
 export type SiteMapJobData = {
   outlet: string;
   url: string; 
