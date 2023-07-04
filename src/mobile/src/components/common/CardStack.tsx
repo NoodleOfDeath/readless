@@ -53,7 +53,7 @@ export function CardStackEntry({
       bg={ theme.colors.primary }
       onPress={ onPress }>
       <View
-        height={ 220 }
+        height={ 120 }
         mt={ -12 }
         mx={ -12 }
         brTopLeft={ 6 }
