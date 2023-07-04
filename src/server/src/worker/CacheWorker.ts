@@ -37,7 +37,7 @@ export async function doWork() {
             await cacheGetSummaries(locale, depth);
           }
           console.log('done caching');
-          await job.moveToCompleted();
+          await job.moveToCompleted(true);
         } catch (e) {
           console.error(e);
           await job.moveToFailed(e);
