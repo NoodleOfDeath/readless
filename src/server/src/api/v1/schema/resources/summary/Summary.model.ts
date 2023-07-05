@@ -74,7 +74,7 @@ function applyFilter(
         if (/^cat(egory)?$/i.test(prefix)) {
           categories.push(...pf);
         }
-        if (/^(?:outlet|source|src)$/i.test(prefix)) {
+        if (/^(?:source|src|pub(lisher)?)$/i.test(prefix)) {
           outlets.push(...pf);
         }
         if (/^[lp]ast$/i.test(prefix)) {
