@@ -146,7 +146,7 @@ async function scheduleCacheJobs() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleCacheJobs, ms(process.env.CACHE_HALFLIFE || '1m'));
+    setTimeout(scheduleCacheJobs, ms('20s'));
   }
 }
 
