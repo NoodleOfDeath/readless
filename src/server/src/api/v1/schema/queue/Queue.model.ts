@@ -84,7 +84,7 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     if (existingJob) {
       return existingJob;
     }
-    const job = await Job.upsert({
+    const [job] = await Job.upsert({
       data: payload,
       group,
       name: jobName,
