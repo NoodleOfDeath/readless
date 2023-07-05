@@ -14,15 +14,15 @@ FROM (
     bullets,
     url,
     "imageUrl",
-    "originalDate",
+    b."originalDate",
     outlet,
     category,
     translations,
-    COALESCE(sentiment, 0) AS sentiment,
-    sentiments,
+    COALESCE(b.sentiment, 0) AS sentiment,
+    COALESCE(b.sentiments, '[]')::JSON AS sentiments,
     media,
     siblings,
-    AVG(sentiment) OVER() AS "averageSentiment",
+    AVG(b.sentiment) OVER() AS "averageSentiment",
     "totalCount"
   FROM (
     SELECT
@@ -33,7 +33,7 @@ FROM (
       bullets,
       url,
       "imageUrl",
-      "originalDate",
+      a."originalDate",
       JSONB_BUILD_OBJECT(
         'id', "outlet.id",
         'name', "outlet.name",
@@ -51,11 +51,8 @@ FROM (
         'attribute', "translation.attribute",
         'value', "translation.value"
       )) FILTER (WHERE "translation.attribute" IS NOT NULL), '[]'::JSON) AS translations,
-      AVG("sentiment.score") AS sentiment,
-      COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
-        'method', "sentiment.method",
-        'score', "sentiment.score"
-      )) FILTER (WHERE "sentiment.score" IS NOT NULL), '[]'::JSON) AS sentiments,
+      AVG(sentiment) AS sentiment,
+      sentiments,
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
         'key', "media.key", 
         'url', "media.url",
@@ -91,10 +88,10 @@ FROM (
         categories.name AS "category.name",
         categories."displayName" AS "category.displayName",
         categories.icon AS "category.icon",
-        summary_translations.attribute AS "translation.attribute",
-        summary_translations.value AS "translation.value",
-        summary_sentiments.method AS "sentiment.method",
-        summary_sentiments.score AS "sentiment.score",
+        st.attribute AS "translation.attribute",
+        st.value AS "translation.value",
+        ss.sentiment AS sentiment,
+        ss.sentiments::TEXT AS sentiments,
         summary_media.key AS "media.key",
         summary_media.url AS "media.url",
         summary_media.path AS "media.path",
@@ -111,13 +108,12 @@ FROM (
         LEFT OUTER JOIN categories
           ON summaries."categoryId" = categories.id 
           AND (categories."deletedAt" IS NULL) 
-        LEFT OUTER JOIN summary_translations
-          ON summaries.id = summary_translations."parentId"
-          AND (summary_translations."deletedAt" IS NULL)
-          AND (summary_translations.locale = :locale)
-        LEFT OUTER JOIN summary_sentiments
-          ON summaries.id = summary_sentiments."parentId"
-          AND (summary_sentiments."deletedAt" IS NULL)
+        LEFT OUTER JOIN summary_translations st
+          ON summaries.id = st."parentId"
+          AND (st."deletedAt" IS NULL)
+          AND (st.locale = :locale)
+        LEFT OUTER JOIN summary_sentiment_caches ss
+          ON summaries.id = ss."summaryId"
         LEFT OUTER JOIN summary_media
           ON summary_media."parentId" = summaries.id
           AND (summary_media."deletedAt" IS NULL)
@@ -159,40 +155,10 @@ FROM (
           OR (summaries."shortSummary" ~* :filter)
           OR (summaries.summary ~* :filter)
           OR (summaries.bullets::text ~* :filter)
-          OR (summary_translations.value ~* :filter)
+          OR (st.value ~* :filter)
         )
-      GROUP BY
-        summaries.id,
-        summaries.title,
-        summaries."shortSummary",
-        summaries.summary,
-        summaries.bullets,
-        summaries.url,
-        summaries."imageUrl",
-        summaries."originalDate",
-        "outlet.id",
-        "outlet.name",
-        "outlet.displayName",
-        "outlet.brandImageUrl",
-        "outlet.description",
-        "category.id",
-        "category.name",
-        "category.displayName",
-        "category.icon",
-        "translation.attribute",
-        "translation.value",
-        "sentiment.method",
-        "sentiment.score",
-        "media.key",
-        "media.url",
-        "media.path",
-        "sibling.id",
-        "sibling.title",
-        "sibling.originalDate",
-        "sibling.outlet.name",
-        "sibling.outlet.displayName"
       ORDER BY 
-        "originalDate" DESC,
+        summaries."originalDate" DESC,
         "sibling.originalDate" DESC
     ) a
     GROUP BY
@@ -203,7 +169,7 @@ FROM (
       bullets,
       url,
       "imageUrl",
-      "originalDate",
+      a."originalDate",
       "outlet.id",
       "outlet.name",
       "outlet.displayName",
@@ -212,9 +178,10 @@ FROM (
       "category.id",
       "category.name",
       "category.displayName",
-      "category.icon"
+      "category.icon",
+      sentiments
     ORDER BY
-      "originalDate" DESC
+      a."originalDate" DESC
   ) b
   LIMIT :limit
   OFFSET :offset

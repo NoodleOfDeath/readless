@@ -5,13 +5,18 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { SummaryAttributes, SummaryCreationAttributes } from './Summary.types';
+import {
+  PublicSummaryGroup,
+  SummaryAttributes,
+  SummaryCreationAttributes,
+} from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
-import { GET_TOPICS, SEARCH_SUMMARIES } from './queries';
+import { QUERIES, QueryKey } from './queries';
 import { parseDate } from '../../../../../utils';
+import { BulkMetadataResponse } from '../../../controllers';
 import { Cache } from '../../system/Cache.model';
 import { Post } from '../Post.model';
 import { Category } from '../channel/Category.model';
@@ -33,6 +38,7 @@ export type SearchSummariesPayload = {
   locale?: string;
   start?: string;
   end?: string;
+  version?: string;
   forceCache?: boolean;
 };
 
@@ -199,20 +205,24 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
 
   declare translations?: PublicTranslationAttributes[];
   
-  public static async getTopics({
+  public static async getTopics(payload: SearchSummariesPayload) {
+    return await this.getSummaries(payload, 'getTopics');
+  }
+  
+  public static async getSummaries({
     filter,
     ids,
     excludeIds = false,
     matchType,
-    interval = '1d',
-    locale,
+    interval: interval0,
+    locale = 'en',
     start,
     end = start !== undefined ? new Date().toISOString() : undefined,
     pageSize = 10,
     page = 0,
     offset = pageSize * page,
-    forceCache = false,
-  }: SearchSummariesPayload) {
+    forceCache,
+  }: SearchSummariesPayload, queryKey: QueryKey = 'getSummaries'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
     const { 
       categories, 
       outlets,
@@ -222,15 +232,16 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
     const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
     const idArray = typeof ids === 'number' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
+    const interval = (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval0 ?? '100y');
     const replacements = {
       categories: categories.length === 0 ? [''] : categories,
       endDate: endDate ?? new Date(0),
       excludeIds,
       filter: query,
       ids: idArray,
-      interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval ?? '100y'),
+      interval,
       limit: Number(pageSize),
-      locale: locale?.replace(/-[a-z]{2}$/i, '') ?? '',
+      locale: locale.replace(/-[a-z]{2}$/i, '') ?? '',
       noCategories: categories.length === 0,
       noFilter: !filter,
       noIds: !ids || excludeIds,
@@ -240,7 +251,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       startDate: startDate ?? new Date(),
     };
     const cacheKey = [
-      'getTopics',
+      queryKey,
       filter,
       idArray?.join(','),
       excludeIds,
@@ -265,34 +276,45 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     
     const fetch = async () => {
       
-      const records = (await this.store.query(GET_TOPICS, {
+      const records = ((await this.store.query(QUERIES[queryKey], {
         nest: true,
         replacements,
         type: QueryTypes.SELECT,
-      })) as any[];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
       
-      if (records.length < replacements.limit) {
+      if (filter || pastInterval || interval || records.rows.length < replacements.limit) {
         return records;
       }
       
-      const filteredRecords = records.reverse().filter((a, i) => {
-        return ![...records].slice(i).some((b) => b.siblings.some((s) => s.id === a.id));
+      const filteredRecords = records.rows.reverse().filter((a, i) => {
+        return ![...records.rows].slice(i).some((b) => b.siblings?.some((s) => s.id === a.id));
       }).reverse();
       
       if (filteredRecords.length < replacements.limit) {
         replacements.offset += replacements.limit;
         replacements.limit -= filteredRecords.length;
-        return [...filteredRecords, ...(await fetch())];
+        return {
+          count: records.count,
+          metadata: records.metadata,
+          rows: [...filteredRecords, ...(await fetch()).rows],
+        };
       }
     
-      return filteredRecords;
+      return {
+        count: records.count,
+        metadata: records.metadata,
+        rows: filteredRecords,
+      };
     };
     
     const filteredRecords = await fetch();
     
     const response = {
-      count: filteredRecords.length,
-      rows: filteredRecords,
+      count: filteredRecords.count,
+      metadata: filteredRecords.metadata,
+      next: replacements.offset + replacements.limit,
+      rows: filteredRecords.rows,
     };
     
     await Cache.upsert({
@@ -300,83 +322,8 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       key: cacheKey,
       value: JSON.stringify(response),
     });
+    
     return response;
-  }
-  
-  public static async searchSummaries({
-    filter,
-    ids,
-    excludeIds = false,
-    matchType,
-    interval = '100y',
-    locale = 'en',
-    start,
-    end = start !== undefined ? new Date().toISOString() : undefined,
-    pageSize = 10,
-    page = 0,
-    offset = pageSize * page,
-    forceCache,
-  }: SearchSummariesPayload) {
-    const { 
-      categories, 
-      outlets,
-      interval: pastInterval,
-      filter: query,
-    } = applyFilter(filter, matchType);
-    const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
-    const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
-    const idArray = typeof ids === 'number' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
-    const replacements = {
-      categories: categories.length === 0 ? [''] : categories,
-      endDate: endDate ?? new Date(0),
-      excludeIds,
-      filter: query,
-      ids: idArray,
-      interval: (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval),
-      limit: Number(pageSize),
-      locale: locale.replace(/-[a-z]{2}$/i, '') ?? '',
-      noCategories: categories.length === 0,
-      noFilter: !filter,
-      noIds: !ids || excludeIds,
-      noOutlets: outlets.length === 0,
-      offset: Number(offset),
-      outlets: outlets.length === 0 ? [''] : outlets,
-      startDate: startDate ?? new Date(),
-    };
-    const cacheKey = [
-      'getSummaries',
-      filter,
-      idArray?.join(','),
-      excludeIds,
-      matchType,
-      interval,
-      locale,
-      start,
-      end,
-      pageSize,
-      page,
-    ].join(':');
-    if (!forceCache) {
-      const cache = await Cache.fromKey(cacheKey);
-      if (cache && cache.expiresSoon === false) {
-        try {
-          return JSON.parse(cache.value);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    }
-    const records = (await this.store.query(SEARCH_SUMMARIES, {
-      nest: true,
-      replacements,
-      type: QueryTypes.SELECT,
-    }))?.[0] ?? { count: 0, rows: [] };
-    await Cache.upsert({
-      halflife: process.env.CACHE_HALFLIFE || '2m',
-      key: cacheKey,
-      value: JSON.stringify(records),
-    });
-    return records;
   }
 
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {

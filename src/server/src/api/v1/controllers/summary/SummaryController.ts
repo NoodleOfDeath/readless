@@ -48,7 +48,7 @@ import {
 export class SummaryController extends BaseControllerWithPersistentStorageAccess {
 
   @Get('/')
-  public static async searchSummaries(
+  public static async getSummaries(
     @Request() req?: ExpressRequest,
     @Query() filter?: string,
     @Query() ids?: number[],
@@ -63,14 +63,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() offset = pageSize * page,
     @Query() forceCache = false
   ): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
-    const version = req?.headers['x-app-version'];
-    if (/^2\.\d\.\d$/.test(JSON.stringify(version) || '')) {
-      return {
-        count: 0,
-        rows: [],
-      };
-    }
-    return await Summary.searchSummaries({
+    const version = JSON.stringify(req?.headers?.['x-app-version']);
+    return await Summary.getSummaries({
       end,
       excludeIds,
       filter,
@@ -83,11 +77,12 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       page,
       pageSize,
       start,
+      version,
     });
   }
   
-  public static async searchSummariesInternal(payload: SearchSummariesPayload) {
-    return await Summary.searchSummaries(payload) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
+  public static async getSummariesInternal(payload: SearchSummariesPayload) {
+    return await Summary.getSummaries(payload); 
   }
 
   @Get('/topics')
@@ -106,13 +101,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() offset = pageSize * page,
     @Query() forceCache = false
   ): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
-    const version = req?.headers['x-app-version'];
-    if (/^2\.\d\.\d$/.test(JSON.stringify(version) || '')) {
-      return {
-        count: 0,
-        rows: [],
-      };
-    }
+    const version = JSON.stringify(req?.headers?.['x-app-version']);
     return await Summary.getTopics({
       end,
       excludeIds,
@@ -126,11 +115,12 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       page,
       pageSize,
       start,
+      version,
     });
   }
   
   public static async getTopicsInternal(payload: SearchSummariesPayload) {
-    return await Summary.getTopics(payload) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>;
+    return await Summary.getTopics(payload);
   }
   
   @Security('jwt')

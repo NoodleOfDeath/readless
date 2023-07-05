@@ -83,21 +83,25 @@ export function Picker<
 
   const handleSelect = React.useCallback((option: T) => {
     setValue((prev) => {
-      let state = [ ...prev ];
+      let newValue = prev.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOption<T, P>[];
+      const newOption = options.find((o) => o.value === option);
+      if (!newOption) {
+        return prev;
+      }
       if (multi) {
-        if (state.includes(option)) {
-          state = state.filter((v) => v !== option);
+        if (newValue.some((v) => v.value === option)) {
+          newValue = newValue.filter((v) => v.value !== option);
         } else {
-          state = [...state, option];
+          newValue = [...newValue, newOption];
         }
       } else {
-        state = [option];
+        newValue = [newOption];
       }
-      setState((multi ? SelectOption.options<T, P>(state) : SelectOption.from(option)) as CurrentValue);
-      onValueChange?.((multi ? SelectOption.options<T, P>(state) : SelectOption.from(option)) as CurrentValue);
-      return (prev = state);
+      setState((multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as CurrentValue);
+      onValueChange?.((multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as CurrentValue);
+      return (prev = newValue.map((v) => v.value) as T[]);
     });
-  }, [multi, onValueChange]);
+  }, [multi, onValueChange, options]);
 
   if (!searchable && !onSave) {
     return loading ? (

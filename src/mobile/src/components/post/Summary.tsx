@@ -158,7 +158,7 @@ export function Summary({
   const [showTranslations, setShowTranslations] = React.useState(initiallyTranslated && Boolean(translations));
   const [isLocalizing, setIsLocalizing] = React.useState(false);
 
-  const [forceShortSummary, setForceShortSummary] = React.useState(showShortSummary || forceShortSummary0);
+  const [forceShortSummary] = React.useState(showShortSummary || forceShortSummary0);
   
   const localizedStrings = React.useMemo(() => {
     return showTranslations && translations ? translations : {
@@ -433,7 +433,7 @@ export function Summary({
             <Text
               caption
               color={ theme.colors.textSecondary }>
-              {summary.siblings?.length && `${summary.siblings.length} ${pluralize(strings.misc_article, summary.siblings.length)}`}
+              {`${summary.siblings.length + 1} ${pluralize(strings.misc_article, summary.siblings.length)}`}
             </Text>
           </React.Fragment>
         )}

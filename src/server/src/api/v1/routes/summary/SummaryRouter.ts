@@ -32,7 +32,8 @@ router.get(
   async (req, res) => {
     try {
       const params = SummaryController.serializeParams(req.query);
-      const response = await SummaryController.searchSummariesInternal(params);
+      params.version = JSON.stringify(req?.headers['x-app-version'] || '1.11.0');
+      const response = await SummaryController.getSummariesInternal(params);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);
@@ -56,6 +57,7 @@ router.get(
   async (req, res) => {
     try {
       const params = SummaryController.serializeParams(req.query);
+      params.version = JSON.stringify(req?.headers['x-app-version'] || '1.11.0');
       const response = await SummaryController.getTopicsInternal(params);
       return res.json(response);
     } catch (err) {

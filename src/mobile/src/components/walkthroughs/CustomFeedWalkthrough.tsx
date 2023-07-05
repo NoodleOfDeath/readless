@@ -3,6 +3,7 @@ import React from 'react';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import Svg, { Ellipse } from 'react-native-svg';
 
+import { PublicCategoryAttributes } from '~/api';
 import {
   Button,
   CategoryPicker,
@@ -23,6 +24,24 @@ export function CustomFeedWalkthrough(props: SheetProps) {
   const theme = useTheme();
   const { setPreference } = React.useContext(SessionContext);
   
+  const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>();
+  const [publishers, setPublishers] = React.useState<string[]>();
+
+  const saveChanges = React.useCallback(async () => {
+    if (categories) {
+      setPreference(
+        'followedCategories', 
+        Object.fromEntries(categories.map((category) => [category.name, category]))
+      );
+    }
+    if (publishers) {
+      setPreference(
+        'followedOutlets', 
+        Object.fromEntries(publishers.map((publisher) => [publisher, true]))
+      );
+    }
+  }, [categories, publishers, setPreference]);
+
   const onDone = React.useCallback(async () => {
     setPreference('viewedFeatures', (prev) => {
       const state = { ...prev };
@@ -39,7 +58,9 @@ export function CustomFeedWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_customFeed_letsStart}
           </Markdown>
-          <CategoryPicker height={ 500 } />
+          <CategoryPicker
+            onValueChange={ setCategories }
+            height={ 500 } />
         </View>
       ),
       title: strings.walkthroughs_customFeed_addCategories,
@@ -50,7 +71,9 @@ export function CustomFeedWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_customFeed_readlessPulls}
           </Markdown>
-          <OutletPicker height={ 500 } />
+          <OutletPicker 
+            onValueChange={ setPublishers }
+            height={ 500 } />
         </View>
       ),
       title: strings.walkthroughs_customFeed_addNewsSources,
@@ -112,7 +135,10 @@ export function CustomFeedWalkthrough(props: SheetProps) {
     <Walkthrough
       { ...props }
       payload={ {
-        closable: true, onDone, steps, 
+        closable: true, 
+        onClose: async () => await saveChanges(), 
+        onDone, 
+        steps,
       } } />
   );
 }

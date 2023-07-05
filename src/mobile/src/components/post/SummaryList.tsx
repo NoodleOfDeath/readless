@@ -23,7 +23,7 @@ import {
   Button,
   ChildlessViewProps,
   Divider,
-  ScrollView,
+  FlatList,
   Summary,
   Text,
   View,
@@ -151,7 +151,6 @@ export function SummaryList({
         return (prev = [...prev, ...rows]);
       });
       setPage(page);
-      setLoaded(true);
       setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
@@ -160,6 +159,7 @@ export function SummaryList({
       setLoaded(false);
       setLastFetchFailed(true);
     } finally {
+      setLoaded(true);
       setLoading(false);
     }
   }, [loading, filter, interval, fetch, specificIds, excludeIds, pageSize, removedSummaries]);
@@ -282,8 +282,16 @@ export function SummaryList({
 
   // components
 
-  const summaryList = React.useMemo(() => {
-    return summaries.map((summary, i) => (
+  const listComponents = React.useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const components: any[] = [];
+    if (showWalkthroughs) {
+      components.push(
+        <WalkthroughStack 
+          onClose={ () => setShowWalkthroughs(false) } />
+      );
+    }
+    components.push(summaries.map((summary, i) => (
       <React.Fragment key={ summary.id }>
         <Summary
           big={ i % 4 === 0 }
@@ -297,10 +305,52 @@ export function SummaryList({
             state[summary.id] = onOrOff;
             return (prev = state);
           }) } />
-        <Divider />
+        <Divider my={ 6 } />
       </React.Fragment>
-    ));
-  }, [summaries, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+    )));
+    if (!loading && totalResultCount > summaries.length) {
+      components.push(
+        <View row justifyCenter p={ 16 } pb={ 24 }>
+          <Button 
+            outlined
+            rounded
+            p={ 8 }
+            onPress={ () => loadMore() }>
+            {strings.search_loadMore}
+          </Button>
+        </View>
+      );
+    }
+    if (loading) {
+      components.push (
+        <View row mb={ 64 }>
+          <View row justifyCenter p={ 16 } pb={ 24 }>
+            <ActivityIndicator size="large" color={ theme.colors.primary } />
+          </View>
+        </View>
+      );
+    }
+    if (summaries.length === 0 && !loading && loaded) {
+      components.push (
+        <View col gap={ 12 } itemsCenter justifyCenter>
+          <Text textCenter mx={ 16 }>
+            {strings.search_noResults}
+            {' '}
+            🥺
+          </Text>
+          <Button 
+            itemsCenter
+            rounded 
+            outlined 
+            p={ 8 }
+            onPress={ () => load(0) }>
+            {strings.search_reload}
+          </Button>
+        </View>
+      );
+    }
+    return components;
+  }, [showWalkthroughs, summaries, loading, totalResultCount, loaded, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction, loadMore, theme.colors.primary, load]);
 
   return (
     <View 
@@ -310,61 +360,16 @@ export function SummaryList({
         <View col>
           <View row>
             <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
-              <ScrollView
+              <FlatList
+                p={ 12 }
+                data={ listComponents }
+                renderItem={ ({ item }) => item }
                 refreshing={ summaries.length === 0 && loading }
                 onScroll={ handleMasterScroll }
                 onRefresh={ () => {
                   setPage(0);
                   load(0);
-                } }>
-                <View 
-                  col 
-                  width="100%" 
-                  px={ 12 }
-                  mt={ 12 }
-                  gap={ 6 }>
-                  {showWalkthroughs && (
-                    <WalkthroughStack 
-                      onClose={ () => setShowWalkthroughs(false) } />
-                  )}
-                  {summaryList}
-                  {!loading && totalResultCount > summaries.length && (
-                    <View row justifyCenter p={ 16 } pb={ 24 }>
-                      <Button 
-                        outlined
-                        rounded
-                        p={ 8 }
-                        onPress={ () => loadMore() }>
-                        {strings.search_loadMore}
-                      </Button>
-                    </View>
-                  )}
-                  {loading && (
-                    <View row mb={ 64 }>
-                      <View row justifyCenter p={ 16 } pb={ 24 }>
-                        <ActivityIndicator size="large" color={ theme.colors.primary } />
-                      </View>
-                    </View>
-                  )}
-                  {summaries.length === 0 && !loading && loaded && (
-                    <View col gap={ 12 } itemsCenter justifyCenter>
-                      <Text textCenter mx={ 16 }>
-                        {strings.search_noResults}
-                        {' '}
-                        🥺
-                      </Text>
-                      <Button 
-                        itemsCenter
-                        rounded 
-                        outlined 
-                        p={ 8 }
-                        onPress={ () => load(0) }>
-                        {strings.search_reload}
-                      </Button>
-                    </View>
-                  )}
-                </View>
-              </ScrollView>
+                } } />
             </Animated.View>
             <Animated.View style={ {
               transform: [

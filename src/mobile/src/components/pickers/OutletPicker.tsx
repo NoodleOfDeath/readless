@@ -3,11 +3,13 @@ import React from 'react';
 import { ChildlessViewProps, GridPicker } from '~/components';
 import { SessionContext, useCategoryClient } from '~/core';
 
-export type OutletPickerProps = ChildlessViewProps;
+export type OutletPickerProps = ChildlessViewProps & {
+  onValueChange?: (outlets?: string[]) => void;
+};
 
 export function OutletPicker(props: OutletPickerProps) {
   const { getOutlets } = useCategoryClient();
-  const { followedOutlets, setPreference } = React.useContext(SessionContext);
+  const { followedOutlets } = React.useContext(SessionContext);
   const [selectedOutlets] = React.useState<string[]>(Object.keys({ ...followedOutlets }));
   const fetch = React.useCallback(async () => {
     const { data } = await getOutlets();
@@ -25,10 +27,10 @@ export function OutletPicker(props: OutletPickerProps) {
       initialValue={ selectedOutlets }
       searchable
       onValueChange={ 
-        (states) => setPreference(
-          'followedOutlets', 
-          states && Object.fromEntries(states.map((state) => [state.value, true]))
-        )
+        (states) => { 
+          const outlets = (states ?? []).map((option) => option.value);
+          props.onValueChange?.(outlets);
+        }
       } />
   );
 }
