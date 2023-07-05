@@ -63,6 +63,7 @@ export async function doWork() {
             }
           );
           const topicQueue = await Queue.from(Queue.QUEUES.topics);
+          await topicQueue.clear();
           await topicQueue.add(
             `topic-resolution-${summary.id}`,
             { summary: summary.id },
