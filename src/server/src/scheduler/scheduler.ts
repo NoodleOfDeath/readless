@@ -24,37 +24,6 @@ async function main() {
   pollForNews();
 }
 
-export function generateDynamicUrl(
-  url: string
-) {
-  return url.replace(/\$\{(.*?)(?:(-?\d\d?)|\+(\d\d?))?\}/g, ($0, $1, $2, $3) => {
-    const offset = Number($2 ?? 0) + Number($3 ?? 0);
-    switch ($1) {
-    case 'YYYY':
-      return new Date(Date.now() + offset * ms('1y'))
-        .getFullYear()
-        .toString();
-    case 'M':
-      return (((new Date().getMonth() + offset) % 12) + 1).toString();
-    case 'MM':
-      return (((new Date().getMonth() + offset) % 12) + 1)
-        .toString()
-        .padStart(2, '0');
-    case 'MMMM':
-      return new Date(`2050-${((new Date().getMonth() + offset) % 12) + 1}-01`).toLocaleString('default', { month: 'long' });
-    case 'D':
-      return new Date(Date.now() + offset * ms('1d')).getDate().toString();
-    case 'DD':
-      return new Date(Date.now() + offset * ms('1d'))
-        .getDate()
-        .toString()
-        .padStart(2, '0');
-    default:
-      return $0;
-    }
-  });
-}
-
 export async function pollForNews() {
   console.log('fetching news!');
   try {

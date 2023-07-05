@@ -95,10 +95,10 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
       },
     },
   },
-  abc: {
+  abcnews: {
     baseUrl: 'https://abcnews.go.com',
     displayName: 'ABC News',
-    name: 'abc',
+    name: 'abcnews',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: '.ShareByline a[href*="/author/"]' },
@@ -159,7 +159,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   arstechnica: {
     baseUrl: 'https://www.arstechnica.com',
     displayName: 'ars technica',
-    name: 'ars-technica',
+    name: 'arstechnica',
     selectors: {
       article:{ selector: 'article p' }, 
       author: { selector: 'article header section *[itemprop*="author creator"] a' },
@@ -171,17 +171,19 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  atlantic: {
-    baseUrl: 'https://www.theatlantic.com',
-    displayName: 'The Atlantic',
-    name: 'atlantic',
+  axios: {
+    baseUrl: 'https://www.axios.com',
+    displayName: 'Axios',
+    name: 'axios',
     selectors: {
       article: { selector: 'article p' },
-      author: { selector: 'article header #byline a' },
-      date: { selector: 'article header time' },
-      spider: {
+      author: { selector: 'article a[href*="/authors/"]' },
+      date: { selector: 'span[data-cy*="time-rubric"]' },
+      spider:{
         attribute: 'href',
-        selector: 'a[class*="titleLink"]',
+        selector: [
+          'a[href*="/${YYYY}/"]',
+        ].join(','),
       },
     },
     timezone: DEFAULT_TIMEZONE,
@@ -237,7 +239,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   bleepingcomputer: {
     baseUrl: 'https://www.bleepingcomputer.com',
     displayName: 'Bleeping Computer',
-    name: 'bleeping-computer',
+    name: 'bleepingcomputer',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .author' },
@@ -267,7 +269,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   businessinsider: {
     baseUrl: 'https://www.businessinsider.com',
     displayName: 'Business Insider',
-    name: 'business-insider',
+    name: 'businessinsider',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: '.byline .byline-author-name' },
@@ -430,7 +432,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   dailymail: {
     baseUrl: 'https://www.dailymail.co.uk/ushome/index.html',
     displayName: 'Daily Mail',
-    name: 'daily-mail',
+    name: 'dailymail',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .author, .author' },
@@ -449,7 +451,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   daringfireball: {
     baseUrl: 'https://www.daringfireball.net',
     displayName: 'Daring Fireball',
-    name: 'daring-fireball',
+    name: 'daringfireball',
     selectors: {
       article: { selector: '.article p' },
       author: { selector: '.article .dateline' },
@@ -458,7 +460,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
         attribute: 'href',
         selector: [
           '.article a',
-          `a[href*="/${new Date().getFullYear()}/"]`,
+          'a[href*="/${YYYY}/"]',
         ].join(','),
       },
     },
@@ -467,7 +469,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   defenseone: {
     baseUrl: 'https://www.defenseone.com',
     displayName: 'Defense One',
-    name: 'defense-one',
+    name: 'defenseone',
     selectors: {
       article: { selector: 'div[role*="article"] .column' },
       author: { selector: 'article .contributors a, a[href*="/voices/"]' },
@@ -607,37 +609,11 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  fastmode: {
-    baseUrl: 'https://www.thefastmode.com',
-    displayName: 'The Fast Mode',
-    name: 'fastmode',
-    selectors: {
-      article: { selector: '.itemFullText p' },
-      author: { selector: 'a[href*="/author/"]' },
-      date: { attribute: 'title', selector: '.itemDateCreated' },
-      spider:{
-        attribute: 'href',
-        selector: [
-          'a[href*="/business/"]',
-          'a[href*="/technology-solutions/"]',
-          'a[href*="/leadership-and-management/"]',
-          'a[href*="/investments-and-expansions/"]',
-          'a[href*="/growth-and-profitability/"]',
-          'a[href*="/mergers-and-acquisitions/"]',
-          'a[href*="/mobile-network-operators-"]',
-          'a[href*="/solution-vendors-/"]',
-          'a[href*="/startups/"]',
-          'a[href*="/regulations/"]',
-        ].join(','),
-      },
-    },
-    timezone: DEFAULT_TIMEZONE,
-  },
-  fbiotech: {
+  fiercebiotech: {
     baseUrl: 'https://www.fiercebiotech.com',
     disabled: true,
     displayName: 'Fierce Biotech',
-    name: 'fbiotech',
+    name: 'fiercebiotech',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .byline a[href*="/person/"]' },
@@ -672,7 +648,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   foreignpolicy: {
     baseUrl: 'https://www.foreignpolicy.com',
     displayName: 'Foreign Policy',
-    name: 'foreign-policy',
+    name: 'foreignpolicy',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .author-bio a[rel*="author/"]' },
@@ -694,7 +670,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
       date: { selector: '#content' },
       spider:{
         attribute: 'href',
-        selector: `a[href*="/${new Date().getFullYear()}/"]`,
+        selector: 'a[href*="/${YYYY}/"]',
       },
     },
     timezone: 'EDT',
@@ -762,39 +738,6 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  guardian: {
-    baseUrl: 'https://www.theguardian.com',
-    displayName: 'The Guardian',
-    name: 'theguardian',
-    selectors: {
-      article: { selector: 'article p' },
-      author: { selector: 'address a[rel*="author"]' },
-      date: { selector: 'details summary, article time' },
-      spider:{
-        attribute: 'href',
-        selector: 'a[data-link-name="article"]',
-      },
-    },
-    timezone: DEFAULT_TIMEZONE,
-  },
-  hill: {
-    baseUrl: 'https://www.thehill.com',
-    displayName: 'The Hill',
-    name: 'thehill',
-    selectors: {
-      article: { selector: 'article p' },
-      author: { selector: 'article .submitted-by a[href*="/author/"]' },
-      date: { selector: 'article .submitted-by' },
-      spider:{
-        attribute: 'href',
-        selector: [
-          'a[href*="/homenews/"]',
-          'a[href*="/newsletters/"]',
-        ].join(','),
-      },
-    },
-    timezone: DEFAULT_TIMEZONE,
-  },
   huffpost: {
     baseUrl: 'https://www.huffpost.com',
     displayName: 'HuffPost',
@@ -813,7 +756,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   ieeespectrum: {
     baseUrl: 'https://spectrum.ieee.org',
     displayName: 'IEEE Spectrum',
-    name: 'ieee-spectrum',
+    name: 'ieeespectrum',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .social-author a' },
@@ -880,6 +823,21 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
           'a[href*="/stock-lists/"]',
           'a[href*="/research/"]',
         ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  jalopnik: {
+    baseUrl: 'https://jalopnik.com/sitemap/${YYYY}/${MMMM}',
+    displayName: 'Jalopnik',
+    name: 'jalopnik',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'a[href*="/author/"]' },
+      date: { selector: 'main time, time' },
+      spider:{
+        attribute: 'href',
+        selector: 'a',
       },
     },
     timezone: DEFAULT_TIMEZONE,
@@ -967,7 +925,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
   menshealth: {
     baseUrl: 'https://www.menshealth.com',
     displayName: 'Men\'s Health',
-    name: 'mens-health',
+    name: 'menshealth',
     selectors: {
       article: { selector: '.article-body-content p' },
       author: { selector: 'header address a[href*="/author/"]' },
@@ -1002,10 +960,10 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  natgeo: {
+  nationalgeographic: {
     baseUrl: 'https://www.nationalgeographic.com',
     displayName: 'National Geographic',
-    name: 'national-geographic',
+    name: 'nationalgeographic',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article header .Byline .Byline__Author a[href*="/author/"]' },
@@ -1015,6 +973,23 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
         selector: [
           'a[class*="AnchorLink"]',
           'a[href*="/magazine/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  nature: {
+    baseUrl: 'https://www.nature.org',
+    displayName: 'Nature',
+    name: 'nature',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="#author"]' },
+      date: { selector: 'article time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/articles/"]',
         ].join(','),
       },
     },
@@ -1164,26 +1139,18 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  popmechs: {
-    baseUrl: 'https://www.popularmechanics.com',
-    displayName: 'Popular Mechanics ',
-    name: 'popular-mechanics',
+  polygon: {
+    baseUrl: 'https://www.polygon.com',
+    displayName: 'Polygon',
+    name: 'polygon',
     selectors: {
-      article: { selector: '.article-body-content' },
-      author: { selector: 'address a[href*="/author/"]' },
-      date: { selector: 'address time' },
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/authors/"]' },
+      date: { selector: 'article time' },
       spider:{
         attribute: 'href',
         selector: [
-          'a[href*="/airplanes/"]',
-          'a[href*="/adventure/"]',
-          'a[href*="/cars/"]',
-          'a[href*="/culture/"]',
-          'a[href*="/home/"]',
-          'a[href*="/military/"]',
-          'a[href*="/science/"]',
-          'a[href*="/space/"]',
-          'a[href*="/technology/"]',
+          'a[data-analytics-link*="article"]',
         ].join(','),
       },
     },
@@ -1205,6 +1172,48 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
           'a[href*="/science/"]',
           'a[href*="/technology/"]',
           '.article-container a',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  popularmechanics: {
+    baseUrl: 'https://www.popularmechanics.com',
+    displayName: 'Popular Mechanics ',
+    name: 'popularmechanics',
+    selectors: {
+      article: { selector: '.article-body-content' },
+      author: { selector: 'address a[href*="/author/"]' },
+      date: { selector: 'address time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/airplanes/"]',
+          'a[href*="/adventure/"]',
+          'a[href*="/cars/"]',
+          'a[href*="/culture/"]',
+          'a[href*="/home/"]',
+          'a[href*="/military/"]',
+          'a[href*="/science/"]',
+          'a[href*="/space/"]',
+          'a[href*="/technology/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  psychologytoday: {
+    baseUrl: 'https://www.psychologytoday.com/us',
+    displayName: 'PsychologyToday',
+    name: 'psychologytoday',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/us/docs/"]' },
+      date: { selector: 'article .blog_entry--date' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/us/blog/"]',
         ].join(','),
       },
     },
@@ -1235,10 +1244,10 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  rstone: {
+  rollingstone: {
     baseUrl: 'https://www.rollingstone.com',
     displayName: 'Rolling Stone',
-    name: 'rolling-stone',
+    name: 'rollingstone',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .author-name a' },
@@ -1275,7 +1284,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     baseUrl: 'https://www.sciencedaily.com',
     displayName: 'Science Daily',
     maxAge: '4d',
-    name: 'science-daily',
+    name: 'sciencedaily',
     selectors: {
       article: { selector: '#story_text p' },
       author: { selector: '#source' },
@@ -1325,34 +1334,10 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  street: {
-    baseUrl: 'https://www.thestreet.com',
-    disabled: true,
-    displayName: 'The Street',
-    name: 'thestreet',
-    selectors: {
-      article: { selector: 'article p' },
-      author: { selector: 'article a[href*="/author/"]' },
-      date: { selector: 'article time' },
-      spider:{
-        attribute: 'href',
-        selector: 'disabled',
-        // selector: [
-        //   'a[href*="/breaking-news/"]',
-        //   'a[href*="/restaurants/"]',
-        //   'a[href*="/investing/"]',
-        //   'a[href*="/travel/"]',
-        //   'a[href*="/technology/"]',
-        //   'a[href*="/taxes/"]',
-        // ].join(','),
-      },
-    },
-    timezone: DEFAULT_TIMEZONE,
-  },
   sundaytimes: {
     baseUrl: 'https://www.thetimes.co.uk',
     displayName: 'The Sunday Times ',
-    name: 'sunday-times',
+    name: 'thetimes',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: '' },
@@ -1377,7 +1362,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
       spider:{
         attribute: 'href',
         selector: [
-          `a[href*="/${new Date().getFullYear()}/"]`,
+          'a[href*="/${YYYY}/"]',
         ].join(','),
       },
     },
@@ -1398,22 +1383,108 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: 'UTC+1',
   },
-  time: {
-    baseUrl: 'https://www.time.com',
-    displayName: 'Time',
-    name: 'time',
+  theatlantic: {
+    baseUrl: 'https://www.theatlantic.com',
+    displayName: 'The Atlantic',
+    name: 'theatlantic',
     selectors: {
-      article: { selector: '#article-body p' },
-      author: { selector: '.author a' },
-      date: { selector: '.author .timestamp time' },
-      spider:{
+      article: { selector: 'article p' },
+      author: { selector: 'article header #byline a' },
+      date: { selector: 'article header time' },
+      spider: {
         attribute: 'href',
-        selector: 'article a',
+        selector: 'a[class*="titleLink"]',
       },
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  torontostar: {
+  thefastmode: {
+    baseUrl: 'https://www.thefastmode.com',
+    displayName: 'The Fast Mode',
+    name: 'thefastmode',
+    selectors: {
+      article: { selector: '.itemFullText p' },
+      author: { selector: 'a[href*="/author/"]' },
+      date: { attribute: 'title', selector: '.itemDateCreated' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/business/"]',
+          'a[href*="/technology-solutions/"]',
+          'a[href*="/leadership-and-management/"]',
+          'a[href*="/investments-and-expansions/"]',
+          'a[href*="/growth-and-profitability/"]',
+          'a[href*="/mergers-and-acquisitions/"]',
+          'a[href*="/mobile-network-operators-"]',
+          'a[href*="/solution-vendors-/"]',
+          'a[href*="/startups/"]',
+          'a[href*="/regulations/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  theguardian: {
+    baseUrl: 'https://www.theguardian.com',
+    displayName: 'The Guardian',
+    name: 'theguardian',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'address a[rel*="author"]' },
+      date: { selector: 'details summary, article time' },
+      spider:{
+        attribute: 'href',
+        selector: 'a[data-link-name="article"]',
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  thehill: {
+    baseUrl: 'https://www.thehill.com',
+    displayName: 'The Hill',
+    name: 'thehill',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article .submitted-by a[href*="/author/"]' },
+      date: { selector: 'article .submitted-by' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/homenews/"]',
+          'a[href*="/newsletters/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  theindependent: {
+    baseUrl: 'https://www.theindependent.co.uk',
+    displayName: 'The Independent',
+    name: 'theindependent',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/author/"]' },
+      date: { selector: 'article time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/asia/"]',
+          'a[href*="/extras/"]',
+          'a[href*="/lifestyle/"]',
+          'a[href*="/life-style/"]',
+          'a[href*="/news/"]',
+          'a[href*="/pride-month/"]',
+          'a[href*="/space/"]',
+          'a[href*="/sport/"]',
+          'a[href*="/tech/"]',
+          'a[href*="/travel/"]',
+          'a[href*="/voices/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  thestar: {
     baseUrl: 'https://www.thestar.com',
     displayName: 'Toronto Star',
     name: 'thestar',
@@ -1433,6 +1504,60 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
           'a[href*="/news/"]',
           'a[href*="/world/"]',
         ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  thestreet: {
+    baseUrl: 'https://www.thestreet.com',
+    disabled: true,
+    displayName: 'The Street',
+    name: 'thestreet',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/author/"]' },
+      date: { selector: 'article time' },
+      spider:{
+        attribute: 'href',
+        selector: 'disabled',
+        // selector: [
+        //   'a[href*="/breaking-news/"]',
+        //   'a[href*="/restaurants/"]',
+        //   'a[href*="/investing/"]',
+        //   'a[href*="/travel/"]',
+        //   'a[href*="/technology/"]',
+        //   'a[href*="/taxes/"]',
+        // ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  theverge: {
+    baseUrl: 'https://www.theverge.com',
+    displayName: 'The Verge',
+    name: 'theverge',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[class*="/authors/"]' },
+      date: { selector: 'article time' },
+      spider:{
+        attribute: 'href',
+        selector: 'li[class*="duet--content-cards"] a',
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
+  time: {
+    baseUrl: 'https://www.time.com',
+    displayName: 'Time',
+    name: 'time',
+    selectors: {
+      article: { selector: '#article-body p' },
+      author: { selector: '.author a' },
+      date: { selector: '.author .timestamp time' },
+      spider:{
+        attribute: 'href',
+        selector: 'article a',
       },
     },
     timezone: DEFAULT_TIMEZONE,
@@ -1491,10 +1616,10 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  vbeat: {
+  venturebeat: {
     baseUrl: 'https://www.venturebeat.com',
     displayName: 'Venture Beat',
-    name: 'venture-beat',
+    name: 'venturebeat',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .byline-name a' },
@@ -1502,21 +1627,6 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
       spider:{
         attribute: 'href',
         selector: 'article a',
-      },
-    },
-    timezone: DEFAULT_TIMEZONE,
-  },
-  verge: {
-    baseUrl: 'https://www.theverge.com',
-    displayName: 'The Verge',
-    name: 'verge',
-    selectors: {
-      article: { selector: 'article p' },
-      author: { selector: 'article a[class*="/authors/"]' },
-      date: { selector: 'article time' },
-      spider:{
-        attribute: 'href',
-        selector: 'li[class*="duet--content-cards"] a',
       },
     },
     timezone: DEFAULT_TIMEZONE,
@@ -1567,17 +1677,17 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
         attribute: 'href',
         selector: [
           'a[href*="/article/"]',
-          `a[href*="/${new Date().getFullYear()}/"]`,
+          'a[href*="/${YYYY}/"]',
         ].join(','),
       },
     },
     timezone: DEFAULT_TIMEZONE,
   },
-  wapo: {
+  washingtonpost: {
     baseUrl: 'https://www.washingtonpost.com',
     disabled: true,
     displayName: 'The Washington Post (Coming Soon)',
-    name: 'washington-post',
+    name: 'washingtonpost',
     selectors: {
       article: { selector: 'disabled' },
       author: { selector: 'disabled' },
@@ -1590,7 +1700,7 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     baseUrl: 'https://www.wilsoncenter.org',
     disabled: true,
     displayName: 'Wilson Center',
-    name: 'wilson-center',
+    name: 'wilsoncenter',
     selectors: {
       article: { selector: 'disabled' },
       author: { selector: 'disabled' },

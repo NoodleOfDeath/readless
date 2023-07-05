@@ -47,6 +47,37 @@ export type LootOptions = {
   exclude?: string[];
 };
 
+export function replaceDatePlaceholders(
+  url: string
+) {
+  return url.replace(/\$\{(.*?)(?:(-?\d\d?)|\+(\d\d?))?\}/g, ($0, $1, $2, $3) => {
+    const offset = Number($2 ?? 0) + Number($3 ?? 0);
+    switch ($1) {
+    case 'YYYY':
+      return new Date(Date.now() + offset * ms('1y'))
+        .getFullYear()
+        .toString();
+    case 'M':
+      return (((new Date().getMonth() + offset) % 12) + 1).toString();
+    case 'MM':
+      return (((new Date().getMonth() + offset) % 12) + 1)
+        .toString()
+        .padStart(2, '0');
+    case 'MMMM':
+      return new Date(`2050-${((new Date().getMonth() + offset) % 12) + 1}-01`).toLocaleString('default', { month: 'long' });
+    case 'D':
+      return new Date(Date.now() + offset * ms('1d')).getDate().toString();
+    case 'DD':
+      return new Date(Date.now() + offset * ms('1d'))
+        .getDate()
+        .toString()
+        .padStart(2, '0');
+    default:
+      return $0;
+    }
+  });
+}
+
 export class PuppeteerService extends BaseService {
   
   static EXCLUDE_EXPRS = {
@@ -137,8 +168,9 @@ export class PuppeteerService extends BaseService {
     }
     const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
+    const targetUrl = replaceDatePlaceholders(baseUrl);
     const urls: string[] = [];
-    const rawHtml = await PuppeteerService.fetch(baseUrl);
+    const rawHtml = await PuppeteerService.fetch(targetUrl);
     const $ = load(rawHtml);
     const cleanUrl = (url?: string) => {
       if (!url) {
@@ -163,8 +195,8 @@ export class PuppeteerService extends BaseService {
         return url;
       }
     };
-    urls.push(...$(spider.selector).map((i, el) => cleanUrl($(el).attr(spider.attribute || 'href'))).filter(Boolean));
-    await PuppeteerService.open(baseUrl, [
+    urls.push(...$(replaceDatePlaceholders(spider.selector)).map((i, el) => cleanUrl($(el).attr(spider.attribute || 'href'))).filter(Boolean));
+    await PuppeteerService.open(targetUrl, [
       {
         action: async (el) => {
           const url = cleanUrl(await el.evaluate((el, spider) => el.getAttribute(spider.attribute ?? 'href'), spider));
@@ -173,7 +205,7 @@ export class PuppeteerService extends BaseService {
           }
         }, 
         selectAll: true,
-        selector: spider.selector,
+        selector: replaceDatePlaceholders(spider.selector),
       },
     ]);
     return [...new Set(urls)].filter((url) => url.length < 2000);
