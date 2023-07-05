@@ -2,6 +2,7 @@
 
 export type BulkResponse<T> = {
   count: number;
+  next?: number;
   rows: T[];
 };
 

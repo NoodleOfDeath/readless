@@ -14,7 +14,7 @@ export async function main() {
 
 async function cacheGetSummaries(locale: string, depth = 1) {
   for (let page = 0; page < depth; page++) {
-    await Summary.searchSummaries({
+    await Summary.getSummaries({
       forceCache: true,
       locale,
       page,
