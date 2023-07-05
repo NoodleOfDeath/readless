@@ -89,6 +89,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     { 
       autostart = true,
       fetchIntervalMs = ms('5s'),
+      fifo,
     }: WorkerOptions = {}
   ) {
     const queue = await Queue.from(queueProps);
@@ -97,7 +98,9 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     }
     const worker = await Worker.create({
       host: HOST,
-      options: { autostart, fetchIntervalMs },
+      options: {
+        autostart, fetchIntervalMs, fifo, 
+      },
       queue: queueProps.name,
     });
     if (!worker) {
@@ -148,7 +151,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     });
     const job = await Job.findOne({
       // lifo
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', this.options.fifo ? 'ASC' : 'DESC']],
       where: {
         completedAt: null,
         delayedUntil: { [Op.or]: [null, { [Op.lt]: new Date() }] },

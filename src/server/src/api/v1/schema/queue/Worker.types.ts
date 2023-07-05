@@ -9,6 +9,7 @@ export type WorkerState = 'idle' | 'processing' | 'stopped' | 'retired';
 
 export type WorkerOptions = {
   autostart?: boolean;
+  fifo?: boolean;
   fetchIntervalMs?: number;
   retryFailedJobs?: string[];
 };
