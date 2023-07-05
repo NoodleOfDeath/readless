@@ -1398,6 +1398,26 @@ export const OUTLETS: Record<string, OutletCreationAttributes> = {
     },
     timezone: DEFAULT_TIMEZONE,
   },
+  thedrive: {
+    baseUrl: 'https://www.thedrive.com',
+    displayName: 'The Drive',
+    name: 'thedrive',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'a[href*="/author/"]' },
+      date: { selector: 'article time' },
+      spider: {
+        attribute: 'href',
+        selector: [
+          'a[href*="/news/"]',
+          'a[href*="/car-reviews/"]',
+          'a[href*="/cleaning-detailing/"]',
+          'a[href*="/guides-and-gear/"]',
+        ].join(','),
+      },
+    },
+    timezone: DEFAULT_TIMEZONE,
+  },
   thefastmode: {
     baseUrl: 'https://www.thefastmode.com',
     displayName: 'The Fast Mode',
