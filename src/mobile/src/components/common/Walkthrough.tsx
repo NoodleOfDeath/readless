@@ -28,6 +28,7 @@ export type WalkthroughStep = {
 
 export type WalkthroughProps<Step extends WalkthroughStep = WalkthroughStep> = {
   steps: Step[];
+  onClose?: () => void;
   onDone?: () => void;
   closable?: boolean;
   closeLabel?: string;
@@ -40,6 +41,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
 
   const { 
     steps = [], 
+    onClose,
     onDone,
     closable,
     closeLabel = strings.action_close,
@@ -164,7 +166,8 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
     <ActionSheet 
       id={ props.sheetId }
       closable={ closable }
-      gestureEnabled={ false }>
+      gestureEnabled={ false }
+      onClose={ onClose }>
       <View height="100%">
         {closable && (
           <View flexRow m={ 12 }>

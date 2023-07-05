@@ -1,13 +1,17 @@
 import React from 'react';
 
+import { PublicCategoryAttributes } from '../../api';
+
 import { ChildlessViewProps, GridPicker } from '~/components';
 import { SessionContext, useCategoryClient } from '~/core';
 
-export type CategoryPickerProps = ChildlessViewProps;
+export type CategoryPickerProps = ChildlessViewProps & {
+  onValueChange?: (categories?: PublicCategoryAttributes[]) => void;
+};
 
 export function CategoryPicker(props: CategoryPickerProps) {
   const { getCategories } = useCategoryClient();
-  const { followedCategories, setPreference } = React.useContext(SessionContext);
+  const { followedCategories } = React.useContext(SessionContext);
   const [selectedCategories] = React.useState<string[]>(Object.keys({ ...followedCategories }));
   const fetch = React.useCallback(async () => {
     const { data } = await getCategories();
@@ -24,11 +28,10 @@ export function CategoryPicker(props: CategoryPickerProps) {
       options={ fetch }
       multi
       initialValue={ selectedCategories }
-      onValueChange={ 
-        (states) => setPreference(
-          'followedCategories', 
-          states && Object.fromEntries(states.map((state) => [state.value, true]))
-        )
-      } />
+      onValueChange={ (states) => {
+        alert(JSON.stringify(states));
+        const categories = (states ?? []).map((option) => option.payload).filter(Boolean) as PublicCategoryAttributes[];
+        props.onValueChange?.(categories);
+      } } />
   );
 }

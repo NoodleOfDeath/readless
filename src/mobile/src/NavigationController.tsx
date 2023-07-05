@@ -186,6 +186,7 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
   const {
     lockRotation,
     rotationLock,
+    isTablet,
     unlockRotation,
   } = React.useContext(LayoutContext);
 
@@ -213,31 +214,36 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
     };
   }, [screenshotListener, viewedFeatures]);
   
-  const headerRight = React.useMemo(() => (
-    <View>
-      <View row gap={ 16 } itemsCenter>
-        <Button
-          leftIcon={ (
-            <View height={ 24 } width={ 24 }>
-              <Icon 
-                absolute
-                name={ rotationLock ? 'lock-check' : 'lock-open' }
-                size={ rotationLock ? 24 : 16 }
-                top={ rotationLock ? 0 : -1 }
-                right={ rotationLock ? 0 : -1 } />
-              <Icon 
-                absolute
-                name='screen-rotation' 
-                bottom={ -1 }
-                left={ -1 }
-                size={ 16 } />
-            </View>
-          ) }
-          haptic
-          onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
+  const headerRight = React.useMemo(() => {
+    if (!isTablet) {
+      return null;
+    }
+    return (
+      <View>
+        <View row gap={ 16 } itemsCenter>
+          <Button
+            leftIcon={ (
+              <View height={ 24 } width={ 24 }>
+                <Icon 
+                  absolute
+                  name={ rotationLock ? 'lock-check' : 'lock-open' }
+                  size={ rotationLock ? 24 : 16 }
+                  top={ rotationLock ? 0 : -1 }
+                  right={ rotationLock ? 0 : -1 } />
+                <Icon 
+                  absolute
+                  name='screen-rotation' 
+                  bottom={ -1 }
+                  left={ -1 }
+                  size={ 16 } />
+              </View>
+            ) }
+            haptic
+            onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
+        </View>
       </View>
-    </View>
-  ), [rotationLock, unlockRotation, lockRotation]);
+    );
+  }, [isTablet, rotationLock, unlockRotation, lockRotation]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);
