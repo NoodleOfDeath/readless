@@ -34,10 +34,13 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   implements QueueAttributes<DataType, ReturnType, QueueName> {
     
   public static QUEUES = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     caches: new QueueSpecifier<CacheJobData, any>('caches'),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     crawler: new QueueSpecifier<CrawlJobData, any>('crawler'),
     recaps: new QueueSpecifier<RecapPayload, Recap>('recaps'),
     siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps'),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     topics: new QueueSpecifier<TopicResolutionJobData, any>('topics'),
   };
   

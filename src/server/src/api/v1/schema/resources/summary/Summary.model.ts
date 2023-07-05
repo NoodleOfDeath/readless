@@ -274,7 +274,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       }
     }
     
-    const fetch = async () => {
+    const fetch = async (previousRecords: PublicSummaryGroup[] = []) => {
       
       const records = ((await this.store.query(QUERIES[queryKey], {
         nest: true,
@@ -288,7 +288,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       }
       
       const filteredRecords = records.rows.reverse().filter((a, i) => {
-        return ![...records.rows].slice(i).some((b) => b.siblings?.some((s) => s.id === a.id));
+        return ![...previousRecords, ...records.rows].slice(i).some((b) => a.id === b.id || b.siblings?.some((s) => s.id === a.id) || a.siblings?.some((s) => s.id === b.id));
       }).reverse();
       
       if (filteredRecords.length < replacements.limit) {
@@ -297,7 +297,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         return {
           count: records.count,
           metadata: records.metadata,
-          rows: [...filteredRecords, ...(await fetch()).rows],
+          rows: [...filteredRecords, ...(await fetch(filteredRecords)).rows],
         };
       }
     
