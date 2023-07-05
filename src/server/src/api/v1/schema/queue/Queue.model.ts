@@ -75,11 +75,16 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   }
 
   async add(jobName: string, payload: DataType, group?: string, schedule?: Date) {
-    const existingJob = await Job.findOne({ where: { name: jobName } });
+    const existingJob = await Job.findOne({
+      where: { 
+        name: jobName,
+        startedAt: { [Op.ne]: null },
+      }, 
+    });
     if (existingJob) {
       return existingJob;
     }
-    const job = await Job.create({
+    const job = await Job.upsert({
       data: payload,
       group,
       name: jobName,
