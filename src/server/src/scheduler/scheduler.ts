@@ -119,15 +119,6 @@ async function scheduleCacheJobs() {
     console.log(SUPPORTED_LOCALES);
     const queue = await Queue.from(Queue.QUEUES.caches);
     await queue.clear();
-    await queue.add(
-      'cache-getSummaries-en', 
-      {
-        depth: 3,
-        endpoint: 'getSummaries',
-        locale: 'en',
-      },
-      'caches'
-    );
     for (const locale of SUPPORTED_LOCALES) {
       if (/^en/.test(locale)) {
         continue;
@@ -141,6 +132,15 @@ async function scheduleCacheJobs() {
         'caches'
       );
     }
+    await queue.add(
+      'cache-getSummaries-en', 
+      {
+        depth: 3,
+        endpoint: 'getSummaries',
+        locale: 'en',
+      },
+      'caches'
+    );
     console.log('done scheduling cache jobs');
   } catch (e) {
     console.error(e);
