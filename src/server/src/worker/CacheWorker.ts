@@ -44,7 +44,8 @@ export async function doWork() {
         } finally {
           next();
         }
-      }
+      },
+      { fifo: true }
     );
   } catch (e) {
     console.error(e);
