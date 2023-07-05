@@ -315,7 +315,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     pageSize = 10,
     page = 0,
     offset = pageSize * page,
-    forceCache = false,
+    forceCache,
   }: SearchSummariesPayload) {
     const { 
       categories, 
