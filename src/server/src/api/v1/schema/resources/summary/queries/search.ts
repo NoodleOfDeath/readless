@@ -137,6 +137,8 @@ FROM (
           OR (summaries.bullets::text ~* :filter)
           OR (summary_translations.value ~* :filter)
         )
+        ORDER BY
+          "originalDate" DESC
     ) a
     GROUP BY
       id,
@@ -191,7 +193,7 @@ FROM (
     b."averageSentiment",
     b."totalCount"
   ORDER BY
-    b."originalDate"
+    b."originalDate" DESC
 ) c 
 GROUP BY
   "averageSentiment",
