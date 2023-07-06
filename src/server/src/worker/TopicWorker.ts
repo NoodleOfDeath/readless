@@ -25,7 +25,10 @@ export async function doWork() {
       async (job, next) => {
         try {
           console.log('Resolving duplicates');
-          const summaries = await Summary.findAll({ where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } } });
+          const summaries = await Summary.findAll({ 
+            order: ['originalDate', 'desc'],
+            where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } },
+          });
           for (const summary of summaries) {
             console.log('checking', summary.id);
             const siblings: Summary[] = [];
@@ -68,6 +71,7 @@ export async function doWork() {
               await summary.associateWith(sibling);
             }
           }
+          console.log('done resolving duplicates');
           await job.moveToCompleted(true);
           return;
         } catch (e) {
