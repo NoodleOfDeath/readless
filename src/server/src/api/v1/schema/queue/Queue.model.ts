@@ -78,16 +78,21 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   }
 
   async add(jobName: string, payload: DataType, group?: string, schedule?: Date) {
-    const existingJob = await Job.findOne({
+    let existingJob = await Job.findOne({
       where: { 
         name: jobName,
+        queue: this.toJSON().name,
         startedAt: { [Op.ne]: null },
       }, 
     });
     if (existingJob) {
       return existingJob;
     }
-    const [job] = await Job.upsert({
+    existingJob = await Job.findOne({ where: { name: jobName } });
+    if (existingJob) {
+      await existingJob.destroy();
+    }
+    const job = await Job.create({
       data: payload,
       group,
       name: jobName,
