@@ -21,8 +21,8 @@ FROM (
       'icon', cat.icon
     ) AS category,
     COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
-      'id', sr.id
-    )) FILTER (WHERE sr.id IS NOT NULL), '[]'::JSON) AS siblings,
+      'id', sr."siblingId"
+    )) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::JSON) AS siblings,
     COUNT(sr.id) AS "siblingCount",
     COUNT(s.id) OVER() AS "totalCount"
   FROM summaries s
