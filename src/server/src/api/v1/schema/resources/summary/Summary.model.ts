@@ -274,7 +274,6 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       }
     }
     
-    const siblings = [];
     const fetch = async (previousRecords: PublicSummaryGroup[] = []) => {
       
       const records = ((await this.store.query(QUERIES[queryKey], {
@@ -284,14 +283,15 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
       
-      if (filter || pastInterval || interval || records.rows.length < replacements.limit) {
+      if (filter || records.rows.length < replacements.limit) {
         return records;
       }
       
-      siblings.push(records.rows.map((r) => (r.siblings ?? []).map((s) => s.id)).flat());
-      const filteredRecords = records.rows.filter((a) => {
-        return !siblings.includes(a.id);
-      });
+      const filteredRecords = records.rows.reverse().filter((a, i) => {
+        return ![...previousRecords, ...records.rows.slice(i)].some((r) => r.siblings?.some((s) => s.id === a.id));
+      }).reverse();
+      
+      console.log('filtered', filteredRecords.length);
       
       if (filteredRecords.length < replacements.limit) {
         replacements.offset += replacements.limit;
@@ -299,7 +299,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         return {
           count: records.count,
           metadata: records.metadata,
-          rows: [...filteredRecords, ...(await fetch()).rows],
+          rows: [...filteredRecords, ...(await fetch(filteredRecords)).rows],
         };
       }
     
@@ -389,16 +389,16 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   async associateWith(sibling: number | SummaryAttributes, ignore: number[] = []) {
     const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
     const newSibling = await Summary.findByPk(siblingId);
-    const siblings = await this.getSiblings([...ignore, this.id, siblingId]);
-    const stepSiblings = await newSibling.getSiblings([...ignore, this.id, siblingId]);
+    const siblings = await this.getSiblings([...ignore, siblingId]);
+    const stepSiblings = await newSibling.getSiblings([...ignore, this.id]);
     const relations = Array.from(new Set([...siblings, ...stepSiblings]));
     for (const relation of relations) {
       if (relation === this.id || relation === siblingId || ignore.includes(relation)) {
         continue;
       }
       const siblingSummary = await Summary.scope('public').findByPk(relation);
-      await siblingSummary.associateWith(siblingId, [...ignore, ...relations, this.id, siblingId]);
-      await siblingSummary.associateWith(this.id, [...ignore, ...relations, this.id, siblingId]);
+      await siblingSummary.associateWith(siblingId, [...ignore, ...relations, this.id]);
+      await siblingSummary.associateWith(this.id, [...ignore, ...relations, siblingId]);
     }
     await SummaryRelation.findOrCreate({
       where: {
