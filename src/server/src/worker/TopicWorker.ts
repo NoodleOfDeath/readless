@@ -26,7 +26,7 @@ export async function doWork() {
         try {
           console.log('Resolving duplicates');
           const summaries = await Summary.findAll({ 
-            order: ['originalDate', 'desc'],
+            order: [['originalDate', 'desc']],
             where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } },
           });
           for (const summary of summaries) {
