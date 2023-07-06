@@ -1,6 +1,6 @@
 export const SEARCH_SUMMARIES = `
 SELECT
-  "totalCount" AS "count",
+  "totalCount"::INT AS "count",
   JSON_BUILD_OBJECT(
     'sentiment', "averageSentiment"
   ) AS metadata,
