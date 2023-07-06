@@ -366,7 +366,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     let siblings = [...siblingIds];
     for (const id of siblingIds) {
       const sibling = await Summary.findByPk(id);
-      siblings.push(...(await sibling.getSiblings([...ignore, id, this.id])));
+      siblings.push(...(await sibling.getSiblings([...ignore, ...siblingIds, this.id])));
     }
     siblings = Array.from(new Set(siblings));
     if (deep) {

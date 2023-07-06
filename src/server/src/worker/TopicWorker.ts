@@ -35,6 +35,7 @@ export async function doWork() {
             const words = summary.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
             const existingSiblings = await summary.getSiblings();
             const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.includes(s.id));
+            console.log('filters summaries', filteredSummaries.length);
             for (const possibleSibling of filteredSummaries) {
               const siblingWords = possibleSibling.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
               const score = words.map((a) => {
