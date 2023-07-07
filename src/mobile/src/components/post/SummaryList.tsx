@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Animated,
   DeviceEventEmitter,
+  ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
@@ -46,6 +47,7 @@ import { parseKeywords } from '~/utils';
 export type SummaryListProps = ChildlessViewProps & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetch: (...args: any[]) => Promise<HttpResponse<BulkMetadataResponsePublicSummaryGroupSentimentNumber, AuthError | InternalError>>;
+  onFormatChange?: (summary: PublicSummaryGroup, format: ReadingFormat) => void;
   filter?: string;
   interval?: string;
   specificIds?: number[];
@@ -55,6 +57,7 @@ export type SummaryListProps = ChildlessViewProps & {
 
 export function SummaryList({ 
   fetch,
+  onFormatChange,
   filter,
   interval = '100y',
   specificIds,
@@ -83,7 +86,7 @@ export function SummaryList({
   const [loading, setLoading] = React.useState(false);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [pageSize] = React.useState(10);
-  const [page, setPage] = React.useState(0);
+  const [cursor, setCursor] = React.useState(0);
   
   const excludeIds = React.useMemo(() => {
     if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
@@ -107,13 +110,14 @@ export function SummaryList({
 
   // callbacks
 
-  const load = React.useCallback(async (page: number) => {
+  const load = React.useCallback(async (reset = false) => {
     if (loading) {
       return;
     }
     setLoading(true);
-    if (page === 0) {
+    if (reset) {
       setSummaries([]);
+      setCursor(0);
       setDetailSummary(undefined);
     }
     try {
@@ -124,8 +128,9 @@ export function SummaryList({
         undefined,
         interval,
         getLocale(),
-        page,
-        pageSize
+        undefined,
+        pageSize,
+        reset ? 0 : cursor
       );
       if (error) {
         console.error(error);
@@ -134,6 +139,7 @@ export function SummaryList({
       if (!data) {
         return;
       }
+      setCursor((prev) => data.next ?? (prev + pageSize));
       setTotalResultCount(data.count);
       setDetailSummary((prev) => {
         if (!prev && data.count > 0) {
@@ -145,16 +151,16 @@ export function SummaryList({
         const rows = data.rows.filter((n) => {
           return !(prev.some((p) => p.id === n.id)) && !(n.id in ({ ...removedSummaries })) ;
         });
-        if (page === 0) {
+        if (reset) {
           return (prev = rows);
         }
         return (prev = [...prev, ...rows]);
       });
-      setPage(page);
       setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
       setSummaries([]);
+      setCursor(0);
       setTotalResultCount(0);
       setLoaded(false);
       setLastFetchFailed(true);
@@ -162,17 +168,17 @@ export function SummaryList({
       setLoaded(true);
       setLoading(false);
     }
-  }, [loading, filter, interval, fetch, specificIds, excludeIds, pageSize, removedSummaries]);
+  }, [loading, fetch, filter, specificIds, excludeIds, interval, pageSize, cursor, removedSummaries]);
 
   const loadMore = React.useCallback(async (event?: string) => {
     if (loading || totalResultCount <= summaries.length) {
       return;
     }
-    await load(page + 1);
+    await load();
     if (event) {
       DeviceEventEmitter.emit(event);
     }
-  }, [load, loading, page, totalResultCount, summaries]);
+  }, [load, loading, totalResultCount, summaries]);
 
   const loadMoreAsNeeded = React.useCallback(async () => {
     if (!currentTrackIndex) {
@@ -219,6 +225,8 @@ export function SummaryList({
       if (supportsMasterDetail) {
         setDetailSummary(summary);
         setLastFocus('detail');
+      } else if (onFormatChange) {
+        onFormatChange(summary, format ?? preferredReadingFormat ?? ReadingFormat.Summary);
       } else {
         navigation?.push('summary', {
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
@@ -228,7 +236,7 @@ export function SummaryList({
         });
       }
     },
-    [handleInteraction, navigation, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
+    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -261,8 +269,7 @@ export function SummaryList({
   
   useFocusEffect(React.useCallback(() => {
     if (summaries.length === 0) {
-      setPage(0);
-      load(0);
+      load(true);
     }
     if (filter) {
       navigation?.setOptions({ headerTitle: filter });
@@ -275,39 +282,19 @@ export function SummaryList({
     },
     onForeground: React.useCallback(() => {
       if (Date.now() - lastActive.valueOf() > ms('10m')) {
-        load(0);
+        load(true);
       }
     }, [lastActive, load]),
   });
 
-  // components
-
-  const listComponents = React.useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const components: any[] = [];
+  const otherComponents = React.useMemo(() => {
+    const components: React.ReactNode[] = [];
     if (showWalkthroughs) {
       components.push(
-        <WalkthroughStack 
+        <WalkthroughStack
           onClose={ () => setShowWalkthroughs(false) } />
       );
     }
-    components.push(summaries.map((summary, i) => (
-      <React.Fragment key={ summary.id }>
-        <Summary
-          big={ i % 4 === 0 }
-          summary={ summary }
-          selected={ Boolean(supportsMasterDetail && summary.id === detailSummary?.id) }
-          keywords={ filter?.split(' ') }
-          onFormatChange={ (format) => handleFormatChange(summary, format) }
-          onInteract={ (...e) => handleInteraction(summary, ...e) }
-          onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
-            const state = { ...prev };
-            state[summary.id] = onOrOff;
-            return (prev = state);
-          }) } />
-        <Divider my={ 6 } />
-      </React.Fragment>
-    )));
     if (!loading && totalResultCount > summaries.length) {
       components.push(
         <View row justifyCenter p={ 16 } pb={ 24 }>
@@ -343,32 +330,49 @@ export function SummaryList({
             rounded 
             outlined 
             p={ 8 }
-            onPress={ () => load(0) }>
+            onPress={ () => load(true) }>
             {strings.search_reload}
           </Button>
         </View>
       );
     }
     return components;
-  }, [showWalkthroughs, summaries, loading, totalResultCount, loaded, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction, loadMore, theme.colors.primary, load]);
+  }, [showWalkthroughs, loading, totalResultCount, summaries.length, loaded, loadMore, theme.colors.primary, load]);
+
+  const renderSummary: ListRenderItem<PublicSummaryGroup> = React.useCallback(({ item, index }) => {
+    return (
+      <React.Fragment>
+        <Summary
+          big={ index % 4 === 0 }
+          summary={ item }
+          selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
+          keywords={ filter?.split(' ') }
+          onFormatChange={ (format) => handleFormatChange(item, format) }
+          onInteract={ (...e) => handleInteraction(item, ...e) }
+          onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
+            const state = { ...prev };
+            state[item.id] = onOrOff;
+            return (prev = state);
+          }) } />
+        <Divider my={ 6 } />
+      </React.Fragment>
+    );
+  }, [supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
   return (
-    <View 
-      { ...props } 
-      col>
+    <View { ...props } col>
       <View col>
         <View col>
           <View row>
             <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
               <FlatList
                 p={ 12 }
-                data={ listComponents }
-                renderItem={ ({ item }) => item }
+                data={ summaries }
+                renderItem={ renderSummary }
                 refreshing={ summaries.length === 0 && loading }
                 onScroll={ handleMasterScroll }
                 onRefresh={ () => {
-                  setPage(0);
-                  load(0);
+                  load(true);
                 } } />
             </Animated.View>
             <Animated.View style={ {
