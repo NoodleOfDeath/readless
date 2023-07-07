@@ -29,7 +29,6 @@ export function CategoryPicker(props: CategoryPickerProps) {
       multi
       initialValue={ selectedCategories }
       onValueChange={ (states) => {
-        alert(JSON.stringify(states));
         const categories = (states ?? []).map((option) => option.payload).filter(Boolean) as PublicCategoryAttributes[];
         props.onValueChange?.(categories);
       } } />

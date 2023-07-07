@@ -53,10 +53,11 @@ async function sync({
     }
     console.log(`Translating ${target}`);
     let toTranslate: Partial<typeof enStrings> = enStrings;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let oldStrings: any = {};
     oldStrings = {};
     if (!force) {
-      const lines = await execSync('git diff src/client/locales/en.ts').toString().split(/\n/);
+      const lines = execSync('git diff src/client/locales/en.ts').toString().split(/\n/);
       const add = lines.filter((l) => /^\+ .*\w+:/.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
       const sub = lines.filter((l) => /^- .*\w+:/.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
       const contents = fs.readFileSync(target, 'utf8');
@@ -70,6 +71,16 @@ async function sync({
       }
       for (const s of sub) {
         delete oldStrings[s];
+      }
+      for (const key of Object.keys(enStrings)) {
+        if (enStrings[key] !== oldStrings[key] || !(key in oldStrings)) {
+          toTranslate[key] = enStrings[key];
+        }
+      }
+      for (const key of Object.keys(oldStrings)) {
+        if (!(key in enStrings)) {
+          delete oldStrings[key];
+        }
       }
     }
     const newStrings = sortByKeys(await translate(toTranslate, oldStrings, locale));

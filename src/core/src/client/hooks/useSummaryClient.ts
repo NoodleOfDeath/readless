@@ -23,11 +23,12 @@ export function useSummaryClient() {
     interval?: string,
     locale?: string,
     page = 0,
-    pageSize = 10
+    pageSize = 10,
+    offset = pageSize * page
   ) => {
     try {
       return await withHeaders(API.getTopics)({
-        excludeIds, filter, ids, interval, locale, matchType, page, pageSize,
+        excludeIds, filter, ids, interval, locale, matchType, offset, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
@@ -42,11 +43,12 @@ export function useSummaryClient() {
     interval?: string,
     locale?: string,
     page = 0,
-    pageSize = 10
+    pageSize = 10,
+    offset = pageSize * page
   ) => {
     try {
       return await withHeaders(API.searchSummaries)({
-        excludeIds, filter, ids, interval, locale, matchType, page, pageSize,
+        excludeIds, filter, ids, interval, locale, matchType, offset, page, pageSize,
       });
     } catch (e) {
       return { data: undefined, error: new ClientError('UNKNOWN', e) };
