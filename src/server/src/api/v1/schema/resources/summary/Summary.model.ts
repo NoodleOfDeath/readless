@@ -261,7 +261,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       start,
       end,
       pageSize,
-      page,
+      offset,
     ].join(':');
     if (!forceCache) {
       const cache = await Cache.fromKey(cacheKey);
