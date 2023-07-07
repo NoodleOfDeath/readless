@@ -57,21 +57,12 @@ async function sync({
     let oldStrings: any = {};
     oldStrings = {};
     if (!force) {
-      const lines = execSync('git diff src/client/locales/en.ts').toString().split(/\n/);
-      const add = lines.filter((l) => /^\+ .*\w+:/.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
-      const sub = lines.filter((l) => /^- .*\w+:/.test(l)).map((l) => l.match(/\w+(?=:)/)[0]);
       const contents = fs.readFileSync(target, 'utf8');
       const match = contents.match(/typeof enStrings = (\{[\s\S]*\});/);
       if (match && match[1]) {
         eval(`oldStrings = ${match[1]}`);
       }
       toTranslate = {};
-      for (const a of add) {
-        toTranslate[a] = enStrings[a];
-      }
-      for (const s of sub) {
-        delete oldStrings[s];
-      }
       for (const key of Object.keys(enStrings)) {
         if (enStrings[key] !== oldStrings[key] || !(key in oldStrings)) {
           toTranslate[key] = enStrings[key];
