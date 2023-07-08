@@ -9,6 +9,7 @@ FROM (
     b."shortSummary",
     b.summary,
     b.bullets,
+    b.url,
     b."originalDate",
     b."imageUrl",
     b.publisher,
@@ -24,6 +25,7 @@ FROM (
       s."shortSummary",
       s.summary,
       s.bullets,
+      s.url,
       s."originalDate",
       s."imageUrl",
       JSONB_BUILD_OBJECT(
@@ -41,6 +43,7 @@ FROM (
         'id', sr."siblingId",
         'title', sibling.title,
         'shortSummary', sibling."shortSummary",
+        'url', sibling.url,
         'imageUrl', sibling."imageUrl",
         'originalDate', sibling."originalDate",
         'publisher', JSONB_BUILD_OBJECT(
@@ -85,6 +88,9 @@ FROM (
       s.id,
       s.title,
       s."shortSummary",
+      s.summary,
+      s.bullets,
+      s.url,
       s."originalDate",
       pub.id,
       pub.name,

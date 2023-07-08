@@ -29,6 +29,9 @@ FROM (
     COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
       'id', sibling.id,
       'title', sibling.title,
+      'shortSummary', sibling."shortSummary",
+      'url', sibling.url,
+      'imageUrl', sibling."imageUrl",
       'originalDate', sibling."originalDate",
       'outlet', JSONB_BUILD_OBJECT( -- legacy support
          'name', sibling_pub.name,
