@@ -17,7 +17,7 @@ import { ScreenProps } from '~/screens';
 
 const Tab = createMaterialTopTabNavigator();
 
-function HeadlinesTab({ 
+function TopStoriesTab({ 
   route,
   navigation: _navigation,
 }: ScreenProps<'search'>) {
@@ -27,7 +27,7 @@ function HeadlinesTab({
       fetch={ getTopStories }
       showWalkthroughs
       filter={ route?.params?.prefilter }
-      interval={ '1d' } />
+      interval='1d' />
   );
 }
 
@@ -86,8 +86,8 @@ export function HomeScreen({
             initialParams={ { prefilter: followFilter } } />
         )}
         <Tab.Screen 
-          name="Headlines" 
-          component={ HeadlinesTab } 
+          name="Top Stories" 
+          component={ TopStoriesTab } 
           options={ {
             tabBarIcon: ({ color }) => (
               <Icon 
@@ -96,7 +96,7 @@ export function HomeScreen({
             ),
           } } />
         <Tab.Screen 
-          name="Livestream" 
+          name="Live" 
           component={ LivestreamTab }
           options={ {
             tabBarIcon: ({ color }) => (

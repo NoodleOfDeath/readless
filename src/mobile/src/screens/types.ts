@@ -11,23 +11,23 @@ import {
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryAttributes,
+  PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 
-export type ChannelType = 'publisher' | 'category';
-
-export type Channel<T extends ChannelType = ChannelType> = {
-  type: T;
-  attributes: T extends 'publisher'
-    ? PublicPublisherAttributes
-    : PublicCategoryAttributes;
-};
-
 export type StackableTabParams = {
   about: undefined;
+  articles: {
+    summary: PublicSummaryGroup;
+  },
   bookmarks: undefined;
   browse: undefined;
-  channel: Channel;
+  category: {
+    category: PublicCategoryAttributes;
+  };
+  publisher: {
+    publisher: PublicPublisherAttributes;
+  };
   default: undefined;
   home: undefined;
   recaps: undefined;
@@ -55,10 +55,12 @@ export type StackableTabParams = {
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {
   config: {
     screens: {
+      articles: { path: 'articles' },
       bookmarks: { path: 'bookmarks' },
       browse: { path: 'browse' },
-      channel: { path: 'channel' },
+      category: { path: 'category' },
       default: { path: '' },
+      publisher: { path: 'publisher' },
       search: { path: 'search' },
       settings: { path: 'settings' },
       summary: { path: 'summary' },

@@ -8,10 +8,11 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { HoldItem } from 'react-native-hold-menu';
 import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 
-import { PublisherIcon } from './PublisherIcon';
+import { ChannelIcon } from './ChannelIcon';
 
 import { 
   InteractionType,
+  PublicSummaryAttributesConservative,
   PublicSummaryGroup,
   PublicSummaryTranslationAttributes,
   ReadingFormat,
@@ -48,15 +49,15 @@ import {
 } from '~/locales';
 import { fixedSentiment } from '~/utils';
 
-type Props = ChildlessViewProps & ScrollViewProps & {
+type SummaryProps<Compact extends boolean = false> = ChildlessViewProps & ScrollViewProps & {
   big?: boolean;
-  summary?: PublicSummaryGroup;
+  summary?: Compact extends true ? PublicSummaryAttributesConservative : PublicSummaryGroup;
   tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
   initiallyTranslated?: boolean;
   keywords?: string[];
-  compact?: boolean;
+  compact?: Compact;
   disableInteractions?: boolean;
   forceSentiment?: boolean;
   forceShortSummary?: boolean;
@@ -111,7 +112,7 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
   },
 };
 
-export function Summary({
+export function Summary<Compact extends boolean = false>({
   summary: summary0,
   tickInterval = '2m',
   selected,
@@ -119,7 +120,7 @@ export function Summary({
   big = Boolean(initialFormat),
   initiallyTranslated = true,
   keywords = [],
-  compact = false,
+  compact,
   disableInteractions = !summary0,
   forceSentiment,
   forceShortSummary: forceShortSummary0,
@@ -130,9 +131,11 @@ export function Summary({
   onLocalize,
   onToggleTranslate,
   ...props
-}: Props) {
+}: SummaryProps<Compact>) {
 
-  const { openPublisher, openCategory } = useNavigation();
+  const {
+    openPublisher, openCategory, openArticleList, 
+  } = useNavigation();
   const { localizeSummary } = useServiceClient();
   const { openURL } = useInAppBrowser();
 
@@ -168,8 +171,8 @@ export function Summary({
   const localizedStrings = React.useMemo(() => {
     return showTranslations && translations ? translations : {
       bullets: (summary.bullets ?? []).join('\n'),
-      shortSummary: summary.shortSummary,
-      summary: summary.summary,
+      shortSummary: summary.shortSummary ?? '',
+      summary: summary.summary ?? '',
       title: summary.title,
     };
   }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
@@ -296,19 +299,19 @@ export function Summary({
       <View>
         {!initialFormat ? (
           <View flexRow itemsCenter gap={ 6 }>
-            <View
+            <Chip
               flexRow
               itemsCenter
               gap={ 6 }
               onPress={ () => !disableInteractions && openPublisher(summary.publisher) }>
-              <PublisherIcon publisher={ summary.publisher } />
+              <ChannelIcon publisher={ summary.publisher } />
               <Text 
                 bold
                 caption
                 color={ theme.colors.textSecondary }>
                 {summary.publisher.displayName}
               </Text>
-            </View>
+            </Chip>
             {timestamp}
             <View row />
             {(forceSentiment || isSentimentEnabled) && sentimentMeter}
@@ -393,7 +396,7 @@ export function Summary({
     );
   }, [translations, isLocalizing, handleLocalizeSummary, showTranslations]);
 
-  const siblingCards = React.useMemo(() => {
+  const footer = React.useMemo(() => {
     return (
       <View
         flexRow
@@ -405,7 +408,7 @@ export function Summary({
           itemsCenter
           leftIcon={ summary.category.icon }
           gap={ 3 }
-          onPress={ () => openCategory(summary.category) }>
+          onPress={ () => !disableInteractions && openCategory(summary.category) }>
           {summary.category.displayName}
         </Chip>
         <Text
@@ -413,14 +416,15 @@ export function Summary({
           color={ theme.colors.textSecondary }>
           •
         </Text>
-        <Text
+        <Chip
           caption
-          color={ theme.colors.textSecondary }>
+          color={ theme.colors.textSecondary }
+          onPress={ () => !disableInteractions && openArticleList(summary as PublicSummaryGroup) }>
           {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.misc_article, (summary.siblings?.length ?? 0) + 1)}`}
-        </Text>
+        </Chip>
       </View>
     );
-  }, [openCategory, summary.category, summary.siblings, theme.colors.textSecondary]);
+  }, [disableInteractions, openArticleList, openCategory, summary, theme.colors.textSecondary]);
   
   const image = React.useMemo(() => {
     if (compact || compactMode || !summary.imageUrl) {
@@ -490,13 +494,13 @@ export function Summary({
                 </Highlighter>
               </View>
             )}
-            {siblingCards}
+            {footer}
           </View>
         </View>
         {!(big) && image}
       </View>
     </View>
-  ), [initialFormat, title, translateToggle, compact, compactMode, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, siblingCards, big, image]);
+  ), [initialFormat, title, translateToggle, compact, compactMode, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, footer, big, image]);
   
   const cardBody = React.useMemo(() => (
     <View flexGrow={ 1 }>

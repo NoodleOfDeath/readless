@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { 
   PublicCategoryAttributes, 
   PublicPublisherAttributes,
+  PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 import { SessionContext } from '~/contexts';
@@ -39,11 +40,15 @@ export function useNavigation() {
   }, [navigate, preferredReadingFormat]);
 
   const openPublisher = React.useCallback((publisher: PublicPublisherAttributes) => {
-    navigate('channel', { attributes: publisher, type: 'publisher' });
+    navigate('publisher', { publisher });
   }, [navigate]);
 
   const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
-    navigate('channel', { attributes: category, type: 'category' });
+    navigate('category', { category });
+  }, [navigate]);
+
+  const openArticleList = React.useCallback((summary: PublicSummaryGroup) => {
+    navigate('articles', { summary });
   }, [navigate]);
 
   const router = React.useCallback(({ url }: { url: string }) => {
@@ -74,6 +79,7 @@ export function useNavigation() {
   return {
     navigate,
     navigation,
+    openArticleList,
     openCategory,
     openPublisher,
     openSummary,

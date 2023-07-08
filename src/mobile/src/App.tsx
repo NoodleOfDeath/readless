@@ -3,7 +3,6 @@ import React from 'react';
 import NavigationController from '~/NavigationController';
 import {
   DialogContextProvider,
-  IapContextProvider,
   LayoutContextProvider,
   MediaContextProvider,
   SessionContextProvider,
@@ -12,15 +11,13 @@ import {
 export default function App() {
   return (
     <SessionContextProvider>
-      <IapContextProvider>
-        <LayoutContextProvider>
-          <DialogContextProvider>
-            <MediaContextProvider>
-              <NavigationController />
-            </MediaContextProvider>
-          </DialogContextProvider>
-        </LayoutContextProvider>
-      </IapContextProvider>
+      <LayoutContextProvider>
+        <DialogContextProvider>
+          <MediaContextProvider>
+            <NavigationController />
+          </MediaContextProvider>
+        </DialogContextProvider>
+      </LayoutContextProvider>
     </SessionContextProvider>
   );
 }

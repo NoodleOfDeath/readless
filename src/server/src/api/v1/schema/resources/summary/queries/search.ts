@@ -19,8 +19,8 @@ FROM (
     publisher::JSON,
     category::JSON,
     translations::JSON,
-    sentiment,
-    sentiments::JSON,
+    b.sentiment,
+    b.sentiments::JSON,
     COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
       'key', media.key,
       'url', media.url,
@@ -42,7 +42,9 @@ FROM (
          'name', sibling_cat.name,
          'displayName', sibling_cat."displayName",
          'icon', sibling_cat.icon
-      )
+      ),
+      'sentiment', sib_ss.sentiment,
+      'sentiments', sib_ss.sentiments
     )) FILTER (WHERE sibling.id IS NOT NULL), '[]'::JSON) AS siblings,
     "averageSentiment",
     "totalCount"
@@ -116,7 +118,7 @@ FROM (
           AND (summary_translations."deletedAt" IS NULL)
           AND (summary_translations.locale = :locale)
         LEFT OUTER JOIN summary_sentiment_caches ss
-    ON summaries.id = ss."parentId"
+          ON summaries.id = ss."parentId"
       WHERE (summaries."deletedAt" IS NULL)
         AND (
           (summaries."originalDate" > NOW() - INTERVAL :interval)
@@ -192,6 +194,8 @@ FROM (
   LEFT OUTER JOIN categories AS sibling_cat
     ON (sibling_cat.id = sibling."categoryId")
     AND (sibling_cat."deletedAt" IS NULL)
+  LEFT OUTER JOIN summary_sentiment_caches AS sib_ss
+    ON (sr."siblingId" = sib_ss."parentId")
   GROUP BY
     b.id,
     b.title,

@@ -1,6 +1,7 @@
 import {
   PublicCategoryAttributes,
   PublicPublisherAttributes,
+  PublicSummaryAttributesConservative,
   PublicSummaryGroup,
   ReadingFormat,
   RequestParams,
@@ -100,10 +101,10 @@ export type SessionContextType = Preferences & {
   resetPreferences: (hard?: boolean) => Promise<void>;
   
   // convenience functions
-  bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
-  readSummary: (summary: PublicSummaryGroup) => Promise<void>;
-  readSource: (summary: PublicSummaryGroup) => Promise<void>;
-  removeSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  bookmarkSummary: (summary: PublicSummaryAttributesConservative) => Promise<void>;
+  readSummary: (summary: PublicSummaryAttributesConservative) => Promise<void>;
+  readSource: (summary: PublicSummaryAttributesConservative) => Promise<void>;
+  removeSummary: (summary: PublicSummaryAttributesConservative) => Promise<void>;
   followPublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   excludePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   followCategory: (category: PublicCategoryAttributes) => Promise<void>;
@@ -127,7 +128,9 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),
   resetPreferences: () => Promise.resolve(),
+  setCategories: () => Promise.resolve(),
   setPreference: () => Promise.resolve(),
+  setPublishers: () => Promise.resolve(),
   unreadBookmarkCount: 0,
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };
