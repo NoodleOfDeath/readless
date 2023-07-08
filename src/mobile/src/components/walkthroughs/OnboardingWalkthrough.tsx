@@ -13,12 +13,10 @@ import {
   Walkthrough,
 } from '~/components';
 import { Bookmark, SessionContext } from '~/contexts';
-import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
-  const theme = useTheme();
   const { setPreference } = React.useContext(SessionContext);
   
   const onDone = React.useCallback(async () => {
@@ -144,7 +142,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
       ),
       title: strings.walkthroughs_onboarding_areYouReady,
     },
-  ], [onDone, theme.colors.paper, theme.colors.text]);
+  ], [onDone]);
   
   return (
     <Walkthrough

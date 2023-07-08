@@ -4,7 +4,7 @@ import { DeviceEventEmitter } from 'react-native';
 import {
   InternalError,
   PublicCategoryAttributes,
-  PublicOutletAttributes,
+  PublicPublisherAttributes,
 } from '~/api';
 import {
   ActivityIndicator,
@@ -28,30 +28,30 @@ import { lengthOf } from '~/utils';
 export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
 
   const theme = useTheme();
-  const { openCategory, openOutlet } = useNavigation();
-  const { getCategories, getOutlets } = useCategoryClient();
+  const { openCategory, openPublisher } = useNavigation();
+  const { getCategories, getPublishers } = useCategoryClient();
   const {
-    followedOutlets,
+    followedPublishers,
     followedCategories,
-    followOutlet,
+    followPublisher,
     followCategory,
     setPreference,
   } = React.useContext(SessionContext);
   
   const [activeTab, setActiveTab] = React.useState(0);
-  const [filterCount, setFilterCount] = React.useState(lengthOf(followedOutlets, followedCategories));
+  const [filterCount, setFilterCount] = React.useState(lengthOf(followedPublishers, followedCategories));
 
-  const [outlets, setOutlets] = React.useState<PublicOutletAttributes[]>([]);
+  const [publishers, setPublishers] = React.useState<PublicPublisherAttributes[]>([]);
   const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>([]);
-  const [selectedOutlets, setSelectedOutlets] = React.useState(followedOutlets);
+  const [selectedPublishers, setSelectedPublishers] = React.useState(followedPublishers);
   const [selectedCategories, setSelectedCategories] = React.useState(followedCategories);
   
   const [_error, setError] = React.useState<InternalError>();
   
   const buttons = React.useMemo(() => [
     { label: categories.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : strings.misc_categories, value: 0 },
-    { label: outlets.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : strings.misc_channels, value: 1 },
-  ], [categories.length, outlets.length]);
+    { label: publishers.length === 0 ? <ActivityIndicator animating size={ 24 } color="#888" /> : strings.misc_channels, value: 1 },
+  ], [categories.length, publishers.length]);
 
   const loadCategories = React.useCallback(async () => {
     setError(undefined);
@@ -67,9 +67,9 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
     setCategories(data.rows);
   }, [getCategories]);
 
-  const loadOutlets = React.useCallback(async () => {
+  const loadPublishers = React.useCallback(async () => {
     setError(undefined);
-    const { data, error } = await getOutlets();
+    const { data, error } = await getPublishers();
     if (error) {
       setError(error);
       return;
@@ -78,32 +78,32 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
       setError(new ClientError('UNKNOWN'));
       return;
     }
-    setOutlets(data.rows);
-  }, [getOutlets]);
+    setPublishers(data.rows);
+  }, [getPublishers]);
 
   React.useEffect(() => {
     navigation?.setOptions({ headerRight: () => undefined });
     loadCategories();
-    loadOutlets();
-  }, [navigation, loadCategories, loadOutlets]);
+    loadPublishers();
+  }, [navigation, loadCategories, loadPublishers]);
   
-  const clearBookmarks = React.useCallback((key: 'followedCategories' | 'followedOutlets') => {
+  const clearBookmarks = React.useCallback((key: 'followedCategories' | 'followedPublishers') => {
     setPreference(key, {});
   }, [setPreference]);
 
   const autoApplyFilter = React.useCallback(() => {
-    const value = lengthOf(followedOutlets, followedCategories);
+    const value = lengthOf(followedPublishers, followedCategories);
     if (filterCount !== value && value > 0) {
       DeviceEventEmitter.emit('apply-filter', true);
       setPreference('showOnlyCustomNews', true);
     }
     setFilterCount(value);
-  }, [followedOutlets, followedCategories, filterCount, setPreference]);
+  }, [followedPublishers, followedCategories, filterCount, setPreference]);
 
   React.useEffect(() => {
     autoApplyFilter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [followedOutlets, followedCategories]);
+  }, [followedPublishers, followedCategories]);
 
   return (
     <Screen>
@@ -188,14 +188,14 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     rounded
                     gap={ 8 }
                     p={ 8 }
-                    onPress={ ()=> clearBookmarks('followedOutlets') }>
+                    onPress={ ()=> clearBookmarks('followedPublishers') }>
                     {strings.action_clearSelection}
                   </Button>
                 </View>
               </View>
-              {outlets.map((outlet, i) => (
+              {publishers.map((publisher, i) => (
                 <View 
-                  key={ outlet.name }
+                  key={ publisher.name }
                   row
                   itemsCenter
                   rounded
@@ -208,8 +208,8 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     rounded
                     gap={ 8 }
                     p={ 8 }
-                    onPress={ () => openOutlet(outlet) }>
-                    {outlet.displayName}
+                    onPress={ () => openPublisher(publisher) }>
+                    {publisher.displayName}
                   </Button>
                   <View row />
                   <Button
@@ -219,21 +219,21 @@ export function BrowseScreen({ navigation }: ScreenProps<'default'>) {
                     gap={ 8 }
                     p={ 8 }
                     elevated
-                    leftIcon={ selectedOutlets?.[outlet.name] ? 'check' : undefined }
+                    leftIcon={ selectedPublishers?.[publisher.name] ? 'check' : undefined }
                     haptic
                     onPress={ () => {
-                      setSelectedOutlets((prev) => {
+                      setSelectedPublishers((prev) => {
                         const state = { ...prev };
-                        if (outlet.name in state) {
-                          delete state[outlet.name];
+                        if (publisher.name in state) {
+                          delete state[publisher.name];
                         } else {
-                          state[outlet.name] = true;
+                          state[publisher.name] = true;
                         }
                         return (prev = state);
                       });
-                      followOutlet(outlet);
+                      followPublisher(publisher);
                     } }>
-                    {selectedOutlets?.[outlet.name] ? strings.action_unfollow : strings.action_follow}
+                    {selectedPublishers?.[publisher.name] ? strings.action_unfollow : strings.action_follow}
                   </Button>
                 </View>
               ))}

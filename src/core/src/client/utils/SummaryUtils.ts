@@ -1,4 +1,5 @@
 import { 
+  PublicPublisherAttributes,
   PublicSummaryAttributes,
   PublicSummarySentimentAttributes,
   ReadingFormat,
@@ -10,6 +11,10 @@ export const shareableLink = (
   format: ReadingFormat = ReadingFormat.Summary
 ) => {
   return `https://open.${baseUrl}/s/${summary.id}/${format}`;
+};
+
+export const publisherIcon = (publisher: PublicPublisherAttributes) => {
+  return `https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/${publisher.name}.png`;
 };
 
 export const audioStreamUri = (

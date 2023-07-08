@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { ClientError } from './types';
 import { Bookmark, SessionContext } from '../contexts';
 
 import {
   API,
   InteractionType,
   PublicSummaryAttributes,
-  SubscriptionChannel,
 } from '~/api';
 import { getUserAgent } from '~/utils';
 
@@ -15,68 +13,23 @@ export function useSummaryClient() {
 
   const { setPreference, withHeaders } = React.useContext(SessionContext);
   
-  const getTopics = React.useCallback(async (
-    filter?: string,
-    ids?: number[],
-    excludeIds?: boolean,
-    matchType?: 'all' | 'any',
-    interval?: string,
-    locale?: string,
-    page = 0,
-    pageSize = 10,
-    offset = pageSize * page
-  ) => {
-    try {
-      return await withHeaders(API.getTopics)({
-        excludeIds, filter, ids, interval, locale, matchType, offset, page, pageSize,
-      });
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
-  }, [withHeaders]);
-  
-  const getSummaries = React.useCallback(async (
-    filter?: string,
-    ids?: number[],
-    excludeIds?: boolean,
-    matchType?: 'all' | 'any',
-    interval?: string,
-    locale?: string,
-    page = 0,
-    pageSize = 10,
-    offset = pageSize * page
-  ) => {
-    try {
-      return await withHeaders(API.searchSummaries)({
-        excludeIds, filter, ids, interval, locale, matchType, offset, page, pageSize,
-      });
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
+  const getSummaries = React.useCallback(async (args: Parameters<typeof API.getSummaries>[0]) => {
+    return await withHeaders(API.getSummaries)(args);
   }, [withHeaders]);
 
-  const getSummary = React.useCallback(async (id: number, locale: string) => {
-    try {
-      const { data, error } = await getSummaries(undefined, [id], false, undefined, undefined, locale, 0, 1);
-      if (error) {
-        return { data: undefined, error };
-      }
-      if (data) {
-        return { data: data.rows[0], error: undefined };
-      }
-      return { data: undefined, error: new ClientError('NOT_FOUND') };
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
+  const getSummary = React.useCallback(async (id: number) => {
+    return await getSummaries({
+      ids: [id], offset: 0, pageSize: 1,
+    });
   }, [getSummaries]);
+  
+  const getTopStories = React.useCallback(async (args: Parameters<typeof API.getTopStories>[0]) => {
+    return await withHeaders(API.getTopStories)(args);
+  }, [withHeaders]);
   
   const interactWithSummary = React.useCallback(
     async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
-      try {
-        return await withHeaders(API.interactWithSummary)(summary.id, type, { content, metadata });
-      } catch (e) {
-        return { data: undefined, error: new ClientError('UNKNOWN', e) };
-      }
+      return await withHeaders(API.interactWithSummary)(summary.id, type, { content, metadata });
     },
     [withHeaders] 
   );
@@ -128,50 +81,26 @@ export function useSummaryClient() {
     page = 0, 
     pageSize = 10
   ) => {
-    try {
-      return await withHeaders(API.getRecaps)({ page, pageSize });
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
+    return await withHeaders(API.getRecaps)({ page, pageSize });
   }, [withHeaders]);
 
-  const subscribeToRecap = React.useCallback(async (
-    event: string,
-    channel: SubscriptionChannel,
-    uuid: string
-  ) => {
-    try {
-      return await withHeaders(API.subscribe)({
-        channel, event, uuid, 
-      });
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
+  const subscribe = React.useCallback(async (args: Parameters<typeof API.subscribe>[0]) => {
+    return await withHeaders(API.unsubscribe)(args);
   }, [withHeaders]);
 
-  const unsubscribeFromRecap = React.useCallback(async (
-    event: string,
-    channel: SubscriptionChannel,
-    uuid: string
-  ) => {
-    try {
-      return await withHeaders(API.unsubscribe)({
-        channel, event, uuid, 
-      });
-    } catch (e) {
-      return { data: undefined, error: new ClientError('UNKNOWN', e) };
-    }
+  const unsubscribe = React.useCallback(async (args: Parameters<typeof API.unsubscribe>[0]) => {
+    return await withHeaders(API.unsubscribe)(args);
   }, [withHeaders]);
 
   return {
     getRecaps,
     getSummaries,
     getSummary,
-    getTopics,
+    getTopStories,
     handleInteraction,
     interactWithSummary,
-    subscribeToRecap,
-    unsubscribeFromRecap,
+    subscribeToRecap: subscribe,
+    unsubscribeFromRecap: unsubscribe,
   };
 
 }

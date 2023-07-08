@@ -1,16 +1,11 @@
 import React from 'react';
-import { FlatList as RNFlatList, FlatListProps as RNFlatListProps } from 'react-native';
 
-import { ChildlessViewProps } from '~/components';
-import { useStyles } from '~/hooks';
+import { FlashList, FlashListProps } from '@shopify/flash-list';
 
-export type FlatListProps<T> = RNFlatListProps<T> & ChildlessViewProps;
+export type FlatListProps<T> = FlashListProps<T>;
 
 export function FlatList<T>(props: FlatListProps<T>) {
-  const style = useStyles(props);
   return (
-    <RNFlatList
-      { ...props }
-      style={ style } />
+    <FlashList { ...props } />
   );
 }

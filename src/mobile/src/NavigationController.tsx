@@ -30,7 +30,11 @@ import {
   Screen,
   View,
 } from '~/components';
-import { useNavigation, useTheme } from '~/hooks';
+import {
+  useCategoryClient,
+  useNavigation,
+  useTheme,
+} from '~/hooks';
 import { strings } from '~/locales';
 import {
   AboutScreen,
@@ -175,20 +179,45 @@ const Stack = createNativeStackNavigator();
 function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
 
   const { router } = useNavigation();
+  const { getCategories, getPublishers } = useCategoryClient();
+  const { setCategories, setPublishers } = React.useContext(SessionContext);
 
   const {
     bookmarkCount,
     loadedInitialUrl,
     viewedFeatures,
+    categories,
+    followedCategories,
     setPreference,
   } = React.useContext(SessionContext);
   
   const {
     lockRotation,
     rotationLock,
-    isTablet,
     unlockRotation,
   } = React.useContext(LayoutContext);
+
+  const _categoryTabs = React.useMemo(() => {
+    return Object.keys({ ...followedCategories }).filter((c) => typeof c === 'object').map((category) => (
+      <Tab.Screen 
+        key={ category }
+        name={ category }
+        component={ ChannelScreen }
+        options={ {
+          tabBarIcon: ({ color }) => (
+            categories?.[category]?.icon && (
+              <Icon 
+                name={ categories[category].icon } 
+                color={ color } />
+            )
+          ),
+        } }
+        initialParams={ { 
+          attributes: category,
+          type: 'category',
+        } } />
+    ));
+  }, [categories, followedCategories]);
 
   React.useEffect(() => {
     if (bookmarkCount > 0 && !('bookmark-walkthrough' in { ...viewedFeatures })) {
@@ -213,11 +242,21 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
       unsubscribe();
     };
   }, [screenshotListener, viewedFeatures]);
+
+  React.useEffect(() => {
+    getCategories().then((response) => {
+      setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
+    }).catch((error) => {
+      console.log(error);
+    });
+    getPublishers().then((response) => {
+      setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
+    }).catch((error) => {
+      console.log(error);
+    });
+  }, [getCategories, getPublishers, setCategories, setPublishers]);
   
   const headerRight = React.useMemo(() => {
-    if (!isTablet) {
-      return null;
-    }
     return (
       <View>
         <View row gap={ 16 } itemsCenter>
@@ -243,7 +282,7 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
         </View>
       </View>
     );
-  }, [isTablet, rotationLock, unlockRotation, lockRotation]);
+  }, [rotationLock, unlockRotation, lockRotation]);
   
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);

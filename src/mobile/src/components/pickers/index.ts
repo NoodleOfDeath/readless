@@ -3,7 +3,7 @@ export * from './ColorSchemePicker';
 export * from './CompactModePicker';
 export * from './FontPicker';
 export * from './NumericPrefPicker';
-export * from './OutletPicker';
+export * from './PublisherPicker';
 export * from './PrefSwitch';
 export * from './ReadingFormatPicker';
 export * from './TriggerWordPicker';

@@ -92,7 +92,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() ids?: number[],
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
-    @Query() interval?: string,
+    @Query() interval = '1d',
     @Query() locale?: string,
     @Query() start?: string,
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
@@ -119,8 +119,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     });
   }
   
-  public static async getTopStoriesInternal(payload: SearchSummariesPayload) {
-    return await Summary.getTopStories(payload);
+  public static async getTopStoriesInternal({ interval = '1d', ...payload }: SearchSummariesPayload) {
+    return await Summary.getTopStories({ interval, ...payload });
   }
   
   @Security('jwt')

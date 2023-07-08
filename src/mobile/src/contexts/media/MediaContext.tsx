@@ -210,11 +210,11 @@ export function MediaContextProvider({ children }: Props) {
       for (const summary of summaries) {
         const timeAgo = formatDistance(new Date(summary.originalDate ?? 0), new Date(), { addSuffix: true });
         const text = [
-          `From ${summary.outlet.displayName} ${timeAgo}:`,
+          `From ${summary.publisher.displayName} ${timeAgo}:`,
           summary.title,
         ].join('\n');
         const newTrack: Track = {
-          artist: summary.outlet.displayName,
+          artist: summary.publisher.displayName,
           artwork: summary.imageUrl ?? 'https://www.readless.ai/AppIcon.png',
           headers: {},
           id: ['summary', summary.id].join('-'),

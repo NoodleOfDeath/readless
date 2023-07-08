@@ -16,8 +16,6 @@ export type HeaderProps = ViewProps & {
 };
 
 export function Header({
-  title,
-  subtitle,
   back,
   backTitle,
   actions,

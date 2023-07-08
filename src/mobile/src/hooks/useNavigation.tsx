@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { 
   PublicCategoryAttributes, 
-  PublicOutletAttributes,
+  PublicPublisherAttributes,
   ReadingFormat,
 } from '~/api';
 import { SessionContext } from '~/contexts';
@@ -38,8 +38,8 @@ export function useNavigation() {
     });
   }, [navigate, preferredReadingFormat]);
 
-  const openOutlet = React.useCallback((outlet: PublicOutletAttributes) => {
-    navigate('channel', { attributes: outlet, type: 'outlet' });
+  const openPublisher = React.useCallback((publisher: PublicPublisherAttributes) => {
+    navigate('channel', { attributes: publisher, type: 'publisher' });
   }, [navigate]);
 
   const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
@@ -75,7 +75,7 @@ export function useNavigation() {
     navigate,
     navigation,
     openCategory,
-    openOutlet,
+    openPublisher,
     openSummary,
     router,
     search,

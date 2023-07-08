@@ -1,6 +1,6 @@
 import {
   PublicCategoryAttributes,
-  PublicOutletAttributes,
+  PublicPublisherAttributes,
   PublicSummaryGroup,
   ReadingFormat,
   RequestParams,
@@ -68,15 +68,17 @@ export type Preferences = {
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
   
-  // outlet/category state
+  // publisher/category state
   followedOutlets?: { [key: string]: boolean };
-  followedCategories?: { [key: string]: PublicCategoryAttributes };
+  followedPublishers?: { [key: string]: boolean };
+  followedCategories?: { [key: string]: boolean };
 
   followCount: number;
   followFilter: string;
 
   excludedOutlets?: { [key: string]: boolean };
-  excludedCategories?: { [key: string]: PublicCategoryAttributes };
+  excludedPublishers?: { [key: string]: boolean };
+  excludedCategories?: { [key: string]: boolean };
 };
 
 export const DEFAULT_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
@@ -86,6 +88,11 @@ export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, Re
 
 export type SessionContextType = Preferences & {
   ready?: boolean;
+
+  categories?: Record<string, PublicCategoryAttributes>;
+  setCategories: React.Dispatch<React.SetStateAction<Record<string, PublicCategoryAttributes> | undefined>>;
+  publishers?: Record<string, PublicPublisherAttributes>;
+  setPublishers: React.Dispatch<React.SetStateAction<Record<string, PublicPublisherAttributes> | undefined>>;
   
   // state setters
   setPreference: <K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])) => Promise<void>;
@@ -97,8 +104,8 @@ export type SessionContextType = Preferences & {
   readSummary: (summary: PublicSummaryGroup) => Promise<void>;
   readSource: (summary: PublicSummaryGroup) => Promise<void>;
   removeSummary: (summary: PublicSummaryGroup) => Promise<void>;
-  followOutlet: (outlet: PublicOutletAttributes) => Promise<void>;
-  excludeOutlet: (outlet: PublicOutletAttributes) => Promise<void>;
+  followPublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
+  excludePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   followCategory: (category: PublicCategoryAttributes) => Promise<void>;
   excludeCategory: (category: PublicCategoryAttributes) => Promise<void>;
   
@@ -110,11 +117,11 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   bookmarkCount: 0,
   bookmarkSummary: () => Promise.resolve(),
   excludeCategory: () => Promise.resolve(),
-  excludeOutlet: () => Promise.resolve(),
+  excludePublisher: () => Promise.resolve(),
   followCategory: () => Promise.resolve(),
   followCount: 0,
   followFilter: '',
-  followOutlet: () => Promise.resolve(),
+  followPublisher: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
   readSource: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
