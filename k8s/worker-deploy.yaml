@@ -50,12 +50,12 @@ spec:
               value: '$OLD_NEWS_THRESHOLD'
             - name: OPENAI_API_KEY
               value: '$OPENAI_API_KEY'
-            - name: OUTLET_FETCH_INTERVAL
-              value: '$OUTLET_FETCH_INTERVAL'
-            - name: OUTLET_FETCH_LIMIT
-              value: '$OUTLET_FETCH_LIMIT'
-            - name: OUTLET_MAX_ATTEMPT_LIMIT
-              value: '$OUTLET_MAX_ATTEMPT_LIMIT'
+            - name: PUBLISHER_FETCH_INTERVAL
+              value: '$PUBLISHER_FETCH_INTERVAL'
+            - name: PUBLISHER_FETCH_LIMIT
+              value: '$PUBLISHER_FETCH_LIMIT'
+            - name: PUBLISHER_MAX_ATTEMPT_LIMIT
+              value: '$PUBLISHER_MAX_ATTEMPT_LIMIT'
             - name: PG_CONNECTION_STRING
               value: '$PG_CONNECTION_STRING'
             - name: PLAY_HT_SECRET_KEY
