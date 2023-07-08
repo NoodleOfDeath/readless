@@ -8223,10 +8223,10 @@ react-native-screens@^3.20.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-share@^8.2.2:
-  version "8.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-8.2.2.tgz#987d6f164afe57b089950dca42e0555f19045d27"
-  integrity sha512-kVCI/cT0GnuYUTXe6mAimrjrnt4VWoRfrWqJZjFeoYFqAyOEfos84RC4eZlZnOT5eVtmTXRIkor5vgSkKOlZhw==
+react-native-share@^9.2.1:
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-9.2.1.tgz#d4f2b3363c119c190c830d3193fb6c30fffe4aa9"
+  integrity sha512-JK0StFndFE1WmjS0GEPiPDzEXYezsd2+I7jV2qgh0rqkEEQO+XGwo716eNNgLA6DUVFj3dsSTpHzwro1HC+4Kw==
 
 react-native-shimmer@^0.6.0:
   version "0.6.0"

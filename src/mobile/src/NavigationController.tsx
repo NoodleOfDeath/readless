@@ -1,7 +1,12 @@
 import React from 'react';
 import { Linking } from 'react-native';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+  createDrawerNavigator,
+} from '@react-navigation/drawer';
 import {
   EventMapBase,
   NavigationContainer,
@@ -16,20 +21,24 @@ import ms from 'ms';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import { addScreenshotListener } from 'react-native-detector';
 import { HoldMenuProvider } from 'react-native-hold-menu';
+import InAppReview from 'react-native-in-app-review';
 
 import {
   LayoutContext,
   MediaContext,
   SessionContext,
 } from './contexts';
-import { ArticleListScreen } from './screens/ArticleListScreen';
 
 import {
   ActivityIndicator,
   Button,
+  ChannelIcon,
+  Divider, 
+  Header,
   Icon,
   MediaPlayer,
   Screen,
+  SearchMenu,
   View,
 } from '~/components';
 import {
@@ -99,14 +108,6 @@ const screens: RouteConfig<
       headerBackTitle: '',
       headerRight: () => undefined, 
     }, 
-  },
-  {
-    component: ArticleListScreen, 
-    name: 'articles',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    },
   },
   {
     component: BrowseScreen, 
@@ -198,8 +199,51 @@ const screens: RouteConfig<
 const Stack = createNativeStackNavigator();
 
 function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
+  return (
+    <Stack.Navigator
+      initialRouteName={ initialRouteName }
+      screenOptions={ ({ route }) => ({
+        header: route.name === 'home' ? () => ( 
+          <Header>
+            <SearchMenu flexGrow={ 1 } />
+          </Header>
+        ) : undefined,
+      }) }>
+      {screens.map((screen) => (
+        <Stack.Screen
+          key={ String(screen.name) }
+          { ...screen }
+          options={ { 
+            headerShown: true,
+            ...screen.options,
+          } } />
+      ))}
+    </Stack.Navigator>
+  );
+  
+}
 
-  const { router } = useNavigation();
+function TabScreen({ initialRouteName }: { initialRouteName?: string } = {}) {
+  return (
+    <Screen>
+      <StackNavigation initialRouteName={ initialRouteName } />
+    </Screen>
+  );
+}
+
+function HomeDrawer() {
+  return <TabScreen />;
+}
+
+const Drawer = createDrawerNavigator();
+
+function DrawerContent(props) {
+  
+  const { 
+    router,
+    openCategory,
+    openPublisher,
+  } = useNavigation();
   const { getCategories, getPublishers } = useCategoryClient();
   const { setCategories, setPublishers } = React.useContext(SessionContext);
 
@@ -210,6 +254,9 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
     categories,
     publishers,
     followedCategories,
+    followedPublishers,
+    hasReviewed,
+    lastRequestForReview,
     setPreference,
   } = React.useContext(SessionContext);
   
@@ -221,34 +268,31 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
 
   const [lastFetch, setLastFetch] = React.useState(0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
-
-  const _categoryTabs = React.useMemo(() => {
-    return Object.keys({ ...followedCategories }).filter((c) => typeof c === 'object').map((category) => (
-      <Tab.Screen 
-        key={ category }
-        name={ category }
-        component={ PublisherScreen }
-        options={ {
-          tabBarIcon: ({ color }) => (
-            categories?.[category]?.icon && (
-              <Icon 
-                name={ categories[category].icon } 
-                color={ color } />
-            )
-          ),
-        } }
-        initialParams={ { 
-          attributes: category,
-          type: 'category',
-        } } />
-    ));
-  }, [categories, followedCategories]);
+  const [showedBookmarks, setShowedBookmarks] = React.useState(false);
 
   React.useEffect(() => {
+    if (showedBookmarks) {
+      return;
+    }
+    setShowedBookmarks(true);
     if (bookmarkCount > 0 && !('bookmark-walkthrough' in { ...viewedFeatures })) {
       SheetManager.show('bookmark-walkthrough');
     }
-  }, [bookmarkCount, viewedFeatures]);
+    if (InAppReview.isAvailable() && (!hasReviewed || Date.now() - lastRequestForReview > ms('2w'))) {
+      setTimeout(() => {
+        InAppReview.RequestInAppReview()
+          .then((hasFlowFinishedSuccessfully) => {
+            if (hasFlowFinishedSuccessfully) {
+              setPreference('hasReviewed', true);
+              setPreference('lastRequestForReview', Date.now());
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }, 5_000);
+    }
+  }, [bookmarkCount, showedBookmarks, viewedFeatures, hasReviewed, lastRequestForReview, setPreference]);
 
   const screenshotListener = React.useCallback(async () => {
     if ('sharing-walkthrough' in { ...viewedFeatures }) {
@@ -335,73 +379,73 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
     return () => subscriber.remove();
   }, [router, loadedInitialUrl, setPreference]);
   
-  return (
-    <View col>
-      <Stack.Navigator
-        initialRouteName={ initialRouteName }>
-        {screens.map((screen) => (
-          <Stack.Screen
-            key={ String(screen.name) }
-            { ...screen }
-            options={ { 
-              headerRight: () => headerRight,
-              headerShown: true,
-              ...screen.options,
-            } } />
-        ))}
-      </Stack.Navigator>
-    </View>
-  );
+  const categoryItems = React.useMemo(() => {
+    if (!categories) {
+      return [];
+    }
+    return Object.keys({ ...followedCategories }).sort().map((c) => {
+      const category = categories[c];
+      if (!category) {
+        return undefined;
+      }
+      return (
+        <DrawerItem
+          key={ category.name }
+          label={ category.displayName }
+          icon={ (props) => <Icon { ...props } name={ category.icon } /> }
+          onPress={ () => openCategory(category) } />
+      );
+    }).filter(Boolean);
+  }, [categories, followedCategories]);
   
+  const publisherItems = React.useMemo(() => {
+    if (!publishers) {
+      return [];
+    }
+    return Object.keys({ ...followedPublishers }).sort().map((p) => {
+      const publisher = publishers[p];
+      if (!publisher) {
+        return undefined;
+      }
+      return (
+        <DrawerItem
+          key={ publisher.name }
+          label={ publisher.displayName }
+          icon={ (props) => <ChannelIcon publisher={ publisher } /> }
+          onPress={ () => openPublisher(publisher) } />
+      );
+    }).filter(Boolean);
+  }, [publishers, followedPublishers]);
+  
+  return (
+    <DrawerContentScrollView { ...props }>
+      <DrawerItemList { ...props } />
+      <Divider />
+      {categoryItems}
+      <Divider />
+      {publisherItems}
+    </DrawerContentScrollView>
+  );
 }
 
-function TabScreen({ initialRouteName }: { initialRouteName?: string } = {}) {
+function DrawerNavigation() {
+  return (
+    <Drawer.Navigator 
+      initialRouteName={ strings.screens_home }
+      screenOptions={ { headerShown: false } }
+      drawerContent={ (props) => <DrawerContent { ...props } /> }>
+      <Drawer.Screen 
+        name={ strings.screens_home } 
+        component={ HomeDrawer } />
+    </Drawer.Navigator>
+  );
+}
+
+function LandingPage() {
   return (
     <Screen>
-      <StackNavigation initialRouteName={ initialRouteName } />
+      <DrawerNavigation />
     </Screen>
-  );
-}
-
-function HomeTab() {
-  return <TabScreen />; 
-}
-
-function ProfileTab() {
-  return <TabScreen initialRouteName="settings" />; 
-}
-
-const TAB_ICONS = {
-  [strings.screens_home]: 'home',
-  [strings.screens_profile]: 'account',
-};
-
-const Tab = createBottomTabNavigator();
-
-function TabNavigation() {
-  return (
-    <Tab.Navigator
-      screenOptions={ ({ route }) => ({
-        headerShown: false,
-        tabBarActiveTintColor: 'tomato',
-        tabBarIcon: ({ color, size }) => {
-          return (
-            <Icon 
-              name={ TAB_ICONS[route.name] } 
-              size={ size } 
-              color={ color } />
-          );
-        },
-        tabBarInactiveTintColor: 'gray',
-        tabBarShowLabel: false,
-      }) }>
-      <Tab.Screen 
-        name={ strings.screens_home } 
-        component={ HomeTab } />
-      <Tab.Screen 
-        name={ strings.screens_profile } 
-        component={ ProfileTab } />
-    </Tab.Navigator>
   );
 }
 
@@ -435,7 +479,7 @@ export default function NavigationController() {
             top: 0,
           } }>
           <SheetProvider>
-            <TabNavigation />
+            <LandingPage />
             <MediaPlayer visible={ Boolean(currentTrack) } />
           </SheetProvider>
         </HoldMenuProvider>

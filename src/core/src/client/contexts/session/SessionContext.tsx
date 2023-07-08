@@ -51,6 +51,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [searchHistory, setSearchHistory] = React.useState<string[]>();
   const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
   const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: string]: Bookmark<boolean>}>();
+  const [hasReviewed, setHasReviewed] = React.useState<boolean>();
+  const [lastRequestForReview, setLastRequestForReview] = React.useState(0);
   
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
@@ -144,6 +146,12 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       break;
     case 'viewedFeatures':
       setViewedFeatures(newValue);
+      break;
+    case 'hasReviewed':
+      setHasReviewed(value);
+      break;
+    case 'lastRequestForReview':
+      setLastRequestForReview(value);
       break;
       
     case 'bookmarkedSummaries':
@@ -316,6 +324,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setSearchHistory(await getPreference('searchHistory'));
     setShowOnlyCustomNews(await getPreference('showOnlyCustomNews'));
     setViewedFeatures(await getPreference('viewedFeatures'));
+    setHasReviewed(await getPreference('hasReviewed'));
+    setLastRequestForReview(await getPreference('lastRequestForReview'));
     
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
@@ -363,6 +373,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         fontFamily,
         fontSizeOffset,
         getPreference,
+        hasReviewed,
+        lastRequestForReview,
         letterSpacing,
         lineHeightMultiplier,
         loadedInitialUrl,

@@ -311,12 +311,16 @@ export function SummaryList({
                 renderItem={ renderSummary }
                 estimatedItemSize={ (114 * 3 + 350) / 4 }
                 ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
-                ListHeaderComponent={ () => (showWalkthroughs && (
-                  <WalkthroughStack
-                    onClose={ () => setShowWalkthroughs(false) } />
-                )) }
+                ListHeaderComponent={ () => (
+                  <View mt={ 12 }>
+                    {showWalkthroughs && (
+                      <WalkthroughStack
+                        onClose={ () => setShowWalkthroughs(false) } />
+                    )}
+                  </View>
+                ) }
                 ListFooterComponent={ () => (
-                  <React.Fragment>
+                  <View mb={ 12 }>
                     {!loading && totalResultCount > summaries.length && (
                       <View row justifyCenter p={ 16 } pb={ 24 }>
                         <Button 
@@ -352,7 +356,7 @@ export function SummaryList({
                         </Button>
                       </View>
                     )}
-                  </React.Fragment>
+                  </View>
                 ) }
                 refreshing={ summaries.length === 0 && loading && !loaded }
                 onScroll={ handleMasterScroll }

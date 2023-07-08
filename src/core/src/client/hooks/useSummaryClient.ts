@@ -18,9 +18,7 @@ export function useSummaryClient() {
   }, [withHeaders]);
 
   const getSummary = React.useCallback(async (id: number) => {
-    return await getSummaries({
-      ids: [id], offset: 0, pageSize: 1,
-    });
+    return await getSummaries({ ids: [id] });
   }, [getSummaries]);
   
   const getTopStories = React.useCallback(async (args: Parameters<typeof API.getTopStories>[0]) => {

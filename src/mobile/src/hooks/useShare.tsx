@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { DeviceEventEmitter, Platform } from 'react-native';
 
 import { BASE_DOMAIN } from '@env';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -13,12 +13,13 @@ import { shareableLink } from '~/utils';
 const SocialAppIds: Record<Social, string> = {
   [Social.Facebook]: 'com.facebook.Facebook',
   [Social.FacebookStories]: 'com.facebook.katana',
-  [Social.Instagram]: `com.instagram.${Platform.OS}`,
+  [Social.Instagram]: 'com.burbn.instagram',
   [Social.InstagramStories]: `com.instagram.${Platform.OS}`,
   [Social.Linkedin]: `com.linkedin.${Platform.OS}`,
   [Social.Messenger]: 'com.facebook.orca',
   [Social.Pinterest]: 'com.pinterest',
   [Social.Pagesmanager]: 'com.facebook.pages.app',
+  'threads': 'com.burbn.barcelona',
   [Social.Twitter]: 'com.twitter.android',
   [Social.Whatsapp]: 'com.whatsapp',
   [Social.Whatsappbusiness]: 'com.whatsapp.w4b',
@@ -67,6 +68,7 @@ export function useShare({
     } catch (e) {
       console.error(e);
     }
+    DeviceEventEmitter.emit('share');
     callback?.();
   }, [callback, onInteract]);
   
@@ -95,6 +97,7 @@ export function useShare({
     } catch (e) {
       console.error(e);
     }
+    DeviceEventEmitter.emit('share');
     callback?.();
   }, [callback, onInteract]);
 

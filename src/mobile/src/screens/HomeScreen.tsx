@@ -15,8 +15,6 @@ import {
 import { useSummaryClient, useTheme } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
-const Tab = createMaterialTopTabNavigator();
-
 function TopStoriesTab({ 
   route,
   navigation: _navigation,
@@ -43,6 +41,8 @@ function LivestreamTab({
   );
 }
 
+const Tab = createMaterialTopTabNavigator();
+
 export function HomeScreen({ 
   route: _route,
   navigation,
@@ -57,15 +57,6 @@ export function HomeScreen({
   return (
     <Screen>
       <Tab.Navigator 
-        screenListeners={ () => ({
-          focus: () => navigation?.setOptions({
-            header: () => ( 
-              <Header>
-                <SearchMenu flexGrow={ 1 } />
-              </Header>
-            ), 
-          }),
-        }) }
         screenOptions={ {
           tabBarAllowFontScaling: true,
           tabBarLabelStyle: { fontFamily: SYSTEM_FONT },

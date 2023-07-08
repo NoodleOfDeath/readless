@@ -47,10 +47,6 @@ export function useNavigation() {
     navigate('category', { category });
   }, [navigate]);
 
-  const openArticleList = React.useCallback((summary: PublicSummaryGroup) => {
-    navigate('articles', { summary });
-  }, [navigate]);
-
   const router = React.useCallback(({ url }: { url: string }) => {
     // http://localhost:6969/read/?s=158&f=casual
     // https://dev.readless.ai/read/?s=158&f=casual
@@ -79,7 +75,6 @@ export function useNavigation() {
   return {
     navigate,
     navigation,
-    openArticleList,
     openCategory,
     openPublisher,
     openSummary,

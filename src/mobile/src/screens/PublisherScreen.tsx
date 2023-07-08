@@ -28,7 +28,7 @@ export function PublisherScreen({
   const publisher = React.useMemo(() => route?.params?.publisher, [route]);
 
   const [loaded, setLoaded] = React.useState(false);
-  const [followed, setFollowed] = React.useState(publisher?.name ?? '' in { ...followedPublishers });
+  const [followed, setFollowed] = React.useState((publisher?.name ?? '') in { ...followedPublishers });
 
   const prefilter = React.useMemo(() => {
     if (!publisher) {
@@ -42,7 +42,7 @@ export function PublisherScreen({
       return; 
     }
     setLoaded(true);
-    setFollowed(publisher?.name ?? '' in { ...followedPublishers });
+    setFollowed((publisher?.name ?? '') in { ...followedPublishers });
   }, [publisher, followedPublishers, loaded]);
 
   const toggleFollowed = React.useCallback(() => {

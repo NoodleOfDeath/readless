@@ -148,6 +148,7 @@ export const enStrings = {
 
   // summary
   summary_bookmark: 'Bookmark',
+  summary_bookmarked: 'Bookmarked',
   summary_bullets: 'Bullets',
   summary_example_bullet1: 'This is an example bullet point',
   summary_example_bullet2: 'This is another example bullet point',

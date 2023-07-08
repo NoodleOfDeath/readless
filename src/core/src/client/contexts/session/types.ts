@@ -60,8 +60,10 @@ export type Preferences = {
   searchHistory?: string[];
   showOnlyCustomNews?: boolean;
   viewedFeatures?: { [key: string]: Bookmark<boolean> };
+  hasReviewed?: boolean;
+  lastRequestForReview: number;
   
-  // sunmary state
+  // summary state
   readSummaries?: { [key: number]: Bookmark<boolean> };
   readSources?: { [key: number]: Bookmark<boolean> };
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryGroup> };
@@ -124,6 +126,7 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   followFilter: '',
   followPublisher: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
+  lastRequestForReview: 0,
   readSource: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),

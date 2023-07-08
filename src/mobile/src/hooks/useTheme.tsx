@@ -10,6 +10,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
     colors: {
       backgroundTranslucent: 'rgba(255, 255, 255, 0.3)',
       contrastText: '#fff',
+      destructive: darkMode ? '#ff0000' : '#ff0000',
       error: '#f44336',
       headerBackground: darkMode ? '#282828' : '#eee',
       inactive: darkMode ? '#777' : '#aaa',

@@ -34,9 +34,10 @@ export function ChannelIcon({
             justifyCenter
             adjustsFontSizeToFit
             textCenter
+            leftIcon={ category?.icon }
             width={ size }
             height={ size }>
-            {(category ?? publisher)?.displayName[0]}
+            {publisher?.displayName[0]}
           </Chip>
         ) }
         source={ { uri: publisher ? publisherIcon(publisher) : undefined } }

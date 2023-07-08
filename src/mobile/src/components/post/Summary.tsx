@@ -63,6 +63,7 @@ type SummaryProps<Compact extends boolean = false> = ChildlessViewProps & Scroll
   forceShortSummary?: boolean;
   hideCard?: boolean;
   hideAnalytics?: boolean;
+  hideFooter?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => Promise<unknown>;
   onLocalize?: (translations: PublicSummaryTranslationAttributes[]) => void;
@@ -126,6 +127,7 @@ export function Summary<Compact extends boolean = false>({
   forceShortSummary: forceShortSummary0,
   hideCard,
   hideAnalytics,
+  hideFooter,
   onFormatChange,
   onInteract,
   onLocalize,
@@ -134,7 +136,9 @@ export function Summary<Compact extends boolean = false>({
 }: SummaryProps<Compact>) {
 
   const {
-    openPublisher, openCategory, openArticleList, 
+    navigate,
+    openPublisher, 
+    openCategory, 
   } = useNavigation();
   const { localizeSummary } = useServiceClient();
   const { openURL } = useInAppBrowser();
@@ -151,6 +155,7 @@ export function Summary<Compact extends boolean = false>({
     readSummaries,
     bookmarkedSummaries,
     bookmarkSummary,
+    readSummary,
     setPreference,
   } = React.useContext(SessionContext);
 
@@ -309,7 +314,7 @@ export function Summary<Compact extends boolean = false>({
                 bold
                 caption
                 color={ theme.colors.textSecondary }>
-                {summary.publisher.displayName}
+                {summary.publisher?.displayName}
               </Text>
             </Chip>
             {timestamp}
@@ -337,10 +342,10 @@ export function Summary<Compact extends boolean = false>({
                   justifyBetween
                   adjustsFontSizeToFit
                   px={ 12 }
-                  leftIcon={ summary.category.icon && summary.category.icon }
+                  leftIcon={ summary.category?.icon && summary.category.icon }
                   rightIcon="chevron-right"
                   onPress={ () => !disableInteractions && openCategory(summary.category) }>
-                  {summary.category.displayName}
+                  {summary.category?.displayName}
                 </Button>
                 <Button
                   system
@@ -351,7 +356,7 @@ export function Summary<Compact extends boolean = false>({
                   px={ 12 }
                   adjustsFontSizeToFit
                   onPress={ () => !disableInteractions && openURL(summary.url) }>
-                  {summary.publisher.displayName}
+                  {summary.publisher?.displayName}
                 </Button>
               </View>
             </View>
@@ -406,10 +411,10 @@ export function Summary<Compact extends boolean = false>({
           caption
           color={ theme.colors.textSecondary }
           itemsCenter
-          leftIcon={ summary.category.icon }
+          leftIcon={ summary.category?.icon }
           gap={ 3 }
           onPress={ () => !disableInteractions && openCategory(summary.category) }>
-          {summary.category.displayName}
+          {summary.category?.displayName}
         </Chip>
         <Text
           caption
@@ -418,13 +423,28 @@ export function Summary<Compact extends boolean = false>({
         </Text>
         <Chip
           caption
-          color={ theme.colors.textSecondary }
-          onPress={ () => !disableInteractions && openArticleList(summary as PublicSummaryGroup) }>
+          color={ theme.colors.textSecondary }>
           {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.misc_article, (summary.siblings?.length ?? 0) + 1)}`}
         </Chip>
+        {isBookmarked && (
+          <React.Fragment>
+            <Text
+              caption
+              color={ theme.colors.textSecondary }>
+              •
+            </Text>
+            <Chip
+              caption
+              color={ theme.colors.textSecondary }
+              leftIcon="bookmark"
+              onPress={ () => !disableInteractions && navigate('bookmarks') }>
+              {strings.summary_bookmarked}
+            </Chip>
+          </React.Fragment>
+        )}
       </View>
     );
-  }, [disableInteractions, openArticleList, openCategory, summary, theme.colors.textSecondary]);
+  }, [disableInteractions, openCategory, summary, theme.colors.textSecondary, isBookmarked]);
   
   const image = React.useMemo(() => {
     if (compact || compactMode || !summary.imageUrl) {
@@ -494,13 +514,13 @@ export function Summary<Compact extends boolean = false>({
                 </Highlighter>
               </View>
             )}
-            {footer}
+            {!hideFooter && footer}
           </View>
         </View>
         {!(big) && image}
       </View>
     </View>
-  ), [initialFormat, title, translateToggle, compact, compactMode, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, footer, big, image]);
+  ), [initialFormat, title, translateToggle, compact, compactMode, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image]);
   
   const cardBody = React.useMemo(() => (
     <View flexGrow={ 1 }>
@@ -573,7 +593,7 @@ export function Summary<Compact extends boolean = false>({
         icon: () => <Icon name={ isBookmarked ? 'bookmark' : 'bookmark-outline' } />,
         key: `${isBookmarked ? 'unbookmark' : 'bookmark'}-${summary.id}`,
         onPress: async () => {
-          setIsBookmarked(!isBookmarked);
+          setIsBookmarked((prev) => !prev);
           bookmarkSummary(summary);
         },
         text: isBookmarked ? strings.summary_unbookmark : strings.summary_bookmark,
@@ -582,15 +602,8 @@ export function Summary<Compact extends boolean = false>({
         icon: () => <Icon name={ isRead ? 'email-mark-as-unread' : 'email-open' } />,
         key: `mark-as-${isRead ? 'unread' : 'read'}-${summary.id}`,
         onPress: () => {
-          setPreference('readSummaries', (prev) => {
-            const newBookmarks = { ...prev };
-            if (isRead || summary.id in newBookmarks) {
-              delete newBookmarks[summary.id];
-            } else {
-              newBookmarks[summary.id] = new Bookmark(true);
-            }
-            return (prev = newBookmarks);
-          });
+          setIsRead((prev) => !isRead);
+          readSummary(summary);
         },
         text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
       },
@@ -605,7 +618,8 @@ export function Summary<Compact extends boolean = false>({
         text: strings.summary_reportAtBug,
       },
       {
-        icon: () => <Icon name='eye-off' />,
+        icon: () => <Icon name='eye-off' color='destructive' />,
+        isDestructive: true,
         key: `hide-${summary.id}`,
         onPress: () => {
           onInteract?.(InteractionType.Hide, undefined, undefined, () => {
@@ -619,7 +633,7 @@ export function Summary<Compact extends boolean = false>({
       },
     ];
     return actions;
-  }, [summary, isBookmarked, isRead, onInteract, bookmarkSummary, setPreference]);
+  }, [summary, isBookmarked, isRead, onInteract, bookmarkSummary, readSummary, setPreference]);
 
   const card = React.useMemo(() => (
     <View
@@ -657,20 +671,17 @@ export function Summary<Compact extends boolean = false>({
 
   const fullCard = React.useMemo(() => (
     <View
-      style={ { ...theme.components.card, ...style } }
-      height='100%'>
+      style={ { ...theme.components.card, ...style } }>
       {!hideCard && (
         <View>
           {header}
         </View>
       )}
-      <ScrollView flexGrow={ 1 } { ...props }>
-        <View>
-          {!hideCard && image}
-          {!hideCard && coverContent}
-          {cardBody}
-        </View>
-      </ScrollView>
+      <View>
+        {!hideCard && image}
+        {!hideCard && coverContent}
+        {cardBody}
+      </View>
     </View>
   ), [theme.components.card, style, hideCard, header, image, coverContent, cardBody, props]);
   
