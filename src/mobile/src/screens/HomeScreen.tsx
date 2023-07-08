@@ -13,7 +13,7 @@ import {
   SummaryList,
 } from '~/components';
 import { useSummaryClient, useTheme } from '~/hooks';
-import { ChannelScreen, ScreenProps } from '~/screens';
+import { ScreenProps } from '~/screens';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -21,10 +21,10 @@ function HeadlinesTab({
   route,
   navigation: _navigation,
 }: ScreenProps<'search'>) {
-  const { getTopics } = useSummaryClient();
+  const { getTopStories } = useSummaryClient();
   return ( 
     <SummaryList
-      fetch={ getTopics }
+      fetch={ getTopStories }
       showWalkthroughs
       filter={ route?.params?.prefilter }
       interval={ '1d' } />
@@ -50,30 +50,9 @@ export function HomeScreen({
 
   const theme = useTheme();
   const { 
-    followedCategories,
     followCount,
     followFilter,
   } = React.useContext(SessionContext);
-
-  const categoryTabs = React.useMemo(() => {
-    return Object.values({ ...followedCategories }).filter((c) => typeof c === 'object').map((category) => (
-      <Tab.Screen 
-        key={ category.name }
-        name={ category.name }
-        component={ ChannelScreen }
-        options={ {
-          tabBarIcon: ({ color }) => (
-            <Icon 
-              name={ category.icon } 
-              color={ color } />
-          ),
-        } }
-        initialParams={ { 
-          attributes: category,
-          type: 'category',
-        } } />
-    ));
-  }, [followedCategories]);
 
   return (
     <Screen>
@@ -126,7 +105,6 @@ export function HomeScreen({
                 color={ color } />
             ),
           } } />
-        {categoryTabs}
       </Tab.Navigator>
     </Screen>
   );

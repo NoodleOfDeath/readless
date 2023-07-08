@@ -2,20 +2,17 @@ import React from 'react';
 import {
   Animated,
   DeviceEventEmitter,
-  ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
+import { ListRenderItem } from '@shopify/flash-list';
 import ms from 'ms';
 
 import {
-  AuthError,
-  BulkMetadataResponsePublicSummaryGroupSentimentNumber,
-  HttpResponse,
+  API,
   InteractionType,
-  InternalError,
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
@@ -46,7 +43,7 @@ import { parseKeywords } from '~/utils';
 
 export type SummaryListProps = ChildlessViewProps & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetch: (...args: any[]) => Promise<HttpResponse<BulkMetadataResponsePublicSummaryGroupSentimentNumber, AuthError | InternalError>>;
+  fetch: typeof API.getSummaries | typeof API.getTopStories;
   onFormatChange?: (summary: PublicSummaryGroup, format: ReadingFormat) => void;
   filter?: string;
   interval?: string;
@@ -121,17 +118,15 @@ export function SummaryList({
       setDetailSummary(undefined);
     }
     try {
-      const { data, error } = await fetch(
+      const { data, error } = await fetch({
+        excludeIds: !specificIds && Boolean(excludeIds),
         filter,
-        specificIds ?? excludeIds,
-        !specificIds && Boolean(excludeIds),
-        undefined,
+        ids: specificIds ?? excludeIds,
         interval,
-        getLocale(),
-        undefined,
+        locale: getLocale(),
+        offset: reset ? 0 : cursor,
         pageSize,
-        reset ? 0 : cursor
-      );
+      });
       if (error) {
         console.error(error);
         return;
@@ -139,7 +134,8 @@ export function SummaryList({
       if (!data) {
         return;
       }
-      setCursor((prev) => data.next ?? (prev + pageSize));
+      setCursor((prev) => data.next ?? (prev + data.rows.length));
+      console.log('next', data.next);
       setTotalResultCount(data.count);
       setDetailSummary((prev) => {
         if (!prev && data.count > 0) {
@@ -232,7 +228,7 @@ export function SummaryList({
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
           initiallyTranslated: Boolean(translationOn[summary.id]),
           keywords: parseKeywords(searchText),
-          summary: summary.id,
+          summary,
         });
       }
     },
@@ -268,13 +264,14 @@ export function SummaryList({
   }, [loadMore]);
   
   useFocusEffect(React.useCallback(() => {
-    if (summaries.length === 0) {
-      load(true);
-    }
     if (filter) {
       navigation?.setOptions({ headerTitle: filter });
     }
-  }, [filter, load, navigation, summaries.length]));
+    if (summaries.length === 0) {
+      load(true);
+      return;
+    }
+  }, [filter, load, navigation, summaries]));
   
   useAppState({ 
     onBackground: () => {
@@ -287,75 +284,21 @@ export function SummaryList({
     }, [lastActive, load]),
   });
 
-  const otherComponents = React.useMemo(() => {
-    const components: React.ReactNode[] = [];
-    if (showWalkthroughs) {
-      components.push(
-        <WalkthroughStack
-          onClose={ () => setShowWalkthroughs(false) } />
-      );
-    }
-    if (!loading && totalResultCount > summaries.length) {
-      components.push(
-        <View row justifyCenter p={ 16 } pb={ 24 }>
-          <Button 
-            outlined
-            rounded
-            p={ 8 }
-            onPress={ () => loadMore() }>
-            {strings.search_loadMore}
-          </Button>
-        </View>
-      );
-    }
-    if (loading) {
-      components.push (
-        <View row mb={ 64 }>
-          <View row justifyCenter p={ 16 } pb={ 24 }>
-            <ActivityIndicator size="large" color={ theme.colors.primary } />
-          </View>
-        </View>
-      );
-    }
-    if (summaries.length === 0 && !loading && loaded) {
-      components.push (
-        <View col gap={ 12 } itemsCenter justifyCenter>
-          <Text textCenter mx={ 16 }>
-            {strings.search_noResults}
-            {' '}
-            🥺
-          </Text>
-          <Button 
-            itemsCenter
-            rounded 
-            outlined 
-            p={ 8 }
-            onPress={ () => load(true) }>
-            {strings.search_reload}
-          </Button>
-        </View>
-      );
-    }
-    return components;
-  }, [showWalkthroughs, loading, totalResultCount, summaries.length, loaded, loadMore, theme.colors.primary, load]);
-
   const renderSummary: ListRenderItem<PublicSummaryGroup> = React.useCallback(({ item, index }) => {
     return (
-      <React.Fragment>
-        <Summary
-          big={ index % 4 === 0 }
-          summary={ item }
-          selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
-          keywords={ filter?.split(' ') }
-          onFormatChange={ (format) => handleFormatChange(item, format) }
-          onInteract={ (...e) => handleInteraction(item, ...e) }
-          onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
-            const state = { ...prev };
-            state[item.id] = onOrOff;
-            return (prev = state);
-          }) } />
-        <Divider my={ 6 } />
-      </React.Fragment>
+      <Summary
+        mx={ 12 }
+        big={ index % 4 === 0 }
+        summary={ item }
+        selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
+        keywords={ filter?.split(' ') }
+        onFormatChange={ (format) => handleFormatChange(item, format) }
+        onInteract={ (...e) => handleInteraction(item, ...e) }
+        onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
+          const state = { ...prev };
+          state[item.id] = onOrOff;
+          return (prev = state);
+        }) } />
     );
   }, [supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
@@ -366,10 +309,54 @@ export function SummaryList({
           <View row>
             <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
               <FlatList
-                p={ 12 }
                 data={ summaries }
                 renderItem={ renderSummary }
-                refreshing={ summaries.length === 0 && loading }
+                estimatedItemSize={ 120 }
+                ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
+                ListHeaderComponent={ () => (showWalkthroughs && (
+                  <WalkthroughStack
+                    onClose={ () => setShowWalkthroughs(false) } />
+                )) }
+                ListFooterComponent={ () => (
+                  <React.Fragment>
+                    {!loading && totalResultCount > summaries.length && (
+                      <View row justifyCenter p={ 16 } pb={ 24 }>
+                        <Button 
+                          outlined
+                          rounded
+                          p={ 8 }
+                          onPress={ () => loadMore() }>
+                          {strings.search_loadMore}
+                        </Button>
+                      </View>
+                    )}
+                    {(loading || summaries.length === 0) && (
+                      <View row mb={ 64 }>
+                        <View row justifyCenter p={ 16 } pb={ 24 }>
+                          <ActivityIndicator size="large" color={ theme.colors.primary } />
+                        </View>
+                      </View>
+                    )}
+                    {summaries.length === 0 && !loading && loaded && (
+                      <View col gap={ 12 } itemsCenter justifyCenter>
+                        <Text textCenter mx={ 16 }>
+                          {strings.search_noResults}
+                          {' '}
+                          🥺
+                        </Text>
+                        <Button 
+                          itemsCenter
+                          rounded 
+                          outlined 
+                          p={ 8 }
+                          onPress={ () => load(true) }>
+                          {strings.search_reload}
+                        </Button>
+                      </View>
+                    )}
+                  </React.Fragment>
+                ) }
+                refreshing={ summaries.length === 0 && loading && !loaded }
                 onScroll={ handleMasterScroll }
                 onRefresh={ () => {
                   load(true);

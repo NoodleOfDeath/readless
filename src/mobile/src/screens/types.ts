@@ -9,17 +9,17 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import {
   PublicCategoryAttributes,
-  PublicOutletAttributes,
+  PublicPublisherAttributes,
   PublicSummaryAttributes,
   ReadingFormat,
 } from '~/api';
 
-export type ChannelType = 'outlet' | 'category';
+export type ChannelType = 'publisher' | 'category';
 
 export type Channel<T extends ChannelType = ChannelType> = {
   type: T;
-  attributes: T extends 'outlet'
-    ? PublicOutletAttributes
+  attributes: T extends 'publisher'
+    ? PublicPublisherAttributes
     : PublicCategoryAttributes;
 };
 

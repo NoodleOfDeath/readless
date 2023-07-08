@@ -362,6 +362,8 @@ PODS:
     - React-Core
   - react-native-detector (0.2.3):
     - React
+  - react-native-in-app-review (4.3.3):
+    - React-Core
   - react-native-notifications (4.3.5):
     - React-Core
   - react-native-orientation-locker (1.5.0):
@@ -478,6 +480,8 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
+  - RNFlashList (1.4.3):
+    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.12.0):
@@ -488,7 +492,7 @@ PODS:
     - React-Core
   - RNReactNativeHapticFeedback (2.0.3):
     - React-Core
-  - RNReanimated (2.7.0):
+  - RNReanimated (2.8.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -594,6 +598,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-cloud-store (from `../node_modules/react-native-cloud-store`)
   - react-native-detector (from `../node_modules/react-native-detector`)
+  - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -619,6 +624,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
+  - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNIap (from `../node_modules/react-native-iap`)
@@ -717,6 +723,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-cloud-store"
   react-native-detector:
     :path: "../node_modules/react-native-detector"
+  react-native-in-app-review:
+    :path: "../node_modules/react-native-in-app-review"
   react-native-notifications:
     :path: "../node_modules/react-native-notifications"
   react-native-orientation-locker:
@@ -767,6 +775,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
+  RNFlashList:
+    :path: "../node_modules/@shopify/flash-list"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -836,6 +846,7 @@ SPEC CHECKSUMS:
   React-logger: 342f358b8decfbf8f272367f4eacf4b6154061be
   react-native-cloud-store: 90ba4db68197c680fb66d62464d65ec28161f4bd
   react-native-detector: 751696a5534f6bbc11be87515cca3d8d32593d73
+  react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
   react-native-notifications: 504143d59f9628c3b0c22fd0ccf34b65b9182d01
   react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
@@ -861,12 +872,13 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
+  RNFlashList: ade81b4e928ebd585dd492014d40fb8d0e848aab
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNIap: c397f49db45af3b10dca64b2325f21bb8078ad21
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNReactNativeHapticFeedback: afa5bf2794aecbb2dba2525329253da0d66656df
-  RNReanimated: c14845df48099ce8e7a3a0f6e654c858fa91d2c8
+  RNReanimated: 3102bd630c372ec7c38a5790eb625011361bc213
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNShare: d82e10f6b7677f4b0048c23709bd04098d5aee6c
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315

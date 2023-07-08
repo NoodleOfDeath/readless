@@ -12,7 +12,7 @@ import {
 
 import {
   PublicCategoryAttributes,
-  PublicOutletAttributes,
+  PublicPublisherAttributes,
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
@@ -29,6 +29,9 @@ export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
 export function SessionContextProvider({ children }: React.PropsWithChildren) { 
 
   const [ready, setReady] = React.useState(false);
+
+  const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes[]>>();
+  const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes[]>>();
 
   const [colorScheme, setColorScheme] = React.useState<ColorScheme>();
   const [fontFamily, setFontFamily] = React.useState<string>();
@@ -54,23 +57,23 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [readSources, setReadSources] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
   
-  const [followedOutlets, setFollowedOutlets] = React.useState<{ [key: string]: boolean }>();
-  const [excludedOutlets, setExcludedOutlets] = React.useState<{ [key: string]: boolean }>();
-  const [followedCategories, setFollowedCategories] = React.useState<{ [key: string]: PublicCategoryAttributes }>();
-  const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: PublicCategoryAttributes }>();
+  const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
+  const [excludedPublishers, setExcludedPublishers] = React.useState<{ [key: string]: boolean }>();
+  const [followedCategories, setFollowedCategories] = React.useState<{ [key: string]: boolean }>();
+  const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: boolean }>();
 
-  const followCount = React.useMemo(() => Object.keys({ ...followedOutlets }).length + Object.keys({ ...followedCategories }).length, [followedOutlets, followedCategories]);
+  const followCount = React.useMemo(() => Object.keys({ ...followedPublishers }).length + Object.keys({ ...followedCategories }).length, [followedPublishers, followedCategories]);
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
     if (Object.keys({ ...followedCategories }).length > 0) {
       filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
     }
-    if (Object.keys({ ...followedOutlets }).length > 0) {
-      filters.push(['src', Object.keys({ ...followedOutlets }).join(',')].join(':'));
+    if (Object.keys({ ...followedPublishers }).length > 0) {
+      filters.push(['src', Object.keys({ ...followedPublishers }).join(',')].join(':'));
     }
     return filters.join(' ');
-  }, [followedCategories, followedOutlets]);
+  }, [followedCategories, followedPublishers]);
   
   const bookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).length, [bookmarkedSummaries]);
   const unreadBookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).filter((k) => !(k in ({ ...readSummaries }))).length, [bookmarkedSummaries, readSummaries]);
@@ -157,10 +160,12 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       break;
       
     case 'followedOutlets':
-      setFollowedOutlets(newValue);
+    case 'followedPublishers':
+      setFollowedPublishers(newValue);
       break;
     case 'excludedOutlets':
-      setExcludedOutlets(newValue);
+    case 'excludedPublishers':
+      setExcludedPublishers(newValue);
       break;
     case 'followedCategories':
       setFollowedCategories(newValue);
@@ -227,25 +232,25 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     });
   };
 
-  const followOutlet = async (outlet: PublicOutletAttributes) => {
-    await setPreference('followedOutlets', (prev) => {
+  const followPublisher = async (publisher: PublicPublisherAttributes) => {
+    await setPreference('followedPublishers', (prev) => {
       const state = { ...prev };
-      if (outlet.name in state) {
-        delete state[outlet.name];
+      if (publisher.name in state) {
+        delete state[publisher.name];
       } else {
-        state[outlet.name] = true;
+        state[publisher.name] = true;
       }
       return (prev = state);
     });
   };
   
-  const excludeOutlet = async (outlet: PublicOutletAttributes) => {
-    await setPreference('excludedOutlets', (prev) => {
+  const excludePublisher = async (publisher: PublicPublisherAttributes) => {
+    await setPreference('excludedPublishers', (prev) => {
       const state = { ...prev };
-      if (outlet.name in state) {
-        delete state[outlet.name];
+      if (publisher.name in state) {
+        delete state[publisher.name];
       } else {
-        state[outlet.name] = true;
+        state[publisher.name] = true;
       }
       return (prev = state);
     });
@@ -257,7 +262,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       if (category.name in state) {
         delete state[category.name];
       } else {
-        state[category.name] = category;
+        state[category.name] = true;
       }
       return (prev = state);
     });
@@ -269,7 +274,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       if (category.name in state) {
         delete state[category.name];
       } else {
-        state[category.name] = category;
+        state[category.name] = true;
       }
       return (prev = state);
     });
@@ -318,10 +323,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setReadSources(await getPreference('readSources'));
     setRemovedSummaries(await getPreference('removedSummaries'));
     
-    // outlet/category statet
-    setFollowedOutlets(await getPreference('followedOutlets'));
+    // publisher/category statet
+    setFollowedPublishers(await getPreference('followedOutlets') ?? await getPreference('followedPublishers'));
     setFollowedCategories(await getPreference('followedCategories'));
-    setExcludedOutlets(await getPreference('excludedOutlets'));
+    setExcludedPublishers(await getPreference('excludedOutlets') ?? await getPreference('excludedPublishers'));
     setExcludedCategories(await getPreference('excludedCategories'));
     
     setReady(true);
@@ -342,18 +347,19 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         bookmarkCount,
         bookmarkSummary,
         bookmarkedSummaries,
+        categories,
         colorScheme,
         compactMode,
         excludeCategory,
-        excludeOutlet,
+        excludePublisher,
         excludedCategories,
-        excludedOutlets,
+        excludedPublishers,
         followCategory,
         followCount,
         followFilter,
-        followOutlet,
+        followPublisher,
         followedCategories,
-        followedOutlets,
+        followedPublishers,
         fontFamily,
         fontSizeOffset,
         getPreference,
@@ -361,6 +367,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         lineHeightMultiplier,
         loadedInitialUrl,
         preferredReadingFormat,
+        publishers,
         readSource,
         readSources,
         readSummaries,
@@ -372,7 +379,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         rotationLock,
         searchHistory,
         sentimentEnabled,
+        setCategories,
         setPreference,
+        setPublishers,
         showOnlyCustomNews,
         showShortSummary,
         sourceLinks,

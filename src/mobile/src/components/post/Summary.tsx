@@ -8,6 +8,8 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { HoldItem } from 'react-native-hold-menu';
 import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 
+import { PublisherIcon } from './PublisherIcon';
+
 import { 
   InteractionType,
   PublicSummaryGroup,
@@ -91,6 +93,11 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
       name: '',
     },
     outletId: 0,
+    publisher: {
+      displayName: strings.misc_publisher,
+      name: '',
+    },
+    publisherId: 0,
     sentiment: 0.3,
     sentiments: [{
       method: 'openai',
@@ -126,7 +133,7 @@ export function Summary({
   ...props
 }: Props) {
 
-  const { openOutlet, openCategory } = useNavigation();
+  const { openPublisher, openCategory } = useNavigation();
   const { localizeSummary } = useServiceClient();
   const { getSummary } = useSummaryClient();
   const { openURL } = useInAppBrowser();
@@ -295,33 +302,13 @@ export function Summary({
               flexRow
               itemsCenter
               gap={ 6 }
-              onPress={ () => !disableInteractions && openOutlet(summary.outlet) }>
-              <View
-                borderRadius={ 3 }
-                overflow="hidden">
-                <Image 
-                  fallbackComponent={ (
-                    <Chip
-                      bg={ theme.colors.primaryLight }
-                      color={ theme.colors.contrastText }
-                      itemsCenter
-                      justifyCenter
-                      adjustsFontSizeToFit
-                      textCenter
-                      width={ 20 }
-                      height={ 20 }>
-                      {summary.outlet.displayName[0]}
-                    </Chip>
-                  ) }
-                  source={ { uri: `https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/${summary.outlet.name}.png` } }
-                  width={ 20 }
-                  height={ 20 } />
-              </View>
+              onPress={ () => !disableInteractions && openPublisher(summary.publisher) }>
+              <PublisherIcon publisher={ summary.publisher } />
               <Text 
                 bold
                 caption
                 color={ theme.colors.textSecondary }>
-                {summary.outlet.displayName}
+                {summary.publisher.displayName}
               </Text>
             </View>
             {timestamp}
@@ -363,7 +350,7 @@ export function Summary({
                   px={ 12 }
                   adjustsFontSizeToFit
                   onPress={ () => !disableInteractions && openURL(summary.url) }>
-                  {summary.outlet.displayName}
+                  {summary.publisher.displayName}
                 </Button>
               </View>
             </View>
@@ -371,7 +358,7 @@ export function Summary({
         )}
       </View>
     </View>
-  ), [initialFormat, theme.colors.headerBackground, theme.colors.primaryLight, theme.colors.contrastText, theme.colors.textSecondary, summary.outlet, summary.category, summary.url, timestamp, forceSentiment, isSentimentEnabled, sentimentMeter, title, disableInteractions, openOutlet, openCategory, openURL]);
+  ), [initialFormat, theme.colors.headerBackground, theme.colors.textSecondary, summary.publisher, summary.category, summary.url, timestamp, forceSentiment, isSentimentEnabled, sentimentMeter, title, disableInteractions, openPublisher, openCategory, openURL]);
   
   const translateToggle = React.useMemo(() => {
     if (/^en/i.test(getLocale())) {
@@ -423,20 +410,16 @@ export function Summary({
           onPress={ () => openCategory(summary.category) }>
           {summary.category.displayName}
         </Chip>
-        {summary.siblings && summary.siblings.length > 0 && (
-          <React.Fragment>
-            <Text
-              caption
-              color={ theme.colors.textSecondary }>
-              •
-            </Text>
-            <Text
-              caption
-              color={ theme.colors.textSecondary }>
-              {`${summary.siblings.length + 1} ${pluralize(strings.misc_article, summary.siblings.length)}`}
-            </Text>
-          </React.Fragment>
-        )}
+        <Text
+          caption
+          color={ theme.colors.textSecondary }>
+          •
+        </Text>
+        <Text
+          caption
+          color={ theme.colors.textSecondary }>
+          {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.misc_article, (summary.siblings?.length ?? 0) + 1)}`}
+        </Text>
       </View>
     );
   }, [openCategory, summary.category, summary.siblings, theme.colors.textSecondary]);

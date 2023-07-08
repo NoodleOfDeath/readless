@@ -2,7 +2,7 @@ import React from 'react';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { PublicCategoryAttributes, PublicOutletAttributes } from '~/api';
+import { PublicCategoryAttributes, PublicPublisherAttributes } from '~/api';
 import {
   Button,
   Chip,
@@ -29,9 +29,9 @@ export function ChannelScreen({
   const theme = useTheme();
 
   const {
-    followedOutlets,
+    followedPublishers,
     followedCategories,
-    followOutlet,
+    followPublisher,
     followCategory,
   } = React.useContext(SessionContext);
 
@@ -46,8 +46,8 @@ export function ChannelScreen({
     }
     type === 'category' ? 
       setBookmarked(attributes.name in (followedCategories ?? {})) :
-      setBookmarked(attributes.name in (followedOutlets ?? {}));
-  }, [attributes, type, followedCategories, followedOutlets]);
+      setBookmarked(attributes.name in (followedPublishers ?? {}));
+  }, [attributes, type, followedCategories, followedPublishers]);
 
   const prefilter = React.useMemo(() => {
     if (!attributes) {
@@ -56,7 +56,7 @@ export function ChannelScreen({
     switch (type) {
     case 'category':
       return `cat:${attributes.name}`;
-    case 'outlet':
+    case 'publisher':
       return `src:${attributes.name}`;
     default:
       return undefined;
@@ -70,8 +70,8 @@ export function ChannelScreen({
     setBookmarked((prev) => !prev);
     type === 'category' ? 
       followCategory(attributes as PublicCategoryAttributes) :
-      followOutlet(attributes);
-  }, [attributes, type, followCategory, followOutlet]);
+      followPublisher(attributes);
+  }, [attributes, type, followCategory, followPublisher]);
   
   return (
     <Screen>
@@ -90,7 +90,7 @@ export function ChannelScreen({
               { type === 'category' && (
                 <Icon name={ (attributes as PublicCategoryAttributes).icon } size={ 24 } />
               )}
-              { type === 'outlet' && (
+              { type === 'publisher' && (
                 <Image 
                   fallbackComponent={ (
                     <Chip
@@ -105,7 +105,7 @@ export function ChannelScreen({
                       {attributes?.displayName[0]}
                     </Chip>
                   ) }
-                  source={ { uri: `https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/${(attributes as PublicOutletAttributes).name}.png` } }
+                  source={ { uri: `https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/${(attributes as PublicPublisherAttributes).name}.png` } }
                   width={ 40 }
                   height={ 40 } />
               )}

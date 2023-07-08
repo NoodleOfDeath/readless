@@ -1,12 +1,10 @@
 import React from 'react';
 
-import { PublicCategoryAttributes } from '../../api';
-
 import { ChildlessViewProps, GridPicker } from '~/components';
 import { SessionContext, useCategoryClient } from '~/core';
 
 export type CategoryPickerProps = ChildlessViewProps & {
-  onValueChange?: (categories?: PublicCategoryAttributes[]) => void;
+  onValueChange?: (categories?: string[]) => void;
 };
 
 export function CategoryPicker(props: CategoryPickerProps) {
@@ -29,7 +27,7 @@ export function CategoryPicker(props: CategoryPickerProps) {
       multi
       initialValue={ selectedCategories }
       onValueChange={ (states) => {
-        const categories = (states ?? []).map((option) => option.payload).filter(Boolean) as PublicCategoryAttributes[];
+        const categories = (states ?? []).map((option) => option.value);
         props.onValueChange?.(categories);
       } } />
   );

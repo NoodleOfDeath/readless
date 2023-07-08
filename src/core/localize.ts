@@ -64,7 +64,7 @@ async function sync({
       }
       toTranslate = {};
       for (const key of Object.keys(enStrings)) {
-        if (enStrings[key] !== oldStrings[key] || !(key in oldStrings)) {
+        if (!(key in oldStrings)) {
           toTranslate[key] = enStrings[key];
         }
       }

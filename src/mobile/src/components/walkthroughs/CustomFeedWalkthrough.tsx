@@ -3,13 +3,12 @@ import React from 'react';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import Svg, { Ellipse } from 'react-native-svg';
 
-import { PublicCategoryAttributes } from '~/api';
 import {
   Button,
   CategoryPicker,
   Icon,
   Markdown,
-  OutletPicker,
+  PublisherPicker,
   Pulse,
   Switch,
   View,
@@ -24,19 +23,19 @@ export function CustomFeedWalkthrough(props: SheetProps) {
   const theme = useTheme();
   const { setPreference } = React.useContext(SessionContext);
   
-  const [categories, setCategories] = React.useState<PublicCategoryAttributes[]>();
+  const [categories, setCategories] = React.useState<string[]>();
   const [publishers, setPublishers] = React.useState<string[]>();
 
   const saveChanges = React.useCallback(async () => {
     if (categories) {
       setPreference(
         'followedCategories', 
-        Object.fromEntries(categories.map((category) => [category.name, category]))
+        Object.fromEntries(categories.map((category) => [category, true]))
       );
     }
     if (publishers) {
       setPreference(
-        'followedOutlets', 
+        'followedPublishers', 
         Object.fromEntries(publishers.map((publisher) => [publisher, true]))
       );
     }
@@ -71,7 +70,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
           <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_customFeed_readlessPulls}
           </Markdown>
-          <OutletPicker 
+          <PublisherPicker 
             onValueChange={ setPublishers }
             height={ 500 } />
         </View>
