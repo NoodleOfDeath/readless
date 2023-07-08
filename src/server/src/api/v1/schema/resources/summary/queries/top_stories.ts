@@ -14,8 +14,8 @@ FROM (
     b.outlet,
     b.category,
     siblings,
-    b.sentiment,
-    b.sentiments,
+    sentiment,
+    sentiments,
     "totalCount"
   FROM (
     SELECT
