@@ -21,23 +21,23 @@ export type Selectors = {
   title?: Selector;
 };
 
-export type OutletAttributes = DatedAttributes & Sentimental & {
+export type PublisherAttributes = DatedAttributes & Sentimental & {
   baseUrl: string;
-  /** name of this outlet */
+  /** name of this publisher */
   name: string;
-  /** xml site maps for this outlet and selector for extracting urls */
+  /** xml site maps for this publisher and selector for extracting urls */
   displayName: string;
   imageUrl?: string;
   description?: string;
   selectors: Selectors;
   maxAge: string;
-  /** fetch policy for this outlet */
+  /** fetch policy for this publisher */
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone: string;
   disabled?: boolean;
 };
 
-export type OutletCreationAttributes = Partial<DatedAttributes & Sentimental> & {
+export type PublisherCreationAttributes = Partial<DatedAttributes & Sentimental> & {
   baseUrl: string;
   name: string;
   displayName: string;
@@ -52,21 +52,21 @@ export type OutletCreationAttributes = Partial<DatedAttributes & Sentimental> & 
 
 const DEFAULT_TIMEZONE = process.env.DEFAULT_TIMZONE || 'EST';
 
-export const PUBLIC_OUTLET_ATTRIBUTES = [
+export const PUBLIC_PUBLISHER_ATTRIBUTES = [
   'name',
   'displayName',
   'imageUrl',
   'description',
 ] as const;
 
-export type PublicOutletAttributes = Sentimental & {
+export type PublicPublisherAttributes = Sentimental & {
   name: string;
   displayName: string;
   imageUrl?: string;
   description?: string;
 };
 
-export const OUTLETS: Record<string, OutletCreationAttributes> = {
+export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   _9to5google: {
     baseUrl: 'https://9to5google.com',
     displayName: '9to5google',

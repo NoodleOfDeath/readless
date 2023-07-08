@@ -9,8 +9,8 @@ import {
 import { DBService, OpenAIService } from '../services';
 
 export async function main() {
-  await DBService.initTables();
-  await Queue.initQueues();
+  await DBService.prepare();
+  await Queue.prepare();
   doWork();
 }
 

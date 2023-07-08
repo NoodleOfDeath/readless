@@ -2,9 +2,9 @@ import { Queue, Worker } from '../api/v1/schema/models';
 import { DBService, ScribeService } from '../services';
 
 export async function main() {
-  await DBService.initTables();
-  await Queue.initQueues();
-  await ScribeService.init();
+  await DBService.prepare();
+  await Queue.prepare();
+  await ScribeService.prepare();
   doWork();
 }
 

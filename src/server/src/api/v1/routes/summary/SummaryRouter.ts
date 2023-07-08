@@ -32,7 +32,7 @@ router.get(
   async (req, res) => {
     try {
       const params = SummaryController.serializeParams(req.query);
-      params.version = JSON.stringify(req?.headers['x-app-version'] || '1.11.0');
+      params.version = JSON.stringify(req?.headers['x-app-version']);
       const response = await SummaryController.getSummariesInternal(params);
       return res.json(response);
     } catch (err) {
@@ -42,7 +42,7 @@ router.get(
 );
 
 router.get(
-  '/topics',
+  '/top',
   rateLimitMiddleware('20 per 1m'),
   query('filter').isString().optional(),
   query('ids').optional(),
@@ -57,8 +57,8 @@ router.get(
   async (req, res) => {
     try {
       const params = SummaryController.serializeParams(req.query);
-      params.version = JSON.stringify(req?.headers['x-app-version'] || '1.11.0');
-      const response = await SummaryController.getTopicsInternal(params);
+      params.version = JSON.stringify(req?.headers['x-app-version']);
+      const response = await SummaryController.getTopStoriesInternal(params);
       return res.json(response);
     } catch (err) {
       internalErrorHandler(res, err);

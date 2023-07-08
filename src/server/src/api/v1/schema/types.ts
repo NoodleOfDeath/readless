@@ -54,8 +54,6 @@ export * from './user/Role.types';
 // Posts
 export * from './resources/Post.types';
 
-export * from './resources/nlp/Token.types';
-export * from './resources/nlp/TokenType.types';
 export * from './resources/sentiment/SentimentMethod.types';
 export * from './resources/localization/Translation.types';
 export * from './resources/media/Media.types';
@@ -63,11 +61,10 @@ export * from './resources/media/Media.types';
 export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
 
-export * from './resources/channel/Outlet.types';
+export * from './resources/channel/Publisher.types';
 export * from './resources/channel/Category.types';
 
 export * from './resources/summary/Summary.types';
-export * from './resources/summary/SummaryToken.types';
 export * from './resources/summary/SummarySentiment.types';
 export * from './resources/summary/SummaryInteraction.types';
 export * from './resources/summary/SummaryTranslation.types';
@@ -75,7 +72,6 @@ export * from './resources/summary/SummaryMedia.types';
 export * from './resources/summary/SummaryRelation.types';
 
 export * from './resources/recap/Recap.types';
-export * from './resources/recap/RecapSentiment.types';
 export * from './resources/recap/RecapInteraction.types';
 export * from './resources/recap/RecapTranslation.types';
 export * from './resources/recap/RecapMedia.types';

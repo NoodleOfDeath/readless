@@ -21,14 +21,12 @@ export * from './user/Credential.model';
 export * from './user/Role.model';
 
 // resource models
-export * from './resources/nlp/TokenType.model';
 export * from './resources/sentiment/SentimentMethod.model';
 
-export * from './resources/channel/Outlet.model';
+export * from './resources/channel/Publisher.model';
 export * from './resources/channel/Category.model';
 
 export * from './resources/summary/Summary.model';
-export * from './resources/summary/SummaryToken.model';
 export * from './resources/summary/SummarySentiment.model';
 export * from './resources/summary/SummaryInteraction.model';
 export * from './resources/summary/SummaryTranslation.model';
@@ -36,7 +34,6 @@ export * from './resources/summary/SummaryMedia.model';
 export * from './resources/summary/SummaryRelation.model';
 
 export * from './resources/recap/Recap.model';
-export * from './resources/recap/RecapSentiment.model';
 export * from './resources/recap/RecapInteraction.model';
 export * from './resources/recap/RecapTranslation.model';
 export * from './resources/recap/RecapMedia.model';

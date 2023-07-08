@@ -3,7 +3,7 @@ import { Op } from 'sequelize';
 
 import {
   Job,
-  Outlet,
+  Publisher,
   Queue,
   Recap,
   Worker,
@@ -15,9 +15,9 @@ const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
 async function main() {
-  await DBService.initTables();
-  await Queue.initQueues();
-  await Outlet.initOutlets();
+  await DBService.prepare();
+  await Queue.prepare();
+  await Publisher.prepare();
   cleanUpDeadWorkers();
   scheduleCacheJobs();
   scheduleRecapJobs();
@@ -27,20 +27,20 @@ async function main() {
 export async function pollForNews() {
   console.log('fetching news!');
   try {
-    const { rows: outlets } = await Outlet.findAndCountAll();
-    const queue = await Queue.from(Queue.QUEUES.siteMaps);
-    for (const outlet of outlets) {
+    const { rows: publishers } = await Publisher.findAndCountAll();
+    const queue = await Queue.from(Queue.QUEUES.sitemaps);
+    for (const publisher of publishers) {
       try {
-        console.log(`fetching sitemaps for ${outlet.name}`);
-        const urls = await PuppeteerService.crawl(outlet);
+        console.log(`fetching sitemaps for ${publisher.name}`);
+        const urls = await PuppeteerService.crawl(publisher);
         for (const url of urls) {
           await queue.add(
             url,
             { 
-              outlet: outlet.name,
+              publisher: publisher.name,
               url,
             },
-            outlet.name
+            publisher.name
           );
         }
       } catch (e) {
@@ -74,7 +74,7 @@ export async function cleanUpDeadWorkers() {
       }, { where: { lockedBy: deadWorkers } });
     }
     // clean up stale sitemaps jobs
-    await Job.destroy({ where: { queue: 'siteMaps', [Op.or]: [ { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }] } });
+    await Job.destroy({ where: { queue: 'sitemaps', [Op.or]: [ { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }] } });
   } catch (e) {
     console.error(e);
   } finally {

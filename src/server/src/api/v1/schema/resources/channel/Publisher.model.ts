@@ -8,44 +8,44 @@ import {
 
 import {
   FetchPolicy,
-  OUTLETS,
-  OutletAttributes,
-  OutletCreationAttributes,
+  PUBLISHERS,
+  PublisherAttributes,
+  PublisherCreationAttributes,
   Selectors,
-} from './Outlet.types';
+} from './Publisher.types';
 import { BaseModel } from '../../base';
 import { RateLimit } from '../../system/RateLimit.model';
 
-const OUTLET_FETCH_LIMIT = process.env.OUTLET_FETCH_LIMIT ? Number(process.env.OUTLET_FETCH_LIMIT) : 1; // 1 for dev and testing
-const OUTLET_MAX_ATTEMPT_LIMIT = process.env.OUTLET_MAX_ATTEMPT_LIMIT ? Number(process.env.OUTLET_MAX_ATTEMPT_LIMIT) : 5;
-const OUTLET_FETCH_INTERVAL = process.env.OUTLET_FETCH_INTERVAL || '1d';
+const PUBLISHER_FETCH_LIMIT = process.env.PUBLISHER_FETCH_LIMIT ? Number(process.env.PUBLISHER_FETCH_LIMIT) : 1; // 1 for dev and testing
+const PUBLISHER_MAX_ATTEMPT_LIMIT = process.env.PUBLISHER_MAX_ATTEMPT_LIMIT ? Number(process.env.PUBLISHER_MAX_ATTEMPT_LIMIT) : 5;
+const PUBLISHER_FETCH_INTERVAL = process.env.PUBLISHER_FETCH_INTERVAL || '1d';
 
 @Table({
-  modelName: 'outlet',
+  modelName: 'publisher',
   paranoid: true,
   timestamps: true,
 })
-export class Outlet<
-    A extends OutletAttributes = OutletAttributes,
-    B extends OutletCreationAttributes = OutletCreationAttributes,
+export class Publisher<
+    A extends PublisherAttributes = PublisherAttributes,
+    B extends PublisherCreationAttributes = PublisherCreationAttributes,
   >
   extends BaseModel<A, B>
-  implements OutletAttributes {
+  implements PublisherAttributes {
 
-  static async initOutlets() {
-    for (const outlet of Object.values(OUTLETS)) {
-      await this.upsert(outlet);
+  static async prepare() {
+    for (const publisher of Object.values(PUBLISHERS)) {
+      await this.upsert(publisher);
     }
   } 
 
   @AfterFind
-  static async legacySupport(cursor: Outlet | Outlet[]) {
+  static async legacySupport(cursor: Publisher | Publisher[]) {
     if (!cursor) {
       return;
     }
-    const outlets = Array.isArray(cursor) ? cursor : [cursor];
-    for (const outlet of outlets) {
-      outlet.set('sentiment', 0, { raw: true });
+    const publishers = Array.isArray(cursor) ? cursor : [cursor];
+    for (const publisher of publishers) {
+      publisher.set('sentiment', 0, { raw: true });
     }
   }
 
@@ -102,14 +102,14 @@ export class Outlet<
   declare sentiment?: number;
   
   async getRateLimit(namespace = 'default') {
-    const key = ['//outlet', this.id, this.name, namespace].join('§§');
+    const key = ['//publisher', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });
     if (!limit) {
       limit = await RateLimit.create({
-        expiresAt: new Date(Date.now() + ms(OUTLET_FETCH_INTERVAL)),
+        expiresAt: new Date(Date.now() + ms(PUBLISHER_FETCH_INTERVAL)),
         key,
-        limit: namespace === 'default' ? OUTLET_FETCH_LIMIT : OUTLET_MAX_ATTEMPT_LIMIT,
-        window: ms(OUTLET_FETCH_INTERVAL),
+        limit: namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
+        window: ms(PUBLISHER_FETCH_INTERVAL),
       });
     }
     return limit;

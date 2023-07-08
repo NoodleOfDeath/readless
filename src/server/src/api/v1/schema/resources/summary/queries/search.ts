@@ -15,7 +15,8 @@ FROM (
     b.url,
     b."imageUrl",
     b."originalDate",
-    outlet::JSON,
+    outlet::JSON, -- legacy support
+    publisher::JSON,
     category::JSON,
     translations::JSON,
     sentiment,
@@ -24,15 +25,18 @@ FROM (
       'key', media.key,
       'url', media.url,
       'path', media.path
-    ))
-    FILTER (WHERE media.key IS NOT NULL), '[]'::JSON)AS media,
+    )) FILTER (WHERE media.key IS NOT NULL), '[]'::JSON)AS media,
     COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
       'id', sibling.id,
       'title', sibling.title,
       'originalDate', sibling."originalDate",
-      'outlet', JSONB_BUILD_OBJECT( 
-         'name', sibling_outlet.name,
-         'displayName', sibling_outlet."displayName"
+      'outlet', JSONB_BUILD_OBJECT( -- legacy support
+         'name', sibling_pub.name,
+         'displayName', sibling_pub."displayName"
+      ),
+      'publisher', JSONB_BUILD_OBJECT( 
+         'name', sibling_pub.name,
+         'displayName', sibling_pub."displayName"
       )
     )) FILTER (WHERE sibling.id IS NOT NULL), '[]'::JSON) AS siblings,
     "averageSentiment",
@@ -48,12 +52,15 @@ FROM (
       "imageUrl",
       "originalDate",
       JSONB_BUILD_OBJECT(
-        'id', "outlet.id",
-        'name', "outlet.name",
-        'displayName', "outlet.displayName",
-        'brandImageUrl', "outlet.brandImageUrl",
-        'description', "outlet.description"
-      )::TEXT AS outlet,
+        'id', "publisher.id",
+        'name', "publisher.name",
+        'displayName', "publisher.displayName"
+      )::TEXT AS outlet, -- legacy support
+      JSONB_BUILD_OBJECT(
+        'id', "publisher.id",
+        'name', "publisher.name",
+        'displayName', "publisher.displayName"
+      )::TEXT AS publisher,
       JSONB_BUILD_OBJECT(
         'id', "category.id",
         'name', "category.name",
@@ -78,11 +85,11 @@ FROM (
         summaries.url,
         summaries."imageUrl",
         summaries."originalDate",
-        outlets.id AS "outlet.id",
-        outlets.name AS "outlet.name",
-        outlets."displayName" AS "outlet.displayName",
-        outlets."brandImageUrl" AS "outlet.brandImageUrl",
-        outlets.description AS "outlet.description",
+        pub.id AS "publisher.id",
+        pub.name AS "publisher.name",
+        pub."displayName" AS "publisher.displayName",
+        pub."brandImageUrl" AS "publisher.brandImageUrl",
+        pub.description AS "publisher.description",
         cat.id AS "category.id",
         cat.name AS "category.name",
         cat."displayName" AS "category.displayName",
@@ -93,9 +100,9 @@ FROM (
         ss.sentiments::TEXT AS sentiments
       FROM
         summaries
-        LEFT OUTER JOIN outlets
-          ON summaries."outletId" = outlets.id 
-          AND (outlets."deletedAt" IS NULL) 
+        LEFT OUTER JOIN publishers pub
+          ON summaries."publisherId" = pub.id 
+          AND (pub."deletedAt" IS NULL) 
         LEFT OUTER JOIN categories cat
           ON summaries."categoryId" = cat.id 
           AND (cat."deletedAt" IS NULL) 
@@ -122,8 +129,8 @@ FROM (
           OR NOT :excludeIds
         )
         AND (
-          (outlets.name IN (:outlets))
-          OR :noOutlets
+          (pub.name IN (:publishers))
+          OR :noPublishers
         )
         AND (
           (cat.name IN (:categories))
@@ -149,11 +156,11 @@ FROM (
       url,
       "imageUrl",
       "originalDate",
-      "outlet.id",
-      "outlet.name",
-      "outlet.displayName",
-      "outlet.brandImageUrl",
-      "outlet.description",
+      "publisher.id",
+      "publisher.name",
+      "publisher.displayName",
+      "publisher.brandImageUrl",
+      "publisher.description",
       "category.id",
       "category.name",
       "category.displayName",
@@ -174,8 +181,8 @@ FROM (
   LEFT OUTER JOIN summaries AS sibling
     ON sr."siblingId" = sibling.id
     AND (sr."deletedAt" IS NULL)
-  LEFT OUTER JOIN outlets AS sibling_outlet
-    ON (sibling_outlet.id = sibling."outletId")
+  LEFT OUTER JOIN publishers AS sibling_pub
+    ON (sibling_pub.id = sibling."publisherId")
   GROUP BY
     b.id,
     b.title,
@@ -185,7 +192,8 @@ FROM (
     b.url,
     b."imageUrl",
     b."originalDate",
-    b.outlet,
+    b.outlet, -- legacy support
+    b.publisher,
     b.category,
     b.translations,
     b.sentiment,

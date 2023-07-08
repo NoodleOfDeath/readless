@@ -12,10 +12,7 @@ import {
 import {
   Category,
   Recap,
-  RecapSentiment,
-  RecapSummary,
   SentimentMethod,
-  SentimentMethodName,
   Subscription,
   Summary,
   SummaryMedia,
@@ -39,11 +36,11 @@ export class ScribeService extends BaseService {
   
   static categories: string[] = [];
   
-  public static async init() {
-    await Category.initCategories();
+  public static async prepare() {
+    await Category.prepare();
     const categories = await Category.findAll();
     this.categories = categories.map((c) => c.displayName);
-    await SentimentMethod.initSentimentMethods();
+    await SentimentMethod.prepare();
   }
 
   public static async error(subject: string, text = subject, throws = true): Promise<void> {
@@ -60,14 +57,14 @@ export class ScribeService extends BaseService {
   
   public static async readAndSummarize(
     {
-      url, content, outlet, force, 
+      url, content, outlet, publisher = outlet, force, // -- legacy support
     }: ReadAndSummarizePayload
   ): Promise<Summary> {
     if (this.categories.length === 0) {
-      await this.init();
+      await this.prepare();
     }
-    if (!outlet) {
-      throw new Error('no outlet id specified');
+    if (!publisher) {
+      throw new Error('no publisher id specified');
     }
     if (!force) {
       const existingSummary = await Summary.findOne({ where: { url } });
@@ -82,7 +79,7 @@ export class ScribeService extends BaseService {
       throw new Error('Probably not a news article');
     }
     // fetch web content with the spider
-    const loot = await PuppeteerService.loot(url, outlet, { content });
+    const loot = await PuppeteerService.loot(url, publisher, { content });
     // create the prompt onReply map to be sentto ChatGPT
     if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
@@ -91,7 +88,7 @@ export class ScribeService extends BaseService {
       await this.error('Article too short', [url, loot.content].join('\n\n'));
     }
     if (!loot.date || Number.isNaN(loot.date.valueOf())) {
-      await this.error('Invalid date found', [url, JSON.stringify(outlet.selectors.date), loot.dateMatches.join('\n-----\n')].join('\n\n'));
+      await this.error('Invalid date found', [url, JSON.stringify(publisher.selectors.date), loot.dateMatches.join('\n-----\n')].join('\n\n'));
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
@@ -108,7 +105,8 @@ export class ScribeService extends BaseService {
       imageUrl: '',
       originalDate: loot.date,
       originalTitle: loot.title,
-      outletId: outlet.id,
+      outletId: publisher.id, //  -- legacy support
+      publisherId: publisher.id,
       rawText: loot.rawText,
       url,
     });
@@ -287,7 +285,7 @@ export class ScribeService extends BaseService {
       
         this.log('Generating tts');
         // generate media
-        const result = await TtsService.generate({ text: `From ${outlet.displayName}: ${summary.title}` });
+        const result = await TtsService.generate({ text: `From ${publisher.displayName}: ${summary.title}` });
         const obj = await TtsService.mirror(result.url, {
           ACL: 'public-read',
           Folder: 'audio/s',
@@ -325,14 +323,14 @@ export class ScribeService extends BaseService {
       
       console.log(start, end);
 
-      const summaries = (await Summary.getTopics({ interval: duration })).rows;
+      const summaries = (await Summary.getTopStories({ interval: duration })).rows;
       
       if (summaries.length === 0) {
         await this.error('no summaries to recap');
       }
 
       const sourceSummaries = summaries.map((summary) => 
-        `[${summary.id}] (${summary.siblings.length} articles) ${summary.outlet.displayName}: ${summary.title} - ${summary.shortSummary}`);
+        `[${summary.id}] (${summary.siblings.length} articles) ${summary.publisher.displayName}: ${summary.title} - ${summary.shortSummary}`);
 
       const mainPrompt = 
         `I will provide you with a list of news events that occurred on ${start.toLocaleString()}. Please summarize the highlights in three to five paragraphs, blog form, making sure to prioritize topics that seem like breaking news and/or have a greater number of related articles written about them indicated in parentheses.
@@ -399,32 +397,6 @@ export class ScribeService extends BaseService {
       }
       
       const recap = await Recap.create(newRecap);
-      
-      if (this.features.recapSentiments) {
-      
-        const sentiments: { [key in keyof SentimentMethodName]?: number[] } = {};
-        for (const summary of summaries) {
-          await RecapSummary.create({
-            parentId: recap.id,
-            summaryId: summary.id,
-          });
-          const summarySentiments = await summary.getSentiments();
-          summarySentiments.forEach((sentiment) => {
-            const scores = sentiments[sentiment.method] ?? [];
-            scores.push(sentiment.score);
-            sentiments[sentiment.method] = scores;
-          });
-        }
-        
-        for (const [method, scores] of Object.entries(sentiments)) {
-          await RecapSentiment.create({
-            method: method as SentimentMethodName,
-            parentId: recap.id,
-            score: scores.reduce((prev, curr) => prev + curr, 0) / scores.length,
-          });
-        }
-        
-      }
 
       await Subscription.notify('daily-recap', 'email', {
         html: await recap.formatAsHTML(summaries),

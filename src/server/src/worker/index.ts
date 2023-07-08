@@ -1,5 +1,5 @@
 export async function main() {
-  if (process.env.WORKER_QUEUE === 'siteMaps') {
+  if (process.env.WORKER_QUEUE === 'sitemaps') {
     await import('./SiteMapWorker');
   } else if (process.env.WORKER_QUEUE === 'topics') {
     await import('./TopicWorker');

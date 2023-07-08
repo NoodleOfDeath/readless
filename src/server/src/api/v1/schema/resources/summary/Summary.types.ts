@@ -5,7 +5,7 @@ import {
   PostCreationAttributes,
 } from '../Post.types';
 import { PublicCategoryAttributes } from '../channel/Category.types';
-import { PublicOutletAttributes } from '../channel/Outlet.types';
+import { PublicPublisherAttributes } from '../channel/Publisher.types';
 import { Translatable } from '../localization/Translation.types';
 import { Sentimental } from '../sentiment/Sentiment.types';
 
@@ -17,8 +17,12 @@ export const READING_FORMATS = {
 export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS];
 
 export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
+  publisherId: number;
+  publisher: PublicPublisherAttributes;
+  // legacy support
   outletId: number;
-  outlet: PublicOutletAttributes;
+  // legacy support
+  outlet: PublicPublisherAttributes;
   categoryId: number;
   category: PublicCategoryAttributes;
   subcategoryId?: number;
@@ -36,6 +40,8 @@ export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {
+  publisherId: number;
+  // legacy support
   outletId: number;
   categoryId: number;
   subcategoryId?: number;
@@ -50,8 +56,8 @@ export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentime
 };
 
 /** light weight record for a summary post */
-export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'outletId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
-export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'outletId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'publisherId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
+export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'publisherId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText' | 'originalTitle'>;
 

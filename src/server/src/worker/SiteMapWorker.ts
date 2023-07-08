@@ -1,5 +1,5 @@
 import {
-  Outlet,
+  Publisher,
   Queue,
   RateLimit,
   Summary,
@@ -8,10 +8,10 @@ import {
 import { DBService, ScribeService } from '../services';
 
 export async function main() {
-  await DBService.initTables();
-  await Queue.initQueues();
-  await Outlet.initOutlets();
-  await ScribeService.init();
+  await DBService.prepare();
+  await Queue.prepare();
+  await Publisher.prepare();
+  await ScribeService.prepare();
   doWork();
 }
 
@@ -19,28 +19,28 @@ export async function doWork() {
   try {
   // Worker that processes site maps and generates new summaries
     await Worker.from(
-      Queue.QUEUES.siteMaps,
+      Queue.QUEUES.sitemaps,
       async (job, next) => {
         let fetchMax: RateLimit;
         try {
           const {
-            outlet: outletName, content, url, force, 
+            outlet, publisher: publisherName = outlet, content, url, force, //  -- legacy support
           } = job.data;
-          const outlet = await Outlet.findOne({ where: { name: outletName } });
-          if (!outlet) {
-            console.log(`Outlet ${outletName} not found`);
-            await job.moveToFailed(`Outlet ${outletName} not found`);
+          const publisher = await Publisher.findOne({ where: { name: publisherName } });
+          if (!publisher) {
+            console.log(`Publisher ${publisherName} not found`);
+            await job.moveToFailed(`Publisher ${publisherName} not found`);
             return;
           }
-          const limit = await outlet.getRateLimit();
+          const limit = await publisher.getRateLimit();
           if (await limit.isSaturated()) {
-            console.log(`Outlet ${outlet.name} has reached its limit of ${limit.limit} per ${limit.window}ms`);
+            console.log(`Publisher ${publisher.name} has reached its limit of ${limit.limit} per ${limit.window}ms`);
             await job.delay(limit.window);
             return;
           }
-          fetchMax = await outlet.getRateLimit('maxAttempt');
+          fetchMax = await publisher.getRateLimit('maxAttempt');
           if (await fetchMax.isSaturated()) {
-            console.log(`Outlet ${outlet.name} has reached its maximum fetch limit of ${fetchMax.limit} per ${fetchMax.window}ms`);
+            console.log(`Publisher ${publisher.name} has reached its maximum fetch limit of ${fetchMax.limit} per ${fetchMax.window}ms`);
             await job.delay(fetchMax.window);
             return;
           }
@@ -58,7 +58,7 @@ export async function doWork() {
           const summary = await ScribeService.readAndSummarize(
             {
               content, 
-              outlet,
+              publisher,
               url, 
             }
           );
