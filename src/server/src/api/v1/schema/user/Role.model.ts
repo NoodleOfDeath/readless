@@ -52,7 +52,7 @@ export class Role<
     },
   };
   
-  static async initRoles() {
+  static async prepare() {
     for (const role of Object.values(this.ROLES)) {
       await this.upsert(role);
     }

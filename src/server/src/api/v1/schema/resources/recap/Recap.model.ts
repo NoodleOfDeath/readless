@@ -7,10 +7,10 @@ import {
 
 import { RecapPayload } from './../../../../../services/scribe/types';
 import { RecapAttributes, RecapCreationAttributes } from './Recap.types';
-import { PublicRecapSentimentAttributes } from './RecapSentiment.types';
 import { Post } from '../Post.model';
 import { PublicTranslationAttributes } from '../localization/Translation.types';
 import { PublicSummaryAttributes } from '../summary/Summary.types';
+import { PublicSummarySentimentAttributes } from '../summary/SummarySentiment.types';
 
 @Table({
   modelName: 'recap',
@@ -35,7 +35,7 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
   declare summaries?: PublicSummaryAttributes[];
   
   declare sentiment?: number;
-  declare sentiments?: PublicRecapSentimentAttributes[];
+  declare sentiments?: PublicSummarySentimentAttributes[];
   
   declare translations?: PublicTranslationAttributes[];
   
@@ -100,7 +100,7 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
       }
       const links: string[] = [];
       ids.forEach((id) => {
-        sources.push(`[${sources.length + 1}] <a href="https://open.${baseUrl}/s/${id}">${summaries[id].outlet.displayName}: ${summaries[id].title}</a>`);
+        sources.push(`[${sources.length + 1}] <a href="https://open.${baseUrl}/s/${id}">${summaries[id].publisher.displayName}: ${summaries[id].title}</a>`);
         links.push(`<a href="https://open.${baseUrl}/s/${id}">${sources.length}</a>`);
       });
       return `[${links.join(', ')}]`;

@@ -13,7 +13,7 @@ export class DBService extends BaseService {
 
   static sq: Sequelize;
 
-  static async initTables({
+  static async prepare({
     connectionString = process.env.PG_CONNECTION_STRING,
     models = [...Object.values(Models)],
   }: DBServiceInitProps = {}) {

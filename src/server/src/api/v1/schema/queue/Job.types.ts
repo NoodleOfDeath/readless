@@ -47,11 +47,12 @@ export type CacheJobData = {
 };
 
 export type CrawlJobData = {
-  outlet: number;
+  publisher: number;
 };
 
 export type SiteMapJobData = {
   outlet: string;
+  publisher?: string;
   url: string; 
   content?: string;
   force?: boolean;

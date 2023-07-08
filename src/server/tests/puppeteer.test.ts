@@ -9,7 +9,7 @@ import {
 
 jest.setTimeout(30_000);
 
-import { OUTLETS } from '../src/api/v1/schema/resources/channel/Outlet.types';
+import { OUTLETS } from '../src/api/v1/schema/resources/channel/Publisher.types';
 import { Loot, PuppeteerService } from '../src/services/puppeteer';
 
 const LOOT: { [ Key in keyof typeof OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'date'> } = {
@@ -348,8 +348,8 @@ const LOOT: { [ Key in keyof typeof OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'd
 describe('crawl', () => {
   for (const [, { name }] of Object.entries(OUTLETS)) {
     test(`crawl-${name}`, async () => {
-      const outlet = OUTLETS[name];
-      const urls = await PuppeteerService.crawl(outlet);
+      const publisher = OUTLETS[name];
+      const urls = await PuppeteerService.crawl(publisher);
       expect(urls.length).toBeGreaterThan(0);
       console.log(urls);
     });

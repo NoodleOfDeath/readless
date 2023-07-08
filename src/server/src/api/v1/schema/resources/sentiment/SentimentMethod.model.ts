@@ -21,7 +21,7 @@ export class SentimentMethod<
     B extends SentimentMethodCreationAttributes = SentimentMethodCreationAttributes,
   > extends BaseModel<A, B> implements SentimentMethodAttributes {
 
-  public static async initSentimentMethods() {
+  public static async prepare() {
     for (const method of Object.values(SENTIMENT_METHODS)) {
       await this.upsert(method);
     }

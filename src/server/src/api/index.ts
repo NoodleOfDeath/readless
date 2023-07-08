@@ -8,23 +8,21 @@ import v1router from './v1';
 import { authMiddleware, rateLimitMiddleware } from './v1/middleware';
 import {
   Category,
-  Outlet,
+  Publisher,
   Queue,
   Role,
   SentimentMethod,
-  TokenType,
 } from './v1/schema';
 import { DBService } from '../services';
 
 async function main() {
   
-  await DBService.initTables();
-  await Queue.initQueues();
-  await Role.initRoles();
-  await Category.initCategories();
-  await Outlet.initOutlets();
-  await SentimentMethod.initSentimentMethods();
-  await TokenType.initTokenTypes();
+  await DBService.prepare();
+  await Queue.prepare();
+  await Role.prepare();
+  await Category.prepare();
+  await Publisher.prepare();
+  await SentimentMethod.prepare();
   
   const app = express();
   

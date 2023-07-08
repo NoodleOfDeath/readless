@@ -9,7 +9,7 @@ const BASE_URL = `${SSL ? 'https' : 'http'}://${BASE_DOMAIN}`;
 
 export async function main() {
 
-  await DBService.initTables();
+  await DBService.prepare();
 
   const app = express();
 

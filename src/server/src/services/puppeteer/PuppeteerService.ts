@@ -9,7 +9,7 @@ import puppeteer, {
 } from 'puppeteer';
 import UserAgent from 'user-agents';
 
-import { OutletCreationAttributes } from '../../api/v1/schema';
+import { PublisherCreationAttributes } from '../../api/v1/schema';
 import { maxDate, parseDate } from '../../utils';
 import { BaseService } from '../base';
 
@@ -161,8 +161,8 @@ export class PuppeteerService extends BaseService {
     }
   }
 
-  public static async crawl(outlet: OutletCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
-    const { baseUrl, selectors: { spider } } = outlet;
+  public static async crawl(publisher: PublisherCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
+    const { baseUrl, selectors: { spider } } = publisher;
     if (spider.selector === 'disabled') {
       return [];
     }
@@ -213,7 +213,7 @@ export class PuppeteerService extends BaseService {
 
   public static async loot(
     url: string, 
-    outlet: OutletCreationAttributes, 
+    publisher: PublisherCreationAttributes, 
     {
       content,
       exclude = [
@@ -255,7 +255,7 @@ export class PuppeteerService extends BaseService {
       
       const {
         article, author, date, title, 
-      } = outlet.selectors;
+      } = publisher.selectors;
       
       const rawHtml = await PuppeteerService.fetch(url);
       

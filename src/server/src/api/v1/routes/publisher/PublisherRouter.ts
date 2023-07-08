@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { query } from 'express-validator';
 
-import { OutletController } from '../../controllers';
+import { PublisherController } from '../../controllers';
 import { internalErrorHandler, validationMiddleware } from '../../middleware';
 
 const router = Router();
@@ -12,7 +12,7 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await OutletController.getOutlets(req.body);
+      const response = await PublisherController.getPublishers(req.body);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

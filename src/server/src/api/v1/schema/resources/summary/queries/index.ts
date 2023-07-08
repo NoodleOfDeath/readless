@@ -1,9 +1,9 @@
 import { SEARCH_SUMMARIES } from './search';
-import { GET_TOPICS } from './topics';
+import { GET_TOP_STORIES } from './top_stories';
 
 export const QUERIES = {
   getSummaries: SEARCH_SUMMARIES,
-  getTopics: GET_TOPICS,
+  getTopStories: GET_TOP_STORIES,
 };
 
 export type QueryKey = keyof typeof QUERIES;

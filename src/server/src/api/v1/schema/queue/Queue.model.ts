@@ -39,12 +39,12 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     crawler: new QueueSpecifier<CrawlJobData, any>('crawler'),
     recaps: new QueueSpecifier<RecapPayload, Recap>('recaps'),
-    siteMaps: new QueueSpecifier<SiteMapJobData, Summary>('siteMaps'),
+    sitemaps: new QueueSpecifier<SiteMapJobData, Summary>('sitemaps'),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     topics: new QueueSpecifier<TopicResolutionJobData, any>('topics'),
   };
   
-  static async initQueues() {
+  static async prepare() {
     for (const queue of Object.values(this.QUEUES)) {
       await this.upsert(queue);
     }

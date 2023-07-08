@@ -85,8 +85,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     return await Summary.getSummaries(payload); 
   }
 
-  @Get('/topics')
-  public static async getTopics(
+  @Get('/top')
+  public static async getTopStories(
     @Request() req?: ExpressRequest,
     @Query() filter?: string,
     @Query() ids?: number[],
@@ -102,7 +102,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() forceCache = false
   ): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
     const version = JSON.stringify(req?.headers?.['x-app-version']);
-    return await Summary.getTopics({
+    return await Summary.getTopStories({
       end,
       excludeIds,
       filter,
@@ -119,8 +119,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     });
   }
   
-  public static async getTopicsInternal(payload: SearchSummariesPayload) {
-    return await Summary.getTopics(payload);
+  public static async getTopStoriesInternal(payload: SearchSummariesPayload) {
+    return await Summary.getTopStories(payload);
   }
   
   @Security('jwt')

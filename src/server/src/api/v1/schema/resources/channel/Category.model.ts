@@ -23,7 +23,7 @@ export class Category<
   extends BaseModel<A, B> 
   implements CategoryAttributes {
   
-  public static async initCategories() {
+  public static async prepare() {
     for (const category of Object.values(CATEGORIES)) {
       await this.upsert(category);
     }

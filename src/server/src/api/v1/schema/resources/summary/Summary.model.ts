@@ -1,5 +1,6 @@
 import { Op, QueryTypes } from 'sequelize';
 import {
+  AfterFind,
   Column,
   DataType,
   Table,
@@ -21,8 +22,8 @@ import { Cache } from '../../system/Cache.model';
 import { Post } from '../Post.model';
 import { Category } from '../channel/Category.model';
 import { PublicCategoryAttributes } from '../channel/Category.types';
-import { Outlet } from '../channel/Outlet.model';
-import { PublicOutletAttributes } from '../channel/Outlet.types';
+import { Publisher } from '../channel/Publisher.model';
+import { PublicPublisherAttributes } from '../channel/Publisher.types';
 import { InteractionType } from '../interaction/Interaction.types';
 import { PublicTranslationAttributes } from '../localization/Translation.types';
 
@@ -58,13 +59,13 @@ function applyFilter(
   matchType: 'any' | 'all' = 'any'
 ) {
   const categories: string[] = [];
-  const outlets: string[] = [];
+  const publishers: string[] = [];
   let interval: string;
   if (!filter) {
     return {
       categories,
       filter: '.',
-      outlets,
+      publishers,
     };
   }
   const splitExpr = /\s*((?:\w+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+\w+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
@@ -81,7 +82,7 @@ function applyFilter(
           categories.push(...pf);
         }
         if (/^(?:source|src|pub(lisher)?)$/i.test(prefix)) {
-          outlets.push(...pf);
+          publishers.push(...pf);
         }
         if (/^[lp]ast$/i.test(prefix)) {
           const timeInterval = parseTimeInterval(prefixValues);
@@ -121,7 +122,7 @@ function applyFilter(
     categories,
     filter: parts.join('|'),
     interval,
-    outlets,
+    publishers,
   };
 }
 
@@ -136,8 +137,11 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     allowNull: false,
     type: DataType.INTEGER,
   })
+  declare publisherId: number;
+
+  // legacy support
   declare outletId: number;
-  
+
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
@@ -196,7 +200,11 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   })
   declare bullets: string[];
 
-  declare outlet: PublicOutletAttributes;
+  declare publisher: PublicPublisherAttributes;
+
+  // legacy support
+  declare outlet: PublicPublisherAttributes;
+
   declare category: PublicCategoryAttributes;
   declare subcategory?: PublicCategoryAttributes;
 
@@ -205,8 +213,21 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
 
   declare translations?: PublicTranslationAttributes[];
   
-  public static async getTopics(payload: SearchSummariesPayload) {
-    return await this.getSummaries(payload, 'getTopics');
+  // legacy support
+  @AfterFind
+  public static async afterFindHook(cursor?: Summary | Summary[]) {
+    if (!cursor) {
+      return;
+    }
+    const summaries = Array.isArray(cursor) ? cursor : [cursor];
+    for (const summary of summaries) {
+      summary.set('outletId', summary.publisherId, { raw: true });
+      summary.set('outlet', summary.publisher, { raw: true });
+    }
+  }
+
+  public static async getTopStories(payload: SearchSummariesPayload) {
+    return await this.getSummaries(payload, 'getTopStories');
   }
   
   public static async getSummaries({
@@ -225,7 +246,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   }: SearchSummariesPayload, queryKey: QueryKey = 'getSummaries'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
     const { 
       categories, 
-      outlets,
+      publishers,
       interval: pastInterval,
       filter: query,
     } = applyFilter(filter, matchType);
@@ -245,9 +266,9 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       noCategories: categories.length === 0,
       noFilter: !filter,
       noIds: !ids || excludeIds,
-      noOutlets: outlets.length === 0,
+      noPublishers: publishers.length === 0,
       offset: Number(offset),
-      outlets: outlets.length === 0 ? [''] : outlets,
+      publishers: publishers.length === 0 ? [''] : publishers,
       startDate: startDate ?? new Date(),
     };
     const cacheKey = [
@@ -345,8 +366,8 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     return await SummarySentiment.findAll({ where: { parentId: this.id } });
   }
   
-  async getOutlet() {
-    return await Outlet.findByPk(this.outletId);
+  async getPublisher() {
+    return await Publisher.findByPk(this.publisherId);
   }
   
   async getCategory() {

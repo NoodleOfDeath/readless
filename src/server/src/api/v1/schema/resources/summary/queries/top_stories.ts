@@ -1,4 +1,4 @@
-export const GET_TOPICS = `
+export const GET_TOP_STORIES = `
 SELECT 
   "totalCount"::INT AS "count",
   JSON_AGG(b.*) AS rows
@@ -13,7 +13,12 @@ FROM (
       'id', pub.id,
       'name', pub.name,
       'displayName', pub."displayName"
-    ) AS outlet,
+    ) AS outlet, -- legacy support
+    JSONB_BUILD_OBJECT(
+      'id', pub.id,
+      'name', pub.name,
+      'displayName', pub."displayName"
+    ) AS publisher,
     JSONB_BUILD_OBJECT(
       'id', cat.id,
       'name', cat.name,
@@ -24,7 +29,11 @@ FROM (
       'id', sr."siblingId",
       'title', sibling.title,
       'originalDate', sibling."originalDate",
-      'outlet', JSONB_BUILD_OBJECT(
+      'publisher', JSONB_BUILD_OBJECT(
+        'name', sibling_pub.name,
+        'displayName', sibling_pub."displayName"
+      ),
+      'publisher', JSONB_BUILD_OBJECT(
         'name', sibling_pub.name,
         'displayName', sibling_pub."displayName"
       )
@@ -32,7 +41,7 @@ FROM (
     COUNT(sr.id) AS "siblingCount",
     COUNT(s.id) OVER() AS "totalCount"
   FROM summaries s
-  LEFT JOIN outlets pub ON s."outletId" = pub.id
+  LEFT JOIN publishers pub ON s."publisherId" = pub.id
     AND pub."deletedAt" IS NULL
   LEFT JOIN categories cat ON s."categoryId" = cat.id
     AND cat."deletedAt" IS NULL
@@ -40,7 +49,7 @@ FROM (
     AND sr."deletedAt" IS NULL
   LEFT JOIN summaries sibling ON sr."siblingId" = sibling.id
     AND sibling."deletedAt" IS NULL
-  LEFT JOIN outlets sibling_pub ON sibling."outletId" = sibling_pub.id
+  LEFT JOIN publishers sibling_pub ON sibling."publisherId" = sibling_pub.id
     AND sibling_pub."deletedAt" IS NULL
   WHERE s."originalDate" > NOW() - interval :interval
   AND s."deletedAt" IS NULL
