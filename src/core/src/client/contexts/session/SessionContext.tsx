@@ -30,8 +30,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
 
   const [ready, setReady] = React.useState(false);
 
-  const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes[]>>();
-  const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes[]>>();
+  const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
+  const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
 
   const [colorScheme, setColorScheme] = React.useState<ColorScheme>();
   const [fontFamily, setFontFamily] = React.useState<string>();

@@ -39,7 +39,6 @@ import {
   useNavigation,
   useServiceClient,
   useStyles,
-  useSummaryClient,
   useTheme,
 } from '~/hooks';
 import {
@@ -135,7 +134,6 @@ export function Summary({
 
   const { openPublisher, openCategory } = useNavigation();
   const { localizeSummary } = useServiceClient();
-  const { getSummary } = useSummaryClient();
   const { openURL } = useInAppBrowser();
 
   const theme = useTheme();
@@ -572,12 +570,7 @@ export function Summary({
         key: `${isBookmarked ? 'unbookmark' : 'bookmark'}-${summary.id}`,
         onPress: async () => {
           setIsBookmarked(!isBookmarked);
-          const newBookmark = await getSummary(summary.id, getLocale());
-          if (!newBookmark.data || newBookmark.error) {
-            setIsBookmarked(!isBookmarked);
-            return;
-          }
-          bookmarkSummary(newBookmark.data);
+          bookmarkSummary(summary);
         },
         text: isBookmarked ? strings.summary_unbookmark : strings.summary_bookmark,
       },
@@ -622,7 +615,7 @@ export function Summary({
       },
     ];
     return actions;
-  }, [summary, isBookmarked, isRead, onInteract, getSummary, bookmarkSummary, setPreference]);
+  }, [summary, isBookmarked, isRead, onInteract, bookmarkSummary, setPreference]);
 
   const card = React.useMemo(() => (
     <View
