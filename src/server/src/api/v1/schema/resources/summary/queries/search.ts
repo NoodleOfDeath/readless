@@ -37,6 +37,11 @@ FROM (
       'publisher', JSONB_BUILD_OBJECT( 
          'name', sibling_pub.name,
          'displayName', sibling_pub."displayName"
+      ),
+      'category', JSONB_BUILD_OBJECT( 
+         'name', sibling_cat.name,
+         'displayName', sibling_cat."displayName",
+         'icon', sibling_cat.icon
       )
     )) FILTER (WHERE sibling.id IS NOT NULL), '[]'::JSON) AS siblings,
     "averageSentiment",
@@ -183,6 +188,10 @@ FROM (
     AND (sr."deletedAt" IS NULL)
   LEFT OUTER JOIN publishers AS sibling_pub
     ON (sibling_pub.id = sibling."publisherId")
+    AND (sibling_pub."deletedAt" IS NULL)
+  LEFT OUTER JOIN categories AS sibling_cat
+    ON (sibling_cat.id = sibling."categoryId")
+    AND (sibling_cat."deletedAt" IS NULL)
   GROUP BY
     b.id,
     b.title,
