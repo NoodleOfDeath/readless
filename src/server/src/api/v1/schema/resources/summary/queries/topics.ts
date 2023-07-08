@@ -21,7 +21,13 @@ FROM (
       'icon', cat.icon
     ) AS category,
     COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
-      'id', sr."siblingId"
+      'id', sr."siblingId",
+      'title', sibling.title,
+      'originalDate', sibling."originalDate",
+      'outlet', JSONB_BUILD_OBJECT(
+        'name', sibling_pub.name,
+        'displayName', sibling_pub."displayName"
+      )
     )) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::JSON) AS siblings,
     COUNT(sr.id) AS "siblingCount",
     COUNT(s.id) OVER() AS "totalCount"
@@ -32,6 +38,10 @@ FROM (
     AND cat."deletedAt" IS NULL
   LEFT JOIN "summary_relations" sr ON s.id = sr."parentId"
     AND sr."deletedAt" IS NULL
+  LEFT JOIN summaries sibling ON sr."siblingId" = sibling.id
+    AND sibling."deletedAt" IS NULL
+  LEFT JOIN outlets sibling_pub ON sibling."outletId" = sibling_pub.id
+    AND sibling_pub."deletedAt" IS NULL
   WHERE s."originalDate" > NOW() - interval :interval
   AND s."deletedAt" IS NULL
   AND s.id NOT IN (:ids)
