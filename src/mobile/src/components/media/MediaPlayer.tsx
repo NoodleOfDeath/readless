@@ -79,7 +79,6 @@ export function MediaPlayer(props: MediaPlayerProps) {
         {currentTrack && (
           <Summary 
             disableInteractions
-            swipeable={ false }
             summary={ currentTrack.summary }
             onFormatChange={ (format) => handleFormatChange(currentTrack.summary, format) }
             onInteract={ (...args) => handleInteraction(currentTrack.summary, ...args) } />

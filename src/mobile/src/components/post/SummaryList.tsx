@@ -56,7 +56,7 @@ export function SummaryList({
   fetch,
   onFormatChange,
   filter,
-  interval = '100y',
+  interval,
   specificIds,
   searchText,
   showWalkthroughs: showWalkthroughs0,
@@ -108,7 +108,7 @@ export function SummaryList({
   // callbacks
 
   const load = React.useCallback(async (reset = false) => {
-    if (loading) {
+    if (lastFetchFailed || loading) {
       return;
     }
     setLoading(true);
@@ -128,14 +128,12 @@ export function SummaryList({
         pageSize,
       });
       if (error) {
-        console.error(error);
-        return;
+        throw error;
       }
-      if (!data) {
-        return;
+      if (!data || !data.rows) {
+        throw new Error('Invalid response');
       }
       setCursor((prev) => data.next ?? (prev + data.rows.length));
-      console.log('next', data.next);
       setTotalResultCount(data.count);
       setDetailSummary((prev) => {
         if (!prev && data.count > 0) {
@@ -164,17 +162,17 @@ export function SummaryList({
       setLoaded(true);
       setLoading(false);
     }
-  }, [loading, fetch, filter, specificIds, excludeIds, interval, pageSize, cursor, removedSummaries]);
+  }, [lastFetchFailed, loading, fetch, specificIds, excludeIds, filter, interval, cursor, pageSize, removedSummaries]);
 
   const loadMore = React.useCallback(async (event?: string) => {
-    if (loading || totalResultCount <= summaries.length) {
+    if (totalResultCount <= summaries.length) {
       return;
     }
     await load();
     if (event) {
       DeviceEventEmitter.emit(event);
     }
-  }, [load, loading, totalResultCount, summaries]);
+  }, [totalResultCount, summaries.length, load]);
 
   const loadMoreAsNeeded = React.useCallback(async () => {
     if (!currentTrackIndex) {
@@ -187,7 +185,7 @@ export function SummaryList({
 
   const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setLastFocus('master');
-    if (loading || totalResultCount <= summaries.length || lastFetchFailed) {
+    if (totalResultCount <= summaries.length) {
       return;
     }
     const {
@@ -200,7 +198,7 @@ export function SummaryList({
     ) {
       await loadMore('autoloaded');
     }
-  }, [loading, totalResultCount, summaries.length, loadMore, lastFetchFailed]);
+  }, [totalResultCount, summaries.length, loadMore]);
 
   const handleResize = React.useCallback(() => {
     if (resizing) {
@@ -267,11 +265,11 @@ export function SummaryList({
     if (filter) {
       navigation?.setOptions({ headerTitle: filter });
     }
-    if (summaries.length === 0) {
+    if (!lastFetchFailed && summaries.length === 0) {
       load(true);
       return;
     }
-  }, [filter, load, navigation, summaries]));
+  }, [filter, lastFetchFailed, load, navigation, summaries.length]));
   
   useAppState({ 
     onBackground: () => {
@@ -307,11 +305,11 @@ export function SummaryList({
       <View col>
         <View col>
           <View row>
-            <Animated.View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
+            <View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
               <FlatList
                 data={ summaries }
                 renderItem={ renderSummary }
-                estimatedItemSize={ 120 }
+                estimatedItemSize={ (114 * 3 + 350) / 4 }
                 ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
                 ListHeaderComponent={ () => (showWalkthroughs && (
                   <WalkthroughStack
@@ -361,7 +359,7 @@ export function SummaryList({
                 onRefresh={ () => {
                   load(true);
                 } } />
-            </Animated.View>
+            </View>
             <Animated.View style={ {
               transform: [
                 { perspective: 1000 }, 

@@ -10,14 +10,11 @@ import {
   BookmarkWalkthrough,
   CustomFeedWalkthrough,
   FeedbackDialog,
-  MainMenuDialog,
   OnboardingWalkthrough,
   PromoCodeWalkthrough,
-  SearchDialog,
   SentimentWalkthrough,
   ShareDialog,
   SharingWalkthrough,
-  SubscribeDialog,
   TriggerWordsWalkthrough,
 } from '~/components';
 
@@ -26,10 +23,6 @@ export const DialogContext = React.createContext(DEFAULT_DIALOG_CONTEXT);
 export function DialogContextProvider({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
-    // global
-    registerSheet('main-menu', MainMenuDialog);
-    registerSheet('search', SearchDialog);
-    registerSheet('subscribe', SubscribeDialog);
     // onboarding/features
     registerSheet('appearance-walkthrough', AppearanceWalkthrough);
     registerSheet('bookmark-walkthrough', BookmarkWalkthrough);

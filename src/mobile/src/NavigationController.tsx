@@ -12,6 +12,7 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import ms from 'ms';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import { addScreenshotListener } from 'react-native-detector';
 import { HoldMenuProvider } from 'react-native-hold-menu';
@@ -21,6 +22,7 @@ import {
   MediaContext,
   SessionContext,
 } from './contexts';
+import { ArticleListScreen } from './screens/ArticleListScreen';
 
 import {
   ActivityIndicator,
@@ -40,11 +42,12 @@ import {
   AboutScreen,
   BookmarksScreen,
   BrowseScreen,
-  ChannelScreen,
+  CategoryScreen,
   ColorSchemePickerScreen,
   FontPickerScreen,
   HomeScreen,
   NAVIGATION_LINKING_OPTIONS,
+  PublisherScreen,
   ReadingFormatPickerScreen,
   RecapScreen,
   SearchScreen,
@@ -62,6 +65,7 @@ const screens: RouteConfig<
   NativeStackNavigationOptions,
   EventMapBase
 >[] = [
+  // Home Tab
   {
     component: HomeScreen, 
     name: 'home',
@@ -71,6 +75,56 @@ const screens: RouteConfig<
     component: SearchScreen, 
     name: 'search',
     options: { headerBackTitle: '' },
+  },
+  {
+    component: SummaryScreen, 
+    name: 'summary',  
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+    },
+  },
+  {
+    component: CategoryScreen, 
+    name: 'category',
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+    }, 
+  },
+  {
+    component: PublisherScreen, 
+    name: 'publisher',
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+    }, 
+  },
+  {
+    component: ArticleListScreen, 
+    name: 'articles',  
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+    },
+  },
+  {
+    component: BrowseScreen, 
+    name: 'browse', options: {
+      headerBackTitle: '', 
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_browse, 
+    },
+  },
+  // Settings Tab
+  {
+    component: SettingsScreen, 
+    name: 'settings', 
+    options: {
+      headerBackTitle: '', 
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_settings, 
+    },
   },
   {
     component: AboutScreen, 
@@ -89,39 +143,6 @@ const screens: RouteConfig<
       headerRight: () => undefined, 
       headerTitle: strings.screens_bookmarks, 
     }, 
-  },
-  {
-    component: BrowseScreen, 
-    name: 'browse', options: {
-      headerBackTitle: '', 
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_browse, 
-    },
-  },
-  {
-    component: ChannelScreen, 
-    name: 'channel',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    }, 
-  },
-  {
-    component: SettingsScreen, 
-    name: 'settings', 
-    options: {
-      headerBackTitle: '', 
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_settings, 
-    },
-  },
-  {
-    component: SummaryScreen, 
-    name: 'summary',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    },
   },
   {
     component: ColorSchemePickerScreen, 
@@ -187,6 +208,7 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
     loadedInitialUrl,
     viewedFeatures,
     categories,
+    publishers,
     followedCategories,
     setPreference,
   } = React.useContext(SessionContext);
@@ -197,12 +219,15 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
     unlockRotation,
   } = React.useContext(LayoutContext);
 
+  const [lastFetch, setLastFetch] = React.useState(0);
+  const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
+
   const _categoryTabs = React.useMemo(() => {
     return Object.keys({ ...followedCategories }).filter((c) => typeof c === 'object').map((category) => (
       <Tab.Screen 
         key={ category }
         name={ category }
-        component={ ChannelScreen }
+        component={ PublisherScreen }
         options={ {
           tabBarIcon: ({ color }) => (
             categories?.[category]?.icon && (
@@ -244,17 +269,30 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
   }, [screenshotListener, viewedFeatures]);
 
   React.useEffect(() => {
-    getCategories().then((response) => {
-      setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-    }).catch((error) => {
-      console.log(error);
-    });
-    getPublishers().then((response) => {
-      setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-    }).catch((error) => {
-      console.log(error);
-    });
-  }, [getCategories, getPublishers, setCategories, setPublishers]);
+    if (lastFetchFailed && lastFetch < Date.now() - ms('20s')) {
+      return;
+    }
+    if (!categories || lastFetch < Date.now() - ms('1h')) {
+      getCategories().then((response) => {
+        setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
+      }).catch((error) => {
+        console.log(error);
+        setLastFetchFailed(true);
+      }).finally(() => {
+        setLastFetch(Date.now());
+      });
+    }
+    if (!publishers || lastFetch < Date.now() - ms('1h')) {
+      getPublishers().then((response) => {
+        setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
+      }).catch((error) => {
+        console.log(error);
+        setLastFetchFailed(true);
+      }).finally(() => {
+        setLastFetch(Date.now());
+      });
+    }
+  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers]);
   
   const headerRight = React.useMemo(() => {
     return (
