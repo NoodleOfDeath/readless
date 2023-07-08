@@ -11,7 +11,7 @@ FROM (
     b.bullets,
     b."originalDate",
     b."imageUrl",
-    b.outlet,
+    b.publisher,
     b.category,
     siblings,
     sentiment,
@@ -30,11 +30,6 @@ FROM (
         'id', pub.id,
         'name', pub.name,
         'displayName', pub."displayName"
-      ) AS outlet, -- legacy support
-      JSONB_BUILD_OBJECT(
-        'id', pub.id,
-        'name', pub.name,
-        'displayName', pub."displayName"
       ) AS publisher,
       JSONB_BUILD_OBJECT(
         'id', cat.id,
@@ -45,12 +40,9 @@ FROM (
       COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
         'id', sr."siblingId",
         'title', sibling.title,
+        'shortSummary', sibling."shortSummary",
         'imageUrl', sibling."imageUrl",
         'originalDate', sibling."originalDate",
-        'publisher', JSONB_BUILD_OBJECT(
-          'name', sibling_pub.name,
-          'displayName', sibling_pub."displayName"
-        ),
         'publisher', JSONB_BUILD_OBJECT(
           'name', sibling_pub.name,
           'displayName', sibling_pub."displayName"
