@@ -61,7 +61,13 @@ export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText' | 'originalTitle'>;
 
-export type PublicSummaryAttributesConservative = Omit<PublicSummaryAttributes, | 'summary' | 'bullets' | 'sentiments'>;
+export type PublicSummaryAttributesConservative = Omit<PublicSummaryAttributes, | 'summary' | 'bullets' | 'sentiments' | 'shortSummary'> & {
+  shortSummary?: string;
+  summary?: string;
+  bullets?: string[];
+  sentiments?: PublicSummarySentimentAttributes[];
+  siblings?: PublicSummaryAttributesConservative[];
+};
 
 export type PublicSummaryGroup = PublicSummaryAttributes & {
   siblings?: PublicSummaryAttributesConservative[];

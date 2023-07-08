@@ -36,21 +36,29 @@ FROM (
       'publisher', JSONB_BUILD_OBJECT(
         'name', sibling_pub.name,
         'displayName', sibling_pub."displayName"
-      )
+      ),
+      'category', JSONB_BUILD_OBJECT( 
+        'name', sibling_cat.name,
+        'displayName', sibling_cat."displayName",
+        'icon', sibling_cat.icon
+     )
     )) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::JSON) AS siblings,
     COUNT(sr.id) AS "siblingCount",
     COUNT(s.id) OVER() AS "totalCount"
   FROM summaries s
-  LEFT JOIN publishers pub ON s."publisherId" = pub.id
+  LEFT OUTER JOIN publishers pub ON s."publisherId" = pub.id
     AND pub."deletedAt" IS NULL
-  LEFT JOIN categories cat ON s."categoryId" = cat.id
+  LEFT OUTER JOIN categories cat ON s."categoryId" = cat.id
     AND cat."deletedAt" IS NULL
-  LEFT JOIN "summary_relations" sr ON s.id = sr."parentId"
+  LEFT OUTER JOIN "summary_relations" sr ON s.id = sr."parentId"
     AND sr."deletedAt" IS NULL
-  LEFT JOIN summaries sibling ON sr."siblingId" = sibling.id
+  LEFT OUTER JOIN summaries sibling ON sr."siblingId" = sibling.id
     AND sibling."deletedAt" IS NULL
-  LEFT JOIN publishers sibling_pub ON sibling."publisherId" = sibling_pub.id
+  LEFT OUTER JOIN publishers sibling_pub ON sibling."publisherId" = sibling_pub.id
     AND sibling_pub."deletedAt" IS NULL
+  LEFT OUTER JOIN categories AS sibling_cat
+    ON (sibling_cat.id = sibling."categoryId")
+    AND sibling_cat."deletedAt" IS NULL
   WHERE s."originalDate" > NOW() - interval :interval
   AND s."deletedAt" IS NULL
   AND s.id NOT IN (:ids)
