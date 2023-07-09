@@ -11,30 +11,41 @@ import {
   SummaryList,
 } from '~/components';
 import { useSummaryClient, useTheme } from '~/hooks';
+import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
+function YourNewsTab({ 
+  route: _route,
+  navigation: _navigation,
+}: ScreenProps<'search'>) {
+  const { getSummaries } = useSummaryClient();
+  const { followFilter } = React.useContext(SessionContext);
+  return ( 
+    <SummaryList
+      fetch={ getSummaries }
+      filter={ followFilter } />
+  );
+}
+
 function TopStoriesTab({ 
-  route,
+  route: _route,
   navigation: _navigation,
 }: ScreenProps<'search'>) {
   const { getTopStories } = useSummaryClient();
   return ( 
     <SummaryList
       fetch={ getTopStories }
-      filter={ route?.params?.prefilter }
       interval='1d' />
   );
 }
 
 function LivestreamTab({ 
-  route,
+  route: _route,
   navigation: _navigation,
 }: ScreenProps<'search'>) {
   const { getSummaries } = useSummaryClient();
   return ( 
-    <SummaryList
-      fetch={ getSummaries }
-      filter={ route?.params?.prefilter } />
+    <SummaryList fetch={ getSummaries } />
   );
 }
 
@@ -46,10 +57,7 @@ export function HomeScreen({
 }: ScreenProps<'home'>) {
 
   const theme = useTheme();
-  const { 
-    followCount,
-    followFilter,
-  } = React.useContext(SessionContext);
+  const { followCount } = React.useContext(SessionContext);
 
   return (
     <Screen>
@@ -62,19 +70,18 @@ export function HomeScreen({
         } }>
         {followCount > 0 && (
           <Tab.Screen 
-            name="Your News" 
-            component={ LivestreamTab } 
+            name={ strings.tabs_yourNews }
+            component={ YourNewsTab } 
             options={ {
               tabBarIcon: ({ color }) => (
                 <Icon 
                   name={ 'account-heart' } 
                   color={ color } />
               ),
-            } }
-            initialParams={ { prefilter: followFilter } } />
+            } } />
         )}
         <Tab.Screen 
-          name="Top Stories" 
+          name={ strings.tabs_topStories }
           component={ TopStoriesTab } 
           options={ {
             tabBarIcon: ({ color }) => (
@@ -84,7 +91,7 @@ export function HomeScreen({
             ),
           } } />
         <Tab.Screen 
-          name="Live" 
+          name={ strings.tabs_live }
           component={ LivestreamTab }
           options={ {
             tabBarIcon: ({ color }) => (

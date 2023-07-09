@@ -180,6 +180,11 @@ export const enStrings = {
   summary_veryPositive: 'Very Positive',
   summary_viewSource: 'View original source',
   
+  // tabs
+  tabs_live: 'Live',
+  tabs_topStories: 'Top Stories',
+  tabs_yourNews: 'Your News',
+  
   // walkthroughs
   walkthroughs: 'Walkthroughs',
 
