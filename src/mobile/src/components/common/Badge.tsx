@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Badge as RNBadge } from 'react-native-paper';
+import { Badge as RNBadge, useTheme } from 'react-native-paper';
 
-import { ViewProps } from '~/components';
-import { useStyles } from '~/hooks';
+import { TextProps, ViewProps } from '~/components';
+import { useStyles, useTextStyles } from '~/hooks';
 
-export type BadgeProps = ViewProps & Parameters<typeof RNBadge>[0] & {
+export type BadgeProps = ViewProps & TextProps & Parameters<typeof RNBadge>[0] & {
   topLeft?: boolean;
   topRight?: boolean;
   bottomLeft?: boolean;
@@ -27,26 +27,30 @@ export function Badge({
   small,
   big,
   size = small ? 16 : big ? 36 : undefined,
-  bg = 'primary',
   color = 'contrastText',
+  fontSize = small ? 12 : big ? 24 : undefined,
   zIndex = 100,
   ...props
 }: BadgeProps) {
+  const theme = useTheme();
   const style = useStyles({ 
     ...props, 
     absolute,
-    bg, 
+    bg: theme.colors.primary, 
     bottom, 
-    color,
     left,
     right,
     top,
     zIndex,
   });
+  const textStyle = useTextStyles({ color, fontSize });
   return (
     <RNBadge
-      { ...props }
       size={ size }
-      style={ style } />
+      itemsCenter
+      justifyCenter
+      textCenter
+      { ...props }
+      style={ [style, textStyle] } />
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { RefreshControl } from 'react-native';
 
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -12,11 +13,12 @@ import {
   FlatList,
   Screen,
   Summary,
+  Text,
   View,
 } from '~/components';
 import {  SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
-import { getLocale } from '~/locales';
+import { getLocale, strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
 export function SummaryScreen({
@@ -93,11 +95,16 @@ export function SummaryScreen({
   return (
     <Screen>
       {loading ? (
-        <View itemsCenter justifyCenter>
+        <View flexGrow={ 1 } itemsCenter justifyCenter>
           <ActivityIndicator size="large" />
         </View>
       ) : (summary && (
         <FlatList
+          refreshControl={ (
+            <RefreshControl 
+              refreshing={ loading }
+              onRefresh={ () => load(summaryId) } />
+          ) }
           data={ siblings }
           renderItem={ ({ item }) => (
             <Summary
@@ -118,8 +125,14 @@ export function SummaryScreen({
                 keywords={ keywords }
                 onFormatChange={ (format) => handleFormatChange(summary, format) } />
               <Divider my={ 6 } />
+              {siblings.length > 0 && (
+                <Text system h6 m={ 12 }>
+                  {`${strings.summary_relatedNews} (${siblings.length})`}
+                </Text>
+              )}
             </React.Fragment>
           ) }
+          ListFooterComponentStyle={ { paddingBottom: 64 } }
           estimatedItemSize={ 114 } />
       ))}
     </Screen>

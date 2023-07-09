@@ -442,7 +442,7 @@ export function Summary<Compact extends boolean = false>({
         )}
       </View>
     );
-  }, [theme.colors.textSecondary, summary.category, summary.siblings?.length, isBookmarked, disableInteractions, openCategory, navigate]);
+  }, [theme.colors.textSecondary, summary.category, summary.siblings, isBookmarked, disableInteractions, openCategory, navigate]);
   
   const image = React.useMemo(() => {
     if (compact || compactSummaries || !summary.imageUrl) {
