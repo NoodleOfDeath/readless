@@ -232,14 +232,14 @@ export function Summary<Compact extends boolean = false>({
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
     setIsRead(summary.id in { ...readSummaries } && !initialFormat && !disableInteractions);
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
-    setIsFollowingPublisher(summary.id in { ...followedPublishers });
-    setIsFollowingCategory(summary.id in { ...followedCategories });
+    setIsFollowingPublisher(summary.publisher.name in { ...followedPublishers });
+    setIsFollowingCategory(summary.category.name in { ...followedCategories });
     if (!hideCard && format === ReadingFormat.FullArticle) {
       openURL(summary.url);
       return;
     }
     return () => clearInterval(interval);
-  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.url, initiallyTranslated, readSummaries, initialFormat, disableInteractions, bookmarkedSummaries, followedPublishers, followedCategories, hideCard, format, openURL]));
+  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, initialFormat, disableInteractions, bookmarkedSummaries, followedPublishers, followedCategories, hideCard, format, openURL]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableInteractions) {

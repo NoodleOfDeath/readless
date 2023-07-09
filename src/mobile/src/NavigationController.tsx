@@ -320,7 +320,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem 
           key="missing-publishers"
           label={ (
-            <Text>
+            <Text numberOfLines={ 3 }>
               { strings.misc_noPublishers }
             </Text>
           ) } />,
@@ -356,7 +356,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem 
           key="missing-categories"
           label={ (
-            <Text>
+            <Text numberOfLines={ 3 }>
               { strings.misc_noCategories }
             </Text>
           ) } />,

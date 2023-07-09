@@ -17,32 +17,35 @@ type Props = ChildlessViewProps & {
 };
 
 export function ChannelIcon({
-  category, publisher, size=20, ...props 
+  category, publisher, size = 20, ...props 
 }: Props) {
   const theme = useTheme();
+  const fallbackComponent = React.useMemo(() => (
+    <Chip
+      bg={ theme.colors.primaryLight }
+      color={ theme.colors.contrastText }
+      itemsCenter
+      justifyCenter
+      adjustsFontSizeToFit
+      textCenter
+      leftIcon={ category?.icon }
+      width={ size }
+      height={ size }>
+      {publisher?.displayName && publisher?.displayName[0]}
+    </Chip>
+  ), [theme, category, publisher, size]);
   return (
     <View
       { ...props }
       borderRadius={ 3 }
       overflow="hidden">
-      <Image 
-        fallbackComponent={ (
-          <Chip
-            bg={ theme.colors.primaryLight }
-            color={ theme.colors.contrastText }
-            itemsCenter
-            justifyCenter
-            adjustsFontSizeToFit
-            textCenter
-            leftIcon={ category?.icon }
-            width={ size }
-            height={ size }>
-            {publisher?.displayName[0]}
-          </Chip>
-        ) }
-        source={ { uri: publisher ? publisherIcon(publisher) : undefined } }
-        width={ size }
-        height={ size } />
+      {category ? fallbackComponent : (
+        <Image 
+          fallbackComponent={ fallbackComponent }
+          source={ { uri: publisher ? publisherIcon(publisher) : undefined } }
+          width={ size }
+          height={ size } />
+      ) }
     </View>
   );
 }
