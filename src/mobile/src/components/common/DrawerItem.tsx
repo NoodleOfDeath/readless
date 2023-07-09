@@ -19,14 +19,20 @@ export function DrawerItem({
   my = -6,
   left,
   right,
-  color,
   ...props
 }: DrawerItemProps) {
   const theme = useTheme();
   const style = useStyles({ ...props, my });
   return (
     <Drawer.Item
-      theme={ { colors: { primary: color ?? theme.colors.text } } }
+      theme={ {
+        colors: { 
+          onSecondaryContainer: theme.colors.text,
+          onSurfaceVariant: theme.colors.text, 
+          primary: theme.colors.text,
+        },
+        isV3: true, 
+      } }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       left={ left as any }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

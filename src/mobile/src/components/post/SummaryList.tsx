@@ -55,7 +55,7 @@ export type SummaryListProps = ChildlessViewProps & {
 export function SummaryList({ 
   fetch,
   onFormatChange,
-  filter,
+  filter: filter0,
   interval,
   specificIds,
   searchText,
@@ -81,6 +81,7 @@ export function SummaryList({
   // search state
   const [loaded, setLoaded] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [filter, setFilter] = React.useState(filter0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [pageSize] = React.useState(10);
   const [cursor, setCursor] = React.useState(0);
@@ -232,44 +233,44 @@ export function SummaryList({
     },
     [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
   );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => handleResize(), [
-    handleResize,
-    supportsMasterDetail, 
-    summaries,
-  ]);
-
-  React.useEffect(() => {
-    loadMoreAsNeeded();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTrackIndex]);
   
-  React.useEffect(() => {
+  useFocusEffect(React.useCallback(() => {
     const subscriber = DeviceEventEmitter.addListener('autoloaded-for-track', () => {
       queueSummary(summaries);
     });
     return () => {
       subscriber.remove();
     };
-  }, [queueSummary, summaries]);
+  }, [queueSummary, summaries]));
   
-  React.useEffect(() => {
+  useFocusEffect(React.useCallback(() => {
     const subscriber = DeviceEventEmitter.addListener('load-more', loadMore);
     return () => { 
       subscriber.remove();
     };
-  }, [loadMore]);
+  }, [loadMore]));
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useFocusEffect(React.useCallback(() => handleResize(), [
+    handleResize,
+    supportsMasterDetail, 
+    summaries,
+  ]));
+
+  useFocusEffect(React.useCallback(() => {
+    loadMoreAsNeeded();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrackIndex]));
   
   useFocusEffect(React.useCallback(() => {
-    if (filter) {
-      navigation?.setOptions({ headerTitle: filter });
-    }
-    if (!lastFetchFailed && summaries.length === 0) {
+    if ((!lastFetchFailed && summaries.length === 0) || (filter !== filter0)) {
       load(true);
-      return;
     }
-  }, [filter, lastFetchFailed, load, navigation, summaries.length]));
+    if (filter0) {
+      navigation?.setOptions({ headerTitle: filter0 });
+    }
+    setFilter(filter0);
+  }, [filter, filter0, lastFetchFailed, load, navigation, summaries.length]));
   
   useAppState({ 
     onBackground: () => {

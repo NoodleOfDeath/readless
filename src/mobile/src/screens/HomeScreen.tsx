@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { SessionContext } from '../core';
 
 import {
-  Icon,
   SYSTEM_FONT,
   Screen,
   SummaryList,
@@ -20,10 +20,12 @@ function YourNewsTab({
 }: ScreenProps<'search'>) {
   const { getSummaries } = useSummaryClient();
   const { followFilter } = React.useContext(SessionContext);
+  const [filter, setFilter] = React.useState(followFilter);
+  useFocusEffect(React.useCallback(() => setFilter(followFilter), [followFilter]));
   return ( 
     <SummaryList
       fetch={ getSummaries }
-      filter={ followFilter } />
+      filter={ filter } />
   );
 }
 
@@ -71,35 +73,14 @@ export function HomeScreen({
         {followCount > 0 && (
           <Tab.Screen 
             name={ strings.tabs_yourNews }
-            component={ YourNewsTab } 
-            options={ {
-              tabBarIcon: ({ color }) => (
-                <Icon 
-                  name={ 'account-heart' } 
-                  color={ color } />
-              ),
-            } } />
+            component={ YourNewsTab } />
         )}
         <Tab.Screen 
           name={ strings.tabs_topStories }
-          component={ TopStoriesTab } 
-          options={ {
-            tabBarIcon: ({ color }) => (
-              <Icon 
-                name={ 'bulletin-board' } 
-                color={ color } />
-            ),
-          } } />
+          component={ TopStoriesTab } />
         <Tab.Screen 
           name={ strings.tabs_live }
-          component={ LivestreamTab }
-          options={ {
-            tabBarIcon: ({ color }) => (
-              <Icon 
-                name={ 'rss' } 
-                color={ color } />
-            ),
-          } } />
+          component={ LivestreamTab } />
       </Tab.Navigator>
     </Screen>
   );
