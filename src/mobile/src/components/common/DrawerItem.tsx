@@ -7,7 +7,11 @@ import {
   IconProps,
   TextProps,
 } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import {
+  useStyles,
+  useTextStyles,
+  useTheme,
+} from '~/hooks';
 
 export type DrawerItemProps = Omit<ChildlessViewProps & TextProps & Parameters<typeof Drawer.Item>[0], 'label' | 'left' | 'right'> & {
   label?: React.ReactNode | (() => React.ReactNode);
@@ -23,6 +27,7 @@ export function DrawerItem({
 }: DrawerItemProps) {
   const theme = useTheme();
   const style = useStyles({ ...props, my });
+  const textStyle = useTextStyles({ ...props });
   return (
     <Drawer.Item
       theme={ {
@@ -39,6 +44,6 @@ export function DrawerItem({
       right={ right as any }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       { ...props as any }
-      style={ style } />
+      style={ [style, textStyle] } />
   );
 }

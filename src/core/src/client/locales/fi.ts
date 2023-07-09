@@ -52,6 +52,7 @@ export const fiStrings: typeof enStrings = {
   misc_sweetGotIt: 'Ihanaa, tajusin!',
   nav_browseCategories: 'Selaa kategorioita',
   nav_browsePublishers: 'Selaa julkaisijoita',
+  nav_yourFollows: 'Sinun seuraamisesi',
   screens_about: 'Noin',
   screens_bookmarks: 'Kirjanmerkit',
   screens_browse: 'Selaa',

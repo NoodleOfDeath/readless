@@ -52,6 +52,7 @@ export const itStrings: typeof enStrings = {
   misc_sweetGotIt: 'Dolce, capito!',
   nav_browseCategories: 'Sfoglia le categorie',
   nav_browsePublishers: 'Sfoglia editori',
+  nav_yourFollows: 'I tuoi follower',
   screens_about: 'Di',
   screens_bookmarks: 'Segnalibri',
   screens_browse: 'Navigare',

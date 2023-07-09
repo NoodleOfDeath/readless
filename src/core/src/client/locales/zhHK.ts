@@ -52,6 +52,7 @@ export const zhHKStrings: typeof enStrings = {
   misc_sweetGotIt: '甜甜，明白了！',
   nav_browseCategories: '瀏覽分類',
   nav_browsePublishers: '瀏覽出版商',
+  nav_yourFollows: '您的關注',
   screens_about: '關於',
   screens_bookmarks: '書籤',
   screens_browse: '瀏覽',

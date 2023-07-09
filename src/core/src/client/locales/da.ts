@@ -52,6 +52,7 @@ export const daStrings: typeof enStrings = {
   misc_sweetGotIt: 'Sød, forstået!',
   nav_browseCategories: 'Gennemse kategorier',
   nav_browsePublishers: 'Gennemse udgivere',
+  nav_yourFollows: 'Dine følgere',
   screens_about: 'Om',
   screens_bookmarks: 'Bogmærker',
   screens_browse: 'Gennemse',

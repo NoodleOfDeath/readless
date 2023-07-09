@@ -52,6 +52,7 @@ export const ukStrings: typeof enStrings = {
   misc_sweetGotIt: 'Мило, зрозуміло!',
   nav_browseCategories: 'Перегляд категорій',
   nav_browsePublishers: 'Огляд видавців',
+  nav_yourFollows: 'Ваші підписки',
   screens_about: 'про',
   screens_bookmarks: 'Закладки',
   screens_browse: 'переглядати',

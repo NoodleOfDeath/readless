@@ -52,6 +52,7 @@ export const heStrings: typeof enStrings = {
   misc_sweetGotIt: 'מתוק, הבנתי!',
   nav_browseCategories: 'עיין בקטגוריות',
   nav_browsePublishers: 'עיין בבעלי אתרים',
+  nav_yourFollows: 'העוקבים שלך',
   screens_about: 'על אודות',
   screens_bookmarks: 'סימניות',
   screens_browse: 'לְדַפדֵף',

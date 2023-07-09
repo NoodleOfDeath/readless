@@ -57,6 +57,7 @@ export const enStrings = {
   
   nav_browseCategories: 'Browse Categories',
   nav_browsePublishers: 'Browse Publishers',
+  nav_yourFollows: 'Your Follows',
   
   // screens
   screens_about: 'About',

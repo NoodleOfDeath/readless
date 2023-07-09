@@ -52,6 +52,7 @@ export const csStrings: typeof enStrings = {
   misc_sweetGotIt: 'Zlato, rozumím!',
   nav_browseCategories: 'Procházet kategorie',
   nav_browsePublishers: 'Procházet vydavatele',
+  nav_yourFollows: 'Vaši sledující',
   screens_about: 'O',
   screens_bookmarks: 'Záložky',
   screens_browse: 'Procházet',

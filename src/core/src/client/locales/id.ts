@@ -52,6 +52,7 @@ export const idStrings: typeof enStrings = {
   misc_sweetGotIt: 'Manis, mengerti!',
   nav_browseCategories: 'Telusuri Kategori',
   nav_browsePublishers: 'Telusuri Penerbit',
+  nav_yourFollows: 'Pengikut Anda',
   screens_about: 'Tentang',
   screens_bookmarks: 'Bookmark',
   screens_browse: 'Jelajahi',

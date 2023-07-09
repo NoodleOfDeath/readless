@@ -52,6 +52,7 @@ export const arStrings: typeof enStrings = {
   misc_sweetGotIt: 'حلوة ، حسنًا!',
   nav_browseCategories: 'تصفح الفئات',
   nav_browsePublishers: 'تصفح الناشرين',
+  nav_yourFollows: 'المتابعات الخاصة بك',
   screens_about: 'عن',
   screens_bookmarks: 'إشارات مرجعية',
   screens_browse: 'تصفح',

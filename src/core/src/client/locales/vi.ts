@@ -52,6 +52,7 @@ export const viStrings: typeof enStrings = {
   misc_sweetGotIt: 'Ngọt ngào, hiểu rồi!',
   nav_browseCategories: 'Duyệt danh mục',
   nav_browsePublishers: 'Duyệt nhà xuất bản',
+  nav_yourFollows: 'Theo dõi của bạn',
   screens_about: 'Về',
   screens_bookmarks: 'Dấu trang',
   screens_browse: 'duyệt',

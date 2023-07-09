@@ -52,6 +52,7 @@ export const jaStrings: typeof enStrings = {
   misc_sweetGotIt: 'わかりました！',
   nav_browseCategories: 'カテゴリを参照',
   nav_browsePublishers: '発行者を参照する',
+  nav_yourFollows: 'あなたのフォロー',
   screens_about: 'だいたい',
   screens_bookmarks: 'ブックマーク',
   screens_browse: 'ブラウズ',

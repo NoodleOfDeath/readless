@@ -52,6 +52,7 @@ export const huStrings: typeof enStrings = {
   misc_sweetGotIt: 'Édes, értem!',
   nav_browseCategories: 'Böngésszen a kategóriák között',
   nav_browsePublishers: 'Böngésszen a kiadók között',
+  nav_yourFollows: 'Az Ön követései',
   screens_about: 'Ról ről',
   screens_bookmarks: 'Könyvjelzők',
   screens_browse: 'Tallózás',

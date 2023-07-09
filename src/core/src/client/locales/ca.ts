@@ -52,6 +52,7 @@ export const caStrings: typeof enStrings = {
   misc_sweetGotIt: 'Dolç, ho entenc!',
   nav_browseCategories: 'Navega per categories',
   nav_browsePublishers: 'Explora els editors',
+  nav_yourFollows: 'Els teus seguidors',
   screens_about: 'Sobre',
   screens_bookmarks: 'Adreces d\'interès',
   screens_browse: 'Navega',

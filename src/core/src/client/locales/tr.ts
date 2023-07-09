@@ -52,6 +52,7 @@ export const trStrings: typeof enStrings = {
   misc_sweetGotIt: 'Tatlım, anladım!',
   nav_browseCategories: 'Kategorilere Gözat',
   nav_browsePublishers: 'Yayıncılara Göz Atın',
+  nav_yourFollows: 'Takipleriniz',
   screens_about: 'Hakkında',
   screens_bookmarks: 'Yer imleri',
   screens_browse: 'Araştır',

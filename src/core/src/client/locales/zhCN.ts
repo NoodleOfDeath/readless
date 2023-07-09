@@ -52,6 +52,7 @@ export const zhCNStrings: typeof enStrings = {
   misc_sweetGotIt: '甜甜，明白了！',
   nav_browseCategories: '浏览分类',
   nav_browsePublishers: '浏览出版商',
+  nav_yourFollows: '您的关注',
   screens_about: '关于',
   screens_bookmarks: '书签',
   screens_browse: '浏览',

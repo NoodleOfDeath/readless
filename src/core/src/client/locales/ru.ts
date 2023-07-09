@@ -52,6 +52,7 @@ export const ruStrings: typeof enStrings = {
   misc_sweetGotIt: 'Сладкий, понял!',
   nav_browseCategories: 'Просмотр категорий',
   nav_browsePublishers: 'Обзор издателей',
+  nav_yourFollows: 'Ваши подписчики',
   screens_about: 'О',
   screens_bookmarks: 'Закладки',
   screens_browse: 'Просматривать',

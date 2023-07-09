@@ -373,6 +373,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
   return (
     <DrawerContentScrollView { ...props }>
       <DrawerItem label={ getUserAgent().currentVersion } />
+      <DrawerItem h4 label={ strings.nav_yourFollows } />
       <DrawerSection 
         title={ strings.misc_publishers }>
         {publisherItems}

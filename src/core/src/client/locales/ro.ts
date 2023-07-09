@@ -52,6 +52,7 @@ export const roStrings: typeof enStrings = {
   misc_sweetGotIt: 'Dulce, am înțeles!',
   nav_browseCategories: 'Răsfoiți categorii',
   nav_browsePublishers: 'Răsfoiți editori',
+  nav_yourFollows: 'Urmărește-ți',
   screens_about: 'Despre',
   screens_bookmarks: 'Marcaje',
   screens_browse: 'Naviga',

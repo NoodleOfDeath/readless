@@ -52,6 +52,7 @@ export const skStrings: typeof enStrings = {
   misc_sweetGotIt: 'Zlato, rozumiem!',
   nav_browseCategories: 'Prehľadávať kategórie',
   nav_browsePublishers: 'Prehľadávať vydavateľov',
+  nav_yourFollows: 'Vaši sledovaní',
   screens_about: 'O',
   screens_bookmarks: 'Záložky',
   screens_browse: 'Prehľadávať',

@@ -52,6 +52,7 @@ export const ptBRStrings: typeof enStrings = {
   misc_sweetGotIt: 'Doce, entendi!',
   nav_browseCategories: 'Procurar Categorias',
   nav_browsePublishers: 'Procurar editores',
+  nav_yourFollows: 'Seus seguidores',
   screens_about: 'Sobre',
   screens_bookmarks: 'Favoritos',
   screens_browse: 'Navegar',

@@ -52,6 +52,7 @@ export const nlStrings: typeof enStrings = {
   misc_sweetGotIt: 'Lief, begrepen!',
   nav_browseCategories: 'Bladeren door rubrieken',
   nav_browsePublishers: 'Blader door uitgevers',
+  nav_yourFollows: 'Uw volgers',
   screens_about: 'Over',
   screens_bookmarks: 'Bladwijzers',
   screens_browse: 'Bladeren',

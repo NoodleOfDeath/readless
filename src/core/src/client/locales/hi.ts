@@ -52,6 +52,7 @@ export const hiStrings: typeof enStrings = {
   misc_sweetGotIt: 'प्रिय, समझ गया!',
   nav_browseCategories: 'श्रेणियाँ ब्राउज़ करें',
   nav_browsePublishers: 'प्रकाशक ब्राउज़ करें',
+  nav_yourFollows: 'आपके फ़ॉलोअर्स',
   screens_about: 'के बारे में',
   screens_bookmarks: 'बुकमार्क',
   screens_browse: 'ब्राउज़',

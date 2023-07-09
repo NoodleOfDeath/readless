@@ -52,6 +52,7 @@ export const deStrings: typeof enStrings = {
   misc_sweetGotIt: 'Süß, verstanden!',
   nav_browseCategories: 'Durchsuche Kategorien',
   nav_browsePublishers: 'Durchsuchen Sie Verlage',
+  nav_yourFollows: 'Deine Follower',
   screens_about: 'Um',
   screens_bookmarks: 'Lesezeichen',
   screens_browse: 'Durchsuche',

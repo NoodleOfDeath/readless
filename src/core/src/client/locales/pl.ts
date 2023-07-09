@@ -52,6 +52,7 @@ export const plStrings: typeof enStrings = {
   misc_sweetGotIt: 'Słodki, rozumiem!',
   nav_browseCategories: 'kategorie wyszukiwania',
   nav_browsePublishers: 'Przeglądaj wydawców',
+  nav_yourFollows: 'Twoje obserwowane',
   screens_about: 'O',
   screens_bookmarks: 'Zakładki',
   screens_browse: 'Przeglądać',

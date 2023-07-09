@@ -52,6 +52,7 @@ export const svStrings: typeof enStrings = {
   misc_sweetGotIt: 'Söt, förstår!',
   nav_browseCategories: 'Bläddra bland kategorier',
   nav_browsePublishers: 'Bläddra bland förlag',
+  nav_yourFollows: 'Dina följare',
   screens_about: 'Handla om',
   screens_bookmarks: 'Bokmärken',
   screens_browse: 'Bläddra',

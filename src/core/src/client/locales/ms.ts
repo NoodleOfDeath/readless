@@ -52,6 +52,7 @@ export const msStrings: typeof enStrings = {
   misc_sweetGotIt: 'Sweet, faham!',
   nav_browseCategories: 'Semak imbas Kategori',
   nav_browsePublishers: 'Semak imbas Penerbit',
+  nav_yourFollows: 'Pengikut Anda',
   screens_about: 'Tentang',
   screens_bookmarks: 'Penanda buku',
   screens_browse: 'Semak imbas',

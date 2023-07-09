@@ -52,6 +52,7 @@ export const koStrings: typeof enStrings = {
   misc_sweetGotIt: '잘했어!',
   nav_browseCategories: '카테고리 찾아보기',
   nav_browsePublishers: '게시자 찾아보기',
+  nav_yourFollows: '팔로우',
   screens_about: '에 대한',
   screens_bookmarks: '북마크',
   screens_browse: '검색',

@@ -52,6 +52,7 @@ export const faStrings: typeof enStrings = {
   misc_sweetGotIt: 'شیرین، فهمیدم!',
   nav_browseCategories: 'دسته بندی ها را مرور کنید',
   nav_browsePublishers: 'ناشران را مرور کنید',
+  nav_yourFollows: 'دنبال کننده های شما',
   screens_about: 'در باره',
   screens_bookmarks: 'نشانک ها',
   screens_browse: 'مرور کردن',

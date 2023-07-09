@@ -52,6 +52,7 @@ export const frStrings: typeof enStrings = {
   misc_sweetGotIt: 'Doux, j\'ai compris !',
   nav_browseCategories: 'Parcourir les catégories',
   nav_browsePublishers: 'Parcourir les éditeurs',
+  nav_yourFollows: 'Vos suivis',
   screens_about: 'À propos',
   screens_bookmarks: 'Signets',
   screens_browse: 'Parcourir',

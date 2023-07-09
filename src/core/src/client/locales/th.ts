@@ -52,6 +52,7 @@ export const thStrings: typeof enStrings = {
   misc_sweetGotIt: 'หวาน เข้าใจแล้ว!',
   nav_browseCategories: 'เรียกดูหมวดหมู่',
   nav_browsePublishers: 'เรียกดูสำนักพิมพ์',
+  nav_yourFollows: 'ติดตามของคุณ',
   screens_about: 'เกี่ยวกับ',
   screens_bookmarks: 'ที่คั่นหนังสือ',
   screens_browse: 'เรียกดู',

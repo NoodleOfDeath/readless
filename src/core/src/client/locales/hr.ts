@@ -52,6 +52,7 @@ export const hrStrings: typeof enStrings = {
   misc_sweetGotIt: 'Slatko, razumijem!',
   nav_browseCategories: 'Pregledajte kategorije',
   nav_browsePublishers: 'Pregledajte izdavače',
+  nav_yourFollows: 'Vaši pratitelji',
   screens_about: 'Oko',
   screens_bookmarks: 'Oznake',
   screens_browse: 'pretraživati',

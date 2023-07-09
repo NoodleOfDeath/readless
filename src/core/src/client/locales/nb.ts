@@ -52,6 +52,7 @@ export const nbStrings: typeof enStrings = {
   misc_sweetGotIt: 'Søt, skjønner!',
   nav_browseCategories: 'Bla gjennom kategorier',
   nav_browsePublishers: 'Bla gjennom utgivere',
+  nav_yourFollows: 'Dine følgere',
   screens_about: 'Om',
   screens_bookmarks: 'Bokmerker',
   screens_browse: 'Bla gjennom',
