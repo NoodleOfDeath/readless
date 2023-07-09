@@ -1,7 +1,6 @@
 import {
   PublicCategoryAttributes,
   PublicPublisherAttributes,
-  PublicSummaryAttributesConservative,
   PublicSummaryGroup,
   ReadingFormat,
   RequestParams,
@@ -47,47 +46,78 @@ export type Preferences = {
   lineHeightMultiplier?: number;
   
   // display settings
-  compactMode?: boolean;
+  compactMode?: boolean; // legacy 1.11.0
+  compactSummaries?: boolean;
   showShortSummary?: boolean;
   preferredReadingFormat?: ReadingFormat;
-  sourceLinks?: boolean;
   sentimentEnabled?: boolean;
   triggerWords?: { [key: string]: string };
   
   // app state
-  loadedInitialUrl?: boolean;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
-  showOnlyCustomNews?: boolean;
   viewedFeatures?: { [key: string]: Bookmark<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
   
   // summary state
   readSummaries?: { [key: number]: Bookmark<boolean> };
-  readSources?: { [key: number]: Bookmark<boolean> };
   bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryGroup> };
   bookmarkCount: number;
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
   
-  // publisher/category state
-  followedOutlets?: { [key: string]: boolean };
+  // followed publishers
+  followedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
   followedPublishers?: { [key: string]: boolean };
+  excludedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
+  excludedPublishers?: { [key: string]: boolean };
+  
+  // followed categories
   followedCategories?: { [key: string]: boolean };
-
+  excludedCategories?: { [key: string]: boolean };
+  
   followCount: number;
   followFilter: string;
-
-  excludedOutlets?: { [key: string]: boolean };
-  excludedPublishers?: { [key: string]: boolean };
-  excludedCategories?: { [key: string]: boolean };
 };
-
-export const DEFAULT_PREFERENCES: Partial<Preferences> = { loadedInitialUrl: false };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
+
+const SESSION_EVENTS = [
+  // summaries
+  'bookmark-summary',
+  'unbookmark-summary',
+  'read-summary',
+  'unread-summary',
+  'hide-summary',
+  'unhide-summary',
+  // publishers
+  'follow-publisher',
+  'unfollow-publisher',
+  'exclude-publisher',
+  'unexclude-publisher',
+  // categories
+  'follow-category',
+  'unfollow-category',
+  'exclude-category',
+  'unexclude-category',
+] as const;
+
+export type SessionEvent = typeof SESSION_EVENTS[number];
+
+export type PreferenceMutation<E extends SessionEvent> =
+  E extends `${string}-summary` ? PublicSummaryGroup :
+  E extends `${string}-publisher` ? PublicPublisherAttributes :
+  E extends `${string}-category` ? PublicCategoryAttributes :
+  never;
+  
+export type PreferenceState<E extends SessionEvent> =
+  E extends `${'unbookmark' | 'bookmark'}-summary` ? Preferences['bookmarkedSummaries'] :
+  E extends `${string}-summary` ? Preferences['readSummaries'] :
+  E extends `${string}-publisher` ? Preferences['followedPublishers'] :
+  E extends `${string}-category` ? Preferences['folowedCategories'] :
+  never;
 
 export type SessionContextType = Preferences & {
   ready?: boolean;
@@ -102,11 +132,12 @@ export type SessionContextType = Preferences & {
   getPreference: <K extends keyof Preferences>(key: K) => Promise<Preferences[K] | undefined>;
   resetPreferences: (hard?: boolean) => Promise<void>;
   
-  // convenience functions
-  bookmarkSummary: (summary: PublicSummaryAttributesConservative) => Promise<void>;
-  readSummary: (summary: PublicSummaryAttributesConservative) => Promise<void>;
-  readSource: (summary: PublicSummaryAttributesConservative) => Promise<void>;
-  removeSummary: (summary: PublicSummaryAttributesConservative) => Promise<void>;
+  // summary convenience functions
+  bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  readSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  removeSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  
+  // follow publisher/category convenience functions
   followPublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   excludePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   followCategory: (category: PublicCategoryAttributes) => Promise<void>;
@@ -127,7 +158,6 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   followPublisher: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
   lastRequestForReview: 0,
-  readSource: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),
   resetPreferences: () => Promise.resolve(),

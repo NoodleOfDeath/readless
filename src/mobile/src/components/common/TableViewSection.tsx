@@ -39,7 +39,7 @@ export function TableViewSection({
 }: TableViewSectionProps) {
   const style = useStyles(props);
   return (
-    <View mx={ grouped ? 24 : 0 }>
+    <View mx={ grouped ? 12 : 0 }>
       <Section
         { ...props }
         hideSeparator={ grouped }

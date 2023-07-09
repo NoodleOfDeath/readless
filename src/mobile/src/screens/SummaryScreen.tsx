@@ -4,7 +4,6 @@ import { ActivityIndicator } from 'react-native-paper';
 
 import {
   InteractionType,
-  PublicSummaryAttributes,
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
@@ -15,7 +14,7 @@ import {
   Summary,
   View,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import {  SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { getLocale } from '~/locales';
 import { ScreenProps } from '~/screens';
@@ -26,12 +25,12 @@ export function SummaryScreen({
 }: ScreenProps<'summary'>) {
 
   const { getSummary, handleInteraction } = useSummaryClient();
-  const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
+  const { preferredReadingFormat } = React.useContext(SessionContext);
 
   const [loading, setLoading] = React.useState(false);
   const [summaryId, setSummaryId] = React.useState(0);
-  const [summary, setSummary] = React.useState<PublicSummaryAttributes>();
-  const [format, setFormat] = React.useState(route?.params?.initialFormat ?? ReadingFormat.Summary);
+  const [summary, setSummary] = React.useState<PublicSummaryGroup>();
+  const [format, setFormat] = React.useState<ReadingFormat | undefined>(route?.params?.initialFormat ?? ReadingFormat.Summary);
   const keywords = React.useMemo(() => route?.params?.keywords ?? [], [route]);
 
   const load = React.useCallback(async (id?: number) => {
@@ -52,7 +51,7 @@ export function SummaryScreen({
     } finally {
       setLoading(false);
     }
-  }, [getSummary, setPreference]);
+  }, [getSummary]);
 
   React.useEffect(() => {
     navigation?.setOptions({ headerTitle: '' });
@@ -73,12 +72,12 @@ export function SummaryScreen({
   }, [load, summary, route?.params?.summary]);
   
   const siblings = React.useMemo(() => {
-    return [...(summary?.siblings ?? [])].sort((a, b) => new Date(b.originalDate).valueOf() - new Date(a.originalDate).valueOf());
+    return [...(summary?.siblings ?? [])].sort((a, b) => new Date(b.originalDate ?? '').valueOf() - new Date(a.originalDate ?? '').valueOf());
   }, [summary?.siblings]);
   
   const handleFormatChange = React.useCallback(
     (newSummary: PublicSummaryGroup, newFormat?: ReadingFormat) => {
-      if (summary.id === newSummary.id) {
+      if (summary?.id === newSummary.id) {
         setFormat(newFormat);
         return;
       }

@@ -17,6 +17,7 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
+  emitEvent,
   getItem,
   getUserAgent,
   removeAll,
@@ -39,24 +40,20 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [letterSpacing, setLetterSpacing] = React.useState<number>();
   const [lineHeightMultiplier, setLineHeightMultiplier] = React.useState<number>();
   
-  const [compactMode, setCompactMode] = React.useState<boolean>();
+  const [compactSummaries, setCompactSummaries] = React.useState<boolean>();
   const [showShortSummary, setShowShortSummary] = React.useState<boolean>();
   const [preferredReadingFormat, setPreferredReadingFormat] = React.useState<ReadingFormat>();
-  const [sourceLinks, setSourceLinks] = React.useState<boolean>();
   const [sentimentEnabled, setSentimentEnabled] = React.useState<boolean>();
   const [triggerWords, setTriggerWords] = React.useState<{ [key: string]: string}>();
   
-  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
   const [searchHistory, setSearchHistory] = React.useState<string[]>();
-  const [showOnlyCustomNews, setShowOnlyCustomNews] = React.useState<boolean>();
   const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: string]: Bookmark<boolean>}>();
   const [hasReviewed, setHasReviewed] = React.useState<boolean>();
   const [lastRequestForReview, setLastRequestForReview] = React.useState(0);
   
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
-  const [readSources, setReadSources] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
   
   const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
@@ -68,14 +65,20 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
 
   const followFilter = React.useMemo(() => {
     const filters: string[] = [];
+    if (Object.keys({ ...followedPublishers }).length > 0) {
+      filters.push(['pub', Object.keys({ ...followedPublishers }).join(',')].join(':'));
+    }
+    if (Object.keys({ ...excludedPublishers }).length > 0) {
+      filters.push(['-pub', Object.keys({ ...excludedPublishers }).join(',')].join(':'));
+    }
     if (Object.keys({ ...followedCategories }).length > 0) {
       filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
     }
-    if (Object.keys({ ...followedPublishers }).length > 0) {
-      filters.push(['src', Object.keys({ ...followedPublishers }).join(',')].join(':'));
+    if (Object.keys({ ...excludedCategories }).length > 0) {
+      filters.push(['-cat', Object.keys({ ...excludedCategories }).join(',')].join(':'));
     }
     return filters.join(' ');
-  }, [followedCategories, followedPublishers]);
+  }, [followedPublishers, excludedPublishers, followedCategories, excludedCategories]);
   
   const bookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).length, [bookmarkedSummaries]);
   const unreadBookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).filter((k) => !(k in ({ ...readSummaries }))).length, [bookmarkedSummaries, readSummaries]);
@@ -114,16 +117,14 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       break;
       
     case 'compactMode':
-      setCompactMode(newValue);
+    case 'compactSummaries':
+      setCompactSummaries(newValue);
       break;
     case 'showShortSummary':
       setShowShortSummary(newValue);
       break;
     case 'preferredReadingFormat':
       setPreferredReadingFormat(newValue);
-      break;
-    case 'sourceLinks':
-      setSourceLinks(newValue);
       break;
     case 'sentimentEnabled':
       setSentimentEnabled(newValue);
@@ -132,17 +133,11 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       setTriggerWords(newValue);
       break;
     
-    case 'loadedInitialUrl':
-      setLoadedInitialUrl(newValue);
-      break;
     case 'rotationLock':
       setRotationLock(newValue);
       break;
     case 'searchHistory':
       setSearchHistory(newValue);
-      break;
-    case 'showOnlyCustomNews':
-      setShowOnlyCustomNews(newValue);
       break;
     case 'viewedFeatures':
       setViewedFeatures(newValue);
@@ -160,9 +155,6 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     case 'readSummaries':
       setReadSummaries(newValue);
       break;
-    case 'readSources':
-      setReadSources(newValue);
-      break;
     case 'removedSummaries':
       setRemovedSummaries(newValue);
       break;
@@ -175,6 +167,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     case 'excludedPublishers':
       setExcludedPublishers(newValue);
       break;
+      
     case 'followedCategories':
       setFollowedCategories(newValue);
       break;
@@ -197,8 +190,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (summary.id in state) {
         delete state[summary.id];
+        emitEvent('unbookmark-summary', summary, state);
       } else {
         state[summary.id] = new Bookmark(summary);
+        emitEvent('bookmark-summary', summary, state);
       }
       return (prev = state);
     });
@@ -209,20 +204,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (summary.id in state) {
         delete state[summary.id];
+        emitEvent('unread-summary', summary, state);
       } else {
         state[summary.id] = new Bookmark(true);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const readSource = async (summary: PublicSummaryGroup) => {
-    await setPreference('readSources', (prev) => {
-      const state = { ...prev };
-      if (summary.id in state) {
-        delete state[summary.id];
-      } else {
-        state[summary.id] = new Bookmark(true);
+        emitEvent('read-summary', summary, state);
       }
       return (prev = state);
     });
@@ -233,8 +218,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (summary.id in state) {
         delete state[summary.id];
+        emitEvent('unhide-summary', summary, state);
       } else {
         state[summary.id] = true;
+        emitEvent('hide-summary', summary, state);
       }
       return (prev = state);
     });
@@ -245,8 +232,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
+        emitEvent('unfollow-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
+        emitEvent('follow-publisher', publisher, state);
       }
       return (prev = state);
     });
@@ -257,8 +246,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
+        emitEvent('unexclude-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
+        emitEvent('exclude-publisher', publisher, state);
       }
       return (prev = state);
     });
@@ -269,8 +260,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
+        emitEvent('unfollow-category', category, state);
       } else {
         state[category.name] = true;
+        emitEvent('follow-category', category, state);
       }
       return (prev = state);
     });
@@ -281,8 +274,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
+        emitEvent('unexclude-category', category, state);
       } else {
         state[category.name] = true;
+        emitEvent('exclude-category', category, state);
       }
       return (prev = state);
     });
@@ -311,18 +306,15 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setLineHeightMultiplier(await getPreference('lineHeightMultiplier'));
     
     // summary display
-    setCompactMode(await getPreference('compactMode'));
+    setCompactSummaries(await getPreference('compactSummaries') ?? await getPreference('compactMode'));
     setShowShortSummary(await getPreference('showShortSummary'));
     setPreferredReadingFormat(await getPreference('preferredReadingFormat'));
-    setSourceLinks(await getPreference('sourceLinks'));
     setSentimentEnabled(await getPreference('sentimentEnabled'));
     setTriggerWords(await getPreference('triggerWords'));
     
     // app state
-    setLoadedInitialUrl(DEFAULT_PREFERENCES.loadedInitialUrl);
     setRotationLock(await getPreference('rotationLock'));
     setSearchHistory(await getPreference('searchHistory'));
-    setShowOnlyCustomNews(await getPreference('showOnlyCustomNews'));
     setViewedFeatures(await getPreference('viewedFeatures'));
     setHasReviewed(await getPreference('hasReviewed'));
     setLastRequestForReview(await getPreference('lastRequestForReview'));
@@ -330,15 +322,15 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
     setReadSummaries(await getPreference('readSummaries'));
-    setReadSources(await getPreference('readSources'));
     setRemovedSummaries(await getPreference('removedSummaries'));
     
-    // publisher/category statet
-    setFollowedPublishers(await getPreference('followedOutlets') ?? await getPreference('followedPublishers'));
+    // publisher/category states
+    setFollowedPublishers(await getPreference('followedPublishers') ?? await getPreference('followedOutlets'));
+    setExcludedPublishers(await getPreference('excludedPublishers') ?? await getPreference('excludedOutlets'));
     setFollowedCategories(await getPreference('followedCategories'));
-    setExcludedPublishers(await getPreference('excludedOutlets') ?? await getPreference('excludedPublishers'));
     setExcludedCategories(await getPreference('excludedCategories'));
     
+    emitEvent('session-ready');
     setReady(true);
   };
 
@@ -359,7 +351,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         bookmarkedSummaries,
         categories,
         colorScheme,
-        compactMode,
+        compactSummaries,
         excludeCategory,
         excludePublisher,
         excludedCategories,
@@ -377,11 +369,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         lastRequestForReview,
         letterSpacing,
         lineHeightMultiplier,
-        loadedInitialUrl,
         preferredReadingFormat,
         publishers,
-        readSource,
-        readSources,
         readSummaries,
         readSummary,
         ready,
@@ -394,9 +383,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         setCategories,
         setPreference,
         setPublishers,
-        showOnlyCustomNews,
         showShortSummary,
-        sourceLinks,
         triggerWords,
         unreadBookmarkCount,
         viewedFeatures,

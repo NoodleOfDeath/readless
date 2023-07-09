@@ -8,12 +8,14 @@ type Props = ChildlessViewProps & {
   format?: ReadingFormat;
   preferredFormat?: ReadingFormat;
   onChange?: (mode?: ReadingFormat) => void;
+  pressOnly?: boolean;
 };
 
 export function ReadingFormatPicker({
   format,
   preferredFormat = ReadingFormat.Summary, 
   onChange,
+  pressOnly,
   ...props
 }: Props = {}) {
   return (
@@ -32,6 +34,12 @@ export function ReadingFormatPicker({
           icon: 'view-list',
           label: strings.summary_bullets,
           value: ReadingFormat.Bullets,
+        },
+        {
+          icon: 'book-open',
+          label: strings.summary_fullArticle,
+          pressOnly,
+          value: ReadingFormat.FullArticle,
         },
       ] } />
   );

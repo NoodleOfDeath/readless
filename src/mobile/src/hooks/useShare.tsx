@@ -10,7 +10,7 @@ import ViewShot from 'react-native-view-shot';
 import { InteractionType, PublicSummaryAttributes } from '~/api';
 import { shareableLink } from '~/utils';
 
-const SocialAppIds: Record<Social, string> = {
+const SocialAppIds: Record<string, string> = {
   [Social.Facebook]: 'com.facebook.Facebook',
   [Social.FacebookStories]: 'com.facebook.katana',
   [Social.Instagram]: 'com.burbn.instagram',
@@ -19,7 +19,7 @@ const SocialAppIds: Record<Social, string> = {
   [Social.Messenger]: 'com.facebook.orca',
   [Social.Pinterest]: 'com.pinterest',
   [Social.Pagesmanager]: 'com.facebook.pages.app',
-  'threads': 'com.burbn.barcelona',
+  // 'threads': 'com.burbn.barcelona',
   [Social.Twitter]: 'com.twitter.android',
   [Social.Whatsapp]: 'com.whatsapp',
   [Social.Whatsappbusiness]: 'com.whatsapp.w4b',

@@ -7,6 +7,7 @@ export const enStrings = {
   action_follow: 'Follow',
   action_loading: 'Loading...',
   action_next: 'Next ', 
+  action_readArticle: 'Read Article',
   action_save: 'Save',
   action_saveAndClose: 'Save & Close',
   action_search: 'Search',
@@ -20,7 +21,7 @@ export const enStrings = {
   bookmarks_bookmarksAvailableOffline: 'Bookmarks are always available offline', 
   bookmarks_header: 'Bookmarks',
   bookmarks_removeReadFromBookmarks: 'Remove Read from Bookmarks',
-
+  
   // feedback screen
   feedback_option_helpful: 'This summary is actually helpful',
   feedback_option_imageIrrelevant: 'This image is irrelevant',
@@ -39,25 +40,23 @@ export const enStrings = {
   feedback_thankYou: 'Thank you for your feedback!',
   feedback_title: 'Feedback',
   
-  // menu
-  menu_about: 'About',
-  menu_bookmarks: 'Bookmarks',
-  menu_browse: 'Browse',
-  menu_settings: 'Settings',
-  menu_walkthroughs: 'Walkthroughs',
-  
   // misc
   misc_and: 'and',
   misc_article: 'Article',
   misc_awesome: 'Awesome!',
   misc_categories: 'Categories',
   misc_category: 'Category',
-  misc_channels: 'Channels',
   misc_duhIAlreadyKnow: 'Duh, I already know',
   misc_inTheLast: 'in the last',
+  misc_noCategories: 'You are not following any categories',
+  misc_noPublishers: 'You are not following any publishers',
   misc_publisher: 'Publisher',
+  misc_publishers: 'Publishers',
   misc_readless: 'Read Less',
-  mise_sweetGotIt: 'Sweet, got it!',
+  misc_sweetGotIt: 'Sweet, got it!',
+  
+  nav_browseCategories: 'Browse Categories',
+  nav_browsePublishers: 'Browse Publishers',
   
   // screens
   screens_about: 'About',
@@ -66,6 +65,7 @@ export const enStrings = {
   screens_colorScheme: 'Color Scheme',
   screens_font: 'Font',
   screens_home: 'Home',
+  screens_legal: 'Legal',
   screens_preferredReadingFormat: 'Preferred Reading Format',
   screens_profile: 'Profile',
   screens_recaps: 'Recaps',
@@ -86,17 +86,17 @@ export const enStrings = {
   search_turnOffFilters: 'Turn off filters',
 
   // settings
-  settings_about: 'About',
   settings_clearCache: 'Clear Cache',
   settings_clearHistory: 'Clear History',
   settings_colorScheme: 'Color Scheme',
-  settings_compactMode: 'Compact',
+  settings_compactSummaries: 'Compact',
   settings_customization: 'Customization',
   settings_dark: 'Dark',
   settings_enterYourTriggerWords: 'Enter and/or remove your trigger words below',
   settings_font: 'Font',
   settings_fontSize: 'Font Size',
   settings_general: 'General',
+  settings_legal: 'Legal',
   settings_letterSpacing: 'Letter Spacing',
   settings_light: 'Light',
   settings_lineHeight: 'Line Height',
@@ -158,6 +158,8 @@ export const enStrings = {
   summary_example_shortSummary: 'This is a short one sentence summary that will usually be no more than 30 words and will always be visible when you expand the summary.',
   summary_example_summary: 'This is a longer summary that will usually be between 3-6 sentences long. You can also view a bulleted list form.',
   summary_example_title: 'This is an example title no more than 15 words long',
+  summary_fullArticle: 'Full Article',
+  summary_fullArticleInfo: 'Selecting this option, will automatically open the original article for a summary in the in-app browser when you tap on it.',
   summary_hide: 'Hide',
   summary_markAsRead: 'Mark as Read',
   summary_markAsUnRead: 'Mark as Unread',
@@ -182,9 +184,9 @@ export const enStrings = {
   walkthroughs: 'Walkthroughs',
 
   // walkthroughs - appearance
-  walkthroughs_appearance_compactModeDescription: 'Toggle the switches below to see which you prefer',
+  walkthroughs_appearance_compactSummariesDescription: 'Toggle the switches below to see which you prefer',
   walkthroughs_appearance_customizeYourExperience: 'Customize your experience',
-  walkthroughs_appearance_preferredReadingFormat: 'Tap on **Summary** or **Bullets** to choose your default reading format',
+  walkthroughs_appearance_preferredReadingFormat: 'Tap on **Summary**,  **Bullets**, or **Full Article** to choose your default reading format.',
   walkthroughs_appearance_selectFont: 'Select a font and size that is easiest to read',
   walkthroughs_appearance_selectTheme: 'Light or dark mode?',
   walkthroughs_appearance_sourceLinks: 'Tap the toggle to see what appearance you prefer',
@@ -194,7 +196,7 @@ export const enStrings = {
 
   // walkthroughs - bookmark
   walkthroughs_bookmark_happyReading: 'Happy Reading!',
-  walkthroughs_bookmark_niceJob: 'Nice! You can view always your bookmarks offline in your account tab!',
+  walkthroughs_bookmark_niceJob: 'Nice! You can view always your bookmarks offline from the side menu!',
 
   // walkthroughs - custom feed
   walkthroughs_customFeed_addCategories: 'Add categories',

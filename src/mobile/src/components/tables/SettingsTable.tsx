@@ -9,6 +9,7 @@ import {
   FONT_SIZES,
   NumericPrefPicker,
   PrefSwitch,
+  SYSTEM_FONT,
   ScrollView,
   Summary,
   TableView,
@@ -24,7 +25,7 @@ export function SettingsTable() {
   const { navigate } = useNavigation();
   
   const {
-    compactMode,
+    compactSummaries,
     colorScheme, 
     fontFamily, 
     preferredReadingFormat,
@@ -61,7 +62,7 @@ export function SettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
-      <TableViewSection header={ strings.settings_system }>
+      <TableViewSection grouped header={ strings.settings_system }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -74,8 +75,8 @@ export function SettingsTable() {
           bold
           cellStyle="RightDetail"
           title={ strings.settings_font }
-          detail={ fontFamily }
-          detailTextStyle={ { fontFamily } }
+          detail={ fontFamily ?? SYSTEM_FONT }
+          detailTextStyle={ { fontFamily: fontFamily ?? SYSTEM_FONT } }
           accessory="DisclosureIndicator"
           cellIcon="format-font"
           onPress={ () => navigate('fontPicker') } />
@@ -116,7 +117,7 @@ export function SettingsTable() {
               step={ 0.05 } />
           ) } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_summaryDisplay }>
+      <TableViewSection grouped header={ strings.settings_summaryDisplay }>
         <TableViewCell
           cellContentView={ (
             <ScrollView scrollEnabled={ false }>
@@ -125,12 +126,12 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ strings.settings_compactMode }
+          title={ strings.settings_compactSummaries }
           cellIcon="view-headline"
-          cellAccessoryView={ <PrefSwitch prefKey='compactMode' /> } />
+          cellAccessoryView={ <PrefSwitch prefKey='compactSummaries' /> } />
         <TableViewCell
           bold
-          title={ compactMode ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries }
+          title={ compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries }
           cellIcon="text-short"
           cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
         <TableViewCell
@@ -142,17 +143,12 @@ export function SettingsTable() {
           bold
           cellStyle="RightDetail"
           title={ strings.settings_preferredReadingFormat }
-          detail={ preferredReadingFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_summary }
+          detail={ preferredReadingFormat === ReadingFormat.Bullets ? strings.summary_bullets : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_summary }
           accessory="DisclosureIndicator"
           cellIcon="view-list"
           onPress={ () => navigate('readingFormatPicker') } />
-        <TableViewCell
-          bold
-          title={ strings.settings_showSourceLinks }
-          cellIcon="link-variant"
-          cellAccessoryView={ <PrefSwitch prefKey='sourceLinks' /> } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_customization }>
+      <TableViewSection grouped header={ strings.settings_customization }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -162,15 +158,11 @@ export function SettingsTable() {
           cellIcon="alphabetical-off"
           onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_general }>
-        <TableViewCell
+      <TableViewSection grouped header={ strings.settings_general }>
+        {/*<TableViewCell
           bold
-          title={ strings.settings_about }
-          onPress={ () => navigate('about') } />
-        <TableViewCell
-          bold
-          title={ strings.screens_bookmarks }
-          onPress={ () => navigate('bookmarks') } />
+          title={ strings.settings_legal }
+          onPress={ () => navigate('legal') } />*/}
         <TableViewCell
           bold
           title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }

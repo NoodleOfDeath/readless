@@ -4,7 +4,7 @@ import { NativeModules, Platform } from 'react-native';
 import { Track as RNTrack, State } from 'react-native-track-player';
 import {  Voice } from 'react-native-tts-export';
 
-import { PublicSummaryAttributes } from '~/api';
+import { PublicSummaryGroup } from '~/api';
 
 export const deviceLanguage = (
   Platform.OS === 'ios' ? NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
@@ -14,7 +14,7 @@ export const deviceLanguage = (
 export type Track = Omit<RNTrack, 'url'> & {
   id: string;
   text: string;
-  summary: PublicSummaryAttributes;
+  summary: PublicSummaryGroup;
   altText?: string;
   url?: string;
 };
@@ -34,7 +34,7 @@ export type MediaContextType = {
   canSkipToNext: boolean;
   preloadCount: number;
   isPreloaded: boolean;
-  queueSummary: (summary: PublicSummaryAttributes | PublicSummaryAttributes[], autoplay?: boolean) => void;
+  queueSummary: (summary: PublicSummaryGroup | PublicSummaryGroup[], autoplay?: boolean) => void;
   playTrack: () => Promise<void>;
   pauseTrack: () => Promise<void>;
   stopAndClearTracks: () => Promise<void>;

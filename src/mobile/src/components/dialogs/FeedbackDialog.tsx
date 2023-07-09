@@ -11,7 +11,7 @@ import {
   TextInput,
   View,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import {  SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -22,7 +22,7 @@ export type FeedbackDialogProps = {
 
 export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogProps>) {
 
-  const { summary, onClose } = React.useMemo(() => payload as Partial<FeedbackDialogProps>, [payload]);
+  const { summary, onClose } = React.useMemo(() => ({ ...payload }), [payload]);
   
   const { setPreference } = React.useContext(SessionContext);
 
@@ -70,7 +70,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
         if (summaries[summary.id]) {
           delete summaries[summary.id];
         } else {
-          summaries[summary.id] = new Bookmark(true);
+          summaries[summary.id] = true;
         }
         return (prev = summaries);
       });

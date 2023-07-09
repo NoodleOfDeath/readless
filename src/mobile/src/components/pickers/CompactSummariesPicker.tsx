@@ -18,41 +18,41 @@ export function CompactModePicker({
   labeled,
 }: CompactModePickerProps) {
   
-  const { compactMode } = React.useContext(SessionContext);
+  const { compactSummaries } = React.useContext(SessionContext);
 
-  const compactModeSwitch = React.useMemo(() => {
+  const compactSummariesSwitch = React.useMemo(() => {
     return labeled ? (
       <Chip system contained gap={ 12 }>
-        {strings.settings_compactMode}
+        {strings.settings_compactSummaries}
         <View row />
-        <PrefSwitch prefKey={ 'compactMode' } />
+        <PrefSwitch prefKey={ 'compactSummaries' } />
       </Chip>
     ) : (
-      <PrefSwitch prefKey={ 'compactMode' } />
+      <PrefSwitch prefKey={ 'compactSummaries' } />
     );
   }, [labeled]);
   
   const shortSummarySwitch = React.useMemo(() => {
     return labeled ? (
       <Chip system contained gap={ 12 }>
-        {compactMode ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries}
+        {compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries}
         <View row />
         <PrefSwitch prefKey={ 'showShortSummary' } />
       </Chip>
     ) : (
       <PrefSwitch prefKey={ 'showShortSummary' } />
     );
-  }, [compactMode, labeled]);
+  }, [compactSummaries, labeled]);
 
   if (compactSwitchOnly) {
-    return compactModeSwitch;
+    return compactSummariesSwitch;
   } else if (shortSummarySwitchOnly) {
     return shortSummarySwitch;
   }
   
   return (
     <View flexRow justifyCenter flexWrap="wrap" gap={ 16 }>
-      {compactModeSwitch}
+      {compactSummariesSwitch}
       {shortSummarySwitch}
     </View>
   );

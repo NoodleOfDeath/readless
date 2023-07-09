@@ -5,11 +5,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { SessionContext } from '../core';
 
 import {
-  Header,
   Icon,
   SYSTEM_FONT,
   Screen,
-  SearchMenu,
   SummaryList,
 } from '~/components';
 import { useSummaryClient, useTheme } from '~/hooks';
@@ -23,7 +21,6 @@ function TopStoriesTab({
   return ( 
     <SummaryList
       fetch={ getTopStories }
-      showWalkthroughs
       filter={ route?.params?.prefilter }
       interval='1d' />
   );
@@ -45,7 +42,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export function HomeScreen({ 
   route: _route,
-  navigation,
+  navigation: _navigation,
 }: ScreenProps<'home'>) {
 
   const theme = useTheme();

@@ -12,6 +12,7 @@ export type SegmentedButtonProps<T extends string | number = string> = {
   label?: React.ReactNode;
   style?: ChildlessViewProps['style'];
   value: T;
+  pressOnly?: boolean;
 };
 
 export type SegmentedButtonsProps<T extends string | number = string> = ChildlessViewProps & {
@@ -33,7 +34,7 @@ export const SegmentedButtons = <T extends string | number = string>({
   return (
     <View flexRow { ...props }>
       {buttons.map(({
-        icon, label, value: v,
+        icon, label, value: v, pressOnly,
       }, index) => (
         <Button
           key={ `${v}${index}` }
@@ -43,7 +44,9 @@ export const SegmentedButtons = <T extends string | number = string>({
           selected={ value === v }
           { ...(buttonProps instanceof Function ? buttonProps(index, value === v) : buttonProps) }
           onPress={ () => {
-            setValue(v);
+            if (!pressOnly) { 
+              setValue(v);
+            }
             onValueChange?.(v);
           } }>
           { label }

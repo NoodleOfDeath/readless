@@ -1,6 +1,7 @@
 export * from './types';
 export * from './ActionSheet';
 export * from './ActivityIndicator';
+export * from './Badge';
 export * from './Banner';
 export * from './Button';
 export * from './CardStack';
@@ -10,6 +11,8 @@ export * from './CollapsedView';
 export * from './DataTable';
 export * from './Dialog';
 export * from './Divider';
+export * from './DrawerItem';
+export * from './DrawerSection';
 export * from './FlatList';
 export * from './Header';
 export * from './Highlighter';

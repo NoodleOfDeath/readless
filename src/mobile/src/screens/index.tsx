@@ -1,11 +1,10 @@
 export * from './types';
 
-export * from './AboutScreen';
-export * from './BrowseScreen';
 export * from './BookmarksScreen';
 export * from './CategoryScreen';
 export * from './PublisherScreen';
 export * from './HomeScreen';
+export * from './LegalScreen';
 export * from './RecapScreen';
 export * from './SearchScreen';
 export * from './SummaryScreen';

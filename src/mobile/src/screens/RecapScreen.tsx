@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { RecapAttributes } from '../../api';
-
+import { RecapAttributes } from '~/api';
 import { Screen, Text } from '~/components';
 import { useSummaryClient } from '~/core';
 

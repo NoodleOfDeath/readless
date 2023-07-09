@@ -151,7 +151,7 @@ export function ShareDialog({
           <View key={ i } height={ 120 } gap={ 12 }>
             <ScrollView horizontal>
               {subactions.map(({
-                icon, iconText, label, onPress, imageUri = '',
+                icon, label, onPress, imageUri = '',
               }, index) => (
                 <View 
                   key={ index }
@@ -171,8 +171,7 @@ export function ShareDialog({
                       borderRadius={ 24 }>
                       <Image
                         fallbackComponent={ 
-                          icon ? (typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon) :
-                            iconText && <Text textCenter h5>{iconText}</Text> 
+                          icon && (typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon)
                         }
                         source={ { uri: imageUri } }
                         width={ 48 }

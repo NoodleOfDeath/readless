@@ -6,7 +6,7 @@ import TrackPlayer, { State } from 'react-native-track-player';
 
 import {
   InteractionType,
-  PublicSummaryAttributes,
+  PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 import {
@@ -41,7 +41,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
   }, []);
 
   const handleFormatChange = React.useCallback(
-    (summary: PublicSummaryAttributes, format?: ReadingFormat) => {
+    (summary: PublicSummaryGroup, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.navigate('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,

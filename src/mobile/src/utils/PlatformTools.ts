@@ -1,7 +1,12 @@
-import { Platform } from 'react-native';
+import { DeviceEventEmitter, Platform } from 'react-native';
 
 import VersionCheck from 'react-native-version-check';
 
+import {
+  PreferenceMutation,
+  PreferenceState,
+  SessionEvent,
+} from '~/contexts';
 import * as Localization from '~/locales';
 
 export function getUserAgent() {
@@ -14,4 +19,6 @@ export function getUserAgent() {
   return userAgent;
 }
 
-export { decode as atob } from 'js-base64';
+export function emitEvent<E extends SessionEvent>(event: E, mutation: PreferenceMutation<E>, state: PreferenceState<E>) {
+  DeviceEventEmitter.emit(event, mutation, state);
+}

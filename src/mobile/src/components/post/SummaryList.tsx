@@ -315,6 +315,8 @@ export function SummaryList({
                   <View mt={ 12 }>
                     {showWalkthroughs && (
                       <WalkthroughStack
+                        width="100%"
+                        height={ 200 }
                         onClose={ () => setShowWalkthroughs(false) } />
                     )}
                   </View>
@@ -382,17 +384,19 @@ export function SummaryList({
               ],
               width: '60%',
             } }>
-              <View
-                mt={ 12 }
-                px={ 12 }>
-                {detailSummary && (
-                  <Summary
-                    summary={ detailSummary }
-                    initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                    onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
-                    onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
-                )}
-              </View>
+              {supportsMasterDetail && (
+                <View
+                  mt={ 12 }
+                  px={ 12 }>
+                  {detailSummary && (
+                    <Summary
+                      summary={ detailSummary }
+                      initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                      onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
+                  )}
+                </View>
+              )}
             </Animated.View>
           </View>
         </View>

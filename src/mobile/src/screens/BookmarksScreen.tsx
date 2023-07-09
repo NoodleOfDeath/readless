@@ -1,8 +1,10 @@
 import React from 'react';
 
+import { SheetManager } from 'react-native-actions-sheet';
+
 import {
   InteractionType,
-  PublicSummaryAttributes,
+  PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 import { 
@@ -16,7 +18,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
-import { useNavigation, useSummaryClient } from '~/hooks';
+import { useSummaryClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
@@ -32,14 +34,13 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     setPreference,
   } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
-  const { navigate } = useNavigation();
   
   const bookmarks = React.useMemo(() => Object.entries({ ...bookmarkedSummaries }), [bookmarkedSummaries]);
   
   const [unreadPage, setUnreadPage] = React.useState(0);
 
   const handleFormatChange = React.useCallback(
-    async (summary: PublicSummaryAttributes, interaction: InteractionType, format?: ReadingFormat) => {
+    async (summary: PublicSummaryGroup, interaction: InteractionType, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
@@ -68,8 +69,8 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               p={ 8 }
               m={ 8 }
               textCenter
-              onPress={ () => navigate('browse') }>
-              {strings.menu_browse}
+              onPress={ () => SheetManager.show('custom-feed-walkthrough') }>
+              {strings.screens_browse}
             </Button>
           </View>
         ) : (
