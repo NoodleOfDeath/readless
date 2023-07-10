@@ -204,11 +204,12 @@ export function MediaContextProvider({ children }: Props) {
     setStreamOffset(0);
     setTotalResultCount(0);
     setFetchOptions(options);
+    setTrackState(State.Playing);
     setStream(() => newStream);
   }, []);
 
   const autoloadFromStream = React.useCallback(async () => {
-    if (!stream || Date.now() - lastFetch < ms('5s')) {
+    if (!stream || Date.now() - lastFetch < ms('5s') || trackState !== State.Playing) {
       return;
     }
     if (currentTrackIndex != null && 
@@ -227,7 +228,7 @@ export function MediaContextProvider({ children }: Props) {
     } catch (err) {
       console.error(err);
     }
-  }, [currentTrackIndex, fetchOptions, lastFetch, preloadCount, queueSummary, stream, streamOffset, totalResultCount, tracks.length]);
+  }, [currentTrackIndex, fetchOptions, lastFetch, preloadCount, queueSummary, stream, streamOffset, totalResultCount, trackState, tracks.length]);
   
   React.useEffect(() => {
     preload();

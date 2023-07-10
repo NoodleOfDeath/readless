@@ -43,25 +43,25 @@ const StyledButton = styled(Button)<{ selected: boolean }>`
 
 export default function LightDarkModeButtons() {
   const {
-    displayMode,
+    colorScheme,
     setPreference,
   } = React.useContext(SessionContext);
 
   return (
     <StyledButtonGroup variant="outlined" aria-label="outlined button group">
       <StyledButton
-        onClick={ () => setPreference('displayMode', 'light') }
-        selected={ displayMode === 'light' }>
+        onClick={ () => setPreference('colorScheme', 'light') }
+        selected={ colorScheme === 'light' }>
         <Icon path={ mdiWeatherSunny } size={ 1 } />
       </StyledButton>
       <StyledButton
-        onClick={ () => setPreference('displayMode', undefined) }
-        selected={ displayMode === undefined }>
+        onClick={ () => setPreference('colorScheme', undefined) }
+        selected={ colorScheme === undefined }>
         <Icon path={ mdiThemeLightDark } size={ 1 } />
       </StyledButton>
       <StyledButton
-        onClick={ () => setPreference('displayMode', 'dark') }
-        selected={ displayMode === 'dark' }>
+        onClick={ () => setPreference('colorScheme', 'dark') }
+        selected={ colorScheme === 'dark' }>
         <Icon path={ mdiWeatherNight } size={ 1 } />
       </StyledButton>
     </StyledButtonGroup>

@@ -21,6 +21,7 @@ import {
   ChildlessViewProps,
   Divider,
   FlatList,
+  ScrollView,
   Summary,
   Text,
   View,
@@ -98,6 +99,10 @@ export function SummaryList({
   const [showWalkthroughs, setShowWalkthroughs] = React.useState(showWalkthroughs0);
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   const [lastActive, setLastActive] = React.useState(Date.now());
+
+  const detailSummarySiblings = React.useMemo(() => {
+    return [...(detailSummary?.siblings ?? [])].sort((a, b) => new Date(b.originalDate ?? '').valueOf() - new Date(a.originalDate ?? '').valueOf());
+  }, [detailSummary?.siblings]);
 
   // animation state
   const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
@@ -347,18 +352,37 @@ export function SummaryList({
           ],
           width: '60%',
         } }>
-          {supportsMasterDetail && (
-            <View
-              mt={ 12 }
-              px={ 12 }>
-              {detailSummary && (
-                <Summary
-                  summary={ detailSummary }
-                  initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                  onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
-                  onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
-              )}
-            </View>
+          {supportsMasterDetail && detailSummary && (
+            <ScrollView>
+              <FlatList
+                data={ detailSummarySiblings }
+                renderItem={ ({ item }) => (
+                  <Summary
+                    mx={ 12 }
+                    summary={ item } 
+                    hideFooter
+                    onFormatChange={ (format) => handleFormatChange(item, format) } />
+                ) }
+                keyExtractor={ (item) => `${item.id}` }
+                ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
+                ListHeaderComponent={ (
+                  <React.Fragment>
+                    <Summary
+                      summary={ detailSummary }
+                      initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+                      keywords={ searchText?.split(' ') }
+                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) } />
+                    <Divider my={ 6 } />
+                    {detailSummarySiblings.length > 0 && (
+                      <Text system h6 m={ 12 }>
+                        {`${strings.summary_relatedNews} (${detailSummarySiblings.length})`}
+                      </Text>
+                    )}
+                  </React.Fragment>
+                ) }
+                ListFooterComponentStyle={ { paddingBottom: 64 } }
+                estimatedItemSize={ 114 } />
+            </ScrollView>
           )}
         </Animated.View>
       </View>

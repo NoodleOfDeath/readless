@@ -2,7 +2,7 @@ import React from 'react';
 
 import ReactCookieConsent from 'react-cookie-consent';
 
-import TruncatedText from '~/components/common/TruncatedText';
+import { TruncatedText } from '~/components';
 
 export default function CookieConsent() {
   return (

@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { mdiFormatListBulleted, mdiTextLong } from '@mdi/js';
+import {
+  mdiBookOpen,
+  mdiFormatListBulleted,
+  mdiTextLong,
+} from '@mdi/js';
 import { Icon } from '@mdi/react';
 import {
   Button,
@@ -42,6 +46,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const FORMAT_ICONS: Record<ReadingFormat, string> = {
   [ReadingFormat.Bullets]: mdiFormatListBulleted,
+  [ReadingFormat.FullArticle]: mdiBookOpen,
   [ReadingFormat.Summary]: mdiTextLong,
 };
 
@@ -68,6 +73,7 @@ export default function ReadingFormatSelector({ format, onChange }: Props = {}) 
     <StyledStack direction="row">
       {ReadingFormatButton(ReadingFormat.Summary)}
       {ReadingFormatButton(ReadingFormat.Bullets)}
+      {ReadingFormatButton(ReadingFormat.FullArticle)}
     </StyledStack>
   );
 }

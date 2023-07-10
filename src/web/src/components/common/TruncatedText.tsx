@@ -23,7 +23,7 @@ const StyledLink = styled('span')<Props>`
   margin-left: 1rem;
 `;
 
-export default function TruncatedText({
+export function TruncatedText({
   children,
   maxCharCount = 100,
   wordBreak = 'normal',

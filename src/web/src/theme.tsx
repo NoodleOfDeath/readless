@@ -1,9 +1,9 @@
 import { createTheme } from '@mui/material';
 
-import { ColorMode } from './contexts';
+import { ColorScheme } from './contexts';
 
-export const loadTheme = (mode: ColorMode = 'light') => {
-  const lightMode = mode === 'light';
+export const loadTheme = (scheme: ColorScheme = 'light') => {
+  const darkMode = scheme === 'dark';
   return createTheme({
     breakpoints: {
       values: {
@@ -43,11 +43,11 @@ export const loadTheme = (mode: ColorMode = 'light') => {
     },
     palette: {
       background: {
-        paper: lightMode
-          ? 'linear-gradient(to bottom, #FFFFFF, #FEFEFE, #F5F5F5)'
-          : 'linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)',
+        paper: darkMode
+          ? 'linear-gradient(to bottom, #1E1E1E, #121212, #0A0A0A)'
+          : 'linear-gradient(to bottom, #FFFFFF, #FEFEFE, #F5F5F5)',
       },
-      mode,
+      mode: scheme === 'dark' ? 'dark' : 'light',
       primary: {
         dark: '#440000',
         light: '#aa2424',
@@ -55,11 +55,11 @@ export const loadTheme = (mode: ColorMode = 'light') => {
       },
       secondary: { main: '#e8b61e' },
       text: {
-        disabled: lightMode ? '#bdbdbd' : '#757575',
-        primary: lightMode ? '#212121' : '#FFFFFF',
-        secondary: lightMode ? '#757575' : '#BDBDBD',
+        disabled: darkMode ? '#757575' : '#bdbdbd',
+        primary: darkMode ? '#FFFFFF' : '#212121',
+        secondary: darkMode ? '#BDBDBD' : '#757575',
       },
     },
-    typography: { fontFamily: 'Alegreya' },
+    typography: { fontFamily: 'AnekLatin' },
   });
 };
