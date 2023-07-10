@@ -234,36 +234,7 @@ export function ScreenshotsCarousel({ ...props }: Partial<CarouselProps> = {}) {
     <StyledCarousel
       infiniteLoop
       { ...props }>
-      <Screenshot
-        screen='main'
-        title='languageModels' />
-      <Screenshot 
-        screen='bullets'
-        title='bullets' />
-      <Screenshot 
-        screen='reader'
-        title='reader' />
-      <Screenshot 
-        screen='publishers'
-        title='publishers' />
-      <Screenshot 
-        screen='tts'
-        title='tts' />
-      <Screenshot 
-        screen='customFeed'
-        title='customFeed' />
-      <Screenshot 
-        screen='localization'
-        title='localization' />
-      <Screenshot
-        screen='topStories'
-        title='topStories' />
-      <Screenshot
-        screen='share'
-        title='share' />
-      <Screenshot 
-        screen='sentiment'
-        title='sentiment' />
+      {[...Array(10).keys()].map((i) => <img key={ i } src={ `/ss/ss-${ i + 1 }.png` } />)}
     </StyledCarousel>
   );
 }

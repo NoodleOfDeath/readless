@@ -12,7 +12,7 @@ import { ScreenshotsCarousel } from '~/components';
 import JustNewsHeader from '~/components/layout/JustNewsHeader';
 import Page from '~/components/layout/Page';
 
-const StyledPage = styled(Page)({ marginTop: 2778 * 0.15 });
+const StyledPage = styled(Page)({ marginTop: 2778 * 0.3 });
 
 export default function HomePage() {
 
