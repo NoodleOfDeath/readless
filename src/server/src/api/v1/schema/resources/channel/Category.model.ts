@@ -10,6 +10,7 @@ import {
   CategoryAttributes,
   CategoryCreationAttributes,
 } from './Category.types';
+import { CategoryTranslation } from './CategoryTranslation.model';
 import { BaseModel } from '../../base';
 
 @Table({
@@ -26,6 +27,10 @@ export class Category<
   public static async prepare() {
     for (const category of Object.values(CATEGORIES)) {
       await this.upsert(category);
+    }
+    const categories = await this.findAll();
+    for (const category of categories) {
+      await CategoryTranslation.translate(category, ['displayName']);
     }
   }
 

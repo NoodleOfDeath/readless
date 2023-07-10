@@ -43,7 +43,7 @@ FROM (
       ),
       'category', JSONB_BUILD_OBJECT( 
          'name', sibling_cat.name,
-         'displayName', sibling_cat."displayName",
+         'displayName', COALESCE(sibling_cat_trans.value, sibling_cat."displayName"),
          'icon', sibling_cat.icon
       ),
       'sentiment', sib_ss.sentiment,
@@ -87,55 +87,59 @@ FROM (
       COUNT(id) OVER() AS "totalCount"
     FROM (
       SELECT
-        summaries.id,
-        summaries.title,
-        summaries."shortSummary",
-        summaries.summary,
-        summaries.bullets,
-        summaries.url,
-        summaries."imageUrl",
-        summaries."originalDate",
+        s.id,
+        s.title,
+        s."shortSummary",
+        s.summary,
+        s.bullets,
+        s.url,
+        s."imageUrl",
+        s."originalDate",
         pub.id AS "publisher.id",
         pub.name AS "publisher.name",
         pub."displayName" AS "publisher.displayName",
-        pub."brandImageUrl" AS "publisher.brandImageUrl",
         pub.description AS "publisher.description",
         cat.id AS "category.id",
         cat.name AS "category.name",
-        cat."displayName" AS "category.displayName",
+        COALESCE(cat_trans.value, cat."displayName") AS "category.displayName",
         cat.icon AS "category.icon",
-        summary_translations.attribute AS "translation.attribute",
-        summary_translations.value AS "translation.value",
+        summary_trans.attribute AS "translation.attribute",
+        summary_trans.value AS "translation.value",
         ss.sentiment,
         ss.sentiments::TEXT AS sentiments
       FROM
-        summaries
+        summaries s
         LEFT OUTER JOIN publishers pub
-          ON summaries."publisherId" = pub.id 
+          ON (s."publisherId" = pub.id)
           AND (pub."deletedAt" IS NULL) 
         LEFT OUTER JOIN categories cat
-          ON summaries."categoryId" = cat.id 
+          ON (s."categoryId" = cat.id)
           AND (cat."deletedAt" IS NULL) 
-        LEFT OUTER JOIN summary_translations
-          ON summaries.id = summary_translations."parentId"
-          AND (summary_translations."deletedAt" IS NULL)
-          AND (summary_translations.locale = :locale)
+        LEFT OUTER JOIN category_translations cat_trans
+          ON (s."categoryId" = cat_trans."parentId")
+          AND (cat_trans."deletedAt" IS NULL)
+          AND (cat_trans.locale = :locale)
+          AND (cat_trans.attribute = 'displayName')
+        LEFT OUTER JOIN summary_translations summary_trans
+          ON (s.id = summary_trans."parentId")
+          AND (summary_trans."deletedAt" IS NULL)
+          AND (summary_trans.locale = :locale)
         LEFT OUTER JOIN summary_sentiment_caches ss
-          ON summaries.id = ss."parentId"
-      WHERE (summaries."deletedAt" IS NULL)
+          ON (s.id = ss."parentId")
+      WHERE (s."deletedAt" IS NULL)
         AND (
-          (summaries."originalDate" > NOW() - INTERVAL :interval)
+          (s."originalDate" > NOW() - INTERVAL :interval)
           OR (
-            (summaries."originalDate" >= :startDate)
-            AND (summaries."originalDate" <= :endDate)
+            (s."originalDate" >= :startDate)
+            AND (s."originalDate" <= :endDate)
           )
         )
         AND (
-          (summaries.id IN (:ids))
+          (s.id IN (:ids))
           OR :noIds
         )
         AND (
-          (:excludeIds AND summaries.id NOT IN (:ids))
+          (:excludeIds AND s.id NOT IN (:ids))
           OR NOT :excludeIds
         )
         AND (
@@ -148,11 +152,11 @@ FROM (
         )
         AND (
           :noFilter
-          OR (summaries.title ~* :filter)
-          OR (summaries."shortSummary" ~* :filter)
-          OR (summaries.summary ~* :filter)
-          OR (summaries.bullets::text ~* :filter)
-          OR (summary_translations.value ~* :filter)
+          OR (s.title ~* :filter)
+          OR (s."shortSummary" ~* :filter)
+          OR (s.summary ~* :filter)
+          OR (s.bullets::text ~* :filter)
+          OR (summary_trans.value ~* :filter)
         )
         ORDER BY
           "originalDate" DESC
@@ -169,7 +173,6 @@ FROM (
       "publisher.id",
       "publisher.name",
       "publisher.displayName",
-      "publisher.brandImageUrl",
       "publisher.description",
       "category.id",
       "category.name",
@@ -188,16 +191,21 @@ FROM (
   LEFT OUTER JOIN summary_relations sr
     ON sr."parentId" = b.id
     AND (sr."deletedAt" IS NULL)
-  LEFT OUTER JOIN summaries AS sibling
+  LEFT OUTER JOIN summaries sibling
     ON sr."siblingId" = sibling.id
     AND (sr."deletedAt" IS NULL)
-  LEFT OUTER JOIN publishers AS sibling_pub
+  LEFT OUTER JOIN publishers sibling_pub
     ON (sibling_pub.id = sibling."publisherId")
     AND (sibling_pub."deletedAt" IS NULL)
-  LEFT OUTER JOIN categories AS sibling_cat
+  LEFT OUTER JOIN categories sibling_cat
     ON (sibling_cat.id = sibling."categoryId")
     AND (sibling_cat."deletedAt" IS NULL)
-  LEFT OUTER JOIN summary_sentiment_caches AS sib_ss
+  LEFT OUTER JOIN category_translations sibling_cat_trans
+    ON (sibling."categoryId" = sibling_cat_trans."parentId")
+    AND (sibling_cat_trans."deletedAt" IS NULL)
+    AND (sibling_cat_trans.locale = :locale)
+    AND (sibling_cat_trans.attribute = 'displayName')
+  LEFT OUTER JOIN summary_sentiment_caches sib_ss
     ON (sr."siblingId" = sib_ss."parentId")
   GROUP BY
     b.id,

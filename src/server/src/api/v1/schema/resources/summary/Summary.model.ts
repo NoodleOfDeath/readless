@@ -306,7 +306,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       
       if (!records) {
         return {
-          count: replacements.offset,
+          count: 0,
           rows: [],
         };
       }
@@ -343,7 +343,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     const response = {
       count: filteredRecords.count,
       metadata: filteredRecords.metadata,
-      next: replacements.offset + replacements.limit,
+      next: filteredRecords.count === 0 ? 0 : replacements.offset + replacements.limit,
       rows: filteredRecords.rows,
     };
     

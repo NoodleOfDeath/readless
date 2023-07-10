@@ -62,7 +62,9 @@ export * from './resources/interaction/Interaction.types';
 export * from './resources/sentiment/Sentiment.types';
 
 export * from './resources/channel/Publisher.types';
+export * from './resources/channel/PublisherTranslation.types';
 export * from './resources/channel/Category.types';
+export * from './resources/channel/CategoryTranslation.types';
 
 export * from './resources/summary/Summary.types';
 export * from './resources/summary/SummarySentiment.types';
