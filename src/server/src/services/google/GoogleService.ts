@@ -25,6 +25,7 @@ export class GoogleService extends BaseService {
   }
     
   static async translateText(text: string, target: string) {
+    console.log('translating', text, 'to', target);
     const [resp] = await this.client().translate(text, target);
     if (!resp) {
       return undefined;

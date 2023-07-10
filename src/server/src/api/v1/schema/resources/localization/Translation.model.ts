@@ -1,9 +1,11 @@
 import { Column, DataType } from 'sequelize-typescript';
 
 import { TranslationAttributes, TranslationCreationAttributes } from './Translation.types';
+import { SUPPORTED_LOCALES } from '../../../../../core/locales';
+import { GoogleService } from '../../../../../services';
 import { BaseModel } from '../../base';
 
-export abstract class Translation<
+export class Translation<
   A extends TranslationAttributes = TranslationAttributes, 
   B extends TranslationCreationAttributes = TranslationCreationAttributes> 
   extends BaseModel<A, B> 
@@ -32,5 +34,33 @@ export abstract class Translation<
     type: DataType.TEXT,
   })
   declare value: string;
+  
+  public static async translate<T extends { id?: number }>(
+    model: T, 
+    attributes: (keyof T)[], 
+    locale: string | string[] = [...SUPPORTED_LOCALES]
+  ) {
+    if (Array.isArray(locale)) {
+      await Promise.all(locale.map(async (l) => await this.translate(model, attributes, l)));
+      return await this.scope('public').findAndCountAll({ where: { parentId: model.id } });
+    }
+    const translations = await this.scope('public').findAndCountAll({ where: { locale, parentId: model.id } });
+    const filteredAttributes = attributes.filter((a) => !translations.rows.some((t) => t.attribute === a));
+    for (const attribute of filteredAttributes) {
+      const property = model[attribute];
+      if (typeof property !== 'string') {
+        continue;
+      }
+      const translatedString = /^en/i.test(locale) ? property : await GoogleService.translateText(Array.isArray(property) ? property.join('\n') : property, locale);
+      await this.upsert({
+        attribute: attribute as string,
+        locale,
+        parentId: model.id,
+        value: translatedString,
+      });
+      return await this.scope('public').findAndCountAll({ where: { locale, parentId: model.id } });
+    }
+
+  }
   
 }

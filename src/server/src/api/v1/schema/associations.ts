@@ -1,11 +1,13 @@
 import {
   Alias,
   Category,
+  CategoryTranslation,
   Credential,
   IapVoucher,
   Job,
   Message,
   Publisher,
+  PublisherTranslation,
   Queue,
   Recap,
   RecapInteraction,
@@ -29,9 +31,11 @@ import {
 } from './models';
 import { 
   PUBLIC_CATEGORY_ATTRIBUTES,
+  PUBLIC_CATEGORY_TRANSLATION_ATTRIBUTES,
   PUBLIC_IAP_VOUCHER_ATTRIBUTES,
   PUBLIC_MESSAGE_ATTRIBUTES,
   PUBLIC_PUBLISHER_ATTRIBUTES,
+  PUBLIC_PUBLISHER_TRANSLATION_ATTRIBUTES,
   PUBLIC_RECAP_ATTRIBUTES,
   PUBLIC_RECAP_MEDIA_ATTRIBUTES, 
   PUBLIC_RECAP_TRANSLATION_ATTRIBUTES,
@@ -44,7 +48,8 @@ import {
 
 export function makeAssociations() {
 
-  // System
+  // system associations
+  
   ServiceStatus.belongsTo(Service, { 
     as: 'statuses',
     foreignKey: 'serviceId',
@@ -54,7 +59,8 @@ export function makeAssociations() {
     foreignKey: 'serviceId',
   });
 
-  // users
+  // user/auth associations
+  
   User.hasMany(Alias, { foreignKey: 'userId' });
   Alias.belongsTo(User, { foreignKey: 'userId' });
 
@@ -67,11 +73,33 @@ export function makeAssociations() {
   Role.hasMany(RefUserRole, { foreignKey: 'roleId' });
   RefUserRole.belongsTo(Role, { foreignKey: 'roleId' });
   
-  // auth
   User.hasMany(Credential, { foreignKey: 'userId' });
   Credential.belongsTo(User, { foreignKey: 'userId' });
   
-  // summaries
+  // publisher associations
+  
+  PublisherTranslation.belongsTo(Publisher, { 
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  Publisher.hasMany(PublisherTranslation, {
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  
+  // category associations
+  
+  CategoryTranslation.belongsTo(Category, { 
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  Category.hasMany(CategoryTranslation, {
+    as: 'translations',
+    foreignKey: 'parentId',
+  });
+  
+  // summary associations
+  
   Summary.belongsTo(Publisher, { foreignKey: 'publisherId' });
   Publisher.hasMany(Summary, { foreignKey: 'publisherId' });
 
@@ -134,6 +162,8 @@ export function makeAssociations() {
       name: 'userId',
     },
   });
+  
+  // recap associations
   
   RecapSummary.belongsTo(Summary, {
     as: 'child',
@@ -228,11 +258,15 @@ export function addScopes() {
     where: { disabled: null },
   });
   
+  PublisherTranslation.addScope('public', { attributes: [...PUBLIC_PUBLISHER_TRANSLATION_ATTRIBUTES] });
+  
   Category.addScope('defaultScope', { where: { disabled: null } });
   Category.addScope('public', {
     attributes: [...PUBLIC_CATEGORY_ATTRIBUTES],
     where: { disabled: null },
   });
+  
+  CategoryTranslation.addScope('public', { attributes: [...PUBLIC_CATEGORY_TRANSLATION_ATTRIBUTES] });
   
   SummarySentiment.addScope('public', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
 

@@ -24,7 +24,9 @@ export * from './user/Role.model';
 export * from './resources/sentiment/SentimentMethod.model';
 
 export * from './resources/channel/Publisher.model';
+export * from './resources/channel/PublisherTranslation.model';
 export * from './resources/channel/Category.model';
+export * from './resources/channel/CategoryTranslation.model';
 
 export * from './resources/summary/Summary.model';
 export * from './resources/summary/SummarySentiment.model';
