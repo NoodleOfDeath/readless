@@ -9,3 +9,11 @@ export const setItem = async (name: string, value?: string) => {
   }
   window.localStorage.setItem(name, value);
 };
+
+export const removeItem = async (name: string) => {
+  return window.localStorage.removeItem(name);
+};
+
+export const removeAll = async (_hard = false) => {
+  return window.localStorage.clear();
+};

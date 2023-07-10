@@ -1,12 +1,12 @@
 import { 
   PublicPublisherAttributes,
-  PublicSummaryAttributes,
+  PublicSummaryGroup,
   PublicSummarySentimentAttributes,
   ReadingFormat,
 } from '~/api';
 
 export const shareableLink = (
-  summary: PublicSummaryAttributes, 
+  summary: PublicSummaryGroup, 
   baseUrl: string,
   format: ReadingFormat = ReadingFormat.Summary
 ) => {
@@ -18,7 +18,7 @@ export const publisherIcon = (publisher: PublicPublisherAttributes) => {
 };
 
 export const audioStreamUri = (
-  summary: PublicSummaryAttributes,
+  summary: PublicSummaryGroup,
   baseUrl: string,
   locale = 'en'
 ) => {

@@ -79,6 +79,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
         {currentTrack && (
           <Summary 
             disableInteractions
+            forceShortSummary
             summary={ currentTrack.summary }
             onFormatChange={ (format) => handleFormatChange(currentTrack.summary, format) }
             onInteract={ (...args) => handleInteraction(currentTrack.summary, ...args) } />

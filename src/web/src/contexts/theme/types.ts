@@ -13,11 +13,7 @@ export type DialogContextType = {
 export const DEFAULT_THEME_CONTEXT: DialogContextType = {
   searchSuggestions: [],
   searchText: '',
-  setSearchSuggestions: () => {
-    /** placeholder */
-  },
-  setSearchText: () => {
-    /** placeholder */
-  },
+  setSearchSuggestions: () => Promise.resolve(),
+  setSearchText: () => Promise.resolve(),
   theme: loadTheme('light'),
 };

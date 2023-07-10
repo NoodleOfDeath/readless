@@ -36,7 +36,9 @@ export function AppearanceWalkthrough(props: SheetProps) {
       {
         artwork:( 
           <ScrollView scrollEnabled={ false }>
-            <Summary disableInteractions />
+            <Summary
+              disableInteractions
+              disableNavigation />
           </ScrollView>
         ),
         artworkBelow: true,
@@ -56,7 +58,9 @@ export function AppearanceWalkthrough(props: SheetProps) {
       {
         artwork:( 
           <ScrollView scrollEnabled={ false }>
-            <Summary disableInteractions />
+            <Summary
+              disableInteractions
+              disableNavigation />
           </ScrollView>
         ),
         artworkBelow: true,
@@ -85,7 +89,9 @@ export function AppearanceWalkthrough(props: SheetProps) {
       {
         artwork:( 
           <ScrollView scrollEnabled={ false }>
-            <Summary disableInteractions />
+            <Summary
+              disableInteractions
+              disableNavigation />
           </ScrollView>
         ),
         artworkBelow: true,

@@ -56,6 +56,7 @@ type SummaryProps<Compact extends boolean = false> = ChildlessViewProps & Scroll
   keywords?: string[];
   compact?: Compact;
   disableInteractions?: boolean;
+  disableNavigation?: boolean;
   forceSentiment?: boolean;
   forceShortSummary?: boolean;
   hideCard?: boolean;
@@ -120,6 +121,7 @@ export function Summary<Compact extends boolean = false>({
   keywords = [],
   compact,
   disableInteractions,
+  disableNavigation,
   forceSentiment,
   forceShortSummary: forceShortSummary0,
   hideCard,
@@ -242,7 +244,7 @@ export function Summary<Compact extends boolean = false>({
   }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, initialFormat, disableInteractions, bookmarkedSummaries, followedPublishers, followedCategories, hideCard, format, openURL]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
-    if (disableInteractions) {
+    if (disableNavigation) {
       return;
     }
     onFormatChange?.(newFormat);
@@ -255,7 +257,7 @@ export function Summary<Compact extends boolean = false>({
       return;
     }
     setFormat(newFormat);
-  }, [disableInteractions, onFormatChange, initialFormat, hideCard, openURL, summary.url]);
+  }, [disableNavigation, onFormatChange, initialFormat, hideCard, openURL, summary.url]);
 
   const handleLocalizeSummary = React.useCallback(async () => {
     setIsLocalizing(true);

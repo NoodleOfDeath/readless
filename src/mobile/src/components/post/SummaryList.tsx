@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Animated,
-  DeviceEventEmitter,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
@@ -22,6 +21,7 @@ import {
   ChildlessViewProps,
   Divider,
   FlatList,
+  ScrollView,
   Summary,
   Text,
   View,
@@ -70,9 +70,7 @@ export function SummaryList({
 
   // contexts
   const { supportsMasterDetail } = React.useContext(LayoutContext);
-  const {
-    queueSummary, currentTrackIndex, preloadCount,
-  } = React.useContext(MediaContext);
+  const { queueStream } = React.useContext(MediaContext);
   const { 
     preferredReadingFormat,
     removedSummaries,
@@ -101,6 +99,10 @@ export function SummaryList({
   const [showWalkthroughs, setShowWalkthroughs] = React.useState(showWalkthroughs0);
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   const [lastActive, setLastActive] = React.useState(Date.now());
+
+  const detailSummarySiblings = React.useMemo(() => {
+    return [...(detailSummary?.siblings ?? [])].sort((a, b) => new Date(b.originalDate ?? '').valueOf() - new Date(a.originalDate ?? '').valueOf());
+  }, [detailSummary?.siblings]);
 
   // animation state
   const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
@@ -165,24 +167,12 @@ export function SummaryList({
     }
   }, [lastFetchFailed, loading, fetch, specificIds, excludeIds, filter, interval, cursor, pageSize, removedSummaries]);
 
-  const loadMore = React.useCallback(async (event?: string) => {
+  const loadMore = React.useCallback(async () => {
     if (totalResultCount <= summaries.length) {
       return;
     }
     await load();
-    if (event) {
-      DeviceEventEmitter.emit(event);
-    }
   }, [totalResultCount, summaries.length, load]);
-
-  const loadMoreAsNeeded = React.useCallback(async () => {
-    if (!currentTrackIndex) {
-      return;
-    }
-    if (currentTrackIndex + preloadCount > summaries.length) {
-      await loadMore('autoloaded-for-track');
-    }
-  }, [currentTrackIndex, loadMore, preloadCount, summaries]);
 
   const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setLastFocus('master');
@@ -197,7 +187,7 @@ export function SummaryList({
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom
     ) {
-      await loadMore('autoloaded');
+      await loadMore();
     }
   }, [totalResultCount, summaries.length, loadMore]);
 
@@ -233,22 +223,6 @@ export function SummaryList({
     },
     [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
   );
-  
-  useFocusEffect(React.useCallback(() => {
-    const subscriber = DeviceEventEmitter.addListener('autoloaded-for-track', () => {
-      queueSummary(summaries);
-    });
-    return () => {
-      subscriber.remove();
-    };
-  }, [queueSummary, summaries]));
-  
-  useFocusEffect(React.useCallback(() => {
-    const subscriber = DeviceEventEmitter.addListener('load-more', loadMore);
-    return () => { 
-      subscriber.remove();
-    };
-  }, [loadMore]));
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useFocusEffect(React.useCallback(() => handleResize(), [
@@ -256,11 +230,6 @@ export function SummaryList({
     supportsMasterDetail, 
     summaries,
   ]));
-
-  useFocusEffect(React.useCallback(() => {
-    loadMoreAsNeeded();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTrackIndex]));
   
   useFocusEffect(React.useCallback(() => {
     if ((!lastFetchFailed && summaries.length === 0) || (filter !== filter0)) {
@@ -303,105 +272,130 @@ export function SummaryList({
 
   return (
     <View { ...props } col>
-      <View col>
-        <View col>
-          <View row>
-            <View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
+      <View row>
+        <View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
+          <FlatList
+            data={ summaries }
+            renderItem={ renderSummary }
+            estimatedItemSize={ (114 * 3 + 350) / 4 }
+            ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
+            ListHeaderComponent={ () => (
+              <View mt={ 12 }>
+                {showWalkthroughs && (
+                  <WalkthroughStack
+                    width="100%"
+                    height={ 200 }
+                    onClose={ () => setShowWalkthroughs(false) } />
+                )}
+              </View>
+            ) }
+            ListFooterComponent={ () => (
+              <View mb={ 12 }>
+                {!loading && totalResultCount > summaries.length && (
+                  <View row justifyCenter p={ 16 } pb={ 24 }>
+                    <Button 
+                      outlined
+                      rounded
+                      p={ 8 }
+                      onPress={ () => loadMore() }>
+                      {strings.search_loadMore}
+                    </Button>
+                  </View>
+                )}
+                {(loading || summaries.length === 0) && (
+                  <View row mb={ 64 }>
+                    <View row justifyCenter p={ 16 } pb={ 24 }>
+                      <ActivityIndicator size="large" color={ theme.colors.primary } />
+                    </View>
+                  </View>
+                )}
+                {summaries.length === 0 && !loading && loaded && (
+                  <View col gap={ 12 } itemsCenter justifyCenter>
+                    <Text textCenter mx={ 16 }>
+                      {strings.search_noResults}
+                      {' '}
+                      🥺
+                    </Text>
+                    <Button 
+                      itemsCenter
+                      rounded 
+                      outlined 
+                      p={ 8 }
+                      onPress={ () => load(true) }>
+                      {strings.search_reload}
+                    </Button>
+                  </View>
+                )}
+              </View>
+            ) }
+            refreshing={ summaries.length === 0 && loading && !loaded }
+            onScroll={ handleMasterScroll }
+            onRefresh={ () => {
+              load(true);
+            } } />
+        </View>
+        <Animated.View style={ {
+          transform: [
+            { perspective: 1000 }, 
+            {
+              rotateY: resizeAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0deg', '360deg'],
+              }),
+            },
+            {
+              scaleX: resizeAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0],
+              }),
+            }, 
+          ],
+          width: '60%',
+        } }>
+          {supportsMasterDetail && detailSummary && (
+            <ScrollView>
               <FlatList
-                data={ summaries }
-                renderItem={ renderSummary }
-                estimatedItemSize={ (114 * 3 + 350) / 4 }
+                data={ detailSummarySiblings }
+                renderItem={ ({ item }) => (
+                  <Summary
+                    mx={ 12 }
+                    summary={ item } 
+                    hideFooter
+                    onFormatChange={ (format) => handleFormatChange(item, format) } />
+                ) }
+                keyExtractor={ (item) => `${item.id}` }
                 ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
-                ListHeaderComponent={ () => (
-                  <View mt={ 12 }>
-                    {showWalkthroughs && (
-                      <WalkthroughStack
-                        width="100%"
-                        height={ 200 }
-                        onClose={ () => setShowWalkthroughs(false) } />
-                    )}
-                  </View>
-                ) }
-                ListFooterComponent={ () => (
-                  <View mb={ 12 }>
-                    {!loading && totalResultCount > summaries.length && (
-                      <View row justifyCenter p={ 16 } pb={ 24 }>
-                        <Button 
-                          outlined
-                          rounded
-                          p={ 8 }
-                          onPress={ () => loadMore() }>
-                          {strings.search_loadMore}
-                        </Button>
-                      </View>
-                    )}
-                    {(loading || summaries.length === 0) && (
-                      <View row mb={ 64 }>
-                        <View row justifyCenter p={ 16 } pb={ 24 }>
-                          <ActivityIndicator size="large" color={ theme.colors.primary } />
-                        </View>
-                      </View>
-                    )}
-                    {summaries.length === 0 && !loading && loaded && (
-                      <View col gap={ 12 } itemsCenter justifyCenter>
-                        <Text textCenter mx={ 16 }>
-                          {strings.search_noResults}
-                          {' '}
-                          🥺
-                        </Text>
-                        <Button 
-                          itemsCenter
-                          rounded 
-                          outlined 
-                          p={ 8 }
-                          onPress={ () => load(true) }>
-                          {strings.search_reload}
-                        </Button>
-                      </View>
-                    )}
-                  </View>
-                ) }
-                refreshing={ summaries.length === 0 && loading && !loaded }
-                onScroll={ handleMasterScroll }
-                onRefresh={ () => {
-                  load(true);
-                } } />
-            </View>
-            <Animated.View style={ {
-              transform: [
-                { perspective: 1000 }, 
-                {
-                  rotateY: resizeAnimation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ['0deg', '360deg'],
-                  }),
-                },
-                {
-                  scaleX: resizeAnimation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [1, 0],
-                  }),
-                }, 
-              ],
-              width: '60%',
-            } }>
-              {supportsMasterDetail && (
-                <View
-                  mt={ 12 }
-                  px={ 12 }>
-                  {detailSummary && (
+                ListHeaderComponent={ (
+                  <React.Fragment>
                     <Summary
                       summary={ detailSummary }
                       initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
-                      onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
-                  )}
-                </View>
-              )}
-            </Animated.View>
-          </View>
-        </View>
+                      keywords={ searchText?.split(' ') }
+                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) } />
+                    <Divider my={ 6 } />
+                    {detailSummarySiblings.length > 0 && (
+                      <Text system h6 m={ 12 }>
+                        {`${strings.summary_relatedNews} (${detailSummarySiblings.length})`}
+                      </Text>
+                    )}
+                  </React.Fragment>
+                ) }
+                ListFooterComponentStyle={ { paddingBottom: 64 } }
+                estimatedItemSize={ 114 } />
+            </ScrollView>
+          )}
+        </Animated.View>
       </View>
+      <Button
+        absolute
+        h1
+        zIndex={ 300 }
+        bottom={ 30 }
+        right={ 30 }
+        contained
+        opacity={ 0.95 }
+        leftIcon="volume-high"
+        onPress={ () => queueStream(fetch, { filter, interval }) } />
     </View>
   );
 }

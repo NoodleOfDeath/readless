@@ -19,7 +19,7 @@ import { formatDistance } from 'date-fns';
 
 import {
   InteractionType,
-  PublicSummaryAttributes,
+  PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 import ReadingFormatSelector from '~/components/ReadingFormatSelector';
@@ -27,7 +27,7 @@ import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/core';
 
 type Props = {
-  summary: PublicSummaryAttributes;
+  summary: PublicSummaryGroup;
   initialFormat?: ReadingFormat;
   tickIntervalMs?: number;
   onChange?: (mode?: ReadingFormat) => void;
@@ -99,7 +99,7 @@ export default function Summary({
     }
     return (
       <List>
-        {summary.bullets.map((bullet, index) => (
+        {summary.bullets?.map((bullet, index) => (
           <ListItem
             key={ index }>
             <ListItemIcon><Icon path={ mdiCircle } size={ 1 } /></ListItemIcon>

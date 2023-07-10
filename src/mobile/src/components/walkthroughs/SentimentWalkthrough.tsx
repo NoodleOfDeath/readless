@@ -214,7 +214,10 @@ export function SentimentWalkthrough(props: SheetProps) {
                 </Svg>
               </Pulse>
             </View>
-            <Summary forceSentiment disableInteractions />
+            <Summary
+              forceSentiment
+              disableInteractions 
+              disableNavigation />
           </ScrollView>
           <View justifyCenter gap={ 12 }>
             <Button 

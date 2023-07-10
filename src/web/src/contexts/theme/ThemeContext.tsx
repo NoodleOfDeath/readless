@@ -17,7 +17,7 @@ export const ThemeContext = React.createContext(DEFAULT_THEME_CONTEXT);
 
 export function ThemeContextProvider({ children }: Props) {
   
-  const { displayMode } = React.useContext(SessionContext);
+  const { colorScheme } = React.useContext(SessionContext);
   
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   
@@ -27,8 +27,8 @@ export function ThemeContextProvider({ children }: Props) {
 
   // Update theme when user preference changes
   React.useEffect(() => {
-    setTheme(loadTheme(displayMode ?? (prefersDarkMode ? 'dark' : 'light')));
-  }, [displayMode, prefersDarkMode]);
+    setTheme(loadTheme(colorScheme ?? (prefersDarkMode ? 'dark' : 'light')));
+  }, [colorScheme, prefersDarkMode]);
 
   return (
     <ThemeContext.Provider

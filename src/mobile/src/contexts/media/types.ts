@@ -4,7 +4,7 @@ import { NativeModules, Platform } from 'react-native';
 import { Track as RNTrack, State } from 'react-native-track-player';
 import {  Voice } from 'react-native-tts-export';
 
-import { PublicSummaryGroup } from '~/api';
+import { API, PublicSummaryGroup } from '~/api';
 
 export const deviceLanguage = (
   Platform.OS === 'ios' ? NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
@@ -34,6 +34,8 @@ export type MediaContextType = {
   canSkipToNext: boolean;
   preloadCount: number;
   isPreloaded: boolean;
+  stream?: typeof API.getSummaries;
+  queueStream: (stream: typeof API.getSummaries, options?: Parameters<typeof API.getSummaries>[0]) => void;
   queueSummary: (summary: PublicSummaryGroup | PublicSummaryGroup[], autoplay?: boolean) => void;
   playTrack: () => Promise<void>;
   pauseTrack: () => Promise<void>;
@@ -52,21 +54,12 @@ export const DEFAULT_MEDIA_CONTEXT: MediaContextType = {
   pauseTrack: () => Promise.resolve(),
   playTrack: () => Promise.resolve(),
   preloadCount: 3,
-  queueSummary: () => {
-    /** placeholder */
-  },
-  setSelectedVoice: () => {
-    /** placeholder */
-  },
-  setSpeechPitch: () => {
-    /** placeholder */
-  },
-  setSpeechRate: () => {
-    /** placeholder */
-  },
-  setSpeechVolume: () => {
-    /** placeholder */
-  },
+  queueStream: () => Promise.resolve([]),
+  queueSummary: () => Promise.resolve(),
+  setSelectedVoice: () => Promise.resolve(),
+  setSpeechPitch: () => Promise.resolve(),
+  setSpeechRate: () => Promise.resolve(),
+  setSpeechVolume: () => Promise.resolve(),
   speechPitch: 1,
   speechRate: 0.5,
   speechVolume: 1,

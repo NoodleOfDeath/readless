@@ -7,7 +7,7 @@ import RNFS from 'react-native-fs';
 import Share, { Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
-import { InteractionType, PublicSummaryAttributes } from '~/api';
+import { InteractionType, PublicSummaryGroup } from '~/api';
 import { shareableLink } from '~/utils';
 
 const SocialAppIds: Record<string, string> = {
@@ -41,7 +41,10 @@ export function useShare({
   callback,
 }: UseShareProps) {
 
-  const copyToClipboard = React.useCallback(async (content: string) => {
+  const copyToClipboard = React.useCallback(async (content?: string) => {
+    if (!content) {
+      return;
+    }
     try {
       Clipboard.setString(content);
       await onInteract?.(InteractionType.Copy, content);
@@ -51,7 +54,7 @@ export function useShare({
     callback?.();
   }, [callback, onInteract]);
   
-  const shareStandard = React.useCallback(async (summary: PublicSummaryAttributes, viewshot: ViewShot | null) => {
+  const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, viewshot: ViewShot | null) => {
     if (!summary) {
       return;
     }
@@ -72,7 +75,7 @@ export function useShare({
     callback?.();
   }, [callback, onInteract]);
   
-  const shareSocial = React.useCallback(async (summary: PublicSummaryAttributes, viewshot: ViewShot | null, social: Social) => {
+  const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, viewshot: ViewShot | null, social: Social) => {
     if (!summary) {
       return;
     }

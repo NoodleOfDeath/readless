@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { PublicSummaryAttributes, ReadingFormat } from '~/api';
+import { PublicSummaryGroup, ReadingFormat } from '~/api';
 import Logo from '~/components/Logo';
 import Summary from '~/components/Summary';
 import Page from '~/components/layout/Page';
@@ -35,8 +35,8 @@ export default function AppPage() {
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [totalResults, setTotalResults] = React.useState<number>(0);
-  const [summaries, setSummaries] = React.useState<PublicSummaryAttributes[]>([]);
-  const [selectedSummary, setSelectedSummary] = React.useState<PublicSummaryAttributes>();
+  const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
+  const [selectedSummary, setSelectedSummary] = React.useState<PublicSummaryGroup>();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   const [pageSize] = React.useState<number>(10);
@@ -45,16 +45,12 @@ export default function AppPage() {
 
   const load = React.useCallback(async () => {
     try {
-      const { data } = await getSummaries(
-        searchText,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        window.navigator.language,
+      const { data } = await getSummaries({
+        filter: searchText,
+        locale: window.navigator.language,
         page,
-        pageSize
-      );
+        pageSize,
+      });
       if (data) {
         setTotalResults(data.count);
         setSummaries((prev) => 
@@ -75,16 +71,19 @@ export default function AppPage() {
     if (!id || id < 0) {
       return;
     }
-    const { data: summary, error } = await getSummary(id, window.navigator.language);
-    if (error) {
-      console.log(error);
-      return;
-    } 
-    if (summary) {
-      setSelectedSummary(summary);
-      setDrawerOpen(true);
-    } else {
-      replace('/404');
+    try {
+      const { data, error } = await getSummary(id, window.navigator.language);
+      if (error) {
+        throw error;
+      } 
+      if (data && data.rows.length > 0) {
+        setSelectedSummary(data.rows[0]);
+        setDrawerOpen(true);
+      } else {
+        replace('/404');
+      }
+    } catch (e) {
+      console.error(e);
     }
   }, [getSummary, id, replace]);
 
@@ -105,7 +104,7 @@ export default function AppPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const handleFormatChange = React.useCallback(async (summary: PublicSummaryAttributes) => {
+  const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup) => {
     if (selectedSummary) {
       return;
     }
@@ -131,13 +130,6 @@ export default function AppPage() {
         <Stack>
           {summaries.length === 0 && (
             <Typography variant="h6">No results found</Typography>
-          )}
-          {searchText && searchText.trim().length > 0 && summaries.length > 0 && (
-            <Typography variant="h6">
-              {totalResults}
-              {' '}
-              results found
-            </Typography>
           )}
         </Stack>
         <Stack spacing={ 2 }>
