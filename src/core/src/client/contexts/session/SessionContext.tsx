@@ -3,7 +3,6 @@ import React from 'react';
 import {
   Bookmark,
   ColorScheme,
-  DEFAULT_PREFERENCES,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
   OrientationType,
@@ -143,10 +142,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       setViewedFeatures(newValue);
       break;
     case 'hasReviewed':
-      setHasReviewed(value);
+      setHasReviewed(newValue);
       break;
     case 'lastRequestForReview':
-      setLastRequestForReview(value);
+      setLastRequestForReview(newValue);
       break;
       
     case 'bookmarkedSummaries':
@@ -317,7 +316,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setSearchHistory(await getPreference('searchHistory'));
     setViewedFeatures(await getPreference('viewedFeatures'));
     setHasReviewed(await getPreference('hasReviewed'));
-    setLastRequestForReview(await getPreference('lastRequestForReview'));
+    setLastRequestForReview(await getPreference('lastRequestForReview') ?? 0);
     
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
@@ -330,18 +329,17 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setFollowedCategories(await getPreference('followedCategories'));
     setExcludedCategories(await getPreference('excludedCategories'));
     
-    emitEvent('session-ready');
     setReady(true);
   };
-
-  React.useEffect(() => {
-    load();
-  }, []);
   
   const resetPreferences = async (hard = false) => {
     await removeAll(hard);
     load();
   };
+
+  React.useEffect(() => {
+    load();
+  }, []);
 
   return (
     <SessionContext.Provider

@@ -3,6 +3,7 @@ import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
 import { formatDistance } from 'date-fns';
+import ms from 'ms';
 import TrackPlayer, {
   Capability,
   Event,
@@ -18,7 +19,7 @@ import {
   deviceLanguage,
 } from './types';
 
-import { PublicSummaryAttributes } from '~/api';
+import { API, PublicSummaryGroup } from '~/api';
 
 export const PlaybackService = async () => {
   try {
@@ -58,6 +59,13 @@ export function MediaContextProvider({ children }: Props) {
   const [speechPitch, setSpeechPitch] = React.useState(1);
   const [speechVolume, setSpeechVolume] = React.useState(1);
 
+  // Streaming
+  const [stream, setStream] = React.useState<typeof API.getSummaries>();
+  const [streamOffset, setStreamOffset] = React.useState(0);
+  const [totalResultCount, setTotalResultCount] = React.useState(0);
+  const [fetchOptions, setFetchOptions] = React.useState<Parameters<typeof API.getSummaries>[0]>();
+  const [lastFetch, setLastFetch] = React.useState(0);
+  
   // Track Player
   const [trackState, setTrackState] = React.useState<State>(State.None);
   const [currentTrackIndex, setCurrentTrackIndex] = React.useState<number>();
@@ -69,29 +77,6 @@ export function MediaContextProvider({ children }: Props) {
 
   const canSkipToPrevious = React.useMemo(() => currentTrackIndex != null && currentTrackIndex > 0, [currentTrackIndex]);
   const canSkipToNext = React.useMemo(() => currentTrackIndex != null && currentTrackIndex < tracks.length - 1, [currentTrackIndex, tracks]);
-
-  useTrackPlayerEvents([
-    Event.PlaybackQueueEnded,
-    Event.PlaybackState,
-  ], async (event) => {
-    if (event.type === Event.PlaybackState) {
-      const { state } = await TrackPlayer.getPlaybackState();
-      const currentTrack = await TrackPlayer.getActiveTrackIndex() ?? undefined;
-      const track = currentTrack != null ? tracks[currentTrack] : undefined;
-      if (state) {
-        setTrackState(state);
-      }
-      if (currentTrack) {
-        setCurrentTrackIndex(currentTrack);
-      }
-      if (track) {
-        setCurrentTrack(track);
-      }
-    } else
-    if (event.type === Event.PlaybackQueueEnded) {
-      stopAndClearTracks();
-    }
-  });
   
   const initTts = React.useCallback(async () => {
     await Tts.setDefaultRate(speechRate);
@@ -185,26 +170,9 @@ export function MediaContextProvider({ children }: Props) {
       return (prev = state);
     });
   }, [cacheMap, currentTrackIndex, generateTrack, preloadCount, tracks]);
-  
-  React.useEffect(() => {
-    preload();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTrackIndex, tracks]);
-
-  React.useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('media-preload', () =>{
-      console.log('Preload event received');
-      if (trackState !== State.Paused) {
-        playTrack();
-      }
-    });
-    return () => {
-      subscription.remove();
-    };
-  }, [playTrack, trackState]);
 
   const queueSummary = React.useCallback(
-    async (summary: PublicSummaryAttributes | PublicSummaryAttributes[]) => {
+    async (summary: PublicSummaryGroup | PublicSummaryGroup[]) => {
       const tracks: Track[] = [];
       const summaries = Array.isArray(summary) ? summary : [summary];
       for (const summary of summaries) {
@@ -231,6 +199,79 @@ export function MediaContextProvider({ children }: Props) {
     },
     []
   );
+
+  const queueStream = React.useCallback((newStream: typeof API.getSummaries, options?: Parameters<typeof API.getSummaries>[0]) => {
+    setStreamOffset(0);
+    setTotalResultCount(0);
+    setFetchOptions(options);
+    setStream(() => newStream);
+  }, []);
+
+  const autoloadFromStream = React.useCallback(async () => {
+    if (!stream || Date.now() - lastFetch < ms('5s')) {
+      return;
+    }
+    if (currentTrackIndex != null && 
+      (tracks.length - currentTrackIndex > preloadCount || streamOffset >= totalResultCount)) {
+      return;
+    }
+    try {
+      const { data, error } = await stream({ offset: streamOffset, ...fetchOptions });
+      if (error) {
+        throw error;
+      }
+      setLastFetch(Date.now());
+      setStreamOffset((prev) => data.next ?? prev + data.rows.length);
+      setTotalResultCount(data.count);
+      queueSummary(data.rows);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [currentTrackIndex, fetchOptions, lastFetch, preloadCount, queueSummary, stream, streamOffset, totalResultCount, tracks.length]);
+  
+  React.useEffect(() => {
+    preload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrackIndex, tracks]);
+
+  React.useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('media-preload', () =>{
+      console.log('Preload event received');
+      if (trackState !== State.Paused) {
+        playTrack();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, [playTrack, trackState]);
+
+  React.useEffect(() => {
+    autoloadFromStream();
+  }, [autoloadFromStream]);
+
+  useTrackPlayerEvents([
+    Event.PlaybackQueueEnded,
+    Event.PlaybackState,
+  ], async (event) => {
+    if (event.type === Event.PlaybackState) {
+      const { state } = await TrackPlayer.getPlaybackState();
+      const currentTrack = await TrackPlayer.getActiveTrackIndex() ?? undefined;
+      const track = currentTrack != null ? tracks[currentTrack] : undefined;
+      if (state) {
+        setTrackState(state);
+      }
+      if (currentTrack) {
+        setCurrentTrackIndex(currentTrack);
+      }
+      if (track) {
+        setCurrentTrack(track);
+      }
+    } else
+    if (event.type === Event.PlaybackQueueEnded) {
+      stopAndClearTracks();
+    }
+  });
   
   return (
     <MediaContext.Provider value={ {
@@ -243,6 +284,7 @@ export function MediaContextProvider({ children }: Props) {
       pauseTrack,
       playTrack,
       preloadCount,
+      queueStream,
       queueSummary,
       selectedVoice,
       setSelectedVoice,
@@ -253,6 +295,7 @@ export function MediaContextProvider({ children }: Props) {
       speechRate,
       speechVolume,
       stopAndClearTracks,
+      stream,
       trackState,
       tracks,
       voices,

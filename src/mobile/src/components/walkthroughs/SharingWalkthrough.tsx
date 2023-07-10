@@ -46,7 +46,9 @@ export function SharingWalkthrough(props: SheetProps) {
             </Pulse>
           </View>
           <ScrollView scrollEnabled={ false }>
-            <Summary disableInteractions />
+            <Summary
+              disableInteractions
+              disableNavigation />
           </ScrollView>
           <View height={ 50 } />
           <Divider />

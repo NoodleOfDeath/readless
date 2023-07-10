@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SheetProps } from 'react-native-actions-sheet';
 
-import { InteractionType, PublicSummaryAttributes } from '~/api';
+import { InteractionType, PublicSummaryGroup } from '~/api';
 import {
   ActionSheet,
   Button,
@@ -16,7 +16,7 @@ import { useSummaryClient } from '~/hooks';
 import { strings } from '~/locales';
 
 export type FeedbackDialogProps = {
-  summary: PublicSummaryAttributes;
+  summary: PublicSummaryGroup;
   onClose?: () => void;
 };
 

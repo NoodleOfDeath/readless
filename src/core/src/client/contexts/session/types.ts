@@ -114,9 +114,10 @@ export type PreferenceMutation<E extends SessionEvent> =
   
 export type PreferenceState<E extends SessionEvent> =
   E extends `${'unbookmark' | 'bookmark'}-summary` ? Preferences['bookmarkedSummaries'] :
-  E extends `${string}-summary` ? Preferences['readSummaries'] :
+  E extends `${'read' | 'unread'}-summary` ? Preferences['readSummaries'] :
+  E extends `${string}-summary` ? Preferences['removedSummaries'] :
   E extends `${string}-publisher` ? Preferences['followedPublishers'] :
-  E extends `${string}-category` ? Preferences['folowedCategories'] :
+  E extends `${string}-category` ? Preferences['followedCategories'] :
   never;
 
 export type SessionContextType = Preferences & {

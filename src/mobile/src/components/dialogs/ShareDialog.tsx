@@ -8,7 +8,7 @@ import ViewShot from 'react-native-view-shot';
 
 import {
   InteractionType,
-  PublicSummaryAttributes,
+  PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 import {
@@ -26,7 +26,7 @@ import { strings } from '~/locales';
 import { shareableLink } from '~/utils';
 
 export type ShareDialogProps = {
-  summary: PublicSummaryAttributes;
+  summary: PublicSummaryGroup;
   format?: ReadingFormat;
   onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => Promise<unknown>;
   onClose?: () => void;
@@ -116,7 +116,7 @@ export function ShareDialog({
       {
         icon:'content-copy',
         label: strings.share_copyBulletPoints,
-        onPress: () => copyToClipboard(summary.bullets.join('\n')), 
+        onPress: () => copyToClipboard(summary.bullets?.join('\n')), 
       },
     ],
   ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
@@ -131,6 +131,7 @@ export function ShareDialog({
                 <View rounded style={ theme.components.card } overflow='hidden'>
                   <Summary 
                     disableInteractions
+                    disableNavigation
                     forceShortSummary
                     summary={ summary } />
                   <Divider mx={ 12 } />
