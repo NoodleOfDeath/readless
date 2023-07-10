@@ -304,6 +304,13 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
       
+      if (!records) {
+        return {
+          count: replacements.offset,
+          rows: [],
+        };
+      }
+      
       if (filter || records.rows.length < replacements.limit) {
         return records;
       }
