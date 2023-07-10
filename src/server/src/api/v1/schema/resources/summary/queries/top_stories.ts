@@ -122,6 +122,9 @@ FROM (
   ) b
   LEFT OUTER JOIN summary_sentiment_caches ss 
     ON b.id = ss."parentId"
+  ORDER BY
+    "siblingCount" DESC,
+    b."originalDate" DESC
 ) c
 GROUP BY 
   "totalCount"
