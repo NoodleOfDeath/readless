@@ -151,7 +151,7 @@ function wrapText(
 function Title(parentContext: CanvasRenderingContext2D, {
   text,
   fontSize = 80,
-  font = `bold ${fontSize}px AnekLatin`,
+  font = `bold ${fontSize}px Arial`,
   maxWidth = 1284 * 0.8,
   width = 1284,
   height = 2778,
