@@ -9,7 +9,7 @@ export function useInAppBrowser() {
 
   const theme = useTheme();
 
-  const openURL = React.useCallback(async (url: string) => {
+  const openURL = React.useCallback(async (url: string, options?: Parameters<typeof InAppBrowser.open>[1]) => {
     try {
       if (await InAppBrowser.isAvailable()) {
         await InAppBrowser.open(url, {
@@ -20,22 +20,23 @@ export function useInAppBrowser() {
             startEnter: 'slide_in_right',
             startExit: 'slide_out_left',
           },
-          dismissButtonStyle: 'cancel',
-          enableBarCollapsing: false,
+          dismissButtonStyle: 'done',
+          enableBarCollapsing: true,
           enableDefaultShare: true,
           enableUrlBarHiding: true,
           forceCloseOnRedirection: false,
           modalEnabled: true,
-          modalPresentationStyle: 'fullScreen',
+          modalPresentationStyle: 'popover',
           modalTransitionStyle: 'coverVertical',
           navigationBarColor: 'black',
           navigationBarDividerColor: 'white',
           preferredBarTintColor: theme.colors.primary,
           preferredControlTintColor: 'white',
-          readerMode: false,
+          readerMode: true,
           secondaryToolbarColor: 'black',
           showTitle: true,
           toolbarColor: '#6200EE',
+          ...options,
         });
       } else {
         Linking.openURL(url);

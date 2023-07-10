@@ -11,6 +11,7 @@ import { Sentimental } from '../sentiment/Sentiment.types';
 
 export const READING_FORMATS = {
   bullets: 'bullets',
+  fullArticle: 'fullArticle',
   summary: 'summary',
 } as const;
 
@@ -61,14 +62,10 @@ export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES
 
 export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText' | 'originalTitle'>;
 
-export type PublicSummaryAttributesConservative = Omit<PublicSummaryAttributes, | 'summary' | 'bullets' | 'sentiments' | 'shortSummary'> & {
+export type PublicSummaryGroup = Omit<PublicSummaryAttributes, 'shortSummary' | 'summary' | 'bullets' | 'sentiments'> & {
   shortSummary?: string;
   summary?: string;
   bullets?: string[];
   sentiments?: PublicSummarySentimentAttributes[];
-  siblings?: PublicSummaryAttributesConservative[];
-};
-
-export type PublicSummaryGroup = PublicSummaryAttributes & {
-  siblings?: PublicSummaryAttributesConservative[];
+  siblings?: PublicSummaryGroup[];
 };

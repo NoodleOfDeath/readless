@@ -12,7 +12,7 @@ import {
 } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type CardStackEntryProps = {
+export type CardStackEntryProps = ChildlessViewProps & {
   id: string;
   image?: string | React.ReactNode;
   title?: string;
@@ -27,6 +27,7 @@ export function CardStackEntry({
   subtitle, 
   onPress,
   onClose,
+  ...props
 }: CardStackEntryProps) {
 
   const theme = useTheme();
@@ -45,17 +46,21 @@ export function CardStackEntry({
 
   return (
     <View
-      touchable
+      { ...props }
       elevated
       p={ 12 }
-      rounded
+      rounded 
+      width="100%"
+      height={ 200 }
       gap={ 12 }
       bg={ theme.colors.primary }
       onPress={ onPress }>
       <View
-        height={ 120 }
         mt={ -12 }
         mx={ -12 }
+        width="100%"
+        height={ 200 }
+        bg='yellow'
         brTopLeft={ 6 }
         brTopRight={ 6 }
         overflow='hidden'>
@@ -100,7 +105,6 @@ export function CardStack({
   
   const renderItem = React.useCallback(({ item, index }: {item: CardStackEntryProps, index: number}) => (
     <View 
-      touchable
       overflow='visible'
       onPress={ () => onPressItem?.(index) }>
       <CardStackEntry 
@@ -115,6 +119,9 @@ export function CardStack({
       overflow='visible'
       { ...props }>
       <View
+        bg='blue'
+        flexGrow={ 1 }
+        my={ 6 }
         onLayout={ (e) => setLayout(e.nativeEvent.layout) }
         overflow='visible'>
         {layout && (

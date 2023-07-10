@@ -11,7 +11,6 @@ import {
   CustomFeedWalkthrough,
   FeedbackDialog,
   OnboardingWalkthrough,
-  PromoCodeWalkthrough,
   SentimentWalkthrough,
   ShareDialog,
   SharingWalkthrough,
@@ -28,7 +27,6 @@ export function DialogContextProvider({ children }: React.PropsWithChildren) {
     registerSheet('bookmark-walkthrough', BookmarkWalkthrough);
     registerSheet('custom-feed-walkthrough', CustomFeedWalkthrough);
     registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
-    registerSheet('promo-code-walkthrough', PromoCodeWalkthrough);
     registerSheet('sentiment-walkthrough', SentimentWalkthrough);
     registerSheet('sharing-walkthrough', SharingWalkthrough);
     registerSheet('trigger-words-walkthrough', TriggerWordsWalkthrough);

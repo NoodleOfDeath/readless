@@ -5,7 +5,7 @@ import { Bookmark, SessionContext } from '../contexts';
 import {
   API,
   InteractionType,
-  PublicSummaryAttributes,
+  PublicSummaryGroup,
 } from '~/api';
 import { getUserAgent } from '~/utils';
 
@@ -17,10 +17,8 @@ export function useSummaryClient() {
     return await withHeaders(API.getSummaries)(args);
   }, [withHeaders]);
 
-  const getSummary = React.useCallback(async (id: number) => {
-    return await getSummaries({
-      ids: [id], offset: 0, pageSize: 1,
-    });
+  const getSummary = React.useCallback(async (id: number, locale?: string) => {
+    return await getSummaries({ ids: [id], locale });
   }, [getSummaries]);
   
   const getTopStories = React.useCallback(async (args: Parameters<typeof API.getTopStories>[0]) => {
@@ -28,14 +26,14 @@ export function useSummaryClient() {
   }, [withHeaders]);
   
   const interactWithSummary = React.useCallback(
-    async (summary: PublicSummaryAttributes, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
+    async (summary: PublicSummaryGroup, type: InteractionType, content?: string, metadata?: Record<string, unknown>) => {
       return await withHeaders(API.interactWithSummary)(summary.id, type, { content, metadata });
     },
     [withHeaders] 
   );
 
   const handleInteraction = React.useCallback(async (
-    summary: PublicSummaryAttributes, 
+    summary: PublicSummaryGroup, 
     interaction: InteractionType, 
     content?: string, 
     metadata?: Record<string, unknown>,
@@ -67,7 +65,7 @@ export function useSummaryClient() {
       });
     }
     if (interaction === InteractionType.Read) {
-      setPreference(/original source/i.test(content ?? '') ? 'readSources' : 'readSummaries', (prev?: Record<number, Bookmark<boolean>>) => {
+      setPreference('readSummaries', (prev?: Record<number, Bookmark<boolean>>) => {
         const bookmarks = { ...prev };
         bookmarks[summary.id] = new Bookmark(true);
         return (prev = bookmarks);

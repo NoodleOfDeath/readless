@@ -1,71 +1,69 @@
 import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { SessionContext } from '../core';
 
 import {
-  Header,
-  Icon,
   SYSTEM_FONT,
   Screen,
-  SearchMenu,
   SummaryList,
 } from '~/components';
 import { useSummaryClient, useTheme } from '~/hooks';
+import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
-const Tab = createMaterialTopTabNavigator();
+function YourNewsTab({ 
+  route: _route,
+  navigation: _navigation,
+}: ScreenProps<'search'>) {
+  const { getSummaries } = useSummaryClient();
+  const { followFilter } = React.useContext(SessionContext);
+  const [filter, setFilter] = React.useState(followFilter);
+  useFocusEffect(React.useCallback(() => setFilter(followFilter), [followFilter]));
+  return ( 
+    <SummaryList
+      fetch={ getSummaries }
+      filter={ filter } />
+  );
+}
 
 function TopStoriesTab({ 
-  route,
+  route: _route,
   navigation: _navigation,
 }: ScreenProps<'search'>) {
   const { getTopStories } = useSummaryClient();
   return ( 
     <SummaryList
       fetch={ getTopStories }
-      showWalkthroughs
-      filter={ route?.params?.prefilter }
       interval='1d' />
   );
 }
 
 function LivestreamTab({ 
-  route,
+  route: _route,
   navigation: _navigation,
 }: ScreenProps<'search'>) {
   const { getSummaries } = useSummaryClient();
   return ( 
-    <SummaryList
-      fetch={ getSummaries }
-      filter={ route?.params?.prefilter } />
+    <SummaryList fetch={ getSummaries } />
   );
 }
 
+const Tab = createMaterialTopTabNavigator();
+
 export function HomeScreen({ 
   route: _route,
-  navigation,
+  navigation: _navigation,
 }: ScreenProps<'home'>) {
 
   const theme = useTheme();
-  const { 
-    followCount,
-    followFilter,
-  } = React.useContext(SessionContext);
+  const { followCount } = React.useContext(SessionContext);
 
   return (
     <Screen>
       <Tab.Navigator 
-        screenListeners={ () => ({
-          focus: () => navigation?.setOptions({
-            header: () => ( 
-              <Header>
-                <SearchMenu flexGrow={ 1 } />
-              </Header>
-            ), 
-          }),
-        }) }
         screenOptions={ {
           tabBarAllowFontScaling: true,
           tabBarLabelStyle: { fontFamily: SYSTEM_FONT },
@@ -74,37 +72,15 @@ export function HomeScreen({
         } }>
         {followCount > 0 && (
           <Tab.Screen 
-            name="Your News" 
-            component={ LivestreamTab } 
-            options={ {
-              tabBarIcon: ({ color }) => (
-                <Icon 
-                  name={ 'account-heart' } 
-                  color={ color } />
-              ),
-            } }
-            initialParams={ { prefilter: followFilter } } />
+            name={ strings.tabs_yourNews }
+            component={ YourNewsTab } />
         )}
         <Tab.Screen 
-          name="Top Stories" 
-          component={ TopStoriesTab } 
-          options={ {
-            tabBarIcon: ({ color }) => (
-              <Icon 
-                name={ 'bulletin-board' } 
-                color={ color } />
-            ),
-          } } />
+          name={ strings.tabs_topStories }
+          component={ TopStoriesTab } />
         <Tab.Screen 
-          name="Live" 
-          component={ LivestreamTab }
-          options={ {
-            tabBarIcon: ({ color }) => (
-              <Icon 
-                name={ 'rss' } 
-                color={ color } />
-            ),
-          } } />
+          name={ strings.tabs_live }
+          component={ LivestreamTab } />
       </Tab.Navigator>
     </Screen>
   );

@@ -1,12 +1,10 @@
 import React from 'react';
 
-import { useNavigation as useRNNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NavigationProp, useNavigation as useRNNavigation } from '@react-navigation/native';
 
 import { 
   PublicCategoryAttributes, 
   PublicPublisherAttributes,
-  PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 import { SessionContext } from '~/contexts';
@@ -15,12 +13,14 @@ import { readingFormat } from '~/utils';
 
 export function useNavigation() {
 
-  const navigation = useRNNavigation<NativeStackNavigationProp<StackableTabParams>>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const navigation = useRNNavigation<NavigationProp<StackableTabParams>>() as any;
   
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
   
   const navigate = React.useCallback(<R extends keyof StackableTabParams>(route: R, params?: StackableTabParams[R]) => {
-    return (navigation?.push ?? navigation.navigate)(route, params as StackableTabParams[R]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return ((navigation as any).push ?? navigation.navigate)(route, params as StackableTabParams[R]);
   }, [navigation]);
 
   const search = React.useCallback((params: StackableTabParams['search']) => {
@@ -45,10 +45,6 @@ export function useNavigation() {
 
   const openCategory = React.useCallback((category: PublicCategoryAttributes) => {
     navigate('category', { category });
-  }, [navigate]);
-
-  const openArticleList = React.useCallback((summary: PublicSummaryGroup) => {
-    navigate('articles', { summary });
   }, [navigate]);
 
   const router = React.useCallback(({ url }: { url: string }) => {
@@ -79,7 +75,6 @@ export function useNavigation() {
   return {
     navigate,
     navigation,
-    openArticleList,
     openCategory,
     openPublisher,
     openSummary,

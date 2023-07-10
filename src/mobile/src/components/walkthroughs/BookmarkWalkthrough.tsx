@@ -6,9 +6,10 @@ import Svg, { Ellipse } from 'react-native-svg';
 import {
   Button,
   Divider,
-  Icon,
+  Header,
   Markdown,
   Pulse,
+  SearchMenu,
   View,
   Walkthrough,
 } from '~/components';
@@ -38,8 +39,8 @@ export function BookmarkWalkthrough(props: SheetProps) {
           <View width="100%">
             <View
               absolute
-              bottom={ -10 }
-              right={ 45 }
+              left={ -30 }
+              top={ 5 }
               zIndex={ 20 }>
               <Pulse>
                 <Svg 
@@ -58,8 +59,9 @@ export function BookmarkWalkthrough(props: SheetProps) {
               </Pulse>
             </View>
             <View flexRow elevated p={ 8 } itemsCenter justifyEvenly>
-              <Icon name="home" size={ 24 } />
-              <Icon name="account" size={ 24 } />
+              <Header flex={ 1 } flexRow flexGrow={ 1 }>
+                <SearchMenu flexGrow={ 1 } />
+              </Header>
             </View>
           </View>
           <Divider />

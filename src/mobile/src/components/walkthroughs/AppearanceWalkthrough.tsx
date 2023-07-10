@@ -65,7 +65,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <CompactModePicker labeled />
           </View>
         ),
-        title: strings.walkthroughs_appearance_compactModeDescription,
+        title: strings.walkthroughs_appearance_compactSummariesDescription,
       },
       {
         body: (

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SessionContext } from '../contexts';
 
-import { API, PublicSummaryAttributesConservative } from '~/api';
+import { API, PublicSummaryGroup } from '~/api';
 
 export const useServiceClient = () => {
 
@@ -16,7 +16,7 @@ export const useServiceClient = () => {
     await withHeaders(API.getSystemMessages)();
   }, [withHeaders]);
 
-  const localizeSummary = React.useCallback(async (summary: PublicSummaryAttributesConservative, locale: string) => {
+  const localizeSummary = React.useCallback(async (summary: PublicSummaryGroup, locale: string) => {
     return await withHeaders(API.localize)({
       locale, resourceId: summary.id, resourceType: 'summary', 
     });

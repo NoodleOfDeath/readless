@@ -55,7 +55,7 @@ export type SummaryListProps = ChildlessViewProps & {
 export function SummaryList({ 
   fetch,
   onFormatChange,
-  filter,
+  filter: filter0,
   interval,
   specificIds,
   searchText,
@@ -81,6 +81,7 @@ export function SummaryList({
   // search state
   const [loaded, setLoaded] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [filter, setFilter] = React.useState(filter0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [pageSize] = React.useState(10);
   const [cursor, setCursor] = React.useState(0);
@@ -232,44 +233,44 @@ export function SummaryList({
     },
     [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
   );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => handleResize(), [
-    handleResize,
-    supportsMasterDetail, 
-    summaries,
-  ]);
-
-  React.useEffect(() => {
-    loadMoreAsNeeded();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTrackIndex]);
   
-  React.useEffect(() => {
+  useFocusEffect(React.useCallback(() => {
     const subscriber = DeviceEventEmitter.addListener('autoloaded-for-track', () => {
       queueSummary(summaries);
     });
     return () => {
       subscriber.remove();
     };
-  }, [queueSummary, summaries]);
+  }, [queueSummary, summaries]));
   
-  React.useEffect(() => {
+  useFocusEffect(React.useCallback(() => {
     const subscriber = DeviceEventEmitter.addListener('load-more', loadMore);
     return () => { 
       subscriber.remove();
     };
-  }, [loadMore]);
+  }, [loadMore]));
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useFocusEffect(React.useCallback(() => handleResize(), [
+    handleResize,
+    supportsMasterDetail, 
+    summaries,
+  ]));
+
+  useFocusEffect(React.useCallback(() => {
+    loadMoreAsNeeded();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrackIndex]));
   
   useFocusEffect(React.useCallback(() => {
-    if (filter) {
-      navigation?.setOptions({ headerTitle: filter });
-    }
-    if (!lastFetchFailed && summaries.length === 0) {
+    if ((!lastFetchFailed && summaries.length === 0) || (filter !== filter0)) {
       load(true);
-      return;
     }
-  }, [filter, lastFetchFailed, load, navigation, summaries.length]));
+    if (filter0) {
+      navigation?.setOptions({ headerTitle: filter0 });
+    }
+    setFilter(filter0);
+  }, [filter, filter0, lastFetchFailed, load, navigation, summaries.length]));
   
   useAppState({ 
     onBackground: () => {
@@ -311,12 +312,18 @@ export function SummaryList({
                 renderItem={ renderSummary }
                 estimatedItemSize={ (114 * 3 + 350) / 4 }
                 ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
-                ListHeaderComponent={ () => (showWalkthroughs && (
-                  <WalkthroughStack
-                    onClose={ () => setShowWalkthroughs(false) } />
-                )) }
+                ListHeaderComponent={ () => (
+                  <View mt={ 12 }>
+                    {showWalkthroughs && (
+                      <WalkthroughStack
+                        width="100%"
+                        height={ 200 }
+                        onClose={ () => setShowWalkthroughs(false) } />
+                    )}
+                  </View>
+                ) }
                 ListFooterComponent={ () => (
-                  <React.Fragment>
+                  <View mb={ 12 }>
                     {!loading && totalResultCount > summaries.length && (
                       <View row justifyCenter p={ 16 } pb={ 24 }>
                         <Button 
@@ -352,7 +359,7 @@ export function SummaryList({
                         </Button>
                       </View>
                     )}
-                  </React.Fragment>
+                  </View>
                 ) }
                 refreshing={ summaries.length === 0 && loading && !loaded }
                 onScroll={ handleMasterScroll }
@@ -378,17 +385,19 @@ export function SummaryList({
               ],
               width: '60%',
             } }>
-              <View
-                mt={ 12 }
-                px={ 12 }>
-                {detailSummary && (
-                  <Summary
-                    summary={ detailSummary }
-                    initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                    onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
-                    onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
-                )}
-              </View>
+              {supportsMasterDetail && (
+                <View
+                  mt={ 12 }
+                  px={ 12 }>
+                  {detailSummary && (
+                    <Summary
+                      summary={ detailSummary }
+                      initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                      onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
+                  )}
+                </View>
+              )}
             </Animated.View>
           </View>
         </View>

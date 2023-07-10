@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   StyleProp,
-  StyleSheet,
   TextStyle,
   ViewStyle,
 } from 'react-native';
@@ -97,7 +96,7 @@ export function TableViewCell(props: TableViewCellProps) {
     <Cell
       { ...props }
       allowFontScaling
-      contentContainerStyle={ [stylesWithoutFontScaling, styles.container] }
+      contentContainerStyle={ [stylesWithoutFontScaling] }
       titleTextStyle={ [stylesWithoutFontScaling, props.titleTextStyle] }
       detailTextStyle={ [stylesWithoutFontScaling, props.detailTextStyle, { color: theme.colors.textSecondary }] }
       subtitleTextStyle={ [stylesWithoutFontScaling, props.subtitleTextStyle, { color: theme.colors.textSecondary }] }
@@ -109,10 +108,3 @@ export function TableViewCell(props: TableViewCellProps) {
       cellImageView={ props.cellImageView ?? props.image ?? <TableViewCellImage icon={ props.cellIcon } /> } />
   );
 }   
-
-const styles = StyleSheet.create({
-  container: {
-    borderBottomWidth: StyleSheet.hairlineWidth * 2,
-    borderColor: '#E0E0E0',
-  },
-});

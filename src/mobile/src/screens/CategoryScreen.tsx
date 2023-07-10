@@ -28,7 +28,7 @@ export function CategoryScreen({
   const category = React.useMemo(() => route?.params?.category, [route]);
 
   const [loaded, setLoaded] = React.useState(false);
-  const [followed, setFollowed] = React.useState(category?.name ?? '' in { ...followedCategories });
+  const [followed, setFollowed] = React.useState((category?.name ?? '') in { ...followedCategories });
 
   const prefilter = React.useMemo(() => {
     if (!category) {
@@ -42,7 +42,7 @@ export function CategoryScreen({
       return; 
     }
     setLoaded(true);
-    setFollowed(category?.name ?? '' in { ...followedCategories });
+    setFollowed((category?.name ?? '') in { ...followedCategories });
   }, [category, followedCategories, loaded]);
 
   const toggleFollowed = React.useCallback(() => {

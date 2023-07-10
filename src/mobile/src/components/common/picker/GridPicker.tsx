@@ -77,6 +77,7 @@ export function GridPicker<
                   contained
                   haptic
                   gap={ 6 }
+                  leftIcon={ option.icon }
                   { ...computedButtonProps }
                   onPress={ () => handlePress(option.value) }>
                   {option.label}

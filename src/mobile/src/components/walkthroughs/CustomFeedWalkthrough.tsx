@@ -122,7 +122,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
             system
             contained
             onPress={ onDone }>
-            {strings.mise_sweetGotIt}
+            {strings.misc_sweetGotIt}
           </Button>
         </View>
       ),

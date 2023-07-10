@@ -10,18 +10,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   PublicCategoryAttributes,
   PublicPublisherAttributes,
-  PublicSummaryAttributes,
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
 
 export type StackableTabParams = {
-  about: undefined;
-  articles: {
-    summary: PublicSummaryGroup;
-  },
   bookmarks: undefined;
-  browse: undefined;
   category: {
     category: PublicCategoryAttributes;
   };
@@ -29,6 +23,7 @@ export type StackableTabParams = {
     publisher: PublicPublisherAttributes;
   };
   default: undefined;
+  legal: undefined;
   home: undefined;
   recaps: undefined;
   search: {
@@ -42,7 +37,7 @@ export type StackableTabParams = {
     initialFormat?: ReadingFormat;
     initiallyTranslated?: boolean;
     keywords?: string[];
-    summary: PublicSummaryAttributes | number;
+    summary: PublicSummaryGroup | number;
     showAnalytics?: boolean;
   };
   colorSchemePicker: undefined;
@@ -55,9 +50,7 @@ export type StackableTabParams = {
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {
   config: {
     screens: {
-      articles: { path: 'articles' },
       bookmarks: { path: 'bookmarks' },
-      browse: { path: 'browse' },
       category: { path: 'category' },
       default: { path: '' },
       publisher: { path: 'publisher' },

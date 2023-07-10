@@ -492,7 +492,7 @@ PODS:
     - React-Core
   - RNReactNativeHapticFeedback (2.0.3):
     - React-Core
-  - RNReanimated (2.8.0):
+  - RNReanimated (2.17.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -522,7 +522,7 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - RNShare (8.2.2):
+  - RNShare (9.2.1):
     - React-Core
   - RNSVG (13.9.0):
     - React-Core
@@ -878,9 +878,9 @@ SPEC CHECKSUMS:
   RNIap: c397f49db45af3b10dca64b2325f21bb8078ad21
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNReactNativeHapticFeedback: afa5bf2794aecbb2dba2525329253da0d66656df
-  RNReanimated: 3102bd630c372ec7c38a5790eb625011361bc213
+  RNReanimated: f186e85d9f28c9383d05ca39e11dd194f59093ec
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
-  RNShare: d82e10f6b7677f4b0048c23709bd04098d5aee6c
+  RNShare: e969d57543095d4018e256d0dab844574627b50a
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d

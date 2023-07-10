@@ -15,6 +15,7 @@ import {
   ActionSheet,
   Divider,
   Icon,
+  Image,
   ScrollView,
   Summary,
   Text,
@@ -74,18 +75,21 @@ export function ShareDialog({
     [
       {
         icon: 'twitter',
+        imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/twitter.png',
         label: strings.share_twitter,
         onPress:() => shareSocial(summary, viewshot.current, Social.Twitter), 
       },
       {
         icon: 'instagram',
+        imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/instagram.png',
         label: strings.share_instagramStories,
         onPress: () => shareSocial(summary, viewshot.current, Social.InstagramStories), 
       },
       // {
-      //   icon: 'instagram',
-      //   label: strings.share_instagram,
-      //   onPress: () => shareSocial(summary, viewshot, Social.Instagram), 
+      //   iconText: '🧵',
+      //   imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/threads.png',
+      //   label: strings.share_threads,
+      //   onPress: () => shareSocial(summary, viewshot, 'threads'), 
       // },
       {
         icon: 'camera-outline',
@@ -147,7 +151,7 @@ export function ShareDialog({
           <View key={ i } height={ 120 } gap={ 12 }>
             <ScrollView horizontal>
               {subactions.map(({
-                icon, label, onPress, 
+                icon, label, onPress, imageUri = '',
               }, index) => (
                 <View 
                   key={ index }
@@ -160,8 +164,19 @@ export function ShareDialog({
                     p={ 12 }
                     justifyCenter
                     itemsCenter>
-                    <View outlined p={ 12 } borderRadius={ 24 }>
-                      {typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon}
+                    <View 
+                      outlined 
+                      p={ 12 } 
+                      overflow="hidden" 
+                      borderRadius={ 24 }>
+                      <Image
+                        fallbackComponent={ 
+                          icon && (typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon)
+                        }
+                        source={ { uri: imageUri } }
+                        width={ 48 }
+                        height={ 48 }
+                        m={ -12 } />
                     </View>
                     <Text 
                       caption 

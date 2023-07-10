@@ -1,6 +1,6 @@
 export * from './CategoryPicker';
 export * from './ColorSchemePicker';
-export * from './CompactModePicker';
+export * from './CompactSummariesPicker';
 export * from './FontPicker';
 export * from './NumericPrefPicker';
 export * from './PublisherPicker';
