@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 type NavLinkProps = {
-    className?: string;
-    activeClassName?: any;
-    href: string;
-    children: React.ReactNode;
+  className?: string;
+  activeClassName?: any;
+  href: string;
+  children: React.ReactNode;
 };
 
 const NavLink = ({

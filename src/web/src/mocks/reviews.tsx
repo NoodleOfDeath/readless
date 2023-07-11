@@ -1,48 +1,31 @@
 export const reviews = [
   {
-    author: 'Emine Isik',
+    author: 'Asiancrunchies (Apple App Store)',
     avatar: '/images/avatar-1.png',
     content:
-            '“It has been an absolute pleasure dealing with Scan during the lockdown. Our church began to livestream our services, and Scan had a great selection of hardware....”',
-    position: 'Nursing Assistant',
+          '“Lately, i\'ve been looking for a place to just read articles / news without being spammed with ads, clickbait, or a ton of bias. I came across ReadLess and i\'ve been pleasantly surprised! I can scroll through, read the news I want, pick categories for the types of news I would like to read and I can even choose what news sources I want!”',
+    position: 'Software Developer / Ex Apple',
+    rating: 5,
+    title: 'Exactly what i\'ve been looking for!',
   },
   {
-    author: 'Fattum Bozok',
+    author: 'YourMotherThatQueen (Apple App Store)',
     avatar: '/images/avatar-2.png',
     content:
-            '“I was also lucky enough to read @Coding_Career early and I was thoroughly blown away! It’s the book I wish I had when I started my dev career.”',
+          '“Finally an app that does what I need: summarize my content. I never have the time to sit down and read through gazillion pages. This app does the trick and does it well. I can pick my sources, & it appears that the choices are growing. Which is appreciated. And you have reputable sources which is important to me. Recommend definitely.”',
     delay: 300,
-    position: 'Web Designer',
+    position: 'French Painter',
+    rating: 5,
+    title: 'Finally',
   },
   {
-    author: 'Veli Dincer',
+    author: 'Lucas limited (Apple App Store)',
     avatar: '/images/avatar-3.png',
     content:
-            '“Wow! The immense wealth of knowledge and experience shared in “The Coding Career Handbook” cannot be overstated. I love how Shawn is able to take his own experience and what he\'s observed in the careers of others and generalize it to principles that will help others level up their own careers. 5 stars ⭐⭐⭐⭐⭐”',
+          '“Due to a limited vocabulary, is it possible to have a feature that supports in-app word translation? It would be great if it could also save unfamiliar words.”',
     delay: 600,
     position: 'Dog Trainer',
-  },
-  {
-    author: 'Mansur Sarica',
-    avatar: '/images/avatar-4.png',
-    content:
-            '“The links to high-value blog posts already make the book worth it, never mind the amazing insight and context provided by Shawn. Must buy for #CodeNewbies looking to break in or senior engineers looking to grow!”',
-    position: 'Medical Assistant',
-  },
-  {
-    author: 'M. Kemal Yilmaz',
-    avatar: '/images/avatar-5.png',
-    content:
-            '“For anyone looking for career advice as a coder but is tired of being told they have to do X or never do Y. Shawn is sharing his personal experiences and knowledge of navigating these sometimes overwhelming waters in the hopes you might find something useful. It\'s like having a caring big brother in your pocket! (if you read on your phone)”',
-    delay: 300,
-    position: 'President of Sales',
-  },
-  {
-    author: 'Emine Simsek',
-    avatar: '/images/avatar-6.png',
-    content:
-            '“I wish I had this book when I was switching jobs. It helps you understand what skills you should leverage and really encourages you not underlevel yourself!”',
-    delay: 600,
-    position: 'Marketing Coordinator',
+    rating: 5,
+    title: 'A very concise but efficient news reading app, I really like it.',
   },
 ];

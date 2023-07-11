@@ -7,11 +7,11 @@ import styles from './Item.module.sass';
 import Play from '~/components/Play';
 
 type ItemProps = {
-    className?: string;
-    title: string;
-    info: string;
-    video: string;
-    children: React.ReactNode;
+  className?: string;
+  title: string;
+  info: string;
+  video: string;
+  children: React.ReactNode;
 };
 
 const Item = ({

@@ -18,13 +18,15 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <Main scrollToRef={ scrollToRef } downloadRef={ downloadRef } />
+      <Main 
+        scrollToRef={ scrollToRef } 
+        downloadRef={ downloadRef } />
       <Generation scrollToRef={ scrollToRef } />
       <Website />
       <Integration />
       {/* <Details /> */}
       {/* <Discover /> */}
-      {/* <Reviews /> */}
+      <Reviews />
       {/* <Design /> */}
       <JoinCommunity downloadRef={ downloadRef } />
     </Layout>

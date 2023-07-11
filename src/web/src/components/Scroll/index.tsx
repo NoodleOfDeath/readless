@@ -5,8 +5,8 @@ import styles from './Scroll.module.sass';
 import Icon from '~/components/Icon';
 
 type ScrollProps = {
-    title: string;
-    onScroll: () => void;
+  title: string;
+  onScroll: () => void;
 };
 
 const Scroll = ({ title, onScroll }: ScrollProps) => (

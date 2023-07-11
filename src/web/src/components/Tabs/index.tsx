@@ -5,17 +5,17 @@ import cn from 'classnames';
 import styles from './Tabs.module.sass';
 
 type TabType = {
-    title: string;
-    value: string;
-    onClick?: () => void;
-    mark?: boolean;
+  title: string;
+  value: string;
+  onClick?: () => void;
+  mark?: boolean;
 };
 
 type TabsProps = {
-    className?: string;
-    items: TabType[];
-    value: number | string;
-    setValue: any;
+  className?: string;
+  items: TabType[];
+  value: number | string;
+  setValue: any;
 };
 
 const Tabs = ({

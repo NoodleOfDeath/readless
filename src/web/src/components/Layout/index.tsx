@@ -11,9 +11,9 @@ import Footer from '~/components/Footer';
 import Header from '~/components/Header';
 
 type LayoutProps = {
-    layoutNoOverflow?: boolean;
-    children: React.ReactNode;
-    footerHide?: boolean;
+  layoutNoOverflow?: boolean;
+  children: React.ReactNode;
+  footerHide?: boolean;
 };
 
 const Layout = ({

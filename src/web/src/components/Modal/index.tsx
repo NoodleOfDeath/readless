@@ -11,14 +11,14 @@ import styles from './Modal.module.sass';
 import Icon from '~/components/Icon';
 
 type ModalProps = {
-    className?: string;
-    closeClassName?: string;
-    containerClassName?: string;
-    visible: boolean;
-    onClose?: any;
-    children: React.ReactNode;
-    sidebar?: boolean;
-    video?: boolean;
+  className?: string;
+  closeClassName?: string;
+  containerClassName?: string;
+  visible: boolean;
+  onClose?: any;
+  children: React.ReactNode;
+  sidebar?: boolean;
+  video?: boolean;
 };
 
 const Modal = ({

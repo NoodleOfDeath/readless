@@ -39,11 +39,11 @@ const Details = () => {
               <div
                 className={ cn(styles.item, {
                   [styles.item1]:
-                                        item.value === 'render-faster',
+                                      item.value === 'render-faster',
                   [styles.item2]:
-                                        item.value === 'realistic-materials',
+                                      item.value === 'realistic-materials',
                   [styles.item3]:
-                                        item.value === 'live-interaction',
+                                      item.value === 'live-interaction',
                 }) }
                 key={ index }>
                 <div className={ styles.wrap }>

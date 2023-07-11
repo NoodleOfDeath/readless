@@ -11,7 +11,7 @@ import { avatars, images } from '~/constants/joinCommunity';
 
 const JoinCommunity = ({ downloadRef }: {downloadRef?: any} = {}) => (
   <div className={ styles.join }>
-    <div className={ styles.anchor } ref={ downloadRef }></div>
+    <div className={ styles.anchor } ref={ downloadRef } id="download" />
     <div className={ cn('container', styles.container) }>
       <div className={ styles.wrap }>
         <div className={ cn('h1', styles.title) }>

@@ -8,9 +8,8 @@ import {
   SwipeableDrawer,
   TextField,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
+import { useMediaQuery } from 'react-responsive';
 import { styled } from 'styled-components';
 
 import { PublicSummaryGroup, ReadingFormat } from '~/api';
@@ -27,10 +26,8 @@ const Page = styled.div`
 
 export default function AppPage() {
 
-  const theme = useTheme();
-  const mdAndDown = useMediaQuery(() => theme.breakpoints.down('md'));
   const { replace, searchParams } = useRouter();
-
+  const isMobile = useMediaQuery({ query: '(max-width: 762px)' });
   const { getSummaries, getSummary } = useSummaryClient();
 
   const { preferredReadingFormat } = React.useContext(SessionContext);
@@ -45,17 +42,20 @@ export default function AppPage() {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   const [pageSize] = React.useState<number>(10);
-  const [page, setPage] = React.useState<number>(0);
+  const [offset, setOffset] = React.useState<number>(0);
   const [searchText, setSearchText] = React.useState<string>();
 
   const load = React.useCallback(async () => {
     try {
-      const { data } = await getSummaries({
+      const { data, error } = await getSummaries({
         filter: searchText,
-        locale: window.navigator.language,
-        page,
+        offset,
         pageSize,
       });
+      if (error) {
+        alert('tits');
+        throw error;
+      }
       if (data) {
         setTotalResults(data.count);
         setSummaries((prev) => 
@@ -63,14 +63,15 @@ export default function AppPage() {
             ...prev,
             ...data.rows.filter((s) => !prev.some((p) => p.id === s.id)),
           ]);
-        setPage((prev) => prev + 1);
+        setOffset((prev) => data.next ?? prev + data.count);
       }
     } catch (e) {
       console.error(e);
+      alert(e);
     } finally {
       setLoading(false);
     }
-  }, [getSummaries, searchText, page, pageSize, setTotalResults, setPage, setLoading]);
+  }, [getSummaries, searchText, offset, pageSize]);
   
   const loadSummary = React.useCallback(async () => {
     if (!id || id < 0) {
@@ -93,7 +94,8 @@ export default function AppPage() {
   }, [getSummary, id, replace]);
 
   const onMount = React.useCallback(() => {
-    setPage(0);
+    setOffset(0);
+    setTotalResults(0);
     setLoading(true);
     setSummaries([]);
     load();
@@ -101,12 +103,12 @@ export default function AppPage() {
 
   React.useEffect(() => {
     onMount();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     loadSummary();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup) => {
@@ -139,27 +141,27 @@ export default function AppPage() {
         </Stack>
         <Stack spacing={ 2 }>
           {summaries.length > 0 &&
-            summaries.map((summary) => (
-              <Summary 
-                key={ summary.id } 
-                summary={ summary }
-                onChange={ () => handleFormatChange(summary) } />
-            ))}
+          summaries.map((summary) => (
+            <Summary 
+              key={ summary.id } 
+              summary={ summary }
+              onChange={ () => handleFormatChange(summary) } />
+          ))}
         </Stack>
         {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
-        {totalResults > pageSize * page && (
+        {totalResults > offset + pageSize && (
           <Button onClick={ () => load() }>Load More</Button>
         )}
       </Stack>
       <SwipeableDrawer 
-        anchor={ mdAndDown ? 'bottom' : 'right' }
+        anchor={ isMobile ? 'bottom' : 'right' }
         open={ drawerOpen }
         onOpen={ () => setDrawerOpen(true) }
         onClose={ () => { 
           setDrawerOpen(false);
           setSelectedSummary(undefined);
         } }>
-        <Box sx={ { width: mdAndDown ? '100%' : 500 } }>
+        <Box sx={ { width: isMobile ? '100%' : 500 } }>
           <Stack spacing={ 2 } sx={ { p: 2 } }>
             {selectedSummary && (
               <Summary

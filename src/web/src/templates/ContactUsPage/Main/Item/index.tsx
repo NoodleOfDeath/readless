@@ -7,11 +7,11 @@ import styles from './Item.module.sass';
 import Image from '~/components/Image';
 
 type ItemProps = {
-    className: string;
-    title: string;
-    content: string;
-    children: React.ReactNode;
-    image: string;
+  className: string;
+  title: string;
+  content: string;
+  children: React.ReactNode;
+  image: string;
 };
 
 const Item = ({

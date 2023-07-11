@@ -8,21 +8,21 @@ import Icon from '~/components/Icon';
 import SignIn from '~/components/SignIn';
 
 type OptionsType = {
-    title: string;
-    addon?: boolean;
+  title: string;
+  addon?: boolean;
 };
 
 type PlansType = {
-    title: string;
-    recommended?: boolean;
-    counter: string;
-    price: number;
-    details: string;
-    options: OptionsType[];
+  title: string;
+  recommended?: boolean;
+  counter: string;
+  price: number;
+  details: string;
+  options: OptionsType[];
 };
 
 type PlansProps = {
-    plans: PlansType[];
+  plans: PlansType[];
 };
 
 const Plans = ({ plans }: PlansProps) => (

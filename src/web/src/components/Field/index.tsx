@@ -7,21 +7,21 @@ import styles from './Field.module.sass';
 import Icon from '~/components/Icon';
 
 type FieldProps = {
-    className?: string;
-    inputClassName?: string;
-    textarea?: boolean;
-    type?: string;
-    value: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onChange: any;
-    placeholder?: string;
-    required?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children?: any;
-    icon?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    autoFocus?: any;
-    light?: boolean;
+  className?: string;
+  inputClassName?: string;
+  textarea?: boolean;
+  type?: string;
+  value: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange: any;
+  placeholder?: string;
+  required?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children?: any;
+  icon?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  autoFocus?: any;
+  light?: boolean;
 };
 
 const Field = ({

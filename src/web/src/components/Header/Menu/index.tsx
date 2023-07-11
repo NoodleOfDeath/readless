@@ -10,13 +10,13 @@ import Modal from '~/components/Modal';
 import NavLink from '~/components/NavLink';
 
 type NavigationType = {
-    title: string;
-    url: string;
-    external?: boolean;
+  title: string;
+  url: string;
+  external?: boolean;
 };
 
 type MenuProps = {
-    navigation: NavigationType[];
+  navigation: NavigationType[];
 };
 
 const Menu = ({ navigation }: MenuProps) => {
@@ -35,7 +35,6 @@ const Menu = ({ navigation }: MenuProps) => {
         sidebar>
         <Logo
           className={ styles.logo }
-          black
           onClick={ () => setVisibleMenu(false) } />
         <nav className={ styles.navigation }>
           {navigation.map((link, index) =>

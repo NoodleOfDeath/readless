@@ -7,14 +7,14 @@ import styles from './List.module.sass';
 import Image from '~/components/Image';
 
 type ListType = {
-    title: string;
-    content: string;
-    image: string;
-    color: string;
+  title: string;
+  content: string;
+  image: string;
+  color: string;
 };
 
 type ListProps = {
-    list: ListType[];
+  list: ListType[];
 };
 
 const List = ({ list }: ListProps) => {

@@ -9,8 +9,8 @@ import Modal from '~/components/Modal';
 import Select from '~/components/Select';
 
 type FormRequestProps = {
-    className?: string;
-    title: string;
+  className?: string;
+  title: string;
 };
 
 const FormRequest = ({ className, title }: FormRequestProps) => {

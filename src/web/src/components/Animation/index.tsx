@@ -4,14 +4,14 @@ import { AnimationOnScroll } from 'react-animation-on-scroll';
 import { Parallax } from 'react-scroll-parallax';
 
 type AnimationProps = {
-    className?: string;
-    animateIn?: string;
-    speed?: number;
-    style?: React.CSSProperties;
-    initiallyVisible?: boolean;
-    delay?: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children: any;
+  className?: string;
+  animateIn?: string;
+  speed?: number;
+  style?: React.CSSProperties;
+  initiallyVisible?: boolean;
+  delay?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children: any;
 };
 
 const Animation = ({

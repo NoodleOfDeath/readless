@@ -7,7 +7,6 @@ import styles from './Header.module.sass';
 import Menu from './Menu';
 
 import Logo from '~/components/Logo';
-import SignIn from '~/components/SignIn';
 import { headerNavigation } from '~/constants/navigation';
 
 const Header = () => {
@@ -25,9 +24,6 @@ const Header = () => {
       ) }>
       <div className={ cn('container', styles.container) }>
         <Logo className={ styles.logo } />
-        <SignIn
-          className={ cn('button-gray', styles.button) }
-          title="Sign In" />
         <Menu navigation={ headerNavigation } />
       </div>
     </header>

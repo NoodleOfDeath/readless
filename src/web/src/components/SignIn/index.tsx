@@ -13,8 +13,8 @@ import Modal from '~/components/Modal';
 const tabs = ['Sign in', 'Create account'];
 
 type SignInProps = {
-    className: string;
-    title: string;
+  className: string;
+  title: string;
 };
 
 const SignIn = ({ className, title }: SignInProps) => {

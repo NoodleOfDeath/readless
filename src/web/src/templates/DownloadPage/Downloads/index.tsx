@@ -8,7 +8,7 @@ import Image from '~/components/Image';
 import { downloads } from '~/constants/downloads';
 
 type DownloadsProps = {
-    scrollToRef: any;
+  scrollToRef: any;
 };
 
 const Downloads = ({ scrollToRef }: DownloadsProps) => (

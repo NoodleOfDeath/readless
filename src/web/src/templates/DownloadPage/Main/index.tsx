@@ -9,7 +9,7 @@ import Image from '~/components/Image';
 import Scroll from '~/components/Scroll';
 
 type MainProps = {
-    scrollToRef: any;
+  scrollToRef: any;
 };
 
 const Main = ({ scrollToRef }: MainProps) => (

@@ -8,13 +8,13 @@ import Field from '~/components/Field';
 import Icon from '~/components/Icon';
 
 type FormProps = {
-    className?: string;
-    onSubmit: any;
-    type: string;
-    value: string;
-    setValue: any;
-    placeholder: string;
-    icon: string;
+  className?: string;
+  onSubmit: any;
+  type: string;
+  value: string;
+  setValue: any;
+  placeholder: string;
+  icon: string;
 };
 
 const Form = ({

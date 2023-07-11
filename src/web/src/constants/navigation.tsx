@@ -1,24 +1,11 @@
 export const headerNavigation = [
   {
-    title: 'Features',
-    url: '/',
-  },
-  {
-    title: 'Pricing',
-    url: '/pricing',
-  },
-  {
     title: 'Download',
-    url: '/download',
-  },
-  {
-    external: true,
-    title: 'Community',
-    url: 'https://ui8.net/',
+    url: '#download',
   },
   {
     title: 'Help',
-    url: '/help',
+    url: 'mailto:thecakeisalie@readless.ai',
   },
 ];
 
@@ -32,13 +19,8 @@ export const footerNavigation = [
       },
       {
         external: false,
-        title: 'Pricing',
-        url: '/pricing',
-      },
-      {
-        external: false,
         title: 'Download',
-        url: '/download',
+        url: '/#download',
       },
     ],
     title: 'Product',
@@ -47,45 +29,24 @@ export const footerNavigation = [
   {
     menu: [
       {
-        external: false,
-        title: 'About',
-        url: '/about-us',
-      },
-      {
-        external: false,
-        title: 'Blog',
-        url: '/blog',
-      },
-      {
-        external: false,
-        title: 'Contact',
-        url: '/contact',
-      },
-    ],
-    title: 'Company',
-    value: 'company',
-  },
-  {
-    menu: [
-      {
-        external: false,
-        title: 'Help',
-        url: '/help',
+        external: true,
+        title: 'Instagram',
+        url: 'https://instagram.com/readless.ai',
       },
       {
         external: true,
-        title: 'Behance',
-        url: 'https://www.behance.net/ui8',
+        title: 'Threads',
+        url: 'https://www.threads.net/@readless.ai',
+      },
+      {
+        external: true,
+        title: 'TikTok',
+        url: 'https://www.tiktok.com/@readless.ai',
       },
       {
         external: true,
         title: 'Twitter',
-        url: 'https://twitter.com/ui8',
-      },
-      {
-        external: true,
-        title: 'Linked in',
-        url: 'https://www.linkedin.com/company/ui8',
+        url: 'https://twitter.com/readlessai',
       },
     ],
     title: 'Community',

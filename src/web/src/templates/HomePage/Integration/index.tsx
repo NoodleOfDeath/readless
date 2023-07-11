@@ -11,15 +11,15 @@ import Image from '~/components/Image';
 import { integrations } from '~/constants/integrations';
 
 const Integration = () => {
-  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+  const isMobile = useMediaQuery({ query: '(max-width: 762px)' });
   return (
     <div className={ cn('section', styles.integration) }>
       <div className={ cn('container', styles.container) }>
         <div className={ styles.preview }>
           <Image
             src="/images/ss-custom-feed.png"
-            width={ isMobile ? 320 : 480 }
-            height={ isMobile ? 480 : 740 }
+            width={ isMobile ? 360 : 480 }
+            height={ isMobile ? 560 : 740 }
             alt="Iphone" />
           <div className={ styles.circles }>
             {Array.from(Array(3).keys()).map((x) => (

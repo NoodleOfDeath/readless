@@ -25,17 +25,23 @@ const Footer = () => {
             <Logo
               className={ styles.logo }
               titleClassName={ styles.titleLogo }
-              title />
+              title
+              compact />
             <div className={ styles.info }>
-              The Real-time & powerful 3D design for web.
+              News without the noise
             </div>
           </div>
         </div>
       </div>
       <div className={ styles.bottom }>
         <div className={ cn('container', styles.container) }>
-          <div className={ styles.copyright }>©2022 - UI8, Ltd.</div>
-          <div>Design by UI8 team.</div>
+          <div className={ styles.copyright }>
+            &copy; 
+            {' '}
+            {new Date().getFullYear()}
+            {' '}
+            Read Less LLC
+          </div>
         </div>
       </div>
     </footer>

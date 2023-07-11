@@ -8,9 +8,9 @@ import Icon from '~/components/Icon';
 import Modal from '~/components/Modal';
 
 type PlayProps = {
-    className?: string;
-    title: string;
-    video: string;
+  className?: string;
+  title: string;
+  video: string;
 };
 
 const Play = ({

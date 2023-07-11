@@ -5,12 +5,12 @@ import Link from 'next/link';
 import styles from './Breadcrumbs.module.sass';
 
 type BreadcrumbsType = {
-    title: string;
-    url?: string;
+  title: string;
+  url?: string;
 };
 
 type BreadcrumbsProps = {
-    items: BreadcrumbsType[];
+  items: BreadcrumbsType[];
 };
 
 const Breadcrumbs = ({ items }: BreadcrumbsProps) => (

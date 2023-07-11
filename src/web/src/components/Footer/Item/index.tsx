@@ -8,8 +8,8 @@ import styles from './Item.module.sass';
 import Icon from '~/components/Icon';
 
 type ItemProps = {
-    className: string;
-    item: any;
+  className: string;
+  item: any;
 };
 
 const Item = ({ className, item }: ItemProps) => {

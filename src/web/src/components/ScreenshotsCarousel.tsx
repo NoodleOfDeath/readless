@@ -99,7 +99,7 @@ async function Screen({
       throw new Error('Could not get canvas context');
     }
     context.resetTransform();
-    
+  
     // background
     context.fillStyle = bg;
     context.fillRect(0, 0, width, height);
@@ -228,7 +228,7 @@ export function Screenshot({
     // draw screens
     context.setTransform(0.9, 0, 0, 0.9, 0, 0);
     context.drawImage(screens[screen], width * 0.05, ipad ? 450 : 800);
-     
+   
     // title
     if (title) {
       const titles = await mapObject(TITLES, (options) => Title(context, {

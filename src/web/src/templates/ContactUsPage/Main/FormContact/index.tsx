@@ -9,8 +9,8 @@ import Modal from '~/components/Modal';
 import Select from '~/components/Select';
 
 type FormContactProps = {
-    className?: string;
-    title: string;
+  className?: string;
+  title: string;
 };
 
 const FormContact = ({ className, title }: FormContactProps) => {

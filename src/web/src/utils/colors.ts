@@ -109,7 +109,7 @@ class Color {
   }
 
   hsl() {
-    // Code taken from https://stackoverflow.com/a/9493060/2688027, licensed under CC BY-SA.
+  // Code taken from https://stackoverflow.com/a/9493060/2688027, licensed under CC BY-SA.
     const r = this.r / 255;
     const g = this.g / 255;
     const b = this.b / 255;
@@ -260,7 +260,7 @@ class Solver {
   }
 
   loss(filters: number[]) {
-    // Argument is array of percentages.
+  // Argument is array of percentages.
     const color = this.reusedColor;
     color.set(0, 0, 0);
 
@@ -274,11 +274,11 @@ class Solver {
     const colorHSL = color.hsl();
     return (
       Math.abs(color.r - this.target.r) +
-      Math.abs(color.g - this.target.g) +
-      Math.abs(color.b - this.target.b) +
-      Math.abs(colorHSL.h - this.targetHSL.h) +
-      Math.abs(colorHSL.s - this.targetHSL.s) +
-      Math.abs(colorHSL.l - this.targetHSL.l)
+    Math.abs(color.g - this.target.g) +
+    Math.abs(color.b - this.target.b) +
+    Math.abs(colorHSL.h - this.targetHSL.h) +
+    Math.abs(colorHSL.s - this.targetHSL.s) +
+    Math.abs(colorHSL.l - this.targetHSL.l)
     );
   }
 

@@ -8,19 +8,19 @@ import styles from './Select.module.sass';
 import Icon from '~/components/Icon';
 
 type OptionType = {
-    title: string;
-    value: any;
+  title: string;
+  value: any;
 };
 
 type SelectProps = {
-    className?: string;
-    toggleClassName?: string;
-    title?: string;
-    value: string;
-    onChange: (value: string) => void;
-    options: OptionType[];
-    icon?: string;
-    small?: boolean;
+  className?: string;
+  toggleClassName?: string;
+  title?: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: OptionType[];
+  icon?: string;
+  small?: boolean;
 };
 
 const Select = ({
@@ -74,7 +74,7 @@ const Select = ({
                   <button
                     className={ cn(styles.option, {
                       [styles.active]:
-                                                value === option.value,
+                                              value === option.value,
                     }) }
                     onClick={ () =>
                       handleChange(option.value) }

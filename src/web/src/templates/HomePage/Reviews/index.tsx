@@ -20,7 +20,7 @@ const Reviews = () => {
             People are talking...
           </div>
           <div className={ cn('h6', styles.info) }>
-            Amet minim mollit non deserunt ullamco est.
+            ...they can&apos;t get enough of Read Less!
           </div>
         </div>
         <div className={ styles.list }>
@@ -36,6 +36,12 @@ const Reviews = () => {
                   layout="fill"
                   alt="Avatar"
                   priority />
+              </div>
+              <div className={ styles.title }>
+                {review.title}
+              </div>
+              <div className={ styles.rating }>
+                {[...Array(review.rating).keys()].map((i) => <React.Fragment key={ i }>🌟</React.Fragment>)}
               </div>
               <div className={ styles.content }>
                 {review.content}
