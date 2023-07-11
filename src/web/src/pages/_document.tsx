@@ -20,37 +20,37 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <meta
-            content="Production-ready landing page template for SaaS and startups"
-            name="Paradox – Premium SaaS landing page kit" />
+            content="Using AI to cut through the bullsh💩t"
+            name="Read Less – News without the noise" />
           <meta
-            content="Paradox – Premium SaaS landing page kit"
+            content="Read Less – News without the noise"
             property="og:title" />
           <meta
-            content="Production-ready landing page template for SaaS and startups"
+            content="Using AI to cut through the bullsh💩t"
             property="og:description" />
           <meta
             content="%PUBLIC_URL%/fb-og-image.png"
             property="og:image" />
           <meta
             property="og:url"
-            content="https://ui8.net/ui8/products/paradox" />
+            content="https://readless.ai" />
           <meta
             property="og:site_name"
-            content="Paradox – Premium SaaS landing page kit" />
+            content="Read Less – News without the noise" />
           <meta
-            content="Paradox – Premium SaaS landing page kit"
+            content="Read Less – News without the noise"
             property="twitter:title" />
           <meta
-            content="Production-ready landing page template for SaaS and startups"
+            content="Using AI to cut through the bullsh💩t"
             property="twitter:description" />
           <meta
             content="%PUBLIC_URL%/twitter-card.png"
             property="twitter:image" />
           <meta property="og:type" content="Article" />
           <meta content="summary" name="twitter:card" />
-          <meta name="twitter:site" content="@ui8" />
-          <meta name="twitter:creator" content="@ui8" />
-          <meta property="fb:admins" content="132951670226590" />
+          <meta name="twitter:site" content="@readlessai" />
+          <meta name="twitter:creator" content="@readlessai" />
+          <!-- <meta property="fb:admins" content="132951670226590" /> -->
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1" />
