@@ -15,7 +15,7 @@ FROM (
     b.url,
     b."imageUrl",
     b."originalDate",
-    outlet::JSON, -- legacy support
+    outlet::JSON,
     publisher::JSON,
     category::JSON,
     translations::JSON,
@@ -33,7 +33,7 @@ FROM (
       'url', sibling.url,
       'imageUrl', sibling."imageUrl",
       'originalDate', sibling."originalDate",
-      'outlet', JSONB_BUILD_OBJECT( -- legacy support
+      'outlet', JSONB_BUILD_OBJECT(
          'name', sibling_pub.name,
          'displayName', sibling_pub."displayName"
       ),
@@ -65,7 +65,7 @@ FROM (
         'id', "publisher.id",
         'name', "publisher.name",
         'displayName', "publisher.displayName"
-      )::TEXT AS outlet, -- legacy support
+      )::TEXT AS outlet,
       JSONB_BUILD_OBJECT(
         'id', "publisher.id",
         'name', "publisher.name",
@@ -216,7 +216,7 @@ FROM (
     b.url,
     b."imageUrl",
     b."originalDate",
-    b.outlet, -- legacy support
+    b.outlet,
     b.publisher,
     b.category,
     b.translations,
