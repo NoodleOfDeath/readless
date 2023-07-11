@@ -50,7 +50,6 @@ class MyDocument extends Document {
           <meta content="summary" name="twitter:card" />
           <meta name="twitter:site" content="@readlessai" />
           <meta name="twitter:creator" content="@readlessai" />
-          <!-- <meta property="fb:admins" content="132951670226590" /> -->
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1" />
