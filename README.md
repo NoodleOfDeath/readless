@@ -120,7 +120,7 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [x] Apple Watch loads pictures
 - [x] Performance improvments
 
-### v1.8/v1.9/v1.10 Duplicate Article Detection
+### v1.8/v1.9/v1.10 - Duplicate Article Detection
 - [x] Improve applinks to show OG images
 - [x] Improve share dialog
 - [x] AI Duplicate Article Detection
