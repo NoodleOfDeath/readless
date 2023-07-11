@@ -27,11 +27,11 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
   - [v1.4/v1.5 - iPad Support + Smart Search](#v14v15---ipad-support--smart-search)
   - [v1.6 - Smart Seach + AFINN/VADER Sentiment Analysis](#v16---smart-seach--afinnvader-sentiment-analysis)
   - [v1.7 - Localization](#v17---localization)
-  - [v1.8 - Duplicate Article Detection](#v18---duplicate-article-detection)
-  - [v1.9 - AI Voice Cloning + Tier 1 Subscriptions](#v19---ai-voice-cloning--tier-1-subscriptions)
-  - [v1.10 - Notifications/Newletters](#v110---notificationsnewletters)
-  - [v1.11 - Advanced Notifications](#v111---advanced-notifications)
-  - [v1.12 - On Demand Sentiment Pipeline](#v112---on-demand-sentiment-pipeline)
+  - [v1.8/v1.9/v1.10 - Duplicate Article Detection](#v18v19v110---duplicate-article-detection)
+  - [v1.11 - UI Updates to Match Artifact](#v111---ui-updates-to-match-artifact)
+  - [v1.12 - Notifications/Newletters](#v112---notificationsnewletters)
+  - [v1.13 - Advanced Notifications](#v113---advanced-notifications)
+  - [v1.14 - On Demand Sentiment Pipeline](#v114---on-demand-sentiment-pipeline)
   - [v17.0 - Enhanced Discover Page](#v170---enhanced-discover-page)
   - [v17.1 - Cross-Comparative Article Generation](#v171---cross-comparative-article-generation)
   - [v69.69 - Shit is getting realllllll](#v6969---shit-is-getting-realllllll)
@@ -120,28 +120,30 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [x] Apple Watch loads pictures
 - [x] Performance improvments
 
-### v1.8 - Duplicate Article Detection
+### v1.8/v1.9/v1.10 - Duplicate Article Detection
 - [x] Improve applinks to show OG images
-- [ ] Improve share dialog
-- [ ] AI Duplicate Article Detection
-- [ ] Onboarding less invasive card stacks
+- [x] Improve share dialog
+- [x] AI Duplicate Article Detection
+- [x] Onboarding less invasive card stacks
 
-### v1.9 - AI Voice Cloning + Tier 1 Subscriptions
-- [ ] On demand AI Voice Cloning
+### v1.11 - UI Updates to Match Artifact
+- [x] Major performance updates
+- [x] Press and hold to share
+- [x] Suck it meta! Come at me bro! 
 
-### v1.10 - Notifications/Newletters
+### v1.12 - Notifications/Newletters
 
 - [ ] Email notifications?
 - [ ] Daily (eventually customizable) newsletters with headlines?
 - [ ] Subscription to topics, threads, and/or keywords?
 
-### v1.11 - Advanced Notifications
+### v1.13 - Advanced Notifications
 
 - [ ] Push notifications with Firebase
 - [ ] Text notifications
 - [ ] 2-factor authentication with text and/or authenticator applications
 
-### v1.12 - On Demand Sentiment Pipeline
+### v1.14 - On Demand Sentiment Pipeline
 - [ ] Expose pipeline for users to upload text/documents to be processed
 
 ### v17.0 - Enhanced Discover Page

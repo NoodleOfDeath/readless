@@ -15,7 +15,7 @@ const JoinCommunity = ({ downloadRef }: {downloadRef?: any} = {}) => (
     <div className={ cn('container', styles.container) }>
       <div className={ styles.wrap }>
         <div className={ cn('h1', styles.title) }>
-          A you ready to Read Less?
+          Are you ready to Read Less?
         </div>
         <div className={ cn('h4M', styles.info) }>
           Join thousands of readers and become part of the Read Less community
