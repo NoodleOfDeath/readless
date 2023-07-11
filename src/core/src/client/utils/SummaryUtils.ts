@@ -29,6 +29,8 @@ export const readingFormat = (str = ''): ReadingFormat => {
   switch (str) {
   case 'bullets':
     return ReadingFormat.Bullets;
+  case 'fullArticle':
+    return ReadingFormat.FullArticle;
   default:
     return ReadingFormat.Summary;
   }

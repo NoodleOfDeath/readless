@@ -1,0 +1,57 @@
+@import ~/styles/helpers
+
+.blog
+    +x
+        margin-bottom: 80px
+    +m
+        margin-bottom: 48px
+
+.title
+    margin-bottom: 64px
+    text-align: center
+    +m
+        margin-bottom: 40px
+
+.list
+    display: flex
+    flex-wrap: wrap
+    margin: -40px -16px 0
+    +m
+        display: block
+        margin: 0
+
+.item
+    flex: 0 0 calc(33.333% - 32px)
+    width: calc(33.333% - 32px)
+    margin: 40px 16px 0
+    color: $n7
+    transition: color .2s
+    +t
+        flex: 0 0 calc(50% - 32px)
+        width: calc(50% - 32px)
+    +m
+        display: block
+        width: 100%
+        margin: 0
+        &:not(:last-child)
+            margin-bottom: 48px
+    &:hover
+        color: $blue
+        img
+            transform: scale(1.05)
+
+.preview
+    position: relative
+    height: 260px
+    margin-bottom: 32px
+    overflow: hidden
+    border-radius: 8px
+    +m
+        margin-bottom: 24px
+    img
+        transition: transform 1s
+
+.date
+    margin-bottom: 9px
+    +caption
+    color: $n4

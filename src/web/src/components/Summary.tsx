@@ -112,6 +112,10 @@ export default function Summary({
 
   const handleFormatChange = React.useCallback(
     async (newFormat: ReadingFormat) => {
+      if (newFormat === ReadingFormat.FullArticle) {
+        window.open(summary.url, '_blank');
+        return;
+      }
       setFormat(newFormat);
       onChange?.(newFormat);
       await handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
@@ -142,12 +146,6 @@ export default function Summary({
             <Box flexGrow={ 1 } />
             <StyledCategoryBox direction="row" spacing={ 1 }>
               <Typography variant="subtitle1">{summary.category.displayName}</Typography>
-              <StyledLink
-                variant="subtitle1"
-                href={ summary.url }
-                target="_blank">
-                View Original Article
-              </StyledLink>
             </StyledCategoryBox>
           </StyledStack>
         </StyledStack>

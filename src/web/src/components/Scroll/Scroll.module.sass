@@ -1,0 +1,35 @@
+@import ~/styles/helpers
+
+.scroll
+    position: relative
+    z-index: 2
+    display: inline-flex
+    align-items: center
+    +caption
+    color: $n4
+    transition: color .2s
+    -webkit-tap-highlight-color: rgba(0,0,0,0)
+    +m
+        flex-direction: column
+    &:hover
+        color: $n7
+        .icon
+            background: $blue
+            svg
+                fill: $n1
+
+.icon
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-shrink: 0
+    width: 24px
+    height: 24px
+    margin-right: 12px
+    border-radius: 50%
+    background: $n3
+    transition: background .2s
+    +m
+        margin: 0 0 12px
+    svg
+        transition: fill .2s

@@ -1,0 +1,62 @@
+@import ~/styles/helpers
+
+.item
+    position: relative
+    display: flex
+    align-items: center
+    min-height: 567px
+    background: #F7F9F9
+    border-radius: 16px
+    +x
+        min-height: 504px
+    +t
+        min-height: 490px
+    +m
+        display: block
+        min-height: auto
+        padding: 24px
+    &:not(:last-child)
+        margin-bottom: 64px
+        +m
+            margin-bottom: 44px
+    &:before
+        content: ""
+        position: absolute
+        top: 0
+        left: calc(50% - 1px)
+        bottom: 0
+        width: 2px
+        background: $n3
+        +m
+            display: none
+
+.col
+    position: relative
+    flex: 0 0 50%
+    width: 50%
+    padding: 64px 80px
+    +x
+        padding: 48px
+    +t
+        padding: 40px 32px
+    +m
+        width: 100%
+        padding: 0
+        &:nth-child(1)
+            margin-bottom: 32px
+            padding-bottom: 32px
+            border-bottom: 2px solid $n3
+
+.title
+    max-width: 320px
+    margin-bottom: 16px
+
+.info
+    min-height: 48px
+    max-width: 320px
+    margin-bottom: 106px
+    color: $n4
+    +x
+        margin-bottom: 129px
+    +m
+        margin-bottom: 32px

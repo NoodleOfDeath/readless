@@ -1,0 +1,48 @@
+@import ~/styles/helpers
+
+div.container
+    display: flex
+    max-width: 728px
+    padding: 48px
+    +w
+        max-width: 620px
+    +d
+        max-width: 520px
+    +m
+        padding: 40px 32px
+
+.wrap
+    width: 100%
+    max-width: 360px
+    min-height: 585px
+    margin: auto
+    text-align: center
+
+.logo
+    margin-bottom: 40px
+
+.nav
+    display: flex
+    margin-bottom: 24px
+
+.tab
+    flex: 0 0 50%
+    height: 56px
+    border-top: 1px solid $n3
+    +base
+    color: $n4
+    transition: all .2s
+    &:hover,
+    &.active
+        color: $n6
+    &.active
+        border-color: $n6
+
+.button
+    &:not(:last-child)
+        margin-bottom: 12px
+
+.info
+    margin: 24px 0
+    +baseM
+    color: $n4

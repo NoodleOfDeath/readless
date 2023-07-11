@@ -1,0 +1,74 @@
+@import ~/styles/helpers
+
+.head
+    max-width: 522px
+    margin: 0 auto 80px
+    text-align: center
+    +d
+        margin-bottom: 64px
+
+.title
+    margin-bottom: 18px
+
+.info
+    color: $n5
+
+.item
+    display: flex
+    align-items: flex-start
+    padding: 64px 0
+    +t
+        padding: 40px 0
+    +m
+        display: block
+        padding: 32px
+        text-align: center
+    &:not(:last-child)
+        border-bottom: 1px solid $n3
+
+.preview
+    position: relative
+    flex-shrink: 0
+    width: 128px
+    margin-right: 48px
+    +m
+        margin: 0 auto 40px
+    &:before
+        content: ""
+        display: block
+        padding-bottom: 100%
+
+.details
+    align-self: center
+    max-width: 340px
+    margin-right: auto
+
+.subtitle
+    margin-bottom: 4px
+    +m
+        font-size: 20px
+        line-height: 32px
+
+.content
+    +baseM
+    color: $n4
+    +m
+        margin-bottom: 4px
+
+.price
+    display: flex
+    align-items: center
+    +m
+        justify-content: center
+
+.duration
+    display: flex
+    align-items: center
+    color: #BCBEC2
+
+.separator
+    width: 4px
+    height: 24px
+    margin: 0 8px
+    transform: translateY(2px) rotate(24deg)
+    background: #BCBEC2

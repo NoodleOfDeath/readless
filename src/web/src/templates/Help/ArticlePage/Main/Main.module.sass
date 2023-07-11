@@ -1,0 +1,53 @@
+@import ~/styles/helpers
+
+.container
+    display: flex
+    align-items: flex-start
+
+.wrap
+    flex-grow: 1
+    padding-right: 188px
+    +x
+        padding-right: 100px
+    +d
+        padding-right: 40px
+    +t
+        padding-right: 0
+
+.info
+    margin-top: 8px
+    color: $n4
+
+.head
+    margin-bottom: 56px
+    +m
+        margin-bottom: 40px
+
+.section
+    &:not(:last-child)
+        margin-bottom: 48px
+
+.menu
+    position: sticky
+    top: 120px
+    flex-shrink: 0
+    width: 196px
+    margin-left: 40px
+    +t
+        display: none
+
+.link
+    display: block
+    padding: 8px 16px
+    border-radius: 8px
+    +base
+    color: $n4
+    cursor: pointer
+    transition: background .2s, color .2s
+    &:hover
+        color: $n7
+    &.active
+        background: $n7
+        color: $n1
+    &:not(:last-child)
+        margin-bottom: 16px

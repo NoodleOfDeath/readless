@@ -1,0 +1,137 @@
+@import ~/styles/helpers
+
+.blog
+    +x
+        margin-bottom: 80px
+    +m
+        margin-bottom: 64px
+
+.head
+    display: flex
+    align-items: center
+    margin-bottom: 80px
+    +t
+        margin-bottom: 64px
+    +m
+        display: block
+
+.title
+    margin-right: auto
+    +m
+        margin: 0 0 16px
+        text-align: center
+
+.select
+    display: none
+    +m
+        display: block
+
+.nav
+    display: flex
+    +m
+        display: none
+
+.link
+    +base
+    color: $n4
+    transition: color .2s
+    &:hover,
+    &.active
+        color: $n7
+    &:not(:last-child)
+        margin-right: 40px
+        +t
+            margin-right: 24px
+
+.list
+    display: flex
+    flex-wrap: wrap
+    margin: -64px -24px 0
+    +t
+        margin: -48px -16px 0
+    +m
+        display: block
+        margin: 0
+
+.item
+    flex: 0 0 calc(50% - 48px)
+    width: calc(50% - 48px)
+    margin: 64px 24px 0
+    color: $n7
+    transition: color .2s
+    +t
+        flex: 0 0 calc(50% - 32px)
+        width: calc(50% - 32px)
+        margin: 48px 16px 0
+    +m
+        display: block
+        width: 100%
+        margin: 0
+        &:not(:last-child)
+            margin-bottom: 48px
+    &:hover
+        color: $blue
+        img
+            transform: scale(1.05)
+    &:nth-child(1)
+        flex: 0 0 calc(100% - 48px)
+        width: calc(100% - 48px)
+        +m
+            width: 100%
+        .preview
+            height: 680px
+            border-radius: 20px
+            +t
+                height: 500px
+            +m
+                height: 260px
+                border-radius: 8px
+        .date
+            margin-bottom: 12px
+            +m
+                margin-bottom: 9px
+        .subtitle
+            font-size: 36px
+            line-height: 44px
+            letter-spacing: -0.02em
+            font-weight: 600
+            +t
+                font-size: 30px
+                line-height: 36px
+            +m
+                font-size: 22px
+                line-height: 32px
+                letter-spacing: -0.01em
+                font-weight: 500
+
+.preview
+    position: relative
+    height: 400px
+    margin-bottom: 32px
+    overflow: hidden
+    border-radius: 8px
+    +x
+        height: 360px
+    +t
+        height: 260px
+    +m
+        margin-bottom: 24px
+    img
+        transition: transform 1s
+
+.date
+    margin-bottom: 9px
+    +caption
+    color: $n4
+
+.subtitle
+    font-size: 22px
+    line-height: 32px
+    letter-spacing: -0.01em
+    font-weight: 500
+    +t
+        font-size: 20px
+        line-height: 28px
+    +m
+        font-size: 22px
+        line-height: 32px

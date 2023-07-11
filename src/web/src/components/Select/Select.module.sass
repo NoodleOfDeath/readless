@@ -1,0 +1,87 @@
+@import ~/styles/helpers
+
+.select
+    position: relative
+    z-index: 10
+    &.selectIcon
+        .toggle
+            padding-left: 46px
+    &.selectSmall
+        .toggle
+            height: 48px
+        .option
+            height: 40px
+    &.active
+        z-index: 30
+        .toggle
+            background: transparent
+            border-color: $n4
+            .arrow
+                transform: rotate(-180deg)
+
+.icon
+    position: absolute
+    top: 50%
+    left: 14px
+    transform: translateY(-50%)
+    pointer-events: none
+    fill: $n4
+
+.inner
+    position: relative
+    z-index: 20
+
+.toggle
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: space-between
+    width: 100%
+    height: 56px
+    padding: 0 14px
+    border: 2px solid transparent
+    background: $n2
+    border-radius: 8px
+    +baseM
+    color: $n7
+    transition: background .2s, border-color .2s
+    -webkit-tap-highlight-color: rgba(0,0,0,0)
+    &:hover
+        border-color: $n1
+
+.arrow
+    margin-left: 16px
+    fill: $n7
+    transition: transform .2s
+
+.title
+    color: $n4
+
+.dropdown
+    position: absolute
+    top: calc(100% + 2px)
+    left: 0
+    right: 0
+    padding: 8px 0
+    background: $n1
+    border: 2px solid $n4
+    border-radius: 8px
+    box-shadow: 0px 32px 32px -9px rgba(0, 0, 0, 0.1)
+
+.option
+    position: relative
+    display: flex
+    align-items: center
+    width: 100%
+    height: 48px
+    padding: 0 12px
+    border-radius: 2px
+    text-align: left
+    +baseM
+    color: $n7
+    transition: background .2s, color .2s
+    &:hover
+        color: $blue
+    &.active
+        background: $n3
+        color: $n7

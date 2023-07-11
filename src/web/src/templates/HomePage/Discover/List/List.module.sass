@@ -1,0 +1,33 @@
+@import ~/styles/helpers
+
+.list
+    +x
+        max-width: 335px
+        margin-left: auto
+
+.box
+    display: flex
+    align-items: center
+    padding: 40px 0
+    +x
+        padding: 32px 0
+    &:not(:last-child)
+        border-bottom: 1px solid $n3
+
+.details
+    flex-grow: 1
+
+.content
+    +baseM
+    color: $n4
+
+.icon
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-shrink: 0
+    width: 64px
+    height: 64px
+    margin-left: 24px
+    border-radius: 8px
+    font-size: 0

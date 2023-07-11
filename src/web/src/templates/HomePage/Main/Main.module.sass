@@ -1,0 +1,176 @@
+@import ~/styles/helpers
+
+.main
+  position: relative
+  padding: 324px 0 72px
+  background: $n2
+  +x
+    margin-bottom: 96px
+    padding-top: 232px
+    +m
+      margin-bottom: 64px
+      padding: 136px 0 40px
+      text-align: center
+
+.wrap
+  position: relative
+  z-index: 2
+  max-width: 356px
+  margin-bottom: 284px
+  +x
+    margin-bottom: 136px
+    +d
+      margin-bottom: 142px
+    +t
+      max-width: 300px
+    +m
+      margin: 0 auto
+
+.title
+  margin-bottom: 16px
+  +x
+    margin-bottom: 10px
+
+.info
+  margin-bottom: 40px
+  color: $n4
+  +x
+    margin-bottom: 24px
+    font-size: 22px
+    line-height: 32px
+    letter-spacing: -0.01em
+    +d
+      font-size: 20px
+      line-height: 28px
+    +m
+      font-size: 18px
+      line-height: 26px
+
+.btns
+  display: flex
+  flex-direction: row
+  flex: 1
+  gap: 0.5rem
+  +m
+    justify-content: center
+
+.button
+  &:nth-child(2)
+    margin-left: 16px
+    +m
+      display: none
+
+.preview
+  position: absolute
+  top: 55%
+  right: calc(50% - 1150px)
+  transform: translateY(-46.5%)
+  font-size: 0
+  .image
+    width: 100%
+    height: auto
+    overflow: hidden
+  section
+    position: relative
+    width: 60%
+    padding: 0 36px
+    transform: translateX(-25%)
+  +x
+    right: calc(50% - 660px)
+    width: 660px
+    margin: 80px -80px 20px -65px
+    .image
+      height: 350px
+    section
+      width: 80%
+      margin: 0 auto
+      transform: translateX(-35%)
+      z-index: 1
+    +d
+      right: calc(50% - 588px)
+      section
+        transform: translateX(-30%)
+        z-index: 1
+    +t
+    +m
+      margin: 10px -80px 20px -65px
+      position: relative
+      right: auto
+      width: auto
+      transform: translateY(0)
+      section
+        transform: translateX(0%)
+        z-index: 1
+    .image
+      position: relative
+      z-index: 1
+      clip: rect(0, 40%, 100%, 0)
+
+.ball
+  position: absolute
+  left: 50%
+  bottom: 0
+  width: 70%
+  transform: translateX(-55%)
+  border-radius: 50%
+  background: #EFF0F4
+  +m
+    bottom: 5px
+    width: 335px
+    &:before
+      content: ""
+      display: block
+      padding-bottom: 100%
+
+.circle
+  position: absolute
+  border-radius: 50%
+  z-index: 2
+  &:nth-child(1)
+    top: 26%
+    left: 22.5%
+    width: 4.1%
+    +x
+      top: 22%
+      width: 4.8%
+      span
+        background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #136FFF 43.61%, #47BDFF 100%)
+    &:nth-child(2)
+      left: 37%
+      bottom: 4.6%
+      width: 2.6%
+      +x
+        width: 3.4%
+        span
+          background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #FFAF13 43.61%, #FBFF47 100%)
+    &:nth-child(3)
+      top: .5%
+      right: 21.3%
+      width: 6.5%
+      +x
+        top: -4.5%
+        right: 27.3%
+        width: 6%
+        +t
+          right: 30%
+        +m
+          top: 0
+        span
+          background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #27A867 43.61%, #33E68C 100%)
+    &:nth-child(4)
+      right: 7.3%
+      bottom: 22%
+      width: 4.3%
+      +x
+        bottom: 19%
+        width: 4.5%
+        span
+          background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #DBDBDB 43.61%, #FFFFFF 100%)
+    span
+      display: block
+      width: 100%
+      border-radius: 50%
+      &:before
+        content: ""
+        display: block
+        padding-bottom: 100%
