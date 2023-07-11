@@ -233,6 +233,8 @@ export function ScreenshotsCarousel({ ...props }: Partial<CarouselProps> = {}) {
   return (
     <StyledCarousel
       infiniteLoop
+      autoPlay
+      interval={ 5_000 }
       { ...props }>
       {[...Array(10).keys()].map((i) => <img key={ i } src={ `/ss/ss-${ i + 1 }.png` } />)}
     </StyledCarousel>
