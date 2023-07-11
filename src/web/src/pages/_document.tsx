@@ -19,6 +19,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <title>Read Less – News without the noise</title>
           <meta
             content="Using AI to cut through the bullsh💩t"
             name="Read Less – News without the noise" />
@@ -29,7 +30,7 @@ class MyDocument extends Document {
             content="Using AI to cut through the bullsh💩t"
             property="og:description" />
           <meta
-            content="%PUBLIC_URL%/fb-og-image.png"
+            content="/sms-banner.png"
             property="og:image" />
           <meta
             property="og:url"
@@ -44,12 +45,13 @@ class MyDocument extends Document {
             content="Using AI to cut through the bullsh💩t"
             property="twitter:description" />
           <meta
-            content="%PUBLIC_URL%/twitter-card.png"
+            content="/twitter-card.png"
             property="twitter:image" />
           <meta property="og:type" content="Article" />
           <meta content="summary" name="twitter:card" />
           <meta name="twitter:site" content="@readlessai" />
           <meta name="twitter:creator" content="@readlessai" />
+          <meta key="apple-itunes-app" name="apple-itunes-app" content={ `app-id=${process.env.NEXT_PUBLIC_APPLE_APP_ID}` } />
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1" />
