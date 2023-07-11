@@ -60,18 +60,15 @@ const Menu = ({ navigation }: MenuProps) => {
         </nav>
         <div className={ styles.line }>
           <div className={ styles.details }>
-            <div className={ styles.text }>Talk to sale</div>
+            <div className={ styles.text }>Contact Us</div>
             <a
-              href="mailto:hello@ui8.net"
+              href="mailto:thecakeisalie@readless.ai"
               className={ cn('h6', styles.mail) }
               target="_blank"
               rel="noreferrer">
-              hello@ui8.net
+              thecakeisalie@readless.ai
             </a>
           </div>
-          <button className={ styles.chat }>
-            <Icon name="chat" />
-          </button>
         </div>
       </Modal>
     </React.Fragment>
