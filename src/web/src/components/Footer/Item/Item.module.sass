@@ -1,0 +1,47 @@
+@import ~/styles/helpers
+
+.item
+    &.active
+        +m
+            .title
+                svg
+                    transform: rotate(45deg)
+            .menu
+                display: flex
+
+.title
+    margin-bottom: 32px
+    +base
+    +m
+        display: flex
+        justify-content: space-between
+        align-items: center
+        margin-bottom: 0
+        padding: 24px
+        cursor: pointer
+        -webkit-tap-highlight-color: rgba(0,0,0,0)
+    svg
+        display: none
+        +m
+            display: inline-block
+            flex-shrink: 0
+            margin-left: 24px
+            fill: #BCBEC2
+            transition: transform .2s
+
+.menu
+    display: flex
+    flex-direction: column
+    +m
+        display: none
+        padding: 0 24px 24px
+
+.link
+    +baseM
+    color: $n4
+    transition: color .2s
+    &:hover
+        color: $n7
+    &:not(:last-child)
+        margin-bottom: 20px
+

@@ -1,0 +1,130 @@
+// fade in 
+.fade-in-enter
+    opacity: 0
+
+.fade-in-enter-active
+    opacity: 1
+    transition: opacity .4s
+
+.fade-in-exit
+    opacity: 1
+
+.fade-in-exit-active
+    opacity: 0
+    transition: opacity .4s
+
+// fade in down
+.fade-in-down-enter
+    opacity: 0
+    transform: translateY(10px)
+
+.fade-in-down-enter-active
+    opacity: 1
+    transform: translateY(0)
+    transition: opacity .4s, transform .4s
+
+.fade-in-down-exit
+    opacity: 1
+
+.fade-in-down-exit-active
+    opacity: 0
+    transform: translateY(10px)
+    transition: opacity .4s, transform .4s
+    
+// CUSTOM
+
+// modal
+.modal-enter
+    opacity: 0
+    .modal-container
+        transform: scale(.7)
+
+.modal-enter-active
+    opacity: 1
+    transition: opacity .4s
+    .modal-container
+        transform: scale(1)
+        transition: transform .4s
+
+.modal-exit
+    opacity: 1
+
+.modal-exit-active
+    opacity: 0
+    transition: opacity .4s
+    .modal-container
+        transform: scale(.7)
+        transform-origin: 100% 0
+        transition: transform .4s
+
+// sidebar
+.sidebar-enter
+    opacity: 0
+    .modal-container
+        transform: translateX(100%)
+
+.sidebar-enter-active
+    opacity: 1
+    transition: opacity .4s
+    .modal-container
+        transform: translateX(0)
+        transition: transform .4s
+
+.sidebar-exit
+    opacity: 1
+
+.sidebar-exit-active
+    opacity: 0
+    transition: opacity .4s
+    .modal-container
+        transform: translateX(100%)
+        transition: transform .4s
+
+@keyframes fadeIn
+    0%
+        opacity: 0
+    100%
+        opacity: 1
+    
+.fadeIn
+    animation-name: fadeIn
+    
+@keyframes fadeInLeft
+    0%
+        transform: translateX(-20px)
+        opacity: 0
+    100%
+        transform: translateX(0px)
+        opacity: 1
+    
+.fadeInLeft
+    animation-name: fadeInLeft
+
+@keyframes fadeInRight
+    0%
+        transform: translateX(20px)
+        opacity: 0
+    100%
+        transform: translateX(0px)
+        opacity: 1
+    
+.fadeInRight
+    animation-name: fadeInRight
+
+@keyframes fadeInDown
+    0%
+        transform: translateY(30px)
+        opacity: 0
+    100%
+        transform: translateY(0px)
+        opacity: 1
+    
+.fadeInDown
+    animation-name: fadeInDown
+
+@keyframes fadeAlways
+    100%
+        opacity: 1
+
+.fadeAlways
+    animation-name: fadeAlways

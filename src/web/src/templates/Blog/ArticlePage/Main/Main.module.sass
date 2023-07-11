@@ -1,0 +1,54 @@
+@import ~/styles/helpers
+
+.main
+    +m
+        padding-top: 136px
+
+.head
+    max-width: 640px
+    margin: 0 auto 80px
+    text-align: center
+    +t
+        margin-bottom: 64px
+    +m
+        margin-bottom: 40px
+
+.category
+    margin-bottom: 12px
+    +captionB
+    text-transform: uppercase
+    color: $blue
+
+.title
+    margin-bottom: 32px
+
+.avatar
+    position: relative
+    width: 64px
+    height: 64px
+    margin: 0 auto 16px
+    border-radius: 50%
+    overflow: hidden
+
+.author
+    +base
+
+.position
+    +baseM
+    color: $n4
+
+.photo
+    margin-bottom: 80px
+    +t
+        margin-bottom: 64px
+    +m
+        margin-bottom: 40px
+    img
+        border-radius: 20px
+        +m
+            min-height: 260px
+            object-fit: cover
+
+.content
+    max-width: 800px
+    margin: 0 auto

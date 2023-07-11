@@ -11,14 +11,19 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { styled } from 'styled-components';
 
 import { PublicSummaryGroup, ReadingFormat } from '~/api';
 import Logo from '~/components/Logo';
 import Summary from '~/components/Summary';
-import Page from '~/components/layout/Page';
 import { SessionContext } from '~/contexts';
 import { useRouter, useSummaryClient } from '~/hooks';
 import { readingFormat } from '~/utils';
+
+const Page = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default function AppPage() {
 
@@ -113,7 +118,7 @@ export default function AppPage() {
   }, [selectedSummary]);
 
   return (
-    <Page center>
+    <Page>
       <Stack spacing={ 2 }>
         <Logo />
         <form onSubmit={ (e) => {

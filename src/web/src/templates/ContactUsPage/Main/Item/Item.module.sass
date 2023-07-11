@@ -1,0 +1,24 @@
+@import ~/styles/helpers
+
+.title
+    margin-bottom: 12px
+
+.content
+    margin-bottom: 32px
+    +body
+    color: $n4
+
+.preview
+    position: relative
+    margin: 0 -32px
+    border-radius: 16px
+    overflow: hidden
+    +m
+        margin: 0 -16px
+    &:before
+        content: ""
+        display: block
+        padding-bottom: 71.1%
+        +m
+            padding-bottom: 100%
+    

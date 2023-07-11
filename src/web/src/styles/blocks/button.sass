@@ -1,0 +1,71 @@
+[class^="button"]
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    height: 48px
+    padding: 0 22px
+    background: $blue
+    border: 2px solid $blue
+    border-radius: 24px
+    text-align: center
+    +base
+    color: $n1
+    transition: background .2s, border-color .2s, color .2s
+    &:hover
+        background: darken($blue, 5)
+        border-color: darken($blue, 5)
+    svg
+        fill: $n1
+        transition: fill .2s
+        &:nth-child(1)
+            margin-right: 10px
+        &:last-child
+            margin-left: 10px
+    span
+        &:not(:nth-child(1))
+            margin-left: 8px
+
+.button-gray
+    background: $n3
+    border-color: $n3
+    color: $n7
+    &:hover
+        background: $n7
+        border-color: $n7
+        color: $n1
+
+.button-black
+    background: $n7
+    border-color: $n7
+    color: $n1
+    &:hover
+        background: $n6
+        border-color: $n6
+
+.button-white
+    background: $n1
+    border-color: $n1
+    color: $n7
+    &:hover
+        background: $n1
+        border-color: $n1
+        color: $blue
+
+.button-stroke
+    border-color: $n3
+    background: none
+    color: $n7
+    &:hover
+        background: none
+        border-color: $n7
+
+.button-large
+    height: 56px
+    border-radius: 28px
+
+.button-wide
+    width: 100%
+
+
+
+

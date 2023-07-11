@@ -1,0 +1,103 @@
+@import ~/styles/helpers
+
+.nav
+    position: absolute
+    top: 50%
+    left: -10px
+    display: flex
+    flex-direction: column
+    transform: translateY(-50%)
+
+.button
+    position: relative
+    width: 20px
+    height: 20px
+    border-radius: 50%
+    &:before
+        content: ""
+        position: absolute
+        top: 50%
+        left: 50%
+        width: 8px
+        height: 8px
+        transform: translate(-50%,-50%) scale(0)
+        border-radius: 50%
+        background: $n1
+        transition: transform .2s, box-shadow .2s
+    &.active
+        &:before
+            transform: translate(-50%,-50%) scale(1)
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15)
+    &:not(:last-child)
+        margin-bottom: 24px
+
+.preview
+    position: relative
+    width: 422px
+    height: 422px
+    margin: auto
+    border-radius: 50%
+    border: 51px solid #FEFEFC
+    background: #EAEBEE
+    box-shadow: 0px 54px 67px -50px #E3E2DA
+    font-size: 0
+    +x
+        width: 306px
+        height: 306px
+        border-width: 42px
+        box-shadow: 0px 39.1896px 48.6241px -36.2866px #E3E2DA
+    +d
+        border-width: 37px
+    +t
+        width: 280px
+        height: 280px
+        border-width: 24px
+    +m
+        width: 253px
+        height: 253px
+        margin: 48px auto 28px
+        border-width: 30px
+
+.image
+    position: absolute
+    top: 50%
+    left: 50%
+    width: 700px
+    transform: translate(-35.3%,-53.3%)
+    +x
+        width: 520px
+    +m
+        width: 420px
+        transform: translate(-35.3%,-54.5%)
+
+.circle
+    position: absolute
+    border-radius: 50%
+    z-index: 2
+    &:nth-child(1)
+        top: 18.5%
+        left: -26%
+        width: 5%
+        +t
+            left: -20%
+    &:nth-child(2)
+        top: -6%
+        right: -15%
+        width: 3.75%
+        +x
+            width: 5.5%
+    &:nth-child(3)
+        right: -16%
+        bottom: -21%
+        width: 6.25%
+        +x
+            width: 7%
+    span
+        display: block
+        width: 100%
+        border-radius: 50%
+        background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #DBDBDB 43.61%, #FFFFFF 100%)
+        &:before
+            content: ""
+            display: block
+            padding-bottom: 100%   

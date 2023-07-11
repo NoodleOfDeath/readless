@@ -1,0 +1,44 @@
+@import ~/styles/helpers
+
+.item
+    position: relative
+    border-radius: 12px
+    transition: background .2s
+    &:hover
+        svg
+            fill: $n4
+    &.active
+        background: #F7F9F9
+        .head
+            svg
+                transform: rotate(45deg)
+                fill: $n4
+        .body
+            display: block
+    &:not(:last-child)
+        margin-bottom: 8px
+
+.head
+    display: flex
+    align-items: flex-start
+    padding: 24px
+    cursor: pointer
+    -webkit-tap-highlight-color: rgba(0,0,0,0)
+    svg
+        flex-shrink: 0
+        margin-left: 24px
+        fill: #BCBEC2
+        transition: all .2s
+
+.subtitle
+    margin-right: auto
+
+.body
+    display: none
+    padding: 0 24px 24px
+    +baseM
+    color: $n6
+    p
+        &:not(:last-child)
+            margin-bottom: 24px
+    

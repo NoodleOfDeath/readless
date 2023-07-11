@@ -1,7 +1,4 @@
-module.exports = {
-  compiler: {
-    // Enables the styled-components SWC transform
-    styledComponents: true,
-  },
-  trailingSlash: true,
-};
+/** @type {import('next').NextConfig} */
+const nextConfig = { images: { unoptimized: true }, reactStrictMode: true };
+
+module.exports = nextConfig;

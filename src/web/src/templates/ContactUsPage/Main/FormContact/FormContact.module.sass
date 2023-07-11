@@ -1,0 +1,38 @@
+@import ~/styles/helpers
+
+.title
+    margin-bottom: 12px
+    text-align: center
+
+.info
+    max-width: 408px
+    margin: 0 auto 24px
+    text-align: center
+    +baseM
+    color: $n4
+
+.field
+    &:not(:last-child)
+        margin-bottom: 16px
+
+.foot
+    display: flex
+    align-items: center
+    +m
+        flex-direction: column-reverse
+        align-items: stretch
+
+.button
+    flex-shrink: 0
+    min-width: 150px
+    +m
+        min-width: 100%
+
+.note
+    max-width: 210px
+    margin-left: 16px
+    +caption
+    color: #BCBEC2
+    +m
+        margin: 0 auto 16px
+        text-align: center

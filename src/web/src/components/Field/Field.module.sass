@@ -1,0 +1,60 @@
+@import ~/styles/helpers
+
+.field
+    &.fieldIcon
+        .input,
+        .textarea
+            padding-left: 46px
+    &.fieldTextarea
+        font-size: 0
+        .icon
+            top: 14px
+            transform: translateY(0)
+    &.fieldLight
+        .input,
+        .textarea
+            border: 2px solid #1667E6
+            background: #1667E6
+            color: $n1
+            &::placeholder
+                color: $n1
+            &:focus
+                border-color: $n1
+                background: transparent
+        .icon
+            fill: $n1
+
+.wrap
+    position: relative
+    
+.input,
+.textarea
+    width: 100%
+    border: 2px solid transparent
+    background: $n2
+    border-radius: 8px
+    +baseM
+    color: $n7
+    transition: background .2s, border-color .2s
+    &::placeholder
+        color: $n4
+    &:focus
+        border-color: $n4
+        background: transparent
+
+.input
+    height: 56px
+    padding: 0 14px
+
+.textarea
+    height: 144px
+    padding: 12px 14px
+    resize: none
+
+.icon
+    position: absolute
+    top: 50%
+    left: 14px
+    transform: translateY(-50%)
+    pointer-events: none
+    fill: $n4

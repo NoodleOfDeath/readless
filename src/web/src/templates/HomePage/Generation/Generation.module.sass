@@ -1,0 +1,80 @@
+@import ~/styles/helpers
+
+.generation
+  margin-top: 32px
+  +d
+    margin-bottom: 96px
+    +m
+      margin-bottom: 64px
+
+.anchor
+  position: absolute
+  top: -150px
+  left: 0
+  right: 0
+  +d
+    top: -130px
+    +m
+      top: -96px
+
+.title
+  margin-bottom: 64px
+  +x
+    margin-bottom: 48px
+    +m
+      max-width: 250px
+      margin-bottom: 40px
+
+.list
+  display: flex
+  flex-wrap: wrap
+  margin: -32px -11px 0
+  +m
+    display: block
+    margin: 0
+
+.item
+  flex: 0 0 calc(33.333% - 22px)
+  width: calc(33.333% - 22px)
+  margin: 32px 11px 0
+  +m
+    width: 100%
+    margin: 32px 0 0
+
+.preview
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  margin-bottom: 22px
+  border-radius: 12px
+  font-size: 0
+  +d
+    margin-bottom: 18px
+    +t
+      height: 200px
+    +m
+      height: 240px
+      margin: auto
+      margin-bottom: 20px
+
+.image
+  overflow: hidden
+  box-shadow: 0px 32px 32px -12px rgba(0, 0, 0, 0.15)
+
+.label
+  position: absolute
+  top: 8px
+  left: 8px
+  z-index: 1
+
+.content
+  +body
+  color: $n4
+
+.footnote
+  +body
+  color: $n4
+  margin-top: 8px
+  +m
+  margin-top: 12px

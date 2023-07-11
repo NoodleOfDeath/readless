@@ -1,0 +1,98 @@
+@import ~/styles/helpers
+
+.team
+    +d
+        margin-bottom: 64px
+
+.container
+    display: flex
+    align-items: flex-start
+    +d
+        display: block
+        max-width: 960px
+
+.details
+    position: sticky
+    top: 110px
+    max-width: 260px
+    margin-right: auto
+    +x
+        max-width: 190px
+    +d
+        position: static
+        max-width: 100%
+        margin: 0 0 64px
+        text-align: center
+    +m
+        margin-bottom: 48px
+
+.title
+    margin-bottom: 12px
+    +d
+        font-size: 36px
+        line-height: 44px
+    +m
+        font-size: 24px
+        line-height: 32px
+
+.content
+    +body
+    color: $n4
+
+.list
+    display: flex
+    flex-wrap: wrap
+    max-width: 800px
+    margin: -48px -32px 0 0
+    +x
+        max-width: 720px
+        margin: -24px -12px 0
+    +d
+        max-width: 100%
+        margin: -80px auto 0
+    +t
+        margin: -48px auto 0
+    +m
+        display: block
+        margin: 0
+
+.item
+    flex: 0 0 calc(50% - 64px)
+    width: calc(50% - 64px)
+    margin: 48px 32px 0
+    +x
+        flex: 0 0 calc(50% - 24px)
+        width: calc(50% - 24px)
+        margin: 24px 12px 0
+    +d
+        flex: 0 0 calc(50% - 64px)
+        width: calc(50% - 64px)
+        margin: 80px 32px 0
+    +t
+        flex: 0 0 calc(50% - 32px)
+        width: calc(50% - 32px)
+        margin: 48px 16px 0
+    +m
+        width: 100%
+        margin: 0
+        &:not(:last-child)
+            margin-bottom: 40px
+
+.photo
+    position: relative
+    margin-bottom: 26px
+    border-radius: 16px
+    overflow: hidden
+    &:before
+        content: ""
+        display: block
+        padding-bottom: 96.73%
+
+.name
+    +m
+        font-size: 18px
+        line-height: 28px
+
+.position
+    +base
+    color: $n4

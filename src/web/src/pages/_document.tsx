@@ -1,23 +1,64 @@
 import React from 'react';
 
-import { ServerStyleSheets } from '@mui/styles';
 import Document, {
+  DocumentContext,
   Head,
   Html,
   Main,
   NextScript,
 } from 'next/document';
 
-export default class ReadLessDocument extends Document {
+class MyDocument extends Document {
+
+  static async getInitialProps(ctx: DocumentContext) {
+    const initialProps = await Document.getInitialProps(ctx);
+    return { ...initialProps };
+  }
 
   render() {
     return (
-      <Html lang="en">
+      <Html>
         <Head>
-          <link key="favicon" rel="icon" href="/favicon.ico" />
-          <link key="index.css" rel="stylesheet" href="/index.css" />
+          <meta
+            content="Production-ready landing page template for SaaS and startups"
+            name="Paradox – Premium SaaS landing page kit" />
+          <meta
+            content="Paradox – Premium SaaS landing page kit"
+            property="og:title" />
+          <meta
+            content="Production-ready landing page template for SaaS and startups"
+            property="og:description" />
+          <meta
+            content="%PUBLIC_URL%/fb-og-image.png"
+            property="og:image" />
+          <meta
+            property="og:url"
+            content="https://ui8.net/ui8/products/paradox" />
+          <meta
+            property="og:site_name"
+            content="Paradox – Premium SaaS landing page kit" />
+          <meta
+            content="Paradox – Premium SaaS landing page kit"
+            property="twitter:title" />
+          <meta
+            content="Production-ready landing page template for SaaS and startups"
+            property="twitter:description" />
+          <meta
+            content="%PUBLIC_URL%/twitter-card.png"
+            property="twitter:image" />
+          <meta property="og:type" content="Article" />
+          <meta content="summary" name="twitter:card" />
+          <meta name="twitter:site" content="@ui8" />
+          <meta name="twitter:creator" content="@ui8" />
+          <meta property="fb:admins" content="132951670226590" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1" />
+          <meta name="theme-color" content="#000000" />
+          <meta name="msapplication-TileColor" content="#da532c" />
+          <meta name="theme-color" content="#ffffff" />
         </Head>
-        <body>
+        <body className="app">
           <Main />
           <NextScript />
         </body>
@@ -27,19 +68,4 @@ export default class ReadLessDocument extends Document {
 
 }
 
-ReadLessDocument.getInitialProps = async (ctx) => {
-
-  // Render app and page and get the context of the page with collected side effects.
-  const sheets = new ServerStyleSheets();
-  const originalRenderPage = ctx.renderPage;
-
-  ctx.renderPage = () => originalRenderPage({ enhanceApp: (App) => (props) => sheets.collect(<App { ...props } />) });
-
-  const initialProps = await Document.getInitialProps(ctx);
-
-  return {
-    ...initialProps,
-    // Styles fragment is rendered after the app and page rendering finish.
-    styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
-  };
-};
+export default MyDocument;

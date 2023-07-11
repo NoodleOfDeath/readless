@@ -1,0 +1,125 @@
+@import ~/styles/helpers
+
+.plans
+    position: relative
+    z-index: 2
+    display: flex
+    +t
+        display: block
+
+.plan
+    flex: 0 0 calc(33.333%)
+    background: $n1
+    &:nth-child(1)
+        border-radius: 8px 0 0 8px
+        +t
+            border-radius: 8px 8px 0 0
+    &:nth-child(3)
+        border-radius: 0 8px 8px 0
+        +t
+            border-radius: 0 0 8px 8px
+    &:not(:last-child)
+        border-right: 1px solid $n3
+        +t
+            border: none
+    &.premium
+        position: relative
+        &:before
+            content: ""
+            position: absolute
+            top: -24px
+            left: -1px
+            right: 0
+            bottom: -24px
+            border-radius: 4px
+            box-shadow: 0px 32px 48px -12px rgba(230, 230, 230, 0.6)
+            background: $n1
+            +t
+                top: 0
+                bottom: 0
+                border-radius: 8px
+        .title
+            color: $blue
+        .option
+            svg
+                fill: $n7
+
+.head
+    position: relative
+    z-index: 2
+    padding: 40px
+    border-bottom: 1px solid $n3
+    +d
+        padding: 40px 32px
+
+.line
+    display: flex
+    align-items: center
+    margin-bottom: 4px
+
+.recommended
+    margin-left: auto
+    padding: 6px 8px
+    border-radius: 4px
+    background: $n3
+    +caption
+
+.counter
+    margin-bottom: 16px
+    +baseM
+    color: $n4
+
+.price
+    display: flex
+    align-items: center
+    margin-bottom: 32px
+
+.duration
+    display: flex
+    align-items: center
+    color: #BCBEC2
+
+.separator
+    width: 4px
+    height: 24px
+    margin: 0 8px
+    transform: translateY(2px) rotate(24deg)
+    background: #BCBEC2
+
+.details
+    max-width: 200px
+
+.body
+    position: relative
+    z-index: 2
+    padding: 40px
+    +d
+        padding: 40px 32px
+
+.option
+    display: flex
+    +body
+    color: $n6
+    svg
+        flex-shrink: 0
+        margin-right: 12px
+        fill: $green
+    &:not(:last-child)
+        margin-bottom: 20px
+
+.add
+    position: relative
+    top: -2px
+    display: inline-block
+    margin-left: 12px
+    padding: 2px 6px
+    border-radius: 4px
+    background: $blue
+    font-size: 11px
+    font-weight: 600
+    line-height: 16px
+    text-transform: uppercase
+    color: $n1
+
+.button
+    margin-top: 40px

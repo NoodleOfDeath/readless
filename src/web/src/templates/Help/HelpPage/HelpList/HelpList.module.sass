@@ -1,0 +1,54 @@
+@import ~/styles/helpers
+
+.list
+    display: flex
+    flex-wrap: wrap
+    margin: -72px -16px 0
+    +m
+        display: block
+        margin: -32px 0 0
+
+.item
+    flex: 0 0 calc(33.333% - 32px)
+    width: calc(33.333% - 32px)
+    margin: 72px 16px 0
+    +t
+        flex: 0 0 calc(50% - 32px)
+        width: calc(50% - 32px)
+    +m
+        width: 100%
+        margin: 32px 0 0
+
+.preview
+    position: relative
+    overflow: hidden
+    height: 240px
+    border-radius: 12px
+    +d
+        height: 224px
+    img
+        transition: transform 1s
+
+.subtitle
+    margin-bottom: 16px
+    padding: 24px 0
+    border-bottom: 1px solid $n3
+    +d
+        font-size: 24px
+        line-height: 36px
+
+.questions
+    display: flex
+    flex-direction: column
+
+.question
+    +body
+    color: $n7
+    transition: color .2s
+    &:hover
+        color: $blue
+    &:not(:last-child)
+        margin-bottom: 12px
+
+.icon
+    margin-right: 16px

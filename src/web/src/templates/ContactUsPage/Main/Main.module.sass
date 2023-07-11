@@ -1,0 +1,86 @@
+@import ~/styles/helpers
+
+.main
+    position: relative
+    padding: 176px 0 174px
+    background: #F7F9F9
+    +t
+        padding-bottom: 96px
+    +m
+        padding: 144px 0 64px
+
+.container
+    position: relative
+    z-index: 2
+
+.title
+    margin-bottom: 74px
+    text-align: center
+    +t
+        margin-bottom: 48px
+    +m
+        margin-bottom: 32px
+
+.list
+    display: flex
+    margin: 0 -20px
+    +t
+        display: block
+        margin: 0
+
+.item
+    flex: 0 0 calc(50% - 40px)
+    width: calc(50% - 40px)
+    margin: 0 20px
+    padding: 48px 48px 16px
+    border-radius: 16px
+    background: $n1
+    box-shadow: 0px 54px 67px -50px #E4E4E4
+    +t
+        width: 100%
+        margin: 0
+        &:not(:last-child)
+            margin-bottom: 32px
+    +m
+        padding: 48px 32px 16px
+
+.button
+    margin-bottom: 48px
+
+.circle
+    position: absolute
+    border-radius: 50%
+    +t
+        display: none
+    &:nth-child(1)
+        top: 186px
+        left: calc(50% - 653px)
+        width: 360px
+        span
+            background: #B6DFEC
+    &:nth-child(2)
+        top: 603px
+        left: calc(50% - 630px)
+        width: 40px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #27A867 43.61%, #33E68C 100%)
+    &:nth-child(3)
+        right: calc(50% - 635px)
+        bottom: 438px
+        width: 48px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #FFAF13 43.61%, #FBFF47 100%)
+    &:nth-child(4)
+        right: calc(50% - 644px)
+        bottom: 90px
+        width: 260px
+        span
+            background: #D2C6F0
+    span
+        display: block
+        width: 100%
+        border-radius: 50%
+        &:before
+            content: ""
+            display: block
+            padding-bottom: 100% 

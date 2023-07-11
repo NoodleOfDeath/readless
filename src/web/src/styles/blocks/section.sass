@@ -1,0 +1,58 @@
+[class^="section"]
+    margin-bottom: 136px
+    +x
+        margin-bottom: 112px
+    +t
+        margin-bottom: 96px
+    +m
+        margin-bottom: 64px
+
+.section-border,
+.section-border-main
+    position: relative
+    padding-bottom: 138px
+    +x
+        padding-bottom: 114px
+    +t
+        padding-bottom: 98px
+    +m
+        padding-bottom: 66px
+    &:after
+        content: ""
+        position: absolute
+        left: calc(50% - 592px)
+        bottom: 0
+        width: 1184px
+        height: 2px
+        background: $n3
+        +r(1408)
+            left: 112px
+            right: 112px
+            width: auto
+        +d
+            left: 80px
+            right: 80px
+        +t
+            left: 40px
+            right: 40px
+        +m
+            left: 24px
+            right: 24px
+
+.section-padding
+    padding: 136px 0
+    background: $n2
+    +x
+        padding: 112px 0
+    +d
+        padding: 96px 0
+    +m
+        padding: 64px 0
+
+.section-main,
+.section-border-main
+    padding-top: 176px
+    +m
+        padding-top: 160px
+
+    

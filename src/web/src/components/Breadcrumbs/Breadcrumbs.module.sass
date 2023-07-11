@@ -1,0 +1,17 @@
+@import ~/styles/helpers
+
+.breadcrumbs
+    margin-bottom: 12px
+    li
+        display: inline
+        +caption
+        &:not(:last-child)
+            &:after
+                content: "/"
+                margin: 0 12px
+                color: $n4
+    a
+        color: $n4
+        transition: color .2s
+        &:hover
+            color: $n7
