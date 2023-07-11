@@ -4,7 +4,7 @@ import { Summary } from '../api/v1/schema';
 import { DBService } from '../services/db/DBService';
 
 const SSL = process.env.SSL === 'true';
-const BASE_DOMAIN = (process.env.SUB_DOMAIN ? `${process.env.SUBDOMAIN}.` : '') + process.env.BASE_DOMAIN;
+const BASE_DOMAIN = process.env.CORS_ORIGIN;
 const BASE_URL = `${SSL ? 'https' : 'http'}://${BASE_DOMAIN}`;
 
 export async function main() {
