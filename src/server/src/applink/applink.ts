@@ -4,7 +4,7 @@ import { Summary } from '../api/v1/schema';
 import { DBService } from '../services/db/DBService';
 
 const SSL = process.env.SSL === 'true';
-const BASE_DOMAIN = process.env.BASE_DOMAIN;
+const BASE_DOMAIN = process.env.CORS_ORIGIN;
 const BASE_URL = `${SSL ? 'https' : 'http'}://${BASE_DOMAIN}`;
 
 export async function main() {
@@ -45,7 +45,7 @@ export async function main() {
         <body>
           <script type="text/javascript">
             window.onload = function() {
-              window.location.href = '${BASE_URL}/read?s=${id}&f=${format}';
+              window.location.href = '${BASE_URL}/read/?s=${id}&f=${format}';
             }
           </script>
           <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
@@ -53,7 +53,7 @@ export async function main() {
               Redirecting you to Read Less...
             </div>
             <div style="font-size: 24px; font-weight: bold; text-align: center;">
-              <a href="${BASE_URL}/read?s=${id}&f=${format}">Click here if you are not redirected.</a>
+              <a href="${BASE_URL}/read/?s=${id}&f=${format}">Click here if you are not redirected.</a>
             </div>
           </div>
         </body>

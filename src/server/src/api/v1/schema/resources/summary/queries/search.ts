@@ -25,7 +25,7 @@ FROM (
       'key', media.key,
       'url', media.url,
       'path', media.path
-    )) FILTER (WHERE media.key IS NOT NULL), '[]'::JSON)AS media,
+    )) FILTER (WHERE media.key IS NOT NULL), '[]'::JSON) AS media,
     COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
       'id', sibling.id,
       'title', sibling.title,
