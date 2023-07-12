@@ -42,6 +42,7 @@ export type JobNameOptions = {
 export type CacheJobData = {
   endpoint: string;
   locale?: string;
+  interval?: string;
   page?: number;
   depth?: number;
 };
