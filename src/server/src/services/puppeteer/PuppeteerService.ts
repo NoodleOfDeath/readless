@@ -254,7 +254,7 @@ export class PuppeteerService extends BaseService {
     if (!content) {
       
       const {
-        article, author, date, title, 
+        article, author, date, title, image
       } = publisher.selectors;
       
       const rawHtml = await PuppeteerService.fetch(url);
@@ -306,6 +306,7 @@ export class PuppeteerService extends BaseService {
         
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         loot.title = extract(title?.selector || 'title', title?.attribute);
+        loot.image = extract(image?.selector, image?.attribute);
         
         dates.push(
           ...extractAll(date.selector),
@@ -327,6 +328,17 @@ export class PuppeteerService extends BaseService {
       
       const actions: SelectorAction[] = [];
       
+      if (!loot.content) {
+        actions.push({
+          action: async (el) => {
+            const $ = load(await el.evaluate((el) => el.innerHTML));
+            exclude.forEach((tag) => $(tag).remove());
+            loot.content = $.text();
+          },
+          selector: article.selector,
+        });
+      }
+      
       if (!loot.title) {
         actions.push({
           action: async (el) => {
@@ -336,14 +348,12 @@ export class PuppeteerService extends BaseService {
         });
       }
       
-      if (!loot.content) {
+      if (!loot.imageUrl && image) {
         actions.push({
           action: async (el) => {
-            const $ = load(await el.evaluate((el) => el.innerHTML));
-            exclude.forEach((tag) => $(tag).remove());
-            loot.content = $.text();
+            loot.imageUrl = clean(await el.evaluate((el) => el.getAttribute(image.attribute || 'src')));
           },
-          selector: article.selector,
+          selector: image.selector,
         });
       }
       
