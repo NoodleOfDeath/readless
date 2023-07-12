@@ -102,7 +102,7 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
-      imageUrl: '',
+      imageUrl: loot.imageUrl ?? '',
       originalDate: loot.date,
       originalTitle: loot.title,
       outletId: publisher.id, //  -- legacy support
@@ -228,7 +228,7 @@ export class ScribeService extends BaseService {
       const category = await Category.findOne({ where: { displayName: categoryDisplayName } });
       newSummary.categoryId = category.id;
 
-      if (this.features.imageGen) {
+      if (!newSummary.imageUrl && this.features.imageGen) {
         
         this.log('Generating image');
         const generateImage = async () => {
