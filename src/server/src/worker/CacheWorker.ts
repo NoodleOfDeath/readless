@@ -13,21 +13,28 @@ export async function main() {
 }
 
 async function cacheGetSummaries(locale: string, depth = 1) {
+  let offset = 0;
   for (let page = 0; page < depth; page++) {
-    await Summary.getSummaries({
+    const { next } = await Summary.getSummaries({
       forceCache: true,
       locale,
-      page,
+      offset,
     });
+    offset = next;
   }
 }
 
-async function cacheTopStories(locale: string, interval = '1d') {
-  await Summary.getTopStories({
-    forceCache: true,
-    interval,
-    locale,
-  });
+async function cacheTopStories(locale: string, interval = '1d', depth = 1) {
+  let offset = 0;
+  for (let page = 0; page < depth; page++) {
+    const { next } = await Summary.getTopStories({
+      forceCache: true,
+      interval,
+      locale,
+      offset,
+    });
+    offset = next;
+  }
 }
 
 export async function doWork() {
@@ -38,13 +45,13 @@ export async function doWork() {
       async (job, next) => {
         try {
           const {
-            endpoint, locale, depth, 
+            endpoint, locale, interval, depth, 
           } = job.data;
           console.log('caching queries', locale, depth);
           if (endpoint === 'getSummaries') {
             await cacheGetSummaries(locale, depth);
           } else if (endpoint === 'getTopStories') {
-            await cacheTopStories(locale);
+            await cacheTopStories(locale, interval, depth);
           }
           console.log('done caching');
           await job.moveToCompleted(true);
