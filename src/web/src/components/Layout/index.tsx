@@ -29,7 +29,7 @@ const Layout = ({
   return (
     <React.Fragment>
       <Head>
-        <title>Paradox</title>
+        <title>Read Less – News without the noise</title>
       </Head>
       <div
         className={ cn(styles.layout, { [styles.layoutNoOverflow]: layoutNoOverflow }) }>
