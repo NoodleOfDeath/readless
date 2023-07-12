@@ -262,7 +262,7 @@ export class PuppeteerService extends BaseService {
     if (!content) {
       
       const {
-        article, author, date, title, image
+        article, author, date, title, image,
       } = publisher.selectors;
       
       const rawHtml = await PuppeteerService.fetch(url);
@@ -317,7 +317,7 @@ export class PuppeteerService extends BaseService {
         // content
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         // image
-        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector, image?.attribute));
+        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector, image?.attribute), publisher);
         
         // dates
         dates.push(
@@ -367,7 +367,7 @@ export class PuppeteerService extends BaseService {
       if (!loot.imageUrl && image) {
         actions.push({
           action: async (el) => {
-            loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el) => el.getAttribute(image.attribute || 'src'))));
+            loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el) => el.getAttribute(image.attribute || 'src'))), publisher);
           },
           selector: image.selector,
         });
