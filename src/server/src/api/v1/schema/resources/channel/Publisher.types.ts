@@ -1204,7 +1204,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   },
   psychologytoday: {
     baseUrl: 'https://www.psychologytoday.com/us',
-    displayName: 'PsychologyToday',
+    displayName: 'Psychology Today',
     name: 'psychologytoday',
     selectors: {
       article: { selector: 'article p' },

@@ -304,10 +304,14 @@ export class PuppeteerService extends BaseService {
           return $(sel)?.map((i, el) => clean(attr ? $(el).attr(attr) : $(el).text())).get().filter(Boolean) ?? [];
         };
         
-        loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
+        // title
         loot.title = extract(title?.selector || 'title', title?.attribute);
-        loot.image = extract(image?.selector, image?.attribute);
+        // content
+        loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
+        // image
+        loot.imageUrl = extract(image?.selector, image?.attribute);
         
+        // dates
         dates.push(
           ...extractAll(date.selector),
           ...extractAll(date.selector, 'datetime')
@@ -323,11 +327,13 @@ export class PuppeteerService extends BaseService {
           extract(date.selector, 'datetime')
         );
         
+        // authors
         authors.push(...$(author.selector || 'author').map((i, el) => $(el).text()).get());
       }
       
       const actions: SelectorAction[] = [];
       
+      // content
       if (!loot.content) {
         actions.push({
           action: async (el) => {
@@ -339,6 +345,7 @@ export class PuppeteerService extends BaseService {
         });
       }
       
+      // title
       if (!loot.title) {
         actions.push({
           action: async (el) => {
@@ -348,6 +355,7 @@ export class PuppeteerService extends BaseService {
         });
       }
       
+      // image
       if (!loot.imageUrl && image) {
         actions.push({
           action: async (el) => {
@@ -357,6 +365,7 @@ export class PuppeteerService extends BaseService {
         });
       }
       
+      // dates
       actions.push({
         action: async (el) => {
           dates.push(...[
@@ -380,7 +389,9 @@ export class PuppeteerService extends BaseService {
         selector: date.selector,
       });
       
-      actions.push({
+      // ignore authors for now
+      // authors
+      /*actions.push({
         action: async (el) => {
           authors.push(...await el.evaluate((el) => {
             const names: string[] = [];
@@ -389,7 +400,7 @@ export class PuppeteerService extends BaseService {
           }));
         },
         selector: author.selector,
-      });
+      });*/
       
       await PuppeteerService.open(url, actions);
       
