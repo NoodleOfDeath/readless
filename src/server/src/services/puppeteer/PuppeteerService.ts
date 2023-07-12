@@ -161,7 +161,7 @@ export class PuppeteerService extends BaseService {
     }
   }
   
-  public static fixRelativeUrl(path: string, publisher: PublisherCreationAttributes, excludeExternal = false) {
+  public static fixRelativeUrl(url: string, publisher: PublisherCreationAttributes, excludeExternal = false) {
     const { baseUrl } = publisher;
     const domain = new URL(baseUrl).hostname.replace(/^www\./, ''); 
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
