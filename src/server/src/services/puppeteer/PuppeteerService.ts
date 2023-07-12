@@ -112,7 +112,7 @@ export class PuppeteerService extends BaseService {
     url: string, 
     actions: SelectorAction[], 
     { 
-      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('20s'),
+      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('5s'),
       viewport = { height: 1024, width: 1080 },
     }: PageOptions = {}
   ) {
@@ -160,6 +160,26 @@ export class PuppeteerService extends BaseService {
       await browser?.close();
     }
   }
+  
+  public static fixRelativeUrl(url: string, publisher: PublisherCreationAttributes, excludeExternal = false) {
+    const { baseUrl } = publisher;
+    const domain = new URL(baseUrl).hostname.replace(/^www\./, ''); 
+    const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
+    // fix relative hrefs
+    if (/^\/\//.test(url)) {
+      return `https:${url}`;
+    } else
+    if (/^\//.test(url)) {
+      return `${baseUrl}${url}`;
+    } else
+    if (excludeExternal && /^https?:\/\//.test(url)) {
+      // exclude external links
+      if (!domainExpr.test(url)) {
+        return '';
+      }
+    }
+    return url;
+  }
 
   public static async crawl(publisher: PublisherCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
     const { baseUrl, selectors: { spider } } = publisher;
@@ -181,25 +201,13 @@ export class PuppeteerService extends BaseService {
         return;
       }
       // fix relative hrefs
-      if (/^\/\//.test(url)) {
-        return `https:${url}`;
-      } else
-      if (/^\//.test(url)) {
-        return `${baseUrl}${url}`;
-      } else
-      if (/^https?:\/\//.test(url)) {
-        // exclude external links
-        if (!domainExpr.test(url)) {
-          return;
-        }
-        return url;
-      }
+      return this.fixRelativeUrl(url, publisher, true);
     };
     urls.push(...$(replaceDatePlaceholders(spider.selector)).map((i, el) => cleanUrl($(el).attr(spider.attribute || 'href'))).filter(Boolean));
     await PuppeteerService.open(targetUrl, [
       {
         action: async (el) => {
-          const url = cleanUrl(await el.evaluate((el, spider) => el.getAttribute(spider.attribute ?? 'href'), spider));
+          const url = cleanUrl(await el.evaluate((el, attr) => el.getAttribute(attr || 'href'), spider.attribute));
           if (url) {
             urls.push(url);
           }
@@ -254,7 +262,7 @@ export class PuppeteerService extends BaseService {
     if (!content) {
       
       const {
-        article, author, date, title, image
+        article, author, date, title, image,
       } = publisher.selectors;
       
       const rawHtml = await PuppeteerService.fetch(url);
@@ -281,8 +289,6 @@ export class PuppeteerService extends BaseService {
           }
         }
         
-        exclude.forEach((tag) => $(tag).remove());
-        
         const extract = (
           sel: string, 
           attr?: string,
@@ -299,6 +305,11 @@ export class PuppeteerService extends BaseService {
           }
           return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ');
         };
+
+        // image
+        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'article figure img', image?.attribute), publisher);
+        
+        exclude.forEach((tag) => $(tag).remove());
         
         const extractAll = (sel: string, attr?: string): string[] => {
           return $(sel)?.map((i, el) => clean(attr ? $(el).attr(attr) : $(el).text())).get().filter(Boolean) ?? [];
@@ -308,8 +319,6 @@ export class PuppeteerService extends BaseService {
         loot.title = extract(title?.selector || 'title', title?.attribute);
         // content
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
-        // image
-        loot.imageUrl = extract(image?.selector, image?.attribute);
         
         // dates
         dates.push(
@@ -356,12 +365,12 @@ export class PuppeteerService extends BaseService {
       }
       
       // image
-      if (!loot.imageUrl && image) {
+      if (!loot.imageUrl) {
         actions.push({
           action: async (el) => {
-            loot.imageUrl = clean(await el.evaluate((el) => el.getAttribute(image.attribute || 'src')));
+            loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el, attr) => el.getAttribute(attr || 'src'), image?.attribute)), publisher);
           },
-          selector: image.selector,
+          selector: image?.selector || 'article figure img',
         });
       }
       

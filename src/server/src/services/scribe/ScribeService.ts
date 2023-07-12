@@ -200,6 +200,9 @@ export class ScribeService extends BaseService {
     const chatService = new OpenAIService();
     // iterate through each summary prompt and send themto ChatGPT
     for (const prompt of prompts) {
+      if (await Summary.findOne({ where: { url } })) {
+        await this.error('job already completed by another worker');
+      }
       let reply = await chatService.send(prompt.text);
       if (BAD_RESPONSE_EXPR.test(reply)) {
         // attempt single retry
@@ -227,42 +230,71 @@ export class ScribeService extends BaseService {
     
       const category = await Category.findOne({ where: { displayName: categoryDisplayName } });
       newSummary.categoryId = category.id;
-
-      if (!newSummary.imageUrl && this.features.imageGen) {
-        
-        this.log('Generating image');
-        const generateImage = async () => {
       
-          // Generate image from the title
-          const image = await DeepAiService.textToImage(newSummary.title);
-          
-          // Save image to S3 CDN
-          const obj = await DeepAiService.mirror(image.output_url, {
-            ACL: 'public-read',
-            ContentType: 'image/jpeg',
-            Folder: 'img/s',
-          });
-          newSummary.imageUrl = obj.url;
-          
-        };
+      if (await Summary.findOne({ where: { url } })) {
+        await this.error('job already completed by another worker');
+      }
+      
+      this.log('Generating image with deepai');
+      let generatedObj: any;
+      const generateImageWithDeepAi = async () => {
         
-        try {
-          await generateImage();
-        } catch (e) {
-          await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'), false);
-          try {
-            // attempt single retry
-            await generateImage();
-          } catch (e) {
-            await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'));
-          }
+        if (await Summary.findOne({ where: { url } })) {
+          await this.error('job already completed by another worker');
         }
-  
+    
+        // Generate image from the title
+        const image = await DeepAiService.textToImage(newSummary.title);
+        
+        // Save image to S3 CDN
+        generatedObj = await DeepAiService.mirror(image.output_url, {
+          ACL: 'public-read',
+          ContentType: 'image/jpeg',
+          Folder: 'img/s',
+        });
+        newSummary.imageUrl = generatedObj.url;
+      
+      };
+      
+      try {
+        await generateImageWithDeepAi();
+      } catch (e) {
+        await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'), false);
+        try {
+          // attempt single retry
+          await generateImageWithDeepAi();
+        } catch (e) {
+          await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'));
+        }
       }
     
       // Save summary to database
       const summary = await Summary.create(newSummary);
       
+      await SummaryMedia.create({
+        key: 'imageAi1',
+        parentId: summary.id,
+        path: generatedObj.key,
+        type: 'image',
+        url: generatedObj.url,
+      });
+      
+      // Save article media
+      if (loot.imageUrl) {
+        const obj = await DeepAiService.mirror(loot.imageUrl, {
+          ACL: 'public-read',
+          ContentType: 'image/jpeg',
+          Folder: 'img/s',
+        });
+        await SummaryMedia.create({
+          key: 'imageArticle',
+          parentId: summary.id,
+          path: obj.key,
+          type: 'image',
+          url: obj.url,
+        });
+      }
+        
       // Create sentiment
       sentiment.parentId = summary.id;
       await SummarySentiment.create(sentiment);
@@ -290,7 +322,7 @@ export class ScribeService extends BaseService {
           ACL: 'public-read',
           Folder: 'audio/s',
         });
-        await SummaryMedia.upsert({
+        await SummaryMedia.create({
           key: 'tts',
           parentId: summary.id,
           path: obj.key,
