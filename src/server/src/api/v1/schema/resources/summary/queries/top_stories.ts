@@ -59,6 +59,7 @@ FROM (
         'sentiments', sib_ss.sentiments
       )) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::JSON) AS siblings,
       COUNT(sr.id) AS "siblingCount",
+      COALESCE(JSON_OBJECT_AGG(media.key, media.url) FILTER (WHERE media.key IS NOT NULL), '{}'::JSON) AS media,
       COUNT(s.id) OVER() AS "totalCount"
     FROM summaries s
     LEFT OUTER JOIN publishers pub 
@@ -76,6 +77,9 @@ FROM (
       ON (s.id = summary_trans."parentId")
       AND (summary_trans."deletedAt" IS NULL)
       AND (summary_trans.locale = :locale)
+    LEFT OUTER JOIN summary_media media
+      ON media."parentId" = s.id
+      AND (media."deletedAt" IS NULL)
     LEFT OUTER JOIN "summary_relations" sr 
       ON (s.id = sr."parentId")
       AND (sr."deletedAt" IS NULL)

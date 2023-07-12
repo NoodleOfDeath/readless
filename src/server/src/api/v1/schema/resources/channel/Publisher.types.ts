@@ -1203,7 +1203,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     timezone: DEFAULT_TIMEZONE,
   },
   psychologytoday: {
-    baseUrl: 'https://www.psychologytoday.com/us',
+    baseUrl: 'https://www.psychologytoday.com',
     displayName: 'Psychology Today',
     name: 'psychologytoday',
     selectors: {

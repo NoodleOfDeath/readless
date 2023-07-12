@@ -112,7 +112,7 @@ export class PuppeteerService extends BaseService {
     url: string, 
     actions: SelectorAction[], 
     { 
-      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('20s'),
+      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('5s'),
       viewport = { height: 1024, width: 1080 },
     }: PageOptions = {}
   ) {
@@ -207,7 +207,7 @@ export class PuppeteerService extends BaseService {
     await PuppeteerService.open(targetUrl, [
       {
         action: async (el) => {
-          const url = cleanUrl(await el.evaluate((el, spider) => el.getAttribute(spider.attribute ?? 'href'), spider));
+          const url = cleanUrl(await el.evaluate((el, attr) => el.getAttribute(attr || 'href'), spider.attribute));
           if (url) {
             urls.push(url);
           }
@@ -289,8 +289,6 @@ export class PuppeteerService extends BaseService {
           }
         }
         
-        exclude.forEach((tag) => $(tag).remove());
-        
         const extract = (
           sel: string, 
           attr?: string,
@@ -307,6 +305,11 @@ export class PuppeteerService extends BaseService {
           }
           return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ');
         };
+
+        // image
+        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'article figure img', image?.attribute), publisher);
+        
+        exclude.forEach((tag) => $(tag).remove());
         
         const extractAll = (sel: string, attr?: string): string[] => {
           return $(sel)?.map((i, el) => clean(attr ? $(el).attr(attr) : $(el).text())).get().filter(Boolean) ?? [];
@@ -316,8 +319,6 @@ export class PuppeteerService extends BaseService {
         loot.title = extract(title?.selector || 'title', title?.attribute);
         // content
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
-        // image
-        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector, image?.attribute), publisher);
         
         // dates
         dates.push(
@@ -364,12 +365,12 @@ export class PuppeteerService extends BaseService {
       }
       
       // image
-      if (!loot.imageUrl && image) {
+      if (!loot.imageUrl) {
         actions.push({
           action: async (el) => {
-            loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el) => el.getAttribute(image.attribute || 'src'))), publisher);
+            loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el, attr) => el.getAttribute(attr || 'src'), image?.attribute)), publisher);
           },
-          selector: image.selector,
+          selector: image?.selector || 'article figure img',
         });
       }
       

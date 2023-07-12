@@ -200,7 +200,7 @@ export class ScribeService extends BaseService {
     const chatService = new OpenAIService();
     // iterate through each summary prompt and send themto ChatGPT
     for (const prompt of prompts) {
-      if (await Summary.findOne({ where: url })) {
+      if (await Summary.findOne({ where: { url } })) {
         await this.error('job already completed by another worker');
       }
       let reply = await chatService.send(prompt.text);
@@ -231,14 +231,15 @@ export class ScribeService extends BaseService {
       const category = await Category.findOne({ where: { displayName: categoryDisplayName } });
       newSummary.categoryId = category.id;
       
-      if (await Summary.findOne({ where: url })) {
+      if (await Summary.findOne({ where: { url } })) {
         await this.error('job already completed by another worker');
       }
       
       this.log('Generating image with deepai');
+      let generatedObj: any;
       const generateImageWithDeepAi = async () => {
         
-        if (await Summary.findOne({ where: url })) {
+        if (await Summary.findOne({ where: { url } })) {
           await this.error('job already completed by another worker');
         }
     
@@ -246,13 +247,13 @@ export class ScribeService extends BaseService {
         const image = await DeepAiService.textToImage(newSummary.title);
         
         // Save image to S3 CDN
-        const obj = await DeepAiService.mirror(image.output_url, {
+        generatedObj = await DeepAiService.mirror(image.output_url, {
           ACL: 'public-read',
           ContentType: 'image/jpeg',
           Folder: 'img/s',
         });
-        newSummary.imageUrl = obj.url;
-        
+        newSummary.imageUrl = generatedObj.url;
+      
       };
       
       try {
@@ -270,6 +271,14 @@ export class ScribeService extends BaseService {
       // Save summary to database
       const summary = await Summary.create(newSummary);
       
+      await SummaryMedia.create({
+        key: 'imageAi1',
+        parentId: summary.id,
+        path: generatedObj.key,
+        type: 'image',
+        url: generatedObj.url,
+      });
+      
       // Save article media
       if (loot.imageUrl) {
         const obj = await DeepAiService.mirror(loot.imageUrl, {
@@ -277,19 +286,14 @@ export class ScribeService extends BaseService {
           ContentType: 'image/jpeg',
           Folder: 'img/s',
         });
-        await SummaryMedia.upsert({
-          key: 'image-article',
+        await SummaryMedia.create({
+          key: 'imageArticle',
           parentId: summary.id,
+          path: obj.key,
           type: 'image',
           url: obj.url,
         });
       }
-      await SummaryMedia.upsert({
-        key: 'image-ai-1',
-        parentId: summary.id,
-        type: 'image',
-        url: newSummary.imageUrl,
-      });
         
       // Create sentiment
       sentiment.parentId = summary.id;
@@ -318,7 +322,7 @@ export class ScribeService extends BaseService {
           ACL: 'public-read',
           Folder: 'audio/s',
         });
-        await SummaryMedia.upsert({
+        await SummaryMedia.create({
           key: 'tts',
           parentId: summary.id,
           path: obj.key,

@@ -21,11 +21,7 @@ FROM (
     translations::JSON,
     b.sentiment,
     b.sentiments::JSON,
-    COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
-      'key', media.key,
-      'url', media.url,
-      'path', media.path
-    )) FILTER (WHERE media.key IS NOT NULL), '[]'::JSON) AS media,
+    COALESCE(JSON_OBJECT_AGG(media.key, media.url) FILTER (WHERE media.key IS NOT NULL), '{}'::JSON) AS media,
     COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
       'id', sibling.id,
       'title', sibling.title,
