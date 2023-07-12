@@ -97,6 +97,14 @@ async function scheduleCacheJobs() {
       },
       'caches'
     );
+    await queue.add(
+      'cache-getTopStories-en', 
+      {
+        endpoint: 'getTopStories',
+        locale: 'en',
+      },
+      'caches'
+    );
     for (const locale of SUPPORTED_LOCALES) {
       if (/^en/.test(locale)) {
         continue;
@@ -106,6 +114,14 @@ async function scheduleCacheJobs() {
         `cache-getSummaries-${locale}`,
         {
           endpoint: 'getSummaries',
+          locale,
+        },
+        'caches'
+      );
+      await queue.add(
+        `cache-getTopStories-${locale}`,
+        {
+          endpoint: 'getTopStories',
           locale,
         },
         'caches'
