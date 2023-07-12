@@ -160,6 +160,26 @@ export class PuppeteerService extends BaseService {
       await browser?.close();
     }
   }
+  
+  public static fixRelativeUrl(path: string, publisher: PublisherCreationAttributes, excludeExternal = false) {
+    const { baseUrl } = publisher;
+    const domain = new URL(baseUrl).hostname.replace(/^www\./, ''); 
+    const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
+    // fix relative hrefs
+    if (/^\/\//.test(url)) {
+      return `https:${url}`;
+    } else
+    if (/^\//.test(url)) {
+      return `${baseUrl}${url}`;
+    } else
+    if (excludeExternal && /^https?:\/\//.test(url)) {
+      // exclude external links
+      if (!domainExpr.test(url)) {
+        return '';
+      }
+    }
+    return url;
+  }
 
   public static async crawl(publisher: PublisherCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
     const { baseUrl, selectors: { spider } } = publisher;
@@ -181,19 +201,7 @@ export class PuppeteerService extends BaseService {
         return;
       }
       // fix relative hrefs
-      if (/^\/\//.test(url)) {
-        return `https:${url}`;
-      } else
-      if (/^\//.test(url)) {
-        return `${baseUrl}${url}`;
-      } else
-      if (/^https?:\/\//.test(url)) {
-        // exclude external links
-        if (!domainExpr.test(url)) {
-          return;
-        }
-        return url;
-      }
+      return this.fixRelativeUrl(url, publisher, true);
     };
     urls.push(...$(replaceDatePlaceholders(spider.selector)).map((i, el) => cleanUrl($(el).attr(spider.attribute || 'href'))).filter(Boolean));
     await PuppeteerService.open(targetUrl, [
@@ -309,7 +317,7 @@ export class PuppeteerService extends BaseService {
         // content
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         // image
-        loot.imageUrl = extract(image?.selector, image?.attribute);
+        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector, image?.attribute));
         
         // dates
         dates.push(
@@ -359,7 +367,7 @@ export class PuppeteerService extends BaseService {
       if (!loot.imageUrl && image) {
         actions.push({
           action: async (el) => {
-            loot.imageUrl = clean(await el.evaluate((el) => el.getAttribute(image.attribute || 'src')));
+            loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el) => el.getAttribute(image.attribute || 'src'))));
           },
           selector: image.selector,
         });
