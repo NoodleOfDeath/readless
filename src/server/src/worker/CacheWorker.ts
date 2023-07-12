@@ -22,7 +22,7 @@ async function cacheGetSummaries(locale: string, depth = 1) {
   }
 }
 
-async function cacheGetSummaries(locale: string, interval = '2d') {
+async function cacheTopStories(locale: string, interval = '2d') {
   await Summary.getTopStories({
     forceCache: true,
     interval,
@@ -44,7 +44,7 @@ export async function doWork() {
           if (endpoint === 'getSummaries') {
             await cacheGetSummaries(locale, depth);
           } else if (endpoint === 'getTopStoties') {
-            await cacheTopStoties(locale);
+            await cacheTopStories(locale);
           }
           console.log('done caching');
           await job.moveToCompleted(true);
