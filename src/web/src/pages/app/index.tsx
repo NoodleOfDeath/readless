@@ -67,7 +67,6 @@ export default function AppPage() {
       }
     } catch (e) {
       console.error(e);
-      alert(e);
     } finally {
       setLoading(false);
     }
