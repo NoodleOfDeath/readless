@@ -22,7 +22,7 @@ async function cacheGetSummaries(locale: string, depth = 1) {
   }
 }
 
-async function cacheTopStories(locale: string, interval = '2d') {
+async function cacheTopStories(locale: string, interval = '1d') {
   await Summary.getTopStories({
     forceCache: true,
     interval,
