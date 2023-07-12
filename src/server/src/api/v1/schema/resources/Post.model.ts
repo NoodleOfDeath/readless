@@ -1,6 +1,7 @@
 import { Column, DataType } from 'sequelize-typescript';
 
 import { PostAttributes, PostCreationAttributes } from './Post.types';
+import { PublicMediaAttributes } from './media/Media.types';
 import { BaseModel } from '../base';
 
 export abstract class Post<
@@ -21,5 +22,7 @@ export abstract class Post<
 
   @Column({ type: DataType.STRING(2083) })
   declare imageUrl?: string;
+  
+  declare media?: { [key: string]: PublicMediaAttributes };
 
 }

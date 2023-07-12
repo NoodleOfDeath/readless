@@ -5,14 +5,14 @@ export type PostAttributes = DatedAttributes & {
   title: string;
   text?: string;
   imageUrl?: string;
-  media?: PublicMediaAttributes[];
+  media?: { [key: string]: PublicMediaAttributes };
 };
 
 export type PostCreationAttributes = Partial<DatedAttributes> & {
   title: string;
   text?: string;
   imageUrl?: string;
-  media?: PublicMediaAttributes[];
+  media?: { [key: string]: PublicMediaAttributes };
 };
 
 /** light weight record for a post */
