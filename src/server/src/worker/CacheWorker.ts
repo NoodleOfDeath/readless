@@ -22,6 +22,14 @@ async function cacheGetSummaries(locale: string, depth = 1) {
   }
 }
 
+async function cacheGetSummaries(locale: string, interval = '2d') {
+  await Summary.getTopStories({
+    forceCache: true,
+    interval,
+    locale,
+  });
+}
+
 export async function doWork() {
   try {
     // Worker that processes site maps and generates new summaries
@@ -35,6 +43,8 @@ export async function doWork() {
           console.log('caching queries', locale, depth);
           if (endpoint === 'getSummaries') {
             await cacheGetSummaries(locale, depth);
+          } else if (endpoint === 'getTopStoties') {
+            await cacheTopStoties(locale);
           }
           console.log('done caching');
           await job.moveToCompleted(true);
