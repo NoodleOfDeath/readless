@@ -43,7 +43,7 @@ export async function doWork() {
           console.log('caching queries', locale, depth);
           if (endpoint === 'getSummaries') {
             await cacheGetSummaries(locale, depth);
-          } else if (endpoint === 'getTopStoties') {
+          } else if (endpoint === 'getTopStories') {
             await cacheTopStories(locale);
           }
           console.log('done caching');
