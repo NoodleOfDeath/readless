@@ -63,10 +63,10 @@ const Menu = ({ navigation }: MenuProps) => {
         <div className={ styles.socials }>
           {socialNavigation.map((social) => (
             <Link 
+              key={ social.icon }
               href={ social.url }
               target="_blank">
               <Icon 
-                key={ social.icon }
                 name={ social.icon } 
                 size={ 48 }
                 />
