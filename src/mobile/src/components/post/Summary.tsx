@@ -58,10 +58,13 @@ type SummaryProps<Compact extends boolean = false> = ChildlessViewProps & Scroll
   compact?: Compact;
   disableInteractions?: boolean;
   disableNavigation?: boolean;
+  dateFormat?: string;
+  showFullDate?: boolean;
   forceSentiment?: boolean;
   forceShortSummary?: boolean;
   hideCard?: boolean;
   hideAnalytics?: boolean;
+  hideArticleCount?: boolean;
   hideFooter?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => Promise<unknown>;
@@ -123,10 +126,13 @@ export function Summary<Compact extends boolean = false>({
   compact,
   disableInteractions,
   disableNavigation,
+  showFullDate,
+  dateFormat = showFullDate ? 'E PP @ p 0' : undefined,
   forceSentiment,
   forceShortSummary: forceShortSummary0,
   hideCard,
   hideAnalytics,
+  hideArticleCount,
   hideFooter,
   onFormatChange,
   onInteract,
@@ -189,12 +195,16 @@ export function Summary<Compact extends boolean = false>({
     };
   }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
 
-  const formatTime = React.useCallback((time?: string) => {
+  const formatTime = React.useCallback((timestamp?: string) => {
     if (!time) {
       return null;
     }
-    return formatDistance(new Date(time ?? 0), lastTick, { addSuffix: true, locale: getFnsLocale() });
-  }, [lastTick]);
+    const date = new Date(timestamp);
+    if (dateFormat) {
+      return format(date, dateFormat, { locale: getFnsLocale() } });
+    }
+    return formatDistance(date, lastTick, { addSuffix: true, locale: getFnsLocale() });
+  }, [lastTick, dateFormat]);
   
   const content = React.useMemo(() => {
     if (!format) {
@@ -508,16 +518,20 @@ export function Summary<Compact extends boolean = false>({
           onPress={ () => !disableInteractions && openCategory(summary.category) }>
           {summary.category?.displayName}
         </Chip>
-        <Text
-          caption
-          color={ theme.colors.textSecondary }>
-          •
-        </Text>
-        <Chip
-          caption
-          color={ theme.colors.textSecondary }>
-          {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.misc_article, (summary.siblings?.length ?? 0) + 1)}`}
-        </Chip>
+        {!hideArticleCount && (
+          <React.Fragment>
+            <Text
+              caption
+              color={ theme.colors.textSecondary }>
+              •
+            </Text>
+            <Chip
+              caption
+              color={ theme.colors.textSecondary }>
+              {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.misc_article, (summary.siblings?.length ?? 0) + 1)}`}
+            </Chip>
+          </React.Fragment>
+        )}
         {isBookmarked && (
           <React.Fragment>
             <Text
@@ -568,7 +582,7 @@ export function Summary<Compact extends boolean = false>({
         )}
       </View>
     );
-  }, [theme.colors.textSecondary, summary, isBookmarked, initialFormat, menuItems, disableInteractions, openCategory, navigate, onInteract]);
+  }, [theme.colors.textSecondary, summary, hideArticleCount, isBookmarked, initialFormat, menuItems, disableInteractions, openCategory, navigate, onInteract]);
   
   const image = React.useMemo(() => {
     if (compact || compactSummaries || !summary.imageUrl) {
@@ -641,7 +655,7 @@ export function Summary<Compact extends boolean = false>({
             {!hideFooter && footer}
           </View>
         </View>
-        {!(big) && image}
+        {!big && image}
       </View>
     </View>
   ), [initialFormat, title, translateToggle, compact, compactSummaries, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image]);

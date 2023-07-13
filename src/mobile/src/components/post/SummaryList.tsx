@@ -360,7 +360,7 @@ export function SummaryList({
                   <Summary
                     mx={ 12 }
                     summary={ item } 
-                    hideFooter
+                    hideArticleCount
                     onFormatChange={ (format) => handleFormatChange(item, format) }
                     onInteract={ (...e) => handleInteraction(item, ...e) } />
                 ) }
