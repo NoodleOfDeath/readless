@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 import cn from 'classnames';
 
@@ -8,6 +9,7 @@ import Icon from '~/components/Icon';
 import Logo from '~/components/Logo';
 import Modal from '~/components/Modal';
 import NavLink from '~/components/NavLink';
+import { socialNavigation } from '~/constants/navigation';
 
 type NavigationType = {
   title: string;
@@ -58,6 +60,19 @@ const Menu = ({ navigation }: MenuProps) => {
               </NavLink>
             ))}
         </nav>
+        <div className={ styles.socials }>
+          {socialNavigation.map((social) => (
+            <Link 
+              href={ social.url }
+              target="_blank">
+              <Icon 
+                key={ social.icon }
+                name={ social.icon } 
+                size={ 48 }
+                />
+            </Link>
+          ))}
+        </div>
         <div className={ styles.line }>
           <div className={ styles.details }>
             <div className={ styles.text }>Contact Us</div>

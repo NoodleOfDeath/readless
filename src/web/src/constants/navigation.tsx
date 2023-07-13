@@ -4,8 +4,45 @@ export const headerNavigation = [
     url: '#download',
   },
   {
+    external: false,
+    title: 'Terms & Conditions',
+    url: '/terms',
+  },
+  {
+    external: false,
+    title: 'Privacy Policy',
+    url: '/privacy',
+  },
+  {
     title: 'Help',
     url: 'mailto:thecakeisalie@readless.ai',
+  },
+];
+
+export const socialNavigation = [
+  {
+    external: true,
+    icon: 'instagram',
+    title: 'Instagram',
+    url: 'https://instagram.com/readless.ai',
+  },
+  {
+    external: true,
+    icon: 'threads',
+    title: 'Threads',
+    url: 'https://www.threads.net/@readless.ai',
+  },
+  {
+    external: true,
+    icon: 'tiktok',
+    title: 'TikTok',
+    url: 'https://www.tiktok.com/@readless.ai',
+  },
+  {
+    external: true,
+    icon: 'twitter',
+    title: 'Twitter',
+    url: 'https://twitter.com/readlessai',
   },
 ];
 
@@ -27,28 +64,7 @@ export const footerNavigation = [
     value: 'product',
   },
   {
-    menu: [
-      {
-        external: true,
-        title: 'Instagram',
-        url: 'https://instagram.com/readless.ai',
-      },
-      {
-        external: true,
-        title: 'Threads',
-        url: 'https://www.threads.net/@readless.ai',
-      },
-      {
-        external: true,
-        title: 'TikTok',
-        url: 'https://www.tiktok.com/@readless.ai',
-      },
-      {
-        external: true,
-        title: 'Twitter',
-        url: 'https://twitter.com/readlessai',
-      },
-    ],
+    menu: socialNavigation,
     title: 'Community',
     value: 'community',
   },

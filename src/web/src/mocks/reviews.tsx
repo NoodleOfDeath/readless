@@ -36,6 +36,6 @@ export const reviews = [
     delay: 900,
     position: '',
     rating: 5,
-    title: 'Don\' Miss Out',
+    title: 'Don\'t Miss Out',
   }
 ];
