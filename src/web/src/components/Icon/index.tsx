@@ -65,7 +65,7 @@ const Icon = ({
     className={ className }
     width={ size }
     height={ size }
-    viewBox={ typeof icons[name] === 'string' ? "0 0 24 24" : icons[name]?.viewBox }>
+    viewBox={ typeof icons[name] === 'string' ? '0 0 24 24' : icons[name]?.viewBox }>
     <path 
       fill={ fill } 
       d={ typeof icons[name] === 'string' ? icons[name] : icons[name]?.path } />

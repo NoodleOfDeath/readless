@@ -1,7 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
 
 import cn from 'classnames';
+import Link from 'next/link';
 
 import styles from './Menu.module.sass';
 
@@ -68,8 +68,7 @@ const Menu = ({ navigation }: MenuProps) => {
               target="_blank">
               <Icon 
                 name={ social.icon } 
-                size={ 48 }
-                />
+                size={ 48 } />
             </Link>
           ))}
         </div>
