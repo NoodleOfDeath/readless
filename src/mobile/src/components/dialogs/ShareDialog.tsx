@@ -132,6 +132,8 @@ export function ShareDialog({
                   <Summary 
                     disableInteractions
                     disableNavigation
+                    showFullDate
+                    forceSentiment
                     forceShortSummary
                     summary={ summary } />
                   <Divider mx={ 12 } />

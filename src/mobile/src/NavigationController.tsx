@@ -502,6 +502,7 @@ export default function NavigationController() {
     const reviewHandlerA = DeviceEventEmitter.addListener('follow-category', inAppReviewHandler);
     const reviewHandlerB = DeviceEventEmitter.addListener('follow-publisher', inAppReviewHandler);
     const reviewHandlerC = DeviceEventEmitter.addListener('bookmark-summary', inAppReviewHandler);
+    const reviewHandlerD = DeviceEventEmitter.addListener('summary-expand', inAppReviewHandler);
     
     if (lastFetchFailed && lastFetch < Date.now() - ms('20s')) {
       return;
@@ -532,6 +533,7 @@ export default function NavigationController() {
       reviewHandlerA.remove();
       reviewHandlerB.remove();
       reviewHandlerC.remove();
+      reviewHandlerD.remove();
     };
     
   }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers, inAppReviewHandler]);
