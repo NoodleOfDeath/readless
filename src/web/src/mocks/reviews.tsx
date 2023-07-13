@@ -29,13 +29,13 @@ export const reviews = [
     title: 'A very concise but efficient news reading app, I really like it.',
   },
   {
-    author: 'Tabitha Butlet (Google Play Store)',
+    author: 'Tabitha Butler (Google Play Store)',
     avatar: '/images/avatar-4.png',
     content: 
          '"Read Less is a neat newsreader and news aggrigator that allows me to organize content I want to look through and easily read through the key points or entire articles. This app is continuing to improve, and every update brings great features to the table. Finding and reading articles from various sources about the same topic is now so easy. I haven\'t found any app that functions or is as visually appealing as Read Less so you\'re missing out if you haven\'t downloaded it yet."',
     delay: 900,
     position: '',
     rating: 5,
-    title: '',
+    title: 'Don\' Miss Out',
   }
 ];
