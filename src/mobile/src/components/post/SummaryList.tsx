@@ -361,7 +361,9 @@ export function SummaryList({
                     mx={ 12 }
                     summary={ item } 
                     hideFooter
-                    onFormatChange={ (format) => handleFormatChange(item, format) } />
+                    onFormatChange={ (format) => handleFormatChange(item, format) }
+                    onInteract={ (...e) => handleInteraction(item, ...e) }
+                    />
                 ) }
                 keyExtractor={ (item) => `${item.id}` }
                 ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
@@ -371,7 +373,9 @@ export function SummaryList({
                       summary={ detailSummary }
                       initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
                       keywords={ searchText?.split(' ') }
-                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) } />
+                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                      onInteract={ (...e) => handleInteraction(detailSummary, ...e) }
+                      />
                     <Divider my={ 6 } />
                     {detailSummarySiblings.length > 0 && (
                       <Text system h6 m={ 12 }>

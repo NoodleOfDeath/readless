@@ -1,4 +1,5 @@
 import React from 'react';
+import { DeviceEventEmitter } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { formatDistance } from 'date-fns';
@@ -248,6 +249,7 @@ export function Summary<Compact extends boolean = false>({
       return;
     }
     onFormatChange?.(newFormat);
+    DeviceEventEmitter.emit('summary-expand');
     if (!initialFormat && !hideCard) {
       setIsRead(true);
       return;
@@ -277,6 +279,96 @@ export function Summary<Compact extends boolean = false>({
     onToggleTranslate?.(showTranslations);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showTranslations]);
+  
+  const menuItems = React.useMemo(() => {
+    const actions: MenuItemProps[] = [
+      {
+        icon: () => <Icon name="eye" />,
+        key: `read-${summary.id}`,
+        onPress: async () => {
+          openURL(summary.url);
+        },
+        text: strings.action_readArticle,
+      },
+      {
+        icon: () => <Icon name="share" />,
+        key: `share-${summary.id}`,
+        onPress: async () => {
+          await SheetManager.show('share', {
+            payload: {
+              onInteract,
+              summary,
+            },
+          });
+        },
+        text: strings.action_share,
+        withSeparator: true,
+      },
+      {
+        icon: () => <Icon name={ isBookmarked ? 'bookmark' : 'bookmark-outline' } />,
+        key: `${isBookmarked ? 'unbookmark' : 'bookmark'}-${summary.id}`,
+        onPress: async () => {
+          setIsBookmarked((prev) => !prev);
+          bookmarkSummary(summary);
+        },
+        text: isBookmarked ? strings.summary_unbookmark : strings.summary_bookmark,
+      },
+      {
+        icon: () => <Icon name={ isRead ? 'email-mark-as-unread' : 'email-open' } />,
+        key: `mark-as-${isRead ? 'unread' : 'read'}-${summary.id}`,
+        onPress: () => {
+          setIsRead((prev) => !prev);
+          readSummary(summary);
+        },
+        text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
+        withSeparator: true,
+      },
+      {
+        icon: () => <ChannelIcon publisher={ summary.publisher } />,
+        key: `${isFollowingPublisher ? 'unfollow-pub' : 'follow-pub'}-${summary.id}`,
+        onPress: async () => {
+          setIsFollowingPublisher((prev) => !prev);
+          followPublisher(summary.publisher);
+        },
+        text: `${isFollowingPublisher ? strings.action_unfollow : strings.action_follow} ${summary.publisher.displayName}`,
+      },
+      {
+        icon: () => <ChannelIcon category={ summary.category } />,
+        key: `${isFollowingCategory ? 'unfollow-cat' : 'follow-cat'}-${summary.id}`,
+        onPress: async () => {
+          setIsFollowingCategory((prev) => !prev);
+          followCategory(summary.category);
+        },
+        text: `${isFollowingCategory ? strings.action_unfollow : strings.action_follow} ${summary.category.displayName}`,
+        withSeparator: true,
+      },
+      {
+        icon: () => <Icon name='bug' />,
+        key: `bug-${summary.id}`,
+        onPress: () => { 
+          onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
+            SheetManager.show('feedback', { payload: { summary } });
+          });
+        },
+        text: strings.summary_reportAtBug,
+      },
+      {
+        icon: () => <Icon name='eye-off' color='destructive' />,
+        isDestructive: true,
+        key: `hide-${summary.id}`,
+        onPress: () => {
+          onInteract?.(InteractionType.Hide, undefined, undefined, () => {
+            setPreference('removedSummaries', (prev) => ({
+              ...prev,
+              [summary.id]: true,
+            }));
+          });
+        },
+        text: strings.summary_hide,
+      },
+    ];
+    return actions;
+  }, [summary, isBookmarked, isRead, isFollowingPublisher, isFollowingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, setPreference]);
   
   const timestamp = React.useMemo(() => {
     return (
@@ -442,9 +534,42 @@ export function Summary<Compact extends boolean = false>({
             </Chip>
           </React.Fragment>
         )}
+        {initialFormat && (
+          <React.Fragment>
+            <View row />
+            <View flexRow gap={ 6 }>
+              <Chip
+                caption
+                color={ theme.colors.textSecondary }
+                leftIcon="share"
+                onPress: async () => {
+                  if (disableInteractions) {
+                    return;
+                  }
+                  await SheetManager.show('share', {
+                    payload: {
+                      onInteract,
+                      summary,
+                    },
+                  });
+                }>
+                {strings.action_share}
+              </Chip>
+              <HoldItem
+                items={ menuItems }
+                closeOnTap>
+                <Chip
+                  caption
+                  color={ theme.colors.textSecondary }
+                  leftIcon="dots-horizontal"
+                  />
+              </HoldItem>
+            </View>
+          </React.Fragment>
+        )}
       </View>
     );
-  }, [theme.colors.textSecondary, summary.category, summary.siblings, isBookmarked, disableInteractions, openCategory, navigate]);
+  }, [theme.colors.textSecondary, onInteract, summary, isBookmarked, disableInteractions, menuItems, openCategory, navigate]);
   
   const image = React.useMemo(() => {
     if (compact || compactSummaries || !summary.imageUrl) {
@@ -573,96 +698,6 @@ export function Summary<Compact extends boolean = false>({
       )}
     </View>
   ), [hideCard, format, preferredReadingFormat, handleFormatChange, content, translateToggle, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, hideAnalytics, summary.sentiment, summary.sentiments]);
-  
-  const menuItems = React.useMemo(() => {
-    const actions: MenuItemProps[] = [
-      {
-        icon: () => <Icon name="eye" />,
-        key: `read-${summary.id}`,
-        onPress: async () => {
-          openURL(summary.url);
-        },
-        text: strings.action_readArticle,
-      },
-      {
-        icon: () => <Icon name="share" />,
-        key: `share-${summary.id}`,
-        onPress: async () => {
-          await SheetManager.show('share', {
-            payload: {
-              onInteract,
-              summary,
-            },
-          });
-        },
-        text: strings.action_share,
-        withSeparator: true,
-      },
-      {
-        icon: () => <Icon name={ isBookmarked ? 'bookmark' : 'bookmark-outline' } />,
-        key: `${isBookmarked ? 'unbookmark' : 'bookmark'}-${summary.id}`,
-        onPress: async () => {
-          setIsBookmarked((prev) => !prev);
-          bookmarkSummary(summary);
-        },
-        text: isBookmarked ? strings.summary_unbookmark : strings.summary_bookmark,
-      },
-      {
-        icon: () => <Icon name={ isRead ? 'email-mark-as-unread' : 'email-open' } />,
-        key: `mark-as-${isRead ? 'unread' : 'read'}-${summary.id}`,
-        onPress: () => {
-          setIsRead((prev) => !prev);
-          readSummary(summary);
-        },
-        text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
-        withSeparator: true,
-      },
-      {
-        icon: () => <ChannelIcon publisher={ summary.publisher } />,
-        key: `${isFollowingPublisher ? 'unfollow-pub' : 'follow-pub'}-${summary.id}`,
-        onPress: async () => {
-          setIsFollowingPublisher((prev) => !prev);
-          followPublisher(summary.publisher);
-        },
-        text: `${isFollowingPublisher ? strings.action_unfollow : strings.action_follow} ${summary.publisher.displayName}`,
-      },
-      {
-        icon: () => <ChannelIcon category={ summary.category } />,
-        key: `${isFollowingCategory ? 'unfollow-cat' : 'follow-cat'}-${summary.id}`,
-        onPress: async () => {
-          setIsFollowingCategory((prev) => !prev);
-          followCategory(summary.category);
-        },
-        text: `${isFollowingCategory ? strings.action_unfollow : strings.action_follow} ${summary.category.displayName}`,
-        withSeparator: true,
-      },
-      {
-        icon: () => <Icon name='bug' />,
-        key: `bug-${summary.id}`,
-        onPress: () => { 
-          onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
-            SheetManager.show('feedback', { payload: { summary } });
-          });
-        },
-        text: strings.summary_reportAtBug,
-      },
-      {
-        icon: () => <Icon name='eye-off' color='destructive' />,
-        isDestructive: true,
-        key: `hide-${summary.id}`,
-        onPress: () => {
-          onInteract?.(InteractionType.Hide, undefined, undefined, () => {
-            setPreference('removedSummaries', (prev) => ({
-              ...prev,
-              [summary.id]: true,
-            }));
-          });
-        },
-        text: strings.summary_hide,
-      },
-    ];
-    return actions;
-  }, [summary, isBookmarked, isRead, isFollowingPublisher, isFollowingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, setPreference]);
 
   const card = React.useMemo(() => (
     <View
