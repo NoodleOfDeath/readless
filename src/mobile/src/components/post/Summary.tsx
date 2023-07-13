@@ -542,7 +542,7 @@ export function Summary<Compact extends boolean = false>({
                 caption
                 color={ theme.colors.textSecondary }
                 leftIcon="share"
-                onPress: async () => {
+                onPress={ async () => {
                   if (disableInteractions) {
                     return;
                   }
@@ -552,7 +552,7 @@ export function Summary<Compact extends boolean = false>({
                       summary,
                     },
                   });
-                }>
+                } }>
                 {strings.action_share}
               </Chip>
               <HoldItem
@@ -561,15 +561,14 @@ export function Summary<Compact extends boolean = false>({
                 <Chip
                   caption
                   color={ theme.colors.textSecondary }
-                  leftIcon="dots-horizontal"
-                  />
+                  leftIcon="dots-horizontal" />
               </HoldItem>
             </View>
           </React.Fragment>
         )}
       </View>
     );
-  }, [theme.colors.textSecondary, onInteract, summary, isBookmarked, disableInteractions, menuItems, openCategory, navigate]);
+  }, [theme.colors.textSecondary, summary, isBookmarked, initialFormat, menuItems, disableInteractions, openCategory, navigate, onInteract]);
   
   const image = React.useMemo(() => {
     if (compact || compactSummaries || !summary.imageUrl) {
