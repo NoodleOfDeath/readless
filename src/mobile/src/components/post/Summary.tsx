@@ -537,7 +537,7 @@ export function Summary<Compact extends boolean = false>({
         {initialFormat && (
           <React.Fragment>
             <View row />
-            <View flexRow gap={ 6 }>
+            <View flexRow itemsCenter gap={ 6 }>
               <Chip
                 caption
                 color={ theme.colors.textSecondary }
@@ -556,10 +556,10 @@ export function Summary<Compact extends boolean = false>({
                 {strings.action_share}
               </Chip>
               <HoldItem
+                activateOn='tap'
                 items={ menuItems }
                 closeOnTap>
                 <Chip
-                  caption
                   color={ theme.colors.textSecondary }
                   leftIcon="dots-horizontal" />
               </HoldItem>
