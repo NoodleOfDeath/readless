@@ -37,5 +37,5 @@ export const reviews = [
     position: '',
     rating: 5,
     title: 'Don\'t Miss Out',
-  }
+  },
 ];
