@@ -1,7 +1,7 @@
 import React from 'react';
 
 type IconsType = {
-  [key: string]: string;
+  [key: string]: any;
 };
 
 const icons: IconsType = {
