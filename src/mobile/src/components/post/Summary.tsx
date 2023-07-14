@@ -2,7 +2,7 @@ import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { formatDistance } from 'date-fns';
+import { format as formatDate, formatDistance } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -196,12 +196,12 @@ export function Summary<Compact extends boolean = false>({
   }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
 
   const formatTime = React.useCallback((timestamp?: string) => {
-    if (!time) {
+    if (!timestamp) {
       return null;
     }
     const date = new Date(timestamp);
     if (dateFormat) {
-      return format(date, dateFormat, { locale: getFnsLocale() } });
+      return formatDate(date, dateFormat, { locale: getFnsLocale() });
     }
     return formatDistance(date, lastTick, { addSuffix: true, locale: getFnsLocale() });
   }, [lastTick, dateFormat]);

@@ -445,6 +445,7 @@ export default function NavigationController() {
     setPublishers,
     viewedFeatures,
     hasReviewed,
+    readSummaries,
     lastRequestForReview,
     setPreference,
   } = React.useContext(SessionContext); 
@@ -455,7 +456,7 @@ export default function NavigationController() {
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [launchedTime] = React.useState(Date.now());
   const [showedBookmarks, setShowedBookmarks] = React.useState(false);
-
+  
   // bookmarks walkthrough
   React.useEffect(() => {
     if (showedBookmarks) {
@@ -473,6 +474,7 @@ export default function NavigationController() {
     if (hasReviewed || 
       Date.now() - launchedTime < ms('5m') || 
       Date.now() - lastRequestForReview < ms('2w') ||
+      Object.keys({ ...readSummaries }).length < 3 ||
       !InAppReview.isAvailable()) {
       return;
     }
@@ -488,7 +490,7 @@ export default function NavigationController() {
           console.error(error);
         });
     }, 5_000);
-  }, [hasReviewed, lastRequestForReview, launchedTime, setPreference]);
+  }, [hasReviewed, lastRequestForReview, launchedTime, readSummaries, setPreference]);
 
   React.useEffect(() => {
     
