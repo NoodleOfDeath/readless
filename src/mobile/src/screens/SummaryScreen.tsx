@@ -1,7 +1,7 @@
 import React from 'react';
 import { RefreshControl } from 'react-native';
 
-import { ActivityIndicator } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 import {
   InteractionType,
@@ -9,9 +9,12 @@ import {
   ReadingFormat,
 } from '~/api';
 import {
+  ActivityIndicator,
+  BackNavigation,
   Divider,
   FlatList,
   Screen,
+  ScrollView,
   Summary,
   Text,
   View,
@@ -91,6 +94,36 @@ export function SummaryScreen({
     },
     [summary, handleInteraction, navigation, preferredReadingFormat]
   );
+  
+  useFocusEffect(React.useCallback(() => {
+    if (!summary) {
+      return;
+    }
+    navigation?.setOptions({
+      header: () => (
+        <View 
+          row 
+          itemsCenter
+          elevated
+          zIndex={ 100 }
+          height={ 80 } 
+          px={ 12 }>
+          <View flexRow gap={ 6 } itemsCenter>
+            <BackNavigation />
+            <ScrollView scrollEnabled={ false }>
+              <Summary
+                forceUnread
+                disableNavigation
+                titleComponent
+                hideArticleCount
+                onInteract={ (...e) => handleInteraction(summary, ...e) }
+                summary={ summary } />
+            </ScrollView>
+          </View>
+        </View>
+      ),
+    });
+  }, [summary, navigation, handleInteraction]));
 
   return (
     <Screen>
@@ -119,6 +152,7 @@ export function SummaryScreen({
           ListHeaderComponent={ (
             <React.Fragment>
               <Summary
+                forceSentiment
                 refreshing={ loading }
                 onRefresh={ () => load(summaryId) }
                 summary={ summary }

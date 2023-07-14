@@ -1,6 +1,9 @@
 import React from 'react';
 
+import { useFocusEffect } from '@react-navigation/native';
+
 import {
+  BackNavigation,
   Button,
   Screen,
   SummaryList,
@@ -15,7 +18,7 @@ import { ScreenProps } from '~/screens';
 
 export function CategoryScreen({
   route,
-  navigation: _navigation,
+  navigation,
 }: ScreenProps<'category'>) {
 
   const { getSummaries } = useSummaryClient();
@@ -53,9 +56,9 @@ export function CategoryScreen({
     followCategory(category);
   }, [category, followCategory]);
   
-  return (
-    <Screen>
-      <View col>
+  useFocusEffect(React.useCallback(() => {
+    navigation?.setOptions({
+      header: () => (
         <View 
           row 
           itemsCenter
@@ -64,6 +67,7 @@ export function CategoryScreen({
           height={ 80 } 
           p={ 12 }>
           <View flexRow gap={ 12 } itemsCenter>
+            <BackNavigation />
             <ChannelIcon size={ 40 } category={ category } />
             <View>
               <Text 
@@ -79,17 +83,21 @@ export function CategoryScreen({
             <Button
               body2
               contained
+              haptic
               onPress={ toggleFollowed }>
-              {`${ followed ? strings.action_unfollow : strings.action_follow } ${strings.misc_category }`}
+              {`${ followed ? strings.action_unfollow : strings.action_follow } ${ category?.displayName && category.displayName.length < 15 ? strings.misc_category : '' }`}
             </Button>
           </View>
         </View>
-        <View col>
-          <SummaryList
-            fetch={ getSummaries }
-            filter={ prefilter } />
-        </View>
-      </View>
+      ),
+    });
+  }, [category]));
+  
+  return (
+    <Screen>
+      <SummaryList
+        fetch={ getSummaries }
+        filter={ prefilter } />
     </Screen>
   );
 }

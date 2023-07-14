@@ -56,6 +56,7 @@ import {
   HomeScreen,
   LegalScreen,
   NAVIGATION_LINKING_OPTIONS,
+  OldNewsScreen,
   PublisherScreen,
   ReadingFormatPickerScreen,
   RecapScreen,
@@ -120,14 +121,16 @@ const screens: RouteConfig<
       headerTitle: strings.screens_bookmarks, 
     }, 
   }, 
-  // Recaps
+  // Old News
+  {
+    component: OldNewsScreen,
+    name: 'oldNews',  
+    options: { headerRight: () => undefined },
+  },
   {
     component: RecapScreen,
-    name: 'recaps',  
-    options: {
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_recaps, 
-    },
+    name: 'recap',  
+    options: { headerRight: () => undefined },
   },
   // Settings
   {

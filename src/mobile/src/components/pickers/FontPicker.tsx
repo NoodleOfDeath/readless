@@ -75,6 +75,7 @@ export function FontPicker({
       <ScrollView scrollEnabled={ false }>
         <Summary
           mt={ 12 }
+          sample
           disableInteractions
           disableNavigation /> 
       </ScrollView>

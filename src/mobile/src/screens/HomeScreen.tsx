@@ -12,7 +12,14 @@ import {
 } from '~/components';
 import { useSummaryClient, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import { ScreenProps } from '~/screens';
+import { OldNewsScreen, ScreenProps } from '~/screens';
+
+function OldNewsTab({
+  route: _route,
+  navigation: _navigation,
+}: ScreenProps<'search'>) {
+  return <OldNewsScreen />;
+}
 
 function YourNewsTab({ 
   route: _route,
@@ -69,7 +76,11 @@ export function HomeScreen({
           tabBarLabelStyle: { fontFamily: SYSTEM_FONT },
           tabBarScrollEnabled: true,
           tabBarStyle: { backgroundColor: theme.navContainerTheme.colors.background },
-        } }>
+        } }
+        initialRouteName={ followCount > 0 ? strings.tabs_yourNews : strings.tabs_topStories }>
+        <Tab.Screen
+          name={ strings.tabs_oldNews }
+          component={ OldNewsTab } />
         {followCount > 0 && (
           <Tab.Screen 
             name={ strings.tabs_yourNews }

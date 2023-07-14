@@ -94,7 +94,7 @@ export function CollapsedView({
             } }>
               <Icon
                 size={ 24 }
-                name='chevron-down' />
+                name='menu-down' />
             </Animated.View>
             {title && <Divider vertical />}
             {title && typeof title === 'string' ? <Text subtitle1 system>{title}</Text> : title}
