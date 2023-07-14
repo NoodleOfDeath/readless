@@ -157,6 +157,7 @@ export const plStrings: typeof enStrings = {
   summary_showOriginalText: 'Pokaż oryginalny tekst',
   summary_showTranslatedText: 'Pokaż przetłumaczony tekst',
   summary_summary: 'Streszczenie',
+  summary_thisImageWasTakenFromTheArticle: 'To zdjęcie pochodzi z oryginalnego artykułu i nie zostało zrobione przez personel Czytaj mniej',
   summary_thisIsNotARealImage: 'Ten obraz został wygenerowany przy użyciu sztucznej inteligencji i nie jest prawdziwym zdjęciem prawdziwego wydarzenia, miejsca, rzeczy lub osoby.',
   summary_translate: 'Tłumaczyć',
   summary_unbookmark: 'Usuń zakładkę',

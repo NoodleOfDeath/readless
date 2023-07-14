@@ -1,11 +1,13 @@
 import React from 'react';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { Canvas } from 'canvas';
 import { Carousel, CarouselProps } from 'react-responsive-carousel';
 import { styled } from 'styled-components';
 
 const StyledCanvas = styled('canvas')({
   backgroundColor: 'white',
+  border: '1px solid black',
   height: `${2778 * 0.25}px`,
   padding: '20px',
 });
@@ -27,7 +29,7 @@ function SCREENS(formFactor = '') {
   const imageName = (name: string) => {
     return [[`/images/ss/${name}`, formFactor].filter(Boolean).join('-'), 'png'].join('.');
   };
-  return {
+  const screens = {
     bullets: { image: imageName('ss-bullets') },
     customFeed: {
       image: imageName('ss-custom-feed'),
@@ -48,6 +50,7 @@ function SCREENS(formFactor = '') {
     topStories: { image: imageName('ss-top-stories') },
     tts: { image: imageName('ss-tts') },
   };
+  return screens;
 }
 
 type ScreenName = keyof ReturnType<typeof SCREENS>;
@@ -61,19 +64,30 @@ type TitleOptions = {
   height?: number;
   lineHeight?: number;
   color?: string;
+  xShift?: number;
+  yShift?: number;
 };
 
 const TITLES: Record<ScreenName, TitleOptions> = {
   bullets: { text: 'Read the bullets to help you decide if the full article is worth your time' },
   customFeed: { text: 'Create a highly customizable feed without even needing to make an account' },
-  localization: { text: 'Localization and on-demand translation for over 30+ languages' },
-  main: { text: 'Read Less uses large language models to reduce clickbait and improve readability of the news' },
+  localization: {
+    text: 'Localization and on-demand translation for over 30+ languages',
+    yShift: 60, 
+  },
+  main: { text: 'Read Less uses large language models to reduce bias and clickbait from the news' },
   publishers: { text: 'Read Less pulls from over 80 reputable publishers and more are added weekly' },
   reader: { text: 'When you read the full article, the built-in reader removes clutter and ads' },
   sentiment: { text: 'Sentiment is intrinsic to news; Read Less measures it and lets you filter by it' },
-  share: { text: 'Share articles with friends and family with a tap' },
+  share: {
+    text: 'Share articles with friends and family with a tap',
+    yShift: 60, 
+  },
   topStories: { text: 'Topics covered by multiple publishers appear grouped under Top Stories' },
-  tts: { text: 'Skip reading altogether with advanced text-to-speech' },
+  tts: {
+    text: 'Skip reading altogether with advanced text-to-speech',
+    yShift: 60, 
+  },
 };
 
 async function mapObject<T extends object, K extends keyof T, V extends T[K], Out>(obj: T, fn: (value: V) => Out) {
@@ -106,11 +120,11 @@ async function Screen({
 
     // screen
     const imageElement = new Image();
-    const src = ipad ? image.replace(/\.png/i, '-ipad.png') : watch ? image.replace(/\.png/i, '-watch.png') : image;
+    const src = image;
     imageElement.src = src;
     imageElement.onload = () => {
       context.setTransform(ipad ? 0.925 : 0.90, 0, 0, 0.95, 0, 0);
-      context.drawImage(imageElement, ipad ? 100 : 65 + xShift, ipad ? 110 : 65 + yShift);
+      context.drawImage(imageElement, ipad ? 100 : (65 + xShift), ipad ? 110 : (65 + yShift));
 
       // cover header
       if (coverHeader) {
@@ -121,7 +135,7 @@ async function Screen({
 
       // frame
       const frame = new Image();
-      frame.src = ipad ? 'ss/ipad-frame.png' : '/ss/iphone-frame.png';
+      frame.src = ipad ? '/images/ss/ipad-frame.png' : '/images/ss/iphone-frame.png';
       frame.onload = () => {
         context.resetTransform();
         context.drawImage(frame, 0, 0);
@@ -159,13 +173,15 @@ function wrapText(
 
 function Title(parentContext: CanvasRenderingContext2D, {
   text,
-  fontSize = 80,
-  font = `bold ${fontSize}px Arial`,
+  fontSize = 90,
+  font = `bold ${fontSize}px Anek Latin`,
   maxWidth = 1284 * 0.8,
   width = 1284,
   height = 2778,
   lineHeight = fontSize * 1.3,
   color,
+  xShift = 0,
+  yShift = 0,
 }: TitleOptions) {
   const canvas = new OffscreenCanvas(width, height * 0.4);
   const context = canvas.getContext('2d') as unknown as CanvasRenderingContext2D;
@@ -176,7 +192,7 @@ function Title(parentContext: CanvasRenderingContext2D, {
   context.fillStyle = color || '#000000';
   context.font = font;
   context.textAlign = 'center';
-  wrapText(context, text, width / 2, height * 0.2 / 2, maxWidth, lineHeight);
+  wrapText(context, text, width / 2 + xShift, height * 0.125 / 2 + yShift, maxWidth, lineHeight);
   return canvas;
 }
 
@@ -191,10 +207,13 @@ type ScreenshotProps = {
   formFactor?: 'ipad' | 'watch',
   width?: number,
   height?: number,
+  screenXShift?: number,
+  screenYShift?: number,
   className?: string,
 };
 
-export function Screenshot({ 
+export async function generateScreenshot<
+C extends HTMLCanvasElement | undefined | null, R extends (C extends undefined | null ? Buffer : HTMLCanvasElement) | null>({ 
   screen, 
   bg = '#ffffff',
   title,
@@ -205,40 +224,62 @@ export function Screenshot({
   formFactor = ipad ? 'ipad' : watch ? 'watch' : undefined,
   width = iphone55 ? 1242 : iphone67 ? 1290 : ipad ? 2732 : watch ? 410 : 1284,
   height = iphone55 ? 2208 : iphone67 ? 2796 : ipad ? 2048 : watch ? 502 : 2778,
+  screenXShift = 0,
+  screenYShift = 0,
+}: ScreenshotProps, canvas0?: C): Promise<R> {
+
+  const canvas = canvas0 ?? new Canvas(width, height);
+  const context = canvas.getContext('2d') as unknown as CanvasRenderingContext2D;
+  if (!context) {
+    return null as R;
+  }
+
+  // background
+  context.resetTransform();
+  context.fillStyle = bg;
+  context.fillRect(0, 0, width, height);
+
+  // load screns
+  const screens = Object.fromEntries(await Promise.all(Object.entries(SCREENS(formFactor)).map(async ([key, value]) => [key, await Screen({
+    ...value, ipad, watch, 
+  })]))) as { [key in ScreenName]: OffscreenCanvas };
+
+  // draw screens
+  context.setTransform(0.9, 0, 0, 0.9, 0, 0);
+  context.drawImage(screens[screen], width * 0.05 + screenXShift, (ipad ? 450 : 700) + screenYShift);
+   
+  // title
+  if (title) {
+    const titles = await mapObject(TITLES, (options) => Title(context, {
+      ...options, height, maxWidth: width * 0.8, width, 
+    }));
+    context.resetTransform();
+    context.drawImage(titles[title], 0, 0);
+  }
+
+  if (!canvas0 && canvas instanceof Canvas) {
+    return canvas.toBuffer('image/png') as R;
+  }
+  return canvas as unknown as R;
+}
+
+export function Screenshot({ 
   className,
+  iphone55,
+  iphone67,
+  ipad,
+  watch,
+  width = iphone55 ? 1242 : iphone67 ? 1290 : ipad ? 2732 : watch ? 410 : 1284,
+  height = iphone55 ? 2208 : iphone67 ? 2796 : ipad ? 2048 : watch ? 502 : 2778,
+  ...props
 }: ScreenshotProps) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   const onload = React.useCallback(async () => {
-    const context = canvasRef.current?.getContext('2d');
-    if (!context) {
-      return;
-    }
-
-    // background
-    context.resetTransform();
-    context.fillStyle = bg;
-    context.fillRect(0, 0, width, height);
-
-    // load screns
-    const screens = Object.fromEntries(await Promise.all(Object.entries(SCREENS(formFactor)).map(async ([key, value]) => [key, await Screen({
-      ...value, ipad, watch, 
-    })]))) as { [key in ScreenName]: OffscreenCanvas };
-
-    // draw screens
-    context.setTransform(0.9, 0, 0, 0.9, 0, 0);
-    context.drawImage(screens[screen], width * 0.05, ipad ? 450 : 800);
-   
-    // title
-    if (title) {
-      const titles = await mapObject(TITLES, (options) => Title(context, {
-        ...options, height, maxWidth: width * 0.8, width, 
-      }));
-      context.resetTransform();
-      context.drawImage(titles[title], 0, 0);
-    }
-
-  }, [bg, formFactor, height, ipad, screen, title, watch, width]);
+    await generateScreenshot({
+      ...props, ipad, iphone55, iphone67, watch,
+    }, canvasRef.current);
+  }, [ipad, iphone55, iphone67, props, watch]);
 
   React.useEffect(() => {
     onload();
@@ -257,7 +298,7 @@ type ScreenshotsCarouselProps = Partial<CarouselProps> & {
   watch?: boolean,
 };
 
-const SLIDE_ORDER = [
+export const SLIDE_ORDER = [
   'main',
   'bullets',
   'reader',
@@ -287,12 +328,10 @@ export function ScreenshotsCarousel({
       iphone67={ iphone67 }
       ipad={ ipad }
       watch={ watch } />
-  )) : [...Array(10).keys()].map((i) => <img key={ i } src={ `/ss/ss-${ i + 1 }.png` } />), [render, iphone55, iphone67, ipad, watch]);
+  )) : [...Array(10).keys()].map((i) => <img key={ `img-${i}` } src={ `/images/ss/ss-${ i + 1 }.png` } />), [render, iphone55, iphone67, ipad, watch]);
   return (
     <Carousel
       infiniteLoop
-      autoPlay
-      interval={ 5_000 }
       { ...props }>
       { slides }
     </Carousel>

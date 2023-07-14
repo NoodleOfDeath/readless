@@ -2,7 +2,7 @@ import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { formatDistance } from 'date-fns';
+import { format as formatDate, formatDistance } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -49,6 +49,7 @@ import { fixedSentiment } from '~/utils';
 
 type SummaryProps<Compact extends boolean = false> = ChildlessViewProps & ScrollViewProps & {
   big?: boolean;
+  fullImage?: boolean;
   summary?: Compact extends true ? PublicSummaryGroup : PublicSummaryGroup;
   tickInterval?: string;
   selected?: boolean;
@@ -89,7 +90,7 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     categoryId: 0,
     id: 0,
     imageUrl: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg',
-    media: [],
+    media: { imageAi1: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg' },
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
     outlet: {
       displayName: strings.misc_publisher,
@@ -120,7 +121,8 @@ export function Summary<Compact extends boolean = false>({
   tickInterval = '5m',
   selected,
   initialFormat,
-  big = Boolean(initialFormat),
+  big,
+  fullImage = Boolean(initialFormat),
   initiallyTranslated = true,
   keywords = [],
   compact,
@@ -196,12 +198,12 @@ export function Summary<Compact extends boolean = false>({
   }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
 
   const formatTime = React.useCallback((timestamp?: string) => {
-    if (!time) {
+    if (!timestamp) {
       return null;
     }
     const date = new Date(timestamp);
     if (dateFormat) {
-      return format(date, dateFormat, { locale: getFnsLocale() } });
+      return formatDate(date, dateFormat, { locale: getFnsLocale() });
     }
     return formatDistance(date, lastTick, { addSuffix: true, locale: getFnsLocale() });
   }, [lastTick, dateFormat]);
@@ -592,12 +594,12 @@ export function Summary<Compact extends boolean = false>({
       <View
         justifyCenter
         flexGrow={ 1 }
-        maxWidth={ big ? undefined : 64 }
-        mx={ big ? undefined : 12 }>
+        maxWidth={ big || fullImage ? undefined : 64 }
+        mx={ big || fullImage ? undefined : 12 }>
         <View
-          brTopLeft={ big && !initialFormat ? 6 : 0 }
-          brTopRight={ big && !initialFormat ? 6 : 0 }
-          borderRadius={ big ? undefined : 6 }
+          brTopLeft={ big || fullImage && !initialFormat ? 6 : 0 }
+          brTopRight={ big || fullImage && !initialFormat ? 6 : 0 }
+          borderRadius={ big || fullImage ? undefined : 6 }
           aspectRatio={ big ? 3/1.75 : 1 }
           overflow="hidden"
           zIndex={ 20 }>
@@ -611,25 +613,38 @@ export function Summary<Compact extends boolean = false>({
             <Image
               flex={ 1 }
               flexGrow={ 1 }
-              source={ { uri: summary.imageUrl } } />
+              source={ { uri: summary.media?.imageArticle || summary.media?.imageAi1 || summary.imageUrl } } />
           )}
-          {big && (
-            <Text 
-              subscript
+          {(big || fullImage) && (
+            <View 
               absolute
               bottom={ 0 }
               left={ 0 }
               right={ 0 }
-              color={ theme.colors.textDark }
-              bg={ theme.colors.backgroundTranslucent }
-              p={ 6 }>
-              {strings.summary_thisIsNotARealImage}
-            </Text>
+              bg={ theme.colors.backgroundTranslucent }>
+              <View
+                itemsCenter
+                flexRow
+                flex={ 1 }
+                m={ 6 }
+                gap={ 6 }>
+                <Icon 
+                  color={ theme.colors.textDark }
+                  name={ summary.media?.imageArticle ? 'camera' : 'information' }
+                  size={ 24 } />
+                <Text 
+                  flex={ 1 }
+                  caption
+                  color={ theme.colors.textDark }>
+                  {!summary.media?.imageArticle ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
+                </Text>
+              </View>
+            </View>
           )}
         </View>
       </View>
     );
-  }, [compact, compactSummaries, summary.imageUrl, big, initialFormat, containsTrigger, theme.colors.textDark, theme.colors.backgroundTranslucent]);
+  }, [compact, compactSummaries, summary.imageUrl, summary.media?.imageArticle, summary.media?.imageAi1, big, fullImage, initialFormat, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark]);
 
   const coverContent = React.useMemo(() => (
     <View flex={ 1 } mb={ 6 }>
@@ -655,10 +670,10 @@ export function Summary<Compact extends boolean = false>({
             {!hideFooter && footer}
           </View>
         </View>
-        {!big && image}
+        {!(big || fullImage) && image}
       </View>
     </View>
-  ), [initialFormat, title, translateToggle, compact, compactSummaries, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image]);
+  ), [initialFormat, title, translateToggle, compact, compactSummaries, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, fullImage, image]);
   
   const cardBody = React.useMemo(() => (
     <View flexGrow={ 1 }>

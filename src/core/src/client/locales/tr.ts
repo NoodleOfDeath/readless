@@ -157,6 +157,7 @@ export const trStrings: typeof enStrings = {
   summary_showOriginalText: 'Orijinal Metni Göster',
   summary_showTranslatedText: 'Çevrilmiş Metni Göster',
   summary_summary: 'Özet',
+  summary_thisImageWasTakenFromTheArticle: 'Bu görüntü orijinal makaleden alınmıştır ve Daha Az Oku personeli tarafından çekilmemiştir.',
   summary_thisIsNotARealImage: 'Bu görüntü AI kullanılarak oluşturulmuştur ve gerçek bir olayın, yerin, şeyin veya kişinin gerçek bir fotoğrafı değildir.',
   summary_translate: 'Çevirmek',
   summary_unbookmark: 'Yer imini kaldır',

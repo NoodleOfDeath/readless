@@ -53,7 +53,7 @@ export function MeterDial({
     // x * x = (-90v / min) * (90v / max)
     // |x| = sqrt((-90v / min) * (90v / max))
     // x = (v / |v|) * sqrt((-90v / min) * (90v / max))
-    return value === 0 ? 0 : (value/Math.abs(value)) * Math.sqrt((-90 * value / min) * (90 * value / max));
+    return Math.abs(value) === 0 ? 0 : (value/Math.abs(value)) * Math.sqrt((-90 * value / min) * (90 * value / max));
   }, [min, max, value]);
   const majorTicks = React.useMemo(() => [...Array.from(Array((max - min) / majorTick).keys())], [min, max, majorTick]);
   const minorTicks = React.useMemo(() => [...Array.from(Array((max - min) / minorTick).keys())], [min, max, minorTick]);

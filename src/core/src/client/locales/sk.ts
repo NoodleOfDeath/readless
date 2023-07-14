@@ -157,6 +157,7 @@ export const skStrings: typeof enStrings = {
   summary_showOriginalText: 'Zobraziť pôvodný text',
   summary_showTranslatedText: 'Zobraziť preložený text',
   summary_summary: 'Zhrnutie',
+  summary_thisImageWasTakenFromTheArticle: 'Tento obrázok je z pôvodného článku a nebol prevzatý personálom Read Less',
   summary_thisIsNotARealImage: 'Tento obrázok bol vytvorený pomocou AI a nie je skutočnou fotografiou skutočnej udalosti, miesta, veci alebo osoby.',
   summary_translate: 'Preložiť',
   summary_unbookmark: 'Odstrániť záložku',

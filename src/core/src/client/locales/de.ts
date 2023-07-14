@@ -157,6 +157,7 @@ export const deStrings: typeof enStrings = {
   summary_showOriginalText: 'Originaltext anzeigen',
   summary_showTranslatedText: 'Übersetzten Text anzeigen',
   summary_summary: 'Zusammenfassung',
+  summary_thisImageWasTakenFromTheArticle: 'Dieses Bild stammt aus dem Originalartikel und wurde nicht von Read Less-Mitarbeitern aufgenommen',
   summary_thisIsNotARealImage: 'Dieses Bild wurde mithilfe von KI erstellt und ist kein echtes Foto eines realen Ereignisses, Ortes, einer realen Sache oder einer realen Person.',
   summary_translate: 'Übersetzen',
   summary_unbookmark: 'Lesezeichen entfernen',

@@ -157,6 +157,7 @@ export const zhCNStrings: typeof enStrings = {
   summary_showOriginalText: '显示原文',
   summary_showTranslatedText: '显示翻译文本',
   summary_summary: '概括',
+  summary_thisImageWasTakenFromTheArticle: '此图片来自原始文章，并非由 Read Less 人员拍摄',
   summary_thisIsNotARealImage: '此图像是使用 AI 生成的，并非真实事件、地点、事物或人物的真实照片。',
   summary_translate: '翻译',
   summary_unbookmark: '删除书签',

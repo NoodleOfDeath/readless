@@ -157,6 +157,7 @@ export const faStrings: typeof enStrings = {
   summary_showOriginalText: 'نمایش متن اصلی',
   summary_showTranslatedText: 'نمایش متن ترجمه شده',
   summary_summary: 'خلاصه',
+  summary_thisImageWasTakenFromTheArticle: 'این تصویر مربوط به مقاله اصلی است و توسط پرسنل Read Less گرفته نشده است',
   summary_thisIsNotARealImage: 'این تصویر با استفاده از هوش مصنوعی ایجاد شده است و یک عکس واقعی از یک رویداد، مکان، چیز یا شخص واقعی نیست.',
   summary_translate: 'ترجمه کردن',
   summary_unbookmark: 'حذف نشانک',

@@ -157,6 +157,7 @@ export const hiStrings: typeof enStrings = {
   summary_showOriginalText: 'मूल पाठ दिखाएं',
   summary_showTranslatedText: 'अनुवादित पाठ दिखाएं',
   summary_summary: 'सारांश',
+  summary_thisImageWasTakenFromTheArticle: 'यह छवि मूल लेख से है और रीड लेस पर्सनल द्वारा नहीं ली गई है',
   summary_thisIsNotARealImage: 'यह छवि एआई का उपयोग करके बनाई गई थी और यह किसी वास्तविक घटना, स्थान, वस्तु या व्यक्ति की वास्तविक तस्वीर नहीं है।',
   summary_translate: 'अनुवाद',
   summary_unbookmark: 'बुकमार्क हटाएँ',

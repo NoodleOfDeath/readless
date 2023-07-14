@@ -26,7 +26,7 @@ export function useInAppBrowser() {
           enableUrlBarHiding: true,
           forceCloseOnRedirection: false,
           modalEnabled: true,
-          modalPresentationStyle: 'popover',
+          modalPresentationStyle: 'pageSheet',
           modalTransitionStyle: 'coverVertical',
           navigationBarColor: 'black',
           navigationBarDividerColor: 'white',

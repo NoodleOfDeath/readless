@@ -157,6 +157,7 @@ export const ruStrings: typeof enStrings = {
   summary_showOriginalText: 'Показать исходный текст',
   summary_showTranslatedText: 'Показать переведенный текст',
   summary_summary: 'Краткое содержание',
+  summary_thisImageWasTakenFromTheArticle: 'Это изображение взято из оригинальной статьи и не было сделано персоналом Read Less.',
   summary_thisIsNotARealImage: 'Это изображение было сгенерировано с помощью искусственного интеллекта и не является реальной фотографией реального события, места, вещи или человека.',
   summary_translate: 'Переводить',
   summary_unbookmark: 'Удалить закладку',

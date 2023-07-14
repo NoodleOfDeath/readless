@@ -157,6 +157,7 @@ export const koStrings: typeof enStrings = {
   summary_showOriginalText: '원본 텍스트 표시',
   summary_showTranslatedText: '번역된 텍스트 표시',
   summary_summary: '요약',
+  summary_thisImageWasTakenFromTheArticle: '이 이미지는 원본 기사에서 가져온 것으로 Read Less personell이 촬영한 것이 아닙니다.',
   summary_thisIsNotARealImage: '이 이미지는 AI를 사용하여 생성되었으며 실제 이벤트, 장소, 사물 또는 사람의 실제 사진이 아닙니다.',
   summary_translate: '번역하다',
   summary_unbookmark: '북마크 제거',

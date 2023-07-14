@@ -11,7 +11,8 @@ import { enStrings } from './src/client/locales/en';
 import { GoogleService } from '../server/src/services/google/GoogleService';
 
 const LOCALE_DIR = p.resolve('./src/client/locales');
-const locales = fs.readdirSync(LOCALE_DIR).filter((locale) => !/(en|index)\.ts/.test(locale));
+const HISTORY_FILE = p.resolve('./src/client/locales/en-last.ts');
+const locales = fs.readdirSync(LOCALE_DIR).filter((locale) => !/(en(-last)?|index)\.ts/.test(locale));
 
 async function translate(obj: unknown, translatedObject: unknown = {}, locale: string) {
   if (typeof obj === 'string') {
@@ -42,6 +43,20 @@ async function sync({
 }: SyncOptions = {}) {
   
   const enStat = fs.statSync(`${LOCALE_DIR}/en.ts`);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let historyStrings: any = {};
+  historyStrings = {};
+
+  if (fs.existsSync(HISTORY_FILE)) {
+    const history = fs.readFileSync(HISTORY_FILE, 'utf8');
+    if (history) {
+      const match = history.match(/export const enStrings = (\{[\s\S]*\});/m);
+      if (match && match[1]) {
+        eval(`historyStrings = ${match[1]}`);
+      }
+    }
+  }
   
   for (const file of locales) {
     const locale = file.replace('.ts', '').replace(/[A-Z]/, (match) => `-${match.toLowerCase()}`);
@@ -64,7 +79,8 @@ async function sync({
       }
       toTranslate = {};
       for (const key of Object.keys(enStrings)) {
-        if (!(key in oldStrings)) {
+        if (!(key in oldStrings) || enStrings[key] !== historyStrings[key]) {
+          console.log(enStrings[key], historyStrings[key]);
           toTranslate[key] = enStrings[key];
         }
       }
@@ -83,6 +99,13 @@ export const ${file.replace('.ts', '')}Strings: typeof enStrings = ${JSON.string
     fs.writeFileSync(target, content);
   }
   
+  const content = `
+export const enStrings = {
+${Object.entries(enStrings).map(([key, value]) => `  ${key}: ${JSON.stringify(value, null, 2)},`).join('\n')}
+};
+`;
+  fs.writeFileSync(HISTORY_FILE, content);
+
   execSync('(cd .. && yarn format)');
   
 }

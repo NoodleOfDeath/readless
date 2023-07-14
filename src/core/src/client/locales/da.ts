@@ -157,6 +157,7 @@ export const daStrings: typeof enStrings = {
   summary_showOriginalText: 'Vis original tekst',
   summary_showTranslatedText: 'Vis oversat tekst',
   summary_summary: 'Resumé',
+  summary_thisImageWasTakenFromTheArticle: 'Dette billede er fra den originale artikel og er ikke taget af Read Less-personalet',
   summary_thisIsNotARealImage: 'Dette billede blev genereret ved hjælp af AI og er ikke et rigtigt billede af en virkelig begivenhed, sted, ting eller person.',
   summary_translate: 'Oversætte',
   summary_unbookmark: 'Fjern bogmærke',

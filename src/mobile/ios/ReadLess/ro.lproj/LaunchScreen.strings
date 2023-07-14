@@ -5,6 +5,12 @@
 /* Class = "UILabel"; text = "Đọc ít hơn"; ObjectID = "8Fa-oG-OKv"; */
 "8Fa-oG-OKv.text" = "Đọc ít hơn";
 
+/* Class = "UILabel"; text = "Citește mai puțin"; ObjectID = "AKO-5U-C9r"; */
+"AKO-5U-C9r.text" = "Citește mai puțin";
+
+/* Class = "UILabel"; text = "Čtěte méně"; ObjectID = "CVh-yK-cjc"; */
+"CVh-yK-cjc.text" = "Čtěte méně";
+
 /* Class = "UILabel"; text = "Leggi Meno"; ObjectID = "Fw3-Fv-rXT"; */
 "Fw3-Fv-rXT.text" = "Leggi Meno";
 
@@ -13,6 +19,9 @@
 
 /* Class = "UILabel"; text = "Kevesebbet Olvas"; ObjectID = "LMe-Kk-LZW"; */
 "LMe-Kk-LZW.text" = "Kevesebbet Olvas";
+
+/* Class = "UILabel"; text = "Daha az oku"; ObjectID = "MXq-x0-mwR"; */
+"MXq-x0-mwR.text" = "Daha az oku";
 
 /* Class = "UILabel"; text = "Читати менше"; ObjectID = "Pgz-ED-CIG"; */
 "Pgz-ED-CIG.text" = "Читати менше";
@@ -32,11 +41,20 @@
 /* Class = "UILabel"; text = "Weniger Lesen"; ObjectID = "qro-p7-H75"; */
 "qro-p7-H75.text" = "Weniger Lesen";
 
+/* Class = "UILabel"; text = "Kevesebbet olvas"; ObjectID = "reU-GO-RhW"; */
+"reU-GO-RhW.text" = "Kevesebbet olvas";
+
 /* Class = "UILabel"; text = "더 적게 읽기"; ObjectID = "sHs-ve-zrk"; */
 "sHs-ve-zrk.text" = "더 적게 읽기";
 
+/* Class = "UILabel"; text = "کمتر بخوانید\""; ObjectID = "so3-yG-47n"; */
+"so3-yG-47n.text" = "کمتر بخوانید\"";
+
 /* Class = "UILabel"; text = "Leer Menos"; ObjectID = "vHM-aC-Ez1"; */
 "vHM-aC-Ez1.text" = "Leer Menos";
+
+/* Class = "UILabel"; text = "Baca lebih sedikit"; ObjectID = "xld-Ny-7ik"; */
+"xld-Ny-7ik.text" = "Baca lebih sedikit";
 
 /* Class = "UILabel"; text = "Ler Menos"; ObjectID = "zHX-jO-m4R"; */
 "zHX-jO-m4R.text" = "Ler Menos";

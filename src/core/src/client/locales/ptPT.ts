@@ -157,6 +157,7 @@ export const ptPTStrings: typeof enStrings = {
   summary_showOriginalText: 'Mostrar texto original',
   summary_showTranslatedText: 'Mostrar Texto Traduzido',
   summary_summary: 'Resumo',
+  summary_thisImageWasTakenFromTheArticle: 'Esta imagem é do artigo original e não foi tirada por Read Less personell',
   summary_thisIsNotARealImage: 'Esta imagem foi gerada usando IA e não é uma foto real de um evento, lugar, coisa ou pessoa real.',
   summary_translate: 'Traduzir',
   summary_unbookmark: 'Remover marcador',

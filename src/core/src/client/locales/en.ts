@@ -174,6 +174,7 @@ export const enStrings = {
   summary_showOriginalText: 'Show Original Text',
   summary_showTranslatedText: 'Show Translated Text',
   summary_summary: 'Summary',
+  summary_thisImageWasTakenFromTheArticle: 'This image is from the original article and does not belong to Read Less',
   summary_thisIsNotARealImage: 'This image was generated using AI and is not a real photo of a real event, place, thing, or person.',
   summary_translate: 'Translate',
   summary_unbookmark: 'Remove Bookmark',

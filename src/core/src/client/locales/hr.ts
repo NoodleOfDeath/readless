@@ -157,6 +157,7 @@ export const hrStrings: typeof enStrings = {
   summary_showOriginalText: 'Prikaži izvorni tekst',
   summary_showTranslatedText: 'Prikaži prevedeni tekst',
   summary_summary: 'Sažetak',
+  summary_thisImageWasTakenFromTheArticle: 'Ova je slika iz izvornog članka i nije ju snimila osoba Read Less',
   summary_thisIsNotARealImage: 'Ova je slika generirana pomoću umjetne inteligencije i nije stvarna fotografija stvarnog događaja, mjesta, stvari ili osobe.',
   summary_translate: 'Prevedi',
   summary_unbookmark: 'Ukloni oznaku',

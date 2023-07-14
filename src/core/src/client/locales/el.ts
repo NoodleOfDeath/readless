@@ -157,6 +157,7 @@ export const elStrings: typeof enStrings = {
   summary_showOriginalText: 'Εμφάνιση πρωτότυπου κειμένου',
   summary_showTranslatedText: 'Εμφάνιση μεταφρασμένου κειμένου',
   summary_summary: 'Περίληψη',
+  summary_thisImageWasTakenFromTheArticle: 'Αυτή η εικόνα είναι από το αρχικό άρθρο και δεν τραβήχτηκε από το προσωπικό του Read Less',
   summary_thisIsNotARealImage: 'Αυτή η εικόνα δημιουργήθηκε με χρήση τεχνητής νοημοσύνης και δεν είναι πραγματική φωτογραφία ενός πραγματικού γεγονότος, μέρους, πράγματος ή προσώπου.',
   summary_translate: 'Μεταφράζω',
   summary_unbookmark: 'Κατάργηση σελιδοδείκτη',

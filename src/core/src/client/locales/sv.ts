@@ -157,6 +157,7 @@ export const svStrings: typeof enStrings = {
   summary_showOriginalText: 'Visa originaltext',
   summary_showTranslatedText: 'Visa översatt text',
   summary_summary: 'Sammanfattning',
+  summary_thisImageWasTakenFromTheArticle: 'Den här bilden är från den ursprungliga artikeln och togs inte av Read Less-personal',
   summary_thisIsNotARealImage: 'Den här bilden skapades med hjälp av AI och är inte ett riktigt foto av en verklig händelse, plats, sak eller person.',
   summary_translate: 'Översätt',
   summary_unbookmark: 'Ta bort bokmärke',
