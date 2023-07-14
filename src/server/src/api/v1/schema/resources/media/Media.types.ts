@@ -11,6 +11,7 @@ export type MediaAttributes = DatedAttributes & {
   path: string;
   type: MediaType;
   url?: string;
+  originalUrl?: string;
 };
 
 export type MediaCreationAttributes = Partial<DatedAttributes> & {
@@ -19,6 +20,7 @@ export type MediaCreationAttributes = Partial<DatedAttributes> & {
   path: string;
   type: MediaType;
   url?: string;
+  originalUrl?: string;
 };
 
 export const PUBLIC_MEDIA_ATTRIBUTES = ['key', 'path', 'type', 'url'];
@@ -27,4 +29,5 @@ export type PublicMediaAttributes = {
   key: string;
   type: MediaType;
   url?: string;
+  originalUrl?: string;
 };

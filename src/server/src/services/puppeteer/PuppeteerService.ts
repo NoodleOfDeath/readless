@@ -307,7 +307,7 @@ export class PuppeteerService extends BaseService {
         };
 
         // image
-        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'article figure img', image?.attribute), publisher);
+        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'figure img', image?.attribute), publisher);
         
         exclude.forEach((tag) => $(tag).remove());
         
@@ -370,7 +370,7 @@ export class PuppeteerService extends BaseService {
           action: async (el) => {
             loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el, attr) => el.getAttribute(attr || 'src'), image?.attribute)), publisher);
           },
-          selector: image?.selector || 'article figure img',
+          selector: image?.selector || 'figure img',
         });
       }
       
