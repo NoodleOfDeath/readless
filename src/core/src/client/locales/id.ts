@@ -157,6 +157,7 @@ export const idStrings: typeof enStrings = {
   summary_showOriginalText: 'Tampilkan Teks Asli',
   summary_showTranslatedText: 'Tampilkan Teks yang Diterjemahkan',
   summary_summary: 'Ringkasan',
+  summary_thisImageWasTakenFromTheArticle: 'Gambar ini dari artikel asli dan tidak diambil oleh Read Less personell',
   summary_thisIsNotARealImage: 'Gambar ini dihasilkan menggunakan AI dan bukan foto asli dari peristiwa, tempat, benda, atau orang yang sebenarnya.',
   summary_translate: 'Menerjemahkan',
   summary_unbookmark: 'Hapus Penanda',

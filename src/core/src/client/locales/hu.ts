@@ -157,6 +157,7 @@ export const huStrings: typeof enStrings = {
   summary_showOriginalText: 'Eredeti szöveg megjelenítése',
   summary_showTranslatedText: 'Lefordított szöveg megjelenítése',
   summary_summary: 'Összegzés',
+  summary_thisImageWasTakenFromTheArticle: 'Ez a kép az eredeti cikkből származik, és nem a Read Less personell készítette',
   summary_thisIsNotARealImage: 'Ez a kép mesterséges intelligencia segítségével készült, és nem egy valós esemény, hely, dolog vagy személy valódi fotója.',
   summary_translate: 'fordít',
   summary_unbookmark: 'Könyvjelző eltávolítása',

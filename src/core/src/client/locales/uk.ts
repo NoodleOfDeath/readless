@@ -157,6 +157,7 @@ export const ukStrings: typeof enStrings = {
   summary_showOriginalText: 'Показати оригінальний текст',
   summary_showTranslatedText: 'Показати перекладений текст',
   summary_summary: 'Резюме',
+  summary_thisImageWasTakenFromTheArticle: 'Це зображення взято з оригінальної статті та не було взято персоналом Read Less',
   summary_thisIsNotARealImage: 'Це зображення було створено за допомогою штучного інтелекту та не є справжнім фото справжньої події, місця, речі чи людини.',
   summary_translate: 'Перекласти',
   summary_unbookmark: 'Видалити закладку',

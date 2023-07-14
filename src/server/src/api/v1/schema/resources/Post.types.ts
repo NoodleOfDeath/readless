@@ -1,18 +1,17 @@
-import { PublicMediaAttributes } from './media/Media.types';
 import { DatedAttributes } from '../types';
 
 export type PostAttributes = DatedAttributes & {
   title: string;
   text?: string;
   imageUrl?: string;
-  media?: { [key: string]: PublicMediaAttributes };
+  media?: { [key: string]: string };
 };
 
 export type PostCreationAttributes = Partial<DatedAttributes> & {
   title: string;
   text?: string;
   imageUrl?: string;
-  media?: { [key: string]: PublicMediaAttributes };
+  media?: { [key: string]: string };
 };
 
 /** light weight record for a post */

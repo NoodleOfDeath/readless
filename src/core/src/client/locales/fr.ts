@@ -157,6 +157,7 @@ export const frStrings: typeof enStrings = {
   summary_showOriginalText: 'Afficher le texte d\'origine',
   summary_showTranslatedText: 'Afficher le texte traduit',
   summary_summary: 'Résumé',
+  summary_thisImageWasTakenFromTheArticle: 'Cette image est tirée de l\'article original et n\'a pas été prise par Read Less personell',
   summary_thisIsNotARealImage: 'Cette image a été générée à l\'aide de l\'IA et n\'est pas une vraie photo d\'un événement, d\'un lieu, d\'une chose ou d\'une personne réels.',
   summary_translate: 'Traduire',
   summary_unbookmark: 'Supprimer le signet',

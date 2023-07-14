@@ -157,6 +157,7 @@ export const nlStrings: typeof enStrings = {
   summary_showOriginalText: 'Toon originele tekst',
   summary_showTranslatedText: 'Toon vertaalde tekst',
   summary_summary: 'Samenvatting',
+  summary_thisImageWasTakenFromTheArticle: 'Deze afbeelding komt uit het originele artikel en is niet gemaakt door Read Less-personeel',
   summary_thisIsNotARealImage: 'Deze afbeelding is gegenereerd met behulp van AI en is geen echte foto van een echte gebeurtenis, plaats, ding of persoon.',
   summary_translate: 'Vertalen',
   summary_unbookmark: 'Bladwijzer verwijderen',

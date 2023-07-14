@@ -157,6 +157,7 @@ export const csStrings: typeof enStrings = {
   summary_showOriginalText: 'Zobrazit původní text',
   summary_showTranslatedText: 'Zobrazit přeložený text',
   summary_summary: 'souhrn',
+  summary_thisImageWasTakenFromTheArticle: 'Tento obrázek pochází z původního článku a nebyl pořízen pracovníkem Read Less',
   summary_thisIsNotARealImage: 'Tento obrázek byl vytvořen pomocí AI a není skutečnou fotografií skutečné události, místa, věci nebo osoby.',
   summary_translate: 'přeložit',
   summary_unbookmark: 'Odebrat záložku',

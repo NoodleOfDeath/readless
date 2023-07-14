@@ -157,6 +157,7 @@ export const jaStrings: typeof enStrings = {
   summary_showOriginalText: '元のテキストを表示',
   summary_showTranslatedText: '翻訳されたテキストを表示',
   summary_summary: 'まとめ',
+  summary_thisImageWasTakenFromTheArticle: 'この画像は元の記事からのものであり、記事を少なく読む担当者によって撮影されたものではありません',
   summary_thisIsNotARealImage: 'この画像は AI を使用して生成されたものであり、実際の出来事、場所、物、人物の実際の写真ではありません。',
   summary_translate: '翻訳',
   summary_unbookmark: 'ブックマークを削除',

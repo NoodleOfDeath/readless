@@ -157,6 +157,7 @@ export const viStrings: typeof enStrings = {
   summary_showOriginalText: 'Hiển thị văn bản gốc',
   summary_showTranslatedText: 'Hiển thị văn bản đã dịch',
   summary_summary: 'Bản tóm tắt',
+  summary_thisImageWasTakenFromTheArticle: 'Hình ảnh này là từ bài viết gốc và không được chụp bởi Read Less personell',
   summary_thisIsNotARealImage: 'Hình ảnh này được tạo bằng AI và không phải là ảnh thực của một sự kiện, địa điểm, sự vật hoặc con người có thật.',
   summary_translate: 'Dịch',
   summary_unbookmark: 'Xóa dấu trang',

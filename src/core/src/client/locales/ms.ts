@@ -157,6 +157,7 @@ export const msStrings: typeof enStrings = {
   summary_showOriginalText: 'Tunjukkan Teks Asal',
   summary_showTranslatedText: 'Tunjukkan Teks Terjemahan',
   summary_summary: 'Ringkasan',
+  summary_thisImageWasTakenFromTheArticle: 'Imej ini adalah daripada artikel asal dan tidak diambil oleh Read Less personell',
   summary_thisIsNotARealImage: 'Imej ini dijana menggunakan AI dan bukan foto sebenar acara, tempat, benda atau orang sebenar.',
   summary_translate: 'Terjemah',
   summary_unbookmark: 'Alih keluar Penanda Halaman',

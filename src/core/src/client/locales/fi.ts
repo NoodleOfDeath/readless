@@ -157,6 +157,7 @@ export const fiStrings: typeof enStrings = {
   summary_showOriginalText: 'Näytä alkuperäinen teksti',
   summary_showTranslatedText: 'Näytä käännetty teksti',
   summary_summary: 'Yhteenveto',
+  summary_thisImageWasTakenFromTheArticle: 'Tämä kuva on alkuperäisestä artikkelista, eikä sitä ole ottanut Read Less personell',
   summary_thisIsNotARealImage: 'Tämä kuva on luotu tekoälyllä, eikä se ole oikea valokuva todellisesta tapahtumasta, paikasta, asiasta tai henkilöstä.',
   summary_translate: 'Kääntää',
   summary_unbookmark: 'Poista kirjanmerkki',

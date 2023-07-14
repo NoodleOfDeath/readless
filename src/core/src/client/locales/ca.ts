@@ -157,6 +157,7 @@ export const caStrings: typeof enStrings = {
   summary_showOriginalText: 'Mostra el text original',
   summary_showTranslatedText: 'Mostra el text traduït',
   summary_summary: 'Resum',
+  summary_thisImageWasTakenFromTheArticle: 'Aquesta imatge és de l\'article original i no ha estat presa pel personal de Read Less',
   summary_thisIsNotARealImage: 'Aquesta imatge es va generar amb IA i no és una foto real d\'un esdeveniment, lloc, cosa o persona real.',
   summary_translate: 'Traduir',
   summary_unbookmark: 'Elimina el marcador',

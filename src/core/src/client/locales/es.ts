@@ -157,6 +157,7 @@ export const esStrings: typeof enStrings = {
   summary_showOriginalText: 'Mostrar texto original',
   summary_showTranslatedText: 'Mostrar texto traducido',
   summary_summary: 'Resumen',
+  summary_thisImageWasTakenFromTheArticle: 'Esta imagen es del artículo original y no fue tomada por Read Less personell',
   summary_thisIsNotARealImage: 'Esta imagen se generó con IA y no es una foto real de un evento, lugar, cosa o persona real.',
   summary_translate: 'Traducir',
   summary_unbookmark: 'Quitar marcador',

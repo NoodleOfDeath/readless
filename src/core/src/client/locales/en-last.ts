@@ -1,12 +1,12 @@
+
 export const enStrings = {
-  // actions
   action_allDone: 'All Done!',
-  action_clearSearchHistory: 'Clear Search History', 
+  action_clearSearchHistory: 'Clear Search History',
   action_clearSelection: 'Clear Selection',
-  action_close: 'Close', 
+  action_close: 'Close',
   action_follow: 'Follow',
   action_loading: 'Loading...',
-  action_next: 'Next ', 
+  action_next: 'Next ',
   action_readArticle: 'Read Article',
   action_save: 'Save',
   action_saveAndClose: 'Save & Close',
@@ -15,14 +15,10 @@ export const enStrings = {
   action_skip: 'Skip',
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
   action_unfollow: 'Unfollow',
-
-  // bookmarks
   bookmarks_bookmarkArticlesAreNotSaved: 'Note: The original articles themselves are not saved for offline reading',
-  bookmarks_bookmarksAvailableOffline: 'Bookmarks are always available offline', 
+  bookmarks_bookmarksAvailableOffline: 'Bookmarks are always available offline',
   bookmarks_header: 'Bookmarks',
   bookmarks_removeReadFromBookmarks: 'Remove Read from Bookmarks',
-  
-  // feedback screen
   feedback_option_helpful: 'This summary is actually helpful',
   feedback_option_imageIrrelevant: 'This image is irrelevant',
   feedback_option_imageOffensive: 'This image is offensive',
@@ -39,8 +35,6 @@ export const enStrings = {
   feedback_submit: 'Submit Feedback',
   feedback_thankYou: 'Thank you for your feedback!',
   feedback_title: 'Feedback',
-  
-  // misc
   misc_and: 'and',
   misc_article: 'Article',
   misc_awesome: 'Awesome!',
@@ -54,12 +48,9 @@ export const enStrings = {
   misc_publishers: 'Publishers',
   misc_readless: 'Read Less',
   misc_sweetGotIt: 'Sweet, got it!',
-  
   nav_browseCategories: 'Browse Categories',
   nav_browsePublishers: 'Browse Publishers',
   nav_yourFollows: 'Your Follows',
-  
-  // screens
   screens_about: 'About',
   screens_bookmarks: 'Bookmarks',
   screens_browse: 'Browse',
@@ -73,8 +64,6 @@ export const enStrings = {
   screens_search: 'Search',
   screens_settings: 'Settings',
   screens_triggerWords: 'Trigger Words',
-
-  // search
   search_customNewsSearch: 'Note: This is searching only within your custom news feed and not all news articles',
   search_filtersTooSpecific: 'It seems your filters are too specific. You may want to consider adding more categories and/or news sources to your follow list',
   search_goToBrowse: 'Go to Browse',
@@ -85,8 +74,6 @@ export const enStrings = {
   search_results: 'Results',
   search_title: 'Search',
   search_turnOffFilters: 'Turn off filters',
-
-  // settings
   settings_clearCache: 'Clear Cache',
   settings_clearHistory: 'Clear History',
   settings_colorScheme: 'Color Scheme',
@@ -115,8 +102,6 @@ export const enStrings = {
   settings_triggerWord: 'Trigger Word',
   settings_triggerWords: 'Trigger Words',
   settings_voice: 'Text-to-Speech Voice',
-
-  // share
   share_copyBulletPoints: 'Copy Bullet Points',
   share_copyLink: 'Copy Link',
   share_copyOriginalSourceLink: 'Copy Original Source Link',
@@ -128,8 +113,6 @@ export const enStrings = {
   share_shareAsImage: 'Share as Image',
   share_shareAsLink: 'Share as Link',
   share_twitter: 'Twitter',
-
-  // subscribe
   subscribe_boost: 'Boost',
   subscribe_feature_accessAllNews: 'Access all news',
   subscribe_feature_basicTts: 'Basic TTS Voices',
@@ -146,8 +129,6 @@ export const enStrings = {
   subscribe_free: 'Free',
   subscribe_iamrich: 'I Am Rich',
   subscribe_subscribe: 'Subscribe',
-
-  // summary
   summary_bookmark: 'Bookmark',
   summary_bookmarked: 'Bookmarked',
   summary_bullets: 'Bullets',
@@ -181,16 +162,10 @@ export const enStrings = {
   summary_veryNegative: 'Very Negative',
   summary_veryPositive: 'Very Positive',
   summary_viewSource: 'View original source',
-  
-  // tabs
   tabs_live: 'Live',
   tabs_topStories: 'Top Stories',
   tabs_yourNews: 'Your News',
-  
-  // walkthroughs
   walkthroughs: 'Walkthroughs',
-
-  // walkthroughs - appearance
   walkthroughs_appearance_compactSummariesDescription: 'Toggle the switches below to see which you prefer',
   walkthroughs_appearance_customizeYourExperience: 'Customize your experience',
   walkthroughs_appearance_preferredReadingFormat: 'Tap on **Summary**,  **Bullets**, or **Full Article** to choose your default reading format.',
@@ -200,20 +175,14 @@ export const enStrings = {
   walkthroughs_appearance_sourceLinksDescription: 'Tapping on the source links will open the original article in a browser',
   walkthroughs_appearance_stackTitle: 'Customize Appearance',
   walkthroughs_appearance_youCanAlwaysSee: 'You can always see the source links after tapping a card itself.\n\nLong pressing will also copy the url.',
-
-  // walkthroughs - bookmark
   walkthroughs_bookmark_happyReading: 'Happy Reading!',
   walkthroughs_bookmark_niceJob: 'Nice! You can view always your bookmarks offline from the side menu!',
-
-  // walkthroughs - custom feed
   walkthroughs_customFeed_addCategories: 'Add categories',
   walkthroughs_customFeed_addNewsSources: 'Add news sources',
   walkthroughs_customFeed_letsStart: 'Let\'s start by choosing any of the following categories that may interest you',
   walkthroughs_customFeed_readlessPulls: 'Read Less pulls from over 80 reputable news sources. Do you have any favorites? (more added weekly)',
   walkthroughs_customFeed_stackTitle: 'Customize Your Feed',
   walkthroughs_customFeed_toggleFilters: 'You can switch between custom news and all news by tapping the toggle at the top of the app',
-  
-  // walkthroughs - onboarding
   walkthroughs_onboarding_areYouReady: 'Are you ready to\nRead Less?',
   walkthroughs_onboarding_beingInformed: 'Being informed is a **human right**.',
   walkthroughs_onboarding_extractTheFacts: 'extract the facts',
@@ -230,12 +199,8 @@ export const enStrings = {
   walkthroughs_onboarding_subscribe: 'If you found us through our marketing ads and are interested in subscribing, you can expect the feature to rollout in the next few weeks. So stay tuned!',
   walkthroughs_onboarding_withoughtNeedingAnAccount: 'and all **without needing to even create an account**',
   walkthroughs_onboarding_yesLetsGetStarted: 'Yes, let\'s get started!',
-  
-  // Promo Codes
   walkthroughs_promoCodeDescription: 'Save this promo code for when subscriptions roll out! Only the **first 500** redemptions will get **3 months FREE** of Boost membership',
   walkthroughs_promoCodeTitle: 'Great Job! You finished all walkthroughs!',
-
-  // walkthroughs - sentiment
   walkthroughs_sentiment_dontEnable: 'I\'m good for now',
   walkthroughs_sentiment_enable: 'Enable Quick Sentiments',
   walkthroughs_sentiment_enableQuestion: 'Enable Quick Sentiments?',
@@ -257,15 +222,10 @@ export const enStrings = {
   walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1: 'brand management, market research, options trading, and understanding customer feedback',
   walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2: 'It also **empowers** readers like **you** to make data-driven decisions and gauge public perception effectively.',
   walkthroughs_sentiment_whatMakesNews: 'Sentiment is a big part of what makes news, news',
-
-  // walkthroughs - sharing
   walkthroughs_sharing_noteworthyArticle: 'Noteworthy article?',
   walkthroughs_sharing_shareArticles: 'Did you know you can directly share an interesting article by **pressing and holding** on the card itself?',
-
-  // walkthroughs - trigger words
   walkthroughs_triggerWords: 'Trigger Words',
   walkthroughs_triggerWords_description: 'Read Less lets you set **trigger words** to be replaced with emojis or words of your choice, so you may read the news with **less anxiety**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Enable trigger words by entering them below',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Support for languages other than English is limited at this time.',
-
 };

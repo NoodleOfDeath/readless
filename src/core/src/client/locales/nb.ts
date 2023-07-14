@@ -157,6 +157,7 @@ export const nbStrings: typeof enStrings = {
   summary_showOriginalText: 'Vis originaltekst',
   summary_showTranslatedText: 'Vis oversatt tekst',
   summary_summary: 'Sammendrag',
+  summary_thisImageWasTakenFromTheArticle: 'Dette bildet er fra den originale artikkelen og ble ikke tatt av Les Less-personell',
   summary_thisIsNotARealImage: 'Dette bildet ble generert ved hjelp av AI og er ikke et ekte bilde av en virkelig hendelse, sted, ting eller person.',
   summary_translate: 'Oversette',
   summary_unbookmark: 'Fjern bokmerke',

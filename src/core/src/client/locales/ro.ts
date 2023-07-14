@@ -157,6 +157,7 @@ export const roStrings: typeof enStrings = {
   summary_showOriginalText: 'Afișați textul original',
   summary_showTranslatedText: 'Afișați textul tradus',
   summary_summary: 'rezumat',
+  summary_thisImageWasTakenFromTheArticle: 'Această imagine este din articolul original și nu a fost luată de personalul Read Less',
   summary_thisIsNotARealImage: 'Această imagine a fost generată folosind AI și nu este o fotografie reală a unui eveniment, loc, lucru sau persoană reală.',
   summary_translate: 'Traduceți',
   summary_unbookmark: 'Eliminați marcajul',

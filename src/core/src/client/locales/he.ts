@@ -157,6 +157,7 @@ export const heStrings: typeof enStrings = {
   summary_showOriginalText: 'הצג טקסט מקורי',
   summary_showTranslatedText: 'הצג טקסט מתורגם',
   summary_summary: 'סיכום',
+  summary_thisImageWasTakenFromTheArticle: 'תמונה זו היא מהמאמר המקורי ולא צולמה על ידי אנשי Read Less',
   summary_thisIsNotARealImage: 'תמונה זו נוצרה באמצעות AI ואינה תמונה אמיתית של אירוע, מקום, דבר או אדם אמיתיים.',
   summary_translate: 'לתרגם',
   summary_unbookmark: 'הסר סימניה',

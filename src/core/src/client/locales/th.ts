@@ -157,6 +157,7 @@ export const thStrings: typeof enStrings = {
   summary_showOriginalText: 'แสดงข้อความต้นฉบับ',
   summary_showTranslatedText: 'แสดงข้อความที่แปล',
   summary_summary: 'สรุป',
+  summary_thisImageWasTakenFromTheArticle: 'ภาพนี้มาจากบทความต้นฉบับและไม่ได้ถ่ายโดย Read Less personell',
   summary_thisIsNotARealImage: 'ภาพนี้สร้างขึ้นโดยใช้ AI และไม่ใช่ภาพถ่ายจริงของเหตุการณ์ สถานที่ สิ่งของ หรือบุคคลจริง',
   summary_translate: 'แปลภาษา',
   summary_unbookmark: 'ลบบุ๊กมาร์ก',

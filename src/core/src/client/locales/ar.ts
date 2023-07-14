@@ -157,6 +157,7 @@ export const arStrings: typeof enStrings = {
   summary_showOriginalText: 'إظهار النص الأصلي',
   summary_showTranslatedText: 'إظهار النص المترجم',
   summary_summary: 'ملخص',
+  summary_thisImageWasTakenFromTheArticle: 'هذه الصورة مأخوذة من المقالة الأصلية ولم يتم التقاطها بواسطة برنامج قراءة أقل شخصيًا',
   summary_thisIsNotARealImage: 'تم إنشاء هذه الصورة باستخدام الذكاء الاصطناعي وهي ليست صورة حقيقية لحدث أو مكان أو شيء أو شخص حقيقي.',
   summary_translate: 'يترجم',
   summary_unbookmark: 'إزالة المرجعية',
