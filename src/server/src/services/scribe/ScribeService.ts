@@ -380,9 +380,8 @@ export class ScribeService extends BaseService {
         [12476] (20 articles) MSNBC: Wildfires in California - Wildfires are raging in California, destroying thousands of homes and forcing hundreds of thousands of people to evacuate.
 
         Then you would write:
-        **${new Date().toLocaleDateString()}**
 
-        In today's news, Trump was impeached [88,2793] and wildfires are raging in California [12476].
+        In today's news, Trump was impeached [88, 2793] and wildfires are raging in California [12476].
 
         Here is the list of events:
         ${sourceSummaries.join('\n')}`;
@@ -402,7 +401,7 @@ export class ScribeService extends BaseService {
           handleReply: async (reply) => {
             newRecap.title = reply;
           },
-          text: 'Give this recap a 10-15 word title',
+          text: 'Give this recap a 10-15 word title that does not reflexively reference that this is a recap/daily highlight. For example: Trump Impeached and Lethal Forest Fires in California',
         },
       ];
       
