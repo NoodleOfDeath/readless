@@ -307,7 +307,7 @@ export class PuppeteerService extends BaseService {
         };
 
         // image
-        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'figure img', image?.attribute), publisher);
+        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'figure img', image?.attribute, true), publisher);
         
         exclude.forEach((tag) => $(tag).remove());
         
@@ -368,7 +368,14 @@ export class PuppeteerService extends BaseService {
       if (!loot.imageUrl) {
         actions.push({
           action: async (el) => {
-            loot.imageUrl = this.fixRelativeUrl(clean(await el.evaluate((el, attr) => el.getAttribute(attr || 'src'), image?.attribute)), publisher);
+            loot.imageUrl = this.fixRelativeUrl(
+              clean(await el.evaluate((el, attr) => {
+                if (el.children.length > 0) {
+                  return el.children[0].getAttribute(attr || 'src');
+                }
+              }, image?.attribute)), 
+              publisher
+            );
           },
           selector: image?.selector || 'figure img',
         });
