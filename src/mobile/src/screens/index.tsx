@@ -5,6 +5,7 @@ export * from './CategoryScreen';
 export * from './PublisherScreen';
 export * from './HomeScreen';
 export * from './LegalScreen';
+export * from './OldNewsScreen';
 export * from './RecapScreen';
 export * from './SearchScreen';
 export * from './SummaryScreen';

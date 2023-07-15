@@ -12,6 +12,7 @@ import {
   PublicPublisherAttributes,
   PublicSummaryGroup,
   ReadingFormat,
+  RecapAttributes,
 } from '~/api';
 
 export type StackableTabParams = {
@@ -25,7 +26,9 @@ export type StackableTabParams = {
   default: undefined;
   legal: undefined;
   home: undefined;
-  recaps: undefined;
+  recap: {
+    recap: RecapAttributes;
+  };
   search: {
     prefilter?: string,
     onlyCustomNews?: boolean;
@@ -40,6 +43,7 @@ export type StackableTabParams = {
     summary: PublicSummaryGroup | number;
     showAnalytics?: boolean;
   };
+  oldNews: undefined;
   colorSchemePicker: undefined;
   fontPicker: undefined;
   triggerWordPicker: undefined;

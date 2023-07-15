@@ -1,7 +1,11 @@
 import React from 'react';
 
+import { useFocusEffect } from '@react-navigation/native';
+
 import {
+  BackNavigation,
   Button,
+  Divider,
   Screen,
   SummaryList,
   Text,
@@ -15,7 +19,7 @@ import { ScreenProps } from '~/screens';
 
 export function PublisherScreen({
   route,
-  navigation: _navigation,
+  navigation,
 }: ScreenProps<'publisher'>) {
 
   const { getSummaries } = useSummaryClient();
@@ -53,43 +57,58 @@ export function PublisherScreen({
     followPublisher(publisher);
   }, [publisher, followPublisher]);
   
-  return (
-    <Screen>
-      <View col>
+  useFocusEffect(React.useCallback(() => {
+    navigation?.setOptions({
+      header: () => (
         <View 
           row 
           itemsCenter
           elevated
+          gap={ 6 }
           zIndex={ 100 }
-          height={ 80 } 
+          height={ publisher?.descriotion ? 120 : 80 } 
           p={ 12 }>
-          <View flexRow gap={ 12 } itemsCenter>
-            <ChannelIcon size={ 40 } publisher={ publisher } />
-            <View>
-              <Text 
-                h6 
-                bold>
-                {publisher?.displayName}
-              </Text>
-              <Text subtitle2>{strings.misc_publisher}</Text>
+          <BackNavigation />
+          <View row>
+            <View flexRow gap={ 6 } itemsCenter>
+              <ChannelIcon size={ 40 } publisher={ publisher } />
+              <View>
+                <Text 
+                  h6
+                  bold>
+                  {publisher?.displayName}
+                </Text>
+                <Text subtitle2>{strings.misc_publisher}</Text>
+              </View>
+              <View row />
+              <View>
+                <Button
+                  body2
+                  contained
+                  haptic
+                  adjustsFontSizeToFit
+                  onPress={ toggleFollowed }>
+                  {`${ followed ? strings.action_unfollow : strings.action_follow } ${ publisher?.displayName && publisher.displayName.length < 15 ? strings.misc_publisher : '' }`}
+                </Button>
+              </View>
             </View>
           </View>
-          <View row />
-          <View>
-            <Button
-              body2
-              contained
-              onPress={ toggleFollowed }>
-              {`${ followed ? strings.action_unfollow : strings.action_follow } ${strings.misc_publisher }`}
-            </Button>
-          </View>
+          {publisher?.description && (
+            <React.Fragment>
+              <Divider />
+              <Text>{publisher.descriotion}</Text>
+            </React.Fragment>
+          )}
         </View>
-        <View col>
-          <SummaryList
-            fetch={ getSummaries }
-            filter={ prefilter } />
-        </View>
-      </View>
+      ),
+    });
+  }, [publisher]));
+  
+  return (
+    <Screen>
+      <SummaryList
+        fetch={ getSummaries }
+        filter={ prefilter } />
     </Screen>
   );
 }

@@ -1,33 +1,59 @@
 import React from 'react';
 
-import { RecapAttributes } from '~/api';
-import { Screen, Text } from '~/components';
-import { useSummaryClient } from '~/core';
+import { useFocusEffect } from '@react-navigation/native';
 
-export function RecapScreen() {
-  const { getRecaps } = useSummaryClient();
+import { 
+  BackNavigation,
+  Screen,
+  ScrollView,
+  Text,
+  View,
+} from '~/components';
+import { ScreenProps } from '~/screens';
 
-  const [recaps, setRecaps] = React.useState<RecapAttributes[]>([]);
-
-  const onMount = React.useCallback(async () => {
-    try {
-      const { data: recaps } = await getRecaps();
-      if (!recaps) {
-        return;
-      }
-      setRecaps(recaps.rows);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [getRecaps]);
-
-  React.useEffect(() => {
-    onMount();
-  }, [onMount]);
-
+export function RecapScreen({
+  route,
+  navigation,
+}: ScreenProps<'recap'>) {
+  
+  const recap = React.useMemo(() => route?.params?.recap, [route]);
+  
+  useFocusEffect(React.useCallback(() => {
+    navigation?.setOptions({
+      header: () => (
+        <View 
+          row 
+          itemsCenter
+          elevated
+          zIndex={ 100 }
+          height={ 80 } 
+          p={ 12 }>
+          <View row gap={ 12 } itemsCenter>
+            <BackNavigation />
+            <View>
+              <Text 
+                row
+                h6 
+                bold>
+                {recap?.title}
+              </Text>
+              <Text subtitle2>{recap?.createdAt}</Text>
+            </View>
+          </View>
+        </View>
+      ),
+    });
+  }, [navigation, recap?.createdAt, recap?.title]));
+  
   return (
     <Screen>
-      <Text>{JSON.stringify(recaps)}</Text>
+      <View p={ 12 }>
+        <ScrollView>
+          <Text h4>
+            {recap?.text}
+          </Text>
+        </ScrollView>
+      </View>
     </Screen>
   );
 }

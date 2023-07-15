@@ -19,6 +19,16 @@ export type HeaderProps = ViewProps & {
   actions?: React.ReactNode;
 };
 
+export function BackNavigation() {
+  const { navigation } = useNavigation();
+  return (
+    <Icon 
+      name="chevron-left" 
+      size={ 36 } 
+      onPress={ () => navigation?.goBack() } />
+  );
+}
+
 export function Header({
   back,
   backTitle,

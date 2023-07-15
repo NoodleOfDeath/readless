@@ -23,6 +23,7 @@ import {
   ChildlessViewProps,
   Chip,
   CollapsedView,
+  Divider,
   Highlighter,
   Icon,
   Image,
@@ -47,22 +48,26 @@ import {
 } from '~/locales';
 import { fixedSentiment } from '~/utils';
 
-type SummaryProps<Compact extends boolean = false> = ChildlessViewProps & ScrollViewProps & {
+type SummaryProps = ChildlessViewProps & ScrollViewProps & {
+  sample?: boolean;
   big?: boolean;
   fullImage?: boolean;
-  summary?: Compact extends true ? PublicSummaryGroup : PublicSummaryGroup;
+  summary?: PublicSummaryGroup
   tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
   initiallyTranslated?: boolean;
   keywords?: string[];
-  compact?: Compact;
+  compact?: boolean;
   disableInteractions?: boolean;
   disableNavigation?: boolean;
   dateFormat?: string;
   showFullDate?: boolean;
+  forceUnread?: boolean;
   forceSentiment?: boolean;
   forceShortSummary?: boolean;
+  titleComponent?: boolean;
+  hideHeader?: boolean;
   hideCard?: boolean;
   hideAnalytics?: boolean;
   hideArticleCount?: boolean;
@@ -116,7 +121,40 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
   },
 };
 
-export function Summary<Compact extends boolean = false>({
+const EMPTY_SUMMARY: PublicSummaryGroup = {
+  bullets: [
+  ],
+  category: {
+    displayName: '',
+    icon: '',
+    name: '',
+  },
+  categoryId: 0,
+  id: 0,
+  imageUrl: '',
+  originalDate: new Date(Date.now() - ms('5m')).toISOString(),
+  outlet: {
+    displayName: strings.misc_publisher,
+    name: '',
+  },
+  outletId: 0,
+  publisher: {
+    displayName: strings.misc_publisher,
+    name: '',
+  },
+  publisherId: 0,
+  sentiment: 0.3,
+  sentiments: [],
+  shortSummary: '',
+  siblings: [],
+  summary: '',
+  title: '',
+  translations: [],
+  url: 'https://readless.ai',
+};
+
+export function Summary({
+  sample,
   summary: summary0,
   tickInterval = '5m',
   selected,
@@ -129,9 +167,12 @@ export function Summary<Compact extends boolean = false>({
   disableInteractions,
   disableNavigation,
   showFullDate,
-  dateFormat = showFullDate ? 'E PP @ p 0' : undefined,
+  dateFormat = showFullDate ? 'E PP' : undefined,
+  forceUnread,
   forceSentiment,
   forceShortSummary: forceShortSummary0,
+  titleComponent,
+  hideHeader,
   hideCard,
   hideAnalytics,
   hideArticleCount,
@@ -141,7 +182,7 @@ export function Summary<Compact extends boolean = false>({
   onLocalize,
   onToggleTranslate,
   ...props
-}: SummaryProps<Compact>) {
+}: SummaryProps) {
 
   const {
     navigate,
@@ -171,12 +212,12 @@ export function Summary<Compact extends boolean = false>({
     followCategory,
   } = React.useContext(SessionContext);
 
-  const summary = React.useMemo((() => summary0 ?? DEFAULT_PROPS.summary), [summary0]);
+  const summary = React.useMemo((() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY)), [summary0, sample]);
 
   const [lastTick, setLastTick] = React.useState(new Date());
   
   const [isSentimentEnabled, setIsSentimentEnabled] = React.useState(sentimentEnabled);
-  const [isRead, setIsRead] = React.useState(summary.id in { ...readSummaries } && !initialFormat && !disableInteractions);
+  const [isRead, setIsRead] = React.useState(!forceUnread &&summary.id in { ...readSummaries } && !disableInteractions);
   const [isBookmarked, setIsBookmarked] = React.useState(summary.id in { ...bookmarkedSummaries });
   const [isFollowingPublisher, setIsFollowingPublisher] = React.useState(summary.publisher.name in { ...followedPublishers });
   const [isFollowingCategory, setIsFollowingCategory] = React.useState(summary.category.name in { ...followedCategories });
@@ -245,7 +286,7 @@ export function Summary<Compact extends boolean = false>({
     setIsSentimentEnabled(sentimentEnabled);
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
-    setIsRead(summary.id in { ...readSummaries } && !initialFormat && !disableInteractions);
+    setIsRead(!forceUnread && (summary.id in { ...readSummaries }) && !disableInteractions);
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
     setIsFollowingPublisher(summary.publisher.name in { ...followedPublishers });
     setIsFollowingCategory(summary.category.name in { ...followedCategories });
@@ -254,7 +295,7 @@ export function Summary<Compact extends boolean = false>({
       return;
     }
     return () => clearInterval(interval);
-  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, initialFormat, disableInteractions, bookmarkedSummaries, followedPublishers, followedCategories, hideCard, format, openURL]));
+  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, disableInteractions, bookmarkedSummaries, followedPublishers, followedCategories, hideCard, format, openURL, forceUnread]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
@@ -293,7 +334,8 @@ export function Summary<Compact extends boolean = false>({
   }, [showTranslations]);
   
   const menuItems = React.useMemo(() => {
-    const actions: MenuItemProps[] = [
+    const actions: MenuItemProps[] = [];
+    actions.push(
       {
         icon: () => <Icon name="eye" />,
         key: `read-${summary.id}`,
@@ -377,22 +419,14 @@ export function Summary<Compact extends boolean = false>({
           });
         },
         text: strings.summary_hide,
-      },
-    ];
+      }
+    );
     return actions;
   }, [summary, isBookmarked, isRead, isFollowingPublisher, isFollowingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, setPreference]);
   
   const timestamp = React.useMemo(() => {
-    return (
-      <Text  
-        adjustsFontSizeToFit
-        color={ theme.colors.textSecondary }
-        textCenter
-        caption>
-        {formatTime(summary.originalDate)}
-      </Text>
-    );
-  }, [formatTime, summary.originalDate, theme.colors.textSecondary]);
+    return formatTime(summary.originalDate);
+  }, [formatTime, summary.originalDate]);
   
   const sentimentMeter = React.useMemo(() => {
     return (
@@ -421,54 +455,60 @@ export function Summary<Compact extends boolean = false>({
     </Highlighter>
   ), [initialFormat, compact, compactSummaries, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
+  const publisherChip = React.useMemo(() => (
+    <Chip
+      flexRow
+      itemsCenter
+      gap={ 6 }
+      haptic
+      onPress={ () => !disableInteractions && openPublisher(summary.publisher) }>
+      <ChannelIcon publisher={ summary.publisher } />
+      <Text 
+        bold
+        caption
+        color={ theme.colors.textSecondary }>
+        {summary.publisher?.displayName}
+      </Text>
+    </Chip>
+  ), [disableInteractions, openPublisher, summary.publisher, theme.colors.textSecondary]);
+  
   const header = React.useMemo(() => {
-    if ((compact || compactSummaries) && !initialFormat) {
+    if ((compact || compactSummaries) && !initialFormat && !titleComponent) {
       return null;
+    }
+    if (hideHeader) {
+      return null;
+    }
+    if (titleComponent) {
+      return title;
     }
     return (
       <View 
-        p={ initialFormat ? 12 : 6 }
+        p={ titleComponent || initialFormat ? 12 : 6 }
         flexGrow={ 1 }
         elevated={ Boolean(initialFormat) }
         zIndex={ 2 }
-        bg={ theme.colors.headerBackground }>
-        <View>
-          {!initialFormat ? (
-            <View flexRow itemsCenter gap={ 6 }>
-              <Chip
-                flexRow
-                itemsCenter
-                gap={ 6 }
-                onPress={ () => !disableInteractions && openPublisher(summary.publisher) }>
-                <ChannelIcon publisher={ summary.publisher } />
-                <Text 
-                  bold
-                  caption
-                  color={ theme.colors.textSecondary }>
-                  {summary.publisher?.displayName}
-                </Text>
-              </Chip>
-              {timestamp}
-              <View row />
-              {(forceSentiment || isSentimentEnabled) && sentimentMeter}
-            </View>
-          ) : (
-            <View gap={ 6 }>
-              <View flexRow>
-                <View flex={ 1 } justifyCenter>
-                  {title}
-                </View>
-                <View width={ 120 } itemsCenter justifyCenter>
-                  {sentimentMeter}
-                  {timestamp}
-                </View>
-              </View>
-            </View>
-          )}
+        bg={ titleComponent ? undefined : theme.colors.headerBackground }>
+        <View flexRow itemsCenter gap={ 6 }>
+          {publisherChip}
+          <Text
+            caption
+            color={ theme.colors.textSecondary }>
+            •
+          </Text>
+          <Text  
+            adjustsFontSizeToFit
+            color={ theme.colors.textSecondary }
+            textCenter
+            caption>
+            {timestamp}
+          </Text>
+          <View row />
+          {(forceSentiment || isSentimentEnabled) && sentimentMeter}
         </View>
       </View>
     );
-  }, [initialFormat, compact, compactSummaries, theme.colors.headerBackground, theme.colors.textSecondary, summary.publisher, timestamp, forceSentiment, isSentimentEnabled, sentimentMeter, title, disableInteractions, openPublisher]);
+  }, [compact, compactSummaries, initialFormat, titleComponent, hideHeader, theme.colors.headerBackground, theme.colors.textSecondary, publisherChip, timestamp, forceSentiment, isSentimentEnabled, sentimentMeter, title]);
   
   const translateToggle = React.useMemo(() => {
     if (/^en/i.test(getLocale())) {
@@ -511,10 +551,21 @@ export function Summary<Compact extends boolean = false>({
         flexRow
         gap={ 6 }
         itemsCenter>
+        {titleComponent && (
+          <React.Fragment>
+            {publisherChip}
+            <Text
+              caption
+              color={ theme.colors.textSecondary }>
+              •
+            </Text>
+          </React.Fragment>
+        )}
         <Chip
           caption
           color={ theme.colors.textSecondary }
           itemsCenter
+          haptic
           leftIcon={ summary.category?.icon }
           gap={ 3 }
           onPress={ () => !disableInteractions && openCategory(summary.category) }>
@@ -550,14 +601,15 @@ export function Summary<Compact extends boolean = false>({
             </Chip>
           </React.Fragment>
         )}
-        {initialFormat && (
+        {(titleComponent) && (
           <React.Fragment>
             <View row />
-            <View flexRow itemsCenter gap={ 6 }>
+            <View flexRow itemsCenter gap={ 12 }>
               <Chip
-                caption
                 color={ theme.colors.textSecondary }
                 leftIcon="share"
+                haptic
+                gap={ 3 }
                 onPress={ async () => {
                   if (disableInteractions) {
                     return;
@@ -576,18 +628,21 @@ export function Summary<Compact extends boolean = false>({
                 items={ menuItems }
                 closeOnTap>
                 <Chip
+                  gap={ 3 }
                   color={ theme.colors.textSecondary }
-                  leftIcon="dots-horizontal" />
+                  leftIcon="menu-down">
+                  {strings.misc_more}
+                </Chip>
               </HoldItem>
             </View>
           </React.Fragment>
         )}
       </View>
     );
-  }, [theme.colors.textSecondary, summary, hideArticleCount, isBookmarked, initialFormat, menuItems, disableInteractions, openCategory, navigate, onInteract]);
+  }, [theme.colors.textSecondary, publisherChip, summary, hideArticleCount, isBookmarked, titleComponent, menuItems, disableInteractions, openCategory, navigate, onInteract]);
   
   const image = React.useMemo(() => {
-    if (compact || compactSummaries || !summary.imageUrl) {
+    if (compact || compactSummaries || !summary.imageUrl || titleComponent) {
       return null;
     }
     return (
@@ -630,7 +685,7 @@ export function Summary<Compact extends boolean = false>({
                 gap={ 6 }>
                 <Icon 
                   color={ theme.colors.textDark }
-                  name={ summary.media?.imageArticle ? 'camera' : 'information' }
+                  name={ summary.media?.imageArticle ? 'tooltip-image' : 'information' }
                   size={ 24 } />
                 <Text 
                   flex={ 1 }
@@ -644,7 +699,7 @@ export function Summary<Compact extends boolean = false>({
         </View>
       </View>
     );
-  }, [compact, compactSummaries, summary.imageUrl, summary.media?.imageArticle, summary.media?.imageAi1, big, fullImage, initialFormat, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark]);
+  }, [compact, compactSummaries, summary.imageUrl, summary.media?.imageArticle, summary.media?.imageAi1, titleComponent, big, fullImage, initialFormat, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark]);
 
   const coverContent = React.useMemo(() => (
     <View flex={ 1 } mb={ 6 }>
@@ -763,19 +818,29 @@ export function Summary<Compact extends boolean = false>({
 
   const fullCard = React.useMemo(() => (
     <View
-      style={ { ...theme.components.card, ...style } }>
-      {!hideCard && (
-        <View>
-          {header}
-        </View>
-      )}
+      style={ { ...theme.components.card, ...style } }>   
       <View>
         {!hideCard && image}
+        {!hideCard && !hideHeader && (
+          <View>
+            {header}
+          </View>
+        )}
         {!hideCard && coverContent}
         {cardBody}
       </View>
     </View>
-  ), [theme.components.card, style, hideCard, header, image, coverContent, cardBody]);
+  ), [theme.components.card, style, hideCard, hideHeader, header, image, coverContent, cardBody]);
+  
+  if (titleComponent) {
+    return (
+      <View flex={ 1 } gap={ 3 }>
+        <View flex={ 2 }>{header}</View>
+        <Divider />
+        <View flex={ 1 }>{footer}</View>
+      </View>
+    );
+  }
   
   return (
     <View flexGrow={ 1 }>

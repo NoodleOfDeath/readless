@@ -36,6 +36,7 @@ export function ColorSchemePicker({
         <ScrollView scrollEnabled={ false }>
           <Summary
             mt={ 12 }
+            sample
             disableInteractions 
             disableNavigation /> 
         </ScrollView>

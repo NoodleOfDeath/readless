@@ -281,18 +281,23 @@ export class ScribeService extends BaseService {
       
       // Save article media
       if (loot.imageUrl) {
-        const obj = await DeepAiService.mirror(loot.imageUrl, {
-          ACL: 'public-read',
-          ContentType: 'image/jpeg',
-          Folder: 'img/s',
-        });
-        await SummaryMedia.create({
-          key: 'imageArticle',
-          parentId: summary.id,
-          path: obj.key,
-          type: 'image',
-          url: obj.url,
-        });
+        try {
+          const obj = await DeepAiService.mirror(loot.imageUrl, {
+            ACL: 'public-read',
+            ContentType: 'image/jpeg',
+            Folder: 'img/s',
+          });
+          await SummaryMedia.create({
+            key: 'imageArticle',
+            originalUrl: loot.imageUrl,
+            parentId: summary.id,
+            path: obj.key,
+            type: 'image',
+            url: obj.url,
+          });
+        } catch (e) {
+          await this.error('Failed to download image', [loot.imageUrl, JSON.stringify(e)].join('\n\n'), false);
+        }
       }
         
       // Create sentiment
