@@ -14,8 +14,8 @@ export async function main() {
   doWork();
 }
 
-const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.35; // Math.floor(8/16)
-const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '3d';
+const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.4;
+const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '1d';
 
 export async function doWork() {
   try {
@@ -59,8 +59,8 @@ export async function doWork() {
                 const chatService = new OpenAIService();
                 const yesOrNo = await chatService.send(`
                   Do the following articles appear to be about the same topic and location? Please respond only with YES or NO:
-                  [Article 1] ${summary.title}
-                  [Article 2] ${possibleSibling.title}
+                  [Article 1] ${summary.title}: ${summary.shortSummary}
+                  [Article 2] ${possibleSibling.title} ${possibleSibling.shortSummary}
                 `);
                 if (/yes/i.test(yesOrNo)) {
                   siblings.push(possibleSibling);
