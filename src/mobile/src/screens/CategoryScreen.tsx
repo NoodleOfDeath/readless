@@ -91,7 +91,7 @@ export function CategoryScreen({
         </View>
       ),
     });
-  }, [category]));
+  }, [category, followed]));
   
   return (
     <Screen>

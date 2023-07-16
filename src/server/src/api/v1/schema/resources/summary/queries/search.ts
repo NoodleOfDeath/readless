@@ -143,8 +143,16 @@ FROM (
           OR :noPublishers
         )
         AND (
+          (pub.name NOT IN (:excludedPublishers))
+          OR :noExcludedPublishers
+        )
+        AND (
           (cat.name IN (:categories))
           OR :noCategories
+        )
+        AND (
+          (pub.name NOT IN (:excludedCategories))
+          OR :noExcludedCategories
         )
         AND (
           :noFilter

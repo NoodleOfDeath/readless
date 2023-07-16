@@ -207,9 +207,17 @@ export function Summary({
     readSummary,
     setPreference,
     followedPublishers,
+    snoozedPublishers,
+    excludedPublishers,
     followedCategories,
+    snoozedCategories,
+    excludedCategories,
     followPublisher,
+    snoozePublisher,
+    excludePublisher,
     followCategory,
+    snoozeCategory,
+    excludeCategory,
   } = React.useContext(SessionContext);
 
   const summary = React.useMemo((() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY)), [summary0, sample]);
@@ -220,7 +228,11 @@ export function Summary({
   const [isRead, setIsRead] = React.useState(!forceUnread &&summary.id in { ...readSummaries } && !disableInteractions);
   const [isBookmarked, setIsBookmarked] = React.useState(summary.id in { ...bookmarkedSummaries });
   const [isFollowingPublisher, setIsFollowingPublisher] = React.useState(summary.publisher.name in { ...followedPublishers });
+  const [isSnoozingPublisher, setIsSnoozingPublisher] = React.useState(summary.publisher.name in { ...snoozedPublishers });
+  const [isExcludingPublisher, setIsExcludingPublisher] = React.useState(summary.publisher.name in { ...excludedPublishers });
   const [isFollowingCategory, setIsFollowingCategory] = React.useState(summary.category.name in { ...followedCategories });
+  const [isSnoozingCategory, setIsSnoozingCategory] = React.useState(summary.category.name in { ...snoozedCategories });
+  const [isExcludingCategory, setIsExcludingCategory] = React.useState(summary.category.name in { ...excludedCategories });
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
   const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
@@ -289,20 +301,22 @@ export function Summary({
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }) && !disableInteractions);
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
     setIsFollowingPublisher(summary.publisher.name in { ...followedPublishers });
+    setIsSnoozingPublisher(summary.publisher.name in { ...snoozedPublishers });
+    setIsExcludingPublisher(summary.publisher.name in { ...excludedPublishers });
     setIsFollowingCategory(summary.category.name in { ...followedCategories });
+    setIsSnoozingCategory(summary.category.name in { ...snoozedCategories });
     if (!hideCard && format === ReadingFormat.FullArticle) {
       openURL(summary.url);
       return;
     }
     return () => clearInterval(interval);
-  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, disableInteractions, bookmarkedSummaries, followedPublishers, followedCategories, hideCard, format, openURL, forceUnread]));
+  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, disableInteractions, bookmarkedSummaries, followedPublishers, snoozedPublishers, excludedPublishers, followedCategories, snoozedCategories, excludedCategories, hideCard, format, openURL, forceUnread]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
       return;
     }
     onFormatChange?.(newFormat);
-    DeviceEventEmitter.emit('summary-expand');
     if (!initialFormat && !hideCard) {
       setIsRead(true);
       return;
@@ -387,6 +401,16 @@ export function Summary({
         text: `${isFollowingPublisher ? strings.action_unfollow : strings.action_follow} ${summary.publisher.displayName}`,
       },
       {
+        icon: () => <ChannelIcon publisher={ summary.publisher } snoozed />,
+        key: `${isSnoozingPublisher ? 'unsnooze-pub' : 'snooze-pub'}-${summary.id}`,
+        onPress: async () => {
+          setIsSnoozingCategory((prev) => !prev);
+          snoozeCategory(summary.publisher);
+        },
+        text: `${isSnoozingPublisher ? strings.action_unsnooze : strings.action_snooze} ${summary.publisher.displayName}`,
+        withSeparator: true,
+      },
+      {
         icon: () => <ChannelIcon category={ summary.category } />,
         key: `${isFollowingCategory ? 'unfollow-cat' : 'follow-cat'}-${summary.id}`,
         onPress: async () => {
@@ -394,6 +418,15 @@ export function Summary({
           followCategory(summary.category);
         },
         text: `${isFollowingCategory ? strings.action_unfollow : strings.action_follow} ${summary.category.displayName}`,
+      },
+      {
+        icon: () => <ChannelIcon category={ summary.category } snoozed />,
+        key: `${isSnoozingCategory ? 'unsnooze-cat' : 'snooze-cat'}-${summary.id}`,
+        onPress: async () => {
+          setIsSnoozingCategory((prev) => !prev);
+          snoozeCategory(summary.category);
+        },
+        text: `${isSnoozingCategory ? strings.action_unsnooze : strings.action_snooze} ${summary.category.displayName}`,
         withSeparator: true,
       },
       {
@@ -405,6 +438,26 @@ export function Summary({
           });
         },
         text: strings.summary_reportAtBug,
+      },
+      {
+        icon: () => <ChannelIcon publisher={ summary.publisher } excluded />,
+        isDestructive: true,
+        key: `${isExcludingPublisher ? 'unexclude-pub' : 'exclude-pub'}-${summary.id}`,
+        onPress: async () => {
+          setIsExcludingPublisher((prev) => !prev);
+          excludePublisher(summary.publisher);
+        },
+        text: `${isExcludingPublisher ? strings.action_unexclude : strings.action_exclude} ${summary.publisher.displayName}`,
+      },
+      {
+        icon: () => <ChannelIcon category={ summary.category } excluded />,
+        isDestructive: true,
+        key: `${isExcludingCategory ? 'unexclude-cat' : 'exclude-cat'}-${summary.id}`,
+        onPress: async () => {
+          setIsExcludingCategory((prev) => !prev);
+          excludeCategory(summary.category);
+        },
+        text: `${isExcludingCategory ? strings.action_unexclude : strings.action_exclude} ${summary.category.displayName}`,
       },
       {
         icon: () => <Icon name='eye-off' color='destructive' />,
@@ -422,7 +475,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [summary, isBookmarked, isRead, isFollowingPublisher, isFollowingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, setPreference]);
+  }, [summary, isBookmarked, isRead, isFollowingPublisher, isSnoozingPublisher, isExcludingPublisher, isFollowingCategory, isSnoozingCategory, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, setPreference]);
   
   const timestamp = React.useMemo(() => {
     return formatTime(summary.originalDate);
