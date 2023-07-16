@@ -259,6 +259,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     offset = pageSize * page,
     forceCache,
   }: SearchSummariesPayload, queryKey: QueryKey = 'getSummaries'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
+    
     const { 
       categories, 
       excludedCategories,
@@ -267,10 +268,12 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       interval: pastInterval,
       filter: query,
     } = applyFilter(filter, matchType);
+    
     const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
     const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
     const idArray = typeof ids === 'number' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
     const interval = (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval0 ?? '100y');
+    
     const replacements = {
       categories: categories.length === 0 ? [''] : categories,
       endDate: endDate ?? new Date(0),
@@ -292,6 +295,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       publishers: publishers.length === 0 ? [''] : publishers,
       startDate: startDate ?? new Date(),
     };
+    
     const cacheKey = [
       queryKey,
       filter,
@@ -305,6 +309,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       pageSize,
       offset,
     ].join(':');
+    
     if (!forceCache) {
       const cache = await Cache.fromKey(cacheKey);
       if (cache && cache.expiresSoon === false) {
@@ -344,8 +349,6 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         }
         return result;
       });
-      
-      console.log('fuck', filteredRecords);
       
       console.log('filtered', filteredRecords.length);
       
