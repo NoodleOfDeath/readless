@@ -39,7 +39,7 @@ export function Recap({
   
   useFocusEffect(React.useCallback(() => {
     setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
-  }, [forceUnread, readRecaps]));
+  }, [forceUnread, readRecaps, recap.id]));
   
   return (
     <View 
@@ -73,6 +73,7 @@ export function OldNewsScreen() {
 
   const [recaps, setRecaps] = React.useState<RecapAttributes[]>([]);
   const [loading, setLoading] = React.useState(false);
+  const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   
   const load = React.useCallback(async () => {
     if (loading) {
@@ -85,16 +86,20 @@ export function OldNewsScreen() {
         return;
       }
       setRecaps(recaps.rows);
+      setLastFetchFailed(false);
     } catch (error) {
       console.log(error);
+      setLastFetchFailed(true);
     } finally {
       setLoading(false);
     }
   }, [loading, getRecaps]);
 
-  React.useEffect(() => {
-    load();
-  }, [load]);
+  useFocusEffect(React.useCallback(() => {
+    if (recaps.length === 0 && !lastFetchFailed) {
+      load();
+    }
+  }, [load, recaps, lastFetchFailed]));
 
   return (
     <Screen>

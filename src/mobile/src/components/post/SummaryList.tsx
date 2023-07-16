@@ -111,7 +111,7 @@ export function SummaryList({
   // callbacks
 
   const load = React.useCallback(async (reset = false) => {
-    if (lastFetchFailed || loading) {
+    if (loading) {
       return;
     }
     setLoading(true);
@@ -165,14 +165,14 @@ export function SummaryList({
       setLoaded(true);
       setLoading(false);
     }
-  }, [lastFetchFailed, loading, fetch, specificIds, excludeIds, filter, interval, cursor, pageSize, removedSummaries]);
+  }, [loading, fetch, specificIds, excludeIds, filter, interval, cursor, pageSize, removedSummaries]);
 
   const loadMore = React.useCallback(async () => {
-    if (totalResultCount <= summaries.length) {
+    if (lastFetchFailed || totalResultCount <= summaries.length) {
       return;
     }
     await load();
-  }, [totalResultCount, summaries.length, load]);
+  }, [lastFetchFailed, totalResultCount, summaries.length, load]);
 
   const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setLastFocus('master');
@@ -232,7 +232,10 @@ export function SummaryList({
   ]));
   
   useFocusEffect(React.useCallback(() => {
-    if ((!lastFetchFailed && summaries.length === 0) || (filter !== filter0)) {
+    if (lastFetchFailed) {
+      return;
+    }
+    if (summaries.length === 0 || (filter !== filter0)) {
       load(true);
     }
     if (filter0) {

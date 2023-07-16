@@ -342,7 +342,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         return records;
       }
       
-      const filteredRecords = records.rows.filter((a, i) => {
+      const filteredRecords = records.rows.filter((a) => {
         const result = ![...previousRecords, ...siblings].some((r) => r.id === a.id);
         if (a.siblings) {
           siblings.push(...a.siblings);
