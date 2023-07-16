@@ -16,6 +16,7 @@ import {
   PublicPublisherAttributes,
   PublicSummaryGroup,
   ReadingFormat,
+  RecapAttributes,
 } from '~/api';
 import {
   emitEvent,
@@ -56,6 +57,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
+  const [readRecaps, setReadRecaps] = React.useState<{ [key: string]: boolean }>();
   
   const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
   const [snoozedPublishers, setSnoozedPublishers] = React.useState<{ [key: string]: Bookmark<boolean> }>();
@@ -162,6 +164,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       setRemovedSummaries(newValue);
       break;
       
+    case 'readRecaps':
+      setReadRecaps(newValue);
+      break;
+      
     case 'followedOutlets':
     case 'followedPublishers':
       setFollowedPublishers(newValue);
@@ -235,6 +241,20 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return (prev = state);
     });
   };
+  
+  const readRecap = async (recap: RecapAttributes) => {
+    await setPreference('readRecaps', (prev) => {
+      const state = { ...prev };
+      if (recap.is in state) {
+        delete state[recap];
+        emitEvent('unread-recap', recap, state);
+      } else {
+        state[recap.id] = new Bookmark(true);
+        emitEvent('read-recap', recap, state);
+      }
+      return (prev = state);
+    });
+  };
 
   const followPublisher = async (publisher: PublicPublisherAttributes) => {
     await setPreference('followedPublishers', (prev) => {
@@ -257,7 +277,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         delete state[publisher.name];
         emitEvent('unsnooze-publisher', publisher, state);
       } else {
-        state[publisher.name] = new Bookmark(true);
+        state[publisher.name] = new Bookmark(true, { expiresIn: '30d' });
         emitEvent('snooze-publisher', publisher, state);
       }
       return (prev = state);
@@ -299,7 +319,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         delete state[category.name];
         emitEvent('unsnooze-category', category, state);
       } else {
-        state[category.name] = new Bookmark(true);
+        state[category.name] = new Bookmark(true, { expiresIn: '30d' });
         emitEvent('snooze-category', category, state);
       }
       return (prev = state);
@@ -361,6 +381,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setReadSummaries(await getPreference('readSummaries'));
     setRemovedSummaries(await getPreference('removedSummaries'));
     
+    // recap state
+    setReadRecaps(await getPreference('readRecaps'));
+    
     // publisher/category states
     setFollowedPublishers(await getPreference('followedPublishers') ?? await getPreference('followedOutlets'));
     //setSnoozedPublishers(Object.fromEntries(Object.entries(await getPreference('snoozedPublishers')).filter(([k, b]) => Date.now() - new Date(b.createdAt).valueOf() < ms('30d'))));
@@ -409,6 +432,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         lineHeightMultiplier,
         preferredReadingFormat,
         publishers,
+        readRecap,
+        readRecaps,
         readSummaries,
         readSummary,
         ready,
