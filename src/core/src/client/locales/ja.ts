@@ -59,6 +59,7 @@ export const jaStrings: typeof enStrings = {
   nav_browsePublishers: '発行者を参照する',
   nav_yourFollows: 'あなたのフォロー',
   recaps_information: '草に触れていたためにニュースを見逃してしまった方のために、毎日の要約をいくつかご紹介します。',
+  recaps_references: '参考文献',
   screens_about: 'だいたい',
   screens_bookmarks: 'ブックマーク',
   screens_browse: 'ブラウズ',

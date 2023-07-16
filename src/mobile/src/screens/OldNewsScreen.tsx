@@ -18,7 +18,7 @@ import {
 import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/core';
 import { useNavigation, useTheme } from '~/hooks';
-import { getFnsLocale } from '~/locales';
+import { getFnsLocale, strings } from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
   recap: RecapAttributes;
@@ -72,8 +72,13 @@ export function OldNewsScreen() {
   const { readRecap, readRecaps } = React.useContext(SessionContext);
 
   const [recaps, setRecaps] = React.useState<RecapAttributes[]>([]);
-
-  const onMount = React.useCallback(async () => {
+  const [loading, setLoading] = React.useState(false);
+  
+  const load = React.useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     try {
       const { data: recaps } = await getRecaps();
       if (!recaps) {
@@ -82,16 +87,22 @@ export function OldNewsScreen() {
       setRecaps(recaps.rows);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-  }, [getRecaps]);
+  }, [loading, getRecaps]);
 
   React.useEffect(() => {
-    onMount();
-  }, [onMount]);
+    load();
+  }, [load]);
 
   return (
     <Screen>
       <FlatList
+        refreshing={ recaps.length === 0 && loading }
+        onRefresh={ () => {
+          load();
+        } }
         data={ recaps }
         renderItem={ ({ item }) => (
           <Recap
@@ -105,6 +116,11 @@ export function OldNewsScreen() {
             } } />
         ) }
         ListHeaderComponentStyle={ { paddingTop: 12 } }
+        ListHeaderComponent={ (
+          <Text mx={ 12 }>
+            {strings.recaps_information}
+          </Text>
+        ) }
         ListFooterComponentStyle={ { paddingBottom: 12 } }
         ItemSeparatorComponent={ () => <Divider /> }
         estimatedItemSize={ 114 } />

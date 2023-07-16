@@ -59,6 +59,7 @@ export const frStrings: typeof enStrings = {
   nav_browsePublishers: 'Parcourir les éditeurs',
   nav_yourFollows: 'Vos suivis',
   recaps_information: 'Voici quelques récapitulatifs quotidiens si vous avez raté l\'actualité parce que vous touchiez de l\'herbe',
+  recaps_references: 'Les références',
   screens_about: 'À propos',
   screens_bookmarks: 'Signets',
   screens_browse: 'Parcourir',

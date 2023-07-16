@@ -59,6 +59,7 @@ export const ruStrings: typeof enStrings = {
   nav_browsePublishers: 'Обзор издателей',
   nav_yourFollows: 'Ваши подписчики',
   recaps_information: 'Вот несколько ежедневных обзоров, если вы пропустили новости, потому что коснулись травы',
+  recaps_references: 'Рекомендации',
   screens_about: 'О',
   screens_bookmarks: 'Закладки',
   screens_browse: 'Просматривать',

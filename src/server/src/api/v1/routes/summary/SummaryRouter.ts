@@ -18,7 +18,7 @@ const router = Router();
 
 router.get(
   '/',
-  rateLimitMiddleware('20 per 1m'),
+  rateLimitMiddleware('30 per 1m'),
   query('filter').isString().optional(),
   query('ids').optional(),
   query('excludeIds').isBoolean().optional(),
@@ -43,7 +43,7 @@ router.get(
 
 router.get(
   '/top',
-  rateLimitMiddleware('20 per 1m'),
+  rateLimitMiddleware('30 per 1m'),
   query('filter').isString().optional(),
   query('ids').optional(),
   query('excludeIds').isBoolean().optional(),
@@ -68,7 +68,7 @@ router.get(
 
 router.post(
   '/interact/:targetId/:type',
-  rateLimitMiddleware('1 per 2s'),
+  rateLimitMiddleware('30 per 1m'),
   param('targetId').isNumeric(),
   param('type').isString(),
   body('value').isString().optional(),

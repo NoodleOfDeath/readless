@@ -59,6 +59,7 @@ export const koStrings: typeof enStrings = {
   nav_browsePublishers: '게시자 찾아보기',
   nav_yourFollows: '팔로우',
   recaps_information: '잔디를 만지고 있어서 뉴스를 놓친 경우를 위한 일일 요약입니다.',
+  recaps_references: '참조',
   screens_about: '에 대한',
   screens_bookmarks: '북마크',
   screens_browse: '검색',

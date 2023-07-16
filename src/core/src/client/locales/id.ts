@@ -59,6 +59,7 @@ export const idStrings: typeof enStrings = {
   nav_browsePublishers: 'Telusuri Penerbit',
   nav_yourFollows: 'Pengikut Anda',
   recaps_information: 'Berikut beberapa rekap harian jika Anda ketinggalan berita karena menyentuh rumput',
+  recaps_references: 'Referensi',
   screens_about: 'Tentang',
   screens_bookmarks: 'Bookmark',
   screens_browse: 'Jelajahi',

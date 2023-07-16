@@ -59,6 +59,7 @@ export const hrStrings: typeof enStrings = {
   nav_browsePublishers: 'Pregledajte izdavače',
   nav_yourFollows: 'Vaši pratitelji',
   recaps_information: 'Evo nekoliko dnevnih sažetaka ako ste propustili vijesti jer ste dodirivali travu',
+  recaps_references: 'Reference',
   screens_about: 'Oko',
   screens_bookmarks: 'Oznake',
   screens_browse: 'pretraživati',

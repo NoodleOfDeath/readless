@@ -59,6 +59,7 @@ export const zhTWStrings: typeof enStrings = {
   nav_browsePublishers: '瀏覽出版商',
   nav_yourFollows: '您的關注',
   recaps_information: '如果您因為接觸草地而錯過了新聞，這裡有一些每日回顧',
+  recaps_references: '參考',
   screens_about: '關於',
   screens_bookmarks: '書籤',
   screens_browse: '瀏覽',

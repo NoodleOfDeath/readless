@@ -59,6 +59,7 @@ export const skStrings: typeof enStrings = {
   nav_browsePublishers: 'Prehľadávať vydavateľov',
   nav_yourFollows: 'Vaši sledovaní',
   recaps_information: 'Tu je niekoľko denných rekapitulácií, ak ste zmeškali správy, pretože ste sa dotýkali trávy',
+  recaps_references: 'Referencie',
   screens_about: 'O',
   screens_bookmarks: 'Záložky',
   screens_browse: 'Prehľadávať',

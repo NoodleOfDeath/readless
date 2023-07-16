@@ -59,6 +59,7 @@ export const zhCNStrings: typeof enStrings = {
   nav_browsePublishers: '浏览出版商',
   nav_yourFollows: '您的关注',
   recaps_information: '如果您因为接触草地而错过了新闻，这里有一些每日回顾',
+  recaps_references: '参考',
   screens_about: '关于',
   screens_bookmarks: '书签',
   screens_browse: '浏览',

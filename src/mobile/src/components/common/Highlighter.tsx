@@ -8,31 +8,41 @@ import { Text, TextProps } from '~/components';
 export type HighlighterProps = Omit<TextProps, 'children'> & {
   children?: string;
   autoEscape?: boolean;
-  highlightStyle?: TextStyle
-  searchWords?: string[],
-  sanitize?: () => string,
+  highlightStyle?: TextStyle | ((text: string, index: number) => TextStyle);
+  searchWords?: string[];
+  sanitize?: () => string;
+  propsFor?: (text: string, index: number) => TextProps;
+  replacementFor?: (text: string, index: number) => string;
 };
 
 export function Highlighter({ 
   children: textToHighlight = '', 
+  highlightStyle,
   searchWords = [],
+  propsFor,
+  replacementFor,
   ...props
 }: HighlighterProps) {
   const chunks = findAll({
     searchWords, textToHighlight, ...props, 
   });
+  let count = 0;
   return (
     <Text { ...props }>
       <RNText>
         {chunks.map((chunk, index) => {
           const text = textToHighlight?.slice(chunk.start, chunk.end);
+          if (chunk.highlight) {
+            count += 1;
+          }
           return (!chunk.highlight)
             ? text
             : (
               <RNText
                 key={ index }
-                style={ props.highlightStyle }>
-                {text}
+                { ...propsFor?.(text, count) }
+                style={ highlightStyle instanceof Function ? highlightStyle(text, count) : highlightStyle }>
+                {replacementFor?.(text, count) || text}
               </RNText>
             );
         })}

@@ -59,6 +59,7 @@ export const faStrings: typeof enStrings = {
   nav_browsePublishers: 'ناشران را مرور کنید',
   nav_yourFollows: 'دنبال کننده های شما',
   recaps_information: 'اگر اخبار را به دلیل دست زدن به چمن از دست داده اید، در اینجا چند خلاصه روزانه آورده شده است',
+  recaps_references: 'منابع',
   screens_about: 'در باره',
   screens_bookmarks: 'نشانک ها',
   screens_browse: 'مرور کردن',

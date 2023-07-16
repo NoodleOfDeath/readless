@@ -59,6 +59,7 @@ export const nbStrings: typeof enStrings = {
   nav_browsePublishers: 'Bla gjennom utgivere',
   nav_yourFollows: 'Dine følgere',
   recaps_information: 'Her er noen daglige oppsummeringer hvis du gikk glipp av nyhetene fordi du tok på gress',
+  recaps_references: 'Referanser',
   screens_about: 'Om',
   screens_bookmarks: 'Bokmerker',
   screens_browse: 'Bla gjennom',

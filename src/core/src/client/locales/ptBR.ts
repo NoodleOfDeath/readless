@@ -59,6 +59,7 @@ export const ptBRStrings: typeof enStrings = {
   nav_browsePublishers: 'Procurar editores',
   nav_yourFollows: 'Seus seguidores',
   recaps_information: 'Aqui estão algumas recapitulações diárias, se você perdeu as notícias porque estava tocando na grama',
+  recaps_references: 'Referências',
   screens_about: 'Sobre',
   screens_bookmarks: 'Favoritos',
   screens_browse: 'Navegar',

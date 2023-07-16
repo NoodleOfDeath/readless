@@ -66,6 +66,7 @@ export const enStrings = {
   
   // recaps
   recaps_information: 'Here are some daily recaps if you missed the news because you were touching grass',
+  recaps_references: 'References',
   
   // screens
   screens_about: 'About',

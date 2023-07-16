@@ -59,6 +59,7 @@ export const caStrings: typeof enStrings = {
   nav_browsePublishers: 'Explora els editors',
   nav_yourFollows: 'Els teus seguidors',
   recaps_information: 'Aquí teniu alguns resums diaris si us vau perdre la notícia perquè tocava gespa',
+  recaps_references: 'Referències',
   screens_about: 'Sobre',
   screens_bookmarks: 'Adreces d\'interès',
   screens_browse: 'Navega',

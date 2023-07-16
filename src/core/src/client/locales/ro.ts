@@ -59,6 +59,7 @@ export const roStrings: typeof enStrings = {
   nav_browsePublishers: 'Răsfoiți editori',
   nav_yourFollows: 'Urmărește-ți',
   recaps_information: 'Iată câteva recapitulări zilnice dacă ați ratat știrile pentru că atingeai iarbă',
+  recaps_references: 'Referințe',
   screens_about: 'Despre',
   screens_bookmarks: 'Marcaje',
   screens_browse: 'Naviga',

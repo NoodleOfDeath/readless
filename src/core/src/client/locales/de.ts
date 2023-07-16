@@ -59,6 +59,7 @@ export const deStrings: typeof enStrings = {
   nav_browsePublishers: 'Durchsuchen Sie Verlage',
   nav_yourFollows: 'Deine Follower',
   recaps_information: 'Hier sind einige tägliche Rückblicke für den Fall, dass Sie die Nachrichten verpasst haben, weil Sie Gras berührt haben',
+  recaps_references: 'Verweise',
   screens_about: 'Um',
   screens_bookmarks: 'Lesezeichen',
   screens_browse: 'Durchsuche',

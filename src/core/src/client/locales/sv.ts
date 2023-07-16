@@ -59,6 +59,7 @@ export const svStrings: typeof enStrings = {
   nav_browsePublishers: 'Bläddra bland förlag',
   nav_yourFollows: 'Dina följare',
   recaps_information: 'Här är några dagliga sammanfattningar om du missade nyheterna för att du rörde gräs',
+  recaps_references: 'Referenser',
   screens_about: 'Handla om',
   screens_bookmarks: 'Bokmärken',
   screens_browse: 'Bläddra',
