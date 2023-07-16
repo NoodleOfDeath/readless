@@ -1,26 +1,41 @@
+import ms from 'ms';
+
 import {
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
   ReadingFormat,
+  RecapAttributes,
   RequestParams,
 } from '~/api';
+
+export type BookmarkConstructorProps = {
+  createdAt: Date;
+  expiresIn?: string;
+};
 
 export class Bookmark<T> {
 
   item: T;
   createdAt: Date;
+  expiresAt?: Date;
   
-  get serialized() {
-    return {
-      createdAt: this.createdAt,
-      item: this.item,
-    };
+  get expired() {
+    if (!this.expiresAt) {
+      return false;
+    }
+    return new Date(this.expiresAt).valueOf() < Date.now();
   }
 
-  constructor(item: T, createdAt = new Date()) {
+  constructor(item: T, {
+    createdAt = new Date(), 
+    expiresIn,
+  }: BookmarkConstructorProps = {}) {
     this.item = item;
     this.createdAt = createdAt;
+    if (expiresIn) {
+      this.expiresAt = new Date(Date.now() + ms(expiresIn));
+    }
   }
 
 }
@@ -67,6 +82,9 @@ export type Preferences = {
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
   
+  // recap state
+  readRecaps: { [key: number]: boolean };
+  
   // followed publishers
   followedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
   followedPublishers?: { [key: string]: boolean };
@@ -87,21 +105,24 @@ export type Preferences = {
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
 
 const SESSION_EVENTS = [
-  // summaries
+  // summary state
   'bookmark-summary',
   'unbookmark-summary',
   'read-summary',
   'unread-summary',
   'hide-summary',
   'unhide-summary',
-  // publishers
+  // recap state
+  'read-recap',
+  'unread-recap',
+  // publisher state
   'follow-publisher',
   'unfollow-publisher',
   'snooze-publisher',
   'unsnooze-publisher',
   'exclude-publisher',
   'unexclude-publisher',
-  // categories
+  // category state
   'follow-category',
   'unfollow-category',
   'snooze-category',
@@ -114,6 +135,7 @@ export type SessionEvent = typeof SESSION_EVENTS[number];
 
 export type PreferenceMutation<E extends SessionEvent> =
   E extends `${string}-summary` ? PublicSummaryGroup :
+  E extends `${string}-recap` ? RecapAttributes :
   E extends `${string}-publisher` ? PublicPublisherAttributes :
   E extends `${string}-category` ? PublicCategoryAttributes :
   never;
@@ -121,6 +143,7 @@ export type PreferenceMutation<E extends SessionEvent> =
 export type PreferenceState<E extends SessionEvent> =
   E extends `${'unbookmark' | 'bookmark'}-summary` ? Preferences['bookmarkedSummaries'] :
   E extends `${'read' | 'unread'}-summary` ? Preferences['readSummaries'] :
+  E extends `${'read' | 'unread'}-recap` ? Preferences['readRecaps'] :
   E extends `${string}-summary` ? Preferences['removedSummaries'] :
   E extends `${string}-publisher` ? Preferences['followedPublishers'] :
   E extends `${string}-category` ? Preferences['followedCategories'] :
@@ -143,6 +166,9 @@ export type SessionContextType = Preferences & {
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
   readSummary: (summary: PublicSummaryGroup) => Promise<void>;
   removeSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  
+  // recap convenience functions
+  readRecap: (recap: RecapAttributes) => Promose<void>;
   
   // follow publisher/category convenience functions
   followPublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
@@ -167,6 +193,7 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   followPublisher: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
   lastRequestForReview: 0,
+  readRecap: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),
   resetPreferences: () => Promise.resolve(),

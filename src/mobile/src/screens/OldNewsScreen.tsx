@@ -1,6 +1,9 @@
 import React from 'react';
 
+import { useFocusEffect } from '@react-navigation/native';
 import { format } from 'date-fns';
+import { HoldItem } from 'react-native-hold-menu';
+import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 
 import { RecapAttributes } from '~/api';
 import { 
@@ -12,24 +15,38 @@ import {
   Text,
   View,
 } from '~/components';
+import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/core';
 import { useNavigation, useTheme } from '~/hooks';
-import { getFnsLocale } from '~/locales';
+import { getFnsLocale, strings } from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
   recap: RecapAttributes;
+  forceUnread?: boolean;
 };
 
 export function Recap({
   recap,
+  forceUnread,
   ...props
 }: RecapProps) {
+  
+  const { readRecaps } = React.useContext(SessionContext);
+  
   const theme = useTheme();
+  
+  const [isRead, setIsRead] = React.useState(!forceUnread && recap.id in ({ ...readRecaps }));
+  
+  useFocusEffect(React.useCallback(() => {
+    setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
+  }, [forceUnread, readRecaps]));
+  
   return (
     <View 
       { ...props }
       p={ 12 }
-      gap={ 3 }>
+      gap={ 3 }
+      opacity={ isRead ? 0.3 : 1.0 }>
       <View flexRow gap={ 6 } itemsCenter>
         <View row>
           <View>
@@ -42,7 +59,7 @@ export function Recap({
             </Text>
           </View>
         </View> 
-        <Icon name="chevron-right" size={ 24 } />
+        <Icon name="menu-right" size={ 24 } />
       </View>
     </View>
   );
@@ -52,10 +69,16 @@ export function OldNewsScreen() {
   
   const { navigate } = useNavigation();
   const { getRecaps } = useSummaryClient();
+  const { readRecap, readRecaps } = React.useContext(SessionContext);
 
   const [recaps, setRecaps] = React.useState<RecapAttributes[]>([]);
-
-  const onMount = React.useCallback(async () => {
+  const [loading, setLoading] = React.useState(false);
+  
+  const load = React.useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     try {
       const { data: recaps } = await getRecaps();
       if (!recaps) {
@@ -64,24 +87,40 @@ export function OldNewsScreen() {
       setRecaps(recaps.rows);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-  }, [getRecaps]);
+  }, [loading, getRecaps]);
 
   React.useEffect(() => {
-    onMount();
-  }, [onMount]);
+    load();
+  }, [load]);
 
   return (
     <Screen>
       <FlatList
+        refreshing={ recaps.length === 0 && loading }
+        onRefresh={ () => {
+          load();
+        } }
         data={ recaps }
         renderItem={ ({ item }) => (
           <Recap
             key={ item.id }
             recap={ item }
-            onPress={ () => navigate('recap', { recap: item } ) } />
+            onPress={ () => {
+              if (!(item.id in ({ ...readRecaps }))) {
+                readRecap(item);
+              }
+              navigate('recap', { recap: item } );
+            } } />
         ) }
         ListHeaderComponentStyle={ { paddingTop: 12 } }
+        ListHeaderComponent={ (
+          <Text mx={ 12 }>
+            {strings.recaps_information}
+          </Text>
+        ) }
         ListFooterComponentStyle={ { paddingBottom: 12 } }
         ItemSeparatorComponent={ () => <Divider /> }
         estimatedItemSize={ 114 } />

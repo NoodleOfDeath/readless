@@ -64,6 +64,10 @@ export const enStrings = {
   nav_browsePublishers: 'Browse Publishers',
   nav_yourFollows: 'Your Follows',
   
+  // recaps
+  recaps_information: 'Here are some daily recaps if you missed the news because you were touching grass',
+  recaps_references: 'References',
+  
   // screens
   screens_about: 'About',
   screens_bookmarks: 'Bookmarks',

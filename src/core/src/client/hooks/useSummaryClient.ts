@@ -12,6 +12,7 @@ import { getUserAgent } from '~/utils';
 export function useSummaryClient() {
 
   const { 
+    readSummaries,
     readSummary,
     setPreference,
     withHeaders,
@@ -57,7 +58,9 @@ export function useSummaryClient() {
       userAgent: getUserAgent(),
     };
     if (interaction === InteractionType.Read) {
-      readSummary(summary);
+      if (!(summary.id in ({ ...readSummaries }))) {
+        readSummary(summary);
+      }
     }
     return await interactWithSummary(summary, interaction, content, payload);
   }, [interactWithSummary, readSummary]);
