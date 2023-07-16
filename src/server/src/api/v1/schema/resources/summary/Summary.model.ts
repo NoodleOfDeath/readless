@@ -66,13 +66,13 @@ function applyFilter(
   if (!filter) {
     return {
       categories,
-      exCategories: excludedCategories,
-      exPublishers: excludedPublishers,
-      filter: '.',
+      excludedCategories,
+      excludedPublishers,
+      filter: '',
       publishers,
     };
   }
-  const splitExpr = /\s*((?:\w+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+\w+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
+  const splitExpr = /\s*((?:[-\w]+:(?:[-\w.]*(?:,[-\w.]*)*))(?:\s+[-\w]+:(?:[-\w.]*(?:,[-\w.]*)*))*)?(.*)/i;
   const [_, prefilter, q] = splitExpr.exec(filter);
   let query = (q ?? '').trim();
   if (prefilter) {
@@ -292,7 +292,6 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       publishers: publishers.length === 0 ? [''] : publishers,
       startDate: startDate ?? new Date(),
     };
-    console.log(replacements);
     const cacheKey = [
       queryKey,
       filter,
@@ -317,6 +316,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       }
     }
     
+    const siblings: PublicSummaryGroup[] = [];
     const fetch = async (previousRecords: PublicSummaryGroup[] = []) => {
       
       const records = ((await this.store.query(QUERIES[queryKey], {
@@ -326,7 +326,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
       
-      if (!records) {
+      if (!records || !records.rows) {
         return {
           count: 0,
           rows: [],
@@ -337,9 +337,15 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         return records;
       }
       
-      const filteredRecords = records.rows.reverse().filter((a, i) => {
-        return ![...previousRecords, ...records.rows.slice(i)].some((r) => r.siblings?.some((s) => s.id === a.id));
-      }).reverse();
+      const filteredRecords = records.rows.filter((a, i) => {
+        const result = ![...previousRecords, ...siblings].some((r) => r.id === a.id);
+        if (a.siblings) {
+          siblings.push(...a.siblings);
+        }
+        return result;
+      });
+      
+      console.log('fuck', filteredRecords);
       
       console.log('filtered', filteredRecords.length);
       
