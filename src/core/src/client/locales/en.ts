@@ -4,6 +4,7 @@ export const enStrings = {
   action_clearSearchHistory: 'Clear Search History', 
   action_clearSelection: 'Clear Selection',
   action_close: 'Close', 
+  action_exclude: 'Hide',
   action_follow: 'Follow',
   action_loading: 'Loading...',
   action_next: 'Next ', 
@@ -13,8 +14,11 @@ export const enStrings = {
   action_search: 'Search',
   action_share: 'Share',
   action_skip: 'Skip',
+  action_snooze: 'Snooze',
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
+  action_unexclude: 'Unhide',
   action_unfollow: 'Unfollow',
+  action_unsnooze: 'Unsnooze',
 
   // bookmarks
   bookmarks_bookmarkArticlesAreNotSaved: 'Note: The original articles themselves are not saved for offline reading',

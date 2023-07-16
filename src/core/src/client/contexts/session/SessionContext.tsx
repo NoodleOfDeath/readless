@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ms from 'ms';
+
 import {
   Bookmark,
   ColorScheme,
@@ -56,8 +58,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
   
   const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
+  const [snoozedPublishers, setSnoozedPublishers] = React.useState<{ [key: string]: Bookmark<boolean> }>();
   const [excludedPublishers, setExcludedPublishers] = React.useState<{ [key: string]: boolean }>();
   const [followedCategories, setFollowedCategories] = React.useState<{ [key: string]: boolean }>();
+  const [snoozedCategories, setSnoozedCategories] = React.useState<{ [key: string]: Bookmark<boolean> }>();
   const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: boolean }>();
 
   const followCount = React.useMemo(() => Object.keys({ ...followedPublishers }).length + Object.keys({ ...followedCategories }).length, [followedPublishers, followedCategories]);
@@ -67,17 +71,17 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     if (Object.keys({ ...followedPublishers }).length > 0) {
       filters.push(['pub', Object.keys({ ...followedPublishers }).join(',')].join(':'));
     }
-    if (Object.keys({ ...excludedPublishers }).length > 0) {
-      filters.push(['-pub', Object.keys({ ...excludedPublishers }).join(',')].join(':'));
+    if (Object.keys({ ...snoozedPublishers, ...excludedPublishers }).length > 0) {
+      filters.push(['-pub', Object.keys({ ...snoozedPublishers, ...excludedPublishers }).join(',')].join(':'));
     }
     if (Object.keys({ ...followedCategories }).length > 0) {
       filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
     }
-    if (Object.keys({ ...excludedCategories }).length > 0) {
-      filters.push(['-cat', Object.keys({ ...excludedCategories }).join(',')].join(':'));
+    if (Object.keys({ ...snoozedCategories, ...excludedCategories }).length > 0) {
+      filters.push(['-cat', Object.keys({ ...snoozedCategories, ...excludedCategories }).join(',')].join(':'));
     }
     return filters.join(' ');
-  }, [followedPublishers, excludedPublishers, followedCategories, excludedCategories]);
+  }, [followedPublishers, snoozedPublishers, excludedPublishers, followedCategories, snoozedCategories, excludedCategories]);
   
   const bookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).length, [bookmarkedSummaries]);
   const unreadBookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).filter((k) => !(k in ({ ...readSummaries }))).length, [bookmarkedSummaries, readSummaries]);
@@ -162,6 +166,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     case 'followedPublishers':
       setFollowedPublishers(newValue);
       break;
+    case 'snoozedPublishers':
+      setSnoozedPublishers(newValue);
+      break;
     case 'excludedOutlets':
     case 'excludedPublishers':
       setExcludedPublishers(newValue);
@@ -169,6 +176,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       
     case 'followedCategories':
       setFollowedCategories(newValue);
+      break;
+    case 'snoozedCategories':
+      setSnoozedCategories(newValue);
       break;
     case 'excludedCategories':
       setExcludedCategories(newValue);
@@ -240,6 +250,20 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     });
   };
   
+  const snoozePublisher = async (publisher: PublicPublisherAttributes) => {
+    await setPreference('snoozedPublishers', (prev) => {
+      const state = { ...prev };
+      if (publisher.name in state) {
+        delete state[publisher.name];
+        emitEvent('unsnooze-publisher', publisher, state);
+      } else {
+        state[publisher.name] = new Bookmark(true);
+        emitEvent('snooze-publisher', publisher, state);
+      }
+      return (prev = state);
+    });
+  };
+  
   const excludePublisher = async (publisher: PublicPublisherAttributes) => {
     await setPreference('excludedPublishers', (prev) => {
       const state = { ...prev };
@@ -263,6 +287,20 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       } else {
         state[category.name] = true;
         emitEvent('follow-category', category, state);
+      }
+      return (prev = state);
+    });
+  };
+  
+  const snoozeCategory = async (category: PublicCategoryAttributes) => {
+    await setPreference('snoozedCategories', (prev) => {
+      const state = { ...prev };
+      if (category.name in state) {
+        delete state[category.name];
+        emitEvent('unsnooze-category', category, state);
+      } else {
+        state[category.name] = new Bookmark(true);
+        emitEvent('snooze-category', category, state);
       }
       return (prev = state);
     });
@@ -325,8 +363,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     
     // publisher/category states
     setFollowedPublishers(await getPreference('followedPublishers') ?? await getPreference('followedOutlets'));
+    //setSnoozedPublishers(Object.fromEntries(Object.entries(await getPreference('snoozedPublishers')).filter(([k, b]) => Date.now() - new Date(b.createdAt).valueOf() < ms('30d'))));
     setExcludedPublishers(await getPreference('excludedPublishers') ?? await getPreference('excludedOutlets'));
     setFollowedCategories(await getPreference('followedCategories'));
+    //setSnoozedCategories(Object.fromEntries(Object.entries(await getPreference('snoozedCategories')).filter(([k, b]) => Date.now() - new Date(b.createdAt).valueOf() < ms('30d'))));
     setExcludedCategories(await getPreference('excludedCategories'));
     
     setReady(true);
@@ -382,6 +422,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         setPreference,
         setPublishers,
         showShortSummary,
+        snoozeCategory,
+        snoozePublisher,
+        snoozedCategories,
+        snoozedPublishers,
         triggerWords,
         unreadBookmarkCount,
         viewedFeatures,

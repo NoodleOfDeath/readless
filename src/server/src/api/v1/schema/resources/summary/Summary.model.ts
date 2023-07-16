@@ -59,11 +59,15 @@ function applyFilter(
   matchType: 'any' | 'all' = 'any'
 ) {
   const categories: string[] = [];
+  const excludedCategories: string[] = [];
   const publishers: string[] = [];
+  const excludedPublishers: string[] = [];
   let interval: string;
   if (!filter) {
     return {
       categories,
+      exCategories: excludedCategories,
+      exPublishers: excludedPublishers,
       filter: '.',
       publishers,
     };
@@ -72,17 +76,26 @@ function applyFilter(
   const [_, prefilter, q] = splitExpr.exec(filter);
   let query = (q ?? '').trim();
   if (prefilter) {
-    const expr = /(\w+):([-\w.]*(?:,[-\w.]*)*)/gi;
+    const expr = /(-)?(\w+):([-\w.]*(?:,[-\w.]*)*)/gi;
     const matches = prefilter.matchAll(expr);
     if (matches) {
       for (const match of matches) {
-        const [_, prefix, prefixValues] = match;
+        const [_, exclude, prefix, prefixValues] = match;
         const pf = prefixValues.split(',');
-        if (/^cat(egory)?$/i.test(prefix)) {
-          categories.push(...pf);
-        }
         if (/^(?:source|src|pub(lisher)?)$/i.test(prefix)) {
-          publishers.push(...pf);
+          console.log(match);
+          if (exclude) {
+            excludedPublishers.push(...pf);
+          } else {
+            publishers.push(...pf);
+          }
+        }
+        if (/^cat(egory)?$/i.test(prefix)) {
+          if (exclude) {
+            excludedCategories.push(...pf);
+          } else {
+            categories.push(...pf);
+          }
         }
         if (/^[lp]ast$/i.test(prefix)) {
           const timeInterval = parseTimeInterval(prefixValues);
@@ -120,6 +133,8 @@ function applyFilter(
   }
   return {
     categories,
+    excludedCategories,
+    excludedPublishers,
     filter: parts.join('|'),
     interval,
     publishers,
@@ -246,6 +261,8 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   }: SearchSummariesPayload, queryKey: QueryKey = 'getSummaries'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
     const { 
       categories, 
+      excludedCategories,
+      excludedPublishers,
       publishers,
       interval: pastInterval,
       filter: query,
@@ -258,12 +275,16 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       categories: categories.length === 0 ? [''] : categories,
       endDate: endDate ?? new Date(0),
       excludeIds,
+      excludedCategories: excludedCategories.length === 0 ? [''] : excludedCategories,
+      excludedPublishers: excludedPublishers.length === 0 ? [''] : excludedPublishers,
       filter: query,
       ids: idArray,
       interval,
       limit: Number(pageSize),
       locale: locale.replace(/-[a-z]{2}$/i, '') ?? '',
       noCategories: categories.length === 0,
+      noExcludedCategories: excludedCategories.length === 0,
+      noExcludedPublishers: excludedPublishers.length === 0,
       noFilter: !filter,
       noIds: !ids || excludeIds,
       noPublishers: publishers.length === 0,
@@ -271,6 +292,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       publishers: publishers.length === 0 ? [''] : publishers,
       startDate: startDate ?? new Date(),
     };
+    console.log(replacements);
     const cacheKey = [
       queryKey,
       filter,

@@ -96,13 +96,13 @@ export function PublisherScreen({
           {publisher?.description && (
             <React.Fragment>
               <Divider />
-              <Text>{publisher.descriotion}</Text>
+              <Text>{publisher.description}</Text>
             </React.Fragment>
           )}
         </View>
       ),
     });
-  }, [publisher]));
+  }, [publisher, followed]));
   
   return (
     <Screen>

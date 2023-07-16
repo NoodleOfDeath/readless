@@ -11,7 +11,11 @@ import { getUserAgent } from '~/utils';
 
 export function useSummaryClient() {
 
-  const { setPreference, withHeaders } = React.useContext(SessionContext);
+  const { 
+    readSummary,
+    setPreference,
+    withHeaders,
+  } = React.useContext(SessionContext);
   
   const getSummaries = React.useCallback(async (args: Parameters<typeof API.getSummaries>[0]) => {
     return await withHeaders(API.getSummaries)(args);
@@ -52,27 +56,11 @@ export function useSummaryClient() {
       content,
       userAgent: getUserAgent(),
     };
-    if (interaction === InteractionType.Bookmark) {
-      setPreference('bookmarkedSummaries', (prev) => {
-        const bookmarks = { ...prev };
-        payload.value = String(!bookmarks[summary.id]);
-        if (bookmarks[summary.id]) {
-          delete bookmarks[summary.id];
-        } else {
-          bookmarks[summary.id] = new Bookmark(summary);
-        }
-        return (prev = bookmarks);
-      });
-    }
     if (interaction === InteractionType.Read) {
-      setPreference('readSummaries', (prev?: Record<number, Bookmark<boolean>>) => {
-        const bookmarks = { ...prev };
-        bookmarks[summary.id] = new Bookmark(true);
-        return (prev = bookmarks);
-      });
+      readSummary(summary);
     }
     return await interactWithSummary(summary, interaction, content, payload);
-  }, [interactWithSummary, setPreference]);
+  }, [interactWithSummary, readSummary]);
 
   const getRecaps = React.useCallback(async (
     filter?: string,

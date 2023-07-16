@@ -4,6 +4,7 @@ import { PublicCategoryAttributes, PublicPublisherAttributes } from '~/api';
 import {
   ChildlessViewProps,
   Chip,
+  Icon,
   Image,
   View,
 } from '~/components';
@@ -14,10 +15,17 @@ type Props = ChildlessViewProps & {
   category?: PublicCategoryAttributes;
   publisher?: PublicPublisherAttributes;
   size?: number;
+  snoozed?: boolean;
+  excluded?: boolean;
 };
 
 export function ChannelIcon({
-  category, publisher, size = 20, ...props 
+  category, 
+  publisher, 
+  size = 20,
+  snoozed,
+  excluded,
+  ...props 
 }: Props) {
   const theme = useTheme();
   const fallbackComponent = React.useMemo(() => (
@@ -37,15 +45,25 @@ export function ChannelIcon({
   return (
     <View
       { ...props }
-      borderRadius={ 3 }
-      overflow="hidden">
-      {category ? fallbackComponent : (
-        <Image 
-          fallbackComponent={ fallbackComponent }
-          source={ { uri: publisher ? publisherIcon(publisher) : undefined } }
-          width={ size }
-          height={ size } />
-      ) }
+      flexRow
+      gap={ 3 }>
+      {(snoozed || excluded) && (
+        <Icon  
+          name={ snoozed ? 'sleep' : 'eye-off' }
+          color={ excluded ? 'red' : undefined }
+          zIndex={ 2 } />
+      )}
+      <View 
+        borderRadius={ 3 }
+        overflow="hidden">
+        {category ? fallbackComponent : (
+          <Image 
+            fallbackComponent={ fallbackComponent }
+            source={ { uri: publisher ? publisherIcon(publisher) : undefined } }
+            width={ size }
+            height={ size } />
+        ) }
+      </View>
     </View>
   );
 }
