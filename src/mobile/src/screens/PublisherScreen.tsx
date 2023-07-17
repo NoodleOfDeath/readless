@@ -66,7 +66,7 @@ export function PublisherScreen({
           elevated
           gap={ 6 }
           zIndex={ 100 }
-          height={ publisher?.descriotion ? 120 : 80 } 
+          height={ publisher?.description ? 120 : 80 } 
           p={ 12 }>
           <BackNavigation />
           <View row>
@@ -102,7 +102,7 @@ export function PublisherScreen({
         </View>
       ),
     });
-  }, [publisher, followed]));
+  }, [navigation, publisher, toggleFollowed, followed]));
   
   return (
     <Screen>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { DeviceEventEmitter } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { format as formatDate, formatDistance } from 'date-fns';
@@ -207,16 +206,12 @@ export function Summary({
     readSummary,
     setPreference,
     followedPublishers,
-    snoozedPublishers,
     excludedPublishers,
     followedCategories,
-    snoozedCategories,
     excludedCategories,
     followPublisher,
-    snoozePublisher,
     excludePublisher,
     followCategory,
-    snoozeCategory,
     excludeCategory,
   } = React.useContext(SessionContext);
 
@@ -228,10 +223,8 @@ export function Summary({
   const [isRead, setIsRead] = React.useState(!forceUnread &&summary.id in { ...readSummaries } && !disableInteractions);
   const [isBookmarked, setIsBookmarked] = React.useState(summary.id in { ...bookmarkedSummaries });
   const [isFollowingPublisher, setIsFollowingPublisher] = React.useState(summary.publisher.name in { ...followedPublishers });
-  const [isSnoozingPublisher, setIsSnoozingPublisher] = React.useState(summary.publisher.name in { ...snoozedPublishers });
   const [isExcludingPublisher, setIsExcludingPublisher] = React.useState(summary.publisher.name in { ...excludedPublishers });
   const [isFollowingCategory, setIsFollowingCategory] = React.useState(summary.category.name in { ...followedCategories });
-  const [isSnoozingCategory, setIsSnoozingCategory] = React.useState(summary.category.name in { ...snoozedCategories });
   const [isExcludingCategory, setIsExcludingCategory] = React.useState(summary.category.name in { ...excludedCategories });
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
@@ -298,26 +291,27 @@ export function Summary({
     setIsSentimentEnabled(sentimentEnabled);
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
     setShowTranslations(initiallyTranslated && Boolean(summary.translations));
-    setIsRead(!forceUnread && (summary.id in { ...readSummaries }) && !disableInteractions);
+    setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
     setIsFollowingPublisher(summary.publisher.name in { ...followedPublishers });
-    setIsSnoozingPublisher(summary.publisher.name in { ...snoozedPublishers });
     setIsExcludingPublisher(summary.publisher.name in { ...excludedPublishers });
     setIsFollowingCategory(summary.category.name in { ...followedCategories });
-    setIsSnoozingCategory(summary.category.name in { ...snoozedCategories });
     if (!hideCard && format === ReadingFormat.FullArticle) {
       openURL(summary.url);
       return;
     }
     return () => clearInterval(interval);
-  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, disableInteractions, bookmarkedSummaries, followedPublishers, snoozedPublishers, excludedPublishers, followedCategories, snoozedCategories, excludedCategories, hideCard, format, openURL, forceUnread]));
+  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, bookmarkedSummaries, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL, forceUnread]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
       return;
     }
     onFormatChange?.(newFormat);
-    if (!initialFormat && !hideCard) {
+    if (!(summary.id in ({ ...readSummaries }))) {
+      readSummary(summary);
+    }
+    if (!forceUnread && !initialFormat && !hideCard) {
       setIsRead(true);
       return;
     }
@@ -326,7 +320,7 @@ export function Summary({
       return;
     }
     setFormat(newFormat);
-  }, [disableNavigation, onFormatChange, initialFormat, hideCard, openURL, summary.url]);
+  }, [disableNavigation, forceUnread, onFormatChange, initialFormat, hideCard, openURL, summary, readSummary, readSummaries]);
 
   const handleLocalizeSummary = React.useCallback(async () => {
     setIsLocalizing(true);
@@ -382,13 +376,13 @@ export function Summary({
         text: isBookmarked ? strings.summary_unbookmark : strings.summary_bookmark,
       },
       {
-        icon: () => <Icon name={ isRead ? 'email-mark-as-unread' : 'email-open' } />,
-        key: `mark-as-${isRead ? 'unread' : 'read'}-${summary.id}`,
+        icon: () => <Icon name={ isRead || initialFormat || titleComponent ? 'email-mark-as-unread' : 'email-open' } />,
+        key: `mark-as-${isRead || initialFormat || titleComponent ? 'unread' : 'read'}-${summary.id}`,
         onPress: () => {
           setIsRead((prev) => !prev);
           readSummary(summary);
         },
-        text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
+        text: isRead || initialFormat || titleComponent ? strings.summary_markAsUnRead : strings.summary_markAsRead,
         withSeparator: true,
       },
       {
@@ -401,16 +395,6 @@ export function Summary({
         text: `${isFollowingPublisher ? strings.action_unfollow : strings.action_follow} ${summary.publisher.displayName}`,
       },
       {
-        icon: () => <ChannelIcon publisher={ summary.publisher } snoozed />,
-        key: `${isSnoozingPublisher ? 'unsnooze-pub' : 'snooze-pub'}-${summary.id}`,
-        onPress: async () => {
-          setIsSnoozingCategory((prev) => !prev);
-          snoozeCategory(summary.publisher);
-        },
-        text: `${isSnoozingPublisher ? strings.action_unsnooze : strings.action_snooze} ${summary.publisher.displayName}`,
-        withSeparator: true,
-      },
-      {
         icon: () => <ChannelIcon category={ summary.category } />,
         key: `${isFollowingCategory ? 'unfollow-cat' : 'follow-cat'}-${summary.id}`,
         onPress: async () => {
@@ -418,15 +402,6 @@ export function Summary({
           followCategory(summary.category);
         },
         text: `${isFollowingCategory ? strings.action_unfollow : strings.action_follow} ${summary.category.displayName}`,
-      },
-      {
-        icon: () => <ChannelIcon category={ summary.category } snoozed />,
-        key: `${isSnoozingCategory ? 'unsnooze-cat' : 'snooze-cat'}-${summary.id}`,
-        onPress: async () => {
-          setIsSnoozingCategory((prev) => !prev);
-          snoozeCategory(summary.category);
-        },
-        text: `${isSnoozingCategory ? strings.action_unsnooze : strings.action_snooze} ${summary.category.displayName}`,
         withSeparator: true,
       },
       {
@@ -475,7 +450,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [summary, isBookmarked, isRead, isFollowingPublisher, isSnoozingPublisher, isExcludingPublisher, isFollowingCategory, isSnoozingCategory, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, setPreference]);
+  }, [summary, isBookmarked, isRead, initialFormat, titleComponent, isFollowingPublisher, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
   
   const timestamp = React.useMemo(() => {
     return formatTime(summary.originalDate);
@@ -764,7 +739,11 @@ export function Summary({
           pb={ 6 }
           pt={ initialFormat ? 12 : undefined }>
           <View flex={ 1 } flexGrow={ 1 } gap={ 6 } mx={ 12 }>
-            {!initialFormat && title}
+            {!initialFormat && (
+              <View flex={ 1 }>
+                {title}
+              </View>
+            )}
             {translateToggle}
             {((!(compact || compactSummaries) && (showShortSummary || forceShortSummary) === true) || initialFormat) && (
               <View>

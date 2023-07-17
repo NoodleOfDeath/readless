@@ -163,10 +163,6 @@ export function SettingsTable() {
           onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
       <TableViewSection grouped header={ strings.settings_general }>
-        {/*<TableViewCell
-          bold
-          title={ strings.settings_legal }
-          onPress={ () => navigate('legal') } />*/}
         <TableViewCell
           bold
           title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }

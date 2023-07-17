@@ -14,11 +14,9 @@ export const enStrings = {
   action_search: 'Search',
   action_share: 'Share',
   action_skip: 'Skip',
-  action_snooze: 'Snooze',
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
   action_unexclude: 'Unhide',
   action_unfollow: 'Unfollow',
-  action_unsnooze: 'Unsnooze',
 
   // bookmarks
   bookmarks_bookmarkArticlesAreNotSaved: 'Note: The original articles themselves are not saved for offline reading',
@@ -171,7 +169,7 @@ export const enStrings = {
   summary_example_title: 'This is an example title no more than 15 words long',
   summary_fullArticle: 'Full Article',
   summary_fullArticleInfo: 'Selecting this option, will automatically open the original article for a summary in the in-app browser when you tap on it.',
-  summary_hide: 'Hide',
+  summary_hide: 'Hide this article',
   summary_markAsRead: 'Mark as Read',
   summary_markAsUnRead: 'Mark as Unread',
   summary_negative: 'Negative',

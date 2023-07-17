@@ -49,6 +49,9 @@ export type SummaryListProps = ChildlessViewProps & {
   interval?: string;
   specificIds?: number[];
   searchText?: string;
+  flow?: 'fluid' | 'fixed';
+  fluid?: boolean;
+  fixed?: boolean;
   showWalkthroughs?: boolean;
 };
 
@@ -59,6 +62,9 @@ export function SummaryList({
   interval,
   specificIds,
   searchText,
+  fixed,
+  fluid = !fixed,
+  flow = fluid ? 'fluid' : 'fixed',
   showWalkthroughs: showWalkthroughs0,
   ...props
 }: SummaryListProps) {
@@ -111,7 +117,7 @@ export function SummaryList({
   // callbacks
 
   const load = React.useCallback(async (reset = false) => {
-    if (lastFetchFailed || loading) {
+    if (loading) {
       return;
     }
     setLoading(true);
@@ -165,14 +171,14 @@ export function SummaryList({
       setLoaded(true);
       setLoading(false);
     }
-  }, [lastFetchFailed, loading, fetch, specificIds, excludeIds, filter, interval, cursor, pageSize, removedSummaries]);
+  }, [loading, fetch, specificIds, excludeIds, filter, interval, cursor, pageSize, removedSummaries]);
 
   const loadMore = React.useCallback(async () => {
-    if (totalResultCount <= summaries.length) {
+    if (lastFetchFailed || totalResultCount <= summaries.length) {
       return;
     }
     await load();
-  }, [totalResultCount, summaries.length, load]);
+  }, [lastFetchFailed, totalResultCount, summaries.length, load]);
 
   const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setLastFocus('master');
@@ -232,7 +238,10 @@ export function SummaryList({
   ]));
   
   useFocusEffect(React.useCallback(() => {
-    if ((!lastFetchFailed && summaries.length === 0) || (filter !== filter0)) {
+    if (lastFetchFailed) {
+      return;
+    }
+    if (summaries.length === 0 || (filter !== filter0)) {
       load(true);
     }
     if (filter0) {
@@ -256,7 +265,7 @@ export function SummaryList({
     return (
       <Summary
         mx={ 12 }
-        big={ index % 4 === 0 }
+        big={ flow === 'fluid' && index % 4 === 0 }
         summary={ item }
         selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
@@ -268,7 +277,7 @@ export function SummaryList({
           return (prev = state);
         }) } />
     );
-  }, [supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+  }, [flow, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
   return (
     <View { ...props } col>

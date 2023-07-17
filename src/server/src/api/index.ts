@@ -61,7 +61,7 @@ async function main() {
   
   app.use(rateLimitMiddleware({
     duration: process.env.API_RATE_LIMIT_DURATION || '1m',
-    limit: process.env.API_RATE_LIMIT ? Number.parseInt(process.env.API_RATE_LIMIT) : 30,
+    limit: process.env.API_RATE_LIMIT ? Number.parseInt(process.env.API_RATE_LIMIT) : 200,
     path: '',
   }));
   

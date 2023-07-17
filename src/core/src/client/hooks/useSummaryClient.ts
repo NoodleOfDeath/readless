@@ -11,12 +11,7 @@ import { getUserAgent } from '~/utils';
 
 export function useSummaryClient() {
 
-  const { 
-    readSummaries,
-    readSummary,
-    setPreference,
-    withHeaders,
-  } = React.useContext(SessionContext);
+  const { withHeaders } = React.useContext(SessionContext);
   
   const getSummaries = React.useCallback(async (args: Parameters<typeof API.getSummaries>[0]) => {
     return await withHeaders(API.getSummaries)(args);
@@ -57,13 +52,8 @@ export function useSummaryClient() {
       content,
       userAgent: getUserAgent(),
     };
-    if (interaction === InteractionType.Read) {
-      if (!(summary.id in ({ ...readSummaries }))) {
-        readSummary(summary);
-      }
-    }
     return await interactWithSummary(summary, interaction, content, payload);
-  }, [interactWithSummary, readSummary]);
+  }, [interactWithSummary]);
 
   const getRecaps = React.useCallback(async (
     filter?: string,
@@ -88,8 +78,8 @@ export function useSummaryClient() {
     getTopStories,
     handleInteraction,
     interactWithSummary,
-    subscribeToRecap: subscribe,
-    unsubscribeFromRecap: unsubscribe,
+    subscribe,
+    unsubscribe,
   };
 
 }
