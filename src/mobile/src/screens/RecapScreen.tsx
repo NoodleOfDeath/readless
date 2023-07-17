@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 
 import { 
   BackNavigation,
+  Divider, 
   Highlighter,
   Screen,
   ScrollView,
@@ -91,6 +92,7 @@ export function RecapScreen({
           </Highlighter>
         </View>
       </ScrollView>
+      <Divider />
       <View p={ 12 }>
         <Text>{strings.recaps_references}</Text>
       </View>

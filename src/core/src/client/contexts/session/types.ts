@@ -88,17 +88,16 @@ export type Preferences = {
   // followed publishers
   followedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
   followedPublishers?: { [key: string]: boolean };
-  snoozedPublishers?: { [key: string]: Bookmark<boolean> }
   excludedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
   excludedPublishers?: { [key: string]: boolean };
   
   // followed categories
   followedCategories?: { [key: string]: boolean };
-  snoozedCategories?: { [key: string]: Bookmark<boolean> }
   excludedCategories?: { [key: string]: boolean };
   
   followCount: number;
-  followFilter: string;
+  followFilter?: string;
+  excludeFilter?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,15 +117,11 @@ const SESSION_EVENTS = [
   // publisher state
   'follow-publisher',
   'unfollow-publisher',
-  'snooze-publisher',
-  'unsnooze-publisher',
   'exclude-publisher',
   'unexclude-publisher',
   // category state
   'follow-category',
   'unfollow-category',
-  'snooze-category',
-  'unsnooze-category',
   'exclude-category',
   'unexclude-category',
 ] as const;
@@ -172,10 +167,8 @@ export type SessionContextType = Preferences & {
   
   // follow publisher/category convenience functions
   followPublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
-  snoozePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   excludePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   followCategory: (category: PublicCategoryAttributes) => Promise<void>;
-  snoozeCategory: (category: PublicCategoryAttributes) => Promise<void>;
   excludeCategory: (category: PublicCategoryAttributes) => Promise<void>;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -200,8 +193,6 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   setCategories: () => Promise.resolve(),
   setPreference: () => Promise.resolve(),
   setPublishers: () => Promise.resolve(),
-  snoozeCategory: () => Promise.resolve(),
-  snoozePublisher: () => Promise.resolve(),
   unreadBookmarkCount: 0,
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };
