@@ -1,5 +1,4 @@
 import React from 'react';
-import { DeviceEventEmitter } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { format as formatDate, formatDistance } from 'date-fns';
@@ -302,7 +301,7 @@ export function Summary({
       return;
     }
     return () => clearInterval(interval);
-  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, bookmarkedSummaries, followedPublishers, excludedPublishers, followedCategories, excludedCategories, hideCard, format, openURL, forceUnread]));
+  }, [tickInterval, sentimentEnabled, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, readSummaries, bookmarkedSummaries, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL, forceUnread]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
@@ -451,7 +450,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [initialFormat, titleComponent, summary, isBookmarked, isRead, isFollowingPublisher, isExcludingPublisher, isFollowingCategory, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, setPreference]);
+  }, [summary, isBookmarked, isRead, initialFormat, titleComponent, isFollowingPublisher, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
   
   const timestamp = React.useMemo(() => {
     return formatTime(summary.originalDate);

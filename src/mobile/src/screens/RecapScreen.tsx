@@ -98,6 +98,7 @@ export function RecapScreen({
       </View>
       <SummaryList
         flex={ 1 }
+        fixed
         fetch={ getSummaries }
         specificIds={ ids } />
     </Screen>

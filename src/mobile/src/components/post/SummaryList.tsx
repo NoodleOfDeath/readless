@@ -49,6 +49,9 @@ export type SummaryListProps = ChildlessViewProps & {
   interval?: string;
   specificIds?: number[];
   searchText?: string;
+  flow?: 'fluid' | 'fixed';
+  fluid?: boolean;
+  fixed?: boolean;
   showWalkthroughs?: boolean;
 };
 
@@ -59,6 +62,9 @@ export function SummaryList({
   interval,
   specificIds,
   searchText,
+  fixed,
+  fluid = !fixed,
+  flow = fluid ? 'fluid' : 'fixed',
   showWalkthroughs: showWalkthroughs0,
   ...props
 }: SummaryListProps) {
@@ -259,7 +265,7 @@ export function SummaryList({
     return (
       <Summary
         mx={ 12 }
-        big={ index % 4 === 0 }
+        big={ flow === 'fluid' && index % 4 === 0 }
         summary={ item }
         selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
@@ -271,7 +277,7 @@ export function SummaryList({
           return (prev = state);
         }) } />
     );
-  }, [supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+  }, [flow, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
   return (
     <View { ...props } col>

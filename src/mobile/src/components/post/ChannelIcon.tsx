@@ -15,7 +15,6 @@ type Props = ChildlessViewProps & {
   category?: PublicCategoryAttributes;
   publisher?: PublicPublisherAttributes;
   size?: number;
-  snoozed?: boolean;
   excluded?: boolean;
 };
 
@@ -23,7 +22,6 @@ export function ChannelIcon({
   category, 
   publisher, 
   size = 20,
-  snoozed,
   excluded,
   ...props 
 }: Props) {
@@ -47,14 +45,17 @@ export function ChannelIcon({
       { ...props }
       flexRow
       gap={ 3 }>
-      {(snoozed || excluded) && (
+      {excluded && (
         <Icon  
-          name={ snoozed ? 'sleep' : 'eye-off' }
-          color={ excluded ? 'red' : undefined }
+          absolute
+          opacity={ 0.7 }
+          name={ 'eye-off' }
+          color={ 'red' }
           zIndex={ 2 } />
       )}
       <View 
         borderRadius={ 3 }
+        opacity={ excluded ? 0.3 : 1.0 }
         overflow="hidden">
         {category ? fallbackComponent : (
           <Image 

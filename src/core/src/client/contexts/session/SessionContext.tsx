@@ -57,7 +57,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
-  const [readRecaps, setReadRecaps] = React.useState<{ [key: string]: boolean }>();
+  const [readRecaps, setReadRecaps] = React.useState<{ [key: number]: boolean }>();
   
   const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
   const [excludedPublishers, setExcludedPublishers] = React.useState<{ [key: string]: boolean }>();
@@ -252,7 +252,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         delete state[recap];
         emitEvent('unread-recap', recap, state);
       } else {
-        state[recap.id] = new Bookmark(true);
+        state[recap.id] = true;
         emitEvent('read-recap', recap, state);
       }
       return (prev = state);
@@ -268,7 +268,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       } else {
         state[publisher.name] = true;
         setPreference('excludedPublishers', (prev) => {
-          delete prev[publisher.name];
+          delete prev?.[publisher.name];
           return prev;
         });
         emitEvent('follow-publisher', publisher, state);
@@ -286,7 +286,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       } else {
         state[publisher.name] = true;
         setPreference('followedPublishers', (prev) => {
-          delete prev[publisher.name];
+          delete prev?.[publisher.name];
           return prev;
         });
         emitEvent('exclude-publisher', publisher, state);
@@ -301,7 +301,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       if (category.name in state) {
         delete state[category.name];
         setPreference('excludedCategories', (prev) => {
-          delete prev[category.name];
+          delete prev?.[category.name];
           return prev;
         });
         emitEvent('unfollow-category', category, state);
@@ -322,7 +322,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       } else {
         state[category.name] = true;
         setPreference('followedCategories', (prev) => {
-          delete prev[category.name];
+          delete prev?.[category.name];
           return prev;
         });
         emitEvent('exclude-category', category, state);
