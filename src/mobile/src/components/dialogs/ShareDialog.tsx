@@ -135,6 +135,7 @@ export function ShareDialog({
                     showFullDate
                     forceSentiment
                     forceShortSummary
+                    forceUnread
                     summary={ summary } />
                   <Divider mx={ 12 } />
                   <View height={ 20 } my={ 3 }>

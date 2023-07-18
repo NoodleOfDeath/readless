@@ -3,9 +3,9 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 import {
-  BackNavigation,
   Button,
   Divider,
+  Header,
   Screen,
   SummaryList,
   Text,
@@ -60,15 +60,9 @@ export function PublisherScreen({
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({
       header: () => (
-        <View 
-          row 
-          itemsCenter
-          elevated
-          gap={ 6 }
-          zIndex={ 100 }
-          height={ publisher?.description ? 120 : 80 } 
-          p={ 12 }>
-          <BackNavigation />
+        <Header
+          back
+          elevated>
           <View row>
             <View flexRow gap={ 6 } itemsCenter>
               <ChannelIcon size={ 40 } publisher={ publisher } />
@@ -99,7 +93,7 @@ export function PublisherScreen({
               <Text>{publisher.description}</Text>
             </React.Fragment>
           )}
-        </View>
+        </Header>
       ),
     });
   }, [navigation, publisher, toggleFollowed, followed]));

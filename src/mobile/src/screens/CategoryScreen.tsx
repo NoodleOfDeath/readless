@@ -3,8 +3,8 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 import {
-  BackNavigation,
   Button,
+  Header,
   Screen,
   SummaryList,
   Text,
@@ -59,15 +59,10 @@ export function CategoryScreen({
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({
       header: () => (
-        <View 
-          row 
-          itemsCenter
-          elevated
-          zIndex={ 100 }
-          height={ 80 } 
-          p={ 12 }>
+        <Header 
+          back
+          elevated>
           <View flexRow gap={ 12 } itemsCenter>
-            <BackNavigation />
             <ChannelIcon size={ 40 } category={ category } />
             <View>
               <Text 
@@ -88,7 +83,7 @@ export function CategoryScreen({
               {`${ followed ? strings.action_unfollow : strings.action_follow } ${ category?.displayName && category.displayName.length < 15 ? strings.misc_category : '' }`}
             </Button>
           </View>
-        </View>
+        </Header>
       ),
     });
   }, [category, followed, navigation, toggleFollowed]));

@@ -248,8 +248,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const readRecap = async (recap: RecapAttributes) => {
     await setPreference('readRecaps', (prev) => {
       const state = { ...prev };
-      if (recap.is in state) {
-        delete state[recap];
+      if (recap.id in state) {
+        delete state[recap.id];
         emitEvent('unread-recap', recap, state);
       } else {
         state[recap.id] = true;

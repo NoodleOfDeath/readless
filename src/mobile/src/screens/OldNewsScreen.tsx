@@ -49,7 +49,7 @@ export function Recap({
         setIsRead((prev) => !prev);
         await readRecap(recap);
       },
-      text: strings.summary_markAsUnRead,
+      text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
     },
   ], [isRead, recap, readRecap]);
   
@@ -127,9 +127,9 @@ export function OldNewsScreen() {
           <Recap
             key={ item.id }
             recap={ item }
-            onPress={ () => {
+            onPress={ async () => {
               if (!(item.id in ({ ...readRecaps }))) {
-                readRecap(item);
+                await readRecap(item);
               }
               navigate('recap', { recap: item } );
             } } />

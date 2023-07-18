@@ -59,7 +59,7 @@ export function BookmarkWalkthrough(props: SheetProps) {
               </Pulse>
             </View>
             <View flexRow elevated p={ 8 } itemsCenter justifyEvenly>
-              <Header flex={ 1 } flexRow flexGrow={ 1 }>
+              <Header menu flex={ 1 } flexRow flexGrow={ 1 }>
                 <SearchMenu flexGrow={ 1 } />
               </Header>
             </View>

@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { 
   BackNavigation,
   Divider, 
+  Header,
   Highlighter,
   Screen,
   ScrollView,
@@ -52,26 +53,11 @@ export function RecapScreen({
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({
       header: () => (
-        <View 
-          row 
-          itemsCenter
-          elevated
-          zIndex={ 100 }
-          height={ 120 } 
-          p={ 12 }>
-          <View row gap={ 6 } itemsCenter>
-            <BackNavigation />
-            <View flex={ 1 }>
-              <Text
-                subtitle2
-                adjustsFontSizeToFit
-                bold>
-                {recap?.title}
-              </Text>
-              <Text subtitle2>{format(new Date(recap?.createdAt ?? ''), 'EEEE PP', { locale: getFnsLocale() })}</Text>
-            </View>
-          </View>
-        </View>
+        <Header 
+          back
+          title={ recap?.title }
+          subtitle={ format(new Date(recap?.createdAt ?? ''), 'EEEE PP', { locale: getFnsLocale() }) } 
+          elevated />
       ),
     });
   }, [navigation, recap?.createdAt, recap?.title]));

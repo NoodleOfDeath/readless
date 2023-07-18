@@ -13,6 +13,7 @@ import {
   BackNavigation,
   Divider,
   FlatList,
+  Header,
   Screen,
   ScrollView,
   Summary,
@@ -101,26 +102,19 @@ export function SummaryScreen({
     }
     navigation?.setOptions({
       header: () => (
-        <View 
-          row 
-          itemsCenter
-          elevated
-          zIndex={ 100 }
-          height={ 80 } 
-          px={ 12 }>
-          <View flexRow gap={ 6 } itemsCenter>
-            <BackNavigation />
-            <ScrollView scrollEnabled={ false }>
-              <Summary
-                forceUnread
-                disableNavigation
-                titleComponent
-                hideArticleCount
-                onInteract={ (...e) => handleInteraction(summary, ...e) }
-                summary={ summary } />
-            </ScrollView>
-          </View>
-        </View>
+        <Header
+          back
+          elevated>
+          <ScrollView scrollEnabled={ false }>
+            <Summary
+              forceUnread
+              disableNavigation
+              titleComponent
+              hideArticleCount
+              onInteract={ (...e) => handleInteraction(summary, ...e) }
+              summary={ summary } />
+          </ScrollView>
+        </Header>
       ),
     });
   }, [summary, navigation, handleInteraction]));

@@ -632,7 +632,7 @@ export function Summary({
         {(titleComponent) && (
           <React.Fragment>
             <View row />
-            <View flexRow itemsCenter gap={ 12 }>
+            <View flexRow itemsCenter gap={ 6 }>
               <Chip
                 color={ theme.colors.textSecondary }
                 leftIcon="share"
@@ -670,7 +670,7 @@ export function Summary({
   }, [theme.colors.textSecondary, publisherChip, summary, hideArticleCount, isBookmarked, titleComponent, menuItems, disableInteractions, openCategory, navigate, onInteract]);
   
   const image = React.useMemo(() => {
-    if (compact || compactSummaries || !summary.imageUrl || titleComponent) {
+    if (compact || compactSummaries || titleComponent) {
       return null;
     }
     return (
@@ -694,6 +694,9 @@ export function Summary({
               size={ 120 } />
           ) : (
             <Image
+              fallbackComponent={
+                <Image source={ { uri: summary.media?.imageAi1 || summary.imageUrl } } />
+              }
               flex={ 1 }
               flexGrow={ 1 }
               source={ { uri: summary.media?.imageArticle || summary.media?.imageAi1 || summary.imageUrl } } />

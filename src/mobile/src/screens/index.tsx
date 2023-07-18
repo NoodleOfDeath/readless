@@ -16,4 +16,5 @@ export * from './FontPickerScreen';
 export * from './ReadingFormatPickerScreen';
 export * from './TriggerWordPickerScreen';
 
+export * from './StatsScreen';
 export * from './TestScreen';

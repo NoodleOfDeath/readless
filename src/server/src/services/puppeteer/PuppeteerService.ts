@@ -29,6 +29,12 @@ type SelectorAction = {
   pageOptions?: PageOptions;
 };
 
+type UrlOptions = {
+  publisher: PublisherCreationAttributes;
+  excludeExternal?: boolean;
+  removeQuery?: boolean;
+};
+
 export type Loot = {
   url: string;
   rawText: string;
@@ -36,7 +42,7 @@ export type Loot = {
   dateMatches: string[];
   title: string;
   content: string;
-  imageUrl?: string;
+  imageUrls?: string[];
   authors: string[];
 };
 
@@ -140,13 +146,13 @@ export class PuppeteerService extends BaseService {
           return '';
         }
         await page.setViewport(pageOptions?.viewport ?? viewport);
-        const el = await page.waitForSelector(selector, { timeout: pageOptions?.timeout ?? timeout });
         if (selectAll) {
           const els = await page.$$(selector);
           for (const el of els) {
             await action(el);
           }
         } else {
+          const el = await page.waitForSelector(selector, { timeout: pageOptions?.timeout ?? timeout });
           await action(el);
         }
       }
@@ -161,10 +167,17 @@ export class PuppeteerService extends BaseService {
     }
   }
   
-  public static fixRelativeUrl(url: string, publisher: PublisherCreationAttributes, excludeExternal = false) {
+  public static fixRelativeUrl(url: string, {
+    publisher,
+    excludeExternal,
+    removeQuery,
+  }: UrlOptions) {
     const { baseUrl } = publisher;
     const domain = new URL(baseUrl).hostname.replace(/^www\./, ''); 
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
+    if (removeQuery) {
+      url = url.replace(/\?.*$/, '');
+    }
     // fix relative hrefs
     if (/^\/\//.test(url)) {
       return `https:${url}`;
@@ -201,7 +214,7 @@ export class PuppeteerService extends BaseService {
         return;
       }
       // fix relative hrefs
-      return this.fixRelativeUrl(url, publisher, true);
+      return this.fixRelativeUrl(url, { excludeExternal: true, publisher });
     };
     urls.push(...$(replaceDatePlaceholders(spider.selector)).map((i, el) => cleanUrl($(el).attr(spider.attribute || 'href'))).filter(Boolean));
     await PuppeteerService.open(targetUrl, [
@@ -305,15 +318,15 @@ export class PuppeteerService extends BaseService {
           }
           return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ');
         };
-
-        // image
-        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]', image?.attribute || 'src', true), publisher);
-        
-        exclude.forEach((tag) => $(tag).remove());
         
         const extractAll = (sel: string, attr?: string): string[] => {
           return $(sel)?.map((i, el) => clean(attr ? $(el).attr(attr) : $(el).text())).get().filter(Boolean) ?? [];
         };
+
+        // image
+        loot.imageUrls = extractAll(image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]', image?.attribute || 'src').map((src) => this.fixRelativeUrl(src, { publisher, removeQuery: true }));
+        
+        exclude.forEach((tag) => $(tag).remove());
         
         // title
         loot.title = extract(title?.selector || 'title', title?.attribute);
@@ -366,17 +379,17 @@ export class PuppeteerService extends BaseService {
       }
       
       // image
-      if (!loot.imageUrl) {
+      if (!loot.imageUrls || loot.imageUrls.length === 0) {
         actions.push({
           action: async (el) => {
-            loot.imageUrl = this.fixRelativeUrl(
+            loot.imageUrls = [this.fixRelativeUrl(
               clean(await el.evaluate((el, attr) => {
                 if (el.children.length > 0) {
                   return el.children[0].getAttribute(attr);
                 }
               }, image?.attribute || 'src')), 
-              publisher
-            );
+              { publisher, removeQuery: true }
+            )];
           },
           selector: image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]',
         });
