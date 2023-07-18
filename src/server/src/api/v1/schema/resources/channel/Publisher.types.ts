@@ -274,6 +274,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: '.byline .byline-author-name' },
       date: { selector: '.byline .byline-timestamp' },
+      image: { selector: 'figure img[src*="i.insider.com"]' },
       spider:{
         attribute: 'href',
         selector: 'a.tout-title-link',
@@ -668,6 +669,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '#article-content p' },
       author: { selector: '#content a[href*="/author/"]' },
       date: { selector: '#content' },
+      image: { selector: '#content img[src*="content.fortune.com"]' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/${YYYY}/"]',
@@ -1467,6 +1469,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .submitted-by a[href*="/author/"]' },
       date: { selector: 'article .submitted-by' },
+      image: { selector: 'figure img[src*="i0.wp.com/thehill.com"]' },
       spider:{
         attribute: 'href',
         selector: [
