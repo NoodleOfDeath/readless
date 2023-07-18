@@ -321,6 +321,7 @@ export class PuppeteerService extends BaseService {
         loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         
         // dates
+        
         dates.push(
           ...extractAll(date.selector),
           ...extractAll(date.selector, 'datetime')
