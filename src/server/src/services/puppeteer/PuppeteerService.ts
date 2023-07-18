@@ -324,7 +324,7 @@ export class PuppeteerService extends BaseService {
         };
 
         // image
-        loot.imageUrls = extractAll(image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]', image?.attribute || 'src').map((src) => this.fixRelativeUrl(src, { publisher, removeQuery: true }));
+        loot.imageUrls = extractAll(image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]', image?.attribute || 'src').map((src) => this.fixRelativeUrl(src, { publisher }));
         
         exclude.forEach((tag) => $(tag).remove());
         
