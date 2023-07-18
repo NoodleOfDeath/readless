@@ -33,7 +33,6 @@ import {
   Icon,
   MediaPlayer,
   Screen,
-  SearchMenu,
   Text,
   View,
 } from '~/components';
@@ -63,6 +62,7 @@ import {
   SearchScreen,
   SettingsScreen,
   StackableTabParams,
+  StatsScreen,
   SummaryScreen,
   TestScreen,
   TriggerWordPickerScreen,
@@ -185,6 +185,15 @@ const screens: RouteConfig<
   },
   // Other
   {
+    component: StatsScreen,
+    name: 'stats',
+    options: {
+      headerBackTitle: '', 
+      headerRight: () => undefined,
+      headerTitle: 'stats', 
+    },
+  },
+  {
     component: TestScreen,
     name: 'test',
     options: {
@@ -203,9 +212,7 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
       initialRouteName={ initialRouteName }
       screenOptions={ ({ route }) => ({
         header: route.name === 'home' ? () => ( 
-          <Header>
-            <SearchMenu flexGrow={ 1 } />
-          </Header>
+          <Header menu search notifications />
         ) : undefined,
       }) }>
       {screens.map((screen) => (

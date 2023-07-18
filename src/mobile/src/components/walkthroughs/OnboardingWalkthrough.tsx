@@ -134,10 +134,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
             onPress={ onDone }>
             {strings.walkthroughs_onboarding_yesLetsGetStarted}
           </Button>
-          <Divider />
-          <Chip bold subtitle1 textCenter system contained>
-            {strings.walkthroughs_onboarding_subscribe}
-          </Chip>
         </View>
       ),
       title: strings.walkthroughs_onboarding_areYouReady,

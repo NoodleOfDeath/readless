@@ -169,7 +169,7 @@ export const enStrings = {
   summary_example_title: 'This is an example title no more than 15 words long',
   summary_fullArticle: 'Full Article',
   summary_fullArticleInfo: 'Selecting this option, will automatically open the original article for a summary in the in-app browser when you tap on it.',
-  summary_hide: 'Hide this article',
+  summary_hide: 'Hide This Article',
   summary_markAsRead: 'Mark as Read',
   summary_markAsUnRead: 'Mark as Unread',
   summary_negative: 'Negative',

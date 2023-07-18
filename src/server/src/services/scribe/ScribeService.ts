@@ -102,7 +102,7 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
-      imageUrl: loot.imageUrl ?? '',
+      imageUrl: loot.imageUrls?.[0] ?? '',
       originalDate: loot.date,
       originalTitle: loot.title,
       outletId: publisher.id, //  -- legacy support
@@ -280,23 +280,25 @@ export class ScribeService extends BaseService {
       });
       
       // Save article media
-      if (loot.imageUrl) {
-        try {
-          const obj = await DeepAiService.mirror(loot.imageUrl, {
-            ACL: 'public-read',
-            ContentType: 'image/jpeg',
-            Folder: 'img/s',
-          });
-          await SummaryMedia.create({
-            key: 'imageArticle',
-            originalUrl: loot.imageUrl,
-            parentId: summary.id,
-            path: obj.key,
-            type: 'image',
-            url: obj.url,
-          });
-        } catch (e) {
-          await this.error('Failed to download image', [loot.imageUrl, JSON.stringify(e)].join('\n\n'), false);
+      if (loot.imageUrls && loot.imageUrls.length > 0) {
+        for (const [index, imageUrl] of loot.imageUrls.entries()) {
+          try {
+            const obj = await DeepAiService.mirror(imageUrl, {
+              ACL: 'public-read',
+              ContentType: 'image/jpeg',
+              Folder: 'img/s',
+            });
+            await SummaryMedia.create({
+              key: `imageArticle${index+1}`,
+              originalUrl: imageUrl,
+              parentId: summary.id,
+              path: obj.key,
+              type: 'image',
+              url: obj.url,
+            });
+          } catch (e) {
+            await this.error('Failed to download image', [loot.imageUrls, JSON.stringify(e)].join('\n\n'), false);
+          }
         }
       }
         
@@ -338,6 +340,7 @@ export class ScribeService extends BaseService {
       }
       
       this.log('🥳 Created new summary from', url, newSummary.title);
+      
       return summary;
       
     } catch (e) {

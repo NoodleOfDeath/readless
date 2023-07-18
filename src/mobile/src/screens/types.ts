@@ -48,6 +48,7 @@ export type StackableTabParams = {
   fontPicker: undefined;
   triggerWordPicker: undefined;
   readingFormatPicker: undefined;
+  stats: undefined;
   test: undefined;
 };
 

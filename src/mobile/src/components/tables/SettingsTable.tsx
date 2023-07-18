@@ -180,7 +180,8 @@ export function SettingsTable() {
           title={ loading ? strings.action_loading : `${strings.settings_clearCache} (${cacheSize})` }
           onPress={ () => {
             clearCache(); 
-          } } />
+          } } 
+          onLongPress={ () => navigate('stats') } />
         <TableViewCell
           bold
           title={ strings.settings_resetAllSettings }
