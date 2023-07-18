@@ -307,7 +307,7 @@ export class PuppeteerService extends BaseService {
         };
 
         // image
-        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'figure img', image?.attribute || 'src', true), publisher);
+        loot.imageUrl = this.fixRelativeUrl(extract(image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]', image?.attribute || 'src', true), publisher);
         
         exclude.forEach((tag) => $(tag).remove());
         
@@ -377,7 +377,7 @@ export class PuppeteerService extends BaseService {
               publisher
             );
           },
-          selector: image?.selector || 'figure img',
+          selector: image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]',
         });
       }
       
