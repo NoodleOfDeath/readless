@@ -29,6 +29,9 @@ import {
   PublicSummaryAttributes,
   PublicSummaryTranslationAttributes,
   PublicVoucherAttributes,
+  Recap,
+  RecapAttributes,
+  RecapTranslation,
   Service,
   ServiceAttributes,
   Summary,
@@ -122,6 +125,29 @@ export class ServiceController {
           });
         }
         return await SummaryTranslation.scope('public').findAndCountAll({ where: { locale, parentId: resourceId } });
+      }
+    } else
+    if (resourceType === 'recap') {
+      const recap = await Recap.findByPk(resourceId);
+      if (!recap) {
+        throw new InternalError('Recap not found');
+      }
+      const translations = await RecapTranslation.scope('public').findAndCountAll({ where: { locale, parentId: resourceId } });
+      if (translations.count >= 2) {
+        return translations;
+      } else {
+        const attributes = ['title', 'text'] as (keyof RecapAttributes)[];
+        for (const attribute of attributes) {
+          const property = recap[attribute];
+          const translatedString = await GoogleService.translateText(Array.isArray(property) ? property.join('\n') : property, body.locale);
+          await RecapTranslation.upsert({
+            attribute,
+            locale,
+            parentId: resourceId,
+            value: translatedString,
+          });
+        }
+        return await RecapTranslation.scope('public').findAndCountAll({ where: { locale, parentId: resourceId } });
       }
     } else {
       throw new InternalError('Invalid resource type');
