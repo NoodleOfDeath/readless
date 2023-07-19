@@ -88,7 +88,13 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     if (existingJob) {
       return existingJob;
     }
-    existingJob = await Job.findOne({ where: { name: jobName } });
+    existingJob = await Job.findOne({ 
+      where: { 
+        completedAt: { [Op.ne]: null },
+        name: jobName,
+        queue: this.toJSON().name,
+      },
+    });
     if (existingJob) {
       await existingJob.destroy();
     }
