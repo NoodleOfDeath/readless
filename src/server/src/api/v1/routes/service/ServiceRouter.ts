@@ -50,8 +50,8 @@ router.get(
 
 router.post(
   '/localize',
-  rateLimitMiddleware('10 per 1m'),
-  body('resourceType').matches(/^(summary)$/i),
+  rateLimitMiddleware('30 per 1m'),
+  body('resourceType').matches(/^(recap|summary)$/i),
   body('resourceId').isNumeric(),
   body('locale').isString(),
   validationMiddleware,
