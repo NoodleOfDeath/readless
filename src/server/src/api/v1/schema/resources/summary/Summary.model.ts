@@ -303,7 +303,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       excludeIds,
       matchType,
       interval,
-      locale,
+      queryKey === 'getTopStories' ? '' : locale,
       start,
       end,
       pageSize,
