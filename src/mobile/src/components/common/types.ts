@@ -26,18 +26,18 @@ export const BASE_LINE_HEIGHT_MULTIPLIER = 1.2;
 export type FontFamily = (typeof AVAILABLE_FONTS[number]);
 
 export const FONT_SIZES = {
-  body1: 16,
-  body2: 15,
+  body1: 18,
+  body2: 16,
   caption: 14,
-  h1: 30,
-  h2: 28,
-  h3: 26,
-  h4: 24,
-  h5: 22,
-  h6: 20,
-  subscript: 10,
-  subtitle1: 18,
-  subtitle2: 17,
+  h1: 32,
+  h2: 30,
+  h3: 28,
+  h4: 26,
+  h5: 24,
+  h6: 22,
+  subscript: 12,
+  subtitle1: 20,
+  subtitle2: 19,
 } as const;
 
 export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextProps & TextStyle & {

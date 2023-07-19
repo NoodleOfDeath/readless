@@ -21,6 +21,7 @@ export * from './user/Credential.model';
 export * from './user/Role.model';
 
 // resource models
+export * from './resources/localization/Locale.model';
 export * from './resources/sentiment/SentimentMethod.model';
 
 export * from './resources/channel/Publisher.model';

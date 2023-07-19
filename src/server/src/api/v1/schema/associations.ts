@@ -5,6 +5,7 @@ import {
   Credential,
   IapVoucher,
   Job,
+  Locale,
   Message,
   Publisher,
   PublisherTranslation,
@@ -87,6 +88,11 @@ export function makeAssociations() {
     foreignKey: 'parentId',
   });
   
+  Locale.hasMany(PublisherTranslation, { 
+    foreignKey: 'locale',
+    sourceKey: 'code',
+  });
+  
   // category associations
   
   CategoryTranslation.belongsTo(Category, { 
@@ -96,6 +102,11 @@ export function makeAssociations() {
   Category.hasMany(CategoryTranslation, {
     as: 'translations',
     foreignKey: 'parentId',
+  });
+  
+  Locale.hasMany(CategoryTranslation, { 
+    foreignKey: 'locale',
+    sourceKey: 'code',
   });
   
   // summary associations
@@ -124,6 +135,11 @@ export function makeAssociations() {
   Summary.hasMany(SummaryTranslation, {
     as: 'translations',
     foreignKey: 'parentId',
+  });
+  
+  Locale.hasMany(SummaryTranslation, { 
+    foreignKey: 'locale',
+    sourceKey: 'code',
   });
   
   SummaryMedia.belongsTo(Summary, { 
@@ -200,6 +216,11 @@ export function makeAssociations() {
   Recap.hasMany(RecapTranslation, {
     as: 'translations',
     foreignKey: 'parentId',
+  });
+  
+  Locale.hasMany(RecapTranslation, { 
+    foreignKey: 'locale',
+    sourceKey: 'code',
   });
   
   RecapMedia.belongsTo(Recap, { 

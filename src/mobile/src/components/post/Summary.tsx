@@ -290,7 +290,7 @@ export function Summary({
     }, ms(tickInterval));
     setIsSentimentEnabled(sentimentEnabled);
     setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
-    setShowTranslations(initiallyTranslated && Boolean(summary.translations));
+    setShowTranslations(initiallyTranslated || Boolean(summary.translations));
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
     setIsFollowingPublisher(summary.publisher.name in { ...followedPublishers });
@@ -512,10 +512,8 @@ export function Summary({
     }
     return (
       <View 
-        p={ titleComponent || initialFormat ? 12 : 6 }
+        p={ 6 }
         flexGrow={ 1 }
-        elevated={ Boolean(initialFormat) }
-        zIndex={ 2 }
         bg={ titleComponent ? undefined : theme.colors.headerBackground }>
         <View flexRow itemsCenter gap={ 6 }>
           {publisherChip}
@@ -525,7 +523,6 @@ export function Summary({
             •
           </Text>
           <Text  
-            adjustsFontSizeToFit
             color={ theme.colors.textSecondary }
             textCenter
             caption>
@@ -579,7 +576,7 @@ export function Summary({
         flexRow
         gap={ 6 }
         itemsCenter>
-        {titleComponent && (
+        {titleComponent || (compact || compactSummaries) && (
           <React.Fragment>
             {publisherChip}
             <Text
@@ -634,6 +631,7 @@ export function Summary({
             <View row />
             <View flexRow itemsCenter gap={ 6 }>
               <Chip
+                caption
                 color={ theme.colors.textSecondary }
                 leftIcon="share"
                 haptic
@@ -656,6 +654,7 @@ export function Summary({
                 items={ menuItems }
                 closeOnTap>
                 <Chip
+                  caption
                   gap={ 3 }
                   color={ theme.colors.textSecondary }
                   leftIcon="menu-down">
@@ -667,7 +666,7 @@ export function Summary({
         )}
       </View>
     );
-  }, [theme.colors.textSecondary, publisherChip, summary, hideArticleCount, isBookmarked, titleComponent, menuItems, disableInteractions, openCategory, navigate, onInteract]);
+  }, [theme.colors.textSecondary, publisherChip, summary, hideArticleCount, isBookmarked, titleComponent, menuItems, disableInteractions, openCategory, navigate, onInteract, compact, compactSummaries]);
   
   const image = React.useMemo(() => {
     if (compact || compactSummaries || titleComponent) {
@@ -751,6 +750,7 @@ export function Summary({
             {((!(compact || compactSummaries) && (showShortSummary || forceShortSummary) === true) || initialFormat) && (
               <View>
                 <Highlighter 
+                  body2
                   highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
                   searchWords={ keywords }>
                   { cleanString(localizedStrings.shortSummary ?? '') }
@@ -772,39 +772,28 @@ export function Summary({
         initiallyCollapsed={ false }
         title={ (
           <ReadingFormatPicker
-            my={ -12 }
-            elevated={ false }
             format={ format } 
             pressOnly={ !hideCard }
             preferredFormat={ preferredReadingFormat }
             onChange={ handleFormatChange } />
         ) }>
         {content && (
-          <View gap={ 6 } pb={ 12 }>
+          <View gap={ 12 } px={ 12 }>
             {translateToggle}
-            <View gap={ 12 } p={ 12 }>
-              {content.split('\n').map((content, i) => (
-                <View
-                  key={ `${content}-${i}` }
-                  itemsCenter
-                  gap={ 12 }
-                  flexRow>
-                  {format === 'bullets' && (
-                    <Icon
-                      name="circle"
-                      size={ 24 }
-                      flexRow
-                      flex={ 1 } />
-                  )}
-                  <Highlighter 
-                    flex={ format === 'bullets' ? 9 : 1 }
-                    highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-                    searchWords={ keywords }>
-                    { cleanString(content) }
-                  </Highlighter>
-                </View>
-              ))}
-            </View>
+            {content.split('\n').map((content, i) => (
+              <Chip
+                key={ `${content}-${i}` }
+                gap={ 12 }
+                leftIcon={ format === 'bullets' ? 'circle' : undefined }>
+                <Highlighter 
+                  flex={ 1 }
+                  flexGrow={ 1 }
+                  highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+                  searchWords={ keywords }>
+                  { cleanString(content) }
+                </Highlighter>
+              </Chip>
+            ))}
           </View>
         )}
       </CollapsedView>

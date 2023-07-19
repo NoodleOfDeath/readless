@@ -8,6 +8,7 @@ import v1router from './v1';
 import { authMiddleware, rateLimitMiddleware } from './v1/middleware';
 import {
   Category,
+  Locale,
   Publisher,
   Queue,
   Role,
@@ -18,6 +19,7 @@ import { DBService } from '../services';
 async function main() {
   
   await DBService.prepare();
+  await Locale.prepare();
   await Queue.prepare();
   await Role.prepare();
   await Category.prepare();

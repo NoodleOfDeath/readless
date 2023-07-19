@@ -17,6 +17,7 @@ FROM (
     siblings,
     sentiment,
     sentiments,
+    translations,
     "totalCount"
   FROM (
     SELECT
@@ -126,6 +127,9 @@ FROM (
   ) b
   LEFT OUTER JOIN summary_sentiment_caches ss 
     ON b.id = ss."parentId"
+  LEFT OUTER JOIN summary_translation_view st
+    ON b.id = st."parentId"
+    AND st.locale = :locale
   ORDER BY
     "siblingCount" DESC,
     b."originalDate" DESC

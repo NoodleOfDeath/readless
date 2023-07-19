@@ -1,15 +1,16 @@
+import { SupportedLocale } from '../../../../../core/locales';
 import { DatedAttributes } from '../../types';
 
 export type TranslationAttributes = DatedAttributes & {
   parentId: number;
-  locale: string;
+  locale: SupportedLocale;
   attribute: string;
   value: string;
 };
 
 export type TranslationCreationAttributes = Partial<DatedAttributes> & {
   parentId: number;
-  locale: string;
+  locale: SupportedLocale;
   attribute: string;
   value: string;
 };
@@ -17,11 +18,11 @@ export type TranslationCreationAttributes = Partial<DatedAttributes> & {
 export const PUBLIC_TRANSLATION_ATTRIBUTES = ['locale', 'attribute', 'value'] as const;
 
 export type PublicTranslationAttributes = {
-  locale: string;
+  locale: SupportedLocale;
   attribute: string;
   value: string;
 };
 
 export type Translatable = {
   translations?: PublicTranslationAttributes[];
-};
+}; 

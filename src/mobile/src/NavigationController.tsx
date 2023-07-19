@@ -326,21 +326,23 @@ function DrawerContent(props: DrawerContentComponentProps) {
       );
     }).filter(Boolean);
     if (items.length === 0) {
-      return [
+      items.push(
         <DrawerItem 
           key="missing-publishers"
           label={ (
             <Text numberOfLines={ 3 }>
               { strings.misc_noPublishers }
             </Text>
-          ) } />,
-        <DrawerItem 
-          key="browse-publishers"
-          label={ strings.nav_browsePublishers }
-          onPress={ () => SheetManager.show('custom-feed-walkthrough') }
-          right={ (props) => <Icon { ...props } name="chevron-right" /> } />,
-      ];
+          ) } />
+      );
     }
+    items.push(
+      <DrawerItem 
+        key="browse-publishers"
+        label={ strings.nav_browsePublishers }
+        onPress={ () => SheetManager.show('custom-feed-walkthrough') }
+        right={ (props) => <Icon { ...props } name="menu-right" /> } />
+    );
     return items;
   }, [publishers, followedPublishers, openPublisher]);
   
@@ -362,21 +364,23 @@ function DrawerContent(props: DrawerContentComponentProps) {
       );
     }).filter(Boolean);
     if (items.length === 0) {
-      return [
+      items.push(
         <DrawerItem 
           key="missing-categories"
           label={ (
             <Text numberOfLines={ 3 }>
               { strings.misc_noCategories }
             </Text>
-          ) } />,
-        <DrawerItem 
-          key="browse-categories"
-          label={ strings.nav_browseCategories }
-          onPress={ () => SheetManager.show('custom-feed-walkthrough') }
-          right={ (props) => <Icon { ...props } name="chevron-right" /> } />,
-      ];
+          ) } />
+      );
     }
+    items.push(
+      <DrawerItem 
+        key="browse-categories"
+        label={ strings.nav_browseCategories }
+        onPress={ () => SheetManager.show('custom-feed-walkthrough') }
+        right={ (props) => <Icon { ...props } name="menu-right" /> } />
+    );
     return items;
   }, [categories, followedCategories, openCategory]);
   
