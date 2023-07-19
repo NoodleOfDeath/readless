@@ -118,14 +118,6 @@ async function scheduleCacheJobs() {
         },
         'caches'
       );
-      await queue.add(
-        `cache-getTopStories-${locale}`,
-        {
-          endpoint: 'getTopStories',
-          locale,
-        },
-        'caches'
-      );
     }
     console.log('done scheduling cache jobs');
   } catch (e) {
