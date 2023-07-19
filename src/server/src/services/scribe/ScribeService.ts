@@ -289,7 +289,7 @@ export class ScribeService extends BaseService {
               Folder: 'img/s',
             });
             await SummaryMedia.create({
-              key: `imageArticle${index+1}`,
+              key: `imageArticle${index === 0 ? '' : index + 1}`,
               originalUrl: imageUrl,
               parentId: summary.id,
               path: obj.key,
