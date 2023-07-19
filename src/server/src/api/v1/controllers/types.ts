@@ -1,4 +1,5 @@
 // record management
+import { SupportedLocale } from '../../../core/locales';
 
 export type BulkResponse<T> = {
   count: number;
@@ -27,7 +28,7 @@ export type JobRequest = {
 
 export type LocalizeRequest = JobRequest & {
   /** target locale **/
-  locale: string;
+  locale: SupportedLocale;
 }; 
 
 export type TtsRequest = JobRequest & {

@@ -54,11 +54,14 @@ export * from './user/Role.types';
 // Posts
 export * from './resources/Post.types';
 
-export * from './resources/sentiment/SentimentMethod.types';
+export * from './resources/localization/Locale.types';
 export * from './resources/localization/Translation.types';
+
 export * from './resources/media/Media.types';
 
 export * from './resources/interaction/Interaction.types';
+
+export * from './resources/sentiment/SentimentMethod.types';
 export * from './resources/sentiment/Sentiment.types';
 
 export * from './resources/channel/Publisher.types';

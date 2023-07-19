@@ -1,7 +1,7 @@
 import { Column, DataType } from 'sequelize-typescript';
 
 import { TranslationAttributes, TranslationCreationAttributes } from './Translation.types';
-import { SUPPORTED_LOCALES } from '../../../../../core/locales';
+import { SUPPORTED_LOCALES, SupportedLocale } from '../../../../../core/locales';
 import { GoogleService } from '../../../../../services';
 import { BaseModel } from '../../base';
 
@@ -21,7 +21,7 @@ export class Translation<
     allowNull: false,
     type: DataType.STRING,
   })
-  declare locale: string;
+  declare locale: SupportedLocale;
   
   @Column({ 
     allowNull: false,
@@ -38,7 +38,7 @@ export class Translation<
   public static async translate<T extends { id?: number }>(
     model: T, 
     attributes: (keyof T)[], 
-    locale: string | string[] = [...SUPPORTED_LOCALES]
+    locale: SupportedLocale | SupportedLocale[] = [...SUPPORTED_LOCALES]
   ) {
     if (Array.isArray(locale)) {
       await Promise.all(locale.map(async (l) => await this.translate(model, attributes, l)));

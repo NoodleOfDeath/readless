@@ -68,7 +68,7 @@ export function AnalyticsView({
         { ...props }
         title={ strings.summary_sentimentAnalysis }
         info={ strings.summary_sentimentAnalysisInfo }>
-        <View gap={ 12 }>
+        <View gap={ 12 } p={ 12 }>
           <View row itemsStart gap={ 12 }>
             <View
               elevated

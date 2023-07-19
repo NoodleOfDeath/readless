@@ -21,7 +21,7 @@ export function ReadingFormatPicker({
   return (
     <SegmentedButtons 
       { ...props }
-      buttonProps={ { my: -24, system: true } }
+      buttonProps={ { my: -16, system: true } }
       initialValue={ format ?? preferredFormat }
       onValueChange={ (value) => onChange?.(value) }
       options={ [

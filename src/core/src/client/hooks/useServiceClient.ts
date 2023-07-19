@@ -2,7 +2,11 @@ import React from 'react';
 
 import { SessionContext } from '../contexts';
 
-import { API, PublicSummaryGroup } from '~/api';
+import { 
+  API, 
+  PublicSummaryGroup,
+  RecapAttributes,
+} from '~/api';
 
 export const useServiceClient = () => {
 
@@ -21,10 +25,17 @@ export const useServiceClient = () => {
       locale, resourceId: summary.id, resourceType: 'summary', 
     });
   }, [withHeaders]);
+  
+  const localizeRecap = React.useCallback(async (recap: RecapAttributes, locale: string) => {
+    return await withHeaders(API.localize)({
+      locale, resourceId: recap, resourceType: 'recap', 
+    });
+  }, [withHeaders]);
 
   return { 
     getServices, 
     getSystemMessages,
+    localizeRecap,
     localizeSummary,
   };
 

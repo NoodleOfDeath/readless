@@ -60,10 +60,6 @@ export function SummaryScreen({
   }, [getSummary]);
 
   React.useEffect(() => {
-    navigation?.setOptions({ headerTitle: '' });
-  }, [navigation, summary]);
-
-  React.useEffect(() => {
     if (summary) {
       return;
     }

@@ -379,7 +379,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     };
     
     await Cache.upsert({
-      halflife: process.env.CACHE_HALFLIFE || '2m',
+      halflife: process.env.CACHE_HALFLIFE || '3m',
       key: cacheKey,
       value: JSON.stringify(response),
     });
