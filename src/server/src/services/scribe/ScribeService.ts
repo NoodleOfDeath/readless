@@ -375,7 +375,7 @@ export class ScribeService extends BaseService {
       const mainPrompt = 
         `I will provide you with a list of news events that occurred on ${start.toLocaleString()}. Please summarize the highlights in three to five paragraphs, blog form, making sure to prioritize topics that seem like breaking news and/or have a greater number of related articles written about them indicated in parentheses.
 
-        Try to make the summary concise, engaging, and entertaining to read. Do not make up facts and do not respons with a list of bullet points. Just cover what seems most important. Do not make a references section at the end. That will be added by the system.
+        Try to make the summary concise, engaging, and entertaining to read. Do not make up facts and do not respons with a list of bullet points. Just cover what seems most important. Do NOT add a references section at the end.
 
         Please also site from the list of events using the number of each headline as its reference code. For example, if the list of events were:
         [88] (14 articles) CNN: Trump impeached - Trump was impeached by the House of Representatives. The Senate will now hold a trial to determine whether or not he will be removed from office.
