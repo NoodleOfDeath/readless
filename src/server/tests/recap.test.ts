@@ -14,10 +14,10 @@ describe('write a recap', () => {
 
   test('write a recap', async () => {
     try {
-      await DBService.initTables();
+      await DBService.prepare();
       const recap = await ScribeService.writeRecap({
         duration: '1d',
-        start: '2023-06-29',
+        start: '2023-07-19',
       });
       expect(recap).toBeDefined();
       console.log(recap?.text);
