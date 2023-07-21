@@ -22,6 +22,7 @@ import {
   InteractionRequest,
 } from '../';
 import { BaseControllerWithPersistentStorageAccess } from '../';
+import { SupportedLocale, parseLocale } from '../../../../core/locales';
 import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
@@ -55,7 +56,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
     @Query() interval?: string,
-    @Query() locale?: string,
+    @Query() locale: SupportedLocale = parseLocale(req.headers['x-locale']),
     @Query() start?: string,
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
     @Query() pageSize = 10,
@@ -87,13 +88,13 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
 
   @Get('/top')
   public static async getTopStories(
-    @Request() req?: ExpressRequest,
+    @Request() req: ExpressRequest,
     @Query() filter?: string,
     @Query() ids?: number[],
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
     @Query() interval = '1d',
-    @Query() locale?: string,
+    @Query() locale: SupportedLocale = parseLocale(req.headers['x-locale']),
     @Query() start?: string,
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
     @Query() pageSize = 10,

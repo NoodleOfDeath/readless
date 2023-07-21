@@ -15,10 +15,10 @@ describe('summary unit tests', () => {
 
   test('associateSibling', async () => {
     try {
-      await DBService.initTables();
-      const summary = await Summary.findByPk(1315);
+      await DBService.prepare();
+      const summary = await Summary.findByPk(1441);
       await summary.dropAllSiblings();
-      await summary.associateWith(1316);
+      await summary.associateWith(1443);
       await summary.associateWith(1317);
       await summary.associateWith(1318);
       const sibling = await Summary.findByPk(1320);

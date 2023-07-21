@@ -69,6 +69,7 @@ export type PublicPublisherAttributes = Sentimental & {
 export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   _9to5google: {
     baseUrl: 'https://9to5google.com',
+    description: 'The 9to5Google publisher is a tech news website that covers the latest developments in the Google ecosystem, including Android, Chrome OS, and other Google products. With a focus on insightful reporting and analysis, it keeps readers informed about the ever-evolving world of Google technology.',
     displayName: '9to5google',
     name: '9to5google',
     selectors: {
