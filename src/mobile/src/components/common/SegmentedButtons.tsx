@@ -51,6 +51,7 @@ export const SegmentedButtons = <T extends string | number = string>({
           <Button
             px={ 12 }
             gap={ 6 }
+            adjustsFontSizeToFit
             leftIcon={ option.icon }
             selected={ value === option.value }
             { ...(buttonProps instanceof Function ? buttonProps(option, value === option.value) : buttonProps) }

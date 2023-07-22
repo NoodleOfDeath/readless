@@ -4,7 +4,6 @@ import { Animated, ViewStyle } from 'react-native';
 import {
   Icon,
   Popover,
-  ScrollView,
   Text,
   View,
   ViewProps,
@@ -61,39 +60,37 @@ export function CollapsedView({
           flexGrow={ 1 }
           p={ titleStyle?.padding !== undefined ? titleStyle?.padding : 6 }
           style={ titleStyle }>
-          <ScrollView horizontal overflow='visible'>
-            <View
-              gap={ 12 }
-              row
-              itemsCenter
-              justifyCenter={ !title }
-              touchable
-              onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
-              <Animated.View style={ { 
-                alignItems: 'center',
-                justifyContent: 'center',
-                transform: [
-                  { 
-                    rotate: animation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [title ? '-90deg' : '0deg', title ? '0deg' : '-180deg'],
-                    }), 
-                  },
-                ],
-              } }>
-                <Icon
-                  size={ 24 }
-                  name='menu-down' />
-              </Animated.View>
-              {title && typeof title === 'string' ? <Text subtitle1 system>{title}</Text> : title}
-              {info && (
-                <Popover
-                  anchor={ <Icon size={ 24 } name='information' /> }>
-                  <Text p={ 12 }>{info}</Text>
-                </Popover>
-              )}
-            </View>
-          </ScrollView>
+          <View
+            gap={ 12 }
+            row
+            itemsCenter
+            justifyCenter={ !title }
+            touchable
+            onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
+            <Animated.View style={ { 
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: [
+                { 
+                  rotate: animation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [title ? '-90deg' : '0deg', title ? '0deg' : '-180deg'],
+                  }), 
+                },
+              ],
+            } }>
+              <Icon
+                size={ 24 }
+                name='menu-down' />
+            </Animated.View>
+            {title && typeof title === 'string' ? <Text subtitle1 system>{title}</Text> : title}
+            {info && (
+              <Popover
+                anchor={ <Icon size={ 24 } name='information' /> }>
+                <Text p={ 12 }>{info}</Text>
+              </Popover>
+            )}
+          </View>
         </View>
       )}
       {!collapsed && children}

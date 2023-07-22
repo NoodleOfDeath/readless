@@ -144,7 +144,7 @@ export function Header({
       )}
       {content && (
         scrollable ? (
-          <ScrollView flex={ 1 } flexGrow={ 1 } horizontal>
+          <ScrollView flex={ 1 } flexGrow={ 1 } horizontal overflow='visible'>
             {content}
           </ScrollView>
         ) : (
