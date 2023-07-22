@@ -5,7 +5,7 @@ import { ScreenProps } from '~/screens';
 
 export function RecapScreen({
   route,
-  navigation,
+  navigation: _navigation,
 }: ScreenProps<'recap'>) {
   const recap = React.useMemo(() => route?.params?.recap, [route]);
   return (

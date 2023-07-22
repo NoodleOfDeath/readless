@@ -3,9 +3,13 @@ import { Text as RNText, TextStyle } from 'react-native';
 
 import { findAll } from 'highlight-words-core';
 
-import { Text, TextProps } from '~/components';
+import {
+  ChildlessViewProps,
+  Text,
+  TextProps,
+} from '~/components';
 
-export type HighlighterProps = Omit<TextProps, 'children'> & {
+export type HighlighterProps = Omit<ChildlessViewProps & TextProps, 'children'> & {
   children?: string;
   autoEscape?: boolean;
   highlightStyle?: TextStyle | ((text: string, index: number) => TextStyle);

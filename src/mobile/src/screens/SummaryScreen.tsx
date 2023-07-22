@@ -10,7 +10,6 @@ import {
 } from '~/api';
 import {
   ActivityIndicator,
-  BackNavigation,
   Divider,
   FlatList,
   Header,
@@ -100,15 +99,15 @@ export function SummaryScreen({
       header: () => (
         <Header
           back
-          elevated>
-          <ScrollView scrollEnabled={ false }>
+          elevated
+          title={ summary.title }>
+          <ScrollView horizontal>
             <Summary
               forceUnread
-              disableNavigation
-              titleComponent
+              footerOnly
               hideArticleCount
-              onInteract={ (...e) => handleInteraction(summary, ...e) }
-              summary={ summary } />
+              summary={ summary }
+              onInteract={ (...e) => handleInteraction(summary, ...e) } />
           </ScrollView>
         </Header>
       ),

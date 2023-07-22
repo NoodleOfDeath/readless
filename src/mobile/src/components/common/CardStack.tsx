@@ -49,7 +49,7 @@ export function CardStackEntry({
       { ...props }
       elevated
       p={ 12 }
-      rounded 
+      beveled 
       width="100%"
       height={ 200 }
       gap={ 12 }

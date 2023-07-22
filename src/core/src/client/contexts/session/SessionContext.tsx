@@ -96,7 +96,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   const bookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).length, [bookmarkedSummaries]);
   const unreadBookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).filter((k) => !(k in ({ ...readSummaries }))).length, [bookmarkedSummaries, readSummaries]);
-
+  
   const getPreference = async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
     const value = await getItem(key);
     if (value) {
@@ -217,10 +217,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     });
   };
   
-  const readSummary = async (summary: PublicSummaryGroup) => {
+  const readSummary = async (summary: PublicSummaryGroup, force = false) => {
     await setPreference('readSummaries', (prev) => {
       const state = { ...prev };
-      if (summary.id in state) {
+      if (force === true && summary.id in state) {
         delete state[summary.id];
         emitEvent('unread-summary', summary, state);
       } else {
@@ -245,10 +245,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     });
   };
   
-  const readRecap = async (recap: RecapAttributes) => {
+  const readRecap = async (recap: RecapAttributes, force = false) => {
     await setPreference('readRecaps', (prev) => {
       const state = { ...prev };
-      if (recap.id in state) {
+      if (force && recap.id in state) {
         delete state[recap.id];
         emitEvent('unread-recap', recap, state);
       } else {
@@ -277,6 +277,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     });
   };
   
+  const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...followedPublishers }), [followedPublishers]);
+  
   const excludePublisher = async (publisher: PublicPublisherAttributes) => {
     await setPreference('excludedPublishers', (prev) => {
       const state = { ...prev };
@@ -294,6 +296,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return (prev = state);
     });
   };
+  
+  const isExcludingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...excludedPublishers }), [excludedPublishers]);
 
   const followCategory = async (category: PublicCategoryAttributes) => {
     await setPreference('followedCategories', (prev) => {
@@ -312,6 +316,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return (prev = state);
     });
   };
+  
+  const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...followedCategories }), [followedCategories]);
 
   const excludeCategory = async (category: PublicCategoryAttributes) => {
     await setPreference('excludedCategories', (prev) => {
@@ -330,14 +336,16 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return (prev = state);
     });
   };
+  
+  const isExcludingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...excludedCategories }), [excludedCategories]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = <T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
     const userAgent = getUserAgent();
     const headers: RequestInit['headers'] = { 
-      'X-App-Version': userAgent.currentVersion,
-      'X-Locale': userAgent.locale,
-      'X-Platform': userAgent.OS,
+      'x-app-version': userAgent.currentVersion,
+      'x-locale': userAgent.locale,
+      'x-platform': userAgent.OS,
     };
     return (...args: T) => {
       return fn(...args, { headers });
@@ -417,6 +425,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         fontSizeOffset,
         getPreference,
         hasReviewed,
+        isExcludingCategory,
+        isExcludingPublisher,
+        isFollowingCategory,
+        isFollowingPublisher,
         lastRequestForReview,
         letterSpacing,
         lineHeightMultiplier,

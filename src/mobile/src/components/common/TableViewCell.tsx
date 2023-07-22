@@ -32,7 +32,7 @@ export function TableViewCellImage({
     <View
       outlined
       p={ 4 }
-      rounded
+      beveled
       mr={ 12 }
       style={ style }>
       {typeof icon === 'string' ? (

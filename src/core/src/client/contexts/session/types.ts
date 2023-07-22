@@ -30,7 +30,7 @@ export class Bookmark<T> {
   constructor(item: T, {
     createdAt = new Date(), 
     expiresIn,
-  }: BookmarkConstructorProps = {}) {
+  }: Partial<BookmarkConstructorProps> = {}) {
     this.item = item;
     this.createdAt = createdAt;
     if (expiresIn) {
@@ -83,7 +83,7 @@ export type Preferences = {
   removedSummaries?: { [key: number]: boolean };
   
   // recap state
-  readRecaps: { [key: number]: boolean };
+  readRecaps?: { [key: number]: boolean };
   
   // followed publishers
   followedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
@@ -159,17 +159,23 @@ export type SessionContextType = Preferences & {
   
   // summary convenience functions
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
-  readSummary: (summary: PublicSummaryGroup) => Promise<void>;
+  readSummary: (summary: PublicSummaryGroup, force?: boolean) => Promise<void>;
   removeSummary: (summary: PublicSummaryGroup) => Promise<void>;
   
   // recap convenience functions
-  readRecap: (recap: RecapAttributes) => Promose<void>;
+  readRecap: (recap: RecapAttributes, force?: boolean) => Promise<void>;
   
-  // follow publisher/category convenience functions
+  // follow publisher convenience functions
   followPublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
+  isFollowingPublisher: (publisher: PublicPublisherAttributes) => boolean;
   excludePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
+  isExcludingPublisher: (publisher: PublicPublisherAttributes) => boolean;
+
+  // follow category convenience functions
   followCategory: (category: PublicCategoryAttributes) => Promise<void>;
+  isFollowingCategory: (publisher: PublicPublisherAttributes) => boolean;
   excludeCategory: (category: PublicCategoryAttributes) => Promise<void>;
+  isExcludingCategory: (publisher: PublicPublisherAttributes) => boolean;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
@@ -185,6 +191,10 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   followFilter: '',
   followPublisher: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
+  isExcludingCategory: () => false,
+  isExcludingPublisher: () => false,
+  isFollowingCategory: () => false,
+  isFollowingPublisher: () => false,
   lastRequestForReview: 0,
   readRecap: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),

@@ -1,10 +1,10 @@
 import LocalizedStrings from 'react-native-localization';
 
+import { SupportedLocale } from '~/api';
 import {
   FNS_LOCALES,
   LOCALE_MAP,
   SUPPORTED_LOCALES,
-  SupportedLocale,
 } from '~/core';
 
 export const strings = new LocalizedStrings(LOCALE_MAP);
@@ -19,7 +19,7 @@ export const getLocale = (): SupportedLocale => {
     if (parts.length > 0 && SUPPORTED_LOCALES.includes(parts[0] as SupportedLocale)) {
       lang = parts[0] as SupportedLocale;
     } else {
-      return 'en';
+      return SupportedLocale.En;
     }
   }
   return lang as SupportedLocale;

@@ -123,7 +123,8 @@ export function SettingsTable() {
             <ScrollView scrollEnabled={ false }>
               <Summary 
                 sample
-                my={ 12 } 
+                my={ 12 }
+                forceUnread
                 disableInteractions 
                 disableNavigation /> 
             </ScrollView>

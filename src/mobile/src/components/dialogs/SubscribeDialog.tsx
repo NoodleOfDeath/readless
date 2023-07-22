@@ -165,7 +165,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                   {availabileTo.includes(id) ? (
                     <Icon 
                       name="check"
-                      rounded
+                      beveled
                       size={ 24 }
                       bg="green"
                       color="white" />
@@ -197,7 +197,7 @@ export function SubscribeDialog({ ...props }: SheetProps<Props>) {
                   <Button
                     haptic
                     outlined 
-                    rounded
+                    beveled
                     touchable
                     p={ 6 }
                     onPress={ () => subscribe(tier.id) }>

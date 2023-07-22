@@ -131,7 +131,7 @@ export function Picker<
           <Button
             elevated
             p={ 8 }
-            rounded
+            beveled
             haptic
             disabled={ loading }
             onPress={ () => onSave(state) }>

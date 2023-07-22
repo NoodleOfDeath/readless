@@ -7,6 +7,7 @@ import {
   Badge,
   Chip,
   Icon,
+  ScrollView,
   SearchMenu,
   Text,
   View,
@@ -40,8 +41,8 @@ export function BackNavigation({
 
 export type HeaderProps = ViewProps & {
   children?: React.ReactNode;
-  title?: string;
-  subtitle?: string;
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
   back?: boolean;
   backTitle?: string;
   menu?: boolean;
@@ -49,6 +50,8 @@ export type HeaderProps = ViewProps & {
   searchValue?: string;
   notifications?: boolean;
   elevated?: boolean;
+  scrollable?: boolean;
+  big?: boolean;
 };
 
 export function Header({
@@ -61,12 +64,37 @@ export function Header({
   search,
   searchValue,
   notifications,
+  scrollable,
+  big,
+  height = big ? 140 : 80,
   ...props
 }: HeaderProps) {
   
   const theme = useTheme();
   const { navigation } = useNavigation();
   const { unreadBookmarkCount } = React.useContext(SessionContext);
+  
+  const content = React.useMemo(() => (
+    (title || children) && (
+      <View gap={ 6 }>
+        {title && (
+          <View flexGrow={ 1 }>
+            <Text bold adjustsFontSizeToFit numberOfLines={ 2 }>
+              {title}
+            </Text>
+            {subtitle && (
+              <Text
+                color={ theme.colors.textSecondary }
+                adjustsFontSizeToFit>
+                {subtitle}
+              </Text>
+            )}
+          </View>
+        )}
+        {children}
+      </View>
+    )
+  ), [title, subtitle, children, theme.colors.textSecondary]);
   
   const notificationMenu: MenuItemProps[] = React.useMemo(() => [
     {
@@ -87,7 +115,7 @@ export function Header({
     <View 
       flexRow
       itemsCenter
-      height={ 80 }
+      height={ height }
       px={ 12 }
       bg={ theme.components.card.backgroundColor }
       { ...props }>
@@ -110,32 +138,32 @@ export function Header({
       )}
       {search && (
         <SearchMenu 
+          flex={ 1 }
           flexGrow={ 1 }
           initialValue={ searchValue } />
       )}
-      {title && (
-        <View flex={ 1 } flexGrow={ 1 }>
-          <Text bold>
-            {title}
-          </Text>
-          {subtitle && (
-            <Text
-              color={ theme.colors.textSecondary }>
-              {subtitle}
-            </Text>
-          )}
-        </View>
+      {content && (
+        scrollable ? (
+          <ScrollView flex={ 1 } flexGrow={ 1 } horizontal>
+            {content}
+          </ScrollView>
+        ) : (
+          <View flex={ 1 } flexGrow={ 1 }>
+            {content}
+          </View>
+        )
       )}
-      {children}
-      {notifications && (
-        <HoldItem 
-          activateOn="tap" 
-          items={ notificationMenu }>
-          <Chip
-            leftIcon="bell"
-            iconSize={ 24 } />
-        </HoldItem>
-      )}
+      <View minWidth={ 24 }>
+        {notifications && (
+          <HoldItem 
+            activateOn="tap" 
+            items={ notificationMenu }>
+            <Chip
+              leftIcon="bell"
+              iconSize={ 24 } />
+          </HoldItem>
+        )}
+      </View>
     </View>
   );
 }

@@ -48,7 +48,7 @@ export function Banner({
                   leftIcon={ minimized ? 'chevron-up' : 'chevron-down' }
                   elevated
                   p={ 4 }
-                  rounded />
+                  beveled />
               </View>
               <View row />
               <View>
@@ -57,7 +57,7 @@ export function Banner({
                   leftIcon={ 'close' }
                   elevated
                   p={ 4 }
-                  rounded />
+                  beveled />
               </View>
             </View>
           </View>
@@ -74,7 +74,7 @@ export function Banner({
                     <Button
                       elevated
                       haptic
-                      rounded
+                      beveled
                       p={ 16 }
                       iconSize={ 24 }
                       disabled={ action.disabled }

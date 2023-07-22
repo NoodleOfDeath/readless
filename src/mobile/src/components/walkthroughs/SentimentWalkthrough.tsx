@@ -54,7 +54,7 @@ export function SentimentWalkthrough(props: SheetProps) {
     {
       body: (
         <View gap={ 12 }>
-          <View elevated p={ 12 } rounded>
+          <View elevated p={ 12 } beveled>
             <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
               <Text bold>&quot;</Text>
               <Text h5>
@@ -84,7 +84,7 @@ export function SentimentWalkthrough(props: SheetProps) {
       body: (
         <View gap={ 12 }>
           <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
-          <View elevated p={ 12 } rounded>
+          <View elevated p={ 12 } beveled>
             <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
               <Text h5 bold>&quot;</Text>
               <Text h5>

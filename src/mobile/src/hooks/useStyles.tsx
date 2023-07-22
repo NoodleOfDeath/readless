@@ -100,8 +100,10 @@ export function useTextStyles({
     attrs.push({ fontFamily: platformFont });
     attrs.push({ fontSize: offsetFontSize });
     
-    attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
-    attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
+    if (!fontSizeFixed) {
+      attrs.push({ letterSpacing: BASE_LETTER_SPACING + (letterSpacing ?? letterSpacing0) });
+      attrs.push({ lineHeight: ((lineHeight ?? offsetFontSize) * (BASE_LINE_HEIGHT_MULTIPLIER + lineHeightMultiplier)) });
+    }
     
     attrs.push(textAlign ? { textAlign } : undefined);
     
@@ -124,6 +126,7 @@ export function useStyles({
   // preset variants
   outlined,
   rounded,
+  beveled,
   
   // position
   absolute,
@@ -205,7 +208,7 @@ export function useStyles({
   borderLeftColor = bcLeft,
   
   // border radius
-  bRadius = rounded ? 6 : undefined,
+  bRadius = beveled ? 6 : rounded ? 500 : undefined,
   borderRadius = bRadius,
   brTopLeft = borderRadius,
   borderTopLeftRadius = brTopLeft,

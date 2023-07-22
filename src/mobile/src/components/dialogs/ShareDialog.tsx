@@ -1,4 +1,5 @@
 import React from 'react';
+import { LayoutRectangle } from 'react-native';
 
 import { BASE_DOMAIN } from '@env';
 import { SheetProps } from 'react-native-actions-sheet';
@@ -39,6 +40,7 @@ export function ShareDialog({
  
   const theme = useTheme();
   const viewshot = React.useRef<ViewShot>(null);
+  const [layout, setLayout] = React.useState<LayoutRectangle>();
 
   const {
     summary,
@@ -125,17 +127,21 @@ export function ShareDialog({
     <ActionSheet id={ props.sheetId }>
       {summary && (
         <ScrollView scrollEnabled={ false }>
-          <View bg={ theme.colors.headerBackground } inactive>
-            <View m={ 12 }>
+          <View
+            bg={ theme.colors.headerBackground }
+            inactive
+            itemsCenter
+            onLayout={ (e) => setLayout(e.nativeEvent.layout) }>
+            <View
+              m={ 12 } 
+              maxWidth={ (Math.min(layout?.width ?? 300, 480)) - 24 }>
               <ViewShot ref={ viewshot }>
-                <View rounded style={ theme.components.card } overflow='hidden'>
+                <View
+                  beveled
+                  style={ theme.components.card }
+                  overflow='hidden'>
                   <Summary 
-                    disableInteractions
-                    disableNavigation
-                    showFullDate
-                    forceSentiment
-                    forceShortSummary
-                    forceUnread
+                    showcase
                     summary={ summary } />
                   <Divider mx={ 12 } />
                   <View height={ 20 } my={ 3 }>

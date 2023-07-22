@@ -61,27 +61,28 @@ export function CategoryScreen({
       header: () => (
         <Header 
           back
+          big
           elevated>
-          <View flexRow gap={ 12 } itemsCenter>
-            <ChannelIcon size={ 40 } category={ category } />
+          <View
+            gap={ 6 } 
+            justifyCenter
+            itemsCenter>
+            <ChannelIcon rounded size={ 40 } category={ category } />
+            <Text 
+              h6 
+              ml={ 6 }
+              bold>
+              {category?.displayName}
+            </Text>
             <View>
-              <Text 
-                h6 
-                bold>
-                {category?.displayName}
-              </Text>
-              <Text subtitle2>{strings.misc_category}</Text>
+              <Button
+                body2
+                contained
+                haptic
+                onPress={ toggleFollowed }>
+                {`${ followed ? strings.action_unfollow : strings.action_follow } ${ strings.misc_category }`}
+              </Button>
             </View>
-          </View>
-          <View row />
-          <View>
-            <Button
-              body2
-              contained
-              haptic
-              onPress={ toggleFollowed }>
-              {`${ followed ? strings.action_unfollow : strings.action_follow } ${ category?.displayName && category.displayName.length < 15 ? strings.misc_category : '' }`}
-            </Button>
           </View>
         </Header>
       ),

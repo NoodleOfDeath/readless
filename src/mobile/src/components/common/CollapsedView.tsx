@@ -4,11 +4,12 @@ import { Animated, ViewStyle } from 'react-native';
 import {
   Icon,
   Popover,
+  ScrollView,
   Text,
   View,
   ViewProps,
 } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 type CollapseStyle = 'banner';
 
@@ -27,7 +28,6 @@ export type CollapsedViewProps = ViewProps & {
 export function CollapsedView({
   title,
   titleStyle,
-  contentStyle,
   info,
   collapseStyle = 'banner',
   initiallyCollapsed = true,
@@ -54,7 +54,6 @@ export function CollapsedView({
 
   return (
     <View 
-      gap={ 12 }
       { ...props }>
       {collapseStyle === 'banner' && (
         <View 
@@ -62,37 +61,39 @@ export function CollapsedView({
           flexGrow={ 1 }
           p={ titleStyle?.padding !== undefined ? titleStyle?.padding : 6 }
           style={ titleStyle }>
-          <View
-            gap={ 12 }
-            row
-            itemsCenter
-            justifyCenter={ !title }
-            touchable
-            onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
-            <Animated.View style={ { 
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: [
-                { 
-                  rotate: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [title ? '-90deg' : '0deg', title ? '0deg' : '-180deg'],
-                  }), 
-                },
-              ],
-            } }>
-              <Icon
-                size={ 24 }
-                name='menu-down' />
-            </Animated.View>
-            {title && typeof title === 'string' ? <Text subtitle1 system>{title}</Text> : title}
-            {info && (
-              <Popover
-                anchor={ <Icon size={ 24 } name='information' /> }>
-                <Text p={ 12 }>{info}</Text>
-              </Popover>
-            )}
-          </View>
+          <ScrollView horizontal overflow='visible'>
+            <View
+              gap={ 12 }
+              row
+              itemsCenter
+              justifyCenter={ !title }
+              touchable
+              onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
+              <Animated.View style={ { 
+                alignItems: 'center',
+                justifyContent: 'center',
+                transform: [
+                  { 
+                    rotate: animation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [title ? '-90deg' : '0deg', title ? '0deg' : '-180deg'],
+                    }), 
+                  },
+                ],
+              } }>
+                <Icon
+                  size={ 24 }
+                  name='menu-down' />
+              </Animated.View>
+              {title && typeof title === 'string' ? <Text subtitle1 system>{title}</Text> : title}
+              {info && (
+                <Popover
+                  anchor={ <Icon size={ 24 } name='information' /> }>
+                  <Text p={ 12 }>{info}</Text>
+                </Popover>
+              )}
+            </View>
+          </ScrollView>
         </View>
       )}
       {!collapsed && children}

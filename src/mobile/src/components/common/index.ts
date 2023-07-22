@@ -34,6 +34,7 @@ export * from './TableViewCell';
 export * from './TableViewSection';
 export * from './Text';
 export * from './TextInput';
+export * from './Timestamp';
 export * from './View';
 export * from './Walkthrough';
 export * from './WalkthroughSlider';

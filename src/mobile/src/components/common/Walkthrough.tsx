@@ -52,10 +52,10 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
       const image = step.artwork && (
         <View 
           elevated={ step.elevateArtwork || typeof step.artwork === 'string' }
-          rounded={ step.elevateArtwork || typeof step.artwork === 'string' }>
+          beveled={ step.elevateArtwork || typeof step.artwork === 'string' }>
           {typeof step.artwork === 'string' ? (
             <Image 
-              rounded
+              beveled
               width='100%'
               height={ 200 }
               source={ { uri: step.artwork } } />
