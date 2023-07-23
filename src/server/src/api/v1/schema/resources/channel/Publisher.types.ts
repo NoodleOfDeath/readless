@@ -75,6 +75,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '#river p' },
       author: { selector: '#main .author-name' },
       date: { selector: '#main .post-meta' },
+      image: { selector: 'article amp-img, article figure img, figure img' },
       spider: {
         attribute: 'href',
         selector: 'a[class*="article__title"], article a',
@@ -89,7 +90,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '#river p' },
       author: { selector: '#main .author-name' },
       date: { selector: '#main .post-meta' },
-      image: { selector: 'article amp-img' },
+      image: { selector: 'article amp-img, article figure img, figure img' },
       spider: {
         attribute: 'href',
         selector: 'a[class*="article__title"]',
@@ -120,6 +121,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .social-author' },
       date: { selector: 'article .social-date' },
+      image: { selector: 'picture source img' },
       spider: { 
         attribute: 'href',
         selector: 'article a',
@@ -151,6 +153,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '.Content .Article p' },
       author: { selector: '.Content .CardHeadline *[class*="Component-bylines"]' },
       date: { attribute: 'data-source', selector: '.Content .CardHeadline .Timestamp' },
+      image: { selector: 'img.Image.flickity-lazyloaded' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/article/"]',
@@ -1063,7 +1066,11 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: '#storybyline .byline__name a' },
-      date: { attribute:'datetime', selector: 'article time' },
+      date: {
+        attribute:'datetime',
+        selector: 'article time', 
+      },
+      image: { selector: '#storytext picture img.img' },
       spider:{
         attribute: 'href',
         selector: 'article a',
