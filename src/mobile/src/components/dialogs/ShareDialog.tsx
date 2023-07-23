@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutRectangle } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 
 import { BASE_DOMAIN } from '@env';
 import { SheetProps } from 'react-native-actions-sheet';
@@ -40,7 +40,7 @@ export function ShareDialog({
  
   const theme = useTheme();
   const viewshot = React.useRef<ViewShot>(null);
-  const [layout, setLayout] = React.useState<LayoutRectangle>();
+  const { width: screenWidth } = useWindowDimensions();
 
   const {
     summary,
@@ -130,11 +130,10 @@ export function ShareDialog({
           <View
             bg={ theme.colors.headerBackground }
             inactive
-            itemsCenter
-            onLayout={ (e) => setLayout(e.nativeEvent.layout) }>
+            itemsCenter>
             <View
               m={ 12 } 
-              maxWidth={ (Math.min(layout?.width ?? 300, 480)) - 24 }>
+              maxWidth={ (Math.min(screenWidth, 480)) - 24 }>
               <ViewShot ref={ viewshot }>
                 <View
                   beveled
@@ -143,6 +142,7 @@ export function ShareDialog({
                   <Summary 
                     showcase
                     forceExpanded
+                    showFullDate
                     summary={ summary } />
                   <Divider mx={ 12 } />
                   <View height={ 20 } my={ 3 }>
@@ -180,14 +180,17 @@ export function ShareDialog({
                       p={ 12 } 
                       overflow="hidden" 
                       borderRadius={ 24 }>
-                      <Image
-                        fallbackComponent={ 
-                          icon && (typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon)
-                        }
-                        source={ { uri: imageUri } }
-                        width={ 48 }
-                        height={ 48 }
-                        m={ -12 } />
+                      {imageUri ? (
+                        <Image
+                          fallbackComponent={ 
+                            icon && (typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon)
+                          }
+                          source={ { uri: imageUri } }
+                          width={ 48 }
+                          height={ 48 }
+                          m={ -12 } />
+                      ) :
+                        <Icon name={ icon } size={ 24 } />}
                     </View>
                     <Text 
                       caption 

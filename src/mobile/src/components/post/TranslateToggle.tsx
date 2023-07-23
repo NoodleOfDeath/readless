@@ -1,42 +1,57 @@
 import React from 'react';
 
+import { PublicSummaryGroup, RecapAttributes } from '~/api';
 import {
   ActivityIndicator,
   ChildlessViewProps,
   Text,
   View,
 } from '~/components';
+import { useServiceClient } from '~/core';
 import { getLocale, strings } from '~/locales';
 
-export type TranslateToggleProps<A> = ChildlessViewProps & {
-  translated?: boolean;
-  localize: () => Promise<A[]>;
-  onLocalize: (translations: A[]) => void;
-  onToggleTranslate?: (onOrOff: boolean) => void;
+export type TranslateToggleProps<Target extends RecapAttributes | PublicSummaryGroup> = ChildlessViewProps & {
+  target: Target;
+  translations?: { [key in keyof Target]?: string };
+  localize: Target extends RecapAttributes ? ReturnType<typeof useServiceClient>['localizeRecap'] : 
+    Target extends PublicSummaryGroup ? ReturnType<typeof useServiceClient>['localizeSummary'] : never;
+  onLocalize: (translations?: { [key in keyof Target]?: string }) => void;
 };
 
-export function TranslateToggle<A>({
-  translated: translated0,
+export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGroup>({
+  target,
+  translations: translations0,
   localize,
   onLocalize,
-  onToggleTranslate,
-}: TranslateToggleProps<A>) {
+}: TranslateToggleProps<Target>) {
   
+  const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string } | undefined>(translations0);
   const [isLocalizing, setIsLocalizing] = React.useState(false);
-  const [translated, setTranslated] = React.useState(translated0);
-  const [showTranslations, setShowTranslations] = React.useState(translated0);
+  const [translated, setTranslated] = React.useState(Boolean(translations0));
+  const [showTranslations, setShowTranslations] = React.useState(Boolean(translations0));
   
   const handleLocalization = React.useCallback(async () => {
+    if (/^en/i.test(getLocale()) || isLocalizing) {
+      return; 
+    }
+    setIsLocalizing(true);
     try {
-      const translations = await localize();
-      onLocalize?.(translations);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await localize(target as any, getLocale());
+      if (error) {
+        throw error;
+      }
+      const translations = Object.fromEntries(Object.values(data.rows).map((t) => [t.attribute, t.value])) as { [key in keyof Target]?: string };
+      setTranslations(translations);
       setTranslated(true);
+      setShowTranslations(true);
+      onLocalize(translations);
     } catch (e) {
       console.error(e);
     } finally {
       setIsLocalizing(false);
     }
-  }, [localize, onLocalize]);
+  }, [isLocalizing, localize, onLocalize, target]);
   
   if (/^en/i.test(getLocale())) {
     return null;
@@ -44,7 +59,7 @@ export function TranslateToggle<A>({
   
   return (
     <View>
-      {!translated && (
+      {!translated ? (
         !isLocalizing ? (
           <Text
             caption 
@@ -55,21 +70,20 @@ export function TranslateToggle<A>({
           </Text>
         )
           : (
-            <View row>
+            <View>
               <ActivityIndicator animating />
             </View>
           )
-      )}
-      {translated && (
+      ) : (
         <Text
           caption 
           bold
           underline
           onPress={ () => {
-            onToggleTranslate?.(!showTranslations);
+            onLocalize?.(showTranslations ? undefined : translations);
             setShowTranslations((prev) => !prev);
           } }>
-          {showTranslations ? strings.translate_showOriginalText : strings.translate_showTranslatedText}
+          {showTranslations ? strings.action_showOriginalText : strings.action_showTranslatedText}
         </Text>
       )}
     </View>

@@ -27,7 +27,7 @@ import {
   Message,
   MessageAttributes,
   PublicSummaryAttributes,
-  PublicSummaryTranslationAttributes,
+  PublicTranslationAttributes,
   PublicVoucherAttributes,
   Recap,
   RecapAttributes,
@@ -96,7 +96,7 @@ export class ServiceController {
   public static async localize(
     @Request() req: ExpressRequest,
     @Body() body: LocalizeRequest
-  ): Promise<BulkResponse<PublicSummaryTranslationAttributes>> {
+  ): Promise<BulkResponse<PublicTranslationAttributes>> {
     const {
       resourceId, resourceType, locale, 
     } = body;

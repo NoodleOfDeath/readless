@@ -100,7 +100,6 @@ export function SummaryList({
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
-  const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   const [lastActive, setLastActive] = React.useState(Date.now());
 
@@ -219,13 +218,12 @@ export function SummaryList({
       } else {
         navigation?.push('summary', {
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
-          initiallyTranslated: Boolean(translationOn[summary.id]),
           keywords: parseKeywords(searchText),
           summary,
         });
       }
     },
-    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
+    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail]
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -260,17 +258,13 @@ export function SummaryList({
     return (
       <Summary
         mx={ 12 }
+        key={ item.id }
         big={ flow === 'fluid' && index % 4 === 0 }
         summary={ item }
         selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
-        onFormatChange={ (format) => handleFormatChange(item, format) }
-        onInteract={ (...e) => handleInteraction(item, ...e) }
-        onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
-          const state = { ...prev };
-          state[item.id] = onOrOff;
-          return (prev = state);
-        }) } />
+        onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
+        onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
   }, [flow, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
@@ -281,11 +275,10 @@ export function SummaryList({
           <FlatList
             data={ summaries }
             renderItem={ renderSummary }
-            estimatedItemSize={ (114 * 3 + 350) / 4 }
+            estimatedItemSize={ flow === 'fluid' ? (114 * 3 + 350) / 4 : 114 }
             ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
-            ListHeaderComponent={ () => (
-              headerComponent
-            ) }
+            ListHeaderComponent={ <React.Fragment>{headerComponent}</React.Fragment> }
+            ListHeaderComponentStyle={ { paddingTop: 12 } }
             ListFooterComponent={ () => (
               <View mb={ 12 }>
                 {!loading && totalResultCount > summaries.length && (
@@ -370,7 +363,7 @@ export function SummaryList({
                     mx={ 12 }
                     summary={ item } 
                     hideArticleCount
-                    onFormatChange={ (format) => handleFormatChange(item, format) }
+                    onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
                     onInteract={ (...e) => handleInteraction(item, ...e) } />
                 ) }
                 keyExtractor={ (item) => `${item.id}` }
@@ -381,7 +374,7 @@ export function SummaryList({
                       summary={ detailSummary }
                       initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
                       keywords={ searchText?.split(' ') }
-                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                      onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
                       onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
                     <Divider my={ 6 } />
                     {detailSummarySiblings.length > 0 && (

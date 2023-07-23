@@ -66,6 +66,7 @@ export function useShare({
         url = base64ImageUrl;
       }
       const options: ShareOptions = Platform.select({
+        android: { url },
         default: { url },
         ios: { 
           activityItemSources: [

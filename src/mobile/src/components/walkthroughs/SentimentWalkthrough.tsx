@@ -215,7 +215,6 @@ export function SentimentWalkthrough(props: SheetProps) {
               </Pulse>
             </View>
             <Summary
-              forceSentiment
               disableInteractions 
               disableNavigation />
           </ScrollView>

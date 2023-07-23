@@ -30,7 +30,6 @@ export function PublisherScreen({
 
   const publisher = React.useMemo(() => route?.params?.publisher, [route]);
 
-  const [loaded, setLoaded] = React.useState(false);
   const [followed, setFollowed] = React.useState((publisher?.name ?? '') in { ...followedPublishers });
 
   const prefilter = React.useMemo(() => {
@@ -39,14 +38,6 @@ export function PublisherScreen({
     }
     return `pub:${publisher.name}`;
   }, [publisher]);
-
-  React.useEffect(() => {
-    if (loaded) {
-      return; 
-    }
-    setLoaded(true);
-    setFollowed((publisher?.name ?? '') in { ...followedPublishers });
-  }, [publisher, followedPublishers, loaded]);
 
   const toggleFollowed = React.useCallback(() => {
     if (!publisher) {
@@ -58,7 +49,11 @@ export function PublisherScreen({
   
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({ headerTitle: '' });
-  }, [navigation]));
+    if (!publisher) {
+      return;
+    }
+    setFollowed(publisher.name in { ...followedPublishers });
+  }, [followedPublishers, navigation, publisher]));
   
   return (
     <Screen>

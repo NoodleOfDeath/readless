@@ -5,8 +5,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import {
   Header,
   Screen, 
-  ScrollView,
-  Summary,
   SummaryList,
 } from '~/components';
 import { useSummaryClient } from '~/hooks';

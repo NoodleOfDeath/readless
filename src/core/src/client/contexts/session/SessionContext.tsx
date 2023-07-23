@@ -220,7 +220,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const readSummary = async (summary: PublicSummaryGroup, force = false) => {
     await setPreference('readSummaries', (prev) => {
       const state = { ...prev };
-      if (force === true && summary.id in state) {
+      if (force && summary.id in state) {
         delete state[summary.id];
         emitEvent('unread-summary', summary, state);
       } else {
