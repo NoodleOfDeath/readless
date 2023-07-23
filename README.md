@@ -172,7 +172,7 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [ ] Text notifications
 - [ ] 2-factor authentication with text and/or authenticator applications
 
-### v1.15- Bringing Back Accounts
+### v1.15 - Bringing Back Accounts
 
 - [ ] Improve backend plumbing to offload much of the client data onto the backend such as followed preferences?
 - [ ] Pros of accounts?
