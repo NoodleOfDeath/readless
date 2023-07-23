@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { useFocusEffect } from '@react-navigation/native';
-
 import { PublicSummaryGroup, RecapAttributes } from '~/api';
 import {
   ActivityIndicator,
@@ -17,7 +15,7 @@ export type TranslateToggleProps<Target extends RecapAttributes | PublicSummaryG
   translations?: { [key in keyof Target]?: string };
   localize: Target extends RecapAttributes ? ReturnType<typeof useServiceClient>['localizeRecap'] : 
     Target extends PublicSummaryGroup ? ReturnType<typeof useServiceClient>['localizeSummary'] : never;
-  onLocalize: (translations: { [key in keyof Target]?: string }) => void;
+  onLocalize: (translations?: { [key in keyof Target]?: string }) => void;
 };
 
 export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGroup>({
@@ -27,18 +25,10 @@ export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGr
   onLocalize,
 }: TranslateToggleProps<Target>) {
   
-  const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string }>(translations0);
+  const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string } | undefined>(translations0);
   const [isLocalizing, setIsLocalizing] = React.useState(false);
   const [translated, setTranslated] = React.useState(Boolean(translations0));
   const [showTranslations, setShowTranslations] = React.useState(Boolean(translations0));
-
-  useFocusEffect(React.useCallback(() => {
-    if (translations0) {
-      setTranslations(translations0);
-      setTranslated(true);
-      setShowTranslations(true);
-    }
-  }, [translations0]));
   
   const handleLocalization = React.useCallback(async () => {
     if (/^en/i.test(getLocale()) || isLocalizing) {
@@ -54,6 +44,7 @@ export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGr
       const translations = Object.fromEntries(Object.values(data.rows).map((t) => [t.attribute, t.value])) as { [key in keyof Target]?: string };
       setTranslations(translations);
       setTranslated(true);
+      setShowTranslations(true);
       onLocalize(translations);
     } catch (e) {
       console.error(e);
@@ -89,8 +80,7 @@ export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGr
           bold
           underline
           onPress={ () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onLocalize?.(!showTranslations ? target as any : translations);
+            onLocalize?.(showTranslations ? undefined : translations);
             setShowTranslations((prev) => !prev);
           } }>
           {showTranslations ? strings.action_showOriginalText : strings.action_showTranslatedText}

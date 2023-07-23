@@ -92,16 +92,26 @@ export function Recap({
     readRecap(recap);
     navigation?.navigate('recap', { recap });
   }, [expanded, navigation, readRecap, recap]);
+
+  const translateToggle = React.useMemo(() => (
+    <TranslateToggle 
+      target={ recap }
+      localize={ localizeRecap }
+      onLocalize={ (translations) => {
+        if (!translations) {
+          setTranslations({ text: recap.text, title: recap.title });
+        } else {
+          setTranslations(translations);
+        }
+      } } />
+  ), [localizeRecap, recap]);
   
   return expanded ? (
     <React.Fragment>
       <ScrollView flex={ 1 }>
         <View p={ 12 } gap={ 6 }>
           <Text h6 bold>{translations.title}</Text>
-          <TranslateToggle 
-            target={ recap }
-            localize={ localizeRecap }
-            onLocalize={ setTranslations } />
+          {translateToggle}
           <Divider />
           <Highlighter
             searchWords={ searchWords }
@@ -140,10 +150,7 @@ export function Recap({
               <Text bold>
                 {translations.title}
               </Text>
-              <TranslateToggle 
-                target={ recap }
-                localize={ localizeRecap }
-                onLocalize={ setTranslations } />
+              {translateToggle}
               <Text
                 caption
                 color={ theme.colors.textSecondary }>

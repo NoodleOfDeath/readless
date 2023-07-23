@@ -38,7 +38,11 @@ import {
   useStyles,
   useTheme,
 } from '~/hooks';
-import { getFnsLocale, strings } from '~/locales';
+import {
+  getFnsLocale,
+  getLocale,
+  strings,
+} from '~/locales';
 import { fixedSentiment } from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
@@ -213,20 +217,15 @@ export function Summary({
   const [isExcludingCategory, setIsExcludingCategory] = React.useState(summary.category.name in { ...excludedCategories });
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const [translations, setTranslations] = React.useState<{ [key in keyof PublicSummaryGroup]?: string }>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
-  const [showTranslations, setShowTranslations] = React.useState(Boolean(summary.translations));
+  const [translations, setTranslations] = React.useState<{ [key in keyof PublicSummaryGroup]?: string }>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : {
+    bullets: summary.bullets?.join('\n'),
+    shortSummary: summary.shortSummary,
+    summary: summary.summary,
+    title: summary.title,
+  });
 
   const [isCompact, setIsCompact] = React.useState(compactSummaries);
   const [forceShortSummary, setForceShortSummary] = React.useState(showShortSummary || forceShortSummary0 || forceExpanded);
-  
-  const localizedStrings = React.useMemo(() => {
-    return showTranslations && translations ? translations : {
-      bullets: (summary.bullets ?? []).join('\n'),
-      shortSummary: summary.shortSummary ?? '',
-      summary: summary.summary ?? '',
-      title: summary.title,
-    };
-  }, [showTranslations, summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
 
   const formatTime = React.useCallback((timestamp?: string) => {
     if (!timestamp) {
@@ -243,23 +242,23 @@ export function Summary({
     if (!format) {
       return;
     }
-    let content = localizedStrings.summary;
+    let content = translations.summary;
     if (format === ReadingFormat.Bullets) {
-      content = localizedStrings.bullets.replace(/•\s*/g, '');
+      content = translations.bullets?.replace(/•\s*/g, '');
     } else if (format === ReadingFormat.FullArticle) {
       if (hideCard) {
         content = strings.summary_fullArticleInfo;
       }
     }
     return content;
-  }, [format, localizedStrings.bullets, hideCard, localizedStrings.summary]);
+  }, [format, translations.bullets, hideCard, translations.summary]);
   
   const containsTrigger = React.useMemo(() => {
     return Object.keys({ ...triggerWords }).some((word) => {
       const expr = new RegExp(word, 'i');
-      return Object.values(localizedStrings).some((s) => expr.test(s));
+      return Object.values(translations).some((s) => expr.test(s));
     });
-  }, [localizedStrings, triggerWords]);
+  }, [translations, triggerWords]);
   
   const cleanString = React.useCallback((str: string) => {
     for (const [word, repl] of Object.entries({ ...triggerWords })) {
@@ -273,9 +272,8 @@ export function Summary({
     const interval = setInterval(() => {
       setLastTick(new Date());
     }, ms(tickInterval));
-    if (!translations) {
-      setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
-      setShowTranslations(Boolean(summary.translations));
+    if (!translations && summary.translations) {
+      setTranslations(Object.fromEntries(summary.translations.map((t) => [t.attribute, t.value])) as { [key in keyof PublicSummaryGroup]?: string });
     }
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
@@ -288,7 +286,7 @@ export function Summary({
       openURL(summary.url);
     }
     return () => clearInterval(interval);
-  }, [tickInterval, translations, forceUnread, summary.id, summary.publisher.name, summary.category.name, summary.translations, summary.url, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
+  }, [tickInterval, translations, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, forceUnread, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
@@ -434,9 +432,9 @@ export function Summary({
       color={ !initialFormat && isRead ? theme.colors.textDisabled : theme.colors.text }
       highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
       searchWords={ keywords }>
-      {cleanString(((!forceExpanded && isCompact) && (showShortSummary || forceShortSummary) && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) }
+      {cleanString(((!forceExpanded && isCompact) && (showShortSummary || forceShortSummary) && !initialFormat) ? translations.shortSummary || '' : translations.title || '') }
     </Highlighter>
-  ), [forceExpanded, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
+  ), [forceExpanded, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, translations.shortSummary, translations.title]);
   
   const publisherChip = React.useMemo(() => (
     <Chip
@@ -493,9 +491,23 @@ export function Summary({
     return (
       <TranslateToggle 
         target={ summary }
-        translations={ translations }
+        translations={ summary.translations && summary.translations.length > 0 ? translations : undefined }
         localize={ localizeSummary }
-        onLocalize={ setTranslations } />
+        onLocalize={ (translations) => {
+          if (!translations) {
+            setTranslations({
+              bullets: (summary.bullets ?? []).join('\n'),
+              shortSummary: summary.shortSummary ?? '',
+              summary: summary.summary ?? '',
+              title: summary.title,
+            });
+          } else {
+            setTranslations(translations);
+            summary.translations = translations ? Object.entries(translations).map(([attribute, value]) => ({
+              attribute, locale: getLocale(), value, 
+            })) : [];
+          }
+        } } />
     );
   }, [summary, translations, localizeSummary]);
 
@@ -691,7 +703,7 @@ export function Summary({
                 <Highlighter 
                   highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
                   searchWords={ keywords }>
-                  { cleanString(localizedStrings.shortSummary ?? '') }
+                  { cleanString(translations.shortSummary ?? '') }
                 </Highlighter>
               </View>
             )}
@@ -701,7 +713,7 @@ export function Summary({
         {!(big || fullImage) && image}
       </View>
     </View>
-  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, fullImage, image]);
+  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, translations.shortSummary, hideFooter, footer, big, fullImage, image]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
     <View flexGrow={ 1 }>
