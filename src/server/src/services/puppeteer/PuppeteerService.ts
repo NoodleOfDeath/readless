@@ -53,7 +53,20 @@ export type LootOptions = {
   exclude?: string[];
 };
 
-const defaultImageSelector = 'article figure img, article picture img, article img, figure img, picture img, article img';
+const fallbackImageSelectors = [
+  'article :not(header) figure picture img:not([src*=".svg"]):not([src*=".gif"])',
+  'article :not(header) figure img:not([src*=".svg"]):not([src*=".gif"]), article :not(header) picture img:not([src*=".svg"]):not([src*=".gif"])',
+  'article :not(header) img:not([src*=".svg"]):not([src*=".gif"]), :not(header) figure img:not([src*=".svg"]):not([src*=".gif"])',
+  ':not(header) picture img:not([src*=".svg"]):not([src*=".gif"]), :not(header) article img:not([src*=".svg"]):not([src*=".gif"])',
+];
+
+const fallbackImageAttributes = [
+  'src',
+  'data-src',
+  'srcset',
+];
+
+const MAX_IMAGE_COUNT = Number(process.env.MAX_IMAGE_COUNT || 3);
 
 export function replaceDatePlaceholders(
   url: string
@@ -195,6 +208,27 @@ export class PuppeteerService extends BaseService {
     }
     return url;
   }
+  
+  public static parseSrcset(str: string, options: UrlOptions) {
+    const splitSet = (srcset: string) => {
+      const [path = '', widthStr = ''] = srcset.split(/\s+/);
+      const widthSubstr = widthStr.replace(/w/ig, '');
+      const width = Number.isNaN(Number(widthSubstr)) ? undefined : Number(widthSubstr);
+      if (path && width) {
+        const url = this.fixRelativeUrl(path, options);
+        return { url, width };
+      }
+    };
+    if (/\S+\s+\d+w\s*,/i.test(str)) {
+      return str.split(/\s*,\s*/)
+        .map((url) => splitSet(url))
+        .filter(Boolean)
+        .sort((a, b) => b.width - a.width)
+        .map((img) => img.url)
+        .filter(Boolean);
+    }
+    return [this.fixRelativeUrl(str, options)].filter(Boolean);
+  }
 
   public static async crawl(publisher: PublisherCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
     const { baseUrl, selectors: { spider } } = publisher;
@@ -284,6 +318,7 @@ export class PuppeteerService extends BaseService {
       
       const authors: string[] = [];
       const dates: string[] = [];
+      const imageUrls: string[] = [];
       
       if (rawHtml) {
         
@@ -326,7 +361,11 @@ export class PuppeteerService extends BaseService {
         };
 
         // image
-        loot.imageUrls = extractAll(image?.selector || defaultImageSelector, image?.attribute || 'src').map((src) => this.fixRelativeUrl(src, { publisher }));
+        for (const selector of [image?.selector, ...fallbackImageSelectors].filter(Boolean)) {
+          for (const attr of [image?.attribute, ...fallbackImageAttributes].filter(Boolean)) {
+            imageUrls.push(...extractAll(selector, attr).flatMap((src) => this.parseSrcset(src, { publisher })));
+          }
+        }
         
         exclude.forEach((tag) => $(tag).remove());
         
@@ -382,19 +421,23 @@ export class PuppeteerService extends BaseService {
       
       // image
       if (!loot.imageUrls || loot.imageUrls.length === 0) {
-        actions.push({
-          action: async (el) => {
-            loot.imageUrls = [this.fixRelativeUrl(
-              clean(await el.evaluate((el, attr) => {
-                if (el.children.length > 0) {
-                  return el.children[0].getAttribute(attr);
-                }
-              }, image?.attribute || 'src')), 
-              { publisher, removeQuery: true }
-            )];
-          },
-          selector: image?.selector || defaultImageSelector,
-        });
+        for (const selector of [image?.selector, ...fallbackImageSelectors].filter(Boolean)) {
+          actions.push({
+            action: async (el) => {
+              for (const attr of [image?.attribute, ...fallbackImageAttributes].filter(Boolean)) {
+                imageUrls.push(...this.parseSrcset(
+                  clean(await el.evaluate((el, attr) => {
+                    if (el.children.length > 0) {
+                      return el.children[0].getAttribute(attr);
+                    }
+                  }, attr)), 
+                  { publisher, removeQuery: true }
+                ));
+              }
+            },
+            selector,
+          });
+        }
       }
       
       // dates
@@ -442,6 +485,7 @@ export class PuppeteerService extends BaseService {
         loot.date = parseDate(dates.join(' '));
       }
       loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
+      loot.imageUrls = Array.from(new Set(imageUrls.filter(Boolean))).slice(0, MAX_IMAGE_COUNT);
       
     }
     return loot;

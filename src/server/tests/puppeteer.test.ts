@@ -9,10 +9,10 @@ import {
 
 jest.setTimeout(30_000);
 
-import { OUTLETS } from '../src/api/v1/schema/resources/channel/Publisher.types';
+import { PUBLISHERS } from '../src/api/v1/schema/resources/channel/Publisher.types';
 import { Loot, PuppeteerService } from '../src/services/puppeteer';
 
-const LOOT: { [ Key in keyof typeof OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'date'> } = {
+const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' | 'date'> } = {
   abc: {
     authors: ['Shannon K. Crawford', 'Luis Martinez'],
     date: new Date('2023-04-23T14:52:00.000Z'),
@@ -345,10 +345,21 @@ const LOOT: { [ Key in keyof typeof OUTLETS]?: Pick<Loot, 'url' | 'authors' | 'd
   },
 };
 
+describe('util method tests', () => {
+  test('parse-srcset', () => {
+    const srcset = '/test200.png 200w, /test400.png 400w';
+    const urls = PuppeteerService.parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
+    expect(urls).toBeDefined();
+    expect(urls.length).toBe(2);
+    expect(urls[0]).toBe('https://www.wsj.com/test400.png');
+    console.log(urls);
+  });
+});
+
 describe('crawl', () => {
-  for (const [, { name }] of Object.entries(OUTLETS)) {
+  for (const [, { name }] of Object.entries(PUBLISHERS)) {
     test(`crawl-${name}`, async () => {
-      const publisher = OUTLETS[name];
+      const publisher = PUBLISHERS[name];
       const urls = await PuppeteerService.crawl(publisher);
       expect(urls.length).toBeGreaterThan(0);
       console.log(urls);
@@ -359,11 +370,11 @@ describe('crawl', () => {
 describe('loot', () => {
   for (const [name, exp] of Object.entries(LOOT)) {
     test(`loot-${name}`, async () => {
-      const loot = await PuppeteerService.loot(exp.url, OUTLETS[name]);
+      const loot = await PuppeteerService.loot(exp.url, PUBLISHERS[name]);
       expect(loot).toBeDefined();
       expect(loot.url).toBe(exp.url);
       expect(loot.content.length).toBeGreaterThan(0);
-      console.log(loot.content, loot.date, loot.authors);
+      console.log(loot.imageUrls);
       if (exp.authors.length > 0) {
         expect(loot.authors.length).toBe(exp.authors.length);
         for (const author of loot.authors) {
