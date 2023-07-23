@@ -62,7 +62,7 @@ function LivestreamTab({
   navigation,
 }: ScreenProps<'search'>) {
   useFocusEffect(React.useCallback(() => {
-    navigation?.setOptions({ headerTitle: strings.tabs_live });
+    navigation?.setOptions({ headerTitle: strings.tabs_livefeed });
   }, [navigation]));
   const { getSummaries } = useSummaryClient();
   return ( 
@@ -102,7 +102,7 @@ export function HomeScreen({
           name={ strings.tabs_topStories }
           component={ TopStoriesTab } />
         <Tab.Screen 
-          name={ strings.tabs_live }
+          name={ strings.tabs_livefeed }
           component={ LivestreamTab } />
       </Tab.Navigator>
     </Screen>

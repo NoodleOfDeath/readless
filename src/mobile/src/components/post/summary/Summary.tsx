@@ -10,12 +10,9 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { 
   InteractionType,
   PublicSummaryGroup,
-  PublicSummaryTranslationAttributes,
   ReadingFormat,
 } from '~/api';
 import {
-  ActivityIndicator,
-  AnalyticsView,
   ChannelIcon,
   ChildlessViewProps,
   Chip,
@@ -30,6 +27,7 @@ import {
   ReadingFormatPicker,
   ScrollViewProps,
   Text,
+  TranslateToggle,
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
@@ -40,11 +38,7 @@ import {
   useStyles,
   useTheme,
 } from '~/hooks';
-import {
-  getFnsLocale,
-  getLocale,
-  strings,
-} from '~/locales';
+import { getFnsLocale, strings } from '~/locales';
 import { fixedSentiment } from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
@@ -56,7 +50,6 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   tickInterval?: string;
   selected?: boolean;
   initialFormat?: ReadingFormat;
-  initiallyTranslated?: boolean;
   keywords?: string[];
   forceExpanded?: boolean;
   disableInteractions?: boolean;
@@ -64,18 +57,14 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   dateFormat?: string;
   showFullDate?: boolean;
   forceUnread?: boolean;
-  forceSentiment?: boolean;
   forceShortSummary?: boolean;
   footerOnly?: boolean;
   hideHeader?: boolean;
   hideCard?: boolean;
-  hideAnalytics?: boolean;
   hideArticleCount?: boolean;
   hideFooter?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => Promise<unknown>;
-  onLocalize?: (translations: PublicSummaryTranslationAttributes[]) => void;
-  onToggleTranslate?: (onOrOff: boolean) => void;
 };
 
 const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
@@ -162,7 +151,6 @@ export function Summary({
   initialFormat,
   big,
   fullImage = Boolean(initialFormat),
-  initiallyTranslated = true,
   keywords = [],
   forceExpanded,
   disableInteractions,
@@ -174,13 +162,10 @@ export function Summary({
   footerOnly,
   hideHeader,
   hideCard,
-  hideAnalytics,
   hideArticleCount,
   hideFooter,
   onFormatChange,
   onInteract,
-  onLocalize,
-  onToggleTranslate,
   ...props
 }: SummaryProps) {
 
@@ -228,9 +213,8 @@ export function Summary({
   const [isExcludingCategory, setIsExcludingCategory] = React.useState(summary.category.name in { ...excludedCategories });
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const [translations, setTranslations] = React.useState<Record<string, string> | undefined>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
-  const [showTranslations, setShowTranslations] = React.useState(initiallyTranslated && Boolean(translations));
-  const [isLocalizing, setIsLocalizing] = React.useState(false);
+  const [translations, setTranslations] = React.useState<{ [key in keyof PublicSummaryGroup]?: string }>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
+  const [showTranslations, setShowTranslations] = React.useState(Boolean(summary.translations));
 
   const [isCompact, setIsCompact] = React.useState(compactSummaries);
   const [forceShortSummary, setForceShortSummary] = React.useState(showShortSummary || forceShortSummary0 || forceExpanded);
@@ -289,8 +273,10 @@ export function Summary({
     const interval = setInterval(() => {
       setLastTick(new Date());
     }, ms(tickInterval));
-    setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
-    setShowTranslations(initiallyTranslated && Boolean(summary.translations));
+    if (!translations) {
+      setTranslations(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : undefined);
+      setShowTranslations(Boolean(summary.translations));
+    }
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
     setIsCompact(compactSummaries);
@@ -300,19 +286,16 @@ export function Summary({
     setIsFollowingCategory(summary.category.name in { ...followedCategories });
     if (!hideCard && format === ReadingFormat.FullArticle) {
       openURL(summary.url);
-      return;
     }
     return () => clearInterval(interval);
-  }, [tickInterval, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, initiallyTranslated, forceUnread, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
+  }, [tickInterval, translations, forceUnread, summary.id, summary.publisher.name, summary.category.name, summary.translations, summary.url, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
       return;
     }
     onFormatChange?.(newFormat);
-    if (!(summary.id in ({ ...readSummaries }))) {
-      readSummary(summary);
-    }
+    readSummary(summary);
     if (!forceUnread && !initialFormat && !hideCard) {
       setIsRead(true);
       return;
@@ -322,26 +305,7 @@ export function Summary({
       return;
     }
     setFormat(newFormat);
-  }, [disableNavigation, forceUnread, onFormatChange, initialFormat, hideCard, openURL, summary, readSummary, readSummaries]);
-
-  const handleLocalizeSummary = React.useCallback(async () => {
-    setIsLocalizing(true);
-    const { data: localizedSummaries, error } = await localizeSummary(summary, getLocale());
-    if (!localizedSummaries || error) {
-      console.log(error);
-      setIsLocalizing(false);
-      return;
-    }
-    setTranslations(Object.fromEntries(localizedSummaries.rows.map((row) => [row.attribute, row.value])));
-    onLocalize?.(localizedSummaries.rows);
-    setIsLocalizing(false);
-    setShowTranslations(true);
-  }, [localizeSummary, onLocalize, summary]);
-  
-  React.useEffect(() => {
-    onToggleTranslate?.(showTranslations);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showTranslations]);
+  }, [disableNavigation, forceUnread, onFormatChange, initialFormat, hideCard, openURL, summary, readSummary]);
   
   const menuActions = React.useMemo(() => {
     if (showcase) {
@@ -380,7 +344,7 @@ export function Summary({
       {
         onPress: () => {
           setIsRead((prev) => !prev);
-          readSummary(summary);
+          readSummary(summary, true);
         },
         title: isRead || initialFormat || footerOnly ? strings.summary_markAsUnRead : strings.summary_markAsRead,
       },
@@ -526,39 +490,14 @@ export function Summary({
   }, [forceExpanded, isCompact, initialFormat, hideHeader, theme.colors.headerBackground, theme.colors.textSecondary, publisherChip, timestamp, sentimentMeter]);
   
   const translateToggle = React.useMemo(() => {
-    if (/^en/i.test(getLocale())) {
-      return; 
-    }
     return (
-      <View>
-        {!translations && (
-          !isLocalizing ? (
-            <Text
-              caption 
-              bold
-              underline
-              onPress={ handleLocalizeSummary }>
-              {strings.summary_translate}
-            </Text>
-          )
-            : (
-              <View row>
-                <ActivityIndicator animating />
-              </View>
-            )
-        )}
-        {translations && (
-          <Text
-            caption 
-            bold
-            underline
-            onPress={ () => setShowTranslations((prev) => !prev) }>
-            {showTranslations ? strings.summary_showOriginalText : strings.summary_showTranslatedText}
-          </Text>
-        )}
-      </View>
+      <TranslateToggle 
+        target={ summary }
+        translations={ translations }
+        localize={ localizeSummary }
+        onLocalize={ setTranslations } />
     );
-  }, [translations, isLocalizing, handleLocalizeSummary, showTranslations]);
+  }, [summary, translations, localizeSummary]);
 
   const footer = React.useMemo(() => {
     return (
@@ -779,8 +718,8 @@ export function Summary({
         ) }>
         {content && (
           <View gap={ 6 } pb={ 12 }>
-            {translateToggle}
             <View gap={ 12 } p={ 12 }>
+              {translateToggle}
               {content.split('\n').map((content, i) => (
                 <Chip
                   key={ `${content}-${i}` }
@@ -799,14 +738,8 @@ export function Summary({
           </View>
         )}
       </CollapsedView>
-      {!hideAnalytics && summary.sentiment && (
-        <AnalyticsView
-          initiallyCollapsed
-          sentiment={ summary.sentiment }
-          sentiments={ Object.values(summary.sentiments ?? []) } />
-      )}
     </View>
-  ), [footerOnly, hideCard, format, handleFormatChange, content, translateToggle, hideAnalytics, summary.sentiment, summary.sentiments, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
+  ), [footerOnly, hideCard, format, handleFormatChange, content, translateToggle, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
 
   const card = React.useMemo(() => footerOnly ? null : (
     <View
@@ -870,7 +803,7 @@ export function Summary({
             actions={ menuActions }
             preview={ (
               <Summary 
-                width={ Math.min(480, screenWidth - 24) }
+                width={ Math.min(screenWidth, 480) - 24 }
                 showcase
                 forceExpanded
                 disableInteractions

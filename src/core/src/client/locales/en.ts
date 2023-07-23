@@ -14,17 +14,22 @@ export const enStrings = {
   action_search: 'Search',
   action_setAsDefault: 'Set as Default',
   action_share: 'Share',
+  action_showOriginalText: 'Show Original Text',
+  action_showTranslatedText: 'Show Translated Text',
   action_skip: 'Skip',
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
+  action_translate: 'Translate',
+  
   action_unexclude: 'Unhide',
-  action_unfollow: 'Unfollow',
-
+  
+  action_unfollow: 'Unfollow', 
   // bookmarks
   bookmarks_bookmarkArticlesAreNotSaved: 'Note: The original articles themselves are not saved for offline reading',
-  bookmarks_bookmarksAvailableOffline: 'Bookmarks are always available offline', 
-  bookmarks_header: 'Bookmarks',
-  bookmarks_removeReadFromBookmarks: 'Remove Read from Bookmarks',
+  bookmarks_bookmarksAvailableOffline: 'Bookmarks are always available offline',
   
+  bookmarks_header: 'Bookmarks',
+  
+  bookmarks_removeReadFromBookmarks: 'Remove Read from Bookmarks',
   // feedback screen
   feedback_option_helpful: 'This summary is actually helpful',
   feedback_option_imageIrrelevant: 'This image is irrelevant',
@@ -40,9 +45,10 @@ export const enStrings = {
   feedback_option_wrongCategory: 'This is in the wrong category',
   feedback_sorry: 'Sorry the inconvenience. The post will no longer be shown to you',
   feedback_submit: 'Submit Feedback',
-  feedback_thankYou: 'Thank you for your feedback!',
-  feedback_title: 'Feedback',
   
+  feedback_thankYou: 'Thank you for your feedback!',
+  
+  feedback_title: 'Feedback',
   // misc
   misc_and: 'and',
   misc_article: 'Article',
@@ -56,17 +62,19 @@ export const enStrings = {
   misc_noPublishers: 'You are not following any publishers',
   misc_publisher: 'Publisher',
   misc_publishers: 'Publishers',
+  
   misc_readless: 'Read Less',
   misc_sweetGotIt: 'Sweet, got it!',
-  
   nav_browseCategories: 'Browse Categories',
+  
   nav_browsePublishers: 'Browse Publishers',
+  
   nav_yourFollows: 'Your Follows',
   
   // recaps
   recaps_information: 'Here are some daily recaps if you missed the news because you were touching grass',
-  recaps_references: 'References',
   
+  recaps_references: 'References',
   // screens
   screens_about: 'About',
   screens_bookmarks: 'Bookmarks',
@@ -80,9 +88,10 @@ export const enStrings = {
   screens_profile: 'Profile',
   screens_recap: 'Recap',
   screens_search: 'Search',
+  
   screens_settings: 'Settings',
+  
   screens_triggerWords: 'Trigger Words',
-
   // search
   search_customNewsSearch: 'Note: This is searching only within your custom news feed and not all news articles',
   search_filtersTooSpecific: 'It seems your filters are too specific. You may want to consider adding more categories and/or news sources to your follow list',
@@ -92,9 +101,10 @@ export const enStrings = {
   search_noResults: 'No results found',
   search_reload: 'Reload',
   search_results: 'Results',
+  
   search_title: 'Search',
+  
   search_turnOffFilters: 'Turn off filters',
-
   // settings
   settings_clearCache: 'Clear Cache',
   settings_clearHistory: 'Clear History',
@@ -122,9 +132,10 @@ export const enStrings = {
   settings_summaryDisplay: 'Summary Display',
   settings_system: 'System',
   settings_triggerWord: 'Trigger Word',
+  
   settings_triggerWords: 'Trigger Words',
+  
   settings_voice: 'Text-to-Speech Voice',
-
   // share
   share_copyBulletPoints: 'Copy Bullet Points',
   share_copyLink: 'Copy Link',
@@ -135,9 +146,10 @@ export const enStrings = {
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram Stories',
   share_shareAsImage: 'Share as Image',
+  
   share_shareAsLink: 'Share as Link',
+  
   share_twitter: 'Twitter',
-
   // subscribe
   subscribe_boost: 'Boost',
   subscribe_feature_accessAllNews: 'Access all news',
@@ -153,9 +165,10 @@ export const enStrings = {
   subscribe_feature_quizzes: 'Quizzes and Rewards',
   subscribe_feature_recaps: 'Recaps',
   subscribe_free: 'Free',
+  
   subscribe_iamrich: 'I Am Rich',
+  
   subscribe_subscribe: 'Subscribe',
-
   // summary
   summary_bookmark: 'Bookmark',
   summary_bookmarked: 'Bookmarked',
@@ -181,19 +194,16 @@ export const enStrings = {
   summary_sentimentAnalysis: 'Sentiment Analysis',
   summary_sentimentAnalysisInfo: 'Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.',
   summary_sentimentScore: 'This is a sentiment score, which measures how people feel about something using a scale from -1 (negative) to +1 (positive), with 0 being neutral.',
-  summary_showOriginalText: 'Show Original Text',
-  summary_showTranslatedText: 'Show Translated Text',
   summary_summary: 'Summary',
   summary_thisImageWasTakenFromTheArticle: 'This image is from the original article and does not belong to Read Less',
   summary_thisIsNotARealImage: 'This image was generated using AI and is not a real photo of a real event, place, thing, or person.',
-  summary_translate: 'Translate',
   summary_unbookmark: 'Remove Bookmark',
   summary_veryNegative: 'Very Negative',
   summary_veryPositive: 'Very Positive',
   summary_viewSource: 'View original source',
   
   // tabs
-  tabs_live: 'Live',
+  tabs_livefeed: 'Live Feed',
   tabs_oldNews: 'Old News',
   tabs_topStories: 'Top Stories',
   tabs_yourNews: 'Your News',

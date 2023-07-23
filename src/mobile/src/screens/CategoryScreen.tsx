@@ -29,7 +29,6 @@ export function CategoryScreen({
 
   const category = React.useMemo(() => route?.params?.category, [route]);
 
-  const [loaded, setLoaded] = React.useState(false);
   const [followed, setFollowed] = React.useState((category?.name ?? '') in { ...followedCategories });
 
   const prefilter = React.useMemo(() => {
@@ -38,14 +37,6 @@ export function CategoryScreen({
     }
     return `cat:${category.name}`;
   }, [category]);
-
-  React.useEffect(() => {
-    if (loaded) {
-      return; 
-    }
-    setLoaded(true);
-    setFollowed((category?.name ?? '') in { ...followedCategories });
-  }, [category, followedCategories, loaded]);
 
   const toggleFollowed = React.useCallback(() => {
     if (!category) {
@@ -57,7 +48,11 @@ export function CategoryScreen({
   
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({ headerTitle: '' });
-  }, [navigation]));
+    if (!category) {
+      return;
+    }
+    setFollowed(category.name in { ...followedCategories });
+  }, [category, followedCategories, navigation]));
   
   return (
     <Screen>

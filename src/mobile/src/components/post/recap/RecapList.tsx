@@ -8,22 +8,15 @@ import {
   FlatList,
   Recap,
 } from '~/components';
-import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/core';
-import { useNavigation } from '~/hooks';
 
 export type RecapListProps = {
   header?: React.ReactNode;
 };
 
-export function RecapList({
-  header,
-  ...props
-}: RecapListProps = {}) {
+export function RecapList({ header }: RecapListProps = {}) {
   
-  const { navigate } = useNavigation();
   const { getRecaps } = useSummaryClient();
-  const { readRecap, readRecaps } = React.useContext(SessionContext);
 
   const [recaps, setRecaps] = React.useState<RecapAttributes[]>([]);
   const [loading, setLoading] = React.useState(false);
@@ -52,7 +45,7 @@ export function RecapList({
   useFocusEffect(React.useCallback(() => {
     if (recaps.length === 0 && !lastFetchFailed) {
       load();
-    }
+    } 
   }, [load, recaps, lastFetchFailed]));
 
   return (
@@ -65,13 +58,7 @@ export function RecapList({
       renderItem={ ({ item }) => (
         <Recap
           key={ item.id }
-          recap={ item }
-          onPress={ async () => {
-            if (!(item.id in ({ ...readRecaps }))) {
-              await readRecap(item);
-            }
-            navigate('recap', { recap: item } );
-          } } />
+          recap={ item } />
       ) }
       ListHeaderComponentStyle={ { paddingTop: 12 } }
       ListHeaderComponent={ <React.Fragment>{header}</React.Fragment> }

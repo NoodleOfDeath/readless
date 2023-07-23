@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 
 import { RecapAttributes } from '~/api';
 import { 
@@ -24,11 +24,7 @@ import {
   useSummaryClient,
   useTheme,
 } from '~/hooks';
-import {
-  getFnsLocale,
-  getLocale,
-  strings,
-} from '~/locales';
+import { getFnsLocale, strings } from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
   recap: RecapAttributes;
@@ -51,12 +47,13 @@ export function Recap({
   const { readRecap, readRecaps } = React.useContext(SessionContext);
   
   const [isRead, setIsRead] = React.useState(!forceUnread && recap.id in ({ ...readRecaps }));
-  
+  const [translations, setTranslations] = React.useState<{ [key in keyof RecapAttributes]?: string }>({ text: recap.text, title: recap.title });
+
   const menuActions: ContextMenuAction[] = React.useMemo(() => [
     {
       onPress: async () => {
-        await readRecap(recap);
         setIsRead((prev) => !prev);
+        readRecap(recap, true);
       },
       title: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
     },
@@ -86,12 +83,25 @@ export function Recap({
       setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
     }
   }, [expanded, forceUnread, navigation, readRecaps, recap.id]));
+
+  const handlePress = React.useCallback(() => {
+    if (expanded) {
+      return;
+    }
+    setIsRead((prev) => !prev);
+    readRecap(recap);
+    navigation?.navigate('recap', { recap });
+  }, [expanded, navigation, readRecap, recap]);
   
   return expanded ? (
     <React.Fragment>
       <ScrollView flex={ 1 }>
         <View p={ 12 } gap={ 6 }>
-          <Text h6 bold>{recap?.title}</Text>
+          <Text h6 bold>{translations.title}</Text>
+          <TranslateToggle 
+            target={ recap }
+            localize={ localizeRecap }
+            onLocalize={ setTranslations } />
           <Divider />
           <Highlighter
             searchWords={ searchWords }
@@ -101,7 +111,7 @@ export function Recap({
               fontWeight: 'bold',
             } }
             replacementFor={ (text, index) => `${index}` }>
-            {recap?.text}
+            {translations.text}
           </Highlighter>
         </View>
       </ScrollView>
@@ -122,23 +132,18 @@ export function Recap({
         { ...props }
         p={ 12 }
         gap={ 3 }
-        opacity={ isRead ? 0.3 : 1.0 }>
+        opacity={ isRead ? 0.3 : 1.0 }
+        onPress={ handlePress }>
         <View flexRow gap={ 6 } itemsCenter>
           <View row>
             <View>
               <Text bold>
-                {recap.title}
+                {translations.title}
               </Text>
-              {/* <TranslateToggle 
-                localize={ async () => {
-                  try {
-                    const { data } = await localizeRecap(recap, getLocale());
-                    return data.rows;
-                  } catch (e) {
-                    return [];
-                  }
-                } }
-                onLocalize={ (translations) => console.log(translations) } /> */}
+              <TranslateToggle 
+                target={ recap }
+                localize={ localizeRecap }
+                onLocalize={ setTranslations } />
               <Text
                 caption
                 color={ theme.colors.textSecondary }>

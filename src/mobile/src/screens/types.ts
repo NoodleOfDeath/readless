@@ -38,7 +38,6 @@ export type StackableTabParams = {
   settings: undefined;
   summary: {
     initialFormat?: ReadingFormat;
-    initiallyTranslated?: boolean;
     keywords?: string[];
     summary: PublicSummaryGroup | number;
     showAnalytics?: boolean;

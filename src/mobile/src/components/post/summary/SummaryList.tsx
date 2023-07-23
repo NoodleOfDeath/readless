@@ -100,7 +100,6 @@ export function SummaryList({
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
-  const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   const [lastActive, setLastActive] = React.useState(Date.now());
 
@@ -219,13 +218,12 @@ export function SummaryList({
       } else {
         navigation?.push('summary', {
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
-          initiallyTranslated: Boolean(translationOn[summary.id]),
           keywords: parseKeywords(searchText),
           summary,
         });
       }
     },
-    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail, translationOn]
+    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail]
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -265,12 +263,7 @@ export function SummaryList({
         selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
         onFormatChange={ (format) => handleFormatChange(item, format) }
-        onInteract={ (...e) => handleInteraction(item, ...e) }
-        onToggleTranslate={ (onOrOff) => setTranslationOn((prev) => {
-          const state = { ...prev };
-          state[item.id] = onOrOff;
-          return (prev = state);
-        }) } />
+        onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
   }, [flow, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
@@ -283,9 +276,8 @@ export function SummaryList({
             renderItem={ renderSummary }
             estimatedItemSize={ (114 * 3 + 350) / 4 }
             ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
-            ListHeaderComponent={ () => (
-              headerComponent
-            ) }
+            ListHeaderComponent={ <React.Fragment>{headerComponent}</React.Fragment> }
+            ListHeaderComponentStyle={ { paddingTop: 12 } }
             ListFooterComponent={ () => (
               <View mb={ 12 }>
                 {!loading && totalResultCount > summaries.length && (
