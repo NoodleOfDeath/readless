@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 
 import { RecapAttributes } from '~/api';
 import { 
@@ -55,8 +55,8 @@ export function Recap({
   const menuActions: ContextMenuAction[] = React.useMemo(() => [
     {
       onPress: async () => {
-        setIsRead((prev) => !prev);
         await readRecap(recap);
+        setIsRead((prev) => !prev);
       },
       title: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
     },
@@ -129,7 +129,7 @@ export function Recap({
               <Text bold>
                 {recap.title}
               </Text>
-              <TranslateToggle 
+              {/* <TranslateToggle 
                 localize={ async () => {
                   try {
                     const { data } = await localizeRecap(recap, getLocale());
@@ -138,7 +138,7 @@ export function Recap({
                     return [];
                   }
                 } }
-                onLocalize={ (translations) => console.log(translations) } />
+                onLocalize={ (translations) => console.log(translations) } /> */}
               <Text
                 caption
                 color={ theme.colors.textSecondary }>

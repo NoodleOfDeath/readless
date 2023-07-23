@@ -1,22 +1,16 @@
 import React from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { format } from 'date-fns';
 
 import { RecapAttributes } from '~/api';
 import { 
   Divider,
   FlatList,
-  Icon,
   Recap,
-  Screen,
-  Text,
-  View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/core';
-import { useNavigation, useTheme } from '~/hooks';
-import { getFnsLocale, strings } from '~/locales';
+import { useNavigation } from '~/hooks';
 
 export type RecapListProps = {
   header?: React.ReactNode;
@@ -80,7 +74,7 @@ export function RecapList({
           } } />
       ) }
       ListHeaderComponentStyle={ { paddingTop: 12 } }
-      ListHeaderComponent={ header }
+      ListHeaderComponent={ <React.Fragment>{header}</React.Fragment> }
       ListFooterComponentStyle={ { paddingBottom: 12 } }
       ItemSeparatorComponent={ () => <Divider /> }
       estimatedItemSize={ 114 } />
