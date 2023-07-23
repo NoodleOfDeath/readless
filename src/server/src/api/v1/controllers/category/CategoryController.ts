@@ -1,6 +1,8 @@
+import { Request as ExpressRequest } from 'express';
 import {
   Get,
   Query,
+  Request,
   Response,
   Route,
   Security,
@@ -9,12 +11,9 @@ import {
 } from 'tsoa';
   
 import { BulkResponse } from '../';
+import { parseLocale } from '../../../../core/locales';
 import { AuthError, InternalError } from '../../middleware';
-import {
-  Category,
-  FindAndCountOptions,
-  PublicCategoryAttributes,
-} from '../../schema';
+import { Category, PublicCategoryAttributes } from '../../schema';
 
 @Route('/v1/category')
 @Tags('Category')
@@ -28,11 +27,13 @@ export class CategoryController {
   
   @Get('/')
   public static async getCategories(
-    @Query() userId?: number,
-    @Query() filter?: string
+    @Request() req: ExpressRequest,
+    @Query() locale = parseLocale(req.query['locale']),
+    @Query() _userId?: number,
+    @Query() _filter?: string
   ): Promise<BulkResponse<PublicCategoryAttributes>> {
-    const options: FindAndCountOptions<Category> = { order: [['name', 'ASC']] };
-    const categories = await Category.scope('public').findAndCountAll(options);
+    const params = { locale: locale ?? parseLocale(req.headers['x-locale']) };
+    const categories = await Category.getCategories(params.locale);
     return categories;
   }
   

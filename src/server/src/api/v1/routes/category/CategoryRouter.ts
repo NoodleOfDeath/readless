@@ -12,7 +12,7 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await CategoryController.getCategories(req.body);
+      const response = await CategoryController.getCategories(req);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

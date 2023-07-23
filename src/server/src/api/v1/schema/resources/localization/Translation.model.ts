@@ -43,24 +43,24 @@ export class Translation<
     if (Array.isArray(locale)) {
       await Promise.all(locale.map(async (l) => await this.translate(model, attributes, l)));
       return await this.scope('public').findAndCountAll({ where: { parentId: model.id } });
-    }
-    const translations = await this.scope('public').findAndCountAll({ where: { locale, parentId: model.id } });
-    const filteredAttributes = attributes.filter((a) => !translations.rows.some((t) => t.attribute === a));
-    for (const attribute of filteredAttributes) {
-      const property = model[attribute];
-      if (typeof property !== 'string') {
-        continue;
+    } else {
+      const translations = await this.scope('public').findAndCountAll({ where: { locale, parentId: model.id } });
+      const filteredAttributes = attributes.filter((a) => !translations.rows.some((t) => t.attribute === a));
+      for (const attribute of filteredAttributes) {
+        const property = model[attribute];
+        if (typeof property !== 'string') {
+          continue;
+        }
+        const translatedString = /^en/i.test(locale) ? property : await GoogleService.translateText(Array.isArray(property) ? property.join('\n') : property, locale);
+        await this.upsert({
+          attribute: attribute as string,
+          locale,
+          parentId: model.id,
+          value: translatedString,
+        });
       }
-      const translatedString = /^en/i.test(locale) ? property : await GoogleService.translateText(Array.isArray(property) ? property.join('\n') : property, locale);
-      await this.upsert({
-        attribute: attribute as string,
-        locale,
-        parentId: model.id,
-        value: translatedString,
-      });
       return await this.scope('public').findAndCountAll({ where: { locale, parentId: model.id } });
     }
-
   }
   
 }

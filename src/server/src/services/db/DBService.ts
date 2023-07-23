@@ -26,6 +26,8 @@ export class DBService extends BaseService {
     await this.sq.authenticate();
     makeAssociations();
     addScopes();
+    // TODO: run prepare for all models here instead of all over the place
+    // TODO: run SQL view update scripts
     await this.sq.sync();
   }
 

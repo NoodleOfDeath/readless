@@ -1,3 +1,4 @@
+import { QueryTypes } from 'sequelize';
 import {
   AfterFind,
   Column,
@@ -11,6 +12,8 @@ import {
   CategoryCreationAttributes,
 } from './Category.types';
 import { CategoryTranslation } from './CategoryTranslation.model';
+import { PUBLIC_CATEGORIES } from './queries';
+import { SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
 
 @Table({
@@ -25,11 +28,15 @@ export class Category<
   implements CategoryAttributes {
   
   public static async prepare() {
+    const newCategories: Category[] = [];
     for (const category of Object.values(CATEGORIES)) {
-      await this.upsert(category);
+      const [newCategory, yes] = await this.upsert(category);
+      if (yes) {
+        newCategories.push(newCategory);
+      }
     }
-    const categories = await this.findAll();
-    for (const category of categories) {
+    for (const category of newCategories) {
+      console.log('translating', category.name);
       await CategoryTranslation.translate(category, ['displayName']);
     }
   }
@@ -43,6 +50,19 @@ export class Category<
     for (const category of categories) {
       category.set('sentiment', 0, { raw: true });
     }
+  }
+  
+  static async getCategories(locale: SupportedLocale = 'en') {
+    const replacements = { locale };
+    const categories: CategoryAttributes[] = await this.store.query(PUBLIC_CATEGORIES, {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+    });
+    return {
+      count: categories?.length ?? 0,
+      rows: categories ?? [],
+    };
   }
   
   @Column({
