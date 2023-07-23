@@ -38,7 +38,7 @@ import {
   useStyles,
   useTheme,
 } from '~/hooks';
-import {
+import { 
   getFnsLocale,
   getLocale,
   strings,
@@ -67,7 +67,7 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   hideCard?: boolean;
   hideArticleCount?: boolean;
   hideFooter?: boolean;
-  onFormatChange?: (format?: ReadingFormat) => void;
+  onFormatChange?: (summary: PublicSummaryGroup, format?: ReadingFormat) => void;
   onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => Promise<unknown>;
 };
 
@@ -205,7 +205,7 @@ export function Summary({
     excludeCategory,
   } = React.useContext(SessionContext);
 
-  const summary = React.useMemo((() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY)), [summary0, sample]);
+  const [summary, setSummary] = React.useState(summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY));
 
   const [lastTick, setLastTick] = React.useState(new Date());
   
@@ -217,15 +217,19 @@ export function Summary({
   const [isExcludingCategory, setIsExcludingCategory] = React.useState(summary.category.name in { ...excludedCategories });
 
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(initialFormat);
-  const [translations, setTranslations] = React.useState<{ [key in keyof PublicSummaryGroup]?: string }>(summary.translations && summary.translations.length > 0 ? Object.fromEntries((summary.translations).map((t) => [t.attribute, t.value])) : {
-    bullets: summary.bullets?.join('\n'),
-    shortSummary: summary.shortSummary,
-    summary: summary.summary,
-    title: summary.title,
-  });
+  const [translations, setTranslations] = React.useState<{ [key in keyof PublicSummaryGroup]?: string } | undefined>(summary.translations && Object.values(summary.translations).length > 0 ? Object.fromEntries(Object.values(summary.translations).map((t) => [t.attribute, t.value])) : undefined);
 
   const [isCompact, setIsCompact] = React.useState(compactSummaries);
   const [forceShortSummary, setForceShortSummary] = React.useState(showShortSummary || forceShortSummary0 || forceExpanded);
+  
+  const localizedStrings = React.useMemo(() => {
+    return translations ? translations : {
+      bullets: (summary.bullets ?? []).join('\n'),
+      shortSummary: summary.shortSummary ?? '',
+      summary: summary.summary ?? '',
+      title: summary.title,
+    };
+  }, [summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
 
   const formatTime = React.useCallback((timestamp?: string) => {
     if (!timestamp) {
@@ -242,23 +246,23 @@ export function Summary({
     if (!format) {
       return;
     }
-    let content = translations.summary;
+    let content = localizedStrings.summary;
     if (format === ReadingFormat.Bullets) {
-      content = translations.bullets?.replace(/•\s*/g, '');
+      content = localizedStrings.bullets?.replace(/•\s*/g, '');
     } else if (format === ReadingFormat.FullArticle) {
       if (hideCard) {
         content = strings.summary_fullArticleInfo;
       }
     }
     return content;
-  }, [format, translations.bullets, hideCard, translations.summary]);
+  }, [format, localizedStrings.bullets, hideCard, localizedStrings.summary]);
   
   const containsTrigger = React.useMemo(() => {
     return Object.keys({ ...triggerWords }).some((word) => {
       const expr = new RegExp(word, 'i');
-      return Object.values(translations).some((s) => expr.test(s));
+      return Object.values(localizedStrings).some((s) => expr.test(s));
     });
-  }, [translations, triggerWords]);
+  }, [localizedStrings, triggerWords]);
   
   const cleanString = React.useCallback((str: string) => {
     for (const [word, repl] of Object.entries({ ...triggerWords })) {
@@ -272,9 +276,6 @@ export function Summary({
     const interval = setInterval(() => {
       setLastTick(new Date());
     }, ms(tickInterval));
-    if (!translations && summary.translations) {
-      setTranslations(Object.fromEntries(summary.translations.map((t) => [t.attribute, t.value])) as { [key in keyof PublicSummaryGroup]?: string });
-    }
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
     setIsCompact(compactSummaries);
@@ -286,13 +287,13 @@ export function Summary({
       openURL(summary.url);
     }
     return () => clearInterval(interval);
-  }, [tickInterval, translations, summary.translations, summary.id, summary.publisher.name, summary.category.name, summary.url, forceUnread, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
+  }, [tickInterval, forceUnread, summary.id, summary.publisher.name, summary.category.name, summary.url, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
       return;
     }
-    onFormatChange?.(newFormat);
+    onFormatChange?.(summary, newFormat);
     readSummary(summary);
     if (!forceUnread && !initialFormat && !hideCard) {
       setIsRead(true);
@@ -432,9 +433,9 @@ export function Summary({
       color={ !initialFormat && isRead ? theme.colors.textDisabled : theme.colors.text }
       highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
       searchWords={ keywords }>
-      {cleanString(((!forceExpanded && isCompact) && (showShortSummary || forceShortSummary) && !initialFormat) ? translations.shortSummary || '' : translations.title || '') }
+      {cleanString((((!forceExpanded && isCompact) && (showShortSummary || forceShortSummary) && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) || '') }
     </Highlighter>
-  ), [forceExpanded, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, translations.shortSummary, translations.title]);
+  ), [forceExpanded, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const publisherChip = React.useMemo(() => (
     <Chip
@@ -486,30 +487,6 @@ export function Summary({
       </View>
     );
   }, [forceExpanded, isCompact, initialFormat, hideHeader, theme.colors.headerBackground, theme.colors.textSecondary, publisherChip, timestamp, sentimentMeter]);
-  
-  const translateToggle = React.useMemo(() => {
-    return (
-      <TranslateToggle 
-        target={ summary }
-        translations={ summary.translations && summary.translations.length > 0 ? translations : undefined }
-        localize={ localizeSummary }
-        onLocalize={ (translations) => {
-          if (!translations) {
-            setTranslations({
-              bullets: (summary.bullets ?? []).join('\n'),
-              shortSummary: summary.shortSummary ?? '',
-              summary: summary.summary ?? '',
-              title: summary.title,
-            });
-          } else {
-            setTranslations(translations);
-            summary.translations = translations ? Object.entries(translations).map(([attribute, value]) => ({
-              attribute, locale: getLocale(), value, 
-            })) : [];
-          }
-        } } />
-    );
-  }, [summary, translations, localizeSummary]);
 
   const footer = React.useMemo(() => {
     return (
@@ -621,8 +598,16 @@ export function Summary({
     );
   }, [forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, footerOnly, summary, hideArticleCount, isBookmarked, menuActions, disableInteractions, openCategory, navigate, openURL, onInteract]);
   
+  const articleImage = React.useMemo(() => {
+    if (/\.(jpe?g|png)/.test(summary.media?.imageArticle || '')) {
+      return summary.media?.imageArticle;
+    }
+  }, [summary.media?.imageArticle]);
+  
+  const imageUrl = React.useMemo(() => articleImage ?? summary.media?.imageAi1 ?? summary.imageUrl, [articleImage, summary.media?.imageAi1, summary.imageUrl]);
+  
   const image = React.useMemo(() => {
-    if ((!forceExpanded && isCompact) || !summary.imageUrl || footerOnly) {
+    if ((!forceExpanded && isCompact) || !imageUrl || footerOnly) {
       return null;
     }
     return (
@@ -648,7 +633,7 @@ export function Summary({
             <Image
               flex={ 1 }
               flexGrow={ 1 }
-              source={ { uri: summary.media?.imageArticle || summary.media?.imageAi1 || summary.imageUrl } } />
+              source={ { uri: imageUrl } } />
           )}
           {(big || fullImage) && (
             <Popover
@@ -675,14 +660,37 @@ export function Summary({
               <Text 
                 caption
                 p={ 12 }>
-                {!summary.media?.imageArticle ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
+                {!articleImage ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
               </Text>
             </Popover>
           )}
         </View>
       </View>
     );
-  }, [forceExpanded, isCompact, summary.imageUrl, summary.media?.imageArticle, summary.media?.imageAi1, footerOnly, big, fullImage, initialFormat, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark]);
+  }, [forceExpanded, isCompact, imageUrl, articleImage, footerOnly, big, fullImage, initialFormat, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark]);
+  
+  const translateToggle = React.useMemo(() => {
+    return (
+      <TranslateToggle 
+        target={ summary }
+        translations={ translations }
+        localize={ localizeSummary }
+        onLocalize={ (trans) => {
+          if (trans) {
+            const translations = Object.entries(trans).map(([attribute, value]) => ({
+              attribute,
+              locale: getLocale(),
+              value,
+            }));
+            setSummary((prev) => ({
+              ...prev,
+              translations,
+            }));
+          }
+          setTranslations(trans);
+        } } />
+    );
+  }, [summary, translations, localizeSummary]);
 
   const coverContent = React.useMemo(() => footerOnly ? null : (
     <View flex={ 1 } mb={ 6 }>
@@ -703,7 +711,7 @@ export function Summary({
                 <Highlighter 
                   highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
                   searchWords={ keywords }>
-                  { cleanString(translations.shortSummary ?? '') }
+                  { cleanString(localizedStrings.shortSummary ?? '') }
                 </Highlighter>
               </View>
             )}
@@ -713,7 +721,7 @@ export function Summary({
         {!(big || fullImage) && image}
       </View>
     </View>
-  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, translations.shortSummary, hideFooter, footer, big, fullImage, image]);
+  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, fullImage, image]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
     <View flexGrow={ 1 }>

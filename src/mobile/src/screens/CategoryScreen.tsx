@@ -74,7 +74,6 @@ export function CategoryScreen({
             </Text>
             <View>
               <Button
-                body2
                 contained
                 haptic
                 onPress={ toggleFollowed }>

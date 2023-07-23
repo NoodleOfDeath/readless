@@ -23,7 +23,7 @@ export function ContextMenu({
 }: ContextMenuProps) {
 
   const menuHandler = React.useCallback((e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
-    onPress ?? actions[e.nativeEvent.index].onPress?.();
+    onPress ?? actions?.[e.nativeEvent.index].onPress?.();
   }, [onPress, actions]);
 
   return (

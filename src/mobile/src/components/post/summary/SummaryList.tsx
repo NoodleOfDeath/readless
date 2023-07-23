@@ -258,11 +258,12 @@ export function SummaryList({
     return (
       <Summary
         mx={ 12 }
+        key={ item.id }
         big={ flow === 'fluid' && index % 4 === 0 }
         summary={ item }
         selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
-        onFormatChange={ (format) => handleFormatChange(item, format) }
+        onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
         onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
   }, [flow, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
@@ -274,7 +275,7 @@ export function SummaryList({
           <FlatList
             data={ summaries }
             renderItem={ renderSummary }
-            estimatedItemSize={ (114 * 3 + 350) / 4 }
+            estimatedItemSize={ flow === 'fluid' ? (114 * 3 + 350) / 4 : 114 }
             ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
             ListHeaderComponent={ <React.Fragment>{headerComponent}</React.Fragment> }
             ListHeaderComponentStyle={ { paddingTop: 12 } }
@@ -362,7 +363,7 @@ export function SummaryList({
                     mx={ 12 }
                     summary={ item } 
                     hideArticleCount
-                    onFormatChange={ (format) => handleFormatChange(item, format) }
+                    onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
                     onInteract={ (...e) => handleInteraction(item, ...e) } />
                 ) }
                 keyExtractor={ (item) => `${item.id}` }
@@ -373,7 +374,7 @@ export function SummaryList({
                       summary={ detailSummary }
                       initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
                       keywords={ searchText?.split(' ') }
-                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+                      onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
                       onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
                     <Divider my={ 6 } />
                     {detailSummarySiblings.length > 0 && (

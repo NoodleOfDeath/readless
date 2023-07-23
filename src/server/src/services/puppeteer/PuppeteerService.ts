@@ -53,7 +53,7 @@ export type LootOptions = {
   exclude?: string[];
 };
 
-const defaultImageSelector = 'figure img, picture img, article img';
+const defaultImageSelector = 'article figure img, article picture img, article img, figure img, picture img, article img';
 
 export function replaceDatePlaceholders(
   url: string

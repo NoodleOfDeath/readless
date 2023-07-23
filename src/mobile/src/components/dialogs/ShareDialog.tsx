@@ -180,14 +180,17 @@ export function ShareDialog({
                       p={ 12 } 
                       overflow="hidden" 
                       borderRadius={ 24 }>
-                      <Image
-                        fallbackComponent={ 
-                          icon && (typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon)
-                        }
-                        source={ { uri: imageUri } }
-                        width={ 48 }
-                        height={ 48 }
-                        m={ -12 } />
+                      {imageUri ? (
+                        <Image
+                          fallbackComponent={ 
+                            icon && (typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon)
+                          }
+                          source={ { uri: imageUri } }
+                          width={ 48 }
+                          height={ 48 }
+                          m={ -12 } />
+                      ) :
+                        <Icon name={ icon } size={ 24 } />}
                     </View>
                     <Text 
                       caption 
