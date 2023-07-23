@@ -28,7 +28,7 @@ env:
 jobs:
   build-api:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '~api') && !contains(github.event.head_commit.message, '~skip') }}
+    if: ${{ contains(github.event.head_commit.message, '~api') || contains(github.event.head_commit.message, '~deploy') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     steps:
       - name: Print Job Description

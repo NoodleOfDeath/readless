@@ -6,6 +6,7 @@ import {
   API, 
   PublicSummaryGroup,
   RecapAttributes,
+  SupportedLocale,
 } from '~/api';
 
 export const useServiceClient = () => {
@@ -20,15 +21,15 @@ export const useServiceClient = () => {
     await withHeaders(API.getSystemMessages)();
   }, [withHeaders]);
 
-  const localizeSummary = React.useCallback(async (summary: PublicSummaryGroup, locale: string) => {
+  const localizeSummary = React.useCallback(async (summary: PublicSummaryGroup, locale: SupportedLocale) => {
     return await withHeaders(API.localize)({
       locale, resourceId: summary.id, resourceType: 'summary', 
     });
   }, [withHeaders]);
   
-  const localizeRecap = React.useCallback(async (recap: RecapAttributes, locale: string) => {
+  const localizeRecap = React.useCallback(async (recap: RecapAttributes, locale: SupportedLocale) => {
     return await withHeaders(API.localize)({
-      locale, resourceId: recap, resourceType: 'recap', 
+      locale, resourceId: recap.id, resourceType: 'recap', 
     });
   }, [withHeaders]);
 

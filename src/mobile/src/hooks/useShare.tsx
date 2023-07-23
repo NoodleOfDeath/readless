@@ -4,7 +4,7 @@ import { DeviceEventEmitter, Platform } from 'react-native';
 import { BASE_DOMAIN } from '@env';
 import Clipboard from '@react-native-clipboard/clipboard';
 import RNFS from 'react-native-fs';
-import Share, { Social } from 'react-native-share';
+import Share, { ShareOptions, Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
 import { InteractionType, PublicSummaryGroup } from '~/api';
@@ -65,8 +65,30 @@ export function useShare({
       if (base64ImageUrl) {
         url = base64ImageUrl;
       }
+      const options: ShareOptions = Platform.select({
+        default: { url },
+        ios: { 
+          activityItemSources: [
+            {
+              item: {
+                message: null,
+                saveToCameraRoll: 
+                {
+                  content: url, 
+                  type: 'url', 
+                },
+              }, 
+              placeholderItem: {
+                content: 'https://readless.ai/logo.svg', 
+                type: 'url', 
+              }, 
+            },
+          ],
+          url,
+        },
+      });
       await onInteract?.(InteractionType.Share, 'standard', { message: summary.title, url }, async () => {
-        await Share.open({ url });
+        await Share.open(options);
       });
     } catch (e) {
       console.error(e);

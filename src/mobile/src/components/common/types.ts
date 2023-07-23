@@ -85,6 +85,7 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   // preset variants
   outlined?: boolean;
   rounded?: boolean;
+  beveled?: boolean;
   
   // preset animations
   pulse?: boolean | PulseProps;

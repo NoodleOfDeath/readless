@@ -22,7 +22,7 @@ export type TableViewSectionProps = ViewProps & {
   headerTextStyle?: TextStyle;
   hideSeparator?: boolean;
   hideSurroundingSeparators?: boolean;
-  roundedCorners?: boolean;
+  beveledCorners?: boolean;
   sectionPaddingBottom?: ViewStyle['paddingBottom'];
   sectionPaddingTop?: ViewStyle['paddingTop'];
   sectionTintColor?: ViewStyle['backgroundColor'];
@@ -43,7 +43,7 @@ export function TableViewSection({
       <Section
         { ...props }
         hideSeparator={ grouped }
-        roundedCorners={ grouped }>
+        beveledCorners={ grouped }>
         <View style={ style }>
           {children}
         </View>

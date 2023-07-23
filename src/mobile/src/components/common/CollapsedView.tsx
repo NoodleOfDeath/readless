@@ -8,7 +8,7 @@ import {
   View,
   ViewProps,
 } from '~/components';
-import { useStyles, useTheme } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 type CollapseStyle = 'banner';
 
@@ -27,7 +27,6 @@ export type CollapsedViewProps = ViewProps & {
 export function CollapsedView({
   title,
   titleStyle,
-  contentStyle,
   info,
   collapseStyle = 'banner',
   initiallyCollapsed = true,
@@ -54,7 +53,6 @@ export function CollapsedView({
 
   return (
     <View 
-      gap={ 12 }
       { ...props }>
       {collapseStyle === 'banner' && (
         <View 

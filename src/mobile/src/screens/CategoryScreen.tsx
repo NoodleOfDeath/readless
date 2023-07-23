@@ -4,7 +4,6 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import {
   Button,
-  Header,
   Screen,
   SummaryList,
   Text,
@@ -57,42 +56,38 @@ export function CategoryScreen({
   }, [category, followCategory]);
   
   useFocusEffect(React.useCallback(() => {
-    navigation?.setOptions({
-      header: () => (
-        <Header 
-          back
-          elevated>
-          <View flexRow gap={ 12 } itemsCenter>
-            <ChannelIcon size={ 40 } category={ category } />
-            <View>
-              <Text 
-                h6 
-                bold>
-                {category?.displayName}
-              </Text>
-              <Text subtitle2>{strings.misc_category}</Text>
-            </View>
-          </View>
-          <View row />
-          <View>
-            <Button
-              body2
-              contained
-              haptic
-              onPress={ toggleFollowed }>
-              {`${ followed ? strings.action_unfollow : strings.action_follow } ${ category?.displayName && category.displayName.length < 15 ? strings.misc_category : '' }`}
-            </Button>
-          </View>
-        </Header>
-      ),
-    });
-  }, [category, followed, navigation, toggleFollowed]));
+    navigation?.setOptions({ headerTitle: '' });
+  }, [navigation]));
   
   return (
     <Screen>
       <SummaryList
         fetch={ getSummaries }
-        filter={ prefilter } />
+        filter={ prefilter }
+        headerComponent={ (
+          <View
+            gap={ 6 }
+            my={ 12 }
+            justifyCenter
+            itemsCenter>
+            <ChannelIcon rounded size={ 40 } category={ category } />
+            <Text 
+              h6 
+              ml={ 6 }
+              bold>
+              {category?.displayName}
+            </Text>
+            <View>
+              <Button
+                body2
+                contained
+                haptic
+                onPress={ toggleFollowed }>
+                {`${ followed ? strings.action_unfollow : strings.action_follow } ${ strings.misc_category }`}
+              </Button>
+            </View>
+          </View>
+        ) } />
     </Screen>
   );
 }

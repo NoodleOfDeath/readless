@@ -107,7 +107,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
                 flexRow
                 gap={ 6 }
                 p={ 6 }
-                rounded
+                beveled
                 itemsCenter>
                 <Icon name="filter" />
                 <Switch />

@@ -111,7 +111,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
       <View p={ 12 }>
         {success ? (
           <Button
-            rounded
+            beveled
             outlined
             justifyCenter
             selectable
@@ -125,7 +125,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
           </Button>
         ) : (
           <Button
-            rounded
+            beveled
             outlined
             justifyCenter 
             selectable

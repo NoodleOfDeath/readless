@@ -19,13 +19,12 @@ import {
 import ms from 'ms';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import { addScreenshotListener } from 'react-native-detector';
-import { HoldMenuProvider } from 'react-native-hold-menu';
 import InAppReview from 'react-native-in-app-review';
+import { OrientationType } from 'react-native-orientation-locker';
 
 import {
   ActivityIndicator,
   Badge,
-  Button,
   ChannelIcon,
   DrawerItem,
   DrawerSection,
@@ -80,43 +79,33 @@ const screens: RouteConfig<
   {
     component: HomeScreen, 
     name: 'home',
-    options: { headerBackTitle: '' },
+    options: { headerTitle: '' },
   },
   {
     component: SearchScreen, 
     name: 'search',
-    options: { headerBackTitle: '' },
+    options: { headerTitle: '' },
   },
   {
     component: SummaryScreen, 
     name: 'summary',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    },
+    options: { headerTitle: '' },
   },
   {
     component: CategoryScreen, 
     name: 'category',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    }, 
+    options: { headerTitle: '' },
   },
   {
     component: PublisherScreen, 
     name: 'publisher',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    }, 
+    options: { headerTitle: '' },
   },
   // Drawer Tab
   {
     component: BookmarksScreen, 
     name: 'bookmarks', 
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined, 
       headerTitle: strings.screens_bookmarks, 
     }, 
@@ -125,19 +114,18 @@ const screens: RouteConfig<
   {
     component: OldNewsScreen,
     name: 'oldNews',  
-    options: { headerRight: () => undefined },
+    options: { headerTitle: '' },
   },
   {
     component: RecapScreen,
     name: 'recap',  
-    options: { headerRight: () => undefined },
+    options: { headerTitle: '' },
   },
   // Settings
   {
     component: SettingsScreen, 
     name: 'settings', 
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined, 
       headerTitle: strings.screens_settings, 
     },
@@ -178,7 +166,6 @@ const screens: RouteConfig<
     component: LegalScreen, 
     name: 'legal', 
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined, 
       headerTitle: strings.screens_legal, 
     },
@@ -188,7 +175,6 @@ const screens: RouteConfig<
     component: StatsScreen,
     name: 'stats',
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined,
       headerTitle: 'stats', 
     },
@@ -197,7 +183,6 @@ const screens: RouteConfig<
     component: TestScreen,
     name: 'test',
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined,
       headerTitle: 'test', 
     },
@@ -212,7 +197,7 @@ function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: 
       initialRouteName={ initialRouteName }
       screenOptions={ ({ route }) => ({
         header: route.name === 'home' ? () => ( 
-          <Header menu search notifications />
+          <Header menu search />
         ) : undefined,
       }) }>
       {screens.map((screen) => (
@@ -260,41 +245,13 @@ function DrawerContent(props: DrawerContentComponentProps) {
   } = React.useContext(SessionContext);
   
   const {
+    isTablet,
     lockRotation,
-    rotationLock,
     unlockRotation,
   } = React.useContext(LayoutContext);
 
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
-  
-  const _headerRight = React.useMemo(() => {
-    return (
-      <View>
-        <View row gap={ 16 } itemsCenter>
-          <Button
-            leftIcon={ (
-              <View height={ 24 } width={ 24 }>
-                <Icon 
-                  absolute
-                  name={ rotationLock ? 'lock-check' : 'lock-open' }
-                  size={ rotationLock ? 24 : 16 }
-                  top={ rotationLock ? 0 : -1 }
-                  right={ rotationLock ? 0 : -1 } />
-                <Icon 
-                  absolute
-                  name='screen-rotation' 
-                  bottom={ -1 }
-                  left={ -1 }
-                  size={ 16 } />
-              </View>
-            ) }
-            haptic
-            onPress={ () => rotationLock ? unlockRotation() : lockRotation() } />
-        </View>
-      </View>
-    );
-  }, [rotationLock, unlockRotation, lockRotation]);
-  
+
   React.useEffect(() => {
     const subscriber = Linking.addEventListener('url', router);
     if (!loadedInitialUrl) {
@@ -304,9 +261,17 @@ function DrawerContent(props: DrawerContentComponentProps) {
           setLoadedInitialUrl(true);
         }
       });
-    } 
+    }
     return () => subscriber.remove();
   }, [router, loadedInitialUrl]);
+
+  React.useEffect(() => {
+    if (!isTablet) {
+      lockRotation(OrientationType.PORTRAIT);
+    } else {
+      unlockRotation();
+    }
+  }, [isTablet, lockRotation, unlockRotation]);
   
   const publisherItems = React.useMemo(() => {
     if (!publishers) {
@@ -507,20 +472,30 @@ export default function NavigationController() {
   }, [hasReviewed, lastRequestForReview, launchedTime, readSummaries, setPreference]);
 
   React.useEffect(() => {
-    
+    if (!ready) {
+      return;
+    }
     // feedback subscriber
     const unsubscribe = addScreenshotListener(() => {
       SheetManager.hideAll();
       setTimeout(() => SheetManager.show('feedback'), 1_000);
     });
-  
     // in-app review handlers
     const reviewHandlerA = DeviceEventEmitter.addListener('follow-category', inAppReviewHandler);
     const reviewHandlerB = DeviceEventEmitter.addListener('follow-publisher', inAppReviewHandler);
     const reviewHandlerC = DeviceEventEmitter.addListener('bookmark-summary', inAppReviewHandler);
     const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
-    
-    if (lastFetchFailed && lastFetch < Date.now() - ms('20s')) {
+    return () => {
+      unsubscribe();
+      reviewHandlerA.remove();
+      reviewHandlerB.remove();
+      reviewHandlerC.remove();
+      reviewHandlerD.remove();
+    };
+  }, [ready, inAppReviewHandler]);
+  
+  const refreshSources = React.useCallback(() => {
+    if (lastFetchFailed && (lastFetch < Date.now() - ms('10s'))) {
       return;
     }
     if (!categories || lastFetch < Date.now() - ms('1h')) {
@@ -543,25 +518,21 @@ export default function NavigationController() {
         setLastFetch(Date.now());
       });
     }
-    
-    return () => {
-      unsubscribe();
-      reviewHandlerA.remove();
-      reviewHandlerB.remove();
-      reviewHandlerC.remove();
-      reviewHandlerD.remove();
-    };
-    
-  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers, inAppReviewHandler]);
+  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers]);
   
   React.useEffect(() => {
     if (!ready) {
       return;
     }
+    if (lastFetchFailed && (lastFetch < Date.now() - ms('10s'))) {
+      setTimeout(refreshSources, ms('10s'));
+    } else {
+      refreshSources();
+    }
     if (!viewedFeatures || !('onboarding-walkthrough' in viewedFeatures)) {
       SheetManager.show('onboarding-walkthrough');
     }
-  }, [viewedFeatures, ready]);
+  }, [viewedFeatures, ready, refreshSources, lastFetchFailed, lastFetch]);
   
   return (
     <NavigationContainer
@@ -572,19 +543,10 @@ export default function NavigationController() {
           <ActivityIndicator animating />
         </View>
       ) : (
-        <HoldMenuProvider
-          theme={ theme.isDarkMode ? 'dark' : 'light' }
-          safeAreaInsets={ {
-            bottom: 0,
-            left: 0,
-            right: 0,
-            top: 0,
-          } }>
-          <SheetProvider>
-            <LandingPage />
-            <MediaPlayer visible={ Boolean(currentTrack) } />
-          </SheetProvider>
-        </HoldMenuProvider>
+        <SheetProvider>
+          <LandingPage />
+          <MediaPlayer visible={ Boolean(currentTrack) } />
+        </SheetProvider>
       )}
     </NavigationContainer>
   );

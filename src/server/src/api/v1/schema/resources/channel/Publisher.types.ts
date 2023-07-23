@@ -89,6 +89,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '#river p' },
       author: { selector: '#main .author-name' },
       date: { selector: '#main .post-meta' },
+      image: { selector: 'article amp-img' },
       spider: {
         attribute: 'href',
         selector: 'a[class*="article__title"]',
@@ -103,6 +104,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: '.ShareByline a[href*="/author/"]' },
       date: { selector: '.ShareByline > div  > div :last-child, div[data-testid*="prism-byline"]' },
+      image: { selector: 'figure picture img' },
       spider: {
         attribute: 'href',
         selector: 'a[class*="AnchorLink"]',
@@ -654,6 +656,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .author-bio a[rel*="author/"]' },
       date: { selector: 'time' },
+      image: { attribute: 'data-src', selector: 'article figure img, article picture img' },
       spider:{
         attribute: 'href',
         selector: 'a[class*="hed-heading"]',

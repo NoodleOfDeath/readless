@@ -1,9 +1,11 @@
 import React from 'react';
 
-import { 
-  Button, 
+import {
+  Button,
   ButtonProps,
   ChildlessViewProps,
+  ContextMenu,
+  ContextMenuAction,
   View,
 } from '~/components';
 
@@ -19,38 +21,42 @@ export type SegmentedButtonsProps<T extends string | number = string> = Childles
   options: SegmentedButtonProps<T>[];
   initialValue?: T;
   onValueChange?: (value: T) => void;
-  buttonProps?: Partial<ButtonProps> | ((index: number, selected: boolean) => Partial<ButtonProps>);
+  buttonProps?: Partial<ButtonProps> | ((option: SegmentedButtonProps<T>, selected: boolean) => Partial<ButtonProps>);
+  buttonMenuItems?: (option: SegmentedButtonProps<T>, selected: boolean) => ContextMenuAction[];
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SegmentedButtons = <T extends string | number = string>({
   initialValue,
-  options: buttons,
+  options,
   onValueChange,
   buttonProps,
+  buttonMenuItems,
   ...props
 }: SegmentedButtonsProps<T>) => {
   const [value, setValue] = React.useState<T | undefined>(initialValue);
   return (
     <View flexRow { ...props }>
-      {buttons.map(({
-        icon, label, value: v, pressOnly,
-      }, index) => (
-        <Button
-          key={ `${v}${index}` }
-          px={ 12 }
-          gap={ 6 }
-          leftIcon={ icon }
-          selected={ value === v }
-          { ...(buttonProps instanceof Function ? buttonProps(index, value === v) : buttonProps) }
-          onPress={ () => {
-            if (!pressOnly) { 
-              setValue(v);
-            }
-            onValueChange?.(v);
-          } }>
-          { label }
-        </Button>
+      {options.map((option, index) => (
+        <ContextMenu 
+          key={ `${option.value}${index}` }
+          actions={ buttonMenuItems?.(option, value === option.value) ?? [] }>
+          <Button
+            px={ 12 }
+            gap={ 6 }
+            adjustsFontSizeToFit
+            leftIcon={ option.icon }
+            selected={ value === option.value }
+            { ...(buttonProps instanceof Function ? buttonProps(option, value === option.value) : buttonProps) }
+            onPress={ () => {
+              if (!option.pressOnly) { 
+                setValue(option.value);
+              }
+              onValueChange?.(option.value);
+            } }>
+            { option.label }
+          </Button>
+        </ContextMenu>
       ))}
     </View>
   );

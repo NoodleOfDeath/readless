@@ -17,7 +17,7 @@ export function useNavigation() {
   const navigation = useRNNavigation<NavigationProp<StackableTabParams>>() as any;
   
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
-  
+
   const navigate = React.useCallback(<R extends keyof StackableTabParams>(route: R, params?: StackableTabParams[R]) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return ((navigation as any).push ?? navigation.navigate)(route, params as StackableTabParams[R]);

@@ -36,7 +36,7 @@ export function SharingWalkthrough(props: SheetProps) {
           <Button
             elevated
             p={ 6 }
-            rounded
+            beveled
             onPress={ onDone }>
             {strings.misc_awesome}
           </Button>

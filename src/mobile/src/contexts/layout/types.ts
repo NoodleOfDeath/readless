@@ -7,23 +7,14 @@ export type LayoutContextType = {
   supportsMasterDetail: boolean;
   isTablet: boolean;
   orientation: OrientationType;
-  rotationLock?: OrientationType;
-  setRotationLock: React.Dispatch<React.SetStateAction<OrientationType | undefined>>;
-  lockRotation(): void;
-  unlockRotation(): void;
+  lockRotation: (orientation?: OrientationType) => void;
+  unlockRotation: () => void;
 };
 
 export const DEFAULT_LAYOUT_CONTEXT: LayoutContextType = {
   isTablet: false,
-  lockRotation: () => {
-    // placeholder
-  },
+  lockRotation: () => Promise.resolve(),
   orientation: Orientation.getInitialOrientation(),
-  setRotationLock: () => {
-    // placeholder
-  },
   supportsMasterDetail: false,
-  unlockRotation: () => {
-    // placeholder
-  },
+  unlockRotation: () => Promise.resolve(),
 };

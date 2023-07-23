@@ -12,7 +12,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
       contrastText: '#fff',
       destructive: darkMode ? '#ff0000' : '#ff0000',
       error: '#f44336',
-      headerBackground: darkMode ? '#282828' : '#eee',
+      headerBackground: darkMode ? '#080808' : '#f2f2f2',
       inactive: darkMode ? '#777' : '#aaa',
       invertText: darkMode ? '#000' : '#fff',
       link: darkMode ? '#aaaaee' : '#8888ee',

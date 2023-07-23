@@ -63,7 +63,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
         {Object.entries(bookmarks ?? {}).length === 0 ? (
           <View justifyCenter itemsCenter>
             <Button
-              rounded
+              beveled
               outlined
               selectable
               p={ 8 }
@@ -90,7 +90,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               <View row>
                 <Button
                   elevated
-                  rounded
+                  beveled
                   p={ 6 }
                   onPress={ () => setPreference('bookmarkedSummaries', (prev) => {
                     const state = { ...prev };
@@ -119,7 +119,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               {(bookmarks ?? []).length > unreadPage * pageSize + pageSize && (
                 <View justifyCenter itemsCenter>
                   <Button
-                    rounded
+                    beveled
                     outlined
                     selectable
                     p={ 8 }

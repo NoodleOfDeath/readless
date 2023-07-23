@@ -5,26 +5,18 @@ import Orientation, { OrientationType } from 'react-native-orientation-locker';
 
 import { DEFAULT_LAYOUT_CONTEXT } from './types';
 
-import { SessionContext } from '~/contexts';
-
 export const LayoutContext = React.createContext(DEFAULT_LAYOUT_CONTEXT);
 
 export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
-  const {
-    rotationLock: initialRotationLock, 
-    setPreference,
-  } = React.useContext(SessionContext);
-  
   const [orientation, setOrientation] = React.useState<OrientationType>(Orientation.getInitialOrientation());
   const [dimensions, setDimensions] = React.useState<ScaledSize>();
-  const [rotationLock, setRotationLock] = React.useState<OrientationType | undefined>(initialRotationLock);
   
   const isTablet = React.useMemo(() => (dimensions?.width ?? Dimensions.get('window').width) > 1024, [dimensions?.width]);
   const supportsMasterDetail = React.useMemo(() => (dimensions?.width ?? Dimensions.get('window').width) > 768, [dimensions?.width]);
 
-  const lockRotation = React.useCallback(() => {
-    switch (orientation) {
+  const lockRotation = React.useCallback((newOrientaion?: OrientationType) => {
+    switch (newOrientaion ?? orientation) {
     case 'LANDSCAPE-LEFT':
       Orientation.lockToLandscapeLeft();
       break;
@@ -37,18 +29,16 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
       break;
     default:
       Orientation.unlockAllOrientations();
-      setPreference('rotationLock', undefined);
       return;
     }
-    setRotationLock(orientation);
-    setPreference('rotationLock', orientation);
-  }, [orientation, setPreference]);
+    if (newOrientaion) {
+      setOrientation(newOrientaion);
+    }
+  }, [orientation]);
   
   const unlockRotation = React.useCallback(() => {
     Orientation.unlockAllOrientations();
-    setRotationLock(undefined);
-    setPreference('rotationLock', undefined);
-  }, [setPreference]);
+  }, []);
   
   React.useEffect(() => {
     Orientation.unlockAllOrientations();
@@ -68,8 +58,6 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
       isTablet,
       lockRotation,
       orientation,
-      rotationLock,
-      setRotationLock,
       supportsMasterDetail,
       unlockRotation,
     } }>

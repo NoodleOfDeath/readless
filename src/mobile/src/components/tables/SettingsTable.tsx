@@ -123,7 +123,8 @@ export function SettingsTable() {
             <ScrollView scrollEnabled={ false }>
               <Summary 
                 sample
-                my={ 12 } 
+                my={ 12 }
+                forceUnread
                 disableInteractions 
                 disableNavigation /> 
             </ScrollView>
@@ -138,11 +139,6 @@ export function SettingsTable() {
           title={ compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries }
           cellIcon="text-short"
           cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
-        <TableViewCell
-          bold
-          title={ strings.walkthroughs_sentiment_enable }
-          cellIcon="speedometer"
-          cellAccessoryView={ <PrefSwitch prefKey='sentimentEnabled' /> } />
         <TableViewCell
           bold
           cellStyle="RightDetail"

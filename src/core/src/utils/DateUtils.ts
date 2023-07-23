@@ -1,3 +1,8 @@
+import {
+  Locale,
+  format as formatDate,
+  formatDistance,
+} from 'date-fns';
 import ms from 'ms';
 
 export const TIME_EXPR = /(\d\d?)\s*(a\.?m\.?|p\.?m\.?)|(\d\d?)[.:](\d\d?)(?:[.:](\d\d?))?(?:\s*(a\.?m\.?|p\.?m\.?))?(?:.*(?:\s*\b(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))\b)?/i;
@@ -99,4 +104,29 @@ export function maxDate(...dates: (Date | undefined | null)[]) {
     return undefined;
   }
   return sortedDates[sortedDates.length - 1];
+}
+
+export type FormatTimestampOptions = {
+  format?: string, 
+  relativeTo?: string | Date, 
+  locale?: Locale
+};
+
+export function formatTimestamp(
+  timestamp?: string | Date,
+  {
+    format, relativeTo, locale,
+  }: FormatTimestampOptions = {}
+) {
+  if (!timestamp) {
+    return null;
+  }
+  const date = new Date(timestamp);
+  if (format) {
+    return formatDate(date, format, { locale });
+  }
+  if (relativeTo) {
+    return formatDistance(date, new Date(relativeTo), { addSuffix: true, locale });
+  }
+  return date.toLocaleDateString();
 }

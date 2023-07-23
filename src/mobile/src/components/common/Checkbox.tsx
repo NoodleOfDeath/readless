@@ -21,7 +21,7 @@ export function Checkbox({
   const style = useStyles(other);
   return (
     <Button 
-      rounded
+      beveled
       outlined
       alignCenter
       justifyCenter

@@ -2,27 +2,37 @@ import React from 'react';
 
 import { ReadingFormat } from '~/api';
 import { ChildlessViewProps, SegmentedButtons } from '~/components';
+import { SessionContext } from '~/core';
 import { strings } from '~/locales';
 
 type Props = ChildlessViewProps & {
   format?: ReadingFormat;
-  preferredFormat?: ReadingFormat;
   onChange?: (mode?: ReadingFormat) => void;
   pressOnly?: boolean;
 };
 
 export function ReadingFormatPicker({
   format,
-  preferredFormat = ReadingFormat.Summary, 
   onChange,
   pressOnly,
   ...props
 }: Props = {}) {
+
+  const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
+
   return (
     <SegmentedButtons 
       { ...props }
-      buttonProps={ { my: -16, system: true } }
-      initialValue={ format ?? preferredFormat }
+      buttonProps={ { py: 3, system: true } }
+      buttonMenuItems={ (option) => [
+        {
+          onPress: () => {
+            setPreference('preferredReadingFormat', option.value);
+          },
+          title: strings.action_setAsDefault,
+        },
+      ] }
+      initialValue={ format ?? preferredReadingFormat }
       onValueChange={ (value) => onChange?.(value) }
       options={ [
         {
