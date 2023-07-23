@@ -83,7 +83,7 @@ export function Recap({
     if (expanded) {
       navigation?.setOptions({ headerTitle: '' });
     } else {
-      //setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
+      setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
     }
   }, [expanded, forceUnread, navigation, readRecaps, recap.id]));
   
