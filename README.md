@@ -47,6 +47,7 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [Contribution](#contribution)
 - [CLI Cheatsheet](#cli-cheatsheet)
   - [Make a new PR](#make-a-new-pr)
+  - [Rebase your branch](#rebase-your-branch)
 
 ## Roadmap
 
@@ -261,6 +262,8 @@ To make a contribution, simply make a new PR onto the `dev` branch. I will autom
 
 ### Make a new PR
 
+It is usually good practice (but not always required) to [rebase your branch](#rebase-your-branch) before you push (line 23 below). Anytime you rebase you will need to use the `--force` glag when pushing. I don't use it below, because it **should not be a regularly used flag**; _only when overwriting rebased code_.
+
 ```bash
  1 | # cd into server directory
  2 | cd ~/git/noodleofdeath/readless/src/server
@@ -301,5 +304,32 @@ To make a contribution, simply make a new PR onto the `dev` branch. I will autom
 37 |
 38 | # make pull request after you push (line 23)
 39 | hub pull-request
+```
+
+### Rebase your Branch
+
+To **rebase** your branch you simply do the following, where `origin/dev` is the branch you want to pull updated code from and merge into your branch.
+
+```bash
+git fetch && git rebase origin/dev
+```
+
+When your branch is behind the origin branch, rebasing will usually fix the below error. You will never experience this error ever in this project because you will never commit directly to `dev` or `main`.
+
+```bash
+thom@mac mobile % git push
+To github.com:noodleofdeath/readless.git
+ ! [rejected]          dev -> dev (fetch first)
+error: failed to push some refs to 'github.com:noodleofdeat
+h/readless.git'
+hint: Updates were rejected because the remote contains wor
+k that you do
+hint: not have locally. This is usually caused by another r
+epository pushing
+hint: to the same ref. You may want to first integrate the 
+remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --hel
+p' for details.
 ```
 
