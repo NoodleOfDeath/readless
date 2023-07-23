@@ -4,7 +4,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (5.3.0):
     - ExpoModulesCore
-  - EXConstants (14.2.1):
+  - EXConstants (14.4.2):
     - ExpoModulesCore
   - EXFileSystem (15.4.2):
     - ExpoModulesCore
@@ -12,14 +12,16 @@ PODS:
     - ExpoModulesCore
   - Expo (49.0.4):
     - ExpoModulesCore
-  - ExpoBlur (12.3.0):
+  - ExpoBlur (12.4.1):
     - ExpoModulesCore
   - ExpoHaptics (12.2.1):
     - ExpoModulesCore
   - ExpoKeepAwake (12.3.0):
     - ExpoModulesCore
-  - ExpoModulesCore (1.2.7):
+  - ExpoModulesCore (1.5.7):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
+    - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
   - FBLazyVector (0.72.3)
@@ -898,14 +900,14 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: 02655a251434d564bb0e73291f5a490c74b5b76f
-  EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
+  EXConstants: ce5bbea779da8031ac818c36bea41b10e14d04e1
   EXFileSystem: d7f59869885cfeab3ac771e2a8d0f5ed98cd3fdb
   EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
   Expo: 57e6a756328a9dfe6e1342a1f048a26e98b27b08
-  ExpoBlur: b0d995dbfc725fc5b7ee60da076131995300815d
+  ExpoBlur: a2c90bdfa4ff9f459cdb0f83191bddf020e3e2db
   ExpoHaptics: 5156bc5160d8e04c170dd6e645a71154951a2ad9
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
-  ExpoModulesCore: dc4b4fd5a55468286dcaa8a9f5c9e89f4084574d
+  ExpoModulesCore: f8f3cac222bb0f574c77664d7e05817eaa97434b
   FBLazyVector: 4cce221dd782d3ff7c4172167bba09d58af67ccb
   FBReactNativeSpec: c6bd9e179757b3c0ecf815864fae8032377903ef
   Flipper: 6edb735e6c3e332975d1b17956bcc584eccf5818
