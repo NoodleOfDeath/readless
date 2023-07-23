@@ -19,7 +19,6 @@ import {
 import ms from 'ms';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import { addScreenshotListener } from 'react-native-detector';
-import { HoldMenuProvider } from 'react-native-hold-menu';
 import InAppReview from 'react-native-in-app-review';
 import { OrientationType } from 'react-native-orientation-locker';
 
@@ -80,43 +79,33 @@ const screens: RouteConfig<
   {
     component: HomeScreen, 
     name: 'home',
-    options: { headerBackTitle: '' },
+    options: { headerTitle: '' },
   },
   {
     component: SearchScreen, 
     name: 'search',
-    options: { headerBackTitle: '' },
+    options: { headerTitle: '' },
   },
   {
     component: SummaryScreen, 
     name: 'summary',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    },
+    options: { headerTitle: '' },
   },
   {
     component: CategoryScreen, 
     name: 'category',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    }, 
+    options: { headerTitle: '' },
   },
   {
     component: PublisherScreen, 
     name: 'publisher',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-    }, 
+    options: { headerTitle: '' },
   },
   // Drawer Tab
   {
     component: BookmarksScreen, 
     name: 'bookmarks', 
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined, 
       headerTitle: strings.screens_bookmarks, 
     }, 
@@ -125,19 +114,18 @@ const screens: RouteConfig<
   {
     component: OldNewsScreen,
     name: 'oldNews',  
-    options: { headerRight: () => undefined },
+    options: { headerTitle: '' },
   },
   {
     component: RecapScreen,
     name: 'recap',  
-    options: { headerRight: () => undefined },
+    options: { headerTitle: '' },
   },
   // Settings
   {
     component: SettingsScreen, 
     name: 'settings', 
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined, 
       headerTitle: strings.screens_settings, 
     },
@@ -178,7 +166,6 @@ const screens: RouteConfig<
     component: LegalScreen, 
     name: 'legal', 
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined, 
       headerTitle: strings.screens_legal, 
     },
@@ -188,7 +175,6 @@ const screens: RouteConfig<
     component: StatsScreen,
     name: 'stats',
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined,
       headerTitle: 'stats', 
     },
@@ -197,7 +183,6 @@ const screens: RouteConfig<
     component: TestScreen,
     name: 'test',
     options: {
-      headerBackTitle: '', 
       headerRight: () => undefined,
       headerTitle: 'test', 
     },
@@ -558,19 +543,10 @@ export default function NavigationController() {
           <ActivityIndicator animating />
         </View>
       ) : (
-        <HoldMenuProvider
-          theme={ theme.isDarkMode ? 'dark' : 'light' }
-          safeAreaInsets={ {
-            bottom: 0,
-            left: 0,
-            right: 0,
-            top: 0,
-          } }>
-          <SheetProvider>
-            <LandingPage />
-            <MediaPlayer visible={ Boolean(currentTrack) } />
-          </SheetProvider>
-        </HoldMenuProvider>
+        <SheetProvider>
+          <LandingPage />
+          <MediaPlayer visible={ Boolean(currentTrack) } />
+        </SheetProvider>
       )}
     </NavigationContainer>
   );

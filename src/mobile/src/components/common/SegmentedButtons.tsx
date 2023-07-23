@@ -1,12 +1,11 @@
 import React from 'react';
 
-import { HoldItem } from 'react-native-hold-menu';
-import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
-
-import { 
-  Button, 
+import {
+  Button,
   ButtonProps,
   ChildlessViewProps,
+  ContextMenu,
+  ContextMenuAction,
   View,
 } from '~/components';
 
@@ -23,7 +22,7 @@ export type SegmentedButtonsProps<T extends string | number = string> = Childles
   initialValue?: T;
   onValueChange?: (value: T) => void;
   buttonProps?: Partial<ButtonProps> | ((option: SegmentedButtonProps<T>, selected: boolean) => Partial<ButtonProps>);
-  buttonMenuItems?: (option: SegmentedButtonProps<T>, selected: boolean) => MenuItemProps[];
+  buttonMenuItems?: (option: SegmentedButtonProps<T>, selected: boolean) => ContextMenuAction[];
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,18 +35,12 @@ export const SegmentedButtons = <T extends string | number = string>({
   ...props
 }: SegmentedButtonsProps<T>) => {
   const [value, setValue] = React.useState<T | undefined>(initialValue);
-  React.useEffect(() => {
-    setValue(initialValue);
-    if (initialValue) {
-      onValueChange?.(initialValue);
-    }
-  }, [initialValue, onValueChange]);
   return (
     <View flexRow { ...props }>
       {options.map((option, index) => (
-        <HoldItem 
+        <ContextMenu 
           key={ `${option.value}${index}` }
-          items={ buttonMenuItems?.(option, value === option.value) ?? [] }>
+          actions={ buttonMenuItems?.(option, value === option.value) ?? [] }>
           <Button
             px={ 12 }
             gap={ 6 }
@@ -63,7 +56,7 @@ export const SegmentedButtons = <T extends string | number = string>({
             } }>
             { option.label }
           </Button>
-        </HoldItem>
+        </ContextMenu>
       ))}
     </View>
   );

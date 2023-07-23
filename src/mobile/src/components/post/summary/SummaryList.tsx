@@ -25,7 +25,6 @@ import {
   Summary,
   Text,
   View,
-  WalkthroughStack,
 } from '~/components';
 import {
   LayoutContext,
@@ -52,7 +51,7 @@ export type SummaryListProps = ChildlessViewProps & {
   flow?: 'fluid' | 'fixed';
   fluid?: boolean;
   fixed?: boolean;
-  showWalkthroughs?: boolean;
+  headerComponent?: React.ReactNode;
 };
 
 export function SummaryList({ 
@@ -65,7 +64,7 @@ export function SummaryList({
   fixed,
   fluid = !fixed,
   flow = fluid ? 'fluid' : 'fixed',
-  showWalkthroughs: showWalkthroughs0,
+  headerComponent,
   ...props
 }: SummaryListProps) {
 
@@ -102,7 +101,6 @@ export function SummaryList({
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [translationOn, setTranslationOn] = React.useState<Record<number, boolean>>({});
-  const [showWalkthroughs, setShowWalkthroughs] = React.useState(showWalkthroughs0);
   const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   const [lastActive, setLastActive] = React.useState(Date.now());
 
@@ -286,14 +284,7 @@ export function SummaryList({
             estimatedItemSize={ (114 * 3 + 350) / 4 }
             ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
             ListHeaderComponent={ () => (
-              <View mt={ 12 }>
-                {showWalkthroughs && (
-                  <WalkthroughStack
-                    width="100%"
-                    height={ 200 }
-                    onClose={ () => setShowWalkthroughs(false) } />
-                )}
-              </View>
+              headerComponent
             ) }
             ListFooterComponent={ () => (
               <View mb={ 12 }>

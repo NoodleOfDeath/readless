@@ -141,11 +141,6 @@ export function SettingsTable() {
           cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
         <TableViewCell
           bold
-          title={ strings.walkthroughs_sentiment_enable }
-          cellIcon="speedometer"
-          cellAccessoryView={ <PrefSwitch prefKey='sentimentEnabled' /> } />
-        <TableViewCell
-          bold
           cellStyle="RightDetail"
           title={ strings.settings_preferredReadingFormat }
           detail={ preferredReadingFormat === ReadingFormat.Bullets ? strings.summary_bullets : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_summary }

@@ -28,7 +28,6 @@ export function ChannelIcon({
   const theme = useTheme();
   const fallbackComponent = React.useMemo(() => (
     <Chip
-      { ...props }
       bg={ theme.colors.primaryLight }
       color={ theme.colors.contrastText }
       itemsCenter
@@ -36,12 +35,11 @@ export function ChannelIcon({
       adjustsFontSizeToFit
       textCenter
       leftIcon={ category?.icon }
-      iconSize={ size * 0.8 }
       width={ size }
       height={ size }>
       {publisher?.displayName && publisher?.displayName[0]}
     </Chip>
-  ), [props, theme.colors.primaryLight, theme.colors.contrastText, category?.icon, size, publisher?.displayName]);
+  ), [theme, category, publisher, size]);
   return (
     <View
       { ...props }
@@ -56,7 +54,7 @@ export function ChannelIcon({
           zIndex={ 2 } />
       )}
       <View 
-        borderRadius={ 6 }
+        borderRadius={ 3 }
         opacity={ excluded ? 0.3 : 1.0 }
         overflow="hidden">
         {category ? fallbackComponent : (

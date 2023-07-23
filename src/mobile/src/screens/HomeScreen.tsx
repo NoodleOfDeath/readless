@@ -16,19 +16,25 @@ import { OldNewsScreen, ScreenProps } from '~/screens';
 
 function OldNewsTab({
   route: _route,
-  navigation: _navigation,
+  navigation,
 }: ScreenProps<'search'>) {
+  useFocusEffect(React.useCallback(() => {
+    navigation?.setOptions({ headerTitle: strings.tabs_oldNews });
+  }, [navigation]));
   return <OldNewsScreen />;
 }
 
 function YourNewsTab({ 
   route: _route,
-  navigation: _navigation,
+  navigation,
 }: ScreenProps<'search'>) {
   const { getSummaries } = useSummaryClient();
   const { followFilter } = React.useContext(SessionContext);
   const [filter, setFilter] = React.useState(followFilter);
-  useFocusEffect(React.useCallback(() => setFilter(followFilter), [followFilter]));
+  useFocusEffect(React.useCallback(() => {
+    setFilter(followFilter);
+    navigation?.setOptions({ headerTitle: strings.tabs_yourNews });
+  }, [followFilter, navigation]));
   return ( 
     <SummaryList
       fetch={ getSummaries }
@@ -38,8 +44,11 @@ function YourNewsTab({
 
 function TopStoriesTab({ 
   route: _route,
-  navigation: _navigation,
+  navigation,
 }: ScreenProps<'search'>) {
+  useFocusEffect(React.useCallback(() => {
+    navigation?.setOptions({ headerTitle: strings.tabs_topStories });
+  }, [navigation]));
   const { getTopStories } = useSummaryClient();
   return ( 
     <SummaryList
@@ -50,8 +59,11 @@ function TopStoriesTab({
 
 function LivestreamTab({ 
   route: _route,
-  navigation: _navigation,
+  navigation,
 }: ScreenProps<'search'>) {
+  useFocusEffect(React.useCallback(() => {
+    navigation?.setOptions({ headerTitle: strings.tabs_live });
+  }, [navigation]));
   const { getSummaries } = useSummaryClient();
   return ( 
     <SummaryList fetch={ getSummaries } />

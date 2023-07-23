@@ -4,7 +4,6 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import {
   Button,
-  Header,
   Screen,
   SummaryList,
   Text,
@@ -57,14 +56,18 @@ export function CategoryScreen({
   }, [category, followCategory]);
   
   useFocusEffect(React.useCallback(() => {
-    navigation?.setOptions({
-      header: () => (
-        <Header 
-          back
-          big
-          elevated>
+    navigation?.setOptions({ headerTitle: '' });
+  }, [navigation]));
+  
+  return (
+    <Screen>
+      <SummaryList
+        fetch={ getSummaries }
+        filter={ prefilter }
+        headerComponent={ (
           <View
-            gap={ 6 } 
+            gap={ 6 }
+            my={ 12 }
             justifyCenter
             itemsCenter>
             <ChannelIcon rounded size={ 40 } category={ category } />
@@ -84,16 +87,7 @@ export function CategoryScreen({
               </Button>
             </View>
           </View>
-        </Header>
-      ),
-    });
-  }, [category, followed, navigation, toggleFollowed]));
-  
-  return (
-    <Screen>
-      <SummaryList
-        fetch={ getSummaries }
-        filter={ prefilter } />
+        ) } />
     </Screen>
   );
 }

@@ -12,9 +12,7 @@ import {
   ActivityIndicator,
   Divider,
   FlatList,
-  Header,
   Screen,
-  ScrollView,
   Summary,
   Text,
   View,
@@ -96,23 +94,14 @@ export function SummaryScreen({
       return;
     }
     navigation?.setOptions({
-      header: () => (
-        <Header
-          back
-          elevated
-          title={ summary.title }>
-          <ScrollView horizontal>
-            <Summary
-              forceUnread
-              footerOnly
-              hideArticleCount
-              summary={ summary }
-              onInteract={ (...e) => handleInteraction(summary, ...e) } />
-          </ScrollView>
-        </Header>
+      headerRight: () => (
+        <View>
+          <Summary footerOnly summary={ summary } />
+        </View>
       ),
+      headerTitle: '', 
     });
-  }, [summary, navigation, handleInteraction]));
+  }, [summary, navigation]));
 
   return (
     <Screen>
@@ -141,7 +130,6 @@ export function SummaryScreen({
           ListHeaderComponent={ (
             <React.Fragment>
               <Summary
-                forceSentiment
                 refreshing={ loading }
                 onRefresh={ () => load(summaryId) }
                 summary={ summary }

@@ -1,12 +1,10 @@
 import React from 'react';
 
-import { HoldItem } from 'react-native-hold-menu';
-import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
-
 import {
   Badge,
   Chip,
-  Icon,
+  ContextMenu,
+  ContextMenuAction,
   ScrollView,
   SearchMenu,
   Text,
@@ -96,18 +94,15 @@ export function Header({
     )
   ), [title, subtitle, children, theme.colors.textSecondary]);
   
-  const notificationMenu: MenuItemProps[] = React.useMemo(() => [
+  const notificationMenu: ContextMenuAction[] = React.useMemo(() => [
     {
-      icon: () => <Icon name="bell" />,
-      key: 'push',
       onPress: () => console.log('test'),
-      text: 'Push Notifications',
+      systemIcon: 'bell',
+      title: 'Push Notifications',
     },
     {
-      icon: () => <Icon name="mail" />,
-      key: 'mail',
       onPress: () => console.log('test'),
-      text: 'Email Notifications',
+      title: 'Email Notifications',
     },
   ], []);
   
@@ -155,13 +150,12 @@ export function Header({
       )}
       <View minWidth={ 24 }>
         {notifications && (
-          <HoldItem 
-            activateOn="tap" 
-            items={ notificationMenu }>
+          <ContextMenu 
+            actions={ notificationMenu }>
             <Chip
               leftIcon="bell"
               iconSize={ 24 } />
-          </HoldItem>
+          </ContextMenu>
         )}
       </View>
     </View>

@@ -142,6 +142,7 @@ export function ShareDialog({
                   overflow='hidden'>
                   <Summary 
                     showcase
+                    forceExpanded
                     summary={ summary } />
                   <Divider mx={ 12 } />
                   <View height={ 20 } my={ 3 }>

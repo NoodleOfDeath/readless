@@ -53,6 +53,8 @@ export type LootOptions = {
   exclude?: string[];
 };
 
+const defaultImageSelector = 'figure img, picture img, article img';
+
 export function replaceDatePlaceholders(
   url: string
 ) {
@@ -324,7 +326,7 @@ export class PuppeteerService extends BaseService {
         };
 
         // image
-        loot.imageUrls = extractAll(image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]', image?.attribute || 'src').map((src) => this.fixRelativeUrl(src, { publisher }));
+        loot.imageUrls = extractAll(image?.selector || defaultImageSelector, image?.attribute || 'src').map((src) => this.fixRelativeUrl(src, { publisher }));
         
         exclude.forEach((tag) => $(tag).remove());
         
@@ -391,7 +393,7 @@ export class PuppeteerService extends BaseService {
               { publisher, removeQuery: true }
             )];
           },
-          selector: image?.selector || 'figure img[src*=".png"], figure img[src*=".jpg"], figure img[src*=".jpeg"]',
+          selector: image?.selector || defaultImageSelector,
         });
       }
       

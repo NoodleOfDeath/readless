@@ -2,15 +2,13 @@ import React from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { format } from 'date-fns';
-import { HoldItem } from 'react-native-hold-menu';
-import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 
 import { RecapAttributes } from '~/api';
 import { 
   ChildlessViewProps,
+  ContextMenu,
+  ContextMenuAction,
   Divider,
-  FlatList,
-  Header,
   Highlighter,
   Icon,
   ScrollView,
@@ -26,7 +24,11 @@ import {
   useSummaryClient,
   useTheme,
 } from '~/hooks';
-import { getFnsLocale, strings } from '~/locales';
+import {
+  getFnsLocale,
+  getLocale,
+  strings,
+} from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
   recap: RecapAttributes;
@@ -50,15 +52,13 @@ export function Recap({
   
   const [isRead, setIsRead] = React.useState(!forceUnread && recap.id in ({ ...readRecaps }));
   
-  const menuItems: MenuItemProps[] = React.useMemo(() => [
+  const menuActions: ContextMenuAction[] = React.useMemo(() => [
     {
-      icon: () => <Icon name={ isRead ? 'email-mark-as-unread' : 'email-open' } size={ 24 } />,
-      key: `recap-markAs${isRead ? 'Un' : ''}Read-${recap.id}`,
       onPress: async () => {
         setIsRead((prev) => !prev);
         await readRecap(recap);
       },
-      text: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
+      title: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
     },
   ], [isRead, recap, readRecap]);
   
@@ -69,36 +69,30 @@ export function Recap({
     const words: string[] = [];
     const matches = recap.text?.matchAll(/\[(\d+(?:\s*,\s*\d+)*)\]/g);
     if (matches) {
-      for (const match of matches) {
+      for (const match of Array.from(matches)) {
         const [, ids] = match;
         words.push(...ids.split(/\s*,\s*/));
       }
     }
     return words;
-  }, [recap]);
+  }, [expanded, recap.text]);
 
   const ids = React.useMemo(() => searchWords.map((word) => Number(word)), [searchWords]);
   
   useFocusEffect(React.useCallback(() => {
     if (expanded) {
-      navigation?.setOptions({
-        header: () => (
-          <Header 
-            back
-            title={ recap?.title }
-            subtitle={ format(new Date(recap?.createdAt ?? ''), 'EEEE PP', { locale: getFnsLocale() }) } 
-            elevated />
-        ),
-      });
+      navigation?.setOptions({ headerTitle: '' });
     } else {
-      setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
+      //setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
     }
-  }, [expanded, navigation, recap?.createdAt, recap?.title]));
+  }, [expanded, forceUnread, navigation, readRecaps, recap.id]));
   
   return expanded ? (
     <React.Fragment>
       <ScrollView flex={ 1 }>
-        <View p={ 12 }>
+        <View p={ 12 } gap={ 6 }>
+          <Text h6 bold>{recap?.title}</Text>
+          <Divider />
           <Highlighter
             searchWords={ searchWords }
             propsFor={ (text) => ({ onPress: () => openSummary({ summary: Number(text) }) }) }
@@ -122,7 +116,8 @@ export function Recap({
         specificIds={ ids } />
     </React.Fragment>
   ) : (
-    <HoldItem items={ menuItems }>
+    <ContextMenu 
+      actions={ menuActions }>
       <View 
         { ...props }
         p={ 12 }
@@ -135,7 +130,14 @@ export function Recap({
                 {recap.title}
               </Text>
               <TranslateToggle 
-                localize={ async () => await localizeRecap(recap) }
+                localize={ async () => {
+                  try {
+                    const { data } = await localizeRecap(recap, getLocale());
+                    return data.rows;
+                  } catch (e) {
+                    return [];
+                  }
+                } }
                 onLocalize={ (translations) => console.log(translations) } />
               <Text
                 caption
@@ -147,6 +149,6 @@ export function Recap({
           <Icon name="menu-right" size={ 24 } />
         </View>
       </View>
-    </HoldItem>
+    </ContextMenu>
   );
 }

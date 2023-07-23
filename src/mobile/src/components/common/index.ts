@@ -8,6 +8,7 @@ export * from './CardStack';
 export * from './Checkbox';
 export * from './Chip';
 export * from './CollapsedView';
+export * from './ContextMenu';
 export * from './DataTable';
 export * from './Dialog';
 export * from './Divider';

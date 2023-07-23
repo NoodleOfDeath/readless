@@ -5,29 +5,23 @@ import {
   View,
 } from 'react-native';
 
-import { HoldItem } from 'react-native-hold-menu';
+import ContextMenu from 'react-native-context-menu-view';
 
 function Test() {
   const titles = ['one', 'two', 'three'];
   return (
     <View style={ { rowGap: 10 } }>
       {titles.map((title) => (
-        <HoldItem
+        <ContextMenu
           key={ title }
-          items={ [{
-            key: title,
-            onPress: function test() {
-              alert(title);
-            },
-            text: 'share',
-          }] }>
+          actions={ [{ title: 'share' }] }>
           <Text style={ {
             backgroundColor: '#eee',
             padding: 10,
           } }>
             {title}
           </Text>
-        </HoldItem>
+        </ContextMenu>
       ))}
     </View>
   );

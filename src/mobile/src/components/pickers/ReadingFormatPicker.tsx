@@ -1,11 +1,7 @@
 import React from 'react';
 
 import { ReadingFormat } from '~/api';
-import {
-  ChildlessViewProps,
-  Icon,
-  SegmentedButtons,
-} from '~/components';
+import { ChildlessViewProps, SegmentedButtons } from '~/components';
 import { SessionContext } from '~/core';
 import { strings } from '~/locales';
 
@@ -23,7 +19,6 @@ export function ReadingFormatPicker({
 }: Props = {}) {
 
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
-  const [initialFormat, setInitialFormat] = React.useState(format ?? preferredReadingFormat);
 
   return (
     <SegmentedButtons 
@@ -31,16 +26,13 @@ export function ReadingFormatPicker({
       buttonProps={ { py: 3, system: true } }
       buttonMenuItems={ (option) => [
         {
-          icon: () => typeof option.icon === 'string' ? <Icon name={ option.icon } /> : <React.Fragment>{option.icon}</React.Fragment>,
-          key: option.value,
           onPress: () => {
             setPreference('preferredReadingFormat', option.value);
-            setInitialFormat(option.value);
           },
-          text: strings.action_setAsDefault,
+          title: strings.action_setAsDefault,
         },
       ] }
-      initialValue={ initialFormat }
+      initialValue={ format ?? preferredReadingFormat }
       onValueChange={ (value) => onChange?.(value) }
       options={ [
         {

@@ -5,7 +5,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import {
   Button,
   Divider,
-  Header,
   Screen,
   SummaryList,
   Text,
@@ -58,14 +57,18 @@ export function PublisherScreen({
   }, [publisher, followPublisher]);
   
   useFocusEffect(React.useCallback(() => {
-    navigation?.setOptions({
-      header: () => (
-        <Header 
-          back
-          big
-          elevated>
+    navigation?.setOptions({ headerTitle: '' });
+  }, [navigation]));
+  
+  return (
+    <Screen>
+      <SummaryList
+        fetch={ getSummaries }
+        filter={ prefilter }
+        headerComponent={ (
           <View
             gap={ 6 } 
+            my={ 12 }
             justifyCenter
             itemsCenter>
             <ChannelIcon rounded size={ 40 } publisher={ publisher } />
@@ -91,16 +94,7 @@ export function PublisherScreen({
               </Button>
             </View>
           </View>
-        </Header>
-      ),
-    });
-  }, [navigation, publisher, toggleFollowed, followed]));
-  
-  return (
-    <Screen>
-      <SummaryList
-        fetch={ getSummaries }
-        filter={ prefilter } />
+        ) } />
     </Screen>
   );
 }
