@@ -5,6 +5,7 @@ import {
   query,
 } from 'express-validator';
 
+import { parseLocale } from './../../../../core/locales/index';
 import { SummaryController } from '../../controllers';
 import {
   authMiddleware,
@@ -32,7 +33,8 @@ router.get(
   async (req, res) => {
     try {
       const params = SummaryController.serializeParams(req.query);
-      params.version = JSON.stringify(req?.headers['x-app-version']);
+      params.version = JSON.stringify(req.headers['x-app-version']);
+      params.locale = parseLocale(req.query['locale'] || req.headers['x-locale']);
       const response = await SummaryController.getSummariesInternal(params);
       return res.json(response);
     } catch (err) {
@@ -57,7 +59,8 @@ router.get(
   async (req, res) => {
     try {
       const params = SummaryController.serializeParams(req.query);
-      params.version = JSON.stringify(req?.headers['x-app-version']);
+      params.version = JSON.stringify(req.headers['x-app-version']);
+      params.locale = parseLocale(req.query['locale'] || req.headers['x-locale']);
       const response = await SummaryController.getTopStoriesInternal(params);
       return res.json(response);
     } catch (err) {

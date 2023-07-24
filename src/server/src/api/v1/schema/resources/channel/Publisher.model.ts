@@ -13,6 +13,7 @@ import {
   PublisherCreationAttributes,
   Selectors,
 } from './Publisher.types';
+import { PublisherTranslation } from './PublisherTranslation.model';
 import { BaseModel } from '../../base';
 import { RateLimit } from '../../system/RateLimit.model';
 
@@ -32,11 +33,24 @@ export class Publisher<
   extends BaseModel<A, B>
   implements PublisherAttributes {
 
-  static async prepare() {
+  public static async prepare() {
+    const newPublishers: Publisher[] = [];
     for (const publisher of Object.values(PUBLISHERS)) {
-      await this.upsert(publisher);
+      const old = await this.findOne({ where: publisher });
+      if (!old) {
+        const [newPublisher] = await this.upsert(publisher);
+        newPublishers.push(newPublisher);
+      }
     }
-  } 
+    const publishers = await this.findAll();
+    for (const publisher of publishers) {
+      if (!publisher.description) {
+        continue;
+      }
+      console.log('translating', publisher.name);
+      await PublisherTranslation.translate(publisher, ['description']);
+    }
+  }
 
   @AfterFind
   static async legacySupport(cursor: Publisher | Publisher[]) {
