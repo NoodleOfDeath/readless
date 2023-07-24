@@ -1,4 +1,5 @@
 import express from 'express';
+import { parseLocale } from 'src/core/locales';
 
 import { Summary } from '../api/v1/schema';
 import { DBService } from '../services/db/DBService';
@@ -25,12 +26,17 @@ export async function main() {
 
     if (type === 's') {
 
-      const summary = await Summary.findOne({ where: { id } });
+      const { count, rows } = await Summary.getSummaries({
+        ids: [Number(id)], 
+        locale: parseLocale(req.query.locale || req.headers['x-locale']), 
+      });
 
-      if (!summary) {
+      if (count < 1 || !rows[0]) {
         res.status(404).send('Not found');
         return;
       }
+
+      const summary = rows[0];
     
       res.header('Content-Type', 'text/html; charset=utf-8');
       res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
