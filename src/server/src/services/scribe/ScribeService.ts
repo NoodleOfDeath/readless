@@ -105,7 +105,6 @@ export class ScribeService extends BaseService {
       imageUrl: loot.imageUrls?.[0] ?? '',
       originalDate: loot.date,
       originalTitle: loot.title,
-      outletId: publisher.id, //  -- legacy support
       publisherId: publisher.id,
       rawText: loot.rawText,
       url,
@@ -236,6 +235,7 @@ export class ScribeService extends BaseService {
       }
       
       this.log('Generating image with deepai');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let generatedObj: any;
       const generateImageWithDeepAi = async () => {
         

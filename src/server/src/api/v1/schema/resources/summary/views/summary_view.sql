@@ -25,12 +25,12 @@ FROM
     AND (pub_en.locale = 'en'
       OR pub_en.locale IS NULL)
   LEFT OUTER JOIN publisher_view pub ON pub.id = s."publisherId"
-  AND (pub.locale = trans.locale)
+  AND pub.locale = trans.locale
   LEFT OUTER JOIN category_view cat_en ON cat_en.id = s."categoryId"
   AND (cat_en.locale = 'en'
     OR cat_en.locale IS NULL)
   LEFT OUTER JOIN category_view cat ON cat.id = s."categoryId"
-  AND (cat.locale = trans.locale)
+  AND cat.locale = trans.locale
   LEFT OUTER JOIN summary_sentiment_view ss ON s.id = ss."parentId"
   LEFT OUTER JOIN summary_media_view m ON s.id = m."parentId";
 

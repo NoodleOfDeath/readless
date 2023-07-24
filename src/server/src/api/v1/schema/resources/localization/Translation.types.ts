@@ -24,5 +24,5 @@ export type PublicTranslationAttributes = {
 };
 
 export type Translatable = {
-  translations?: PublicTranslationAttributes[];
+  translations?: { [key: string]: PublicTranslationAttributes };
 }; 

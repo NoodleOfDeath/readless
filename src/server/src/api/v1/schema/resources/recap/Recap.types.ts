@@ -5,14 +5,14 @@ import {
 } from '../Post.types';
 import { Translatable } from '../localization/Translation.types';
 import { Sentimental } from '../sentiment/Sentiment.types';
+import { PublicSentimentAttributes } from '../sentiment/Sentiment.types';
 import { PublicSummaryAttributes } from '../summary/Summary.types';
-import { PublicSummarySentimentAttributes } from '../summary/SummarySentiment.types';
 
 export type RecapAttributes = PostAttributes & Sentimental & Translatable & {
   key: string;
   length: string;
   summaries?: PublicSummaryAttributes[];
-  sentiments?: PublicSummarySentimentAttributes[];
+  sentiments?: PublicSentimentAttributes[];
 };
 
 export type RecapCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {

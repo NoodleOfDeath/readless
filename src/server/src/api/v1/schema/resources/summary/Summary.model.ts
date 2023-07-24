@@ -1,6 +1,5 @@
 import { Op, QueryTypes } from 'sequelize';
 import {
-  AfterFind,
   Column,
   DataType,
   Table,
@@ -25,7 +24,6 @@ import { PublicCategoryAttributes } from '../channel/Category.types';
 import { Publisher } from '../channel/Publisher.model';
 import { PublicPublisherAttributes } from '../channel/Publisher.types';
 import { InteractionType } from '../interaction/Interaction.types';
-import { PublicTranslationAttributes } from '../localization/Translation.types';
 
 export type SearchSummariesPayload = {
   filter?: string;
@@ -154,9 +152,6 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   })
   declare publisherId: number;
 
-  // legacy support
-  declare outletId: number;
-
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
@@ -217,29 +212,11 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
 
   declare publisher: PublicPublisherAttributes;
 
-  // legacy support
-  declare outlet: PublicPublisherAttributes;
-
   declare category: PublicCategoryAttributes;
   declare subcategory?: PublicCategoryAttributes;
 
   declare sentiment?: number;
   declare sentiments?: PublicSummarySentimentAttributes[];
-
-  declare translations?: PublicTranslationAttributes[];
-  
-  // legacy support
-  @AfterFind
-  public static async afterFindHook(cursor?: Summary | Summary[]) {
-    if (!cursor) {
-      return;
-    }
-    const summaries = Array.isArray(cursor) ? cursor : [cursor];
-    for (const summary of summaries) {
-      summary.set('outletId', summary.publisherId, { raw: true });
-      summary.set('outlet', summary.publisher, { raw: true });
-    }
-  }
 
   public static async getTopStories(payload: SearchSummariesPayload) {
     return await this.getSummaries(payload, 'getTopStories');
