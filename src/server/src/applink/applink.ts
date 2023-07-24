@@ -25,12 +25,14 @@ export async function main() {
 
     if (type === 's') {
 
-      const summary = await Summary.findOne({ where: { id } });
+      const { count, rows } = await Summary.getSummaries({ ids: [Number(id)] });
 
-      if (!summary) {
+      if (count < 1 || !rows[0]) {
         res.status(404).send('Not found');
         return;
       }
+
+      const summary = rows[0];
     
       res.header('Content-Type', 'text/html; charset=utf-8');
       res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
