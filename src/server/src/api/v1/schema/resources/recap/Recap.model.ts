@@ -8,9 +8,8 @@ import {
 import { RecapPayload } from './../../../../../services/scribe/types';
 import { RecapAttributes, RecapCreationAttributes } from './Recap.types';
 import { Post } from '../Post.model';
-import { PublicTranslationAttributes } from '../localization/Translation.types';
+import { PublicSentimentAttributes } from '../sentiment/Sentiment.types';
 import { PublicSummaryAttributes } from '../summary/Summary.types';
-import { PublicSummarySentimentAttributes } from '../summary/SummarySentiment.types';
 
 @Table({
   modelName: 'recap',
@@ -35,9 +34,7 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
   declare summaries?: PublicSummaryAttributes[];
   
   declare sentiment?: number;
-  declare sentiments?: PublicSummarySentimentAttributes[];
-  
-  declare translations?: PublicTranslationAttributes[];
+  declare sentiments?: PublicSentimentAttributes[];
   
   public static objectKey({
     start: start0,

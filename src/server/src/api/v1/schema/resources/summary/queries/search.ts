@@ -18,9 +18,10 @@ FROM (
     s."imageUrl",
     s.publisher::JSONB AS publisher,
     s.category::JSONB AS category,
-    s.media::JSONB AS media,
     s.sentiment,
     s.sentiments::JSONB AS sentiments,
+    s.media::JSONB AS media,
+    s.translations::JSONB AS translations,
     COALESCE(
       JSON_AGG(ROW_TO_JSON(sibling.*))
       FILTER (WHERE sr."siblingId" IS NOT NULL),
@@ -110,6 +111,7 @@ FROM (
     s.sentiment,
     s.sentiments::JSONB,
     s.media::JSONB,
+    s.translations::JSONB,
     "averageSentiment",
     "totalCount"
   ORDER BY

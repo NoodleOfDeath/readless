@@ -20,10 +20,6 @@ export type ReadingFormat = typeof READING_FORMATS[keyof typeof READING_FORMATS]
 export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
   publisherId: number;
   publisher: PublicPublisherAttributes;
-  // legacy support
-  outletId: number;
-  // legacy support
-  outlet: PublicPublisherAttributes;
   categoryId: number;
   category: PublicCategoryAttributes;
   subcategoryId?: number;
@@ -42,8 +38,6 @@ export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
 
 export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {
   publisherId: number;
-  // legacy support
-  outletId: number;
   categoryId: number;
   subcategoryId?: number;
   url: string;

@@ -1,6 +1,10 @@
 import { Column, DataType } from 'sequelize-typescript';
 
-import { TranslationAttributes, TranslationCreationAttributes } from './Translation.types';
+import {
+  PublicTranslationAttributes,
+  TranslationAttributes,
+  TranslationCreationAttributes,
+} from './Translation.types';
 import { SUPPORTED_LOCALES, SupportedLocale } from '../../../../../core/locales';
 import { GoogleService } from '../../../../../services';
 import { BaseModel } from '../../base';
@@ -34,6 +38,8 @@ export class Translation<
     type: DataType.TEXT,
   })
   declare value: string;
+
+  declare translations?: { [key: string]: PublicTranslationAttributes };
   
   public static async translate<T extends { id?: number }>(
     model: T, 
