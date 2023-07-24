@@ -9,6 +9,7 @@ export const enStrings = {
   action_loading: 'Loading...',
   action_next: 'Next ',
   action_readArticle: 'Read Article',
+  action_report: 'Report',
   action_save: 'Save',
   action_saveAndClose: 'Save & Close',
   action_search: 'Search',
@@ -159,7 +160,6 @@ export const enStrings = {
   summary_neutral: 'Neutral',
   summary_positive: 'Positive',
   summary_relatedNews: 'Related News',
-  summary_reportAtBug: 'Report a Bug',
   summary_sentimentAnalysis: 'Sentiment Analysis',
   summary_sentimentAnalysisInfo: 'Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.',
   summary_sentimentScore: 'This is a sentiment score, which measures how people feel about something using a scale from -1 (negative) to +1 (positive), with 0 being neutral.',
@@ -237,4 +237,5 @@ export const enStrings = {
   walkthroughs_triggerWords_description: 'Read Less lets you set **trigger words** to be replaced with emojis or words of your choice, so you may read the news with **less anxiety**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Enable trigger words by entering them below',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Support for languages other than English is limited at this time.',
+  walkthroughs_whatsNew: 'What\'s New',
 };

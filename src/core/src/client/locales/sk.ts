@@ -11,6 +11,7 @@ export const skStrings: typeof enStrings = {
   action_loading: 'Načítava...',
   action_next: 'Ďalšie',
   action_readArticle: 'Prečítajte si článok',
+  action_report: 'Súvisiace správy',
   action_save: 'Uložiť',
   action_saveAndClose: 'Uložiť a zavrieť',
   action_search: 'Vyhľadávanie',
@@ -161,7 +162,6 @@ export const skStrings: typeof enStrings = {
   summary_neutral: 'Neutrálne',
   summary_positive: 'Pozitívny',
   summary_relatedNews: 'Súvisiace správy',
-  summary_reportAtBug: 'Nahlásiť chybu',
   summary_sentimentAnalysis: 'Analýza sentimentu',
   summary_sentimentAnalysisInfo: 'Analýza sentimentu je nástroj, ktorý nám pomocou analýzy ich jazyka pomáha pochopiť, ako sa ľudia k niečomu cítia. Pozerá sa na slová, ktoré ľudia používajú, a rozhoduje sa, či sú pozitívne, negatívne alebo neutrálne. To môže byť užitočné v mnohých oblastiach, ako je pochopenie spätnej väzby od zákazníkov alebo verejnej mienky na danú tému.',
   summary_sentimentScore: 'Toto je skóre sentimentu, ktoré meria, ako ľudia niečo cítia, pomocou stupnice od -1 (negatívne) do +1 (pozitívne), pričom 0 je neutrálne.',
@@ -239,5 +239,6 @@ export const skStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Čítať menej vám umožňuje nastaviť **spúšťacie slová**, ktoré sa majú nahradiť emotikonmi alebo slovami podľa vlastného výberu, aby ste mohli čítať správy s **menšou úzkosťou**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Povoľte spúšťacie slová ich zadaním nižšie',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Podpora iných jazykov ako angličtiny je v súčasnosti obmedzená.',
+  walkthroughs_whatsNew: 'Čo je nové',
 };
   

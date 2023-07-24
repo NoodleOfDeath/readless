@@ -18,9 +18,9 @@ export function ActionSheet({
   return (
     <RNActionSheet
       { ...props }
+      elevation={ 2 }
       gestureEnabled={ gestureEnabled }
       headerAlwaysVisible={ gestureEnabled }
-      elevation={ 2 }
       containerStyle={ { backgroundColor: theme.navContainerTheme.colors.background, ...style } }>
       <SafeAreaView>
         {children}

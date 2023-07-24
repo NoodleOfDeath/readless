@@ -5,7 +5,6 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import {
   Button,
   Chip,
-  Divider,
   Icon,
   Markdown,
   Text,

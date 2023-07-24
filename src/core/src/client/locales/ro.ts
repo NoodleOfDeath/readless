@@ -11,6 +11,7 @@ export const roStrings: typeof enStrings = {
   action_loading: 'Se încarcă...',
   action_next: 'Următorul',
   action_readArticle: 'Citiți articolul',
+  action_report: 'Știri similare',
   action_save: 'Salvați',
   action_saveAndClose: 'Salvați și închideți',
   action_search: 'Căutare',
@@ -161,7 +162,6 @@ export const roStrings: typeof enStrings = {
   summary_neutral: 'Neutru',
   summary_positive: 'Pozitiv',
   summary_relatedNews: 'Știri similare',
-  summary_reportAtBug: 'Raporteaza o eroare',
   summary_sentimentAnalysis: 'Analiza sentimentelor',
   summary_sentimentAnalysisInfo: 'Analiza sentimentelor este un instrument care ne ajută să înțelegem ce simt oamenii despre ceva prin analiza limbajului lor. Se uită la cuvintele folosite de oameni și decide dacă sunt pozitive, negative sau neutre. Acest lucru poate fi util în multe domenii, cum ar fi înțelegerea feedback-ului clienților sau a opiniei publice asupra unui subiect.',
   summary_sentimentScore: 'Acesta este un scor de sentiment, care măsoară modul în care oamenii se simt despre ceva folosind o scală de la -1 (negativ) la +1 (pozitiv), cu 0 fiind neutru.',
@@ -239,5 +239,6 @@ export const roStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Citiți mai puțin vă permite să setați **cuvinte declanșatoare** să fie înlocuite cu emoji-uri sau cuvinte la alegere, astfel încât să puteți citi știrile cu **mai puțină anxietate**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Activați cuvintele declanșatoare introducându-le mai jos',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Suportul pentru alte limbi decât engleza este limitat în acest moment.',
+  walkthroughs_whatsNew: 'Ce mai e nou',
 };
   

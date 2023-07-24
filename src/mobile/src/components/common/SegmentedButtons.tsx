@@ -9,7 +9,7 @@ import {
   View,
 } from '~/components';
 
-export type SegmentedButtonProps<T extends string | number = string> = {
+export type SegmentedButtonProps<T extends string | number | boolean = string> = {
   icon?: React.ReactNode;
   label?: React.ReactNode;
   style?: ChildlessViewProps['style'];
@@ -17,7 +17,7 @@ export type SegmentedButtonProps<T extends string | number = string> = {
   pressOnly?: boolean;
 };
 
-export type SegmentedButtonsProps<T extends string | number = string> = ChildlessViewProps & {
+export type SegmentedButtonsProps<T extends string | number | boolean = string> = ChildlessViewProps & {
   options: SegmentedButtonProps<T>[];
   initialValue?: T;
   onValueChange?: (value: T) => void;
@@ -25,16 +25,21 @@ export type SegmentedButtonsProps<T extends string | number = string> = Childles
   buttonMenuItems?: (option: SegmentedButtonProps<T>, selected: boolean) => ContextMenuAction[];
 };
 
+export type SegmentedButtonsRef<T extends string | number | boolean = string> = {
+  setValue: React.Dispatch<React.SetStateAction<T | undefined>>;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SegmentedButtons = <T extends string | number = string>({
+export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T extends string | number | boolean = string>({
   initialValue,
   options,
   onValueChange,
   buttonProps,
   buttonMenuItems,
   ...props
-}: SegmentedButtonsProps<T>) => {
+}: SegmentedButtonsProps<T>, ref?: React.Ref<SegmentedButtonsRef<T>>) {
   const [value, setValue] = React.useState<T | undefined>(initialValue);
+  React.useImperativeHandle(ref, () => ({ setValue }), [setValue]);
   return (
     <View flexRow { ...props }>
       {options.map((option, index) => (
@@ -60,4 +65,4 @@ export const SegmentedButtons = <T extends string | number = string>({
       ))}
     </View>
   );
-};
+});

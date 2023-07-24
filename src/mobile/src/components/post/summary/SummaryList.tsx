@@ -22,6 +22,7 @@ import {
   Divider,
   FlatList,
   ScrollView,
+  SearchMenu,
   Summary,
   Text,
   View,
@@ -236,9 +237,7 @@ export function SummaryList({
   useFocusEffect(React.useCallback(() => {
     if (!loading && !lastFetchFailed && !loaded && (summaries.length === 0 || filter !== filter0)) {
       load(true);
-      if (filter0) {
-        navigation?.setOptions({ headerTitle: filter0 });
-      }
+      navigation?.setOptions({ headerTitle:'fuck' });
       setFilter(filter0);
     }
   }, [loading, filter, filter0, lastFetchFailed, loaded, load, navigation, summaries.length]));
@@ -263,7 +262,7 @@ export function SummaryList({
         summary={ item }
         selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
-        onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
+        onFormatChange={ (format) => handleFormatChange(item, format) }
         onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
   }, [flow, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
@@ -363,7 +362,7 @@ export function SummaryList({
                     mx={ 12 }
                     summary={ item } 
                     hideArticleCount
-                    onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
+                    onFormatChange={ (format) => handleFormatChange(item, format) }
                     onInteract={ (...e) => handleInteraction(item, ...e) } />
                 ) }
                 keyExtractor={ (item) => `${item.id}` }
@@ -374,7 +373,7 @@ export function SummaryList({
                       summary={ detailSummary }
                       initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
                       keywords={ searchText?.split(' ') }
-                      onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
+                      onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
                       onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
                     <Divider my={ 6 } />
                     {detailSummarySiblings.length > 0 && (

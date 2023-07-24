@@ -62,7 +62,7 @@ export function View({
   }, [children, elevated, inactive, overlay, style]);
   
   const onPress = React.useCallback((event: GestureResponderEvent) => {
-    if (!props.onPress) {
+    if (!props.onPress || props.disabled) {
       return;
     }
     if (haptic) {

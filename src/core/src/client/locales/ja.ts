@@ -11,6 +11,7 @@ export const jaStrings: typeof enStrings = {
   action_loading: '読み込み中...',
   action_next: '次',
   action_readArticle: '記事を読む',
+  action_report: '関連ニュース',
   action_save: '保存',
   action_saveAndClose: '保存して閉じる',
   action_search: '検索',
@@ -161,7 +162,6 @@ export const jaStrings: typeof enStrings = {
   summary_neutral: '中性',
   summary_positive: 'ポジティブ',
   summary_relatedNews: '関連ニュース',
-  summary_reportAtBug: 'バグを報告',
   summary_sentimentAnalysis: '感情分析',
   summary_sentimentAnalysisInfo: '感情分析は、人々の言語を分析することで、人々が何かについてどのように感じているかを理解するのに役立つツールです。人々が使用する言葉を見て、それが肯定的か否定的か中立的かを判断します。これは、顧客からのフィードバックやトピックに関する世論の理解など、さまざまな分野で役立ちます。',
   summary_sentimentScore: 'これは感情スコアであり、-1 (ネガティブ) から +1 (ポジティブ) までのスケールを使用して人々が何かについてどのように感じているかを測定します (0 は中立)。',
@@ -239,5 +239,6 @@ export const jaStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: '[少なく読む] を使用すると、**トリガー ワード**を設定して絵文字や選択した単語に置き換えることができるため、**不安を軽減**しながらニュースを読むことができます。',
   walkthroughs_triggerWords_enableTriggerWords: '以下にトリガーワードを入力してトリガーワードを有効にします',
   walkthroughs_triggerWords_limitedLocalizationSupport: '現時点では、英語以外の言語のサポートは制限されています。',
+  walkthroughs_whatsNew: '新着情報',
 };
   

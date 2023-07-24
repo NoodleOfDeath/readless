@@ -11,6 +11,7 @@ export const ukStrings: typeof enStrings = {
   action_loading: 'Завантаження...',
   action_next: 'Далі',
   action_readArticle: 'Прочитати статтю',
+  action_report: 'Схожі новини',
   action_save: 'зберегти',
   action_saveAndClose: 'Зберегти та закрити',
   action_search: 'Пошук',
@@ -161,7 +162,6 @@ export const ukStrings: typeof enStrings = {
   summary_neutral: 'Нейтральний',
   summary_positive: 'Позитивний',
   summary_relatedNews: 'Схожі новини',
-  summary_reportAtBug: 'Повідомити про помилку',
   summary_sentimentAnalysis: 'Аналіз настроїв',
   summary_sentimentAnalysisInfo: 'Аналіз настроїв – це інструмент, який допомагає нам зрозуміти, як люди ставляться до чогось, аналізуючи їх мову. Він розглядає слова, які люди використовують, і вирішує, чи є вони позитивними, негативними чи нейтральними. Це може бути корисним у багатьох сферах, як-от зрозуміти відгуки клієнтів або громадську думку щодо певної теми.',
   summary_sentimentScore: 'Це оцінка настрою, яка вимірює, як люди ставляться до чогось, використовуючи шкалу від -1 (негативне) до +1 (позитивне), де 0 означає нейтральне значення.',
@@ -239,5 +239,6 @@ export const ukStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Read Less дозволяє замінити **слів-тригери** на емодзі або слова на ваш вибір, щоб ви могли читати новини з **меншим занепокоєнням**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Увімкніть тригерні слова, ввівши їх нижче',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Підтримка інших мов, крім англійської, наразі обмежена.',
+  walkthroughs_whatsNew: 'Що нового',
 };
   

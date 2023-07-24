@@ -25,15 +25,16 @@ export function Image({
 }: ImageProps) {
   const style = useStyles(props);
   const [shouldFallback, setShouldFallback] = React.useState(false);
+  const uri = React.useMemo(() => typeof source !== 'number' ? source?.uri : undefined, [source]);
   const [layout, setLayout] = React.useState<LayoutRectangle>();
-  if (/\.svg/.test(source.uri || '')) {
+  if (uri && /\.svg/.test(uri)) {
     return (
       <View
         flexGrow={ 1 } 
         onLayout={ (e) => setLayout(e.nativeEvent.layout) }>
         <SvgUri 
           viewBox={ `0 0 ${layout?.width ?? 0} ${layout?.height ?? 0}` }
-          uri={ source.uri } 
+          uri={ uri } 
           width={ layout?.width ?? 0 } 
           height={ layout?.height ?? 0 } />
       </View>

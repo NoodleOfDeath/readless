@@ -11,6 +11,7 @@ export const nbStrings: typeof enStrings = {
   action_loading: 'Laster inn...',
   action_next: 'Neste',
   action_readArticle: 'Les artikkelen',
+  action_report: 'Relaterte nyheter',
   action_save: 'Lagre',
   action_saveAndClose: 'Lagre og lukk',
   action_search: 'Søk',
@@ -161,7 +162,6 @@ export const nbStrings: typeof enStrings = {
   summary_neutral: 'Nøytral',
   summary_positive: 'Positivt',
   summary_relatedNews: 'Relaterte nyheter',
-  summary_reportAtBug: 'Rapporter en feil',
   summary_sentimentAnalysis: 'Sentimentanalyse',
   summary_sentimentAnalysisInfo: 'Sentimentanalyse er et verktøy som hjelper oss å forstå hvordan folk føler om noe ved å analysere språket deres. Den ser på ordene folk bruker og bestemmer om de er positive, negative eller nøytrale. Dette kan være nyttig på mange områder, som å forstå tilbakemeldinger fra kunder eller opinionen om et emne.',
   summary_sentimentScore: 'Dette er en sentiment-score, som måler hvordan folk føler om noe ved å bruke en skala fra -1 (negativ) til +1 (positiv), der 0 er nøytral.',
@@ -239,5 +239,6 @@ export const nbStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Les Less lar deg angi at **triggerord** skal erstattes med emojier eller ord etter eget valg, slik at du kan lese nyhetene med **mindre angst**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Aktiver triggerord ved å skrive dem inn nedenfor',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Støtte for andre språk enn engelsk er begrenset for øyeblikket.',
+  walkthroughs_whatsNew: 'Hva er nytt',
 };
   

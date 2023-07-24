@@ -11,6 +11,7 @@ export const itStrings: typeof enStrings = {
   action_loading: 'Caricamento...',
   action_next: 'Prossimo',
   action_readArticle: 'Leggi l\'articolo',
+  action_report: 'Notizie correlate',
   action_save: 'Salva',
   action_saveAndClose: 'Salva e chiudi',
   action_search: 'Ricerca',
@@ -161,7 +162,6 @@ export const itStrings: typeof enStrings = {
   summary_neutral: 'Neutro',
   summary_positive: 'Positivo',
   summary_relatedNews: 'Notizie correlate',
-  summary_reportAtBug: 'Segnalare un bug',
   summary_sentimentAnalysis: 'Analisi del sentimento',
   summary_sentimentAnalysisInfo: 'L\'analisi del sentiment è uno strumento che ci aiuta a capire come le persone si sentono riguardo a qualcosa analizzando il loro linguaggio. Guarda le parole che le persone usano e decide se sono positive, negative o neutre. Questo può essere utile in molte aree, come comprendere il feedback dei clienti o l\'opinione pubblica su un argomento.',
   summary_sentimentScore: 'Questo è un punteggio di sentimento, che misura come le persone si sentono riguardo a qualcosa utilizzando una scala da -1 (negativo) a +1 (positivo), dove 0 è neutro.',
@@ -239,5 +239,6 @@ export const itStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Leggi di meno ti consente di impostare **parole chiave** da sostituire con emoji o parole a tua scelta, in modo da poter leggere le notizie con **meno ansia**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Abilita le parole trigger inserendole di seguito',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Il supporto per lingue diverse dall\'inglese è attualmente limitato.',
+  walkthroughs_whatsNew: 'Cosa c\'è di nuovo',
 };
   

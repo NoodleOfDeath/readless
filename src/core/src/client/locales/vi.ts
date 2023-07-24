@@ -11,6 +11,7 @@ export const viStrings: typeof enStrings = {
   action_loading: 'Đang tải...',
   action_next: 'Kế tiếp',
   action_readArticle: 'đọc bài viết',
+  action_report: 'Tin tức liên quan',
   action_save: 'Cứu',
   action_saveAndClose: 'Lưu & Đóng',
   action_search: 'Tìm kiếm',
@@ -161,7 +162,6 @@ export const viStrings: typeof enStrings = {
   summary_neutral: 'Trung lập',
   summary_positive: 'Tích cực',
   summary_relatedNews: 'Tin tức liên quan',
-  summary_reportAtBug: 'Báo cáo lỗi',
   summary_sentimentAnalysis: 'Phân tích tình cảm',
   summary_sentimentAnalysisInfo: 'Phân tích tình cảm là một công cụ giúp chúng tôi hiểu cảm nhận của mọi người về điều gì đó bằng cách phân tích ngôn ngữ của họ. Nó xem xét những từ mọi người sử dụng và quyết định xem chúng là tích cực, tiêu cực hay trung lập. Điều này có thể hữu ích trong nhiều lĩnh vực, chẳng hạn như hiểu phản hồi của khách hàng hoặc dư luận về một chủ đề.',
   summary_sentimentScore: 'Đây là điểm số tình cảm, đo lường cảm nhận của mọi người về điều gì đó bằng cách sử dụng thang điểm từ -1 (tiêu cực) đến +1 (tích cực), với 0 là trung tính.',
@@ -239,5 +239,6 @@ export const viStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Đọc Ít hơn cho phép bạn đặt **từ kích hoạt** được thay thế bằng biểu tượng cảm xúc hoặc từ bạn chọn, vì vậy bạn có thể đọc tin tức với **ít lo lắng hơn**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Kích hoạt các từ kích hoạt bằng cách nhập chúng bên dưới',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Hỗ trợ cho các ngôn ngữ khác tiếng Anh bị hạn chế tại thời điểm này.',
+  walkthroughs_whatsNew: 'Có gì mới',
 };
   

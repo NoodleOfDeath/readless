@@ -69,16 +69,15 @@ export function PublisherScreen({
             <ChannelIcon rounded size={ 40 } publisher={ publisher } />
             <Text 
               h6 
-              ml={ 6 }
               bold>
               {publisher?.displayName}
             </Text>
             {publisher?.description && (
-              <React.Fragment>
-                <Divider />
-                <Text>{publisher.description}</Text>
-              </React.Fragment>
+              <View px={ 12 }>
+                <Text body2>{publisher.description}</Text>
+              </View>
             )}
+            <Divider />
             <View>
               <Button
                 body2

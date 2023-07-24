@@ -11,6 +11,7 @@ export const huStrings: typeof enStrings = {
   action_loading: 'Betöltés...',
   action_next: 'Következő',
   action_readArticle: 'Olvassa el a cikket',
+  action_report: 'Kapcsolódó hírek',
   action_save: 'Megment',
   action_saveAndClose: 'Mentés és bezárás',
   action_search: 'Keresés',
@@ -161,7 +162,6 @@ export const huStrings: typeof enStrings = {
   summary_neutral: 'Semleges',
   summary_positive: 'Pozitív',
   summary_relatedNews: 'Kapcsolódó hírek',
-  summary_reportAtBug: 'Hiba bejelentése',
   summary_sentimentAnalysis: 'Érzelemelemzés',
   summary_sentimentAnalysisInfo: 'A hangulatelemzés egy olyan eszköz, amely nyelvezetük elemzésével segít megérteni, hogyan vélekednek az emberek valamiről. Megvizsgálja az emberek által használt szavakat, és eldönti, hogy azok pozitívak, negatívak vagy semlegesek. Ez számos területen hasznos lehet, például megértheti az ügyfelek visszajelzéseit vagy a témával kapcsolatos közvéleményt.',
   summary_sentimentScore: 'Ez egy hangulati pontszám, amely egy -1-től (negatív) +1-ig (pozitív) terjedő skála segítségével méri, hogyan vélekednek az emberek valamiről, ahol a 0 semleges.',
@@ -239,5 +239,6 @@ export const huStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'A Kevesebb olvasás funkcióval beállíthatja, hogy a **kiváltó szavak** helyére emojik vagy tetszőleges szavak kerüljenek, így **kevesebb szorongással** olvashatja a híreket.',
   walkthroughs_triggerWords_enableTriggerWords: 'Engedélyezze a kiváltó szavakat, ha beírja őket alább',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Az angoltól eltérő nyelvek támogatása jelenleg korlátozott.',
+  walkthroughs_whatsNew: 'Mi újság',
 };
   

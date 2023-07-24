@@ -28,6 +28,7 @@ import {
   ChannelIcon,
   DrawerItem,
   DrawerSection,
+  DrawerToggle,
   Header,
   Icon,
   MediaPlayer,
@@ -79,7 +80,10 @@ const screens: RouteConfig<
   {
     component: HomeScreen, 
     name: 'home',
-    options: { headerTitle: '' },
+    options: { 
+      headerLeft: () => <DrawerToggle />,
+      headerTitle: '',
+    },
   },
   {
     component: SearchScreen, 
@@ -193,13 +197,7 @@ const Stack = createNativeStackNavigator();
 
 function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
   return (
-    <Stack.Navigator
-      initialRouteName={ initialRouteName }
-      screenOptions={ ({ route }) => ({
-        header: route.name === 'home' ? () => ( 
-          <Header menu search />
-        ) : undefined,
-      }) }>
+    <Stack.Navigator initialRouteName={ initialRouteName }>
       {screens.map((screen) => (
         <Stack.Screen
           key={ String(screen.name) }
@@ -351,7 +349,9 @@ function DrawerContent(props: DrawerContentComponentProps) {
   
   return (
     <DrawerContentScrollView { ...props }>
-      <DrawerItem label={ getUserAgent().currentVersion } />
+      <DrawerItem 
+        label={ getUserAgent().currentVersion }
+        onPress={ () => SheetManager.show('whats-new') } />
       <DrawerSection 
         title={ strings.misc_publishers }>
         {publisherItems}

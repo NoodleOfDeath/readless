@@ -46,7 +46,7 @@ export function ReadingFormatPicker({
           value: ReadingFormat.Bullets,
         },
         {
-          icon: 'book-open',
+          icon: 'book-open-variant',
           label: strings.summary_fullArticle,
           pressOnly,
           value: ReadingFormat.FullArticle,

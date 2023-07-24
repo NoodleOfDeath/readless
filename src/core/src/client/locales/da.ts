@@ -11,6 +11,7 @@ export const daStrings: typeof enStrings = {
   action_loading: 'Indlæser...',
   action_next: 'Næste',
   action_readArticle: 'Læs artikel',
+  action_report: 'Relaterede nyheder',
   action_save: 'Gemme',
   action_saveAndClose: 'Gem og luk',
   action_search: 'Søg',
@@ -161,7 +162,6 @@ export const daStrings: typeof enStrings = {
   summary_neutral: 'Neutral',
   summary_positive: 'Positiv',
   summary_relatedNews: 'Relaterede nyheder',
-  summary_reportAtBug: 'Anmeld en fejl',
   summary_sentimentAnalysis: 'Følelsesanalyse',
   summary_sentimentAnalysisInfo: 'Følelsesanalyse er et værktøj, der hjælper os med at forstå, hvordan folk har det med noget ved at analysere deres sprog. Den ser på de ord, folk bruger og afgør, om de er positive, negative eller neutrale. Dette kan være nyttigt på mange områder, såsom forståelse af kundefeedback eller offentlig mening om et emne.',
   summary_sentimentScore: 'Dette er en følelsesscore, som måler, hvordan folk har det med noget ved hjælp af en skala fra -1 (negativ) til +1 (positiv), hvor 0 er neutral.',
@@ -239,5 +239,6 @@ export const daStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Læs mindre giver dig mulighed for at indstille **udløserord** til at blive erstattet med emojis eller ord efter eget valg, så du kan læse nyhederne med **mindre angst**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Aktiver triggerord ved at indtaste dem nedenfor',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Support til andre sprog end engelsk er begrænset på nuværende tidspunkt.',
+  walkthroughs_whatsNew: 'Hvad er nyt',
 };
   

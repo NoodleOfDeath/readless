@@ -37,6 +37,25 @@ export function BackNavigation({
   );
 }
 
+export function DrawerToggle() {
+  const { navigation } = useNavigation();
+  const { unreadBookmarkCount } = React.useContext(SessionContext);
+  return (
+    <View>
+      {unreadBookmarkCount > 0 && (
+        <Badge topLeft small>
+          {unreadBookmarkCount}
+        </Badge>
+      )}
+      <Chip
+        haptic
+        leftIcon='menu' 
+        iconSize={ 24 }
+        onPress={ () => navigation?.toggleDrawer?.() } />
+    </View>
+  );
+}
+
 export type HeaderProps = ViewProps & {
   children?: React.ReactNode;
   title?: React.ReactNode;
@@ -69,8 +88,6 @@ export function Header({
 }: HeaderProps) {
   
   const theme = useTheme();
-  const { navigation } = useNavigation();
-  const { unreadBookmarkCount } = React.useContext(SessionContext);
   
   const content = React.useMemo(() => (
     (title || children) && (
@@ -117,20 +134,7 @@ export function Header({
       {back && (
         <BackNavigation title={ backTitle } />
       )}
-      {menu && (
-        <View>
-          {unreadBookmarkCount > 0 && (
-            <Badge topLeft small>
-              {unreadBookmarkCount}
-            </Badge>
-          )}
-          <Chip
-            haptic
-            leftIcon='menu' 
-            iconSize={ 24 }
-            onPress={ () => navigation?.toggleDrawer?.() } />
-        </View>
-      )}
+      {menu && <DrawerToggle />}
       {search && (
         <SearchMenu 
           flex={ 1 }

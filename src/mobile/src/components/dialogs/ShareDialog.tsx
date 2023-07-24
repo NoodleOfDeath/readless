@@ -18,6 +18,7 @@ import {
   Icon,
   Image,
   ScrollView,
+  SegmentedButtons,
   Summary,
   Text,
   View,
@@ -33,6 +34,14 @@ export type ShareDialogProps = {
   onClose?: () => void;
 };
 
+export type ShareDialogAction = {
+  icon?: React.ReactNode;
+  iconText?: string;
+  imageUri?: string;
+  label: string;
+  onPress: () => void;
+};
+
 export function ShareDialog({
   payload,
   ...props
@@ -40,7 +49,9 @@ export function ShareDialog({
  
   const theme = useTheme();
   const viewshot = React.useRef<ViewShot>(null);
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  const [big, setBig] = React.useState(true);
 
   const {
     summary,
@@ -56,10 +67,10 @@ export function ShareDialog({
     onInteract,
   });
 
-  const actions = React.useMemo(() => summary && viewshot && [
+  const actions: ShareDialogAction[][] = React.useMemo(() => summary && viewshot && [
     [
       {
-        icon: 'share-outline',
+        icon: 'export-variant',
         label: strings.share_shareAsLink,
         onPress: () => shareStandard(summary, null), 
       },
@@ -77,13 +88,13 @@ export function ShareDialog({
     [
       {
         icon: 'twitter',
-        imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/twitter.png',
+        // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/twitter.png',
         label: strings.share_twitter,
         onPress:() => shareSocial(summary, viewshot.current, Social.Twitter), 
       },
       {
         icon: 'instagram',
-        imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/instagram.png',
+        // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/instagram.png',
         label: strings.share_instagramStories,
         onPress: () => shareSocial(summary, viewshot.current, Social.InstagramStories), 
       },
@@ -126,36 +137,69 @@ export function ShareDialog({
   return (
     <ActionSheet id={ props.sheetId }>
       {summary && (
-        <ScrollView scrollEnabled={ false }>
+        <View
+          bg={ theme.colors.headerBackground }
+          inactive
+          itemsCenter>
           <View
-            bg={ theme.colors.headerBackground }
-            inactive
-            itemsCenter>
-            <View
-              m={ 12 } 
-              maxWidth={ (Math.min(screenWidth, 480)) - 24 }>
-              <ViewShot ref={ viewshot }>
-                <View
-                  beveled
-                  style={ theme.components.card }
-                  overflow='hidden'>
-                  <Summary 
+            absolute
+            top={ -65 }
+            p={ 12 }
+            zIndex={ 3 }>
+            <SegmentedButtons
+              rounded
+              elevated
+              p={ 5 }
+              bg={ theme.colors.headerBackground }
+              buttonProps={ { p: 6 } }
+              initialValue={ big }
+              onValueChange={ (v) => setBig(v) }
+              options={ [
+                {
+                  icon: 'arrow-expand',
+                  value: true,
+                },
+                {
+                  icon: 'arrow-collapse',
+                  value: false,
+                },
+              ] } />
+          </View>
+          <ScrollView
+            m={ 12 } 
+            maxWidth={ (Math.min(screenWidth, screenHeight, 480)) - 24 }
+            maxHeight={ (Math.min(screenWidth, screenHeight / 2, 400)) - 24 }>
+            <ViewShot ref={ viewshot }>
+              <View
+                beveled
+                style={ theme.components.card }>
+                {big ? (
+                  <Summary
+                    big
                     showcase
+                    disableInteractions
                     forceExpanded
                     showFullDate
                     summary={ summary } />
-                  <Divider mx={ 12 } />
-                  <View height={ 20 } my={ 3 }>
-                    <SvgUri
-                      viewBox='328 0 724 338'
-                      uri='https://www.readless.ai/logo.svg' 
-                      height={ 20 } /> 
-                  </View>
+                ) : (
+                  <Summary 
+                    showcase
+                    disableInteractions
+                    forceExpanded
+                    showFullDate
+                    summary={ summary } />
+                )}
+                <Divider mx={ 12 } />
+                <View height={ 20 } my={ 3 }>
+                  <SvgUri
+                    viewBox='328 0 724 338'
+                    uri='https://www.readless.ai/logo.svg' 
+                    height={ 20 } /> 
                 </View>
-              </ViewShot>
-            </View>
-          </View>
-        </ScrollView>
+              </View>
+            </ViewShot>
+          </ScrollView>
+        </View>
       )}
       <View py={ 12 }>
         {Object.values(actions).map((subactions, i) => (
@@ -190,7 +234,7 @@ export function ShareDialog({
                           height={ 48 }
                           m={ -12 } />
                       ) :
-                        <Icon name={ icon } size={ 24 } />}
+                        typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon }
                     </View>
                     <Text 
                       caption 

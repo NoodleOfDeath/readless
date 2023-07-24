@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { NavigationProp, useNavigation as useRNNavigation } from '@react-navigation/native';
+import { useNavigation as useRNNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { 
   PublicCategoryAttributes, 
@@ -14,7 +15,7 @@ import { readingFormat } from '~/utils';
 export function useNavigation() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const navigation = useRNNavigation<NavigationProp<StackableTabParams>>() as any;
+  const navigation = useRNNavigation<NativeStackNavigationProp<StackableTabParams>>() as any;
   
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
 

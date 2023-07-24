@@ -18,12 +18,16 @@ export type TranslateToggleProps<Target extends RecapAttributes | PublicSummaryG
   onLocalize: (translations?: { [key in keyof Target]?: string }) => void;
 };
 
-export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGroup>({
+export type TranslateToggleRef<Target extends RecapAttributes | PublicSummaryGroup> = {
+  setTranslations: React.Dispatch<React.SetStateAction<{ [key in keyof Target]?: string | undefined; } | undefined>>
+};
+
+export const TranslateToggle = React.forwardRef(function TranslateToggle<Target extends RecapAttributes | PublicSummaryGroup>({
   target,
   translations: translations0,
   localize,
   onLocalize,
-}: TranslateToggleProps<Target>) {
+}: TranslateToggleProps<Target>, ref?: React.Ref<Partial<TranslateToggleRef<Target>>>) {
   
   const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string } | undefined>(translations0);
   const [isLocalizing, setIsLocalizing] = React.useState(false);
@@ -52,6 +56,14 @@ export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGr
       setIsLocalizing(false);
     }
   }, [isLocalizing, localize, onLocalize, target]);
+
+  React.useImperativeHandle(ref, () => ({ 
+    setTranslations: (translations) => {
+      setTranslations(translations);
+      setTranslated(Boolean(translations));
+      setShowTranslations(Boolean(translations));
+    },
+  }));
   
   if (/^en/i.test(getLocale())) {
     return null;
@@ -88,4 +100,4 @@ export function TranslateToggle<Target extends RecapAttributes | PublicSummaryGr
       )}
     </View>
   );
-}
+});

@@ -11,6 +11,7 @@ export const hrStrings: typeof enStrings = {
   action_loading: 'Učitavam...',
   action_next: 'Sljedeći',
   action_readArticle: 'Pročitaj članak',
+  action_report: 'Povezane vijesti',
   action_save: 'Uštedjeti',
   action_saveAndClose: 'Spremi i zatvori',
   action_search: 'traži',
@@ -161,7 +162,6 @@ export const hrStrings: typeof enStrings = {
   summary_neutral: 'Neutralan',
   summary_positive: 'Pozitivan',
   summary_relatedNews: 'Povezane vijesti',
-  summary_reportAtBug: 'Prijavi grešku',
   summary_sentimentAnalysis: 'Analiza osjećaja',
   summary_sentimentAnalysisInfo: 'Analiza osjećaja je alat koji nam pomaže razumjeti što ljudi misle o nečemu analizirajući njihov jezik. Promatra riječi koje ljudi koriste i odlučuje jesu li pozitivne, negativne ili neutralne. To može biti korisno u mnogim područjima, poput razumijevanja povratnih informacija korisnika ili javnog mnijenja o nekoj temi.',
   summary_sentimentScore: 'Ovo je rezultat osjećaja koji mjeri kako ljudi misle o nečemu koristeći ljestvicu od -1 (negativno) do +1 (pozitivno), pri čemu je 0 neutralna.',
@@ -239,5 +239,6 @@ export const hrStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Read Less vam omogućuje da postavite **riječi pokretače** da se zamijene emotikonima ili riječima po vašem izboru, tako da možete čitati vijesti s **manje tjeskobe**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Omogućite riječi pokretače unosom u nastavku',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Podrška za druge jezike osim engleskog trenutačno je ograničena.',
+  walkthroughs_whatsNew: 'Što ima novog',
 };
   

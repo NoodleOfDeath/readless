@@ -76,7 +76,6 @@ export function AppearanceWalkthrough(props: SheetProps) {
           <View gap={ 12 }>
             <ScrollView scrollEnabled={ false }>
               <Summary 
-                hideAnalytics
                 hideCard
                 scrollEnabled={ false }
                 initialFormat={ ReadingFormat.Summary }

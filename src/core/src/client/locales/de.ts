@@ -11,6 +11,7 @@ export const deStrings: typeof enStrings = {
   action_loading: 'Wird geladen...',
   action_next: 'Nächste',
   action_readArticle: 'Artikel lesen',
+  action_report: 'Ähnliche Neuigkeiten',
   action_save: 'Speichern',
   action_saveAndClose: 'Speichern und schließen',
   action_search: 'Suchen',
@@ -161,7 +162,6 @@ export const deStrings: typeof enStrings = {
   summary_neutral: 'Neutral',
   summary_positive: 'Positiv',
   summary_relatedNews: 'Ähnliche Neuigkeiten',
-  summary_reportAtBug: 'Melde einen technischen Fehler',
   summary_sentimentAnalysis: 'Stimmungsanalyse',
   summary_sentimentAnalysisInfo: 'Die Stimmungsanalyse ist ein Tool, das uns hilft, durch die Analyse ihrer Sprache zu verstehen, wie Menschen über etwas denken. Es untersucht die von Menschen verwendeten Wörter und entscheidet, ob sie positiv, negativ oder neutral sind. Dies kann in vielen Bereichen nützlich sein, beispielsweise beim Verständnis von Kundenfeedback oder der öffentlichen Meinung zu einem Thema.',
   summary_sentimentScore: 'Hierbei handelt es sich um einen Sentiment-Score, der anhand einer Skala von -1 (negativ) bis +1 (positiv) misst, wie Menschen über etwas denken, wobei 0 neutral ist.',
@@ -239,5 +239,6 @@ export const deStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Mit „Weniger lesen“ können Sie festlegen, dass **Triggerwörter** durch Emojis oder Wörter Ihrer Wahl ersetzt werden, sodass Sie die Nachrichten mit **weniger Angst** lesen können.',
   walkthroughs_triggerWords_enableTriggerWords: 'Aktivieren Sie Triggerwörter, indem Sie sie unten eingeben',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Die Unterstützung für andere Sprachen als Englisch ist derzeit begrenzt.',
+  walkthroughs_whatsNew: 'Was gibt\'s Neues',
 };
   

@@ -11,6 +11,7 @@ export const plStrings: typeof enStrings = {
   action_loading: 'Ładowanie...',
   action_next: 'Następny',
   action_readArticle: 'Przeczytaj artykuł',
+  action_report: 'Powiązane wiadomości',
   action_save: 'Ratować',
   action_saveAndClose: 'Zapisz i zamknij',
   action_search: 'Szukaj',
@@ -161,7 +162,6 @@ export const plStrings: typeof enStrings = {
   summary_neutral: 'Neutralny',
   summary_positive: 'Pozytywny',
   summary_relatedNews: 'Powiązane wiadomości',
-  summary_reportAtBug: 'Zgłoś błąd',
   summary_sentimentAnalysis: 'Analiza nastrojów',
   summary_sentimentAnalysisInfo: 'Analiza nastrojów to narzędzie, które pomaga nam zrozumieć, co ludzie myślą o czymś, analizując ich język. Przygląda się słowom używanym przez ludzi i decyduje, czy są one pozytywne, negatywne czy neutralne. Może to być przydatne w wielu obszarach, takich jak zrozumienie opinii klientów lub opinii publicznej na dany temat.',
   summary_sentimentScore: 'Jest to wynik nastrojów, który mierzy, jak ludzie myślą o czymś, używając skali od -1 (negatywny) do +1 (pozytywny), gdzie 0 oznacza neutralny.',
@@ -239,5 +239,6 @@ export const plStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Mniej czytania pozwala zastąpić **wyzwalające słowa** emotikonami lub wybranymi słowami, dzięki czemu możesz czytać wiadomości z **mniejszym niepokojem**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Włącz słowa wyzwalające, wpisując je poniżej',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Obsługa języków innych niż angielski jest obecnie ograniczona.',
+  walkthroughs_whatsNew: 'Co nowego',
 };
   

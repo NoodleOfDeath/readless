@@ -11,6 +11,7 @@ export const csStrings: typeof enStrings = {
   action_loading: 'Načítání...',
   action_next: 'další',
   action_readArticle: 'Přečtěte si článek',
+  action_report: 'Související novinky',
   action_save: 'Uložit',
   action_saveAndClose: 'Uložit a zavřít',
   action_search: 'Vyhledávání',
@@ -161,7 +162,6 @@ export const csStrings: typeof enStrings = {
   summary_neutral: 'Neutrální',
   summary_positive: 'Pozitivní',
   summary_relatedNews: 'Související novinky',
-  summary_reportAtBug: 'Nahlásit chybu',
   summary_sentimentAnalysis: 'Analýza sentimentu',
   summary_sentimentAnalysisInfo: 'Analýza sentimentu je nástroj, který nám pomáhá porozumět tomu, jak se lidé o něčem cítí, pomocí analýzy jejich jazyka. Sleduje slova, která lidé používají, a rozhoduje, zda jsou pozitivní, negativní nebo neutrální. To může být užitečné v mnoha oblastech, jako je pochopení zpětné vazby od zákazníků nebo veřejného mínění na určité téma.',
   summary_sentimentScore: 'Toto je skóre sentimentu, které měří, jak se lidé k něčemu cítí, pomocí stupnice od -1 (negativní) do +1 (pozitivní), přičemž 0 je neutrální.',
@@ -239,5 +239,6 @@ export const csStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Méně čtení vám umožňuje nastavit **spouštěcí slova**, která mají být nahrazena emotikony nebo slovy podle vašeho výběru, abyste mohli číst zprávy s **méně úzkostí**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Aktivujte spouštěcí slova jejich zadáním níže',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Podpora jiných jazyků než angličtiny je v současnosti omezena.',
+  walkthroughs_whatsNew: 'Co je nového',
 };
   
