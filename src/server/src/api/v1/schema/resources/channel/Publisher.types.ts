@@ -383,6 +383,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .at-authors a' },
       date: { selector: 'article .at-created,article .at-updated' },
+      image: { selector: 'article figure img, img src' },
       spider:{
         attribute: 'href',
         selector: 'a.card-title-link',
