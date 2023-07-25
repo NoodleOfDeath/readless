@@ -29,7 +29,6 @@ import {
   DrawerItem,
   DrawerSection,
   DrawerToggle,
-  Header,
   Icon,
   MediaPlayer,
   Screen,
@@ -293,7 +292,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem 
           key="missing-publishers"
           label={ (
-            <Text numberOfLines={ 3 }>
+            <Text flex={ 1 } numberOfLines={ 3 }>
               { strings.misc_noPublishers }
             </Text>
           ) } />
@@ -331,7 +330,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem 
           key="missing-categories"
           label={ (
-            <Text numberOfLines={ 3 }>
+            <Text flex={ 1 } numberOfLines={ 3 }>
               { strings.misc_noCategories }
             </Text>
           ) } />
@@ -351,7 +350,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
     <DrawerContentScrollView { ...props }>
       <DrawerItem 
         label={ getUserAgent().currentVersion }
-        onPress={ () => SheetManager.show('whats-new') } />
+        onPress={ () => false && SheetManager.show('whats-new') } />
       <DrawerSection 
         title={ strings.misc_publishers }>
         {publisherItems}

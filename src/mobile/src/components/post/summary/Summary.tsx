@@ -53,6 +53,8 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   initialFormat?: ReadingFormat;
   keywords?: string[];
   forceExpanded?: boolean;
+  showImage?: boolean;
+  bulletsAsShortSummary?: boolean;
   disableInteractions?: boolean;
   disableNavigation?: boolean;
   dateFormat?: string;
@@ -142,13 +144,15 @@ export function Summary({
   initialFormat,
   big = Boolean(initialFormat),
   keywords = [],
+  bulletsAsShortSummary,
   forceExpanded,
   disableInteractions,
   disableNavigation,
   showFullDate,
+  showImage = true,
   dateFormat = showFullDate ? 'E PP' : undefined,
   forceUnread = showcase,
-  forceShortSummary: forceShortSummary0,
+  forceShortSummary: forceShortSummary0 = bulletsAsShortSummary,
   footerOnly,
   hideHeader,
   hideCard,
@@ -224,7 +228,7 @@ export function Summary({
       title: summary.title,
     };
   }, [summary.bullets, summary.shortSummary, summary.summary, summary.title, translations]);
-  
+
   const translateToggleRef = React.useRef<TranslateToggleRef<PublicSummaryGroup>>(null);
 
   const formatTime = React.useCallback((timestamp?: string) => {
@@ -239,11 +243,11 @@ export function Summary({
   }, [lastTick, dateFormat]);
   
   const content = React.useMemo(() => {
-    if (!format) {
+    if (!format && !bulletsAsShortSummary) {
       return;
     }
     let content = localizedStrings.summary;
-    if (format === ReadingFormat.Bullets) {
+    if (format === ReadingFormat.Bullets || bulletsAsShortSummary) {
       content = localizedStrings.bullets?.replace(/•\s*/g, '');
     } else if (format === ReadingFormat.FullArticle) {
       if (hideCard) {
@@ -251,7 +255,7 @@ export function Summary({
       }
     }
     return content;
-  }, [format, localizedStrings.bullets, hideCard, localizedStrings.summary]);
+  }, [format, bulletsAsShortSummary, localizedStrings.summary, localizedStrings.bullets, hideCard]);
   
   const containsTrigger = React.useMemo(() => {
     return Object.keys({ ...triggerWords }).some((word) => {
@@ -266,6 +270,27 @@ export function Summary({
     }
     return str;
   }, [triggerWords]);
+
+  const renderContent = React.useCallback((format?: ReadingFormat) => content && (
+    <React.Fragment>
+      {content.split('\n').map((content, i) => (
+        <Chip
+          key={ `${content}-${i}` }
+          itemsCenter
+          gap={ 12 }
+          body2={ bulletsAsShortSummary }
+          leftIcon={ format === 'bullets' ? 'circle' : undefined }>
+          <Highlighter 
+            flex={ 1 }
+            body2={ bulletsAsShortSummary }
+            highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+            searchWords={ keywords }>
+            { cleanString(content) }
+          </Highlighter>
+        </Chip>
+      ))}
+    </React.Fragment>
+  ), [content, bulletsAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
 
   // update time ago every `tickIntervalMs` milliseconds
   useFocusEffect(React.useCallback(() => {
@@ -305,6 +330,61 @@ export function Summary({
     }
     setFormat(newFormat);
   }, [disableNavigation, forceUnread, onFormatChange, initialFormat, hideCard, openURL, summary, readSummary]);
+  
+  const timestamp = React.useMemo(() => {
+    return formatTime(summary.originalDate);
+  }, [formatTime, summary.originalDate]);
+  
+  const sentimentMeter = React.useMemo(() => {
+    return (
+      <Popover
+        disabled={ disableInteractions }
+        anchor={ (
+          <View flexRow itemsCenter gap={ 3 }>
+            <Text
+              subscript
+              adjustsFontSizeToFit>
+              { fixedSentiment(summary.sentiment) }
+            </Text>
+            <MeterDial 
+              value={ summary.sentiment }
+              width={ 40 } />
+          </View>
+        ) }>
+        <Text p={ 12 }>{strings.summary_sentimentScore}</Text>
+      </Popover>
+    );
+  }, [disableInteractions, summary.sentiment]);
+
+  const title = React.useMemo(() => (
+    <Highlighter
+      bold
+      subtitle2={ Boolean(!(!forceExpanded && isCompact) && !initialFormat) }
+      body1={ (!forceExpanded && isCompact) && !initialFormat }
+      color={ !initialFormat && isRead ? theme.colors.textDisabled : theme.colors.text }
+      highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+      searchWords={ keywords }>
+      {cleanString((((!forceExpanded && isCompact) && (showShortSummary || forceShortSummary) && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) || '') }
+    </Highlighter>
+  ), [forceExpanded, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
+  
+  const publisherChip = React.useMemo(() => (
+    <Chip
+      flexRow
+      itemsCenter
+      gap={ 6 }
+      haptic
+      onPress={ () => !disableInteractions && openPublisher(summary.publisher) }>
+      <ChannelIcon publisher={ summary.publisher } />
+      <Text 
+        bold
+        caption
+        adjustsFontSizeToFit
+        color={ theme.colors.textSecondary }>
+        {summary.publisher?.displayName}
+      </Text>
+    </Chip>
+  ), [disableInteractions, openPublisher, summary.publisher, theme.colors.textSecondary]);
   
   const menuActions = React.useMemo(() => {
     if (showcase) {
@@ -410,61 +490,6 @@ export function Summary({
     );
     return actions;
   }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
-  
-  const timestamp = React.useMemo(() => {
-    return formatTime(summary.originalDate);
-  }, [formatTime, summary.originalDate]);
-  
-  const sentimentMeter = React.useMemo(() => {
-    return (
-      <Popover
-        disabled={ disableInteractions }
-        anchor={ (
-          <View flexRow itemsCenter gap={ 3 }>
-            <Text
-              subscript
-              adjustsFontSizeToFit>
-              { fixedSentiment(summary.sentiment) }
-            </Text>
-            <MeterDial 
-              value={ summary.sentiment }
-              width={ 40 } />
-          </View>
-        ) }>
-        <Text p={ 12 }>{strings.summary_sentimentScore}</Text>
-      </Popover>
-    );
-  }, [disableInteractions, summary.sentiment]);
-
-  const title = React.useMemo(() => (
-    <Highlighter
-      bold
-      subtitle2={ Boolean(!(!forceExpanded && isCompact) && !initialFormat) }
-      body1={ (!forceExpanded && isCompact) && !initialFormat }
-      color={ !initialFormat && isRead ? theme.colors.textDisabled : theme.colors.text }
-      highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-      searchWords={ keywords }>
-      {cleanString((((!forceExpanded && isCompact) && (showShortSummary || forceShortSummary) && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) || '') }
-    </Highlighter>
-  ), [forceExpanded, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
-  
-  const publisherChip = React.useMemo(() => (
-    <Chip
-      flexRow
-      itemsCenter
-      gap={ 6 }
-      haptic
-      onPress={ () => !disableInteractions && openPublisher(summary.publisher) }>
-      <ChannelIcon publisher={ summary.publisher } />
-      <Text 
-        bold
-        caption
-        adjustsFontSizeToFit
-        color={ theme.colors.textSecondary }>
-        {summary.publisher?.displayName}
-      </Text>
-    </Chip>
-  ), [disableInteractions, openPublisher, summary.publisher, theme.colors.textSecondary]);
 
   const shareActions = React.useMemo(() => (
     <React.Fragment>
@@ -623,14 +648,13 @@ export function Summary({
   const imageUrl = React.useMemo(() => articleImage || summary.media?.imageAi1 || summary.imageUrl, [articleImage, summary.media?.imageAi1, summary.imageUrl]);
   
   const image = React.useMemo(() => {
-    if ((!forceExpanded && isCompact) || !imageUrl || footerOnly) {
+    if ((!forceExpanded && isCompact) || !showImage || !imageUrl || footerOnly) {
       return null;
     }
     return (
       <View
         flexGrow={ 1 }
-        alignCenter
-        maxWidth={ big ? Math.min(screenWidth, 480) : 64 }
+        maxWidth={ big ? Math.min(screenWidth, 480) - 12 : 64 }
         maxHeight={ big ? Math.min(screenHeight / 3, 300) : 64 }
         m={ big && !initialFormat ? undefined : 12 }>
         <View
@@ -685,7 +709,7 @@ export function Summary({
         </View>
       </View>
     );
-  }, [forceExpanded, isCompact, imageUrl, footerOnly, big, screenWidth, screenHeight, initialFormat, showcase, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark, articleImage]);
+  }, [forceExpanded, isCompact, showImage, imageUrl, footerOnly, big, screenWidth, screenHeight, initialFormat, showcase, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark, articleImage]);
 
   const translateToggle = React.useMemo(() => {
     if (showcase) {
@@ -722,11 +746,13 @@ export function Summary({
             {translateToggle}
             {((!(!forceExpanded && isCompact) && (showShortSummary || forceShortSummary)) || initialFormat) && (
               <View>
-                <Highlighter 
-                  highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-                  searchWords={ keywords }>
-                  { cleanString(localizedStrings.shortSummary ?? '') }
-                </Highlighter>
+                {bulletsAsShortSummary ? renderContent(ReadingFormat.Bullets) : (
+                  <Highlighter 
+                    highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+                    searchWords={ keywords }>
+                    { cleanString(localizedStrings.shortSummary ?? '') }
+                  </Highlighter>
+                )}
               </View>
             )}
             {!hideFooter && footer}
@@ -741,26 +767,7 @@ export function Summary({
         </View>
       )}
     </View>
-  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image, isTablet, shareActions]);
-  
-  const bodyText = React.useMemo(() => content && (
-    <React.Fragment>
-      {content.split('\n').map((content, i) => (
-        <Chip
-          key={ `${content}-${i}` }
-          itemsCenter
-          gap={ 12 }
-          leftIcon={ format === 'bullets' ? 'circle' : undefined }>
-          <Highlighter 
-            flex={ 1 }
-            highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-            searchWords={ keywords }>
-            { cleanString(content) }
-          </Highlighter>
-        </Chip>
-      ))}
-    </React.Fragment>
-  ), [content, format, keywords, cleanString, theme.colors.textHighlightBackground, theme.colors.textDark]);
+  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image, isTablet, shareActions]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
     <View flexGrow={ 1 }>
@@ -779,13 +786,13 @@ export function Summary({
           <View gap={ 6 } pb={ 12 }>
             <View gap={ 6 } p={ 12 }>
               {translateToggle}
-              {bodyText}
+              {renderContent(format)}
             </View>
           </View>
         )}
       </CollapsedView>
     </View>
-  ), [footerOnly, hideCard, format, handleFormatChange, content, translateToggle, bodyText]);
+  ), [footerOnly, hideCard, format, handleFormatChange, content, translateToggle, renderContent]);
 
   const card = React.useMemo(() => footerOnly ? null : (
     <View
@@ -821,16 +828,16 @@ export function Summary({
   ), [footerOnly, big, theme.components.cardBig, theme.components.card, theme.colors.primary, style, containsTrigger, isRead, selected, image, header, coverContent, handleFormatChange, preferredReadingFormat]);
 
   const fullCard = React.useMemo(() => footerOnly ? null : (
-    <View mt={ 12 } style={ { ...theme.components.card, ...style } }>   
+    <View style={ { ...theme.components.card, ...style } }>   
       <View>
-        {!hideCard && !hideHeader && (
-          <View>
-            {header}
-          </View>
-        )}
         <View flexRow={ supportsMasterDetail }>
           {!hideCard && image}
           <View flex={ 1 } mr={ supportsMasterDetail ? 12 : undefined }>
+            {!hideCard && !hideHeader && (
+              <View>
+                {header}
+              </View>
+            )}
             {!hideCard && coverContent}
           </View>
         </View>

@@ -1,16 +1,26 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 
-import RNActionSheet, { ActionSheetProps as RNActionSheetProps } from 'react-native-actions-sheet';
+import RNActionSheet, {
+  ActionSheetProps as RNActionSheetProps,
+  SheetManager,
+} from 'react-native-actions-sheet';
 
-import { ViewProps } from '~/components';
+import {
+  Chip,
+  View,
+  ViewProps,
+} from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type ActionSheetProps = ViewProps & RNActionSheetProps;
+export type ActionSheetProps = ViewProps & RNActionSheetProps & {
+  closeButton?: boolean | React.ReactNode;
+};
 
 export function ActionSheet({ 
   children, 
   gestureEnabled = true, 
+  closeButton,
   ...props
 }: ActionSheetProps) {
   const theme = useTheme();
@@ -23,6 +33,25 @@ export function ActionSheet({
       headerAlwaysVisible={ gestureEnabled }
       containerStyle={ { backgroundColor: theme.navContainerTheme.colors.background, ...style } }>
       <SafeAreaView>
+        {closeButton === true ? (
+          <View
+            absolute
+            top={ -65 }
+            right= { 5 }
+            p={ 12 }
+            zIndex={ 3 }>
+            <Chip
+              rounded
+              elevated
+              p={ 12 }
+              bg={ theme.colors.headerBackground }
+              leftIcon="close" 
+              onPress={ () => {
+                props.onClose?.();
+                props.id && SheetManager.hide(props.id);
+              } } />
+          </View>
+        ) : closeButton}
         {children}
       </SafeAreaView>
     </RNActionSheet>

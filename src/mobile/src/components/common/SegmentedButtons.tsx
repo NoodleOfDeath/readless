@@ -8,6 +8,7 @@ import {
   ContextMenuAction,
   View,
 } from '~/components';
+import { useTheme } from '~/hooks';
 
 export type SegmentedButtonProps<T extends string | number | boolean = string> = {
   icon?: React.ReactNode;
@@ -34,14 +35,20 @@ export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T ext
   initialValue,
   options,
   onValueChange,
-  buttonProps,
+  buttonProps = { p: 6 },
   buttonMenuItems,
   ...props
 }: SegmentedButtonsProps<T>, ref?: React.ForwardedRef<SegmentedButtonsRef<T>>) {
+  const theme = useTheme();
   const [value, setValue] = React.useState<T | undefined>(initialValue);
   React.useImperativeHandle(ref, () => ({ setValue }), [setValue]);
   return (
-    <View flexRow { ...props }>
+    <View
+      flexRow
+      rounded
+      p={ 6 }
+      bg={ theme.colors.headerBackground }
+      { ...props }>
       {options.map((option, index) => (
         <ContextMenu 
           key={ `${option.value}${index}` }

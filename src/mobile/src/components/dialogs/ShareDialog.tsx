@@ -42,7 +42,7 @@ export type ShareDialogAction = {
   onPress: () => void;
 };
 
-export const SHARE_FORMATS = ['big', 'compact'] as const;
+export const SHARE_FORMATS = ['big', 'compact-shortSummary', 'compact-bullets', 'compact'] as const;
 
 export type ShareFormat = typeof SHARE_FORMATS[number];
 
@@ -139,7 +139,10 @@ export function ShareDialog({
   ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
 
   return (
-    <ActionSheet id={ props.sheetId } gestureEnabled={ false }>
+    <ActionSheet
+      id={ props.sheetId }
+      closeButton
+      gestureEnabled={ false }>
       {summary && (
         <View
           bg={ theme.colors.headerBackground }
@@ -151,20 +154,24 @@ export function ShareDialog({
             p={ 12 }
             zIndex={ 3 }>
             <SegmentedButtons
-              rounded
               elevated
-              p={ 5 }
-              bg={ theme.colors.headerBackground }
-              buttonProps={ { p: 6 } }
               initialValue={ shareFormat }
               onValueChange={ (f) => setShareFormat(f) }
               options={ [
                 {
-                  icon: 'arrow-expand',
+                  icon: 'cards-variant',
                   value: 'big',
                 },
                 {
-                  icon: 'arrow-expand',
+                  icon: 'id-card',
+                  value: 'compact-shortSummary',
+                },
+                {
+                  icon: 'card-bulleted-outline',
+                  value: 'compact-bullets',
+                },
+                {
+                  icon: 'card-text-outline',
                   value: 'compact',
                 },
               ] } />
@@ -179,9 +186,11 @@ export function ShareDialog({
                 style={ theme.components.card }>
                 <Summary 
                   showcase
-                  big={ /big/.test(shareFormat) }
-                  forceExpanded={ !/compact/.test(shareFormat) }
-                  initialFormat={ /bullets/.test(shareFormat) ? ReadingFormat.Bullets : undefined }
+                  big={ /^big$/.test(shareFormat) }
+                  showImage={ !/compact-(shortSummary|bullets)/.test(shareFormat) }
+                  forceExpanded={ !/^compact$/.test(shareFormat) }
+                  forceShortSummary={ /^big|compact-(shortSummary|bullets)$/.test(shareFormat) }
+                  bulletsAsShortSummary={ /bullets/.test(shareFormat) }
                   disableInteractions
                   showFullDate
                   summary={ summary } />
