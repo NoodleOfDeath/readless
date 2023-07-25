@@ -38,8 +38,11 @@ export class MailService extends BaseService {
     });
   }
 
-  async sendMail(opts: SMTPTransport.Options) {
-    return await this.client.sendMail(opts);
+  async sendMail({
+    from = process.env.MAIL_REPLY_TO,
+    ...opts
+  }: SMTPTransport.Options) {
+    return await this.client.sendMail({ from, ...opts });
   }
 
   async sendMailFromTemplate<
@@ -50,7 +53,7 @@ export class MailService extends BaseService {
     params?: Optional<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain' | 'ssl'>
   ) {
     const options = {
-      from: `<${process.env.MAIL_USER}> ReadLess - Reply Blackhole"`,
+      from: process.env.MAIL_REPLY_TO,
       ...opts,
     };
     if (templateName) {

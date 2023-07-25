@@ -106,12 +106,14 @@ export class Subscription<
     channel,
     uuid,
     event,
+    verifyToken,
   }: SubscriptionCreationAttributes): Promise<void> {
     const subscription = await Subscription.findOne({
       where: {
         channel,
         event,
         uuid,
+        verifyToken,
       },
     });
     if (!subscription) {
@@ -163,7 +165,7 @@ export class Subscription<
       case 'email':
         await new MailService().sendMail({
           ...data,
-          from: 'Read Less <thecakeisalie@readless.ai>',
+          from: process.env.MAIL_REPLY_TO,
           to: subscription.uuid,
         });
         break;

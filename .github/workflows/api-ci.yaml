@@ -80,6 +80,7 @@ jobs:
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_REPLY_TO: ${{ vars.MAIL_REPLY_TO }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
