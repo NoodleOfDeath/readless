@@ -19,20 +19,20 @@ import {
   CollapsedView,
   ContextMenu,
   ContextMenuAction,
+  Divider,
   Highlighter,
   Icon,
   Image,
   MeterDial,
   Popover,
   ReadingFormatPicker,
-  ScrollView,
   ScrollViewProps,
   Text,
   TranslateToggle,
   TranslateToggleRef,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { LayoutContext, SessionContext } from '~/contexts';
 import {
   useInAppBrowser,
   useNavigation,
@@ -45,9 +45,8 @@ import { fixedSentiment } from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   sample?: boolean;
-  big?: boolean;
   showcase?: boolean;
-  fullImage?: boolean;
+  big?: boolean;
   summary?: PublicSummaryGroup
   tickInterval?: string;
   selected?: boolean;
@@ -141,8 +140,7 @@ export function Summary({
   tickInterval = '5m',
   selected,
   initialFormat,
-  big,
-  fullImage = Boolean(initialFormat),
+  big = Boolean(initialFormat),
   keywords = [],
   forceExpanded,
   disableInteractions,
@@ -169,10 +167,11 @@ export function Summary({
   const { localizeSummary } = useServiceClient();
   const { openURL } = useInAppBrowser();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-
+  
   const theme = useTheme();
   const style = useStyles(props);
-
+  
+  const { isTablet, supportsMasterDetail } = React.useContext(LayoutContext);
   const {
     // prefs
     compactSummaries,
@@ -312,7 +311,7 @@ export function Summary({
       return [];
     }
     const actions: ContextMenuAction[] = [];
-    if (!footerOnly) {
+    if (!footerOnly && !initialFormat) {
       actions.push(
         {
           onPress: async () => {
@@ -410,7 +409,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [showcase, isBookmarked, isRead, initialFormat, footerOnly, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
+  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
   
   const timestamp = React.useMemo(() => {
     return formatTime(summary.originalDate);
@@ -460,11 +459,61 @@ export function Summary({
       <Text 
         bold
         caption
+        adjustsFontSizeToFit
         color={ theme.colors.textSecondary }>
         {summary.publisher?.displayName}
       </Text>
     </Chip>
   ), [disableInteractions, openPublisher, summary.publisher, theme.colors.textSecondary]);
+
+  const shareActions = React.useMemo(() => (
+    <React.Fragment>
+      <View row />
+      <View flexRow itemsCenter gap={ 12 }>
+        <Chip
+          color={ theme.colors.textSecondary }
+          leftIcon="book-open-variant"
+          haptic
+          gap={ 3 }
+          onPress={ async () => {
+            if (disableInteractions) {
+              return;
+            }
+            openURL(summary.url);
+          } }>
+          {strings.summary_fullArticle}
+        </Chip>
+        <Chip
+          color={ theme.colors.textSecondary }
+          leftIcon="export-variant"
+          haptic
+          gap={ 3 }
+          onPress={ async () => {
+            if (disableInteractions) {
+              return;
+            }
+            await SheetManager.show('share', {
+              payload: {
+                onInteract,
+                summary,
+              },
+            });
+          } }>
+          {strings.action_share}
+        </Chip>
+        <ContextMenu
+          dropdownMenuMode
+          actions={ menuActions as ContextMenuAction[] }>
+          <Chip
+            gap={ 3 }
+            color={ theme.colors.textSecondary }
+            leftIcon="menu-down">
+            {strings.misc_more}
+          </Chip>
+        </ContextMenu>
+      </View>
+    </React.Fragment>
+  ), [theme.colors.textSecondary, disableInteractions, openURL, onInteract, summary, menuActions]);
   
   const header = React.useMemo(() => {
     if ((!forceExpanded && isCompact) && !initialFormat) {
@@ -474,25 +523,27 @@ export function Summary({
       return null;
     }
     return (
-      <View 
+      <View
         p={ 6 }
         flexGrow={ 1 }
         zIndex={ 2 }
         bg={ theme.colors.headerBackground }>
         <View flexRow itemsCenter gap={ 6 }>
           {publisherChip}
-          <Text
-            caption
-            color={ theme.colors.textSecondary }>
-            •
-          </Text>
-          <Text  
-            adjustsFontSizeToFit
-            color={ theme.colors.textSecondary }
-            textCenter
-            caption>
-            {timestamp}
-          </Text>
+          <View flex={ 1 } flexRow itemsCenter gap={ 6 }>
+            <Text
+              caption
+              color={ theme.colors.textSecondary }>
+              •
+            </Text>
+            <Text  
+              adjustsFontSizeToFit
+              color={ theme.colors.textSecondary }
+              textCenter
+              caption>
+              {timestamp}
+            </Text>
+          </View>
           <View row />
           {sentimentMeter}
         </View>
@@ -558,57 +609,10 @@ export function Summary({
             </Chip>
           </React.Fragment>
         )}
-        {footerOnly && (
-          <React.Fragment>
-            <View row />
-            <View flexRow itemsCenter gap={ 12 }>
-              <Chip
-                color={ theme.colors.textSecondary }
-                leftIcon="book-open-variant"
-                haptic
-                gap={ 3 }
-                onPress={ async () => {
-                  if (disableInteractions) {
-                    return;
-                  }
-                  openURL(summary.url);
-                } }>
-                {strings.summary_fullArticle}
-              </Chip>
-              <Chip
-                color={ theme.colors.textSecondary }
-                leftIcon="export-variant"
-                haptic
-                gap={ 3 }
-                onPress={ async () => {
-                  if (disableInteractions) {
-                    return;
-                  }
-                  await SheetManager.show('share', {
-                    payload: {
-                      onInteract,
-                      summary,
-                    },
-                  });
-                } }>
-                {strings.action_share}
-              </Chip>
-              <ContextMenu
-                dropdownMenuMode
-                actions={ menuActions as ContextMenuAction[] }>
-                <Chip
-                  gap={ 3 }
-                  color={ theme.colors.textSecondary }
-                  leftIcon="menu-down">
-                  {strings.misc_more}
-                </Chip>
-              </ContextMenu>
-            </View>
-          </React.Fragment>
-        )}
+        {footerOnly && shareActions}
       </View>
     );
-  }, [forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, footerOnly, summary, hideArticleCount, isBookmarked, menuActions, disableInteractions, openCategory, navigate, openURL, onInteract]);
+  }, [footerOnly, forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, summary.category, summary.siblings?.length, hideArticleCount, isBookmarked, shareActions, disableInteractions, openCategory, navigate]);
   
   const articleImage = React.useMemo(() => {
     if (summary.media?.imageArticle && /\.(?:jpe?g|png)/.test(summary.media.imageArticle)) {
@@ -625,66 +629,63 @@ export function Summary({
     return (
       <View
         flexGrow={ 1 }
-        maxWidth={ big || fullImage ? Math.min(screenWidth, 480) : 64 }
-        maxHeight={ big || fullImage ? Math.min(screenHeight / 3, 300) : 64 }
-        mx={ big || fullImage ? undefined : 12 }>
-        {!showcase && (big || fullImage) && (
-          <Popover
-            anchor={ (
-              <View 
-                absolute
-                bottom={ 3 }
-                left={ 3 }
-                rounded
-                bg={ theme.colors.backgroundTranslucent }>
-                <View
-                  itemsCenter
-                  flexRow
-                  flex={ 1 }
-                  m={ 6 }
-                  gap={ 6 }>
-                  <Icon 
-                    color={ theme.colors.textDark }
-                    name={ 'information' }
-                    size={ 24 } />
-                </View>
-              </View>
-            ) }>
-            <Text 
-              caption
-              p={ 12 }>
-              {!articleImage ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
-            </Text>
-          </Popover>
-        )}
-        <ScrollView
-          scrollEnabled={ big || fullImage }>
-          <View>
-            <View
-              brTopLeft={ big || fullImage && !initialFormat ? 6 : 0 }
-              brTopRight={ big || fullImage && !initialFormat ? 6 : 0 }
-              borderRadius={ big || fullImage ? undefined : 6 }
-              aspectRatio={ big ? 3/1.75 : 1 }
-              overflow="hidden"
-              zIndex={ 20 }>
-              {!showcase && containsTrigger ? (
-                <Icon
-                  name="cancel"
+        alignCenter
+        maxWidth={ big ? Math.min(screenWidth, 480) : 64 }
+        maxHeight={ big ? Math.min(screenHeight / 3, 300) : 64 }
+        m={ big && !initialFormat ? undefined : 12 }>
+        <View
+          brTopLeft={ big && !initialFormat ? 6 : undefined }
+          brTopRight={ big && !initialFormat ? 6 : undefined }
+          borderRadius={ big && !initialFormat ? undefined : 6 }
+          aspectRatio={ big ? 3/1.75 : 1 }
+          overflow="hidden"
+          zIndex={ 20 }>
+          {!showcase && containsTrigger ? (
+            <Icon
+              name="cancel"
+              absolute
+              zIndex={ 20 } 
+              size={ 120 } />
+          ) : (
+            <Image
+              flex={ 1 }
+              flexGrow={ 1 }
+              source={ { uri: imageUrl } } />
+          )}
+          {!showcase && (big) && (
+            <Popover
+              anchor={ (
+                <View 
                   absolute
-                  zIndex={ 20 } 
-                  size={ 120 } />
-              ) : (
-                <Image
-                  flex={ 1 }
-                  flexGrow={ 1 }
-                  source={ { uri: imageUrl } } />
-              )}
-            </View>
-          </View>
-        </ScrollView>
+                  bottom={ 3 }
+                  left={ 3 }
+                  rounded
+                  zIndex={ 30 }
+                  bg={ theme.colors.backgroundTranslucent }>
+                  <View
+                    itemsCenter
+                    flexRow
+                    flex={ 1 }
+                    m={ 6 }
+                    gap={ 6 }>
+                    <Icon 
+                      color={ theme.colors.textDark }
+                      name={ 'information' }
+                      size={ 24 } />
+                  </View>
+                </View>
+              ) }>
+              <Text 
+                caption
+                p={ 12 }>
+                {!articleImage ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
+              </Text>
+            </Popover>
+          )}
+        </View>
       </View>
     );
-  }, [forceExpanded, isCompact, imageUrl, footerOnly, showcase, big, fullImage, theme.colors.backgroundTranslucent, theme.colors.textDark, articleImage, screenWidth, screenHeight, initialFormat, containsTrigger]);
+  }, [forceExpanded, isCompact, imageUrl, footerOnly, big, screenWidth, screenHeight, initialFormat, showcase, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark, articleImage]);
 
   const translateToggle = React.useMemo(() => {
     if (showcase) {
@@ -706,7 +707,7 @@ export function Summary({
   }, [showcase, summary, translations, localizeSummary, storeTranslations]);
 
   const coverContent = React.useMemo(() => footerOnly ? null : (
-    <View flex={ 1 } mb={ 6 }>
+    <View flex={ !initialFormat ? 1 : undefined } mb={ 6 }>
       <View row>
         <View
           flex={ 1 }
@@ -731,10 +732,35 @@ export function Summary({
             {!hideFooter && footer}
           </View>
         </View>
-        {!(big || fullImage) && image}
+        {!(big) && image}
       </View>
+      {Boolean(initialFormat && isTablet) && (
+        <View col m={ 12 } gap={ 6 }>
+          <Divider />
+          {shareActions}
+        </View>
+      )}
     </View>
-  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, fullImage, image]);
+  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image, isTablet, shareActions]);
+  
+  const bodyText = React.useMemo(() => content && (
+    <React.Fragment>
+      {content.split('\n').map((content, i) => (
+        <Chip
+          key={ `${content}-${i}` }
+          itemsCenter
+          gap={ 12 }
+          leftIcon={ format === 'bullets' ? 'circle' : undefined }>
+          <Highlighter 
+            flex={ 1 }
+            highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
+            searchWords={ keywords }>
+            { cleanString(content) }
+          </Highlighter>
+        </Chip>
+      ))}
+    </React.Fragment>
+  ), [content, format, keywords, cleanString, theme.colors.textHighlightBackground, theme.colors.textDark]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
     <View flexGrow={ 1 }>
@@ -753,33 +779,19 @@ export function Summary({
           <View gap={ 6 } pb={ 12 }>
             <View gap={ 6 } p={ 12 }>
               {translateToggle}
-              {content.split('\n').map((content, i) => (
-                <Chip
-                  key={ `${content}-${i}` }
-                  itemsCenter
-                  gap={ 12 }
-                  leftIcon={ format === 'bullets' ? 'circle' : undefined }>
-                  <Highlighter 
-                    flex={ 1 }
-                    highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-                    searchWords={ keywords }>
-                    { cleanString(content) }
-                  </Highlighter>
-                </Chip>
-              ))}
+              {bodyText}
             </View>
           </View>
         )}
       </CollapsedView>
     </View>
-  ), [footerOnly, hideCard, format, handleFormatChange, content, translateToggle, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
+  ), [footerOnly, hideCard, format, handleFormatChange, content, translateToggle, bodyText]);
 
   const card = React.useMemo(() => footerOnly ? null : (
     <View
       flexGrow={ 1 }
-      style={ { ...theme.components.card, ...style } }
+      style={ { ...(big ? theme.components.cardBig : theme.components.card), ...style } }
       borderRadius={ 6 }
-      overflow="hidden"
       bg={ containsTrigger ? '#eecccc' : undefined }
       opacity={ isRead ? 0.75 : 1 }
       onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
@@ -806,23 +818,26 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [footerOnly, theme.components.card, theme.colors.primary, style, containsTrigger, isRead, selected, big, image, header, coverContent, handleFormatChange, preferredReadingFormat]);
+  ), [footerOnly, big, theme.components.cardBig, theme.components.card, theme.colors.primary, style, containsTrigger, isRead, selected, image, header, coverContent, handleFormatChange, preferredReadingFormat]);
 
   const fullCard = React.useMemo(() => footerOnly ? null : (
-    <View
-      style={ { ...theme.components.card, ...style } }>   
+    <View mt={ 12 } style={ { ...theme.components.card, ...style } }>   
       <View>
-        {!hideCard && image}
         {!hideCard && !hideHeader && (
           <View>
             {header}
           </View>
         )}
-        {!hideCard && coverContent}
+        <View flexRow={ supportsMasterDetail }>
+          {!hideCard && image}
+          <View flex={ 1 } mr={ supportsMasterDetail ? 12 : undefined }>
+            {!hideCard && coverContent}
+          </View>
+        </View>
         {cardBody}
       </View>
     </View>
-  ), [footerOnly, theme.components.card, style, hideCard, image, hideHeader, header, coverContent, cardBody]);
+  ), [footerOnly, theme.components.card, style, hideCard, hideHeader, header, supportsMasterDetail, image, coverContent, cardBody]);
   
   const contextMenuPreview = React.useMemo(() => (
     <Summary 

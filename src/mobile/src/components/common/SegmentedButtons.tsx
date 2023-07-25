@@ -37,7 +37,7 @@ export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T ext
   buttonProps,
   buttonMenuItems,
   ...props
-}: SegmentedButtonsProps<T>, ref?: React.Ref<SegmentedButtonsRef<T>>) {
+}: SegmentedButtonsProps<T>, ref?: React.ForwardedRef<SegmentedButtonsRef<T>>) {
   const [value, setValue] = React.useState<T | undefined>(initialValue);
   React.useImperativeHandle(ref, () => ({ setValue }), [setValue]);
   return (
@@ -49,6 +49,7 @@ export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T ext
           <Button
             px={ 12 }
             gap={ 6 }
+            flex={ 1 }
             adjustsFontSizeToFit
             leftIcon={ option.icon }
             selected={ value === option.value }
@@ -65,4 +66,6 @@ export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T ext
       ))}
     </View>
   );
-});
+}) as <T extends string | number | boolean = string>(
+  props: SegmentedButtonsProps<T> & { ref?: React.ForwardedRef<SegmentedButtonsRef<T>> }
+) => React.ReactElement;

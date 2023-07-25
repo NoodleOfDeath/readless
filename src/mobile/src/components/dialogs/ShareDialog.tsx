@@ -42,6 +42,10 @@ export type ShareDialogAction = {
   onPress: () => void;
 };
 
+export const SHARE_FORMATS = ['big', 'compact'] as const;
+
+export type ShareFormat = typeof SHARE_FORMATS[number];
+
 export function ShareDialog({
   payload,
   ...props
@@ -51,7 +55,7 @@ export function ShareDialog({
   const viewshot = React.useRef<ViewShot>(null);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  const [big, setBig] = React.useState(true);
+  const [shareFormat, setShareFormat] = React.useState<ShareFormat>('big');
 
   const {
     summary,
@@ -135,7 +139,7 @@ export function ShareDialog({
   ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
 
   return (
-    <ActionSheet id={ props.sheetId }>
+    <ActionSheet id={ props.sheetId } gestureEnabled={ false }>
       {summary && (
         <View
           bg={ theme.colors.headerBackground }
@@ -152,44 +156,36 @@ export function ShareDialog({
               p={ 5 }
               bg={ theme.colors.headerBackground }
               buttonProps={ { p: 6 } }
-              initialValue={ big }
-              onValueChange={ (v) => setBig(v) }
+              initialValue={ shareFormat }
+              onValueChange={ (f) => setShareFormat(f) }
               options={ [
                 {
                   icon: 'arrow-expand',
-                  value: true,
+                  value: 'big',
                 },
                 {
-                  icon: 'arrow-collapse',
-                  value: false,
+                  icon: 'arrow-expand',
+                  value: 'compact',
                 },
               ] } />
           </View>
           <ScrollView
-            m={ 12 } 
             maxWidth={ (Math.min(screenWidth, screenHeight, 480)) - 24 }
             maxHeight={ (Math.min(screenWidth, screenHeight / 2, 400)) - 24 }>
             <ViewShot ref={ viewshot }>
               <View
                 beveled
+                my={ 12 }
                 style={ theme.components.card }>
-                {big ? (
-                  <Summary
-                    big
-                    showcase
-                    disableInteractions
-                    forceExpanded
-                    showFullDate
-                    summary={ summary } />
-                ) : (
-                  <Summary 
-                    showcase
-                    disableInteractions
-                    forceExpanded
-                    showFullDate
-                    summary={ summary } />
-                )}
-                <Divider mx={ 12 } />
+                <Summary 
+                  showcase
+                  big={ /big/.test(shareFormat) }
+                  forceExpanded={ !/compact/.test(shareFormat) }
+                  initialFormat={ /bullets/.test(shareFormat) ? ReadingFormat.Bullets : undefined }
+                  disableInteractions
+                  showFullDate
+                  summary={ summary } />
+                <Divider />
                 <View height={ 20 } my={ 3 }>
                   <SvgUri
                     viewBox='328 0 724 338'
@@ -201,7 +197,7 @@ export function ShareDialog({
           </ScrollView>
         </View>
       )}
-      <View py={ 12 }>
+      <View py={ 12 } alignCenter>
         {Object.values(actions).map((subactions, i) => (
           <View key={ i } height={ 120 } gap={ 12 }>
             <ScrollView horizontal>

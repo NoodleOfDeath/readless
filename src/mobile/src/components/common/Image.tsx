@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutRectangle } from 'react-native';
+import { Image as RNImage } from 'react-native';
 
 import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { SvgUri } from 'react-native-svg';
@@ -7,10 +7,11 @@ import { SvgUri } from 'react-native-svg';
 import { View, ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type ImageProps = FastImageProps & Omit<ViewProps, 'children' | 'center'> & {
+export type ImageProps = FastImageProps & Omit<ViewProps, 'children' | 'center', 'height'> & {
   contain?: boolean;
   stretch?: boolean;
   center?: boolean;
+  height?: number;
   fallbackComponent?: React.ReactNode;
 };
 
@@ -23,29 +24,34 @@ export function Image({
   source,
   ...props 
 }: ImageProps) {
+  
   const style = useStyles(props);
   const [shouldFallback, setShouldFallback] = React.useState(false);
+  const [aspectRatio, setAspectRatio] = React.useState(1);
+  
   const uri = React.useMemo(() => typeof source !== 'number' ? source?.uri : undefined, [source]);
-  const [layout, setLayout] = React.useState<LayoutRectangle>();
-  if (uri && /\.svg/.test(uri)) {
-    return (
-      <View
-        flexGrow={ 1 } 
-        onLayout={ (e) => setLayout(e.nativeEvent.layout) }>
-        <SvgUri 
-          viewBox={ `0 0 ${layout?.width ?? 0} ${layout?.height ?? 0}` }
-          uri={ uri } 
-          width={ layout?.width ?? 0 } 
-          height={ layout?.height ?? 0 } />
-      </View>
-    );
-  } 
+  
+  React.useEffect(() => {
+    try {
+      RNImage.getSize(uri, (width, height) => {
+        if (!width || !height) {
+          return;
+        }
+        setAspectRatio(width / height);
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+  
   return shouldFallback ? fallbackComponent : (
     <FastImage 
       onError={ () => setShouldFallback(true) }
       source={ source }
+      aspectRatio={ aspectRatio }
       { ...props }
       resizeMode={ resizeMode }
       style={ style } />
   );
+  
 }

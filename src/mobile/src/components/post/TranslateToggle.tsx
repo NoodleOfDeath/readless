@@ -27,7 +27,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Target 
   translations: translations0,
   localize,
   onLocalize,
-}: TranslateToggleProps<Target>, ref?: React.Ref<Partial<TranslateToggleRef<Target>>>) {
+}: TranslateToggleProps<Target>, ref?: React.ForwardedRef<Partial<TranslateToggleRef<Target>>>) {
   
   const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string } | undefined>(translations0);
   const [isLocalizing, setIsLocalizing] = React.useState(false);
