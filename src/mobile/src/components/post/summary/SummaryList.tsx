@@ -324,7 +324,7 @@ export function SummaryList({
             } } />
         </View>
         {isTablet && (
-          <View flexGrow={ 1 } mr={ 12 }>
+          <View flex={ 1 } flexGrow={ 1 } mr={ 12 }>
             <FlatList
               ref={ flatListRef }
               data={ detailSummarySiblings }

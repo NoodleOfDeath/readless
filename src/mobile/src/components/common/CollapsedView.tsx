@@ -66,7 +66,14 @@ export function CollapsedView({
             itemsCenter
             justifyCenter={ !title }
             touchable
-            onPress={ () => !disabled && setCollapsed((prev) => !prev) }>
+            opacity={ collapsed ? 0.5 : 1.0 }
+            onPress={ (e) => {
+              if (disabled) {
+                e.stopPropagation();
+                return;
+              }
+              setCollapsed((prev) => !prev);
+            } }>
             <Animated.View style={ { 
               alignItems: 'center',
               justifyContent: 'center',

@@ -550,6 +550,7 @@ export function Summary({
     return (
       <View
         p={ 6 }
+        gap={ 3 }
         flexGrow={ 1 }
         zIndex={ 2 }
         bg={ theme.colors.headerBackground }>
@@ -770,7 +771,7 @@ export function Summary({
   ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image, isTablet, shareActions]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
-    <View flexGrow={ 1 }>
+    <View>
       <CollapsedView 
         disabled={ hideCard }
         initiallyCollapsed={ false }
@@ -828,11 +829,15 @@ export function Summary({
   ), [footerOnly, big, theme.components.cardBig, theme.components.card, theme.colors.primary, style, containsTrigger, isRead, selected, image, header, coverContent, handleFormatChange, preferredReadingFormat]);
 
   const fullCard = React.useMemo(() => footerOnly ? null : (
-    <View style={ { ...theme.components.card, ...style } }>   
+    <View
+      style={ { ...theme.components.card, ...style } }>   
       <View>
-        <View flexRow={ supportsMasterDetail }>
+        <View flex={ 1 } flexRow={ supportsMasterDetail }>
           {!hideCard && image}
-          <View flex={ 1 } mr={ supportsMasterDetail ? 12 : undefined }>
+          <View 
+            flex={ supportsMasterDetail ? 1 : undefined } 
+            mt={ supportsMasterDetail ? 12 : undefined }
+            mr={ supportsMasterDetail ? 12 : undefined }>
             {!hideCard && !hideHeader && (
               <View>
                 {header}
@@ -846,7 +851,7 @@ export function Summary({
     </View>
   ), [footerOnly, theme.components.card, style, hideCard, hideHeader, header, supportsMasterDetail, image, coverContent, cardBody]);
   
-  const contextMenuPreview = React.useMemo(() => (
+  const contextMenuPreview = React.useMemo(() => isTablet ? undefined : (
     <Summary 
       width={ Math.min(screenWidth, 480) - 24 }
       big
@@ -855,7 +860,7 @@ export function Summary({
       disableInteractions
       disableNavigation
       summary={ summary } />
-  ), [screenWidth, summary]);
+  ), [isTablet, screenWidth, summary]);
 
   if (footerOnly) {
     return footer;

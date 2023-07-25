@@ -13,7 +13,7 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   const dimensions = useWindowDimensions();
   
   const isTablet = React.useMemo(() => dimensions.width >= 1024, [dimensions.width]);
-  const supportsMasterDetail = React.useMemo(() => dimensions.width > 1024, [dimensions?.width]);
+  const supportsMasterDetail = React.useMemo(() => dimensions.width > 1200, [dimensions?.width]);
 
   const lockRotation = React.useCallback((newOrientaion?: OrientationType) => {
     switch (newOrientaion ?? orientation) {

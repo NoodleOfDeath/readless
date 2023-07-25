@@ -38,6 +38,10 @@ export function ReadingFormatPicker({
         {
           onPress: () => {
             setPreference('preferredReadingFormat', option.value);
+            if (option.value !== ReadingFormat.FullArticle) {
+              buttonsRef.current?.setValue(option.value);
+            }
+            onChange?.(option.value);
           },
           systemIcon: ICONS[option.value],
           title: strings.action_setAsDefault,
