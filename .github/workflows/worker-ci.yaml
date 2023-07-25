@@ -73,6 +73,7 @@ jobs:
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_REPLY_TO: ${{ vars.MAIL_REPLY_TO }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
       MAX_OPENAI_TOKEN_COUNT: ${{ vars.MAX_OPENAI_TOKEN_COUNT }}
       OLD_NEWS_THRESHOLD: ${{ vars.OLD_NEWS_THRESHOLD }}
@@ -133,6 +134,7 @@ jobs:
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_REPLY_TO: ${{ vars.MAIL_REPLY_TO }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
       MAX_OPENAI_TOKEN_COUNT: ${{ vars.MAX_OPENAI_TOKEN_COUNT }}
       OLD_NEWS_THRESHOLD: ${{ vars.OLD_NEWS_THRESHOLD }}
@@ -194,6 +196,7 @@ jobs:
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_REPLY_TO: ${{ vars.MAIL_REPLY_TO }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
       MAX_OPENAI_TOKEN_COUNT: ${{ vars.MAX_OPENAI_TOKEN_COUNT }}
       OLD_NEWS_THRESHOLD: ${{ vars.OLD_NEWS_THRESHOLD }}
@@ -253,6 +256,7 @@ jobs:
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
+      MAIL_REPLY_TO: ${{ vars.MAIL_REPLY_TO }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
       MAX_OPENAI_TOKEN_COUNT: ${{ vars.MAX_OPENAI_TOKEN_COUNT }}
       OLD_NEWS_THRESHOLD: ${{ vars.OLD_NEWS_THRESHOLD }}

@@ -29,8 +29,8 @@ export class SubscribeController {
   
   @Post('/')
   public static async subscribe(
-    @Request() req?: ExpressRequest,
-    @Body() body?: SubscriptionCreationAttributes
+    @Request() req: ExpressRequest,
+    @Body() body: SubscriptionCreationAttributes
   ): Promise<PublicSubscriptionAttributes> {
     const subscription = await Subscription.subscribe(body);
     return subscription;
@@ -38,8 +38,8 @@ export class SubscribeController {
   
   @Post('/unsubscribe')
   public static async unsubscribe(
-    @Request() req?: ExpressRequest,
-    @Body() body?: SubscriptionCreationAttributes
+    @Request() req: ExpressRequest,
+    @Body() body: SubscriptionCreationAttributes
   ): Promise<void> {
     await Subscription.unsubscribe(body);
   }

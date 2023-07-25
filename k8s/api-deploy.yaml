@@ -54,6 +54,8 @@ spec:
               value: '$MAIL_PASS'
             - name: MAIL_PORT
               value: '$MAIL_PORT'
+            - name: MAIL_REPLY_TO
+              value: '$MAIL_REPLY_TO'
             - name: MAIL_USER
               value: '$MAIL_USER'
             - name: OPENAI_API_KEY
