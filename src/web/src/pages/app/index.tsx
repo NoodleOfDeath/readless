@@ -7,22 +7,19 @@ import {
   Stack,
   SwipeableDrawer,
   TextField,
-  Typography,
 } from '@mui/material';
 import { useMediaQuery } from 'react-responsive';
-import { styled } from 'styled-components';
 
-import { PublicSummaryGroup, ReadingFormat } from '~/api';
-import Logo from '~/components/Logo';
+import {
+  PublicSummaryGroup,
+  ReadingFormat,
+  SupportedLocale,
+} from '~/api';
+import Layout from '~/components/Layout';
 import Summary from '~/components/Summary';
 import { SessionContext } from '~/contexts';
 import { useRouter, useSummaryClient } from '~/hooks';
 import { readingFormat } from '~/utils';
-
-const Page = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 export default function AppPage() {
 
@@ -77,7 +74,7 @@ export default function AppPage() {
       return;
     }
     try {
-      const { data, error } = await getSummary(id, window.navigator.language);
+      const { data, error } = await getSummary(id, window.navigator.language as SupportedLocale);
       if (error) {
         throw error;
       } 
@@ -119,13 +116,12 @@ export default function AppPage() {
   }, [selectedSummary]);
 
   return (
-    <Page>
+    <Layout>
       <Stack spacing={ 2 }>
-        <Logo />
         <form onSubmit={ (e) => {
           e.preventDefault(); onMount(); 
         } }>
-          <Stack spacing={ 2 }>
+          <Stack spacing={ 1 }>
             <TextField
               value={ searchText } 
               onChange={ (e) => setSearchText(e.target.value) }
@@ -133,11 +129,6 @@ export default function AppPage() {
             <Button type="submit">Search</Button>
           </Stack>
         </form>
-        <Stack>
-          {summaries.length === 0 && (
-            <Typography variant="h6">No results found</Typography>
-          )}
-        </Stack>
         <Stack spacing={ 2 }>
           {summaries.length > 0 &&
           summaries.map((summary) => (
@@ -171,6 +162,6 @@ export default function AppPage() {
           </Stack>
         </Box>
       </SwipeableDrawer>
-    </Page>
+    </Layout>
   );
 }

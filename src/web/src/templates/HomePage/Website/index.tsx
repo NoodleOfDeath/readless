@@ -22,20 +22,20 @@ const Website = () => {
           <Image
             src="/images/ss-publishers.png"
             width={ 500 }
-            height={ 300 }
+            height={ 360 }
             alt="Hero" />
         </div>
         <div className={ styles.previewDesktop }>
           <Image
             src="/images/ss-publishers.png"
             width={ 864 }
-            height={ 560 }
+            height={ 600 }
             alt="Hero" />
         </div>
         <div className={ styles.preview }>
           <Image
             src="/images/ss-publishers.png"
-            width={ 580 }
+            width={ 864 }
             height={ 420 }
             alt="Hero" />
         </div>

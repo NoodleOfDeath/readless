@@ -28,7 +28,7 @@ const Integration = () => {
                 animateIn="fadeIn"
                 speed={ -4 }
                 key={ x }>
-                <span></span>
+                <span />
               </Animation>
             ))}
           </div>

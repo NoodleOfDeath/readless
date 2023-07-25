@@ -179,9 +179,9 @@ export type SessionContextType = Preferences & {
 
   // follow category convenience functions
   followCategory: (category: PublicCategoryAttributes) => Promise<void>;
-  isFollowingCategory: (publisher: PublicPublisherAttributes) => boolean;
+  isFollowingCategory: (publisher: PublicCategoryAttributes) => boolean;
   excludeCategory: (category: PublicCategoryAttributes) => Promise<void>;
-  isExcludingCategory: (publisher: PublicPublisherAttributes) => boolean;
+  isExcludingCategory: (publisher: PublicCategoryAttributes) => boolean;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);

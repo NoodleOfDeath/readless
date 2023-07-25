@@ -13,7 +13,7 @@ const Reviews = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 
   return (
-    <div className={ cn('section-padding', styles.reviews) }>
+    <div className={ cn('section', styles.reviews) }>
       <div className={ cn('container', styles.container) }>
         <div className={ styles.head }>
           <div className={ cn('h2', styles.title) }>

@@ -8,11 +8,12 @@ import Document, {
   NextScript,
 } from 'next/document';
 
+import { GoogleAnalytics } from '~/components';
+
 class MyDocument extends Document {
 
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
-    console.log(initialProps);
     return { ...initialProps };
   }
 
@@ -61,6 +62,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <body className="app">
+          <GoogleAnalytics />
           <Main />
           <NextScript />
         </body>

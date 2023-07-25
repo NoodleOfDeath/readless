@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   Divider,
-  Link,
   List,
   ListItem,
   ListItemIcon,
@@ -56,8 +55,6 @@ const StyledCategoryBox = styled(Stack)(({ theme }) => ({
   justifyContent: 'space-between',
   padding: theme.spacing(1),
 }));
-
-const StyledLink = styled(Link)(({ theme }) => ({ color: theme.palette.text.primary }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({ marginTop: theme.spacing(1) }));
 
@@ -127,7 +124,7 @@ export default function Summary({
     <StyledCard onClick={ initialFormat ? undefined : () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
       <StyledStack spacing={ 2 }>
         <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
-          <Typography variant="subtitle1">{summary.outlet.displayName}</Typography>
+          <Typography variant="subtitle1">{summary.publisher.displayName}</Typography>
           <Box flexGrow={ 1 } />
         </Stack>
         <StyledStack direction='row' spacing={ 2 }>
