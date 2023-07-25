@@ -31,10 +31,11 @@ const Layout = ({
       <Head>
         <title>Read Less – News without the noise</title>
       </Head>
-      <div
-        className={ cn(styles.layout, { [styles.layoutNoOverflow]: layoutNoOverflow }) }>
+      <div className={ cn(styles.layout, { [styles.layoutNoOverflow]: layoutNoOverflow }) }>
         <Header />
-        {children}
+        <div className={ cn('main', styles.main) }>
+          {children}
+        </div>
         {!footerHide && <Footer />}
       </div>
     </React.Fragment>

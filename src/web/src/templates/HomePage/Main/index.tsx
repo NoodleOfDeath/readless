@@ -1,17 +1,17 @@
 import React from 'react';
 
 import cn from 'classnames';
-import Link from 'next/link';
 
 import styles from './Main.module.sass';
 
-import { Screenshot } from '~/components';
 import Animation from '~/components/Animation';
 import Image from '~/components/Image';
 import Scroll from '~/components/Scroll';
 
 type MainProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   scrollToRef: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   downloadRef: any;
 };
 

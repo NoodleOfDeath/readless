@@ -25,9 +25,9 @@ const Logo = ({
   <Link href="/" className={ cn(styles.logo, className) } onClick={ onClick }>
     <Image
       src={ `/images/logo${compact ? '-compact' : ''}.svg` }
-      width={ compact ? 40 : 100 }
-      height={ 40 }
-      alt="Read Less"
+      width={ compact ? 56 : 100 }
+      height={ 48 }
+      alt="Read Less Logo"
       priority />
     {title && (
       <div className={ cn('h5M', styles.title, titleClassName) }>

@@ -3,23 +3,16 @@
 .integration
   position: relative
   background: rgba(#F7F7F9, .5)
-  +d
-    margin-bottom: 96px
-  +m
-    margin-bottom: 64px
 
 .container
   display: flex
   align-items: center
-  min-height: 1012px
   padding-top: 136px
   padding-bottom: 136px
   +x
-    min-height: 694px
     padding-top: 112px
     padding-bottom: 112px
   +d
-    min-height: 666px
     padding-top: 96px
     padding-bottom: 96px
   +m
@@ -31,11 +24,11 @@
 .preview
   position: absolute
   top: 50%
-  left: calc(50% - 445px)
+  left: calc(50% - 440px)
   width: 768px
   transform: translateY(-50%)
   +x
-    left: calc(50% - 460px)
+    left: calc(50% - 480px)
     width: 490px
   +d
     left: calc(50% - 420px)
@@ -55,11 +48,11 @@
 .wrap
   position: relative
   z-index: 2
-  max-width: 394px
-  margin: 0 120px 0 auto
+  max-width: 420px
+  margin: 0 0px 0 auto
   +x
     max-width: 420px
-    margin-right: 40px
+    margin-right: 0px
   +d
     max-width: 320px
     margin-right: 40px
@@ -112,7 +105,7 @@
     left: 16.5%
     width: 5.2%
     span
-      background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #136FFF 43.61%, #47BDFF 100%) 
+      background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #136FFF 43.61%, #47BDFF 100%)
   &:nth-child(2)
     top: 1%
     right: 5.5%
@@ -132,4 +125,4 @@
     &:before
       content: ""
       display: block
-      padding-bottom: 100%   
+      padding-bottom: 100%

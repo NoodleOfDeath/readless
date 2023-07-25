@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { Bookmark, SessionContext } from '../contexts';
+import { SessionContext } from '../contexts';
 
 import {
   API,
   InteractionType,
   PublicSummaryGroup,
+  SupportedLocale,
 } from '~/api';
 import { getUserAgent } from '~/utils';
 
@@ -17,7 +18,7 @@ export function useSummaryClient() {
     return await withHeaders(API.getSummaries)(args);
   }, [withHeaders]);
 
-  const getSummary = React.useCallback(async (id: number, locale?: string) => {
+  const getSummary = React.useCallback(async (id: number, locale?: SupportedLocale) => {
     return await getSummaries({ ids: [id], locale });
   }, [getSummaries]);
   

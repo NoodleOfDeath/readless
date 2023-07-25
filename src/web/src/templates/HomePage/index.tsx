@@ -18,7 +18,7 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <Main 
+      <Main
         scrollToRef={ scrollToRef } 
         downloadRef={ downloadRef } />
       <Generation scrollToRef={ scrollToRef } />

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AnimationOnScroll } from 'react-animation-on-scroll';
+import AnimationOnScroll from 'react-animate-on-scroll';
 import { Parallax } from 'react-scroll-parallax';
 
 type AnimationProps = {

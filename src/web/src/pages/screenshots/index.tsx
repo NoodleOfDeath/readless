@@ -1,11 +1,12 @@
 import React from 'react';
 
 import { ScreenshotsCarousel } from '~/components';
+import Layout from '~/components/Layout';
 
 export default function ScreenshotsPage() {
   return (
-    <div>
+    <Layout>
       <ScreenshotsCarousel iphone55 render />
-    </div>
+    </Layout>
   );
 }

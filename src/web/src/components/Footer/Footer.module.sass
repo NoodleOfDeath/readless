@@ -1,95 +1,95 @@
 @import ~/styles/helpers
 
 .body
-    border-width: 1px 0
-    border-style: solid
-    border-color: $n3
+  border-width: 1px 0
+  border-style: solid
+  border-color: $n3
 
 .container
-    display: flex
-    +x
-        padding: 0 64px
-    +t
-        padding: 0 40px
-    +m
-        display: block
-        padding: 0
+  display: flex
+  +x
+    padding: 0 64px
+  +t
+    padding: 0 40px
+  +m
+    display: block
+    padding: 0
 
 .group
-    display: flex
-    flex-grow: 1
-    +m
-        display: block
+  display: flex
+  flex-grow: 1
+  +m
+    display: block
 
 .item
-    padding: 48px 64px
-    border-width: 0 1px 0 0
-    border-style: solid
-    border-color: $n3
-    +t
-        padding: 40px 32px
-    +m
-        padding: 0
-        border-width: 0 0 1px
-    &:nth-child(1)
-        flex: 0 0 25%
-        padding-left: 0
-        +x
-            flex: 0 0 28%
-    &:nth-child(2)
-        flex: 0 0 37%
-    &:nth-child(3)
-        flex-grow: 1
+  padding: 48px 64px
+  border-width: 0 1px 0 0
+  border-style: solid
+  border-color: $n3
+  +t
+    padding: 40px 32px
+  +m
+    padding: 0
+    border-width: 0 0 1px
+  &:nth-child(1)
+    flex: 0 0 25%
+    padding-left: 0
+    +x
+      flex: 0 0 28%
+  &:nth-child(2)
+    flex: 0 0 37%
+  &:nth-child(3)
+    flex-grow: 1
 
 .details
-    flex-shrink: 0
-    width: 270px
+  flex-shrink: 0
+  width: 270px
+  margin-right: -40px
+  padding: 48px 0 48px 64px
+  +x
+    width: 265px
+    margin-right: 0
+  +d
     margin-right: -40px
-    padding: 48px 0 48px 64px
-    +x
-        width: 235px
-        margin-right: 0
-    +d
-        margin-right: -40px
-    +t
-        padding-left: 40px
-    +m
-        display: flex
-        align-items: center
-        width: 100%
-        margin: 0
-        padding: 48px 24px
+  +t
+    padding-left: 40px
+  +m
+    display: flex
+    align-items: center
+    width: 100%
+    margin: 0
+    padding: 48px 24px
 
 .logo
-    flex-shrink: 0
-    margin-bottom: 20px
-    +m
-        margin: 0 20px 0 0
+  flex-shrink: 0
+  margin-bottom: 20px
+  +m
+    margin: 0 20px 0 0
 
 .titleLogo
-    +d
-        display: none
+  +d
+    display: none
 
 .info
-    +base
-    color: $n4
-    +d
-        max-width: 160px
-    +m
-        max-width: 210px
+  +base
+  color: $n4
+  +d
+    max-width: 160px
+  +m
+    max-width: 210px
 
 .bottom
-    padding: 24px 0
-    +caption
-    color: $n4
+  padding: 24px 0
+  +caption
+  color: $n4
+  +m
+    padding: 24px
+  .container
+    justify-content: space-between
+    align-items: center
     +m
-        padding: 24px
-    .container
-        justify-content: space-between
-        align-items: center
-        +m
-            text-align: center
+      text-align: center
 
 .copyright
-    +m
-        margin-bottom: 8px
+  +m
+    margin-bottom: 8px

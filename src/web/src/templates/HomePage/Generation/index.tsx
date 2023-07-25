@@ -9,6 +9,7 @@ import Animation from '~/components/Animation';
 import Image from '~/components/Image';
 import { generation } from '~/mocks/generation';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Generation = ({ scrollToRef }: {scrollToRef: any}) => {
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
   const isWidescreen = useMediaQuery({ query: '(min-width: 1440px)' });
@@ -21,12 +22,12 @@ const Generation = ({ scrollToRef }: {scrollToRef: any}) => {
           There is simply too much out there to read it all.
         </h2>
         <div className={ styles.list }>
-          {generation.map((item, index) => (
+          {generation.map((item) => (
             <Animation
               className={ styles.item }
               animateIn="fadeInDown"
-              key={ index }
-              delay={ isMobile ? 0 : item.delay }>
+              key={ item.title }
+              speed={ -4 }>
               <div
                 className={ styles.preview }
                 style={ { 

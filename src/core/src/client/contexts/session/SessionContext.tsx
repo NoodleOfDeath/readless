@@ -1,7 +1,5 @@
 import React from 'react';
 
-import ms from 'ms';
-
 import {
   Bookmark,
   ColorScheme,
@@ -256,10 +254,11 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
 
   const storeTranslations = async <
     Target extends RecapAttributes | PublicSummaryGroup, 
-    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
+    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
+    State extends NonNullable<PrefKey extends 'recapTranslations' ? typeof recapTranslations : PrefKey extends 'summaryTranslations' ? typeof summaryTranslations : never>,
   >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => {
     await setPreference(prefKey, (prev) => {
-      const state = { ...prev };
+      const state = { ...prev } as State;
       state[item.id] = translations;
       return (prev = state);
     });
@@ -275,14 +274,6 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         state[recap.id] = true;
         emitEvent('read-recap', recap, state);
       }
-      return (prev = state);
-    });
-  };
-
-  const storeRecapTranslations = async (summary: RecapAttributes, translations: { [key in keyof RecapAttributes]?: string }) => {
-    await setPreference('recapTranslations', (prev) => {
-      const state = { ...prev };
-      state[summary.id] = translations;
       return (prev = state);
     });
   };
