@@ -54,8 +54,7 @@ jobs:
             --build-arg NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
             --build-arg NEXT_PUBLIC_GENERATE_SOURCEMAP=$NEXT_PUBLIC_GENERATE_SOURCEMAP \
             --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID \
-            --build-arg
-              NEXT_PUBLIC_MEASUREMENT_CLIENT_ID=$NEXT_PUBLIC_MEASUREMENT_CLIENT_ID
+            --build-arg NEXT_PUBLIC_MEASUREMENT_CLIENT_ID=$NEXT_PUBLIC_MEASUREMENT_CLIENT_ID
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
