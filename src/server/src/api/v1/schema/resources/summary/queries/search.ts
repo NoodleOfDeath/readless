@@ -47,6 +47,7 @@ FROM (
             AND (s."originalDate" <= :endDate)
           )
         )
+        AND (s.locale = :locale OR (:locale = 'en' AND s.locale IS NULL))
         AND (
           (s.id IN (:ids))
           OR :noIds
