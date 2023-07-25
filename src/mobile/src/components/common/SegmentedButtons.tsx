@@ -8,8 +8,9 @@ import {
   ContextMenuAction,
   View,
 } from '~/components';
+import { useTheme } from '~/hooks';
 
-export type SegmentedButtonProps<T extends string | number = string> = {
+export type SegmentedButtonProps<T extends string | number | boolean = string> = {
   icon?: React.ReactNode;
   label?: React.ReactNode;
   style?: ChildlessViewProps['style'];
@@ -17,7 +18,7 @@ export type SegmentedButtonProps<T extends string | number = string> = {
   pressOnly?: boolean;
 };
 
-export type SegmentedButtonsProps<T extends string | number = string> = ChildlessViewProps & {
+export type SegmentedButtonsProps<T extends string | number | boolean = string> = ChildlessViewProps & {
   options: SegmentedButtonProps<T>[];
   initialValue?: T;
   onValueChange?: (value: T) => void;
@@ -25,18 +26,29 @@ export type SegmentedButtonsProps<T extends string | number = string> = Childles
   buttonMenuItems?: (option: SegmentedButtonProps<T>, selected: boolean) => ContextMenuAction[];
 };
 
+export type SegmentedButtonsRef<T extends string | number | boolean = string> = {
+  setValue: React.Dispatch<React.SetStateAction<T | undefined>>;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SegmentedButtons = <T extends string | number = string>({
+export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T extends string | number | boolean = string>({
   initialValue,
   options,
   onValueChange,
-  buttonProps,
+  buttonProps = { p: 6 },
   buttonMenuItems,
   ...props
-}: SegmentedButtonsProps<T>) => {
+}: SegmentedButtonsProps<T>, ref?: React.ForwardedRef<SegmentedButtonsRef<T>>) {
+  const theme = useTheme();
   const [value, setValue] = React.useState<T | undefined>(initialValue);
+  React.useImperativeHandle(ref, () => ({ setValue }), [setValue]);
   return (
-    <View flexRow { ...props }>
+    <View
+      flexRow
+      rounded
+      p={ 6 }
+      bg={ theme.colors.headerBackground }
+      { ...props }>
       {options.map((option, index) => (
         <ContextMenu 
           key={ `${option.value}${index}` }
@@ -44,6 +56,7 @@ export const SegmentedButtons = <T extends string | number = string>({
           <Button
             px={ 12 }
             gap={ 6 }
+            flex={ 1 }
             adjustsFontSizeToFit
             leftIcon={ option.icon }
             selected={ value === option.value }
@@ -60,4 +73,6 @@ export const SegmentedButtons = <T extends string | number = string>({
       ))}
     </View>
   );
-};
+}) as <T extends string | number | boolean = string>(
+  props: SegmentedButtonsProps<T> & { ref?: React.ForwardedRef<SegmentedButtonsRef<T>> }
+) => React.ReactElement;

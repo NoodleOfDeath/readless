@@ -11,6 +11,7 @@ export const thStrings: typeof enStrings = {
   action_loading: 'กำลังโหลด...',
   action_next: 'ต่อไป',
   action_readArticle: 'อ่านบทความ',
+  action_report: 'ข่าวที่เกี่ยวข้อง',
   action_save: 'บันทึก',
   action_saveAndClose: 'บันทึก & ปิด',
   action_search: 'ค้นหา',
@@ -161,7 +162,6 @@ export const thStrings: typeof enStrings = {
   summary_neutral: 'เป็นกลาง',
   summary_positive: 'เชิงบวก',
   summary_relatedNews: 'ข่าวที่เกี่ยวข้อง',
-  summary_reportAtBug: 'รายงานข้อผิดพลาด',
   summary_sentimentAnalysis: 'การวิเคราะห์ความรู้สึก',
   summary_sentimentAnalysisInfo: 'การวิเคราะห์ความรู้สึกเป็นเครื่องมือที่ช่วยให้เราเข้าใจว่าผู้คนรู้สึกอย่างไรเกี่ยวกับบางสิ่งโดยการวิเคราะห์ภาษาของพวกเขา ดูคำที่ผู้คนใช้และตัดสินว่าเป็นคำเชิงบวก เชิงลบ หรือเป็นกลาง สิ่งนี้มีประโยชน์ในหลายด้าน เช่น การทำความเข้าใจความคิดเห็นของลูกค้าหรือความคิดเห็นสาธารณะเกี่ยวกับหัวข้อหนึ่งๆ',
   summary_sentimentScore: 'นี่คือคะแนนความเชื่อมั่นซึ่งวัดว่าผู้คนรู้สึกอย่างไรเกี่ยวกับบางสิ่งโดยใช้มาตราส่วนตั้งแต่ -1 (เชิงลบ) ถึง +1 (เชิงบวก) โดย 0 คือค่ากลางๆ',
@@ -239,5 +239,6 @@ export const thStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: '"อ่านน้อย" ให้คุณตั้งค่า **คำเรียก** ให้แทนที่ด้วยอีโมจิหรือคำที่คุณเลือก คุณจึงอ่านข่าวได้โดย **กังวลน้อยลง**',
   walkthroughs_triggerWords_enableTriggerWords: 'เปิดใช้งานคำเรียกโดยการป้อนด้านล่าง',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'ขณะนี้การสนับสนุนสำหรับภาษาอื่นที่ไม่ใช่ภาษาอังกฤษมีจำกัด',
+  walkthroughs_whatsNew: 'มีอะไรใหม่',
 };
   

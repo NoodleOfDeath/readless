@@ -11,6 +11,7 @@ export const esStrings: typeof enStrings = {
   action_loading: 'Cargando...',
   action_next: 'Próximo',
   action_readArticle: 'Lee el artículo',
+  action_report: 'Informe',
   action_save: 'Ahorrar',
   action_saveAndClose: 'Guardar cerrar',
   action_search: 'Buscar',
@@ -161,7 +162,6 @@ export const esStrings: typeof enStrings = {
   summary_neutral: 'Neutral',
   summary_positive: 'Positivo',
   summary_relatedNews: 'Noticias relacionadas',
-  summary_reportAtBug: 'Reportar un error',
   summary_sentimentAnalysis: 'Análisis de los sentimientos',
   summary_sentimentAnalysisInfo: 'El análisis de sentimientos es una herramienta que nos ayuda a comprender cómo se sienten las personas acerca de algo mediante el análisis de su lenguaje. Examina las palabras que usa la gente y decide si son positivas, negativas o neutrales. Esto puede ser útil en muchas áreas, como comprender los comentarios de los clientes o la opinión pública sobre un tema.',
   summary_sentimentScore: 'Esta es una puntuación de sentimiento, que mide cómo se sienten las personas acerca de algo utilizando una escala de -1 (negativo) a +1 (positivo), siendo 0 neutral.',
@@ -239,5 +239,6 @@ export const esStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Leer menos te permite configurar **palabras desencadenantes** para que se reemplacen con emojis o palabras de tu elección, para que puedas leer las noticias con **menos ansiedad**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Habilite las palabras desencadenantes introduciéndolas a continuación',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'La compatibilidad con otros idiomas además del inglés es limitada en este momento.',
+  walkthroughs_whatsNew: 'Qué hay de nuevo',
 };
   

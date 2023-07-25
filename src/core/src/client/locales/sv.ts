@@ -11,6 +11,7 @@ export const svStrings: typeof enStrings = {
   action_loading: 'Läser in...',
   action_next: 'Nästa',
   action_readArticle: 'Läs artikeln',
+  action_report: 'Relaterade nyheter',
   action_save: 'Spara',
   action_saveAndClose: 'Spara & Stäng',
   action_search: 'Sök',
@@ -161,7 +162,6 @@ export const svStrings: typeof enStrings = {
   summary_neutral: 'Neutral',
   summary_positive: 'Positiv',
   summary_relatedNews: 'Relaterade nyheter',
-  summary_reportAtBug: 'Rapportera en bugg',
   summary_sentimentAnalysis: 'Sentimentanalys',
   summary_sentimentAnalysisInfo: 'Sentimentanalys är ett verktyg som hjälper oss att förstå hur människor känner om något genom att analysera deras språk. Den tittar på orden människor använder och avgör om de är positiva, negativa eller neutrala. Detta kan vara användbart inom många områden, som att förstå kundfeedback eller den allmänna opinionen om ett ämne.',
   summary_sentimentScore: 'Detta är ett sentimentpoäng, som mäter hur människor känner om något med en skala från -1 (negativ) till +1 (positiv), där 0 är neutral.',
@@ -239,5 +239,6 @@ export const svStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Med Read Less kan du ställa in att **triggerord** ska ersättas med emojis eller ord som du väljer, så att du kan läsa nyheterna med **mindre ångest**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Aktivera triggerord genom att ange dem nedan',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Stödet för andra språk än engelska är begränsat för närvarande.',
+  walkthroughs_whatsNew: 'Vad är nytt',
 };
   

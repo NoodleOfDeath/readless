@@ -11,6 +11,7 @@ export const fiStrings: typeof enStrings = {
   action_loading: 'Ladataan...',
   action_next: 'Seuraava',
   action_readArticle: 'Lue artikkeli',
+  action_report: 'Aiheeseen liittyviä uutisia',
   action_save: 'Tallentaa',
   action_saveAndClose: 'Tallenna ja sulje',
   action_search: 'Hae',
@@ -161,7 +162,6 @@ export const fiStrings: typeof enStrings = {
   summary_neutral: 'Neutraali',
   summary_positive: 'Positiivinen',
   summary_relatedNews: 'Aiheeseen liittyviä uutisia',
-  summary_reportAtBug: 'Ilmoita virheestä',
   summary_sentimentAnalysis: 'Tunneanalyysi',
   summary_sentimentAnalysisInfo: 'Tunneanalyysi on työkalu, joka auttaa meitä ymmärtämään, mitä ihmiset ajattelevat jostain analysoimalla heidän kieltään. Se tarkastelee ihmisten käyttämiä sanoja ja päättää, ovatko ne positiivisia, negatiivisia vai neutraaleja. Tästä voi olla hyötyä monilla aloilla, kuten asiakaspalautteen tai aiheeseen liittyvän yleisen mielipiteen ymmärtämisessä.',
   summary_sentimentScore: 'Tämä on mielipidepistemäärä, joka mittaa ihmisten suhtautumista johonkin asteikolla -1 (negatiivinen) +1 (positiivinen), jolloin 0 on neutraali.',
@@ -239,5 +239,6 @@ export const fiStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Lue vähemmän voit asettaa **laukaisusanat** korvattaviksi hymiöillä tai valitsemillasi sanoilla, jotta voit lukea uutisia **vähemmän ahdistuneisuutta**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Ota laukaisusanat käyttöön kirjoittamalla ne alle',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Muiden kielten kuin englannin tuki on tällä hetkellä rajoitettua.',
+  walkthroughs_whatsNew: 'Mikä on uutta',
 };
   

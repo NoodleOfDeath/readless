@@ -122,7 +122,7 @@ export function SummaryScreen({
               mx={ 12 }
               summary={ item } 
               hideArticleCount
-              onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
+              onFormatChange={ (format) => handleFormatChange(item, format) }
               onInteract={ (...e) => handleInteraction(item, ...e) } />
           ) }
           keyExtractor={ (item) => `${item.id}` }
@@ -135,7 +135,7 @@ export function SummaryScreen({
                 summary={ summary }
                 initialFormat={ format }
                 keywords={ keywords }
-                onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
+                onFormatChange={ (format) => handleFormatChange(summary, format) }
                 onInteract={ (...e) => handleInteraction(summary, ...e) } />
               <Divider my={ 6 } />
               {siblings.length > 0 && (

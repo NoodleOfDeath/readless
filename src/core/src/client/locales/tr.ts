@@ -11,6 +11,7 @@ export const trStrings: typeof enStrings = {
   action_loading: 'Yükleniyor...',
   action_next: 'Sonraki',
   action_readArticle: 'Makaleyi Oku',
+  action_report: 'Alakalı haberler',
   action_save: 'Kaydetmek',
   action_saveAndClose: 'Kaydet kapat',
   action_search: 'Aramak',
@@ -161,7 +162,6 @@ export const trStrings: typeof enStrings = {
   summary_neutral: 'Doğal',
   summary_positive: 'Pozitif',
   summary_relatedNews: 'Alakalı haberler',
-  summary_reportAtBug: 'Hata Bildir',
   summary_sentimentAnalysis: 'Duygu Analizi',
   summary_sentimentAnalysisInfo: 'Duyarlılık analizi, insanların dillerini analiz ederek bir şey hakkında nasıl hissettiklerini anlamamıza yardımcı olan bir araçtır. İnsanların kullandığı kelimelere bakar ve bunların olumlu, olumsuz veya nötr olup olmadığına karar verir. Bu, bir konu hakkında müşteri geri bildirimlerini veya kamuoyunu anlamak gibi birçok alanda yararlı olabilir.',
   summary_sentimentScore: 'Bu, insanların -1 (negatif) ile +1 (pozitif) arasında bir ölçek kullanarak bir şey hakkında ne hissettiklerini ölçen ve 0\'ın nötr olduğu bir duyarlılık puanıdır.',
@@ -239,5 +239,6 @@ export const trStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Daha Az Oku, **tetikleyici sözcükleri** emojilerle veya seçtiğiniz sözcüklerle değiştirecek şekilde ayarlamanıza olanak tanır, böylece haberleri **daha az endişeyle** okuyabilirsiniz.',
   walkthroughs_triggerWords_enableTriggerWords: 'Tetikleyici kelimeleri aşağıya girerek etkinleştirin',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'İngilizce dışındaki diller için destek şu anda sınırlıdır.',
+  walkthroughs_whatsNew: 'Ne var ne yok',
 };
   

@@ -11,6 +11,7 @@ export const ruStrings: typeof enStrings = {
   action_loading: 'Загрузка...',
   action_next: 'Следующий',
   action_readArticle: 'Читать статью',
+  action_report: 'Связанные новости',
   action_save: 'Сохранять',
   action_saveAndClose: 'Сохранить и закрыть',
   action_search: 'Поиск',
@@ -161,7 +162,6 @@ export const ruStrings: typeof enStrings = {
   summary_neutral: 'Нейтральный',
   summary_positive: 'Положительный',
   summary_relatedNews: 'Связанные новости',
-  summary_reportAtBug: 'Сообщить об ошибке',
   summary_sentimentAnalysis: 'Анализ настроений',
   summary_sentimentAnalysisInfo: 'Анализ настроений — это инструмент, который помогает нам понять, как люди относятся к чему-то, анализируя их язык. Он смотрит на слова, которые люди используют, и решает, являются ли они положительными, отрицательными или нейтральными. Это может быть полезно во многих областях, таких как понимание отзывов клиентов или общественного мнения по теме.',
   summary_sentimentScore: 'Это оценка настроений, которая измеряет, как люди относятся к чему-либо, используя шкалу от -1 (отрицательно) до +1 (положительно), где 0 означает нейтральность.',
@@ -239,5 +239,6 @@ export const ruStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Функция «Меньше чтения» позволяет вам установить **триггерные слова**, которые будут заменены смайликами или словами по вашему выбору, чтобы вы могли читать новости с **меньшей тревогой**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Включите триггерные слова, введя их ниже',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'В настоящее время поддержка языков, отличных от английского, ограничена.',
+  walkthroughs_whatsNew: 'Что нового',
 };
   

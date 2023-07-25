@@ -81,9 +81,11 @@ export type Preferences = {
   bookmarkCount: number;
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
+  summaryTranslations?: { [key: number]: { [key in keyof PublicSummaryGroup]?: string } };
   
   // recap state
   readRecaps?: { [key: number]: boolean };
+  recapTranslations?: { [key: number]: { [key in keyof RecapAttributes]?: string } };
   
   // followed publishers
   followedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
@@ -156,6 +158,10 @@ export type SessionContextType = Preferences & {
   setPreference: <K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])) => Promise<void>;
   getPreference: <K extends keyof Preferences>(key: K) => Promise<Preferences[K] | undefined>;
   resetPreferences: (hard?: boolean) => Promise<void>;
+  storeTranslations: <
+    Target extends RecapAttributes | PublicSummaryGroup, 
+    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
+  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => Promise<void>;
   
   // summary convenience functions
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
@@ -203,6 +209,7 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   setCategories: () => Promise.resolve(),
   setPreference: () => Promise.resolve(),
   setPublishers: () => Promise.resolve(),
+  storeTranslations: () => Promise.resolve(undefined),
   unreadBookmarkCount: 0,
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };

@@ -9,6 +9,7 @@ export type SurfaceProps = ViewProps & RNPSurfaceProps & React.PropsWithChildren
 
 export function Surface({
   children,
+  elevation = 1,
   ...props
 }: SurfaceProps) {
   const theme = useTheme();
@@ -16,6 +17,7 @@ export function Surface({
   return (
     <RNPSurface 
       { ...props }
+      elevation={ elevation }
       style={ style }>
       {children}
     </RNPSurface>

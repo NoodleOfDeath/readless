@@ -11,6 +11,7 @@ export const faStrings: typeof enStrings = {
   action_loading: 'بارگذاری...',
   action_next: 'بعد',
   action_readArticle: 'مقاله را بخوانید',
+  action_report: 'اخبار مرتبط',
   action_save: 'صرفه جویی',
   action_saveAndClose: 'ذخیره و بستن',
   action_search: 'جستجو کردن',
@@ -161,7 +162,6 @@ export const faStrings: typeof enStrings = {
   summary_neutral: 'خنثی',
   summary_positive: 'مثبت',
   summary_relatedNews: 'اخبار مرتبط',
-  summary_reportAtBug: 'گزارش یک اشکال',
   summary_sentimentAnalysis: 'تحلیل احساسات',
   summary_sentimentAnalysisInfo: 'تجزیه و تحلیل احساسات ابزاری است که به ما کمک می کند تا با تجزیه و تحلیل زبان خود درک کنیم که مردم در مورد چیزی چه احساسی دارند. به کلماتی که مردم استفاده می کنند نگاه می کند و تصمیم می گیرد که آیا آنها مثبت، منفی یا خنثی هستند. این می تواند در بسیاری از زمینه ها مفید باشد، مانند درک بازخورد مشتری یا افکار عمومی در مورد یک موضوع.',
   summary_sentimentScore: 'این یک نمره احساسات است که با استفاده از مقیاسی از -1 (منفی) تا +1 (مثبت)، که 0 خنثی است، احساس مردم را در مورد چیزی اندازه می‌گیرد.',
@@ -239,5 +239,6 @@ export const faStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Read Less به شما امکان می دهد **کلمات محرک** را با شکلک ها یا کلمات دلخواه جایگزین کنید، بنابراین می توانید اخبار را با **اضطراب کمتر** بخوانید.',
   walkthroughs_triggerWords_enableTriggerWords: 'کلمات محرک را با وارد کردن آنها در زیر فعال کنید',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'پشتیبانی از زبان های غیر از انگلیسی در حال حاضر محدود است.',
+  walkthroughs_whatsNew: 'چه خبر',
 };
   

@@ -11,6 +11,7 @@ export const nlStrings: typeof enStrings = {
   action_loading: 'Bezig met laden...',
   action_next: 'Volgende',
   action_readArticle: 'Lees artikel',
+  action_report: 'Gerelateerd nieuws',
   action_save: 'Redden',
   action_saveAndClose: 'Opslaan en sluiten',
   action_search: 'Zoekopdracht',
@@ -161,7 +162,6 @@ export const nlStrings: typeof enStrings = {
   summary_neutral: 'Neutrale',
   summary_positive: 'Positief',
   summary_relatedNews: 'Gerelateerd nieuws',
-  summary_reportAtBug: 'Meld een fout',
   summary_sentimentAnalysis: 'Sentiment analyse',
   summary_sentimentAnalysisInfo: 'Sentimentanalyse is een hulpmiddel dat ons helpt te begrijpen hoe mensen ergens over denken door hun taalgebruik te analyseren. Het kijkt naar de woorden die mensen gebruiken en beslist of ze positief, negatief of neutraal zijn. Dit kan op veel gebieden nuttig zijn, zoals het begrijpen van feedback van klanten of de publieke opinie over een onderwerp.',
   summary_sentimentScore: 'Dit is een sentimentscore, die meet hoe mensen over iets denken op een schaal van -1 (negatief) tot +1 (positief), waarbij 0 neutraal is.',
@@ -239,5 +239,6 @@ export const nlStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Met Minder lezen kun je ervoor zorgen dat **triggerwoorden** worden vervangen door emoji\'s of woorden naar keuze, zodat je het nieuws met **minder angst** kunt lezen.',
   walkthroughs_triggerWords_enableTriggerWords: 'Schakel triggerwoorden in door ze hieronder in te voeren',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Ondersteuning voor andere talen dan Engels is momenteel beperkt.',
+  walkthroughs_whatsNew: 'Wat is er nieuw',
 };
   

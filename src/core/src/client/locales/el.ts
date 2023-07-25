@@ -11,6 +11,7 @@ export const elStrings: typeof enStrings = {
   action_loading: 'Φόρτωση...',
   action_next: 'Επόμενο',
   action_readArticle: 'Διαβάστε το άρθρο',
+  action_report: 'Σχετικά Νέα',
   action_save: 'Αποθηκεύσετε',
   action_saveAndClose: 'Αποθήκευση & Κλείσιμο',
   action_search: 'Αναζήτηση',
@@ -161,7 +162,6 @@ export const elStrings: typeof enStrings = {
   summary_neutral: 'Ουδέτερος',
   summary_positive: 'Θετικός',
   summary_relatedNews: 'Σχετικά Νέα',
-  summary_reportAtBug: 'Αναφορά σφάλματος',
   summary_sentimentAnalysis: 'Ανάλυση Συναισθήματος',
   summary_sentimentAnalysisInfo: 'Η ανάλυση συναισθήματος είναι ένα εργαλείο που μας βοηθά να κατανοήσουμε πώς νιώθουν οι άνθρωποι για κάτι αναλύοντας τη γλώσσα τους. Εξετάζει τις λέξεις που χρησιμοποιούν οι άνθρωποι και αποφασίζει αν είναι θετικές, αρνητικές ή ουδέτερες. Αυτό μπορεί να είναι χρήσιμο σε πολλούς τομείς, όπως η κατανόηση των σχολίων των πελατών ή η κοινή γνώμη για ένα θέμα.',
   summary_sentimentScore: 'Αυτή είναι μια βαθμολογία συναισθήματος, η οποία μετρά πώς νιώθουν οι άνθρωποι για κάτι χρησιμοποιώντας μια κλίμακα από -1 (αρνητικό) έως +1 (θετικό), με το 0 να είναι ουδέτερο.',
@@ -239,5 +239,6 @@ export const elStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Το Read Less σάς επιτρέπει να ρυθμίσετε τις **λέξεις ενεργοποίησης** να αντικατασταθούν με emoji ή λέξεις της επιλογής σας, ώστε να μπορείτε να διαβάζετε τις ειδήσεις με **λιγότερο άγχος**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Ενεργοποιήστε τις λέξεις ενεργοποίησης εισάγοντάς τις παρακάτω',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Αυτή τη στιγμή, η υποστήριξη για άλλες γλώσσες εκτός από τα αγγλικά είναι περιορισμένη.',
+  walkthroughs_whatsNew: 'Τι νέα',
 };
   

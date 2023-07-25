@@ -11,6 +11,7 @@ export const caStrings: typeof enStrings = {
   action_loading: 'Carregant...',
   action_next: 'Pròxim',
   action_readArticle: 'Llegeix l\'article',
+  action_report: 'Notícies relacionades',
   action_save: 'Desa',
   action_saveAndClose: 'Desa i tanca',
   action_search: 'Cerca',
@@ -161,7 +162,6 @@ export const caStrings: typeof enStrings = {
   summary_neutral: 'Neutre',
   summary_positive: 'Positiu',
   summary_relatedNews: 'Notícies relacionades',
-  summary_reportAtBug: 'Informar d\'un error',
   summary_sentimentAnalysis: 'Anàlisi de sentiments',
   summary_sentimentAnalysisInfo: 'L\'anàlisi de sentiments és una eina que ens ajuda a entendre com se senten les persones sobre alguna cosa mitjançant l\'anàlisi del seu llenguatge. Observa les paraules que la gent utilitza i decideix si són positives, negatives o neutres. Això pot ser útil en moltes àrees, com ara entendre els comentaris dels clients o l\'opinió pública sobre un tema.',
   summary_sentimentScore: 'Aquesta és una puntuació de sentiment, que mesura com se senten les persones sobre alguna cosa utilitzant una escala de -1 (negatiu) a +1 (positiu), on 0 és neutre.',
@@ -239,5 +239,6 @@ export const caStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Llegir menys us permet configurar **paraules activadores** perquè es substitueixin per emojis o paraules que trieu, de manera que podeu llegir les notícies amb **menys ansietat**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Activa les paraules activadores introduint-les a continuació',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'El suport per a idiomes diferents de l\'anglès és limitat en aquest moment.',
+  walkthroughs_whatsNew: 'Que hi ha de nou',
 };
   

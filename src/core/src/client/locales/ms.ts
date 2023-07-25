@@ -11,6 +11,7 @@ export const msStrings: typeof enStrings = {
   action_loading: 'Memuatkan...',
   action_next: 'Seterusnya',
   action_readArticle: 'Baca Artikel',
+  action_report: 'Berita Berkaitan',
   action_save: 'Jimat',
   action_saveAndClose: 'Simpan & Tutup',
   action_search: 'Cari',
@@ -161,7 +162,6 @@ export const msStrings: typeof enStrings = {
   summary_neutral: 'Berkecuali',
   summary_positive: 'Positif',
   summary_relatedNews: 'Berita Berkaitan',
-  summary_reportAtBug: 'Laporkan Pepijat',
   summary_sentimentAnalysis: 'Analisis Sentimen',
   summary_sentimentAnalysisInfo: 'Analisis sentimen ialah alat yang membantu kita memahami perasaan orang tentang sesuatu dengan menganalisis bahasa mereka. Ia melihat perkataan yang digunakan orang dan memutuskan sama ada ia positif, negatif atau neutral. Ini boleh berguna dalam banyak bidang, seperti memahami maklum balas pelanggan atau pendapat umum tentang sesuatu topik.',
   summary_sentimentScore: 'Ini ialah skor sentimen, yang mengukur perasaan orang tentang sesuatu menggunakan skala daripada -1 (negatif) kepada +1 (positif), dengan 0 adalah neutral.',
@@ -239,5 +239,6 @@ export const msStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Kurang Baca membolehkan anda menetapkan **perkataan pencetus** untuk digantikan dengan emoji atau perkataan pilihan anda, jadi anda boleh membaca berita dengan **kurang kebimbangan**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Dayakan perkataan pencetus dengan memasukkannya di bawah',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'Sokongan untuk bahasa selain bahasa Inggeris adalah terhad pada masa ini.',
+  walkthroughs_whatsNew: 'Apa yang Baru',
 };
   

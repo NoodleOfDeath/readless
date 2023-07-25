@@ -11,6 +11,7 @@ export const zhTWStrings: typeof enStrings = {
   action_loading: '加載中...',
   action_next: '下一個',
   action_readArticle: '閱讀文章',
+  action_report: '相關新聞',
   action_save: '節省',
   action_saveAndClose: '保存並關閉',
   action_search: '搜索',
@@ -161,7 +162,6 @@ export const zhTWStrings: typeof enStrings = {
   summary_neutral: '中性的',
   summary_positive: '積極的',
   summary_relatedNews: '相關新聞',
-  summary_reportAtBug: '報告錯誤',
   summary_sentimentAnalysis: '情緒分析',
   summary_sentimentAnalysisInfo: '情感分析是一種工具，可以幫助我們通過分析人們的語言來了解人們對某事的感受。它會查看人們使用的詞語並確定它們是正面的、負面的還是中性的。這在許多領域都很有用，例如了解客戶反饋或公眾對某個主題的看法。',
   summary_sentimentScore: '這是一個情緒分數，它使用從 -1（負面）到 +1（正面）的範圍來衡量人們對某事的感受，其中 0 表示中性。',
@@ -239,5 +239,6 @@ export const zhTWStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Read Less 可讓您設置 **觸發詞** 以替換為您選擇的表情符號或詞語，這樣您就可以在 **減少焦慮** 的情況下閱讀新聞。',
   walkthroughs_triggerWords_enableTriggerWords: '通過在下面輸入觸發詞來啟用它們',
   walkthroughs_triggerWords_limitedLocalizationSupport: '目前對英語以外語言的支持有限。',
+  walkthroughs_whatsNew: '什麼是新的',
 };
   

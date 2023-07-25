@@ -86,6 +86,13 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   outlined?: boolean;
   rounded?: boolean;
   beveled?: boolean;
+  elevated?: boolean;
+  
+  // state variants
+  touchable?: boolean;
+  untouchable?: boolean;
+  haptic?: boolean;
+  inactive?: boolean;
   
   // preset animations
   pulse?: boolean | PulseProps;
@@ -252,13 +259,6 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   rowGap?: ViewStyle['rowGap'];
   colGap?: ViewStyle['columnGap'];
   columnGap?: ViewStyle['columnGap'];
-  
-  // custom
-  touchable?: boolean;
-  untouchable?: boolean;
-  elevated?: boolean;
-  haptic?: boolean;
-  inactive?: boolean;
   
   // other
   style?: StyleProp<ViewStyle>;

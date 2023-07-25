@@ -57,7 +57,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
+  const [summaryTranslations, setSummaryTranslations] = React.useState<{ [key: number]: { [key in keyof PublicSummaryGroup]?: string } }>();
+
   const [readRecaps, setReadRecaps] = React.useState<{ [key: number]: boolean }>();
+  const [recapTranslations, setRecapTranslations] = React.useState<{ [key: number]: { [key in keyof RecapAttributes]?: string } }>();
   
   const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
   const [excludedPublishers, setExcludedPublishers] = React.useState<{ [key: string]: boolean }>();
@@ -172,9 +175,15 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     case 'removedSummaries':
       setRemovedSummaries(newValue);
       break;
+    case 'summaryTranslations':
+      setSummaryTranslations(newValue);
+      break;
       
     case 'readRecaps':
       setReadRecaps(newValue);
+      break;
+    case 'recapTranslations':
+      setRecapTranslations(newValue);
       break;
       
     case 'followedOutlets':
@@ -244,6 +253,17 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return (prev = state);
     });
   };
+
+  const storeTranslations = async <
+    Target extends RecapAttributes | PublicSummaryGroup, 
+    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
+  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => {
+    await setPreference(prefKey, (prev) => {
+      const state = { ...prev };
+      state[item.id] = translations;
+      return (prev = state);
+    });
+  };
   
   const readRecap = async (recap: RecapAttributes, force = false) => {
     await setPreference('readRecaps', (prev) => {
@@ -255,6 +275,14 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         state[recap.id] = true;
         emitEvent('read-recap', recap, state);
       }
+      return (prev = state);
+    });
+  };
+
+  const storeRecapTranslations = async (summary: RecapAttributes, translations: { [key in keyof RecapAttributes]?: string }) => {
+    await setPreference('recapTranslations', (prev) => {
+      const state = { ...prev };
+      state[summary.id] = translations;
       return (prev = state);
     });
   };
@@ -439,6 +467,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         readSummaries,
         readSummary,
         ready,
+        recapTranslations,
         removeSummary,
         removedSummaries,
         resetPreferences,
@@ -449,6 +478,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         setPreference,
         setPublishers,
         showShortSummary,
+        storeTranslations,
+        summaryTranslations,
         triggerWords,
         unreadBookmarkCount,
         viewedFeatures,

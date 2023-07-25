@@ -28,7 +28,7 @@ import {
   ChannelIcon,
   DrawerItem,
   DrawerSection,
-  Header,
+  DrawerToggle,
   Icon,
   MediaPlayer,
   Screen,
@@ -79,7 +79,10 @@ const screens: RouteConfig<
   {
     component: HomeScreen, 
     name: 'home',
-    options: { headerTitle: '' },
+    options: { 
+      headerLeft: () => <DrawerToggle />,
+      headerTitle: '',
+    },
   },
   {
     component: SearchScreen, 
@@ -193,13 +196,7 @@ const Stack = createNativeStackNavigator();
 
 function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
   return (
-    <Stack.Navigator
-      initialRouteName={ initialRouteName }
-      screenOptions={ ({ route }) => ({
-        header: route.name === 'home' ? () => ( 
-          <Header menu search />
-        ) : undefined,
-      }) }>
+    <Stack.Navigator initialRouteName={ initialRouteName }>
       {screens.map((screen) => (
         <Stack.Screen
           key={ String(screen.name) }
@@ -295,7 +292,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem 
           key="missing-publishers"
           label={ (
-            <Text numberOfLines={ 3 }>
+            <Text flex={ 1 } numberOfLines={ 3 }>
               { strings.misc_noPublishers }
             </Text>
           ) } />
@@ -333,7 +330,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem 
           key="missing-categories"
           label={ (
-            <Text numberOfLines={ 3 }>
+            <Text flex={ 1 } numberOfLines={ 3 }>
               { strings.misc_noCategories }
             </Text>
           ) } />
@@ -351,7 +348,9 @@ function DrawerContent(props: DrawerContentComponentProps) {
   
   return (
     <DrawerContentScrollView { ...props }>
-      <DrawerItem label={ getUserAgent().currentVersion } />
+      <DrawerItem 
+        label={ getUserAgent().currentVersion }
+        onPress={ () => false && SheetManager.show('whats-new') } />
       <DrawerSection 
         title={ strings.misc_publishers }>
         {publisherItems}

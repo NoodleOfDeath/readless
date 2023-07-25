@@ -11,6 +11,7 @@ export const arStrings: typeof enStrings = {
   action_loading: 'تحميل...',
   action_next: 'التالي',
   action_readArticle: 'اقرأ المقال',
+  action_report: 'أخبار ذات صلة',
   action_save: 'يحفظ',
   action_saveAndClose: 'حفظ وإغلاق',
   action_search: 'يبحث',
@@ -161,7 +162,6 @@ export const arStrings: typeof enStrings = {
   summary_neutral: 'حيادي',
   summary_positive: 'إيجابي',
   summary_relatedNews: 'أخبار ذات صلة',
-  summary_reportAtBug: 'الإبلاغ عن خطأ',
   summary_sentimentAnalysis: 'تحليل المشاعر',
   summary_sentimentAnalysisInfo: 'تحليل المشاعر هو أداة تساعدنا على فهم شعور الناس تجاه شيء ما من خلال تحليل لغتهم. يبحث في الكلمات التي يستخدمها الناس ويقرر ما إذا كانت إيجابية أم سلبية أم محايدة. يمكن أن يكون هذا مفيدًا في العديد من المجالات ، مثل فهم ملاحظات العملاء أو الرأي العام حول موضوع ما.',
   summary_sentimentScore: 'هذه هي درجة المشاعر ، والتي تقيس شعور الناس تجاه شيء ما باستخدام مقياس من -1 (سلبي) إلى +1 (إيجابي) ، مع كون الصفر محايدًا.',
@@ -239,5 +239,6 @@ export const arStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'يتيح لك "قراءة أقل" تعيين ** الكلمات المشغلة ** لاستبدالها برموز تعبيرية أو كلمات من اختيارك ، حتى تتمكن من قراءة الأخبار ** بقلق أقل **.',
   walkthroughs_triggerWords_enableTriggerWords: 'تمكين الكلمات المشغلة عن طريق إدخالها أدناه',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'دعم اللغات الأخرى غير الإنجليزية محدود في الوقت الحالي.',
+  walkthroughs_whatsNew: 'ما هو الجديد',
 };
   

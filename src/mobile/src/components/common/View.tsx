@@ -9,20 +9,20 @@ import {
 
 import { trigger } from 'react-native-haptic-feedback';
 
-import { Surface, ViewProps } from '~/components';
+import { ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export function View({ 
   children,
   untouchable,
   touchable = untouchable ? false : undefined,
-  elevated,
   haptic,
   inactive,
+  elevated,
   ...props
 }: ViewProps) {
   
-  const style = useStyles(props);
+  const style = useStyles({ ...props, elevated });
   const theme = useTheme();
   
   const overlay = React.useMemo(() => {
@@ -43,26 +43,15 @@ export function View({
     }
   }, [inactive, style, theme.colors.inactive]);
   
-  const contents = React.useMemo(() => {
-    if (elevated) {
-      return (
-        <Surface style={ style }>
-          {inactive && overlay}
-          {children}
-        </Surface>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          {inactive && overlay}
-          {children}
-        </React.Fragment>
-      );
-    }
-  }, [children, elevated, inactive, overlay, style]);
+  const contents = React.useMemo(() => (
+    <React.Fragment>
+      {inactive && overlay}
+      {children}
+    </React.Fragment>
+  ), [children, inactive, overlay]);
   
   const onPress = React.useCallback((event: GestureResponderEvent) => {
-    if (!props.onPress) {
+    if (!props.onPress || props.disabled) {
       return;
     }
     if (haptic) {
@@ -77,19 +66,21 @@ export function View({
   return (touchable) ? (
     <TouchableOpacity
       { ...props } 
-      style={ elevated ? undefined : style }
+      style={ style }
       onPress={ onPress }>
       {contents}
     </TouchableOpacity>
   ) : props.onPress ? (
     <Pressable
       { ...props } 
-      style={ elevated ? undefined : style }
+      style={ style }
       onPress={ onPress }>
       {contents}
     </Pressable>
   ) : (
-    <RNView { ...props } style={ elevated ? undefined : style }>
+    <RNView
+      { ...props }
+      style={ style }>
       {contents}
     </RNView>
   );

@@ -11,6 +11,7 @@ export const hiStrings: typeof enStrings = {
   action_loading: 'लोड हो रहा है...',
   action_next: 'अगला',
   action_readArticle: 'आलेख पढ़ें',
+  action_report: 'सम्बंधित खबर',
   action_save: 'बचाना',
   action_saveAndClose: 'सहेजे बंद करें',
   action_search: 'खोज',
@@ -161,7 +162,6 @@ export const hiStrings: typeof enStrings = {
   summary_neutral: 'तटस्थ',
   summary_positive: 'सकारात्मक',
   summary_relatedNews: 'सम्बंधित खबर',
-  summary_reportAtBug: 'एक बग रिपोर्ट करो',
   summary_sentimentAnalysis: 'भावनाओं का विश्लेषण',
   summary_sentimentAnalysisInfo: 'भाव विश्लेषण एक ऐसा उपकरण है जो हमें यह समझने में मदद करता है कि लोग उनकी भाषा का विश्लेषण करके किसी चीज़ के बारे में कैसा महसूस करते हैं। यह लोगों द्वारा उपयोग किए जाने वाले शब्दों को देखता है और तय करता है कि वे सकारात्मक हैं, नकारात्मक हैं या तटस्थ हैं। यह कई क्षेत्रों में उपयोगी हो सकता है, जैसे किसी विषय पर ग्राहकों की प्रतिक्रिया या जनता की राय को समझना।',
   summary_sentimentScore: 'यह एक भावना स्कोर है, जो मापता है कि लोग -1 (नकारात्मक) से +1 (सकारात्मक) तक के पैमाने का उपयोग करके किसी चीज़ के बारे में कैसा महसूस करते हैं, जिसमें 0 तटस्थ है।',
@@ -239,5 +239,6 @@ export const hiStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'कम पढ़ें आपको **ट्रिगर शब्द** को इमोजी या अपनी पसंद के शब्दों से बदलने के लिए सेट करने देता है, ताकि आप **कम चिंता** के साथ समाचार पढ़ सकें।',
   walkthroughs_triggerWords_enableTriggerWords: 'ट्रिगर शब्दों को नीचे दर्ज करके सक्षम करें',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'इस समय अंग्रेजी के अलावा अन्य भाषाओं के लिए समर्थन सीमित है।',
+  walkthroughs_whatsNew: 'नया क्या है',
 };
   

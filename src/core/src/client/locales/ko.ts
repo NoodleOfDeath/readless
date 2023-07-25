@@ -11,6 +11,7 @@ export const koStrings: typeof enStrings = {
   action_loading: '로드 중...',
   action_next: '다음',
   action_readArticle: '기사 읽기',
+  action_report: '관련 뉴스',
   action_save: '구하다',
   action_saveAndClose: '저장 후 닫기',
   action_search: '찾다',
@@ -161,7 +162,6 @@ export const koStrings: typeof enStrings = {
   summary_neutral: '중립적',
   summary_positive: '긍정적인',
   summary_relatedNews: '관련 뉴스',
-  summary_reportAtBug: '버그 신고',
   summary_sentimentAnalysis: '감정 분석',
   summary_sentimentAnalysisInfo: '감정 분석은 언어를 분석하여 사람들이 무언가에 대해 어떻게 느끼는지 이해하는 데 도움이 되는 도구입니다. 사람들이 사용하는 단어를 살펴보고 긍정적인지, 부정적인지 또는 중립적인지를 결정합니다. 이는 주제에 대한 고객 피드백 또는 여론 이해와 같은 많은 영역에서 유용할 수 있습니다.',
   summary_sentimentScore: '이것은 사람들이 무언가에 대해 어떻게 느끼는지 측정하는 감정 점수로 -1(부정적)에서 +1(긍정적)까지의 척도를 사용하며 0은 중립입니다.',
@@ -239,5 +239,6 @@ export const koStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: '적게 읽기를 사용하면 **트리거 단어**를 이모티콘이나 선택한 단어로 대체하도록 설정하여 **덜 불안**하게 뉴스를 읽을 수 있습니다.',
   walkthroughs_triggerWords_enableTriggerWords: '아래에 입력하여 트리거 단어 활성화',
   walkthroughs_triggerWords_limitedLocalizationSupport: '영어 이외의 언어에 대한 지원은 현재 제한되어 있습니다.',
+  walkthroughs_whatsNew: '새로운 기능',
 };
   

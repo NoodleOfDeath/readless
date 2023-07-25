@@ -18,6 +18,7 @@ import {
   Icon,
   Image,
   ScrollView,
+  SegmentedButtons,
   Summary,
   Text,
   View,
@@ -33,6 +34,18 @@ export type ShareDialogProps = {
   onClose?: () => void;
 };
 
+export type ShareDialogAction = {
+  icon?: React.ReactNode;
+  iconText?: string;
+  imageUri?: string;
+  label: string;
+  onPress: () => void;
+};
+
+export const SHARE_FORMATS = ['big', 'compact-shortSummary', 'compact-bullets', 'compact'] as const;
+
+export type ShareFormat = typeof SHARE_FORMATS[number];
+
 export function ShareDialog({
   payload,
   ...props
@@ -40,7 +53,9 @@ export function ShareDialog({
  
   const theme = useTheme();
   const viewshot = React.useRef<ViewShot>(null);
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  const [shareFormat, setShareFormat] = React.useState<ShareFormat>('big');
 
   const {
     summary,
@@ -56,10 +71,10 @@ export function ShareDialog({
     onInteract,
   });
 
-  const actions = React.useMemo(() => summary && viewshot && [
+  const actions: ShareDialogAction[][] = React.useMemo(() => summary && viewshot && [
     [
       {
-        icon: 'share-outline',
+        icon: 'export-variant',
         label: strings.share_shareAsLink,
         onPress: () => shareStandard(summary, null), 
       },
@@ -77,13 +92,13 @@ export function ShareDialog({
     [
       {
         icon: 'twitter',
-        imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/twitter.png',
+        // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/twitter.png',
         label: strings.share_twitter,
         onPress:() => shareSocial(summary, viewshot.current, Social.Twitter), 
       },
       {
         icon: 'instagram',
-        imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/instagram.png',
+        // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/instagram.png',
         label: strings.share_instagramStories,
         onPress: () => shareSocial(summary, viewshot.current, Social.InstagramStories), 
       },
@@ -124,40 +139,74 @@ export function ShareDialog({
   ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
 
   return (
-    <ActionSheet id={ props.sheetId }>
+    <ActionSheet
+      id={ props.sheetId }
+      closeButton
+      gestureEnabled={ false }>
       {summary && (
-        <ScrollView scrollEnabled={ false }>
+        <View
+          bg={ theme.colors.headerBackground }
+          inactive
+          itemsCenter>
           <View
-            bg={ theme.colors.headerBackground }
-            inactive
-            itemsCenter>
-            <View
-              m={ 12 } 
-              maxWidth={ (Math.min(screenWidth, 480)) - 24 }>
-              <ViewShot ref={ viewshot }>
-                <View
-                  beveled
-                  style={ theme.components.card }
-                  overflow='hidden'>
-                  <Summary 
-                    showcase
-                    forceExpanded
-                    showFullDate
-                    summary={ summary } />
-                  <Divider mx={ 12 } />
-                  <View height={ 20 } my={ 3 }>
-                    <SvgUri
-                      viewBox='328 0 724 338'
-                      uri='https://www.readless.ai/logo.svg' 
-                      height={ 20 } /> 
-                  </View>
-                </View>
-              </ViewShot>
-            </View>
+            absolute
+            top={ -65 }
+            p={ 12 }
+            zIndex={ 3 }>
+            <SegmentedButtons
+              elevated
+              initialValue={ shareFormat }
+              onValueChange={ (f) => setShareFormat(f) }
+              options={ [
+                {
+                  icon: 'cards-variant',
+                  value: 'big',
+                },
+                {
+                  icon: 'id-card',
+                  value: 'compact-shortSummary',
+                },
+                {
+                  icon: 'card-bulleted-outline',
+                  value: 'compact-bullets',
+                },
+                {
+                  icon: 'card-text-outline',
+                  value: 'compact',
+                },
+              ] } />
           </View>
-        </ScrollView>
+          <ScrollView
+            maxWidth={ (Math.min(screenWidth, screenHeight, 480)) - 24 }
+            maxHeight={ (Math.min(screenHeight * 0.6, 480)) - 24 }>
+            <ViewShot ref={ viewshot }>
+              <View
+                beveled
+                my={ 12 }
+                style={ theme.components.card }>
+                <Summary 
+                  showcase
+                  big={ /^big$/.test(shareFormat) }
+                  showImage={ !/compact-(shortSummary|bullets)/.test(shareFormat) }
+                  forceExpanded={ !/^compact$/.test(shareFormat) }
+                  forceShortSummary={ /^big|compact-(shortSummary|bullets)$/.test(shareFormat) }
+                  bulletsAsShortSummary={ /bullets/.test(shareFormat) }
+                  disableInteractions
+                  showFullDate
+                  summary={ summary } />
+                <Divider />
+                <View height={ 20 } my={ 3 }>
+                  <SvgUri
+                    viewBox='328 0 724 338'
+                    uri='https://www.readless.ai/logo.svg' 
+                    height={ 20 } /> 
+                </View>
+              </View>
+            </ViewShot>
+          </ScrollView>
+        </View>
       )}
-      <View py={ 12 }>
+      <View py={ 12 } alignCenter>
         {Object.values(actions).map((subactions, i) => (
           <View key={ i } height={ 120 } gap={ 12 }>
             <ScrollView horizontal>
@@ -190,7 +239,7 @@ export function ShareDialog({
                           height={ 48 }
                           m={ -12 } />
                       ) :
-                        <Icon name={ icon } size={ 24 } />}
+                        typeof icon === 'string' ? <Icon name={ icon } size={ 24 } /> : icon }
                     </View>
                     <Text 
                       caption 

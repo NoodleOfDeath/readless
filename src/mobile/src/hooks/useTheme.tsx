@@ -12,11 +12,11 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
       contrastText: '#fff',
       destructive: darkMode ? '#ff0000' : '#ff0000',
       error: '#f44336',
-      headerBackground: darkMode ? '#080808' : '#f2f2f2',
+      headerBackground: darkMode ? '#303030' : '#f4f4f4',
       inactive: darkMode ? '#777' : '#aaa',
       invertText: darkMode ? '#000' : '#fff',
       link: darkMode ? '#aaaaee' : '#8888ee',
-      paper: darkMode ? '#424242' : '#fff',
+      paper: darkMode ? '#242424' : '#fff',
       primary: '#c00000',
       primaryDark: '#8b0000',
       primaryDisabled: '#A23333',
@@ -24,6 +24,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
       rowEven: darkMode ? '#101010' : '#efefef',
       rowOdd: darkMode ? '#222' : '#e9e9e9',
       secondary: '#F73378',
+      shadowColor: darkMode ? '#fff' : '#000',
       success: '#4caf50',
       text: darkMode ? '#fff' : '#000',
       textDark: '#000',
@@ -34,13 +35,14 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
     // containers
     components: 
       StyleSheet.create({
-        card: { backgroundColor: darkMode ? '#424242' : '#fff' },
+        card: { backgroundColor: darkMode ? '#242424' : '#fff' },
+        cardBig: { backgroundColor: darkMode ? '#242424' : '#fff' },
         chip: {
           alignItems: 'center',
           justifyContent: 'center',
         },
         chipContained: {
-          backgroundColor: darkMode ? '#424242' : '#fff',
+          backgroundColor: darkMode ? '#242424' : '#fff',
           borderRadius: 500,
           color: darkMode ? '#fff' : '#000',
           paddingBottom: 8,
@@ -79,17 +81,13 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
           padding: 0,
           width: '100%',
         },
-        surface: {
-          backgroundColor: darkMode ? '#424242' : '#fff',
-          color: darkMode ? '#fff' : '#000',
-        },
       }),
     isDarkMode: darkMode,   
     navContainerTheme: {
       ...(darkMode ? DarkTheme : DefaultTheme),
       colors: {
         ...(darkMode ? DarkTheme.colors : DefaultTheme),
-        background: darkMode ? '#424242' : '#fff',
+        background: darkMode ? '#242424' : '#f9f9f9',
         border: darkMode ? '#757575' : '#bdbdbd',
         card: darkMode ? '#1e1e1e' : '#fff',
         notification: '#c00000',

@@ -11,6 +11,7 @@ export const heStrings: typeof enStrings = {
   action_loading: 'טוען...',
   action_next: 'הַבָּא',
   action_readArticle: 'קרא מאמר',
+  action_report: 'חדשות קשורות',
   action_save: 'להציל',
   action_saveAndClose: 'שמור סגור',
   action_search: 'לחפש',
@@ -161,7 +162,6 @@ export const heStrings: typeof enStrings = {
   summary_neutral: 'ניטראלי',
   summary_positive: 'חִיוּבִי',
   summary_relatedNews: 'חדשות קשורות',
-  summary_reportAtBug: 'דווח על באג',
   summary_sentimentAnalysis: 'ניתוח הסנטימנט',
   summary_sentimentAnalysisInfo: 'ניתוח סנטימנטים הוא כלי שעוזר לנו להבין איך אנשים מרגישים לגבי משהו על ידי ניתוח השפה שלהם. הוא מסתכל על המילים שאנשים משתמשים בהן ומחליט אם הן חיוביות, שליליות או ניטרליות. זה יכול להיות שימושי בתחומים רבים, כמו הבנת משוב לקוחות או דעת קהל על נושא מסוים.',
   summary_sentimentScore: 'זהו ציון סנטימנט, שמודד איך אנשים מרגישים לגבי משהו באמצעות סולם מ-1 (שלילי) ל-+1 (חיובי), כאשר 0 הוא ניטרלי.',
@@ -239,5 +239,6 @@ export const heStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Read Less מאפשר לך להגדיר את **מילות ההפעלה** שיוחלפו באימוג\'י או במילים לבחירתך, כך שתוכל לקרוא את החדשות עם **פחות חרדה**.',
   walkthroughs_triggerWords_enableTriggerWords: 'אפשר מילות הפעלה על ידי הזנתן למטה',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'התמיכה בשפות שאינן אנגלית מוגבלת בשלב זה.',
+  walkthroughs_whatsNew: 'מה חדש',
 };
   

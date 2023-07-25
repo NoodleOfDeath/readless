@@ -11,6 +11,7 @@ export const frStrings: typeof enStrings = {
   action_loading: 'Chargement...',
   action_next: 'Suivant',
   action_readArticle: 'Lire l\'article',
+  action_report: 'Nouvelles connexes',
   action_save: 'Sauvegarder',
   action_saveAndClose: 'Sauvegarder et fermer',
   action_search: 'Recherche',
@@ -161,7 +162,6 @@ export const frStrings: typeof enStrings = {
   summary_neutral: 'Neutre',
   summary_positive: 'Positif',
   summary_relatedNews: 'Nouvelles connexes',
-  summary_reportAtBug: 'Signaler un bug',
   summary_sentimentAnalysis: 'Analyse des sentiments',
   summary_sentimentAnalysisInfo: 'L\'analyse des sentiments est un outil qui nous aide à comprendre ce que les gens ressentent à propos de quelque chose en analysant leur langage. Il examine les mots que les gens utilisent et décide s\'ils sont positifs, négatifs ou neutres. Cela peut être utile dans de nombreux domaines, comme comprendre les commentaires des clients ou l\'opinion publique sur un sujet.',
   summary_sentimentScore: 'Il s\'agit d\'un score de sentiment, qui mesure ce que les gens ressentent à l\'aide d\'une échelle allant de -1 (négatif) à +1 (positif), 0 étant neutre.',
@@ -239,5 +239,6 @@ export const frStrings: typeof enStrings = {
   walkthroughs_triggerWords_description: 'Lire moins vous permet de définir des **mots déclencheurs** à remplacer par des émoticônes ou des mots de votre choix, afin que vous puissiez lire les actualités avec **moins d\'anxiété**.',
   walkthroughs_triggerWords_enableTriggerWords: 'Activez les mots déclencheurs en les saisissant ci-dessous',
   walkthroughs_triggerWords_limitedLocalizationSupport: 'La prise en charge des langues autres que l\'anglais est limitée pour le moment.',
+  walkthroughs_whatsNew: 'Quoi de neuf',
 };
   

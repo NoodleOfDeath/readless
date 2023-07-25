@@ -1,12 +1,8 @@
 import React from 'react';
-import {
-  Animated,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-} from 'react-native';
+import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { ListRenderItem } from '@shopify/flash-list';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import ms from 'ms';
 
 import {
@@ -21,7 +17,6 @@ import {
   ChildlessViewProps,
   Divider,
   FlatList,
-  ScrollView,
   Summary,
   Text,
   View,
@@ -74,7 +69,7 @@ export function SummaryList({
   const theme = useTheme();
 
   // contexts
-  const { supportsMasterDetail } = React.useContext(LayoutContext);
+  const { isTablet, dimensions: { width: screenWidth } } = React.useContext(LayoutContext);
   const { queueStream } = React.useContext(MediaContext);
   const { 
     preferredReadingFormat,
@@ -100,16 +95,13 @@ export function SummaryList({
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
-  const [_lastFocus, setLastFocus] = React.useState<'master'|'detail'>('master');
   const [lastActive, setLastActive] = React.useState(Date.now());
 
   const detailSummarySiblings = React.useMemo(() => {
     return [...(detailSummary?.siblings ?? [])].sort((a, b) => new Date(b.originalDate ?? '').valueOf() - new Date(a.originalDate ?? '').valueOf());
   }, [detailSummary?.siblings]);
 
-  // animation state
-  const resizeAnimation = React.useRef(new Animated.Value(supportsMasterDetail ? 0 : 1)).current;
-  const [resizing, setResizing] = React.useState(false);
+  const flatListRef = React.useRef<FlashList<PublicSummaryGroup>>(null);
 
   // callbacks
 
@@ -178,7 +170,6 @@ export function SummaryList({
   }, [loading, lastFetchFailed, totalResultCount, summaries.length, load]);
 
   const handleMasterScroll = React.useCallback(async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setLastFocus('master');
     if (loading || lastFetchFailed || totalResultCount <= summaries.length) {
       return;
     }
@@ -193,26 +184,13 @@ export function SummaryList({
       await loadMore();
     }
   }, [loading, lastFetchFailed, totalResultCount, summaries.length, loadMore]);
-
-  const handleResize = React.useCallback(() => {
-    if (resizing) {
-      return;
-    }
-    setResizing(true);
-    Animated.spring(resizeAnimation, {
-      toValue: supportsMasterDetail ? 0 : 1,
-      useNativeDriver: true,
-    }).start(() => {
-      setResizing(false);
-    });
-  }, [resizing, resizeAnimation, supportsMasterDetail]);
   
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryGroup, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
-      if (supportsMasterDetail) {
+      if (isTablet) {
         setDetailSummary(summary);
-        setLastFocus('detail');
+        flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
       } else if (onFormatChange) {
         onFormatChange(summary, format ?? preferredReadingFormat ?? ReadingFormat.Summary);
       } else {
@@ -223,25 +201,15 @@ export function SummaryList({
         });
       }
     },
-    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, supportsMasterDetail]
+    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, isTablet]
   );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useFocusEffect(React.useCallback(() => handleResize(), [
-    handleResize,
-    supportsMasterDetail, 
-    summaries,
-  ]));
   
   useFocusEffect(React.useCallback(() => {
     if (!loading && !lastFetchFailed && !loaded && (summaries.length === 0 || filter !== filter0)) {
       load(true);
-      if (filter0) {
-        navigation?.setOptions({ headerTitle: filter0 });
-      }
       setFilter(filter0);
     }
-  }, [loading, filter, filter0, lastFetchFailed, loaded, load, navigation, summaries.length]));
+  }, [loading, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
   
   useAppState({ 
     onBackground: () => {
@@ -259,21 +227,40 @@ export function SummaryList({
       <Summary
         mx={ 12 }
         key={ item.id }
-        big={ flow === 'fluid' && index % 4 === 0 }
+        big={ Boolean(flow === 'fluid' && index % 4 === 0 && item.media?.imageArticle) }
         summary={ item }
-        selected={ Boolean(supportsMasterDetail && item.id === detailSummary?.id) }
+        selected={ Boolean(isTablet && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
-        onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
+        onFormatChange={ (format) => handleFormatChange(item, format) }
         onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
-  }, [flow, supportsMasterDetail, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+  }, [flow, isTablet, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+
+  const detailComponent = React.useMemo(() => detailSummary && (
+    <React.Fragment>
+      <Summary
+        summary={ detailSummary }
+        key={ detailSummary.id }
+        initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+        keywords={ searchText?.split(' ') }
+        onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
+        onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
+      <Divider my={ 6 } />
+      {detailSummarySiblings.length > 0 && (
+        <Text system h6 m={ 12 }>
+          {`${strings.summary_relatedNews} (${detailSummarySiblings.length})`}
+        </Text>
+      )}
+    </React.Fragment>
+  ), [detailSummary, detailSummarySiblings.length, handleFormatChange, handleInteraction, preferredReadingFormat, searchText]);
 
   return (
     <View { ...props } col>
       <View row>
-        <View style={ { width: supportsMasterDetail ? '40%' : '100%' } }>
+        <View style={ { width: isTablet ? Math.min(screenWidth * 0.4, 400) : '100%' } }>
           <FlatList
             data={ summaries }
+            extraData={ detailSummary }
             renderItem={ renderSummary }
             estimatedItemSize={ flow === 'fluid' ? (114 * 3 + 350) / 4 : 114 }
             ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
@@ -336,59 +323,26 @@ export function SummaryList({
               await load(true);
             } } />
         </View>
-        <Animated.View style={ {
-          transform: [
-            { perspective: 1000 }, 
-            {
-              rotateY: resizeAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0deg', '360deg'],
-              }),
-            },
-            {
-              scaleX: resizeAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 0],
-              }),
-            }, 
-          ],
-          width: '60%',
-        } }>
-          {supportsMasterDetail && detailSummary && (
-            <ScrollView>
-              <FlatList
-                data={ detailSummarySiblings }
-                renderItem={ ({ item }) => (
-                  <Summary
-                    mx={ 12 }
-                    summary={ item } 
-                    hideArticleCount
-                    onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
-                    onInteract={ (...e) => handleInteraction(item, ...e) } />
-                ) }
-                keyExtractor={ (item) => `${item.id}` }
-                ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
-                ListHeaderComponent={ (
-                  <React.Fragment>
-                    <Summary
-                      summary={ detailSummary }
-                      initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-                      keywords={ searchText?.split(' ') }
-                      onFormatChange={ (summary, format) => handleFormatChange(summary, format) }
-                      onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
-                    <Divider my={ 6 } />
-                    {detailSummarySiblings.length > 0 && (
-                      <Text system h6 m={ 12 }>
-                        {`${strings.summary_relatedNews} (${detailSummarySiblings.length})`}
-                      </Text>
-                    )}
-                  </React.Fragment>
-                ) }
-                ListFooterComponentStyle={ { paddingBottom: 64 } }
-                estimatedItemSize={ 114 } />
-            </ScrollView>
-          )}
-        </Animated.View>
+        {isTablet && (
+          <View flex={ 1 } flexGrow={ 1 } mr={ 12 }>
+            <FlatList
+              ref={ flatListRef }
+              data={ detailSummarySiblings }
+              renderItem={ ({ item }) => (
+                <Summary
+                  mx={ 12 }
+                  key={ item.id }
+                  summary={ item } 
+                  hideArticleCount
+                  onFormatChange={ (format) => handleFormatChange(item, format) }
+                  onInteract={ (...e) => handleInteraction(item, ...e) } />
+              ) }
+              ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
+              ListHeaderComponent={ detailComponent }
+              ListFooterComponentStyle={ { paddingBottom: 64 } }
+              estimatedItemSize={ 114 } />
+          </View>
+        )}
       </View>
       <Button
         absolute

@@ -102,7 +102,7 @@ export class ScribeService extends BaseService {
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,
-      imageUrl: loot.imageUrls?.[0] ?? '',
+      imageUrl: loot.imageUrls?.[0],
       originalDate: loot.date,
       originalTitle: loot.title,
       publisherId: publisher.id,
@@ -233,6 +233,9 @@ export class ScribeService extends BaseService {
       if (await Summary.findOne({ where: { url } })) {
         await this.error('job already completed by another worker');
       }
+    
+      // Save summary to database
+      const summary = await Summary.create(newSummary);
       
       this.log('Generating image with deepai');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -267,9 +270,6 @@ export class ScribeService extends BaseService {
           await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'));
         }
       }
-    
-      // Save summary to database
-      const summary = await Summary.create(newSummary);
       
       await SummaryMedia.create({
         key: 'imageAi1',
