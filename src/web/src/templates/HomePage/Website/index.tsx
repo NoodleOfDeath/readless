@@ -22,7 +22,7 @@ const Website = () => {
           <Image
             src="/images/ss-publishers.png"
             width={ 500 }
-            height={ 360 }
+            height={ 300 }
             alt="Hero" />
         </div>
         <div className={ styles.previewDesktop }>

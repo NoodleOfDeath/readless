@@ -76,11 +76,11 @@ const Menu = ({ navigation }: MenuProps) => {
           <div className={ styles.details }>
             <div className={ styles.text }>Contact Us</div>
             <a
-              href="mailto:thecakeisalie@readless.ai"
+              href={ `mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}` }
               className={ cn('h6', styles.mail) }
               target="_blank"
               rel="noreferrer">
-              thecakeisalie@readless.ai
+              {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
             </a>
           </div>
         </div>
