@@ -5,15 +5,6 @@ on:
     branches:
       - main
       - dev
-    paths:
-      - ".github/workflows/mobile-ci.yaml"
-      - "package.json"
-      - "k8s/mobile-deploy.yaml"
-      - "src/mobile/package.json"
-      - "src/mobile/public/**"
-      - "src/mobile/src/**"
-      - "src/core/client/**"
-      - "src/server/api/**"
 
 concurrency:
   group: ${{ github.ref }}-mobile

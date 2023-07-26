@@ -5,17 +5,6 @@ on:
     branches:
       - main
       - dev
-    paths:
-      - ".github/workflows/worker-ci.yaml"
-      - "package.json"
-      - "Dockerfile.worker"
-      - "k8s/worker-deploy.yaml"
-      - "src/server/package.json"
-      - "src/server/src/core/**"
-      - "src/server/src/worker/**"
-      - "src/server/src/services/**"
-      - "src/server/src/utils/**"
-      - "src/server/src/api/v1/schema/**"
 
 concurrency:
   group: ${{ github.ref }}-worker
