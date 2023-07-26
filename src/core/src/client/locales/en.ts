@@ -86,13 +86,13 @@ export const enStrings = {
   screens_legal: 'Legal',
   screens_oldNews: 'Old News',
   screens_preferredReadingFormat: 'Preferred Reading Format',
+  screens_preferredShortPressFormat: 'Preferred Short Press Format',
   screens_profile: 'Profile',
   screens_recap: 'Recap',
   screens_search: 'Search',
-  
   screens_settings: 'Settings',
-  
   screens_triggerWords: 'Trigger Words',
+  
   // search
   search_customNewsSearch: 'Note: This is searching only within your custom news feed and not all news articles',
   search_filtersTooSpecific: 'It seems your filters are too specific. You may want to consider adding more categories and/or news sources to your follow list',
@@ -122,6 +122,7 @@ export const enStrings = {
   settings_light: 'Light',
   settings_lineHeight: 'Line Height',
   settings_preferredReadingFormat: 'Default reading mode on open',
+  settings_preferredShortPressFormat: 'Default reading mode on short press',
   settings_replacement: 'Replacement',
   settings_resetAllSettings: 'Reset All Settings',
   settings_resetHiddenSummaries: 'Reset hidden summaries',

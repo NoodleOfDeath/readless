@@ -28,43 +28,44 @@ import {
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
 
 export function SessionContextProvider({ children }: React.PropsWithChildren) { 
-
+  
+  // system state
   const [ready, setReady] = React.useState(false);
 
-  const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
-  const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
-
-  const [colorScheme, setColorScheme] = React.useState<ColorScheme>();
-  const [fontFamily, setFontFamily] = React.useState<string>();
-  const [fontSizeOffset, setFontSizeOffset] = React.useState<number>();
-  const [letterSpacing, setLetterSpacing] = React.useState<number>();
-  const [lineHeightMultiplier, setLineHeightMultiplier] = React.useState<number>();
-  
-  const [compactSummaries, setCompactSummaries] = React.useState<boolean>();
-  const [showShortSummary, setShowShortSummary] = React.useState<boolean>();
-  const [preferredReadingFormat, setPreferredReadingFormat] = React.useState<ReadingFormat>();
-  const [sentimentEnabled, setSentimentEnabled] = React.useState<boolean>();
-  const [triggerWords, setTriggerWords] = React.useState<{ [key: string]: string}>();
-  
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
   const [searchHistory, setSearchHistory] = React.useState<string[]>();
   const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: string]: Bookmark<boolean>}>();
   const [hasReviewed, setHasReviewed] = React.useState<boolean>();
   const [lastRequestForReview, setLastRequestForReview] = React.useState(0);
+  const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
+  const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
   
+  // user state
+  const [uuid, setUuid] = React.useState<string>();
+  
+  // summary state
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
   const [summaryTranslations, setSummaryTranslations] = React.useState<{ [key: number]: { [key in keyof PublicSummaryGroup]?: string } }>();
-
+  
+  // bookmark state
+  const bookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).length, [bookmarkedSummaries]);
+  const unreadBookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).filter((k) => !(k in ({ ...readSummaries }))).length, [bookmarkedSummaries, readSummaries]);
+  
+  // recap state
   const [readRecaps, setReadRecaps] = React.useState<{ [key: number]: boolean }>();
   const [recapTranslations, setRecapTranslations] = React.useState<{ [key: number]: { [key in keyof RecapAttributes]?: string } }>();
   
+  // publisher state
   const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
   const [excludedPublishers, setExcludedPublishers] = React.useState<{ [key: string]: boolean }>();
+  
+  // category state
   const [followedCategories, setFollowedCategories] = React.useState<{ [key: string]: boolean }>();
   const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: boolean }>();
 
+  // following computed state
   const followCount = React.useMemo(() => Object.keys({ ...followedPublishers }).length + Object.keys({ ...followedCategories }).length, [followedPublishers, followedCategories]);
 
   const followFilter = React.useMemo(() => {
@@ -95,8 +96,22 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     return filters.join(' ');
   }, [excludedPublishers, excludedCategories]);
   
-  const bookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).length, [bookmarkedSummaries]);
-  const unreadBookmarkCount = React.useMemo(() => Object.keys({ ...bookmarkedSummaries }).filter((k) => !(k in ({ ...readSummaries }))).length, [bookmarkedSummaries, readSummaries]);
+  // system preferences
+  const [colorScheme, setColorScheme] = React.useState<ColorScheme>();
+  const [fontFamily, setFontFamily] = React.useState<string>();
+  const [fontSizeOffset, setFontSizeOffset] = React.useState<number>();
+  const [letterSpacing, setLetterSpacing] = React.useState<number>();
+  const [lineHeightMultiplier, setLineHeightMultiplier] = React.useState<number>();
+  
+  // summary preferences
+  const [compactSummaries, setCompactSummaries] = React.useState<boolean>();
+  const [showShortSummary, setShowShortSummary] = React.useState<boolean>();
+  const [preferredShortPressFormat, setPreferredShortPressFormat] = React.useState<ReadingFormat>();
+  const [preferredReadingFormat, setPreferredReadingFormat] = React.useState<ReadingFormat>();
+  const [sentimentEnabled, setSentimentEnabled] = React.useState<boolean>();
+  const [triggerWords, setTriggerWords] = React.useState<{ [key: string]: string}>();
+  
+  // system functions
   
   const getPreference = async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
     const value = await getItem(key);
@@ -115,39 +130,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     const newValue = (value instanceof Function ? value(await getPreference(key)) : value) as any;
     switch (key) {
       
-    case 'colorScheme':
-      setColorScheme(newValue);
-      break;
-    case 'fontFamily':
-      setFontFamily(newValue);
-      break;
-    case 'fontSizeOffset':
-      setFontSizeOffset(newValue);
-      break;
-    case 'letterSpacing':
-      setLetterSpacing(newValue);
-      break;
-    case 'lineHeightMultiplier':
-      setLineHeightMultiplier(newValue);
-      break;
-      
-    case 'compactMode':
-    case 'compactSummaries':
-      setCompactSummaries(newValue);
-      break;
-    case 'showShortSummary':
-      setShowShortSummary(newValue);
-      break;
-    case 'preferredReadingFormat':
-      setPreferredReadingFormat(newValue);
-      break;
-    case 'sentimentEnabled':
-      setSentimentEnabled(newValue);
-      break;
-    case 'triggerWords':
-      setTriggerWords(newValue);
-      break;
-    
+    // system state
     case 'rotationLock':
       setRotationLock(newValue);
       break;
@@ -164,6 +147,12 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       setLastRequestForReview(newValue);
       break;
       
+    // user state
+    case 'uuid':
+      setUuid(uuid);
+      break;
+      
+    // summary state
     case 'bookmarkedSummaries':
       setBookmarkedSummaries(newValue);
       break;
@@ -177,6 +166,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       setSummaryTranslations(newValue);
       break;
       
+    // recap state
     case 'readRecaps':
       setReadRecaps(newValue);
       break;
@@ -184,6 +174,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       setRecapTranslations(newValue);
       break;
       
+    // publisher state
     case 'followedOutlets':
     case 'followedPublishers':
       setFollowedPublishers(newValue);
@@ -193,11 +184,50 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       setExcludedPublishers(newValue);
       break;
       
+    // category state
     case 'followedCategories':
       setFollowedCategories(newValue);
       break;
     case 'excludedCategories':
       setExcludedCategories(newValue);
+      break;
+      
+    // system preferences
+    case 'colorScheme':
+      setColorScheme(newValue);
+      break;
+    case 'fontFamily':
+      setFontFamily(newValue);
+      break;
+    case 'fontSizeOffset':
+      setFontSizeOffset(newValue);
+      break;
+    case 'letterSpacing':
+      setLetterSpacing(newValue);
+      break;
+    case 'lineHeightMultiplier':
+      setLineHeightMultiplier(newValue);
+      break;
+      
+    // summary preferences
+    case 'compactMode':
+    case 'compactSummaries':
+      setCompactSummaries(newValue);
+      break;
+    case 'showShortSummary':
+      setShowShortSummary(newValue);
+      break;
+    case 'preferredShortPressFormat':
+      setPreferredShortPressFormat(newValue);
+      break;
+    case 'preferredReadingFormat':
+      setPreferredReadingFormat(newValue);
+      break;
+    case 'sentimentEnabled':
+      setSentimentEnabled(newValue);
+      break;
+    case 'triggerWords':
+      setTriggerWords(newValue);
       break;
       
     default:
@@ -209,6 +239,34 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       await setItem(key, JSON.stringify(newValue));
     }
   };
+  
+  const storeTranslations = async <
+    Target extends RecapAttributes | PublicSummaryGroup, 
+    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
+    State extends NonNullable<PrefKey extends 'recapTranslations' ? typeof recapTranslations : PrefKey extends 'summaryTranslations' ? typeof summaryTranslations : never>,
+  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => {
+    await setPreference(prefKey, (prev) => {
+      const state = { ...prev } as State;
+      state[item.id] = translations;
+      return (prev = state);
+    });
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
+    const userAgent = getUserAgent();
+    const headers: RequestInit['headers'] = { 
+      'x-app-version': userAgent.currentVersion,
+      'x-locale': userAgent.locale,
+      'x-platform': userAgent.OS,
+      'x-uuid': uuid,
+    };
+    return (...args: T) => {
+      return fn(...args, { headers });
+    };
+  }, [uuid]);
+  
+  // summary functions
   
   const bookmarkSummary = async (summary: PublicSummaryGroup) => {
     await setPreference('bookmarkedSummaries', (prev) => {
@@ -251,18 +309,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return (prev = state);
     });
   };
-
-  const storeTranslations = async <
-    Target extends RecapAttributes | PublicSummaryGroup, 
-    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
-    State extends NonNullable<PrefKey extends 'recapTranslations' ? typeof recapTranslations : PrefKey extends 'summaryTranslations' ? typeof summaryTranslations : never>,
-  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => {
-    await setPreference(prefKey, (prev) => {
-      const state = { ...prev } as State;
-      state[item.id] = translations;
-      return (prev = state);
-    });
-  };
+  
+  // recap functions
   
   const readRecap = async (recap: RecapAttributes, force = false) => {
     await setPreference('readRecaps', (prev) => {
@@ -278,6 +326,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     });
   };
 
+  // publisher functions
+  
   const followPublisher = async (publisher: PublicPublisherAttributes) => {
     await setPreference('followedPublishers', (prev) => {
       const state = { ...prev };
@@ -318,6 +368,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   const isExcludingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...excludedPublishers }), [excludedPublishers]);
 
+  // category functions
+  
   const followCategory = async (category: PublicCategoryAttributes) => {
     await setPreference('followedCategories', (prev) => {
       const state = { ...prev };
@@ -358,55 +410,46 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   const isExcludingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...excludedCategories }), [excludedCategories]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const withHeaders = <T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
-    const userAgent = getUserAgent();
-    const headers: RequestInit['headers'] = { 
-      'x-app-version': userAgent.currentVersion,
-      'x-locale': userAgent.locale,
-      'x-platform': userAgent.OS,
-    };
-    return (...args: T) => {
-      return fn(...args, { headers });
-    };
-  };
-
   // Load preferences on mount
   const load = async () => {
-    // system
-    setColorScheme(await getPreference('colorScheme')); 
-    setFontFamily(await getPreference('fontFamily'));
-    setFontSizeOffset(await getPreference('fontSizeOffset'));
-    setLetterSpacing(await getPreference('letterSpacing'));
-    setLineHeightMultiplier(await getPreference('lineHeightMultiplier'));
-    
-    // summary display
-    setCompactSummaries(await getPreference('compactSummaries') ?? await getPreference('compactMode'));
-    setShowShortSummary(await getPreference('showShortSummary'));
-    setPreferredReadingFormat(await getPreference('preferredReadingFormat'));
-    setSentimentEnabled(await getPreference('sentimentEnabled'));
-    setTriggerWords(await getPreference('triggerWords'));
-    
-    // app state
+    // system state
     setRotationLock(await getPreference('rotationLock'));
     setSearchHistory(await getPreference('searchHistory'));
     setViewedFeatures(await getPreference('viewedFeatures'));
     setHasReviewed(await getPreference('hasReviewed'));
     setLastRequestForReview(await getPreference('lastRequestForReview') ?? 0);
+    setUuid(await getPreference('uuid'));
     
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
     setReadSummaries(await getPreference('readSummaries'));
     setRemovedSummaries(await getPreference('removedSummaries'));
+    setSummaryTranslations(await getPreference('summaryTranslations'));
     
     // recap state
     setReadRecaps(await getPreference('readRecaps'));
+    setRecapTranslations(await getPreference('recapTranslations'));
     
     // publisher/category states
     setFollowedPublishers(await getPreference('followedPublishers') ?? await getPreference('followedOutlets'));
     setExcludedPublishers(await getPreference('excludedPublishers') ?? await getPreference('excludedOutlets'));
     setFollowedCategories(await getPreference('followedCategories'));
     setExcludedCategories(await getPreference('excludedCategories'));
+    
+    // system preferences
+    setColorScheme(await getPreference('colorScheme')); 
+    setFontFamily(await getPreference('fontFamily'));
+    setFontSizeOffset(await getPreference('fontSizeOffset'));
+    setLetterSpacing(await getPreference('letterSpacing'));
+    setLineHeightMultiplier(await getPreference('lineHeightMultiplier'));
+    
+    // summary preferences
+    setCompactSummaries(await getPreference('compactSummaries') ?? await getPreference('compactMode'));
+    setShowShortSummary(await getPreference('showShortSummary'));
+    setPreferredReadingFormat(await getPreference('preferredReadingFormat'));
+    setPreferredShortPressFormat(await getPreference('preferredShortPressFormat'));
+    setSentimentEnabled(await getPreference('sentimentEnabled'));
+    setTriggerWords(await getPreference('triggerWords'));
     
     setReady(true);
   };
@@ -452,6 +495,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         letterSpacing,
         lineHeightMultiplier,
         preferredReadingFormat,
+        preferredShortPressFormat,
         publishers,
         readRecap,
         readRecaps,
@@ -473,6 +517,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         summaryTranslations,
         triggerWords,
         unreadBookmarkCount,
+        uuid,
         viewedFeatures,
         withHeaders,
       } }>

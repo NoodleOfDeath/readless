@@ -11,6 +11,7 @@ import { useTextStyles } from '~/hooks';
 export function Text({
   children,
   fontSizeFixed,
+  sentenceCase,
   ...props
 }: ViewProps & TextProps) {
   const textStyle = useTextStyles({
@@ -19,8 +20,10 @@ export function Text({
   });
   return (
     <View { ...props }>
-      <RNText style={ textStyle } { ...props }>
-        {children}
+      <RNText
+        style={ textStyle }
+        { ...props }>
+        {sentenceCase && typeof children === 'string' ? children.replace(/^\w/, ($0) => $0.toUpperCase()) : children}
       </RNText>
     </View>
   );

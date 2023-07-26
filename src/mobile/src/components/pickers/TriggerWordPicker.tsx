@@ -26,11 +26,7 @@ export function TriggerWordPicker({
   const [words, setWords] = React.useState([...Object.entries({ ...triggerWords }).map(([word, replacement]) => [word, replacement]), ['', '']]);
 
   const save = React.useCallback(() => {
-    if (words.every(([word, replacement]) => !word && !replacement)) {
-      setPreference('triggerWords', undefined);
-      onSubmit?.();
-    }
-    setPreference('triggerWords', Object.fromEntries(words.map(([word, replacement]) => [word.toLowerCase().replace(/[\n\s\t]+/g, ' '), replacement])));
+    setPreference('triggerWords', Object.fromEntries(words.map(([word, replacement]) => [word.toLowerCase().replace(/[\n\s\t]+/g, ' '), replacement]).filter((pair) => !/^\s*$/.test(pair.join('')))));
     onSubmit?.();
   }, [setPreference, words, onSubmit]);
 
@@ -67,11 +63,13 @@ export function TriggerWordPicker({
               haptic
               system
               contained
-              onPress={ () => setWords((prev) => {
-                const state = [ ...prev ];
-                state.splice(i, 1);
-                return (prev = state);
-              }) } />
+              onPress={ () => {
+                setWords((prev) => {
+                  const state = [ ...prev ];
+                  state.splice(i, 1);
+                  return (prev = state);
+                });
+              } } />
           </View>
         ))}
       </ScrollView>

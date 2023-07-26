@@ -17,18 +17,23 @@ export type HighlighterProps = Omit<ChildlessViewProps & TextProps, 'children'> 
   sanitize?: () => string;
   propsFor?: (text: string, index: number) => TextProps;
   replacementFor?: (text: string, index: number) => string;
+  sentenceCase?: boolean;
 };
 
 export function Highlighter({ 
-  children: textToHighlight = '', 
+  children = '', 
   highlightStyle,
   searchWords = [],
   propsFor,
   replacementFor,
+  sentenceCase,
   ...props
 }: HighlighterProps) {
+  const textToHighlight = React.useMemo(() => sentenceCase ? children?.replace(/^\w/, ($0) => $0.toUpperCase()) : children, [sentenceCase, children]);
   const chunks = findAll({
-    searchWords, textToHighlight, ...props, 
+    searchWords,
+    textToHighlight, 
+    ...props, 
   });
   let count = 0;
   return (
