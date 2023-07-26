@@ -108,11 +108,11 @@ export default function AppPage() {
   }, [id]);
 
   const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format: ReadingFormat = ReadingFormat.Summary) => {
+    replace(`/read?s=${summary.id}&f=${format}`, undefined);
     if (selectedSummary) {
       return;
     }
     setSelectedSummary(summary);
-    replace(`/read?s=${summary.id}&f=${format}`, undefined, { shallow: true });
     setDrawerOpen(true);
   }, [replace, selectedSummary]);
 
@@ -159,7 +159,7 @@ export default function AppPage() {
                 big
                 summary={ selectedSummary }
                 initialFormat={ initialFormat }
-                onChange={ () => handleFormatChange(selectedSummary) } />
+                onChange={ (format) => handleFormatChange(selectedSummary, format) } />
             )}
           </Stack>
         </Box>

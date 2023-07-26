@@ -36,7 +36,7 @@ type Props = {
   summary: PublicSummaryGroup;
   initialFormat?: ReadingFormat;
   tickIntervalMs?: number;
-  onChange?: (mode?: ReadingFormat) => void;
+  onChange?: (format?: ReadingFormat) => void;
   onInteract?: (type: InteractionType, content?: string, metadata?: Record<string, unknown>) => void;
 };
 
