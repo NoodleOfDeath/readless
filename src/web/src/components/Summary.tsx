@@ -182,8 +182,7 @@ export default function Summary({
             </Box>
           )}
         </StyledStack>
-        <StyledDivider variant="fullWidth" />
-        <Stack direction='column' spacing={ 1 }>
+        <Stack direction='column' spacing={ 2 }>
           <Stack direction='row' flexGrow={ 1 } alignItems="center" spacing={ 1 }>
             <Typography variant="subtitle2">{summary.category.displayName}</Typography>
             <Typography variant="subtitle2">·</Typography>
@@ -193,9 +192,12 @@ export default function Summary({
             <Box flexGrow={ 1 } />
           </Stack>
           {initialFormat && (
-            <ReadingFormatSelector 
-              format={ format }
-              onChange={ (newFormat) => handleFormatChange(newFormat) } />
+            <React.Fragment>
+              <StyledDivider variant="fullWidth" />
+              <ReadingFormatSelector 
+                format={ format }
+                onChange={ (newFormat) => handleFormatChange(newFormat) } />
+            </React.Fragment>
           )}
         </Stack>
         {content && <CardContent>{content}</CardContent>}

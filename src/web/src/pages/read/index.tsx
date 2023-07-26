@@ -107,13 +107,14 @@ export default function AppPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup) => {
+  const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format: ReadingFormat = ReadingFormat.Summary) => {
     if (selectedSummary) {
       return;
     }
     setSelectedSummary(summary);
+    replace(`/read?s=${summary.id}&f=${format}`, undefined, { shallow: true });
     setDrawerOpen(true);
-  }, [selectedSummary]);
+  }, [replace, selectedSummary]);
 
   return (
     <Layout>
@@ -135,7 +136,7 @@ export default function AppPage() {
             <Summary 
               key={ summary.id } 
               summary={ summary }
-              onChange={ () => handleFormatChange(summary) } />
+              onChange={ (format) => handleFormatChange(summary, format) } />
           ))}
         </Stack>
         {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
