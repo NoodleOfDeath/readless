@@ -46,7 +46,8 @@ const Menu = ({ navigation }: MenuProps) => {
                 href={ link.url }
                 target="_blank"
                 rel="noopener noreferrer"
-                key={ index }>
+                key={ index }
+                onClick={ () => setVisibleMenu(false) }>
                 {link.title}
                 <Icon name="external-link" />
               </a>
@@ -55,6 +56,7 @@ const Menu = ({ navigation }: MenuProps) => {
                 className={ cn('h5M', styles.link) }
                 activeClassName={ styles.active }
                 href={ link.url }
+                onClick={ () => setVisibleMenu(false) }
                 key={ index }>
                 {link.title}
               </NavLink>

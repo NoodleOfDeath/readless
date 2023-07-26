@@ -15,6 +15,8 @@ import {
   styled,
 } from '@mui/material';
 import { formatDistance } from 'date-fns';
+import ms from 'ms';
+import pluralize from 'pluralize';
 
 import {
   InteractionType,
@@ -23,9 +25,14 @@ import {
 } from '~/api';
 import ReadingFormatSelector from '~/components/ReadingFormatSelector';
 import { SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/core';
+import {
+  fixedSentiment,
+  publisherIcon,
+  useSummaryClient,
+} from '~/core';
 
 type Props = {
+  big?: boolean;
   summary: PublicSummaryGroup;
   initialFormat?: ReadingFormat;
   tickIntervalMs?: number;
@@ -38,7 +45,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   justifyContent: 'left',
   minWidth: 200,
   overflow: 'visible',
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   textAlign: 'left',
 }));
 
@@ -46,14 +53,8 @@ const StyledTitle = styled(Typography)(() => ({
   '&:hover': { textDecoration: 'underline' },
   cursor: 'pointer',
   fontWeight: 600,
+  lineHeight: 1.4,
   textDecoration: 'none',
-}));
-
-const StyledCategoryBox = styled(Stack)(({ theme }) => ({
-  alignItems: 'center',
-  flexGrow: 1,
-  justifyContent: 'space-between',
-  padding: theme.spacing(1),
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({ marginTop: theme.spacing(1) }));
@@ -61,9 +62,10 @@ const StyledDivider = styled(Divider)(({ theme }) => ({ marginTop: theme.spacing
 const StyledStack = styled(Stack)(() => ({ width: '100%' }));
 
 export default function Summary({
+  big,
   summary,
   initialFormat,
-  tickIntervalMs = 60_000,
+  tickIntervalMs = ms('5m'),
   onChange,
 }: Props) {
 
@@ -107,6 +109,13 @@ export default function Summary({
     );
   }, [summary, initialFormat, format]);
 
+  const imageUrl = React.useMemo(() => {
+    if (summary.media?.imageArticle) {
+      return summary.media.imageArticle;
+    }
+    return summary.media?.imageAi1 || summary.imageUrl;
+  }, [summary]);
+
   const handleFormatChange = React.useCallback(
     async (newFormat: ReadingFormat) => {
       if (newFormat === ReadingFormat.FullArticle) {
@@ -123,34 +132,63 @@ export default function Summary({
   return (
     <StyledCard onClick={ initialFormat ? undefined : () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
       <StyledStack spacing={ 2 }>
-        <Stack direction="row" spacing={ 1 } flexGrow={ 1 }>
-          <Typography variant="subtitle1">{summary.publisher.displayName}</Typography>
+        {big && imageUrl && (
+          <Box>
+            <div style={ {
+              backgroundImage: `url(${imageUrl})`,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              borderRadius: 8, 
+              height: 300, 
+              width: '100%', 
+            } } />
+          </Box>
+        )}
+        <Stack direction="row" spacing={ 1 } flexGrow={ 1 } alignItems={ 'center' }>
+          <img 
+            src={ publisherIcon(summary.publisher) }
+            alt={ summary.publisher.displayName }
+            width={ 24 }
+            height={ 24 }
+            style={ { borderRadius: '50%' } } />
+          <Typography variant="subtitle2">{summary.publisher.displayName}</Typography>
+          <Typography variant="subtitle2">·</Typography>
+          <Typography variant="subtitle2">
+            {timeAgo}
+          </Typography>
           <Box flexGrow={ 1 } />
+          <Typography variant="subtitle2">
+            {fixedSentiment(summary.sentiment)}
+          </Typography>
         </Stack>
         <StyledStack direction='row' spacing={ 2 }>
-          {summary.imageUrl && (
-            <Box>
-              <img src={ summary.imageUrl } alt={ summary.title } width={ 100 } height={ 100 } />
-            </Box>
-          )}
           <StyledStack flexGrow={ 1 }>
-            <StyledTitle variant="h6">
+            <StyledTitle variant="subtitle1">
               {summary.title}
             </StyledTitle>
-            {initialFormat && (
-              <Typography>{summary.shortSummary}</Typography>
-            )}
+            <Typography variant="body2">{summary.shortSummary}</Typography>
             <Box flexGrow={ 1 } />
-            <StyledCategoryBox direction="row" spacing={ 1 }>
-              <Typography variant="subtitle1">{summary.category.displayName}</Typography>
-            </StyledCategoryBox>
           </StyledStack>
+          {!big && imageUrl && (
+            <Box>
+              <div style={ {
+                backgroundImage: `url(${imageUrl})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                borderRadius: 8, 
+                height: 100, 
+                width: 100, 
+              } } />
+            </Box>
+          )}
         </StyledStack>
         <StyledDivider variant="fullWidth" />
         <Stack direction='column' spacing={ 1 }>
-          <Stack direction='row' flexGrow={ 1 } alignItems="center">
+          <Stack direction='row' flexGrow={ 1 } alignItems="center" spacing={ 1 }>
+            <Typography variant="subtitle2">{summary.category.displayName}</Typography>
+            <Typography variant="subtitle2">·</Typography>
             <Typography variant="subtitle2">
-              {timeAgo}
+              {pluralize('Article', (summary.siblings?.length ?? 0) + 1, true)}
             </Typography>
             <Box flexGrow={ 1 } />
           </Stack>
