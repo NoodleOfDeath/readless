@@ -241,10 +241,6 @@ export class ScribeService extends BaseService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let generatedObj: any;
       const generateImageWithDeepAi = async () => {
-        
-        if (await Summary.findOne({ where: { url } })) {
-          await this.error('job already completed by another worker');
-        }
     
         // Generate image from the title
         const image = await DeepAiService.textToImage(newSummary.title);
