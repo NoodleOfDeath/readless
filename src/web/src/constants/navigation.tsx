@@ -26,6 +26,12 @@ export const headerNavigation = [
 export const socialNavigation = [
   {
     external: true,
+    icon: 'facebook',
+    title: 'Facebook',
+    url: `https://www.facebook.com/profile.php?id=${process.env.NEXT_PUBLIC_FACEBOOK_ID}`,
+  },
+  {
+    external: true,
     icon: 'instagram',
     title: 'Instagram',
     url: 'https://instagram.com/readless.ai',
