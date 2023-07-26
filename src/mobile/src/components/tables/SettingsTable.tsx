@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 
 import RNFS from 'react-native-fs';
 
@@ -28,6 +29,7 @@ export function SettingsTable() {
     compactSummaries,
     colorScheme, 
     fontFamily, 
+    preferredShortPressFormat,
     preferredReadingFormat,
     resetPreferences, 
     triggerWords,
@@ -62,7 +64,7 @@ export function SettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
-      <TableViewSection grouped header={ strings.settings_system }>
+      <TableViewSection header={ strings.settings_system }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -117,13 +119,12 @@ export function SettingsTable() {
               step={ 0.05 } />
           ) } />
       </TableViewSection>
-      <TableViewSection grouped header={ strings.settings_summaryDisplay }>
+      <TableViewSection header={ strings.settings_summaryDisplay }>
         <TableViewCell
           cellContentView={ (
-            <ScrollView scrollEnabled={ false }>
+            <ScrollView my={ 12 } scrollEnabled={ false }>
               <Summary 
                 sample
-                my={ 12 }
                 forceUnread
                 disableInteractions 
                 disableNavigation /> 
@@ -139,16 +140,26 @@ export function SettingsTable() {
           title={ compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries }
           cellIcon="text-short"
           cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
+        {Platform.OS === 'ios' && (
+          <TableViewCell
+            bold
+            cellStyle="RightDetail"
+            title={ strings.settings_preferredShortPressFormat }
+            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_summary }
+            accessory="DisclosureIndicator"
+            cellIcon="gesture-tap-hold"
+            onPress={ () => navigate('shortPressFormatPicker') } />
+        )}
         <TableViewCell
           bold
           cellStyle="RightDetail"
           title={ strings.settings_preferredReadingFormat }
           detail={ preferredReadingFormat === ReadingFormat.Bullets ? strings.summary_bullets : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_summary }
           accessory="DisclosureIndicator"
-          cellIcon="view-list"
+          cellIcon="gesture-tap"
           onPress={ () => navigate('readingFormatPicker') } />
       </TableViewSection>
-      <TableViewSection grouped header={ strings.settings_customization }>
+      <TableViewSection header={ strings.settings_customization }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
@@ -158,7 +169,7 @@ export function SettingsTable() {
           cellIcon="alphabetical-off"
           onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
-      <TableViewSection grouped header={ strings.settings_general }>
+      <TableViewSection header={ strings.settings_general }>
         <TableViewCell
           bold
           title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }

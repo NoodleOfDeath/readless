@@ -55,6 +55,7 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   forceExpanded?: boolean;
   showImage?: boolean;
   bulletsAsShortSummary?: boolean;
+  summaryAsShortSummary?: boolean;
   disableInteractions?: boolean;
   disableNavigation?: boolean;
   dateFormat?: string;
@@ -91,7 +92,7 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
     publisher: {
       displayName: strings.misc_publisher,
-      name: '',
+      name: 'forbes',
     },
     publisherId: 0,
     sentiment: 0.3,
@@ -103,7 +104,6 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     siblings: [],
     summary: [strings.summary_example_summary, strings.summary_example_summary, strings.summary_example_summary].join('\n'),
     title: strings.summary_example_title,
-    translations: {},
     url: 'https://readless.ai',
   },
 };
@@ -145,6 +145,7 @@ export function Summary({
   big = Boolean(initialFormat),
   keywords = [],
   bulletsAsShortSummary,
+  summaryAsShortSummary,
   forceExpanded,
   disableInteractions,
   disableNavigation,
@@ -152,7 +153,7 @@ export function Summary({
   showImage = true,
   dateFormat = showFullDate ? 'E PP' : undefined,
   forceUnread = showcase,
-  forceShortSummary: forceShortSummary0 = bulletsAsShortSummary,
+  forceShortSummary: forceShortSummary0 = bulletsAsShortSummary || summaryAsShortSummary,
   footerOnly,
   hideHeader,
   hideCard,
@@ -180,6 +181,7 @@ export function Summary({
     // prefs
     compactSummaries,
     showShortSummary,
+    preferredShortPressFormat,
     preferredReadingFormat, 
     triggerWords,
     // summaries
@@ -203,7 +205,7 @@ export function Summary({
     setPreference,
   } = React.useContext(SessionContext);
 
-  const [summary] = React.useState(summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY));
+  const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
 
   const [lastTick, setLastTick] = React.useState(new Date());
   
@@ -243,7 +245,7 @@ export function Summary({
   }, [lastTick, dateFormat]);
   
   const content = React.useMemo(() => {
-    if (!format && !bulletsAsShortSummary) {
+    if (!format && !bulletsAsShortSummary && !summaryAsShortSummary) {
       return;
     }
     let content = localizedStrings.summary;
@@ -255,7 +257,7 @@ export function Summary({
       }
     }
     return content;
-  }, [format, bulletsAsShortSummary, localizedStrings.summary, localizedStrings.bullets, hideCard]);
+  }, [format, bulletsAsShortSummary, summaryAsShortSummary, localizedStrings.summary, localizedStrings.bullets, hideCard]);
   
   const containsTrigger = React.useMemo(() => {
     return Object.keys({ ...triggerWords }).some((word) => {
@@ -276,21 +278,23 @@ export function Summary({
       {content.split('\n').map((content, i) => (
         <Chip
           key={ `${content}-${i}` }
-          itemsCenter
           gap={ 12 }
-          body2={ bulletsAsShortSummary }
+          body2={ bulletsAsShortSummary || summaryAsShortSummary }
+          iconSize={ 12 }
           leftIcon={ format === 'bullets' ? 'circle' : undefined }>
           <Highlighter 
             flex={ 1 }
-            body2={ bulletsAsShortSummary }
+            selectable={ Boolean(initialFormat) }
+            body2={ bulletsAsShortSummary || summaryAsShortSummary }
+            sentenceCase
             highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-            searchWords={ keywords }>
+            searchWords={ !showcase ? keywords : [] }>
             { cleanString(content) }
           </Highlighter>
         </Chip>
       ))}
     </React.Fragment>
-  ), [content, bulletsAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
+  ), [content, bulletsAsShortSummary, showcase, initialFormat, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
 
   // update time ago every `tickIntervalMs` milliseconds
   useFocusEffect(React.useCallback(() => {
@@ -359,14 +363,15 @@ export function Summary({
   const title = React.useMemo(() => (
     <Highlighter
       bold
+      selectable={ Boolean(initialFormat) }
       subtitle2={ Boolean(!(!forceExpanded && isCompact) && !initialFormat) }
       body1={ (!forceExpanded && isCompact) && !initialFormat }
       color={ !initialFormat && isRead ? theme.colors.textDisabled : theme.colors.text }
       highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-      searchWords={ keywords }>
+      searchWords={ !showcase ? keywords : [] }>
       {cleanString((((!forceExpanded && isCompact) && (showShortSummary || forceShortSummary) && !initialFormat) ? localizedStrings.shortSummary : localizedStrings.title) || '') }
     </Highlighter>
-  ), [forceExpanded, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
+  ), [forceExpanded, showcase, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const publisherChip = React.useMemo(() => (
     <Chip
@@ -746,11 +751,12 @@ export function Summary({
             </View>
             {translateToggle}
             {((!(!forceExpanded && isCompact) && (showShortSummary || forceShortSummary)) || initialFormat) && (
-              <View>
-                {bulletsAsShortSummary ? renderContent(ReadingFormat.Bullets) : (
+              <View gap={ 3 }>
+                {bulletsAsShortSummary ? renderContent(ReadingFormat.Bullets) : summaryAsShortSummary ? renderContent(ReadingFormat.Summary) : (
                   <Highlighter 
+                    selectable={ Boolean(initialFormat) }
                     highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-                    searchWords={ keywords }>
+                    searchWords={ !showcase ? keywords : [] }>
                     { cleanString(localizedStrings.shortSummary ?? '') }
                   </Highlighter>
                 )}
@@ -768,7 +774,7 @@ export function Summary({
         </View>
       )}
     </View>
-  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image, isTablet, shareActions]);
+  ), [footerOnly, showcase, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, summaryAsShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image, isTablet, shareActions]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
     <View>
@@ -859,8 +865,9 @@ export function Summary({
       forceExpanded
       disableInteractions
       disableNavigation
+      bulletsAsShortSummary={ preferredShortPressFormat === ReadingFormat.Bullets }
       summary={ summary } />
-  ), [isTablet, screenWidth, summary]);
+  ), [isTablet, screenWidth, preferredShortPressFormat, summary]);
 
   if (footerOnly) {
     return footer;

@@ -76,6 +76,7 @@ export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextP
   underline?: boolean;
   color?: TextStyle['color'];
 
+  sentenceCase?: boolean;
   capitalize?: boolean;
   uppercase?: boolean;
 };

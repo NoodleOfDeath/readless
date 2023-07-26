@@ -33,9 +33,8 @@ export function ColorSchemePicker({
         ] }
         initialValue={ colorScheme ?? 'system' }
         onValueChange={ (state) => setPreference('colorScheme', state?.value) }>
-        <ScrollView scrollEnabled={ false }>
+        <ScrollView my={ 12 } scrollEnabled={ false }>
           <Summary
-            mt={ 12 }
             sample
             disableInteractions 
             disableNavigation /> 

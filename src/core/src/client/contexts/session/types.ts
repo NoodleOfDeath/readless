@@ -53,27 +53,16 @@ export enum OrientationType {
 }
   
 export type Preferences = {
-  // system settings
-  colorScheme?: ColorScheme;
-  fontFamily?: string;
-  fontSizeOffset?: number;
-  letterSpacing?: number;
-  lineHeightMultiplier?: number;
   
-  // display settings
-  compactMode?: boolean; // legacy 1.11.0
-  compactSummaries?: boolean;
-  showShortSummary?: boolean;
-  preferredReadingFormat?: ReadingFormat;
-  sentimentEnabled?: boolean;
-  triggerWords?: { [key: string]: string };
-  
-  // app state
+  // system state
   rotationLock?: OrientationType;  
   searchHistory?: string[];
   viewedFeatures?: { [key: string]: Bookmark<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
+  
+  // user state
+  uuid?: string;
   
   // summary state
   readSummaries?: { [key: number]: Bookmark<boolean> };
@@ -100,6 +89,22 @@ export type Preferences = {
   followCount: number;
   followFilter?: string;
   excludeFilter?: string;
+  
+  // system preferences
+  colorScheme?: ColorScheme;
+  fontFamily?: string;
+  fontSizeOffset?: number;
+  letterSpacing?: number;
+  lineHeightMultiplier?: number;
+  
+  // display preferences
+  compactMode?: boolean; // legacy 1.11.0
+  compactSummaries?: boolean;
+  showShortSummary?: boolean;
+  preferredShortPressFormat?: ReadingFormat;
+  preferredReadingFormat?: ReadingFormat;
+  sentimentEnabled?: boolean;
+  triggerWords?: { [key: string]: string };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

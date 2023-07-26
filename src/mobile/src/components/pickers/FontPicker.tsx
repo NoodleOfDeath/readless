@@ -72,9 +72,8 @@ export function FontPicker({
       initialValue={ fontFamily as FontFamily }
       cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
       onValueChange={ (state) => setPreference('fontFamily', state?.value) }>
-      <ScrollView scrollEnabled={ false }>
+      <ScrollView my={ 12 } scrollEnabled={ false }>
         <Summary
-          mt={ 12 }
           sample
           disableInteractions
           disableNavigation /> 

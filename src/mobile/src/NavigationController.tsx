@@ -60,6 +60,7 @@ import {
   RecapScreen,
   SearchScreen,
   SettingsScreen,
+  ShortPressFormatPickerScreen,
   StackableTabParams,
   StatsScreen,
   SummaryScreen,
@@ -155,6 +156,14 @@ const screens: RouteConfig<
     options: {
       headerRight: () => undefined, 
       headerTitle: strings.screens_triggerWords, 
+    },
+  },
+  {
+    component: ShortPressFormatPickerScreen,
+    name: 'shortPressFormatPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_preferredShortPressFormat, 
     },
   },
   {

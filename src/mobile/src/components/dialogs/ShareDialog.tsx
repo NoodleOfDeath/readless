@@ -42,7 +42,7 @@ export type ShareDialogAction = {
   onPress: () => void;
 };
 
-export const SHARE_FORMATS = ['big', 'compact-shortSummary', 'compact-bullets', 'compact'] as const;
+export const SHARE_FORMATS = ['big', 'big-summary', 'big-bullets', 'compact-shortSummary', 'compact-summary', 'compact-bullets', 'compact'] as const;
 
 export type ShareFormat = typeof SHARE_FORMATS[number];
 
@@ -80,11 +80,6 @@ export function ShareDialog({
       },
       {
         icon: 'link-variant',
-        label: strings.share_copyLink,
-        onPress: () => copyToClipboard(shareableLink(summary, BASE_DOMAIN, format)),
-      },
-      {
-        icon: 'link-variant',
         label: strings.share_copyOriginalSourceLink,
         onPress: () => copyToClipboard(summary.url),
       },
@@ -114,28 +109,6 @@ export function ShareDialog({
         onPress: () => shareStandard(summary, viewshot.current), 
       },
     ],
-    [
-      { 
-        icon:'content-copy',
-        label: strings.share_copyTitle,
-        onPress: () => copyToClipboard(summary.title), 
-      },
-      {
-        icon:'content-copy',
-        label: strings.share_copyShortSummary,
-        onPress: () => copyToClipboard(summary.shortSummary), 
-      },
-      {
-        icon:'content-copy',
-        label: strings.share_copySummary,
-        onPress: () => copyToClipboard(summary.summary), 
-      },
-      {
-        icon:'content-copy',
-        label: strings.share_copyBulletPoints,
-        onPress: () => copyToClipboard(summary.bullets?.join('\n')), 
-      },
-    ],
   ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
 
   return (
@@ -163,15 +136,27 @@ export function ShareDialog({
                   value: 'big',
                 },
                 {
-                  icon: 'id-card',
+                  icon: 'text-long',
+                  value: 'big-summary',
+                },
+                {
+                  icon: 'format-list-text',
+                  value: 'big-bullets',
+                },
+                {
+                  icon: 'text-short',
                   value: 'compact-shortSummary',
                 },
                 {
-                  icon: 'card-bulleted-outline',
+                  icon: 'text',
+                  value: 'compact-summary',
+                },
+                {
+                  icon: 'format-list-bulleted',
                   value: 'compact-bullets',
                 },
                 {
-                  icon: 'card-text-outline',
+                  icon: 'image-text',
                   value: 'compact',
                 },
               ] } />
@@ -186,17 +171,19 @@ export function ShareDialog({
                 style={ theme.components.card }>
                 <Summary 
                   showcase
-                  big={ /^big$/.test(shareFormat) }
-                  showImage={ !/compact-(shortSummary|bullets)/.test(shareFormat) }
+                  big={ /^big/.test(shareFormat) }
+                  showImage={ !/compact-(summary|shortSummary|bullets)/.test(shareFormat) }
                   forceExpanded={ !/^compact$/.test(shareFormat) }
                   forceShortSummary={ /^big|compact-(shortSummary|bullets)$/.test(shareFormat) }
                   bulletsAsShortSummary={ /bullets/.test(shareFormat) }
+                  summaryAsShortSummary={ /summary/.test(shareFormat) }
                   disableInteractions
                   showFullDate
                   summary={ summary } />
                 <Divider />
                 <View height={ 20 } my={ 3 }>
                   <SvgUri
+                    color={ theme.colors.text }
                     viewBox='328 0 724 338'
                     uri='https://www.readless.ai/logo.svg' 
                     height={ 20 } /> 

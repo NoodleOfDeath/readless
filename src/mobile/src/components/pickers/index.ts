@@ -6,5 +6,6 @@ export * from './NumericPrefPicker';
 export * from './PublisherPicker';
 export * from './PrefSwitch';
 export * from './ReadingFormatPicker';
+export * from './ShortPressFormatPicker';
 export * from './TriggerWordPicker';
 export * from './VoicePicker';
