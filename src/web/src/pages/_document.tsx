@@ -20,47 +20,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head>
-          <title>Read Less – News without the noise</title>
-          <meta
-            content="Using AI to cut through the bullsh💩t"
-            name="Read Less – News without the noise" />
-          <meta
-            content="Read Less – News without the noise"
-            property="og:title" />
-          <meta
-            content="Using AI to cut through the bullsh💩t"
-            property="og:description" />
-          <meta
-            content="/sms-banner.png"
-            property="og:image" />
-          <meta
-            property="og:url"
-            content="https://readless.ai" />
-          <meta
-            property="og:site_name"
-            content="Read Less – News without the noise" />
-          <meta
-            content="Read Less – News without the noise"
-            property="twitter:title" />
-          <meta
-            content="Using AI to cut through the bullsh💩t"
-            property="twitter:description" />
-          <meta
-            content="/twitter-card.png"
-            property="twitter:image" />
-          <meta property="og:type" content="Article" />
-          <meta content="summary" name="twitter:card" />
-          <meta name="twitter:site" content="@readlessai" />
-          <meta name="twitter:creator" content="@readlessai" />
-          <meta key="apple-itunes-app" name="apple-itunes-app" content={ `app-id=${process.env.NEXT_PUBLIC_APPLE_APP_ID}` } />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1" />
-          <meta name="theme-color" content="#000000" />
-          <meta name="msapplication-TileColor" content="#da532c" />
-          <meta name="theme-color" content="#ffffff" />
-        </Head>
+        <Head />
         <body className="app">
           <GoogleAnalytics />
           <Main />

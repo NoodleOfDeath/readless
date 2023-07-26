@@ -1,7 +1,7 @@
 export const headerNavigation = [
   {
     title: 'Download',
-    url: '#download',
+    url: '/#download',
   },
   {
     external: false,
@@ -15,7 +15,7 @@ export const headerNavigation = [
   },
   {
     title: 'Help',
-    url: 'mailto:thecakeisalie@readless.ai',
+    url: `mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`,
   },
 ];
 
