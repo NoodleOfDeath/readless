@@ -259,8 +259,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       'x-app-version': userAgent.currentVersion,
       'x-locale': userAgent.locale,
       'x-platform': userAgent.OS,
-      'x-uuid': uuid,
     };
+    if (uuid) {
+      headers['x-uuid'] = uuid;
+    }
     return (...args: T) => {
       return fn(...args, { headers });
     };
