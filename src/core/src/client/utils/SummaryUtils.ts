@@ -10,7 +10,7 @@ export const shareableLink = (
   baseUrl: string,
   format: ReadingFormat = ReadingFormat.Summary
 ) => {
-  return `https://open.${baseUrl}/s/${summary.id}/${format}`;
+  return `https://open.${baseUrl.replace(/https?:\/\/(?:www\.)?/, '')}/s/${summary.id}/${format}`;
 };
 
 export const publisherIcon = (publisher: PublicPublisherAttributes) => {

@@ -4,6 +4,10 @@ export const headerNavigation = [
     url: `${process.env.NEXT_PUBLIC_BASE_URL}/#download`,
   },
   {
+    title: 'Web App',
+    url: '/read',
+  },
+  {
     external: false,
     title: 'Terms & Conditions',
     url: '/terms',
