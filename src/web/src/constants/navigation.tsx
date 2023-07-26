@@ -1,7 +1,7 @@
 export const headerNavigation = [
   {
     title: 'Download',
-    url: '/#download',
+    url: `${process.env.NEXT_PUBLIC_BASE_URL}/#download`,
   },
   {
     external: false,
