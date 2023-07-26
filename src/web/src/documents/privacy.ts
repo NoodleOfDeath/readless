@@ -30,7 +30,7 @@ behavior, and providing customer support.
 
 4. Cookies and similar technologies: We may use cookies and similar technologies to collect information about your use of our App and to improve and personalize your user experience.
 
-5. Your choices: You may opt-out of receiving marketing communications from us at any time by clicking the &quot;unsubscribe&quot; link in our emails or by contacting us at [idontwant@readless.ai](mailto:idontwant@readless.ai). You may also disable cookies in your browser settings, although this may impact your user experience on our App.
+5. Your choices: You may opt-out of receiving marketing communications from us at any time by clicking the &quot;unsubscribe&quot; link in our emails or by contacting us at [nomore@readless.ai](mailto:nomore@readless.ai). You may also disable cookies in your browser settings, although this may impact your user experience on our App.
 
 6. Data retention and security: We retain your personal information only for as long as necessary to fulfill the purposes for which it was collected and to comply with legal obligations. We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure.
 
