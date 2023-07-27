@@ -12,7 +12,7 @@ jest.setTimeout(30_000);
 import { PUBLISHERS } from '../src/api/v1/schema/resources/channel/Publisher.types';
 import { Loot, PuppeteerService } from '../src/services/puppeteer';
 
-const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' | 'date'> } = {
+const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' | 'date' | 'imageUrls'> } = {
   abc: {
     authors: ['Shannon K. Crawford', 'Luis Martinez'],
     date: new Date('2023-04-23T14:52:00.000Z'),
@@ -111,6 +111,7 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   csis: {
     authors: [],
     date: new Date('placeholder'),
+    imageUrls: ['https://features.csis.org/hiddenreach/china-polar-research-facility/assets/n9kJ0Tanih/fallback-1920x1080.jpg'],
     url: 'https://features.csis.org/hiddenreach/china-polar-research-facility/',
   },
   defenseone: {
@@ -347,11 +348,16 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
 
 describe('util method tests', () => {
   test('parse-srcset', () => {
-    const srcset = '/test200.png 200w, /test400.png 400w';
-    const urls = PuppeteerService.parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
+    let srcset = '/test200.png 200w, /test400.png 400w';
+    let urls = PuppeteerService.parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
     expect(urls).toBeDefined();
     expect(urls.length).toBe(2);
     expect(urls[0]).toBe('https://www.wsj.com/test400.png');
+    srcset = '/test1x.png 1x, /test2x.png 2x';
+    urls = PuppeteerService.parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
+    expect(urls).toBeDefined();
+    expect(urls.length).toBe(2);
+    expect(urls[0]).toBe('https://www.wsj.com/test2x.png');
     console.log(urls);
   });
 });
@@ -375,6 +381,9 @@ describe('loot', () => {
       expect(loot.url).toBe(exp.url);
       expect(loot.content.length).toBeGreaterThan(0);
       console.log(loot.imageUrls);
+      if (exp.imageUrls) {
+        expect(loot.imageUrls[0]).toBe(exp.imageUrls[0]);
+      }
       if (exp.authors.length > 0) {
         expect(loot.authors.length).toBe(exp.authors.length);
         for (const author of loot.authors) {
