@@ -4,10 +4,14 @@ import { DeviceEventEmitter, Platform } from 'react-native';
 import { BASE_DOMAIN } from '@env';
 import Clipboard from '@react-native-clipboard/clipboard';
 import RNFS from 'react-native-fs';
-import Share, { ShareOptions, Social } from 'react-native-share';
+import Share, { ShareOptions as RNShareOptions, Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
-import { InteractionType, PublicSummaryGroup } from '~/api';
+import { 
+  InteractionType, 
+  PublicSummaryGroup,
+  ReadingFormat,
+} from '~/api';
 import { shareableLink } from '~/utils';
 
 const SocialAppIds: Record<string, string> = {
@@ -36,6 +40,12 @@ export type UseShareProps = {
   callback?: () => void;
 };
 
+export type ShareOptions = Partial<RNShareOptions> & {
+  format?: ReadingFormat;
+  social?: Social;
+  viewshot?: ViewShot | null;
+};
+
 export function useShare({
   onInteract,
   callback,
@@ -54,18 +64,18 @@ export function useShare({
     callback?.();
   }, [callback, onInteract]);
   
-  const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, viewshot: ViewShot | null) => {
+  const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, { format, viewshot }: ShareOptions) => {
     if (!summary) {
       return;
     }
     try {
-      let url = shareableLink(summary, BASE_DOMAIN);
+      let url = shareableLink(summary, BASE_DOMAIN, format);
       const imageUrl = await viewshot?.capture?.();
       const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
       if (base64ImageUrl) {
         url = base64ImageUrl;
       }
-      const options: ShareOptions = Platform.select({
+      const options: RNShareOptions = Platform.select({
         android: { url },
         default: { url },
         ios: { 
@@ -98,7 +108,9 @@ export function useShare({
     callback?.();
   }, [callback, onInteract]);
   
-  const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, viewshot: ViewShot | null, social: Social) => {
+  const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, {
+    format, social, viewshot, 
+  }) => {
     if (!summary) {
       return;
     }

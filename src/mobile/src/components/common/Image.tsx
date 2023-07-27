@@ -1,13 +1,13 @@
 import React from 'react';
-import { Image as RNImage } from 'react-native';
+import { Image as RNImage, ImageProps as RNImageProps } from 'react-native';
 
 import FastImage, { FastImageProps } from 'react-native-fast-image';
-import { SvgUri } from 'react-native-svg';
 
-import { View, ViewProps } from '~/components';
+import { ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type ImageProps = FastImageProps & Omit<ViewProps, 'children' | 'center', 'height'> & {
+export type ImageProps = RNImageProps & FastImageProps & Omit<ViewProps, 'children'> & {
+  native?: boolean;
   contain?: boolean;
   stretch?: boolean;
   center?: boolean;
@@ -15,7 +15,8 @@ export type ImageProps = FastImageProps & Omit<ViewProps, 'children' | 'center',
   fallbackComponent?: React.ReactNode;
 };
 
-export function Image({ 
+export function Image({
+  native,
   contain, 
   stretch,
   center,
@@ -27,28 +28,21 @@ export function Image({
   
   const style = useStyles(props);
   const [shouldFallback, setShouldFallback] = React.useState(false);
-  const [aspectRatio, setAspectRatio] = React.useState(1);
   
-  const uri = React.useMemo(() => typeof source !== 'number' ? source?.uri : undefined, [source]);
-  
-  React.useEffect(() => {
-    try {
-      RNImage.getSize(uri, (width, height) => {
-        if (!width || !height) {
-          return;
-        }
-        setAspectRatio(width / height);
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-  
+  if (native) {
+    return (
+      <RNImage
+        source={ source }
+        { ...props }
+        resizeMode={ resizeMode }
+        style={ style } />
+    );
+  }
+
   return shouldFallback ? fallbackComponent : (
     <FastImage 
       onError={ () => setShouldFallback(true) }
       source={ source }
-      aspectRatio={ aspectRatio }
       { ...props }
       resizeMode={ resizeMode }
       style={ style } />

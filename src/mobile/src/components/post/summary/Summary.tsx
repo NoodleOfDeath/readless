@@ -1,11 +1,18 @@
 import React from 'react';
-import { useWindowDimensions } from 'react-native';
+import {  useWindowDimensions } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { format as formatDate, formatDistance } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
 import { SheetManager } from 'react-native-actions-sheet';
+import { 
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart,
+  VictoryLabel,
+  VictoryTheme,
+} from 'victory-native';
 
 import { 
   InteractionType,
@@ -340,6 +347,11 @@ export function Summary({
   }, [formatTime, summary.originalDate]);
   
   const sentimentMeter = React.useMemo(() => {
+    if (!summary.sentiments || !Object.values(summary.sentiments).length) {
+      return null;
+    }
+    const data = Object.values(summary.sentiments ?? []).sort((a, b) => a.method.localeCompare(b.method))
+      .map((s) => ({ x: s.method, y: s.score })) ?? [];
     return (
       <Popover
         disabled={ disableInteractions }
@@ -355,10 +367,35 @@ export function Summary({
               width={ 40 } />
           </View>
         ) }>
-        <Text p={ 12 }>{strings.summary_sentimentScore}</Text>
+        <View p={ 12 } itemsCenter>
+          <VictoryChart 
+            animate={ { duration: 500 } }
+            theme={ VictoryTheme.material }>
+            <VictoryAxis
+              crossAxis
+              domain={ [0, (summary.sentiments?.length ?? 0) + 1] }
+              tickFormat={ () => '' }
+              standalone={ false } />
+            <VictoryAxis
+              dependentAxis
+              crossAxis 
+              domainPadding={ 12 }
+              standalone={ false } />
+            <VictoryBar
+              labelComponent={ 
+                <VictoryLabel style={ { fill: theme.colors.text } } /> 
+              }
+              labels={ ({ datum }) => `${datum.x}\n${fixedSentiment(datum.y)}` }
+              style={ { data: { fill: ({ datum }) => datum.y < 0 ? theme.colors.error : theme.colors.success } } }
+              data={ data } />
+          </VictoryChart>
+          <Text>
+            {strings.summary_sentimentScore}
+          </Text>
+        </View>
       </Popover>
     );
-  }, [disableInteractions, summary.sentiment]);
+  }, [disableInteractions, summary.sentiment, summary.sentiments, theme.colors.error, theme.colors.success, theme.colors.text]);
 
   const title = React.useMemo(() => (
     <Highlighter
@@ -409,6 +446,7 @@ export function Summary({
           onPress: async () => {
             await SheetManager.show('share', {
               payload: {
+                format: preferredShortPressFormat,
                 onInteract,
                 summary,
               },
@@ -494,7 +532,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
+  }, [showcase, preferredShortPressFormat, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
 
   const shareActions = React.useMemo(() => (
     <React.Fragment>
@@ -524,6 +562,7 @@ export function Summary({
             }
             await SheetManager.show('share', {
               payload: {
+                format: initialFormat,
                 onInteract,
                 summary,
               },
@@ -543,7 +582,7 @@ export function Summary({
         </ContextMenu>
       </View>
     </React.Fragment>
-  ), [theme.colors.textSecondary, disableInteractions, openURL, onInteract, summary, menuActions]);
+  ), [theme.colors.textSecondary, initialFormat, disableInteractions, openURL, onInteract, summary, menuActions]);
   
   const header = React.useMemo(() => {
     if ((!forceExpanded && isCompact) && !initialFormat) {
@@ -561,7 +600,7 @@ export function Summary({
         bg={ theme.colors.headerBackground }>
         <View flexRow itemsCenter gap={ 6 }>
           {publisherChip}
-          <View flex={ 1 } flexRow itemsCenter gap={ 6 }>
+          <View flex={ 3 } flexRow itemsCenter gap={ 6 }>
             <Text
               caption
               color={ theme.colors.textSecondary }>
@@ -646,10 +685,10 @@ export function Summary({
   }, [footerOnly, forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, summary.category, summary.siblings?.length, hideArticleCount, isBookmarked, shareActions, disableInteractions, openCategory, navigate]);
   
   const articleImage = React.useMemo(() => {
-    if (summary.media?.imageArticle && /\.(?:jpe?g|png)/.test(summary.media.imageArticle)) {
+    if (summary.media?.imageArticle) {
       return summary.media.imageArticle;
     }
-  }, [summary.media]);
+  }, [summary.media?.imageArticle]);
   
   const imageUrl = React.useMemo(() => articleImage || summary.media?.imageAi1 || summary.imageUrl, [articleImage, summary.media?.imageAi1, summary.imageUrl]);
   
@@ -708,7 +747,7 @@ export function Summary({
               <Text 
                 caption
                 p={ 12 }>
-                {!articleImage ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
+                {articleImage == null ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
               </Text>
             </Popover>
           )}
@@ -876,7 +915,7 @@ export function Summary({
   return (
     <View flexGrow={ 1 }>
       {!initialFormat ? 
-        (disableInteractions || showcase) ? card : (
+        ((disableInteractions || showcase)) ? card : (
           <ContextMenu 
             actions={ menuActions }
             preview={ contextMenuPreview }>

@@ -35,7 +35,7 @@ export function SummaryScreen({
   const [summary, setSummary] = React.useState<PublicSummaryGroup>();
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(route?.params?.initialFormat ?? ReadingFormat.Summary);
   const keywords = React.useMemo(() => route?.params?.keywords ?? [], [route]);
-
+  
   const load = React.useCallback(async (id?: number) => {
     if (!id) {
       return;
@@ -96,12 +96,16 @@ export function SummaryScreen({
     navigation?.setOptions({
       headerRight: () => (
         <View>
-          <Summary footerOnly summary={ summary } />
+          <Summary 
+            footerOnly 
+            summary={ summary } 
+            initialFormat={ format }
+            onInteract={ (...e) => handleInteraction(summary, ...e) } />
         </View>
       ),
       headerTitle: '', 
     });
-  }, [summary, navigation]));
+  }, [summary, format, handleInteraction, navigation]));
 
   return (
     <Screen>
@@ -120,12 +124,12 @@ export function SummaryScreen({
           renderItem={ ({ item }) => (
             <Summary
               mx={ 12 }
+              key={ item.id }
               summary={ item } 
               hideArticleCount
               onFormatChange={ (format) => handleFormatChange(item, format) }
               onInteract={ (...e) => handleInteraction(item, ...e) } />
           ) }
-          keyExtractor={ (item) => `${item.id}` }
           ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
           ListHeaderComponent={ (
             <React.Fragment>

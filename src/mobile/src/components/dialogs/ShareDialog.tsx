@@ -23,9 +23,22 @@ import {
   Text,
   View,
 } from '~/components';
+import { SessionContext } from '~/contexts';
 import {  useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { shareableLink } from '~/utils';
+
+export const SHARE_FORMATS = [
+  'big',
+  'big-summary',
+  'big-bullets',
+  'compact-shortSummary',
+  'compact-summary', 
+  'compact-bullets',
+  'compact',
+] as const;
+
+export type ShareFormat = typeof SHARE_FORMATS[number];
 
 export type ShareDialogProps = {
   summary: PublicSummaryGroup;
@@ -42,10 +55,6 @@ export type ShareDialogAction = {
   onPress: () => void;
 };
 
-export const SHARE_FORMATS = ['big', 'big-summary', 'big-bullets', 'compact-shortSummary', 'compact-summary', 'compact-bullets', 'compact'] as const;
-
-export type ShareFormat = typeof SHARE_FORMATS[number];
-
 export function ShareDialog({
   payload,
   ...props
@@ -55,14 +64,17 @@ export function ShareDialog({
   const viewshot = React.useRef<ViewShot>(null);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  const [shareFormat, setShareFormat] = React.useState<ShareFormat>('big');
-
+  const { compactSummaries, preferredReadingFormat } = React.useContext(SessionContext);
+  
   const {
     summary,
-    format,
+    format: format0,
     onClose,
     onInteract,
-  } = React.useMemo(() => (payload ?? {}) as Partial<ShareDialogProps>, [payload]);
+  } = React.useMemo(() => ({ ...payload }), [payload]);
+  
+  const [shareFormat, setShareFormat] = React.useState<ShareFormat>(compactSummaries ? ((format0 || preferredReadingFormat) === ReadinFormat.Bullets ? 'compact-bullets' : 'compact-shortSummary') : ((format0 || preferredReadingFormat) === ReadingFormat.Bullets ? 'big-bullets' : 'big'));
+  const format = React.useMemo(() => /bullets/i.test(shareFormat) ? ReadingFormat.Bullets : ReadingFormat.Summary, [shareFormat]);
   
   const {
     copyToClipboard, shareSocial, shareStandard, 
@@ -76,7 +88,7 @@ export function ShareDialog({
       {
         icon: 'export-variant',
         label: strings.share_shareAsLink,
-        onPress: () => shareStandard(summary, null), 
+        onPress: () => shareStandard(summary, { format }), 
       },
       {
         icon: 'link-variant',
@@ -89,13 +101,21 @@ export function ShareDialog({
         icon: 'twitter',
         // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/twitter.png',
         label: strings.share_twitter,
-        onPress:() => shareSocial(summary, viewshot.current, Social.Twitter), 
+        onPress:() => shareSocial(summary, { 
+          format,
+          social: Social.Twitter,
+          viewshot: viewshot.current, 
+        }), 
       },
       {
         icon: 'instagram',
         // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/instagram.png',
         label: strings.share_instagramStories,
-        onPress: () => shareSocial(summary, viewshot.current, Social.InstagramStories), 
+        onPress: () => shareSocial(summary, {
+          format,
+          social: Social.InstagramStories,
+          viewshot: viewshot.current,
+        }), 
       },
       // {
       //   iconText: '🧵',
@@ -106,7 +126,10 @@ export function ShareDialog({
       {
         icon: 'camera-outline',
         label: strings.share_shareAsImage,
-        onPress: () => shareStandard(summary, viewshot.current), 
+        onPress: () => shareStandard(summary, {
+          format,
+          viewshot: viewshot.current,
+        }), 
       },
     ],
   ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);

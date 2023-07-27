@@ -5,8 +5,6 @@ import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import {
   Button,
   Chip,
-  Icon,
-  Markdown,
   Text,
   View,
   Walkthrough,
@@ -30,43 +28,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
   const steps = React.useMemo(() => [
     {
       artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-accessible-news.png',
-      body: (
-        <View gap={ 12 } itemsCenter>
-          <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_onboarding_beingInformed}
-          </Markdown>
-          <Markdown subtitle1 textCenter system>
-            {strings.walkthroughs_onboarding_inTodaysWorld}
-          </Markdown>
-          <View col />
-        </View>
-      ),
-      title: strings.walkthroughs_onboarding_newsShouldBeAccessible,
-    },
-    {
-      artwork: (
-        <View
-          width="100%"
-          mt={ 24 }
-          itemsCenter
-          gap={ 12 }>
-          <Chip
-            contained
-            subtitle1
-            textCenter
-            py={ 24 }>
-            {'"Having Neanderthal Ancestors Could Mean You Have This Debilitating Trait!"'}
-          </Chip>
-          <Icon name="arrow-down-bold" size={ 48 } />
-          <Chip
-            contained
-            textCenter
-            subtitle1
-            py={ 24 }>
-            {'"Neanderthal DNA linked to common hand condition (Dupuytren\'s contracture)"'}
-          </Chip>
-        </View>
-      ),
       body: (
         <View gap={ 12 }>
           <Chip 
@@ -99,7 +60,17 @@ export function OnboardingWalkthrough(props: SheetProps) {
             system>
             {strings.walkthroughs_onboarding_extractTheFacts}
           </Chip>
-          <Text subtitle1 textCenter system>
+          <Chip 
+            subtitle1
+            bold
+            contained
+            leftIcon="check"
+            gap={ 6 }
+            justifyStart
+            system>
+            {strings.walkthroughs_onboarding_measureSentiment}
+          </Chip>
+          <Text bold subtitle1 textCenter system>
             {strings.walkthroughs_onboarding_fromNewsHeadlines}
           </Text>
         </View>
@@ -107,21 +78,19 @@ export function OnboardingWalkthrough(props: SheetProps) {
       title: strings.walkthroughs_onboarding_readlessUses,
     },
     {
-      artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-granular-control.png',
-      body: (
-        <View gap={ 24 }>
-          <Markdown subtitle1 textLeft mr={ 64 } system contained>
-            {strings.walkthroughs_onboarding_granularControl}
-          </Markdown>
-          <Markdown subtitle1 textRight ml={ 64 } system contained>
-            {strings.walkthroughs_onboarding_separateFromSocialMedia}
-          </Markdown>
-          <Markdown subtitle1 textLeft mr={ 64 } system contained>
-            {strings.walkthroughs_onboarding_withoughtNeedingAnAccount}
-          </Markdown>
-        </View>
-      ),
-      title: strings.walkthroughs_onboarding_madeWithYouInMind,
+      artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/short-press-preview.gif',
+      tallImage: true,
+      title: strings.walkthroughs_onboarding_shortPress,
+    },
+    {
+      artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/sentiment-preview.gif',
+      tallImage: true,
+      title: strings.walkthroughs_onboarding_readSentiment,
+    },
+    {
+      artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/settings-preview.gif',
+      tallImage: true,
+      title: strings.walkthroughs_onboarding_settings,
     },
     {
       artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-start-reading.png',

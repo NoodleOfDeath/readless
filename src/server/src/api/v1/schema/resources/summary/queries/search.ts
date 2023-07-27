@@ -37,9 +37,14 @@ FROM (
       SELECT
         s.id,
         s."originalDate",
-        s.sentiment
+        ss.sentiment
       FROM
-        summary_view s
+        summaries s
+      LEFT OUTER JOIN categories cat ON s."categoryId" = cat.id
+      LEFT OUTER JOIN publishers pub ON s."publisherId" = pub.id
+      LEFT OUTER JOIN summary_translations st ON st."parentId" = s.id
+      AND st.locale = :locale
+      LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
       WHERE (
           (s."originalDate" > NOW() - INTERVAL :interval)
           OR (
@@ -47,7 +52,6 @@ FROM (
             AND (s."originalDate" <= :endDate)
           )
         )
-        AND (s.locale = :locale OR (:locale = 'en' AND s.locale IS NULL))
         AND (
           (s.id IN (:ids))
           OR :noIds
@@ -57,19 +61,19 @@ FROM (
           OR NOT :excludeIds
         )
         AND (
-          (s.publisher ->> 'name' IN (:publishers))
+          (pub.name IN (:publishers))
           OR :noPublishers
         )
         AND (
-          (s.publisher ->> 'name' NOT IN (:excludedPublishers))
+          (pub.name NOT IN (:excludedPublishers))
           OR :noExcludedPublishers
         )
         AND (
-          (s.category ->> 'name' IN (:categories))
+          (cat.name IN (:categories))
           OR :noCategories
         )
         AND (
-          (s.category ->> 'name' NOT IN (:excludedCategories))
+          (cat.name NOT IN (:excludedCategories))
           OR :noExcludedCategories
         )
         AND (
@@ -78,10 +82,7 @@ FROM (
           OR (s."shortSummary" ~* :filter)
           OR (s.summary ~* :filter)
           OR (s.bullets::TEXT ~* :filter)
-          OR (s.translations ->> 'title' ~* :filter)
-          OR (s.translations ->> 'shortSummary' ~* :filter)
-          OR (s.translations ->> 'summary' ~* :filter)
-          OR (s.translations ->> 'bullets'::TEXT ~* :filter)
+          OR (st.value ~* :filter)
         )
         ORDER BY
           s."originalDate" DESC
