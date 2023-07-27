@@ -37,6 +37,7 @@ function YourNewsTab({
   }, [followFilter, navigation]));
   return ( 
     <SummaryList
+      landscapeEnabled
       fetch={ getSummaries }
       filter={ filter } />
   );
@@ -52,6 +53,7 @@ function TopStoriesTab({
   const { getTopStories } = useSummaryClient();
   return ( 
     <SummaryList
+      landscapeEnabled
       fetch={ getTopStories }
       interval='1d' />
   );
@@ -66,7 +68,9 @@ function LivestreamTab({
   }, [navigation]));
   const { getSummaries } = useSummaryClient();
   return ( 
-    <SummaryList fetch={ getSummaries } />
+    <SummaryList 
+      landscapeEnabled
+      fetch={ getSummaries } />
   );
 }
 

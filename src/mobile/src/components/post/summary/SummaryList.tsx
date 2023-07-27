@@ -1,5 +1,9 @@
 import React from 'react';
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { 
+  NativeScrollEvent, 
+  NativeSyntheticEvent,
+  RefreshControl,
+} from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
@@ -14,9 +18,10 @@ import {
 import {
   ActivityIndicator,
   Button,
-  ChildlessViewProps,
   Divider,
   FlatList,
+  FlatListProps,
+  SearchMenu,
   Summary,
   Text,
   View,
@@ -35,7 +40,7 @@ import {
 import { getLocale, strings } from '~/locales';
 import { parseKeywords } from '~/utils';
 
-export type SummaryListProps = ChildlessViewProps & {
+export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetch: typeof API.getSummaries | typeof API.getTopStories;
   onFormatChange?: (summary: PublicSummaryGroup, format: ReadingFormat) => void;
@@ -43,6 +48,7 @@ export type SummaryListProps = ChildlessViewProps & {
   interval?: string;
   specificIds?: number[];
   searchText?: string;
+  landscapeEnabled?: boolean;
   flow?: 'fluid' | 'fixed';
   fluid?: boolean;
   fixed?: boolean;
@@ -56,6 +62,7 @@ export function SummaryList({
   interval,
   specificIds,
   searchText,
+  landscapeEnabled,
   fixed,
   fluid = !fixed,
   flow = fluid ? 'fluid' : 'fixed',
@@ -208,8 +215,13 @@ export function SummaryList({
     if (!loading && !lastFetchFailed && !loaded && (summaries.length === 0 || filter !== filter0)) {
       load(true);
       setFilter(filter0);
+      navigation?.setOptions({
+        headerTitle: () => {
+          return <SearchMenu initialValue={ filter0 } />;
+        },
+      });
     }
-  }, [loading, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
+  }, [loading, navigation, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
   
   useAppState({ 
     onBackground: () => {
@@ -229,14 +241,14 @@ export function SummaryList({
         key={ item.id }
         big={ Boolean(flow === 'fluid' && index % 4 === 0 && item.media?.imageArticle) }
         summary={ item }
-        selected={ Boolean(isTablet && item.id === detailSummary?.id) }
+        selected={ Boolean(landscapeEnabled && isTablet && item.id === detailSummary?.id) }
         keywords={ filter?.split(' ') }
         onFormatChange={ (format) => handleFormatChange(item, format) }
         onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
-  }, [flow, isTablet, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+  }, [flow, landscapeEnabled, isTablet, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
-  const detailComponent = React.useMemo(() => detailSummary && (
+  const detailComponent = React.useMemo(() => (landscapeEnabled && isTablet && detailSummary) ? (
     <React.Fragment>
       <Summary
         summary={ detailSummary }
@@ -252,13 +264,18 @@ export function SummaryList({
         </Text>
       )}
     </React.Fragment>
-  ), [detailSummary, detailSummarySiblings.length, handleFormatChange, handleInteraction, preferredReadingFormat, searchText]);
+  ) : null, [landscapeEnabled, isTablet, detailSummary, detailSummarySiblings.length, handleFormatChange, handleInteraction, preferredReadingFormat, searchText]);
 
   return (
     <View { ...props } col>
       <View row>
-        <View style={ { width: isTablet ? Math.min(screenWidth * 0.4, 400) : '100%' } }>
+        <View style={ { width: landscapeEnabled && isTablet ? Math.min(screenWidth * 0.4, 400) : '100%' } }>
           <FlatList
+            refreshControl={ (
+              <RefreshControl 
+                refreshing={ summaries.length === 0 && loading }
+                onRefresh={ async () => await load(true) } />
+            ) }
             data={ summaries }
             extraData={ detailSummary }
             renderItem={ renderSummary }
@@ -317,13 +334,9 @@ export function SummaryList({
                 )}
               </View>
             ) }
-            refreshing={ summaries.length === 0 && loading && !loaded }
-            onScroll={ handleMasterScroll }
-            onRefresh={ async () => {
-              await load(true);
-            } } />
+            onScroll={ handleMasterScroll } />
         </View>
-        {isTablet && (
+        {landscapeEnabled && isTablet && (
           <View flex={ 1 } flexGrow={ 1 } mr={ 12 }>
             <FlatList
               ref={ flatListRef }
@@ -337,10 +350,8 @@ export function SummaryList({
                   onFormatChange={ (format) => handleFormatChange(item, format) }
                   onInteract={ (...e) => handleInteraction(item, ...e) } />
               ) }
-              ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
               ListHeaderComponent={ detailComponent }
-              ListFooterComponentStyle={ { paddingBottom: 64 } }
-              estimatedItemSize={ 114 } />
+              ListFooterComponentStyle={ { paddingBottom: 64 } } />
           </View>
         )}
       </View>

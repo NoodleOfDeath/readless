@@ -21,6 +21,11 @@ import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import { addScreenshotListener } from 'react-native-detector';
 import InAppReview from 'react-native-in-app-review';
 import { OrientationType } from 'react-native-orientation-locker';
+import {
+  DefaultTheme,
+  MD3DarkTheme,
+  PaperProvider,
+} from 'react-native-paper';
 
 import {
   ActivityIndicator,
@@ -32,6 +37,7 @@ import {
   Icon,
   MediaPlayer,
   Screen,
+  SearchMenu,
   Text,
   View,
 } from '~/components';
@@ -81,35 +87,49 @@ const screens: RouteConfig<
     component: HomeScreen, 
     name: 'home',
     options: { 
+      headerBackTitle: '',
       headerLeft: () => <DrawerToggle />,
-      headerTitle: '',
+      headerTitle: () => <SearchMenu />,
     },
   },
   {
     component: SearchScreen, 
     name: 'search',
-    options: { headerTitle: '' },
+    options: { 
+      headerBackTitle: '',
+      headerTitle: '', 
+    },
   },
   {
     component: SummaryScreen, 
     name: 'summary',  
-    options: { headerTitle: '' },
+    options: { 
+      headerBackTitle: '',
+      headerTitle: '', 
+    },
   },
   {
     component: CategoryScreen, 
     name: 'category',
-    options: { headerTitle: '' },
+    options: { 
+      headerBackTitle: '', 
+      headerTitle: '', 
+    },
   },
   {
     component: PublisherScreen, 
     name: 'publisher',
-    options: { headerTitle: '' },
+    options: {
+      headerBackTitle: '', 
+      headerTitle: '', 
+    },
   },
   // Drawer Tab
   {
     component: BookmarksScreen, 
     name: 'bookmarks', 
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_bookmarks, 
     }, 
@@ -118,18 +138,25 @@ const screens: RouteConfig<
   {
     component: OldNewsScreen,
     name: 'oldNews',  
-    options: { headerTitle: '' },
+    options: {
+      headerBackTitle: '', 
+      headerTitle: '', 
+    },
   },
   {
     component: RecapScreen,
     name: 'recap',  
-    options: { headerTitle: '' },
+    options: {
+      headerBackTitle: '',
+      headerTitle: '', 
+    },
   },
   // Settings
   {
     component: SettingsScreen, 
     name: 'settings', 
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_settings, 
     },
@@ -138,6 +165,7 @@ const screens: RouteConfig<
     component: ColorSchemePickerScreen, 
     name: 'colorSchemePicker',  
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_colorScheme, 
     },
@@ -146,6 +174,7 @@ const screens: RouteConfig<
     component: FontPickerScreen,
     name: 'fontPicker',  
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_font, 
     },
@@ -162,6 +191,7 @@ const screens: RouteConfig<
     component: ShortPressFormatPickerScreen,
     name: 'shortPressFormatPicker',  
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_preferredShortPressFormat, 
     },
@@ -170,6 +200,7 @@ const screens: RouteConfig<
     component: ReadingFormatPickerScreen,
     name: 'readingFormatPicker',  
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_preferredReadingFormat, 
     },
@@ -178,6 +209,7 @@ const screens: RouteConfig<
     component: LegalScreen, 
     name: 'legal', 
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_legal, 
     },
@@ -187,6 +219,7 @@ const screens: RouteConfig<
     component: StatsScreen,
     name: 'stats',
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined,
       headerTitle: 'stats', 
     },
@@ -195,6 +228,7 @@ const screens: RouteConfig<
     component: TestScreen,
     name: 'test',
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined,
       headerTitle: 'test', 
     },
@@ -359,7 +393,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
     <DrawerContentScrollView { ...props }>
       <DrawerItem 
         label={ getUserAgent().currentVersion }
-        onPress={ () => false && SheetManager.show('whats-new') } />
+        onLongPress={ () => SheetManager.show('onboarding-walkthrough') } />
       <DrawerSection 
         title={ strings.misc_publishers }>
         {publisherItems}
@@ -426,7 +460,6 @@ export default function NavigationController() {
     ready, 
     categories,
     publishers,
-    bookmarkCount,
     setCategories, 
     setPublishers,
     viewedFeatures,
@@ -441,29 +474,21 @@ export default function NavigationController() {
   const [lastFetch, setLastFetch] = React.useState(0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [launchedTime] = React.useState(Date.now());
-  const [showedBookmarks, setShowedBookmarks] = React.useState(false);
-  
-  // bookmarks walkthrough
-  React.useEffect(() => {
-    if (showedBookmarks) {
-      return;
-    }
-    if (bookmarkCount > 0 && !('bookmark-walkthrough' in { ...viewedFeatures })) {
-      SheetManager.show('bookmark-walkthrough');
-      setShowedBookmarks(true);
-    }
-  }, [bookmarkCount, showedBookmarks, viewedFeatures]);
+
+  const [showedReview, setShowedReview] = React.useState(false);
+  const [showedOnboarding, setShowedOnboarding] = React.useState(false);
   
   const inAppReviewHandler = React.useCallback(() => {
     // make sure user has been using the app for at least 5 minutes before
     // requesting to review
-    if (hasReviewed || 
+    if (showedReview || hasReviewed || 
       Date.now() - launchedTime < ms('5m') || 
       Date.now() - lastRequestForReview < ms('2w') ||
       Object.keys({ ...readSummaries }).length < 3 ||
       !InAppReview.isAvailable()) {
       return;
     }
+    setShowedReview(true);
     setTimeout(() => {
       InAppReview.RequestInAppReview()
         .then((hasFlowFinishedSuccessfully) => {
@@ -476,7 +501,7 @@ export default function NavigationController() {
           console.error(error);
         });
     }, 5_000);
-  }, [hasReviewed, lastRequestForReview, launchedTime, readSummaries, setPreference]);
+  }, [hasReviewed, lastRequestForReview, launchedTime, readSummaries, setPreference, showedReview]);
 
   React.useEffect(() => {
     if (!ready) {
@@ -536,11 +561,17 @@ export default function NavigationController() {
     } else {
       refreshSources();
     }
-    if (!viewedFeatures || !('onboarding-walkthrough' in viewedFeatures)) {
+    if (!('onboarding-walkthrough' in ({ ...viewedFeatures }))) {
+      if (showedOnboarding) {
+        return;
+      }
+      setShowedOnboarding(true);
       SheetManager.show('onboarding-walkthrough');
     }
-  }, [viewedFeatures, ready, refreshSources, lastFetchFailed, lastFetch]);
+  }, [viewedFeatures, ready, refreshSources, lastFetchFailed, lastFetch, showedOnboarding]);
   
+  const currentTheme = React.useMemo(() => theme.isDarkMode ? MD3DarkTheme : DefaultTheme, [theme.isDarkMode]);
+
   return (
     <NavigationContainer
       theme= { theme.navContainerTheme }
@@ -550,10 +581,12 @@ export default function NavigationController() {
           <ActivityIndicator animating />
         </View>
       ) : (
-        <SheetProvider>
-          <LandingPage />
-          <MediaPlayer visible={ Boolean(currentTrack) } />
-        </SheetProvider>
+        <PaperProvider theme={ currentTheme }>
+          <SheetProvider>
+            <LandingPage />
+            <MediaPlayer visible={ Boolean(currentTrack) } />
+          </SheetProvider>
+        </PaperProvider>
       )}
     </NavigationContainer>
   );

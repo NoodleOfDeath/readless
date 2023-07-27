@@ -1,4 +1,5 @@
 import React from 'react';
+import { useWindowDimensions } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
 
@@ -34,6 +35,7 @@ export function SearchMenu({
 
   const theme = useTheme();
   const { search } = useNavigation();
+  const { width } = useWindowDimensions();
   
   const {
     searchHistory,
@@ -56,16 +58,20 @@ export function SearchMenu({
   }, [onChangeText]);
 
   return (
-    <View gap={ 8 } mx={ 12 } { ...props }>
+    <View
+      gap={ 8 } 
+      width={ width - (132 / 2) }
+      { ...props }>
       <Searchbar
-        elevation={ 2 }
         placeholder={ placeholder }
         onChangeText={ handleChangeText }
+        style={ { height: 32, padding: 0 } }
         inputStyle={ {
           ...theme.components.searchBar,
-          flex: 1,
-          flexGrow: 1,
-          width: 100, 
+          color: theme.colors.text,
+          margin: 0,
+          padding: -10,
+          top: -12,
         } }
         value={ value }
         onClearIconPress={ () => {

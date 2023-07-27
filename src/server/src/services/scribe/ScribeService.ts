@@ -251,7 +251,8 @@ export class ScribeService extends BaseService {
           ContentType: 'image/jpeg',
           Folder: 'img/s',
         });
-        newSummary.imageUrl = generatedObj.url;
+        summary.set('imageUrl', generatedObj.url);
+        await summary.save();
       
       };
       

@@ -23,8 +23,8 @@ describe('tests mail service', () => {
     await new MailService().sendMail({
       from: process.env.MAIL_REPLY_TO,
       subject: 'test',
-      text: 'test',
-      to: 'thom@readless.ai',
+      text: 'this is a motherfucking test',
+      to: 'gillensteven@gmail.com',
     });
     expect(true).toBe(true);
   });

@@ -17,6 +17,7 @@ import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export type WalkthroughStep = {
+  tallImage?: boolean;
   artwork?: React.ReactNode;
   artworkBelow?: boolean;
   elevateArtwork?: boolean;
@@ -37,7 +38,7 @@ export type WalkthroughProps<Step extends WalkthroughStep = WalkthroughStep> = {
 export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ payload, ...props }: SheetProps<WalkthroughProps<Step>>) {
   
   const theme = useTheme();
-  const { isTablet } = React.useContext(LayoutContext);
+  const { isTablet, dimensions } = React.useContext(LayoutContext);
 
   const { 
     steps = [], 
@@ -56,8 +57,9 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
           {typeof step.artwork === 'string' ? (
             <Image 
               beveled
-              width='100%'
-              height={ 200 }
+              native
+              width={ Math.min(dimensions.width, 420) - 48 }
+              height={ step.tallImage ? Math.min(dimensions.height * 0.6, 550) : 200 }
               source={ { uri: step.artwork } } />
           ) : (
             <View p={ 12 }>{step.artwork}</View>
@@ -66,7 +68,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
       );
       return (
         <View gap={ 12 } key={ i }>
-          {!step.artworkBelow && image}
+          {!(step.artworkBelow || step.tallImage) && image}
           {typeof step.title === 'string' ? (
             <Markdown 
               h4
@@ -77,7 +79,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
               {step.title}
             </Markdown>
           ) : step.title}
-          {step.artworkBelow && image}
+          {(step.artworkBelow || step.tallImage) && image}
           {typeof step.body === 'string' ? (
             <Markdown 
               subtitle1
@@ -95,7 +97,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
         </View>
       );
     });
-  }, [steps]);
+  }, [dimensions.height, dimensions.width, steps]);
   
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<React.ReactNode>) => {
     return (

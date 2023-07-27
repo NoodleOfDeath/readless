@@ -3,9 +3,10 @@ import { StyleSheet, useColorScheme } from 'react-native';
 
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
-import { Preferences, SessionContext } from '~/contexts';
+import { SYSTEM_FONT } from '~/components';
+import { SessionContext } from '~/contexts';
 
-const makeTheme = (darkMode: boolean, preferences: Preferences) => {
+const makeTheme = (darkMode: boolean) => {
   return {
     colors: {
       backgroundTranslucent: 'rgba(255, 255, 255, 0.3)',
@@ -75,12 +76,7 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
           borderColor: darkMode ? '#fff' : '#000',
           borderWidth: 1,
         },
-        searchBar: {
-          fontFamily: preferences.fontFamily,
-          overflow: 'visible',
-          padding: 0,
-          width: '100%',
-        },
+        searchBar: { fontFamily: SYSTEM_FONT },
       }),
     isDarkMode: darkMode,   
     navContainerTheme: {
@@ -101,14 +97,10 @@ const makeTheme = (darkMode: boolean, preferences: Preferences) => {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function useTheme() {
-
   const preferences = React.useContext(SessionContext);
-
-  const LIGHT_THEME = makeTheme(false, preferences);
-  const DARK_THEME = makeTheme(true, preferences);
-
+  const LIGHT_THEME = makeTheme(false);
+  const DARK_THEME = makeTheme(true);
   const colorScheme = useColorScheme();
-
   return ((preferences.colorScheme ?? colorScheme) === 'dark') ? DARK_THEME : LIGHT_THEME;
   
 }
