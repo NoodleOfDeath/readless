@@ -18,7 +18,6 @@ import {
 } from '@react-navigation/native-stack';
 import ms from 'ms';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
-import { addScreenshotListener } from 'react-native-detector';
 import InAppReview from 'react-native-in-app-review';
 import { OrientationType } from 'react-native-orientation-locker';
 import {
@@ -507,18 +506,12 @@ export default function NavigationController() {
     if (!ready) {
       return;
     }
-    // feedback subscriber
-    const unsubscribe = addScreenshotListener(() => {
-      SheetManager.hideAll();
-      setTimeout(() => SheetManager.show('feedback'), 1_000);
-    });
     // in-app review handlers
     const reviewHandlerA = DeviceEventEmitter.addListener('follow-category', inAppReviewHandler);
     const reviewHandlerB = DeviceEventEmitter.addListener('follow-publisher', inAppReviewHandler);
     const reviewHandlerC = DeviceEventEmitter.addListener('bookmark-summary', inAppReviewHandler);
     const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
     return () => {
-      unsubscribe();
       reviewHandlerA.remove();
       reviewHandlerB.remove();
       reviewHandlerC.remove();
