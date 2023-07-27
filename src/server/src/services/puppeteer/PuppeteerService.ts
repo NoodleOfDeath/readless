@@ -31,6 +31,7 @@ type SelectorAction = {
 
 type UrlOptions = {
   publisher: PublisherCreationAttributes;
+  targetUrl?: string;
   excludeExternal?: boolean;
   removeQuery?: boolean;
 };
@@ -54,8 +55,11 @@ export type LootOptions = {
 };
 
 const fallbackImageSelectors = [
-  'article :not(header) figure picture img:not([src*=".svg"]):not([src*=".gif"])',
-  'article :not(header) figure img:not([src*=".svg"]):not([src*=".gif"]), article :not(header) picture img:not([src*=".svg"]):not([src*=".gif"])',
+  'article :not(header) figure picture img:not([src*=".svg"]):not([src*=".gif"]):not([src*="data:image"])',
+  'article :not(header) figure picture source[type*="image"]:not([srcset*="data:image"])',
+  'article :not(header) figure img:not([src*=".svg"]):not([src*=".gif"]):not([src*="data:image"]), article :not(header) picture img:not([src*=".svg"]):not([src*=".gif"]):not([src*="data:image"])',
+  'article :not(header) figure source[type*="image"]:not([srcset*="data:image"])',
+  'article :not(header) picture source[type*="image"]:not([srcset*="data:image"])',
   'article :not(header) img:not([src*=".svg"]):not([src*=".gif"]), :not(header) figure img:not([src*=".svg"]):not([src*=".gif"])',
   ':not(header) picture img:not([src*=".svg"]):not([src*=".gif"]), :not(header) article img:not([src*=".svg"]):not([src*=".gif"])',
 ];
@@ -184,6 +188,7 @@ export class PuppeteerService extends BaseService {
   
   public static fixRelativeUrl(url: string, {
     publisher,
+    targetUrl = publisher.baseUrl,
     excludeExternal,
     removeQuery,
   }: UrlOptions) {
@@ -200,6 +205,9 @@ export class PuppeteerService extends BaseService {
     if (/^\//.test(url)) {
       return `${baseUrl}${url}`;
     } else
+    if (/^\.\//.test(url)) {
+      return `${targetUrl.replace(/\/+$/, '')}${url.replace(/^\./, '')}`;
+    } else
     if (excludeExternal && /^https?:\/\//.test(url)) {
       // exclude external links
       if (!domainExpr.test(url)) {
@@ -212,14 +220,14 @@ export class PuppeteerService extends BaseService {
   public static parseSrcset(str: string, options: UrlOptions) {
     const splitSet = (srcset: string) => {
       const [path = '', widthStr = ''] = srcset.split(/\s+/);
-      const widthSubstr = widthStr.replace(/w/ig, '');
+      const widthSubstr = widthStr.replace(/[wx]/ig, '');
       const width = Number.isNaN(Number(widthSubstr)) ? undefined : Number(widthSubstr);
       if (path && width) {
         const url = this.fixRelativeUrl(path, options);
         return { url, width };
       }
     };
-    if (/\S+\s+\d+w\s*,/i.test(str)) {
+    if (/\S+\s+\d+[wx]\s*,/i.test(str)) {
       return str.split(/\s*,\s*/)
         .map((url) => splitSet(url))
         .filter(Boolean)
@@ -363,7 +371,7 @@ export class PuppeteerService extends BaseService {
         // image
         for (const selector of [image?.selector, ...fallbackImageSelectors].filter(Boolean)) {
           for (const attr of [image?.attribute, ...fallbackImageAttributes].filter(Boolean)) {
-            imageUrls.push(...extractAll(selector, attr).flatMap((src) => this.parseSrcset(src, { publisher })));
+            imageUrls.push(...extractAll(selector, attr).flatMap((src) => this.parseSrcset(src, { publisher, targetUrl: url })));
           }
         }
         
@@ -431,7 +439,9 @@ export class PuppeteerService extends BaseService {
                       return el.children[0].getAttribute(attr);
                     }
                   }, attr)), 
-                  { publisher, removeQuery: true }
+                  {
+                    publisher, removeQuery: true, targetUrl: url, 
+                  }
                 ));
               }
             },

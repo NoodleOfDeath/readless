@@ -415,7 +415,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     selectors: {
       article: { selector: 'div[role*="article"] .column p' },
       author: { selector: 'article .contributors a' },
-      date: { selector: 'article .contributors :last-child, main .mb-md' },
+      date: { selector: 'article .contributors :last-child, main .mb-md, article header' },
       spider:{
         attribute: 'href',
         selector: 'article a',
