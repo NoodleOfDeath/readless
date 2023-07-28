@@ -46,6 +46,12 @@ spec:
               value: '$GOOGLE_CLIENT_SECRET'
             - name: GOOGLE_CREDENTIALS
               value: '$GOOGLE_CREDENTIALS'
+            - name: GOOGLE_MEASUREMENT_API_SECRET
+              value: '$GOOGLE_MEASUREMENT_API_SECRET'
+            - name: GOOGLE_MEASUREMENT_CLIENT_ID
+              value: '$GOOGLE_MEASUREMENT_CLIENT_ID'
+            - name: GOOGLE_MEASUREMENT_ID
+              value: '$GOOGLE_MEASUREMENT_ID'
             - name: JWT_SECRET
               value: '$JWT_SECRET'
             - name: MAIL_HOST

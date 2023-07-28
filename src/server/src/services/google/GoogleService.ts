@@ -1,3 +1,5 @@
+import os from 'os';
+
 import { v2 } from '@google-cloud/translate';
 import axios from 'axios';
 import { OAuth2Client } from 'google-auth-library';
@@ -64,7 +66,7 @@ export class GoogleService extends BaseService {
     debug,
     measurement_id = process.env.GOOGLE_MEASUREMENT_ID,
     api_secret = process.env.GOOGLE_MEASUREMENT_API_SECRET,
-    client_id = 'Express API',
+    client_id = process.env.GOOGLE_MEASUREMENT_CLIENT_ID || os.hostname(),
     events,
   }: MPCollectPayload) {
     const resp = await axios.post(`${debug ? GOOGLE_MP_DEBUG_ENDPOINT : GOOGLE_MP_ENDPOINT}?measurement_id=${measurement_id}&api_secret=${api_secret}`, {
