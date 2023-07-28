@@ -45,7 +45,7 @@ export const rateLimitMiddleware = (
       const uuid = req.get('x-uuid');
       const userAgent = req.get('user-agent');
       if (/kube-probe/i.test(userAgent)) {
-        res.send(200);
+        res.status(200).send('OK');
         return;
       }
       await Query.create({
