@@ -54,6 +54,8 @@ spec:
               value: '$MAIL_REPLY_TO'
             - name: MAIL_USER
               value: '$MAIL_USER'
+            - name: NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID
+              value: '$NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID'
             - name: OPENAI_API_KEY
               value: '$OPENAI_API_KEY'
             - name: PG_CONNECTION_STRING
