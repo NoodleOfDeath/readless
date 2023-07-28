@@ -297,7 +297,8 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   sundaytimes: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.thetimes.co.uk/article/diane-abbott-has-labour-whip-suspended-over-jewish-racism-claims-tzg8v87k3',
+    imageUrls: ['https://www.thetimes.co.uk/imageserver/image/%2Fmethode%2Ftimes%2Fprod%2Fweb%2Fbin%2F785fe892-2cc2-11ee-b33d-6d3f5a636b40.jpg?crop=6690%2C3763%2C137%2C37&resize=1500'],
+    url: 'https://www.thetimes.co.uk/article/tesla-range-miles-electric-battery-wddfq7z5r',
   },
   telegraph: {
     authors: [],
