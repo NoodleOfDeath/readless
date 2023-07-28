@@ -71,6 +71,7 @@ jobs:
       MAIL_PORT: ${{ vars.MAIL_PORT }}
       MAIL_REPLY_TO: ${{ vars.MAIL_REPLY_TO }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
+      NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PLAY_HT_SECRET_KEY: ${{ secrets.PLAY_HT_SECRET_KEY }}
