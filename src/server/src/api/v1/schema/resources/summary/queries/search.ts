@@ -140,14 +140,14 @@ FROM (
     ON b.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling
     ON sibling.id = sr."siblingId"
-  LEFT OUTER JOIN summary_sentiment_view sibling_ss
-    ON sibling_ss."parentId" = sibling.id
   LEFT OUTER JOIN publisher_view sibling_pub
     ON sibling."publisherId" = sibling_pub.id
     AND sibling_pub.locale = :locale
   LEFT OUTER JOIN category_view sibling_cat
     ON sibling."categoryId" = sibling_cat.id
     AND sibling_cat.locale = :locale
+  LEFT OUTER JOIN summary_sentiment_view sibling_ss
+    ON sibling_ss."parentId" = sibling.id
   LEFT OUTER JOIN summary_media_view sibling_sm
     ON sibling_sm."parentId" = sibling.id
   LEFT OUTER JOIN summary_translation_view sibling_st
