@@ -269,10 +269,11 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     date: new Date('placeholder'),
     url: 'https://www.reuters.com/world/africa/us-france-evacuate-diplomats-sudan-battles-rage-2023-04-23/',
   },
-  rstone: {
+  rollingstone: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.rollingstone.com/culture/culture-features/indian-boarding-school-survivors-abuse-interviews-1234721724/',
+    imageUrls: ['https://www.rollingstone.com/wp-content/uploads/2023/07/Screen-Shot-2023-07-27-at-4.14.43-PM.jpg?w=1581&h=1054&crop=1'],
+    url: 'https://www.rollingstone.com/music/music-news/chrissy-chlapecka-brat-video-drag-queens-sugar-spice-1234796413/',
   },
   science: {
     authors: [],
@@ -377,13 +378,16 @@ describe('crawl', () => {
 describe('loot', () => {
   for (const [name, exp] of Object.entries(LOOT)) {
     test(`loot-${name}`, async () => {
+      if (!exp) {
+        return; 
+      }
       const loot = await PuppeteerService.loot(exp.url, PUBLISHERS[name]);
       expect(loot).toBeDefined();
       expect(loot.url).toBe(exp.url);
       expect(loot.content.length).toBeGreaterThan(0);
       console.log(loot.imageUrls);
       if (exp.imageUrls) {
-        expect(loot.imageUrls[0]).toBe(exp.imageUrls[0]);
+        expect(loot.imageUrls?.[0]).toBe(exp?.imageUrls[0]);
       }
       if (exp.authors.length > 0) {
         expect(loot.authors.length).toBe(exp.authors.length);
