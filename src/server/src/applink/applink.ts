@@ -7,7 +7,7 @@ import { DBService } from '../services/db/DBService';
 const SSL = process.env.SSL === 'true';
 const BASE_DOMAIN = process.env.CORS_ORIGIN;
 const BASE_URL = `${SSL ? 'https' : 'http'}://${BASE_DOMAIN}`;
-const MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID || 'G-ZJF8C6F8Z9';
+//const MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID || 'G-ZJF8C6F8Z9';
 
 export async function main() {
 
@@ -50,7 +50,6 @@ export async function main() {
           <meta property="og:description" content="${summary?.shortSummary.replace(/"/g, '&quot;')}}" />
         </head>
         <body>
-          <script src="https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}" />
           <script type="text/javascript">
             //window.dataLayer = window.dataLayer || [];
             //function gtag(){dataLayer.push(arguments);}
