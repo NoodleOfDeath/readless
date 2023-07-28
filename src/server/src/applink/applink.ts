@@ -52,10 +52,10 @@ export async function main() {
         <body>
           <script src="https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}" />
           <script type="text/javascript">
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${MEASUREMENT_ID}');
+            //window.dataLayer = window.dataLayer || [];
+            //function gtag(){dataLayer.push(arguments);}
+            //gtag('js', new Date());
+            //gtag('config', '${MEASUREMENT_ID}');
             window.onload = function() {
               window.location.href = '${BASE_URL}/read/?s=${id}&f=${format}';
             }
