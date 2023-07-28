@@ -16,14 +16,42 @@ FROM (
     s.summary,
     s.bullets,
     s."imageUrl",
-    s.publisher::JSONB AS publisher,
-    s.category::JSONB AS category,
-    s.sentiment,
-    s.sentiments::JSONB AS sentiments,
-    s.media::JSONB AS media,
-    s.translations::JSONB AS translations,
+    JSON_BUILD_OBJECT(
+      'id', pub.id,
+      'name', pub.name,
+      'displayName', pub."displayName",
+      'description', pub.description,
+      'translations', pub.translations::JSONB
+    ) AS publisher,
+    JSON_BUILD_OBJECT(
+      'id', cat.id,
+      'name', cat.name,
+      'displayName', cat."displayName",
+      'description', cat.icon,
+      'translations', cat.translations::JSONB
+    ) AS category,
+    ss.sentiment,
+    ss.sentiments::JSONB AS sentiments,
+    sm.media::JSONB AS media,
+    st.translations::JSONB AS translations,
     COALESCE(
-      JSON_AGG(ROW_TO_JSON(sibling.*))
+      JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(
+        'id', sibling.id,
+        'url', sibling.url,
+        'originalDate', sibling."originalDate",
+        'createdAt', sibling."createdAt",
+        'title', sibling.title,
+        'shortSummary', sibling."shortSummary",
+        'summary', sibling.summary,
+        'bullets', sibling.bullets,
+        'imageUrl', sibling."imageUrl",
+        'publisher', ROW_TO_JSON(sibling_pub.*),
+        'category', ROW_TO_JSON(sibling_cat.*),
+        'sentiment', sibling_ss.sentiment,
+        'sentiments', sibling_ss.sentiments,
+        'media', sibling_sm.media,
+        'translations', sibling_st.translations
+      ))
       FILTER (WHERE sr."siblingId" IS NOT NULL),
     '[]'::JSON) AS siblings,
     "averageSentiment",
@@ -92,12 +120,39 @@ FROM (
     LIMIT :limit
     OFFSET :offset
   ) b
-  LEFT OUTER JOIN summary_view s
+  LEFT OUTER JOIN summaries s
     ON b.id = s.id
+  LEFT OUTER JOIN publisher_view pub
+    ON s."publisherId" = pub.id
+    AND pub.locale = :locale
+  LEFT OUTER JOIN category_view cat
+    ON s."categoryId" = cat.id
+    AND cat.locale = :locale
+  LEFT OUTER JOIN summary_sentiment_view ss
+    ON ss."parentId" = s.id
+  LEFT OUTER JOIN summary_media_view sm
+    ON sm."parentId" = s.id
+  LEFT OUTER JOIN summary_translation_view st
+    ON st."parentId" = s.id
+    AND st.locale = :locale
+  -- siblings
   LEFT OUTER JOIN summary_relations sr
     ON b.id = sr."parentId"
-  LEFT OUTER JOIN summary_view sibling
+  LEFT OUTER JOIN summaries sibling
     ON sibling.id = sr."siblingId"
+  LEFT OUTER JOIN summary_sentiment_view sibling_ss
+    ON sibling_ss."parentId" = sibling.id
+  LEFT OUTER JOIN publisher_view sibling_pub
+    ON sibling."publisherId" = sibling_pub.id
+    AND sibling_pub.locale = :locale
+  LEFT OUTER JOIN category_view sibling_cat
+    ON sibling."categoryId" = sibling_cat.id
+    AND sibling_cat.locale = :locale
+  LEFT OUTER JOIN summary_media_view sibling_sm
+    ON sibling_sm."parentId" = sibling.id
+  LEFT OUTER JOIN summary_translation_view sibling_st
+    ON sibling_st."parentId" = sibling.id
+    AND sibling_st.locale = :locale
   GROUP BY
     s.id,
     s.url,
@@ -108,12 +163,20 @@ FROM (
     s.summary,
     s.bullets,
     s."imageUrl",
-    s.publisher::JSONB,
-    s.category::JSONB,
-    s.sentiment,
-    s.sentiments::JSONB,
-    s.media::JSONB,
-    s.translations::JSONB,
+    pub.id,
+    pub.name,
+    pub."displayName",
+    pub.description,
+    pub.translations::JSONB,
+    cat.id,
+    cat.name,
+    cat."displayName",
+    cat.icon,
+    cat.translations::JSONB,
+    ss.sentiment,
+    ss.sentiments::JSONB,
+    sm.media::JSONB,
+    st.translations::JSONB,
     "averageSentiment",
     "totalCount"
   ORDER BY
@@ -121,5 +184,5 @@ FROM (
 ) c
 GROUP BY
   "averageSentiment",
-  "totalCount"
+  "totalCount";
 `;
