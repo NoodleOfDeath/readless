@@ -124,10 +124,10 @@ FROM (
     ON b.id = s.id
   LEFT OUTER JOIN publisher_view pub
     ON s."publisherId" = pub.id
-    AND pub.locale = :locale
+    AND (pub.locale = :locale OR pub.locale IS NULL)
   LEFT OUTER JOIN category_view cat
     ON s."categoryId" = cat.id
-    AND cat.locale = :locale
+    AND (cat.locale = :locale OR cat.locale IS NULL)
   LEFT OUTER JOIN summary_sentiment_view ss
     ON ss."parentId" = s.id
   LEFT OUTER JOIN summary_media_view sm
@@ -142,10 +142,10 @@ FROM (
     ON sibling.id = sr."siblingId"
   LEFT OUTER JOIN publisher_view sibling_pub
     ON sibling."publisherId" = sibling_pub.id
-    AND sibling_pub.locale = :locale
+    AND (sibling_pub.locale = :locale OR sibling_pub.locale IS NULL)
   LEFT OUTER JOIN category_view sibling_cat
     ON sibling."categoryId" = sibling_cat.id
-    AND sibling_cat.locale = :locale
+    AND (sibling_cat.locale = :locale OR sibling_cat.locale IS NULL)
   LEFT OUTER JOIN summary_sentiment_view sibling_ss
     ON sibling_ss."parentId" = sibling.id
   LEFT OUTER JOIN summary_media_view sibling_sm
