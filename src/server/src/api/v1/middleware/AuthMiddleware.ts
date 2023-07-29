@@ -11,8 +11,8 @@ type AuthMiddlewareOptions = {
 export const authMiddleware = (securityName: string, { required = false, scope = [] }: AuthMiddlewareOptions = {}): RequestHandler => async (req, res, next) => {
   try {
     if (securityName === 'jwt') {
-      if (req.headers.authorization) {
-        const [type, token] = req.headers.authorization.split(' ');
+      if (req.get('authorization')) {
+        const [type, token] = req.get('authorization').split(' ');
         if (type === 'Bearer') {
           try {
             const jwt = Jwt.from(token);

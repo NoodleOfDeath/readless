@@ -1,3 +1,4 @@
+import ms from 'ms';
 import { Op } from 'sequelize';
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Index,
   Table,
 } from 'sequelize-typescript';
+import { v4 } from 'uuid';
 
 import {
   SubscriptionAttributes,
@@ -65,14 +67,25 @@ export class Subscription<
   declare locale?: string;
     
   @Column({
-    allowNull: false,
     type: DataType.STRING,
     unique: true,
   })
   declare verifiedToken?: string;
     
+  @Column({
+    type: DataType.STRING,
+    unique: true,
+  })
+  declare unsubscribeToken?: string;
+    
   @Column({ type: DataType.DATE })
   declare verifiedAt?: Date;
+
+  @Column({
+    defaultValue: new Date(Date.now() + ms(process.env.TOKEN_TTL_LEVEL_1 || '30m')),
+    type: DataType.DATE,
+  })
+  declare expiresAt?: Date;
 
   public static async subscribe({
     channel,
@@ -80,7 +93,7 @@ export class Subscription<
     event,
     locale,
   }: SubscriptionCreationAttributes): Promise<Subscription> {
-    const verifyToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const verifyToken = v4();
     const subscription = await Subscription.create({
       channel,
       event,
@@ -99,6 +112,31 @@ export class Subscription<
     default:
       throw new InternalError('invalid subscription channel');
     }
+    return subscription;
+  }
+
+  public static async verify({
+    channel,
+    uuid,
+    event,
+    unsubscribeToken,
+  }: SubscriptionAttributes): Promise<Subscription> {
+    const subscription = await Subscription.findOne({
+      where: {
+        channel,
+        event,
+        unsubscribeToken,
+        uuid,
+      },
+    });
+    if (!subscription) {
+      throw new InternalError('invalid subscription');
+    }
+    subscription.set('verifyToken', null);
+    subscription.set('unsubscribeToken', v4());
+    subscription.set('verifiedAt', new Date());
+    subscription.set('expiresAt', null);
+    await subscription.save();
     return subscription;
   }
   
@@ -122,28 +160,6 @@ export class Subscription<
     await subscription.destroy();
   }
 
-  public static async verify(
-    channel: SubscriptionChannel,
-    uuid: string,
-    event: string,
-    verifyToken: string
-  ): Promise<Subscription> {
-    const subscription = await Subscription.findOne({
-      where: {
-        channel,
-        event,
-        uuid,
-        verifyToken,
-      },
-    });
-    if (!subscription) {
-      throw new InternalError('invalid subscription');
-    }
-    subscription.set('verifiedAt', new Date());
-    await subscription.save();
-    return subscription;
-  }
-
   public static async notify<
     T extends SubscriptionChannel, 
     D extends T extends 'email' ? MailServiceOptions : never
@@ -161,11 +177,13 @@ export class Subscription<
     });
     console.log(`notifying ${subscriptions.length} subscribers`);
     for (const subscription of subscriptions) {
+      const unsub = `${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/unsubscribe?t=${subscription.unsubscribeToken}`;
       switch (subscription.channel) {
       case 'email':
         await new MailService().sendMail({
           ...data,
           from: process.env.MAIL_REPLY_TO,
+          html: `${data.html}<br /><br /><a href="${unsub}">Unsubscribe</a>`,
           to: subscription.uuid,
         });
         break;

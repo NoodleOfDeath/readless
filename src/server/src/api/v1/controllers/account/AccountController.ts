@@ -1,7 +1,9 @@
+import { Request as ExpressRequest } from 'express';
 import {
   Body,
   Post,
   Put,
+  Request,
   Response,
   Route,
   Security,
@@ -39,38 +41,59 @@ import { AuthError, InternalError } from '../../middleware';
 export class AccountController {
 
   @Post('/register')
-  public static async register(@Body() body: Partial<RegistrationRequest>): Promise<RegistrationResponse> {
+  public static async register(
+    @Request() req: ExpressRequest,
+    @Body() body: Partial<RegistrationRequest>
+  ): Promise<RegistrationResponse> {
     return await AccountService.register(body);
   }
 
   @Post('/login')
-  public static async login(@Body() body: Partial<LoginRequest>): Promise<LoginResponse> {
+  public static async login(
+    @Request() req: ExpressRequest,
+    @Body() body: Partial<LoginRequest>
+  ): Promise<LoginResponse> {
     return await AccountService.login(body);
   }
 
   @Post('/logout')
-  public static async logout(@Body() body: Partial<LogoutRequest>): Promise<LogoutResponse> {
+  public static async logout(
+    @Request() req: ExpressRequest,
+    @Body() body: Partial<LogoutRequest>
+  ): Promise<LogoutResponse> {
     return await AccountService.logout(body);
   }
   
   @Post('/otp')
-  public static async generateOTP(@Body() body: Partial<GenerateOTPRequest>): Promise<GenerateOTPResponse> {
+  public static async generateOTP(
+    @Request() req: ExpressRequest,
+    @Body() body: Partial<GenerateOTPRequest>
+  ): Promise<GenerateOTPResponse> {
     return await AccountService.generateOtp(body);
   }
   
   @Post('/verify/alias')
-  public static async verifyAlias(@Body() body: Partial<VerifyAliasRequest>): Promise<VerifyAliasResponse> {
+  public static async verifyAlias(
+    @Request() req: ExpressRequest,
+    @Body() body: Partial<VerifyAliasRequest>
+  ): Promise<VerifyAliasResponse> {
     return await AccountService.verifyAlias(body);
   }
   
   @Post('/verify/otp')
-  public static async verifyOTP(@Body() body: Partial<VerifyOTPRequest>): Promise<VerifyOTPResponse> {
+  public static async verifyOTP(
+    @Request() req: ExpressRequest,
+    @Body() body: Partial<VerifyOTPRequest>
+  ): Promise<VerifyOTPResponse> {
     return await AccountService.verifyOtp(body);
   }
   
   @Put('/update/credential')
   @Security('jwt', ['account:write'])
-  public static async updateCredential(@Body() body: Partial<UpdateCredentialRequest>): Promise<UpdateCredentialResponse> {
+  public static async updateCredential(
+    @Request() req: ExpressRequest,
+    @Body() body: Partial<UpdateCredentialRequest>
+  ): Promise<UpdateCredentialResponse> {
     return await AccountService.updateCredential(body);
   }
 

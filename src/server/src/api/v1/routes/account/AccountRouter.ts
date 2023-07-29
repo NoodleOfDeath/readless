@@ -26,7 +26,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.register(req.body);
+      const response = await AccountController.register(req, req.body);
       return res.status(201).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -49,7 +49,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.login(req.body);
+      const response = await AccountController.login(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -63,7 +63,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.logout(req.body);
+      const response = await AccountController.logout(req, req.body);
       return res.status(204).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -76,7 +76,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.generateOTP(req.body);
+      const response = await AccountController.generateOTP(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -89,7 +89,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.verifyAlias(req.body);
+      const response = await AccountController.verifyAlias(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -103,7 +103,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.verifyOTP(req.body);
+      const response = await AccountController.verifyOTP(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -118,7 +118,7 @@ router.put(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.updateCredential(req.body);
+      const response = await AccountController.updateCredential(req, req.body);
       return res.status(200).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
