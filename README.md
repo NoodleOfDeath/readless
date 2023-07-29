@@ -39,7 +39,7 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
   - [v27.1 - Cross-Comparative Article Generation](#v271---cross-comparative-article-generation)
   - [v69.69 - Shit is getting realllllll](#v6969---shit-is-getting-realllllll)
   - [v6724.21 - Who the f\*\*k knew we would make it this far?!](#v672421---who-the-fk-knew-we-would-make-it-this-far)
-- [Develoment - Getting Started](#develoment---getting-started)
+- [Development - Getting Started](#development---getting-started)
   - [Web Client](#web-client)
   - [Server API](#server-api)
   - [Server Scheduler](#server-scheduler)
@@ -47,7 +47,7 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [Contribution](#contribution)
 - [CLI Cheatsheet](#cli-cheatsheet)
   - [Make a new PR](#make-a-new-pr)
-  - [Rebase your branch](#rebase-your-branch)
+  - [Rebase your Branch](#rebase-your-branch)
 
 ## Roadmap
 
