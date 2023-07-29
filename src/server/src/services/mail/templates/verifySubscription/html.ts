@@ -38,7 +38,7 @@ const html = `
         font-size: 18px;
         line-height: 1.5;
       }
-      a {
+      .center a {
         display: inline-block;
         padding: 10px 20px;
         background-color: #8b0000;
@@ -46,7 +46,7 @@ const html = `
         text-decoration: none;
         border-radius: 5px;
       }
-      a:hover {
+      .center a:hover {
         background-color: #b20000;
       }
     </style>
@@ -60,7 +60,9 @@ const html = `
         Please click the button below to verify your subscription to the Read Less newsletter.
       </p>
       <p class="center">
-        <a href="{{domain}}/verify?vc={{verificationCode}}">Verify Email</a>
+        <a href="{{domain}}/verify?code={{verificationCode}}">
+          Verify Subscription
+        </a>
       </p>
       <p>If you did not request a newsletter subscription, please disregard this message or notify us via <a href='mailto:thecakeisalie@readless.ai'>thecakeisalie@readless.ai</a></p>
       <div class="center">

@@ -14,19 +14,19 @@ export default function VerifyPage() {
 
   const validateToken = React.useCallback(async () => {
     try {
-      const token = searchParams.get('t');
-      if (!token) {
-        setMessage('Error, no token provided.');
+      const code = searchParams.get('code');
+      if (!code) {
+        setMessage('Error, no code or channel provided.');
         setLoading(false);
         return;
       }
-      const { error } = await verify({ verificationCode: token });
+      const { error } = await verify({ verificationCode: code });
       if (error) {
         throw error;
       }
-      setMessage('Success! You may now login.');
+      setMessage('Success! You are now subscribed!');
     } catch (e) {
-      setMessage('Error, invalid token.');
+      setMessage('Error, invalid code.');
     } finally {
       setLoading(false);
     }

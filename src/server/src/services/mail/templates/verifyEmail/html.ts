@@ -61,9 +61,13 @@ const html = `
         the button below to verify your email address:
       </p>
       <p class="center">
-        <a href="{{domain}}/verify?v={{verificationCode}}">Verify Subscription</a>
+        <a href="{{domain}}/verify?channel=email&code={{verificationCode}}">Verify Email</a>
       </p>
       <p>If you did not create an account, please disregard this message.</p>
+    </div>
+    <div class="center">
+      <img src="{{domain}}/logo.svg" alt="Read Less Logo" />
+      <p>Read Less</p>
     </div>
   </body>
 </html>
