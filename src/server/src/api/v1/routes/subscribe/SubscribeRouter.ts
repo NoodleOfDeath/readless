@@ -11,7 +11,7 @@ router.post(
   body('channel').isString().notEmpty(),
   body('uuid').isString().notEmpty(),
   body('event').isString().notEmpty(),
-  rateLimitMiddleware('1 per 2s'),
+  rateLimitMiddleware('2 per 1m'),
   async (req, res) => {
     try {
       const response = await SubscribeController.subscribe(req, req.body);
@@ -28,7 +28,7 @@ router.post(
   body('uuid').isString().notEmpty(),
   body('event').isString().notEmpty(),
   body('verifiedToken').isString().notEmpty(),
-  rateLimitMiddleware('1 per 2s'),
+  rateLimitMiddleware('5 per 1m'),
   async (req, res) => {
     try {
       const response = await SubscribeController.verify(req, req.body);
@@ -45,7 +45,7 @@ router.post(
   body('uuid').isString().notEmpty(),
   body('event').isString().notEmpty(),
   body('verifiedToken').isString().notEmpty(),
-  rateLimitMiddleware('1 per 2s'),
+  rateLimitMiddleware('5 per 1m'),
   async (req, res) => {
     try {
       const response = await SubscribeController.unsubscribe(req, req.body);
