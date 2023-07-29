@@ -158,9 +158,7 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [x] Short hold shows summary previews (iOS only for now)
 - [ ] Implement ContextMenu native for Android?
 - [ ] Improve localization to happen on-demand seamlessly, to appear already translated
-- [ ] Add variations to summaries
-- [ ] Allow users to re-request AI images?
-- [ ] Update publishers to fetch original images assigned to @mkdirsteve
+- [x] Update publishers to fetch original images assigned to @mkdirsteve
 - [ ] Add a dislike system for the future "smart" algorithm
 
 ### v1.14 - Notifications/Newletters
@@ -170,7 +168,6 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [ ] Daily (eventually customizable) newsletters with headlines
 - [ ] Subscription to topics, threads, and/or keywords
 - [ ] Push notifications with Firebase
-- [ ] Text notifications
 - [ ] 2-factor authentication with text and/or authenticator applications
 
 ### v1.15 - Bringing Back Accounts
@@ -186,11 +183,14 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 ### v1.16 - Home Screen Widget
 
 - [ ] Home screen widget with a lot of customizability
+- [ ] Add variations to summaries
 
 ### v1.17 - Local News and On Demand Jobs
 
 - [ ] Provide local news (needs some kind of optimization for scaling)
 - [ ] Expose pipeline for users to upload text/documents to be processed
+- [ ] Allow users to re-request AI images?
+- [ ] Text notifications
 
 ### v27.0 - Enhanced Discover Page
 
