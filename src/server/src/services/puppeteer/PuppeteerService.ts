@@ -172,7 +172,7 @@ export class PuppeteerService extends BaseService {
               await action(el);
             }
           } else {
-            const el = await page.waitForSelector(selector, { timeout: pageOptions?.timeout ?? ms('5s') });
+            const el = await page.waitForSelector(selector, { timeout: pageOptions?.timeout ?? ms('3s') });
             await action(el);
           }
         } catch (e) {
