@@ -218,6 +218,13 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   declare sentiment?: number;
   declare sentiments?: PublicSummarySentimentAttributes[];
 
+  declare siblingCount?: number;
+
+  public static async getSitemapData() {
+    const [summaries] = await this.store.query(QUERIES.getSiteMap);
+    return summaries as Summary[];
+  }
+
   public static async getTopStories(payload: SearchSummariesPayload) {
     return await this.getSummaries(payload, 'getTopStories');
   }
@@ -387,6 +394,10 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   
   async getCategory() {
     return await Category.findByPk(this.categoryId);
+  }
+
+  async getSiblingCount() {
+    return await SummaryRelation.count({ where: { parentId: this.id } });
   }
   
   async getSiblings<
