@@ -11,7 +11,7 @@ import {
 } from '@aws-sdk/client-s3';
 import axios from 'axios';
 import mime from 'mime-types';
-import { v1 as uuid } from 'uuid';
+import { v1 } from 'uuid';
 
 import { BaseService } from '../../base';
 
@@ -49,11 +49,20 @@ export class S3Service extends BaseService {
   });
   
   public static async download(url: string, {
-    filetype = p.extname(url), 
-    filename = `${uuid()}${filetype}`,
-    filepath = `/tmp/${filename}`,
+    filetype, 
+    filename,
+    filepath,
   }: DownloadOptions = {}): Promise<string> {
     const response = await axios.get(url, { responseType: 'stream' });
+    if (!filetype) {
+      filetype = mime.extension(response.headers['content-type']) || 'bin';
+    }
+    if (!filename) {
+      filename = `${v1()}.${filetype}`;
+    }
+    if (!filepath) {
+      filepath = `/tmp/${filename}`;
+    }
     return new Promise((resolve, reject) => {
       response.data.pipe(fs.createWriteStream(filepath))
         .on('error', reject)
@@ -61,7 +70,7 @@ export class S3Service extends BaseService {
     });
   }
   
-  public static async getObject(options: GetOptions, filepath = `/tmp/${uuid()}`): Promise<string> {
+  public static async getObject(options: GetOptions, filepath = `/tmp/${v1()}`): Promise<string> {
     const params = {
       ...options,
       Bucket: options.Bucket || process.env.S3_BUCKET,
