@@ -38,11 +38,6 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     date: new Date('2023-04-23T05:47:09.000Z'),
     url: 'https://arstechnica.com/science/2023/04/the-strange-tragic-story-of-egypts-foremost-female-nuclear-scientist/',
   },
-  atlantic: {
-    authors: ['Mark Leibovich'],
-    date: new Date('2023-04-22T12:30:00.000Z'),
-    url: 'https://www.theatlantic.com/politics/archive/2023/04/chris-christie-interview-trump-2024-election/673818/',
-  },
   barrons: {
     authors: ['Lawrence C. Strauss'],
     date: new Date('2023-04-21T04:00:00.000Z'),
@@ -306,6 +301,11 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     authors: [],
     date: new Date('placeholder'),
     url: 'https://www.telegraph.co.uk/world-news/2023/04/23/el-salvador-president-nayib-bukele-crime-crackdown-police/',
+  },
+  theatlantic: {
+    authors: [],
+    date: new Date('placeholder'),
+    url: 'https://cdn.theatlantic.com/thumbor/V6dZ4_O0a4054tchlComWJ1bWms=/0x0:2000x1125/960x540/media/img/mt/2023/07/ups_final_2/original.jpg',
   },
   time: {
     authors: [],

@@ -23,6 +23,23 @@ router.post(
 );
 
 router.post(
+  '/verify',
+  body('channel').isString().notEmpty(),
+  body('uuid').isString().notEmpty(),
+  body('event').isString().notEmpty(),
+  body('verifyToken').isString().notEmpty(),
+  rateLimitMiddleware('1 per 2s'),
+  async (req, res) => {
+    try {
+      const response = await SubscribeController.verify(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.post(
   '/unsubscribe',
   body('channel').isString().notEmpty(),
   body('uuid').isString().notEmpty(),

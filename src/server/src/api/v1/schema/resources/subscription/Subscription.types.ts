@@ -8,7 +8,9 @@ export type SubscriptionAttributes = DatedAttributes & {
   event: string;
   locale?: string;
   verifyToken?: string;
+  unsubscribeToken?: string;
   verifiedAt?: Date;
+  expiresAt?: Date;
 };
 
 export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
@@ -17,7 +19,9 @@ export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
   event: string;
   locale?: string;
   verifyToken?: string;
+  unsubscribeToken?: string;
   verifiedAt?: Date;
+  expiresAt?: Date;
 };
 
-export type PublicSubscriptionAttributes = Omit<SubscriptionAttributes, 'verifyToken'>;
+export type PublicSubscriptionAttributes = Omit<SubscriptionAttributes, 'verifyToken' | 'unsubscribeToken'>;
