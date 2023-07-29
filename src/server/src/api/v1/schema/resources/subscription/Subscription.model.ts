@@ -68,7 +68,7 @@ export class Subscription<
     type: DataType.STRING,
     unique: true,
   })
-  declare verifiedToken?: string;
+  declare verificationCode?: string;
     
   @Column({
     type: DataType.STRING,
@@ -91,20 +91,22 @@ export class Subscription<
     event,
     locale,
   }: SubscriptionCreationAttributes): Promise<Subscription> {
-    const verifiedToken = v4();
+    const verificationCode = v4();
     const subscription = await Subscription.create({
       channel,
       event,
       locale,
       uuid,
-      verifiedToken,
+      verificationCode,
     });
     switch (subscription.channel) {
     case 'email':
-      await new MailService().sendMail({
-        subject: 'Verify Subscription',
-        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/verify?t=${subscription.verifiedToken}`,
+      await new MailService().sendMailFromTemplate({
+        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/verify?t=${subscription.verificationCode}`,
         to: subscription.uuid,
+      }, 'verifySubscription', {
+        email: subscription.uuid, 
+        verificationCode, 
       });
       break;
     default:
@@ -113,17 +115,17 @@ export class Subscription<
     return await this.scope('public').findByPk(subscription.id);
   }
 
-  public static async verify({ verifiedToken }: Pick<SubscriptionCreationAttributes, 'verifiedToken'>): Promise<Subscription> {
+  public static async verify({ verificationCode }: Pick<SubscriptionCreationAttributes, 'verificationCode'>): Promise<Subscription> {
     const subscription = await Subscription.findOne({ 
       where: { 
-        expiresAt: { [Op.or]: { [Op.eq]: null, [Op.gt]: new Date() } },
-        verifiedToken,
+        expiresAt: { [Op.or]: [{ [Op.eq]: null }, { [Op.gt]: new Date() }] },
+        verificationCode,
       }, 
     });
     if (!subscription) {
       throw new InternalError('invalid subscription');
     }
-    subscription.set('verifiedToken', null);
+    subscription.set('verificationCode', null);
     subscription.set('unsubscribeToken', v4());
     subscription.set('verifiedAt', new Date());
     subscription.set('expiresAt', null);

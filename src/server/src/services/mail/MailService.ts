@@ -1,6 +1,7 @@
 import { Transporter, createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
+import { VerifySubscriptionProps, VerifySubscriptionTemplate } from './templates';
 import {
   ResetPasswordProps,
   ResetPasswordTemplate,
@@ -14,6 +15,7 @@ export type MailServiceOptions = SMTPTransport.Options;
 const TEMPLATES = { 
   resetPassword: ResetPasswordTemplate,
   verifyEmail: VerifyEmailTemplate,
+  verifySubscription: VerifySubscriptionTemplate,
 } as const;
 
 export class MailService extends BaseService {
@@ -63,6 +65,8 @@ export class MailService extends BaseService {
         options.html = template.render(params as VerifyEmailProps);
       } else if (template instanceof ResetPasswordTemplate) {
         options.html = template.render(params as ResetPasswordProps);
+      } else if (template instanceof VerifySubscriptionTemplate) {
+        options.html = template.render(params as VerifySubscriptionProps);
       }
     }
     return await this.client.sendMail(options);

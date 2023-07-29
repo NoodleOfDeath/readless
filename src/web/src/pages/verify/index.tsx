@@ -20,7 +20,7 @@ export default function VerifyPage() {
         setLoading(false);
         return;
       }
-      const { error } = await verify({ verifiedToken: token });
+      const { error } = await verify({ verificationCode: token });
       if (error) {
         throw error;
       }

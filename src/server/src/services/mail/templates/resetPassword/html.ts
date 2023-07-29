@@ -53,7 +53,7 @@ const html = `
   </head>
   <body>
     <header>
-      <h1>ReadLess: Reset Password</h1>
+      <h1>Read Less: Reset Password</h1>
     </header>
     <div class="container">
       <p>

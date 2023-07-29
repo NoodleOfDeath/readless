@@ -53,17 +53,20 @@ const html = `
   </head>
   <body>
     <header>
-      <h1>Read Less: Verify Your Email</h1>
+      <h1>Read Less: Verify Your Subscription</h1>
     </header>
     <div class="container">
       <p>
-        Thank you for signing up! To complete your registration, please click
-        the button below to verify your email address:
+        Please click the button below to verify your subscription to the Read Less newsletter.
       </p>
       <p class="center">
-        <a href="{{domain}}/verify?v={{verificationCode}}">Verify Subscription</a>
+        <a href="{{domain}}/verify?vc={{verificationCode}}">Verify Email</a>
       </p>
-      <p>If you did not create an account, please disregard this message.</p>
+      <p>If you did not request a newsletter subscription, please disregard this message or notify us via <a href='mailto:thecakeisalie@readless.ai'>thecakeisalie@readless.ai</a></p>
+      <div class="center">
+        <img src="{{domain}}/logo.svg" alt="Read Less Logo" />
+        <p>Read Less</p>
+      </div>
     </div>
   </body>
 </html>
