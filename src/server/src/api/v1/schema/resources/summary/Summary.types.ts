@@ -34,6 +34,7 @@ export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
   bullets: string[];
   formats?: ReadingFormat[];
   sentiments?: PublicSummarySentimentAttributes[];
+  siblingCount?: number;
 };
 
 export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {
@@ -48,6 +49,7 @@ export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentime
   summary: string;
   shortSummary: string;
   bullets: string[];
+  siblingCount?: number;
 };
 
 /** light weight record for a summary post */

@@ -293,6 +293,8 @@ export function addScopes() {
   
   SummarySentiment.addScope('public', { attributes: [...PUBLIC_SENTIMENT_ATTRIBUTES] });
 
+  Summary.addScope('minimal', { attributes: ['id', 'updatedAt'] });
+
   Summary.addScope('public', { 
     attributes: [...PUBLIC_SUMMARY_ATTRIBUTES],
     include: [
