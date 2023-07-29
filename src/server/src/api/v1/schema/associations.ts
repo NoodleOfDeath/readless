@@ -20,6 +20,7 @@ import {
   SentimentMethod,
   Service,
   ServiceStatus,
+  Subscription,
   Summary,
   SummaryInteraction,
   SummaryMedia,
@@ -41,6 +42,7 @@ import {
   PUBLIC_RECAP_MEDIA_ATTRIBUTES, 
   PUBLIC_RECAP_TRANSLATION_ATTRIBUTES,
   PUBLIC_SENTIMENT_ATTRIBUTES, 
+  PUBLIC_SUBSCRIPTION_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES,
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
   PUBLIC_SUMMARY_MEDIA_ATTRIBUTES, 
@@ -316,6 +318,8 @@ export function addScopes() {
   
   RecapMedia.addScope('public', { attributes: [...PUBLIC_RECAP_MEDIA_ATTRIBUTES] });
   
+  Subscription.addScope('public', { attributes: [...PUBLIC_SUBSCRIPTION_ATTRIBUTES] });
+
   IapVoucher.addScope('public', { attributes: [...PUBLIC_IAP_VOUCHER_ATTRIBUTES] });
 
 }

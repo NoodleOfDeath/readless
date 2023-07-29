@@ -14,7 +14,6 @@ import { AuthError, InternalError } from '../../middleware';
 import {
   PublicSubscriptionAttributes,
   Subscription,
-  SubscriptionAttributes,
   SubscriptionCreationAttributes,
 } from '../../schema';
 
@@ -40,7 +39,7 @@ export class SubscribeController {
   @Post('/verify')
   public static async verify(
     @Request() req: ExpressRequest,
-    @Body() body: SubscriptionAttributes
+    @Body() body: Pick<SubscriptionCreationAttributes, 'verifiedToken'>
   ): Promise<PublicSubscriptionAttributes> {
     const subscription = await Subscription.verify(body);
     return subscription;
@@ -49,7 +48,7 @@ export class SubscribeController {
   @Post('/unsubscribe')
   public static async unsubscribe(
     @Request() req: ExpressRequest,
-    @Body() body: SubscriptionCreationAttributes
+    @Body() body: Pick<SubscriptionCreationAttributes, 'unsubscribeToken'>
   ): Promise<void> {
     await Subscription.unsubscribe(body);
   }
