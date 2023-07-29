@@ -103,7 +103,7 @@ export class Subscription<
     case 'email':
       await new MailService().sendMail({
         subject: 'Verify Subscription',
-        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/subscribe/verify?t=${subscription.verifiedToken}`,
+        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/verify?t=${subscription.verifiedToken}`,
         to: subscription.uuid,
       });
       break;
