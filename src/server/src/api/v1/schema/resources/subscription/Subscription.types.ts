@@ -7,7 +7,7 @@ export type SubscriptionAttributes = DatedAttributes & {
   uuid: string;
   event: string;
   locale?: string;
-  verifiedToken?: string;
+  verificationCode?: string;
   unsubscribeToken?: string;
   verifiedAt?: Date;
   expiresAt?: Date;
@@ -18,7 +18,7 @@ export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
   uuid: string;
   event: string;
   locale?: string;
-  verifiedToken?: string;
+  verificationCode?: string;
   unsubscribeToken?: string;
   verifiedAt?: Date;
   expiresAt?: Date;
