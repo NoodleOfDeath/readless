@@ -18,12 +18,14 @@ import { formatDistance } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
 
+import { MeterDial } from './MeterDial';
+
 import {
   InteractionType,
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
-import ReadingFormatSelector from '~/components/ReadingFormatSelector';
+import ReadingFormatPicker from '~/components/ReadingFormatPicker';
 import { SessionContext } from '~/contexts';
 import {
   fixedSentiment,
@@ -101,7 +103,9 @@ export default function Summary({
         {summary.bullets?.map((bullet, index) => (
           <ListItem
             key={ index }>
-            <ListItemIcon><Icon path={ mdiCircle } size={ 1 } /></ListItemIcon>
+            <ListItemIcon>
+              <Icon path={ mdiCircle } size={ 1 } />
+            </ListItemIcon>
             <Typography>{bullet.replace(/^•\s*/, '')}</Typography>
           </ListItem>
         ))}
@@ -144,7 +148,11 @@ export default function Summary({
             } } />
           </Box>
         )}
-        <Stack direction="row" spacing={ 1 } flexGrow={ 1 } alignItems={ 'center' }>
+        <Stack 
+          direction="row"
+          spacing={ 1 }
+          flexGrow={ 1 }
+          alignItems={ 'center' }>
           <img 
             src={ publisherIcon(summary.publisher) }
             alt={ summary.publisher.displayName }
@@ -160,6 +168,7 @@ export default function Summary({
           <Typography variant="subtitle2">
             {fixedSentiment(summary.sentiment)}
           </Typography>
+          <MeterDial value={ summary.sentiment } width={ 40 } />
         </Stack>
         <StyledStack direction='row' spacing={ 2 }>
           <StyledStack flexGrow={ 1 }>
@@ -194,7 +203,7 @@ export default function Summary({
           {initialFormat && (
             <React.Fragment>
               <StyledDivider variant="fullWidth" />
-              <ReadingFormatSelector 
+              <ReadingFormatPicker 
                 format={ format }
                 onChange={ (newFormat) => handleFormatChange(newFormat) } />
             </React.Fragment>

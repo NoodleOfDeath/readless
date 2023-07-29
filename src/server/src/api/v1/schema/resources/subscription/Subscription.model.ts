@@ -110,7 +110,7 @@ export class Subscription<
     default:
       throw new InternalError('invalid subscription channel');
     }
-    return subscription;
+    return await this.scope('public').findByPk(subscription.id);
   }
 
   public static async verify({ verifiedToken }: Pick<SubscriptionCreationAttributes, 'verifiedToken'>): Promise<Subscription> {
@@ -128,7 +128,7 @@ export class Subscription<
     subscription.set('verifiedAt', new Date());
     subscription.set('expiresAt', null);
     await subscription.save();
-    return this.scope('public').findByPk(subscription.id);
+    return await this.scope('public').findByPk(subscription.id);
   }
   
   public static async unsubscribe({ unsubscribeToken }: Pick<SubscriptionCreationAttributes, 'unsubscribeToken'>): Promise<void> {

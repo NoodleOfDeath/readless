@@ -8,6 +8,7 @@ import {
   SwipeableDrawer,
   TextField,
 } from '@mui/material';
+import Head from 'next/head';
 import { useMediaQuery } from 'react-responsive';
 
 import {
@@ -108,7 +109,7 @@ export default function AppPage() {
   }, [id]);
 
   const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format: ReadingFormat = ReadingFormat.Summary) => {
-    replace(`/read?s=${summary.id}&f=${format}`, undefined);
+    replace(`/read?s=${summary.id}&f=${format}`, undefined, { scroll: false, shallow: true });
     if (selectedSummary) {
       return;
     }
@@ -118,6 +119,31 @@ export default function AppPage() {
 
   return (
     <Layout>
+      <Head>
+        {selectedSummary && (
+          <React.Fragment>
+            <title 
+              key='title'>
+              {selectedSummary.title}
+            </title>
+            <meta 
+              name="viewport"
+              content="width=device-width, initial-scale=1.0" />
+            <meta 
+              key="description"
+              property="og:image"
+              content={ selectedSummary.media?.imageArticle || selectedSummary.media?.imageAi1 || selectedSummary.imageUrl } />
+            <meta 
+              key="og:title"
+              property="og:title"
+              content={ selectedSummary?.title.replace(/"/g, '&quot;') } />
+            <meta 
+              key="og:description"
+              property="og:description"
+              content={ selectedSummary?.shortSummary?.replace(/"/g, '&quot;') } />
+          </React.Fragment>
+        )}
+      </Head>
       <Stack spacing={ 2 }>
         <form onSubmit={ (e) => {
           e.preventDefault(); onMount(); 

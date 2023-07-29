@@ -68,6 +68,10 @@ export function useSummaryClient() {
     return await withHeaders(API.unsubscribe)(args);
   }, [withHeaders]);
 
+  const verify = React.useCallback(async (args: Parameters<typeof API.verify>[0]) => {
+    return await withHeaders(API.verify)(args);
+  }, [withHeaders]);
+
   const unsubscribe = React.useCallback(async (args: Parameters<typeof API.unsubscribe>[0]) => {
     return await withHeaders(API.unsubscribe)(args);
   }, [withHeaders]);
@@ -81,6 +85,7 @@ export function useSummaryClient() {
     interactWithSummary,
     subscribe,
     unsubscribe,
+    verify,
   };
 
 }
