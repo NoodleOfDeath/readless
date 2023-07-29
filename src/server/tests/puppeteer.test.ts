@@ -127,7 +127,8 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   espn: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.espn.com/nba/story/_/id/36268249/grizzlies-dillon-brooks-ejected-flagrant-2-lebron-james',
+    imageUrls: [''],
+    url: 'https://www.espn.com/nfl/story/_/id/38094491/vikings-looking-options-move-danielle-hunter-sources-say',
   },
   essence: {
     authors: [],
@@ -314,7 +315,8 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   usatoday: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.usatoday.com/story/news/world/2023/04/23/sudan-war-live-updates/11724633002/',
+    imageUrls: ['https://www.usatoday.com/gcdn/presto/2023/07/27/USAT/eeb75d65-5318-47fa-a1fc-8a4cff1465f5-WWKN_RectThumb_PHOTO_213.png?width=660&height=371&fit=crop&format=pjpg&auto=webp'],
+    url: 'https://www.usatoday.com/story/news/world/2023/07/29/niger-coups-in-africa/70475841007/',
   },
   usnews: {
     authors: [],
