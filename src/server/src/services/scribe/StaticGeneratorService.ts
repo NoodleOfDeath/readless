@@ -15,7 +15,7 @@ export class StaticGeneratorService extends BaseService {
         ${summaries.map((summary) => (`
           <url>
             <loc>https://readless.ai/read?s=${summary.id}</loc>
-            <lastmod>${summary.updatedAt}</lastmod>
+            <lastmod>${summary.updatedAt.toLocaleDateString()}</lastmod>
             <changefreq>Monthly</changefreq>
             <priority>${(summary.siblingCount ?? 0) / mostSiblings}</priority>
             <news:news>
@@ -23,7 +23,7 @@ export class StaticGeneratorService extends BaseService {
                 <news:name>${summary.publisher.displayName}</news:name>
                 <news:language>en</news:language>
               </news:publication>
-            <news:publication_date>${summary.originalDate}</news:publication_date>
+            <news:publication_date>${summary.originalDate.toLocaleDateString()}</news:publication_date>
             <news:title>${summary.title}</news:title>
           </url>`)).join('')}
       </urlset>
