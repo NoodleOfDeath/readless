@@ -1,6 +1,23 @@
 import { Summary } from '../../api/v1/schema';
 import { BaseService } from '../base';
 
+function formatDate(date: Date) {
+  return [
+    date.getFullYear(), 
+    `${date.getMonth()}`.padStart(2, '0'),
+    `${date.getDate()}`.padStart(2, '0'),
+  ].join('-');
+}
+
+function clean(str: string) {
+  return str
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/&/g, '&amp;')
+    .replace(/'/g, '&apos;')
+    .replace(/"/g, '&quot;');
+}
+
 export class StaticGeneratorService extends BaseService {
   
   public static async generateSitemap() {
@@ -8,26 +25,28 @@ export class StaticGeneratorService extends BaseService {
     console.log('summaries retrived', summaries.length);
     const mostSiblings = Math.max(...summaries.map((s) => (s.siblingCount ?? 0))) || 1;
     console.log('most siblings', mostSiblings);
-    return `
-      <?xml version="1.0" encoding="UTF-8"?>
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-              xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-        ${summaries.map((summary) => (`
-          <url>
-            <loc>https://readless.ai/read?s=${summary.id}</loc>
-            <lastmod>${summary.updatedAt.toLocaleDateString()}</lastmod>
-            <changefreq>Monthly</changefreq>
-            <priority>${(summary.siblingCount ?? 0) / mostSiblings}</priority>
-            <news:news>
-              <news:publication>
-                <news:name>${summary.publisher.displayName}</news:name>
-                <news:language>en</news:language>
-              </news:publication>
-            <news:publication_date>${summary.originalDate.toLocaleDateString()}</news:publication_date>
-            <news:title>${summary.title}</news:title>
-          </url>`)).join('')}
-      </urlset>
-    `;
+    return `<?xml version="1.0" encoding="UTF-8"?>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+          xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    ${summaries.map((summary) => (`
+      <url>
+        <loc>https://readless.ai/read?s=${summary.id}</loc>
+        <lastmod>${formatDate(summary.updatedAt)}</lastmod>
+        <changefreq>Monthly</changefreq>
+        <priority>${(summary.siblingCount ?? 0) / mostSiblings}</priority>
+        <news:news>
+          <news:publication>
+            <news:name>${summary.publisher.displayName}</news:name>
+            <news:language>en</news:language>
+          </news:publication>
+          <news:publication_date>
+            ${formatDate(summary.originalDate)}
+          </news:publication_date>
+          <news:title>${clean(summary.title)}</news:title>
+        </news:news>
+      </url>`)).join('')}
+  </urlset>
+`;
   }
   
 }
