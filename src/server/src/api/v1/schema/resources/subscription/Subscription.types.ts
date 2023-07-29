@@ -7,7 +7,7 @@ export type SubscriptionAttributes = DatedAttributes & {
   uuid: string;
   event: string;
   locale?: string;
-  verifyToken?: string;
+  verifiedToken?: string;
   unsubscribeToken?: string;
   verifiedAt?: Date;
   expiresAt?: Date;
@@ -18,10 +18,18 @@ export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
   uuid: string;
   event: string;
   locale?: string;
-  verifyToken?: string;
+  verifiedToken?: string;
   unsubscribeToken?: string;
   verifiedAt?: Date;
   expiresAt?: Date;
 };
 
-export type PublicSubscriptionAttributes = Omit<SubscriptionAttributes, 'verifyToken' | 'unsubscribeToken'>;
+export const PUBLIC_SUBSCRIPTION_ATTRIBUTES = [
+  'id',
+  'verifiedAt',
+  'expiresAt',
+] as const;
+
+export type PublicSubscriptionAttributes = Pick<
+  SubscriptionAttributes,
+  typeof PUBLIC_SUBSCRIPTION_ATTRIBUTES[number]>;

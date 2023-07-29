@@ -27,7 +27,7 @@ router.post(
   body('channel').isString().notEmpty(),
   body('uuid').isString().notEmpty(),
   body('event').isString().notEmpty(),
-  body('verifyToken').isString().notEmpty(),
+  body('verifiedToken').isString().notEmpty(),
   rateLimitMiddleware('1 per 2s'),
   async (req, res) => {
     try {
@@ -44,7 +44,7 @@ router.post(
   body('channel').isString().notEmpty(),
   body('uuid').isString().notEmpty(),
   body('event').isString().notEmpty(),
-  body('verifyToken').isString().notEmpty(),
+  body('verifiedToken').isString().notEmpty(),
   rateLimitMiddleware('1 per 2s'),
   async (req, res) => {
     try {

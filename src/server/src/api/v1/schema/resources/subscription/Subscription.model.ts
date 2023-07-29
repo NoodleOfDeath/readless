@@ -27,8 +27,6 @@ export class Subscription<
     B extends SubscriptionCreationAttributes = SubscriptionCreationAttributes,
   > extends BaseModel<A, B> implements SubscriptionAttributes {
 
-  verifyToken: string;
-
   @Index({  
     name: 'subscription_channel_uuid_event',
     unique: true,
@@ -93,19 +91,19 @@ export class Subscription<
     event,
     locale,
   }: SubscriptionCreationAttributes): Promise<Subscription> {
-    const verifyToken = v4();
+    const verifiedToken = v4();
     const subscription = await Subscription.create({
       channel,
       event,
       locale,
       uuid,
-      verifyToken,
+      verifiedToken,
     });
     switch (subscription.channel) {
     case 'email':
       await new MailService().sendMail({
         subject: 'Verify Subscription',
-        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/subscribe/verify?t=${subscription.verifyToken}`,
+        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/subscribe/verify?t=${subscription.verifiedToken}`,
         to: subscription.uuid,
       });
       break;
@@ -115,45 +113,26 @@ export class Subscription<
     return subscription;
   }
 
-  public static async verify({
-    channel,
-    uuid,
-    event,
-    unsubscribeToken,
-  }: SubscriptionAttributes): Promise<Subscription> {
-    const subscription = await Subscription.findOne({
-      where: {
-        channel,
-        event,
-        unsubscribeToken,
-        uuid,
-      },
+  public static async verify({ verifiedToken }: Pick<SubscriptionCreationAttributes, 'verifiedToken'>): Promise<Subscription> {
+    const subscription = await Subscription.findOne({ 
+      where: { 
+        expiresAt: { [Op.or]: { [Op.eq]: null, [Op.gt]: new Date() } },
+        verifiedToken,
+      }, 
     });
     if (!subscription) {
       throw new InternalError('invalid subscription');
     }
-    subscription.set('verifyToken', null);
+    subscription.set('verifiedToken', null);
     subscription.set('unsubscribeToken', v4());
     subscription.set('verifiedAt', new Date());
     subscription.set('expiresAt', null);
     await subscription.save();
-    return subscription;
+    return this.scope('public').findByPk(subscription.id);
   }
   
-  public static async unsubscribe({
-    channel,
-    uuid,
-    event,
-    verifyToken,
-  }: SubscriptionCreationAttributes): Promise<void> {
-    const subscription = await Subscription.findOne({
-      where: {
-        channel,
-        event,
-        uuid,
-        verifyToken,
-      },
-    });
+  public static async unsubscribe({ unsubscribeToken }: Pick<SubscriptionCreationAttributes, 'unsubscribeToken'>): Promise<void> {
+    const subscription = await Subscription.findOne({ where: { unsubscribeToken } });
     if (!subscription) {
       throw new InternalError('invalid subscription');
     }
