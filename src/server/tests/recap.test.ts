@@ -17,7 +17,7 @@ describe('write a recap', () => {
       await DBService.prepare();
       const recap = await ScribeService.writeRecap({
         duration: '1d',
-        start: '2023-07-19',
+        start: '2023-07-29',
       });
       expect(recap).toBeDefined();
       console.log(recap?.text);
