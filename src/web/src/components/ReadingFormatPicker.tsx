@@ -12,6 +12,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material';
+import { useMediaQuery } from 'react-responsive';
 
 import { ReadingFormat } from '~/api';
 
@@ -55,6 +56,7 @@ const FORMAT_ICONS: Record<ReadingFormat, string> = {
 export default function ReadingFormatPicker({ format, onChange }: Props = {}) {
     
   const theme = useTheme();
+  const xsAndDown = useMediaQuery({ maxWidth: 400 });
 
   const ReadingFormatButton = React.useCallback((buttonFormat: ReadingFormat) => {
     return (
@@ -71,7 +73,7 @@ export default function ReadingFormatPicker({ format, onChange }: Props = {}) {
   }, [format, onChange, theme.palette.common.white, theme.palette.primary.main]);
   
   return (
-    <StyledStack direction="row">
+    <StyledStack direction={ xsAndDown ? 'column' : 'row' }>
       {ReadingFormatButton(ReadingFormat.Summary)}
       {ReadingFormatButton(ReadingFormat.Bullets)}
       {ReadingFormatButton(ReadingFormat.FullArticle)}

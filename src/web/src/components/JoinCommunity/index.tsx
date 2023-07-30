@@ -9,6 +9,7 @@ import Animation from '~/components/Animation';
 import Image from '~/components/Image';
 import { avatars, images } from '~/constants/joinCommunity';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JoinCommunity = ({ downloadRef }: {downloadRef?: any} = {}) => (
   <div className={ styles.join }>
     <div className={ styles.anchor } ref={ downloadRef } id="download" />
@@ -18,7 +19,7 @@ const JoinCommunity = ({ downloadRef }: {downloadRef?: any} = {}) => (
           Are you ready to Read Less?
         </div>
         <div className={ cn('h4M', styles.info) }>
-          Join thousands of readers and become part of the Read Less community
+          Join hundreds of readers and become part of the Read Less community
         </div>
         <div className={ styles.avatars }>
           {avatars.map((avatar, index) => (

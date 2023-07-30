@@ -25,6 +25,7 @@ import {
 import { formatDistance } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
+import { useMediaQuery } from 'react-responsive';
 import {
   EmailShareButton,
   FacebookMessengerShareButton,
@@ -92,6 +93,10 @@ export default function Summary({
 
   const { handleInteraction } = useSummaryClient();
   const { preferredReadingFormat } = React.useContext(SessionContext);
+
+  const mdAndDown = useMediaQuery({ maxWidth: 960 });
+  const smAndDown = useMediaQuery({ maxWidth: 600 });
+  const xsAndDown = useMediaQuery({ maxWidth: 400 });
 
   const [format, setFormat] = React.useState(initialFormat);
   const [lastTick, setLastTick] = React.useState(new Date());
@@ -174,21 +179,25 @@ export default function Summary({
           )}
           <Box component={ initialFormat ? 'address' : undefined }>
             <Stack 
-              direction="row"
+              direction={ xsAndDown ? 'column' : 'row' }
               spacing={ 1 }
               flexGrow={ 1 }
               alignItems={ 'center' }>
-              <img 
-                src={ publisherIcon(summary.publisher) }
-                alt={ summary.publisher.displayName }
-                width={ 24 }
-                height={ 24 }
-                style={ { borderRadius: '50%' } } />
-              <Typography variant="subtitle2">{summary.publisher.displayName}</Typography>
-              <Typography variant="subtitle2">·</Typography>
-              <Typography variant="subtitle2">
-                <time dateTime={ summary.originalDate }>{timeAgo}</time>
-              </Typography>
+              <Stack direction={ smAndDown ? 'column' : 'row' } spacing={ smAndDown ? 0 : 1 } alignItems="center">
+                <Stack direction="row" spacing={ 1 } alignItems="center">
+                  <img 
+                    src={ publisherIcon(summary.publisher) }
+                    alt={ summary.publisher.displayName }
+                    width={ 24 }
+                    height={ 24 }
+                    style={ { borderRadius: '50%' } } />
+                  <Typography variant="subtitle2">{summary.publisher.displayName}</Typography>
+                </Stack>
+                {!smAndDown && <Typography variant="subtitle2">·</Typography>}
+                <Typography variant="subtitle2">
+                  <time dateTime={ summary.originalDate }>{timeAgo}</time>
+                </Typography>
+              </Stack>
               <Box flexGrow={ 1 } />
               <Typography variant="subtitle2">
                 {fixedSentiment(summary.sentiment)}
@@ -196,7 +205,7 @@ export default function Summary({
               <MeterDial value={ summary.sentiment } width={ 40 } />
             </Stack>
           </Box>
-          <Stack direction='row' spacing={ 2 }>
+          <Stack direction={ xsAndDown ? 'column' : 'row' } spacing={ 2 } alignItems={ 'center' }>
             <Stack spacing={ 1 } flexGrow={ 1 }>
               <StyledTitle variant="subtitle1">
                 {summary.title}
@@ -206,7 +215,7 @@ export default function Summary({
                   ...so here&apos; what happened in a nutshell
                 </Typography>
               )}
-              <Typography variant="body2">{summary.shortSummary}</Typography>
+              {(!smAndDown || initialFormat) && <Typography variant="body2">{summary.shortSummary}</Typography>}
               <Box flexGrow={ 1 } />
             </Stack>
             {!big && imageUrl && (
@@ -224,12 +233,14 @@ export default function Summary({
             )}
           </Stack>
           <Stack direction='column' spacing={ 2 }>
-            <Stack direction='row' flexGrow={ 1 } alignItems="center" spacing={ 1 }>
-              <Typography variant="subtitle2">{summary.category.displayName}</Typography>
-              <Typography variant="subtitle2">·</Typography>
-              <Typography variant="subtitle2">
-                {pluralize('Article', (summary.siblings?.length ?? 0) + 1, true)}
-              </Typography>
+            <Stack direction={ mdAndDown ? 'column' : 'row' } flexGrow={ 1 } alignItems="center" spacing={ 1 }>
+              <Stack direction="row" spacing={ 1 }>
+                <Typography variant="subtitle2">{summary.category.displayName}</Typography>
+                <Typography variant="subtitle2">·</Typography>
+                <Typography variant="subtitle2">
+                  {pluralize('Article', (summary.siblings?.length ?? 0) + 1, true)}
+                </Typography>
+              </Stack>
               <Box flexGrow={ 1 } />
               <Stack direction="row" spacing={ 1 }>
                 <EmailShareButton url={ shareUrl }>
