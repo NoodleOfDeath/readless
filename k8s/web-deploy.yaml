@@ -25,15 +25,18 @@ spec:
             limits:
               memory: '$K8S_MEMORY_LIMITS'
               cpu: '$K8S_CPU_LIMITS'
+          env:
+            - name: PORT
+              value: '$PORT'
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: $PORT
             initialDelaySeconds: 5
             periodSeconds: 5
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: $PORT
             initialDelaySeconds: 5
             periodSeconds: 5
