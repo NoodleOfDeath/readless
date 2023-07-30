@@ -369,7 +369,7 @@ export function Summary({
         ) }>
         <View p={ 12 } itemsCenter>
           <VictoryChart 
-            animate={ { duration: 500 } }
+            animate={ { duration: 300 } }
             theme={ VictoryTheme.material }>
             <VictoryAxis
               crossAxis
