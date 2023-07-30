@@ -1,6 +1,14 @@
 import React from 'react';
 
-import { mdiCircle } from '@mdi/js';
+import {
+  mdiCircle,
+  mdiEmail,
+  mdiFacebook,
+  mdiFacebookMessenger,
+  mdiLinkedin,
+  mdiTwitter,
+  mdiWhatsapp,
+} from '@mdi/js';
 import Icon from '@mdi/react';
 import {
   Box,
@@ -17,6 +25,16 @@ import {
 import { formatDistance } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
+import {
+  EmailShareButton,
+  FacebookMessengerShareButton,
+  FacebookShareButton,
+  LinkedinShareButton,
+  TelegramIcon,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from 'react-share';
 
 import { MeterDial } from './MeterDial';
 
@@ -30,6 +48,7 @@ import { SessionContext } from '~/contexts';
 import {
   fixedSentiment,
   publisherIcon,
+  shareableLink,
   useSummaryClient,
 } from '~/core';
 
@@ -61,7 +80,7 @@ const StyledTitle = styled(Typography)(() => ({
 
 const StyledDivider = styled(Divider)(({ theme }) => ({ marginTop: theme.spacing(1) }));
 
-const StyledStack = styled(Stack)(() => ({ width: '100%' }));
+const FullWidth = styled(Box)(() => ({ width: '100%' }));
 
 export default function Summary({
   big,
@@ -82,6 +101,8 @@ export default function Summary({
       formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true }),
     [summary.originalDate, summary.createdAt, lastTick]
   );
+
+  const shareUrl = React.useMemo(() => shareableLink(summary, process.env.NEXT_PUBLIC_BASE_URL as string, format), [format, summary]);
 
   // update time ago every `tickIntervalMs` milliseconds
   React.useEffect(() => {
@@ -134,83 +155,118 @@ export default function Summary({
   );
 
   return (
-    <StyledCard onClick={ initialFormat ? undefined : () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
-      <StyledStack spacing={ 2 }>
-        {big && imageUrl && (
-          <Box>
-            <div style={ {
-              backgroundImage: `url(${imageUrl})`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              borderRadius: 8, 
-              height: 300, 
-              width: '100%', 
-            } } />
-          </Box>
-        )}
-        <Stack 
-          direction="row"
-          spacing={ 1 }
-          flexGrow={ 1 }
-          alignItems={ 'center' }>
-          <img 
-            src={ publisherIcon(summary.publisher) }
-            alt={ summary.publisher.displayName }
-            width={ 24 }
-            height={ 24 }
-            style={ { borderRadius: '50%' } } />
-          <Typography variant="subtitle2">{summary.publisher.displayName}</Typography>
-          <Typography variant="subtitle2">·</Typography>
-          <Typography variant="subtitle2">
-            {timeAgo}
-          </Typography>
-          <Box flexGrow={ 1 } />
-          <Typography variant="subtitle2">
-            {fixedSentiment(summary.sentiment)}
-          </Typography>
-          <MeterDial value={ summary.sentiment } width={ 40 } />
-        </Stack>
-        <StyledStack direction='row' spacing={ 2 }>
-          <StyledStack flexGrow={ 1 }>
-            <StyledTitle variant="subtitle1">
-              {summary.title}
-            </StyledTitle>
-            <Typography variant="body2">{summary.shortSummary}</Typography>
-            <Box flexGrow={ 1 } />
-          </StyledStack>
-          {!big && imageUrl && (
-            <Box>
+    <StyledCard 
+      onClick={ initialFormat ? undefined : () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+      <FullWidth component={ initialFormat ? 'article' : undefined }>
+        <Stack spacing={ 2 }>
+          {big && imageUrl && (
+            <Box component={ initialFormat ? 'figure' : undefined }>
               <div style={ {
                 backgroundImage: `url(${imageUrl})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 borderRadius: 8, 
-                height: 100, 
-                width: 100, 
+                height: 400, 
+                maxHeight: '40vh',
+                width: '100%', 
               } } />
             </Box>
           )}
-        </StyledStack>
-        <Stack direction='column' spacing={ 2 }>
-          <Stack direction='row' flexGrow={ 1 } alignItems="center" spacing={ 1 }>
-            <Typography variant="subtitle2">{summary.category.displayName}</Typography>
-            <Typography variant="subtitle2">·</Typography>
-            <Typography variant="subtitle2">
-              {pluralize('Article', (summary.siblings?.length ?? 0) + 1, true)}
-            </Typography>
-            <Box flexGrow={ 1 } />
+          <Box component={ initialFormat ? 'address' : undefined }>
+            <Stack 
+              direction="row"
+              spacing={ 1 }
+              flexGrow={ 1 }
+              alignItems={ 'center' }>
+              <img 
+                src={ publisherIcon(summary.publisher) }
+                alt={ summary.publisher.displayName }
+                width={ 24 }
+                height={ 24 }
+                style={ { borderRadius: '50%' } } />
+              <Typography variant="subtitle2">{summary.publisher.displayName}</Typography>
+              <Typography variant="subtitle2">·</Typography>
+              <Typography variant="subtitle2">
+                <time dateTime={ summary.originalDate }>{timeAgo}</time>
+              </Typography>
+              <Box flexGrow={ 1 } />
+              <Typography variant="subtitle2">
+                {fixedSentiment(summary.sentiment)}
+              </Typography>
+              <MeterDial value={ summary.sentiment } width={ 40 } />
+            </Stack>
+          </Box>
+          <Stack direction='row' spacing={ 2 }>
+            <Stack spacing={ 1 } flexGrow={ 1 }>
+              <StyledTitle variant="subtitle1">
+                {summary.title}
+              </StyledTitle>
+              {initialFormat && (
+                <Typography variant="body1" textAlign={ 'right' }>
+                  ...so here&apos; what happened in a nutshell
+                </Typography>
+              )}
+              <Typography variant="body2">{summary.shortSummary}</Typography>
+              <Box flexGrow={ 1 } />
+            </Stack>
+            {!big && imageUrl && (
+              <Box component={ initialFormat ? 'figure' : undefined }>
+                <div style={ {
+                  backgroundImage: `url(${imageUrl})`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  borderRadius: 8, 
+                  height: '100%',
+                  minHeight: 100,
+                  width: 100, 
+                } } />
+              </Box>
+            )}
           </Stack>
-          {initialFormat && (
-            <React.Fragment>
-              <StyledDivider variant="fullWidth" />
-              <ReadingFormatPicker 
-                format={ format }
-                onChange={ (newFormat) => handleFormatChange(newFormat) } />
-            </React.Fragment>
-          )}
+          <Stack direction='column' spacing={ 2 }>
+            <Stack direction='row' flexGrow={ 1 } alignItems="center" spacing={ 1 }>
+              <Typography variant="subtitle2">{summary.category.displayName}</Typography>
+              <Typography variant="subtitle2">·</Typography>
+              <Typography variant="subtitle2">
+                {pluralize('Article', (summary.siblings?.length ?? 0) + 1, true)}
+              </Typography>
+              <Box flexGrow={ 1 } />
+              <Stack direction="row" spacing={ 1 }>
+                <EmailShareButton url={ shareUrl }>
+                  <Icon path={ mdiEmail } size={ 1 } />
+                </EmailShareButton>
+                <FacebookShareButton url={ shareUrl }>
+                  <Icon path={ mdiFacebook } size={ 1 } />
+                </FacebookShareButton>
+                <FacebookMessengerShareButton appId={ process.env.NEXT_PUBLIC_FACEBOOK_ID as string } url={ shareUrl }>
+                  <Icon path={ mdiFacebookMessenger } size={ 1 } />
+                </FacebookMessengerShareButton>
+                <TwitterShareButton url={ shareUrl }>
+                  <Icon path={ mdiTwitter } size={ 1 } />
+                </TwitterShareButton>
+                <LinkedinShareButton url={ shareUrl }>
+                  <Icon path={ mdiLinkedin } size={ 1 } />
+                </LinkedinShareButton>
+                <TelegramShareButton url={ shareUrl }>
+                  <TelegramIcon size={ 30 } iconFillColor={ 'black' } bgStyle={ { fill: 'none' } } />
+                </TelegramShareButton>
+                <WhatsappShareButton url={ shareUrl }>
+                  <Icon path={ mdiWhatsapp } size={ 1 } />
+                </WhatsappShareButton>
+              </Stack>
+            </Stack>
+            {initialFormat && (
+              <React.Fragment>
+                <StyledDivider variant="fullWidth" />
+                <ReadingFormatPicker 
+                  format={ format }
+                  onChange={ (newFormat) => handleFormatChange(newFormat) } />
+              </React.Fragment>
+            )}
+          </Stack>
+          {content && <CardContent>{content}</CardContent>}
         </Stack>
-        {content && <CardContent>{content}</CardContent>}
-      </StyledStack>
+      </FullWidth>
     </StyledCard>
   );
 }

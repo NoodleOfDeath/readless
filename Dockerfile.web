@@ -61,8 +61,4 @@ RUN echo NEXT_PUBLIC_SUPPORT_EMAIL=\"${NEXT_PUBLIC_SUPPORT_EMAIL}\" >> .env
 # run build
 ENV NODE_ENV=production
 RUN yarn build
-
-# deploy AS nginx
-FROM nginx:alpine AS web
-COPY src/web/nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /home/node/app/build /etc/nginx/html
+CMD yarn start

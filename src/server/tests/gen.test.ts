@@ -19,7 +19,6 @@ describe('generate sitemap', () => {
       await DBService.prepare();
       const xml = await StaticGeneratorService.generateSitemap();
       expect(xml).toBeDefined();
-      console.log(xml);
       fs.writeFileSync('./sitemap.xml', xml);
     } catch (e) {
       console.log(e);
