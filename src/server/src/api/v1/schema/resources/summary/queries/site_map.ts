@@ -4,6 +4,7 @@ SELECT
   s.title,
   JSON_BUILD_OBJECT('displayName', pub."displayName") AS publisher,
   s."originalDate",
+  s."createdAt",
   s."updatedAt",
   COALESCE(COUNT(sr.id), 0) AS "siblingCount"
 FROM
@@ -15,6 +16,7 @@ GROUP BY
   s.title,
   pub."displayName",
   s."originalDate",
+  s."createdAt",
   s."updatedAt"
 ORDER BY
   "siblingCount" DESC

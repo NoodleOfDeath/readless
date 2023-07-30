@@ -1,3 +1,5 @@
+import ms from 'ms';
+
 import { Summary } from '../../api/v1/schema';
 import { BaseService } from '../base';
 
@@ -38,10 +40,8 @@ export class StaticGeneratorService extends BaseService {
           <news:publication>
             <news:name>${summary.publisher.displayName}</news:name>
             <news:language>en</news:language>
-          </news:publication>${summary.originalDate && (`
-          <news:publication_date>
-            ${formatDate(summary.originalDate)}
-          </news:publication_date>`)}
+          </news:publication>
+          <news:publication_date>${formatDate(Date.now() - summary.originalDate.valueOf() < ms('5y') ? summary.originalDate : summary.createdAt)}</news:publication_date>
           <news:title>${clean(summary.title)}</news:title>
         </news:news>
       </url>`)).join('')}
