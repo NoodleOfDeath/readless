@@ -125,6 +125,7 @@ export const ruStrings: typeof enStrings = {
   share_copyTitle: 'Копировать заголовок',
   share_instagram: 'Инстаграм',
   share_instagramStories: 'Истории инстаграма',
+  share_saveImage: 'Сохранить изображение в фото',
   share_shareAsImage: 'Поделиться как изображение',
   share_shareAsLink: 'Поделиться ссылкой',
   share_twitter: 'Твиттер',

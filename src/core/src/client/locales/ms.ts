@@ -125,6 +125,7 @@ export const msStrings: typeof enStrings = {
   share_copyTitle: 'Salin Tajuk',
   share_instagram: 'Instagram',
   share_instagramStories: 'Cerita Instagram',
+  share_saveImage: 'Simpan Imej ke Foto',
   share_shareAsImage: 'Kongsi sebagai Imej',
   share_shareAsLink: 'Kongsi sebagai Pautan',
   share_twitter: 'Twitter',

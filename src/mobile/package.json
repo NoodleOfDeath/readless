@@ -76,11 +76,11 @@
     "react-native-svg": "^13.9.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-tableview-simple": "^4.4.0",
-    "react-native-track-player": "^4.0.0-rc04",
+    "react-native-track-player": "4.0.0-rc04",
     "react-native-tts-export": "^5.2.3",
     "react-native-vector-icons": "^9.2.0",
     "react-native-version-check": "^3.4.7",
-    "react-native-view-shot": "^3.6.0",
+    "react-native-view-shot": "^3.7.0",
     "uuid": "^9.0.0",
     "victory-native": "^36.6.11"
   },

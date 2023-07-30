@@ -125,6 +125,7 @@ export const plStrings: typeof enStrings = {
   share_copyTitle: 'Kopiuj tytuł',
   share_instagram: 'Instagram',
   share_instagramStories: 'Historie na Instagramie',
+  share_saveImage: 'Zapisz obraz do zdjęć',
   share_shareAsImage: 'Udostępnij jako obraz',
   share_shareAsLink: 'Udostępnij jako łącze',
   share_twitter: 'Świergot',

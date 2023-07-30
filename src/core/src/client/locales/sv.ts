@@ -125,6 +125,7 @@ export const svStrings: typeof enStrings = {
   share_copyTitle: 'Kopiera titel',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram Stories',
+  share_saveImage: 'Spara bild till foton',
   share_shareAsImage: 'Dela som bild',
   share_shareAsLink: 'Dela som länk',
   share_twitter: 'Twitter',

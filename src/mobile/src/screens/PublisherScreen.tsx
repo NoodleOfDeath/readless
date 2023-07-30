@@ -1,5 +1,6 @@
 import React from 'react';
 
+import analytics from '@react-native-firebase/analytics';
 import { useFocusEffect } from '@react-navigation/native';
 
 import {
@@ -15,6 +16,7 @@ import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
+import { getUserAgent } from '~/utils';
 
 export function PublisherScreen({
   route,
@@ -43,9 +45,14 @@ export function PublisherScreen({
     if (!publisher) {
       return;
     }
+    analytics().logEvent('toggle_followed_publisher', {
+      followed: !followed,
+      publisher: publisher.name,
+      userAgent: getUserAgent(),
+    });
     setFollowed((prev) => !prev);
     followPublisher(publisher);
-  }, [publisher, followPublisher]);
+  }, [publisher, followed, followPublisher]);
   
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({ headerTitle: '' });

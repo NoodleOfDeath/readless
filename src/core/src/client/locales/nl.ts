@@ -125,6 +125,7 @@ export const nlStrings: typeof enStrings = {
   share_copyTitle: 'Titel kopiëren',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram-verhalen',
+  share_saveImage: 'Afbeelding opslaan in foto\'s',
   share_shareAsImage: 'Deel als afbeelding',
   share_shareAsLink: 'Deel als koppeling',
   share_twitter: 'Twitteren',

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import analytics from '@react-native-firebase/analytics';
+
 import {
   AVAILABLE_FONTS,
   Button,
@@ -14,6 +16,7 @@ import {
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useStyles } from '~/hooks';
+import { getUserAgent } from '~/utils';
 
 export type FontPickerProps = ViewProps & {
   variant?: 'grid' | 'horizontal' | 'table';
@@ -38,7 +41,10 @@ export function FontPicker({
         options={ [...AVAILABLE_FONTS] }
         initialValue={ fontFamily as FontFamily }
         buttonProps={ ({ option }) => ({ fontFamily: option.value }) }
-        onValueChange={ (state) => setPreference('fontFamily', state?.value) } />
+        onValueChange={ (state) => {
+          analytics().logEvent('set_preference', { key: 'fontFamily', value: state?.value });
+          setPreference('fontFamily', state?.value); 
+        } } />
     );
   } else
   if (variant === 'horizontal') {
@@ -57,7 +63,12 @@ export function FontPicker({
               key={ font }
               leftIcon={ fontFamily === font ? 'check' : undefined } 
               fontFamily={ font }
-              onPress={ () => setPreference('fontFamily', font) }>
+              onPress={ () => {
+                analytics().logEvent('set_preference', {
+                  key: 'fontFamily', userAgent: getUserAgent(), value: font, 
+                });
+                setPreference('fontFamily', font); 
+              } }>
               {font}
             </Button>
           ))}

@@ -331,6 +331,7 @@ export function Summary({
       return;
     }
     onFormatChange?.(newFormat);
+    analytics().logEvent('summary_format_change', { format: newFormat, summary });
     readSummary(summary);
     if (!forceUnread && !initialFormat && !hideCard) {
       setIsRead(true);
@@ -356,6 +357,7 @@ export function Summary({
     return (
       <Popover
         disabled={ disableInteractions }
+        event={ { name: 'summary_view_sentiment', params: { summary } } }
         anchor={ (
           <View flexRow itemsCenter gap={ 3 }>
             <Text
@@ -396,7 +398,7 @@ export function Summary({
         </View>
       </Popover>
     );
-  }, [disableInteractions, summary.sentiment, summary.sentiments, theme.colors.error, theme.colors.success, theme.colors.text]);
+  }, [disableInteractions, summary, theme.colors.error, theme.colors.success, theme.colors.text]);
 
   const title = React.useMemo(() => (
     <Highlighter
@@ -438,7 +440,7 @@ export function Summary({
       actions.push(
         {
           onPress: async () => {
-            analytics().logEvent('summary_openArticle', { summary, userAgent: getUserAgent() });
+            analytics().logEvent('summary_open_article_1', { summary, userAgent: getUserAgent() });
             openURL(summary.url);
           },
           systemIcon: 'book',
@@ -446,6 +448,7 @@ export function Summary({
         },
         {
           onPress: async () => {
+            analytics().logEvent('summary_intent_to_share_1', { summary, userAgent: getUserAgent() });
             await SheetManager.show('share', {
               payload: {
                 format: preferredShortPressFormat,
@@ -471,7 +474,7 @@ export function Summary({
       },
       {
         onPress: () => {
-          analytics().logEvent(isRead ? 'summary_markUnread' : 'summary_markRead', { summary, userAgent: getUserAgent() });
+          analytics().logEvent(isRead ? 'summary_mark_unread' : 'summary_mark_read', { summary, userAgent: getUserAgent() });
           setIsRead((prev) => !prev);
           readSummary(summary, true);
         },
@@ -480,7 +483,7 @@ export function Summary({
       },
       {
         onPress: async () => {
-          analytics().logEvent(isFollowingPublisher ? 'summary_unfollowPublisher' : 'summary_followPublisher', { summary, userAgent: getUserAgent() });
+          analytics().logEvent(isFollowingPublisher ? 'summary_unfollow_publisher' : 'summary_follow_publisher', { summary, userAgent: getUserAgent() });
           setIsFollowingPublisher((prev) => !prev);
           followPublisher(summary.publisher);
         },
@@ -489,7 +492,7 @@ export function Summary({
       },
       {
         onPress: async () => {
-          analytics().logEvent(isFollowingPublisher ? 'summary_unfollowCategory' : 'summary_followCategory', { summary, userAgent: getUserAgent() });
+          analytics().logEvent(isFollowingPublisher ? 'summary_unfollow_category' : 'summary_follow_category', { summary, userAgent: getUserAgent() });
           setIsFollowingCategory((prev) => !prev);
           followCategory(summary.category);
         },
@@ -509,7 +512,7 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
-          analytics().logEvent(isExcludingPublisher ? 'summary_unexcludePublisher' : 'summary_excludePublisher', { summary, userAgent: getUserAgent() });
+          analytics().logEvent(isExcludingPublisher ? 'summary_unexclude_publisher' : 'summary_exclude_publisher', { summary, userAgent: getUserAgent() });
           setIsExcludingPublisher((prev) => !prev);
           excludePublisher(summary.publisher);
         },
@@ -519,7 +522,7 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
-          analytics().logEvent(isExcludingCategory ? 'summary_unexcludeCategory' : 'summary_excludeCategory', { summary, userAgent: getUserAgent() });
+          analytics().logEvent(isExcludingCategory ? 'summary_unexclude_category' : 'summary_exclude_category', { summary, userAgent: getUserAgent() });
           setIsExcludingCategory((prev) => !prev);
           excludeCategory(summary.category);
         },
@@ -557,7 +560,7 @@ export function Summary({
             if (disableInteractions) {
               return;
             }
-            analytics().logEvent('summary_openArticle2', { summary, userAgent: getUserAgent() });
+            analytics().logEvent('summary_open_article_2', { summary, userAgent: getUserAgent() });
             openURL(summary.url);
           } }>
           {strings.summary_fullArticle}
@@ -571,7 +574,7 @@ export function Summary({
             if (disableInteractions) {
               return;
             }
-            analytics().logEvent('summary_intentToShare', { summary, userAgent: getUserAgent() });
+            analytics().logEvent('summary_intent_to_share_2', { summary, userAgent: getUserAgent() });
             await SheetManager.show('share', {
               payload: {
                 format: initialFormat,
@@ -584,6 +587,7 @@ export function Summary({
         </Chip>
         <ContextMenu
           dropdownMenuMode
+          event={ { name: 'summary_more', params: { summary, userAgent: getUserAgent() } } }
           actions={ menuActions as ContextMenuAction[] }>
           <Chip
             gap={ 3 }
@@ -930,6 +934,11 @@ export function Summary({
         ((disableInteractions || showcase)) ? card : (
           <ContextMenu 
             actions={ menuActions }
+            event={ {
+              name: 'summary_preview', params: {
+                preferredShortPressFormat, summary, userAgent: getUserAgent(), 
+              }, 
+            } }
             preview={ contextMenuPreview }>
             {card}
           </ContextMenu>

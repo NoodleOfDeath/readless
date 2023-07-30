@@ -125,6 +125,7 @@ export const hiStrings: typeof enStrings = {
   share_copyTitle: 'शीर्षक कॉपी करें',
   share_instagram: 'Instagram',
   share_instagramStories: 'इंस्टाग्राम कहानियां',
+  share_saveImage: 'छवि को फ़ोटो में सहेजें',
   share_shareAsImage: 'छवि के रूप में साझा करें',
   share_shareAsLink: 'लिंक के रूप में साझा करें',
   share_twitter: 'ट्विटर',

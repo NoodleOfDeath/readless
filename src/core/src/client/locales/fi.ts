@@ -125,6 +125,7 @@ export const fiStrings: typeof enStrings = {
   share_copyTitle: 'Kopioi otsikko',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram-tarinat',
+  share_saveImage: 'Tallenna kuva Valokuviin',
   share_shareAsImage: 'Jaa kuvana',
   share_shareAsLink: 'Jaa linkkinä',
   share_twitter: 'Viserrys',

@@ -123,6 +123,7 @@ export const enStrings = {
   share_copyTitle: 'Copy Title',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram Stories',
+  share_saveImage: 'Save Image to Photos',
   share_shareAsImage: 'Share as Image',
   share_shareAsLink: 'Share as Link',
   share_twitter: 'Twitter',

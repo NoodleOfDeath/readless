@@ -125,6 +125,7 @@ export const koStrings: typeof enStrings = {
   share_copyTitle: '제목 복사',
   share_instagram: '인스 타 그램',
   share_instagramStories: '인스타그램 스토리',
+  share_saveImage: '사진에 이미지 저장',
   share_shareAsImage: '이미지로 공유',
   share_shareAsLink: '링크로 공유',
   share_twitter: '트위터',

@@ -125,6 +125,7 @@ export const viStrings: typeof enStrings = {
   share_copyTitle: 'sao chép tiêu đề',
   share_instagram: 'Instagram',
   share_instagramStories: 'Câu chuyện trên Instagram',
+  share_saveImage: 'Lưu hình ảnh vào Ảnh',
   share_shareAsImage: 'Chia sẻ dưới dạng hình ảnh',
   share_shareAsLink: 'Chia sẻ dưới dạng liên kết',
   share_twitter: 'Twitter',

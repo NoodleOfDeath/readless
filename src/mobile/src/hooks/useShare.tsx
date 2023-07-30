@@ -57,6 +57,7 @@ export function useShare({
       return;
     }
     try {
+      analytics().logEvent('copy_to_clipboard', { content });
       Clipboard.setString(content);
       await onInteract?.(InteractionType.Copy, content);
     } catch (e) {
@@ -88,8 +89,8 @@ export function useShare({
     callback?.();
   }, [callback, onInteract]);
   
-  const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, { social, viewshot }) => {
-    if (!summary) {
+  const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, { social, viewshot }: ShareOptions) => {
+    if (!summary || !social) {
       return;
     }
     try {

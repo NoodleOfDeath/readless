@@ -125,6 +125,7 @@ export const faStrings: typeof enStrings = {
   share_copyTitle: 'کپی عنوان',
   share_instagram: 'اینستاگرام',
   share_instagramStories: 'استوری های اینستاگرام',
+  share_saveImage: 'ذخیره تصویر در عکس ها',
   share_shareAsImage: 'اشتراک گذاری به عنوان تصویر',
   share_shareAsLink: 'به عنوان پیوند به اشتراک بگذارید',
   share_twitter: 'توییتر',

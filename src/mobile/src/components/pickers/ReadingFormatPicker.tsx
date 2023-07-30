@@ -1,5 +1,7 @@
 import React from 'react';
 
+import analytics from '@react-native-firebase/analytics';
+
 import { ReadingFormat } from '~/api';
 import {
   ChildlessViewProps,
@@ -8,6 +10,7 @@ import {
 } from '~/components';
 import { SessionContext } from '~/core';
 import { strings } from '~/locales';
+import { getUserAgent } from '~/utils';
 
 type Props = ChildlessViewProps & {
   format?: ReadingFormat;
@@ -37,6 +40,11 @@ export function ReadingFormatPicker({
       buttonMenuItems={ (option) => [
         {
           onPress: () => {
+            analytics().logEvent('set_preference', {
+              key: 'preferredReadingFormat', 
+              userAgent: getUserAgent(), 
+              value: option.value, 
+            });
             setPreference('preferredReadingFormat', option.value);
             if (option.value !== ReadingFormat.FullArticle) {
               buttonsRef.current?.setValue(option.value);

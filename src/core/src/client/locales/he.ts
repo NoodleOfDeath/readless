@@ -125,6 +125,7 @@ export const heStrings: typeof enStrings = {
   share_copyTitle: 'העתק את הכותרת',
   share_instagram: 'אינסטגרם',
   share_instagramStories: 'סיפורי אינסטגרם',
+  share_saveImage: 'שמור תמונה בתמונות',
   share_shareAsImage: 'שתף כתמונה',
   share_shareAsLink: 'שתף כקישור',
   share_twitter: 'טוויטר',
