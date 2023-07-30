@@ -164,7 +164,7 @@ export class Subscription<
         await new MailService().sendMail({
           ...data,
           from: process.env.MAIL_REPLY_TO,
-          html: `${data.html}<br /><br /><a href="${unsub}">Unsubscribe</a>`,
+          html: `${data.html}<p><a href="${unsub}">Unsubscribe</a></p>`,
           to: subscription.uuid,
         });
         break;
