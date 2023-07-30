@@ -27,12 +27,14 @@
     "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-native-community/hooks": "^3.0.0",
+    "@react-native-firebase/analytics": "^18.3.0",
+    "@react-native-firebase/app": "^18.3.0",
     "@react-native/metro-config": "^0.72.9",
-    "@react-navigation/bottom-tabs": "^6.5.7",
+    "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/drawer": "^6.6.3",
     "@react-navigation/material-top-tabs": "^6.6.3",
-    "@react-navigation/native": "^6.1.6",
-    "@react-navigation/native-stack": "^6.9.12",
+    "@react-navigation/native": "^6.1.7",
+    "@react-navigation/native-stack": "^6.9.13",
     "@shopify/flash-list": "^1.4.3",
     "date-fns": "^2.29.3",
     "deprecated-react-native-prop-types": "^4.1.0",
@@ -82,7 +84,8 @@
     "react-native-version-check": "^3.4.7",
     "react-native-view-shot": "^3.6.0",
     "uuid": "^9.0.0",
-    "victory-native": "^36.6.11"
+    "victory-native": "^36.6.11",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
