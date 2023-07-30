@@ -118,14 +118,11 @@ function applyFilter(
         .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`)
         .matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
     if (matches) {
-      const subqueries = [...matches].map((match) => ({
-        boundaries: Boolean(match[1]),
-        value: (match[1] ? match[2] : match[3]).replace(/['"]/g, ($0) => `\\${$0}`),
-      }));
+      const subqueries = [...matches].map((match) => (match[1] ? match[2] : match[3]).replace(/['"]/g, ($0) => `\\${$0}`));
       if (matchType === 'all') {
         //
       } else {
-        parts.push(...subqueries.map((subquery) => subquery.boundaries ? `(?:(?:^|\\y)${subquery.value}(?:\\y|$))` : `(?:${subquery.value})`));
+        parts.push(...subqueries.map((subquery) => `(?:(?:^|\\y)${subquery}(?:\\y|$))`));
       }
     }
   }
