@@ -38,11 +38,11 @@ export class SitemapController {
 
   public static async getSitemapInternal({ forceCache }: GetSitemapRequest) {
     const cache = await Cache.fromKey('sitemap');
-    if (!forceCache && cache && cache.expiresSoon) {
+    if (!forceCache && cache && cache.expiresSoon === false) {
       return cache.value;
     }
     const sitemap = await StaticGeneratorService.generateSitemap();
-    await Cache.create({
+    await Cache.upsert({
       halflife: '1h',
       key: 'sitemap',
       value: sitemap,
