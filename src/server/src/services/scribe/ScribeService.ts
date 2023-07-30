@@ -154,7 +154,7 @@ export class ScribeService extends BaseService {
           newSummary.title = reply;
         },
         text: [
-          'Please summarize the same article using no more than 10 words to be used as a title. Prioritize any important names, places, events, date, or numeric values and try to make the title as unbiased and mot clickbaity as possible. Respond with just the title.',
+          'Please summarize the same article using no more than 10 words to be used as a title. Prioritize important names, places, events, dates, and numeric values. Make the title as unbiased and not clickbaity as possible. Respond with just the title.',
         ].join(''),
       },
       {
@@ -165,7 +165,7 @@ export class ScribeService extends BaseService {
           newSummary.shortSummary = reply;
         },
         text: [
-          'Please provide another unbiased summary using no more than 30 words. Do not use phrases like "The article" or "This article".', 
+          'Please provide another unbiased summary using no more than 30 words. Prioritize important names, places, events, dates, and numeric values. Make the summary as unbiased as possible. Do not use phrases like "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -176,7 +176,7 @@ export class ScribeService extends BaseService {
           newSummary.summary = reply;
         },
         text: [
-          'Please provide another longer unbiased summary using no more than 100 words. Do not use phrases like "The article" or "This article".', 
+          'Please provide another longer unbiased summary using no more than 100 words. Prioritize important names, places, events, dates, and numeric values. Make the summary as unbiased as possible. Do not use phrases like "The article" or "This article".', 
         ].join(''),
       },
       {
@@ -191,7 +191,7 @@ export class ScribeService extends BaseService {
               .replace(/[\\.]*$/, ''))
             .filter(Boolean);
         },
-        text: 'Please provide 5 concise unbiased bullet point sentences no longer than 10 words each that summarize this article/story using • as the bullet symbol',
+        text: 'Please provide 5 concise unbiased bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol. Prioritize important names, places, events, dates, and numeric values.',
       },
     ];
       
