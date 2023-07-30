@@ -1,6 +1,7 @@
 import React from 'react';
 import {  useWindowDimensions } from 'react-native';
 
+import analytics from '@react-native-firebase/analytics';
 import { useFocusEffect } from '@react-navigation/native';
 import { format as formatDate, formatDistance } from 'date-fns';
 import ms from 'ms';
@@ -48,7 +49,7 @@ import {
   useTheme,
 } from '~/hooks';
 import { getFnsLocale, strings } from '~/locales';
-import { fixedSentiment } from '~/utils';
+import { fixedSentiment, getUserAgent } from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   sample?: boolean;
@@ -437,6 +438,7 @@ export function Summary({
       actions.push(
         {
           onPress: async () => {
+            analytics().logEvent('summary_openArticle', { summary, userAgent: getUserAgent() });
             openURL(summary.url);
           },
           systemIcon: 'book',
@@ -460,6 +462,7 @@ export function Summary({
     actions.push(
       {
         onPress: async () => {
+          analytics().logEvent(isBookmarked ? 'summary_unbookmark' : 'summary_bookmark', { summary, userAgent: getUserAgent() });
           setIsBookmarked((prev) => !prev);
           bookmarkSummary(summary);
         },
@@ -468,6 +471,7 @@ export function Summary({
       },
       {
         onPress: () => {
+          analytics().logEvent(isRead ? 'summary_markUnread' : 'summary_markRead', { summary, userAgent: getUserAgent() });
           setIsRead((prev) => !prev);
           readSummary(summary, true);
         },
@@ -476,6 +480,7 @@ export function Summary({
       },
       {
         onPress: async () => {
+          analytics().logEvent(isFollowingPublisher ? 'summary_unfollowPublisher' : 'summary_followPublisher', { summary, userAgent: getUserAgent() });
           setIsFollowingPublisher((prev) => !prev);
           followPublisher(summary.publisher);
         },
@@ -484,6 +489,7 @@ export function Summary({
       },
       {
         onPress: async () => {
+          analytics().logEvent(isFollowingPublisher ? 'summary_unfollowCategory' : 'summary_followCategory', { summary, userAgent: getUserAgent() });
           setIsFollowingCategory((prev) => !prev);
           followCategory(summary.category);
         },
@@ -492,6 +498,7 @@ export function Summary({
       },
       {
         onPress: () => { 
+          analytics().logEvent('summary_report', { summary, userAgent: getUserAgent() });
           onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
             SheetManager.show('feedback', { payload: { summary } });
           });
@@ -502,6 +509,7 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
+          analytics().logEvent(isExcludingPublisher ? 'summary_unexcludePublisher' : 'summary_excludePublisher', { summary, userAgent: getUserAgent() });
           setIsExcludingPublisher((prev) => !prev);
           excludePublisher(summary.publisher);
         },
@@ -511,6 +519,7 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
+          analytics().logEvent(isExcludingCategory ? 'summary_unexcludeCategory' : 'summary_excludeCategory', { summary, userAgent: getUserAgent() });
           setIsExcludingCategory((prev) => !prev);
           excludeCategory(summary.category);
         },
@@ -520,6 +529,7 @@ export function Summary({
       {
         destructive: true,
         onPress: () => {
+          analytics().logEvent('summary_remove', { summary, userAgent: getUserAgent() });
           onInteract?.(InteractionType.Hide, undefined, undefined, () => {
             setPreference('removedSummaries', (prev) => ({
               ...prev,
@@ -547,6 +557,7 @@ export function Summary({
             if (disableInteractions) {
               return;
             }
+            analytics().logEvent('summary_openArticle2', { summary, userAgent: getUserAgent() });
             openURL(summary.url);
           } }>
           {strings.summary_fullArticle}
@@ -560,6 +571,7 @@ export function Summary({
             if (disableInteractions) {
               return;
             }
+            analytics().logEvent('summary_intentToShare', { summary, userAgent: getUserAgent() });
             await SheetManager.show('share', {
               payload: {
                 format: initialFormat,

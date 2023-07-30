@@ -3,6 +3,7 @@ import { DeviceEventEmitter, Platform } from 'react-native';
 
 import { BASE_DOMAIN } from '@env';
 import Clipboard from '@react-native-clipboard/clipboard';
+import analytics from '@react-native-firebase/analytics';
 import RNFS from 'react-native-fs';
 import Share, { ShareOptions as RNShareOptions, Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
@@ -69,35 +70,14 @@ export function useShare({
       return;
     }
     try {
+      analytics().logEvent('share_standard', { summary });
       let url = shareableLink(summary, BASE_DOMAIN, format);
       const imageUrl = await viewshot?.capture?.();
       const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
       if (base64ImageUrl) {
         url = base64ImageUrl;
       }
-      const options: RNShareOptions = Platform.select({
-        android: { url },
-        default: { url },
-        ios: { 
-          activityItemSources: [
-            {
-              item: {
-                message: null,
-                saveToCameraRoll: 
-                {
-                  content: url, 
-                  type: 'url', 
-                },
-              }, 
-              placeholderItem: {
-                content: 'https://readless.ai/logo.svg', 
-                type: 'url', 
-              }, 
-            },
-          ],
-          url,
-        },
-      });
+      const options: RNShareOptions = { url };
       await onInteract?.(InteractionType.Share, 'standard', { message: summary.title, url }, async () => {
         await Share.open(options);
       });
@@ -108,13 +88,15 @@ export function useShare({
     callback?.();
   }, [callback, onInteract]);
   
-  const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, {
-    format, social, viewshot, 
-  }) => {
+  const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, { social, viewshot }) => {
     if (!summary) {
       return;
     }
     try {
+      analytics().logEvent('share_social', {
+        social,
+        summary,
+      });
       const url = await viewshot?.capture?.();
       await onInteract?.(InteractionType.Share, 'social', {
         message: summary.title, social, url, 
