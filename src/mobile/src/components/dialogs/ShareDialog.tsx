@@ -186,7 +186,7 @@ export function ShareDialog({
           </View>
           <ScrollView
             maxWidth={ (Math.min(screenWidth, screenHeight, 480)) - 24 }
-            maxHeight={ (Math.min(screenHeight * 0.6, 480)) - 24 }>
+            maxHeight={ (Math.min(screenHeight * 0.4, 480)) - 24 }>
             <ViewShot ref={ viewshot }>
               <View
                 beveled
