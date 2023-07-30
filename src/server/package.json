@@ -24,6 +24,7 @@
     "build:applink": "rimraf dist/serve-applink.cjs && esbuild ./src/applink --bundle --platform=node --outfile=./dist/serve-applink.cjs",
     "build:scheduler": "rimraf dist/serve-scheduler.cjs && esbuild ./src/scheduler --bundle --platform=node --outfile=./dist/serve-scheduler.cjs",
     "build:worker": "rimraf dist/serve-worker.cjs && esbuild ./src/worker --bundle --platform=node --outfile=./dist/serve-worker.cjs",
+    "gen:site": "yarn test gen",
     "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core/utils && cp -rf ../core/src/utils/* ./src/core/utils && cp -rf ../core/src/client/locales ./src/core/locales",
     "test": "jest",
     "tsoa": "tsoa spec -c tsoa.config.json",

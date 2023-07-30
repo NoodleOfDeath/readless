@@ -17,6 +17,7 @@
 # misc
 .DS_Store
 swagger.json
+sitemap.xml
 gc.*
 .env
 .env.local

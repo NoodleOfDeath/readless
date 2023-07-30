@@ -26,7 +26,7 @@ const AboutUsPage = () => {
               Something went wrong.
             </div>
             <div className={ styles.btns }>
-              <Link href="/contact" className={ cn('button', styles.button) }>
+              <Link href={ `mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}` } className={ cn('button', styles.button) }>
                 Contact us
               </Link>
               <button

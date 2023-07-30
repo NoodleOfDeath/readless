@@ -38,10 +38,10 @@ export class StaticGeneratorService extends BaseService {
           <news:publication>
             <news:name>${summary.publisher.displayName}</news:name>
             <news:language>en</news:language>
-          </news:publication>
+          </news:publication>${summary.originalDate && (`
           <news:publication_date>
             ${formatDate(summary.originalDate)}
-          </news:publication_date>
+          </news:publication_date>`)}
           <news:title>${clean(summary.title)}</news:title>
         </news:news>
       </url>`)).join('')}

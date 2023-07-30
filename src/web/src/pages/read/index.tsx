@@ -8,13 +8,14 @@ import {
   SwipeableDrawer,
   TextField,
 } from '@mui/material';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useMediaQuery } from 'react-responsive';
 
 import {
+  API,
   PublicSummaryGroup,
   ReadingFormat,
-  SupportedLocale,
 } from '~/api';
 import Layout from '~/components/Layout';
 import Summary from '~/components/Summary';
@@ -22,26 +23,39 @@ import { SessionContext } from '~/contexts';
 import { useRouter, useSummaryClient } from '~/hooks';
 import { readingFormat } from '~/utils';
 
-export default function AppPage() {
+type Props = {
+  activeSummary?: PublicSummaryGroup;
+  initialFormat?: ReadingFormat;
+};
+
+export default function AppPage({ 
+  activeSummary: activeSummary0, 
+  initialFormat: initialFormat0,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   const { replace, searchParams } = useRouter();
   const isMobile = useMediaQuery({ query: '(max-width: 762px)' });
-  const { getSummaries, getSummary } = useSummaryClient();
+  const { getSummaries } = useSummaryClient();
 
   const { preferredReadingFormat } = React.useContext(SessionContext);
   
-  const id = React.useMemo(() => parseInt(searchParams.get('s') ?? '-1'), [searchParams]);
-  const initialFormat = React.useMemo(() => readingFormat(searchParams.get('f') ?? preferredReadingFormat ?? ReadingFormat.Summary), [preferredReadingFormat, searchParams]);
+  const initialFormat = React.useMemo(() => initialFormat0 ?? readingFormat(searchParams.get('f') ?? preferredReadingFormat ?? ReadingFormat.Summary), [initialFormat0, preferredReadingFormat, searchParams]);
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [totalResults, setTotalResults] = React.useState<number>(0);
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
-  const [selectedSummary, setSelectedSummary] = React.useState<PublicSummaryGroup>();
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [activeSummary, setActiveSummary] = React.useState<PublicSummaryGroup | undefined>(activeSummary0);
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(Boolean(activeSummary0));
 
   const [pageSize] = React.useState<number>(10);
   const [offset, setOffset] = React.useState<number>(0);
   const [searchText, setSearchText] = React.useState<string>();
+
+  React.useEffect(() => { 
+    if (activeSummary) {
+      setDrawerOpen(true);
+    }
+  }, [activeSummary]);
 
   const load = React.useCallback(async () => {
     try {
@@ -51,7 +65,6 @@ export default function AppPage() {
         pageSize,
       });
       if (error) {
-        alert('tits');
         throw error;
       }
       if (data) {
@@ -70,25 +83,12 @@ export default function AppPage() {
     }
   }, [getSummaries, searchText, offset, pageSize]);
   
-  const loadSummary = React.useCallback(async () => {
-    if (!id || id < 0) {
+  React.useEffect(() => {
+    if (!activeSummary) {
       return;
     }
-    try {
-      const { data, error } = await getSummary(id, window.navigator.language as SupportedLocale);
-      if (error) {
-        throw error;
-      } 
-      if (data && data.rows.length > 0) {
-        setSelectedSummary(data.rows[0]);
-        setDrawerOpen(true);
-      } else {
-        replace('/404');
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [getSummary, id, replace]);
+    setDrawerOpen(true);
+  }, [activeSummary]);
 
   const onMount = React.useCallback(() => {
     setOffset(0);
@@ -100,47 +100,42 @@ export default function AppPage() {
 
   React.useEffect(() => {
     onMount();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  React.useEffect(() => {
-    loadSummary();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
 
   const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format: ReadingFormat = ReadingFormat.Summary) => {
     replace(`/read?s=${summary.id}&f=${format}`, undefined, { scroll: false, shallow: true });
-    if (selectedSummary) {
+    if (activeSummary) {
       return;
     }
-    setSelectedSummary(summary);
+    setActiveSummary(summary);
     setDrawerOpen(true);
-  }, [replace, selectedSummary]);
+  }, [replace, activeSummary]);
 
   return (
     <Layout>
       <Head>
-        {selectedSummary && (
+        {activeSummary && (
           <React.Fragment>
             <title 
               key='title'>
-              {selectedSummary.title}
+              {activeSummary.title}
             </title>
             <meta 
               name="viewport"
               content="width=device-width, initial-scale=1.0" />
             <meta 
-              key="description"
+              key="og:image"
               property="og:image"
-              content={ selectedSummary.media?.imageArticle || selectedSummary.media?.imageAi1 || selectedSummary.imageUrl } />
+              content={ activeSummary.media?.imageArticle || activeSummary.media?.imageAi1 || activeSummary.imageUrl } />
             <meta 
               key="og:title"
               property="og:title"
-              content={ selectedSummary?.title.replace(/"/g, '&quot;') } />
+              content={ activeSummary?.title.replace(/"/g, '&quot;') } />
             <meta 
               key="og:description"
               property="og:description"
-              content={ selectedSummary?.shortSummary?.replace(/"/g, '&quot;') } />
+              content={ activeSummary?.shortSummary?.replace(/"/g, '&quot;') } />
           </React.Fragment>
         )}
       </Head>
@@ -176,16 +171,16 @@ export default function AppPage() {
         onOpen={ () => setDrawerOpen(true) }
         onClose={ () => { 
           setDrawerOpen(false);
-          setSelectedSummary(undefined);
+          setActiveSummary(undefined);
         } }>
         <Box sx={ { width: isMobile ? '100%' : 500 } }>
           <Stack spacing={ 2 } sx={ { p: 2 } }>
-            {selectedSummary && (
+            {activeSummary && (
               <Summary
                 big
-                summary={ selectedSummary }
+                summary={ activeSummary }
                 initialFormat={ initialFormat }
-                onChange={ (format) => handleFormatChange(selectedSummary, format) } />
+                onChange={ (format) => handleFormatChange(activeSummary, format) } />
             )}
           </Stack>
         </Box>
@@ -193,3 +188,27 @@ export default function AppPage() {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res }) => {
+  const id = parseInt(query.s as string ?? '');
+  const format = readingFormat(query.f as string ?? '');
+  if (Number.isNaN(id)) {
+    res.statusCode = 404;
+    return { props: { query } };
+  }
+  try {
+    const { data, error } = await API.getSummaries({ ids: [id] });
+    if (error) {
+      throw error;
+    }
+    if (data) {
+      return { props: { activeSummary: data.rows[0], initialFormat: format } };
+    }
+  } catch (e) {
+    console.error(e);
+    res.statusCode = 500;
+    return { props: { query } };
+  }
+  res.statusCode = 404;
+  return { props: {} };
+};

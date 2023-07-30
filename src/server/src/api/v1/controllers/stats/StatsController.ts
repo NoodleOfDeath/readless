@@ -32,7 +32,7 @@ export class StatsController {
   
   @Get('/')
   public static async getStats(
-    @Request() req?: ExpressRequest
+    @Request() _req: ExpressRequest
   ): Promise<StatsResponse> {
     return { count: 0 };
   }
