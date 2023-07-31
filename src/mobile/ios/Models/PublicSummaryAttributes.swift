@@ -16,21 +16,13 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   public var id: Int
   public var url: String
   public var title: String
-  public var shortSummary: String
+  public var shortSummary: String?
   public var publisher: PublicPublisherAttributes
   public var category: PublicCategoryAttributes
   public var imageUrl: String?
+  public var media: [String: String]?
   public var originalDate: Date?
-  public var translations: [PublicTranslationAttributes]?
-  
-  public func translationMap() -> [String: String] {
-    guard let translations = self.translations else { return [String: String]() }
-    var map = [String: String]()
-    for translation in translations {
-      map[translation.attribute] = translation.value
-    }
-    return map
-  }
+  public var translations: [String: String]?
 
   public init(id: Int,
               url: String,
@@ -39,8 +31,9 @@ public struct PublicSummaryAttributes: Codable, Hashable {
               publisher: PublicPublisherAttributes,
               category: PublicCategoryAttributes,
               imageUrl: String? = nil,
+              media: [String: String]? = nil,
               originalDate: Date? = nil,
-              translations: [PublicTranslationAttributes]? = nil) {
+              translations: [String: String]? = nil) {
     self.id = id
     self.url = url
     self.title = title
@@ -48,6 +41,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     self.publisher = publisher
     self.category = category
     self.imageUrl = imageUrl
+    self.media = media
     self.originalDate = originalDate
     self.translations = translations
   }
@@ -60,6 +54,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     case publisher
     case category
     case imageUrl
+    case media
     case originalDate
     case translations
   }
@@ -71,9 +66,10 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     try container.encode(id, forKey: .id)
     try container.encode(url, forKey: .url)
     try container.encode(title, forKey: .title)
-    try container.encode(shortSummary, forKey: .shortSummary)
+    try container.encodeIfPresent(shortSummary, forKey: .shortSummary)
     try container.encode(publisher, forKey: .publisher)
     try container.encode(category, forKey: .category)
+    try container.encodeIfPresent(media, forKey: .media)
     try container.encodeIfPresent(imageUrl, forKey: .imageUrl)
     try container.encodeIfPresent(originalDate, forKey: .originalDate)
     try container.encodeIfPresent(translations, forKey: .translations)
