@@ -59,7 +59,7 @@ FROM (
     SELECT
       s.id,
       s."originalDate",
-      COUNT(sr.id) AS "siblingCount"
+      COUNT(sibling.id) AS "siblingCount"
     FROM summaries s
       LEFT OUTER JOIN categories cat ON s."categoryId" = cat.id
       LEFT OUTER JOIN publishers pub ON s."publisherId" = pub.id
@@ -67,6 +67,9 @@ FROM (
         AND st.locale = :locale
       LEFT OUTER JOIN "summary_relations" sr ON (s.id = sr."parentId")
         AND (sr."deletedAt" IS NULL)
+      LEFT OUTER JOIN summaries sibling ON (sibling.id = sr."siblingId")
+        AND (sibling."deletedAt" IS NULL)
+        AND (sibling."originalDate" > NOW() - INTERVAL :interval)
       WHERE (
           (s."originalDate" > NOW() - INTERVAL :interval)
           OR (

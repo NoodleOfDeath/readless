@@ -188,7 +188,9 @@ export function SettingsTable() {
           onPress={ () => {
             clearCache(); 
           } } 
-          onLongPress={ () => navigate('stats') } />
+          onLongPress={ () => {
+            navigate('stats'); 
+          } } />
         <TableViewCell
           bold
           title={ strings.settings_resetAllSettings }
