@@ -22,7 +22,7 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { formatDistance } from 'date-fns';
+import { format as formatDate, formatDistance } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
 import { useMediaQuery } from 'react-responsive';
@@ -101,11 +101,10 @@ export default function Summary({
   const [format, setFormat] = React.useState(initialFormat);
   const [lastTick, setLastTick] = React.useState(new Date());
 
-  const timeAgo = React.useMemo(
-    () =>
-      formatDistance(new Date(summary.originalDate ?? summary.createdAt ?? 0), lastTick, { addSuffix: true }),
-    [summary.originalDate, summary.createdAt, lastTick]
-  );
+  const timeAgo = React.useMemo(() => {
+    const date = new Date(summary.originalDate && Date.now() - new Date(summary.originalDate).valueOf() < ms('10y') ? !summary.originalDate : summary.createdAt);
+    return Date.now() - date.valueOf() > ms('1w') ? formatDate(date, 'EEE PP') : formatDistance(date, lastTick, { addSuffix: true });
+  }, [summary.originalDate, summary.createdAt, lastTick]);
 
   const shareUrl = React.useMemo(() => shareableLink(summary, process.env.NEXT_PUBLIC_BASE_URL as string, format), [format, summary]);
 
