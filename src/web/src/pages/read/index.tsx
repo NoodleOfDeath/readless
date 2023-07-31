@@ -73,7 +73,7 @@ export default function AppPage({
         setSummaries((prev) => 
           [
             ...prev,
-            ...data.rows.filter((s) => !prev.some((p) => p.id === s.id || p.id === rootSummary.id)),
+            ...data.rows.filter((s) => !prev.some((p) => p.id === s.id || p.id === rootSummary?.id)),
           ]);
         setOffset((prev) => data.next ?? prev + data.count);
       }
@@ -106,7 +106,7 @@ export default function AppPage({
 
   const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format = initialFormat) => {
     replace(`/read?s=${summary.id}&f=${format}`, undefined, { scroll: false, shallow: true });
-    if (summary.id === rootSummary.id || activeSummary) {
+    if (summary.id === rootSummary?.id || activeSummary) {
       return;
     }
     setActiveSummary(summary);
