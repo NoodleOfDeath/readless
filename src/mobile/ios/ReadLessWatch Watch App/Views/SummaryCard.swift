@@ -24,7 +24,7 @@ struct SummaryCard: View {
     VStack(spacing: 1) {
       VStack(alignment: .leading) {
         HStack {
-          Text(summary.outlet.displayName)
+          Text(summary.publisher.displayName)
             .frame(maxWidth: .infinity)
             .padding(3)
         }
