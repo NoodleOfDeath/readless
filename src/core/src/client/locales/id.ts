@@ -125,6 +125,7 @@ export const idStrings: typeof enStrings = {
   share_copyTitle: 'Salin Judul',
   share_instagram: 'Instagram',
   share_instagramStories: 'Cerita Instagram',
+  share_saveImage: 'Simpan Gambar ke Foto',
   share_shareAsImage: 'Bagikan sebagai Gambar',
   share_shareAsLink: 'Bagikan sebagai Tautan',
   share_twitter: 'Twitter',

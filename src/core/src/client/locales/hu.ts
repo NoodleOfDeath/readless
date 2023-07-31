@@ -125,6 +125,7 @@ export const huStrings: typeof enStrings = {
   share_copyTitle: 'Cím másolása',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram történetek',
+  share_saveImage: 'Kép mentése a Fotók közé',
   share_shareAsImage: 'Megosztás képként',
   share_shareAsLink: 'Megosztás linkként',
   share_twitter: 'Twitter',

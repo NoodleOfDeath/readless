@@ -125,6 +125,7 @@ export const csStrings: typeof enStrings = {
   share_copyTitle: 'Kopírovat název',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagramové příběhy',
+  share_saveImage: 'Uložit obrázek do fotografií',
   share_shareAsImage: 'Sdílet jako obrázek',
   share_shareAsLink: 'Sdílet jako odkaz',
   share_twitter: 'Cvrlikání',

@@ -125,6 +125,7 @@ export const zhCNStrings: typeof enStrings = {
   share_copyTitle: '复制标题',
   share_instagram: 'Instagram的',
   share_instagramStories: 'Instagram 故事',
+  share_saveImage: '将图像保存到照片',
   share_shareAsImage: '分享为图片',
   share_shareAsLink: '分享为链接',
   share_twitter: '推特',

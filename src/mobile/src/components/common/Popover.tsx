@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
+import analytics from '@react-native-firebase/analytics';
 import { Menu } from 'react-native-paper';
 import  RNPopover from 'react-native-popover-view';
 import { PublicPopoverProps } from 'react-native-popover-view/dist/Popover';
@@ -11,6 +12,7 @@ export type PopoverProps = PublicPopoverProps & {
   anchor?: React.ReactNode;
   disabled?: boolean;
   onPress?: () => void;
+  event?: { name: string, params?: Record<string, unknown> };
   longPress?: boolean;
   variant?: 'default' | 'menu';
   menu?: boolean;
@@ -21,6 +23,7 @@ export function Popover({
   anchor,
   disabled,
   onPress,
+  event,
   longPress,
   menu,
   variant = menu ? 'menu' : 'default',
@@ -40,6 +43,9 @@ export function Popover({
         anchor={ (
           <TouchableOpacity
             onPress={ () => {
+              if (event) {
+                analytics().logEvent(event.name, event.params);
+              }
               onPress?.();
               !longPress && setVisible(true); 
             } }

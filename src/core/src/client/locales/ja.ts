@@ -125,6 +125,7 @@ export const jaStrings: typeof enStrings = {
   share_copyTitle: 'タイトルをコピー',
   share_instagram: 'インスタグラム',
   share_instagramStories: 'インスタグラムのストーリー',
+  share_saveImage: '画像を写真に保存',
   share_shareAsImage: '画像として共有',
   share_shareAsLink: 'リンクとして共有',
   share_twitter: 'ツイッター',

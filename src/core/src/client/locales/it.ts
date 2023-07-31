@@ -125,6 +125,7 @@ export const itStrings: typeof enStrings = {
   share_copyTitle: 'Copia titolo',
   share_instagram: 'Instagram',
   share_instagramStories: 'Storie di Instagram',
+  share_saveImage: 'Salva immagine in foto',
   share_shareAsImage: 'Condividi come immagine',
   share_shareAsLink: 'Condividi come collegamento',
   share_twitter: 'Cinguettio',

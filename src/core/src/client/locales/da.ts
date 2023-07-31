@@ -125,6 +125,7 @@ export const daStrings: typeof enStrings = {
   share_copyTitle: 'Kopiér titel',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram-historier',
+  share_saveImage: 'Gem billede til fotos',
   share_shareAsImage: 'Del som billede',
   share_shareAsLink: 'Del som link',
   share_twitter: 'Twitter',

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
 
-import { BASE_DOMAIN } from '@env';
 import { SheetProps } from 'react-native-actions-sheet';
 import { Social } from 'react-native-share';
 import { SvgUri } from 'react-native-svg';
@@ -26,7 +25,6 @@ import {
 import { SessionContext } from '~/contexts';
 import {  useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import { shareableLink } from '~/utils';
 
 export const SHARE_FORMATS = [
   'big',
@@ -73,7 +71,7 @@ export function ShareDialog({
     onInteract,
   } = React.useMemo(() => ({ ...payload }), [payload]);
   
-  const [shareFormat, setShareFormat] = React.useState<ShareFormat>(compactSummaries ? ((format0 || preferredReadingFormat) === ReadinFormat.Bullets ? 'compact-bullets' : 'compact-shortSummary') : ((format0 || preferredReadingFormat) === ReadingFormat.Bullets ? 'big-bullets' : 'big'));
+  const [shareFormat, setShareFormat] = React.useState<ShareFormat>(compactSummaries ? ((format0 || preferredReadingFormat) === ReadingFormat.Bullets ? 'compact-bullets' : 'compact-shortSummary') : ((format0 || preferredReadingFormat) === ReadingFormat.Bullets ? 'big-bullets' : 'big'));
   const format = React.useMemo(() => /bullets/i.test(shareFormat) ? ReadingFormat.Bullets : ReadingFormat.Summary, [shareFormat]);
   
   const {
@@ -122,6 +120,14 @@ export function ShareDialog({
       //   imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/threads.png',
       //   label: strings.share_threads,
       //   onPress: () => shareSocial(summary, viewshot, 'threads'), 
+      // },
+      // {
+      //   icon: 'image',
+      //   label: strings.share_saveImage,
+      //   onPress: () => shareStandard(summary, {
+      //     format,
+      //     viewshot: viewshot.current,
+      //   }), 
       // },
       {
         icon: 'camera-outline',
@@ -186,7 +192,7 @@ export function ShareDialog({
           </View>
           <ScrollView
             maxWidth={ (Math.min(screenWidth, screenHeight, 480)) - 24 }
-            maxHeight={ (Math.min(screenHeight * 0.6, 480)) - 24 }>
+            maxHeight={ (Math.min(screenHeight * 0.4, 480)) - 24 }>
             <ViewShot ref={ viewshot }>
               <View
                 beveled

@@ -125,6 +125,7 @@ export const caStrings: typeof enStrings = {
   share_copyTitle: 'Copia el títol',
   share_instagram: 'Instagram',
   share_instagramStories: 'Històries d\'Instagram',
+  share_saveImage: 'Desa la imatge a les fotos',
   share_shareAsImage: 'Comparteix com a imatge',
   share_shareAsLink: 'Comparteix com a enllaç',
   share_twitter: 'Twitter',

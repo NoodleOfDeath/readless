@@ -125,6 +125,7 @@ export const hrStrings: typeof enStrings = {
   share_copyTitle: 'Kopiraj naslov',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram priče',
+  share_saveImage: 'Spremi sliku u Fotografije',
   share_shareAsImage: 'Dijeli kao sliku',
   share_shareAsLink: 'Dijeli kao vezu',
   share_twitter: 'Cvrkut',

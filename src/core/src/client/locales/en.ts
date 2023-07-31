@@ -136,8 +136,8 @@ export const enStrings = {
   settings_triggerWord: 'Trigger Word',
   
   settings_triggerWords: 'Trigger Words',
-  
   settings_voice: 'Text-to-Speech Voice',
+
   // share
   share_copyBulletPoints: 'Copy Bullet Points',
   share_copyLink: 'Copy Link',
@@ -147,11 +147,11 @@ export const enStrings = {
   share_copyTitle: 'Copy Title',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram Stories',
+  share_saveImage: 'Save Image to Photos',
   share_shareAsImage: 'Share as Image',
-  
   share_shareAsLink: 'Share as Link',
-  
   share_twitter: 'Twitter',
+
   // subscribe
   subscribe_boost: 'Boost',
   subscribe_feature_accessAllNews: 'Access all news',

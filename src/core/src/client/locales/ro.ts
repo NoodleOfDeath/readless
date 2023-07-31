@@ -125,6 +125,7 @@ export const roStrings: typeof enStrings = {
   share_copyTitle: 'Copiați titlul',
   share_instagram: 'Instagram',
   share_instagramStories: 'Povești Instagram',
+  share_saveImage: 'Salvați imaginea în fotografii',
   share_shareAsImage: 'Distribuie ca imagine',
   share_shareAsLink: 'Distribuie ca link',
   share_twitter: 'Stare de nervozitate',

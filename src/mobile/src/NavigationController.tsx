@@ -569,18 +569,12 @@ export default function NavigationController() {
     <NavigationContainer
       theme= { theme.navContainerTheme }
       linking={ NAVIGATION_LINKING_OPTIONS }>
-      {!ready ? (
-        <View>
-          <ActivityIndicator animating />
-        </View>
-      ) : (
-        <PaperProvider theme={ currentTheme }>
-          <SheetProvider>
-            <LandingPage />
-            <MediaPlayer visible={ Boolean(currentTrack) } />
-          </SheetProvider>
-        </PaperProvider>
-      )}
+      <PaperProvider theme={ currentTheme }>
+        <SheetProvider>
+          <LandingPage />
+          <MediaPlayer visible={ Boolean(currentTrack) } />
+        </SheetProvider>
+      </PaperProvider>
     </NavigationContainer>
   );
 }

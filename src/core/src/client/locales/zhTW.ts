@@ -125,6 +125,7 @@ export const zhTWStrings: typeof enStrings = {
   share_copyTitle: '複製標題',
   share_instagram: 'Instagram的',
   share_instagramStories: 'Instagram 故事',
+  share_saveImage: '將圖像保存到照片',
   share_shareAsImage: '分享為圖片',
   share_shareAsLink: '分享為鏈接',
   share_twitter: '推特',

@@ -125,6 +125,7 @@ export const ukStrings: typeof enStrings = {
   share_copyTitle: 'Копіювати заголовок',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram Stories',
+  share_saveImage: 'Зберегти зображення у фото',
   share_shareAsImage: 'Поділитися як зображення',
   share_shareAsLink: 'Поділитися як посилання',
   share_twitter: 'Twitter',

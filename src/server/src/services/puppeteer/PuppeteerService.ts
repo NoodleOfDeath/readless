@@ -69,6 +69,7 @@ const fallbackImageSelectors = [
 const fallbackImageAttributes = [
   'poster', // -- video thumbails
   'src',
+  'data-gallery-src',
   'data-src',
   'srcset',
 ];

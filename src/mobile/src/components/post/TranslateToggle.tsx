@@ -1,5 +1,7 @@
 import React from 'react';
 
+import analytics from '@react-native-firebase/analytics';
+
 import { PublicSummaryGroup, RecapAttributes } from '~/api';
 import {
   ActivityIndicator,
@@ -9,6 +11,7 @@ import {
 } from '~/components';
 import { useServiceClient } from '~/core';
 import { getLocale, strings } from '~/locales';
+import { getUserAgent } from '~/utils';
 
 export type TranslateToggleProps<Target extends RecapAttributes | PublicSummaryGroup> = ChildlessViewProps & {
   target: Target;
@@ -38,6 +41,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Target 
     if (/^en/i.test(getLocale()) || isLocalizing) {
       return; 
     }
+    analytics().logEvent('localize', { target, userAgent: getUserAgent() });
     setIsLocalizing(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

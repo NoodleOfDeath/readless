@@ -125,6 +125,7 @@ export const ptPTStrings: typeof enStrings = {
   share_copyTitle: 'Copiar Título',
   share_instagram: 'Instagram',
   share_instagramStories: 'Histórias do Instagram',
+  share_saveImage: 'Salvar imagem em fotos',
   share_shareAsImage: 'Compartilhar como imagem',
   share_shareAsLink: 'Compartilhar como link',
   share_twitter: 'Twitter',

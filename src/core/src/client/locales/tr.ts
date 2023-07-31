@@ -125,6 +125,7 @@ export const trStrings: typeof enStrings = {
   share_copyTitle: 'Başlığı Kopyala',
   share_instagram: 'instagram',
   share_instagramStories: 'Instagram Hikayeleri',
+  share_saveImage: 'Resmi Fotoğraflara Kaydet',
   share_shareAsImage: 'Resim Olarak Paylaş',
   share_shareAsLink: 'Bağlantı Olarak Paylaş',
   share_twitter: 'twitter',

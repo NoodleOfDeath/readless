@@ -1,7 +1,7 @@
 import React from 'react';
 import { LayoutRectangle } from 'react-native';
 
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel from 'react-native-reanimated-carousel';
 
 import {
   Button,
@@ -37,10 +37,7 @@ export function CardStackEntry({
       return imageUri;
     }
     return (
-      <Image 
-        width="100%"
-        height="100%"
-        source={ { uri: imageUri } } />
+      <Image source={ { uri: imageUri } } />
     );
   }, [imageUri]);
 
@@ -97,10 +94,7 @@ export function CardStack({
   ...props
 }: CardStackProps = {}) {
   
-  const theme = useTheme();
-
   const [layout, setLayout] = React.useState<LayoutRectangle>();
-  const refCarousel = React.useRef<Carousel<CardStackEntryProps>>(null);
   const [activeSlide, setActiveSlide] = React.useState(0);
   
   const renderItem = React.useCallback(({ item, index }: {item: CardStackEntryProps, index: number}) => (
@@ -127,34 +121,14 @@ export function CardStack({
         {layout && (
           <React.Fragment>
             <Carousel
-              ref={ refCarousel }
               data={ cards }
-              layout={ 'tinder' } 
+              defaultIndex={ activeSlide }
               renderItem={ renderItem }
-              sliderWidth={ layout.width }
-              itemWidth={ layout.width }
-              hasParallaxImages
-              firstItem={ activeSlide }
-              inactiveSlideScale={ 0.94 }
-              inactiveSlideOpacity={ 0.3 }
-              containerCustomStyle={ { overflow: 'visible' } }
+              width={ layout.width }
               loop
-              autoplay
-              autoplayDelay={ 500 }
-              autoplayInterval={ 7_000 }
+              autoPlay
+              autoPlayInterval={ 7_000 }
               onSnapToItem={ setActiveSlide } />
-            <Pagination
-              dotsLength={ cards.length }
-              activeDotIndex={ activeSlide }
-              containerStyle={ {} }
-              dotColor={ theme.colors.text }
-              dotStyle={ {} }
-              inactiveDotColor={ theme.colors.textSecondary }
-              inactiveDotOpacity={ 0.8 }
-              inactiveDotScale={ 0.6 }
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              carouselRef={ refCarousel as any }
-              tappableDots={ Boolean(refCarousel) } />
           </React.Fragment>
         )}
       </View>

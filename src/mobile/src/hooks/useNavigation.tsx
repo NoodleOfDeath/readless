@@ -1,5 +1,6 @@
 import React from 'react';
 
+import analytics from '@react-native-firebase/analytics';
 import { useNavigation as useRNNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -10,7 +11,7 @@ import {
 } from '~/api';
 import { SessionContext } from '~/contexts';
 import { StackableTabParams } from '~/screens';
-import { readingFormat } from '~/utils';
+import { getUserAgent, readingFormat } from '~/utils';
 
 export function useNavigation() {
 
@@ -20,6 +21,9 @@ export function useNavigation() {
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
 
   const navigate = React.useCallback(<R extends keyof StackableTabParams>(route: R, params?: StackableTabParams[R]) => {
+    analytics().logEvent('navigate', {
+      params, route, userAgent: getUserAgent(), 
+    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return ((navigation as any).push ?? navigation.navigate)(route, params as StackableTabParams[R]);
   }, [navigation]);

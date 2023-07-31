@@ -125,6 +125,7 @@ export const skStrings: typeof enStrings = {
   share_copyTitle: 'Kopírovať názov',
   share_instagram: 'Instagram',
   share_instagramStories: 'Príbehy Instagramu',
+  share_saveImage: 'Uložiť obrázok do Fotiek',
   share_shareAsImage: 'Zdieľať ako obrázok',
   share_shareAsLink: 'Zdieľať ako odkaz',
   share_twitter: 'Twitter',

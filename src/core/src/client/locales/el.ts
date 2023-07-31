@@ -125,6 +125,7 @@ export const elStrings: typeof enStrings = {
   share_copyTitle: 'Αντιγραφή τίτλου',
   share_instagram: 'Ίνσταγκραμ',
   share_instagramStories: 'Ιστορίες Instagram',
+  share_saveImage: 'Αποθήκευση εικόνας στις Φωτογραφίες',
   share_shareAsImage: 'Κοινή χρήση ως εικόνα',
   share_shareAsLink: 'Κοινή χρήση ως σύνδεσμος',
   share_twitter: 'Κελάδημα',

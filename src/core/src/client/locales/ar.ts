@@ -125,6 +125,7 @@ export const arStrings: typeof enStrings = {
   share_copyTitle: 'نسخ العنوان',
   share_instagram: 'انستغرام',
   share_instagramStories: 'قصص انستغرام',
+  share_saveImage: 'حفظ الصورة في الصور',
   share_shareAsImage: 'شارك كصورة',
   share_shareAsLink: 'شارك كرابط',
   share_twitter: 'تويتر',

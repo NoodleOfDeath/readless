@@ -125,6 +125,7 @@ export const nbStrings: typeof enStrings = {
   share_copyTitle: 'Kopier tittel',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram-historier',
+  share_saveImage: 'Lagre bilde til bilder',
   share_shareAsImage: 'Del som bilde',
   share_shareAsLink: 'Del som lenke',
   share_twitter: 'Twitter',

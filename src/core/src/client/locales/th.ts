@@ -125,6 +125,7 @@ export const thStrings: typeof enStrings = {
   share_copyTitle: 'คัดลอกชื่อเรื่อง',
   share_instagram: 'อินสตาแกรม',
   share_instagramStories: 'เรื่องราวของ Instagram',
+  share_saveImage: 'บันทึกภาพลงในรูปถ่าย',
   share_shareAsImage: 'แบ่งปันเป็นภาพ',
   share_shareAsLink: 'แบ่งปันเป็นลิงค์',
   share_twitter: 'ทวิตเตอร์',
