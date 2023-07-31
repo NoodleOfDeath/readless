@@ -16,6 +16,14 @@ FROM (
     s.summary,
     s.bullets,
     s."imageUrl",
+    --legacy for watch
+    JSON_BUILD_OBJECT(
+      'id', pub.id,
+      'name', pub.name,
+      'displayName', pub."displayName",
+      'description', pub.description,
+      'translations', pub.translations::JSONB
+    ) AS outlet,
     JSON_BUILD_OBJECT(
       'id', pub.id,
       'name', pub.name,

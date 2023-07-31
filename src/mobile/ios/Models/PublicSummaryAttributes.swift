@@ -17,7 +17,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   public var url: String
   public var title: String
   public var shortSummary: String
-  public var outlet: PublicOutletAttributes
+  public var publisher: PublicPublisherAttributes
   public var category: PublicCategoryAttributes
   public var imageUrl: String?
   public var originalDate: Date?
@@ -36,7 +36,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
               url: String,
               title: String,
               shortSummary: String,
-              outlet: PublicOutletAttributes,
+              publisher: PublicPublisherAttributes,
               category: PublicCategoryAttributes,
               imageUrl: String? = nil,
               originalDate: Date? = nil,
@@ -45,7 +45,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     self.url = url
     self.title = title
     self.shortSummary = shortSummary
-    self.outlet = outlet
+    self.publisher = publisher
     self.category = category
     self.imageUrl = imageUrl
     self.originalDate = originalDate
@@ -57,7 +57,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     case url
     case title
     case shortSummary
-    case outlet
+    case publisher
     case category
     case imageUrl
     case originalDate
@@ -72,7 +72,7 @@ public struct PublicSummaryAttributes: Codable, Hashable {
     try container.encode(url, forKey: .url)
     try container.encode(title, forKey: .title)
     try container.encode(shortSummary, forKey: .shortSummary)
-    try container.encode(outlet, forKey: .outlet)
+    try container.encode(publisher, forKey: .publisher)
     try container.encode(category, forKey: .category)
     try container.encodeIfPresent(imageUrl, forKey: .imageUrl)
     try container.encodeIfPresent(originalDate, forKey: .originalDate)
