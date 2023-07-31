@@ -102,7 +102,7 @@ export default function Summary({
   const [lastTick, setLastTick] = React.useState(new Date());
 
   const timeAgo = React.useMemo(() => {
-    const date = new Date(summary.originalDate && Date.now() - new Date(summary.originalDate).valueOf() < ms('10y') ? !summary.originalDate : summary.createdAt);
+    const date = new Date(summary.originalDate && Date.now() - new Date(summary.originalDate).valueOf() < ms('10y') ? summary.originalDate : summary.createdAt);
     return Date.now() - date.valueOf() > ms('1w') ? formatDate(date, 'EEE PP') : formatDistance(date, lastTick, { addSuffix: true });
   }, [summary.originalDate, summary.createdAt, lastTick]);
 
