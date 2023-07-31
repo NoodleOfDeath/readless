@@ -18,7 +18,6 @@
 		010F0D0429E88D490064DD97 /* Read Less.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 010F0CE129E88D470064DD97 /* Read Less.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		010F0D5229E88EC40064DD97 /* PublicCategoryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */; };
 		010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
-		010F0D5C29E88EC40064DD97 /* PublicOutletAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */; };
 		010F0D8129E89D770064DD97 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
 		0125BD3A29D791ED00EAC61C /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1A29D791EC00EAC61C /* Fontisto.ttf */; };
 		0125BD3C29D791ED00EAC61C /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD1C29D791EC00EAC61C /* Octicons.ttf */; };
@@ -68,6 +67,7 @@
 		7699B88040F8A987B510C191 /* libPods-ReadLess-ReadLessTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */; };
 		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
 		CDE11B1F2A7701BE00C0BC39 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */; };
+		CDE11B212A786FF500C0BC39 /* PublicPublisherAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */; };
 		CDE9EB4E2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB502A48A3770057217B /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
@@ -97,7 +97,6 @@
 		CDE9EB682A48A3770057217B /* PitagonSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4D2A48A3770057217B /* PitagonSerif-Bold.ttf */; };
 		CDE9EB692A48A3770057217B /* PitagonSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB4D2A48A3770057217B /* PitagonSerif-Bold.ttf */; };
 		CDEE16182A1B9CCA00E15B10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDEE161A2A1B9CCA00E15B10 /* LaunchScreen.storyboard */; };
-		CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,7 +170,6 @@
 		010F0D0029E88D490064DD97 /* ReadLessWatch_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWatch_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicCategoryAttributes.swift; sourceTree = "<group>"; };
 		010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicSummaryAttributes.swift; sourceTree = "<group>"; };
-		010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicOutletAttributes.swift; sourceTree = "<group>"; };
 		010F0D8029E89D770064DD97 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		0125BD1829D791EC00EAC61C /* ReadLess.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = ReadLess.entitlements; path = ReadLess/ReadLess.entitlements; sourceTree = "<group>"; };
 		0125BD1A29D791EC00EAC61C /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
@@ -260,6 +258,7 @@
 		CD7821782A253DAE00F3B33A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD7821792A28FA2100F3B33A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicPublisherAttributes.swift; sourceTree = "<group>"; };
 		CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-BoldItalic.ttf"; sourceTree = "<group>"; };
 		CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Italic.ttf"; sourceTree = "<group>"; };
 		CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekLatin-Regular.ttf"; sourceTree = "<group>"; };
@@ -274,7 +273,6 @@
 		CDE9EB4B2A48A3770057217B /* Newsreader72pt-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-Italic.ttf"; sourceTree = "<group>"; };
 		CDE9EB4C2A48A3770057217B /* Faustina-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Bold.ttf"; sourceTree = "<group>"; };
 		CDE9EB4D2A48A3770057217B /* PitagonSerif-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PitagonSerif-Bold.ttf"; sourceTree = "<group>"; };
-		CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTranslationAttributes.swift; sourceTree = "<group>"; };
 		D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ReadLess-ReadLessTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ReadLess/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -380,10 +378,9 @@
 		010F0D0E29E88EC40064DD97 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */,
 				010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */,
-				CDEE16512A1BA12200E15B10 /* PublicTranslationAttributes.swift */,
 				010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */,
-				010F0D2B29E88EC40064DD97 /* PublicOutletAttributes.swift */,
 				018CE3AF29E98AB9005E6391 /* BulkResponse.swift */,
 			);
 			path = Models;
@@ -1086,10 +1083,9 @@
 				018173BF29EA1842006D3509 /* PressActions.swift in Sources */,
 				018173C329EA4833006D3509 /* Date.swift in Sources */,
 				013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */,
-				CDEE16532A1BA12200E15B10 /* PublicTranslationAttributes.swift in Sources */,
+				CDE11B212A786FF500C0BC39 /* PublicPublisherAttributes.swift in Sources */,
 				018CE3B029E98AB9005E6391 /* BulkResponse.swift in Sources */,
 				010F0D8129E89D770064DD97 /* Color.swift in Sources */,
-				010F0D5C29E88EC40064DD97 /* PublicOutletAttributes.swift in Sources */,
 				010F0CE429E88D470064DD97 /* ReadLessWatchApp.swift in Sources */,
 				010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */,
 				015A19D129EAEB1A0072EEE3 /* View.swift in Sources */,
@@ -1490,7 +1486,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				GCC_NO_COMMON_BLOCKS = NO;
@@ -1532,7 +1528,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;

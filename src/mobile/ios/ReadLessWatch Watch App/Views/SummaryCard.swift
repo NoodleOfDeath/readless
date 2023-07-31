@@ -49,7 +49,7 @@ struct SummaryCard: View {
             Text("Loading Image...")
                 .onAppear(perform: loadImage)
         }
-        Text(compact ? (summary.translationMap()["title"] ?? summary.title) : (summary.translationMap()["shortSummary"] ?? summary.shortSummary))
+        Text(compact ? (summary.translations?["title"] ?? summary.title) : (summary.translations?["shortSummary"] ?? summary.shortSummary ?? ""))
           .padding(3)
           .if(compact) { view in
             view
