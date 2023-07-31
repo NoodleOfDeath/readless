@@ -175,7 +175,7 @@ export const ptBRStrings: typeof enStrings = {
   summary_veryNegative: 'muito negativo',
   summary_veryPositive: 'Muito positivo',
   summary_viewSource: 'Ver fonte original',
-  tabs_livefeed: 'Transmissão ao vivo',
+  tabs_liveFeed: 'Transmissão ao vivo',
   tabs_oldNews: 'Noticias antigas',
   tabs_topStories: 'Melhores histórias',
   tabs_yourNews: 'Suas notícias',

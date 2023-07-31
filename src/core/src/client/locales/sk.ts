@@ -175,7 +175,7 @@ export const skStrings: typeof enStrings = {
   summary_veryNegative: 'Veľmi negatívne',
   summary_veryPositive: 'Veľmi pozitívne',
   summary_viewSource: 'Zobraziť pôvodný zdroj',
-  tabs_livefeed: 'Priamy prenos',
+  tabs_liveFeed: 'Priamy prenos',
   tabs_oldNews: 'Staré správy',
   tabs_topStories: 'Najlepšie príbehy',
   tabs_yourNews: 'Vaše novinky',

@@ -175,7 +175,7 @@ export const viStrings: typeof enStrings = {
   summary_veryNegative: 'Rất tiêu cực',
   summary_veryPositive: 'Rất tích cực',
   summary_viewSource: 'Xem nguồn gốc',
-  tabs_livefeed: 'nguồn cấp dữ liệu trực tiếp',
+  tabs_liveFeed: 'nguồn cấp dữ liệu trực tiếp',
   tabs_oldNews: 'Tin cũ',
   tabs_topStories: 'Câu chuyện hàng đầu',
   tabs_yourNews: 'Tin tức của bạn',

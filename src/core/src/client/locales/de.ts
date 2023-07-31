@@ -175,7 +175,7 @@ export const deStrings: typeof enStrings = {
   summary_veryNegative: 'Sehr negativ',
   summary_veryPositive: 'Sehr positiv',
   summary_viewSource: 'Originalquelle ansehen',
-  tabs_livefeed: 'Live-Feed',
+  tabs_liveFeed: 'Live-Feed',
   tabs_oldNews: 'Schnee von gestern',
   tabs_topStories: 'Top-Geschichten',
   tabs_yourNews: 'Deine Neuigkeiten',

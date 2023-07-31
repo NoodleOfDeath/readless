@@ -175,7 +175,7 @@ export const faStrings: typeof enStrings = {
   summary_veryNegative: 'خیلی منفی',
   summary_veryPositive: 'خیلی مثبته',
   summary_viewSource: 'مشاهده منبع اصلی',
-  tabs_livefeed: 'فید زنده',
+  tabs_liveFeed: 'فید زنده',
   tabs_oldNews: 'اخبار قدیمی',
   tabs_topStories: 'داستان های برتر',
   tabs_yourNews: 'اخبار شما',

@@ -175,7 +175,7 @@ export const zhHKStrings: typeof enStrings = {
   summary_veryNegative: '非常消極',
   summary_veryPositive: '非常積極',
   summary_viewSource: '查看原始來源',
-  tabs_livefeed: '動態信息',
+  tabs_liveFeed: '動態信息',
   tabs_oldNews: '舊聞',
   tabs_topStories: '熱門故事',
   tabs_yourNews: '你的消息',

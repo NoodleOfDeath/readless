@@ -38,7 +38,6 @@ import {
   Screen,
   SearchMenu,
   Text,
-  View,
 } from '~/components';
 import {
   LayoutContext,
@@ -59,14 +58,13 @@ import {
   HomeScreen,
   LegalScreen,
   NAVIGATION_LINKING_OPTIONS,
-  OldNewsScreen,
   PublisherScreen,
   ReadingFormatPickerScreen,
   RecapScreen,
+  RoutingParams,
   SearchScreen,
   SettingsScreen,
   ShortPressFormatPickerScreen,
-  StackableTabParams,
   StatsScreen,
   SummaryScreen,
   TestScreen,
@@ -74,9 +72,9 @@ import {
 } from '~/screens';
 import { getUserAgent } from '~/utils';
 
-const screens: RouteConfig<
-  StackableTabParams,
-  keyof StackableTabParams,
+const STACK_SCREENS: RouteConfig<
+  RoutingParams,
+  keyof RoutingParams,
   NavigationState,
   NativeStackNavigationOptions,
   EventMapBase
@@ -91,6 +89,7 @@ const screens: RouteConfig<
       headerTitle: () => <SearchMenu />,
     },
   },
+  // Screens
   {
     component: SearchScreen, 
     name: 'search',
@@ -103,6 +102,14 @@ const screens: RouteConfig<
     component: SummaryScreen, 
     name: 'summary',  
     options: { 
+      headerBackTitle: '',
+      headerTitle: '', 
+    },
+  },
+  {
+    component: RecapScreen,
+    name: 'recap',  
+    options: {
       headerBackTitle: '',
       headerTitle: '', 
     },
@@ -123,7 +130,6 @@ const screens: RouteConfig<
       headerTitle: '', 
     },
   },
-  // Drawer Tab
   {
     component: BookmarksScreen, 
     name: 'bookmarks', 
@@ -133,23 +139,6 @@ const screens: RouteConfig<
       headerTitle: strings.screens_bookmarks, 
     }, 
   }, 
-  // Old News
-  {
-    component: OldNewsScreen,
-    name: 'oldNews',  
-    options: {
-      headerBackTitle: '', 
-      headerTitle: '', 
-    },
-  },
-  {
-    component: RecapScreen,
-    name: 'recap',  
-    options: {
-      headerBackTitle: '',
-      headerTitle: '', 
-    },
-  },
   // Settings
   {
     component: SettingsScreen, 
@@ -239,7 +228,7 @@ const Stack = createNativeStackNavigator();
 function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
   return (
     <Stack.Navigator initialRouteName={ initialRouteName }>
-      {screens.map((screen) => (
+      {STACK_SCREENS.map((screen) => (
         <Stack.Screen
           key={ String(screen.name) }
           { ...screen }
@@ -565,7 +554,11 @@ export default function NavigationController() {
   
   const currentTheme = React.useMemo(() => theme.isDarkMode ? MD3DarkTheme : DefaultTheme, [theme.isDarkMode]);
 
-  return (
+  return !ready ? (
+    <Screen>
+      <ActivityIndicator />
+    </Screen>
+  ) : (
     <NavigationContainer
       theme= { theme.navContainerTheme }
       linking={ NAVIGATION_LINKING_OPTIONS }>

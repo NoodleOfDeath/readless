@@ -112,10 +112,11 @@ export function SummaryList({
 
   // callbacks
 
-  const load = React.useCallback(async (reset = false) => {
+  const load = React.useCallback(async (reset = false, overrideFilter = filter) => {
     if (loading) {
       return;
     }
+    setLoaded(false);
     setLoading(true);
     if (reset) {
       setSummaries([]);
@@ -125,7 +126,7 @@ export function SummaryList({
     try {
       const { data, error } = await fetch({
         excludeIds: !specificIds && Boolean(excludeIds),
-        filter,
+        filter: overrideFilter,
         ids: specificIds ?? excludeIds,
         interval,
         locale: getLocale(),
@@ -212,14 +213,14 @@ export function SummaryList({
   );
   
   useFocusEffect(React.useCallback(() => {
-    if (!loading && !lastFetchFailed && !loaded && (summaries.length === 0 || filter !== filter0)) {
-      load(true);
+    if (!loading && !lastFetchFailed && ((!loaded && summaries.length === 0) || filter !== filter0)) {
       setFilter(filter0);
       navigation?.setOptions({
         headerTitle: () => {
           return <SearchMenu initialValue={ filter0 } />;
         },
       });
+      load(true, filter0);
     }
   }, [loading, navigation, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
   
@@ -302,7 +303,7 @@ export function SummaryList({
                     </Button>
                   </View>
                 )}
-                {(loading || summaries.length === 0) && !loaded && (
+                {(loading || summaries.length === 0) && (!loaded || cursor > 0) && (
                   <View row mb={ 64 }>
                     <View row justifyCenter p={ 16 } pb={ 24 }>
                       <ActivityIndicator size="large" color={ theme.colors.primary } />

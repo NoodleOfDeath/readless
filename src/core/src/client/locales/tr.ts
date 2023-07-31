@@ -175,7 +175,7 @@ export const trStrings: typeof enStrings = {
   summary_veryNegative: 'Çok Olumsuz',
   summary_veryPositive: 'Çok pozitif',
   summary_viewSource: 'Orijinal kaynağı görüntüle',
-  tabs_livefeed: 'Canlı yem',
+  tabs_liveFeed: 'Canlı yem',
   tabs_oldNews: 'Eski Haberler',
   tabs_topStories: 'En iyi hikayeler',
   tabs_yourNews: 'Haberleriniz',

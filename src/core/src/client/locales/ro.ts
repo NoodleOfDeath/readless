@@ -175,7 +175,7 @@ export const roStrings: typeof enStrings = {
   summary_veryNegative: 'Foarte Negativ',
   summary_veryPositive: 'Foarte pozitiv',
   summary_viewSource: 'Vezi sursa originală',
-  tabs_livefeed: 'Live Feed',
+  tabs_liveFeed: 'Live Feed',
   tabs_oldNews: 'Stiri vechi',
   tabs_topStories: 'Stiri de top',
   tabs_yourNews: 'Stirile tale',

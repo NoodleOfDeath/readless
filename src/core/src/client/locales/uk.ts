@@ -175,7 +175,7 @@ export const ukStrings: typeof enStrings = {
   summary_veryNegative: 'Дуже негативно',
   summary_veryPositive: 'Дуже позитивно',
   summary_viewSource: 'Переглянути першоджерело',
-  tabs_livefeed: 'Жива стрічка',
+  tabs_liveFeed: 'Жива стрічка',
   tabs_oldNews: 'Старі новини',
   tabs_topStories: 'Найкращі історії',
   tabs_yourNews: 'Ваші новини',

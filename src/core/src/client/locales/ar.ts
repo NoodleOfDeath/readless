@@ -175,7 +175,7 @@ export const arStrings: typeof enStrings = {
   summary_veryNegative: 'سلبي جدا',
   summary_veryPositive: 'إيجابي جدا',
   summary_viewSource: 'عرض المصدر الأصلي',
-  tabs_livefeed: 'البث المباشر',
+  tabs_liveFeed: 'البث المباشر',
   tabs_oldNews: 'أخبار قديمة',
   tabs_topStories: 'أهم الأخبار',
   tabs_yourNews: 'أخبارك',

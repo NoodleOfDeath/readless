@@ -175,7 +175,7 @@ export const heStrings: typeof enStrings = {
   summary_veryNegative: 'מאוד שלילי',
   summary_veryPositive: 'חיובי מאוד',
   summary_viewSource: 'צפה במקור המקורי',
-  tabs_livefeed: 'עדכון חי',
+  tabs_liveFeed: 'עדכון חי',
   tabs_oldNews: 'חדשות ישנות',
   tabs_topStories: 'הסיפורים הטובים ביותר',
   tabs_yourNews: 'החדשות שלך',

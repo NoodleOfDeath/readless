@@ -204,7 +204,7 @@ export const enStrings = {
   summary_viewSource: 'View original source',
   
   // tabs
-  tabs_livefeed: 'Live Feed',
+  tabs_liveFeed: 'Live Feed',
   tabs_oldNews: 'Old News',
   tabs_topStories: 'Top Stories',
   tabs_yourNews: 'Your News',

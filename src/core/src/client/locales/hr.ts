@@ -175,7 +175,7 @@ export const hrStrings: typeof enStrings = {
   summary_veryNegative: 'Vrlo negativno',
   summary_veryPositive: 'Vrlo pozitivno',
   summary_viewSource: 'Pogledajte izvorni izvor',
-  tabs_livefeed: 'Prijenos uživo',
+  tabs_liveFeed: 'Prijenos uživo',
   tabs_oldNews: 'Stare vijesti',
   tabs_topStories: 'Najvažnije priče',
   tabs_yourNews: 'Vaše Vijesti',

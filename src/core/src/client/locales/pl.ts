@@ -175,7 +175,7 @@ export const plStrings: typeof enStrings = {
   summary_veryNegative: 'Bardzo negatywne',
   summary_veryPositive: 'Bardzo pozytywny',
   summary_viewSource: 'Zobacz oryginalne źródło',
-  tabs_livefeed: 'Przekaz na żywo',
+  tabs_liveFeed: 'Przekaz na żywo',
   tabs_oldNews: 'Stare wiadomości',
   tabs_topStories: 'Kultowe historie',
   tabs_yourNews: 'Twoje wiadomości',

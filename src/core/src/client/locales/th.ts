@@ -175,7 +175,7 @@ export const thStrings: typeof enStrings = {
   summary_veryNegative: 'เชิงลบมาก',
   summary_veryPositive: 'แง่บวกมาก',
   summary_viewSource: 'ดูแหล่งที่มาต้นฉบับ',
-  tabs_livefeed: 'ฟีดสด',
+  tabs_liveFeed: 'ฟีดสด',
   tabs_oldNews: 'ข่าวเก่า',
   tabs_topStories: 'เรื่องเด่น',
   tabs_yourNews: 'ข่าวของคุณ',

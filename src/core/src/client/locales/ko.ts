@@ -175,7 +175,7 @@ export const koStrings: typeof enStrings = {
   summary_veryNegative: '매우 부정적',
   summary_veryPositive: '매우 긍정적',
   summary_viewSource: '원본 소스 보기',
-  tabs_livefeed: '생방송',
+  tabs_liveFeed: '생방송',
   tabs_oldNews: '오래된 뉴스',
   tabs_topStories: '주요 뉴스',
   tabs_yourNews: '당신의 뉴스',

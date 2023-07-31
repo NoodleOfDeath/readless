@@ -175,7 +175,7 @@ export const svStrings: typeof enStrings = {
   summary_veryNegative: 'Mycket negativ',
   summary_veryPositive: 'Mycket positiv',
   summary_viewSource: 'Se originalkällan',
-  tabs_livefeed: 'Direktsändning',
+  tabs_liveFeed: 'Direktsändning',
   tabs_oldNews: 'Gamla nyheter',
   tabs_topStories: 'Mest lästa artiklar',
   tabs_yourNews: 'Dina nyheter',

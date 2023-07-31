@@ -175,7 +175,7 @@ export const fiStrings: typeof enStrings = {
   summary_veryNegative: 'Erittäin negatiivinen',
   summary_veryPositive: 'Erittäin positiivinen',
   summary_viewSource: 'Katso alkuperäinen lähde',
-  tabs_livefeed: 'Live-syöte',
+  tabs_liveFeed: 'Live-syöte',
   tabs_oldNews: 'Vanhoja uutisia',
   tabs_topStories: 'Parhaat tarinat',
   tabs_yourNews: 'Sinun uutiset',

@@ -175,7 +175,7 @@ export const nlStrings: typeof enStrings = {
   summary_veryNegative: 'Zeer negatief',
   summary_veryPositive: 'Heel positief',
   summary_viewSource: 'Bekijk originele bron',
-  tabs_livefeed: 'Live feed',
+  tabs_liveFeed: 'Live feed',
   tabs_oldNews: 'Oud nieuws',
   tabs_topStories: 'Topverhalen',
   tabs_yourNews: 'Jouw nieuws',
