@@ -16,7 +16,7 @@ FROM (
     s.summary,
     s.bullets,
     s."imageUrl",
-    --legacy for watch
+    -- legacy for watch
     JSON_BUILD_OBJECT(
       'id', pub.id,
       'name', pub.name,
