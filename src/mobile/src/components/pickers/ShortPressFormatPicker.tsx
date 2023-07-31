@@ -1,11 +1,8 @@
 import React from 'react';
 
-import analytics from '@react-native-firebase/analytics';
-
 import { ReadingFormat } from '~/api';
 import { ChildlessViewProps, TablePicker } from '~/components';
 import { SessionContext } from '~/core';
-import { getUserAgent } from '~/utils';
 
 type Props = ChildlessViewProps;
 
@@ -15,13 +12,8 @@ export function ShortPressFormatPicker({ ...props }: Props = {}) {
     <TablePicker
       { ...props }
       options={ [ReadingFormat.Summary, ReadingFormat.Bullets] }
-      initialValue={ preferredShortPressFormat ?? ReadingFormat.Summary }
+      initialValue={ (preferredShortPressFormat ?? ReadingFormat.Summary) as ReadingFormat.Summary | ReadingFormat.Bullets | undefined }
       onValueChange={ (state) => {
-        analytics().logEvent('set_preference', {
-          key: 'preferredShortPressFormat', 
-          userAgent: getUserAgent(), 
-          value: state?.value, 
-        });
         setPreference('preferredShortPressFormat', state?.value); 
       } }>
     </TablePicker>

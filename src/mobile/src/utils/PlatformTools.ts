@@ -1,5 +1,6 @@
 import { DeviceEventEmitter, Platform } from 'react-native';
 
+import analytics from '@react-native-firebase/analytics';
 import VersionCheck from 'react-native-version-check';
 
 import {
@@ -20,5 +21,10 @@ export function getUserAgent() {
 }
 
 export function emitEvent<E extends SessionEvent>(event: E, mutation: PreferenceMutation<E>, state: PreferenceState<E>) {
+  analytics().logEvent(event.replace(/-/g, '_'), {
+    mutation,
+    state,
+    userAgent: getUserAgent(),
+  });
   DeviceEventEmitter.emit(event, mutation, state);
 }

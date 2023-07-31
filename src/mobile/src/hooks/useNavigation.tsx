@@ -29,12 +29,12 @@ export function useNavigation() {
   }, [navigation]);
 
   const search = React.useCallback((params: RoutingParams['search']) => {
-    navigate('search', params);
-    const searchText = params.prefilter;
-    if (!searchText) {
+    const prefilter = params.prefilter;
+    if (!prefilter) {
       return;
     }
-    setTimeout(() => setPreference('searchHistory', (prev) => Array.from(new Set([searchText, ...(prev ?? [])])).slice(0, 10)), 500);
+    setPreference('searchHistory', (prev) => Array.from(new Set([prefilter, ...(prev ?? [])])).slice(0, 10));
+    navigate('search', params);
   }, [navigate, setPreference]);
   
   const openSummary = React.useCallback((props: RoutingParams['summary']) => {

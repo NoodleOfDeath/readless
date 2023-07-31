@@ -197,6 +197,7 @@ export function Summary({
     summaryTranslations,
     bookmarkSummary,
     readSummary,
+    removeSummary,
     storeTranslations,
     // publishers
     followedPublishers,
@@ -208,8 +209,6 @@ export function Summary({
     excludedCategories,
     followCategory,
     excludeCategory,
-    // base pref setter
-    setPreference,
   } = React.useContext(SessionContext);
 
   const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
@@ -295,13 +294,13 @@ export function Summary({
             body2={ bulletsAsShortSummary || summaryAsShortSummary }
             sentenceCase
             highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-            searchWords={ !showcase ? keywords : [] }>
+            searchWords={ keywords }>
             { cleanString(content) }
           </Highlighter>
         </Chip>
       ))}
     </React.Fragment>
-  ), [content, bulletsAsShortSummary, showcase, initialFormat, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
+  ), [content, bulletsAsShortSummary, initialFormat, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
 
   // update time ago every `tickIntervalMs` milliseconds
   useFocusEffect(React.useCallback(() => {
@@ -330,7 +329,6 @@ export function Summary({
       return;
     }
     onFormatChange?.(newFormat);
-    analytics().logEvent('summary_format_change', { format: newFormat, summary });
     readSummary(summary);
     if (!forceUnread && !initialFormat && !hideCard) {
       setIsRead(true);
@@ -464,7 +462,6 @@ export function Summary({
     actions.push(
       {
         onPress: async () => {
-          analytics().logEvent(isBookmarked ? 'summary_unbookmark' : 'summary_bookmark', { summary, userAgent: getUserAgent() });
           setIsBookmarked((prev) => !prev);
           bookmarkSummary(summary);
         },
@@ -473,7 +470,6 @@ export function Summary({
       },
       {
         onPress: () => {
-          analytics().logEvent(isRead ? 'summary_mark_unread' : 'summary_mark_read', { summary, userAgent: getUserAgent() });
           setIsRead((prev) => !prev);
           readSummary(summary, true);
         },
@@ -482,7 +478,6 @@ export function Summary({
       },
       {
         onPress: async () => {
-          analytics().logEvent(isFollowingPublisher ? 'summary_unfollow_publisher' : 'summary_follow_publisher', { summary, userAgent: getUserAgent() });
           setIsFollowingPublisher((prev) => !prev);
           followPublisher(summary.publisher);
         },
@@ -491,7 +486,6 @@ export function Summary({
       },
       {
         onPress: async () => {
-          analytics().logEvent(isFollowingPublisher ? 'summary_unfollow_category' : 'summary_follow_category', { summary, userAgent: getUserAgent() });
           setIsFollowingCategory((prev) => !prev);
           followCategory(summary.category);
         },
@@ -511,7 +505,6 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
-          analytics().logEvent(isExcludingPublisher ? 'summary_unexclude_publisher' : 'summary_exclude_publisher', { summary, userAgent: getUserAgent() });
           setIsExcludingPublisher((prev) => !prev);
           excludePublisher(summary.publisher);
         },
@@ -521,7 +514,6 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
-          analytics().logEvent(isExcludingCategory ? 'summary_unexclude_category' : 'summary_exclude_category', { summary, userAgent: getUserAgent() });
           setIsExcludingCategory((prev) => !prev);
           excludeCategory(summary.category);
         },
@@ -531,20 +523,14 @@ export function Summary({
       {
         destructive: true,
         onPress: () => {
-          analytics().logEvent('summary_remove', { summary, userAgent: getUserAgent() });
-          onInteract?.(InteractionType.Hide, undefined, undefined, () => {
-            setPreference('removedSummaries', (prev) => ({
-              ...prev,
-              [summary.id]: true,
-            }));
-          });
+          removeSummary(summary);
         },
         systemIcon: 'xmark.circle.fill',
         title: strings.summary_hide,
       }
     );
     return actions;
-  }, [showcase, preferredShortPressFormat, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
+  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, preferredShortPressFormat, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
 
   const shareActions = React.useMemo(() => showcase ? null : (
     <React.Fragment>
@@ -921,9 +907,10 @@ export function Summary({
       forceExpanded
       disableInteractions
       disableNavigation
+      keywords={ keywords }
       bulletsAsShortSummary={ preferredShortPressFormat === ReadingFormat.Bullets }
       summary={ summary } />
-  ), [isTablet, screenWidth, preferredShortPressFormat, summary]);
+  ), [isTablet, screenWidth, keywords, preferredShortPressFormat, summary]);
 
   if (footerOnly) {
     return footer;

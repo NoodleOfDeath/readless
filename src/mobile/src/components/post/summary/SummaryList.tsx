@@ -1,5 +1,6 @@
 import React from 'react';
 import { 
+  DeviceEventEmitter,
   NativeScrollEvent, 
   NativeSyntheticEvent,
   RefreshControl,
@@ -47,7 +48,6 @@ export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
   filter?: string;
   interval?: string;
   specificIds?: number[];
-  searchText?: string;
   landscapeEnabled?: boolean;
   flow?: 'fluid' | 'fixed';
   fluid?: boolean;
@@ -61,7 +61,6 @@ export function SummaryList({
   filter: filter0,
   interval,
   specificIds,
-  searchText,
   landscapeEnabled,
   fixed,
   fluid = !fixed,
@@ -204,15 +203,18 @@ export function SummaryList({
       } else {
         navigation?.push('summary', {
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
-          keywords: parseKeywords(searchText),
+          keywords: parseKeywords(filter),
           summary,
         });
       }
     },
-    [handleInteraction, navigation, onFormatChange, preferredReadingFormat, searchText, isTablet]
+    [handleInteraction, isTablet, onFormatChange, preferredReadingFormat, navigation, filter]
   );
   
   useFocusEffect(React.useCallback(() => {
+    const subscriber = DeviceEventEmitter.addListener('hide-summary', (data) => {
+      setSummaries((prev) => prev.filter((s) => s.id !== data.id));
+    });
     if (!loading && !lastFetchFailed && ((!loaded && summaries.length === 0) || filter !== filter0)) {
       setFilter(filter0);
       navigation?.setOptions({
@@ -222,6 +224,9 @@ export function SummaryList({
       });
       load(true, filter0);
     }
+    return () => {
+      subscriber.remove();
+    };
   }, [loading, navigation, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
   
   useAppState({ 
@@ -243,7 +248,7 @@ export function SummaryList({
         big={ Boolean(flow === 'fluid' && index % 4 === 0 && item.media?.imageArticle) }
         summary={ item }
         selected={ Boolean(landscapeEnabled && isTablet && item.id === detailSummary?.id) }
-        keywords={ filter?.split(' ') }
+        keywords={ parseKeywords(filter) }
         onFormatChange={ (format) => handleFormatChange(item, format) }
         onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
@@ -255,7 +260,7 @@ export function SummaryList({
         summary={ detailSummary }
         key={ detailSummary.id }
         initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
-        keywords={ searchText?.split(' ') }
+        keywords={ parseKeywords(filter) }
         onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
         onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
       <Divider my={ 6 } />
@@ -265,7 +270,7 @@ export function SummaryList({
         </Text>
       )}
     </React.Fragment>
-  ) : null, [landscapeEnabled, isTablet, detailSummary, detailSummarySiblings.length, handleFormatChange, handleInteraction, preferredReadingFormat, searchText]);
+  ) : null, [landscapeEnabled, isTablet, detailSummary, preferredReadingFormat, filter, detailSummarySiblings.length, handleFormatChange, handleInteraction]);
 
   return (
     <View { ...props } col>
@@ -348,6 +353,7 @@ export function SummaryList({
                   key={ item.id }
                   summary={ item } 
                   hideArticleCount
+                  keywords={ parseKeywords(filter) }
                   onFormatChange={ (format) => handleFormatChange(item, format) }
                   onInteract={ (...e) => handleInteraction(item, ...e) } />
               ) }

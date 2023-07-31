@@ -1,6 +1,5 @@
 import React from 'react';
 
-import analytics from '@react-native-firebase/analytics';
 import { useFocusEffect } from '@react-navigation/native';
 
 import {
@@ -15,7 +14,6 @@ import { SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
-import { getUserAgent } from '~/utils';
 
 export function CategoryScreen({
   route,
@@ -44,14 +42,9 @@ export function CategoryScreen({
     if (!category) {
       return;
     }
-    analytics().logEvent('toggle_followed_category', {
-      category: category.name,
-      followed: !followed,
-      userAgent: getUserAgent(),
-    });
     setFollowed((prev) => !prev);
     followCategory(category);
-  }, [category, followCategory, followed]);
+  }, [category, followCategory]);
   
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({ headerTitle: '' });

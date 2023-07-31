@@ -1,10 +1,7 @@
 import React from 'react';
 
-import analytics from '@react-native-firebase/analytics';
-
 import { Stepper } from '~/components';
 import { Preferences, SessionContext } from '~/contexts';
-import { getUserAgent } from '~/utils';
 
 type ValueOf<T> = T[keyof T];
 type NumericPreferencesKeys = NonNullable<ValueOf<{ [I in keyof Preferences]: Preferences[I] extends (number | undefined) ? I : never }>>;
@@ -33,9 +30,6 @@ export function NumericPrefPicker<K extends keyof NumericPreferences>({
   const [value, setValue] = React.useState<Preferences[K] | undefined>(context[prefKey]);
 
   const onValueChange = React.useCallback((values?: number | number[]) => {
-    analytics().logEvent('set_preference', {
-      key: prefKey, userAgent: getUserAgent(), value: values, 
-    });
     let newValue = typeof values === 'number' ? values : values && values[0];
     if (newValue !== undefined) {
       if (newValue < min) {

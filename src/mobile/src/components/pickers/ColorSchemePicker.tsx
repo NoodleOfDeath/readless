@@ -36,9 +36,6 @@ export function ColorSchemePicker({
         ] }
         initialValue={ colorScheme ?? 'system' }
         onValueChange={ (state) => {
-          analytics().logEvent('set_preference', {
-            key: 'colorScheme', userAgent: getUserAgent(), value: state?.value, 
-          });
           setPreference('colorScheme', state?.value); 
         } }>
         <ScrollView my={ 12 } scrollEnabled={ false }>

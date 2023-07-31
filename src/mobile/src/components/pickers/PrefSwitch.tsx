@@ -1,10 +1,7 @@
 import React from 'react';
 
-import analytics from '@react-native-firebase/analytics';
-
 import { Switch, SwitchProps } from '~/components';
 import { Preferences, SessionContext } from '~/contexts';
-import { getUserAgent } from '~/utils';
 
 type ValueOf<T> = T[keyof T];
 type BooleanPreferencesKeys = NonNullable<ValueOf<{ [I in keyof Preferences]: Preferences[I] extends (boolean | undefined) ? I : never }>>;
@@ -28,9 +25,6 @@ export function PrefSwitch<K extends keyof BooleanPreferences>({
     <Switch
       value={ value }
       onValueChange={ (value) => {
-        analytics().logEvent('set_preference', {
-          key: prefKey, userAgent: getUserAgent(), value, 
-        });
         setValue(value);
         context.setPreference(prefKey, value);
         onValueChange?.(value);
