@@ -8,7 +8,7 @@ import {
 export const shareableLink = (
   summary: PublicSummaryGroup, 
   baseUrl: string,
-  format: ReadingFormat = ReadingFormat.Summary
+  format = ReadingFormat.Summary
 ) => {
   return `https://${baseUrl.replace(/https?:\/\/(?:www\.)?/, '')}/read?s=${summary.id}&f=${format}`;
 };

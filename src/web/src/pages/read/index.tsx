@@ -24,12 +24,12 @@ import { useRouter, useSummaryClient } from '~/hooks';
 import { readingFormat } from '~/utils';
 
 type Props = {
-  activeSummary?: PublicSummaryGroup;
+  rootSummary?: PublicSummaryGroup;
   initialFormat?: ReadingFormat;
 };
 
 export default function AppPage({ 
-  activeSummary: activeSummary0, 
+  rootSummary, 
   initialFormat: initialFormat0,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
@@ -44,17 +44,15 @@ export default function AppPage({
   const [loading, setLoading] = React.useState<boolean>(true);
   const [totalResults, setTotalResults] = React.useState<number>(0);
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
-  const [activeSummary, setActiveSummary] = React.useState<PublicSummaryGroup | undefined>(activeSummary0);
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(Boolean(activeSummary0));
+  const [activeSummary, setActiveSummary] = React.useState<PublicSummaryGroup>();
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   const [pageSize] = React.useState<number>(10);
   const [offset, setOffset] = React.useState<number>(0);
   const [searchText, setSearchText] = React.useState<string>();
 
   React.useEffect(() => { 
-    if (activeSummary) {
-      setDrawerOpen(true);
-    }
+    setDrawerOpen(Boolean(activeSummary));
   }, [activeSummary]);
 
   const load = React.useCallback(async () => {
@@ -105,7 +103,7 @@ export default function AppPage({
 
   const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format: ReadingFormat = ReadingFormat.Summary) => {
     replace(`/read?s=${summary.id}&f=${format}`, undefined, { scroll: false, shallow: true });
-    if (activeSummary) {
+    if (summary.id === rootSummary.id || activeSummary) {
       return;
     }
     setActiveSummary(summary);
@@ -115,11 +113,10 @@ export default function AppPage({
   return (
     <Layout>
       <Head>
-        {activeSummary && (
+        {rootSummary && (
           <React.Fragment>
-            <title 
-              key='title'>
-              {activeSummary.title}
+            <title key='title'>
+              {rootSummary.title}
             </title>
             <meta 
               name="viewport"
@@ -127,44 +124,67 @@ export default function AppPage({
             <meta 
               key="og:image"
               property="og:image"
-              content={ activeSummary.media?.imageArticle || activeSummary.media?.imageAi1 || activeSummary.imageUrl } />
+              content={ rootSummary.media?.imageArticle || rootSummary.media?.imageAi1 || rootSummary.imageUrl } />
             <meta 
               key="og:title"
               property="og:title"
-              content={ activeSummary?.title.replace(/"/g, '&quot;') } />
+              content={ rootSummary.title.replace(/"/g, '&quot;') } />
             <meta 
               key="og:description"
               property="og:description"
-              content={ activeSummary?.shortSummary?.replace(/"/g, '&quot;') } />
+              content={ rootSummary.shortSummary?.replace(/"/g, '&quot;') } />
+            <meta
+              key='og:url'
+              property="og:url"
+              content={ `${process.env.NEXT_PUBLIC_BASE_URL}/read?s=${rootSummary.id}` } />
+            <meta
+              key='og:site_name'
+              property="og:site_name"
+              content={ rootSummary.title } />
+            <meta 
+              key='og:type'
+              property="og:type"
+              content="Article" />
           </React.Fragment>
         )}
       </Head>
-      <Stack spacing={ 2 }>
-        <form onSubmit={ (e) => {
-          e.preventDefault(); onMount(); 
-        } }>
-          <Stack spacing={ 1 }>
-            <TextField
-              value={ searchText } 
-              onChange={ (e) => setSearchText(e.target.value) }
-              label="Search" />
-            <Button type="submit">Search</Button>
-          </Stack>
-        </form>
+      <Box style={ {
+        margin: 'auto', maxWidth: 800, width: isMobile ? undefined : '50vw', 
+      } }>
         <Stack spacing={ 2 }>
-          {summaries.length > 0 &&
-          summaries.map((summary) => (
-            <Summary 
-              key={ summary.id } 
-              summary={ summary }
+          {rootSummary && (
+            <Summary
+              big
+              summary={ rootSummary }
+              initialFormat={ initialFormat }
               onChange={ (format) => handleFormatChange(summary, format) } />
-          ))}
+          )}
+          <form onSubmit={ (e) => {
+            e.preventDefault(); onMount(); 
+          } }>
+            <Stack spacing={ 1 }>
+              <TextField
+                value={ searchText } 
+                onChange={ (e) => setSearchText(e.target.value) }
+                label="Search" />
+              <Button type="submit">Search</Button>
+            </Stack>
+          </form>
+          <Stack spacing={ 2 }>
+            {summaries.length > 0 &&
+            summaries.map((summary) => (
+              <Summary 
+                key={ summary.id } 
+                summary={ summary }
+                onChange={ (format) => handleFormatChange(summary, format) } />
+            ))}
+          </Stack>
+          {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
+          {totalResults > offset + pageSize && (
+            <Button onClick={ () => load() }>Load More</Button>
+          )}
         </Stack>
-        {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
-        {totalResults > offset + pageSize && (
-          <Button onClick={ () => load() }>Load More</Button>
-        )}
-      </Stack>
+      </Box>
       <SwipeableDrawer 
         anchor={ isMobile ? 'bottom' : 'right' }
         open={ drawerOpen }
@@ -179,7 +199,6 @@ export default function AppPage({
               <Summary
                 big
                 summary={ activeSummary }
-                initialFormat={ initialFormat }
                 onChange={ (format) => handleFormatChange(activeSummary, format) } />
             )}
           </Stack>
@@ -202,12 +221,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
       throw error;
     }
     if (data) {
-      return { props: { activeSummary: data.rows[0], initialFormat: format } };
+      return { props: { initialFormat: format, rootSummary: data.rows[0] } };
     }
   } catch (e) {
     console.error(e);
     res.statusCode = 500;
-    return { props: { query } };
+    return { props: {} };
   }
   res.statusCode = 404;
   return { props: {} };

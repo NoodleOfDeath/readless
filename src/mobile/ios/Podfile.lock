@@ -545,7 +545,7 @@ PODS:
     - SwiftAudioEx (= 1.0.0-rc.3)
   - react-native-version-check (3.4.7):
     - React-Core
-  - react-native-view-shot (3.6.0):
+  - react-native-view-shot (3.7.0):
     - React-Core
   - React-NativeModulesApple (0.72.3):
     - hermes-engine
@@ -1100,7 +1100,7 @@ SPEC CHECKSUMS:
   react-native-shimmer: 2fdba9953215a29106febc9d147caa31a0080a8a
   react-native-track-player: 744094fceed7e67226cb5f406f3481bbc126f5dc
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
-  react-native-view-shot: 705f999ac2a24e4e6c909c0ca65c732ed33ca2ff
+  react-native-view-shot: f5507655f122e6b104888a11130f267a427f0d57
   React-NativeModulesApple: c57f3efe0df288a6532b726ad2d0322a9bf38472
   React-perflogger: 6bd153e776e6beed54c56b0847e1220a3ff92ba5
   React-RCTActionSheet: c0b62af44e610e69d9a2049a682f5dba4e9dff17
