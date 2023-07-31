@@ -27,7 +27,7 @@ FROM (
       'id', cat.id,
       'name', cat.name,
       'displayName', cat."displayName",
-      'description', cat.icon,
+      'icon', cat.icon,
       'translations', cat.translations::JSONB
     ) AS category,
     ss.sentiment,
