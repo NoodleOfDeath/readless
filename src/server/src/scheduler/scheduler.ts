@@ -91,7 +91,7 @@ async function scheduleCacheJobs() {
     await queue.add(
       'cache-getTopStories-en', 
       {
-        depth: 2,
+        depth: 3,
         endpoint: 'getTopStories',
         locale: 'en',
       },
