@@ -14,7 +14,9 @@ import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
+import { SummaryTranslation } from './SummaryTranslation.model';
 import { QUERIES, QueryKey } from './queries';
+import { SupportedLocale } from '../../../../../core/locales';
 import { parseDate } from '../../../../../utils';
 import { BulkMetadataResponse } from '../../../controllers';
 import { Cache } from '../../system/Cache.model';
@@ -291,7 +293,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       offset,
     ].join(':');
     
-    if (!forceCache) {
+    if (queryKey === 'getTopStories' && !forceCache) {
       const cache = await Cache.fromKey(cacheKey);
       if (cache && cache.expiresSoon === false) {
         try {
@@ -351,6 +353,15 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     };
     
     const filteredRecords = await fetch();
+
+    if (locale !== 'en') {
+      const untranslated = filteredRecords.rows.filter((r: PublicSummaryGroup) => !r.translations);
+      for (const summary of untranslated.slice(0, 5)) {
+        const attributes = ['title', 'shortSummary', 'summary', 'bullets'];
+        const { rows } = await SummaryTranslation.translate(summary, attributes, locale as SupportedLocale);
+        summary.translations = Object.fromEntries(rows.map((r) => [r.attribute, r.value]));
+      }
+    }
     
     const response = {
       count: filteredRecords.count,
@@ -360,7 +371,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     };
     
     await Cache.upsert({
-      halflife: process.env.CACHE_HALFLIFE || '3m',
+      halflife: process.env.CACHE_HALFLIFE || '30s',
       key: cacheKey,
       value: JSON.stringify(response),
     });

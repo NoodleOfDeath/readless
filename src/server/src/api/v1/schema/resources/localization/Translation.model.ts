@@ -49,7 +49,8 @@ export class Translation<
       const translations = await this.scope('public').findAndCountAll({ where: { locale, parentId: model.id } });
       const filteredAttributes = attributes.filter((a) => !translations.rows.some((t) => t.attribute === a));
       for (const attribute of filteredAttributes) {
-        const property = model[attribute];
+        const prop = model[attribute];
+        const property = Array.isArray(prop) ? prop.join('\n') : prop;
         if (typeof property !== 'string') {
           continue;
         }
