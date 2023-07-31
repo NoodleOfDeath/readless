@@ -41,6 +41,7 @@ export type SearchSummariesPayload = {
   end?: string;
   version?: string;
   forceCache?: boolean;
+  cacheHalflife?: string;
 };
 
 function parseTimeInterval(str: string) {
@@ -241,6 +242,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     page = 0,
     offset = pageSize * page,
     forceCache,
+    cacheHalflife = process.env.CACHE_HALFLIFE || '3m',
   }: SearchSummariesPayload, queryKey: QueryKey = 'getSummaries'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
     
     const { 
@@ -371,7 +373,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     };
     
     await Cache.upsert({
-      halflife: process.env.CACHE_HALFLIFE || '30s',
+      halflife: cacheHalflife,
       key: cacheKey,
       value: JSON.stringify(response),
     });
