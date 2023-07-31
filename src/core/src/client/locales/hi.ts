@@ -175,7 +175,7 @@ export const hiStrings: typeof enStrings = {
   summary_veryNegative: 'बहुत नकारात्मक',
   summary_veryPositive: 'बहुत सकारात्मक',
   summary_viewSource: 'मूल स्रोत देखें',
-  tabs_livefeed: 'लाइव फ़ीड',
+  tabs_liveFeed: 'लाइव फ़ीड',
   tabs_oldNews: 'पुराना समाचार',
   tabs_topStories: 'शीर्ष आलेख',
   tabs_yourNews: 'अपका समाचार',

@@ -27,7 +27,6 @@ import {
   CollapsedView,
   ContextMenu,
   ContextMenuAction,
-  Divider,
   Highlighter,
   Icon,
   Image,
@@ -198,6 +197,7 @@ export function Summary({
     summaryTranslations,
     bookmarkSummary,
     readSummary,
+    removeSummary,
     storeTranslations,
     // publishers
     followedPublishers,
@@ -209,8 +209,6 @@ export function Summary({
     excludedCategories,
     followCategory,
     excludeCategory,
-    // base pref setter
-    setPreference,
   } = React.useContext(SessionContext);
 
   const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
@@ -296,13 +294,13 @@ export function Summary({
             body2={ bulletsAsShortSummary || summaryAsShortSummary }
             sentenceCase
             highlightStyle={ { backgroundColor: theme.colors.textHighlightBackground, color: theme.colors.textDark } }
-            searchWords={ !showcase ? keywords : [] }>
+            searchWords={ keywords }>
             { cleanString(content) }
           </Highlighter>
         </Chip>
       ))}
     </React.Fragment>
-  ), [content, bulletsAsShortSummary, showcase, initialFormat, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
+  ), [content, bulletsAsShortSummary, initialFormat, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
 
   // update time ago every `tickIntervalMs` milliseconds
   useFocusEffect(React.useCallback(() => {
@@ -331,7 +329,6 @@ export function Summary({
       return;
     }
     onFormatChange?.(newFormat);
-    analytics().logEvent('summary_format_change', { format: newFormat, summary });
     readSummary(summary);
     if (!forceUnread && !initialFormat && !hideCard) {
       setIsRead(true);
@@ -349,10 +346,10 @@ export function Summary({
   }, [formatTime, summary.originalDate]);
   
   const sentimentMeter = React.useMemo(() => {
-    if (!summary.sentiments || !Object.values(summary.sentiments).length) {
+    if (!summary.sentiments || Object.keys(summary.sentiments).length === 0) {
       return null;
     }
-    const data = Object.values(summary.sentiments ?? []).sort((a, b) => a.method.localeCompare(b.method))
+    const data = Object.values(summary.sentiments).sort((a, b) => a.method.localeCompare(b.method))
       .map((s) => ({ x: s.method, y: s.score })) ?? [];
     return (
       <Popover
@@ -376,13 +373,13 @@ export function Summary({
             theme={ VictoryTheme.material }>
             <VictoryAxis
               crossAxis
-              domain={ [0, (summary.sentiments?.length ?? 0) + 1] }
+              domain={ [0, Object.values(summary.sentiments).length + 1] }
               tickFormat={ () => '' }
               standalone={ false } />
             <VictoryAxis
               dependentAxis
               crossAxis 
-              domainPadding={ 12 }
+              domainPadding={ 16 }
               standalone={ false } />
             <VictoryBar
               labelComponent={ 
@@ -465,7 +462,6 @@ export function Summary({
     actions.push(
       {
         onPress: async () => {
-          analytics().logEvent(isBookmarked ? 'summary_unbookmark' : 'summary_bookmark', { summary, userAgent: getUserAgent() });
           setIsBookmarked((prev) => !prev);
           bookmarkSummary(summary);
         },
@@ -474,7 +470,6 @@ export function Summary({
       },
       {
         onPress: () => {
-          analytics().logEvent(isRead ? 'summary_mark_unread' : 'summary_mark_read', { summary, userAgent: getUserAgent() });
           setIsRead((prev) => !prev);
           readSummary(summary, true);
         },
@@ -483,7 +478,6 @@ export function Summary({
       },
       {
         onPress: async () => {
-          analytics().logEvent(isFollowingPublisher ? 'summary_unfollow_publisher' : 'summary_follow_publisher', { summary, userAgent: getUserAgent() });
           setIsFollowingPublisher((prev) => !prev);
           followPublisher(summary.publisher);
         },
@@ -492,7 +486,6 @@ export function Summary({
       },
       {
         onPress: async () => {
-          analytics().logEvent(isFollowingPublisher ? 'summary_unfollow_category' : 'summary_follow_category', { summary, userAgent: getUserAgent() });
           setIsFollowingCategory((prev) => !prev);
           followCategory(summary.category);
         },
@@ -512,7 +505,6 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
-          analytics().logEvent(isExcludingPublisher ? 'summary_unexclude_publisher' : 'summary_exclude_publisher', { summary, userAgent: getUserAgent() });
           setIsExcludingPublisher((prev) => !prev);
           excludePublisher(summary.publisher);
         },
@@ -522,7 +514,6 @@ export function Summary({
       {
         destructive: true,
         onPress: async () => {
-          analytics().logEvent(isExcludingCategory ? 'summary_unexclude_category' : 'summary_exclude_category', { summary, userAgent: getUserAgent() });
           setIsExcludingCategory((prev) => !prev);
           excludeCategory(summary.category);
         },
@@ -532,65 +523,64 @@ export function Summary({
       {
         destructive: true,
         onPress: () => {
-          analytics().logEvent('summary_remove', { summary, userAgent: getUserAgent() });
-          onInteract?.(InteractionType.Hide, undefined, undefined, () => {
-            setPreference('removedSummaries', (prev) => ({
-              ...prev,
-              [summary.id]: true,
-            }));
-          });
+          removeSummary(summary);
         },
         systemIcon: 'xmark.circle.fill',
         title: strings.summary_hide,
       }
     );
     return actions;
-  }, [showcase, preferredShortPressFormat, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, setPreference]);
+  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, preferredShortPressFormat, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
 
-  const shareActions = React.useMemo(() => (
+  const shareActions = React.useMemo(() => showcase ? null : (
     <React.Fragment>
       <View row />
       <View flexRow itemsCenter gap={ 12 }>
-        <Chip
-          color={ theme.colors.textSecondary }
-          leftIcon="book-open-variant"
-          haptic
-          gap={ 3 }
-          onPress={ async () => {
-            if (disableInteractions) {
-              return;
-            }
-            analytics().logEvent('summary_open_article_2', { summary, userAgent: getUserAgent() });
-            openURL(summary.url);
-          } }>
-          {strings.summary_fullArticle}
-        </Chip>
-        <Chip
-          color={ theme.colors.textSecondary }
-          leftIcon="export-variant"
-          haptic
-          gap={ 3 }
-          onPress={ async () => {
-            if (disableInteractions) {
-              return;
-            }
-            analytics().logEvent('summary_intent_to_share_2', { summary, userAgent: getUserAgent() });
-            await SheetManager.show('share', {
-              payload: {
-                format: initialFormat,
-                onInteract,
-                summary,
-              },
-            });
-          } }>
-          {strings.action_share}
-        </Chip>
+        {footerOnly && (
+          <React.Fragment>
+            <Chip
+              color={ theme.colors.textSecondary }
+              leftIcon="book-open-variant"
+              haptic
+              gap={ 3 }
+              onPress={ async () => {
+                if (disableInteractions) {
+                  return;
+                }
+                analytics().logEvent('summary_open_article_2', { summary, userAgent: getUserAgent() });
+                openURL(summary.url);
+              } }>
+              {strings.summary_fullArticle}
+            </Chip>
+            <Chip
+              color={ theme.colors.textSecondary }
+              leftIcon="export-variant"
+              haptic
+              gap={ 3 }
+              onPress={ async () => {
+                if (disableInteractions) {
+                  return;
+                }
+                analytics().logEvent('summary_intent_to_share_2', { summary, userAgent: getUserAgent() });
+                await SheetManager.show('share', {
+                  payload: {
+                    format: initialFormat,
+                    onInteract,
+                    summary,
+                  },
+                });
+              } }>
+              {strings.action_share}
+            </Chip>
+          </React.Fragment>
+        )}  
         <ContextMenu
           dropdownMenuMode
           event={ { name: 'summary_more', params: { summary, userAgent: getUserAgent() } } }
           actions={ menuActions as ContextMenuAction[] }>
           <Chip
             gap={ 3 }
+            caption={ !footerOnly }
             color={ theme.colors.textSecondary }
             leftIcon="menu-down">
             {strings.misc_more}
@@ -598,7 +588,7 @@ export function Summary({
         </ContextMenu>
       </View>
     </React.Fragment>
-  ), [theme.colors.textSecondary, initialFormat, disableInteractions, openURL, onInteract, summary, menuActions]);
+  ), [showcase, footerOnly, theme.colors.textSecondary, summary, menuActions, disableInteractions, openURL, initialFormat, onInteract]);
   
   const header = React.useMemo(() => {
     if ((!forceExpanded && isCompact) && !initialFormat) {
@@ -695,7 +685,7 @@ export function Summary({
             </Chip>
           </React.Fragment>
         )}
-        {footerOnly && shareActions}
+        {shareActions}
       </View>
     );
   }, [footerOnly, forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, summary.category, summary.siblings?.length, hideArticleCount, isBookmarked, shareActions, disableInteractions, openCategory, navigate]);
@@ -793,7 +783,9 @@ export function Summary({
 
   const coverContent = React.useMemo(() => footerOnly ? null : (
     <View flex={ !initialFormat ? 1 : undefined } mb={ 6 }>
-      <View row>
+      <View
+        row
+        onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
         <View
           flex={ 1 }
           flexGrow={ 1 }
@@ -817,19 +809,15 @@ export function Summary({
                 )}
               </View>
             )}
-            {!hideFooter && footer}
           </View>
         </View>
         {!(big) && image}
       </View>
-      {Boolean(initialFormat && isTablet) && (
-        <View col m={ 12 } gap={ 6 }>
-          <Divider />
-          {shareActions}
-        </View>
-      )}
+      <View col mx={ 12 } gap={ 6 }>
+        {!hideFooter && footer}
+      </View>
     </View>
-  ), [footerOnly, showcase, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, summaryAsShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, hideFooter, footer, big, image, isTablet, shareActions]);
+  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, showcase, keywords, cleanString, localizedStrings.shortSummary, big, image, hideFooter, footer, handleFormatChange, preferredReadingFormat]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
     <View>
@@ -862,8 +850,7 @@ export function Summary({
       style={ { ...(big ? theme.components.cardBig : theme.components.card), ...style } }
       borderRadius={ 6 }
       bg={ containsTrigger ? '#eecccc' : undefined }
-      opacity={ isRead ? 0.75 : 1 }
-      onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+      opacity={ isRead ? 0.75 : 1 }>
       <View flexRow flexGrow={ 1 }>
         {selected && (
           <View
@@ -887,7 +874,7 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [footerOnly, big, theme.components.cardBig, theme.components.card, theme.colors.primary, style, containsTrigger, isRead, selected, image, header, coverContent, handleFormatChange, preferredReadingFormat]);
+  ), [footerOnly, big, theme.components.cardBig, theme.components.card, theme.colors.primary, style, containsTrigger, isRead, selected, image, header, coverContent]);
 
   const fullCard = React.useMemo(() => footerOnly ? null : (
     <View
@@ -920,9 +907,10 @@ export function Summary({
       forceExpanded
       disableInteractions
       disableNavigation
+      keywords={ keywords }
       bulletsAsShortSummary={ preferredShortPressFormat === ReadingFormat.Bullets }
       summary={ summary } />
-  ), [isTablet, screenWidth, preferredShortPressFormat, summary]);
+  ), [isTablet, screenWidth, keywords, preferredShortPressFormat, summary]);
 
   if (footerOnly) {
     return footer;

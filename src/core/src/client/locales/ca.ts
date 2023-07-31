@@ -175,7 +175,7 @@ export const caStrings: typeof enStrings = {
   summary_veryNegative: 'Molt negatiu',
   summary_veryPositive: 'Molt positiu',
   summary_viewSource: 'Veure la font original',
-  tabs_livefeed: 'Feed en directe',
+  tabs_liveFeed: 'Feed en directe',
   tabs_oldNews: 'Notícies antigues',
   tabs_topStories: 'Top Stories',
   tabs_yourNews: 'Les teves notícies',

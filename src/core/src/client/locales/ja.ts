@@ -175,7 +175,7 @@ export const jaStrings: typeof enStrings = {
   summary_veryNegative: 'とてもネガティブ',
   summary_veryPositive: 'とてもポジティブ',
   summary_viewSource: 'オリジナルのソースを表示',
-  tabs_livefeed: 'ライブフィード',
+  tabs_liveFeed: 'ライブフィード',
   tabs_oldNews: '古いニュース',
   tabs_topStories: 'トップストーリー',
   tabs_yourNews: 'あなたのニュース',

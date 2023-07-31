@@ -175,7 +175,7 @@ export const csStrings: typeof enStrings = {
   summary_veryNegative: 'Velmi negativní',
   summary_veryPositive: 'Velmi pozitivní',
   summary_viewSource: 'Zobrazit původní zdroj',
-  tabs_livefeed: 'Živý kanál',
+  tabs_liveFeed: 'Živý kanál',
   tabs_oldNews: 'Staré zprávy',
   tabs_topStories: 'Nejlepší historky',
   tabs_yourNews: 'Vaše novinky',

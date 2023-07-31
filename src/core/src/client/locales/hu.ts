@@ -175,7 +175,7 @@ export const huStrings: typeof enStrings = {
   summary_veryNegative: 'Nagyon negatív',
   summary_veryPositive: 'Nagyon pozitív',
   summary_viewSource: 'Eredeti forrás megtekintése',
-  tabs_livefeed: 'Élő közvetítés',
+  tabs_liveFeed: 'Élő közvetítés',
   tabs_oldNews: 'Régi Hírek',
   tabs_topStories: 'Legjobb történetek',
   tabs_yourNews: 'A híreid',

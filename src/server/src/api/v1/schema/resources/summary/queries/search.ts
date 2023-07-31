@@ -122,6 +122,7 @@ FROM (
   ) b
   LEFT OUTER JOIN summaries s
     ON b.id = s.id
+    AND (s."deletedAt" IS NULL)
   LEFT OUTER JOIN publisher_view pub
     ON s."publisherId" = pub.id
     AND (pub.locale = :locale OR pub.locale IS NULL)
@@ -140,6 +141,7 @@ FROM (
     ON b.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling
     ON sibling.id = sr."siblingId"
+    AND (sibling."deletedAt" IS NULL)
   LEFT OUTER JOIN publisher_view sibling_pub
     ON sibling."publisherId" = sibling_pub.id
     AND (sibling_pub.locale = :locale OR sibling_pub.locale IS NULL)

@@ -175,7 +175,7 @@ export const daStrings: typeof enStrings = {
   summary_veryNegative: 'Meget negativ',
   summary_veryPositive: 'Meget positiv',
   summary_viewSource: 'Se den originale kilde',
-  tabs_livefeed: 'Live feed',
+  tabs_liveFeed: 'Live feed',
   tabs_oldNews: 'Gamle nyheder',
   tabs_topStories: 'Top historier',
   tabs_yourNews: 'Dine nyheder',

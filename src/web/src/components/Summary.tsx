@@ -215,7 +215,7 @@ export default function Summary({
               </StyledTitle>
               {initialFormat && (
                 <Typography variant="body1" textAlign={ 'right' }>
-                  ...so here&apos; what happened in a nutshell
+                  ...so here&apos;s what happened in a nutshell
                 </Typography>
               )}
               {(!smAndDown || initialFormat) && <Typography variant="body2">{summary.shortSummary}</Typography>}

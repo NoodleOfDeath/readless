@@ -15,7 +15,16 @@ import {
   RecapAttributes,
 } from '~/api';
 
-export type StackableTabParams = {
+export type RoutingParams = {
+  // main
+  default: undefined;
+  home: undefined;
+  // tabs
+  oldNews: undefined;
+  topStories: undefined;
+  yourNews: undefined;
+  liveFeed: undefined;
+  // screens
   bookmarks: undefined;
   category: {
     category: PublicCategoryAttributes;
@@ -23,36 +32,33 @@ export type StackableTabParams = {
   publisher: {
     publisher: PublicPublisherAttributes;
   };
-  default: undefined;
   legal: undefined;
-  home: undefined;
   recap: {
     recap: RecapAttributes;
   };
   search: {
     prefilter?: string,
-    onlyCustomNews?: boolean;
     specificIds?: number[];
-    noHeader?: boolean;
   },
-  settings: undefined;
   summary: {
     initialFormat?: ReadingFormat;
     keywords?: string[];
     summary: PublicSummaryGroup | number;
     showAnalytics?: boolean;
   };
-  oldNews: undefined;
+  // settings and pickers
+  settings: undefined;
   colorSchemePicker: undefined;
   fontPicker: undefined;
   triggerWordPicker: undefined;
   shortPressFormatPicker: undefined;
   readingFormatPicker: undefined;
+  // other
   stats: undefined;
   test: undefined;
 };
 
-export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<StackableTabParams> = {
+export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   config: {
     screens: {
       bookmarks: { path: 'bookmarks' },
@@ -85,7 +91,7 @@ export type ScreenComponentType<
   // eslint-disable-next-line @typescript-eslint/ban-types
   | React.ComponentType<{}>;
 
-export type ScreenProps<Path extends keyof StackableTabParams = keyof StackableTabParams, C extends React.ComponentType = React.ComponentType> = {
+export type ScreenProps<Path extends keyof RoutingParams = keyof RoutingParams, C extends React.ComponentType = React.ComponentType> = {
   name?: Path;
   component?: C;
   icon?: string;
@@ -96,6 +102,6 @@ export type ScreenProps<Path extends keyof StackableTabParams = keyof StackableT
         pressOpacity?: number;
       }) => React.ReactNode)
     ;
-  route?: RouteProp<StackableTabParams, Path> 
-  navigation?: NativeStackNavigationProp<StackableTabParams, Path>
+  route?: RouteProp<RoutingParams, Path> 
+  navigation?: NativeStackNavigationProp<RoutingParams, Path>
 };

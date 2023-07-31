@@ -173,7 +173,7 @@ export const enStrings = {
   summary_veryNegative: 'Very Negative',
   summary_veryPositive: 'Very Positive',
   summary_viewSource: 'View original source',
-  tabs_livefeed: 'Live Feed',
+  tabs_liveFeed: 'Live Feed',
   tabs_oldNews: 'Old News',
   tabs_topStories: 'Top Stories',
   tabs_yourNews: 'Your News',

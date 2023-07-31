@@ -175,7 +175,7 @@ export const ruStrings: typeof enStrings = {
   summary_veryNegative: 'Очень отрицательно',
   summary_veryPositive: 'Очень позитивно',
   summary_viewSource: 'Посмотреть первоисточник',
-  tabs_livefeed: 'Прямой эфир',
+  tabs_liveFeed: 'Прямой эфир',
   tabs_oldNews: 'Старые новости',
   tabs_topStories: 'Главные новости',
   tabs_yourNews: 'Твои новости',

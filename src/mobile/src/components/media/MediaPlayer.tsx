@@ -18,7 +18,7 @@ import {
 } from '~/components';
 import { MediaContext, SessionContext } from '~/contexts';
 import { useSummaryClient } from '~/hooks';
-import { StackableTabParams } from '~/screens';
+import { RoutingParams } from '~/screens';
 
 type MediaPlayerProps = ViewProps & Omit<BannerProps, 'actions' | 'children'> ;
 
@@ -30,7 +30,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
   const { preferredReadingFormat } = React.useContext(SessionContext);
   const { handleInteraction } = useSummaryClient();
 
-  const navigation = useNavigation<NativeStackNavigationProp<StackableTabParams>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RoutingParams>>();
 
   const handleSkipToPrevious = React.useCallback(async () => {
     await TrackPlayer.skipToPrevious();

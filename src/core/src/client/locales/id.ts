@@ -175,7 +175,7 @@ export const idStrings: typeof enStrings = {
   summary_veryNegative: 'Sangat Negatif',
   summary_veryPositive: 'Sangat positif',
   summary_viewSource: 'Lihat sumber asli',
-  tabs_livefeed: 'Umpan Langsung',
+  tabs_liveFeed: 'Umpan Langsung',
   tabs_oldNews: 'Berita lama',
   tabs_topStories: 'Cerita populer',
   tabs_yourNews: 'Kabar mu',

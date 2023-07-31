@@ -175,7 +175,7 @@ export const elStrings: typeof enStrings = {
   summary_veryNegative: 'Πολύ Αρνητικό',
   summary_veryPositive: 'Πολύ θετικό',
   summary_viewSource: 'Δείτε την αρχική πηγή',
-  tabs_livefeed: 'Ζωντανή μετάδοση',
+  tabs_liveFeed: 'Ζωντανή μετάδοση',
   tabs_oldNews: 'Παλιά Νέα',
   tabs_topStories: 'Καλύτερες ιστορίες',
   tabs_yourNews: 'Τα ΝΕΑ σας',

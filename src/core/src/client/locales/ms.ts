@@ -175,7 +175,7 @@ export const msStrings: typeof enStrings = {
   summary_veryNegative: 'Sangat Negatif',
   summary_veryPositive: 'Sangat Positif',
   summary_viewSource: 'Lihat sumber asal',
-  tabs_livefeed: 'Makanan hidup',
+  tabs_liveFeed: 'Makanan hidup',
   tabs_oldNews: 'Berita Lama',
   tabs_topStories: 'Cerita Teratas',
   tabs_yourNews: 'Berita Anda',

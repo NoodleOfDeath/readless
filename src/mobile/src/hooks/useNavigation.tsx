@@ -10,34 +10,34 @@ import {
   ReadingFormat,
 } from '~/api';
 import { SessionContext } from '~/contexts';
-import { StackableTabParams } from '~/screens';
+import { RoutingParams } from '~/screens';
 import { getUserAgent, readingFormat } from '~/utils';
 
 export function useNavigation() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const navigation = useRNNavigation<NativeStackNavigationProp<StackableTabParams>>() as any;
+  const navigation = useRNNavigation<NativeStackNavigationProp<RoutingParams>>() as any;
   
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
 
-  const navigate = React.useCallback(<R extends keyof StackableTabParams>(route: R, params?: StackableTabParams[R]) => {
+  const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R]) => {
     analytics().logEvent('navigate', {
       params, route, userAgent: getUserAgent(), 
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return ((navigation as any).push ?? navigation.navigate)(route, params as StackableTabParams[R]);
+    return ((navigation as any).push ?? navigation.navigate)(route, params as RoutingParams[R]);
   }, [navigation]);
 
-  const search = React.useCallback((params: StackableTabParams['search']) => {
-    navigate('search', params);
-    const searchText = params.prefilter;
-    if (!searchText) {
+  const search = React.useCallback((params: RoutingParams['search']) => {
+    const prefilter = params.prefilter;
+    if (!prefilter) {
       return;
     }
-    setTimeout(() => setPreference('searchHistory', (prev) => Array.from(new Set([searchText, ...(prev ?? [])])).slice(0, 10)), 500);
+    setPreference('searchHistory', (prev) => Array.from(new Set([prefilter, ...(prev ?? [])])).slice(0, 10));
+    navigate('search', params);
   }, [navigate, setPreference]);
   
-  const openSummary = React.useCallback((props: StackableTabParams['summary']) => {
+  const openSummary = React.useCallback((props: RoutingParams['summary']) => {
     navigate('summary', {
       ...props,
       initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary,
