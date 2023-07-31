@@ -53,7 +53,7 @@ function App({ Component, pageProps }: AppProps) {
             property="twitter:image"
             content="/twitter-card.png" />
           <meta 
-            key='og:typ'
+            key='og:type'
             property="og:type"
             content="Article" />
           <meta
