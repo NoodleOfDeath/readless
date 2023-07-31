@@ -39,7 +39,7 @@ export default function AppPage({
 
   const { preferredReadingFormat } = React.useContext(SessionContext);
   
-  const initialFormat = React.useMemo(() => initialFormat0 ?? readingFormat(searchParams.get('f') ?? preferredReadingFormat ?? ReadingFormat.Summary), [initialFormat0, preferredReadingFormat, searchParams]);
+  const initialFormat = React.useMemo(() => readingFormat(searchParams.get('f') ?? initialFormat0 ?? preferredReadingFormat ?? ReadingFormat.Summary), [initialFormat0, preferredReadingFormat, searchParams]);
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [totalResults, setTotalResults] = React.useState<number>(0);
@@ -53,7 +53,10 @@ export default function AppPage({
 
   React.useEffect(() => { 
     setDrawerOpen(Boolean(activeSummary));
-  }, [activeSummary]);
+    if (!activeSummary) {
+      replace(rootSummary ? `/read?s=${rootSummary.id}&f=${initialFormat0}` : '/read', undefined, { scroll: false, shallow: true });
+    }
+  }, [activeSummary, replace, rootSummary, initialFormat0]);
 
   const load = React.useCallback(async () => {
     try {
@@ -70,7 +73,7 @@ export default function AppPage({
         setSummaries((prev) => 
           [
             ...prev,
-            ...data.rows.filter((s) => !prev.some((p) => p.id === s.id)),
+            ...data.rows.filter((s) => !prev.some((p) => p.id === s.id || p.id === rootSummary.id)),
           ]);
         setOffset((prev) => data.next ?? prev + data.count);
       }
@@ -79,7 +82,7 @@ export default function AppPage({
     } finally {
       setLoading(false);
     }
-  }, [getSummaries, searchText, offset, pageSize]);
+  }, [getSummaries, searchText, offset, pageSize, rootSummary]);
   
   React.useEffect(() => {
     if (!activeSummary) {
@@ -101,14 +104,14 @@ export default function AppPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format: ReadingFormat = ReadingFormat.Summary) => {
+  const handleFormatChange = React.useCallback(async (summary: PublicSummaryGroup, format = initialFormat) => {
     replace(`/read?s=${summary.id}&f=${format}`, undefined, { scroll: false, shallow: true });
     if (summary.id === rootSummary.id || activeSummary) {
       return;
     }
     setActiveSummary(summary);
     setDrawerOpen(true);
-  }, [replace, activeSummary]);
+  }, [replace, activeSummary, initialFormat]);
 
   return (
     <Layout>
@@ -157,7 +160,7 @@ export default function AppPage({
               big
               summary={ rootSummary }
               initialFormat={ initialFormat }
-              onChange={ (format) => handleFormatChange(summary, format) } />
+              onChange={ (format) => handleFormatChange(rootSummary, format) } />
           )}
           <form onSubmit={ (e) => {
             e.preventDefault(); onMount(); 
@@ -199,6 +202,7 @@ export default function AppPage({
               <Summary
                 big
                 summary={ activeSummary }
+                initialFormat={ initialFormat }
                 onChange={ (format) => handleFormatChange(activeSummary, format) } />
             )}
           </Stack>
