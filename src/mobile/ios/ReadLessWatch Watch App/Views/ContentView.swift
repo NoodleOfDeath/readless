@@ -33,7 +33,7 @@ struct ContentView: View {
               List(self.service.summaries, id: \.id) { summary in
                 NavigationLink(
                   destination: ScrollView { SummaryCard(summary: summary, compact: false)
-                  }.navigationTitle(summary.title) ,
+                  }.navigationTitle(summary.translations?["title"] ?? summary.title) ,
                   tag: summary,
                   selection: $selectedSummary) {
                     SummaryCard(summary: summary, compact: true)
