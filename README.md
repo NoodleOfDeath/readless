@@ -4,7 +4,6 @@
 [![Mobile Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml)
 
 [![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
-[![Applink CI](https://github.com/NoodleOfDeath/readless/actions/workflows/applink-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/applink-ci.yaml)
 [![Scheduler CI](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml)
 [![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
@@ -156,23 +155,26 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - [x] Adds context menus in intuitive places
 - [x] Moves sentiments to always be shown
 - [x] Short hold shows summary previews (iOS only for now)
-- [ ] Implement ContextMenu native for Android?
-- [ ] Improve localization to happen on-demand seamlessly, to appear already translated
+- [ ] ~Implement ContextMenu native for Android?~
+- [x] Improve localization to happen on-demand seamlessly, to appear already translated (will need to revisit for streaming performance)
 - [x] Update publishers to fetch original images assigned to @mkdirsteve
-- [ ] Add a dislike system for the future "smart" algorithm
+- [x] Improve top stories algorithm to prioritize topics covered in past 24 hours over sibling count
 
 ### v1.14 - Notifications/Newletters
 
+- [ ] App Store artwork makeover
+- [ ] Add a dislike system for the future "smart" algorithm?
 - [x] Backend subscription plumbing to emails/sms/push notifications (50% done)
 - [ ] Add subscription flow to mobile UI
 - [ ] Daily (eventually customizable) newsletters with headlines
 - [ ] Subscription to topics, threads, and/or keywords
 - [ ] Push notifications with Firebase
-- [ ] 2-factor authentication with text and/or authenticator applications
+- [ ] Replace trigger words with actual negative filters
 
 ### v1.15 - Bringing Back Accounts
 
 - [ ] Improve backend plumbing to offload much of the client data onto the backend such as followed preferences?
+- [ ] 2-factor authentication with text and/or authenticator applications
 - [ ] Pros of accounts?
   - [ ] Account recovery
   - [ ] Offload preferences on backend
