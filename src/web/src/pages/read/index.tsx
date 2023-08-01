@@ -162,30 +162,32 @@ export default function AppPage({
               initialFormat={ initialFormat }
               onChange={ (format) => handleFormatChange(rootSummary, format) } />
           )}
-          <form onSubmit={ (e) => {
-            e.preventDefault(); onMount(); 
-          } }>
-            <Stack spacing={ 1 }>
-              <TextField
-                value={ searchText } 
-                onChange={ (e) => setSearchText(e.target.value) }
-                label="Search" />
-              <Button type="submit">Search</Button>
+          <Box component={ rootSummary ? 'aside' : 'div' }>
+            <form onSubmit={ (e) => {
+              e.preventDefault(); onMount(); 
+            } }>
+              <Stack spacing={ 1 }>
+                <TextField
+                  value={ searchText } 
+                  onChange={ (e) => setSearchText(e.target.value) }
+                  label="Search" />
+                <Button type="submit">Search</Button>
+              </Stack>
+            </form>
+            <Stack spacing={ 2 }>
+              {summaries.length > 0 &&
+              summaries.map((summary) => (
+                <Summary 
+                  key={ summary.id } 
+                  summary={ summary }
+                  onChange={ (format) => handleFormatChange(summary, format) } />
+              ))}
             </Stack>
-          </form>
-          <Stack spacing={ 2 }>
-            {summaries.length > 0 &&
-            summaries.map((summary) => (
-              <Summary 
-                key={ summary.id } 
-                summary={ summary }
-                onChange={ (format) => handleFormatChange(summary, format) } />
-            ))}
-          </Stack>
-          {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
-          {totalResults > offset + pageSize && (
-            <Button onClick={ () => load() }>Load More</Button>
-          )}
+            {loading && <CircularProgress size={ 10 } variant="indeterminate" />}
+            {totalResults > offset + pageSize && (
+              <Button onClick={ () => load() }>Load More</Button>
+            )}
+          </Box>
         </Stack>
       </Box>
       <SwipeableDrawer 
