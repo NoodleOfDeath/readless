@@ -4,10 +4,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import {
-  PollAttributes,
-  PollCreationAttributes,
-} from './Poll.types';
+import { PollAttributes, PollCreationAttributes } from './Poll.types';
 import { PollOptionAttributes } from './PollOption.types';
 import { BaseModel } from '../../base';
 

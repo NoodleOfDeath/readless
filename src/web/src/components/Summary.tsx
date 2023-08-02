@@ -208,7 +208,7 @@ export default function Summary({
               <MeterDial value={ summary.sentiment } width={ 40 } />
             </Stack>
           </Box>
-          <Stack direction={ xsAndDown ? 'column' : 'row' } spacing={ 2 } alignItems={ 'center' }>
+          <Stack direction={ smAndDown ? 'column' : 'row' } spacing={ 2 } alignItems={ 'center' }>
             <Stack spacing={ 1 } flexGrow={ 1 }>
               <StyledTitle variant="subtitle1">
                 {summary.title}

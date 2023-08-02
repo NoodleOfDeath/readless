@@ -1,5 +1,5 @@
-import { DatedAttributes } from '../../types';
 import { PollOptionAttributes } from './PollOption.types';
+import { DatedAttributes } from '../../types';
 
 export type PollAttributes = DatedAttributes & {
   name: string;
