@@ -299,7 +299,9 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       const cache = await Cache.fromKey(cacheKey);
       if (cache && cache.expiresSoon === false) {
         try {
-          return JSON.parse(cache.value);
+          const results = JSON.parse(cache.value);
+          results.rows = results.rows.filter((r: PublicSummaryGroup) => (!excludeIds || (excludeIds && !idArray.includes(r.id))) && !(r.publisher.name in excludedPublishers) && !(r.category.name in excludedCategories));
+          return results;
         } catch (err) {
           console.error(err);
         }
@@ -328,7 +330,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       }
       
       const filteredRecords = records.rows.filter((a) => {
-        const result = ![...previousRecords, ...siblings].some((r) => r.id === a.id);
+        const result = ![...previousRecords, ...siblings].some((r) => r.id === a.id && (!excludeIds || (excludeIds && !idArray.includes(r.id))) && !(a.publisher.name in excludedPublishers) && !(a.category.name in excludedCategories));
         if (a.siblings) {
           siblings.push(...a.siblings);
         }

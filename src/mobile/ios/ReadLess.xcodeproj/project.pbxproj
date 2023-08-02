@@ -15,7 +15,7 @@
 		010F0CF529E88D490064DD97 /* ReadLessWatch_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0CF429E88D490064DD97 /* ReadLessWatch_Watch_AppTests.swift */; };
 		010F0CFF29E88D490064DD97 /* ReadLessWatch_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0CFE29E88D490064DD97 /* ReadLessWatch_Watch_AppUITests.swift */; };
 		010F0D0129E88D490064DD97 /* ReadLessWatch_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D0029E88D490064DD97 /* ReadLessWatch_Watch_AppUITestsLaunchTests.swift */; };
-		010F0D0429E88D490064DD97 /* Read Less.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 010F0CE129E88D470064DD97 /* Read Less.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		010F0D0429E88D490064DD97 /* ReadLess.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 010F0CE129E88D470064DD97 /* ReadLess.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		010F0D5229E88EC40064DD97 /* PublicCategoryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */; };
 		010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
 		010F0D8129E89D770064DD97 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
@@ -137,7 +137,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				010F0D0429E88D490064DD97 /* Read Less.app in Embed Watch Content */,
+				010F0D0429E88D490064DD97 /* ReadLess.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -158,7 +158,7 @@
 		00E356EE1AD99517003FC87E /* ReadLessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReadLessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ReadLessTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReadLessTests.m; sourceTree = "<group>"; };
-		010F0CE129E88D470064DD97 /* Read Less.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Read Less.app"; path = ReadLess.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		010F0CE129E88D470064DD97 /* ReadLess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReadLess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		010F0CE329E88D470064DD97 /* ReadLessWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWatchApp.swift; sourceTree = "<group>"; };
 		010F0CE529E88D470064DD97 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		010F0CE729E88D480064DD97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -531,7 +531,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* ReadLess.app */,
 				00E356EE1AD99517003FC87E /* ReadLessTests.xctest */,
-				010F0CE129E88D470064DD97 /* Read Less.app */,
+				010F0CE129E88D470064DD97 /* ReadLess.app */,
 				010F0CF029E88D490064DD97 /* ReadLessWatch Watch AppTests.xctest */,
 				010F0CFA29E88D490064DD97 /* ReadLessWatch Watch AppUITests.xctest */,
 			);
@@ -597,7 +597,7 @@
 			);
 			name = "ReadLessWatch Watch App";
 			productName = "ReadLessWatch Watch App";
-			productReference = 010F0CE129E88D470064DD97 /* Read Less.app */;
+			productReference = 010F0CE129E88D470064DD97 /* ReadLess.app */;
 			productType = "com.apple.product-type.application";
 		};
 		010F0CEF29E88D490064DD97 /* ReadLessWatch Watch AppTests */ = {
@@ -1286,7 +1286,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -1331,7 +1331,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.0;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.watchkitapp;
@@ -1486,7 +1486,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				ENABLE_BITCODE = NO;
 				GCC_NO_COMMON_BLOCKS = NO;
@@ -1528,7 +1528,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ReadLess/ReadLess.entitlements;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = UD23CMJ5W5;
 				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = ReadLess/Info.plist;

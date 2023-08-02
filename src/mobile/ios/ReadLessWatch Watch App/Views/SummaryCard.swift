@@ -65,7 +65,7 @@ struct SummaryCard: View {
   }
   
   func loadImage() {
-    guard let url =  summary.imageUrl, let imageUrl = URL(string: url) else { return }
+    guard let url = summary.media?["imageArticle"] ?? summary.media?["imageAi1"] ?? summary.imageUrl, let imageUrl = URL(string: url) else { return }
       URLSession.shared.dataTask(with: imageUrl) { data, _, error in
           if let data = data, let uiImage = UIImage(data: data) {
               DispatchQueue.main.async {

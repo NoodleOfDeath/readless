@@ -111,7 +111,7 @@ export default function AppPage({
     }
     setActiveSummary(summary);
     setDrawerOpen(true);
-  }, [replace, activeSummary, initialFormat]);
+  }, [initialFormat, replace, rootSummary?.id, activeSummary]);
 
   return (
     <Layout>
@@ -152,7 +152,7 @@ export default function AppPage({
         )}
       </Head>
       <Box style={ {
-        margin: 'auto', maxWidth: 800, width: isMobile ? undefined : '50vw', 
+        margin: 'auto', maxWidth: 800, width: isMobile ? undefined : '75vw', 
       } }>
         <Stack spacing={ 2 }>
           {rootSummary && (
