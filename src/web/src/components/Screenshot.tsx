@@ -345,7 +345,8 @@ export const SLIDE_ORDER = [
 
 function cropCanvas(sourceCanvas: OffscreenCanvas, left: number, top: number, width: number, height: number) {
   const destCanvas = new OffscreenCanvas(width, height);
-  destCanvas.getContext('2d')?.drawImage(
+  const context = destCanvas.getContext('2d') as unknown as CanvasRenderingContext2D;
+  context?.drawImage(
     sourceCanvas,
     left,
     top,
