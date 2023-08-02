@@ -6,6 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
+import { OpenAIService } from './../../../../../services/';
 import {
   FetchPolicy,
   PUBLISHERS,
@@ -43,9 +44,17 @@ export class Publisher<
       }
     }
     const publishers = await this.findAll();
+    const chatService = new OpenAIService();
     for (const publisher of publishers) {
       if (!publisher.description) {
-        continue;
+        console.log('creating description for', publisher.name);
+        try {
+          publisher.set('description', await chatService.send(`Write a 2 sentence description of the publisher "${publisher.displayName}"`));
+          chatService.clearConversation();
+          await publisher.save();
+        } catch (error) {
+          console.log(error);
+        }
       }
       console.log('translating', publisher.name);
       await PublisherTranslation.translate(publisher, ['description']);

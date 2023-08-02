@@ -69,7 +69,6 @@ export type PublicPublisherAttributes = Sentimental & {
 export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   _9to5google: {
     baseUrl: 'https://9to5google.com',
-    description: 'The 9to5Google publisher is a tech news website that covers the latest developments in the Google ecosystem, including Android, Chrome OS, and other Google products. With a focus on insightful reporting and analysis, it keeps readers informed about the ever-evolving world of Google technology.',
     displayName: '9to5google',
     name: '9to5google',
     selectors: {
@@ -106,7 +105,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: '.ShareByline a[href*="/author/"]' },
       date: { selector: '.ShareByline > div  > div :last-child, div[data-testid*="prism-byline"]' },
-      image: { selector: 'figure picture img' },
       spider: {
         attribute: 'href',
         selector: 'a[class*="AnchorLink"]',
@@ -122,7 +120,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .social-author' },
       date: { selector: 'article .social-date' },
-      image: { selector: 'picture source img' },
       spider: { 
         attribute: 'href',
         selector: 'article a',
@@ -265,7 +262,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'address p[class*="author/"] a' },
       date: { selector: 'article time[itemprop="datePublished"], article time' },
-      image: { selector: 'main img' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/articles/"]',
@@ -384,7 +380,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .at-authors a' },
       date: { selector: 'article .at-created,article .at-updated' },
-      image: { selector: 'article figure img' },
       spider:{
         attribute: 'href',
         selector: 'a.card-title-link',
@@ -504,7 +499,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .byline .by a' },
       date: { selector: 'article .byline time' },
-      image: { selector: 'article figure img, img src' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/news/"]',
@@ -520,7 +514,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'cite a[href*="/users/"], cite a.author' },
       date: { selector: 'cite time.date, cite time' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -544,7 +537,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'disabled' },
       author: { selector: 'disabled' },
       date: { selector: 'disabled' },
-      image: { selector: 'figure img' },
       spider : { selector: 'disabled' },
     },
     timezone: DEFAULT_TIMEZONE,
@@ -572,7 +564,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .authors .author' },
       date: { attribute: 'data-date', selector: 'article .timestamp' },
-      image: { selector: 'article figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -592,7 +583,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article header .byline .author a' },
       date: { selector: 'article .posted-on time' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -635,7 +625,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .byline a[href*="/person/"]' },
       date: { selector: 'article .byline .date' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -656,7 +645,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .fs-author-name a' },
       date: { selector: 'article time' },
-      image: { selector: 'article figure img' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/sites/"]',
@@ -672,7 +660,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .author-bio a[rel*="author/"]' },
       date: { selector: 'time' },
-      image: { attribute: 'data-src', selector: 'article figure img, article picture img' },
       spider:{
         attribute: 'href',
         selector: 'a[class*="hed-heading"]',
@@ -704,7 +691,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article header .author-byline a[href*="/person"]' },
       date: { selector: 'article header time' },
-      image: { selector: 'picture img' },
       spider:{
         attribute: 'href',
         selector: 'article a',
@@ -733,7 +719,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'a[href*="/authors/"]' },
       date: { selector: 'script#__NEXT_DATA__' },
-      image: { selector: 'article img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -754,7 +739,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '.js_post-content p' },
       author: { selector: 'a[href*="/author/"]' },
       date: { selector: 'time' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: 'article a',
@@ -785,7 +769,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .social-author a' },
       date: { selector: 'article .social-date' },
-      image: { selector: 'article picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -803,7 +786,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
       date: { selector: 'article .inews__post__pubdate' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -821,7 +803,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'address a' },
       date: { selector: 'article time' },
-      image: { selector: 'picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -877,7 +858,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'main p' },
       author: { selector: 'main a[href*="/author/"]' },
       date: { selector: 'main time' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: 'article a',
@@ -893,7 +873,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: '.story .byline .author' },
       date: { selector: '.story .byline .author' },
-      image: { selector: 'picture img' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/article/"]',
@@ -926,7 +905,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: '.article-meta a' },
       date: { selector: '.mntl-attribution__item-date' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -945,7 +923,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'header a[href*="/author/"]' },
       date: { selector: 'header time' },
-      image: { selector: 'main img' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/article/"]',
@@ -982,7 +959,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article header a[href*="/authors/"]' },
       date: { selector: 'article header time' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1000,7 +976,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article header .Byline .Byline__Author a[href*="/author/"]' },
       date: { selector: 'article header .Byline__TimestampWrapper .Byline__Meta--publishDate' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1036,7 +1011,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .byline-name a' },
       date: { attribute:'content', selector: 'time' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1059,7 +1033,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .byline-name a' },
       date: { attribute:'content', selector: 'time' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: '.news-title a',
@@ -1075,7 +1048,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article *[class*="BylinesWrapper"] a[href*="/contributors"]' },
       date: { attribute: 'datetime', selector: 'article time' },
-      image: { selector: 'span picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1127,7 +1099,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .byline-name a' },
       date: { attribute: 'content', selector: 'article .social-date,article .social-date-modified' },
-      image: { selector: 'article picture img' },
       spider:{
         attribute: 'href',
         selector: 'article a',
@@ -1143,7 +1114,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .mntl-bylines__item a[href*="/author/"]' },
       date: { selector: '.mntl-attribution__item-date' },
-      image: { selector: 'article figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1172,7 +1142,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '.article__container .article__content' },
       author: { selector: '.article-meta .authors a, .story-meta__authors a' },
       date: { selector: '.article-meta .article-meta__datetime-duration .date-time__date, .story-meta__timestamp, time' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1190,7 +1159,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/authors/"]' },
       date: { selector: 'article time' },
-      image: { selector: 'picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1208,7 +1176,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .Article-author a' },
       date: { selector: 'article time' },
-      image: { selector: 'article img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1230,7 +1197,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '.article-body-content' },
       author: { selector: 'address a[href*="/author/"]' },
       date: { selector: 'address time' },
-      image: { selector: 'picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1298,7 +1264,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .author-name a' },
       date: { selector: 'article .author time, main time' },
-      image: { selector: 'article figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1368,7 +1333,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
       date: { selector: 'article time.updated, article time.published' },
-      image: { selector: 'article img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1392,7 +1356,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: '' },
       date: { selector: 'time' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1410,7 +1373,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
       date: { selector: 'article time, article .full-date-time' },
-      image: { selector: 'article img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1428,7 +1390,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .e-byline__author' },
       date: { selector: 'article time' },
-      image: { selector: 'figure picture img' },
       spider:{
         attribute: 'href',
         selector: 'article a, a[class*="headline__link"]',
@@ -1444,7 +1405,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article header #byline a' },
       date: { selector: 'article header time' },
-      image: { selector: 'picture img' },
       spider: {
         attribute: 'href',
         selector: 'a[class*="titleLink"]',
@@ -1460,7 +1420,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'a[href*="/author/"]' },
       date: { selector: 'article time' },
-      image: { selector: 'figure img' },
       spider: {
         attribute: 'href',
         selector: [
@@ -1507,7 +1466,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'address a[rel*="author"]' },
       date: { selector: 'details summary, article time' },
-      image: { selector: 'picture img' },
       spider:{
         attribute: 'href',
         selector: 'a[data-link-name="article"]',
@@ -1617,7 +1575,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article a[class*="/authors/"]' },
       date: { selector: 'article time' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: 'li[class*="duet--content-cards"] a',
@@ -1683,7 +1640,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .author' },
       date: { selector: 'article time' },
-      image: { selector: 'article figure img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1704,7 +1660,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .byline-name a' },
       date: { selector: 'time' },
-      image: { selector: 'body header img' },
+      image: { selector: 'header img' },
       spider:{
         attribute: 'href',
         selector: 'article a',
@@ -1720,7 +1676,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'main p' },
       author: { selector: '.contributor a' },
       date: { selector: 'time' },
-      image: { selector: 'body picture img' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/article/"]',
@@ -1736,7 +1691,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .a[data-analytics-link="author-name"]' },
       date: { selector: 'article time' },
-      image: { selector: 'span picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1756,7 +1710,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .author-name a' },
       date: { selector: 'article time, .article-timestamp' },
-      image: { selector: 'article picture img' },
       spider:{
         attribute: 'href',
         selector: [
@@ -1801,7 +1754,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .bylines .byline__name a' },
       date: { selector: 'article time' },
-      image: { selector: 'article picture img' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/story/"]',
@@ -1817,7 +1769,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'article .article-byline a' },
       date: { selector: 'time' },
-      image: { selector: 'figure img' },
       spider:{
         attribute: 'href',
         selector: 'article a, a[href*="/articles/"]',

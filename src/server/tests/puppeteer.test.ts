@@ -233,7 +233,8 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   newyorker: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.newyorker.com/culture/the-new-yorker-interview/how-allan-gurganus-became-a-writer',
+    imageUrls: ['https://media.newyorker.com/photos/64c96a0c03ba9998f5c21c06/master/w_2560%2Cc_limit/Glasser-Trump-Indictment-GA.jpg'],
+    url: 'https://www.newyorker.com/news/letter-from-bidens-washington/trumps-offense-against-democracy-itself',
   },
   npr: {
     authors: [],
