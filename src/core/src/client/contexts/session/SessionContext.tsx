@@ -15,7 +15,9 @@ import {
   PublicSummaryGroup,
   ReadingFormat,
   RecapAttributes,
+  SupportedLocale,
 } from '~/api';
+import { getLocale } from '~/locales';
 import {
   emitEvent,
   getItem,
@@ -39,6 +41,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [lastRequestForReview, setLastRequestForReview] = React.useState(0);
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
+  const [locale, setLocale] = React.useState<SupportedLocale>();
   
   // user state
   const [uuid, setUuid] = React.useState<string>();
@@ -145,6 +148,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       break;
     case 'lastRequestForReview':
       setLastRequestForReview(newValue);
+      break;
+    case 'locale':
+      setLocale(newValue);
       break;
       
     // user state
@@ -414,23 +420,29 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
 
   // Load preferences on mount
   const load = async () => {
-    // system state
+    
+    const locale = await getPreference('locale') as SupportedLocale;
+    
+    // client state
     setRotationLock(await getPreference('rotationLock'));
     setSearchHistory(await getPreference('searchHistory'));
     setViewedFeatures(await getPreference('viewedFeatures'));
     setHasReviewed(await getPreference('hasReviewed'));
     setLastRequestForReview(await getPreference('lastRequestForReview') ?? 0);
+    setLocale(locale);
+    
+    // user state
     setUuid(await getPreference('uuid'));
     
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
     setReadSummaries(await getPreference('readSummaries'));
     setRemovedSummaries(await getPreference('removedSummaries'));
-    setSummaryTranslations(await getPreference('summaryTranslations'));
+    setSummaryTranslations(locale !== getLocale() ? undefined : await getPreference('summaryTranslations'));
     
     // recap state
     setReadRecaps(await getPreference('readRecaps'));
-    setRecapTranslations(await getPreference('recapTranslations'));
+    setRecapTranslations(locale !== getLocale() ? undefined : await getPreference('recapTranslations'));
     
     // publisher/category states
     setFollowedPublishers(await getPreference('followedPublishers') ?? await getPreference('followedOutlets'));
@@ -496,6 +508,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         lastRequestForReview,
         letterSpacing,
         lineHeightMultiplier,
+        locale,
         preferredReadingFormat,
         preferredShortPressFormat,
         publishers,

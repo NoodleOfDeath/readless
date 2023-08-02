@@ -7,6 +7,7 @@ import {
   ReadingFormat,
   RecapAttributes,
   RequestParams,
+  SupportedLocale,
 } from '~/api';
 
 export type BookmarkConstructorProps = {
@@ -54,12 +55,13 @@ export enum OrientationType {
   
 export type Preferences = {
   
-  // system state
+  // client state
   rotationLock?: OrientationType;  
   searchHistory?: string[];
   viewedFeatures?: { [key: string]: Bookmark<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
+  locale?: SupportedLocale;
   
   // user state
   uuid?: string;

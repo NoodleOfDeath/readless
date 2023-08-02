@@ -47,7 +47,9 @@ export function SettingsTable() {
       RNFS.unlink(file.path);
     });
     setCacheSize('0MB');
-  }, []);
+    setPreference('summaryTranslations', undefined);
+    setPreference('recapTranslations', {});
+  }, [setPreference]);
   
   const onMount = React.useCallback(async () => {
     setLoading(true);
