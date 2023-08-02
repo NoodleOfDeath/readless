@@ -704,6 +704,7 @@ export function Summary({
     }
     return (
       <View
+        onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }
         flexGrow={ 1 }
         maxWidth={ big ? Math.min(screenWidth, 480) - 12 : 64 }
         maxHeight={ big ? Math.min(screenHeight / 3, 300) : 64 }

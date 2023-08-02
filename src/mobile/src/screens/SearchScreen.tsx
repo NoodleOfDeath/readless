@@ -13,6 +13,7 @@ export function SearchScreen({
   return (
     <Screen>
       <SummaryList
+        landscapeEnabled
         fetch={ getSummaries }
         filter={ route?.params?.prefilter }
         specificIds={ route?.params?.specificIds } />
