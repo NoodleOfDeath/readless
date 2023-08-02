@@ -9,7 +9,7 @@ export class SelectOption<T extends string = string, P = any> {
   icon?: React.ReactNode;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static from<T extends string = string, P = any>(value: T | SelectOption<T, P>, label?: React.ReactNode, icon?: React.ReactNodd) {
+  static from<T extends string = string, P = any>(value: T | SelectOption<T, P>, label?: React.ReactNode, icon?: React.ReactNode) {
     return new SelectOption<T, P>(value, label, icon);
   }
   

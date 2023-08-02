@@ -50,9 +50,11 @@ export type RoutingParams = {
   settings: undefined;
   colorSchemePicker: undefined;
   fontPicker: undefined;
-  triggerWordPicker: undefined;
+  publisherPicker: undefined;
+  categoryPicker: undefined;
   shortPressFormatPicker: undefined;
   readingFormatPicker: undefined;
+  triggerWordPicker: undefined;
   // other
   stats: undefined;
   test: undefined;

@@ -80,6 +80,7 @@ export function SummaryList({
   const { 
     preferredReadingFormat,
     removedSummaries,
+    excludeFilter,
   } = React.useContext(SessionContext);
   
   // search state
@@ -125,7 +126,7 @@ export function SummaryList({
     try {
       const { data, error } = await fetch({
         excludeIds: !specificIds && Boolean(excludeIds),
-        filter: overrideFilter,
+        filter: [excludeFilter, overrideFilter].filter(Boolean).join(' '),
         ids: specificIds ?? excludeIds,
         interval,
         locale: getLocale(),
@@ -167,7 +168,7 @@ export function SummaryList({
       setLoaded(true);
       setLoading(false);
     }
-  }, [loading, fetch, specificIds, excludeIds, filter, interval, cursor, pageSize, removedSummaries]);
+  }, [filter, loading, fetch, specificIds, excludeIds, excludeFilter, interval, cursor, pageSize, removedSummaries]);
 
   const loadMore = React.useCallback(async () => {
     if (loading || lastFetchFailed || totalResultCount <= summaries.length) {
@@ -212,8 +213,14 @@ export function SummaryList({
   );
   
   useFocusEffect(React.useCallback(() => {
-    const subscriber = DeviceEventEmitter.addListener('hide-summary', (data) => {
+    const hideSummarySub = DeviceEventEmitter.addListener('hide-summary', (data) => {
       setSummaries((prev) => prev.filter((s) => s.id !== data.id));
+    });
+    const excludePublisherSub = DeviceEventEmitter.addListener('exclude-publisher', (data) => {
+      setSummaries((prev) => prev.filter((s) => s.publisher.name !== data.name));
+    });
+    const excludeCategorySub = DeviceEventEmitter.addListener('exclude-category', (data) => {
+      setSummaries((prev) => prev.filter((s) => s.category.name !== data.name));
     });
     if (!loading && !lastFetchFailed && ((!loaded && summaries.length === 0) || filter !== filter0)) {
       setFilter(filter0);
@@ -225,7 +232,9 @@ export function SummaryList({
       load(true, filter0);
     }
     return () => {
-      subscriber.remove();
+      hideSummarySub.remove();
+      excludePublisherSub.remove();
+      excludeCategorySub.remove();
     };
   }, [loading, navigation, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
   
