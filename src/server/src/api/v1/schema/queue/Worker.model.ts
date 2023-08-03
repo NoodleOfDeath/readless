@@ -97,11 +97,12 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
       throw new Error(`missing queue?! ${queueProps.name}`);
     }
     const workerCount = await Worker.count({ where: { queue: queueProps.name, state: 'processing' } });
+    console.log(`found ${workerCount} workers for queue "${queueProps.name}"`);
     const worker = await Worker.create({
       host: HOST,
       options: {
         autostart,
-        clockOffset: ms(`${(workerCount + 1) * fetchIntervalMs}s`),
+        clockOffset: ms(`${(workerCount + 1) * 2}s`),
         fetchIntervalMs, 
         fifo, 
       },

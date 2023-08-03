@@ -10,8 +10,8 @@ import { DBService, ScribeService } from '../services';
 export async function main() {
   await DBService.prepare();
   await Queue.prepare();
-  await Publisher.prepare();
-  await ScribeService.prepare();
+  Publisher.prepare();
+  ScribeService.prepare();
   doWork();
 }
 
