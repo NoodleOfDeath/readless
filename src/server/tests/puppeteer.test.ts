@@ -178,7 +178,8 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   huffpost: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.huffpost.com/entry/abortion-donald-trump-iowa_n_64454990e4b03c1b88c7a55d',
+    imageUrls: ['https://img.connatix.com/d0db5e84-ba12-4782-8439-fc8cffee6013/1_th.jpg?crop=629:354,smart&width=629&height=354&format=jpeg&quality=60&fit=crop'],
+    url: 'https://www.huffpost.com/entry/trump-arraignment-jan-6-live-updates_n_64c993d1e4b03ad2b89b7bbe',
   },
   inverse: {
     authors: [],

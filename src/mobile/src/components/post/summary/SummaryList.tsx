@@ -1,6 +1,7 @@
 import React from 'react';
 import { 
   DeviceEventEmitter,
+  LayoutRectangle,
   NativeScrollEvent, 
   NativeSyntheticEvent,
   RefreshControl,
@@ -100,6 +101,7 @@ export function SummaryList({
   }, [removedSummaries]);
 
   // display state
+  const [layout, setLayout] = React.useState<LayoutRectangle>();
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
@@ -286,9 +288,9 @@ export function SummaryList({
   ) : null, [landscapeEnabled, isTablet, detailSummary, preferredReadingFormat, filter, detailSummarySiblings.length, handleFormatChange, handleInteraction]);
 
   return (
-    <View { ...props } col>
+    <View { ...props } col onLayout={ ({ nativeEvent: { layout } }) => setLayout(layout) }>
       <View row>
-        <View style={ { width: landscapeEnabled && isTablet ? Math.min(screenWidth * 0.4, 400) : '100%' } }>
+        <View style={ { width: landscapeEnabled && isTablet ? Math.min((layout?.width ?? screenWidth) * 0.4, 400) : '100%' } }>
           <FlatList
             refreshControl={ (
               <RefreshControl 

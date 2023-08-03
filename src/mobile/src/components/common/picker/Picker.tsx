@@ -13,17 +13,16 @@ import {
 } from '~/components';
 import { strings } from '~/locales';
 
-export type PickerRender<T extends string, P> = (options: SelectOption<T, P>[], value: T[], onSelect: (option: T) => void) => React.ReactNode;
+export type PickerRender<T extends string> = (options: SelectOption<T>[], value: T[], onSelect: (option: T) => void) => React.ReactNode;
 
 export type PickerProps<
   T extends string,
-  P,
   Multi extends true | false = false,
   Value extends (Multi extends true ? T[] : (T | undefined)) = Multi extends true ? T[] : (T | undefined),
-  OptionValue extends (Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+  OptionValue extends (Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 > = ChildlessViewProps & {
-  options: T[] | SelectOption<T, P>[] | (() => Promise<T[] | SelectOption<T, P>[]>);
-  render: PickerRender<T, P>;
+  options: T[] | SelectOption<T>[] | (() => Promise<T[] | SelectOption<T>[]>);
+  render: PickerRender<T>;
   multi?: Multi;
   initialValue?: Value;
   scrollViewProps?: Partial<ScrollViewProps>;
@@ -35,10 +34,9 @@ export type PickerProps<
 
 export function Picker<
   T extends string,
-  P,
   Multi extends true | false = false,
   Value extends (Multi extends true ? T[] : (T | undefined)) = Multi extends true ? T[] : (T | undefined),
-  OptionValue extends (Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+  OptionValue extends (Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 >({
   options: options0,
   render,
@@ -48,11 +46,11 @@ export function Picker<
   onValueChange,
   onSave,
   ...props
-}: PickerProps<T, P, Multi, Value, OptionValue>) {
+}: PickerProps<T, Multi, Value, OptionValue>) {
 
   const [loading, setLoading] = React.useState(options0 instanceof Function);
 
-  const [options, setOptions] = React.useState(SelectOption.options<T, P>(options0 instanceof Function ? [] as T[] : options0));
+  const [options, setOptions] = React.useState(SelectOption.options<T>(options0 instanceof Function ? [] as T[] : options0));
   const [value, setValue] = React.useState<T[]>((Array.isArray(initialValue) ? initialValue : initialValue != null ? [initialValue] : []) as T[]);
   const [state, setState] = React.useState<OptionValue>();
 
@@ -73,7 +71,7 @@ export function Picker<
       setLoading(true);
       const options = await options0();
       setLoading(false);
-      setOptions(SelectOption.options(options));
+      setOptions(SelectOption.options<T>(options));
     }
   }, [options, options0]);
 
@@ -83,7 +81,7 @@ export function Picker<
 
   const handleSelect = React.useCallback((option: T) => {
     setValue((prev) => {
-      let newValue = prev.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOption<T, P>[];
+      let newValue = prev.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOption<T>[];
       const newOption = options.find((o) => o.value === option);
       if (!newOption) {
         return prev;
@@ -98,21 +96,24 @@ export function Picker<
         newValue = [newOption];
       }
       const value = newValue.map((v) => v.value) as T[];
-      setState((multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as OptionValue);
-      onValueChange?.((multi ? value : option) as Value, (multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as OptionValue);
+      setState((multi ? SelectOption.options<T>(newValue) : SelectOption.from(option)) as OptionValue);
+      onValueChange?.((multi ? value : option) as Value, (multi ? SelectOption.options<T>(newValue) : SelectOption.from(option)) as OptionValue);
       return (prev = value);
     });
   }, [multi, onValueChange, options]);
 
+  const content = React.useMemo(() => render(filteredOptions, value, handleSelect), [render, filteredOptions, value, handleSelect]);
+
   if (!searchable && !onSave) {
     return loading ? (
       <ActivityIndicator />
-    ) : render(filteredOptions, value, handleSelect);
+    ) : content;
   }
 
   return (
     <View 
       itemsCenter
+      col
       gap={ 12 }
       { ...props }>
       <React.Fragment>
@@ -127,7 +128,7 @@ export function Picker<
         )}
         {loading ? (
           <ActivityIndicator />
-        ) : render(filteredOptions, value, handleSelect)}
+        ) : content }
         {onSave && (
           <Button
             elevated

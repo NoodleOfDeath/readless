@@ -11,9 +11,10 @@ export type CategoryPickerProps = ChildlessViewProps & {
   onValueChange?: (categories?: string[]) => void;
 };
 
-export function CategoryPicker(props: CategoryPickerProps) {
+export const CategoryPicker = React.forwardRef(function CategoryPicker(props: CategoryPickerProps, ref: React.ForwardedRef<{value: string[]}>) {
   const { followedCategories, categories } = React.useContext(SessionContext);
-  const [selectedCategories] = React.useState<string[]>(Object.keys({ ...followedCategories }));
+  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(Object.keys({ ...followedCategories }));
+  React.useImperativeHandle(ref, React.useCallback(() => ({ value: selectedCategories }), [selectedCategories]));
   return (
     <GridPicker
       { ...props }
@@ -27,7 +28,8 @@ export function CategoryPicker(props: CategoryPickerProps) {
       multi
       initialValue={ selectedCategories }
       onValueChange={ (categories) => {
+        setSelectedCategories(categories ?? []);
         props.onValueChange?.(categories);
       } } />
   );
-}
+}) as React.ForwardRefExoticComponent<CategoryPickerProps & React.RefAttributes<{value: string[]}>>;

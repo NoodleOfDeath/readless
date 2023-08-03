@@ -16,11 +16,10 @@ import {
   
 export type TablePickerProps<
   T extends string,
-  P,
   Multi extends true | false = false,
-  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
-> = TableViewProps & Omit<PickerProps<T, P, Multi, InitialValue, CurrentValue>, 'render'> & {
+  Value extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  OptionValue extends Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
+> = TableViewProps & Omit<PickerProps<T, Multi, Value, OptionValue>, 'render'> & {
   children?: React.ReactNode;
   sectionProps?: Partial<TableViewSectionProps> | ((state: Omit<SelectOptionState<T, Pick<TableIndex, 'section'>>, 'option' | 'selected'>) => Partial<TableViewSectionProps>);
   cellProps?: Partial<TableViewCellProps> | ((state: SelectOptionState<T, TableIndex>) => Partial<TableViewCellProps>);
@@ -28,16 +27,15 @@ export type TablePickerProps<
 
 export function TablePicker<
   T extends string,
-  P,
   Multi extends true | false = false,
-  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+  Value extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  OptionValue extends Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 >({
   children,
   sectionProps: sectionProps0,
   cellProps: cellProps0,
   ...props
-}: TablePickerProps<T, P, Multi, InitialValue, CurrentValue>) {
+}: TablePickerProps<T, Multi, Value, OptionValue>) {
 
   const sectionProps = React.useCallback((value: T[], section: number) => {
     return sectionProps0 instanceof Function ? sectionProps0({
@@ -46,7 +44,7 @@ export function TablePicker<
     }) : sectionProps0;
   }, [sectionProps0]);
 
-  const cellProps = React.useCallback((option: SelectOption<T, P>, value: T[], index: number, section: number) => {
+  const cellProps = React.useCallback((option: SelectOption<T>, value: T[], index: number, section: number) => {
     return cellProps0 instanceof Function ? cellProps0({
       currentValue: props.multi ? value : value[0] ? value[0] as T : undefined,
       index,
