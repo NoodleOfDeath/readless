@@ -3,12 +3,11 @@ import {
   Summary,
   Worker,
 } from '../api/v1/schema/models';
-import { DBService, ScribeService } from '../services';
+import { DBService } from '../services';
 
 export async function main() {
   await DBService.prepare();
   await Queue.prepare();
-  await ScribeService.prepare();
   doWork();
 }
 

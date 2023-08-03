@@ -4,7 +4,7 @@ import { DBService, ScribeService } from '../services';
 export async function main() {
   await DBService.prepare();
   await Queue.prepare();
-  await ScribeService.prepare();
+  ScribeService.prepare();
   doWork();
 }
 
