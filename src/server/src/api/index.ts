@@ -20,12 +20,12 @@ import { DBService } from '../services';
 async function main() {
   
   await DBService.prepare();
-  await Locale.prepare();
-  await Queue.prepare();
-  await Role.prepare();
-  await Category.prepare();
-  await Publisher.prepare();
-  await SentimentMethod.prepare();
+  Locale.prepare();
+  Queue.prepare();
+  Role.prepare();
+  Category.prepare();
+  Publisher.prepare();
+  SentimentMethod.prepare();
   
   const app = express();
   
