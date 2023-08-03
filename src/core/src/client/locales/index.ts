@@ -176,14 +176,6 @@ export const SUPPORTED_LOCALES = [
 
 export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
 
-export const parseLocale = (obj: any) => {
-  const code = typeof obj === 'string' ? obj : JSON.stringify(obj ?? '').replace(/"/g, '');
-  if (!(new RegExp(SUPPORTED_LOCALES.join('|')).test(code))) {
-    return undefined;
-  }
-  return code as SupportedLocale;
-};
-
 export const FNS_LOCALES: Record<keyof typeof LOCALE_MAP, Locale> = {
   ar,
   'ar-SA': arSA,

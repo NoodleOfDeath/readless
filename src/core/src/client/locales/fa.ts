@@ -62,6 +62,7 @@ export const faStrings: typeof enStrings = {
   nav_browseCategories: 'دسته بندی ها را مرور کنید',
   nav_browsePublishers: 'ناشران را مرور کنید',
   nav_yourFollows: 'دنبال کننده های شما',
+  recaps_headlines: 'سرفصل ها',
   recaps_information: 'اگر اخبار را به دلیل دست زدن به چمن از دست داده اید، در اینجا چند خلاصه روزانه آورده شده است',
   recaps_references: 'منابع',
   screens_about: 'در باره',

@@ -62,6 +62,7 @@ export const heStrings: typeof enStrings = {
   nav_browseCategories: 'עיין בקטגוריות',
   nav_browsePublishers: 'עיין בבעלי אתרים',
   nav_yourFollows: 'העוקבים שלך',
+  recaps_headlines: 'כותרות',
   recaps_information: 'הנה כמה תקצירים יומיים אם פספסת את החדשות כי נגעת בדשא',
   recaps_references: 'הפניות',
   screens_about: 'על אודות',

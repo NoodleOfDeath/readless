@@ -62,6 +62,7 @@ export const viStrings: typeof enStrings = {
   nav_browseCategories: 'Duyệt danh mục',
   nav_browsePublishers: 'Duyệt nhà xuất bản',
   nav_yourFollows: 'Theo dõi của bạn',
+  recaps_headlines: 'tiêu đề',
   recaps_information: 'Dưới đây là một số tóm tắt hàng ngày nếu bạn bỏ lỡ tin tức vì bạn đang chạm vào cỏ',
   recaps_references: 'Người giới thiệu',
   screens_about: 'Về',

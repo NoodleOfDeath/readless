@@ -73,6 +73,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     if (Object.keys({ ...followedPublishers }).length > 0) {
       filters.push(['pub', Object.keys({ ...followedPublishers }).join(',')].join(':'));
     }
+    if (Object.keys({ ...excludedPublishers }).length > 0) {
+      filters.push(['-pub', Object.keys({ ...excludedPublishers }).join(',')].join(':'));
+    }
     if (Object.keys({ ...followedCategories }).length > 0) {
       filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
     }

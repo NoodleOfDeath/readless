@@ -62,6 +62,7 @@ export const csStrings: typeof enStrings = {
   nav_browseCategories: 'Procházet kategorie',
   nav_browsePublishers: 'Procházet vydavatele',
   nav_yourFollows: 'Vaši sledující',
+  recaps_headlines: 'Titulky',
   recaps_information: 'Zde je několik denních rekapitulací, pokud jste zmeškali zprávy, protože jste se dotýkali trávy',
   recaps_references: 'Reference',
   screens_about: 'O',

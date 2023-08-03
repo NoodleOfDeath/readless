@@ -62,6 +62,7 @@ export const ukStrings: typeof enStrings = {
   nav_browseCategories: 'Перегляд категорій',
   nav_browsePublishers: 'Огляд видавців',
   nav_yourFollows: 'Ваші підписки',
+  recaps_headlines: 'Заголовки',
   recaps_information: 'Ось кілька щоденних підсумків, якщо ви пропустили новини через те, що торкалися трави',
   recaps_references: 'Список літератури',
   screens_about: 'про',

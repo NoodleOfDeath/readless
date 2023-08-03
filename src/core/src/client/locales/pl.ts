@@ -62,6 +62,7 @@ export const plStrings: typeof enStrings = {
   nav_browseCategories: 'kategorie wyszukiwania',
   nav_browsePublishers: 'Przeglądaj wydawców',
   nav_yourFollows: 'Twoje obserwowane',
+  recaps_headlines: 'Nagłówki',
   recaps_information: 'Oto kilka codziennych podsumowań, jeśli przegapiłeś wiadomości, ponieważ dotykałeś trawy',
   recaps_references: 'Bibliografia',
   screens_about: 'O',

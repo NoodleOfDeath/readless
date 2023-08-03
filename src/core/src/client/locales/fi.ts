@@ -62,6 +62,7 @@ export const fiStrings: typeof enStrings = {
   nav_browseCategories: 'Selaa kategorioita',
   nav_browsePublishers: 'Selaa julkaisijoita',
   nav_yourFollows: 'Sinun seuraamisesi',
+  recaps_headlines: 'Otsikot',
   recaps_information: 'Tässä on joitain päivittäisiä yhteenvetoja, jos unohdat uutiset, koska kosket ruohoa',
   recaps_references: 'Viitteet',
   screens_about: 'Noin',

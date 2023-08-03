@@ -62,6 +62,7 @@ export const trStrings: typeof enStrings = {
   nav_browseCategories: 'Kategorilere Gözat',
   nav_browsePublishers: 'Yayıncılara Göz Atın',
   nav_yourFollows: 'Takipleriniz',
+  recaps_headlines: 'manşetler',
   recaps_information: 'Çimlere dokunduğunuz için haberleri kaçırdıysanız, işte bazı günlük özetler',
   recaps_references: 'Referanslar',
   screens_about: 'Hakkında',

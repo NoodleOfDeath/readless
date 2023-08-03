@@ -62,6 +62,7 @@ export const zhHKStrings: typeof enStrings = {
   nav_browseCategories: '瀏覽分類',
   nav_browsePublishers: '瀏覽出版商',
   nav_yourFollows: '您的關注',
+  recaps_headlines: '頭條新聞',
   recaps_information: '如果您因為接觸草地而錯過了新聞，這裡有一些每日回顧',
   recaps_references: '參考',
   screens_about: '關於',

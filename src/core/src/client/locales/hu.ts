@@ -62,6 +62,7 @@ export const huStrings: typeof enStrings = {
   nav_browseCategories: 'Böngésszen a kategóriák között',
   nav_browsePublishers: 'Böngésszen a kiadók között',
   nav_yourFollows: 'Az Ön követései',
+  recaps_headlines: 'Hírek',
   recaps_information: 'Íme néhány napi összefoglaló, ha lemaradt a hírről, mert fűhöz ért',
   recaps_references: 'Hivatkozások',
   screens_about: 'Ról ről',
