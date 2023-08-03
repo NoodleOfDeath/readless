@@ -88,13 +88,13 @@ spec:
             httpGet:
               path: /v1/healthz
               port: $PORT
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30
             periodSeconds: 5
           readinessProbe:
             httpGet:
               path: /v1/healthz
               port: $PORT
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30
             periodSeconds: 5
 ---
 apiVersion: v1
