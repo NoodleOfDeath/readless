@@ -5,7 +5,6 @@ import {
   query,
 } from 'express-validator';
 
-import { parseLocale } from './../../../../core/locales/index';
 import { SummaryController } from '../../controllers';
 import {
   authMiddleware,
@@ -32,9 +31,7 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     try {
-      const params = SummaryController.serializeParams(req.query);
-      params.version = JSON.stringify(req.headers['x-app-version']);
-      params.locale = parseLocale(req.query['locale'] || req.headers['x-locale']);
+      const params = SummaryController.serializeParams(req);
       const response = await SummaryController.getSummariesInternal(params);
       return res.json(response);
     } catch (err) {
@@ -58,9 +55,7 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     try {
-      const params = SummaryController.serializeParams(req.query);
-      params.version = JSON.stringify(req.headers['x-app-version']);
-      params.locale = parseLocale(req.query['locale'] || req.headers['x-locale']);
+      const params = SummaryController.serializeParams(req);
       const response = await SummaryController.getTopStoriesInternal(params);
       return res.json(response);
     } catch (err) {
@@ -80,7 +75,7 @@ router.post(
     try {
       const { targetId, type } = req.params;
       req.body.remoteAddr = req.ip;
-      const interactions = await SummaryController.interactWithSummary(targetId, type, req.body);
+      const interactions = await SummaryController.interactWithSummary(req, targetId, type, req.body);
       return res.json(interactions);
     } catch (e) {
       internalErrorHandler(res, e);
@@ -97,7 +92,7 @@ router.delete(
   async (req, res) => {
     try {
       const { targetId } = req.params;
-      const response = await SummaryController.destroySummary(targetId, req.body);
+      const response = await SummaryController.destroySummary(req, targetId, req.body);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);
@@ -114,7 +109,7 @@ router.patch(
   async (req, res) => {
     try {
       const { targetId } = req.params;
-      const response = await SummaryController.restoreSummary(targetId, req.body);
+      const response = await SummaryController.restoreSummary(req, targetId, req.body);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

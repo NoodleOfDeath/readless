@@ -22,7 +22,7 @@ import {
   InteractionRequest,
 } from '../';
 import { BaseControllerWithPersistentStorageAccess } from '../';
-import { SupportedLocale, parseLocale } from '../../../../core/locales';
+import { SupportedLocale } from '../../../../core/locales';
 import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
@@ -50,13 +50,13 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
 
   @Get('/')
   public static async getSummaries(
-    @Request() req?: ExpressRequest,
+    @Request() req: ExpressRequest,
     @Query() filter?: string,
     @Query() ids?: number[],
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
     @Query() interval?: string,
-    @Query() locale: SupportedLocale = parseLocale(req.query['locale']) || parseLocale(req.headers['x-locale']),
+    @Query() locale?: SupportedLocale,
     @Query() start?: string,
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
     @Query() pageSize = 10,
@@ -64,7 +64,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() offset = pageSize * page,
     @Query() forceCache = false
   ): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
-    const version = JSON.stringify(req?.headers?.['x-app-version']);
+    const params = this.serializeParams(req);
     return await Summary.getSummaries({
       end,
       excludeIds,
@@ -72,13 +72,13 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       forceCache,
       ids,
       interval,
-      locale,
       matchType,
       offset,
       page,
       pageSize,
       start,
-      version,
+      ...params,
+      locale: locale ?? params.locale,
     });
   }
   
@@ -94,7 +94,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() excludeIds = false,
     @Query() matchType?: 'all' | 'any',
     @Query() interval = '1d',
-    @Query() locale: SupportedLocale = parseLocale(req.query['locale']) || parseLocale(req.headers['x-locale']),
+    @Query() locale?: SupportedLocale,
     @Query() start?: string,
     @Query() end: string = start !== undefined ? new Date().toISOString() : undefined,
     @Query() pageSize = 10,
@@ -127,6 +127,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
+    @Request() _request: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
@@ -156,6 +157,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Security('jwt', ['god:*'])
   @Delete('/:targetId')
   public static async destroySummary(
+    @Request() _request: ExpressRequest,
     @Path() targetId: number,
     @Body() body: PayloadWithUserId
   ): Promise<DestroyResponse> {
@@ -167,6 +169,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Security('jwt', ['god:*'])
   @Patch('/restore/:targetId')
   public static async restoreSummary(
+    @Request() _request: ExpressRequest,
     @Path() targetId: number,
     @Body() body: PayloadWithUserId
   ): Promise<DestroyResponse> {
