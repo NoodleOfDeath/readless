@@ -1,9 +1,10 @@
-import { ScaledSize } from 'react-native';
-
 import Orientation, { OrientationType } from 'react-native-orientation-locker';
 
 export type LayoutContextType = {
-  dimensions: ScaledSize;
+  screenHeight: number;
+  screenWidth: number;
+  scale: number;
+  fontScale: number;
   supportsMasterDetail: boolean;
   isTablet: boolean;
   orientation: OrientationType;
@@ -12,12 +13,13 @@ export type LayoutContextType = {
 };
 
 export const DEFAULT_LAYOUT_CONTEXT: LayoutContextType = {
-  dimensions: {
-    fontScale: 0, height: 0, scale: 0, width: 0, 
-  },
-  isTablet: false,
-  lockRotation: () => Promise.resolve(),
-  orientation: Orientation.getInitialOrientation(),
+  fontScale: 0,
+  isTablet: false, 
+  lockRotation: () => Promise.resolve(), 
+  orientation: Orientation.getInitialOrientation(), 
+  scale: 0,
+  screenHeight: 0,
+  screenWidth: 0,
   supportsMasterDetail: false,
   unlockRotation: () => Promise.resolve(),
 };

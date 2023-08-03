@@ -172,6 +172,7 @@ export const zhTWStrings: typeof enStrings = {
   summary_sentimentAnalysis: '情緒分析',
   summary_sentimentAnalysisInfo: '情感分析是一種工具，可以幫助我們通過分析人們的語言來了解人們對某事的感受。它會查看人們使用的詞語並確定它們是正面的、負面的還是中性的。這在許多領域都很有用，例如了解客戶反饋或公眾對某個主題的看法。',
   summary_sentimentScore: '這是一個情緒分數，它使用從 -1（負面）到 +1（正面）的範圍來衡量人們對某事的感受，其中 0 表示中性。',
+  summary_shortSummary: '簡短的摘要',
   summary_summary: '概括',
   summary_thisImageWasTakenFromTheArticle: '此圖片來自原始文章，並非由 Read Less 人員拍攝',
   summary_thisIsNotARealImage: '此圖像是使用 AI 生成的，並非真實事件、地點、事物或人物的真實照片。',

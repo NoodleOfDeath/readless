@@ -26,8 +26,7 @@ export function CategoryPicker(props: CategoryPickerProps) {
       })) }
       multi
       initialValue={ selectedCategories }
-      onValueChange={ (states) => {
-        const categories = (states ?? []).map((option) => option.value);
+      onValueChange={ (categories) => {
         props.onValueChange?.(categories);
       } } />
   );

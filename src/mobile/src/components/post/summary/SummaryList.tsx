@@ -49,10 +49,11 @@ export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
   interval?: string;
   specificIds?: number[];
   landscapeEnabled?: boolean;
-  flow?: 'fluid' | 'fixed';
-  fluid?: boolean;
-  fixed?: boolean;
+  big?: boolean;
+  fancy?: boolean;
   headerComponent?: React.ReactNode;
+  horizontal?: boolean;
+  enableTts?: boolean;
 };
 
 export function SummaryList({ 
@@ -62,10 +63,10 @@ export function SummaryList({
   interval,
   specificIds,
   landscapeEnabled,
-  fixed,
-  fluid = !fixed,
-  flow = fluid ? 'fluid' : 'fixed',
+  big,
+  fancy,
   headerComponent,
+  enableTts,
   ...props
 }: SummaryListProps) {
 
@@ -75,7 +76,7 @@ export function SummaryList({
   const theme = useTheme();
 
   // contexts
-  const { isTablet, dimensions: { width: screenWidth } } = React.useContext(LayoutContext);
+  const { isTablet, screenWidth } = React.useContext(LayoutContext);
   const { queueStream } = React.useContext(MediaContext);
   const { 
     preferredReadingFormat,
@@ -200,10 +201,10 @@ export function SummaryList({
         setDetailSummary(summary);
         flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
       } else if (onFormatChange) {
-        onFormatChange(summary, format ?? preferredReadingFormat ?? ReadingFormat.Summary);
+        onFormatChange(summary, format ?? preferredReadingFormat ?? ReadingFormat.Bullets);
       } else {
         navigation?.push('summary', {
-          initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
+          initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Bullets,
           keywords: parseKeywords(filter),
           summary,
         });
@@ -253,22 +254,25 @@ export function SummaryList({
     return (
       <Summary
         mx={ 12 }
+        mr={ index === 1 && fancy ? 6 : 12 }
+        ml={ index === 2 && fancy ? 6 : 12 }
         key={ item.id }
-        big={ Boolean(flow === 'fluid' && index % 4 === 0 && item.media?.imageArticle) }
+        big={ big || (index < 3 && fancy) }
+        halfBig={ big || (index > 0 && index < 3 && fancy) }
         summary={ item }
         selected={ Boolean(landscapeEnabled && isTablet && item.id === detailSummary?.id) }
         keywords={ parseKeywords(filter) }
         onFormatChange={ (format) => handleFormatChange(item, format) }
         onInteract={ (...e) => handleInteraction(item, ...e) } />
     );
-  }, [flow, landscapeEnabled, isTablet, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+  }, [big, fancy, landscapeEnabled, isTablet, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
 
   const detailComponent = React.useMemo(() => (landscapeEnabled && isTablet && detailSummary) ? (
     <React.Fragment>
       <Summary
         summary={ detailSummary }
         key={ detailSummary.id }
-        initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+        initialFormat={ preferredReadingFormat ?? ReadingFormat.Bullets }
         keywords={ parseKeywords(filter) }
         onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
         onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
@@ -291,11 +295,26 @@ export function SummaryList({
                 refreshing={ summaries.length === 0 && loading }
                 onRefresh={ async () => await load(true) } />
             ) }
+            numColumns={ 2 }
+            overrideItemLayout={ (
+              layout,
+              _,
+              index
+            ) => {
+              if (index === 0 && fancy) {
+                layout.span = 2;
+              } else
+              if (index < 3 && fancy) {
+                layout.span = 1;
+              } else {
+                layout.span = 2;
+              }
+            } }
             data={ summaries }
             extraData={ detailSummary }
             renderItem={ renderSummary }
-            estimatedItemSize={ flow === 'fluid' ? (114 * 3 + 350) / 4 : 114 }
-            ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
+            estimatedItemSize={ big ? 350 : 114 }
+            ItemSeparatorComponent={ () => <View mx={ 12 } my={ 6 } /> }
             ListHeaderComponent={ <React.Fragment>{headerComponent}</React.Fragment> }
             ListHeaderComponentStyle={ { paddingTop: 12 } }
             ListFooterComponent={ () => (
@@ -371,16 +390,18 @@ export function SummaryList({
           </View>
         )}
       </View>
-      <Button
-        absolute
-        h1
-        zIndex={ 300 }
-        bottom={ 30 }
-        right={ 30 }
-        contained
-        opacity={ 0.95 }
-        leftIcon="volume-high"
-        onPress={ () => queueStream(fetch, { filter, interval }) } />
+      {enableTts && (
+        <Button
+          absolute
+          h1
+          zIndex={ 300 }
+          bottom={ 30 }
+          right={ 30 }
+          contained
+          opacity={ 0.95 }
+          leftIcon="volume-high"
+          onPress={ () => queueStream(fetch, { filter, interval }) } />
+      )}
     </View>
   );
 }

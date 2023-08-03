@@ -172,6 +172,7 @@ export const koStrings: typeof enStrings = {
   summary_sentimentAnalysis: '감정 분석',
   summary_sentimentAnalysisInfo: '감정 분석은 언어를 분석하여 사람들이 무언가에 대해 어떻게 느끼는지 이해하는 데 도움이 되는 도구입니다. 사람들이 사용하는 단어를 살펴보고 긍정적인지, 부정적인지 또는 중립적인지를 결정합니다. 이는 주제에 대한 고객 피드백 또는 여론 이해와 같은 많은 영역에서 유용할 수 있습니다.',
   summary_sentimentScore: '이것은 사람들이 무언가에 대해 어떻게 느끼는지 측정하는 감정 점수로 -1(부정적)에서 +1(긍정적)까지의 척도를 사용하며 0은 중립입니다.',
+  summary_shortSummary: '짧은 요약',
   summary_summary: '요약',
   summary_thisImageWasTakenFromTheArticle: '이 이미지는 원본 기사에서 가져온 것으로 Read Less personell이 촬영한 것이 아닙니다.',
   summary_thisIsNotARealImage: '이 이미지는 AI를 사용하여 생성되었으며 실제 이벤트, 장소, 사물 또는 사람의 실제 사진이 아닙니다.',

@@ -172,6 +172,7 @@ export const csStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Analýza sentimentu',
   summary_sentimentAnalysisInfo: 'Analýza sentimentu je nástroj, který nám pomáhá porozumět tomu, jak se lidé o něčem cítí, pomocí analýzy jejich jazyka. Sleduje slova, která lidé používají, a rozhoduje, zda jsou pozitivní, negativní nebo neutrální. To může být užitečné v mnoha oblastech, jako je pochopení zpětné vazby od zákazníků nebo veřejného mínění na určité téma.',
   summary_sentimentScore: 'Toto je skóre sentimentu, které měří, jak se lidé k něčemu cítí, pomocí stupnice od -1 (negativní) do +1 (pozitivní), přičemž 0 je neutrální.',
+  summary_shortSummary: 'Krátké shrnutí',
   summary_summary: 'souhrn',
   summary_thisImageWasTakenFromTheArticle: 'Tento obrázek pochází z původního článku a nebyl pořízen pracovníkem Read Less',
   summary_thisIsNotARealImage: 'Tento obrázek byl vytvořen pomocí AI a není skutečnou fotografií skutečné události, místa, věci nebo osoby.',

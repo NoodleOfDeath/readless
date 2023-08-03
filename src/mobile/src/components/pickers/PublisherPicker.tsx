@@ -26,11 +26,8 @@ export function PublisherPicker(props: PublisherPickerProps) {
       multi
       initialValue={ selectedPublishers }
       searchable
-      onValueChange={ 
-        (states) => { 
-          const publishers = (states ?? []).map((option) => option.value);
-          props.onValueChange?.(publishers);
-        }
-      } />
+      onValueChange={ (publishers) => { 
+        props.onValueChange?.(publishers);
+      } } />
   );
 }

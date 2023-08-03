@@ -4,9 +4,9 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { RecapAttributes } from '~/api';
 import { 
-  Divider,
   FlatList,
   Recap,
+  View,
 } from '~/components';
 import { useSummaryClient } from '~/core';
 
@@ -64,7 +64,7 @@ export function RecapList({ header }: RecapListProps = {}) {
       ListHeaderComponentStyle={ { paddingTop: 12 } }
       ListHeaderComponent={ <React.Fragment>{header}</React.Fragment> }
       ListFooterComponentStyle={ { paddingBottom: 12 } }
-      ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
+      ItemSeparatorComponent={ () => <View mx={ 12 } my={ 6 } /> }
       estimatedItemSize={ 114 } />
   );
 }

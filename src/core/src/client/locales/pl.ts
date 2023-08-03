@@ -172,6 +172,7 @@ export const plStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Analiza nastrojów',
   summary_sentimentAnalysisInfo: 'Analiza nastrojów to narzędzie, które pomaga nam zrozumieć, co ludzie myślą o czymś, analizując ich język. Przygląda się słowom używanym przez ludzi i decyduje, czy są one pozytywne, negatywne czy neutralne. Może to być przydatne w wielu obszarach, takich jak zrozumienie opinii klientów lub opinii publicznej na dany temat.',
   summary_sentimentScore: 'Jest to wynik nastrojów, który mierzy, jak ludzie myślą o czymś, używając skali od -1 (negatywny) do +1 (pozytywny), gdzie 0 oznacza neutralny.',
+  summary_shortSummary: 'Krótkie podsumowanie',
   summary_summary: 'Streszczenie',
   summary_thisImageWasTakenFromTheArticle: 'To zdjęcie pochodzi z oryginalnego artykułu i nie zostało zrobione przez personel Czytaj mniej',
   summary_thisIsNotARealImage: 'Ten obraz został wygenerowany przy użyciu sztucznej inteligencji i nie jest prawdziwym zdjęciem prawdziwego wydarzenia, miejsca, rzeczy lub osoby.',

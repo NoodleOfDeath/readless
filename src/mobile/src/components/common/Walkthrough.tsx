@@ -38,7 +38,9 @@ export type WalkthroughProps<Step extends WalkthroughStep = WalkthroughStep> = {
 export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ payload, ...props }: SheetProps<WalkthroughProps<Step>>) {
   
   const theme = useTheme();
-  const { isTablet, dimensions } = React.useContext(LayoutContext);
+  const {
+    isTablet, screenWidth, screenHeight, 
+  } = React.useContext(LayoutContext);
 
   const { 
     steps = [], 
@@ -58,8 +60,8 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
             <Image 
               beveled
               native
-              width={ Math.min(dimensions.width, 420) - 48 }
-              height={ step.tallImage ? Math.min(dimensions.height * 0.6, 550) : 200 }
+              width={ Math.min(screenWidth, 420) - 48 }
+              height={ step.tallImage ? Math.min(screenHeight * 0.6, 550) : 200 }
               source={ { uri: step.artwork } } />
           ) : (
             <View p={ 12 }>{step.artwork}</View>
@@ -97,7 +99,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
         </View>
       );
     });
-  }, [dimensions.height, dimensions.width, steps]);
+  }, [screenHeight, screenWidth, steps]);
   
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<React.ReactNode>) => {
     return (

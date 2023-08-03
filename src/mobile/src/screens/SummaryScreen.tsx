@@ -10,7 +10,6 @@ import {
 } from '~/api';
 import {
   ActivityIndicator,
-  Divider,
   FlatList,
   Screen,
   Summary,
@@ -33,7 +32,7 @@ export function SummaryScreen({
   const [loading, setLoading] = React.useState(false);
   const [summaryId, setSummaryId] = React.useState(0);
   const [summary, setSummary] = React.useState<PublicSummaryGroup>();
-  const [format, setFormat] = React.useState<ReadingFormat | undefined>(route?.params?.initialFormat ?? ReadingFormat.Summary);
+  const [format, setFormat] = React.useState<ReadingFormat | undefined>(route?.params?.initialFormat ?? ReadingFormat.Bullets);
   const keywords = React.useMemo(() => route?.params?.keywords ?? [], [route]);
   
   const load = React.useCallback(async (id?: number) => {
@@ -82,7 +81,7 @@ export function SummaryScreen({
       }
       handleInteraction(newSummary, InteractionType.Read, undefined, { format: newFormat });
       navigation?.push('summary', {
-        initialFormat: newFormat ?? preferredReadingFormat ?? ReadingFormat.Summary,
+        initialFormat: newFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary: newSummary.id,
       });
     },
@@ -130,7 +129,7 @@ export function SummaryScreen({
               onFormatChange={ (format) => handleFormatChange(item, format) }
               onInteract={ (...e) => handleInteraction(item, ...e) } />
           ) }
-          ItemSeparatorComponent={ () => <Divider mx={ 12 } my={ 6 } /> }
+          ItemSeparatorComponent={ () => <View mx={ 12 } my={ 6 } /> }
           ListHeaderComponent={ (
             <React.Fragment>
               <Summary
@@ -141,7 +140,6 @@ export function SummaryScreen({
                 keywords={ keywords }
                 onFormatChange={ (format) => handleFormatChange(summary, format) }
                 onInteract={ (...e) => handleInteraction(summary, ...e) } />
-              <Divider my={ 6 } />
               {siblings.length > 0 && (
                 <Text system h6 m={ 12 }>
                   {`${strings.summary_relatedNews} (${siblings.length})`}

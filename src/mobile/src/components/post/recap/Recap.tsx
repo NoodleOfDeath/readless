@@ -17,7 +17,7 @@ import {
   TranslateToggle,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { LayoutContext, SessionContext } from '~/contexts';
 import { 
   useNavigation,
   useServiceClient,
@@ -45,13 +45,14 @@ export function Recap({
   const { navigation, openSummary } = useNavigation();
   const { localizeRecap } = useServiceClient();
   const { getSummaries } = useSummaryClient();
+  const { screenHeight } = React.useContext(LayoutContext);
   
   const { readRecap, readRecaps } = React.useContext(SessionContext);
   
   const [isRead, setIsRead] = React.useState(!forceUnread && recap.id in ({ ...readRecaps }));
   const [translations, setTranslations] = React.useState<{ [key in keyof RecapAttributes]?: string }>({ text: recap.text, title: recap.title });
 
-  const bodyText = React.useMemo(() => (translations.text ?? recap.text)?.slice(0, preview ? 600 : undefined), [preview, recap.text, translations.text]);
+  const bodyText = React.useMemo(() => (translations.text ?? recap.text), [recap.text, translations.text]);
 
   const menuActions: ContextMenuAction[] = React.useMemo(() => [
     {
@@ -130,6 +131,7 @@ export function Recap({
       { ...props }
       p={ 12 }
       gap={ 3 }
+      borderRadius={ 12 }
       opacity={ isRead ? 0.3 : 1.0 }
       style={ theme.components.card }
       onPress={ handlePress }>
@@ -150,16 +152,23 @@ export function Recap({
         {!preview && <Icon name="menu-right" size={ 24 } />}
       </View>
       {preview && (
-        <React.Fragment>
-          <Divider />
+        <ScrollView maxHeight={ screenHeight * 0.6 }>
           {content}
-        </React.Fragment>
+        </ScrollView>
       )}
     </View>
-  ), [props, isRead, theme.components.card, theme.colors.textSecondary, handlePress, translations.title, translateToggle, recap.createdAt, preview, content]);
+  ), [props, isRead, theme.components.card, theme.colors.textSecondary, handlePress, translations.title, preview, translateToggle, recap.createdAt, screenHeight, content]);
 
   return expanded ? (
     <React.Fragment>
+      <View p={ 12 }>
+        <Text>{strings.recaps_headlines}</Text>
+      </View>
+      <SummaryList
+        flex={ 1 }
+        fixed
+        fetch={ getSummaries }
+        specificIds={ ids } />
       <ScrollView flex={ 1 }>
         <View
           p={ 12 }
@@ -172,14 +181,6 @@ export function Recap({
         </View>
       </ScrollView>
       <Divider />
-      <View p={ 12 }>
-        <Text>{strings.recaps_references}</Text>
-      </View>
-      <SummaryList
-        flex={ 1 }
-        fixed
-        fetch={ getSummaries }
-        specificIds={ ids } />
     </React.Fragment>
   ) : (
     preview ? <ScrollView flex={ 1 }>{coverCard}</ScrollView> : (

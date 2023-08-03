@@ -172,6 +172,7 @@ export const jaStrings: typeof enStrings = {
   summary_sentimentAnalysis: '感情分析',
   summary_sentimentAnalysisInfo: '感情分析は、人々の言語を分析することで、人々が何かについてどのように感じているかを理解するのに役立つツールです。人々が使用する言葉を見て、それが肯定的か否定的か中立的かを判断します。これは、顧客からのフィードバックやトピックに関する世論の理解など、さまざまな分野で役立ちます。',
   summary_sentimentScore: 'これは感情スコアであり、-1 (ネガティブ) から +1 (ポジティブ) までのスケールを使用して人々が何かについてどのように感じているかを測定します (0 は中立)。',
+  summary_shortSummary: '短い概要',
   summary_summary: 'まとめ',
   summary_thisImageWasTakenFromTheArticle: 'この画像は元の記事からのものであり、記事を少なく読む担当者によって撮影されたものではありません',
   summary_thisIsNotARealImage: 'この画像は AI を使用して生成されたものであり、実際の出来事、場所、物、人物の実際の写真ではありません。',

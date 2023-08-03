@@ -164,7 +164,7 @@ export default function Summary({
 
   return (
     <StyledCard 
-      onClick={ initialFormat ? undefined : () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+      onClick={ initialFormat ? undefined : () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Bullets) }>
       <FullWidth component={ initialFormat ? 'article' : undefined }>
         <Stack spacing={ 2 }>
           {big && imageUrl && (
@@ -173,7 +173,7 @@ export default function Summary({
                 backgroundImage: `url(${imageUrl})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
-                borderRadius: 8, 
+                borderRadius: 12, 
                 height: 400, 
                 maxHeight: '40vh',
                 width: '100%', 
@@ -227,7 +227,7 @@ export default function Summary({
                   backgroundImage: `url(${imageUrl})`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
-                  borderRadius: 8, 
+                  borderRadius: 12, 
                   height: '100%',
                   minHeight: 100,
                   width: 100, 

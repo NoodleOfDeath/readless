@@ -172,6 +172,7 @@ export const idStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Analisis Sentimen',
   summary_sentimentAnalysisInfo: 'Analisis sentimen adalah alat yang membantu kita memahami perasaan orang tentang sesuatu dengan menganalisis bahasa mereka. Itu melihat kata-kata yang digunakan orang dan memutuskan apakah itu positif, negatif, atau netral. Ini dapat berguna di banyak bidang, seperti memahami umpan balik pelanggan atau opini publik tentang suatu topik.',
   summary_sentimentScore: 'Ini adalah skor sentimen, yang mengukur perasaan orang tentang sesuatu menggunakan skala dari -1 (negatif) hingga +1 (positif), dengan 0 berarti netral.',
+  summary_shortSummary: 'Ringkasan Singkat',
   summary_summary: 'Ringkasan',
   summary_thisImageWasTakenFromTheArticle: 'Gambar ini dari artikel asli dan tidak diambil oleh Read Less personell',
   summary_thisIsNotARealImage: 'Gambar ini dihasilkan menggunakan AI dan bukan foto asli dari peristiwa, tempat, benda, atau orang yang sebenarnya.',

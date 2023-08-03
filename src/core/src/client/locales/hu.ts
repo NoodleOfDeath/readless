@@ -172,6 +172,7 @@ export const huStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Érzelemelemzés',
   summary_sentimentAnalysisInfo: 'A hangulatelemzés egy olyan eszköz, amely nyelvezetük elemzésével segít megérteni, hogyan vélekednek az emberek valamiről. Megvizsgálja az emberek által használt szavakat, és eldönti, hogy azok pozitívak, negatívak vagy semlegesek. Ez számos területen hasznos lehet, például megértheti az ügyfelek visszajelzéseit vagy a témával kapcsolatos közvéleményt.',
   summary_sentimentScore: 'Ez egy hangulati pontszám, amely egy -1-től (negatív) +1-ig (pozitív) terjedő skála segítségével méri, hogyan vélekednek az emberek valamiről, ahol a 0 semleges.',
+  summary_shortSummary: 'Rövid összefoglaló',
   summary_summary: 'Összegzés',
   summary_thisImageWasTakenFromTheArticle: 'Ez a kép az eredeti cikkből származik, és nem a Read Less personell készítette',
   summary_thisIsNotARealImage: 'Ez a kép mesterséges intelligencia segítségével készült, és nem egy valós esemény, hely, dolog vagy személy valódi fotója.',

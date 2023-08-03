@@ -44,7 +44,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
     (summary: PublicSummaryGroup, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.navigate('summary', {
-        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary,
       });
     },

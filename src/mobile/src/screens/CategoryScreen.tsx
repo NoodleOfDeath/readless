@@ -23,11 +23,13 @@ export function CategoryScreen({
   const { getSummaries } = useSummaryClient();
 
   const {
+    categories,
     followedCategories,
     followCategory,
   } = React.useContext(SessionContext);
 
-  const category = React.useMemo(() => route?.params?.category, [route]);
+  const category0 = React.useMemo(() => route?.params?.category, [route]);
+  const category = React.useMemo(() => category0 && categories?.[category0.name], [category0, categories]);
 
   const [followed, setFollowed] = React.useState((category?.name ?? '') in { ...followedCategories });
 

@@ -531,10 +531,10 @@ export default function NavigationController() {
   }, [ready, inAppReviewHandler]);
   
   const refreshSources = React.useCallback(() => {
-    if (lastFetchFailed && (lastFetch < Date.now() - ms('10s'))) {
+    if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
       return;
     }
-    if (!categories || lastFetch < Date.now() - ms('1h')) {
+    if (!categories || (Date.now() - lastFetch < ms('1h'))) {
       getCategories().then((response) => {
         setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
       }).catch((error) => {
@@ -544,7 +544,7 @@ export default function NavigationController() {
         setLastFetch(Date.now());
       });
     }
-    if (!publishers || lastFetch < Date.now() - ms('1h')) {
+    if (!publishers || (Date.now() - lastFetch < ms('1h'))) {
       getPublishers().then((response) => {
         setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
       }).catch((error) => {

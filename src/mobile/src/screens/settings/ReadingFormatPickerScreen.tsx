@@ -16,7 +16,7 @@ export function ReadingFormatPickerScreen() {
         <Summary
           sample
           hideCard
-          initialFormat={ preferredReadingFormat ?? ReadingFormat.Summary }
+          initialFormat={ preferredReadingFormat ?? ReadingFormat.Bullets }
           onFormatChange={ (format) => setPreference('preferredReadingFormat', format) } />
       </ScrollView>
     </Screen>

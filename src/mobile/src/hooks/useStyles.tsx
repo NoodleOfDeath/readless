@@ -209,7 +209,7 @@ export function useStyles({
   borderLeftColor = bcLeft,
   
   // border radius
-  bRadius = beveled ? 6 : rounded ? 500 : undefined,
+  bRadius = beveled ? 12 : rounded ? 500 : undefined,
   borderRadius = bRadius,
   brTopLeft = borderRadius,
   borderTopLeftRadius = brTopLeft,
@@ -390,7 +390,7 @@ export function useStyles({
     
     return attrs.filter((v) => v !== undefined).reduce((acc, val) => ({ ...acc, ...val }), style ?? {});
     
-  }, [position, top, left, right, bottom, zIndex, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, marginTop, marginBottom, marginLeft, marginRight, paddingTop, paddingBottom, paddingLeft, paddingRight, backgroundColor, opacity, overflow, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, flexDirection, flex, flexWrap, flexGrow, flexShrink, flexBasis, alignItems, alignSelf, justifyContent, rowGap, columnGap, style, theme.colors.shadowColor]);
+  }, [position, top, left, right, bottom, zIndex, aspectRatio, width, height, minWidth, minHeight, maxWidth, maxHeight, marginTop, marginBottom, marginLeft, marginRight, paddingTop, paddingBottom, paddingLeft, paddingRight, backgroundColor, opacity, overflow, borderTopWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, flexDirection, flex, flexWrap, flexGrow, flexShrink, flexBasis, alignItems, alignSelf, justifyContent, rowGap, columnGap, shadowColor, elevated, theme.colors.shadowColor, shadowOffset, shadowOpacity, shadowRadius, style]);
 
   const allStyles = React.useMemo(() => {
     return { ...viewStyle, ...outlineStyle };

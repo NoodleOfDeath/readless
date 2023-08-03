@@ -172,6 +172,7 @@ export const svStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Sentimentanalys',
   summary_sentimentAnalysisInfo: 'Sentimentanalys är ett verktyg som hjälper oss att förstå hur människor känner om något genom att analysera deras språk. Den tittar på orden människor använder och avgör om de är positiva, negativa eller neutrala. Detta kan vara användbart inom många områden, som att förstå kundfeedback eller den allmänna opinionen om ett ämne.',
   summary_sentimentScore: 'Detta är ett sentimentpoäng, som mäter hur människor känner om något med en skala från -1 (negativ) till +1 (positiv), där 0 är neutral.',
+  summary_shortSummary: 'Kort sammanfattning',
   summary_summary: 'Sammanfattning',
   summary_thisImageWasTakenFromTheArticle: 'Den här bilden är från den ursprungliga artikeln och togs inte av Read Less-personal',
   summary_thisIsNotARealImage: 'Den här bilden skapades med hjälp av AI och är inte ett riktigt foto av en verklig händelse, plats, sak eller person.',

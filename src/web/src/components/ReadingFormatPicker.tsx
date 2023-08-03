@@ -74,8 +74,8 @@ export default function ReadingFormatPicker({ format, onChange }: Props = {}) {
   
   return (
     <StyledStack direction={ xsAndDown ? 'column' : 'row' }>
-      {ReadingFormatButton(ReadingFormat.Summary)}
       {ReadingFormatButton(ReadingFormat.Bullets)}
+      {ReadingFormatButton(ReadingFormat.Summary)}
       {ReadingFormatButton(ReadingFormat.FullArticle)}
     </StyledStack>
   );

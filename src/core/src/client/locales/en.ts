@@ -197,6 +197,7 @@ export const enStrings = {
   summary_sentimentAnalysis: 'Sentiment Analysis',
   summary_sentimentAnalysisInfo: 'Sentiment analysis is a tool that helps us understand how people feel about something by analyzing their language. It looks at the words people use and decides if they are positive, negative, or neutral. This can be useful in many areas, like understanding customer feedback or public opinion on a topic.',
   summary_sentimentScore: 'This is a sentiment score, which measures how people feel about something using a scale from -1 (negative) to +1 (positive), with 0 being neutral.',
+  summary_shortSummary: 'Short Summary',
   summary_summary: 'Summary',
   summary_thisImageWasTakenFromTheArticle: 'This image is from the original article and does not belong to Read Less',
   summary_thisIsNotARealImage: 'This image was generated using AI and is not a real photo of a real event, place, thing, or person.',

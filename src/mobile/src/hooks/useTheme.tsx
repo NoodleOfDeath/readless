@@ -13,7 +13,7 @@ const makeTheme = (darkMode: boolean) => {
       contrastText: '#fff',
       destructive: darkMode ? '#ff0000' : '#ff0000',
       error: '#f44336',
-      headerBackground: darkMode ? '#303030' : '#f4f4f4',
+      headerBackground: darkMode ? '#303030' : '#f0f0f0',
       inactive: darkMode ? '#777' : '#aaa',
       invertText: darkMode ? '#000' : '#fff',
       link: darkMode ? '#aaaaee' : '#8888ee',
@@ -64,8 +64,9 @@ const makeTheme = (darkMode: boolean) => {
         divider: {
           backgroundColor: darkMode ? '#888' : '#888',
           height: StyleSheet.hairlineWidth,
-          marginBottom: 2,
-          marginTop: 2,
+          marginBottom: 1,
+          marginTop: 1,
+          opacity: 0.5,
         },
         input: { 
           backgroundColor: darkMode ? '#111' : '#ddd',
@@ -83,7 +84,7 @@ const makeTheme = (darkMode: boolean) => {
       ...(darkMode ? DarkTheme : DefaultTheme),
       colors: {
         ...(darkMode ? DarkTheme.colors : DefaultTheme),
-        background: darkMode ? '#242424' : '#f9f9f9',
+        background: darkMode ? '#030303' : '#e4e4e4',
         border: darkMode ? '#757575' : '#bdbdbd',
         card: darkMode ? '#1e1e1e' : '#fff',
         notification: '#c00000',
@@ -101,6 +102,6 @@ export function useTheme() {
   const LIGHT_THEME = makeTheme(false);
   const DARK_THEME = makeTheme(true);
   const colorScheme = useColorScheme();
-  return ((preferences.colorScheme ?? colorScheme) === 'dark') ? DARK_THEME : LIGHT_THEME;
+  return ((preferences.colorScheme && preferences.colorScheme !== 'system' ? preferences.colorScheme : colorScheme) === 'dark') ? DARK_THEME : LIGHT_THEME;
   
 }

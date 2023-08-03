@@ -1,5 +1,4 @@
 import React from 'react';
-import { useWindowDimensions } from 'react-native';
 
 import { SheetProps } from 'react-native-actions-sheet';
 import { Social } from 'react-native-share';
@@ -22,7 +21,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { LayoutContext, SessionContext } from '~/contexts';
 import {  useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -60,8 +59,8 @@ export function ShareDialog({
  
   const theme = useTheme();
   const viewshot = React.useRef<ViewShot>(null);
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-
+  
+  const { screenWidth, screenHeight } = React.useContext(LayoutContext);
   const { compactSummaries, preferredReadingFormat } = React.useContext(SessionContext);
   
   const {

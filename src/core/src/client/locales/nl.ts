@@ -172,6 +172,7 @@ export const nlStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Sentiment analyse',
   summary_sentimentAnalysisInfo: 'Sentimentanalyse is een hulpmiddel dat ons helpt te begrijpen hoe mensen ergens over denken door hun taalgebruik te analyseren. Het kijkt naar de woorden die mensen gebruiken en beslist of ze positief, negatief of neutraal zijn. Dit kan op veel gebieden nuttig zijn, zoals het begrijpen van feedback van klanten of de publieke opinie over een onderwerp.',
   summary_sentimentScore: 'Dit is een sentimentscore, die meet hoe mensen over iets denken op een schaal van -1 (negatief) tot +1 (positief), waarbij 0 neutraal is.',
+  summary_shortSummary: 'Korte samenvatting',
   summary_summary: 'Samenvatting',
   summary_thisImageWasTakenFromTheArticle: 'Deze afbeelding komt uit het originele artikel en is niet gemaakt door Read Less-personeel',
   summary_thisIsNotARealImage: 'Deze afbeelding is gegenereerd met behulp van AI en is geen echte foto van een echte gebeurtenis, plaats, ding of persoon.',

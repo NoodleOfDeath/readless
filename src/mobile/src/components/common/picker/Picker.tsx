@@ -19,26 +19,26 @@ export type PickerProps<
   T extends string,
   P,
   Multi extends true | false = false,
-  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+  Value extends (Multi extends true ? T[] : (T | undefined)) = Multi extends true ? T[] : (T | undefined),
+  OptionValue extends (Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
 > = ChildlessViewProps & {
   options: T[] | SelectOption<T, P>[] | (() => Promise<T[] | SelectOption<T, P>[]>);
   render: PickerRender<T, P>;
   multi?: Multi;
-  initialValue?: InitialValue;
+  initialValue?: Value;
   scrollViewProps?: Partial<ScrollViewProps>;
   buttonProps?: Partial<ButtonProps> | ((state: SelectOptionState<T>) => Partial<ButtonProps>);
   searchable?: boolean;
-  onValueChange?: (value?: CurrentValue) => void;
-  onSave?: (value?: CurrentValue) => void;
+  onValueChange?: (value?: Value, option?: OptionValue) => void;
+  onSave?: (value?: OptionValue) => void;
 };
 
 export function Picker<
   T extends string,
   P,
   Multi extends true | false = false,
-  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+  Value extends (Multi extends true ? T[] : (T | undefined)) = Multi extends true ? T[] : (T | undefined),
+  OptionValue extends (Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
 >({
   options: options0,
   render,
@@ -48,13 +48,13 @@ export function Picker<
   onValueChange,
   onSave,
   ...props
-}: PickerProps<T, P, Multi, InitialValue, CurrentValue>) {
+}: PickerProps<T, P, Multi, Value, OptionValue>) {
 
   const [loading, setLoading] = React.useState(options0 instanceof Function);
 
   const [options, setOptions] = React.useState(SelectOption.options<T, P>(options0 instanceof Function ? [] as T[] : options0));
   const [value, setValue] = React.useState<T[]>((Array.isArray(initialValue) ? initialValue : initialValue != null ? [initialValue] : []) as T[]);
-  const [state, setState] = React.useState<CurrentValue>();
+  const [state, setState] = React.useState<OptionValue>();
 
   const [filter, setFilter] = React.useState('');
 
@@ -97,9 +97,10 @@ export function Picker<
       } else {
         newValue = [newOption];
       }
-      setState((multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as CurrentValue);
-      onValueChange?.((multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as CurrentValue);
-      return (prev = newValue.map((v) => v.value) as T[]);
+      const value = newValue.map((v) => v.value) as T[];
+      setState((multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as OptionValue);
+      onValueChange?.((multi ? value : option) as Value, (multi ? SelectOption.options<T, P>(newValue) : SelectOption.from(option)) as OptionValue);
+      return (prev = value);
     });
   }, [multi, onValueChange, options]);
 
