@@ -62,6 +62,7 @@ export const arStrings: typeof enStrings = {
   nav_browseCategories: 'تصفح الفئات',
   nav_browsePublishers: 'تصفح الناشرين',
   nav_yourFollows: 'المتابعات الخاصة بك',
+  recaps_headlines: 'العناوين',
   recaps_information: 'فيما يلي بعض الملخصات اليومية إذا فاتتك الأخبار لأنك كنت تلمس العشب',
   recaps_references: 'مراجع',
   screens_about: 'عن',

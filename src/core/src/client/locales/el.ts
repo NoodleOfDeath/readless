@@ -62,6 +62,7 @@ export const elStrings: typeof enStrings = {
   nav_browseCategories: 'Περιήγηση σε κατηγορίες',
   nav_browsePublishers: 'Περιήγηση στους εκδότες',
   nav_yourFollows: 'Οι ακόλουθοί σας',
+  recaps_headlines: 'Επικεφαλίδες',
   recaps_information: 'Ακολουθούν μερικές ημερήσιες ανακεφαλαιώσεις εάν χάσατε τα νέα επειδή αγγίξατε γρασίδι',
   recaps_references: 'βιβλιογραφικές αναφορές',
   screens_about: 'Σχετικά με',

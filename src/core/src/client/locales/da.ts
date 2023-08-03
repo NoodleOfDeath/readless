@@ -62,6 +62,7 @@ export const daStrings: typeof enStrings = {
   nav_browseCategories: 'Gennemse kategorier',
   nav_browsePublishers: 'Gennemse udgivere',
   nav_yourFollows: 'Dine følgere',
+  recaps_headlines: 'Overskrifter',
   recaps_information: 'Her er nogle daglige opsummeringer, hvis du gik glip af nyhederne, fordi du rørte græs',
   recaps_references: 'Referencer',
   screens_about: 'Om',

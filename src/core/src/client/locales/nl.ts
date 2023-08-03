@@ -62,6 +62,7 @@ export const nlStrings: typeof enStrings = {
   nav_browseCategories: 'Bladeren door rubrieken',
   nav_browsePublishers: 'Blader door uitgevers',
   nav_yourFollows: 'Uw volgers',
+  recaps_headlines: 'Krantenkoppen',
   recaps_information: 'Hier zijn enkele dagelijkse samenvattingen als je het nieuws hebt gemist omdat je gras aanraakte',
   recaps_references: 'Referenties',
   screens_about: 'Over',

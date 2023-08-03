@@ -62,6 +62,7 @@ export const ruStrings: typeof enStrings = {
   nav_browseCategories: 'Просмотр категорий',
   nav_browsePublishers: 'Обзор издателей',
   nav_yourFollows: 'Ваши подписчики',
+  recaps_headlines: 'Заголовки',
   recaps_information: 'Вот несколько ежедневных обзоров, если вы пропустили новости, потому что коснулись травы',
   recaps_references: 'Рекомендации',
   screens_about: 'О',

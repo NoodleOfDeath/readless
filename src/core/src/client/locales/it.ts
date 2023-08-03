@@ -62,6 +62,7 @@ export const itStrings: typeof enStrings = {
   nav_browseCategories: 'Sfoglia le categorie',
   nav_browsePublishers: 'Sfoglia editori',
   nav_yourFollows: 'I tuoi follower',
+  recaps_headlines: 'Titoli',
   recaps_information: 'Ecco alcuni riepiloghi giornalieri se ti sei perso la notizia perché stavi toccando l\'erba',
   recaps_references: 'Riferimenti',
   screens_about: 'Di',

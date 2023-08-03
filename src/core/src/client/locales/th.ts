@@ -62,6 +62,7 @@ export const thStrings: typeof enStrings = {
   nav_browseCategories: 'เรียกดูหมวดหมู่',
   nav_browsePublishers: 'เรียกดูสำนักพิมพ์',
   nav_yourFollows: 'ติดตามของคุณ',
+  recaps_headlines: 'หัวข้อข่าว',
   recaps_information: 'ต่อไปนี้คือสรุปรายวันหากคุณพลาดข่าวเพราะคุณกำลังสัมผัสหญ้า',
   recaps_references: 'อ้างอิง',
   screens_about: 'เกี่ยวกับ',

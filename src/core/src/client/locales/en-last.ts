@@ -60,6 +60,7 @@ export const enStrings = {
   nav_browseCategories: 'Browse Categories',
   nav_browsePublishers: 'Browse Publishers',
   nav_yourFollows: 'Your Follows',
+  recaps_headlines: 'Headlines',
   recaps_information: 'Here are some daily recaps if you missed the news because you were touching grass',
   recaps_references: 'References',
   screens_about: 'About',

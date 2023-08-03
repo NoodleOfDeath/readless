@@ -62,6 +62,7 @@ export const esStrings: typeof enStrings = {
   nav_browseCategories: 'Examinar las categorías',
   nav_browsePublishers: 'Explorar editores',
   nav_yourFollows: 'Tus seguidores',
+  recaps_headlines: 'Titulares',
   recaps_information: 'Aquí hay algunos resúmenes diarios si te perdiste las noticias porque estabas tocando el césped.',
   recaps_references: 'Referencias',
   screens_about: 'Acerca de',

@@ -62,6 +62,7 @@ export const msStrings: typeof enStrings = {
   nav_browseCategories: 'Semak imbas Kategori',
   nav_browsePublishers: 'Semak imbas Penerbit',
   nav_yourFollows: 'Pengikut Anda',
+  recaps_headlines: 'Tajuk utama',
   recaps_information: 'Berikut ialah beberapa rekap harian jika anda terlepas berita kerana anda menyentuh rumput',
   recaps_references: 'Rujukan',
   screens_about: 'Tentang',
