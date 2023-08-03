@@ -1,6 +1,6 @@
 import ms from 'ms';
+import { QueryTypes } from 'sequelize';
 import {
-  AfterFind,
   Column,
   DataType,
   Table,
@@ -15,6 +15,8 @@ import {
   Selectors,
 } from './Publisher.types';
 import { PublisherTranslation } from './PublisherTranslation.model';
+import { PUBLIC_PUBLISHERS } from './queries';
+import { SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
 import { RateLimit } from '../../system/RateLimit.model';
 
@@ -61,15 +63,26 @@ export class Publisher<
     }
   }
 
-  @AfterFind
-  static async legacySupport(cursor: Publisher | Publisher[]) {
-    if (!cursor) {
-      return;
-    }
-    const publishers = Array.isArray(cursor) ? cursor : [cursor];
-    for (const publisher of publishers) {
-      publisher.set('sentiment', 0, { raw: true });
-    }
+  static async getPublishers(locale: SupportedLocale = 'en') {
+    const replacements = { locale };
+    const publishers: PublisherAttributes[] = await this.store.query(PUBLIC_PUBLISHERS, {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+    });
+    return {
+      count: publishers?.length ?? 0,
+      rows: publishers ?? [],
+    };
+  }
+
+  async getTranslations(locale: SupportedLocale = 'en') {
+    return PublisherTranslation.findAll({
+      where: {
+        id: this.id,
+        locale,
+      },
+    });
   }
 
   @Column({

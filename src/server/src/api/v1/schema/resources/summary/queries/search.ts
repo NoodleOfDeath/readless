@@ -19,16 +19,13 @@ FROM (
     JSON_BUILD_OBJECT(
       'id', pub.id,
       'name', pub.name,
-      'displayName', pub."displayName",
-      'description', pub.description,
-      'translations', pub.translations::JSONB
+      'displayName', pub."displayName"
     ) AS publisher,
     JSON_BUILD_OBJECT(
       'id', cat.id,
       'name', cat.name,
       'displayName', cat."displayName",
-      'icon', cat.icon,
-      'translations', cat.translations::JSONB
+      'icon', cat.icon
     ) AS category,
     ss.sentiment,
     ss.sentiments::JSONB AS sentiments,
@@ -45,8 +42,17 @@ FROM (
         'summary', sibling.summary,
         'bullets', sibling.bullets,
         'imageUrl', sibling."imageUrl",
-        'publisher', ROW_TO_JSON(sibling_pub.*),
-        'category', ROW_TO_JSON(sibling_cat.*),
+        'publisher', JSON_BUILD_OBJECT(
+          'id', sibling_pub.id,
+          'name', sibling_pub.name,
+          'displayName', sibling_pub."displayName"
+        ),
+        'category', JSON_BUILD_OBJECT(
+          'id', sibling_cat.id,
+          'name', sibling_cat.name,
+          'displayName', sibling_cat."displayName",
+          'icon', sibling_cat.icon
+        ),
         'sentiment', sibling_ss.sentiment,
         'sentiments', sibling_ss.sentiments,
         'media', sibling_sm.media,

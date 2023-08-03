@@ -1,6 +1,17 @@
 // record management
 import { SupportedLocale } from '../../../core/locales';
 
+// custom headers
+export enum CustomHeader {
+  LOCALE = 'x-locale',
+  PLATFORM = 'x-platform',
+  USER_ID = 'x-user-id',
+  UUID = 'x-uuid',
+  VERSION = 'x-version',
+}
+
+// bulk response models
+
 export type BulkResponse<T> = {
   count: number;
   next?: number;
@@ -10,6 +21,8 @@ export type BulkResponse<T> = {
 export type BulkMetadataResponse<T, M> = BulkResponse<T> & {
   metadata?: M;
 };
+
+// TODO: Clean Up
 
 export type DestroyResponse = {
   success: boolean;

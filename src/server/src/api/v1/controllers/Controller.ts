@@ -1,12 +1,16 @@
 import { Request } from 'express';
-import { Query } from 'express-serve-static-core';
 
+import { CustomHeader } from './types';
+import { SUPPORTED_LOCALES, SupportedLocale } from '../../../core/locales';
+import { firstOf } from '../../../core/utils';
 import { DBService } from '../../../services';
 
 export abstract class BaseController {
 
-  public static serializeParams(params: Query) {
-    return Object.fromEntries(Object.entries(params).map(([key, value]) => { 
+  public static serializeParams(req: Request) {
+    const params = Object.fromEntries(Object.entries({
+      ... req.query, ...req.params, ...req.headers, 
+    }).map(([key, value]) => { 
       if (value === 'true') {
         return [key, true];
       }
@@ -24,18 +28,22 @@ export abstract class BaseController {
       }
       return [key, value];
     }));
+    return {
+      ...params,
+      locale: this.parseLocale(req),
+      platform: req.get(CustomHeader.PLATFORM),
+      userId: req.get(CustomHeader.USER_ID),
+      uuid: req.get(CustomHeader.UUID),
+      version: req.get(CustomHeader.VERSION),
+    };
   }
 
-  public static extractParams(req: Request) {
-    return {
-      locale: req.get('x-locale'),
-      platform: req.get('x-platform'),
-      userId: req.get('x-user-id'),
-      uuid: req.get('x-uuid'),
-      version: req.get('x-version'),
-      ...req.params,
-      ...BaseControllerWithPersistentStorageAccess.serializeParams(req.query),
-    };
+  public static parseLocale(req: Request) {
+    const code = firstOf(req.query['locale']) || req.get(CustomHeader.LOCALE);
+    if (!(new RegExp(SUPPORTED_LOCALES.join('|')).test(code))) {
+      return undefined;
+    }
+    return code as SupportedLocale;
   }
 
 }

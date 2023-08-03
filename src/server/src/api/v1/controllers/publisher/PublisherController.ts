@@ -1,6 +1,8 @@
+import { Request as ExpressRequest } from 'express';
 import {
   Get,
   Query,
+  Request,
   Response,
   Route,
   Security,
@@ -8,13 +10,10 @@ import {
   Tags,
 } from 'tsoa';
  
-import { BulkResponse } from '..';
+import { BaseController, BulkResponse } from '..';
+import { SupportedLocale } from '../../../../core/locales';
 import { AuthError, InternalError } from '../../middleware';
-import {
-  FindAndCountOptions,
-  PublicPublisherAttributes,
-  Publisher,
-} from '../../schema';
+import { PublicPublisherAttributes, Publisher } from '../../schema';
 
 @Route('/v1/publisher')
 @Tags('Publisher')
@@ -24,15 +23,18 @@ import {
 @SuccessResponse(204, 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Error')
-export class PublisherController {
+export class PublisherController extends BaseController {
   
   @Get('/')
   public static async getPublishers(
+    @Request() req: ExpressRequest,
+    @Query() locale?: SupportedLocale,
     @Query() _userId?: number,
     @Query() _filter?: string
   ): Promise<BulkResponse<PublicPublisherAttributes>> {
-    const options: FindAndCountOptions<Publisher> = { order: [['displayName', 'ASC']] };
-    const publishers = await Publisher.scope('public').findAndCountAll(options);
+    const params = this.serializeParams(req);
+    console.log('fuck', params);
+    const publishers = await Publisher.getPublishers(locale ?? params.locale);
     return publishers;
   }
   

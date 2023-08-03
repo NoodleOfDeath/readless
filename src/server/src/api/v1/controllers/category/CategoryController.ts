@@ -10,8 +10,8 @@ import {
   Tags,
 } from 'tsoa';
   
-import { BulkResponse } from '../';
-import { parseLocale } from '../../../../core/locales';
+import { BaseController, BulkResponse } from '../';
+import { SupportedLocale } from '../../../../core/locales';
 import { AuthError, InternalError } from '../../middleware';
 import { Category, PublicCategoryAttributes } from '../../schema';
 
@@ -23,17 +23,17 @@ import { Category, PublicCategoryAttributes } from '../../schema';
 @SuccessResponse(204, 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Error')
-export class CategoryController {
+export class CategoryController extends BaseController {
   
   @Get('/')
   public static async getCategories(
     @Request() req: ExpressRequest,
-    @Query() locale = parseLocale(req.query['locale']),
+    @Query() locale?: SupportedLocale,
     @Query() _userId?: number,
     @Query() _filter?: string
   ): Promise<BulkResponse<PublicCategoryAttributes>> {
-    const params = { locale: locale ?? parseLocale(req.headers['x-locale']) };
-    const categories = await Category.getCategories(params.locale);
+    const params = this.serializeParams(req);
+    const categories = await Category.getCategories(locale ?? params.locale);
     return categories;
   }
   

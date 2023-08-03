@@ -12,7 +12,7 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await PublisherController.getPublishers(req.body);
+      const response = await PublisherController.getPublishers(req);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

@@ -1,6 +1,5 @@
 import { QueryTypes } from 'sequelize';
 import {
-  AfterFind,
   Column,
   DataType,
   Table,
@@ -41,17 +40,6 @@ export class Category<
     }
   }
 
-  @AfterFind
-  static async legacySupport(cursor: Category | Category[]) {
-    if (!cursor) {
-      return;
-    }
-    const categories = Array.isArray(cursor) ? cursor : [cursor];
-    for (const category of categories) {
-      category.set('sentiment', 0, { raw: true });
-    }
-  }
-  
   static async getCategories(locale: SupportedLocale = 'en') {
     const replacements = { locale };
     const categories: CategoryAttributes[] = await this.store.query(PUBLIC_CATEGORIES, {
