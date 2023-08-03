@@ -301,7 +301,10 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         try {
           const results = JSON.parse(cache.value);
           results.rows = results.rows.filter((r: PublicSummaryGroup) => (!excludeIds || (excludeIds && !idArray.includes(r.id))) && !(r.publisher.name in excludedPublishers) && !(r.category.name in excludedCategories));
-          return results;
+          return {
+            count: results.rows.length,
+            rows: results.rows,
+          };
         } catch (err) {
           console.error(err);
         }
