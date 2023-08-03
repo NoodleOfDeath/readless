@@ -5,31 +5,25 @@ import {
   ChildlessViewProps,
   GridPicker,
 } from '~/components';
-import { SessionContext, useCategoryClient } from '~/core';
+import { SessionContext } from '~/core';
 
 export type CategoryPickerProps = ChildlessViewProps & {
   onValueChange?: (categories?: string[]) => void;
 };
 
 export function CategoryPicker(props: CategoryPickerProps) {
-  const { getCategories } = useCategoryClient();
-  const { followedCategories, setCategories } = React.useContext(SessionContext);
+  const { followedCategories, categories } = React.useContext(SessionContext);
   const [selectedCategories] = React.useState<string[]>(Object.keys({ ...followedCategories }));
-  const fetch = React.useCallback(async () => {
-    const { data } = await getCategories();
-    setCategories(Object.fromEntries((data.rows).map((r) => [r.name, r])));
-    return data.rows.map((category) => ({
-      icon: <ChannelIcon category={ category } />,
-      label: category.displayName,
-      payload: category,
-      value: category.name,
-    }));
-  }, [getCategories, setCategories]);
   return (
     <GridPicker
       { ...props }
       searchable
-      options={ fetch }
+      options={ Object.values({ ...categories }).map((category) => ({
+        icon: <ChannelIcon category={ category } />,
+        label: category.displayName,
+        payload: category,
+        value: category.name,
+      })) }
       multi
       initialValue={ selectedCategories }
       onValueChange={ (states) => {

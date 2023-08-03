@@ -63,13 +63,12 @@ export const enStrings = {
   misc_noPublishers: 'You are not following any publishers',
   misc_publisher: 'Publisher',
   misc_publishers: 'Publishers',
-  
   misc_readless: 'Read Less',
   misc_sweetGotIt: 'Sweet, got it!',
+  misc_system: 'System',
+
   nav_browseCategories: 'Browse Categories',
-  
   nav_browsePublishers: 'Browse Publishers',
-  
   nav_yourFollows: 'Your Follows',
   
   // recaps
@@ -80,6 +79,7 @@ export const enStrings = {
   screens_about: 'About',
   screens_bookmarks: 'Bookmarks',
   screens_browse: 'Browse',
+  screens_categories: 'Categories',
   screens_colorScheme: 'Color Scheme',
   screens_font: 'Font',
   screens_home: 'Home',
@@ -88,6 +88,7 @@ export const enStrings = {
   screens_preferredReadingFormat: 'Preferred Reading Format',
   screens_preferredShortPressFormat: 'Preferred Short Press Format',
   screens_profile: 'Profile',
+  screens_publishers: 'Publishers',
   screens_recap: 'Recap',
   screens_search: 'Search',
   screens_settings: 'Settings',

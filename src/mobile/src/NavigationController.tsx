@@ -26,6 +26,9 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 
+import { CategoryPickerScreen } from './screens/settings/CategoryPickerScreen';
+import { PublisherPickerScreen } from './screens/settings/PublisherPickerScreen';
+
 import {
   ActivityIndicator,
   Badge,
@@ -168,11 +171,21 @@ const STACK_SCREENS: RouteConfig<
     },
   },
   {
-    component: TriggerWordPickerScreen,
-    name: 'triggerWordPicker',  
+    component: PublisherPickerScreen,
+    name: 'publisherPicker',
     options: {
+      headerBackTitle: '',
       headerRight: () => undefined, 
-      headerTitle: strings.screens_triggerWords, 
+      headerTitle: strings.screens_publishers, 
+    },
+  },
+  {
+    component: CategoryPickerScreen,
+    name: 'categoryPicker',
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_categories, 
     },
   },
   {
@@ -191,6 +204,14 @@ const STACK_SCREENS: RouteConfig<
       headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_preferredReadingFormat, 
+    },
+  },
+  {
+    component: TriggerWordPickerScreen,
+    name: 'triggerWordPicker',  
+    options: {
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_triggerWords, 
     },
   },
   {
@@ -333,11 +354,11 @@ function DrawerContent(props: DrawerContentComponentProps) {
       <DrawerItem 
         key="browse-publishers"
         label={ strings.nav_browsePublishers }
-        onPress={ () => SheetManager.show('custom-feed-walkthrough') }
+        onPress={ () => navigate('publisherPicker') }
         right={ (props) => <Icon { ...props } name="menu-right" /> } />
     );
     return items;
-  }, [publishers, followedPublishers, openPublisher]);
+  }, [publishers, followedPublishers, openPublisher, navigate]);
   
   const categoryItems = React.useMemo(() => {
     if (!categories) {
@@ -371,11 +392,11 @@ function DrawerContent(props: DrawerContentComponentProps) {
       <DrawerItem 
         key="browse-categories"
         label={ strings.nav_browseCategories }
-        onPress={ () => SheetManager.show('custom-feed-walkthrough') }
+        onPress={ () => navigate('categoryPicker') }
         right={ (props) => <Icon { ...props } name="menu-right" /> } />
     );
     return items;
-  }, [categories, followedCategories, openCategory]);
+  }, [categories, followedCategories, openCategory, navigate]);
   
   return (
     <DrawerContentScrollView { ...props }>
@@ -390,7 +411,8 @@ function DrawerContent(props: DrawerContentComponentProps) {
         title={ strings.misc_categories }>
         {categoryItems}
       </DrawerSection>
-      <DrawerSection>
+      <DrawerSection
+        title={ strings.misc_system }>
         <DrawerItem
           label={ `${strings.screens_bookmarks} (${bookmarkCount})` }
           icon={ (props) => (

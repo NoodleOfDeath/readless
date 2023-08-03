@@ -15,6 +15,8 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 - Production (ios): [https://apps.apple.com/us/app/read-less-news/id6447275859](https://apps.apple.com/us/app/read-less-news/id6447275859)
 - Production (android): [https://play.google.com/store/apps/details?id=ai.readless.ReadLess](https://play.google.com/store/apps/details?id=ai.readless.ReadLess)
 
+- Child Project [Search Less](https://github.com/noodleofdeath/searchless)
+
 ## Table of Contents <!-- omit in toc -->
 
 - [Roadmap](#roadmap)
