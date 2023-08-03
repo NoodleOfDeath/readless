@@ -96,7 +96,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     if (!queue) {
       throw new Error(`missing queue?! ${queueProps.name}`);
     }
-    const workerCount = await Worker.count({ where: { queue: queueProps.name } });
+    const workerCount = await Worker.count({ where: { queue: queueProps.name, state: 'processing' } });
     const worker = await Worker.create({
       host: HOST,
       options: {
