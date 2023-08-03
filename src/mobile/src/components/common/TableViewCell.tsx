@@ -87,17 +87,14 @@ export type TableViewCellProps = TextProps & ChildlessViewProps & {
 export function TableViewCell(props: TableViewCellProps) {
   const theme= useTheme();
   const style = useStyles(props);
-  const textStyles = useTextStyles({
-    ...props, fontSizeFixed: true, system: true, 
-  });
+  const textStyles = useTextStyles({ ...props, system: true });
   const stylesWithoutFontScaling = { ...textStyles };
-  delete stylesWithoutFontScaling.fontSize;
   return (
     <Cell
       { ...props }
       allowFontScaling
       contentContainerStyle={ [stylesWithoutFontScaling] }
-      titleTextStyle={ [stylesWithoutFontScaling, props.titleTextStyle] }
+      titleTextStyle={ [stylesWithoutFontScaling, props.titleTextStyle, { flex: 1 }] }
       detailTextStyle={ [stylesWithoutFontScaling, props.detailTextStyle, { color: theme.colors.textSecondary }] }
       subtitleTextStyle={ [stylesWithoutFontScaling, props.subtitleTextStyle, { color: theme.colors.textSecondary }] }
       accessoryColor={ props.accessoryColor || theme.colors.textSecondary }

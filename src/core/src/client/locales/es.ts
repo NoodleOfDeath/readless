@@ -172,6 +172,7 @@ export const esStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Análisis de los sentimientos',
   summary_sentimentAnalysisInfo: 'El análisis de sentimientos es una herramienta que nos ayuda a comprender cómo se sienten las personas acerca de algo mediante el análisis de su lenguaje. Examina las palabras que usa la gente y decide si son positivas, negativas o neutrales. Esto puede ser útil en muchas áreas, como comprender los comentarios de los clientes o la opinión pública sobre un tema.',
   summary_sentimentScore: 'Esta es una puntuación de sentimiento, que mide cómo se sienten las personas acerca de algo utilizando una escala de -1 (negativo) a +1 (positivo), siendo 0 neutral.',
+  summary_shortSummary: 'Breve resumen',
   summary_summary: 'Resumen',
   summary_thisImageWasTakenFromTheArticle: 'Esta imagen es del artículo original y no fue tomada por Read Less personell',
   summary_thisIsNotARealImage: 'Esta imagen se generó con IA y no es una foto real de un evento, lugar, cosa o persona real.',

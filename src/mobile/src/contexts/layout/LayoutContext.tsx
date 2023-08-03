@@ -10,10 +10,12 @@ export const LayoutContext = React.createContext(DEFAULT_LAYOUT_CONTEXT);
 export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
   const [orientation, setOrientation] = React.useState<OrientationType>(Orientation.getInitialOrientation());
-  const dimensions = useWindowDimensions();
+  const {
+    width: screenWidth, height: screenHeight, scale, fontScale, 
+  } = useWindowDimensions();
   
-  const isTablet = React.useMemo(() => dimensions.width >= 1024, [dimensions.width]);
-  const supportsMasterDetail = React.useMemo(() => dimensions.width > 1200, [dimensions?.width]);
+  const isTablet = React.useMemo(() =>screenWidth >= 1024, [screenWidth]);
+  const supportsMasterDetail = React.useMemo(() => screenWidth > 1200, [screenWidth]);
 
   const lockRotation = React.useCallback((newOrientaion?: OrientationType) => {
     switch (newOrientaion ?? orientation) {
@@ -50,10 +52,13 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
   return (
     <LayoutContext.Provider value={ {
-      dimensions,
+      fontScale,
       isTablet,
       lockRotation,
       orientation,
+      scale,
+      screenHeight,
+      screenWidth,
       supportsMasterDetail,
       unlockRotation,
     } }>

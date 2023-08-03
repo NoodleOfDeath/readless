@@ -43,7 +43,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     async (summary: PublicSummaryGroup, interaction: InteractionType, format?: ReadingFormat) => {
       handleInteraction(summary, InteractionType.Read, undefined, { format });
       navigation?.push('summary', {
-        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Summary,
+        initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary,
       });
     },

@@ -172,6 +172,7 @@ export const viStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Phân tích tình cảm',
   summary_sentimentAnalysisInfo: 'Phân tích tình cảm là một công cụ giúp chúng tôi hiểu cảm nhận của mọi người về điều gì đó bằng cách phân tích ngôn ngữ của họ. Nó xem xét những từ mọi người sử dụng và quyết định xem chúng là tích cực, tiêu cực hay trung lập. Điều này có thể hữu ích trong nhiều lĩnh vực, chẳng hạn như hiểu phản hồi của khách hàng hoặc dư luận về một chủ đề.',
   summary_sentimentScore: 'Đây là điểm số tình cảm, đo lường cảm nhận của mọi người về điều gì đó bằng cách sử dụng thang điểm từ -1 (tiêu cực) đến +1 (tích cực), với 0 là trung tính.',
+  summary_shortSummary: 'Tóm tắt ngắn',
   summary_summary: 'Bản tóm tắt',
   summary_thisImageWasTakenFromTheArticle: 'Hình ảnh này là từ bài viết gốc và không được chụp bởi Read Less personell',
   summary_thisIsNotARealImage: 'Hình ảnh này được tạo bằng AI và không phải là ảnh thực của một sự kiện, địa điểm, sự vật hoặc con người có thật.',

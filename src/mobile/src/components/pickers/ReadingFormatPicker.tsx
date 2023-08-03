@@ -16,8 +16,9 @@ type Props = ChildlessViewProps & {
 };
 
 const ICONS = {
-  [ReadingFormat.Summary]: 'text.justify.left',
   [ReadingFormat.Bullets]: 'list.bullet',
+  [ReadingFormat.ShortSummary]: 'text.short',
+  [ReadingFormat.Summary]: 'text.justify.left',
   [ReadingFormat.FullArticle]: 'book',
 };
 
@@ -51,14 +52,14 @@ export function ReadingFormatPicker({
       onValueChange={ (value) => onChange?.(value) }
       options={ [
         {
-          icon: 'text-long',
-          label: strings.summary_summary,
-          value: ReadingFormat.Summary,
-        },
-        {
           icon: 'view-list',
           label: strings.summary_bullets,
           value: ReadingFormat.Bullets,
+        },
+        {
+          icon: 'text-long',
+          label: strings.summary_summary,
+          value: ReadingFormat.Summary,
         },
         {
           icon: 'book-open-variant',

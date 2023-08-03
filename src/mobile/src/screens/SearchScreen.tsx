@@ -14,6 +14,7 @@ export function SearchScreen({
     <Screen>
       <SummaryList
         landscapeEnabled
+        enableTts
         fetch={ getSummaries }
         filter={ route?.params?.prefilter }
         specificIds={ route?.params?.specificIds } />

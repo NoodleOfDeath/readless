@@ -172,6 +172,7 @@ export const deStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Stimmungsanalyse',
   summary_sentimentAnalysisInfo: 'Die Stimmungsanalyse ist ein Tool, das uns hilft, durch die Analyse ihrer Sprache zu verstehen, wie Menschen über etwas denken. Es untersucht die von Menschen verwendeten Wörter und entscheidet, ob sie positiv, negativ oder neutral sind. Dies kann in vielen Bereichen nützlich sein, beispielsweise beim Verständnis von Kundenfeedback oder der öffentlichen Meinung zu einem Thema.',
   summary_sentimentScore: 'Hierbei handelt es sich um einen Sentiment-Score, der anhand einer Skala von -1 (negativ) bis +1 (positiv) misst, wie Menschen über etwas denken, wobei 0 neutral ist.',
+  summary_shortSummary: 'Kurze Zusammenfassung',
   summary_summary: 'Zusammenfassung',
   summary_thisImageWasTakenFromTheArticle: 'Dieses Bild stammt aus dem Originalartikel und wurde nicht von Read Less-Mitarbeitern aufgenommen',
   summary_thisIsNotARealImage: 'Dieses Bild wurde mithilfe von KI erstellt und ist kein echtes Foto eines realen Ereignisses, Ortes, einer realen Sache oder einer realen Person.',

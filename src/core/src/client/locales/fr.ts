@@ -172,6 +172,7 @@ export const frStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Analyse des sentiments',
   summary_sentimentAnalysisInfo: 'L\'analyse des sentiments est un outil qui nous aide à comprendre ce que les gens ressentent à propos de quelque chose en analysant leur langage. Il examine les mots que les gens utilisent et décide s\'ils sont positifs, négatifs ou neutres. Cela peut être utile dans de nombreux domaines, comme comprendre les commentaires des clients ou l\'opinion publique sur un sujet.',
   summary_sentimentScore: 'Il s\'agit d\'un score de sentiment, qui mesure ce que les gens ressentent à l\'aide d\'une échelle allant de -1 (négatif) à +1 (positif), 0 étant neutre.',
+  summary_shortSummary: 'Court résumé',
   summary_summary: 'Résumé',
   summary_thisImageWasTakenFromTheArticle: 'Cette image est tirée de l\'article original et n\'a pas été prise par Read Less personell',
   summary_thisIsNotARealImage: 'Cette image a été générée à l\'aide de l\'IA et n\'est pas une vraie photo d\'un événement, d\'un lieu, d\'une chose ou d\'une personne réels.',

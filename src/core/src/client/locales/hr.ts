@@ -172,6 +172,7 @@ export const hrStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Analiza osjećaja',
   summary_sentimentAnalysisInfo: 'Analiza osjećaja je alat koji nam pomaže razumjeti što ljudi misle o nečemu analizirajući njihov jezik. Promatra riječi koje ljudi koriste i odlučuje jesu li pozitivne, negativne ili neutralne. To može biti korisno u mnogim područjima, poput razumijevanja povratnih informacija korisnika ili javnog mnijenja o nekoj temi.',
   summary_sentimentScore: 'Ovo je rezultat osjećaja koji mjeri kako ljudi misle o nečemu koristeći ljestvicu od -1 (negativno) do +1 (pozitivno), pri čemu je 0 neutralna.',
+  summary_shortSummary: 'Kratak sažetak',
   summary_summary: 'Sažetak',
   summary_thisImageWasTakenFromTheArticle: 'Ova je slika iz izvornog članka i nije ju snimila osoba Read Less',
   summary_thisIsNotARealImage: 'Ova je slika generirana pomoću umjetne inteligencije i nije stvarna fotografija stvarnog događaja, mjesta, stvari ili osobe.',

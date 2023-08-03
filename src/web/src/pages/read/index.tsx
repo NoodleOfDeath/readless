@@ -39,7 +39,7 @@ export default function AppPage({
 
   const { preferredReadingFormat } = React.useContext(SessionContext);
   
-  const initialFormat = React.useMemo(() => readingFormat(searchParams.get('f') ?? initialFormat0 ?? preferredReadingFormat ?? ReadingFormat.Summary), [initialFormat0, preferredReadingFormat, searchParams]);
+  const initialFormat = React.useMemo(() => readingFormat(searchParams.get('f') ?? initialFormat0 ?? preferredReadingFormat ?? ReadingFormat.Bullets), [initialFormat0, preferredReadingFormat, searchParams]);
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [totalResults, setTotalResults] = React.useState<number>(0);

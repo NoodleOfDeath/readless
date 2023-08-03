@@ -7977,10 +7977,10 @@ react-native-localization@^2.3.1:
   dependencies:
     react-localization "^1.0.17"
 
-react-native-notifications@^4.3.3:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/react-native-notifications/-/react-native-notifications-4.3.5.tgz#90c7f3b1b248f6628c8efc8cafab4fd464ce3e5a"
-  integrity sha512-tCKkPaauN8/RIwPTeWdyezHXt5i4iDJViZGZ7/EBBuHB9kl9Oq3UjKFZeDfnM4DmJt+m7K2FQ7NaAuh3Kg1FCA==
+react-native-notifications@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-notifications/-/react-native-notifications-5.0.0.tgz#a6f8cead3372aa81aead50e9fc8bfac77d5b786d"
+  integrity sha512-QXtBBmbDtwq9X8WAPLn+OctIeEtnJOQ+RCT6iweaypvFTydt2baLPtawTAbCSXKuWpVDqDAdmZnlQjCcavNzoA==
 
 react-native-orientation-locker@^1.5.0:
   version "1.5.0"

@@ -34,12 +34,11 @@ export function FontPicker({
   if (variant === 'grid') {
     return (
       <GridPicker
-        centered
         options={ [...AVAILABLE_FONTS] }
         initialValue={ fontFamily as FontFamily }
         buttonProps={ ({ option }) => ({ fontFamily: option.value }) }
-        onValueChange={ (state) => {
-          setPreference('fontFamily', state?.value); 
+        onValueChange={ (font) => {
+          setPreference('fontFamily', font); 
         } } />
     );
   } else
@@ -75,7 +74,7 @@ export function FontPicker({
       options={ [...AVAILABLE_FONTS] }
       initialValue={ fontFamily as FontFamily }
       cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
-      onValueChange={ (state) => setPreference('fontFamily', state?.value) }>
+      onValueChange={ (font) => setPreference('fontFamily', font) }>
       <ScrollView my={ 12 } scrollEnabled={ false }>
         <Summary
           sample

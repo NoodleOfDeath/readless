@@ -145,7 +145,8 @@ export function SettingsTable() {
             bold
             cellStyle="RightDetail"
             title={ strings.settings_preferredShortPressFormat }
-            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_summary }
+            sentenceCase
+            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_shortSummary }
             accessory="DisclosureIndicator"
             cellIcon="gesture-tap-hold"
             onPress={ () => navigate('shortPressFormatPicker') } />
@@ -154,7 +155,7 @@ export function SettingsTable() {
           bold
           cellStyle="RightDetail"
           title={ strings.settings_preferredReadingFormat }
-          detail={ preferredReadingFormat === ReadingFormat.Bullets ? strings.summary_bullets : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_summary }
+          detail={ preferredReadingFormat === ReadingFormat.Summary ? strings.summary_summary : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_bullets }
           accessory="DisclosureIndicator"
           cellIcon="gesture-tap"
           onPress={ () => navigate('readingFormatPicker') } />

@@ -1,4 +1,4 @@
-export * from './dialog';
+export * from './notifications';
 export * from './iap';
 export * from './layout';
 export * from './media';

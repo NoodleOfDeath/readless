@@ -172,6 +172,7 @@ export const caStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Anàlisi de sentiments',
   summary_sentimentAnalysisInfo: 'L\'anàlisi de sentiments és una eina que ens ajuda a entendre com se senten les persones sobre alguna cosa mitjançant l\'anàlisi del seu llenguatge. Observa les paraules que la gent utilitza i decideix si són positives, negatives o neutres. Això pot ser útil en moltes àrees, com ara entendre els comentaris dels clients o l\'opinió pública sobre un tema.',
   summary_sentimentScore: 'Aquesta és una puntuació de sentiment, que mesura com se senten les persones sobre alguna cosa utilitzant una escala de -1 (negatiu) a +1 (positiu), on 0 és neutre.',
+  summary_shortSummary: 'Breu resum',
   summary_summary: 'Resum',
   summary_thisImageWasTakenFromTheArticle: 'Aquesta imatge és de l\'article original i no ha estat presa pel personal de Read Less',
   summary_thisIsNotARealImage: 'Aquesta imatge es va generar amb IA i no és una foto real d\'un esdeveniment, lloc, cosa o persona real.',

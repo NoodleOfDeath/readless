@@ -24,7 +24,7 @@ export function OldNewsTab({
           <Text mx={ 12 }>
             {strings.recaps_information}
           </Text>
-          <Divider />
+          <Divider mb={ 12 } />
         </View>
       ) } />
   );
@@ -42,6 +42,8 @@ export function YourNewsTab({
   }, [followFilter]));
   return ( 
     <SummaryList
+      fancy
+      enableTts
       landscapeEnabled
       fetch={ getSummaries }
       filter={ filter } />
@@ -55,6 +57,8 @@ export function TopStoriesTab({
   const { getTopStories } = useSummaryClient();
   return ( 
     <SummaryList
+      fancy
+      enableTts
       landscapeEnabled
       fetch={ getTopStories }
       interval='1d' />
@@ -68,6 +72,7 @@ export function LiveFeedTab({
   const { getSummaries } = useSummaryClient();
   return ( 
     <SummaryList 
+      enableTts
       landscapeEnabled
       fetch={ getSummaries } />
   );

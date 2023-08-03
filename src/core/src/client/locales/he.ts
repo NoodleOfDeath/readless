@@ -172,6 +172,7 @@ export const heStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'ניתוח הסנטימנט',
   summary_sentimentAnalysisInfo: 'ניתוח סנטימנטים הוא כלי שעוזר לנו להבין איך אנשים מרגישים לגבי משהו על ידי ניתוח השפה שלהם. הוא מסתכל על המילים שאנשים משתמשים בהן ומחליט אם הן חיוביות, שליליות או ניטרליות. זה יכול להיות שימושי בתחומים רבים, כמו הבנת משוב לקוחות או דעת קהל על נושא מסוים.',
   summary_sentimentScore: 'זהו ציון סנטימנט, שמודד איך אנשים מרגישים לגבי משהו באמצעות סולם מ-1 (שלילי) ל-+1 (חיובי), כאשר 0 הוא ניטרלי.',
+  summary_shortSummary: 'סיכום קצר',
   summary_summary: 'סיכום',
   summary_thisImageWasTakenFromTheArticle: 'תמונה זו היא מהמאמר המקורי ולא צולמה על ידי אנשי Read Less',
   summary_thisIsNotARealImage: 'תמונה זו נוצרה באמצעות AI ואינה תמונה אמיתית של אירוע, מקום, דבר או אדם אמיתיים.',

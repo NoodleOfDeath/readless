@@ -26,9 +26,11 @@ export function PublisherScreen({
   const {
     followedPublishers,
     followPublisher,
+    publishers,
   } = React.useContext(SessionContext);
 
-  const publisher = React.useMemo(() => route?.params?.publisher, [route]);
+  const publisher0 = React.useMemo(() => route?.params?.publisher, [route]);
+  const publisher = React.useMemo(() => publisher0 && publishers?.[publisher0.name], [publisher0, publishers]);
 
   const [followed, setFollowed] = React.useState((publisher?.name ?? '') in { ...followedPublishers });
 

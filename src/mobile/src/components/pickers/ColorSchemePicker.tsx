@@ -1,7 +1,5 @@
 import React from 'react';
 
-import analytics from '@react-native-firebase/analytics';
-
 import { 
   ScrollView,
   SegmentedButtons, 
@@ -11,7 +9,6 @@ import {
 } from '~/components';
 import { ColorScheme, SessionContext } from '~/contexts';
 import { strings } from '~/locales';
-import { getUserAgent } from '~/utils';
 
 type ColorSchemePickerProps = Omit<SegmentedButtonsProps, 'options'> & {
   variant?: 'table' | 'buttons';
@@ -35,8 +32,8 @@ export function ColorSchemePicker({
           { label: strings.settings_dark, value: 'dark' as ColorScheme },
         ] }
         initialValue={ colorScheme ?? 'system' }
-        onValueChange={ (state) => {
-          setPreference('colorScheme', state?.value); 
+        onValueChange={ (colorScheme) => {
+          setPreference('colorScheme', colorScheme); 
         } }>
         <ScrollView my={ 12 } scrollEnabled={ false }>
           <Summary

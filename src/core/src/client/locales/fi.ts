@@ -172,6 +172,7 @@ export const fiStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Tunneanalyysi',
   summary_sentimentAnalysisInfo: 'Tunneanalyysi on työkalu, joka auttaa meitä ymmärtämään, mitä ihmiset ajattelevat jostain analysoimalla heidän kieltään. Se tarkastelee ihmisten käyttämiä sanoja ja päättää, ovatko ne positiivisia, negatiivisia vai neutraaleja. Tästä voi olla hyötyä monilla aloilla, kuten asiakaspalautteen tai aiheeseen liittyvän yleisen mielipiteen ymmärtämisessä.',
   summary_sentimentScore: 'Tämä on mielipidepistemäärä, joka mittaa ihmisten suhtautumista johonkin asteikolla -1 (negatiivinen) +1 (positiivinen), jolloin 0 on neutraali.',
+  summary_shortSummary: 'Lyhyt yhteenveto',
   summary_summary: 'Yhteenveto',
   summary_thisImageWasTakenFromTheArticle: 'Tämä kuva on alkuperäisestä artikkelista, eikä sitä ole ottanut Read Less personell',
   summary_thisIsNotARealImage: 'Tämä kuva on luotu tekoälyllä, eikä se ole oikea valokuva todellisesta tapahtumasta, paikasta, asiasta tai henkilöstä.',

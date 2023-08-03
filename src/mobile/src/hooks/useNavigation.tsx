@@ -40,7 +40,7 @@ export function useNavigation() {
   const openSummary = React.useCallback((props: RoutingParams['summary']) => {
     navigate('summary', {
       ...props,
-      initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Summary,
+      initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets,
     });
   }, [navigate, preferredReadingFormat]);
 

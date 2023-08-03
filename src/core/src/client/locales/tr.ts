@@ -172,6 +172,7 @@ export const trStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Duygu Analizi',
   summary_sentimentAnalysisInfo: 'Duyarlılık analizi, insanların dillerini analiz ederek bir şey hakkında nasıl hissettiklerini anlamamıza yardımcı olan bir araçtır. İnsanların kullandığı kelimelere bakar ve bunların olumlu, olumsuz veya nötr olup olmadığına karar verir. Bu, bir konu hakkında müşteri geri bildirimlerini veya kamuoyunu anlamak gibi birçok alanda yararlı olabilir.',
   summary_sentimentScore: 'Bu, insanların -1 (negatif) ile +1 (pozitif) arasında bir ölçek kullanarak bir şey hakkında ne hissettiklerini ölçen ve 0\'ın nötr olduğu bir duyarlılık puanıdır.',
+  summary_shortSummary: 'Kısa özet',
   summary_summary: 'Özet',
   summary_thisImageWasTakenFromTheArticle: 'Bu görüntü orijinal makaleden alınmıştır ve Daha Az Oku personeli tarafından çekilmemiştir.',
   summary_thisIsNotARealImage: 'Bu görüntü AI kullanılarak oluşturulmuştur ve gerçek bir olayın, yerin, şeyin veya kişinin gerçek bir fotoğrafı değildir.',

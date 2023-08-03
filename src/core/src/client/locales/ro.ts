@@ -172,6 +172,7 @@ export const roStrings: typeof enStrings = {
   summary_sentimentAnalysis: 'Analiza sentimentelor',
   summary_sentimentAnalysisInfo: 'Analiza sentimentelor este un instrument care ne ajută să înțelegem ce simt oamenii despre ceva prin analiza limbajului lor. Se uită la cuvintele folosite de oameni și decide dacă sunt pozitive, negative sau neutre. Acest lucru poate fi util în multe domenii, cum ar fi înțelegerea feedback-ului clienților sau a opiniei publice asupra unui subiect.',
   summary_sentimentScore: 'Acesta este un scor de sentiment, care măsoară modul în care oamenii se simt despre ceva folosind o scală de la -1 (negativ) la +1 (pozitiv), cu 0 fiind neutru.',
+  summary_shortSummary: 'Rezumat scurt',
   summary_summary: 'rezumat',
   summary_thisImageWasTakenFromTheArticle: 'Această imagine este din articolul original și nu a fost luată de personalul Read Less',
   summary_thisIsNotARealImage: 'Această imagine a fost generată folosind AI și nu este o fotografie reală a unui eveniment, loc, lucru sau persoană reală.',

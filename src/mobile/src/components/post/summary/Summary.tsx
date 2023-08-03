@@ -24,7 +24,6 @@ import {
   ChannelIcon,
   ChildlessViewProps,
   Chip,
-  CollapsedView,
   ContextMenu,
   ContextMenuAction,
   Highlighter,
@@ -54,6 +53,7 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   sample?: boolean;
   showcase?: boolean;
   big?: boolean;
+  halfBig?: boolean;
   summary?: PublicSummaryGroup
   tickInterval?: string;
   selected?: boolean;
@@ -149,7 +149,8 @@ export function Summary({
   tickInterval = '5m',
   selected,
   initialFormat,
-  big = Boolean(initialFormat),
+  halfBig,
+  big = halfBig || Boolean(initialFormat),
   keywords = [],
   bulletsAsShortSummary,
   summaryAsShortSummary,
@@ -508,7 +509,7 @@ export function Summary({
           setIsExcludingPublisher((prev) => !prev);
           excludePublisher(summary.publisher);
         },
-        systemIcon: 'xmark.circle.fill',
+        systemIcon: 'eye.slash',
         title: `${isExcludingPublisher ? strings.action_unexclude : strings.action_exclude} ${summary.publisher.displayName}`,
       },
       {
@@ -517,7 +518,7 @@ export function Summary({
           setIsExcludingCategory((prev) => !prev);
           excludeCategory(summary.category);
         },
-        systemIcon: 'xmark.circle.fill',
+        systemIcon: 'eye.slash',
         title: `${isExcludingCategory ? strings.action_unexclude : strings.action_exclude} ${summary.category.displayName}`,
       },
       {
@@ -525,7 +526,7 @@ export function Summary({
         onPress: () => {
           removeSummary(summary);
         },
-        systemIcon: 'xmark.circle.fill',
+        systemIcon: 'eye.slash',
         title: strings.summary_hide,
       }
     );
@@ -605,13 +606,19 @@ export function Summary({
         zIndex={ 2 }
         bg={ theme.colors.headerBackground }>
         <View flexRow itemsCenter gap={ 6 }>
-          {publisherChip}
+          <View
+            absolute={ halfBig }
+            top={ halfBig ? -32 : undefined }>
+            {publisherChip}
+          </View>
           <View flex={ 3 } flexRow itemsCenter gap={ 6 }>
-            <Text
-              caption
-              color={ theme.colors.textSecondary }>
-              •
-            </Text>
+            {!halfBig && (
+              <Text
+                caption
+                color={ theme.colors.textSecondary }>
+                •
+              </Text>
+            )}
             <Text  
               adjustsFontSizeToFit
               color={ theme.colors.textSecondary }
@@ -625,12 +632,13 @@ export function Summary({
         </View>
       </View>
     );
-  }, [forceExpanded, isCompact, initialFormat, hideHeader, theme.colors.headerBackground, theme.colors.textSecondary, publisherChip, timestamp, sentimentMeter]);
+  }, [forceExpanded, isCompact, initialFormat, hideHeader, theme.colors.headerBackground, theme.colors.textSecondary, halfBig, publisherChip, timestamp, sentimentMeter]);
 
   const footer = React.useMemo(() => {
     return (
       <View
         flexRow
+        flexWrap={ halfBig ? 'wrap' : undefined }
         gap={ 6 }
         itemsCenter>
         {!footerOnly && !forceExpanded && isCompact && (
@@ -688,7 +696,7 @@ export function Summary({
         {shareActions}
       </View>
     );
-  }, [footerOnly, forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, summary.category, summary.siblings?.length, hideArticleCount, isBookmarked, shareActions, disableInteractions, openCategory, navigate]);
+  }, [halfBig, footerOnly, forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, summary.category, summary.siblings?.length, hideArticleCount, isBookmarked, shareActions, disableInteractions, openCategory, navigate]);
   
   const articleImage = React.useMemo(() => {
     if (summary.media?.imageArticle) {
@@ -704,15 +712,15 @@ export function Summary({
     }
     return (
       <View
-        onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }
+        onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Bullets) }
         flexGrow={ 1 }
         maxWidth={ big ? Math.min(screenWidth, 480) - 12 : 64 }
         maxHeight={ big ? Math.min(screenHeight / 3, 300) : 64 }
         m={ big && !initialFormat ? undefined : 12 }>
         <View
-          brTopLeft={ big && !initialFormat ? 6 : undefined }
-          brTopRight={ big && !initialFormat ? 6 : undefined }
-          borderRadius={ big && !initialFormat ? undefined : 6 }
+          brTopLeft={ big && !initialFormat ? 12 : undefined }
+          brTopRight={ big && !initialFormat ? 12 : undefined }
+          borderRadius={ big && !initialFormat ? undefined : 12 }
           aspectRatio={ big ? 3/1.75 : 1 }
           overflow="hidden"
           zIndex={ 20 }>
@@ -734,7 +742,7 @@ export function Summary({
                 <View 
                   absolute
                   bottom={ 3 }
-                  left={ 3 }
+                  right={ 3 }
                   rounded
                   zIndex={ 30 }
                   bg={ theme.colors.backgroundTranslucent }>
@@ -742,7 +750,6 @@ export function Summary({
                     itemsCenter
                     flexRow
                     flex={ 1 }
-                    m={ 6 }
                     gap={ 6 }>
                     <Icon 
                       color={ theme.colors.textDark }
@@ -761,7 +768,7 @@ export function Summary({
         </View>
       </View>
     );
-  }, [forceExpanded, isCompact, showImage, imageUrl, footerOnly, big, screenWidth, screenHeight, initialFormat, showcase, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark, articleImage]);
+  }, [forceExpanded, isCompact, showImage, imageUrl, footerOnly, big, screenWidth, screenHeight, initialFormat, showcase, containsTrigger, theme.colors.backgroundTranslucent, theme.colors.textDark, articleImage, handleFormatChange, preferredReadingFormat]);
 
   const translateToggle = React.useMemo(() => {
     if (showcase) {
@@ -786,14 +793,15 @@ export function Summary({
     <View flex={ !initialFormat ? 1 : undefined } mb={ 6 }>
       <View
         row
-        onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Summary) }>
+        onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Bullets) }>
         <View
           flex={ 1 }
           flexGrow={ 1 }
           gap={ 6 }
-          pb={ 6 }
+          pb={ initialFormat ? 24 : 6 }
+          px={ initialFormat && !showcase ? 24 : 0 }
           pt={ initialFormat ? 12 : undefined }>
-          <View flex={ 1 } flexGrow={ 1 } gap={ 6 } mx={ 12 }>
+          <View flex={ 1 } flexGrow={ 1 } gap={ initialFormat ? 12 : 6 } mx={ 12 }>
             <View flex={ 1 }>
               {title}
             </View>
@@ -821,35 +829,28 @@ export function Summary({
   ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, showcase, keywords, cleanString, localizedStrings.shortSummary, big, image, hideFooter, footer, handleFormatChange, preferredReadingFormat]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
-    <View>
-      <CollapsedView 
-        disabled={ hideCard }
-        initiallyCollapsed={ false }
-        title={ (
-          <ReadingFormatPicker
-            my={ -12 }
-            elevated={ false }
-            format={ format } 
-            pressOnly={ !hideCard }
-            onChange={ handleFormatChange } />
-        ) }>
-        {content && (
-          <View gap={ 6 } pb={ 12 }>
-            <View gap={ 6 } p={ 12 }>
-              {translateToggle}
-              {renderContent(format)}
-            </View>
+    <View gap={ 12 }>
+      <ReadingFormatPicker
+        elevated={ false }
+        format={ format } 
+        pressOnly={ !hideCard }
+        onChange={ handleFormatChange } />
+      {content && (
+        <View gap={ 6 } pb={ 12 } px={ showcase ? 0 : 24 }>
+          <View gap={ showcase ? 6 : 12 } p={ 12 }>
+            {translateToggle}
+            {renderContent(format)}
           </View>
-        )}
-      </CollapsedView>
+        </View>
+      )}
     </View>
-  ), [footerOnly, hideCard, format, handleFormatChange, content, translateToggle, renderContent]);
+  ), [footerOnly, format, hideCard, handleFormatChange, content, showcase, translateToggle, renderContent]);
 
   const card = React.useMemo(() => footerOnly ? null : (
     <View
       flexGrow={ 1 }
       style={ { ...(big ? theme.components.cardBig : theme.components.card), ...style } }
-      borderRadius={ 6 }
+      borderRadius={ 12 }
       bg={ containsTrigger ? '#eecccc' : undefined }
       opacity={ isRead ? 0.75 : 1 }>
       <View flexRow flexGrow={ 1 }>
@@ -865,8 +866,8 @@ export function Summary({
           flexGrow={ 1 }
           gap={ 6 }
           overflow='hidden'
-          brTopLeft={ 6 }
-          brTopRight={ 6 }>
+          brTopLeft={ 12 }
+          brTopRight={ 12 }>
           <View>
             {big && image}
             {header}
@@ -880,7 +881,8 @@ export function Summary({
   const fullCard = React.useMemo(() => footerOnly ? null : (
     <View
       style={ { ...theme.components.card, ...style } }>   
-      <View>
+      <View
+        gap={ 12 }>
         <View flex={ 1 } flexRow={ supportsMasterDetail }>
           {!hideCard && image}
           <View 
