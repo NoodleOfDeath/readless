@@ -81,6 +81,13 @@ export class ScribeService extends BaseService {
     // fetch web content with the spider
     const loot = await PuppeteerService.loot(url, publisher, { content });
     // create the prompt onReply map to be sentto ChatGPT
+    if (!force) {
+      const existingMedia = await SummaryMedia.findOne({ where: { originalUrl: loot.imageUrls } });
+      if (existingMedia) {
+        console.log(`Media already exists for ${url}`);
+        return await Summary.findOne({ where: { id: existingMedia.parentId } });
+      }
+    }
     if (loot.content.split(' ').length > MAX_OPENAI_TOKEN_COUNT) {
       loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
     }

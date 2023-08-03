@@ -96,10 +96,14 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     if (!queue) {
       throw new Error(`missing queue?! ${queueProps.name}`);
     }
+    const workerCount = await Worker.count({ where: { queue: queueProps.name } });
     const worker = await Worker.create({
       host: HOST,
       options: {
-        autostart, fetchIntervalMs, fifo, 
+        autostart,
+        clockOffset: ms(`${(workerCount + 1) * fetchIntervalMs}s`),
+        fetchIntervalMs, 
+        fifo, 
       },
       queue: queueProps.name,
     });
@@ -127,7 +131,8 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
   }
 
   async start() {
-    console.log(`Starting worker (pid ${this.pid}) for queue "${this.queueProps.name}"`);
+    console.log(`Starting worker (pid ${this.pid}) for queue "${this.queueProps.name}" after ${this.options.clockOffset}ms`);
+    await new Promise((resolve) => setTimeout(resolve, this.options.clockOffset ?? 0));
     await this.setState('processing');
     this.process();
   }
