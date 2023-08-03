@@ -12,6 +12,7 @@ import { Sentimental } from '../sentiment/Sentiment.types';
 export const READING_FORMATS = {
   bullets: 'bullets',
   fullArticle: 'fullArticle',
+  shortSummary: 'shortSummary',
   summary: 'summary',
 } as const;
 
