@@ -754,6 +754,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: 'article p' },
       author: { selector: 'main header .entry__wirepartner span' },
       date: { selector: 'main header time' },
+      image: { selector: 'main img[class*="connatix-thumbnail"]' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/entry/"]',
