@@ -79,7 +79,9 @@ FROM (
       LEFT OUTER JOIN summary_translations st ON st."parentId" = s.id
       AND st.locale = :locale
       LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
-      WHERE (
+      WHERE 
+        s."deletedAt" IS NULL
+        AND (
           (s."originalDate" > NOW() - INTERVAL :interval)
           OR (
             (s."originalDate" >= :startDate)

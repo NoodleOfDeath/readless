@@ -76,7 +76,9 @@ FROM (
       LEFT OUTER JOIN summaries sibling ON (sibling.id = sr."siblingId")
         AND (sibling."deletedAt" IS NULL)
         AND (sibling."originalDate" > NOW() - INTERVAL :interval)
-      WHERE (
+      WHERE 
+        s."deletedAt" IS NULL
+        AND (
           (s."originalDate" > NOW() - INTERVAL :interval)
           OR (
             (s."originalDate" >= :startDate)
