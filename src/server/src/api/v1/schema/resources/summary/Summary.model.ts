@@ -299,12 +299,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       const cache = await Cache.fromKey(cacheKey);
       if (cache && cache.expiresSoon === false) {
         try {
-          const results = JSON.parse(cache.value);
-          results.rows = results.rows.filter((r: PublicSummaryGroup) => (!excludeIds || (excludeIds && !idArray.includes(r.id))) && !(r.publisher.name in excludedPublishers) && !(r.category.name in excludedCategories));
-          return {
-            count: results.rows.length,
-            rows: results.rows,
-          };
+          return JSON.parse(cache.value);
         } catch (err) {
           console.error(err);
         }
