@@ -15,26 +15,24 @@ import { useTheme } from '~/hooks';
 
 export type GridPickerProps<
   T extends string,
-  P,
   Multi extends true | false = false,
-  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
-> = Omit<PickerProps<T, P, Multi, InitialValue, CurrentValue>, 'render'> & {
+  Value extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  OptionValue extends Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
+> = Omit<PickerProps<T, Multi, Value, OptionValue>, 'render'> & {
   cols?: number;
   buttonProps?: Partial<ButtonProps> | ((state: SelectOptionState<T>) => Partial<ButtonProps>);
 };
 
 export function GridPicker<
   T extends string,
-  P,
   Multi extends true | false = false,
-  InitialValue extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
-  CurrentValue extends Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined) = Multi extends true ? SelectOption<T, P>[] : (SelectOption<T, P> | undefined)
+  Value extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
+  OptionValue extends Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 >({
   cols = 3,
   buttonProps: buttonProps0,
   ...props
-}: GridPickerProps<T, P, Multi, InitialValue, CurrentValue>) {
+}: GridPickerProps<T, Multi, Value, OptionValue>) {
 
   const theme = useTheme();
 
@@ -47,7 +45,7 @@ export function GridPicker<
     });
   }, [buttonProps0, theme.components.chipSelected]);
 
-  const itemWidth = React.useMemo(() => layout?.width ? layout.width / cols : undefined, [cols, layout?.width]);
+  const itemWidth = React.useMemo(() => layout?.width ? layout.width / cols : 0, [cols, layout?.width]);
 
   return (
     <Picker
@@ -55,7 +53,6 @@ export function GridPicker<
       render={ (options, value, handlePress) => (
         <FlatGrid
           onLayout={ ({ nativeEvent: { layout } }) => setLayout(layout) }
-          itemDimension={ itemWidth }
           data={ options }
           renderItem={ ({ item }) => {
             const computedButtonProps = buttonProps({ 
@@ -73,7 +70,8 @@ export function GridPicker<
                 textCenter
                 vertical
                 gap={ 6 }
-                height={ itemWidth }
+                width={ itemWidth - 24 }
+                height={ itemWidth / 2 }
                 leftIcon={ item.icon }
                 { ...computedButtonProps }
                 onPress={ () => handlePress(item.value) }>

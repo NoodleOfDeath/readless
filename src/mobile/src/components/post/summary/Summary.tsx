@@ -423,11 +423,11 @@ export function Summary({
         bold
         caption
         adjustsFontSizeToFit
-        color={ theme.colors.textSecondary }>
+        color={ halfBig ? theme.colors.contrastText : theme.colors.textSecondary }>
         {summary.publisher?.displayName}
       </Text>
     </Chip>
-  ), [disableInteractions, openPublisher, summary.publisher, theme.colors.textSecondary]);
+  ), [disableInteractions, halfBig, openPublisher, summary.publisher, theme.colors.contrastText, theme.colors.textSecondary]);
   
   const menuActions = React.useMemo(() => {
     if (showcase) {

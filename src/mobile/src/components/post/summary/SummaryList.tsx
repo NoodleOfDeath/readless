@@ -1,6 +1,7 @@
 import React from 'react';
 import { 
   DeviceEventEmitter,
+  LayoutRectangle,
   NativeScrollEvent, 
   NativeSyntheticEvent,
   RefreshControl,
@@ -100,6 +101,7 @@ export function SummaryList({
   }, [removedSummaries]);
 
   // display state
+  const [layout, setLayout] = React.useState<LayoutRectangle>();
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
@@ -257,8 +259,7 @@ export function SummaryList({
         mr={ index === 1 && fancy ? 6 : 12 }
         ml={ index === 2 && fancy ? 6 : 12 }
         key={ item.id }
-        big={ big || (index < 3 && fancy) }
-        halfBig={ big || (index > 0 && index < 3 && fancy) }
+        big={ big || (index % 4 === 0 && fancy) }
         summary={ item }
         selected={ Boolean(landscapeEnabled && isTablet && item.id === detailSummary?.id) }
         keywords={ parseKeywords(filter) }
@@ -286,30 +287,15 @@ export function SummaryList({
   ) : null, [landscapeEnabled, isTablet, detailSummary, preferredReadingFormat, filter, detailSummarySiblings.length, handleFormatChange, handleInteraction]);
 
   return (
-    <View { ...props } col>
+    <View { ...props } col onLayout={ ({ nativeEvent: { layout } }) => setLayout(layout) }>
       <View row>
-        <View style={ { width: landscapeEnabled && isTablet ? Math.min(screenWidth * 0.4, 400) : '100%' } }>
+        <View style={ { width: landscapeEnabled && isTablet ? Math.min((layout?.width ?? screenWidth) * 0.4, 400) : '100%' } }>
           <FlatList
             refreshControl={ (
               <RefreshControl 
                 refreshing={ summaries.length === 0 && loading }
                 onRefresh={ async () => await load(true) } />
             ) }
-            numColumns={ 2 }
-            overrideItemLayout={ (
-              layout,
-              _,
-              index
-            ) => {
-              if (index === 0 && fancy) {
-                layout.span = 2;
-              } else
-              if (index < 3 && fancy) {
-                layout.span = 1;
-              } else {
-                layout.span = 2;
-              }
-            } }
             data={ summaries }
             extraData={ detailSummary }
             renderItem={ renderSummary }
