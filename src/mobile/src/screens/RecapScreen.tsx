@@ -1,11 +1,12 @@
 import React from 'react';
 
 import { Recap, Screen } from '~/components';
+import { getLocale } from '~/locales';
 import { ScreenProps } from '~/screens';
 
 export function RecapScreen({
   route,
-  navigation: _navigation,
+  navigation,
 }: ScreenProps<'recap'>) {
   const recap = React.useMemo(() => route?.params?.recap, [route]);
   return (

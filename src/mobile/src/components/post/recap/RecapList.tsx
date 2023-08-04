@@ -59,12 +59,12 @@ export function RecapList({ header }: RecapListProps = {}) {
         <Recap
           key={ item.id }
           recap={ item }
-          mx={ 12 } />
+          mx={ 12 }
+          mb={ 12 } />
       ) }
       ListHeaderComponentStyle={ { paddingTop: 12 } }
       ListHeaderComponent={ <React.Fragment>{header}</React.Fragment> }
       ListFooterComponentStyle={ { paddingBottom: 12 } }
-      ItemSeparatorComponent={ () => <View mx={ 12 } my={ 6 } /> }
-      estimatedItemSize={ 114 } />
+      estimatedItemSize={ 126 } />
   );
 }

@@ -18,7 +18,6 @@ export const CategoryPicker = React.forwardRef(function CategoryPicker(props: Ca
   return (
     <GridPicker
       { ...props }
-      searchable
       options={ Object.values({ ...categories }).map((category) => ({
         icon: <ChannelIcon category={ category } />,
         label: category.displayName,

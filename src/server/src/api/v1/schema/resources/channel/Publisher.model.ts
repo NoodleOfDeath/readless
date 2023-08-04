@@ -19,6 +19,7 @@ import { PUBLIC_PUBLISHERS } from './queries';
 import { SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
 import { RateLimit } from '../../system/RateLimit.model';
+import { PrepareOptions } from '../../types';
 
 const PUBLISHER_FETCH_LIMIT = process.env.PUBLISHER_FETCH_LIMIT ? Number(process.env.PUBLISHER_FETCH_LIMIT) : 1; // 1 for dev and testing
 const PUBLISHER_MAX_ATTEMPT_LIMIT = process.env.PUBLISHER_MAX_ATTEMPT_LIMIT ? Number(process.env.PUBLISHER_MAX_ATTEMPT_LIMIT) : 5;
@@ -36,7 +37,7 @@ export class Publisher<
   extends BaseModel<A, B>
   implements PublisherAttributes {
 
-  public static async prepare() {
+  public static async prepare({ translate }: PrepareOptions = {}) {
     const newPublishers: Publisher[] = [];
     for (const publisher of Object.values(PUBLISHERS)) {
       const old = await this.findOne({ where: publisher });
@@ -58,8 +59,10 @@ export class Publisher<
           console.log(error);
         }
       }
-      console.log('translating', publisher.name);
-      await PublisherTranslation.translate(publisher, ['description']);
+      if (translate) {
+        console.log('translating', publisher.name);
+        await PublisherTranslation.translate(publisher, ['description']);
+      }
     }
   }
 

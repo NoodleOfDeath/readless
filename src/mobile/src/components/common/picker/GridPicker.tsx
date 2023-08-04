@@ -29,7 +29,7 @@ export function GridPicker<
   Value extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
   OptionValue extends Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 >({
-  cols = 3,
+  cols = 2,
   buttonProps: buttonProps0,
   ...props
 }: GridPickerProps<T, Multi, Value, OptionValue>) {
@@ -40,10 +40,10 @@ export function GridPicker<
 
   const buttonProps = React.useMemo(() => {
     return (state: SelectOptionState<T>) => ({
-      ...(state.selected ? theme.components.chipSelected : undefined),
+      ...(state.selected ? theme.components.chipSelected : theme.components.chipDisabled),
       ...(buttonProps0 instanceof Function ? buttonProps0(state) : buttonProps0),
     });
-  }, [buttonProps0, theme.components.chipSelected]);
+  }, [buttonProps0, theme.components.chipDisabled, theme.components.chipSelected]);
 
   const itemWidth = React.useMemo(() => layout?.width ? layout.width / cols : 0, [cols, layout?.width]);
 
@@ -70,7 +70,6 @@ export function GridPicker<
                 textCenter
                 vertical
                 gap={ 6 }
-                width={ itemWidth - 24 }
                 height={ itemWidth / 2 }
                 leftIcon={ item.icon }
                 { ...computedButtonProps }
