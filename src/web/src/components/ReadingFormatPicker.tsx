@@ -4,6 +4,7 @@ import {
   mdiBookOpen,
   mdiFormatListBulleted,
   mdiTextLong,
+  mdiTextShort,
 } from '@mdi/js';
 import { Icon } from '@mdi/react';
 import {
@@ -50,6 +51,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const FORMAT_ICONS: Record<ReadingFormat, string> = {
   [ReadingFormat.Bullets]: mdiFormatListBulleted,
   [ReadingFormat.FullArticle]: mdiBookOpen,
+  [ReadingFormat.ShortSummary]: mdiTextShort,
   [ReadingFormat.Summary]: mdiTextLong,
 };
 
