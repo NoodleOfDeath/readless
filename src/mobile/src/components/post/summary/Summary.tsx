@@ -852,7 +852,7 @@ export function Summary({
       style={ { ...(big ? theme.components.cardBig : theme.components.card), ...style } }
       borderRadius={ 12 }
       bg={ containsTrigger ? '#eecccc' : undefined }
-      opacity={ isRead ? 0.75 : 1 }>
+      opacity={ isRead ? 0.5 : 1 }>
       <View flexRow flexGrow={ 1 }>
         {selected && (
           <View

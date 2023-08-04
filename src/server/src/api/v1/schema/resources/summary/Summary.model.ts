@@ -17,6 +17,7 @@ import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import { SummaryTranslation } from './SummaryTranslation.model';
 import { QUERIES, QueryKey } from './queries';
 import { SupportedLocale } from '../../../../../core/locales';
+import { DeepAiService, SentimentService } from '../../../../../services';
 import { parseDate } from '../../../../../utils';
 import { BulkMetadataResponse } from '../../../controllers';
 import { Cache } from '../../system/Cache.model';
@@ -470,6 +471,43 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       },
     });
     console.log('associated', this.id, siblingId);
+  }
+  
+  async generateImageWithDeepAi() {
+    try {
+      // Generate image from the title
+      const image = await DeepAiService.textToImage(this.title);
+      // Save image to S3 CDN
+      const obj = await DeepAiService.mirror(image.output_url, {
+        ACL: 'public-read',
+        ContentType: 'image/jpeg',
+        Folder: 'img/s',
+      });
+      return obj;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  
+  async generateSentiment() {
+    const openAiSentiment = await SentimentService.sentiment('openai', this.filteredText);
+    await SummarySentiment.create({
+      method: 'openai',
+      parentId: this.id,
+      score: openAiSentiment,
+    });
+    const afinnSentimentScores = await SentimentService.sentiment('afinn', this.filteredText);
+    await SummarySentiment.create({
+      method: 'afinn',
+      parentId: this.id,
+      score: afinnSentimentScores.comparative,
+    });
+    const vaderSentimentScores = await SentimentService.sentiment('vader', this.filteredText);
+    await SummarySentiment.create({
+      method: 'vader',
+      parentId: this.id,
+      score: vaderSentimentScores.compound,
+    });
   }
 
 }

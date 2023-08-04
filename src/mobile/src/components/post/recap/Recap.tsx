@@ -24,7 +24,11 @@ import {
   useSummaryClient,
   useTheme,
 } from '~/hooks';
-import { getFnsLocale, strings } from '~/locales';
+import { 
+  getFnsLocale, 
+  getLocale,
+  strings,
+} from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
   recap: RecapAttributes;
@@ -84,7 +88,7 @@ export function Recap({
   
   useFocusEffect(React.useCallback(() => {
     if (expanded) {
-      navigation?.setOptions({ headerTitle: '' });
+      navigation?.setOptions({ headerTitle: format(new Date(recap.createdAt), 'EEE PP', getLocale()) });
     } else {
       setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
     }
@@ -132,7 +136,7 @@ export function Recap({
       p={ 12 }
       gap={ 3 }
       borderRadius={ 12 }
-      opacity={ isRead ? 0.3 : 1.0 }
+      opacity={ isRead ? 0.5 : 1.0 }
       style={ theme.components.card }
       onPress={ handlePress }>
       <View flexRow gap={ 6 } itemsCenter>

@@ -18,6 +18,10 @@ export type FindAndCountOptions<
   T extends Model<any, any> | Hooks<Model<any, any>, any, any>,
 > = Omit<SequelizeFindAndCountOptions<Attributes<T>>, 'groups'>;
 
+export type PrepareOptions = {
+  translate?: boolean;
+};
+
 export function orderByToItem(orderBy: string): OrderItem {
   return orderBy.split(':') as OrderItem;
 }

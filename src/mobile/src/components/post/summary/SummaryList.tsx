@@ -256,8 +256,7 @@ export function SummaryList({
     return (
       <Summary
         mx={ 12 }
-        mr={ index === 1 && fancy ? 6 : 12 }
-        ml={ index === 2 && fancy ? 6 : 12 }
+        mb={ 12 }
         key={ item.id }
         big={ big || (index % 4 === 0 && fancy) }
         summary={ item }
@@ -299,8 +298,7 @@ export function SummaryList({
             data={ summaries }
             extraData={ detailSummary }
             renderItem={ renderSummary }
-            estimatedItemSize={ big ? 350 : 114 }
-            ItemSeparatorComponent={ () => <View mx={ 12 } my={ 6 } /> }
+            estimatedItemSize={ big ? 362 : 126 }
             ListHeaderComponent={ <React.Fragment>{headerComponent}</React.Fragment> }
             ListHeaderComponentStyle={ { paddingTop: 12 } }
             ListFooterComponent={ () => (

@@ -26,7 +26,6 @@ export const PublisherPicker = React.forwardRef(function PublisherPicker(props: 
       options={ options }
       multi
       initialValue={ selectedPublishers }
-      searchable
       onValueChange={ (publishers) => { 
         setSelectedPublishers(publishers ?? []);
         props.onValueChange?.(publishers);

@@ -1,465 +1,31 @@
 import React from 'react';
-import { DeviceEventEmitter, Linking } from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
 
-import {
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-  createDrawerNavigator,
-} from '@react-navigation/drawer';
-import {
-  EventMapBase,
-  NavigationContainer,
-  NavigationState,
-  RouteConfig,
-} from '@react-navigation/native';
-import {
-  NativeStackNavigationOptions,
-  createNativeStackNavigator,
-} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 import ms from 'ms';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
-import { OrientationType } from 'react-native-orientation-locker';
 import {
   DefaultTheme,
   MD3DarkTheme,
   PaperProvider,
 } from 'react-native-paper';
 
-import { CategoryPickerScreen } from './screens/settings/CategoryPickerScreen';
-import { PublisherPickerScreen } from './screens/settings/PublisherPickerScreen';
+import { RightDrawerScreen } from './RightDrawerScreen';
 
 import {
   ActivityIndicator,
-  Badge,
-  ChannelIcon,
-  DrawerItem,
-  DrawerSection,
-  DrawerToggle,
-  Icon,
   MediaPlayer,
   Screen,
-  SearchMenu,
-  Text,
 } from '~/components';
 import {
   LayoutContext,
   MediaContext,
+  OrientationType,
   SessionContext,
 } from '~/contexts';
-import {
-  useCategoryClient,
-  useNavigation,
-  useTheme,
-} from '~/hooks';
-import { strings } from '~/locales';
-import {
-  BookmarksScreen,
-  CategoryScreen,
-  ColorSchemePickerScreen,
-  FontPickerScreen,
-  HomeScreen,
-  LegalScreen,
-  NAVIGATION_LINKING_OPTIONS,
-  PublisherScreen,
-  ReadingFormatPickerScreen,
-  RecapScreen,
-  RoutingParams,
-  SearchScreen,
-  SettingsScreen,
-  ShortPressFormatPickerScreen,
-  StatsScreen,
-  SummaryScreen,
-  TestScreen,
-  TriggerWordPickerScreen,
-} from '~/screens';
-import { getUserAgent } from '~/utils';
-
-const STACK_SCREENS: RouteConfig<
-  RoutingParams,
-  keyof RoutingParams,
-  NavigationState,
-  NativeStackNavigationOptions,
-  EventMapBase
->[] = [
-  // Home Tab
-  {
-    component: HomeScreen, 
-    name: 'home',
-    options: { 
-      headerBackTitle: '',
-      headerLeft: () => <DrawerToggle />,
-      headerTitle: () => <SearchMenu />,
-    },
-  },
-  // Screens
-  {
-    component: SearchScreen, 
-    name: 'search',
-    options: { 
-      headerBackTitle: '',
-      headerTitle: '', 
-    },
-  },
-  {
-    component: SummaryScreen, 
-    name: 'summary',  
-    options: { 
-      headerBackTitle: '',
-      headerTitle: '', 
-    },
-  },
-  {
-    component: RecapScreen,
-    name: 'recap',  
-    options: {
-      headerBackTitle: '',
-      headerTitle: '', 
-    },
-  },
-  {
-    component: CategoryScreen, 
-    name: 'category',
-    options: { 
-      headerBackTitle: '', 
-      headerTitle: '', 
-    },
-  },
-  {
-    component: PublisherScreen, 
-    name: 'publisher',
-    options: {
-      headerBackTitle: '', 
-      headerTitle: '', 
-    },
-  },
-  {
-    component: BookmarksScreen, 
-    name: 'bookmarks', 
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_bookmarks, 
-    }, 
-  }, 
-  // Settings
-  {
-    component: SettingsScreen, 
-    name: 'settings', 
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_settings, 
-    },
-  },
-  {
-    component: ColorSchemePickerScreen, 
-    name: 'colorSchemePicker',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_colorScheme, 
-    },
-  },
-  {
-    component: FontPickerScreen,
-    name: 'fontPicker',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_font, 
-    },
-  },
-  {
-    component: PublisherPickerScreen,
-    name: 'publisherPicker',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_publishers, 
-    },
-  },
-  {
-    component: CategoryPickerScreen,
-    name: 'categoryPicker',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_categories, 
-    },
-  },
-  {
-    component: ShortPressFormatPickerScreen,
-    name: 'shortPressFormatPicker',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_preferredShortPressFormat, 
-    },
-  },
-  {
-    component: ReadingFormatPickerScreen,
-    name: 'readingFormatPicker',  
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_preferredReadingFormat, 
-    },
-  },
-  {
-    component: TriggerWordPickerScreen,
-    name: 'triggerWordPicker',  
-    options: {
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_triggerWords, 
-    },
-  },
-  {
-    component: LegalScreen, 
-    name: 'legal', 
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_legal, 
-    },
-  },
-  // Other
-  {
-    component: StatsScreen,
-    name: 'stats',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined,
-      headerTitle: 'stats', 
-    },
-  },
-  {
-    component: TestScreen,
-    name: 'test',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined,
-      headerTitle: 'test', 
-    },
-  },
-];
-
-const Stack = createNativeStackNavigator();
-
-function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
-  return (
-    <Stack.Navigator initialRouteName={ initialRouteName }>
-      {STACK_SCREENS.map((screen) => (
-        <Stack.Screen
-          key={ String(screen.name) }
-          { ...screen }
-          options={ { 
-            headerShown: true,
-            ...screen.options,
-          } } />
-      ))}
-    </Stack.Navigator>
-  );
-  
-}
-
-function TabScreen({ initialRouteName }: { initialRouteName?: string } = {}) {
-  return (
-    <Screen>
-      <StackNavigation initialRouteName={ initialRouteName } />
-    </Screen>
-  );
-}
-
-function HomeDrawer() {
-  return <TabScreen />;
-}
-
-function DrawerContent(props: DrawerContentComponentProps) {
-  
-  const {
-    router,
-    navigate,
-    openCategory,
-    openPublisher,
-  } = useNavigation();
-
-  const {
-    bookmarkCount,
-    unreadBookmarkCount,
-    categories,
-    publishers,
-    followedCategories,
-    followedPublishers,
-  } = React.useContext(SessionContext);
-  
-  const {
-    isTablet,
-    lockRotation,
-    unlockRotation,
-  } = React.useContext(LayoutContext);
-
-  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
-
-  React.useEffect(() => {
-    const subscriber = Linking.addEventListener('url', router);
-    if (!loadedInitialUrl) {
-      Linking.getInitialURL().then((url) => {
-        if (url) {
-          router({ url } );
-          setLoadedInitialUrl(true);
-        }
-      });
-    }
-    return () => subscriber.remove();
-  }, [router, loadedInitialUrl]);
-
-  React.useEffect(() => {
-    if (!isTablet) {
-      lockRotation(OrientationType.PORTRAIT);
-    } else {
-      unlockRotation();
-    }
-  }, [isTablet, lockRotation, unlockRotation]);
-  
-  const publisherItems = React.useMemo(() => {
-    if (!publishers) {
-      return [];
-    }
-    const items = Object.keys({ ...followedPublishers }).sort().map((p) => {
-      const publisher = publishers[p];
-      if (!publisher) {
-        return undefined;
-      }
-      return (
-        <DrawerItem
-          key={ publisher.name }
-          label={ publisher.displayName }
-          icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
-          onPress={ () => openPublisher(publisher) } />
-      );
-    }).filter(Boolean);
-    if (items.length === 0) {
-      items.push(
-        <DrawerItem 
-          key="missing-publishers"
-          label={ (
-            <Text flex={ 1 } numberOfLines={ 3 }>
-              { strings.misc_noPublishers }
-            </Text>
-          ) } />
-      );
-    }
-    items.push(
-      <DrawerItem 
-        key="browse-publishers"
-        label={ strings.nav_browsePublishers }
-        onPress={ () => navigate('publisherPicker') }
-        right={ (props) => <Icon { ...props } name="menu-right" /> } />
-    );
-    return items;
-  }, [publishers, followedPublishers, openPublisher, navigate]);
-  
-  const categoryItems = React.useMemo(() => {
-    if (!categories) {
-      return [];
-    }
-    const items = Object.keys({ ...followedCategories }).sort().map((c) => {
-      const category = categories[c];
-      if (!category) {
-        return undefined;
-      }
-      return (
-        <DrawerItem
-          key={ category.name }
-          label={ category.displayName }
-          icon={ (props) => <Icon { ...props } name={ category.icon } /> }
-          onPress={ () => openCategory(category) } />
-      );
-    }).filter(Boolean);
-    if (items.length === 0) {
-      items.push(
-        <DrawerItem 
-          key="missing-categories"
-          label={ (
-            <Text flex={ 1 } numberOfLines={ 3 }>
-              { strings.misc_noCategories }
-            </Text>
-          ) } />
-      );
-    }
-    items.push(
-      <DrawerItem 
-        key="browse-categories"
-        label={ strings.nav_browseCategories }
-        onPress={ () => navigate('categoryPicker') }
-        right={ (props) => <Icon { ...props } name="menu-right" /> } />
-    );
-    return items;
-  }, [categories, followedCategories, openCategory, navigate]);
-  
-  return (
-    <DrawerContentScrollView { ...props }>
-      <DrawerItem 
-        label={ getUserAgent().currentVersion }
-        onLongPress={ () => SheetManager.show('onboarding-walkthrough') } />
-      <DrawerSection 
-        title={ strings.misc_publishers }>
-        {publisherItems}
-      </DrawerSection>
-      <DrawerSection
-        title={ strings.misc_categories }>
-        {categoryItems}
-      </DrawerSection>
-      <DrawerSection
-        title={ strings.misc_system }>
-        <DrawerItem
-          label={ `${strings.screens_bookmarks} (${bookmarkCount})` }
-          icon={ (props) => (
-            <React.Fragment>
-              {unreadBookmarkCount > 0 && (
-                <Badge topLeft small>
-                  {unreadBookmarkCount}
-                </Badge>
-              )}
-              <Icon { ...props } name="bookmark" />
-            </React.Fragment>
-          ) }
-          onPress= { () => navigate('bookmarks') } />
-        <DrawerItem
-          label={ strings.screens_settings }
-          icon={ (props) => <Icon { ...props } name="cog" /> }
-          onPress= { () => navigate('settings') } />
-      </DrawerSection>
-    </DrawerContentScrollView>
-  );
-}
-
-const DrawerNav = createDrawerNavigator();
-
-function DrawerNavigation() {
-  return (
-    <DrawerNav.Navigator 
-      initialRouteName={ strings.screens_home }
-      screenOptions={ ({ route: _route }) => ({
-        headerShown: false,
-        swipeEnabled: false,
-      }) }
-      drawerContent={ (props) => <DrawerContent { ...props } /> }>
-      <DrawerNav.Screen 
-        name={ strings.screens_home } 
-        component={ HomeDrawer } />
-    </DrawerNav.Navigator>
-  );
-}
-
-function LandingPage() {
-  return (
-    <Screen safeArea={ false }>
-      <DrawerNavigation />
-    </Screen>
-  );
-}
+import { useCategoryClient, useTheme } from '~/hooks';
+import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 
 export default function NavigationController() {
   
@@ -477,7 +43,12 @@ export default function NavigationController() {
     readSummaries,
     lastRequestForReview,
     setPreference,
-  } = React.useContext(SessionContext); 
+  } = React.useContext(SessionContext);   
+  const {
+    isTablet,
+    lockRotation,
+    unlockRotation,
+  } = React.useContext(LayoutContext);
   
   const { currentTrack } = React.useContext(MediaContext);
   
@@ -522,13 +93,18 @@ export default function NavigationController() {
     const reviewHandlerB = DeviceEventEmitter.addListener('follow-publisher', inAppReviewHandler);
     const reviewHandlerC = DeviceEventEmitter.addListener('bookmark-summary', inAppReviewHandler);
     const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
+    if (!isTablet) {
+      lockRotation(OrientationType.PORTRAIT);
+    } else {
+      unlockRotation();
+    }
     return () => {
       reviewHandlerA.remove();
       reviewHandlerB.remove();
       reviewHandlerC.remove();
       reviewHandlerD.remove();
     };
-  }, [ready, inAppReviewHandler]);
+  }, [ready, inAppReviewHandler, isTablet, lockRotation, unlockRotation]);
   
   const refreshSources = React.useCallback(() => {
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
@@ -586,7 +162,9 @@ export default function NavigationController() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          <LandingPage />
+          <Screen safeArea={ false }>
+            <RightDrawerScreen />
+          </Screen>
           <MediaPlayer visible={ Boolean(currentTrack) } />
         </SheetProvider>
       </PaperProvider>

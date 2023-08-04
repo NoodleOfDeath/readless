@@ -25,6 +25,7 @@ export * from './Pulse';
 export * from './MeterDial';
 export * from './Screen';
 export * from './ScrollView';
+export * from './SearchMenu';
 export * from './SegmentedButtons';
 export * from './Shimmer';
 export * from './Stepper';

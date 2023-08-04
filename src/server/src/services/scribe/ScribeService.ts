@@ -2,11 +2,11 @@ import ms from 'ms';
 
 import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
-  DeepAiService,
   MailService,
   OpenAIService,
   Prompt,
   PuppeteerService,
+  S3Service,
   TtsService,
 } from '../';
 import {
@@ -16,10 +16,8 @@ import {
   Subscription,
   Summary,
   SummaryMedia,
-  SummarySentiment,
 } from '../../api/v1/schema';
 import { BaseService } from '../base';
-import { SentimentService } from '../sentiment';
 
 const MIN_TOKEN_COUNT = 50;
 const MAX_OPENAI_TOKEN_COUNT = Number(process.env.MAX_OPENAI_TOKEN_COUNT || 1500);
@@ -117,7 +115,6 @@ export class ScribeService extends BaseService {
       url,
     });
     let categoryDisplayName: string;
-    const sentiment = SummarySentiment.json<SummarySentiment>({ method: 'openai' });
     const prompts: Prompt[] = [
       {
         handleReply: async (reply) => { 
@@ -130,16 +127,6 @@ export class ScribeService extends BaseService {
           'Does the following appear to be a news article or story? A collection of article headlines, pictures, videos, advertisements, description of a news website, or subscription program should not be considered a news article/story. Please respond with just "yes" or "no"\n\n', 
           newSummary.filteredText,
         ].join(''),
-      },
-      {
-        handleReply: async (reply) => {
-          const score = Number.parseFloat(reply);
-          if (Number.isNaN(score)) {
-            await this.error('Not a valid sentiment score', [url, reply, newSummary.filteredText].join('\n\n'));
-          }
-          sentiment.score = score;
-        },
-        text: 'For the article I just gave you, please provide a floating point sentiment score between -1 and 1. Please respond with the score only.',
       },
       {
         handleReply: async (reply) => { 
@@ -244,50 +231,12 @@ export class ScribeService extends BaseService {
       // Save summary to database
       const summary = await Summary.create(newSummary);
       
-      this.log('Generating image with deepai');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let generatedObj: any;
-      const generateImageWithDeepAi = async () => {
-    
-        // Generate image from the title
-        const image = await DeepAiService.textToImage(newSummary.title);
-        
-        // Save image to S3 CDN
-        generatedObj = await DeepAiService.mirror(image.output_url, {
-          ACL: 'public-read',
-          ContentType: 'image/jpeg',
-          Folder: 'img/s',
-        });
-        summary.set('imageUrl', generatedObj.url);
-        await summary.save();
-      
-      };
-      
-      try {
-        await generateImageWithDeepAi();
-      } catch (e) {
-        await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'), false);
-        try {
-          // attempt single retry
-          await generateImageWithDeepAi();
-        } catch (e) {
-          await this.error('Image generation failed', [url, JSON.stringify(e)].join('\n\n'));
-        }
-      }
-      
-      await SummaryMedia.create({
-        key: 'imageAi1',
-        parentId: summary.id,
-        path: generatedObj.key,
-        type: 'image',
-        url: generatedObj.url,
-      });
-      
       // Save article media
       if (loot.imageUrls && loot.imageUrls.length > 0) {
+        // download looted images
         for (const [index, imageUrl] of loot.imageUrls.entries()) {
           try {
-            const obj = await DeepAiService.mirror(imageUrl, {
+            const obj = await S3Service.mirror(imageUrl, {
               ACL: 'public-read',
               ContentType: 'image/jpeg',
               Folder: 'img/s',
@@ -300,29 +249,30 @@ export class ScribeService extends BaseService {
               type: 'image',
               url: obj.url,
             });
+            if (index === 0) {
+              summary.set('imageUrl', obj.url);
+              await summary.save();
+            }
           } catch (e) {
             await this.error('Failed to download image', [loot.imageUrls, JSON.stringify(e)].join('\n\n'), false);
           }
         }
+      } else {
+        this.log('Generating image with deepai as fallback');
+        const obj = await summary.generateImageWithDeepAi();
+        await SummaryMedia.create({
+          key: 'imageAi1',
+          parentId: summary.id,
+          path: obj.key,
+          type: 'image',
+          url: obj.url,
+        });
+        summary.set('imageUrl', obj.url);
+        await summary.save();
       }
         
-      // Create sentiment
-      sentiment.parentId = summary.id;
-      await SummarySentiment.create(sentiment);
-      
-      const afinnSentimentScores = SentimentService.sentiment('afinn', loot.content);
-      await SummarySentiment.create({
-        method: 'afinn',
-        parentId: summary.id,
-        score: afinnSentimentScores.comparative,
-      });
-      
-      const vaderSentimentScores = SentimentService.sentiment('vader', loot.content);
-      await SummarySentiment.create({
-        method: 'vader',
-        parentId: summary.id,
-        score: vaderSentimentScores.compound,
-      });
+      // Generate sentiment scores
+      await summary.generateSentiment();
       
       if (this.features.tts) {
       

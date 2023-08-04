@@ -10,7 +10,7 @@ import {
   ScrollView,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { LayoutContext, SessionContext } from '~/contexts';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -35,12 +35,12 @@ export function SearchMenu({
 
   const theme = useTheme();
   const { search } = useNavigation();
-  const { width } = useWindowDimensions();
   
   const {
     searchHistory,
     setPreference,
   } = React.useContext(SessionContext);
+  const { screenWidth } = React.useContext(LayoutContext);
 
   const [value, setValue] = React.useState(initialValue);
   
@@ -60,7 +60,7 @@ export function SearchMenu({
   return (
     <View
       gap={ 8 } 
-      width={ width - (132 / 2) }
+      width={ screenWidth - (220 / 2) }
       { ...props }>
       <Searchbar
         placeholder={ placeholder }
