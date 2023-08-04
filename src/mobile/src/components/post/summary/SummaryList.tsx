@@ -259,8 +259,7 @@ export function SummaryList({
         mr={ index === 1 && fancy ? 6 : 12 }
         ml={ index === 2 && fancy ? 6 : 12 }
         key={ item.id }
-        big={ big || (index < 3 && fancy) }
-        halfBig={ big || (index > 0 && index < 3 && fancy) }
+        big={ big || (index % 4 === 0 && fancy) }
         summary={ item }
         selected={ Boolean(landscapeEnabled && isTablet && item.id === detailSummary?.id) }
         keywords={ parseKeywords(filter) }
@@ -297,21 +296,6 @@ export function SummaryList({
                 refreshing={ summaries.length === 0 && loading }
                 onRefresh={ async () => await load(true) } />
             ) }
-            numColumns={ 2 }
-            overrideItemLayout={ (
-              layout,
-              _,
-              index
-            ) => {
-              if (index === 0 && fancy) {
-                layout.span = 2;
-              } else
-              if (index < 3 && fancy) {
-                layout.span = 1;
-              } else {
-                layout.span = 2;
-              }
-            } }
             data={ summaries }
             extraData={ detailSummary }
             renderItem={ renderSummary }

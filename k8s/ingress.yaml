@@ -36,6 +36,7 @@ spec:
     - hosts:
         - readless.ai
       secretName: tls-readless.ai
+      secretName: tls-www.readless.ai
   rules:
     - http:
         paths:
@@ -43,7 +44,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: readless-web-prod
+                name: http-svc
                 port:
                   number: 80
 ---
