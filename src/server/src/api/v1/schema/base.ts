@@ -1,3 +1,6 @@
+import fs from 'fs';
+import p from 'path';
+
 import { Model } from 'sequelize-typescript';
 
 import { DBService } from '../../../services';
@@ -17,6 +20,12 @@ export abstract class BaseModel<ModelAttributes extends object, CreationAttribut
   
   static get store() {
     return DBService.sq;
+  }
+  
+  static loadQuery(path: string) {
+    const target = p.resolve(path);
+    console.log(target);
+    return fs.readFileSync(target);
   }
 
 }

@@ -395,6 +395,11 @@ export class ScribeService extends BaseService {
         html: await recap.formatAsHTML(summaries),
         subject: `Daily Highlights: ${recap.title}`,
       });
+      
+      await Subscription.notify('daily-recap', 'push', {
+        body: `${recap.text.slice(0, 100)}...`,
+        title: `Daily Highlights: ${recap.title}`,
+      });
 
       return recap;
       

@@ -13,7 +13,11 @@ import {
   SubscriptionChannel,
   SubscriptionCreationAttributes,
 } from './Subscription.types';
-import { MailService, MailServiceOptions } from '../../../../../services';
+import { 
+  FirebaseService,
+  MailService,
+  MailServiceOptions,
+} from '../../../../../services';
 import { InternalError } from '../../../middleware';
 import { BaseModel } from '../../base';
 
@@ -107,7 +111,15 @@ export class Subscription<
       }, 'verifySubscription', {
         email: subscription.uuid, 
         verificationCode, 
-      });
+      }); 
+      break;
+    case 'firebase':
+    case 'apns':
+      subscription.set('verificationCode', null);
+      subscription.set('unsubscribeToken', uuid);
+      subscription.set('verifiedAt', new Date());
+      subscription.set('expiresAt', null);
+      await subscription.save();
       break;
     default:
       throw new InternalError('invalid subscription channel');
@@ -116,14 +128,12 @@ export class Subscription<
   }
 
   public static async verify({ verificationCode }: Pick<SubscriptionCreationAttributes, 'verificationCode'>): Promise<Subscription> {
-    const subscription = await Subscription.findOne({ 
-      where: { 
-        expiresAt: { [Op.or]: [{ [Op.eq]: null }, { [Op.gt]: new Date() }] },
-        verificationCode,
-      }, 
-    });
+    const subscription = await Subscription.findOne({ where: { verificationCode } });
     if (!subscription) {
       throw new InternalError('invalid subscription');
+    }
+    if (subscription.expiresAt && subscription.expiresAt.valueOf() < Date.now()) {
+      throw new InternalError('subscription expired');
     }
     subscription.set('verificationCode', null);
     subscription.set('unsubscribeToken', v4());
@@ -141,14 +151,12 @@ export class Subscription<
     await subscription.destroy();
   }
 
-  public static async notify<
-    T extends SubscriptionChannel, 
-    D extends T extends 'email' ? MailServiceOptions : never
-  >(
+  public static async notify<T extends SubscriptionChannel>(
     event: string, 
-    channel: T,
-    data: D
+    channel0: T,
+    data: MailServiceOptions & { title?: string, body?: string }
   ): Promise<void> {
+    const channel = channel0 === 'push' ? ['firebase', 'apns'] : channel0;
     const subscriptions = await Subscription.findAll({
       where: {
         channel, 
@@ -157,9 +165,10 @@ export class Subscription<
       },
     });
     console.log(`notifying ${subscriptions.length} subscribers`);
+    const tokens: string[] = [];
     for (const subscription of subscriptions) {
       const unsub = `${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/unsubscribe?t=${subscription.unsubscribeToken}`;
-      switch (subscription.channel) {
+      switch (channel0) {
       case 'email':
         await new MailService().sendMail({
           ...data,
@@ -168,9 +177,21 @@ export class Subscription<
           to: subscription.uuid,
         });
         break;
+      case 'push':
+        tokens.push(subscription.uuid);
+        break;
       default:
         throw new InternalError('invalid subscription channel');
       }
+    }
+    if (channel0 === 'push') {
+      await FirebaseService.notify({
+        notification: {
+          body: data.body,
+          title: data.title,
+        },
+        tokens,
+      });
     }
   }
   
