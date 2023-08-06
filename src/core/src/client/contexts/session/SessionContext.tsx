@@ -275,7 +275,12 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   const viewFeature = async (feature: string, state = true) => {
     await setPreference('viewedFeatures', (prev) => {
-      const newState = { ...prev, [feature]: state };
+      const newState = { ...prev };
+      if (state) {
+        newState[feature] = new Bookmark(true);
+      } else {
+        delete newState[feature];
+      }
       return (prev = newState);
     });
   };
