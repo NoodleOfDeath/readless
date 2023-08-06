@@ -32,8 +32,8 @@ export class StaticGeneratorService extends BaseService {
           xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     ${summaries.map((summary) => (`
       <url>
-        <loc>https://readless.ai/read?s=${summary.id}</loc>
-        <lastmod>${formatDate(summary.updatedAt)}</lastmod>
+        <loc>https://www.readless.ai/read?s=${summary.id}</loc>
+        <lastmod>${formatDate(new Date())}</lastmod>
         <changefreq>Monthly</changefreq>
         <priority>${(summary.siblingCount ?? 0) / mostSiblings}</priority>
         <news:news>

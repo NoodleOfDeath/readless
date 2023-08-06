@@ -26,6 +26,7 @@ import {
   FontPickerScreen,
   HomeScreen,
   LegalScreen,
+  NotificationSettingsScreen,
   PublisherScreen,
   ReadingFormatPickerScreen,
   RecapScreen,
@@ -115,6 +116,15 @@ export const STACK_SCREENS: RouteConfig<
       headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_settings, 
+    },
+  },
+  {
+    component: NotificationSettingsScreen,
+    name: 'notifications',
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_notifications, 
     },
   },
   {

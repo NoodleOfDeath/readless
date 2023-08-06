@@ -10,7 +10,8 @@ import {
 import { LeftDrawerScreen } from './LeftDrawerScreen';
 
 import {
-  Badge,
+  Chip,
+  ContextMenu,
   DrawerItem,
   DrawerSection,
   Icon,
@@ -18,6 +19,7 @@ import {
 import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
+import { getUserAgent } from '~/utils';
 
 export function LeftDrawerContent(props: DrawerContentComponentProps) {
   
@@ -25,11 +27,6 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     router,
     navigate,
   } = useNavigation();
-
-  const {
-    bookmarkCount,
-    unreadBookmarkCount,
-  } = React.useContext(SessionContext);
 
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
 
@@ -48,21 +45,15 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   
   return (
     <DrawerContentScrollView { ...props }>
-      <DrawerSection
-        title={ strings.misc_system }>
+      <DrawerSection>
+        <DrawerItem 
+          label={ getUserAgent().currentVersion } />
+      </DrawerSection>
+      <DrawerSection>
         <DrawerItem
-          label={ `${strings.screens_bookmarks} (${bookmarkCount})` }
-          icon={ (props) => (
-            <React.Fragment>
-              {unreadBookmarkCount > 0 && (
-                <Badge topLeft small>
-                  {unreadBookmarkCount}
-                </Badge>
-              )}
-              <Icon { ...props } name="bookmark" />
-            </React.Fragment>
-          ) }
-          onPress= { () => navigate('bookmarks') } />
+          label={ strings.misc_notifications || 'Notifications' }
+          icon={ (props) => <Icon { ...props } name="bell" /> }
+          onPress={ () => navigate('notifications') } />
         <DrawerItem
           label={ strings.screens_settings }
           icon={ (props) => <Icon { ...props } name="cog" /> }

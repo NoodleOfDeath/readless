@@ -42,6 +42,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   // user state
   const [uuid, setUuid] = React.useState<string>();
+  const [fcmToken, setFcmToken] = React.useState<string>();
   
   // summary state
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
@@ -147,6 +148,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     // user state
     case 'uuid':
       setUuid(uuid);
+      break;
+    case 'fcmToken':
+      setFcmToken(newValue);
       break;
       
     // summary state
@@ -264,6 +268,17 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return fn(...args, { headers });
     };
   }, [uuid]);
+  
+  const hasViewedFeature = React.useCallback((feature: string) => {
+    return feature in ({ ...viewedFeatures });
+  }, [viewedFeatures]);
+  
+  const viewFeature = async (feature: string, state = true) => {
+    await setPreference('viewedFeatures', (prev) => {
+      const newState = { ...prev, [feature]: state };
+      return (prev = newState);
+    });
+  };
   
   // summary functions
   
@@ -418,6 +433,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setHasReviewed(await getPreference('hasReviewed'));
     setLastRequestForReview(await getPreference('lastRequestForReview') ?? 0);
     setUuid(await getPreference('uuid'));
+    setFcmToken(await getPreference('fcmToken'));
     
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
@@ -476,6 +492,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         excludePublisher,
         excludedCategories,
         excludedPublishers,
+        fcmToken,
         followCategory,
         followCount,
         followFilter,
@@ -486,6 +503,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         fontSizeOffset,
         getPreference,
         hasReviewed,
+        hasViewedFeature,
         isExcludingCategory,
         isExcludingPublisher,
         isFollowingCategory,
@@ -517,6 +535,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         triggerWords,
         unreadBookmarkCount,
         uuid,
+        viewFeature,
         viewedFeatures,
         withHeaders,
       } }>
