@@ -2431,6 +2431,11 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/messaging@^18.3.0":
+  version "18.3.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.3.0.tgz#062e4844d1a5e409e035efc13ecd68f403165568"
+  integrity sha512-MolNWboyN+ZwfHgFTQ4NspIzpFxbtlROxrsiGjwpfzBcKL6cjpfS6uxwupidycuzVL+gaIq1xbCLQaNhv/bToA==
+
 "@react-native/assets-registry@^0.72.0":
   version "0.72.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets-registry/-/assets-registry-0.72.0.tgz#c82a76a1d86ec0c3907be76f7faf97a32bbed05d"
@@ -7899,10 +7904,10 @@ react-native-cloud-store@^0.10.3-alpha.1:
   resolved "https://registry.yarnpkg.com/react-native-cloud-store/-/react-native-cloud-store-0.10.3-alpha.1.tgz#694d2f24c28c3fd916bf29dd03568a27c776ef04"
   integrity sha512-iNtpHoXwR4D2HAdtbdqraz0VO6ghzsM/Igx10xY/diBs+zTGPiVNt+axiMOr/q+LeW+Ycp2kOsL9CnuxesxBVg==
 
-react-native-context-menu-view@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.10.0.tgz#d3a4e5db5d5f50e0483b9329ee0c94cd763b74de"
-  integrity sha512-L93jSvW+ytFOpWEDnFPj+uEeYRW2Rx/vc1oP8rgGqnoBl26GDj5xHXJJiya2RujaSjG7CoPIkJMCraPxBfZR+w==
+react-native-context-menu-view@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.11.0.tgz#942e1436898930eab63ae28aa4bfda39d418a455"
+  integrity sha512-2ztIsQtb/sYStjq5Zn4cKvqAfTp44w+0gdI4nSQ0+PVXUTvn7Q9QCeTijj2GH8elYAtjvuJvr0ORc91whDhyCg==
 
 react-native-detector@^0.2.3:
   version "0.2.3"

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {
-  Badge,
   Chip,
   ContextMenu,
   ContextMenuAction,
@@ -16,10 +15,12 @@ import { useNavigation, useTheme } from '~/hooks';
 
 export function DrawerToggle() {
   const { navigation } = useNavigation();
+  const { unreadBookmarkCount } = React.useContext(SessionContext);
   return (
     <View>
       <Chip
         haptic
+        badge={ unreadBookmarkCount }
         leftIcon='menu' 
         iconSize={ 24 }
         onPress={ () => navigation?.getParent('LeftDrawer')?.openDrawer?.() } />
@@ -29,14 +30,8 @@ export function DrawerToggle() {
 
 export function SettingsToggle() {
   const { navigation } = useNavigation();
-  const { unreadBookmarkCount } = React.useContext(SessionContext);
   return (
     <View>
-      {unreadBookmarkCount > 0 && (
-        <Badge topLeft small>
-          {unreadBookmarkCount}
-        </Badge>
-      )}
       <Chip
         haptic
         leftIcon='cog' 

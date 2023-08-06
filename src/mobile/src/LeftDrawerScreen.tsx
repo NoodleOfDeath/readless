@@ -11,6 +11,7 @@ import { StackNavigation } from './StackNavigation';
 
 import {
   ChannelIcon,
+  Chip,
   DrawerItem,
   DrawerSection,
   Icon,
@@ -21,7 +22,6 @@ import {
 import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
-import { getUserAgent } from '~/utils';
 
 function HomeDrawer() {
   return (
@@ -42,6 +42,8 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   const {
     categories,
     publishers,
+    bookmarkCount,
+    unreadBookmarkCount,
     followedCategories,
     followedPublishers,
   } = React.useContext(SessionContext);
@@ -124,9 +126,18 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   
   return (
     <DrawerContentScrollView { ...props }>
-      <DrawerItem 
-        label={ getUserAgent().currentVersion }
-        onLongPress={ () => SheetManager.show('onboarding-walkthrough') } />
+      <DrawerSection>
+        <DrawerItem
+          label={ `${strings.screens_bookmarks} (${bookmarkCount})` }
+          icon={ (props) => (
+            <Chip 
+              { ...props }
+              badge={ unreadBookmarkCount }
+              iconSize={ 24 }
+              leftIcon="bookmark" />
+          ) }
+          onPress= { () => navigate('bookmarks') } />
+      </DrawerSection>
       <DrawerSection 
         title={ strings.misc_publishers }>
         {publisherItems}

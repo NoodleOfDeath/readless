@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { 
+  Badge,
   Icon,
+  IconProps,
   Text,
   TextProps,
   View,
@@ -14,8 +16,10 @@ import {
 } from '~/hooks';
 
 export type ChipProps = TextProps & ViewProps & {
+  badge?: number | boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  iconProps?: IconProps;
   vertical?: boolean;
   iconSize?: number;
   selected?: boolean;
@@ -26,8 +30,10 @@ export type ChipProps = TextProps & ViewProps & {
 
 export function Chip({
   children,
+  badge,
   leftIcon,
   rightIcon,
+  iconProps,
   vertical,
   iconSize,
   contained,
@@ -62,31 +68,38 @@ export function Chip({
     if (typeof leftIcon === 'string') {
       return (
         <Icon 
+          { ...iconProps }
           name={ leftIcon } 
           size={ iconSize ?? textStyle.fontSize } 
           color={ buttonStyle.color ?? textStyle.color } />
       );
     }
     return leftIcon;
-  }, [leftIcon, iconSize, textStyle.fontSize, textStyle.color, buttonStyle.color]);
+  }, [iconProps, leftIcon, iconSize, textStyle.fontSize, textStyle.color, buttonStyle.color]);
   
   const rightIconComponent = React.useMemo(() => {
     if (typeof rightIcon === 'string') {
       return (
         <Icon 
+          { ...iconProps }
           name={ rightIcon } 
           size={ iconSize ?? textStyle.fontSize } 
           color={ buttonStyle.color ?? textStyle.color } />
       );
     }
     return rightIcon;
-  }, [rightIcon, iconSize, textStyle.fontSize, textStyle.color, buttonStyle.color]);
+  }, [iconProps, rightIcon, iconSize, textStyle.fontSize, textStyle.color, buttonStyle.color]);
 
   return (
     <View 
       elevated={ variant === 'contained' }
       { ...props } 
       style={ buttonStyle }>
+      {badge && (
+        <Badge topLeft small>
+          {badge === true ? '' : badge}
+        </Badge>
+      )}
       {leftIconComponent && <View>{leftIconComponent }</View>}
       {(Array.isArray(children) ? children : [children]).map((child, i) => (
         <React.Fragment key={ i }>

@@ -65,7 +65,7 @@ export function useSummaryClient() {
   }, [withHeaders]);
 
   const subscribe = React.useCallback(async (args: Parameters<typeof API.subscribe>[0]) => {
-    return await withHeaders(API.unsubscribe)(args);
+    return await withHeaders(API.subscribe)(args);
   }, [withHeaders]);
 
   const verify = React.useCallback(async (args: Parameters<typeof API.verify>[0]) => {

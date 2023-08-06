@@ -63,6 +63,7 @@ export type Preferences = {
   
   // user state
   uuid?: string;
+  fcmToken?: string;
   
   // summary state
   readSummaries?: { [key: number]: Bookmark<boolean> };
@@ -167,6 +168,8 @@ export type SessionContextType = Preferences & {
     Target extends RecapAttributes | PublicSummaryGroup, 
     PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
   >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => Promise<void>;
+  hasViewedFeature: (feature: string) => boolean;
+  viewFeature: (feature: string, state?: boolean) => Promise<void>;
   
   // summary convenience functions
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
