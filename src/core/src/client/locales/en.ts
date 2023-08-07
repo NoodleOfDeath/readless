@@ -78,6 +78,9 @@ export const enStrings = {
   nav_browseCategories: 'Browse Categories',
   nav_browsePublishers: 'Browse Publishers',
   nav_yourFollows: 'Your Follows',
+
+  notifications_dailyReminder: 'Daily Reminder',
+  notifications_dailyReminderDescription: 'This is your daily reminder to read the news and stay informed!',
   
   // recaps
   recaps_headlines: 'Headlines',
@@ -123,6 +126,8 @@ export const enStrings = {
   settings_colorScheme: 'Color Scheme',
   settings_compactSummaries: 'Compact',
   settings_customization: 'Customization',
+  settings_dailyRecaps: 'Daily Recaps',
+  settings_dailyReminderTime: 'Daily Reminder Time',
   settings_dailyReminders: 'Daily Reminders',
   settings_dark: 'Dark',
   settings_enterYourTriggerWords: 'Enter and/or remove your trigger words below',

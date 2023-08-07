@@ -174,6 +174,19 @@ export class Subscription<
   }
   
   public static async unsubscribe({ event, unsubscribeToken }: Pick<SubscriptionCreationAttributes, 'event' | 'unsubscribeToken'>): Promise<void> {
+    if (event === 'default') {
+      await Subscription.destroy({
+        where: {
+          [Op.or]: [ 
+            { unsubscribeToken }, 
+            {
+              channel: ['push', 'fcm', 'apns'], 
+              uuid: unsubscribeToken, 
+            },
+          ], 
+        }, 
+      });
+    }
     await Subscription.destroy({
       where: {
         event, 

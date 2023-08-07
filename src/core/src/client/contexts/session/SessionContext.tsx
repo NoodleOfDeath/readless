@@ -6,6 +6,7 @@ import {
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
   OrientationType,
+  PREFERENCE_TYPES,
   Preferences,
   PushNotificationSettings,
 } from './types';
@@ -44,7 +45,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // user state
   const [uuid, setUuid] = React.useState<string>();
   const [pushNotificationsEnabled, setPushNotificationsEnabled] = React.useState<boolean>();
-  const [pushNotifications, setPushNotifications] = React.useState<{[key: string]: { frequency?: string }}>();
+  const [pushNotifications, setPushNotifications] = React.useState<{[key: string]: PushNotificationSettings}>();
   const [fcmToken, setFcmToken] = React.useState<string>();
   
   // summary state
@@ -115,10 +116,22 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // system functions
   
   const getPreference = async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
+
     const value = await getItem(key);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const serialize = (key: K, value: Preferences[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
+      const isCorrectType = type === 'array' ? Array.isArray(value) : typeof value === type;
+      if (!isCorrectType) {
+        setPreference(key, undefined);
+        return undefined;
+      }
+      return value;
+    };
+
     if (value) {
       try {
-        return JSON.parse(value) as Preferences[K];
+        return serialize(key, JSON.parse(value), PREFERENCE_TYPES[key]);
       } catch (e) {
         return undefined;
       }
@@ -126,9 +139,11 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     return undefined;
   };
 
-  const setPreference = async <K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))) => {
+  const setPreference = async <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V) => {
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newValue = (value instanceof Function ? value(await getPreference(key)) : value) as any;
+
     switch (key) {
       
     // system state
@@ -282,7 +297,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     return type in ({ ...pushNotifications });
   }, [pushNotifications]);
 
-  const enablePush = React.useCallback(async (type: string, settings?: PushNotificationSettings) => {
+  const enablePush = async (type: string, settings?: PushNotificationSettings) => {
     await setPreference('pushNotifications', (prev) => {
       const newState = { ...prev };
       if (settings) {
@@ -292,7 +307,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       }
       return (prev = newState);
     });
-  }, []);
+  };
   
   const hasViewedFeature = React.useCallback((feature: string) => {
     return feature in ({ ...viewedFeatures });

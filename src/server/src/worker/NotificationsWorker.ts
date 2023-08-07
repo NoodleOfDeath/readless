@@ -41,12 +41,14 @@ export async function doWork() {
     );
   } catch (e) {
     console.error(e);
-    setTimeout(() => doWork, 3_000);
+  } finally {
+    setTimeout(() => doWork(), 3_000);
   }
 }
 
 export async function sendDailyPushNotifications() {
   try {
+    console.log('sending daily push notifications');
     // Worker that processes site maps and generates new summaries
     const subscriptions = await Subscription.findAll({
       where: {
@@ -75,7 +77,7 @@ export async function sendDailyPushNotifications() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(() => sendDailyPushNotifications, 3_000);
+    setTimeout(() => sendDailyPushNotifications(), 3_000);
   }
 }
 

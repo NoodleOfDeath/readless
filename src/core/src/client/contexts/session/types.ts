@@ -52,7 +52,18 @@ export enum OrientationType {
   'UNKNOWN' = 'UNKNOWN',
 }
 
-export type PushNotificationSettings = { frequency?: string };
+export type PushNotificationSettings = { 
+  title: string;
+  body: string;
+  sound?: string;
+  category?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  userInfo?: { [key: string]: any };
+  repeat?: string; 
+  delay?: string;
+  fireTime?: string; 
+  scheduled?: number[];
+};
   
 export type Preferences = {
   
@@ -112,6 +123,47 @@ export type Preferences = {
   triggerWords?: { [key: string]: string };
 };
 
+export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number' | 'string' | 'object' | 'array' } = {
+  bookmarkCount: 'number',
+  bookmarkedSummaries: 'object',
+  colorScheme: 'string',
+  compactMode: 'boolean',
+  compactSummaries: 'boolean',
+  excludeFilter: 'string',
+  excludedCategories: 'object',
+  excludedOutlets: 'object',
+  excludedPublishers: 'object',
+  fcmToken: 'string',
+  followCount: 'number',
+  followFilter: 'string',
+  followedCategories: 'object',
+  followedOutlets: 'object',
+  followedPublishers: 'object',
+  fontFamily: 'string',
+  fontSizeOffset: 'number',
+  hasReviewed: 'boolean',
+  lastRequestForReview: 'number',
+  letterSpacing: 'number',
+  lineHeightMultiplier: 'number',
+  preferredReadingFormat: 'string',
+  preferredShortPressFormat: 'string',
+  pushNotifications: 'object',
+  pushNotificationsEnabled: 'boolean',
+  readRecaps: 'object',
+  readSummaries: 'object',
+  recapTranslations: 'object',
+  removedSummaries: 'object',
+  rotationLock: 'boolean',
+  searchHistory: 'array',
+  sentimentEnabled: 'boolean',
+  showShortSummary: 'boolean',
+  summaryTranslations: 'object',
+  triggerWords: 'object',
+  unreadBookmarkCount: 'number',
+  uuid: 'string',
+  viewedFeatures: 'object',
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
 
@@ -165,7 +217,7 @@ export type SessionContextType = Preferences & {
   setPublishers: React.Dispatch<React.SetStateAction<Record<string, PublicPublisherAttributes> | undefined>>;
   
   // state setters
-  setPreference: <K extends keyof Preferences>(key: K, value?: Preferences[K] | ((value?: Preferences[K]) => Preferences[K])) => Promise<void>;
+  setPreference: <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V) => Promise<void>;
   getPreference: <K extends keyof Preferences>(key: K) => Promise<Preferences[K] | undefined>;
   resetPreferences: (hard?: boolean) => Promise<void>;
   storeTranslations: <
