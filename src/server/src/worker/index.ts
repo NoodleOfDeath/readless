@@ -3,8 +3,8 @@ export async function main() {
     await import('./SiteMapWorker');
   } else if (process.env.WORKER_QUEUE === 'topics') {
     await import('./TopicWorker');
-  } else if (process.env.WORKER_QUEUE === 'recaps') {
-    await import('./RecapWorker');
+  } else if (process.env.WORKER_QUEUE === 'notifs') {
+    await import('./NotificationsWorker');
   } else if (process.env.WORKER_QUEUE === 'caches') {
     await import('./CacheWorker');
   } else {
