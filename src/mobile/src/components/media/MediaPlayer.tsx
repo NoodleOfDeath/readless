@@ -17,7 +17,7 @@ import {
   ViewProps,
 } from '~/components';
 import { MediaContext, SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/hooks';
+import { useApiClient } from '~/hooks';
 import { RoutingParams } from '~/screens';
 
 type MediaPlayerProps = ViewProps & Omit<BannerProps, 'actions' | 'children'> ;
@@ -28,7 +28,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
     canSkipToPrevious, canSkipToNext, currentTrack, trackState, playTrack, pauseTrack, stopAndClearTracks, 
   } = React.useContext(MediaContext);
   const { preferredReadingFormat } = React.useContext(SessionContext);
-  const { handleInteraction } = useSummaryClient();
+  const { interactWithSummary } = useApiClient();
 
   const navigation = useNavigation<NativeStackNavigationProp<RoutingParams>>();
 
@@ -42,13 +42,13 @@ export function MediaPlayer(props: MediaPlayerProps) {
 
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryGroup, format?: ReadingFormat) => {
-      handleInteraction(summary, InteractionType.Read, undefined, { format });
+      interactWithSummary(summary.id, InteractionType.Read);
       navigation?.navigate('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary,
       });
     },
-    [handleInteraction, navigation, preferredReadingFormat]
+    [interactWithSummary, navigation, preferredReadingFormat]
   );
 
   return (
@@ -81,8 +81,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
             disableInteractions
             forceShortSummary
             summary={ currentTrack.summary }
-            onFormatChange={ (format) => handleFormatChange(currentTrack.summary, format) }
-            onInteract={ (...args) => handleInteraction(currentTrack.summary, ...args) } />
+            onFormatChange={ (format) => handleFormatChange(currentTrack.summary, format) } />
         )}
       </ScrollView>
     </Banner>

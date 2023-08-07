@@ -18,7 +18,7 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/hooks';
+import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
@@ -33,7 +33,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     preferredReadingFormat, 
     setPreference,
   } = React.useContext(SessionContext);
-  const { handleInteraction } = useSummaryClient();
+  const { interactWithSummary } = useApiClient();
   
   const bookmarks = React.useMemo(() => Object.entries({ ...bookmarkedSummaries }), [bookmarkedSummaries]);
   
@@ -41,13 +41,13 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
 
   const handleFormatChange = React.useCallback(
     async (summary: PublicSummaryGroup, interaction: InteractionType, format?: ReadingFormat) => {
-      handleInteraction(summary, InteractionType.Read, undefined, { format });
+      interactWithSummary(summary.id, InteractionType.Read, { metadata: { format } });
       navigation?.push('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary,
       });
     },
-    [handleInteraction, navigation, preferredReadingFormat]
+    [interactWithSummary, navigation, preferredReadingFormat]
   );
   
   React.useEffect(() => {
@@ -112,8 +112,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                     <Summary
                       key={ id }
                       summary={ bookmark.item }
-                      onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) }
-                      onInteract={ (...args) => handleInteraction(bookmark.item, ...args) } />
+                      onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) } />
                   );
                 })}
               {(bookmarks ?? []).length > unreadPage * pageSize + pageSize && (

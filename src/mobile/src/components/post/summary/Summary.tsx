@@ -15,11 +15,7 @@ import {
   VictoryTheme,
 } from 'victory-native';
 
-import { 
-  InteractionType,
-  PublicSummaryGroup,
-  ReadingFormat,
-} from '~/api';
+import { PublicSummaryGroup, ReadingFormat } from '~/api';
 import {
   ChannelIcon,
   ChildlessViewProps,
@@ -40,9 +36,9 @@ import {
 } from '~/components';
 import { LayoutContext, SessionContext } from '~/contexts';
 import {
+  useApiClient,
   useInAppBrowser,
   useNavigation,
-  useServiceClient,
   useStyles,
   useTheme,
 } from '~/hooks';
@@ -75,7 +71,6 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   hideArticleCount?: boolean;
   hideFooter?: boolean;
   onFormatChange?: (format?: ReadingFormat) => void;
-  onInteract?: (interaction: InteractionType, content?: string, metadata?: Record<string, unknown>, alternateAction?: () => void) => Promise<unknown>;
 };
 
 const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
@@ -168,7 +163,6 @@ export function Summary({
   hideArticleCount,
   hideFooter,
   onFormatChange,
-  onInteract,
   ...props
 }: SummaryProps) {
 
@@ -177,7 +171,7 @@ export function Summary({
     openPublisher, 
     openCategory, 
   } = useNavigation();
-  const { localizeSummary } = useServiceClient();
+  const { interactWithSummary, localize } = useApiClient();
   const { openURL } = useInAppBrowser();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   
@@ -450,7 +444,6 @@ export function Summary({
             await SheetManager.show('share', {
               payload: {
                 format: preferredShortPressFormat,
-                onInteract,
                 summary,
               },
             });
@@ -496,9 +489,7 @@ export function Summary({
       {
         onPress: () => { 
           analytics().logEvent('summary_report', { summary, userAgent: getUserAgent() });
-          onInteract?.(InteractionType.Feedback, undefined, undefined, () => {
-            SheetManager.show('feedback', { payload: { summary } });
-          });
+          SheetManager.show('feedback', { payload: { summary } });
         },
         systemIcon: 'flag',
         title: strings.action_report,
@@ -531,7 +522,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, preferredShortPressFormat, onInteract, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
+  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, preferredShortPressFormat, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
 
   const shareActions = React.useMemo(() => showcase ? null : (
     <React.Fragment>
@@ -566,7 +557,7 @@ export function Summary({
                 await SheetManager.show('share', {
                   payload: {
                     format: initialFormat,
-                    onInteract,
+                    interactWithSummary,
                     summary,
                   },
                 });
@@ -589,7 +580,7 @@ export function Summary({
         </ContextMenu>
       </View>
     </React.Fragment>
-  ), [showcase, footerOnly, theme.colors.textSecondary, summary, menuActions, disableInteractions, openURL, initialFormat, onInteract]);
+  ), [showcase, footerOnly, theme.colors.textSecondary, summary, menuActions, disableInteractions, openURL, initialFormat, interactWithSummary]);
   
   const header = React.useMemo(() => {
     if ((!forceExpanded && isCompact) && !initialFormat) {
@@ -777,9 +768,10 @@ export function Summary({
     return (
       <TranslateToggle 
         ref={ translateToggleRef }
+        type="summary"
         target={ summary }
         translations={ translations }
-        localize={ localizeSummary }
+        localize={ localize }
         onLocalize={ (translations) => {
           if (translations) {
             storeTranslations(summary, translations, 'summaryTranslations');
@@ -787,7 +779,7 @@ export function Summary({
           setTranslations(translations);
         } } />
     );
-  }, [showcase, summary, translations, localizeSummary, storeTranslations]);
+  }, [showcase, summary, translations, localize, storeTranslations]);
 
   const coverContent = React.useMemo(() => footerOnly ? null : (
     <View flex={ !initialFormat ? 1 : undefined } mb={ 6 }>
@@ -852,7 +844,7 @@ export function Summary({
       style={ { ...(big ? theme.components.cardBig : theme.components.card), ...style } }
       borderRadius={ 12 }
       bg={ containsTrigger ? '#eecccc' : undefined }
-      opacity={ isRead ? 0.5 : 1 }>
+      opacity={ isRead ? 0.75 : 1 }>
       <View flexRow flexGrow={ 1 }>
         {selected && (
           <View

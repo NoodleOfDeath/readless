@@ -10,13 +10,10 @@ import {
 import { LeftDrawerScreen } from './LeftDrawerScreen';
 
 import {
-  Chip,
-  ContextMenu,
   DrawerItem,
   DrawerSection,
   Icon,
 } from '~/components';
-import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 import { getUserAgent } from '~/utils';
@@ -51,7 +48,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
       </DrawerSection>
       <DrawerSection>
         <DrawerItem
-          label={ strings.misc_notifications || 'Notifications' }
+          label={ strings.screens_notifications }
           icon={ (props) => <Icon { ...props } name="bell" /> }
           onPress={ () => navigate('notifications') } />
         <DrawerItem

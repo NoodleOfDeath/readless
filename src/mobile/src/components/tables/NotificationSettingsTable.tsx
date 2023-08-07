@@ -1,41 +1,24 @@
 import React from 'react';
-import { Platform } from 'react-native';
 
-import RNFS from 'react-native-fs';
+import { useFocusEffect } from '@react-navigation/native';
 
-import { ReadingFormat } from '~/api';
 import {
-  BASE_LETTER_SPACING,
-  BASE_LINE_HEIGHT_MULTIPLIER,
-  FONT_SIZES,
-  NumericPrefPicker,
   PrefSwitch,
-  SYSTEM_FONT,
-  ScrollView,
-  Summary,
+  Switch,
   TableView,
   TableViewCell,
   TableViewSection,
 } from '~/components';
 import { NotificationContext, SessionContext } from '~/contexts';
-import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
 export function NotificationSettingsTable() {
   
-  const { navigate } = useNavigation();
-  
   const {
-    compactSummaries,
-    colorScheme, 
     fcmToken: unsubscribeToken,
-    fontFamily, 
-    preferredShortPressFormat,
-    preferredReadingFormat,
-    resetPreferences, 
-    triggerWords,
-    readSummaries,
-    removedSummaries,
+    pushNotifications,
+    pushNotificationsEnabled,
+    enablePush,
     setPreference,
   } = React.useContext(SessionContext);
   
@@ -43,6 +26,14 @@ export function NotificationSettingsTable() {
     registerRemoteNotifications,
     unsubscribe,
   } = React.useContext(NotificationContext);
+
+  const [enabled, setEnabled] = React.useState(pushNotificationsEnabled);
+  const [settings, setSettings] = React.useState(pushNotifications ?? {});
+
+  useFocusEffect(React.useCallback(() => {
+    setEnabled(pushNotificationsEnabled);
+    setSettings(pushNotifications ?? {});
+  }, [pushNotificationsEnabled, pushNotifications]));
   
   return (
     <TableView 
@@ -54,12 +45,36 @@ export function NotificationSettingsTable() {
           cellIcon="view-headline"
           cellAccessoryView={ (
             <PrefSwitch 
-              prefKey='pushNotifications'
+              prefKey='pushNotificationsEnabled'
               onValueChange={ async (value) => {
                 if (value === true) {
+                  setEnabled(true);
                   await registerRemoteNotifications();
                 } else {
+                  setEnabled(false);
                   await unsubscribe({ unsubscribeToken });
+                  setPreference('pushNotificationsEnabled', false);
+                  setPreference('fcmToken', undefined);
+                }
+              } } />
+          ) } />
+        <TableViewCell
+          bold
+          disabled={ !enabled }
+          title={ 'Daily Reminders' }
+          cellIcon="view-headline"
+          cellAccessoryView={ (
+            <Switch 
+              value={ Boolean(settings['daily-reminders']) }
+              onValueChange={ async (value) => {
+                if (value === true) {
+                  settings['daily-reminders'] = { frequency: '1d' };
+                  enablePush('daily-reminders', settings['daily-reminders']);
+                  await registerRemoteNotifications();
+                } else {
+                  setEnabled(false);
+                  delete settings['daily-reminders'];
+                  enablePush('daily-reminders', undefined);
                   setPreference('fcmToken', undefined);
                 }
               } } />

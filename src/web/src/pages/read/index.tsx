@@ -20,7 +20,7 @@ import {
 import Layout from '~/components/Layout';
 import Summary from '~/components/Summary';
 import { SessionContext } from '~/contexts';
-import { useRouter, useSummaryClient } from '~/hooks';
+import { useApiClient, useRouter } from '~/hooks';
 import { readingFormat } from '~/utils';
 
 type Props = {
@@ -35,7 +35,7 @@ export default function AppPage({
 
   const { replace, searchParams } = useRouter();
   const isMobile = useMediaQuery({ query: '(max-width: 762px)' });
-  const { getSummaries } = useSummaryClient();
+  const { getSummaries } = useApiClient();
 
   const { preferredReadingFormat } = React.useContext(SessionContext);
   

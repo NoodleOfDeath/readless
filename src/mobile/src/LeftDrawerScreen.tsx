@@ -5,7 +5,6 @@ import {
   DrawerContentScrollView,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import { SheetManager } from 'react-native-actions-sheet';
 
 import { StackNavigation } from './StackNavigation';
 

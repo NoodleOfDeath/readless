@@ -11,6 +11,7 @@ import {
   Markdown,
   View,
   WalkthroughSlider,
+  WalkthroughSliderRef,
 } from '~/components';
 import { LayoutContext } from '~/contexts';
 import { useTheme } from '~/hooks';
@@ -35,11 +36,11 @@ export type WalkthroughProps<Step extends WalkthroughStep = WalkthroughStep> = {
   closeLabel?: string;
 };
 
-export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ payload, ...props }: SheetProps<WalkthroughProps<Step>>) {
+export const Walkthrough = React.forwardRef(function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ payload, ...props }: SheetProps<WalkthroughProps<Step>>, ref: React.ForwardedRef<WalkthroughSliderRef>) {
   
   const theme = useTheme();
   const {
-    isTablet, screenWidth, screenHeight, 
+    isTablet, screenWidth, screenHeight,
   } = React.useContext(LayoutContext);
 
   const { 
@@ -50,7 +51,7 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
     closeLabel = strings.action_close,
   } = React.useMemo(() => ({ ...payload }), [payload]);
   
-  const computedSteps = React.useMemo(() => {
+  const computedSteps: React.ReactNode[] = React.useMemo(() => {
     return steps.map((step, i) => {
       const image = step.artwork && (
         <View 
@@ -187,6 +188,8 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
           </View>
         )}
         <WalkthroughSlider
+          ref={ ref }
+          data={ computedSteps }
           renderItem={ renderItem }
           renderPrevButton={ renderPrevButton }
           renderNextButton={ renderNextButton }
@@ -194,12 +197,12 @@ export function Walkthrough<Step extends WalkthroughStep = WalkthroughStep>({ pa
           renderDoneButton={ renderDoneButton }
           onDone={ onDone }
           showPrevButton
+          showNextButton
           showSkipButton
           dotStyle={ { backgroundColor: theme.colors.textDisabled } }
-          activeDotStyle={ { backgroundColor: theme.colors.text } }
-          data={ computedSteps } />
+          activeDotStyle={ { backgroundColor: theme.colors.text } } />
       </View>
     </ActionSheet>
   );
   
-}
+}) as <Step extends WalkthroughStep = WalkthroughStep>(props: SheetProps<WalkthroughProps<Step>> & React.RefAttributes<WalkthroughSliderRef>) => React.ReactElement;

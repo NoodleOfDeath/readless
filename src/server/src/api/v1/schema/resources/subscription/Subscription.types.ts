@@ -1,6 +1,6 @@
 import { DatedAttributes } from '../../types';
 
-export type SubscriptionChannel = 'email' | 'sms' | 'firebase' | 'apns' | 'push';
+export type SubscriptionChannel = 'email' | 'sms' | 'fcm' | 'apns' | 'push';
 
 export type SubscriptionAttributes = DatedAttributes & {
   channel: SubscriptionChannel;

@@ -19,16 +19,11 @@ import {
 } from '~/components';
 import { LayoutContext, SessionContext } from '~/contexts';
 import { 
+  useApiClient,
   useNavigation,
-  useServiceClient,
-  useSummaryClient,
   useTheme,
 } from '~/hooks';
-import { 
-  getFnsLocale, 
-  getLocale,
-  strings,
-} from '~/locales';
+import { getFnsLocale, strings } from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
   recap: RecapAttributes;
@@ -47,8 +42,7 @@ export function Recap({
   
   const theme = useTheme();
   const { navigation, openSummary } = useNavigation();
-  const { localizeRecap } = useServiceClient();
-  const { getSummaries } = useSummaryClient();
+  const { getSummaries, localize } = useApiClient();
   const { screenHeight } = React.useContext(LayoutContext);
   
   const { readRecap, readRecaps } = React.useContext(SessionContext);
@@ -88,11 +82,11 @@ export function Recap({
   
   useFocusEffect(React.useCallback(() => {
     if (expanded) {
-      navigation?.setOptions({ headerTitle: format(new Date(recap.createdAt), 'EEE PP', getLocale()) });
+      navigation?.setOptions({ headerTitle: format(new Date(recap.createdAt || ''), 'EEE PP', { locale: getFnsLocale() }) });
     } else {
       setIsRead(!forceUnread && recap.id in ({ ...readRecaps }));
     }
-  }, [expanded, forceUnread, navigation, readRecaps, recap.id]));
+  }, [expanded, forceUnread, navigation, readRecaps, recap.createdAt, recap.id]));
 
   const handlePress = React.useCallback(() => {
     if (expanded) {
@@ -105,8 +99,9 @@ export function Recap({
 
   const translateToggle = React.useMemo(() => (
     <TranslateToggle 
+      type="recap"
       target={ recap }
-      localize={ localizeRecap }
+      localize={ localize }
       onLocalize={ (translations) => {
         if (!translations) {
           setTranslations({ text: recap.text, title: recap.title });
@@ -114,7 +109,7 @@ export function Recap({
           setTranslations(translations);
         }
       } } />
-  ), [localizeRecap, recap]);
+  ), [localize, recap]);
 
   const content = React.useMemo(() => (preview || expanded) && (
     <Highlighter
@@ -170,7 +165,6 @@ export function Recap({
       </View>
       <SummaryList
         flex={ 1 }
-        fixed
         fetch={ getSummaries }
         specificIds={ ids } />
       <ScrollView flex={ 1 }>

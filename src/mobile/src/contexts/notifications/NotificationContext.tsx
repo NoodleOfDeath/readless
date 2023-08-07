@@ -1,16 +1,14 @@
 import React from 'react';
+import { Platform } from 'react-native';
 
 import messaging from '@react-native-firebase/messaging';
 import { registerSheet } from 'react-native-actions-sheet';
-import {
-  Notifications,
-  Registered,
-  RegistrationError,
-} from 'react-native-notifications';
+import { Notifications, RegistrationError } from 'react-native-notifications';
 import { Provider } from 'react-native-paper';
 
 import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
 
+import { SubscriptionChannel } from '~/api';
 import {
   AppearanceWalkthrough,
   BookmarkWalkthrough,
@@ -23,13 +21,16 @@ import {
   TriggerWordsWalkthrough,
   WhatsNewWalkthrough,
 } from '~/components';
-import { useSummaryClient } from '~/hooks';
+import { SessionContext } from '~/contexts';
+import { useApiClient } from '~/hooks';
 
 export const NotificationContext = React.createContext(DEFAULT_NOTIFICATION_CONTEXT);
 
 export function NotificationContextProvider({ children }: React.PropsWithChildren) {
 
-  const { subscribe, unsubscribe } = useSummaryClient();
+  const { subscribe, unsubscribe } = useApiClient();
+
+  const { setPreference } = React.useContext(SessionContext);
 
   React.useEffect(() => {
     // onboarding/features
@@ -47,22 +48,27 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     
   }, []);
   
-  const registerRemoteNotifications = React.useCallback(() => {
+  const registerRemoteNotifications = React.useCallback(async () => {
     
     Notifications.registerRemoteNotifications();
     
-    Notifications.events().registerRemoteNotificationsRegistered(async (event: Registered) => {
+    Notifications.events().registerRemoteNotificationsRegistered(async () => {
       try {
+        const channel = Platform.select({ android: SubscriptionChannel.Fcm, ios: SubscriptionChannel.Apns });
+        if (!channel) {
+          return;
+        }
         const newFcmToken = await messaging().getToken();
-        alert(newFcmToken);
+        setPreference('pushNotificationsEnabled', true);
+        setPreference('fcmToken', newFcmToken);
         await subscribe({
-          channel: 'apns',
+          channel,
           event: 'default',
           uuid: newFcmToken,
         });
       } catch (error) {
         console.error(error);
-        return null;
+        return;
       }
     });
     
@@ -104,11 +110,10 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
   
     // Foreground State
     messaging().onMessage(async remoteMessage => {
-      alert(remoteMessage);
       console.log('foreground', remoteMessage);
     });
       
-  }, []);
+  }, [setPreference, subscribe]);
 
   return (
     <NotificationContext.Provider value={ { 

@@ -11,7 +11,7 @@ import {
 } from '~/components';
 import { ChannelIcon } from '~/components/post/ChannelIcon';
 import { SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/hooks';
+import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
@@ -20,7 +20,7 @@ export function CategoryScreen({
   navigation,
 }: ScreenProps<'category'>) {
 
-  const { getSummaries } = useSummaryClient();
+  const { getSummaries } = useApiClient();
 
   const {
     categories,

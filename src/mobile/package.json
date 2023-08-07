@@ -107,7 +107,7 @@
     "nodemon": "^2.0.22",
     "react-native-dotenv": "^3.4.8",
     "react-test-renderer": "18.2.0",
-    "typescript": "4.8.4"
+    "typescript": "^5.1.6"
   },
   "jest": {
     "preset": "react-native"

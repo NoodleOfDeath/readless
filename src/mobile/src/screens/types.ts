@@ -48,6 +48,7 @@ export type RoutingParams = {
   };
   // settings and pickers
   settings: undefined;
+  notifications: undefined;
   colorSchemePicker: undefined;
   fontPicker: undefined;
   publisherPicker: undefined;

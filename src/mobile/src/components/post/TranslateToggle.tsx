@@ -9,15 +9,16 @@ import {
   Text,
   View,
 } from '~/components';
-import { useServiceClient } from '~/core';
+import { useApiClient } from '~/core';
 import { getLocale, strings } from '~/locales';
 import { getUserAgent } from '~/utils';
 
-export type TranslateToggleProps<Target extends RecapAttributes | PublicSummaryGroup> = ChildlessViewProps & {
+export type TranslateToggleProps<Type extends 'summary' | 'recap', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes> = ChildlessViewProps & {
+  type: Type;
   target: Target;
   translations?: { [key in keyof Target]?: string };
-  localize: Target extends RecapAttributes ? ReturnType<typeof useServiceClient>['localizeRecap'] : 
-    Target extends PublicSummaryGroup ? ReturnType<typeof useServiceClient>['localizeSummary'] : never;
+  localize: Target extends RecapAttributes ? ReturnType<typeof useApiClient>['localize'] : 
+    Target extends PublicSummaryGroup ? ReturnType<typeof useApiClient>['localize'] : never;
   onLocalize: (translations?: { [key in keyof Target]?: string }) => void;
 };
 
@@ -25,12 +26,13 @@ export type TranslateToggleRef<Target extends RecapAttributes | PublicSummaryGro
   setTranslations: React.Dispatch<React.SetStateAction<{ [key in keyof Target]?: string | undefined; } | undefined>>
 };
 
-export const TranslateToggle = React.forwardRef(function TranslateToggle<Target extends RecapAttributes | PublicSummaryGroup>({
+export const TranslateToggle = React.forwardRef(function TranslateToggle<Type extends 'summary' | 'recap', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes>({
+  type,
   target,
   translations: translations0,
   localize,
   onLocalize,
-}: TranslateToggleProps<Target>, ref?: React.ForwardedRef<Partial<TranslateToggleRef<Target>>>) {
+}: TranslateToggleProps<Type, Target>, ref?: React.ForwardedRef<Partial<TranslateToggleRef<Target>>>) {
   
   const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string } | undefined>(translations0);
   const [isLocalizing, setIsLocalizing] = React.useState(false);
@@ -45,7 +47,11 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Target 
     setIsLocalizing(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await localize(target as any, getLocale());
+      const { data, error } = await localize({
+        locale: getLocale(),
+        resourceId: target.id, 
+        resourceType: type,
+      });
       if (error) {
         throw error;
       }
@@ -59,7 +65,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Target 
     } finally {
       setIsLocalizing(false);
     }
-  }, [isLocalizing, localize, onLocalize, target]);
+  }, [isLocalizing, localize, onLocalize, type, target]);
 
   React.useImperativeHandle(ref, () => ({ 
     setTranslations: (translations) => {

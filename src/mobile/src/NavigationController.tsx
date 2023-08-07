@@ -24,13 +24,13 @@ import {
   OrientationType,
   SessionContext,
 } from '~/contexts';
-import { useCategoryClient, useTheme } from '~/hooks';
+import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 
 export default function NavigationController() {
   
   const theme = useTheme();
-  const { getCategories, getPublishers } = useCategoryClient();
+  const { getCategories, getPublishers } = useApiClient();
   
   const {
     ready, 

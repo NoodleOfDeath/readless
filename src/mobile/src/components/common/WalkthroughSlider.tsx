@@ -50,7 +50,7 @@ export type WalkthroughSliderProps<ItemT> = FlatListProps<ItemT> & {
   data: ItemT[];
   renderItem: (
     info: ListRenderItemInfo<ItemT> & {
-      dimensions: {width: number; height: number};
+      dimensions: { width: number; height: number };
     },
   ) => React.ReactNode;
   renderSkipButton?: () => React.ReactNode;
@@ -73,7 +73,7 @@ export type WalkthroughSliderProps<ItemT> = FlatListProps<ItemT> & {
   showPrevButton: boolean;
   showSkipButton: boolean;
   bottomButton: boolean;
-} & FlatListProps<ItemT>;
+};
 
 type State = {
   width: number;
@@ -81,73 +81,63 @@ type State = {
   activeIndex: number;
 };
 
+export type WalkthroughSliderRef = {
+  goToSlide?: (a: number, b?: boolean) => void;
+  next?: () => void;  
+  prev?: () => void;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class WalkthroughSlider<ItemT = any> extends React.Component<
-  WalkthroughSliderProps<ItemT>,
-  State
-> {
+export const WalkthroughSlider = React.forwardRef(function WalkthroughSlider<ItemT>({
+  data,
+  activeIndex: activeIndex0 = 0,
+  width: width0,
+  height: height0,
+  onSlideChange,
+  renderItem,
+  renderSkipButton,
+  renderNextButton,
+  renderDoneButton,
+  renderPrevButton,
+  onSkip,
+  onDone,
+  renderPagination,
+  activeDotStyle,
+  dotStyle,
+  dotClickEnabled,
+  skipLabel,
+  doneLabel,
+  nextLabel,
+  prevLabel,
+  showDoneButton,
+  showNextButton,
+  showPrevButton,
+  showSkipButton,
+  bottomButton,
+  ...props
+}: WalkthroughSliderProps<ItemT> & State, ref: React.ForwardedRef<WalkthroughSliderRef>) {
 
-  static defaultProps = {
-    activeDotStyle: { backgroundColor: 'rgba(255, 255, 255, .9)' },
-    bottomButton: false,
-    doneLabel: 'Done',
-    dotClickEnabled: true,
-    dotStyle: { backgroundColor: 'rgba(0, 0, 0, .2)' },
-    nextLabel: 'Next',
-    prevLabel: 'Back',
-    showDoneButton: true,
-    showNextButton: true,
-    showPrevButton: false,
-    showSkipButton: false,
-    skipLabel: 'Skip',
-  };
+  const [activeIndex, setActiveIndex] = React.useState(activeIndex0);
+  const [width, setWidth] = React.useState(width0);
+  const [height, setHeight] = React.useState(height0);
 
-  state = {
-    activeIndex: 0,
-    height: 0,
-    width: 0,
-  };
-
-  flatList: FlatList<ItemT> | undefined;
-
-  goToSlide = (pageNum: number, triggerOnSlideChange?: boolean) => {
-    const prevNum = this.state.activeIndex;
-    this.setState({ activeIndex: pageNum });
-    this.flatList?.scrollToOffset({ offset: this._rtlSafeIndex(pageNum) * this.state.width });
-    if (triggerOnSlideChange && this.props.onSlideChange) {
-      this.props.onSlideChange(pageNum, prevNum);
-    }
-  };
-
-  // Get the list ref
-  getListRef = () => this.flatList;
+  const flatList = React.useRef<FlatList<ItemT>>(null);
 
   // Index that works across Android's weird rtl bugs
-  _rtlSafeIndex = (i: number) =>
-    isAndroidRTL ? this.props.data.length - 1 - i : i;
+  const _rtlSafeIndex = React.useCallback((i: number) =>
+    isAndroidRTL ? data.length - 1 - i : i, [data]);
 
   // Render a slide
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _renderItem = (flatListArgs: any) => {
-    const { width, height } = this.state;
+  const _renderItem = React.useCallback((flatListArgs: any) => {
     const props = { ...flatListArgs, dimensions: { height, width } };
     // eslint-disable-next-line react-native/no-inline-styles
-    return <View style={ { flex: 1, width } }>{this.props.renderItem(props)}</View>;
-  };
+    return <View style={ { flex: 1, width } }>{renderItem(props)}</View>;
+  }, [height, width, renderItem]);
 
-  _renderButton = (
-    name: string,
-    label: string,
-    onPress?: () => void,
-    render?: () => React.ReactNode
-  ) => {
-    const content = render ? render() : this._renderDefaultButton(name, label);
-    return this._renderOuterButton(content, name, onPress);
-  };
-
-  _renderDefaultButton = (name: string, label: string) => {
+  const renderDefaultButton = React.useCallback((name: string, label: string) => {
     let content = <Text style={ styles.buttonText }>{label}</Text>;
-    if (this.props.bottomButton) {
+    if (bottomButton) {
       content = (
         <View
           style={ [
@@ -160,9 +150,9 @@ export class WalkthroughSlider<ItemT = any> extends React.Component<
       );
     }
     return content;
-  };
+  }, [bottomButton]);
 
-  _renderOuterButton = (
+  const renderOuterButton = React.useCallback((
     content: React.ReactNode,
     name: string,
     onPress?: (e: GestureResponderEvent) => void
@@ -172,91 +162,110 @@ export class WalkthroughSlider<ItemT = any> extends React.Component<
         ? styles.leftButtonContainer
         : styles.rightButtonContainer;
     return (
-      <View style={ !this.props.bottomButton && style }>
+      <View style={ !bottomButton && style }>
         <TouchableOpacity
           onPress={ onPress }
-          style={ this.props.bottomButton && styles.flexOne }>
+          style={ bottomButton && styles.flexOne }>
           {content}
         </TouchableOpacity>
       </View>
     );
-  };
+  }, [bottomButton]);
 
-  _renderNextButton = () =>
-    this.props.showNextButton &&
-    this._renderButton(
+  const _renderButton = React.useCallback((
+    name: string,
+    label: string,
+    onPress?: () => void,
+    render?: () => React.ReactNode
+  ) => {
+    const content = render ? render() : renderDefaultButton(name, label);
+    return renderOuterButton(content, name, onPress);
+  }, [renderDefaultButton, renderOuterButton]);
+
+  const goToSlide = React.useCallback((pageNum: number, triggerOnSlideChange?: boolean) => {
+    const prevNum = activeIndex;
+    setActiveIndex(pageNum);
+    flatList.current?.scrollToOffset({ offset: _rtlSafeIndex(pageNum) * width });
+    if (triggerOnSlideChange && onSlideChange) {
+      onSlideChange?.(pageNum, prevNum);
+    }
+  }, [_rtlSafeIndex, activeIndex, onSlideChange, width]);
+
+  const _renderNextButton = React.useCallback(() =>
+    showNextButton &&
+    _renderButton(
       'Next',
-      this.props.nextLabel,
-      () => this.goToSlide(this.state.activeIndex + 1, true),
-      this.props.renderNextButton
-    );
+      nextLabel,
+      () => goToSlide(activeIndex + 1, true),
+      renderNextButton
+    ), [_renderButton, activeIndex, goToSlide, nextLabel, renderNextButton, showNextButton]);
 
-  _renderPrevButton = () =>
-    this.props.showPrevButton &&
-    this._renderButton(
+  const _renderPrevButton = React.useCallback(() =>
+    showPrevButton &&
+    _renderButton(
       'Prev',
-      this.props.prevLabel,
-      () => this.goToSlide(this.state.activeIndex - 1, true),
-      this.props.renderPrevButton
-    );
+      prevLabel,
+      () => goToSlide(activeIndex - 1, true),
+      renderPrevButton
+    ), [_renderButton, activeIndex, goToSlide, prevLabel, renderPrevButton, showPrevButton]);
 
-  _renderDoneButton = () =>
-    this.props.showDoneButton &&
-    this._renderButton(
+  const _renderDoneButton = React.useCallback(() =>
+    showDoneButton &&
+    _renderButton(
       'Done',
-      this.props.doneLabel,
-      this.props.onDone,
-      this.props.renderDoneButton
-    );
+      doneLabel,
+      onDone,
+      renderDoneButton
+    ), [_renderButton, doneLabel, onDone, renderDoneButton, showDoneButton]);
 
-  _renderSkipButton = () =>
+  const _renderSkipButton = React.useCallback(() =>
     // scrollToEnd does not work in RTL so use goToSlide instead
-    this.props.showSkipButton &&
-    this._renderButton(
+    showSkipButton &&
+    _renderButton(
       'Skip',
-      this.props.skipLabel,
+      skipLabel,
       () =>
-        this.props.onSkip
-          ? this.props.onSkip()
-          : this.goToSlide(this.props.data.length - 1),
-      this.props.renderSkipButton
-    );
+        onSkip
+          ? onSkip()
+          : goToSlide(data.length - 1),
+      renderSkipButton
+    ), [_renderButton, data.length, goToSlide, onSkip, renderSkipButton, showSkipButton, skipLabel]);
 
-  _renderPagination = () => {
-    const isLastSlide = this.state.activeIndex === this.props.data.length - 1;
-    const isFirstSlide = this.state.activeIndex === 0;
+  const _renderPagination = React.useCallback(() => {
+    const isLastSlide = activeIndex === data.length - 1;
+    const isFirstSlide = activeIndex === 0;
 
     const secondaryButton =
-      (!isFirstSlide && this._renderPrevButton()) ||
-      (!isLastSlide && this._renderSkipButton());
+      (!isFirstSlide && _renderPrevButton()) ||
+      (!isLastSlide && _renderSkipButton());
     const primaryButton = isLastSlide
-      ? this._renderDoneButton()
-      : this._renderNextButton();
+      ? _renderDoneButton()
+      : _renderNextButton();
 
     return (
       <View style={ styles.paginationContainer }>
         <SafeAreaView>
           <View style={ styles.paginationDots }>
-            {this.props.data.length > 1 &&
-              this.props.data.map((_, i) =>
-                this.props.dotClickEnabled ? (
+            {data.length > 1 &&
+              data.map((_, i) =>
+                dotClickEnabled ? (
                   <TouchableOpacity
                     key={ i }
                     style={ [
                       styles.dot,
-                      this._rtlSafeIndex(i) === this.state.activeIndex
-                        ? this.props.activeDotStyle
-                        : this.props.dotStyle,
+                      _rtlSafeIndex(i) === activeIndex
+                        ? activeDotStyle
+                        : dotStyle,
                     ] }
-                    onPress={ () => this.goToSlide(i, true) } />
+                    onPress={ () => goToSlide(i, true) } />
                 ) : (
                   <View
                     key={ i }
                     style={ [
                       styles.dot,
-                      this._rtlSafeIndex(i) === this.state.activeIndex
-                        ? this.props.activeDotStyle
-                        : this.props.dotStyle,
+                      _rtlSafeIndex(i) === activeIndex
+                        ? activeDotStyle
+                        : dotStyle,
                     ] } />
                 ))}
           </View>
@@ -265,86 +274,73 @@ export class WalkthroughSlider<ItemT = any> extends React.Component<
         </SafeAreaView>
       </View>
     );
-  };
+  }, [activeIndex, data, _renderPrevButton, _renderSkipButton, _renderDoneButton, _renderNextButton, dotClickEnabled, _rtlSafeIndex, activeDotStyle, dotStyle, goToSlide]);
 
-  _onMomentumScrollEnd = (e: {nativeEvent: NativeScrollEvent}) => {
+  const onMomentumScrollEnd = React.useCallback((e: {nativeEvent: NativeScrollEvent}) => {
     const offset = e.nativeEvent.contentOffset.x;
     // Touching very very quickly and continuous brings about
     // a variation close to - but not quite - the width.
     // That's why we round the number.
     // Also, Android phones and their weird numbers
-    const newIndex = this._rtlSafeIndex(Math.round(offset / this.state.width));
-    if (newIndex === this.state.activeIndex) {
+    const newIndex = _rtlSafeIndex(Math.round(offset / width));
+    if (newIndex === activeIndex) {
       // No page change, don't do anything
       return;
     }
-    const lastIndex = this.state.activeIndex;
-    this.setState({ activeIndex: newIndex });
-    this.props.onSlideChange && this.props.onSlideChange(newIndex, lastIndex);
-  };
+    const lastIndex = activeIndex;
+    setActiveIndex(newIndex);
+    onSlideChange?.(newIndex, lastIndex);
+  }, [_rtlSafeIndex, width, activeIndex, onSlideChange]);
 
-  _onLayout = ({ nativeEvent }: LayoutChangeEvent) => {
-    const { width, height } = nativeEvent.layout;
-    if (width !== this.state.width || height !== this.state.height) {
+  const onLayout = React.useCallback(({ nativeEvent }: LayoutChangeEvent) => {
+    const { layout } = nativeEvent;
+    if (layout.width !== width || layout.height !== height) {
       // Set new width to update rendering of pages
-      this.setState({ height, width });
+      setWidth(layout.width);
+      setHeight(layout.height);
       // Set new scroll position
       const func = () => {
-        this.flatList?.scrollToOffset({
+        flatList.current?.scrollToOffset({
           animated: false,
-          offset: this._rtlSafeIndex(this.state.activeIndex) * width,
+          offset: _rtlSafeIndex(activeIndex) * layout.width,
         });
       };
       setTimeout(func, 0); // Must be called like this to avoid bugs :/
     }
-  };
+  }, [width, height, _rtlSafeIndex, activeIndex]);
 
-  render() {
-    // Separate props used by the component to props passed to FlatList
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    const {
-      renderPagination,
-      activeDotStyle,
-      dotStyle,
-      skipLabel,
-      doneLabel,
-      nextLabel,
-      prevLabel,
-      renderItem,
-      data,
-      extraData,
-      ...otherProps
-    } = this.props;
-    /* eslint-enable @typescript-eslint/no-unused-vars */
+  React.useImperativeHandle(ref, () => ({
+    goToSlide, 
+    next: () => activeIndex + 1 < data.length && goToSlide(activeIndex + 1, true), 
+    prev: () => activeIndex - 1 > 0 && goToSlide(activeIndex - 1, true), 
+  }));
 
-    // Merge component width and user-defined extraData
-    const extra = mergeExtraData(extraData, this.state.width);
+  const extra = React.useMemo(() => mergeExtraData(props.extraData, width), [props.extraData, width]);
 
-    return (
-      <View style={ styles.flexOne }>
-        <FlatList
-          ref={ (ref) => (this.flatList = ref as FlatList<ItemT>) }
-          data={ this.props.data }
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={ false }
-          bounces={ false }
-          style={ styles.flatList }
-          renderItem={ this._renderItem }
-          onMomentumScrollEnd={ this._onMomentumScrollEnd }
-          extraData={ extra }
-          onLayout={ this._onLayout }
-          // make sure all slides are rendered so we can use dots to navigate to them
-          initialNumToRender={ data.length }
-          { ...otherProps } />
-        {renderPagination
-          ? renderPagination(this.state.activeIndex)
-          : this._renderPagination()}
-      </View>
-    );
-  }
+  return (
+    <View style={ styles.flexOne }>
+      <FlatList
+        ref={ flatList }
+        data={ data }
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={ false }
+        bounces={ false }
+        style={ styles.flatList }
+        renderItem={ _renderItem }
+        onMomentumScrollEnd={ onMomentumScrollEnd }
+        extraData={ extra }
+        onLayout={ onLayout }
+        // make sure all slides are rendered so we can use dots to navigate to them
+        initialNumToRender={ data.length }
+        { ...props } />
+      {renderPagination
+        ? renderPagination(activeIndex)
+        : _renderPagination()}
+    </View>
+  );
 
-}
+}) as <ItemT>(props: Partial<WalkthroughSliderProps<ItemT> & State> & React.RefAttributes<WalkthroughSliderRef>) => React.ReactElement;
 
 const styles = StyleSheet.create({
   bottomButton: {
