@@ -1,11 +1,16 @@
 import { DatedAttributes } from '../../types';
 
 export type SubscriptionChannel = 'email' | 'sms' | 'fcm' | 'apns' | 'push';
+export type SubscriptionEvent = 'default' | 'daily-recap' | 'daily-reminder';
 
 export type SubscriptionAttributes = DatedAttributes & {
   channel: SubscriptionChannel;
   uuid: string;
-  event: string;
+  event: SubscriptionEvent;
+  repeats?: string;
+  title?: string;
+  body?: string;
+  fireTime?: Date;
   locale?: string;
   verificationCode?: string;
   unsubscribeToken?: string;
@@ -16,7 +21,11 @@ export type SubscriptionAttributes = DatedAttributes & {
 export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
   channel: SubscriptionChannel;
   uuid: string;
-  event: string;
+  event: SubscriptionEvent;
+  repeats?: string;
+  title?: string;
+  body?: string;
+  fireTime?: Date;
   locale?: string;
   verificationCode?: string;
   unsubscribeToken?: string;

@@ -12,8 +12,10 @@ import {
   SubscriptionAttributes,
   SubscriptionChannel,
   SubscriptionCreationAttributes,
+  SubscriptionEvent,
 } from './Subscription.types';
 import { 
+  FirebaseMessage,
   FirebaseService,
   MailService,
   MailServiceOptions,
@@ -62,7 +64,19 @@ export class Subscription<
     allowNull: false,
     type: DataType.STRING,
   })
-  declare event: string;
+  declare event: SubscriptionEvent;
+
+  @Column({ type: DataType.STRING })
+  declare repeats: string;
+
+  @Column({ type: DataType.STRING })
+  declare title?: string;
+
+  @Column({ type: DataType.STRING })
+  declare body?: string;
+
+  @Column({ type: DataType.DATE })
+  declare fireTime?: Date;
     
   @Column({
     allowNull: false,
@@ -100,13 +114,21 @@ export class Subscription<
     channel,
     uuid,
     event,
+    repeats,
+    title,
+    body,
+    fireTime,
     locale,
   }: SubscriptionCreationAttributes): Promise<Subscription> {
     const verificationCode = v4();
     const subscription = await Subscription.create({
+      body,
       channel,
       event,
+      fireTime,
       locale,
+      repeats,
+      title,
       uuid,
       verificationCode,
     });
@@ -151,8 +173,8 @@ export class Subscription<
     return await this.scope('public').findByPk(subscription.id);
   }
   
-  public static async unsubscribe({ unsubscribeToken }: Pick<SubscriptionCreationAttributes, 'unsubscribeToken'>): Promise<void> {
-    const subscription = await Subscription.findOne({ where: { unsubscribeToken } });
+  public static async unsubscribe({ event, unsubscribeToken }: Pick<SubscriptionCreationAttributes, 'event' | 'unsubscribeToken'>): Promise<void> {
+    const subscription = await Subscription.findOne({ where: { event, unsubscribeToken } });
     if (!subscription) {
       throw new InternalError('invalid subscription');
     }
@@ -172,8 +194,11 @@ export class Subscription<
         verifiedAt: { [Op.ne] : null }, 
       },
     });
+    if (!subscriptions.length) {
+      return;
+    }
     console.log(`notifying ${subscriptions.length} subscribers`);
-    const tokens: string[] = [];
+    const messages: FirebaseMessage[] = [];
     for (const subscription of subscriptions) {
       const unsub = `${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/unsubscribe?t=${subscription.unsubscribeToken}`;
       switch (channel0) {
@@ -186,20 +211,20 @@ export class Subscription<
         });
         break;
       case 'push':
-        tokens.push(subscription.uuid);
+        messages.push({
+          notification: {
+            body: data.body,
+            title: data.title,
+          },
+          token: subscription.uuid,
+        });
         break;
       default:
         throw new InternalError('invalid subscription channel');
       }
     }
-    if (channel0 === 'push') {
-      await FirebaseService.notify({
-        notification: {
-          body: data.body,
-          title: data.title,
-        },
-        tokens,
-      });
+    if (messages.length > 0 && channel0 === 'push') {
+      await FirebaseService.notify(messages);
     }
   }
   

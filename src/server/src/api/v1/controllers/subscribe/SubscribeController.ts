@@ -48,7 +48,7 @@ export class SubscribeController {
   @Post('/unsubscribe')
   public static async unsubscribe(
     @Request() req: ExpressRequest,
-    @Body() body: Pick<SubscriptionCreationAttributes, 'unsubscribeToken'>
+    @Body() body: Pick<SubscriptionCreationAttributes, 'event' | 'unsubscribeToken'>
   ): Promise<void> {
     await Subscription.unsubscribe(body);
   }
