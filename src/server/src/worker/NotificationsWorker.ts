@@ -56,6 +56,7 @@ export async function sendDailyPushNotifications() {
       },
     });
     if (!subscriptions.length) {
+      setTimeout(() => sendDailyPushNotifications, 3_000);
       return;
     }
     console.log(`notifying ${subscriptions.length} subscribers`);
