@@ -201,7 +201,7 @@ export class PuppeteerService extends BaseService {
     removeQuery,
   }: UrlOptions) {
     const { baseUrl } = publisher;
-    const domain = new URL(baseUrl).hostname.replace(/^www\./, ''); 
+    const domain = new URL(baseUrl).hostname.replace(/^www\./, '').replace(/\/$/, '');
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
     if (removeQuery) {
       url = url.replace(/\?.*$/, '');
