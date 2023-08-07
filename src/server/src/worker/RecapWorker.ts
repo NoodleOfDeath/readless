@@ -53,7 +53,6 @@ export async function sendDailyPushNotifications() {
         channel: ['push', 'fcm', 'apns'],
         event: 'daily-reminder',
         fireTime: { [Op.lte]: new Date() },
-        verifiedAt: { [Op.ne]: null },
       },
     });
     if (!subscriptions.length) {
