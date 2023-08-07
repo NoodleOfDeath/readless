@@ -353,6 +353,7 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
 };
 
 describe('util method tests', () => {
+
   test('parse-srcset', () => {
     let srcset = '/test200.png 200w, /test400.png 400w';
     let urls = PuppeteerService.parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
@@ -366,6 +367,7 @@ describe('util method tests', () => {
     expect(urls[0]).toBe('https://www.wsj.com/test2x.png');
     console.log(urls);
   });
+
 });
 
 describe('crawl', () => {
