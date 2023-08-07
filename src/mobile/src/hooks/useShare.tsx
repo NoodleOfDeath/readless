@@ -8,13 +8,12 @@ import RNFS from 'react-native-fs';
 import Share, { ShareOptions as RNShareOptions, Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
-import { useApiClient } from '.';
-
 import { 
   InteractionType, 
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
+import { useApiClient } from '~/hooks';
 import { shareableLink } from '~/utils';
 
 const SocialAppIds: Record<string, string> = {

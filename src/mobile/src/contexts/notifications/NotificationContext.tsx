@@ -8,7 +8,7 @@ import { Provider } from 'react-native-paper';
 
 import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
 
-import { SubscriptionChannel } from '~/api';
+import { SubscriptionChannel, SubscriptionEvent } from '~/api';
 import {
   AppearanceWalkthrough,
   BookmarkWalkthrough,
@@ -30,7 +30,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
 
   const { subscribe, unsubscribe } = useApiClient();
 
-  const { setPreference } = React.useContext(SessionContext);
+  const { fcmToken, setPreference } = React.useContext(SessionContext);
 
   React.useEffect(() => {
     // onboarding/features
@@ -46,6 +46,18 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     registerSheet('share', ShareDialog);
     registerSheet('feedback', FeedbackDialog);
     
+  }, []);
+
+  const isRegisteredForRemoteNotifications = React.useCallback(async () => {
+    const enabled = await messaging().hasPermission();
+    if (!enabled) {
+      return false;
+    }
+    const token = await messaging().getToken();
+    if (!token) {
+      return false;
+    }
+    return true;
   }, []);
   
   const registerRemoteNotifications = React.useCallback(async () => {
@@ -63,7 +75,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
         setPreference('fcmToken', newFcmToken);
         await subscribe({
           channel,
-          event: 'default',
+          event: SubscriptionEvent.Default,
           uuid: newFcmToken,
         });
       } catch (error) {
@@ -117,7 +129,18 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
 
   return (
     <NotificationContext.Provider value={ { 
+      isRegisteredForRemoteNotifications,
       registerRemoteNotifications,
+      subscribe: async (params: Omit<Parameters<typeof subscribe>[0], 'channel' | 'uuid'>) => {
+        if (!fcmToken) {
+          throw new Error('FCM token not available');
+        }
+        return await subscribe({
+          ...params,
+          channel: Platform.select({ android: SubscriptionChannel.Fcm, ios: SubscriptionChannel.Apns }) as SubscriptionChannel,
+          uuid: fcmToken,
+        });
+      },
       unsubscribe,
     } }>
       <Provider>

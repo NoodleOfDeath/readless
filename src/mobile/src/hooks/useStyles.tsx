@@ -16,6 +16,8 @@ import { SessionContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
 export function useTextStyles({
+
+  disabled,
   
   // typographies (aka variants)
   caption,
@@ -62,7 +64,7 @@ export function useTextStyles({
   textDecorationLine = underline ? 'underline' : undefined,
   fontStyle = italic ? 'italic' : undefined,
 
-  color = 'text',
+  color = disabled ? 'textDisabled' : 'text',
 }: TextProps) {
   
   const { 

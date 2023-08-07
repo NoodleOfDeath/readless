@@ -56,8 +56,7 @@ export async function sendDailyPushNotifications() {
       },
     });
     if (!subscriptions.length) {
-      setTimeout(() => sendDailyPushNotifications, 3_000);
-      return;
+      throw new Error('no subscriptions');
     }
     console.log(`notifying ${subscriptions.length} subscribers`);
     const messages: FirebaseMessage[] = [];
@@ -75,6 +74,7 @@ export async function sendDailyPushNotifications() {
     await FirebaseService.notify(messages);
   } catch (e) {
     console.error(e);
+  } finally {
     setTimeout(() => sendDailyPushNotifications, 3_000);
   }
 }
