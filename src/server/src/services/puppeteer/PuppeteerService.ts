@@ -211,7 +211,7 @@ export class PuppeteerService extends BaseService {
       return `https:${url}`;
     } else
     if (/^\//.test(url)) {
-      return `https://${domain}${url}`;
+      return `https://${domain}/${url}`;
     } else
     if (/^\.\//.test(url)) {
       return `${targetUrl.replace(/\/+$/, '')}${url.replace(/^\./, '')}`;
