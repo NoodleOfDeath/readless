@@ -48,6 +48,7 @@ export async function doWork() {
 
 export async function sendDailyPushNotifications() {
   try {
+    console.log('sending daily push notifications');
     // Worker that processes site maps and generates new summaries
     const subscriptions = await Subscription.findAll({
       where: {

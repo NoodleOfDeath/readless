@@ -49,16 +49,10 @@ export function NotificationSettingsTable() {
         if (!await isRegisteredForRemoteNotifications()) {
           await registerRemoteNotifications();
         }
-        const fTime = fireTime;
-        if (fTime < new Date()) {
-          fTime.setDate(new Date().getDate() + 1);
-          enablePush(SubscriptionEvent.DailyReminder, { ...settings[SubscriptionEvent.DailyReminder], fireTime: fTime.toISOString() });
-          return;
-        }
-        console.log(fTime);
+        console.log(fireTime);
         const reminders = {
           ...settings[SubscriptionEvent.DailyReminder],
-          fireTime: fTime.toISOString(),
+          fireTime: fireTime.toISOString(),
         };
         setSettings((prev) => {
           const newState = {
@@ -67,14 +61,12 @@ export function NotificationSettingsTable() {
           };
           return (prev = newState);
         });
-        const messages = [strings.notifications_dailyReminderDescription1, strings.notifications_dailyReminderDescription2, strings.notifications_dailyReminderDescriptionMorning];
-        const body = messages[Math.floor(Math.random() * messages.length)];
         setSettings({ ...settings, [SubscriptionEvent.DailyReminder]: reminders });
         await enablePush(SubscriptionEvent.DailyReminder, reminders);
         await subscribe({
-          body,
+          body: strings.notifications_dailyReminderDescription,
           event: SubscriptionEvent.DailyReminder,
-          fireTime: fTime.toISOString(),
+          fireTime: fireTime.toISOString(),
           repeats: '1d',
           title: strings.notifications_dailyReminder,
         });
@@ -140,13 +132,31 @@ export function NotificationSettingsTable() {
               value={ Boolean(settings[SubscriptionEvent.DailyRecap]) }
               onValueChange={ async (value) => {
                 if (value === true) {
+                  setSettings((prev) => {
+                    const newState = { ...prev };
+                    newState[SubscriptionEvent.DailyRecap] = {
+                      body: '',
+                      title: '',
+                    };
+                    return (prev = newState);
+                  });
                   await enablePush(SubscriptionEvent.DailyRecap, {
-                    ...settings[SubscriptionEvent.DailyRecap],
                     body: '',
                     title: '',
                   });
+                  await subscribe({
+                    body: '',
+                    event: SubscriptionEvent.DailyRecap,
+                    title: strings.settings_dailyRecaps,
+                  });
                 } else {
+                  setSettings((prev) => {
+                    const newState = { ...prev };
+                    delete newState[SubscriptionEvent.DailyRecap];
+                    return (prev = newState);
+                  });
                   await enablePush(SubscriptionEvent.DailyRecap, undefined);
+                  await unsubscribe({ event: SubscriptionEvent.DailyRecap, unsubscribeToken: fcmToken });
                 }
               } } />
           ) } />
@@ -174,7 +184,15 @@ export function NotificationSettingsTable() {
               value={ fireTime }
               onChange={ async (event, date) => {
                 if (date) {
-                  setFireTime(date);
+                  const newDate = new Date();
+                  newDate.setMonth(new Date().getMonth());
+                  newDate.setFullYear(new Date().getFullYear());
+                  if (date.getHours() < new Date().getHours()) {
+                    newDate.setDate(new Date().getDate() + 1);
+                  }
+                  newDate.setHours(date.getHours());
+                  newDate.setMinutes(date.getMinutes());
+                  setFireTime(newDate);
                 }
                 await updatePushNotifications(true);
               } }
