@@ -302,7 +302,8 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   telegraph: {
     authors: [],
     date: new Date('placeholder'),
-    url: 'https://www.telegraph.co.uk/world-news/2023/04/23/el-salvador-president-nayib-bukele-crime-crackdown-police/',
+    imageUrls: ['https://www.telegraph.co.uk/content/dam/news/2023/08/05/TELEMMGLPICT000344906232_16912508059220_trans_NvBQzQNjv4BqAgteUjTgAPhe0-ZjLyZCCY-CP8FGr5EfoXiA1Tlm5m4.jpeg?imwidth=680'],
+    url: 'https://www.telegraph.co.uk//news/2023/08/05/victory-in-the-battle-of-britain-victory-hinged-on-one-man/',
   },
   theatlantic: {
     authors: [],

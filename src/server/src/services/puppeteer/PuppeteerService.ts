@@ -203,6 +203,7 @@ export class PuppeteerService extends BaseService {
     const { baseUrl } = publisher;
     const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
+    const baseDomain = `https://${new URL(targetUrl).hostname.replace(/\/+$/, '')}`;
     if (removeQuery) {
       url = url.replace(/\?.*$/, '');
     }
@@ -211,10 +212,10 @@ export class PuppeteerService extends BaseService {
       return `https:${url}`;
     } else
     if (/^\//.test(url)) {
-      return `${targetUrl.replace(/\/+$/, '')}${url}`;
+      return `${baseDomain}${url}`;
     } else
     if (/^\.\//.test(url)) {
-      return `${targetUrl.replace(/\/+$/, '')}${url.replace(/^\./, '')}`;
+      return `${targetUrl.replace(/\/.*?$/, '')}${url.replace(/^\./, '')}`;
     } else
     if (excludeExternal && /^https?:\/\//.test(url)) {
       // exclude external links
