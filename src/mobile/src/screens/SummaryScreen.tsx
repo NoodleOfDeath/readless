@@ -17,8 +17,8 @@ import {
   View,
 } from '~/components';
 import {  SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/hooks';
-import { getLocale, strings } from '~/locales';
+import { useApiClient } from '~/hooks';
+import { strings } from '~/locales';
 import { ScreenProps } from '~/screens';
 
 export function SummaryScreen({
@@ -26,7 +26,7 @@ export function SummaryScreen({
   navigation,
 }: ScreenProps<'summary'>) {
 
-  const { getSummary, handleInteraction } = useSummaryClient();
+  const { getSummary, interactWithSummary } = useApiClient();
   const { preferredReadingFormat } = React.useContext(SessionContext);
 
   const [loading, setLoading] = React.useState(false);
@@ -41,7 +41,7 @@ export function SummaryScreen({
     }
     setLoading(true);
     try {
-      const { data, error } = await getSummary(id, getLocale());
+      const { data, error } = await getSummary(id);
       if (error) {
         throw error;
       }
@@ -79,13 +79,13 @@ export function SummaryScreen({
         setFormat(newFormat);
         return;
       }
-      handleInteraction(newSummary, InteractionType.Read, undefined, { format: newFormat });
+      interactWithSummary(newSummary.id, InteractionType.Read, { metadata: { format: newFormat } });
       navigation?.push('summary', {
         initialFormat: newFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary: newSummary.id,
       });
     },
-    [summary, handleInteraction, navigation, preferredReadingFormat]
+    [summary, interactWithSummary, navigation, preferredReadingFormat]
   );
   
   useFocusEffect(React.useCallback(() => {
@@ -98,13 +98,12 @@ export function SummaryScreen({
           <Summary 
             footerOnly 
             summary={ summary } 
-            initialFormat={ format }
-            onInteract={ (...e) => handleInteraction(summary, ...e) } />
+            initialFormat={ format } />
         </View>
       ),
       headerTitle: '', 
     });
-  }, [summary, format, handleInteraction, navigation]));
+  }, [summary, format, navigation]));
 
   return (
     <Screen>
@@ -126,8 +125,7 @@ export function SummaryScreen({
               key={ item.id }
               summary={ item } 
               hideArticleCount
-              onFormatChange={ (format) => handleFormatChange(item, format) }
-              onInteract={ (...e) => handleInteraction(item, ...e) } />
+              onFormatChange={ (format) => handleFormatChange(item, format) } />
           ) }
           ItemSeparatorComponent={ () => <View mx={ 12 } my={ 6 } /> }
           ListHeaderComponent={ (
@@ -138,8 +136,7 @@ export function SummaryScreen({
                 summary={ summary }
                 initialFormat={ format }
                 keywords={ keywords }
-                onFormatChange={ (format) => handleFormatChange(summary, format) }
-                onInteract={ (...e) => handleInteraction(summary, ...e) } />
+                onFormatChange={ (format) => handleFormatChange(summary, format) } />
               {siblings.length > 0 && (
                 <Text system h6 m={ 12 }>
                   {`${strings.summary_relatedNews} (${siblings.length})`}

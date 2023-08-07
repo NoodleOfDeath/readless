@@ -51,6 +51,8 @@ export enum OrientationType {
   'FACE-DOWN' = 'FACE-DOWN',
   'UNKNOWN' = 'UNKNOWN',
 }
+
+export type PushNotificationSettings = { frequency?: string };
   
 export type Preferences = {
   
@@ -63,6 +65,8 @@ export type Preferences = {
   
   // user state
   uuid?: string;
+  pushNotificationsEnabled?: boolean;
+  pushNotifications?: { [key: string]: PushNotificationSettings };
   fcmToken?: string;
   
   // summary state
@@ -168,6 +172,8 @@ export type SessionContextType = Preferences & {
     Target extends RecapAttributes | PublicSummaryGroup, 
     PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
   >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => Promise<void>;
+  hasPushEnabled: (key: string) => boolean;
+  enablePush: (key: string, settings?: PushNotificationSettings) => Promise<void>;
   hasViewedFeature: (feature: string) => boolean;
   viewFeature: (feature: string, state?: boolean) => Promise<void>;
   
@@ -198,6 +204,7 @@ export type SessionContextType = Preferences & {
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   bookmarkCount: 0,
   bookmarkSummary: () => Promise.resolve(),
+  enablePush: () => Promise.resolve(),
   excludeCategory: () => Promise.resolve(),
   excludePublisher: () => Promise.resolve(),
   followCategory: () => Promise.resolve(),
@@ -205,6 +212,8 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   followFilter: '',
   followPublisher: () => Promise.resolve(),
   getPreference: () => Promise.resolve(undefined),
+  hasPushEnabled: () => false,
+  hasViewedFeature: () => false,
   isExcludingCategory: () => false,
   isExcludingPublisher: () => false,
   isFollowingCategory: () => false,
@@ -219,5 +228,6 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   setPublishers: () => Promise.resolve(),
   storeTranslations: () => Promise.resolve(undefined),
   unreadBookmarkCount: 0,
+  viewFeature: () => Promise.resolve(),
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };

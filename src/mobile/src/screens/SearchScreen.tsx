@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Screen, SummaryList } from '~/components';
-import { useSummaryClient } from '~/hooks';
+import { useApiClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
 export function SearchScreen({ 
@@ -9,7 +9,7 @@ export function SearchScreen({
   navigation: _navigation,
 }: ScreenProps<'search'>) {
   
-  const { getSummaries } = useSummaryClient();
+  const { getSummaries } = useApiClient();
   return (
     <Screen>
       <SummaryList

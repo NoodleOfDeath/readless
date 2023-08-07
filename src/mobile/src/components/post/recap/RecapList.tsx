@@ -3,12 +3,8 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { RecapAttributes } from '~/api';
-import { 
-  FlatList,
-  Recap,
-  View,
-} from '~/components';
-import { useSummaryClient } from '~/core';
+import { FlatList, Recap } from '~/components';
+import { useApiClient } from '~/core';
 
 export type RecapListProps = {
   header?: React.ReactNode;
@@ -16,7 +12,7 @@ export type RecapListProps = {
 
 export function RecapList({ header }: RecapListProps = {}) {
   
-  const { getRecaps } = useSummaryClient();
+  const { getRecaps } = useApiClient();
 
   const [recaps, setRecaps] = React.useState<RecapAttributes[]>([]);
   const [loading, setLoading] = React.useState(false);

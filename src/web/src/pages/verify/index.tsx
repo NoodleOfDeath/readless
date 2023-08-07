@@ -1,12 +1,12 @@
 import React from 'react';
 
 import Layout from '~/components/Layout';
-import { useSummaryClient } from '~/core';
+import { useApiClient } from '~/core';
 import { useRouter } from '~/hooks';
 
 export default function VerifyPage() {
 
-  const { verify } = useSummaryClient();
+  const { verify } = useApiClient();
   const { searchParams } = useRouter();
 
   const [loading, setLoading] = React.useState<boolean>(true);

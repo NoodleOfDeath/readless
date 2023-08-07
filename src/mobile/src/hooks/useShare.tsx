@@ -8,6 +8,8 @@ import RNFS from 'react-native-fs';
 import Share, { ShareOptions as RNShareOptions, Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
 
+import { useApiClient } from '.';
+
 import { 
   InteractionType, 
   PublicSummaryGroup,
@@ -47,24 +49,24 @@ export type ShareOptions = Partial<RNShareOptions> & {
   viewshot?: ViewShot | null;
 };
 
-export function useShare({
-  onInteract,
-  callback,
-}: UseShareProps) {
+export function useShare({ callback }: UseShareProps) {
 
-  const copyToClipboard = React.useCallback(async (content?: string) => {
-    if (!content) {
+  const { interactWithSummary } = useApiClient();
+
+  const copyToClipboard = React.useCallback(async (summary: PublicSummaryGroup, property: keyof PublicSummaryGroup) => {
+    if (!property) {
       return;
     }
+    const content = summary[property] as string;
     try {
       analytics().logEvent('copy_to_clipboard', { content });
       Clipboard.setString(content);
-      await onInteract?.(InteractionType.Copy, content);
+      interactWithSummary(summary.id, InteractionType.Copy, { content });
     } catch (e) {
       console.error(e);
     }
     callback?.();
-  }, [callback, onInteract]);
+  }, [callback, interactWithSummary]);
   
   const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, { format, viewshot }: ShareOptions) => {
     if (!summary) {
@@ -79,15 +81,20 @@ export function useShare({
         url = base64ImageUrl;
       }
       const options: RNShareOptions = { url };
-      await onInteract?.(InteractionType.Share, 'standard', { message: summary.title, url }, async () => {
-        await Share.open(options);
+      Share.open(options);
+      interactWithSummary(summary.id, InteractionType.Share, {
+        metadata: {
+          content: 'standard', 
+          message: summary.title, 
+          url, 
+        }, 
       });
     } catch (e) {
       console.error(e);
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, onInteract]);
+  }, [callback, interactWithSummary]);
   
   const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, { social, viewshot }: ShareOptions) => {
     if (!summary || !social) {
@@ -99,28 +106,29 @@ export function useShare({
         summary,
       });
       const url = await viewshot?.capture?.();
-      await onInteract?.(InteractionType.Share, 'social', {
-        message: summary.title, social, url, 
-      }, async () => {
-        if (!url) {
-          return;
-        }
-        const base64ImageUrl = `data:image/png;base64,${await RNFS.readFile(url, 'base64')}`;
-        await Share.shareSingle({ 
-          appId: SocialAppIds[social],
-          message: `${summary.title} ${shareableLink(summary, BASE_DOMAIN)}`,
-          social,
-          stickerImage: base64ImageUrl,
-          url,
-          urls: [url],
-        });
+      if (!url) {
+        return;
+      }
+      const base64ImageUrl = `data:image/png;base64,${await RNFS.readFile(url, 'base64')}`;
+      await Share.shareSingle({ 
+        appId: SocialAppIds[social],
+        message: `${summary.title} ${shareableLink(summary, BASE_DOMAIN)}`,
+        social,
+        stickerImage: base64ImageUrl,
+        url,
+        urls: [url],
+      });
+      interactWithSummary(summary.id, InteractionType.Share, {
+        content: 'social', metadata: {
+          message: summary.title, social, url, 
+        },
       });
     } catch (e) {
       console.error(e);
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, onInteract]);
+  }, [callback, interactWithSummary]);
 
   return {
     copyToClipboard,

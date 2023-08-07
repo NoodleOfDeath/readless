@@ -50,7 +50,7 @@ import {
   fixedSentiment,
   publisherIcon,
   shareableLink,
-  useSummaryClient,
+  useApiClient,
 } from '~/core';
 
 type Props = {
@@ -91,7 +91,7 @@ export default function Summary({
   onChange,
 }: Props) {
 
-  const { handleInteraction } = useSummaryClient();
+  const { interactWithSummary } = useApiClient();
   const { preferredReadingFormat } = React.useContext(SessionContext);
 
   const mdAndDown = useMediaQuery({ maxWidth: 960 });
@@ -157,9 +157,9 @@ export default function Summary({
       }
       setFormat(newFormat);
       onChange?.(newFormat);
-      await handleInteraction(summary, InteractionType.Read, undefined, { format: newFormat });
+      await interactWithSummary(summary.id, InteractionType.Read, { metadata: { format: newFormat } });
     },
-    [handleInteraction, onChange, summary]
+    [interactWithSummary, onChange, summary]
   );
 
   return (

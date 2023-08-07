@@ -5,11 +5,7 @@ import { Social } from 'react-native-share';
 import { SvgUri } from 'react-native-svg';
 import ViewShot from 'react-native-view-shot';
 
-import {
-  InteractionType,
-  PublicSummaryGroup,
-  ReadingFormat,
-} from '~/api';
+import { PublicSummaryGroup, ReadingFormat } from '~/api';
 import {
   ActionSheet,
   Divider,
@@ -40,7 +36,7 @@ export type ShareFormat = typeof SHARE_FORMATS[number];
 export type ShareDialogProps = {
   summary: PublicSummaryGroup;
   format?: ReadingFormat;
-  onInteract?: (type: InteractionType, subtype: string, data?: Record<string, unknown>, callback?: () => void) => Promise<unknown>;
+  onComplete?: (callback?: () => void) => Promise<unknown>;
   onClose?: () => void;
 };
 
@@ -67,7 +63,6 @@ export function ShareDialog({
     summary,
     format: format0,
     onClose,
-    onInteract,
   } = React.useMemo(() => ({ ...payload }), [payload]);
   
   const [shareFormat, setShareFormat] = React.useState<ShareFormat>(compactSummaries ? ((format0 || preferredReadingFormat) === ReadingFormat.Bullets ? 'compact-bullets' : 'compact-shortSummary') : ((format0 || preferredReadingFormat) === ReadingFormat.Bullets ? 'big-bullets' : 'big'));
@@ -75,10 +70,7 @@ export function ShareDialog({
   
   const {
     copyToClipboard, shareSocial, shareStandard, 
-  } = useShare({
-    callback: onClose,
-    onInteract,
-  });
+  } = useShare({ callback: onClose });
 
   const actions: ShareDialogAction[][] = React.useMemo(() => summary && viewshot && [
     [
@@ -90,7 +82,7 @@ export function ShareDialog({
       {
         icon: 'link-variant',
         label: strings.share_copyOriginalSourceLink,
-        onPress: () => copyToClipboard(summary.url),
+        onPress: () => copyToClipboard(summary, 'url'),
       },
     ],
     [

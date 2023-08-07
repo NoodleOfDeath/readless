@@ -1,86 +1,113 @@
 import React from 'react';
 import { Platform } from 'react-native';
 
+import analytics from '@react-native-firebase/analytics';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import {
   Button,
-  Chip,
   Text,
   View,
   Walkthrough,
+  WalkthroughSliderRef,
   WalkthroughStep,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
-  const { setPreference } = React.useContext(SessionContext);
+  const { pushNotificationsEnabled, viewFeature } = React.useContext(SessionContext);
+
+  const [iLikeReading, setILikeReading] = React.useState(false);
+
+  const walkthroughRef = React.useRef<WalkthroughSliderRef>(null);
   
   const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
-      const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
-      return (prev = state);
-    });
+    viewFeature(props.sheetId);
     await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
+  }, [props.sheetId, viewFeature]);
   
   const steps = React.useMemo(() => {
     const steps: WalkthroughStep[] = [
       {
-        artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-accessible-news.png',
         body: (
-          <View gap={ 12 }>
-            <Chip 
-              subtitle1
-              bold
+          <View itemsCenter gap={ 12 }>
+            <Button
+              h4
               contained
-              justifyStart
-              leftIcon="check"
-              gap={ 6 }
-              system>
-              {strings.walkthroughs_onboarding_minimizeBias}
-            </Chip>
-            <Chip 
-              subtitle1
-              bold
+              onPress={ () => {
+                analytics().logEvent('poll_reading_is_a_pain');
+                setILikeReading(false);
+                console.log(walkthroughRef.current);
+                walkthroughRef.current?.next?.();
+              } }>
+              {strings.misc_yesPain}
+            </Button>
+            <Button
+              h4
               contained
-              leftIcon="check"
-              gap={ 6 }
-              justifyStart
-              system>
-              {strings.walkthroughs_onboarding_reduceClickbait}
-            </Chip>
-            <Chip 
-              subtitle1
-              bold
+              onPress={ () => {
+                analytics().logEvent('poll_the_news_is_negative');
+                setILikeReading(false);
+                console.log(walkthroughRef.current);
+                walkthroughRef.current?.next?.();
+              } }>
+              {strings.misc_yesNegative}
+            </Button>
+            <Button
+              h4
               contained
-              leftIcon="check"
-              gap={ 6 }
-              justifyStart
-              system>
-              {strings.walkthroughs_onboarding_extractTheFacts}
-            </Chip>
-            <Chip 
-              subtitle1
-              bold
+              onPress={ () => {
+                analytics().logEvent('poll_the_news_is_boring');
+                setILikeReading(false);
+                console.log(walkthroughRef.current);
+                walkthroughRef.current?.next?.();
+              } }>
+              {strings.misc_yesBoring}
+            </Button>
+            <Button
+              h4
               contained
-              leftIcon="check"
-              gap={ 6 }
-              justifyStart
-              system>
-              {strings.walkthroughs_onboarding_measureSentiment}
-            </Chip>
-            <Text bold subtitle1 textCenter system>
-              {strings.walkthroughs_onboarding_fromNewsHeadlines}
-            </Text>
+              onPress={ () => {
+                analytics().logEvent('poll_reading_is_enjoyable');
+                setILikeReading(true);
+                walkthroughRef.current?.next?.();
+              } }>
+              {strings.misc_iEnjoyReading}
+            </Button>
+            <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_isReadingForYouAChoreDescription}</Text>
           </View>
         ),
-        title: strings.walkthroughs_onboarding_readlessUses,
+        title: strings.walkthroughs_onboarding_isReadingForYouAChore,
       },
     ];
+    if (!iLikeReading) {
+      steps.push(
+        {
+          body: (
+            <View itemsCenter gap={ 12 }>
+              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription}</Text>
+              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription2}</Text>
+            </View>
+          ),
+          title: strings.walkthroughs_onboarding_enableReminders,
+        }
+      );
+    }
+    if (pushNotificationsEnabled) {
+      steps.push(
+        {
+          body: (
+            <View itemsCenter gap={ 12 }>
+              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription}</Text>
+              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription2}</Text>
+            </View>
+          ),
+          title: strings.walkthroughs_onboarding_enableReminders,
+        }
+      );
+    }
     if (Platform.OS === 'ios') {
       steps.push({
         artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/short-press-preview.gif',
@@ -115,11 +142,12 @@ export function OnboardingWalkthrough(props: SheetProps) {
       }
     );
     return steps;
-  }, [onDone]);
+  }, [iLikeReading, onDone, pushNotificationsEnabled]);
   
   return (
     <Walkthrough
       { ...props }
+      ref={ walkthroughRef }
       payload={ { onDone, steps } } />
   );
   

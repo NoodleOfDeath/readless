@@ -7,6 +7,7 @@ import {
   FunctionWithRequestParams,
   OrientationType,
   Preferences,
+  PushNotificationSettings,
 } from './types';
 
 import {
@@ -42,6 +43,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   // user state
   const [uuid, setUuid] = React.useState<string>();
+  const [pushNotificationsEnabled, setPushNotificationsEnabled] = React.useState<boolean>();
+  const [pushNotifications, setPushNotifications] = React.useState<{[key: string]: { frequency?: string }}>();
   const [fcmToken, setFcmToken] = React.useState<string>();
   
   // summary state
@@ -81,7 +84,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       filters.push(['cat', Object.keys({ ...followedCategories }).join(',')].join(':'));
     }
     return filters.join(' ');
-  }, [followedPublishers, excludedPublishers, followedCategories, excludedCategories]);
+  }, [followedPublishers, excludedPublishers, followedCategories]);
   
   const excludeFilter = React.useMemo(() => {
     const filters: string[] = [];
@@ -148,6 +151,12 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     // user state
     case 'uuid':
       setUuid(uuid);
+      break;
+    case 'pushNotificationsEnabled':
+      setPushNotificationsEnabled(newValue);
+      break;
+    case 'pushNotifications':
+      setPushNotifications(newValue);
       break;
     case 'fcmToken':
       setFcmToken(newValue);
@@ -268,6 +277,22 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       return fn(...args, { headers });
     };
   }, [uuid]);
+
+  const hasPushEnabled = React.useCallback((type: string) => {
+    return type in ({ ...pushNotifications });
+  }, [pushNotifications]);
+
+  const enablePush = React.useCallback(async (type: string, settings?: PushNotificationSettings) => {
+    await setPreference('pushNotifications', (prev) => {
+      const newState = { ...prev };
+      if (settings) {
+        newState[type] = settings;
+      } else {
+        delete newState[type];
+      }
+      return (prev = newState);
+    });
+  }, []);
   
   const hasViewedFeature = React.useCallback((feature: string) => {
     return feature in ({ ...viewedFeatures });
@@ -438,6 +463,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setHasReviewed(await getPreference('hasReviewed'));
     setLastRequestForReview(await getPreference('lastRequestForReview') ?? 0);
     setUuid(await getPreference('uuid'));
+    setPushNotificationsEnabled(await getPreference('pushNotificationsEnabled'));
+    setPushNotifications(await getPreference('pushNotifications'));
     setFcmToken(await getPreference('fcmToken'));
     
     // summary state
@@ -492,6 +519,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         categories,
         colorScheme,
         compactSummaries,
+        enablePush,
         excludeCategory,
         excludeFilter,
         excludePublisher,
@@ -507,6 +535,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         fontFamily,
         fontSizeOffset,
         getPreference,
+        hasPushEnabled,
         hasReviewed,
         hasViewedFeature,
         isExcludingCategory,
@@ -519,6 +548,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         preferredReadingFormat,
         preferredShortPressFormat,
         publishers,
+        pushNotifications,
+        pushNotificationsEnabled,
         readRecap,
         readRecaps,
         readSummaries,

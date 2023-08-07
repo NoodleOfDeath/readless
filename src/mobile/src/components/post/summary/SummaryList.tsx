@@ -34,9 +34,9 @@ import {
   SessionContext,
 } from '~/contexts';
 import {
+  useApiClient,
   useAppState,
   useNavigation,
-  useSummaryClient,
   useTheme,
 } from '~/hooks';
 import { getLocale, strings } from '~/locales';
@@ -73,7 +73,7 @@ export function SummaryList({
 
   // hooks
   const { navigation } = useNavigation();
-  const { handleInteraction } = useSummaryClient();
+  const { interactWithSummary } = useApiClient();
   const theme = useTheme();
 
   // contexts
@@ -198,7 +198,7 @@ export function SummaryList({
   
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryGroup, format?: ReadingFormat) => {
-      handleInteraction(summary, InteractionType.Read, undefined, { format });
+      interactWithSummary(summary.id, InteractionType.Read, { metadata: { format } });
       if (isTablet) {
         setDetailSummary(summary);
         flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
@@ -212,7 +212,7 @@ export function SummaryList({
         });
       }
     },
-    [handleInteraction, isTablet, onFormatChange, preferredReadingFormat, navigation, filter]
+    [interactWithSummary, isTablet, onFormatChange, preferredReadingFormat, navigation, filter]
   );
   
   useFocusEffect(React.useCallback(() => {
@@ -262,10 +262,9 @@ export function SummaryList({
         summary={ item }
         selected={ Boolean(landscapeEnabled && isTablet && item.id === detailSummary?.id) }
         keywords={ parseKeywords(filter) }
-        onFormatChange={ (format) => handleFormatChange(item, format) }
-        onInteract={ (...e) => handleInteraction(item, ...e) } />
+        onFormatChange={ (format) => handleFormatChange(item, format) } />
     );
-  }, [big, fancy, landscapeEnabled, isTablet, detailSummary?.id, filter, handleFormatChange, handleInteraction]);
+  }, [big, fancy, landscapeEnabled, isTablet, detailSummary?.id, filter, handleFormatChange]);
 
   const detailComponent = React.useMemo(() => (landscapeEnabled && isTablet && detailSummary) ? (
     <React.Fragment>
@@ -274,8 +273,7 @@ export function SummaryList({
         key={ detailSummary.id }
         initialFormat={ preferredReadingFormat ?? ReadingFormat.Bullets }
         keywords={ parseKeywords(filter) }
-        onFormatChange={ (format) => handleFormatChange(detailSummary, format) }
-        onInteract={ (...e) => handleInteraction(detailSummary, ...e) } />
+        onFormatChange={ (format) => handleFormatChange(detailSummary, format) } />
       <Divider my={ 6 } />
       {detailSummarySiblings.length > 0 && (
         <Text system h6 m={ 12 }>
@@ -283,7 +281,7 @@ export function SummaryList({
         </Text>
       )}
     </React.Fragment>
-  ) : null, [landscapeEnabled, isTablet, detailSummary, preferredReadingFormat, filter, detailSummarySiblings.length, handleFormatChange, handleInteraction]);
+  ) : null, [landscapeEnabled, isTablet, detailSummary, preferredReadingFormat, filter, detailSummarySiblings.length, handleFormatChange ]);
 
   return (
     <View { ...props } col onLayout={ ({ nativeEvent: { layout } }) => setLayout(layout) }>
@@ -366,8 +364,7 @@ export function SummaryList({
                   summary={ item } 
                   hideArticleCount
                   keywords={ parseKeywords(filter) }
-                  onFormatChange={ (format) => handleFormatChange(item, format) }
-                  onInteract={ (...e) => handleInteraction(item, ...e) } />
+                  onFormatChange={ (format) => handleFormatChange(item, format) } />
               ) }
               ListHeaderComponent={ detailComponent }
               ListFooterComponentStyle={ { paddingBottom: 64 } } />

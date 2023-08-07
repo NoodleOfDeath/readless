@@ -1,12 +1,12 @@
 import React from 'react';
 
 import Layout from '~/components/Layout';
-import { useSummaryClient } from '~/core';
+import { useApiClient } from '~/core';
 import { useRouter } from '~/hooks';
 
 export default function UnsubcribePage() {
 
-  const { unsubscribe } = useSummaryClient();
+  const { unsubscribe } = useApiClient();
   const { searchParams } = useRouter();
 
   const [loading, setLoading] = React.useState<boolean>(true);

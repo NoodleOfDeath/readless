@@ -12,7 +12,7 @@ import {
   View,
 } from '~/components';
 import {  SessionContext } from '~/contexts';
-import { useSummaryClient } from '~/hooks';
+import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 
 export type FeedbackDialogProps = {
@@ -26,7 +26,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
   
   const { setPreference } = React.useContext(SessionContext);
 
-  const { handleInteraction } = useSummaryClient();
+  const { interactWithSummary } = useApiClient();
 
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
   const [otherValue, setOtherValue] = React.useState('');
@@ -76,11 +76,14 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
       });
       setSuccessMessage(strings.feedback_sorry);
     }
-    handleInteraction(summary, InteractionType.Feedback, otherValue, { issues: selectedValues });
+    interactWithSummary(
+      summary.id,
+      InteractionType.Feedback
+    );
     setSelectedValues([]);
     setOtherValue('');
     setSuccess(true);
-  }, [selectedValues, otherValue, handleInteraction, summary, setPreference]);
+  }, [selectedValues, interactWithSummary, summary, setPreference]);
   
   return (
     <ActionSheet id={ props.sheetId }>

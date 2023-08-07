@@ -113,7 +113,8 @@ export class Subscription<
         verificationCode, 
       }); 
       break;
-    case 'firebase':
+    case 'push':
+    case 'fcm':
     case 'apns':
       subscription.set('verificationCode', null);
       subscription.set('unsubscribeToken', uuid);
