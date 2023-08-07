@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body } from 'express-validator';
+import { body, oneOf } from 'express-validator';
 
 import { SubscribeController } from '../../controllers';
 import { internalErrorHandler, rateLimitMiddleware } from '../../middleware';
@@ -11,7 +11,11 @@ router.post(
   body('channel').isString().notEmpty(),
   body('uuid').isString().notEmpty(),
   body('event').isString().notEmpty(),
-  rateLimitMiddleware('2 per 1m'),
+  body('repeats').optional().isString(),
+  body('title').optional().isString(),
+  body('body').optional().isString(),
+  body('fireTime').optional().isDate(),
+  rateLimitMiddleware('30 per 1m'),
   async (req, res) => {
     try {
       const response = await SubscribeController.subscribe(req, req.body);
@@ -41,11 +45,9 @@ router.post(
 
 router.post(
   '/unsubscribe',
-  body('channel').isString().notEmpty(),
-  body('uuid').isString().notEmpty(),
   body('event').isString().notEmpty(),
-  body('verificationCode').isString().notEmpty(),
-  rateLimitMiddleware('5 per 1m'),
+  oneOf([body('unsubscribeToken').isString().notEmpty(), body('uuid').isString().notEmpty()]),
+  rateLimitMiddleware('30 per 1m'),
   async (req, res) => {
     try {
       await SubscribeController.unsubscribe(req, req.body);
