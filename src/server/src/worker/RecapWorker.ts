@@ -18,7 +18,7 @@ export async function main() {
   await Queue.prepare();
   ScribeService.prepare();
   doWork();
-  sendPushNotifications();
+  sendDailyPushNotifications();
 }
 
 export async function doWork() {
@@ -45,7 +45,7 @@ export async function doWork() {
   }
 }
 
-export async function sendPushNotifications() {
+export async function sendDailyPushNotifications() {
   try {
     // Worker that processes site maps and generates new summaries
     const subscriptions = await Subscription.findAll({
@@ -75,7 +75,7 @@ export async function sendPushNotifications() {
     await FirebaseService.notify(messages);
   } catch (e) {
     console.error(e);
-    setTimeout(() => sendPushNotifications, 3_000);
+    setTimeout(() => sendDailyPushNotifications, 3_000);
   }
 }
 
