@@ -146,7 +146,7 @@ export class Subscription<
     case 'fcm':
     case 'apns':
       subscription.set('verificationCode', null);
-      subscription.set('unsubscribeToken', uuid);
+      subscription.set('unsubscribeToken', v4());
       subscription.set('verifiedAt', new Date());
       subscription.set('expiresAt', null);
       await subscription.save();
@@ -174,7 +174,18 @@ export class Subscription<
   }
   
   public static async unsubscribe({ event, unsubscribeToken }: Pick<SubscriptionCreationAttributes, 'event' | 'unsubscribeToken'>): Promise<void> {
-    const subscription = await Subscription.findOne({ where: { event, unsubscribeToken } });
+    const subscription = await Subscription.findOne({
+      where: {
+        event, 
+        [Op.or]: [ 
+          { unsubscribeToken }, 
+          {
+            channel: ['push', 'fcm', 'apns'], 
+            uuid: unsubscribeToken, 
+          },
+        ], 
+      },
+    });
     if (!subscription) {
       throw new InternalError('invalid subscription');
     }
