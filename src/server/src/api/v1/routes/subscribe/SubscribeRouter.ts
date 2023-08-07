@@ -48,8 +48,8 @@ router.post(
   rateLimitMiddleware('5 per 1m'),
   async (req, res) => {
     try {
-      const response = await SubscribeController.unsubscribe(req, req.body);
-      return res.json(response);
+      await SubscribeController.unsubscribe(req, req.body);
+      return res.status(200).send();
     } catch (e) {
       internalErrorHandler(res, e);
     }
