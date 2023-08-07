@@ -74,7 +74,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     selectors: {
       article: { selector: '#river p' },
       author: { selector: '#main .author-name' },
-      date: { selector: '#main .post-meta' },
+      date: { selector: 'main .container.left .post-meta' },
       image: { selector: 'article amp-img, article figure img, figure img' },
       spider: {
         attribute: 'href',
