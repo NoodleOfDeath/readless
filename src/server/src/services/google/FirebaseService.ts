@@ -1,15 +1,14 @@
 import admin from 'firebase-admin';
 
-import { BaseService } from '../base';
-
-export type NotifyOptions = {
-  data?: any;
+export type FirebaseMessage = {
   notification: {
-    title?: string;
-    body?: string;
-  }
-  tokens: string[];
+    title: string;
+    body: string;
+  };
+  token: string;
 };
+
+import { BaseService } from '../base';
 
 export class FirebaseService extends BaseService {
 
@@ -19,14 +18,9 @@ export class FirebaseService extends BaseService {
     return admin.initializeApp({ credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.FIREBASE_CREDENTIALS, 'base64').toString('ascii'))) });
   }
   
-  static async notify({
-    data, notification, tokens, 
-  }: NotifyOptions) {
+  static async notify(messages: FirebaseMessage[]) {
     const messaging = this.client().messaging();
-    await messaging.sendMulticast({
-      notification,
-      tokens,
-    });
+    await messaging.sendEach(messages);
   }
 
 }
