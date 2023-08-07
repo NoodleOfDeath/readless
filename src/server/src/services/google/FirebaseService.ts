@@ -19,6 +19,10 @@ export class FirebaseService extends BaseService {
   }
   
   static async notify(messages: FirebaseMessage[]) {
+    while (messages.length > 500) {
+      const batch = messages.splice(0, 500);
+      await this.notify(batch);
+    }
     const messaging = this.client().messaging();
     await messaging.sendEach(messages);
   }
