@@ -174,7 +174,7 @@ export class Subscription<
   }
   
   public static async unsubscribe({ event, unsubscribeToken }: Pick<SubscriptionCreationAttributes, 'event' | 'unsubscribeToken'>): Promise<void> {
-    const subscription = await Subscription.findOne({
+    await Subscription.destroy({
       where: {
         event, 
         [Op.or]: [ 
@@ -186,10 +186,6 @@ export class Subscription<
         ], 
       },
     });
-    if (!subscription) {
-      throw new InternalError('invalid subscription');
-    }
-    await subscription.destroy();
   }
 
   public static async notify<T extends SubscriptionChannel>(
