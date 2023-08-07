@@ -225,15 +225,15 @@ jobs:
       - name: Verify deployment
         run: kubectl rollout status deployment/$CONTAINER_NAME --namespace $K8S_NAMESPACE
 
-  deploy-worker-recaps:
+  deploy-worker-notifs:
     needs: build-worker
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '~recaps') }}
+    if: ${{ contains(github.event.head_commit.message, '~notifs') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
-      CONTAINER_NAME: ${{ github.event.repository.name }}-worker-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}-recaps
+      CONTAINER_NAME: ${{ github.event.repository.name }}-worker-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}-notifs
       DEEPAI_API_KEY: ${{ secrets.DEEPAI_API_KEY }}
       ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
@@ -241,7 +241,7 @@ jobs:
       K8S_CPU_REQUESTS: ${{ vars.K8S_CPU_REQUESTS }}
       K8S_MEMORY_LIMITS: ${{ vars.K8S_MEMORY_LIMITS }}
       K8S_CPU_LIMITS: ${{ vars.K8S_CPU_LIMITS }}
-      K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER_RECAPS || 1 }}
+      K8S_REPLICA_COUNT_WORKER: ${{ vars.K8S_REPLICA_COUNT_WORKER_NOTIFS || 1 }}
       MAIL_HOST: ${{ vars.MAIL_HOST }}
       MAIL_PASS: ${{ secrets.MAIL_PASS }}
       MAIL_PORT: ${{ vars.MAIL_PORT }}
@@ -261,7 +261,7 @@ jobs:
       S3_KEY: ${{ secrets.S3_KEY }}
       S3_SECRET: ${{ secrets.S3_SECRET }}
       WORKER_RETRY_EXPRS: ${{ vars.WORKER_RETRY_EXPRS }}
-      WORKER_QUEUE: recaps
+      WORKER_QUEUE: notifs
     steps:
       - name: Print Job Description
         run: |
