@@ -211,10 +211,10 @@ export class PuppeteerService extends BaseService {
       return `https:${url}`;
     } else
     if (/^\//.test(url)) {
-      return `https://${domain}${url}`;
+      return `https://${targetUrl.replace(/\/+$/, '')}${url}`;
     } else
     if (/^\.\//.test(url)) {
-      return `${targetUrl.replace(/\/+$/, '')}${url.replace(/^\./, '')}`;
+      return `${targetUrl.replace(/\/+$/, '')}${url.replace(/^\./, '/')}`;
     } else
     if (excludeExternal && /^https?:\/\//.test(url)) {
       // exclude external links
