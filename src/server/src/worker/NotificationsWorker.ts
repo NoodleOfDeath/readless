@@ -41,7 +41,6 @@ export async function doWork() {
     );
   } catch (e) {
     console.error(e);
-  } finally {
     setTimeout(() => doWork(), 3_000);
   }
 }
