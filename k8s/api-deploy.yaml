@@ -40,6 +40,8 @@ spec:
               value: '$CORS_ORIGIN'
             - name: ENABLED_FEATURES
               value: '$ENABLED_FEATURES'
+            - name: FIREBASE_CREDENTIALS
+              value: '$FIREBASE_CREDENTIALS'
             - name: GOOGLE_CLIENT_ID
               value: '$GOOGLE_CLIENT_ID'
             - name: GOOGLE_CLIENT_SECRET
