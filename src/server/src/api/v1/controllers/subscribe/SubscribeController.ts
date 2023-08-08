@@ -36,6 +36,15 @@ export class SubscribeController {
     return subscription;
   }
 
+  @Post('/status')
+  public static async status(
+    @Request() req: ExpressRequest,
+    @Body() body: Pick<SubscriptionCreationAttributes, 'channel' | 'uuid'>
+  ): Promise<PublicSubscriptionAttributes[]> {
+    const subscription = await Subscription.status(body);
+    return subscription;
+  }
+
   @Post('/verify')
   public static async verify(
     @Request() req: ExpressRequest,

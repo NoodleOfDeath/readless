@@ -35,6 +35,9 @@ export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
 
 export const PUBLIC_SUBSCRIPTION_ATTRIBUTES = [
   'id',
+  'channel',
+  'event',
+  'repeats',
   'verifiedAt',
   'expiresAt',
 ] as const;

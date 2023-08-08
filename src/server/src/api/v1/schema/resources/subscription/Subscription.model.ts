@@ -157,6 +157,13 @@ export class Subscription<
     return await this.scope('public').findByPk(subscription.id);
   }
 
+  public static async status({ channel, uuid }: Pick<SubscriptionCreationAttributes, 'channel' | 'uuid'>): Promise<Subscription[]> {
+    if (channel === 'email') {
+      return [];
+    }
+    return await Subscription.scope('public').findAll({ where: { channel, uuid } });
+  }
+
   public static async verify({ verificationCode }: Pick<SubscriptionCreationAttributes, 'verificationCode'>): Promise<Subscription> {
     const subscription = await Subscription.findOne({ where: { verificationCode } });
     if (!subscription) {
