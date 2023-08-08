@@ -66,7 +66,7 @@ export const fiStrings: typeof enStrings = {
   misc_yes: 'Joo',
   misc_yesBoring: 'Kyllä, se voi olla todella tylsää',
   misc_yesNegative: 'Kyllä, se voi olla todella negatiivista',
-  misc_yesPain: 'Kyllä, se voi olla kipua',
+  misc_yesReading: 'Kyllä, inhoan lukemista',
   nav_browseCategories: 'Selaa kategorioita',
   nav_browsePublishers: 'Selaa julkaisijoita',
   nav_yourFollows: 'Sinun seuraamisesi',

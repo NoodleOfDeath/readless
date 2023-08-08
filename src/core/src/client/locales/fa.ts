@@ -66,7 +66,7 @@ export const faStrings: typeof enStrings = {
   misc_yes: 'آره',
   misc_yesBoring: 'بله، می تواند واقعا خسته کننده باشد',
   misc_yesNegative: 'بله، واقعاً می تواند منفی باشد',
-  misc_yesPain: 'بله، ممکن است درد باشد',
+  misc_yesReading: 'بله، از خواندن متنفرم',
   nav_browseCategories: 'دسته بندی ها را مرور کنید',
   nav_browsePublishers: 'ناشران را مرور کنید',
   nav_yourFollows: 'دنبال کننده های شما',

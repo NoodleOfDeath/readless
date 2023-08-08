@@ -17,17 +17,14 @@ import { strings } from '~/locales';
 export function NotificationSettingsTable() {
   
   const {
-    fcmToken,
     pushNotifications,
     pushNotificationsEnabled,
-    enablePush,
-    setPreference,
   } = React.useContext(SessionContext);
   
   const {
-    isRegisteredForRemoteNotifications,
     registerRemoteNotifications,
     subscribe,
+    syncWithServer,
     unsubscribe,
   } = React.useContext(NotificationContext);
 
@@ -41,15 +38,12 @@ export function NotificationSettingsTable() {
       return;
     }
     try {
-      await unsubscribe({ event: SubscriptionEvent.DailyReminder, unsubscribeToken: fcmToken });
+      await unsubscribe({ event: SubscriptionEvent.DailyReminder });
       if (enable) {
         if (settings[SubscriptionEvent.DailyReminder]?.fireTime === fireTime.toISOString()) {
           return; 
         }
-        if (!await isRegisteredForRemoteNotifications()) {
-          await registerRemoteNotifications();
-        }
-        console.log(fireTime);
+        await registerRemoteNotifications();
         const reminders = {
           ...settings[SubscriptionEvent.DailyReminder],
           fireTime: fireTime.toISOString(),
@@ -62,7 +56,6 @@ export function NotificationSettingsTable() {
           return (prev = newState);
         });
         setSettings({ ...settings, [SubscriptionEvent.DailyReminder]: reminders });
-        await enablePush(SubscriptionEvent.DailyReminder, reminders);
         await subscribe({
           body: strings.notifications_dailyReminderDescription,
           event: SubscriptionEvent.DailyReminder,
@@ -76,27 +69,28 @@ export function NotificationSettingsTable() {
           delete newState[SubscriptionEvent.DailyReminder];
           return (prev = newState);
         });
-        await enablePush(SubscriptionEvent.DailyReminder, undefined);
       }
     } catch (e) {
       console.error(e);
     }
-  }, [loaded, fireTime, unsubscribe, fcmToken, settings, isRegisteredForRemoteNotifications, enablePush, subscribe, registerRemoteNotifications]);
+  }, [loaded, fireTime, unsubscribe, settings, subscribe, registerRemoteNotifications]);
 
   useFocusEffect(React.useCallback(() => {
     if (loaded) {
       return; 
     }
-    setEnabled(pushNotificationsEnabled);
-    setSettings(pushNotifications ?? {});
-    setLoaded(true);
-    const fireTime = new Date(pushNotifications?.[SubscriptionEvent.DailyReminder]?.fireTime ?? new Date().getTime());
-    if (Number.isNaN(fireTime.getTime())) {
-      setFireTime(new Date(new Date().getTime()));
-    } else {
-      setFireTime(fireTime);
-    }
-  }, [loaded, pushNotificationsEnabled, pushNotifications]));
+    syncWithServer().then(() => {
+      setEnabled(pushNotificationsEnabled);
+      setSettings(pushNotifications ?? {});
+      setLoaded(true);
+      const fireTime = new Date(pushNotifications?.[SubscriptionEvent.DailyReminder]?.fireTime ?? new Date().getTime());
+      if (Number.isNaN(fireTime.getTime())) {
+        setFireTime(new Date(new Date().getTime()));
+      } else {
+        setFireTime(fireTime);
+      }
+    }).catch(console.error);
+  }, [loaded, syncWithServer, pushNotificationsEnabled, pushNotifications]));
   
   return (
     <TableView 
@@ -110,14 +104,11 @@ export function NotificationSettingsTable() {
             <PrefSwitch 
               prefKey='pushNotificationsEnabled'
               onValueChange={ async (value) => {
+                setEnabled(value);
                 if (value === true) {
-                  setEnabled(true);
                   await registerRemoteNotifications();
                 } else {
-                  setEnabled(false);
-                  await unsubscribe({ event: SubscriptionEvent.Default, unsubscribeToken: fcmToken });
-                  setPreference('pushNotificationsEnabled', false);
-                  setPreference('fcmToken', undefined);
+                  await unsubscribe({ event: SubscriptionEvent.Default });
                 }
               } } />
           ) } />
@@ -131,32 +122,22 @@ export function NotificationSettingsTable() {
               disabled={ !enabled }
               value={ Boolean(settings[SubscriptionEvent.DailyRecap]) }
               onValueChange={ async (value) => {
+                setSettings((prev) => {
+                  const newState = { ...prev };
+                  if (value === true) {
+                    newState[SubscriptionEvent.DailyRecap] = {};
+                  } else {
+                    delete newState[SubscriptionEvent.DailyRecap];
+                  }
+                  return (prev = newState);
+                });
                 if (value === true) {
-                  setSettings((prev) => {
-                    const newState = { ...prev };
-                    newState[SubscriptionEvent.DailyRecap] = {
-                      body: '',
-                      title: '',
-                    };
-                    return (prev = newState);
-                  });
-                  await enablePush(SubscriptionEvent.DailyRecap, {
-                    body: '',
-                    title: '',
-                  });
                   await subscribe({
-                    body: '',
                     event: SubscriptionEvent.DailyRecap,
                     title: strings.settings_dailyRecaps,
                   });
                 } else {
-                  setSettings((prev) => {
-                    const newState = { ...prev };
-                    delete newState[SubscriptionEvent.DailyRecap];
-                    return (prev = newState);
-                  });
-                  await enablePush(SubscriptionEvent.DailyRecap, undefined);
-                  await unsubscribe({ event: SubscriptionEvent.DailyRecap, unsubscribeToken: fcmToken });
+                  await unsubscribe({ event: SubscriptionEvent.DailyRecap });
                 }
               } } />
           ) } />
@@ -170,7 +151,7 @@ export function NotificationSettingsTable() {
               disabled={ !enabled }
               value={ Boolean(settings[SubscriptionEvent.DailyReminder]) }
               onValueChange={ async (value) => {
-                setFiretime(value ? new Date() : undefined);
+                setFireTime(value ? new Date() : undefined);
                 await updatePushNotifications(value);
               } } />
           ) } />

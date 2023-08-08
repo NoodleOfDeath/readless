@@ -66,7 +66,7 @@ export const jaStrings: typeof enStrings = {
   misc_yes: 'はい',
   misc_yesBoring: 'はい、本当に退屈かもしれません',
   misc_yesNegative: 'はい、それは本当にネガティブになる可能性があります',
-  misc_yesPain: 'はい、それは苦痛かもしれません',
+  misc_yesReading: 'はい、私は読書が嫌いです',
   nav_browseCategories: 'カテゴリを参照',
   nav_browsePublishers: '発行者を参照する',
   nav_yourFollows: 'あなたのフォロー',

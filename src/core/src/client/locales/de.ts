@@ -66,7 +66,7 @@ export const deStrings: typeof enStrings = {
   misc_yes: 'Ja',
   misc_yesBoring: 'Ja, es kann wirklich langweilig sein',
   misc_yesNegative: 'Ja, es kann wirklich negativ sein',
-  misc_yesPain: 'Ja, es kann schmerzhaft sein',
+  misc_yesReading: 'Ja, ich hasse es zu lesen',
   nav_browseCategories: 'Durchsuche Kategorien',
   nav_browsePublishers: 'Durchsuchen Sie Verlage',
   nav_yourFollows: 'Deine Follower',

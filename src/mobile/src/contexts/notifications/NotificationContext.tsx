@@ -15,9 +15,49 @@ export const NotificationContext = React.createContext(DEFAULT_NOTIFICATION_CONT
 
 export function NotificationContextProvider({ children }: React.PropsWithChildren) {
 
-  const { subscribe, unsubscribe } = useApiClient();
+  const { 
+    getSubscriptionStatus,
+    subscribe, 
+    unsubscribe,
+  } = useApiClient();
 
-  const { fcmToken, setPreference } = React.useContext(SessionContext);
+  const { 
+    fcmToken, 
+    enablePush,
+    setPreference,
+  } = React.useContext(SessionContext);
+  
+  const syncWithServer = React.useCallback(async () => {
+    if (!fcmToken) {
+      return;
+    }
+    try {
+      const { data } = await getSubscriptionStatus({ 
+        channel: Platform.select({ android: SubscriptionChannel.Fcm, ios: SubscriptionChannel.Apns }) as SubscriptionChannel, 
+        uuid: fcmToken, 
+      });
+      if (!data) {
+        return;
+      }
+      await setPreference('pushNotifications', (prev) => {
+        const newState = { ...prev };
+        for (const [event] of (Object.keys(newState) as SubscriptionEvent[]).entries()) {
+          if (!(event in data)) {
+            delete newState[event];
+          }
+        }
+        for (const event of data) {
+          newState[event.event] = {
+            ...event,
+            fireTime: event.fireTime ?? newState[event.event]?.fireTime,
+          };
+        }
+        return (prev = newState);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, [fcmToken, getSubscriptionStatus, setPreference]);
 
   const isRegisteredForRemoteNotifications = React.useCallback(async () => {
     const enabled = await messaging().hasPermission();
@@ -28,10 +68,15 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     if (!token) {
       return false;
     }
+    await syncWithServer();
     return true;
-  }, []);
-  
+  }, [syncWithServer]);
+
   const registerRemoteNotifications = React.useCallback(async () => {
+    
+    if (await isRegisteredForRemoteNotifications()) {
+      return;
+    }
     
     Notifications.registerRemoteNotifications();
     
@@ -96,7 +141,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       console.log('foreground', remoteMessage);
     });
       
-  }, [setPreference, subscribe]);
+  }, [isRegisteredForRemoteNotifications, setPreference, subscribe]);
 
   return (
     <NotificationContext.Provider value={ { 
@@ -106,13 +151,31 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
         if (!fcmToken) {
           throw new Error('FCM token not available');
         }
+        if (params.event) {
+          await enablePush(params.event, params);
+        }
         return await subscribe({
           ...params,
           channel: Platform.select({ android: SubscriptionChannel.Fcm, ios: SubscriptionChannel.Apns }) as SubscriptionChannel,
           uuid: fcmToken,
         });
       },
-      unsubscribe,
+      syncWithServer,
+      unsubscribe: async (params: Omit<Parameters<typeof unsubscribe>[0], 'unsubscribeToken'>) => {
+        if (!fcmToken) {
+          throw new Error('FCM token not available');
+        }
+        if (params.event === SubscriptionEvent.Default) {
+          await setPreference('pushNotificationsEnabled', false);
+          await setPreference('fcmToken', undefined);
+        } else {
+          await enablePush(params.event, undefined);
+        }
+        return await unsubscribe({
+          ...params,
+          unsubscribeToken: fcmToken,
+        });
+      },
     } }>
       <Provider>
         {children}

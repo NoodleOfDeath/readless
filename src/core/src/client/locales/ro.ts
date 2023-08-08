@@ -66,7 +66,7 @@ export const roStrings: typeof enStrings = {
   misc_yes: 'da',
   misc_yesBoring: 'Da, poate fi chiar plictisitor',
   misc_yesNegative: 'Da, poate fi cu adevărat negativ',
-  misc_yesPain: 'Da, poate fi o durere',
+  misc_yesReading: 'Da, urăsc să citesc',
   nav_browseCategories: 'Răsfoiți categorii',
   nav_browsePublishers: 'Răsfoiți editori',
   nav_yourFollows: 'Urmărește-ți',

@@ -10,10 +10,11 @@ import {
 import { LeftDrawerScreen } from './LeftDrawerScreen';
 
 import {
+  Chip,
   DrawerItem,
   DrawerSection,
-  Icon,
 } from '~/components';
+import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 import { getUserAgent } from '~/utils';
@@ -24,6 +25,8 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     router,
     navigate,
   } = useNavigation();
+  
+  const { viewFeature, hasViewedFeature } = React.useContext(SessionContext);
 
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
 
@@ -49,12 +52,28 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
       <DrawerSection>
         <DrawerItem
           label={ strings.screens_notifications }
-          icon={ (props) => <Icon { ...props } name="bell" /> }
-          onPress={ () => navigate('notifications') } />
+          icon={ (_props) => (
+            <Chip 
+              iconSize={ 24 }
+              leftIcon="bell"
+              indicator={ !hasViewedFeature('first-view-notifs') } />
+          ) }
+          onPress={ () => {
+            viewFeature('first-view-notifs');
+            navigate('notifications');
+          } } />
         <DrawerItem
           label={ strings.screens_settings }
-          icon={ (props) => <Icon { ...props } name="cog" /> }
-          onPress= { () => navigate('settings') } />
+          icon={ (_props) => (
+            <Chip 
+              iconSize={ 24 }
+              leftIcon="cog"
+              indicator={ !hasViewedFeature('first-view-settings') } />
+          ) }
+          onPress= { () => {
+            viewFeature('first-view-settings');
+            navigate('settings');
+          } } />
       </DrawerSection>
     </DrawerContentScrollView>
   );

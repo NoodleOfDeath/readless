@@ -53,8 +53,8 @@ export enum OrientationType {
 }
 
 export type PushNotificationSettings = { 
-  title: string;
-  body: string;
+  title?: string;
+  body?: string;
   sound?: string;
   category?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,7 +64,30 @@ export type PushNotificationSettings = {
   fireTime?: string; 
   scheduled?: number[];
 };
-  
+
+export type ActivityAction = 
+ | 'read'
+ | 'unread'
+ | 'hide'
+ | 'unhide'
+ | 'bookmark' 
+ | 'unbookmark' 
+ | 'follow'
+ | 'unfollow'
+ | 'exclude'
+ | 'unexclude'
+ | 'intent-to-share'
+ | 'standard-share'
+ | 'social-share';
+ 
+export type ResourceType =
+ | 'category'
+ | 'publisher'
+ | 'recap'
+ | 'summary';
+ 
+export type SessionEvent = `${ActivityAction}-${ResourceType}`;
+
 export type Preferences = {
   
   // system state
@@ -167,31 +190,6 @@ export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
 
-const SESSION_EVENTS = [
-  // summary state
-  'bookmark-summary',
-  'unbookmark-summary',
-  'read-summary',
-  'unread-summary',
-  'hide-summary',
-  'unhide-summary',
-  // recap state
-  'read-recap',
-  'unread-recap',
-  // publisher state
-  'follow-publisher',
-  'unfollow-publisher',
-  'exclude-publisher',
-  'unexclude-publisher',
-  // category state
-  'follow-category',
-  'unfollow-category',
-  'exclude-category',
-  'unexclude-category',
-] as const;
-
-export type SessionEvent = typeof SESSION_EVENTS[number];
-
 export type PreferenceMutation<E extends SessionEvent> =
   E extends `${string}-summary` ? PublicSummaryGroup :
   E extends `${string}-recap` ? RecapAttributes :
@@ -226,7 +224,7 @@ export type SessionContextType = Preferences & {
   >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => Promise<void>;
   hasPushEnabled: (key: string) => boolean;
   enablePush: (key: string, settings?: PushNotificationSettings) => Promise<void>;
-  hasViewedFeature: (feature: string) => boolean;
+  hasViewedFeature: (...features: string[]) => boolean;
   viewFeature: (feature: string, state?: boolean) => Promise<void>;
   
   // summary convenience functions

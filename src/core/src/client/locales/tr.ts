@@ -66,7 +66,7 @@ export const trStrings: typeof enStrings = {
   misc_yes: 'Evet',
   misc_yesBoring: 'Evet, gerçekten sıkıcı olabilir',
   misc_yesNegative: 'Evet, gerçekten olumsuz olabilir',
-  misc_yesPain: 'evet acı olabilir',
+  misc_yesReading: 'evet okumaktan nefret ederim',
   nav_browseCategories: 'Kategorilere Gözat',
   nav_browsePublishers: 'Yayıncılara Göz Atın',
   nav_yourFollows: 'Takipleriniz',

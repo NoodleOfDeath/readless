@@ -66,7 +66,7 @@ export const ukStrings: typeof enStrings = {
   misc_yes: 'Так',
   misc_yesBoring: 'Так, це може бути справді нудно',
   misc_yesNegative: 'Так, це може бути дійсно негативно',
-  misc_yesPain: 'Так, це може бути боляче',
+  misc_yesReading: 'Так, я ненавиджу читати',
   nav_browseCategories: 'Перегляд категорій',
   nav_browsePublishers: 'Огляд видавців',
   nav_yourFollows: 'Ваші підписки',

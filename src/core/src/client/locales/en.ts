@@ -73,7 +73,7 @@ export const enStrings = {
   misc_yes: 'Yes',
   misc_yesBoring: 'Yes, it can be really boring',
   misc_yesNegative: 'Yes, it can be really negative',
-  misc_yesPain: 'Yes, it can be a pain',
+  misc_yesReading: 'Yes, I hate reading',
 
   nav_browseCategories: 'Browse Categories',
   nav_browsePublishers: 'Browse Publishers',
@@ -254,7 +254,7 @@ export const enStrings = {
   // walkthroughs - onboarding
   walkthroughs_onboarding_areYouReady: 'Are you ready to\nRead Less?',
   walkthroughs_onboarding_beingInformed: 'Being informed is a **human right**.',
-  walkthroughs_onboarding_enableReminders: 'Enable Reminders?',
+  walkthroughs_onboarding_enableReminders: 'Enable Daily Reminders?',
   walkthroughs_onboarding_enableRemindersDescription: 'Would you like to enable reminders to read the news?',
   walkthroughs_onboarding_enableRemindersDescription2: 'You can always change this later in the settings',
   walkthroughs_onboarding_enableRemindersDescription3: 'When would you like to be reminded?',

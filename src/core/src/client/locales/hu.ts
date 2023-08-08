@@ -66,7 +66,7 @@ export const huStrings: typeof enStrings = {
   misc_yes: 'Igen',
   misc_yesBoring: 'Igen, nagyon unalmas tud lenni',
   misc_yesNegative: 'Igen, ez tényleg negatív lehet',
-  misc_yesPain: 'Igen, fájdalom lehet',
+  misc_yesReading: 'Igen, utálok olvasni',
   nav_browseCategories: 'Böngésszen a kategóriák között',
   nav_browsePublishers: 'Böngésszen a kiadók között',
   nav_yourFollows: 'Az Ön követései',

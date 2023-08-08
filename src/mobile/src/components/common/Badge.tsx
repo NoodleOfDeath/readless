@@ -1,15 +1,20 @@
 import React from 'react';
 
-import { Badge as RNBadge, useTheme } from 'react-native-paper';
+import { Badge as RNBadge } from 'react-native-paper';
 
 import { TextProps, ViewProps } from '~/components';
-import { useStyles, useTextStyles } from '~/hooks';
+import { 
+  useStyles, 
+  useTextStyles,
+  useTheme,
+} from '~/hooks';
 
 export type BadgeProps = ViewProps & TextProps & Parameters<typeof RNBadge>[0] & {
   topLeft?: boolean;
   topRight?: boolean;
   bottomLeft?: boolean;
   bottomRight?: boolean;
+  xs?: boolean;
   small?: boolean;
   big?: boolean;
 };
@@ -24,12 +29,14 @@ export function Badge({
   bottom = (bottomLeft || bottomRight) ? -2 : undefined,
   left = (topLeft || bottomLeft) ? -2 : undefined,
   right = (topRight || bottomRight) ? -2 : undefined,
+  xs,
   small,
   big,
-  size = small ? 16 : big ? 36 : undefined,
+  size = xs ? 12 : small ? 16 : big ? 36 : undefined,
   color = 'contrastText',
-  fontSize = small ? 12 : big ? 24 : undefined,
+  fontSize = xs ? 8 : small ? 12 : big ? 24 : undefined,
   zIndex = 100,
+  bg = 'primary',
   ...props
 }: BadgeProps) {
   const theme = useTheme();
@@ -46,6 +53,7 @@ export function Badge({
   const textStyle = useTextStyles({ color, fontSize });
   return (
     <RNBadge
+      rounded
       size={ size }
       itemsCenter
       justifyCenter

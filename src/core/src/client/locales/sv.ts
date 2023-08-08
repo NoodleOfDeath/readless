@@ -66,7 +66,7 @@ export const svStrings: typeof enStrings = {
   misc_yes: 'Ja',
   misc_yesBoring: 'Ja, det kan vara riktigt tråkigt',
   misc_yesNegative: 'Ja, det kan vara riktigt negativt',
-  misc_yesPain: 'Ja, det kan vara jobbigt',
+  misc_yesReading: 'Ja, jag hatar att läsa',
   nav_browseCategories: 'Bläddra bland kategorier',
   nav_browsePublishers: 'Bläddra bland förlag',
   nav_yourFollows: 'Dina följare',

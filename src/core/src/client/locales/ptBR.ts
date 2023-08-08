@@ -66,7 +66,7 @@ export const ptBRStrings: typeof enStrings = {
   misc_yes: 'Sim',
   misc_yesBoring: 'Sim, pode ser muito chato',
   misc_yesNegative: 'Sim, pode ser muito negativo',
-  misc_yesPain: 'Sim, pode ser uma dor',
+  misc_yesReading: 'Sim, eu odeio ler',
   nav_browseCategories: 'Procurar Categorias',
   nav_browsePublishers: 'Procurar editores',
   nav_yourFollows: 'Seus seguidores',

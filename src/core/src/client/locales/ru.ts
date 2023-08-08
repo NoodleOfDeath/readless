@@ -66,7 +66,7 @@ export const ruStrings: typeof enStrings = {
   misc_yes: 'Да',
   misc_yesBoring: 'Да, это может быть очень скучно',
   misc_yesNegative: 'Да, это может быть очень негативно',
-  misc_yesPain: 'Да, это может быть боль',
+  misc_yesReading: 'Да, я ненавижу читать',
   nav_browseCategories: 'Просмотр категорий',
   nav_browsePublishers: 'Обзор издателей',
   nav_yourFollows: 'Ваши подписчики',

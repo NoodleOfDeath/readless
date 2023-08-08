@@ -66,7 +66,7 @@ export const esStrings: typeof enStrings = {
   misc_yes: 'Sí',
   misc_yesBoring: 'Sí, puede ser muy aburrido.',
   misc_yesNegative: 'Sí, puede ser muy negativo.',
-  misc_yesPain: 'Sí, puede ser un dolor.',
+  misc_yesReading: 'si, odio leer',
   nav_browseCategories: 'Examinar las categorías',
   nav_browsePublishers: 'Explorar editores',
   nav_yourFollows: 'Tus seguidores',

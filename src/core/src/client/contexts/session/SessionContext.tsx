@@ -309,8 +309,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     });
   };
   
-  const hasViewedFeature = React.useCallback((feature: string) => {
-    return feature in ({ ...viewedFeatures });
+  const hasViewedFeature = React.useCallback((...features: string[]) => {
+    return features.every((f) => f in ({ ...viewedFeatures }));
   }, [viewedFeatures]);
   
   const viewFeature = async (feature: string, state = true) => {
@@ -335,6 +335,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('unbookmark-summary', summary, state);
       } else {
         state[summary.id] = new Bookmark(summary);
+        viewFeature('unread-bookmarks', false);
         emitEvent('bookmark-summary', summary, state);
       }
       return (prev = state);

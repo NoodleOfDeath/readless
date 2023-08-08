@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useFocusEffect } from '@react-navigation/native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 import {
@@ -32,6 +33,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     readSummaries,
     preferredReadingFormat, 
     setPreference,
+    viewFeature,
   } = React.useContext(SessionContext);
   const { interactWithSummary } = useApiClient();
   
@@ -50,12 +52,13 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
     [interactWithSummary, navigation, preferredReadingFormat]
   );
   
-  React.useEffect(() => {
+  useFocusEffect(React.useCallback(() => {
+    viewFeature('unread-bookmarks');
     navigation?.setOptions({ 
       headerRight: () => undefined,
       headerTitle: `${strings.bookmarks_header} (${bookmarkCount})`,
     });
-  }, [bookmarkCount, navigation]);
+  }, [bookmarkCount, navigation]));
   
   return (
     <Screen>
@@ -89,7 +92,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
               </View>
               <View row>
                 <Button
-                  elevated
+                  contained
                   beveled
                   p={ 6 }
                   onPress={ () => setPreference('bookmarkedSummaries', (prev) => {
@@ -111,6 +114,8 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
                   return (
                     <Summary
                       key={ id }
+                      mx={ 12 }
+                      mb={ 12 }
                       summary={ bookmark.item }
                       onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) } />
                   );

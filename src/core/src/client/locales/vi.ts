@@ -66,7 +66,7 @@ export const viStrings: typeof enStrings = {
   misc_yes: 'Đúng',
   misc_yesBoring: 'Vâng, nó có thể thực sự nhàm chán',
   misc_yesNegative: 'Vâng, nó có thể thực sự tiêu cực',
-  misc_yesPain: 'Vâng, nó có thể là một nỗi đau',
+  misc_yesReading: 'Vâng, tôi ghét đọc',
   nav_browseCategories: 'Duyệt danh mục',
   nav_browsePublishers: 'Duyệt nhà xuất bản',
   nav_yourFollows: 'Theo dõi của bạn',

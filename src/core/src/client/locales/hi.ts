@@ -66,7 +66,7 @@ export const hiStrings: typeof enStrings = {
   misc_yes: 'हाँ',
   misc_yesBoring: 'हाँ, यह सचमुच उबाऊ हो सकता है',
   misc_yesNegative: 'हाँ, यह सचमुच नकारात्मक हो सकता है',
-  misc_yesPain: 'हां, दर्द हो सकता है',
+  misc_yesReading: 'हां, मुझे पढ़ने से नफरत है',
   nav_browseCategories: 'श्रेणियाँ ब्राउज़ करें',
   nav_browsePublishers: 'प्रकाशक ब्राउज़ करें',
   nav_yourFollows: 'आपके फ़ॉलोअर्स',

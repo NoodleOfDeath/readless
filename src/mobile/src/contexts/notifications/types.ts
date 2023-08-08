@@ -11,6 +11,7 @@ export type NotificationContextType = {
   isRegisteredForRemoteNotifications: () => Promise<boolean>;
   registerRemoteNotifications: () => Promise<void>;
   subscribe: (data: Omit<Parameters<typeof API.subscribe>[0], 'channel' | 'uuid'>) => ReturnType<typeof API.subscribe>,
+  syncWithServer: () => Promise<void>;
   unsubscribe: typeof API.unsubscribe;
 };
 
@@ -18,5 +19,6 @@ export const DEFAULT_NOTIFICATION_CONTEXT: NotificationContextType = {
   isRegisteredForRemoteNotifications: () => Promise.resolve(false),
   registerRemoteNotifications: () => Promise.resolve(),
   subscribe: () => Promise.resolve(null) as unknown as ReturnType<typeof API.subscribe>,
+  syncWithServer: () => Promise.resolve(),
   unsubscribe: API.unsubscribe,
 };

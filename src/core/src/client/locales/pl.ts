@@ -66,7 +66,7 @@ export const plStrings: typeof enStrings = {
   misc_yes: 'Tak',
   misc_yesBoring: 'Tak, to może być naprawdę nudne',
   misc_yesNegative: 'Tak, to może być naprawdę negatywne',
-  misc_yesPain: 'Tak, to może być ból',
+  misc_yesReading: 'Tak, nienawidzę czytać',
   nav_browseCategories: 'kategorie wyszukiwania',
   nav_browsePublishers: 'Przeglądaj wydawców',
   nav_yourFollows: 'Twoje obserwowane',
