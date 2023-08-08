@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
+import { SubscriptionEvent } from '~/api';
 import {
   Button,
   Text,
@@ -12,19 +13,22 @@ import {
   WalkthroughSliderRef,
   WalkthroughStep,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { NotificationContext, SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
-  const { pushNotificationsEnabled, viewFeature } = React.useContext(SessionContext);
+  const {
+    enablePush, pushNotificationsEnabled, viewFeature, 
+  } = React.useContext(SessionContext);
+  const { registerRemoteNotifications } = React.useContext(NotificationContext);
 
   const [iLikeReading, setILikeReading] = React.useState(false);
 
   const walkthroughRef = React.useRef<WalkthroughSliderRef>(null);
   
   const onDone = React.useCallback(async () => {
-    viewFeature(props.sheetId);
+    await viewFeature(props.sheetId);
     await SheetManager.hide(props.sheetId);
   }, [props.sheetId, viewFeature]);
   
@@ -88,6 +92,17 @@ export function OnboardingWalkthrough(props: SheetProps) {
           body: (
             <View itemsCenter gap={ 12 }>
               <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription}</Text>
+              <Button
+                contained
+                onPress={ async () => {
+                  await registerRemoteNotifications();
+                  await enablePush(SubscriptionEvent.DailyReminder, {
+                    body: '',
+                    title: '',
+                  });
+                } }>
+                {strings.misc_yes}
+              </Button> 
               <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription2}</Text>
             </View>
           ),

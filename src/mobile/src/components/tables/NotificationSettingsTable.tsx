@@ -101,10 +101,10 @@ export function NotificationSettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
-      <TableViewSection>
+      <TableViewSection header={ strings.settings_pushNotifications }>
         <TableViewCell
           bold
-          title={ strings.settings_pushNotifications || 'Push Notifications' }
+          title={ strings.settings_pushNotifications }
           cellIcon="bell"
           cellAccessoryView={ (
             <PrefSwitch 
@@ -170,6 +170,7 @@ export function NotificationSettingsTable() {
               disabled={ !enabled }
               value={ Boolean(settings[SubscriptionEvent.DailyReminder]) }
               onValueChange={ async (value) => {
+                setFiretime(value ? new Date() : undefined);
                 await updatePushNotifications(value);
               } } />
           ) } />

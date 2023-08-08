@@ -78,7 +78,8 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
     }
     interactWithSummary(
       summary.id,
-      InteractionType.Feedback
+      InteractionType.Feedback,
+      {}
     );
     setSelectedValues([]);
     setOtherValue('');

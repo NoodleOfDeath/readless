@@ -25,7 +25,7 @@ export function StatsScreen({
         <Button
           contained
           onPress={ () => {
-            setPreference('viewedFeatures', undefined);
+            setPreference('viewedFeatures', {});
           } }>
           DO NOT PRESS ME
         </Button>

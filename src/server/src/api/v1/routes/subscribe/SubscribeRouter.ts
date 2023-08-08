@@ -27,6 +27,21 @@ router.post(
 );
 
 router.post(
+  '/status',
+  body('channel').isString().notEmpty(),
+  body('uuid').isString().notEmpty(),
+  rateLimitMiddleware('10 per 1m'),
+  async (req, res) => {
+    try {
+      const response = await SubscribeController.status(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.post(
   '/verify',
   body('channel').isString().notEmpty(),
   body('uuid').isString().notEmpty(),
