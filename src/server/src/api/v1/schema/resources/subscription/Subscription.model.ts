@@ -157,7 +157,7 @@ export class Subscription<
     return await this.scope('public').findByPk(subscription.id);
   }
 
-  public static async status({ channel, uuid }: Pick<SubscriptionCreationAttributes, 'channel' | 'uuid'>): Promise<Subscription[]> {
+  public static async getSubscriptionStatus({ channel, uuid }: Pick<SubscriptionCreationAttributes, 'channel' | 'uuid'>): Promise<Subscription[]> {
     if (channel === 'email') {
       return [];
     }

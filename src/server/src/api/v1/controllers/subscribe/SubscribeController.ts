@@ -37,11 +37,11 @@ export class SubscribeController {
   }
 
   @Post('/status')
-  public static async status(
+  public static async getSubscriptionStatus(
     @Request() req: ExpressRequest,
     @Body() body: Pick<SubscriptionCreationAttributes, 'channel' | 'uuid'>
   ): Promise<PublicSubscriptionAttributes[]> {
-    const subscription = await Subscription.status(body);
+    const subscription = await Subscription.getSubscriptionStatus(body);
     return subscription;
   }
 
