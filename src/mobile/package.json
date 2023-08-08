@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "preinstall": "cd ../../ && yarn install && cd -",
     "postinstall": "yarn tsoa && yarn patch",
     "patch": "npx patch-package && yarn pod:fix",
     "pod:fix": "sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 13.0/' ios/Pods/Pods.xcodeproj/project.pbxproj",

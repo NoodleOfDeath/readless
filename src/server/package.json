@@ -11,7 +11,7 @@
   ],
   "type": "module",
   "scripts": {
-    "preinstall": "npx only-allow yarn",
+    "preinstall": "cd ../../ && yarn install && cd -",
     "start:api": "node dist/serve-api.cjs",
     "start:scheduler": "node dist/serve-scheduler.cjs",
     "start:worker": "node dist/serve-worker.cjs",
@@ -90,7 +90,6 @@
     "mock-aws-s3": "^4.0.2",
     "module-alias": "^2.2.3",
     "nodemon": "^2.0.21",
-    "only-allow": "^1.1.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
