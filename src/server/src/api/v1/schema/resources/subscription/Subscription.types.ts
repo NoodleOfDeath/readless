@@ -38,6 +38,7 @@ export const PUBLIC_SUBSCRIPTION_ATTRIBUTES = [
   'channel',
   'event',
   'repeats',
+  'fireTime',
   'verifiedAt',
   'expiresAt',
 ] as const;
