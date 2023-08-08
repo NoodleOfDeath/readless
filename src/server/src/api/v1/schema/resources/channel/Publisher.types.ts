@@ -1398,6 +1398,21 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     },
     timezone: 'UTC+1',
   },
+  texasmonthly: {
+    baseUrl: 'https://www.texasmonthly.com/',
+    displayName: 'Texas Monthly',
+    name: 'texasmonthly',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article .has-flyout' },
+      date: { selector: 'article-date time' },
+      spider:{
+        attribute: 'href',
+        selector: '[article a, h3[class*="tease-title"]',
+      },
+    },
+    timezone: 'UTC+1',
+  },
   theatlantic: {
     baseUrl: 'https://www.theatlantic.com',
     displayName: 'The Atlantic',
