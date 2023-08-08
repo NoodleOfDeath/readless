@@ -36,7 +36,7 @@ spec:
               value: '$DUPLICATE_LOOKBACK_INTERVAL'
             - name: ENABLED_FEATURES
               value: '$ENABLED_FEATURES'
-            - nmae: FIREBASE_CREDENTIALS
+            - name: FIREBASE_CREDENTIALS
               value: '$FIREBASE_CREDENTIALS'
             - name: MAIL_HOST
               value: '$MAIL_HOST'
