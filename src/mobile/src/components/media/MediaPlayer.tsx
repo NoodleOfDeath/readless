@@ -42,7 +42,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
 
   const handleFormatChange = React.useCallback(
     (summary: PublicSummaryGroup, format?: ReadingFormat) => {
-      interactWithSummary(summary.id, InteractionType.Read);
+      interactWithSummary(summary.id, InteractionType.Read, { metadata: { format } });
       navigation?.navigate('summary', {
         initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary,

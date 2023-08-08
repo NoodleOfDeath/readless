@@ -2,25 +2,12 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import messaging from '@react-native-firebase/messaging';
-import { registerSheet } from 'react-native-actions-sheet';
 import { Notifications, RegistrationError } from 'react-native-notifications';
 import { Provider } from 'react-native-paper';
 
 import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
 
 import { SubscriptionChannel, SubscriptionEvent } from '~/api';
-import {
-  AppearanceWalkthrough,
-  BookmarkWalkthrough,
-  CustomFeedWalkthrough,
-  FeedbackDialog,
-  OnboardingWalkthrough,
-  SentimentWalkthrough,
-  ShareDialog,
-  SharingWalkthrough,
-  TriggerWordsWalkthrough,
-  WhatsNewWalkthrough,
-} from '~/components';
 import { SessionContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 
@@ -31,22 +18,6 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
   const { subscribe, unsubscribe } = useApiClient();
 
   const { fcmToken, setPreference } = React.useContext(SessionContext);
-
-  React.useEffect(() => {
-    // onboarding/features
-    registerSheet('appearance-walkthrough', AppearanceWalkthrough);
-    registerSheet('bookmark-walkthrough', BookmarkWalkthrough);
-    registerSheet('custom-feed-walkthrough', CustomFeedWalkthrough);
-    registerSheet('onboarding-walkthrough', OnboardingWalkthrough);
-    registerSheet('sentiment-walkthrough', SentimentWalkthrough);
-    registerSheet('sharing-walkthrough', SharingWalkthrough);
-    registerSheet('trigger-words-walkthrough', TriggerWordsWalkthrough);
-    registerSheet('whats-new', WhatsNewWalkthrough);
-    // summary specific
-    registerSheet('share', ShareDialog);
-    registerSheet('feedback', FeedbackDialog);
-    
-  }, []);
 
   const isRegisteredForRemoteNotifications = React.useCallback(async () => {
     const enabled = await messaging().hasPermission();

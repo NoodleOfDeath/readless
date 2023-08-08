@@ -95,9 +95,9 @@ export function Chip({
       elevated={ variant === 'contained' }
       { ...props } 
       style={ buttonStyle }>
-      {badge && (
+      {Boolean(badge) && (
         <Badge topLeft small>
-          {badge === true ? '' : badge}
+          {badge === true ? '' : `${badge}`}
         </Badge>
       )}
       {leftIconComponent && <View>{leftIconComponent }</View>}

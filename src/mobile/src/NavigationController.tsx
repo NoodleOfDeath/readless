@@ -38,7 +38,7 @@ export default function NavigationController() {
     publishers,
     setCategories, 
     setPublishers,
-    viewedFeatures,
+    hasViewedFeature,
     hasReviewed,
     readSummaries,
     lastRequestForReview,
@@ -57,7 +57,7 @@ export default function NavigationController() {
   const [launchedTime] = React.useState(Date.now());
 
   const [showedReview, setShowedReview] = React.useState(false);
-  const [showedOnboarding, setShowedOnboarding] = React.useState(false);
+  const [alreadyShowedOnboarding, setAlreadyShowedOnboarding] = React.useState(false);
   
   const inAppReviewHandler = React.useCallback(() => {
     // make sure user has been using the app for at least 5 minutes before
@@ -141,14 +141,14 @@ export default function NavigationController() {
     } else {
       refreshSources();
     }
-    if (!('onboarding-walkthrough' in ({ ...viewedFeatures }))) {
-      if (showedOnboarding) {
+    if (!hasViewedFeature('onboarding-walkthrough')) {
+      if (alreadyShowedOnboarding) {
         return;
       }
-      setShowedOnboarding(true);
       SheetManager.show('onboarding-walkthrough');
+      setAlreadyShowedOnboarding(true);
     }
-  }, [viewedFeatures, ready, refreshSources, lastFetchFailed, lastFetch, showedOnboarding]);
+  }, [hasViewedFeature, ready, refreshSources, lastFetchFailed, lastFetch, alreadyShowedOnboarding]);
   
   const currentTheme = React.useMemo(() => theme.isDarkMode ? MD3DarkTheme : DefaultTheme, [theme.isDarkMode]);
 
