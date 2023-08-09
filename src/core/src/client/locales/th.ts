@@ -66,7 +66,7 @@ export const thStrings: typeof enStrings = {
   misc_yes: 'ใช่',
   misc_yesBoring: 'ใช่ มันอาจจะน่าเบื่อจริงๆ',
   misc_yesNegative: 'ใช่ มันอาจเป็นลบจริงๆ',
-  misc_yesPain: 'ใช่ มันอาจจะเจ็บปวด',
+  misc_yesReading: 'ใช่ ฉันเกลียดการอ่าน',
   nav_browseCategories: 'เรียกดูหมวดหมู่',
   nav_browsePublishers: 'เรียกดูสำนักพิมพ์',
   nav_yourFollows: 'ติดตามของคุณ',

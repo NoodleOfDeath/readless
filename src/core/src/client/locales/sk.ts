@@ -66,7 +66,7 @@ export const skStrings: typeof enStrings = {
   misc_yes: 'Áno',
   misc_yesBoring: 'Áno, môže to byť naozaj nudné',
   misc_yesNegative: 'Áno, môže to byť naozaj negatívne',
-  misc_yesPain: 'Áno, môže to byť bolesť',
+  misc_yesReading: 'Áno, nenávidím čítanie',
   nav_browseCategories: 'Prehľadávať kategórie',
   nav_browsePublishers: 'Prehľadávať vydavateľov',
   nav_yourFollows: 'Vaši sledovaní',

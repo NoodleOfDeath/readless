@@ -1,6 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import analytics from '@react-native-firebase/analytics';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
@@ -18,12 +19,12 @@ import { strings } from '~/locales';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
-  const {
-    enablePush, pushNotificationsEnabled, viewFeature, 
-  } = React.useContext(SessionContext);
-  const { registerRemoteNotifications } = React.useContext(NotificationContext);
+  const { viewFeature } = React.useContext(SessionContext);
+  const { subscribe, unsubscribe } = React.useContext(NotificationContext);
 
   const [iLikeReading, setILikeReading] = React.useState(false);
+  const [enableDailyReminders, setEnableDailyReminders] = React.useState(false);
+  const [fireTime, setFireTime] = React.useState<Date>(new Date());
 
   const walkthroughRef = React.useRef<WalkthroughSliderRef>(null);
   
@@ -38,18 +39,16 @@ export function OnboardingWalkthrough(props: SheetProps) {
         body: (
           <View itemsCenter gap={ 12 }>
             <Button
-              h4
               contained
               onPress={ () => {
-                analytics().logEvent('poll_reading_is_a_pain');
+                analytics().logEvent('poll_i_hate_reading');
                 setILikeReading(false);
                 console.log(walkthroughRef.current);
                 walkthroughRef.current?.next?.();
               } }>
-              {strings.misc_yesPain}
+              {strings.misc_yesReading}
             </Button>
             <Button
-              h4
               contained
               onPress={ () => {
                 analytics().logEvent('poll_the_news_is_negative');
@@ -60,7 +59,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
               {strings.misc_yesNegative}
             </Button>
             <Button
-              h4
               contained
               onPress={ () => {
                 analytics().logEvent('poll_the_news_is_boring');
@@ -71,7 +69,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
               {strings.misc_yesBoring}
             </Button>
             <Button
-              h4
               contained
               onPress={ () => {
                 analytics().logEvent('poll_reading_is_enjoyable');
@@ -95,14 +92,21 @@ export function OnboardingWalkthrough(props: SheetProps) {
               <Button
                 contained
                 onPress={ async () => {
-                  await registerRemoteNotifications();
-                  await enablePush(SubscriptionEvent.DailyReminder, {
-                    body: '',
-                    title: '',
-                  });
+                  setEnableDailyReminders(true);
+                  subscribe({ event: SubscriptionEvent.DailyReminder });
+                  walkthroughRef.current?.next?.();
                 } }>
                 {strings.misc_yes}
               </Button> 
+              <Button
+                contained
+                onPress={ async () => {
+                  setEnableDailyReminders(false);
+                  unsubscribe({ event: SubscriptionEvent.DailyReminder });
+                  walkthroughRef.current?.next?.();
+                } }>
+                {strings.misc_maybeLater}
+              </Button>
               <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription2}</Text>
             </View>
           ),
@@ -110,16 +114,38 @@ export function OnboardingWalkthrough(props: SheetProps) {
         }
       );
     }
-    if (pushNotificationsEnabled) {
+    if (enableDailyReminders) {
       steps.push(
         {
           body: (
             <View itemsCenter gap={ 12 }>
-              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription}</Text>
-              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription2}</Text>
+              <RNDateTimePicker 
+                value={ fireTime }
+                onChange={ async (event, date) => {
+                  if (date) {
+                    const newDate = new Date();
+                    newDate.setMonth(new Date().getMonth());
+                    newDate.setFullYear(new Date().getFullYear());
+                    if (date.getHours() < new Date().getHours()) {
+                      newDate.setDate(new Date().getDate() + 1);
+                    }
+                    newDate.setHours(date.getHours());
+                    newDate.setMinutes(date.getMinutes());
+                    setFireTime(newDate);
+                    await unsubscribe({ event: SubscriptionEvent.DailyReminder });
+                    await subscribe({ 
+                      body: strings.notifications_dailyReminderDescription, 
+                      event: SubscriptionEvent.DailyReminder,
+                      fireTime: newDate.toISOString(),
+                      repeats: '1d',
+                      title: strings.notifications_dailyReminder, 
+                    });
+                  }
+                } }
+                mode="time" />
             </View>
           ),
-          title: strings.walkthroughs_onboarding_enableReminders,
+          title: strings.walkthroughs_onboarding_enableRemindersDescription3,
         }
       );
     }
@@ -157,7 +183,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
       }
     );
     return steps;
-  }, [iLikeReading, onDone, pushNotificationsEnabled]);
+  }, [enableDailyReminders, fireTime, iLikeReading, onDone, subscribe, unsubscribe]);
   
   return (
     <Walkthrough

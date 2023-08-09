@@ -66,7 +66,7 @@ export const msStrings: typeof enStrings = {
   misc_yes: 'ya',
   misc_yesBoring: 'Ya, ia boleh menjadi sangat membosankan',
   misc_yesNegative: 'Ya, ia boleh menjadi sangat negatif',
-  misc_yesPain: 'Ya, ia boleh menjadi sakit',
+  misc_yesReading: 'Ya, saya benci membaca',
   nav_browseCategories: 'Semak imbas Kategori',
   nav_browsePublishers: 'Semak imbas Penerbit',
   nav_yourFollows: 'Pengikut Anda',

@@ -66,7 +66,7 @@ export const arStrings: typeof enStrings = {
   misc_yes: 'نعم',
   misc_yesBoring: 'نعم ، يمكن أن يكون مملاً حقًا',
   misc_yesNegative: 'نعم ، يمكن أن تكون سلبية حقًا',
-  misc_yesPain: 'نعم ، يمكن أن يكون ذلك مؤلمًا',
+  misc_yesReading: 'نعم أكره القراءة',
   nav_browseCategories: 'تصفح الفئات',
   nav_browsePublishers: 'تصفح الناشرين',
   nav_yourFollows: 'المتابعات الخاصة بك',

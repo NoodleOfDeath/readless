@@ -45,6 +45,8 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     unreadBookmarkCount,
     followedCategories,
     followedPublishers,
+    viewFeature,
+    hasViewedFeature,
   } = React.useContext(SessionContext);
   
   const publisherItems = React.useMemo(() => {
@@ -79,11 +81,20 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
       <DrawerItem 
         key="browse-publishers"
         label={ strings.nav_browsePublishers }
-        onPress={ () => navigate('publisherPicker') }
+        onPress={ () => {
+          viewFeature('first-view-publishers');
+          navigate('publisherPicker');
+        } }
+        icon={ (_props) => (
+          <Chip
+            leftIcon="pen"
+            iconSize={ 24 }
+            indicator={ !hasViewedFeature('first-view-publishers') } />
+        ) }
         right={ (props) => <Icon { ...props } name="menu-right" /> } />
     );
     return items;
-  }, [publishers, followedPublishers, openPublisher, navigate]);
+  }, [publishers, followedPublishers, viewFeature, hasViewedFeature, openPublisher, navigate]);
   
   const categoryItems = React.useMemo(() => {
     if (!categories) {
@@ -117,11 +128,20 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
       <DrawerItem 
         key="browse-categories"
         label={ strings.nav_browseCategories }
-        onPress={ () => navigate('categoryPicker') }
+        onPress={ () => {
+          viewFeature('first-view-categories');
+          navigate('categoryPicker');
+        } }
+        icon={ (_props) => (
+          <Chip
+            leftIcon="shape"
+            iconSize={ 24 }
+            indicator={ !hasViewedFeature('first-view-categories') } />
+        ) }
         right={ (props) => <Icon { ...props } name="menu-right" /> } />
     );
     return items;
-  }, [categories, followedCategories, openCategory, navigate]);
+  }, [categories, followedCategories, viewFeature, hasViewedFeature, openCategory, navigate]);
   
   return (
     <DrawerContentScrollView { ...props }>

@@ -66,7 +66,7 @@ export const hrStrings: typeof enStrings = {
   misc_yes: 'Da',
   misc_yesBoring: 'Da, može biti stvarno dosadno',
   misc_yesNegative: 'Da, može biti stvarno negativno',
-  misc_yesPain: 'Da, to može biti bol',
+  misc_yesReading: 'Da, mrzim čitati',
   nav_browseCategories: 'Pregledajte kategorije',
   nav_browsePublishers: 'Pregledajte izdavače',
   nav_yourFollows: 'Vaši pratitelji',

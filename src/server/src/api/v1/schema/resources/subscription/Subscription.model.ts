@@ -25,7 +25,6 @@ import { BaseModel } from '../../base';
 
 @Table({
   modelName: 'subscription',
-  paranoid: true,
   timestamps: true,
 })
 export class Subscription<

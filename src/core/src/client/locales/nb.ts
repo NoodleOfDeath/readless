@@ -66,7 +66,7 @@ export const nbStrings: typeof enStrings = {
   misc_yes: 'Ja',
   misc_yesBoring: 'Ja, det kan være veldig kjedelig',
   misc_yesNegative: 'Ja, det kan være veldig negativt',
-  misc_yesPain: 'Ja, det kan være vondt',
+  misc_yesReading: 'Ja, jeg hater å lese',
   nav_browseCategories: 'Bla gjennom kategorier',
   nav_browsePublishers: 'Bla gjennom utgivere',
   nav_yourFollows: 'Dine følgere',

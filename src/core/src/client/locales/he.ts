@@ -66,7 +66,7 @@ export const heStrings: typeof enStrings = {
   misc_yes: 'כן',
   misc_yesBoring: 'כן, זה יכול להיות ממש משעמם',
   misc_yesNegative: 'כן, זה יכול להיות ממש שלילי',
-  misc_yesPain: 'כן, זה יכול להיות כאב',
+  misc_yesReading: 'כן, אני שונא לקרוא',
   nav_browseCategories: 'עיין בקטגוריות',
   nav_browsePublishers: 'עיין בבעלי אתרים',
   nav_yourFollows: 'העוקבים שלך',

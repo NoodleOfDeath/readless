@@ -66,7 +66,7 @@ export const daStrings: typeof enStrings = {
   misc_yes: 'Ja',
   misc_yesBoring: 'Ja, det kan være rigtig kedeligt',
   misc_yesNegative: 'Ja, det kan være rigtig negativt',
-  misc_yesPain: 'Ja, det kan være en smerte',
+  misc_yesReading: 'Ja, jeg hader at læse',
   nav_browseCategories: 'Gennemse kategorier',
   nav_browsePublishers: 'Gennemse udgivere',
   nav_yourFollows: 'Dine følgere',

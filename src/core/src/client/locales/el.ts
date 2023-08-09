@@ -66,7 +66,7 @@ export const elStrings: typeof enStrings = {
   misc_yes: 'Ναί',
   misc_yesBoring: 'Ναι, μπορεί να είναι πραγματικά βαρετό',
   misc_yesNegative: 'Ναι, μπορεί να είναι πραγματικά αρνητικό',
-  misc_yesPain: 'Ναι, μπορεί να είναι πόνος',
+  misc_yesReading: 'Ναι, μισώ το διάβασμα',
   nav_browseCategories: 'Περιήγηση σε κατηγορίες',
   nav_browsePublishers: 'Περιήγηση στους εκδότες',
   nav_yourFollows: 'Οι ακόλουθοί σας',

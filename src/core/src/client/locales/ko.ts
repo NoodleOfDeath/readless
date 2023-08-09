@@ -66,7 +66,7 @@ export const koStrings: typeof enStrings = {
   misc_yes: '예',
   misc_yesBoring: '네, 정말 지루할 수 있습니다',
   misc_yesNegative: '예, 정말 부정적일 수 있습니다.',
-  misc_yesPain: '예, 고통이 될 수 있습니다',
+  misc_yesReading: '네, 읽기 싫어요',
   nav_browseCategories: '카테고리 찾아보기',
   nav_browsePublishers: '게시자 찾아보기',
   nav_yourFollows: '팔로우',

@@ -17,6 +17,7 @@ import {
 
 export type ChipProps = TextProps & ViewProps & {
   badge?: number | boolean;
+  indicator?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   iconProps?: IconProps;
@@ -31,6 +32,7 @@ export type ChipProps = TextProps & ViewProps & {
 export function Chip({
   children,
   badge,
+  indicator,
   leftIcon,
   rightIcon,
   iconProps,
@@ -96,9 +98,12 @@ export function Chip({
       { ...props } 
       style={ buttonStyle }>
       {Boolean(badge) && (
-        <Badge topLeft small>
+        <Badge topRight small>
           {badge === true ? '' : `${badge}`}
         </Badge>
+      )}
+      {indicator && (
+        <Badge topRight xs />
       )}
       {leftIconComponent && <View>{leftIconComponent }</View>}
       {(Array.isArray(children) ? children : [children]).map((child, i) => (

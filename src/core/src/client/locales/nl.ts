@@ -66,7 +66,7 @@ export const nlStrings: typeof enStrings = {
   misc_yes: 'Ja',
   misc_yesBoring: 'Ja, het kan echt saai zijn',
   misc_yesNegative: 'Ja, het kan heel negatief zijn',
-  misc_yesPain: 'Ja, het kan pijn doen',
+  misc_yesReading: 'Ja, ik haat lezen',
   nav_browseCategories: 'Bladeren door rubrieken',
   nav_browsePublishers: 'Blader door uitgevers',
   nav_yourFollows: 'Uw volgers',

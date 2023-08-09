@@ -66,7 +66,7 @@ export const caStrings: typeof enStrings = {
   misc_yes: 'Sí',
   misc_yesBoring: 'Sí, pot ser molt avorrit',
   misc_yesNegative: 'Sí, pot ser realment negatiu',
-  misc_yesPain: 'Sí, pot ser un dolor',
+  misc_yesReading: 'Sí, odio llegir',
   nav_browseCategories: 'Navega per categories',
   nav_browsePublishers: 'Explora els editors',
   nav_yourFollows: 'Els teus seguidors',

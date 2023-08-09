@@ -66,7 +66,7 @@ export const zhCNStrings: typeof enStrings = {
   misc_yes: '是的',
   misc_yesBoring: '是的，这可能真的很无聊',
   misc_yesNegative: '是的，这可能真的很负面',
-  misc_yesPain: '是的，这可能会很痛苦',
+  misc_yesReading: '是的，我讨厌读书',
   nav_browseCategories: '浏览分类',
   nav_browsePublishers: '浏览出版商',
   nav_yourFollows: '您的关注',

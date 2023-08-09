@@ -66,7 +66,7 @@ export const csStrings: typeof enStrings = {
   misc_yes: 'Ano',
   misc_yesBoring: 'Ano, může to být opravdu nudné',
   misc_yesNegative: 'Ano, může to být opravdu negativní',
-  misc_yesPain: 'Ano, může to bolet',
+  misc_yesReading: 'Ano, nesnáším čtení',
   nav_browseCategories: 'Procházet kategorie',
   nav_browsePublishers: 'Procházet vydavatele',
   nav_yourFollows: 'Vaši sledující',

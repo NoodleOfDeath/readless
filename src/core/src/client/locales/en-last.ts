@@ -64,7 +64,7 @@ export const enStrings = {
   misc_yes: 'Yes',
   misc_yesBoring: 'Yes, it can be really boring',
   misc_yesNegative: 'Yes, it can be really negative',
-  misc_yesPain: 'Yes, it can be a pain',
+  misc_yesReading: 'Yes, I hate reading',
   nav_browseCategories: 'Browse Categories',
   nav_browsePublishers: 'Browse Publishers',
   nav_yourFollows: 'Your Follows',

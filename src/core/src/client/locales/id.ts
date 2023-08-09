@@ -66,7 +66,7 @@ export const idStrings: typeof enStrings = {
   misc_yes: 'Ya',
   misc_yesBoring: 'Ya, itu bisa sangat membosankan',
   misc_yesNegative: 'Ya, itu bisa sangat negatif',
-  misc_yesPain: 'Ya, itu bisa menyakitkan',
+  misc_yesReading: 'Ya, aku benci membaca',
   nav_browseCategories: 'Telusuri Kategori',
   nav_browsePublishers: 'Telusuri Penerbit',
   nav_yourFollows: 'Pengikut Anda',
