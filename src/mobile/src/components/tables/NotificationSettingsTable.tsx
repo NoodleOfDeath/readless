@@ -1,10 +1,10 @@
 import React from 'react';
 
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { SubscriptionEvent } from '~/api';
 import {
+  DateTimePicker,
   PrefSwitch,
   Switch,
   TableView,
@@ -161,7 +161,7 @@ export function NotificationSettingsTable() {
           title={ strings.settings_dailyReminderTime }
           cellIcon="clock"
           cellAccessoryView={ fireTime && (
-            <RNDateTimePicker 
+            <DateTimePicker 
               disabled={ !settings[SubscriptionEvent.DailyReminder] }
               value={ fireTime }
               onChange={ async (event, date) => {

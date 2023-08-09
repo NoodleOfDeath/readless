@@ -10,6 +10,7 @@ export * from './Chip';
 export * from './CollapsedView';
 export * from './ContextMenu';
 export * from './DataTable';
+export * from './DateTimePicker';
 export * from './Dialog';
 export * from './Divider';
 export * from './DrawerItem';
