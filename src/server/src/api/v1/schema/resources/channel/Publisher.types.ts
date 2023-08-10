@@ -1405,13 +1405,13 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article .has-flyout' },
-      date: { selector: 'article-date time' },
+      date: { selector: 'header .article-date' },
       spider:{
         attribute: 'href',
         selector: '[article a, h3[class*="tease-title"]',
       },
     },
-    timezone: 'UTC+1',
+    timezone: 'UTC-6',
   },
   theatlantic: {
     baseUrl: 'https://www.theatlantic.com',
