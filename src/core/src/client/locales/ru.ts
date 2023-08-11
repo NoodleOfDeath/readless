@@ -112,6 +112,7 @@ export const ruStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Ежедневное время напоминания',
   settings_dailyReminders: 'Ежедневные напоминания',
   settings_dark: 'Темный',
+  settings_enablePushNotifications: 'Включить push-уведомления?',
   settings_enterYourTriggerWords: 'Введите и/или удалите триггерные слова ниже',
   settings_font: 'Шрифт',
   settings_fontSize: 'Размер шрифта',

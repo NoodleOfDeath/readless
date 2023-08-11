@@ -112,6 +112,7 @@ export const deStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Tägliche Erinnerungszeit',
   settings_dailyReminders: 'Tägliche Erinnerungen',
   settings_dark: 'Dunkel',
+  settings_enablePushNotifications: 'Push-Benachrichtigungen aktivieren?',
   settings_enterYourTriggerWords: 'Geben Sie unten Ihre Triggerwörter ein und/oder entfernen Sie sie',
   settings_font: 'Schriftart',
   settings_fontSize: 'Schriftgröße',

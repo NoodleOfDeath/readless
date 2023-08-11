@@ -112,6 +112,7 @@ export const fiStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Päivittäinen muistutusaika',
   settings_dailyReminders: 'Päivittäiset muistutukset',
   settings_dark: 'Tumma',
+  settings_enablePushNotifications: 'Otetaanko push-ilmoitukset käyttöön?',
   settings_enterYourTriggerWords: 'Kirjoita ja/tai poista laukaisinsanasi alle',
   settings_font: 'Fontti',
   settings_fontSize: 'Fonttikoko',

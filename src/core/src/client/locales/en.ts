@@ -130,6 +130,7 @@ export const enStrings = {
   settings_dailyReminderTime: 'Daily Reminder Time',
   settings_dailyReminders: 'Daily Reminders',
   settings_dark: 'Dark',
+  settings_enablePushNotifications: 'Enable Push Notifications?',
   settings_enterYourTriggerWords: 'Enter and/or remove your trigger words below',
   settings_font: 'Font',
   settings_fontSize: 'Font Size',

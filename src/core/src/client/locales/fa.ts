@@ -112,6 +112,7 @@ export const faStrings: typeof enStrings = {
   settings_dailyReminderTime: 'زمان یادآوری روزانه',
   settings_dailyReminders: 'یادآوری های روزانه',
   settings_dark: 'تاریک',
+  settings_enablePushNotifications: 'Push Notifications فعال شود؟',
   settings_enterYourTriggerWords: 'کلمات محرک خود را در زیر وارد کنید و/یا حذف کنید',
   settings_font: 'فونت',
   settings_fontSize: 'اندازه فونت',

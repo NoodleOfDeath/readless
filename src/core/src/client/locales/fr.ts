@@ -112,6 +112,7 @@ export const frStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Heure de rappel quotidienne',
   settings_dailyReminders: 'Rappels quotidiens',
   settings_dark: 'Sombre',
+  settings_enablePushNotifications: 'Activer les notifications push ?',
   settings_enterYourTriggerWords: 'Saisissez et/ou supprimez vos mots déclencheurs ci-dessous',
   settings_font: 'Police de caractère',
   settings_fontSize: 'Taille de police',

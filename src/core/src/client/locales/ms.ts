@@ -112,6 +112,7 @@ export const msStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Masa Peringatan Harian',
   settings_dailyReminders: 'Peringatan Harian',
   settings_dark: 'Gelap',
+  settings_enablePushNotifications: 'Dayakan Pemberitahuan Tolak?',
   settings_enterYourTriggerWords: 'Masukkan dan/atau alih keluar perkataan pencetus anda di bawah',
   settings_font: 'fon',
   settings_fontSize: 'Saiz huruf',

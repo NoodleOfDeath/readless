@@ -112,6 +112,7 @@ export const caStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Hora de recordatori diari',
   settings_dailyReminders: 'Recordatoris diaris',
   settings_dark: 'Fosc',
+  settings_enablePushNotifications: 'Vols activar les notificacions push?',
   settings_enterYourTriggerWords: 'Introduïu i/o elimineu les vostres paraules activadores a continuació',
   settings_font: 'Font',
   settings_fontSize: 'Mida de la font',

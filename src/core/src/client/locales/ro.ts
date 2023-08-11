@@ -112,6 +112,7 @@ export const roStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Ora de memento zilnică',
   settings_dailyReminders: 'Memento-uri zilnice',
   settings_dark: 'Întuneric',
+  settings_enablePushNotifications: 'Activați notificările push?',
   settings_enterYourTriggerWords: 'Introduceți și/sau eliminați cuvintele de declanșare mai jos',
   settings_font: 'Font',
   settings_fontSize: 'Marimea fontului',

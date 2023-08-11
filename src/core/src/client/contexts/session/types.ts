@@ -65,7 +65,7 @@ export type PushNotificationSettings = {
   scheduled?: number[];
 };
 
-export type ActivityAction = 
+export type Activity = 
  | 'read'
  | 'unread'
  | 'hide'
@@ -78,15 +78,16 @@ export type ActivityAction =
  | 'unexclude'
  | 'intent-to-share'
  | 'standard-share'
- | 'social-share';
- 
-export type ResourceType =
+ | 'social-share'
+ | 'set-preference';
+
+export type Resource =
  | 'category'
  | 'publisher'
  | 'recap'
  | 'summary';
  
-export type SessionEvent = `${ActivityAction}-${ResourceType}`;
+export type SessionEvent = `${Activity}-${Resource}`;
 
 export type Preferences = {
   

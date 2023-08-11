@@ -112,6 +112,7 @@ export const viStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Thời gian nhắc nhở hàng ngày',
   settings_dailyReminders: 'Lời nhắc hàng ngày',
   settings_dark: 'Tối tăm',
+  settings_enablePushNotifications: 'Bật thông báo đẩy?',
   settings_enterYourTriggerWords: 'Nhập và/hoặc xóa các từ kích hoạt của bạn bên dưới',
   settings_font: 'Nét chữ',
   settings_fontSize: 'Cỡ chữ',

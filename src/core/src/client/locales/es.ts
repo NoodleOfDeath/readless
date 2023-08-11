@@ -112,6 +112,7 @@ export const esStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Hora de recordatorio diario',
   settings_dailyReminders: 'Recordatorios diarios',
   settings_dark: 'Oscuro',
+  settings_enablePushNotifications: '¿Habilitar notificaciones automáticas?',
   settings_enterYourTriggerWords: 'Ingrese y/o elimine sus palabras desencadenantes a continuación',
   settings_font: 'Fuente',
   settings_fontSize: 'Tamaño de fuente',

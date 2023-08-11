@@ -112,6 +112,7 @@ export const itStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Tempo di promemoria giornaliero',
   settings_dailyReminders: 'Promemoria giornalieri',
   settings_dark: 'Buio',
+  settings_enablePushNotifications: 'Abilitare le notifiche push?',
   settings_enterYourTriggerWords: 'Inserisci e/o rimuovi le parole chiave di seguito',
   settings_font: 'Font',
   settings_fontSize: 'Dimensione del font',

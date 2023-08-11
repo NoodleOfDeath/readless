@@ -112,6 +112,7 @@ export const ukStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Час щоденного нагадування',
   settings_dailyReminders: 'Щоденні нагадування',
   settings_dark: 'Темний',
+  settings_enablePushNotifications: 'Увімкнути Push-сповіщення?',
   settings_enterYourTriggerWords: 'Введіть і/або видаліть тригерні слова нижче',
   settings_font: 'Шрифт',
   settings_fontSize: 'Розмір шрифту',

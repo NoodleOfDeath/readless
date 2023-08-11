@@ -112,6 +112,7 @@ export const arStrings: typeof enStrings = {
   settings_dailyReminderTime: 'وقت التذكير اليومي',
   settings_dailyReminders: 'تذكير يومي',
   settings_dark: 'مظلم',
+  settings_enablePushNotifications: 'تمكين دفع الإشعارات؟',
   settings_enterYourTriggerWords: 'أدخل و / أو قم بإزالة الكلمات المحفزة أدناه',
   settings_font: 'الخط',
   settings_fontSize: 'حجم الخط',

@@ -112,6 +112,7 @@ export const heStrings: typeof enStrings = {
   settings_dailyReminderTime: 'זמן תזכורת יומית',
   settings_dailyReminders: 'תזכורות יומיות',
   settings_dark: 'אפל',
+  settings_enablePushNotifications: 'להפעיל הודעות דחיפה?',
   settings_enterYourTriggerWords: 'הזן ו/או הסר את מילות ההפעלה שלך למטה',
   settings_font: 'גוֹפָן',
   settings_fontSize: 'גודל גופן',

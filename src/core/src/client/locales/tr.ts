@@ -112,6 +112,7 @@ export const trStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Günlük Hatırlatma Süresi',
   settings_dailyReminders: 'Günlük Hatırlatıcılar',
   settings_dark: 'Karanlık',
+  settings_enablePushNotifications: 'Push Bildirimleri Etkinleştirilsin mi?',
   settings_enterYourTriggerWords: 'Tetikleyici kelimelerinizi aşağıya girin ve/veya kaldırın',
   settings_font: 'Yazı tipi',
   settings_fontSize: 'Yazı Boyutu',

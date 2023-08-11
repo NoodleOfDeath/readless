@@ -8,8 +8,8 @@ export type LocalNotificationOptions = {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NotificationContextType = {
-  isRegisteredForRemoteNotifications: () => Promise<boolean>;
-  registerRemoteNotifications: () => Promise<void>;
+  isRegisteredForRemoteNotifications: (redirectOnFail?: boolean) => Promise<boolean>;
+  registerRemoteNotifications: (redirectOnFail?: boolean) => void;
   subscribe: (data: Omit<Parameters<typeof API.subscribe>[0], 'channel' | 'uuid'>) => ReturnType<typeof API.subscribe>,
   syncWithServer: () => Promise<void>;
   unsubscribe: typeof API.unsubscribe;

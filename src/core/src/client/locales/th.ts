@@ -112,6 +112,7 @@ export const thStrings: typeof enStrings = {
   settings_dailyReminderTime: 'เวลาเตือนความจำรายวัน',
   settings_dailyReminders: 'เตือนความจำรายวัน',
   settings_dark: 'มืด',
+  settings_enablePushNotifications: 'เปิดใช้งานการแจ้งเตือนแบบพุช?',
   settings_enterYourTriggerWords: 'ป้อนและ/หรือลบคำกระตุ้นด้านล่าง',
   settings_font: 'แบบอักษร',
   settings_fontSize: 'ขนาดตัวอักษร',

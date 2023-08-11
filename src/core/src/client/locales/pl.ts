@@ -112,6 +112,7 @@ export const plStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Codzienny czas przypomnienia',
   settings_dailyReminders: 'Codzienne przypomnienia',
   settings_dark: 'Ciemny',
+  settings_enablePushNotifications: 'Włączyć powiadomienia push?',
   settings_enterYourTriggerWords: 'Wpisz i/lub usuń słowa wyzwalające poniżej',
   settings_font: 'Czcionka',
   settings_fontSize: 'Rozmiar czcionki',

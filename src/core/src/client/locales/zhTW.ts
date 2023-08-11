@@ -112,6 +112,7 @@ export const zhTWStrings: typeof enStrings = {
   settings_dailyReminderTime: '每日提醒時間',
   settings_dailyReminders: '每日提醒',
   settings_dark: '黑暗的',
+  settings_enablePushNotifications: '啟用推送通知？',
   settings_enterYourTriggerWords: '在下方輸入和/或刪除您的觸發詞',
   settings_font: '字體',
   settings_fontSize: '字體大小',

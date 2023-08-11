@@ -112,6 +112,7 @@ export const nbStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Daglig påminnelsestid',
   settings_dailyReminders: 'Daglige påminnelser',
   settings_dark: 'Mørk',
+  settings_enablePushNotifications: 'Vil du aktivere push-varsler?',
   settings_enterYourTriggerWords: 'Skriv inn og/eller fjern utløserordene nedenfor',
   settings_font: 'Font',
   settings_fontSize: 'Skriftstørrelse',

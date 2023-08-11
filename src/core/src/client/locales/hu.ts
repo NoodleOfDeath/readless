@@ -112,6 +112,7 @@ export const huStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Napi emlékeztető idő',
   settings_dailyReminders: 'Napi emlékeztetők',
   settings_dark: 'Sötét',
+  settings_enablePushNotifications: 'Engedélyezi a push értesítéseket?',
   settings_enterYourTriggerWords: 'Írja be és/vagy távolítsa el a kiváltó szavakat alább',
   settings_font: 'Betűtípus',
   settings_fontSize: 'Betűméret',

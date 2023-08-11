@@ -112,6 +112,7 @@ export const hrStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Vrijeme dnevnog podsjetnika',
   settings_dailyReminders: 'Dnevni podsjetnici',
   settings_dark: 'tamno',
+  settings_enablePushNotifications: 'Omogućiti push obavijesti?',
   settings_enterYourTriggerWords: 'U nastavku unesite i/ili uklonite svoje riječi pokretače',
   settings_font: 'Font',
   settings_fontSize: 'Veličina fonta',

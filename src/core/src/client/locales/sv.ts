@@ -112,6 +112,7 @@ export const svStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Daglig påminnelsetid',
   settings_dailyReminders: 'Dagliga påminnelser',
   settings_dark: 'Mörk',
+  settings_enablePushNotifications: 'Aktivera push-meddelanden?',
   settings_enterYourTriggerWords: 'Ange och/eller ta bort dina triggerord nedan',
   settings_font: 'Font',
   settings_fontSize: 'Textstorlek',

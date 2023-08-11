@@ -112,6 +112,7 @@ export const csStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Denní čas připomenutí',
   settings_dailyReminders: 'Denní připomenutí',
   settings_dark: 'Temný',
+  settings_enablePushNotifications: 'Povolit Push Notifications?',
   settings_enterYourTriggerWords: 'Níže zadejte a/nebo odstraňte svá spouštěcí slova',
   settings_font: 'Písmo',
   settings_fontSize: 'Velikost písma',

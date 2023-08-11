@@ -112,6 +112,7 @@ export const ptBRStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Hora do lembrete diário',
   settings_dailyReminders: 'Lembretes diários',
   settings_dark: 'Escuro',
+  settings_enablePushNotifications: 'Ativar notificações push?',
   settings_enterYourTriggerWords: 'Insira e/ou remova suas palavras-chave abaixo',
   settings_font: 'Fonte',
   settings_fontSize: 'Tamanho da fonte',

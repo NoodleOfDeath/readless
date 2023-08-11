@@ -112,6 +112,7 @@ export const elStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Καθημερινή ώρα υπενθύμισης',
   settings_dailyReminders: 'Καθημερινές Υπενθυμίσεις',
   settings_dark: 'Σκοτάδι',
+  settings_enablePushNotifications: 'Ενεργοποίηση Push Notifications;',
   settings_enterYourTriggerWords: 'Εισαγάγετε και/ή αφαιρέστε τις λέξεις ενεργοποίησης παρακάτω',
   settings_font: 'Γραμματοσειρά',
   settings_fontSize: 'Μέγεθος γραμματοσειράς',

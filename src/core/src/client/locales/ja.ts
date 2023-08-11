@@ -112,6 +112,7 @@ export const jaStrings: typeof enStrings = {
   settings_dailyReminderTime: '毎日のリマインダー時間',
   settings_dailyReminders: '毎日のリマインダー',
   settings_dark: '暗い',
+  settings_enablePushNotifications: 'プッシュ通知を有効にしますか?',
   settings_enterYourTriggerWords: '以下にトリガーワードを入力または削除します',
   settings_font: 'フォント',
   settings_fontSize: 'フォントサイズ',

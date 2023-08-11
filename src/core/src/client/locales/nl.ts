@@ -112,6 +112,7 @@ export const nlStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Dagelijkse herinneringstijd',
   settings_dailyReminders: 'Dagelijkse herinneringen',
   settings_dark: 'Donker',
+  settings_enablePushNotifications: 'Pushmeldingen inschakelen?',
   settings_enterYourTriggerWords: 'Voer hieronder uw triggerwoorden in en/of verwijder ze',
   settings_font: 'Lettertype',
   settings_fontSize: 'Lettertypegrootte',

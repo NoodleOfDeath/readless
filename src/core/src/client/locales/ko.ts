@@ -112,6 +112,7 @@ export const koStrings: typeof enStrings = {
   settings_dailyReminderTime: '일일 알림 시간',
   settings_dailyReminders: '일일 알림',
   settings_dark: '어두운',
+  settings_enablePushNotifications: '푸시 알림을 활성화하시겠습니까?',
   settings_enterYourTriggerWords: '아래에 트리거 단어를 입력 및/또는 제거하십시오.',
   settings_font: '폰트',
   settings_fontSize: '글꼴 크기',

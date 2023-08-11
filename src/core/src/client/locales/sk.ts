@@ -112,6 +112,7 @@ export const skStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Denný čas pripomenutia',
   settings_dailyReminders: 'Denné pripomenutia',
   settings_dark: 'Tmavý',
+  settings_enablePushNotifications: 'Povoliť upozornenia push?',
   settings_enterYourTriggerWords: 'Nižšie zadajte a/alebo odstráňte spúšťacie slová',
   settings_font: 'Písmo',
   settings_fontSize: 'Veľkosť písma',

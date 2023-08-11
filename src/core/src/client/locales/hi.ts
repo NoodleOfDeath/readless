@@ -112,6 +112,7 @@ export const hiStrings: typeof enStrings = {
   settings_dailyReminderTime: 'दैनिक अनुस्मारक समय',
   settings_dailyReminders: 'दैनिक अनुस्मारक',
   settings_dark: 'अँधेरा',
+  settings_enablePushNotifications: 'पुश सूचनाएँ सक्षम करें?',
   settings_enterYourTriggerWords: 'नीचे अपने ट्रिगर शब्द दर्ज करें और/या हटा दें',
   settings_font: 'फ़ॉन्ट',
   settings_fontSize: 'फ़ॉन्ट आकार',

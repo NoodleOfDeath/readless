@@ -112,6 +112,7 @@ export const idStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Waktu Pengingat Harian',
   settings_dailyReminders: 'Pengingat Harian',
   settings_dark: 'Gelap',
+  settings_enablePushNotifications: 'Aktifkan Notifikasi Push?',
   settings_enterYourTriggerWords: 'Masukkan dan/atau hapus kata pemicu Anda di bawah ini',
   settings_font: 'Fon',
   settings_fontSize: 'Ukuran huruf',

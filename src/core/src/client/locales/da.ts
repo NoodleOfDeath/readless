@@ -112,6 +112,7 @@ export const daStrings: typeof enStrings = {
   settings_dailyReminderTime: 'Daglig påmindelsestid',
   settings_dailyReminders: 'Daglige påmindelser',
   settings_dark: 'Mørk',
+  settings_enablePushNotifications: 'Aktiver push-meddelelser?',
   settings_enterYourTriggerWords: 'Indtast og/eller fjern dine triggerord nedenfor',
   settings_font: 'Skrifttype',
   settings_fontSize: 'Skriftstørrelse',
