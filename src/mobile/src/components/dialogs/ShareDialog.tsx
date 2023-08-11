@@ -106,6 +106,15 @@ export function ShareDialog({
           viewshot: viewshot.current,
         }), 
       },
+      {
+        icon: 'linkedin',
+        label: strings.share_linkedin,
+        onPress: () => shareSocial(summary, {
+          format,
+          social: Social.Linkedin,
+          viewshot: viewshot.current,
+        }), 
+      },
       // {
       //   iconText: '🧵',
       //   imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/threads.png',
