@@ -23,15 +23,15 @@ export type Selectors = {
 
 export type PublisherAttributes = DatedAttributes & Sentimental & {
   baseUrl: string;
-  /** name of this publisher */
   name: string;
-  /** xml site maps for this publisher and selector for extracting urls */
+  sitemaps?: string[],
   displayName: string;
   imageUrl?: string;
   description?: string;
   selectors: Selectors;
+  geolocation?: string;
+  radius?: string;
   maxAge: string;
-  /** fetch policy for this publisher */
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone: string;
   disabled?: boolean;
@@ -40,10 +40,13 @@ export type PublisherAttributes = DatedAttributes & Sentimental & {
 export type PublisherCreationAttributes = Partial<DatedAttributes & Sentimental> & {
   baseUrl: string;
   name: string;
+  sitemaps?: string[];
   displayName: string;
   imageUrl?: string;
   description?: string;
   selectors: Selectors;
+  geolocation?: string;
+  radius?: string;
   maxAge?: string;
   fetchPolicy?: Record<string, FetchPolicy>;
   timezone?: string;
@@ -70,6 +73,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   _9to5google: {
     baseUrl: 'https://9to5google.com',
     displayName: '9to5google',
+    geolocation: 'Mountain View, California, United States',
     name: '9to5google',
     selectors: {
       article: { selector: '#river p' },
@@ -85,6 +89,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   _9to5mac: {
     baseUrl: 'https://9to5mac.com',
     displayName: '9to5mac',
+    geolocation: 'Cupertino, California, United States',
     name: '9to5mac',
     selectors: {
       article: { selector: '#river p' },
