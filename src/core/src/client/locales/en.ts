@@ -160,13 +160,17 @@ export const enStrings = {
   settings_voice: 'Text-to-Speech Voice',
 
   // share
-  share_copyOriginalSourceLink: 'Copy Original Source Link',
+  share_facebook: 'Facebook',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram Stories',
-  share_saveImage: 'Save Image to Photos',
+  share_linkedin: 'Linkedin',
+  share_saveToCameraRoll: 'Save to Camera Roll',
   share_shareAsImage: 'Share as Image',
-  share_shareAsLink: 'Share as Link',
+  share_shareAsLink: 'Share',
+  share_shareOriginalLink: 'Share Original Link',
+  share_telegram: 'Telegram',
   share_twitter: 'Twitter',
+  share_whatsapp: 'Whatsapp',
 
   // subscribe
   subscribe_boost: 'Boost',

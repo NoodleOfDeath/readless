@@ -93,6 +93,7 @@ export function TableViewCell(props: TableViewCellProps) {
     <Cell
       { ...props }
       allowFontScaling
+      { ...theme.components.tableViewCell }
       contentContainerStyle={ [stylesWithoutFontScaling] }
       titleTextStyle={ [stylesWithoutFontScaling, props.titleTextStyle, { flex: 1 }] }
       detailTextStyle={ [stylesWithoutFontScaling, props.detailTextStyle, { color: theme.colors.textSecondary }] }

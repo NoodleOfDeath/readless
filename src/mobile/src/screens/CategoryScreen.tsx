@@ -49,7 +49,18 @@ export function CategoryScreen({
   }, [category, followCategory]);
   
   useFocusEffect(React.useCallback(() => {
-    navigation?.setOptions({ headerTitle: '' });
+    navigation?.setOptions({
+      headerTitle: () => (
+        <View flexRow gap={ 6 } itemsCenter>
+          <Text  
+            h6 
+            ml={ 6 }
+            bold>
+            {category?.displayName}
+          </Text>
+        </View>
+      ), 
+    });
     if (!category) {
       return;
     }
@@ -64,16 +75,10 @@ export function CategoryScreen({
         headerComponent={ (
           <View
             gap={ 6 }
-            my={ 12 }
+            mb={ 12 }
             justifyCenter
             itemsCenter>
-            <ChannelIcon rounded size={ 40 } category={ category } />
-            <Text 
-              h6 
-              ml={ 6 }
-              bold>
-              {category?.displayName}
-            </Text>
+            <ChannelIcon rounded size={ 80 } category={ category } />
             <View>
               <Button
                 contained

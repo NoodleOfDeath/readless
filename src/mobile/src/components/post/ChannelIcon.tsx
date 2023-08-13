@@ -30,11 +30,13 @@ export function ChannelIcon({
     <Chip
       bg={ theme.colors.primaryLight }
       color={ theme.colors.contrastText }
+      beveled
       itemsCenter
       justifyCenter
       adjustsFontSizeToFit
       textCenter
       leftIcon={ category?.icon }
+      iconSize={ size * 0.9 }
       width={ size }
       height={ size }>
       {publisher?.displayName && publisher?.displayName[0]}

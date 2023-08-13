@@ -32,7 +32,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     setPreference,
   } = React.useContext(SessionContext);
 
-  const [redirect, setRedirect] = React.useState(false);
+  const [redirectToSettings, setRedirectToSettings] = React.useState(false);
   
   const syncWithServer = React.useCallback(async () => {
     if (!fcmToken) {
@@ -100,7 +100,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
 
   const registerRemoteNotifications = React.useCallback((redirectOnFail = false) => {
     try {
-      setRedirect(redirectOnFail);
+      setRedirectToSettings(redirectOnFail);
       Notifications.registerRemoteNotifications();
     } catch (error) {
       console.log(error);
@@ -112,7 +112,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     const listeners = [
       Notifications.events().registerRemoteNotificationsRegistered(async () => {
         try {
-          if (!await isRegisteredForRemoteNotifications(redirect)) {
+          if (!await isRegisteredForRemoteNotifications(redirectToSettings)) {
             return;
           }
           await syncWithServer();
@@ -184,7 +184,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       listeners.forEach(listener => listener.remove());
     };
 
-  }, [isRegisteredForRemoteNotifications, redirect, setPreference, subscribe, syncWithServer]);
+  }, [isRegisteredForRemoteNotifications, redirectToSettings, setPreference, subscribe, syncWithServer]);
 
   return (
     <NotificationContext.Provider value={ { 
