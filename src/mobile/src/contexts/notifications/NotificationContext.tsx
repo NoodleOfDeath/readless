@@ -1,8 +1,12 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import {
+  Linking,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 
 import messaging from '@react-native-firebase/messaging';
-import { Notifications, RegistrationError } from 'react-native-notifications';
+import { Notifications } from 'react-native-notifications';
 import { Provider } from 'react-native-paper';
 
 import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
@@ -10,6 +14,7 @@ import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
 import { SubscriptionChannel, SubscriptionEvent } from '~/api';
 import { SessionContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
+import { strings } from '~/locales';
 
 export const NotificationContext = React.createContext(DEFAULT_NOTIFICATION_CONTEXT);
 
@@ -26,6 +31,8 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     enablePush,
     setPreference,
   } = React.useContext(SessionContext);
+
+  const [redirectToSettings, setRedirectToSettings] = React.useState(false);
   
   const syncWithServer = React.useCallback(async () => {
     if (!fcmToken) {
@@ -59,62 +66,94 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     }
   }, [fcmToken, getSubscriptionStatus, setPreference]);
 
-  const isRegisteredForRemoteNotifications = React.useCallback(async () => {
-    const enabled = await messaging().hasPermission();
+  const isRegisteredForRemoteNotifications = React.useCallback(async (redirectOnFail = false) => {
+    const fail = () => {
+      setPreference('pushNotificationsEnabled', false);
+      setPreference('fcmToken', undefined);
+      setPreference('pushNotifications', {});
+      if (redirectOnFail) {
+        Linking.openSettings();
+      }
+    };
+    const enabled = 
+      await Notifications.isRegisteredForRemoteNotifications() &&
+      await messaging().hasPermission() &&
+      Platform.select({
+        android: (await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS, {
+          buttonPositive: 'OK',
+          message: strings.settings_enablePushNotifications, 
+          title: strings.settings_pushNotifications,
+        })) === PermissionsAndroid.RESULTS.GRANTED, 
+        ios: true, 
+      });
     if (!enabled) {
+      fail();
       return false;
     }
     const token = await messaging().getToken();
     if (!token) {
+      fail();
       return false;
     }
-    await syncWithServer();
     return true;
-  }, [syncWithServer]);
+  }, [setPreference]);
 
-  const registerRemoteNotifications = React.useCallback(async () => {
-    
-    if (await isRegisteredForRemoteNotifications()) {
-      return;
+  const registerRemoteNotifications = React.useCallback((redirectOnFail = false) => {
+    try {
+      setRedirectToSettings(redirectOnFail);
+      Notifications.registerRemoteNotifications();
+    } catch (error) {
+      console.log(error);
     }
-    
-    Notifications.registerRemoteNotifications();
-    
-    Notifications.events().registerRemoteNotificationsRegistered(async () => {
-      try {
-        const channel = Platform.select({ android: SubscriptionChannel.Fcm, ios: SubscriptionChannel.Apns });
-        if (!channel) {
+  }, []);
+
+  React.useEffect(() => {
+
+    const listeners = [
+      Notifications.events().registerRemoteNotificationsRegistered(async () => {
+        try {
+          if (!await isRegisteredForRemoteNotifications(redirectToSettings)) {
+            return;
+          }
+          await syncWithServer();
+          const channel = Platform.select({ android: SubscriptionChannel.Fcm, ios: SubscriptionChannel.Apns });
+          if (!channel) {
+            return;
+          }
+          const newFcmToken = await messaging().getToken();
+          setPreference('pushNotificationsEnabled', true);
+          setPreference('fcmToken', newFcmToken);
+          await subscribe({
+            channel,
+            event: SubscriptionEvent.Default,
+            uuid: newFcmToken,
+          });
+        } catch (error) {
+          console.error(error);
           return;
         }
-        const newFcmToken = await messaging().getToken();
-        setPreference('pushNotificationsEnabled', true);
-        setPreference('fcmToken', newFcmToken);
-        await subscribe({
-          channel,
-          event: SubscriptionEvent.Default,
-          uuid: newFcmToken,
+      }),
+
+      Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
+        console.log(event);
+      }),
+
+      Notifications.events().registerRemoteNotificationsRegistrationDenied(() => {
+        console.log('User refused remote notifications');
+      }),
+
+      Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
+        console.log(`Notification received in foreground: ${notification.title} : ${notification.body}`);
+        completion({
+          alert: true, badge: true, sound: true, 
         });
-      } catch (error) {
-        console.error(error);
-        return;
-      }
-    });
-    
-    Notifications.events().registerRemoteNotificationsRegistrationFailed((event: RegistrationError) => {
-      console.error(event);
-    });
+      }),
 
-    Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
-      console.log(`Notification received in foreground: ${notification.title} : ${notification.body}`);
-      completion({
-        alert: true, badge: true, sound: true, 
-      });
-    });
-
-    Notifications.events().registerNotificationOpened((notification, completion) => {
-      console.log(`Notification opened: ${notification.payload}`);
-      completion();
-    });
+      Notifications.events().registerNotificationOpened((notification, completion) => {
+        console.log(`Notification opened: ${notification.payload}`);
+        completion();
+      }),
+    ];
     
     messaging().onNotificationOpenedApp(remoteMessage => {
       console.log(
@@ -140,8 +179,12 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     messaging().onMessage(async remoteMessage => {
       console.log('foreground', remoteMessage);
     });
-      
-  }, [isRegisteredForRemoteNotifications, setPreference, subscribe]);
+    
+    return () => {
+      listeners.forEach(listener => listener.remove());
+    };
+
+  }, [isRegisteredForRemoteNotifications, redirectToSettings, setPreference, subscribe, syncWithServer]);
 
   return (
     <NotificationContext.Provider value={ { 

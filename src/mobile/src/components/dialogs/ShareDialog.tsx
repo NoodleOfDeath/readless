@@ -18,7 +18,7 @@ import {
   View,
 } from '~/components';
 import { LayoutContext, SessionContext } from '~/contexts';
-import {  useShare, useTheme } from '~/hooks';
+import { useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export const SHARE_FORMATS = [
@@ -69,67 +69,110 @@ export function ShareDialog({
   const format = React.useMemo(() => /bullets/i.test(shareFormat) ? ReadingFormat.Bullets : ReadingFormat.Summary, [shareFormat]);
   
   const {
-    copyToClipboard, shareSocial, shareStandard, 
+    saveToCameraRoll,
+    shareSocial, 
+    shareStandard, 
   } = useShare({ callback: onClose });
 
-  const actions: ShareDialogAction[][] = React.useMemo(() => summary && viewshot && [
-    [
-      {
-        icon: 'export-variant',
-        label: strings.share_shareAsLink,
-        onPress: () => shareStandard(summary, { format }), 
-      },
-      {
-        icon: 'link-variant',
-        label: strings.share_copyOriginalSourceLink,
-        onPress: () => copyToClipboard(summary, 'url'),
-      },
-    ],
-    [
-      {
-        icon: 'twitter',
-        // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/twitter.png',
-        label: strings.share_twitter,
-        onPress:() => shareSocial(summary, { 
-          format,
-          social: Social.Twitter,
-          viewshot: viewshot.current, 
-        }), 
-      },
-      {
-        icon: 'instagram',
-        // imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/instagram.png',
-        label: strings.share_instagramStories,
-        onPress: () => shareSocial(summary, {
-          format,
-          social: Social.InstagramStories,
-          viewshot: viewshot.current,
-        }), 
-      },
-      // {
-      //   iconText: '🧵',
-      //   imageUri: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/app/threads.png',
-      //   label: strings.share_threads,
-      //   onPress: () => shareSocial(summary, viewshot, 'threads'), 
-      // },
-      // {
-      //   icon: 'image',
-      //   label: strings.share_saveImage,
-      //   onPress: () => shareStandard(summary, {
-      //     format,
-      //     viewshot: viewshot.current,
-      //   }), 
-      // },
-      {
-        icon: 'camera-outline',
-        label: strings.share_shareAsImage,
-        onPress: () => shareStandard(summary, {
-          format,
-          viewshot: viewshot.current,
-        }), 
-      },
-    ],
-  ] || [], [copyToClipboard, format, shareSocial, shareStandard, summary, viewshot]);
+  const actions: ShareDialogAction[][] = React.useMemo(() => {
+    if (!summary || !viewshot) {
+      return [];
+    }
+    const genericActions: ShareDialogAction[] = 
+      [
+        {
+          icon: 'export-variant',
+          label: strings.share_shareAsLink,
+          onPress: () => shareStandard(summary, { format }), 
+        },
+        {
+          icon: 'link-variant',
+          label: strings.share_shareOriginalLink,
+          onPress: () => shareStandard(summary, { originalUrl: true }),
+        },
+        {
+          icon: 'download',
+          label: strings.share_saveToCameraRoll,
+          onPress: () => saveToCameraRoll(summary, { viewshot: viewshot.current }), 
+        },
+        {
+          icon: 'camera-outline',
+          label: strings.share_shareAsImage,
+          onPress: () => shareStandard(summary, {
+            format,
+            viewshot: viewshot.current,
+          }), 
+        },
+      ];
+    const socialActions: ShareDialogAction[] =
+      [
+        {
+          icon: 'facebook',
+          label: strings.share_facebook,
+          onPress: () => shareSocial(summary, {
+            format,
+            social: Social.Facebook,
+          }), 
+        },
+        {
+          icon: 'twitter',
+          label: strings.share_twitter,
+          onPress:() => shareSocial(summary, { 
+            format,
+            social: Social.Twitter,
+            viewshot: viewshot.current, 
+          }), 
+        },
+        {
+          icon: 'instagram',
+          label: strings.share_instagram,
+          onPress: () => shareSocial(summary, {
+            format,
+            social: Social.Instagram,
+            viewshot: viewshot.current,
+          }), 
+        },
+        {
+          icon: 'instagram',
+          label: strings.share_instagramStories,
+          onPress: () => shareSocial(summary, {
+            format,
+            social: Social.InstagramStories,
+            viewshot: viewshot.current,
+          }), 
+        },
+        {
+          icon: 'linkedin',
+          label: strings.share_linkedin,
+          onPress: () => {
+            shareSocial(summary, {
+              format,
+              social: Social.Linkedin,
+              viewshot: viewshot.current,
+            });
+          },
+        },
+        {
+          icon: 'send',
+          label: strings.share_telegram,
+          onPress: () => shareSocial(summary, {
+            format,
+            social: Social.Telegram,
+            viewshot: viewshot.current,
+          }),
+        },
+        {
+          icon: 'whatsapp',
+          label: strings.share_whatsapp,
+          onPress: () => shareSocial(summary, {
+            format,
+            social: Social.Whatsapp,
+          }),
+        },
+      ];
+    const actions = [genericActions, socialActions];
+    return actions;
+  }, [format, saveToCameraRoll, shareSocial, shareStandard, summary]);
 
   return (
     <ActionSheet
@@ -215,7 +258,7 @@ export function ShareDialog({
       )}
       <View py={ 12 } alignCenter>
         {Object.values(actions).map((subactions, i) => (
-          <View key={ i } height={ 120 } gap={ 12 }>
+          <View key={ i } height={ 120 } gap={ 6 }>
             <ScrollView horizontal>
               {subactions.map(({
                 icon, label, onPress, imageUri = '',
@@ -227,7 +270,7 @@ export function ShareDialog({
                   onPress={ onPress }>
                   <View
                     gap={ 6 }
-                    width={ 120 }
+                    width={ 100 }
                     p={ 12 }
                     justifyCenter
                     itemsCenter>

@@ -2,6 +2,7 @@ import React from 'react';
 import { DeviceEventEmitter, Platform } from 'react-native';
 
 import { BASE_DOMAIN } from '@env';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Clipboard from '@react-native-clipboard/clipboard';
 import analytics from '@react-native-firebase/analytics';
 import RNFS from 'react-native-fs';
@@ -13,7 +14,7 @@ import {
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
-import { useApiClient } from '~/hooks';
+import { useApiClient, useTheme } from '~/hooks';
 import { shareableLink } from '~/utils';
 
 const SocialAppIds: Record<string, string> = {
@@ -46,11 +47,13 @@ export type ShareOptions = Partial<RNShareOptions> & {
   format?: ReadingFormat;
   social?: Social;
   viewshot?: ViewShot | null;
+  originalUrl?: boolean;
 };
 
 export function useShare({ callback }: UseShareProps) {
 
   const { interactWithSummary } = useApiClient();
+  const theme = useTheme();
 
   const copyToClipboard = React.useCallback(async (summary: PublicSummaryGroup, property: keyof PublicSummaryGroup) => {
     if (!property) {
@@ -66,14 +69,35 @@ export function useShare({ callback }: UseShareProps) {
     }
     callback?.();
   }, [callback, interactWithSummary]);
+
+  const saveToCameraRoll = React.useCallback(async (summary: PublicSummaryGroup, { viewshot }: ShareOptions) => {
+    if (!summary || !viewshot) {
+      return;
+    }
+    try {
+      const uri = await viewshot.capture?.();
+      if (!uri) {
+        return;
+      }
+      analytics().logEvent('save_as_image', { summary });
+      CameraRoll.save(uri, { type: 'photo' });
+      interactWithSummary(summary.id, InteractionType.Share, { metadata: { summary } });
+    } catch (e) {
+      console.error(e);
+    }
+    DeviceEventEmitter.emit('share');
+    callback?.();
+  }, [callback, interactWithSummary]);
   
-  const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, { format, viewshot }: ShareOptions) => {
+  const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, {
+    format, originalUrl, viewshot, 
+  }: ShareOptions) => {
     if (!summary) {
       return;
     }
     try {
       analytics().logEvent('share_standard', { summary });
-      let url = shareableLink(summary, BASE_DOMAIN, format);
+      let url = originalUrl ? summary.url : shareableLink(summary, BASE_DOMAIN, format);
       const imageUrl = await viewshot?.capture?.();
       const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
       if (base64ImageUrl) {
@@ -104,18 +128,18 @@ export function useShare({ callback }: UseShareProps) {
         social,
         summary,
       });
-      const url = await viewshot?.capture?.();
-      if (!url) {
-        return;
-      }
-      const base64ImageUrl = `data:image/png;base64,${await RNFS.readFile(url, 'base64')}`;
+      const url = shareableLink(summary, BASE_DOMAIN);
+      const viewshotData = await viewshot?.capture?.();
+      const base64ImageUrl = viewshotData ? `data:image/png;base64,${await RNFS.readFile(viewshotData, 'base64')}` : undefined;
       await Share.shareSingle({ 
         appId: SocialAppIds[social],
-        message: `${summary.title} ${shareableLink(summary, BASE_DOMAIN)}`,
+        backgroundBottomColor: theme.colors.headerBackground,
+        backgroundTopColor: theme.colors.primaryDark,
+        message: summary.title,
         social,
         stickerImage: base64ImageUrl,
-        url,
-        urls: [url],
+        url: base64ImageUrl || url,
+        urls: [url, summary.url],
       });
       interactWithSummary(summary.id, InteractionType.Share, {
         content: 'social', metadata: {
@@ -127,10 +151,11 @@ export function useShare({ callback }: UseShareProps) {
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, interactWithSummary]);
+  }, [callback, interactWithSummary, theme.colors.headerBackground, theme.colors.primaryDark]);
 
   return {
     copyToClipboard,
+    saveToCameraRoll,
     shareSocial,
     shareStandard,
   };

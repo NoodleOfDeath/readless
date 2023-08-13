@@ -43,7 +43,6 @@ export function NotificationSettingsTable() {
         if (settings[SubscriptionEvent.DailyReminder]?.fireTime === fireTime.toISOString()) {
           return; 
         }
-        await registerRemoteNotifications();
         const reminders = {
           ...settings[SubscriptionEvent.DailyReminder],
           fireTime: fireTime.toISOString(),
@@ -73,7 +72,7 @@ export function NotificationSettingsTable() {
     } catch (e) {
       console.error(e);
     }
-  }, [loaded, fireTime, unsubscribe, settings, subscribe, registerRemoteNotifications]);
+  }, [loaded, fireTime, unsubscribe, settings, subscribe]);
 
   useFocusEffect(React.useCallback(() => {
     if (loaded) {
@@ -106,7 +105,7 @@ export function NotificationSettingsTable() {
               onValueChange={ async (value) => {
                 setEnabled(value);
                 if (value === true) {
-                  await registerRemoteNotifications();
+                  registerRemoteNotifications(true);
                 } else {
                   await unsubscribe({ event: SubscriptionEvent.Default });
                 }
@@ -152,6 +151,7 @@ export function NotificationSettingsTable() {
               value={ Boolean(settings[SubscriptionEvent.DailyReminder]) }
               onValueChange={ async (value) => {
                 setFireTime(value ? new Date() : undefined);
+                registerRemoteNotifications(true);
                 await updatePushNotifications(value);
               } } />
           ) } />
@@ -160,11 +160,14 @@ export function NotificationSettingsTable() {
           disabled={ !settings[SubscriptionEvent.DailyReminder] }
           title={ strings.settings_dailyReminderTime }
           cellIcon="clock"
-          cellAccessoryView={ fireTime && (
+          cellAccessoryView={ Boolean(settings[SubscriptionEvent.DailyReminder]) && fireTime && (
             <DateTimePicker 
               disabled={ !settings[SubscriptionEvent.DailyReminder] }
               value={ fireTime }
               onChange={ async (event, date) => {
+                if (event.type !== 'set') {
+                  return;
+                }
                 if (date) {
                   const newDate = new Date();
                   newDate.setMonth(new Date().getMonth());
@@ -176,6 +179,7 @@ export function NotificationSettingsTable() {
                   newDate.setMinutes(date.getMinutes());
                   setFireTime(newDate);
                 }
+                registerRemoteNotifications();
                 await updatePushNotifications(true);
               } }
               mode="time" />

@@ -519,6 +519,8 @@ PODS:
   - React-jsinspector (0.72.3)
   - React-logger (0.72.3):
     - glog
+  - react-native-cameraroll (5.7.2):
+    - React-Core
   - react-native-cloud-store (0.10.3-alpha.1):
     - React-Core
   - react-native-context-menu-view (1.11.0):
@@ -805,6 +807,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-cloud-store (from `../node_modules/react-native-cloud-store`)
   - react-native-context-menu-view (from `../node_modules/react-native-context-menu-view`)
   - react-native-detector (from `../node_modules/react-native-detector`)
@@ -951,6 +954,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-cameraroll:
+    :path: "../node_modules/@react-native-camera-roll/camera-roll"
   react-native-cloud-store:
     :path: "../node_modules/react-native-cloud-store"
   react-native-context-menu-view:
@@ -1106,6 +1111,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 59d1eb03af7d30b7d66589c410f13151271e8006
   React-jsinspector: b511447170f561157547bc0bef3f169663860be7
   React-logger: c5b527272d5f22eaa09bb3c3a690fee8f237ae95
+  react-native-cameraroll: 134805127580aed23403b8c2cb1548920dd77b3a
   react-native-cloud-store: 90ba4db68197c680fb66d62464d65ec28161f4bd
   react-native-context-menu-view: c13b66d44f85b7e7d791a6fbc1e6218c6047eb90
   react-native-detector: 751696a5534f6bbc11be87515cca3d8d32593d73

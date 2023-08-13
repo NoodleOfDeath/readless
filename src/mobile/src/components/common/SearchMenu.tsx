@@ -1,5 +1,4 @@
 import React from 'react';
-import { useWindowDimensions } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
 
@@ -60,6 +59,7 @@ export function SearchMenu({
   return (
     <View
       gap={ 8 } 
+      alignCenter
       width={ screenWidth - (220 / 2) }
       { ...props }>
       <Searchbar

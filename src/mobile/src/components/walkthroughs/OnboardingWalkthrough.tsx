@@ -1,13 +1,13 @@
 import React from 'react';
 import { Platform } from 'react-native';
 
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 import analytics from '@react-native-firebase/analytics';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import { SubscriptionEvent } from '~/api';
 import {
   Button,
+  DateTimePicker,
   Text,
   View,
   Walkthrough,
@@ -119,9 +119,12 @@ export function OnboardingWalkthrough(props: SheetProps) {
         {
           body: (
             <View itemsCenter gap={ 12 }>
-              <RNDateTimePicker 
+              <DateTimePicker 
                 value={ fireTime }
                 onChange={ async (event, date) => {
+                  if (event.type !== 'set') {
+                    return;
+                  }
                   if (date) {
                     const newDate = new Date();
                     newDate.setMonth(new Date().getMonth());

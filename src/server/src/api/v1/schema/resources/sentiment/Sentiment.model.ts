@@ -26,5 +26,8 @@ export abstract class Sentiment<
     type: DataType.DOUBLE,
   })
   declare score: number;
+
+  @Column({ type: DataType.TEXT })
+  declare payload?: string;
   
 }

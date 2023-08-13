@@ -78,6 +78,7 @@ const makeTheme = (darkMode: boolean) => {
           borderWidth: 1,
         },
         searchBar: { fontFamily: SYSTEM_FONT },
+        tableViewCell: { backgroundColor: darkMode ? '#2c2c2c' : '#f9f9f9' },
       }),
     isDarkMode: darkMode,   
     navContainerTheme: {

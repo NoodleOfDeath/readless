@@ -1,5 +1,5 @@
 import React from 'react';
-import {  useWindowDimensions } from 'react-native';
+import {  Platform, useWindowDimensions } from 'react-native';
 
 import analytics from '@react-native-firebase/analytics';
 import { useFocusEffect } from '@react-navigation/native';
@@ -914,7 +914,7 @@ export function Summary({
   return (
     <View flexGrow={ 1 }>
       {!initialFormat ? 
-        ((disableInteractions || showcase)) ? card : (
+        ((disableInteractions || showcase || Platform.OS !== 'ios')) ? card : (
           <ContextMenu 
             actions={ menuActions }
             event={ {

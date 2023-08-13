@@ -4,7 +4,6 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import {
   Button,
-  Divider,
   Screen,
   SummaryList,
   Text,
@@ -50,7 +49,18 @@ export function PublisherScreen({
   }, [publisher, followPublisher]);
   
   useFocusEffect(React.useCallback(() => {
-    navigation?.setOptions({ headerTitle: '' });
+    navigation?.setOptions({
+      headerTitle: () => (
+        <View flexRow gap={ 12 } itemsCenter>
+          <Text 
+            h6 
+            bold
+            adjustsFontSizeToFit>
+            {publisher?.displayName}
+          </Text>
+        </View>
+      ), 
+    });
     if (!publisher) {
       return;
     }
@@ -65,21 +75,10 @@ export function PublisherScreen({
         headerComponent={ (
           <View
             gap={ 6 } 
-            my={ 12 }
+            mb={ 12 }
             justifyCenter
             itemsCenter>
-            <ChannelIcon rounded size={ 40 } publisher={ publisher } />
-            <Text 
-              h6 
-              bold>
-              {publisher?.displayName}
-            </Text>
-            {publisher?.description && (
-              <View px={ 12 }>
-                <Text body2>{publisher.description}</Text>
-              </View>
-            )}
-            <Divider />
+            <ChannelIcon rounded size={ 80 } publisher={ publisher } />
             <View>
               <Button
                 body2
@@ -89,6 +88,11 @@ export function PublisherScreen({
                 {`${ followed ? strings.action_unfollow : strings.action_follow } ${ strings.misc_publisher }`}
               </Button>
             </View>
+            {publisher?.description && (
+              <View px={ 12 }>
+                <Text body2>{publisher.description}</Text>
+              </View>
+            )}
           </View>
         ) } />
     </Screen>

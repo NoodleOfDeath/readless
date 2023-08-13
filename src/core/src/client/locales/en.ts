@@ -130,6 +130,7 @@ export const enStrings = {
   settings_dailyReminderTime: 'Daily Reminder Time',
   settings_dailyReminders: 'Daily Reminders',
   settings_dark: 'Dark',
+  settings_enablePushNotifications: 'Enable Push Notifications?',
   settings_enterYourTriggerWords: 'Enter and/or remove your trigger words below',
   settings_font: 'Font',
   settings_fontSize: 'Font Size',
@@ -159,13 +160,17 @@ export const enStrings = {
   settings_voice: 'Text-to-Speech Voice',
 
   // share
-  share_copyOriginalSourceLink: 'Copy Original Source Link',
+  share_facebook: 'Facebook',
   share_instagram: 'Instagram',
   share_instagramStories: 'Instagram Stories',
-  share_saveImage: 'Save Image to Photos',
+  share_linkedin: 'Linkedin',
+  share_saveToCameraRoll: 'Save to Camera Roll',
   share_shareAsImage: 'Share as Image',
-  share_shareAsLink: 'Share as Link',
+  share_shareAsLink: 'Share',
+  share_shareOriginalLink: 'Share Original Link',
+  share_telegram: 'Telegram',
   share_twitter: 'Twitter',
+  share_whatsapp: 'Whatsapp',
 
   // subscribe
   subscribe_boost: 'Boost',

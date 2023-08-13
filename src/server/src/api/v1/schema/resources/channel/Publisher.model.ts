@@ -93,7 +93,10 @@ export class Publisher<
     type: DataType.STRING,
     unique: true,
   })
-  declare name: string;
+  declare name: string;  
+  
+  @Column({ type: DataType.ARRAY<DataType.STRING> })
+  declare sitemaps?: string[];
 
   @Column({
     allowNull: false,
@@ -119,6 +122,12 @@ export class Publisher<
     type: DataType.JSON,
   })
   declare selectors: Selectors;
+  
+  @Column({ type: DataType.STRING })
+  declare geolocation?: string;
+  
+  @Column({ type: DataType.STRING })
+  declare radius?: string;
   
   @Column({ 
     defaultValue: '12h',
