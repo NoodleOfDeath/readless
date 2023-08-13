@@ -489,23 +489,30 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     }
   }
   
-  async generateSentiment() {
-    const openAiSentiment = await SentimentService.sentiment('openai', this.filteredText);
+  async generateSentiment(...props: (keyof SummaryAttributes)[]) {
+    if (props.length === 0) {
+      props = ['title', 'shortSummary'];
+    }
+    const payload = props.map((p) => this[p]).join('\n\n');
+    const openAiSentiment = await SentimentService.sentiment('openai', payload);
     await SummarySentiment.create({
       method: 'openai',
       parentId: this.id,
+      payload,
       score: openAiSentiment,
     });
-    const afinnSentimentScores = await SentimentService.sentiment('afinn', this.filteredText);
+    const afinnSentimentScores = await SentimentService.sentiment('afinn', payload);
     await SummarySentiment.create({
       method: 'afinn',
       parentId: this.id,
+      payload,
       score: afinnSentimentScores.comparative,
     });
-    const vaderSentimentScores = await SentimentService.sentiment('vader', this.filteredText);
+    const vaderSentimentScores = await SentimentService.sentiment('vader', payload);
     await SummarySentiment.create({
       method: 'vader',
       parentId: this.id,
+      payload,
       score: vaderSentimentScores.compound,
     });
   }
