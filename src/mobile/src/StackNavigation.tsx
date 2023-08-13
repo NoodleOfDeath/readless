@@ -64,6 +64,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'search',
     options: { 
       headerBackTitle: '',
+      headerRight: () => <SettingsToggle />,
       headerTitle: '', 
     },
   },
@@ -72,6 +73,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'summary',  
     options: { 
       headerBackTitle: '',
+      headerRight: () => <SettingsToggle />,
       headerTitle: '', 
     },
   },
@@ -80,6 +82,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'recap',  
     options: {
       headerBackTitle: '',
+      headerRight: () => <SettingsToggle />,
       headerTitle: '', 
     },
   },
@@ -88,6 +91,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'category',
     options: { 
       headerBackTitle: '', 
+      headerRight: () => <SettingsToggle />,
       headerTitle: '', 
     },
   },
@@ -96,6 +100,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'publisher',
     options: {
       headerBackTitle: '', 
+      headerRight: () => <SettingsToggle />,
       headerTitle: '', 
     },
   },
@@ -104,7 +109,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'bookmarks', 
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => <SettingsToggle />,
       headerTitle: strings.screens_bookmarks, 
     }, 
   }, 
@@ -116,6 +121,24 @@ export const STACK_SCREENS: RouteConfig<
       headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_settings, 
+    },
+  },
+  {
+    component: PublisherPickerScreen,
+    name: 'publisherPicker',
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_publishers, 
+    },
+  },
+  {
+    component: CategoryPickerScreen,
+    name: 'categoryPicker',
+    options: {
+      headerBackTitle: '',
+      headerRight: () => undefined, 
+      headerTitle: strings.screens_categories, 
     },
   },
   {
@@ -143,24 +166,6 @@ export const STACK_SCREENS: RouteConfig<
       headerBackTitle: '',
       headerRight: () => undefined, 
       headerTitle: strings.screens_font, 
-    },
-  },
-  {
-    component: PublisherPickerScreen,
-    name: 'publisherPicker',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_publishers, 
-    },
-  },
-  {
-    component: CategoryPickerScreen,
-    name: 'categoryPicker',
-    options: {
-      headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_categories, 
     },
   },
   {
