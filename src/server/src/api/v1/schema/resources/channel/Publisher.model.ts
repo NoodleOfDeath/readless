@@ -95,8 +95,11 @@ export class Publisher<
   })
   declare name: string;  
   
-  @Column({ type: DataType.ARRAY<DataType.STRING> })
-  declare sitemaps?: string[];
+  @Column({ 
+    defaultValue: [],
+    type: DataType.ARRAY(DataType.STRING),
+  })
+  declare sitemaps: string[];
 
   @Column({
     allowNull: false,
