@@ -24,7 +24,7 @@ export type Selectors = {
 export type PublisherAttributes = DatedAttributes & Sentimental & {
   baseUrl: string;
   name: string;
-  sitemaps?: string[],
+  sitemaps: string[],
   displayName: string;
   imageUrl?: string;
   description?: string;
