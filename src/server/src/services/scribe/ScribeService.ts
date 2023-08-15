@@ -397,8 +397,8 @@ export class ScribeService extends BaseService {
       });
       
       await Subscription.notify('daily-recap', 'push', {
-        body: `${recap.text.slice(0, 100)}...`,
-        title: `Daily Highlights: ${recap.title}`,
+        body: recap.title,
+        title: 'Daily Highlights',
       });
 
       return recap;
