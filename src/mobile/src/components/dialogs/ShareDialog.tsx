@@ -148,7 +148,6 @@ export function ShareDialog({
             shareSocial(summary, {
               format,
               social: Social.Linkedin,
-              viewshot: viewshot.current,
             });
           },
         },
