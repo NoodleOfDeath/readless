@@ -13,7 +13,7 @@ export type Selector = {
 };
 
 export type Selectors = {
-  article: Selector;
+  article?: Selector;
   author?: Selector;
   date: Selector;
   spider: Selector;

@@ -389,7 +389,7 @@ export class PuppeteerService extends BaseService {
         // title
         loot.title = extract(title?.selector || 'title', title?.attribute);
         // content
-        loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
+        loot.content = article ? extract(article.selector, article.attribute) : extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         
         // dates
         
