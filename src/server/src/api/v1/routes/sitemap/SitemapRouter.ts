@@ -19,7 +19,7 @@ router.get(
     try {
       const response = await SitemapController.getSitemap(req);
       res.setHeader('Content-Type', 'application/xml');
-      return res.json(response);
+      return res.send(response);
     } catch (e) {
       internalErrorHandler(res, e);
     }
