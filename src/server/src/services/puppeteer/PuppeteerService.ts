@@ -142,7 +142,7 @@ export class PuppeteerService extends BaseService {
     actions: SelectorAction[], 
     { 
       timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('5s'),
-      viewport = { height: 1024, width: 1080 },
+      viewport = { height: 1080, width: 1920 },
     }: PageOptions = {}
   ) {
 
