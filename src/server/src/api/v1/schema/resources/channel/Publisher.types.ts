@@ -14,7 +14,7 @@ export type Selector = {
 
 export type Selectors = {
   article: Selector;
-  author: Selector;
+  author?: Selector;
   date: Selector;
   spider: Selector;
   image?: Selector;

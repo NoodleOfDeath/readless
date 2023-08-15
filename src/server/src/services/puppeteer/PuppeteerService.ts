@@ -409,7 +409,7 @@ export class PuppeteerService extends BaseService {
         );
         
         // authors
-        authors.push(...$(author.selector || 'author').map((i, el) => $(el).text()).get());
+        authors.push(...$(author?.selector || 'author').map((i, el) => $(el).text()).get());
       }
       
       const actions: SelectorAction[] = [];
@@ -493,7 +493,7 @@ export class PuppeteerService extends BaseService {
             return names;
           }));
         },
-        selector: author.selector,
+        selector: author?.selector,
       });*/
       
       await PuppeteerService.open(url, actions);
