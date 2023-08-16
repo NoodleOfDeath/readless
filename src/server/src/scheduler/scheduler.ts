@@ -30,9 +30,6 @@ export async function pollForNews() {
     const { rows: publishers } = await Publisher.findAndCountAll();
     const queue = await Queue.from(Queue.QUEUES.sitemaps);
     for (const publisher of publishers) {
-      if (publisher.name !== 'cnn') {
-        continue;
-      }
       try {
         console.log(`fetching sitemaps for ${publisher.name}`);
         const urls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
