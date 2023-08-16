@@ -86,7 +86,6 @@ export async function cleanUpDeadWorkers() {
         queue: 'sitemaps', 
         [Op.or]: [ 
           { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, 
-          { [Op.and]: [ { priority: { [Op.gt]: 0 } }, { priority: { [Op.lt]: Date.now() - ms(OLD_NEWS_THRESHOLD) } } ] }, 
           { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } },
         ], 
       }, 
