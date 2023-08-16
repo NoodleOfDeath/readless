@@ -3,9 +3,9 @@ import { Publisher } from '../../api/v1/schema';
 export type ReadAndSummarizePayload = {
   url: string;
   content?: string;
-  outlet?: Publisher; //  -- legacy support
   publisher?: Publisher;
   force?: boolean;
+  priority?: bigint;
 };
 
 export type RecapPayload = {

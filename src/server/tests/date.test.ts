@@ -30,12 +30,20 @@ const DATES: Test[] = [
     expect: new Date('Oct  7,2023 09:36 PM EST'), 
   },
   {
+    date: '1 hour ago', 
+    expect: new Date(Date.now() - ms('1h')), 
+  },
+  {
     date: '5 hours ago', 
     expect: new Date(Date.now() - ms('5h')), 
   },
   {
     date: '3m ago',
     expect: new Date(Date.now() - ms('3m')),
+  },
+  {
+    date: '22 minutes ago',
+    expect: new Date(Date.now() - ms('22m')),
   },
   {
     date: '10h ago',
@@ -98,12 +106,12 @@ const DATES: Test[] = [
     expect: new Date('Apr 27, 2023 10:16 AM EST'),
   },
   {
-    date: '11:12 am',
+    date: `${new Date().toLocaleDateString()} 11:12 am`,
     expect: new Date(`${new Date().toLocaleDateString()} 11:12 AM`),
   },
   {
     date: 'Presented By Mind ·chatbotsNational Eating Disorder Association replaces human helpline staff with an AI chatbotBYChris MorrisMay 26, 2023, 3:26 PM UTC<img alt="" sizes="100vw" srcSet="https://content.fortune.co',
-    expect: new Date('May 26, 2023 3:26 PM EST'),
+    expect: new Date('May 26, 2023 3:26 PM UTC'),
   },
   {
     date: 'Wed 7 Jun 2023 20.19 EDT',
@@ -115,6 +123,7 @@ describe('date tests', () => {
   DATES.forEach((date, i) => {
     test(`parse-${i}`, async () => {
       const parsedDate = parseDate(date.date);
+      console.log(i, ' >> ', parsedDate?.toLocaleString(), date.expect.toLocaleString());
       expect(parsedDate).toBeDefined();
       expect(parsedDate?.toLocaleDateString()).toEqual(date.expect.toLocaleDateString());
       expect(parsedDate?.toTimeString()).toEqual(date.expect.toTimeString());

@@ -45,7 +45,7 @@ jobs:
   deploy-worker-sitemaps:
     needs: build-worker
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '~sitemaps') }}
+    if: ${{ contains(github.event.head_commit.message, '~worker') || contains(github.event.head_commit.message, '~sitemaps') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
@@ -106,7 +106,7 @@ jobs:
   deploy-worker-topics:
     needs: build-worker
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '~topics') }}
+    if: ${{ contains(github.event.head_commit.message, '~worker') || contains(github.event.head_commit.message, '~topics') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
@@ -168,7 +168,7 @@ jobs:
   deploy-worker-caches:
     needs: build-worker
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '~caches') }}
+    if: ${{ contains(github.event.head_commit.message, '~worker') || contains(github.event.head_commit.message, '~caches') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
@@ -229,7 +229,7 @@ jobs:
   deploy-worker-notifs:
     needs: build-worker
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '~notifs') }}
+    if: ${{ contains(github.event.head_commit.message, '~worker') || contains(github.event.head_commit.message, '~notifs') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}

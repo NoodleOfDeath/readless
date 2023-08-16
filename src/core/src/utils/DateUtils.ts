@@ -68,7 +68,6 @@ export function parseDate(context?: string) {
     }
   }
   const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : ''}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/i, ($0, $1) => `${$1}ST`)].join(' ');
-  console.log(dateMatch);
   const parsedDate = dateOrUndefined(new Date(dateMatch));
   return parsedDate;
 }

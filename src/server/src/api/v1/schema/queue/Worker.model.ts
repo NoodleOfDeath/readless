@@ -96,15 +96,10 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     if (!queue) {
       throw new Error(`missing queue?! ${queueProps.name}`);
     }
-    const workerCount = await Worker.count({ where: { queue: queueProps.name, state: 'processing' } });
-    console.log(`found ${workerCount} workers for queue "${queueProps.name}"`);
     const worker = await Worker.create({
       host: HOST,
       options: {
-        autostart,
-        clockOffset: ms(`${(workerCount + 1) * 2}s`),
-        fetchIntervalMs, 
-        fifo, 
+        autostart, fetchIntervalMs, fifo, 
       },
       queue: queueProps.name,
     });
@@ -132,8 +127,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
   }
 
   async start() {
-    console.log(`Starting worker (pid ${this.pid}) for queue "${this.queueProps.name}" after ${this.options.clockOffset}ms`);
-    await new Promise((resolve) => setTimeout(resolve, this.options.clockOffset ?? 0));
+    console.log(`Starting worker (pid ${this.pid}) for queue "${this.queueProps.name}"`);
     await this.setState('processing');
     this.process();
   }
@@ -156,8 +150,10 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
       },
     });
     const job = await Job.findOne({
-      // lifo
-      order: [['createdAt', this.options.fifo ? 'ASC' : 'DESC']],
+      order: [
+        ['priority', 'DESC'],
+        ['createdAt', this.options.fifo ? 'ASC' : 'DESC'],
+      ],
       where: {
         completedAt: null,
         delayedUntil: { [Op.or]: [null, { [Op.lt]: new Date() }] },

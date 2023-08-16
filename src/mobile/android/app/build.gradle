@@ -98,8 +98,8 @@ android {
         applicationId "ai.readless.ReadLess"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 88
-        versionName "1.14.2"
+        versionCode 89
+        versionName "1.14.2-4"
         missingDimensionStrategy "store", "play"
     }
 

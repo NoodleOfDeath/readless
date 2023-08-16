@@ -9,7 +9,7 @@ import puppeteer, {
 } from 'puppeteer';
 import UserAgent from 'user-agents';
 
-import { PublisherCreationAttributes } from '../../api/v1/schema';
+import { PublisherCreationAttributes, SpiderSelector } from '../../api/v1/schema';
 import { maxDate, parseDate } from '../../utils';
 import { BaseService } from '../base';
 
@@ -31,6 +31,8 @@ type SelectorAction = {
 
 type UrlOptions = {
   publisher: PublisherCreationAttributes;
+  spider?: SpiderSelector;
+  baseUrl?: string;
   targetUrl?: string;
   excludeExternal?: boolean;
   removeQuery?: boolean;
@@ -105,6 +107,59 @@ export function replaceDatePlaceholders(
       return $0;
     }
   });
+}
+
+export function fixRelativeUrl(url: string, {
+  publisher,
+  targetUrl = publisher.baseUrl,
+  excludeExternal,
+  removeQuery,
+}: UrlOptions) {
+  const { baseUrl } = publisher;
+  const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
+  const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
+  const baseDomain = `https://${new URL(targetUrl).hostname.replace(/\/*$/, '')}`;
+  if (removeQuery) {
+    url = url.replace(/\?.*$/, '');
+  }
+  // fix relative hrefs
+  if (/^\/\//.test(url)) {
+    return `https:${url}`;
+  } else
+  if (/^\//.test(url)) {
+    return `${baseDomain}${url}`;
+  } else
+  if (/^\.\//.test(url)) {
+    return `${targetUrl.replace(/\/.*?$/, '')}${url.replace(/^\./, '')}`;
+  } else
+  if (excludeExternal && /^https?:\/\//.test(url)) {
+    // exclude external links
+    if (!domainExpr.test(url)) {
+      return '';
+    }
+  }
+  return url;
+}
+  
+export function parseSrcset(str: string, options: UrlOptions) {
+  const splitSet = (srcset: string) => {
+    const [path = '', widthStr = ''] = srcset.split(/\s+/);
+    const widthSubstr = widthStr.replace(/[wx]/ig, '');
+    const width = Number.isNaN(Number(widthSubstr)) ? undefined : Number(widthSubstr);
+    if (path && width) {
+      const url = fixRelativeUrl(path, options);
+      return { url, width };
+    }
+  };
+  if (/\S+\s+\d+[wx]\s*,/i.test(str)) {
+    return str.split(/\s*,\s*/)
+      .map((url) => splitSet(url))
+      .filter(Boolean)
+      .sort((a, b) => b.width - a.width)
+      .map((img) => img.url)
+      .filter(Boolean);
+  }
+  return [fixRelativeUrl(str, options)].filter(Boolean);
 }
 
 export class PuppeteerService extends BaseService {
@@ -194,68 +249,19 @@ export class PuppeteerService extends BaseService {
     }
   }
   
-  public static fixRelativeUrl(url: string, {
-    publisher,
-    targetUrl = publisher.baseUrl,
-    excludeExternal,
-    removeQuery,
-  }: UrlOptions) {
-    const { baseUrl } = publisher;
+  public static async crawlUrl(
+    {
+      publisher,
+      spider = publisher.selectors.spider,
+      baseUrl = publisher.baseUrl,
+      targetUrl,
+    }: UrlOptions,
+    { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}
+  ) {
     const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
-    const baseDomain = `https://${new URL(targetUrl).hostname.replace(/\/*$/, '')}`;
-    if (removeQuery) {
-      url = url.replace(/\?.*$/, '');
-    }
-    // fix relative hrefs
-    if (/^\/\//.test(url)) {
-      return `https:${url}`;
-    } else
-    if (/^\//.test(url)) {
-      return `${baseDomain}${url}`;
-    } else
-    if (/^\.\//.test(url)) {
-      return `${targetUrl.replace(/\/.*?$/, '')}${url.replace(/^\./, '')}`;
-    } else
-    if (excludeExternal && /^https?:\/\//.test(url)) {
-      // exclude external links
-      if (!domainExpr.test(url)) {
-        return '';
-      }
-    }
-    return url;
-  }
-  
-  public static parseSrcset(str: string, options: UrlOptions) {
-    const splitSet = (srcset: string) => {
-      const [path = '', widthStr = ''] = srcset.split(/\s+/);
-      const widthSubstr = widthStr.replace(/[wx]/ig, '');
-      const width = Number.isNaN(Number(widthSubstr)) ? undefined : Number(widthSubstr);
-      if (path && width) {
-        const url = this.fixRelativeUrl(path, options);
-        return { url, width };
-      }
-    };
-    if (/\S+\s+\d+[wx]\s*,/i.test(str)) {
-      return str.split(/\s*,\s*/)
-        .map((url) => splitSet(url))
-        .filter(Boolean)
-        .sort((a, b) => b.width - a.width)
-        .map((img) => img.url)
-        .filter(Boolean);
-    }
-    return [this.fixRelativeUrl(str, options)].filter(Boolean);
-  }
-
-  public static async crawl(publisher: PublisherCreationAttributes, { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}) {
-    const { baseUrl, selectors: { spider } } = publisher;
-    if (spider.selector === 'disabled') {
-      return [];
-    }
-    const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
-    const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
-    const targetUrl = replaceDatePlaceholders(baseUrl);
-    const urls: string[] = [];
+    targetUrl = replaceDatePlaceholders(targetUrl);
+    let urls: Record<string, number> = {};
     const rawHtml = await PuppeteerService.fetch(targetUrl);
     const $ = load(rawHtml);
     const cleanUrl = (url?: string) => {
@@ -267,22 +273,91 @@ export class PuppeteerService extends BaseService {
         return;
       }
       // fix relative hrefs
-      return this.fixRelativeUrl(url, { excludeExternal: true, publisher });
+      return fixRelativeUrl(url, { excludeExternal: true, publisher });
     };
-    urls.push(...$(replaceDatePlaceholders(spider.selector)).map((i, el) => cleanUrl($(el).attr(spider.attribute || 'href'))).filter(Boolean));
+    urls = Object.fromEntries([...$(replaceDatePlaceholders(spider.selector)).map((i, el) => {
+      let priority = 0;
+      let url: string;
+      if (spider.urlSelector) {
+        url = cleanUrl($(el).find(replaceDatePlaceholders(spider.urlSelector.selector)).first()?.attr(spider.urlSelector.attribute || spider.attribute || 'href'));
+        if (!url) {
+          return undefined;
+        }
+        if (spider.dateSelector) {
+          const date = $(el).find(replaceDatePlaceholders(spider.dateSelector.selector)).first();
+          const dates = [date?.attr(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.text()].filter(Boolean).map((d) => parseDate(d));
+          priority = maxDate(...dates)?.valueOf() || 0;
+        }
+      } else {
+        url = cleanUrl($(el).attr(spider.attribute || 'href'));
+        if (!url) {
+          return undefined;
+        }
+      }
+      return { priority, url };
+    })].filter(Boolean).map(({ priority, url }) => [url, priority]));
     await PuppeteerService.open(targetUrl, [
       {
         action: async (el) => {
-          const url = cleanUrl(await el.evaluate((el, attr) => el.getAttribute(attr || 'href'), spider.attribute));
-          if (url) {
-            urls.push(url);
+          let priority = 0;
+          let url: string;
+          if (spider.urlSelector) {
+            try {
+              url = cleanUrl(await el.evaluate((el, selector, attr) => el.querySelector(selector)?.getAttribute(attr), replaceDatePlaceholders(spider.urlSelector.selector), spider.urlSelector.attribute || spider.attribute || 'href'));
+              if (!url || url in urls) {
+                return;
+              }
+            } catch (e) {
+              console.error(e);
+              return;
+            }
+            if (spider.dateSelector) {
+              try {
+                const date = await el.evaluate((el, selector) => el.querySelector(selector), replaceDatePlaceholders(spider.dateSelector.selector));
+                const dates = [date?.getAttribute(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.textContent].filter(Boolean).map((d) => parseDate(d));
+                if (dates.length > 0) {
+                  priority = maxDate(...dates)?.valueOf() || 0;
+                }
+              } catch (e) {
+                console.error(e);
+              }
+            }
+          } else {
+            url = cleanUrl(await el.evaluate((el, attr) => el.getAttribute(attr || 'href'), spider.attribute));
+            if (!url || url in urls) {
+              return;
+            }
           }
+          urls[url] = priority;
         }, 
         selectAll: true,
         selector: replaceDatePlaceholders(spider.selector),
       },
     ]);
-    return [...new Set(urls)].filter((url) => url.length < 2000);
+    return Object.entries(urls).map(([url, priority]) => ({ priority, url })).sort((a, b) => b.priority - a.priority);
+  }
+
+  public static async crawl(
+    publisher: PublisherCreationAttributes, 
+    { exclude = this.EXCLUDE_EXPRS.depth1 }: LootOptions = {}
+  ) {
+    const {
+      baseUrl, selectors: { spider }, sitemaps, 
+    } = publisher;
+    if (spider.selector === 'disabled') {
+      return [];
+    }
+    if (sitemaps && sitemaps.length > 0) {
+      return (await Promise.all(sitemaps.map(async (sitemap) => await this.crawlUrl({
+        publisher,
+        spider: sitemap.spider ?? spider,
+        targetUrl: sitemap.url, 
+      }, { exclude })))).flat();
+    }
+    return await this.crawlUrl({ 
+      publisher,
+      targetUrl: baseUrl,
+    }, { exclude });
   }
 
   public static async loot(
@@ -380,7 +455,7 @@ export class PuppeteerService extends BaseService {
         // image
         for (const selector of [image?.selector, ...fallbackImageSelectors].filter(Boolean)) {
           for (const attr of [image?.attribute, ...fallbackImageAttributes].filter(Boolean)) {
-            imageUrls.push(...extractAll(selector, attr).flatMap((src) => this.parseSrcset(src, { publisher, targetUrl: url })));
+            imageUrls.push(...extractAll(selector, attr).flatMap((src) => parseSrcset(src, { publisher, targetUrl: url })));
           }
         }
         
@@ -389,7 +464,7 @@ export class PuppeteerService extends BaseService {
         // title
         loot.title = extract(title?.selector || 'title', title?.attribute);
         // content
-        loot.content = extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
+        loot.content = article ? extract(article.selector, article.attribute) : extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         
         // dates
         
@@ -409,7 +484,7 @@ export class PuppeteerService extends BaseService {
         );
         
         // authors
-        authors.push(...$(author.selector || 'author').map((i, el) => $(el).text()).get());
+        authors.push(...$(author?.selector || 'author').map((i, el) => $(el).text()).get());
       }
       
       const actions: SelectorAction[] = [];
@@ -445,7 +520,7 @@ export class PuppeteerService extends BaseService {
                 return;
               }
               for (const attr of [image?.attribute, ...fallbackImageAttributes].filter(Boolean)) {
-                const urls = this.parseSrcset(
+                const urls = parseSrcset(
                   await el.evaluate((el, attr) => {
                     return el.getAttribute(attr);
                   }, attr), 
@@ -493,7 +568,7 @@ export class PuppeteerService extends BaseService {
             return names;
           }));
         },
-        selector: author.selector,
+        selector: author?.selector,
       });*/
       
       await PuppeteerService.open(url, actions);

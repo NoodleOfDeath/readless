@@ -24,7 +24,11 @@ export async function doWork() {
         let fetchMax: RateLimit;
         try {
           const {
-            outlet, publisher: publisherName = outlet, content, url, force, //  -- legacy support
+            outlet, 
+            publisher: publisherName = outlet, 
+            content, 
+            url, 
+            force, //  -- legacy support
           } = job.data;
           const publisher = await Publisher.findOne({ where: { name: publisherName } });
           if (!publisher) {
@@ -58,8 +62,9 @@ export async function doWork() {
           const summary = await ScribeService.readAndSummarize(
             {
               content, 
-              publisher,
-              url, 
+              priority: job.priority,
+              publisher, 
+              url,
             }
           );
           const topicQueue = await Queue.from(Queue.QUEUES.topics);
@@ -67,7 +72,7 @@ export async function doWork() {
           await topicQueue.add(
             `topic-resolution-${summary.id}`,
             { summary: summary.id },
-            'topics'
+            { group: 'topics' }
           );
           await fetchMax.advance();
           await limit.advance();

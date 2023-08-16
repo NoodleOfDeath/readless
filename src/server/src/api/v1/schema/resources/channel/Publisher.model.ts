@@ -13,6 +13,7 @@ import {
   PublisherAttributes,
   PublisherCreationAttributes,
   Selectors,
+  Sitemap,
 } from './Publisher.types';
 import { PublisherTranslation } from './PublisherTranslation.model';
 import { PUBLIC_PUBLISHERS } from './queries';
@@ -97,9 +98,9 @@ export class Publisher<
   
   @Column({ 
     defaultValue: [],
-    type: DataType.ARRAY(DataType.STRING),
+    type: DataType.ARRAY(DataType.JSONB),
   })
-  declare sitemaps: string[];
+  declare sitemaps: Sitemap[];
 
   @Column({
     allowNull: false,

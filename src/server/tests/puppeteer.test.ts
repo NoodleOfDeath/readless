@@ -10,7 +10,11 @@ import {
 jest.setTimeout(30_000);
 
 import { PUBLISHERS } from '../src/api/v1/schema/resources/channel/Publisher.types';
-import { Loot, PuppeteerService } from '../src/services/puppeteer';
+import {
+  Loot,
+  PuppeteerService,
+  parseSrcset,
+} from '../src/services/puppeteer';
 
 const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' | 'date' | 'imageUrls'> } = {
   abc: {
@@ -357,12 +361,12 @@ describe('util method tests', () => {
 
   test('parse-srcset', () => {
     let srcset = '/test200.png 200w, /test400.png 400w';
-    let urls = PuppeteerService.parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
+    let urls = parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
     expect(urls).toBeDefined();
     expect(urls.length).toBe(2);
     expect(urls[0]).toBe('https://www.wsj.com/test400.png');
     srcset = '/test1x.png 1x, /test2x.png 2x';
-    urls = PuppeteerService.parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
+    urls = parseSrcset(srcset, { publisher: PUBLISHERS.wsj });
     expect(urls).toBeDefined();
     expect(urls.length).toBe(2);
     expect(urls[0]).toBe('https://www.wsj.com/test2x.png');

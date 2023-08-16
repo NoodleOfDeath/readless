@@ -11,6 +11,7 @@ export type JobAttributes<DataType extends Serializable, ReturnType, QueueName e
   queue: QueueName;
   name: string;
   data: DataType;
+  priority: bigint;
   group: string;
   retryPolicy: RetryPolicy;
   attempts: number;
@@ -27,6 +28,7 @@ export type JobCreationAttributes<DataType extends Serializable, ReturnType, Que
   queue: QueueName;
   name: string;
   data?: DataType;
+  priority?: bigint;
   group?: string;
   retryPolicy?: RetryPolicy;
 };

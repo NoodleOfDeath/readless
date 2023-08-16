@@ -12,19 +12,29 @@ export type Selector = {
   attribute?: string;
 };
 
+export type SpiderSelector = Selector & {
+  dateSelector?: Selector;
+  urlSelector?: Selector;
+};
+
 export type Selectors = {
-  article: Selector;
-  author: Selector;
+  article?: Selector;
+  author?: Selector;
   date: Selector;
-  spider: Selector;
+  spider: SpiderSelector;
   image?: Selector;
   title?: Selector;
+};
+
+export type Sitemap = {
+  url: string;
+  spider?: SpiderSelector;
 };
 
 export type PublisherAttributes = DatedAttributes & Sentimental & {
   baseUrl: string;
   name: string;
-  sitemaps: string[],
+  sitemaps: Sitemap[],
   displayName: string;
   imageUrl?: string;
   description?: string;
@@ -40,7 +50,7 @@ export type PublisherAttributes = DatedAttributes & Sentimental & {
 export type PublisherCreationAttributes = Partial<DatedAttributes & Sentimental> & {
   baseUrl: string;
   name: string;
-  sitemaps?: string[];
+  sitemaps?: Sitemap[];
   displayName: string;
   imageUrl?: string;
   description?: string;
@@ -112,9 +122,23 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector: '.ShareByline > div  > div :last-child, div[data-testid*="prism-byline"]' },
       spider: {
         attribute: 'href',
-        selector: 'a[class*="AnchorLink"]',
+        dateSelector: { selector: '.ContentRoll__TimeStamp, .ContentRoll__Date' },
+        selector: '.ContentRoll [class*="ContentRoll__Item"]',
+        urlSelector: { selector: '.ContentRoll__Headline a' },
       },
     },
+    sitemaps: [
+      { url: 'https://abcnews.go.com/Entertainment' },
+      { url: 'https://abcnews.go.com/Technology' },
+      { url: 'https://abcnews.go.com/Lifestyle' },
+      { url: 'https://abcnews.go.com/US' },
+      { url: 'https://abcnews.go.com/Sports' },
+      { url: 'https://abcnews.go.com/International' },
+      { url: 'https://abcnews.go.com/Politics' },
+      { url: 'https://abcnews.go.com/Health' },
+      { url: 'https://abcnews.go.com/Travel' },
+      { url: 'https://abcnews.go.com/WhatWouldYouDo' },
+    ],
     timezone: DEFAULT_TIMEZONE,
   },
   advocate: {
@@ -375,6 +399,16 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[data-link-type="article"]',
       },
     },
+    sitemaps: [
+      {
+        spider: { 
+          dateSelector: { selector: '.date' },
+          selector: '.sitemap-entry ul li',
+          urlSelector: { selector: '.sitemap-link a' },
+        },
+        url: 'https://www.cnn.com/article/sitemap-${YYYY}-${M}.html',
+      },
+    ],
     timezone: DEFAULT_TIMEZONE,
   },
   coindesk: {
@@ -560,6 +594,22 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       },
     },
     timezone: 'UTC-7',
+  },
+  engadget: {
+    baseUrl: 'https://www.engadget.com/',
+    displayName: 'Engadget',
+    geolocation: '22000 Aol Way, Dulles, Virginia, 20166, United States',
+    name: 'engadget',
+    selectors: {
+      article: { selector: 'main section .article-text' },
+      date: { selector: 'main [data-component*="HorizontalAuthor"]' },
+      image: { selector: 'main figure img' },
+      spider:{
+        attribute: 'href',
+        selector: 'article h2 a',
+      },
+    },
+    timezone: 'UTC-4',
   },
   espn: {
     baseUrl: 'https://www.espn.com',
@@ -1499,9 +1549,9 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     timezone: DEFAULT_TIMEZONE,
   },
   theindependent: {
-    baseUrl: 'https://www.theindependent.co.uk',
+    baseUrl: 'https://www.independent.co.uk/',
     displayName: 'The Independent',
-    name: 'theindependent',
+    name: 'independent',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'article a[href*="/author/"]' },
