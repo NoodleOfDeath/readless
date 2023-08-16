@@ -14,6 +14,7 @@ import {
   TopicResolutionJobData,
 } from './Job.types';
 import {
+  AddJobOptions,
   QueueAttributes,
   QueueCreationAttributes,
   QueueSpecifier,
@@ -72,37 +73,32 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   
   generateJobName(options?: JobNameOptions) {
     return Job.generateJobName({
-      prefix: this.toJSON().name,
+      prefix: this.name,
       ...options,
     });
   }
 
-  async add(jobName: string, payload: DataType, group?: string, schedule?: Date) {
-    let existingJob = await Job.findOne({
+  async add(jobName: string, payload: DataType, {
+    schedule,
+    ...options
+  }: AddJobOptions<DataType, ReturnType, QueueName> = {}) {
+    const existingJob = await Job.findOne({
       where: { 
         name: jobName,
-        queue: this.toJSON().name,
-        startedAt: { [Op.ne]: null },
+        queue: this.name,
       }, 
     });
     if (existingJob) {
       return existingJob;
     }
-    existingJob = await Job.findOne({ 
-      where: { 
-        completedAt: { [Op.ne]: null },
-        name: jobName,
-        queue: this.toJSON().name,
-      },
-    });
     if (existingJob) {
       await existingJob.destroy();
     }
     const job = await Job.create({
       data: payload,
-      group,
       name: jobName,
-      queue: this.toJSON().name,
+      queue: this.name,
+      ...options,
     });
     if (schedule) {
       await job.schedule(schedule);
@@ -114,7 +110,7 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     await Job.destroy({
       where: {
         completedAt: { [Op.ne]: null },
-        queue: this.toJSON().name,
+        queue: this.name,
       }, 
     });
   }

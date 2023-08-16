@@ -54,6 +54,12 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
   declare data: DataType;
   
   @Column({
+    defaultValue: 0,
+    type: DataType.BIGINT,
+  })
+  declare priority: bigint;
+  
+  @Column({
     defaultValue: 'default',
     type: DataType.STRING,
   })

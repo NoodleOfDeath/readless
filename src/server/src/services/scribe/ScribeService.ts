@@ -55,7 +55,7 @@ export class ScribeService extends BaseService {
   
   public static async readAndSummarize(
     {
-      url, content, outlet, publisher = outlet, force, // -- legacy support
+      url, content, publisher, force, priority,
     }: ReadAndSummarizePayload
   ): Promise<Summary> {
     if (this.categories.length === 0) {
@@ -78,6 +78,12 @@ export class ScribeService extends BaseService {
     }
     // fetch web content with the spider
     const loot = await PuppeteerService.loot(url, publisher, { content });
+    if (priority) {
+      const parsedDate = new Date(parseInt(`${priority}`));
+      if (!Number.isNaN(parsedDate.valueOf())) {
+        loot.date = parsedDate;
+      }
+    }
     // create the prompt onReply map to be sentto ChatGPT
     if (!force) {
       const existingMedia = await SummaryMedia.findOne({ where: { originalUrl: loot.imageUrls } });
@@ -101,9 +107,8 @@ export class ScribeService extends BaseService {
     if (loot.date > new Date(Date.now() + ms('3h'))) {
       await this.error('News is from the future', [url, loot.date.toISOString()].join('\n\n'));
     }
-    // daylight savings most likely
-    if (loot.date > new Date() && loot.date < new Date(Date.now() + ms('1h'))) {
-      loot.date = new Date(Date.now() - ms('1h') + ms(`${loot.date.getMinutes()}m`));
+    while (loot.date > new Date()) {
+      loot.date = new Date(loot.date.valueOf() - ms('1h'));
     }
     const newSummary = Summary.json<Summary>({
       filteredText: loot.content,

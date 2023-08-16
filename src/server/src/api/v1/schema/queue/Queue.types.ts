@@ -1,5 +1,5 @@
 import { Serializable } from '../../../../types';
-import { DatedAttributes } from '../types';
+import { DatedAttributes, JobCreationAttributes } from '../types';
 
 export type QueueState = 'active' | 'paused';
 
@@ -15,6 +15,10 @@ export type QueueCreationAttributes<DataType extends Serializable, ReturnType, Q
   name: QueueName;
   state?: QueueState;
   data?: DataType;
+};
+
+export type AddJobOptions<DataType extends Serializable, ReturnType, QueueName extends string = string> = Omit<JobCreationAttributes<DataType, ReturnType, QueueName>, 'queue' | 'name'> & {
+  schedule?: Date;
 };
 
 export class QueueSpecifier<DataType extends Serializable, ReturnType = Serializable, QueueName extends string = string> implements QueueCreationAttributes<DataType, ReturnType, QueueName> {

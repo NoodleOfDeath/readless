@@ -30,17 +30,24 @@ export async function pollForNews() {
     const { rows: publishers } = await Publisher.findAndCountAll();
     const queue = await Queue.from(Queue.QUEUES.sitemaps);
     for (const publisher of publishers) {
+      if (publisher.name !== 'cnn') {
+        continue;
+      }
       try {
         console.log(`fetching sitemaps for ${publisher.name}`);
-        const urls = await PuppeteerService.crawl(publisher);
+        const urls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
+        console.log(`found ${urls.length} new urls for ${publisher.name}`);
         for (const url of urls) {
           await queue.add(
-            url,
+            url.url,
             { 
               publisher: publisher.name,
-              url,
+              url: url.url,
             },
-            publisher.name
+            {
+              group: publisher.name,
+              priority: BigInt(url.priority), 
+            }
           );
         }
       } catch (e) {
@@ -74,7 +81,16 @@ export async function cleanUpDeadWorkers() {
       }, { where: { lockedBy: deadWorkers } });
     }
     // clean up stale sitemaps jobs
-    await Job.destroy({ where: { queue: 'sitemaps', [Op.or]: [ { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }] } });
+    await Job.destroy({ 
+      where: { 
+        queue: 'sitemaps', 
+        [Op.or]: [ 
+          { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, 
+          { [Op.and]: [ { priority: { [Op.gt]: 0 } }, { priority: { [Op.lt]: Date.now() - ms(OLD_NEWS_THRESHOLD) } } ] }, 
+          { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } },
+        ], 
+      }, 
+    });
   } catch (e) {
     console.error(e);
   } finally {
@@ -95,7 +111,7 @@ async function scheduleCacheJobs() {
         endpoint: 'getTopStories',
         locale: 'en',
       },
-      'caches'
+      { group: 'caches' }
     );
     console.log('done scheduling cache jobs');
   } catch (e) {
@@ -118,8 +134,10 @@ async function scheduleRecapJob(offset = '1d') {
         end,
         start,
       },
-      'daily',
-      new Date(new Date(new Date().toDateString()).valueOf() + ms(offset ?? '0m') + ms(duration))
+      {
+        group: 'daily',
+        schedule: new Date(new Date(new Date().toDateString()).valueOf() + ms(offset ?? '0m') + ms(duration)),
+      }
     );
   }
 }
