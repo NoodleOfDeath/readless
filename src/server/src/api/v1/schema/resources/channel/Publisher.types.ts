@@ -561,6 +561,22 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     },
     timezone: 'UTC-7',
   },
+  engadget: {
+    baseUrl: 'https://www.engadget.com/',
+    displayName: 'Engadget',
+    geolocation: '22000 Aol Way, Dulles, Virginia, 20166, United States',
+    name: 'engadget',
+    selectors: {
+      article: { selector: 'main section .article-text' },
+      date: { selector: 'main [data-component*="HorizontalAuthor"]' },
+      image: { selector: 'main figure img' },
+      spider:{
+        attribute: 'href',
+        selector: 'article h2 a',
+      },
+    },
+    timezone: 'UTC-4',
+  },
   espn: {
     baseUrl: 'https://www.espn.com',
     displayName: 'ESPN',
