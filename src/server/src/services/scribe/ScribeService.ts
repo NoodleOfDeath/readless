@@ -78,7 +78,7 @@ export class ScribeService extends BaseService {
     }
     // fetch web content with the spider
     const loot = await PuppeteerService.loot(url, publisher, { content });
-    if (priority) {
+    if (priority > 0) {
       const parsedDate = new Date(parseInt(`${priority}`));
       if (!Number.isNaN(parsedDate.valueOf())) {
         loot.date = parsedDate;
@@ -102,7 +102,7 @@ export class ScribeService extends BaseService {
       await this.error('Invalid date found', [url, JSON.stringify(publisher.selectors.date), loot.dateMatches.join('\n-----\n')].join('\n\n'));
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
-      throw new Error(`News is older than ${OLD_NEWS_THRESHOLD}`);
+      throw new Error(`${loot.date} -- News is older than ${OLD_NEWS_THRESHOLD}`);
     }
     if (loot.date > new Date(Date.now() + ms('3h'))) {
       await this.error('News is from the future', [url, loot.date.toISOString()].join('\n\n'));
@@ -409,7 +409,7 @@ export class ScribeService extends BaseService {
       return recap;
       
     } catch (e) {
-      console.log(e);
+      console.error(e);
       await this.error('Unexpected error writing recap');
     }
   }
