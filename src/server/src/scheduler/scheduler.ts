@@ -21,7 +21,20 @@ async function main() {
   cleanUpDeadWorkers();
   scheduleCacheJobs();
   scheduleRecapJobs();
+  preparePublishers();
   pollForNews();
+}
+
+export async function preparePublishers() {
+  try {
+    await Publisher.prepare({ translate: true });
+  } catch (e) {
+    if (process.env.ERROR_REPORTING) {
+      console.error(e);
+    }
+  } finally {
+    setTimeout(preparePublishers, ms('5m'));
+  }
 }
 
 export async function pollForNews() {
@@ -48,11 +61,15 @@ export async function pollForNews() {
           );
         }
       } catch (e) {
-        console.error(e);
+        if (process.env.ERROR_REPORTING) {
+          console.error(e);
+        }
       }
     }
   } catch (e) {
-    console.error(e);
+    if (process.env.ERROR_REPORTING) {
+      console.error(e);
+    }
   } finally {
     setTimeout(pollForNews, ms(SPIDER_FETCH_INTERVAL));
   }
@@ -88,7 +105,9 @@ export async function cleanUpDeadWorkers() {
       }, 
     });
   } catch (e) {
-    console.error(e);
+    if (process.env.ERROR_REPORTING) {
+      console.error(e);
+    }
   } finally {
     setTimeout(cleanUpDeadWorkers, ms('2m'));
   }
@@ -111,7 +130,9 @@ async function scheduleCacheJobs() {
     );
     console.log('done scheduling cache jobs');
   } catch (e) {
-    console.error(e);
+    if (process.env.ERROR_REPORTING) {
+      console.error(e);
+    }
   } finally {
     setTimeout(scheduleCacheJobs, ms('30s'));
   }
@@ -144,7 +165,9 @@ async function scheduleRecapJobs() {
     await scheduleRecapJob();
     console.log('done scheduling recap jobs');
   } catch (e) {
-    console.error(e);
+    if (process.env.ERROR_REPORTING) {
+      console.error(e);
+    }
   } finally {
     setTimeout(scheduleRecapJobs, ms('10m'));
   }
