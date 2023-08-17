@@ -188,7 +188,9 @@ export class PuppeteerService extends BaseService {
       });
       return text;
     } catch (e) {
-      console.error(e);
+      if (process.env.ERROR_REPORTING) {
+        console.error(e);
+      }
     }
   }
 
@@ -235,7 +237,9 @@ export class PuppeteerService extends BaseService {
             await action(el);
           }
         } catch (e) {
-          console.error(e);
+          if (process.env.ERROR_REPORTING) {
+            console.error(e);
+          }
         }
       }
 
@@ -308,7 +312,9 @@ export class PuppeteerService extends BaseService {
                 return;
               }
             } catch (e) {
-              console.error(e);
+              if (process.env.ERROR_REPORTING) {
+                console.error(e);
+              }
               return;
             }
             if (spider.dateSelector) {
@@ -319,7 +325,9 @@ export class PuppeteerService extends BaseService {
                   priority = maxDate(...dates)?.valueOf() || 0;
                 }
               } catch (e) {
-                console.error(e);
+                if (process.env.ERROR_REPORTING) {
+                  console.error(e);
+                }
               }
             }
           } else {
@@ -427,7 +435,9 @@ export class PuppeteerService extends BaseService {
               dates.push(match[1]);
             }
           } catch (e) {
-            console.error(e);
+            if (process.env.ERROR_REPORTING) {
+              console.error(e);
+            }
           }
         }
         

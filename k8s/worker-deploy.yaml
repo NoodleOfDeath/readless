@@ -36,6 +36,8 @@ spec:
               value: '$DUPLICATE_LOOKBACK_INTERVAL'
             - name: ENABLED_FEATURES
               value: '$ENABLED_FEATURES'
+            - name: ERROR_REPORTING
+              value: '$ERROR_REPORTING'
             - name: FIREBASE_CREDENTIALS
               value: '$FIREBASE_CREDENTIALS'
             - name: MAIL_HOST
