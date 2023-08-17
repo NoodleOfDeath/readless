@@ -76,7 +76,9 @@ export async function doWork() {
           await job.moveToCompleted(true);
           return;
         } catch (e) {
-          console.error(e);
+          if (process.env.ERROR_REPORTING) {
+            console.error(e);
+          }
           await job.moveToFailed(e);
         } finally {
           next();
@@ -84,7 +86,9 @@ export async function doWork() {
       }
     );
   } catch (e) {
-    console.error(e);
+    if (process.env.ERROR_REPORTING) {
+      console.error(e);
+    }
     setTimeout(() => doWork, 3_000);
   }
 }

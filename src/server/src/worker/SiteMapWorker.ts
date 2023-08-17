@@ -30,6 +30,7 @@ export async function doWork() {
             url, 
             force, //  -- legacy support
           } = job.data;
+          console.log(`Looting ${url}`);
           const publisher = await Publisher.findOne({ where: { name: publisherName } });
           if (!publisher) {
             console.log(`Publisher ${publisherName} not found`);
@@ -79,16 +80,22 @@ export async function doWork() {
           await job.moveToCompleted();
           return summary;
         } catch (e) {
-          console.error(e);
+          if (process.env.ERROR_REPORTING) {
+            console.error(e);
+          }
           await fetchMax.advance();
           await job.moveToFailed(e);
         } finally {
+          console.log('----------');
+          console.log();
           next();
         }
       }
     );
   } catch (e) {
-    console.error(e);
+    if (process.env.ERROR_REPORTING) {
+      console.error(e);
+    }
     setTimeout(() => doWork, 3_000);
   }
 }
