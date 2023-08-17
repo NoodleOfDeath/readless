@@ -1,4 +1,5 @@
 import { 
+  Publisher,
   Queue, 
   Summary,
   Worker,
@@ -8,6 +9,7 @@ import { DBService } from '../services';
 export async function main() {
   await DBService.prepare();
   await Queue.prepare();
+  await Publisher.prepare({ translate: true });
   doWork();
 }
 

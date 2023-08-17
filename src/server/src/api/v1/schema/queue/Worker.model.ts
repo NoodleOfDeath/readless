@@ -46,7 +46,7 @@ const WORKER_RETRY_EXPRS = (process.env.WORKER_RETRY_EXPRS || 'took long,bad res
   paranoid: true,
   timestamps: true,
 })
-export class Worker<DataType extends Serializable, ReturnType, QueueName extends string = string, A extends WorkerAttributes<DataType, ReturnType, QueueName> = WorkerAttributes<DataType, ReturnType, QueueName>, B extends WorkerCreationAttributes<DataType, ReturnType, QueueName> = WorkerCreationAttributes<DataType, ReturnType, QueueName>> extends BaseModel<A, B> implements WorkerAttributes<DataType, ReturnType, QueueName> {
+export class Worker<D extends Serializable, R, Q extends string = string, A extends WorkerAttributes<D, R, Q> = WorkerAttributes<D, R, Q>, B extends WorkerCreationAttributes<D, R, Q> = WorkerCreationAttributes<D, R, Q>> extends BaseModel<A, B> implements WorkerAttributes<D, R, Q> {
 
   get pid() {
     return this.id; 
@@ -56,7 +56,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     allowNull: false,
     type: DataType.STRING,
   })
-  declare queue: QueueName;
+  declare queue: Q;
   
   @Column({ type: DataType.STRING })
   declare host?: string;
@@ -78,14 +78,14 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
   })
   declare lastUpdateAt: Date;
     
-  activeQueue: Queue<DataType, ReturnType, QueueName>;
-  queueProps: QueueSpecifier<DataType, ReturnType, QueueName>;
+  activeQueue: Queue<D, R, Q>;
+  queueProps: QueueSpecifier<D, R, Q>;
   
-  handler: (job: Job<DataType, ReturnType, QueueName>, next: (() => void)) => Promise<ReturnType>;
+  handler: (job: Job<D, R, Q>, next: (() => void)) => Promise<R>;
 
-  static async from<DataType extends Serializable, ReturnType, QueueName extends string = string>(
-    queueProps: QueueSpecifier<DataType, ReturnType, QueueName>,
-    handler: (job: Job<DataType, ReturnType, QueueName>, next: (() => void)) => Promise<ReturnType>,
+  static async from<D extends Serializable, R, Q extends string = string>(
+    queueProps: QueueSpecifier<D, R, Q>,
+    handler: (job: Job<D, R, Q>, next: (() => void)) => Promise<R>,
     { 
       autostart = true,
       fetchIntervalMs = ms('5s'),
@@ -151,7 +151,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     });
     const job = await Job.findOne({
       order: [
-        //['priority', 'DESC'], --disable for now
+        ['priority', 'DESC'],
         ['createdAt', this.options.fifo ? 'ASC' : 'DESC'],
       ],
       where: {
@@ -164,7 +164,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
         [Op.or]: [{ failedAt: null }, { failureReason: { [Op.or]: [...(this.options.retryFailedJobs ?? WORKER_RETRY_EXPRS).map((e) => ({ [Op.iRegexp]: e }))] } }],
       },
     });
-    return job as Job<DataType, ReturnType, QueueName>;
+    return job as Job<D, R, Q>;
   }
   
   async process() {

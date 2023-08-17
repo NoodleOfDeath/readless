@@ -16,8 +16,8 @@ export type WorkerOptions = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type WorkerAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = DatedAttributes & {
-  queue: QueueName;
+export type WorkerAttributes<D extends Serializable, R, Q extends string = string> = DatedAttributes & {
+  queue: Q;
   host?: string;
   options: WorkerOptions;
   state: WorkerState;
@@ -25,8 +25,8 @@ export type WorkerAttributes<DataType extends Serializable, ReturnType, QueueNam
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type WorkerCreationAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = {
-  queue: QueueName;
+export type WorkerCreationAttributes<D extends Serializable, R, Q extends string = string> = {
+  queue: Q;
   host?: string;
   options?: WorkerOptions;
   state?: WorkerState;
@@ -34,9 +34,9 @@ export type WorkerCreationAttributes<DataType extends Serializable, ReturnType, 
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type WorkerInitProps<DataType extends Serializable, ReturnType, QueueName extends string = string> = {
-  queue: Queue<DataType, ReturnType, QueueName>;
-  queueProps: QueueSpecifier<DataType, ReturnType, QueueName>;
-  handler: (job: Job<DataType, ReturnType, QueueName>, next: (() => void)) => Promise<ReturnType>;
+export type WorkerInitProps<D extends Serializable, R, Q extends string = string> = {
+  queue: Queue<D, R, Q>;
+  queueProps: QueueSpecifier<D, R, Q>;
+  handler: (job: Job<D, R, Q>, next: (() => void)) => Promise<R>;
   options: WorkerOptions;
 };
