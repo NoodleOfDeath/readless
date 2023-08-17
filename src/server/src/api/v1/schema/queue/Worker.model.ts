@@ -174,12 +174,14 @@ export class Worker<D extends Serializable, R, Q extends string = string, A exte
     await this.ping();
     const job = await this.fetchJob();
     if (job) {
-      console.log(`Processing job ${job.id} for queue "${this.queueProps.name}"`);
+      console.log(`Processing job (${this.queueProps.name}): ${job.name}`);
       await this.ping();
       await job.begin(this.id);
       await this.handler(job, () => this.process());
       await this.ping();
-      console.log(`Finished processing job ${job.id} for queue "${this.queueProps.name}"`);
+      console.log(`Finished job (${this.queueProps.name}): ${job.name}`);
+      console.log('----------');
+      console.log();
     } else {
       await this.setState('idle');
       setTimeout(() => this.process(), this.options.fetchIntervalMs);
