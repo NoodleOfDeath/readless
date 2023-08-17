@@ -151,7 +151,7 @@ export class Worker<DataType extends Serializable, ReturnType, QueueName extends
     });
     const job = await Job.findOne({
       order: [
-        ['priority', 'DESC'],
+        //['priority', 'DESC'], --disable for now
         ['createdAt', this.options.fifo ? 'ASC' : 'DESC'],
       ],
       where: {
