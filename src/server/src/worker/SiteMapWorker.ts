@@ -30,7 +30,6 @@ export async function doWork() {
             url, 
             force, //  -- legacy support
           } = job.data;
-          console.log(`Looting ${url}`);
           const publisher = await Publisher.findOne({ where: { name: publisherName } });
           if (!publisher) {
             console.log(`Publisher ${publisherName} not found`);
@@ -80,16 +79,12 @@ export async function doWork() {
           await job.moveToCompleted();
           return summary;
         } catch (e) {
-          console.log(`!!! failed to loot ${url}`);
           if (process.env.ERROR_REPORTING) {
             console.error(e);
           }
           await fetchMax.advance();
           await job.moveToFailed(e);
         } finally {
-          console.log(`>>> finished looting ${url}`);
-          console.log('----------');
-          console.log();
           next();
         }
       }
