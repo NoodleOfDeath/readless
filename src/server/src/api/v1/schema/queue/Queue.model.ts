@@ -30,9 +30,9 @@ import { Recap, Summary } from '../models';
   paranoid: true,
   timestamps: true,
 })
-export class Queue<DataType extends Serializable = Serializable, ReturnType = Serializable, QueueName extends string = string, A extends QueueAttributes<DataType, ReturnType, QueueName> = QueueAttributes<DataType, ReturnType, QueueName>, B extends QueueCreationAttributes<DataType, ReturnType, QueueName> = QueueCreationAttributes<DataType, ReturnType, QueueName>>
+export class Queue<D extends Serializable = Serializable, R = Serializable, Q extends string = string, A extends QueueAttributes<D, R, Q> = QueueAttributes<D, R, Q>, B extends QueueCreationAttributes<D, R, Q> = QueueCreationAttributes<D, R, Q>>
   extends BaseModel<A, B>
-  implements QueueAttributes<DataType, ReturnType, QueueName> {
+  implements QueueAttributes<D, R, Q> {
     
   public static QUEUES = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,7 +51,7 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     }
   }
   
-  static async from<DataType extends Serializable = Serializable, ReturnType = Serializable, QueueName extends string = string>(queueProps: QueueSpecifier<DataType, ReturnType, QueueName>) {
+  static async from<D extends Serializable = Serializable, R = Serializable, Q extends string = string>(queueProps: QueueSpecifier<D, R, Q>) {
     return await Queue.findOne({ where: { name: queueProps.name } });
   }
   
@@ -60,7 +60,7 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     type: DataType.STRING,
     unique: true,
   })
-  declare name: QueueName;
+  declare name: Q;
     
   @Column({
     defaultValue: 'active',
@@ -68,8 +68,8 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
   })
   declare state: QueueState;
 
-  declare data?: DataType;
-  declare resp?: ReturnType;
+  declare data?: D;
+  declare resp?: R;
   
   generateJobName(options?: JobNameOptions) {
     return Job.generateJobName({
@@ -78,10 +78,10 @@ export class Queue<DataType extends Serializable = Serializable, ReturnType = Se
     });
   }
 
-  async add(jobName: string, payload: DataType, {
+  async add(jobName: string, payload: D, {
     schedule,
     ...options
-  }: AddJobOptions<DataType, ReturnType, QueueName> = {}) {
+  }: AddJobOptions<D, R, Q> = {}) {
     const existingJob = await Job.findOne({
       where: { 
         name: jobName,

@@ -7,10 +7,10 @@ export type RetryPolicy =
  | `${number}`;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type JobAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = DatedAttributes & {
-  queue: QueueName;
+export type JobAttributes<D extends Serializable, R, Q extends string = string> = DatedAttributes & {
+  queue: Q;
   name: string;
-  data: DataType;
+  data: D;
   priority: bigint;
   group: string;
   retryPolicy: RetryPolicy;
@@ -24,10 +24,10 @@ export type JobAttributes<DataType extends Serializable, ReturnType, QueueName e
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type JobCreationAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = {
-  queue: QueueName;
+export type JobCreationAttributes<D extends Serializable, R, Q extends string = string> = {
+  queue: Q;
   name: string;
-  data?: DataType;
+  data?: D;
   priority?: bigint;
   group?: string;
   retryPolicy?: RetryPolicy;

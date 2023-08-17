@@ -6,6 +6,7 @@ import {
   Publisher,
   Queue,
   Recap,
+  Summary,
   Worker,
 } from '../api/v1/schema';
 import { SUPPORTED_LOCALES } from '../core/locales';
@@ -45,7 +46,16 @@ export async function pollForNews() {
     for (const publisher of publishers) {
       try {
         console.log(`fetching sitemaps for ${publisher.name}`);
-        const urls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
+        const fetchedUrls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
+        console.log(`fetched ${fetchedUrls.length} urls for ${publisher.name}`);
+        const existingJobs = await Job.findAll({ 
+          where: { 
+            name: fetchedUrls.map((u) => u.url),
+            queue: 'sitemaps',
+          },
+        });
+        const existingSummaries = await Summary.scope('public').findAll({ where: { url: fetchedUrls.map((u) => u.url) } });
+        const urls = fetchedUrls.filter((u) => !existingJobs.some((j) => j.name === u.url) && !existingSummaries.some((s) => s.url === u.url));
         console.log(`found ${urls.length} new urls for ${publisher.name}`);
         for (const url of urls) {
           await queue.add(
@@ -116,7 +126,6 @@ export async function cleanUpDeadWorkers() {
 async function scheduleCacheJobs() {
   try {
     console.log('scheduling cache jobs');
-    console.log(SUPPORTED_LOCALES);
     const queue = await Queue.from(Queue.QUEUES.caches);
     await queue.clear();
     await queue.add(

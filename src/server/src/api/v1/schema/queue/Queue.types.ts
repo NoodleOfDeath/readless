@@ -4,30 +4,30 @@ import { DatedAttributes, JobCreationAttributes } from '../types';
 export type QueueState = 'active' | 'paused';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type QueueAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = DatedAttributes & {
-  name: QueueName;
+export type QueueAttributes<D extends Serializable, R, Q extends string = string> = DatedAttributes & {
+  name: Q;
   state: QueueState;
-  data?: DataType;
+  data?: D;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type QueueCreationAttributes<DataType extends Serializable, ReturnType, QueueName extends string = string> = {
-  name: QueueName;
+export type QueueCreationAttributes<D extends Serializable, R, Q extends string = string> = {
+  name: Q;
   state?: QueueState;
-  data?: DataType;
+  data?: D;
 };
 
-export type AddJobOptions<DataType extends Serializable, ReturnType, QueueName extends string = string> = Omit<JobCreationAttributes<DataType, ReturnType, QueueName>, 'queue' | 'name'> & {
+export type AddJobOptions<D extends Serializable, R, Q extends string = string> = Omit<JobCreationAttributes<D, R, Q>, 'queue' | 'name'> & {
   schedule?: Date;
 };
 
-export class QueueSpecifier<DataType extends Serializable, ReturnType = Serializable, QueueName extends string = string> implements QueueCreationAttributes<DataType, ReturnType, QueueName> {
+export class QueueSpecifier<D extends Serializable, R = Serializable, Q extends string = string> implements QueueCreationAttributes<D, R, Q> {
   
-  name: QueueName;
+  name: Q;
   state?: QueueState;
-  data?: DataType;
+  data?: D;
   
-  constructor(name: QueueName) {
+  constructor(name: Q) {
     this.name = name;
   }
   

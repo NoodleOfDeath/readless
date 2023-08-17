@@ -21,9 +21,9 @@ import { BaseModel } from '../base';
   paranoid: true,
   timestamps: true,
 })
-export class Job<DataType extends Serializable, ReturnType, QueueName extends string = string, A extends JobAttributes<DataType, ReturnType, QueueName> = JobAttributes<DataType, ReturnType, QueueName>, B extends JobCreationAttributes<DataType, ReturnType, QueueName> = JobCreationAttributes<DataType, ReturnType, QueueName>>
+export class Job<D extends Serializable, R, Q extends string = string, A extends JobAttributes<D, R, Q> = JobAttributes<D, R, Q>, B extends JobCreationAttributes<D, R, Q> = JobCreationAttributes<D, R, Q>>
   extends BaseModel<A, B>
-  implements JobAttributes<DataType, ReturnType, QueueName> {
+  implements JobAttributes<D, R, Q> {
     
   @Index({
     name: 'jobs_queue_name_unique_key',
@@ -34,7 +34,7 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     allowNull: false,
     type: DataType.STRING,
   })
-  declare queue: QueueName;
+  declare queue: Q;
   
   @Index({
     name: 'jobs_queue_name_unique_key',
@@ -51,7 +51,7 @@ export class Job<DataType extends Serializable, ReturnType, QueueName extends st
     allowNull: false,
     type: DataType.JSON,
   })
-  declare data: DataType;
+  declare data: D;
   
   @Column({
     defaultValue: 0,
