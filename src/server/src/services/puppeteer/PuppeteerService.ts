@@ -219,14 +219,14 @@ export class PuppeteerService extends BaseService {
       const rawText = await page.evaluate(() => document.body.innerText);
 
       for (const selectorAction of actions) {
-        const {
-          selector, selectAll, pageOptions, action, 
-        } = selectorAction;
-        if (selector === 'disabled') {
-          return '';
-        }
-        await page.setViewport(pageOptions?.viewport ?? viewport);
         try {
+          const {
+            selector, selectAll, pageOptions, action, 
+          } = selectorAction;
+          if (selector === 'disabled') {
+            return '';
+          }
+          await page.setViewport(pageOptions?.viewport ?? viewport);
           if (selectAll) {
             const els = await page.$$(selector);
             for (const el of els) {
@@ -246,7 +246,9 @@ export class PuppeteerService extends BaseService {
       return rawText;
       
     } catch (e) {
-      console.log(e);
+      if (process.env.ERROR_REPORTING) {
+        console.error(e);
+      }
       return '';
     } finally {
       await browser?.close();
@@ -405,7 +407,7 @@ export class PuppeteerService extends BaseService {
           newText = newText.replace(pattern.expr, pattern.repl);
         }
       }
-      return newText;
+      return newText.trim();
     }
     
     if (!content) {
@@ -455,7 +457,7 @@ export class PuppeteerService extends BaseService {
           if (first) {
             return clean($(sel)?.first()?.text());
           }
-          return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ');
+          return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ').trim();
         };
         
         const extractAll = (sel: string, attr?: string): string[] => {
@@ -474,7 +476,7 @@ export class PuppeteerService extends BaseService {
         // title
         loot.title = extract(title?.selector || 'title', title?.attribute);
         // content
-        loot.content = article ? extract(article.selector, article.attribute) ||  extract('h1,h2,h3,h4,h5,h6,p,blockquote') : extract('h1,h2,h3,h4,h5,h6,p,blockquote');
+        loot.content = extract(article?.selector || 'h1,h2,h3,h4,h5,h6,p,blockquote', article?.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
         
         // dates
         
@@ -507,7 +509,7 @@ export class PuppeteerService extends BaseService {
             exclude.forEach((tag) => $(tag).remove());
             loot.content = $.text();
           },
-          selector: article.selector,
+          selector: article?.selector || 'h1,h2,h3,h4,h5,h6,p,blockquote',
         });
       }
       
