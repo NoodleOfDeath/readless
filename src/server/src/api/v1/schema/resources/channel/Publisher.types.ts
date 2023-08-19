@@ -228,6 +228,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   barrons: {
     baseUrl: 'https://www.barrons.com/real-time',
     displayName: 'Barron\'s',
+    geolocation: 'New York City, New York, United States',
     name: 'barrons',
     selectors: {
       article: { selector: 'article p' },
