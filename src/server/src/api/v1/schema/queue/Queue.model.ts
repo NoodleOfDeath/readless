@@ -107,12 +107,7 @@ export class Queue<D extends Serializable = Serializable, R = Serializable, Q ex
   }
   
   async clear() {
-    await Job.destroy({
-      where: {
-        completedAt: { [Op.ne]: null },
-        queue: this.toJSON().name,
-      }, 
-    });
+    await Job.destroy({ where: { queue: this.name } });
   }
 
 }
