@@ -110,7 +110,7 @@ export class Queue<D extends Serializable = Serializable, R = Serializable, Q ex
     await Job.destroy({
       where: {
         completedAt: { [Op.ne]: null },
-        queue: this.name,
+        queue: this.toJSON().name,
       }, 
     });
   }
