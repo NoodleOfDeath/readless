@@ -115,6 +115,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   abcnews: {
     baseUrl: 'https://abcnews.go.com',
     displayName: 'ABC News',
+    geolocation: 'Manhattan, New York, United States',
     name: 'abcnews',
     selectors: {
       article: { selector: 'article p' },
