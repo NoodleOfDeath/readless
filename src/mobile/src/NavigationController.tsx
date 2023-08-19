@@ -26,6 +26,7 @@ import {
 } from '~/contexts';
 import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
+import { emitEvent } from '~/utils';
 
 export default function NavigationController() {
   
@@ -69,6 +70,7 @@ export default function NavigationController() {
       !InAppReview.isAvailable()) {
       return;
     }
+    emitEvent('in-app-review');
     setShowedReview(true);
     setTimeout(() => {
       InAppReview.RequestInAppReview()

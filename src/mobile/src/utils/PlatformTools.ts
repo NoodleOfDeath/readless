@@ -20,7 +20,7 @@ export function getUserAgent() {
   return userAgent;
 }
 
-export function emitEvent<E extends SessionEvent>(event: E, mutation: PreferenceMutation<E>, state: PreferenceState<E>) {
+export function emitEvent<E extends SessionEvent>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) {
   analytics().logEvent(event.replace(/-/g, '_'), {
     mutation,
     state,
