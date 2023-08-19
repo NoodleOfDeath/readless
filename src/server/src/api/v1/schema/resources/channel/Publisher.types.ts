@@ -162,6 +162,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.aei.org',
     disabled: true,
     displayName: 'AEI',
+    geolocation: 'Washington, DC, United States',
     name: 'aei',
     selectors: {
       article: { selector: 'article p' },
