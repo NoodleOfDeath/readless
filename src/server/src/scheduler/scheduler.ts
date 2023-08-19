@@ -28,15 +28,17 @@ async function main() {
 
 export async function preparePublishers() {
   try {
+    console.log('prepping publishers');
     await Publisher.prepare({ translate: true });
+    console.log('queuing topic jobs');
     const queue = await Queue.from(Queue.QUEUES.topics);
     await queue.clear();
     await queue.add(
-      'topic-resolution', 
+      'topics-resolution', 
       { summary: 0 },
       { group: 'topics' }
     );
-    console.log('done scheduling cache jobs');
+    console.log('done scheduling topic jobs');
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
       console.error(e);
