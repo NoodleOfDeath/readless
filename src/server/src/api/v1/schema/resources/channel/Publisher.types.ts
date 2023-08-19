@@ -210,6 +210,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   axios: {
     baseUrl: 'https://www.axios.com',
     displayName: 'Axios',
+    geolocation: 'Arlington, Virginia, United States',
     name: 'axios',
     selectors: {
       article: { selector: 'article p' },
