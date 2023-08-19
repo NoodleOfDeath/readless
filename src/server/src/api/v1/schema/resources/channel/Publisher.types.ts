@@ -145,6 +145,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   advocate: {
     baseUrl: 'https://www.advocate.com',
     displayName: 'Advocate',
+    geolocation: 'Los Angeles, California, United States',
     name: 'advocate',
     selectors: {
       article: { selector: 'article p' },
