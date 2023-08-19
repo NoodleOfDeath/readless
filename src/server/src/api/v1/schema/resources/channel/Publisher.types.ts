@@ -162,7 +162,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.aei.org',
     disabled: true,
     displayName: 'AEI',
-    geolocation: 'Washington, DC, United States',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'aei',
     selectors: {
       article: { selector: 'article p' },
@@ -178,6 +178,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   apnews: {
     baseUrl: 'https://apnews.com',
     displayName: 'AP News',
+    geolocation: 'New York, New York, United States',
     name: 'apnews',
     selectors: {
       article: { selector: '.Content .Article p' },
