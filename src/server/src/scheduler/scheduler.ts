@@ -29,6 +29,14 @@ async function main() {
 export async function preparePublishers() {
   try {
     await Publisher.prepare({ translate: true });
+    const queue = await Queue.from(Queue.QUEUES.topics);
+    await queue.clear();
+    await queue.add(
+      'topic-resolution', 
+      { summary: 0 },
+      { group: 'topics' }
+    );
+    console.log('done scheduling cache jobs');
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
       console.error(e);
