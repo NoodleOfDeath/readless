@@ -244,6 +244,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   bbc: {
     baseUrl: 'https://www.bbc.com',
     displayName: 'BBC',
+    geolocation: 'London, United Kingdom',
     name: 'bbc',
     selectors: { 
       article: { selector: 'article p' },
