@@ -67,13 +67,6 @@ export async function doWork() {
               url,
             }
           );
-          const topicQueue = await Queue.from(Queue.QUEUES.topics);
-          await topicQueue.clear();
-          await topicQueue.add(
-            `topic-resolution-${summary.id}`,
-            { summary: summary.id },
-            { group: 'topics' }
-          );
           await fetchMax.advance();
           await limit.advance();
           await job.moveToCompleted();

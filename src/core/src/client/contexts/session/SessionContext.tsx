@@ -123,7 +123,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     const serialize = (key: K, value: Preferences[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
       const isCorrectType = type === 'array' ? Array.isArray(value) : typeof value === type;
       if (!isCorrectType) {
-        setPreference(key, undefined);
+        setPreference(key, undefined, false);
         return undefined;
       }
       return value;
@@ -139,7 +139,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     return undefined;
   };
 
-  const setPreference = async <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V) => {
+  const setPreference = async <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V, emit = true) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newValue = (value instanceof Function ? value(await getPreference(key)) : value) as any;
@@ -263,6 +263,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     } else {
       await setItem(key, JSON.stringify(newValue));
     }
+    if (emit) {
+      emitEvent('set-preference');
+    }
   };
   
   const storeTranslations = async <
@@ -274,7 +277,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev } as State;
       state[item.id] = translations;
       return (prev = state);
-    });
+    }, false);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -306,7 +309,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         delete newState[type];
       }
       return (prev = newState);
-    });
+    }, false);
   };
   
   const hasViewedFeature = React.useCallback((...features: string[]) => {
@@ -322,7 +325,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         delete newState[feature];
       }
       return (prev = newState);
-    });
+    }, false);
   };
   
   // summary functions
@@ -339,7 +342,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('bookmark-summary', summary, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
   
   const readSummary = async (summary: PublicSummaryGroup, force = false) => {
@@ -353,7 +356,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('read-summary', summary, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
   
   const removeSummary = async (summary: PublicSummaryGroup) => {
@@ -367,7 +370,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('hide-summary', summary, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
   
   // recap functions
@@ -383,7 +386,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('read-recap', recap, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
 
   // publisher functions
@@ -403,7 +406,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('follow-publisher', publisher, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
   
   const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...followedPublishers }), [followedPublishers]);
@@ -423,7 +426,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('exclude-publisher', publisher, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
   
   const isExcludingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...excludedPublishers }), [excludedPublishers]);
@@ -438,14 +441,14 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         setPreference('excludedCategories', (prev) => {
           delete prev?.[category.name];
           return prev;
-        });
+        }, false);
         emitEvent('unfollow-category', category, state);
       } else {
         state[category.name] = true;
         emitEvent('follow-category', category, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
   
   const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...followedCategories }), [followedCategories]);
@@ -461,11 +464,11 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         setPreference('followedCategories', (prev) => {
           delete prev?.[category.name];
           return prev;
-        });
+        }, false);
         emitEvent('exclude-category', category, state);
       }
       return (prev = state);
-    });
+    }, false);
   };
   
   const isExcludingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...excludedCategories }), [excludedCategories]);

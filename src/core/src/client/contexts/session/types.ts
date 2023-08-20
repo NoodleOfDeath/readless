@@ -65,7 +65,9 @@ export type PushNotificationSettings = {
   scheduled?: number[];
 };
 
-export type Activity = 
+export type Activity = 'in-app-review' | 'set-preference';
+
+export type ResourceActivity = 
  | 'read'
  | 'unread'
  | 'hide'
@@ -87,7 +89,7 @@ export type Resource =
  | 'recap'
  | 'summary';
  
-export type SessionEvent = `${Activity}-${Resource}`;
+export type SessionEvent = Activity | `${ResourceActivity}-${Resource}`;
 
 export type Preferences = {
   
@@ -196,7 +198,7 @@ export type PreferenceMutation<E extends SessionEvent> =
   E extends `${string}-recap` ? RecapAttributes :
   E extends `${string}-publisher` ? PublicPublisherAttributes :
   E extends `${string}-category` ? PublicCategoryAttributes :
-  never;
+  undefined;
   
 export type PreferenceState<E extends SessionEvent> =
   E extends `${'unbookmark' | 'bookmark'}-summary` ? Preferences['bookmarkedSummaries'] :
@@ -205,7 +207,7 @@ export type PreferenceState<E extends SessionEvent> =
   E extends `${string}-summary` ? Preferences['removedSummaries'] :
   E extends `${string}-publisher` ? Preferences['followedPublishers'] :
   E extends `${string}-category` ? Preferences['followedCategories'] :
-  never;
+  undefined;
 
 export type SessionContextType = Preferences & {
   ready?: boolean;
@@ -216,7 +218,7 @@ export type SessionContextType = Preferences & {
   setPublishers: React.Dispatch<React.SetStateAction<Record<string, PublicPublisherAttributes> | undefined>>;
   
   // state setters
-  setPreference: <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V) => Promise<void>;
+  setPreference: <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V, emit?: boolean) => Promise<void>;
   getPreference: <K extends keyof Preferences>(key: K) => Promise<Preferences[K] | undefined>;
   resetPreferences: (hard?: boolean) => Promise<void>;
   storeTranslations: <
