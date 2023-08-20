@@ -91,9 +91,6 @@ export class Queue<D extends Serializable = Serializable, R = Serializable, Q ex
     if (existingJob) {
       return existingJob;
     }
-    if (existingJob) {
-      await existingJob.destroy();
-    }
     const job = await Job.create({
       data: payload,
       name: jobName,
