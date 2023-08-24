@@ -115,6 +115,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   abcnews: {
     baseUrl: 'https://abcnews.go.com',
     displayName: 'ABC News',
+    geolocation: 'Manhattan, New York, United States',
     name: 'abcnews',
     selectors: {
       article: { selector: 'article p' },
@@ -144,6 +145,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   advocate: {
     baseUrl: 'https://www.advocate.com',
     displayName: 'Advocate',
+    geolocation: 'Los Angeles, California, United States',
     name: 'advocate',
     selectors: {
       article: { selector: 'article p' },
@@ -160,6 +162,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.aei.org',
     disabled: true,
     displayName: 'AEI',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'aei',
     selectors: {
       article: { selector: 'article p' },
@@ -175,6 +178,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   apnews: {
     baseUrl: 'https://apnews.com',
     displayName: 'AP News',
+    geolocation: 'New York, New York, United States',
     name: 'apnews',
     selectors: {
       article: { selector: '.Content .Article p' },
@@ -206,6 +210,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   axios: {
     baseUrl: 'https://www.axios.com',
     displayName: 'Axios',
+    geolocation: 'Arlington, Virginia, United States',
     name: 'axios',
     selectors: {
       article: { selector: 'article p' },
@@ -223,6 +228,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   barrons: {
     baseUrl: 'https://www.barrons.com/real-time',
     displayName: 'Barron\'s',
+    geolocation: 'New York City, New York, United States',
     name: 'barrons',
     selectors: {
       article: { selector: 'article p' },
@@ -238,6 +244,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   bbc: {
     baseUrl: 'https://www.bbc.com',
     displayName: 'BBC',
+    geolocation: 'London, United Kingdom',
     name: 'bbc',
     selectors: { 
       article: { selector: 'article p' },
@@ -375,7 +382,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '.ArticleBody-articleBody p' },
       author: { selector: '.Author-authorName' },
       date: { selector: 'time' },
-      image: { selector: '.Article span picture img' },
+      image: { selector: '[class*="ArticleBody"] [class*="InlineImage"] picture img' },
       spider:{
         attribute: 'href',
         selector: [
