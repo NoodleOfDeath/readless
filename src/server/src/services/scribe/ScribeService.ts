@@ -246,6 +246,9 @@ export class ScribeService extends BaseService {
               ContentType: 'image/jpeg',
               Folder: 'img/s',
             });
+            if (!obj) {
+              continue;
+            }
             await SummaryMedia.create({
               key: `imageArticle${index === 0 ? '' : index + 1}`,
               originalUrl: imageUrl,
@@ -265,15 +268,17 @@ export class ScribeService extends BaseService {
       } else {
         this.log('Generating image with deepai as fallback');
         const obj = await summary.generateImageWithDeepAi();
-        await SummaryMedia.create({
-          key: 'imageAi1',
-          parentId: summary.id,
-          path: obj.key,
-          type: 'image',
-          url: obj.url,
-        });
-        summary.set('imageUrl', obj.url);
-        await summary.save();
+        if (obj) {
+          await SummaryMedia.create({
+            key: 'imageAi1',
+            parentId: summary.id,
+            path: obj.key,
+            type: 'image',
+            url: obj.url,
+          });
+          summary.set('imageUrl', obj.url);
+          await summary.save();
+        }
       }
         
       // Generate sentiment scores
