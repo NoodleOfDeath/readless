@@ -52,6 +52,19 @@ export class S3Service extends BaseService {
     region: process.env.S3_REGION || 'nyc3',
   });
   
+  public static toBlob(url: string) {
+    const matches = /^(?:data:(\w+\/\w+);base64,)(.*)$/.exec(url);
+    if (!matches) {
+      return;
+    }
+    const [, mimeType, data] = matches;
+    return {
+      data,
+      ext: mime.extension(mimeType) || 'application/octet-stream',
+      mimeType,
+    };
+  }
+  
   public static async download(url: string, {
     filetype, 
     filename,
@@ -59,26 +72,36 @@ export class S3Service extends BaseService {
     accept,
     minSize = 10,
   }: DownloadOptions = {}): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const response = await axios.get(url, { responseType: 'stream' });
-      if (accept && !new RegExp(accept, 'i').test(response.headers['content-type'])) {
-        reject(new Error('Unexpected response type'));
-        return;
-      }
-      const contentLength = Number(response.headers['content-length']);
-      if (Number.isNaN(contentLength) || contentLength < minSize) {
-        reject(new Error('Bad file'));
-        return;
-      }
-      if (!filetype) {
-        filetype = mime.extension(response.headers['content-type']) || 'bin';
-      }
+    const base64 = this.toBlob(url);
+    if (base64) {
+      filetype = base64.ext;
       if (!filename) {
         filename = `${v1()}.${filetype}`;
       }
       if (!filepath) {
         filepath = `/tmp/${filename}`;
       }
+      fs.writeFileSync(filepath, base64.data, 'base64');
+      return filepath;
+    }
+    const response = await axios.get(url, { responseType: 'stream' });
+    if (accept && !new RegExp(accept, 'i').test(response.headers['content-type'])) {
+      throw new Error('Unexpected response type');
+    }
+    const contentLength = Number(response.headers['content-length']);
+    if (Number.isNaN(contentLength) || contentLength < minSize) {
+      throw new Error('Bad file');
+    }
+    if (!filetype) {
+      filetype = mime.extension(response.headers['content-type']) || 'bin';
+    }
+    if (!filename) {
+      filename = `${v1()}.${filetype}`;
+    }
+    if (!filepath) {
+      filepath = `/tmp/${filename}`;
+    }
+    return new Promise((resolve, reject) => {
       response.data.pipe(fs.createWriteStream(filepath))
         .on('error', reject)
         .once('close', () => resolve(filepath));

@@ -42,6 +42,7 @@ export class ScribeService extends BaseService {
   }
 
   public static async error(subject: string, text = subject, throws = true): Promise<void> {
+    console.log(subject);
     await new MailService().sendMail({
       from: 'debug@readless.ai',
       subject,
@@ -214,7 +215,7 @@ export class ScribeService extends BaseService {
       } catch (e) {
         if (/too long|sentiment|category/i.test(e.message)) {
           reply = await chatService.send(prompt.text);
-          console.error(e);
+          console.log(e);
           // attempt single retry
           await prompt.handleReply(reply);
         } else {
@@ -239,28 +240,30 @@ export class ScribeService extends BaseService {
       // Save article media
       if (loot.imageUrls && loot.imageUrls.length > 0) {
         // download looted images
-        for (const [index, imageUrl] of loot.imageUrls.entries()) {
+        let imageCount = 0;
+        for (const imageUrl of loot.imageUrls) {
           try {
             const obj = await S3Service.mirror(imageUrl, {
               ACL: 'public-read',
-              ContentType: 'image/jpeg',
+              Accept: 'image',
               Folder: 'img/s',
             });
             if (!obj) {
               continue;
             }
             await SummaryMedia.create({
-              key: `imageArticle${index === 0 ? '' : index + 1}`,
+              key: `imageArticle${imageCount === 0 ? '' : imageCount + 1}`,
               originalUrl: imageUrl,
               parentId: summary.id,
               path: obj.key,
               type: 'image',
               url: obj.url,
             });
-            if (index === 0) {
+            if (imageCount === 0) {
               summary.set('imageUrl', obj.url);
               await summary.save();
             }
+            imageCount++;
           } catch (e) {
             await this.error('Failed to download image', [loot.imageUrls, JSON.stringify(e)].join('\n\n'), false);
           }
@@ -293,13 +296,15 @@ export class ScribeService extends BaseService {
           ACL: 'public-read',
           Folder: 'audio/s',
         });
-        await SummaryMedia.create({
-          key: 'tts',
-          parentId: summary.id,
-          path: obj.key,
-          type: 'audio',
-          url: obj.url,
-        });
+        if (obj) {
+          await SummaryMedia.create({
+            key: 'tts',
+            parentId: summary.id,
+            path: obj.key,
+            type: 'audio',
+            url: obj.url,
+          });
+        }
         
       }
       
@@ -414,7 +419,7 @@ export class ScribeService extends BaseService {
       return recap;
       
     } catch (e) {
-      console.error(e);
+      console.log(e);
       await this.error('Unexpected error writing recap');
     }
   }

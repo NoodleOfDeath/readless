@@ -57,11 +57,11 @@ export type LootOptions = {
 };
 
 const fallbackImageSelectors = [
-  'article :not(header) figure picture img:not([src*=".svg"]):not([src*=".gif"]):not([src*="data:image"])',
-  'article :not(header) figure picture source:not([srcset*=".svg"]):not([srcset*=".gif"]):not([srcset*="data:image"])',
-  'article :not(header) figure img:not([src*=".svg"]):not([src*=".gif"]):not([src*="data:image"]), article :not(header) picture img:not([src*=".svg"]):not([src*=".gif"]):not([src*="data:image"])',
-  'article :not(header) figure source:not([srcset*=".svg"]):not([srcset*=".gif"]):not([srcset*="data:image"])',
-  'article :not(header) picture source:not([srcset*=".svg"]):not([srcset*=".gif"]):not([srcset*="data:image"])',
+  'article :not(header) figure picture img:not([src*=".svg"]):not([src*=".gif"])',
+  'article :not(header) figure picture source:not([srcset*=".svg"]):not([srcset*=".gif"]):',
+  'article :not(header) figure img:not([src*=".svg"]):not([src*=".gif"]), article :not(header) picture img:not([src*=".svg"]):not([src*=".gif"])',
+  'article :not(header) figure source:not([srcset*=".svg"]):not([srcset*=".gif"]):',
+  'article :not(header) picture source:not([srcset*=".svg"]):not([srcset*=".gif"]):',
   'article video',
   // dont grab just any images
   //'article :not(header) img:not([src*=".svg"]):not([src*=".gif"]), :not(header) figure img:not([src*=".svg"]):not([src*=".gif"])',
