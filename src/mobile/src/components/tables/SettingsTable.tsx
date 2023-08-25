@@ -146,7 +146,7 @@ export function SettingsTable() {
             cellStyle="RightDetail"
             title={ strings.settings_preferredShortPressFormat }
             sentenceCase
-            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_shortSummary }
+            detail={ preferredShortPressFormat === ReadingFormat.ShortSummary ? strings.summary_shortSummary : strings.summary_bullets }
             accessory="DisclosureIndicator"
             cellIcon="gesture-tap-hold"
             onPress={ () => navigate('shortPressFormatPicker') } />
