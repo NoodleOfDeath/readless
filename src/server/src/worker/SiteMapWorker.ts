@@ -72,9 +72,7 @@ export async function doWork() {
           await job.moveToCompleted();
           return summary;
         } catch (e) {
-          if (process.env.ERROR_REPORTING) {
-            console.error(e);
-          }
+          console.log(e);
           await fetchMax.advance();
           await job.moveToFailed(e);
         } finally {

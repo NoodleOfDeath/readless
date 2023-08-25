@@ -19,6 +19,8 @@ export type DownloadOptions = {
   filetype?: string;
   filename?: string;
   filepath?: string;
+  accept?: string;
+  minSize?: number;
 };
 
 export type GetOptions = Omit<GetObjectCommandInput, 'Bucket'> & {
@@ -34,6 +36,8 @@ export type PutOptions = Omit<PutObjectCommandInput, 'Body' | 'Bucket' | 'Conten
   Folder?: string;
   Key?: string;
   Provider?: string;
+  Accept?: string;
+  MinSize?: number;
 };
 
 export class S3Service extends BaseService {
@@ -48,12 +52,46 @@ export class S3Service extends BaseService {
     region: process.env.S3_REGION || 'nyc3',
   });
   
+  public static toBlob(url: string) {
+    const matches = /^(?:data:(\w+\/\w+);base64,)(.*)$/.exec(url);
+    if (!matches) {
+      return;
+    }
+    const [, mimeType, data] = matches;
+    return {
+      data,
+      ext: mime.extension(mimeType) || 'application/octet-stream',
+      mimeType,
+    };
+  }
+  
   public static async download(url: string, {
     filetype, 
     filename,
     filepath,
+    accept,
+    minSize = 10,
   }: DownloadOptions = {}): Promise<string> {
+    const base64 = this.toBlob(url);
+    if (base64) {
+      filetype = base64.ext;
+      if (!filename) {
+        filename = `${v1()}.${filetype}`;
+      }
+      if (!filepath) {
+        filepath = `/tmp/${filename}`;
+      }
+      fs.writeFileSync(filepath, base64.data, 'base64');
+      return filepath;
+    }
     const response = await axios.get(url, { responseType: 'stream' });
+    if (accept && !new RegExp(accept, 'i').test(response.headers['content-type'])) {
+      throw new Error('Unexpected response type');
+    }
+    const contentLength = Number(response.headers['content-length']);
+    if (Number.isNaN(contentLength) || contentLength < minSize) {
+      throw new Error('Bad file');
+    }
     if (!filetype) {
       filetype = mime.extension(response.headers['content-type']) || 'bin';
     }
@@ -119,14 +157,17 @@ export class S3Service extends BaseService {
   }
   
   public static async mirror(url: string, options: PutOptions) {
-    const file = await this.download(url);
-    const response = await this.putObject({ ...options, File: file });
     try {
+      const file = await this.download(url, { 
+        accept: options.Accept, 
+        minSize: options.MinSize,
+      });
+      const response = await this.putObject({ ...options, File: file });
       fs.unlinkSync(file);
+      return response;
     } catch (e) {
       console.error(e);
     }
-    return response;
   }
 
 }

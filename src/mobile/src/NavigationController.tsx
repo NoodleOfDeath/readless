@@ -42,7 +42,6 @@ export default function NavigationController() {
     hasViewedFeature,
     hasReviewed,
     readSummaries,
-    lastRequestForReview,
     setPreference,
   } = React.useContext(SessionContext);   
   const {
@@ -61,21 +60,15 @@ export default function NavigationController() {
   const [alreadyShowedOnboarding, setAlreadyShowedOnboarding] = React.useState(false);
   
   const inAppReviewHandler = React.useCallback(() => {
-    // make sure user has been using the app for at least 5 minutes before
-    // requesting to review
-    if (showedReview || hasReviewed || 
-      Date.now() - launchedTime < ms('5m') || 
-      Date.now() - lastRequestForReview < ms('2w') ||
-      Object.keys({ ...readSummaries }).length < 3 ||
-      !InAppReview.isAvailable()) {
+    if ((Object.keys({ ...readSummaries }).length < 1)) {
       return;
     }
-    emitEvent('in-app-review');
-    setShowedReview(true);
     setTimeout(() => {
+      emitEvent('in-app-review');
       InAppReview.RequestInAppReview()
         .then((hasFlowFinishedSuccessfully) => {
           if (hasFlowFinishedSuccessfully) {
+            setShowedReview(true);
             setPreference('hasReviewed', true);
             setPreference('lastRequestForReview', Date.now());
           }
@@ -83,30 +76,34 @@ export default function NavigationController() {
         .catch((error) => {
           console.error(error);
         });
-    }, 5_000);
-  }, [hasReviewed, lastRequestForReview, launchedTime, readSummaries, setPreference, showedReview]);
+    }, ms('5s'));
+  }, [launchedTime, readSummaries, setPreference]);
 
   React.useEffect(() => {
     if (!ready) {
       return;
     }
-    // in-app review handlers
-    const reviewHandlerA = DeviceEventEmitter.addListener('follow-category', inAppReviewHandler);
-    const reviewHandlerB = DeviceEventEmitter.addListener('follow-publisher', inAppReviewHandler);
-    const reviewHandlerC = DeviceEventEmitter.addListener('bookmark-summary', inAppReviewHandler);
-    const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
     if (!isTablet) {
       lockRotation(OrientationType.PORTRAIT);
     } else {
       unlockRotation();
     }
-    return () => {
-      reviewHandlerA.remove();
-      reviewHandlerB.remove();
-      reviewHandlerC.remove();
-      reviewHandlerD.remove();
-    };
-  }, [ready, inAppReviewHandler, isTablet, lockRotation, unlockRotation]);
+    if (!showedReview && !hasReviewed && InAppReview.isAvailable()) {
+      // in-app review handlers
+      const reviewHandlerA = DeviceEventEmitter.addListener('follow-category', inAppReviewHandler);
+      const reviewHandlerB = DeviceEventEmitter.addListener('follow-publisher', inAppReviewHandler);
+      const reviewHandlerC = DeviceEventEmitter.addListener('bookmark-summary', inAppReviewHandler);
+      const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
+      const reviewHandlerE = DeviceEventEmitter.addListener('read-recap', inAppReviewHandler);
+      return () => {
+        reviewHandlerA.remove();
+        reviewHandlerB.remove();
+        reviewHandlerC.remove();
+        reviewHandlerD.remove();
+        reviewHandlerE.remove();
+      };
+    }
+  }, [ready, inAppReviewHandler, isTablet, lockRotation, showedReview, hasReviewed, unlockRotation]);
   
   const refreshSources = React.useCallback(() => {
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
