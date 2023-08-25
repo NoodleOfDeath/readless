@@ -53,7 +53,7 @@ export class S3Service extends BaseService {
   });
   
   public static toBlob(url: string) {
-    const matches = /^(?:data:(\w+\/\w+);base64,)(.*)$/.exec(url);
+    const matches = /^(?:data:(\w+(?:\/\w+)?);base64,)(.*)$/.exec(url);
     if (!matches) {
       return;
     }
@@ -74,6 +74,9 @@ export class S3Service extends BaseService {
   }: DownloadOptions = {}): Promise<string> {
     const base64 = this.toBlob(url);
     if (base64) {
+      if (accept && !new RegExp(accept, 'i').test(base64.mimeType)) {
+        throw new Error('Unexpected response type');
+      }
       filetype = base64.ext;
       if (!filename) {
         filename = `${v1()}.${filetype}`;
