@@ -14,9 +14,7 @@ import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
-import { SummaryTranslation } from './SummaryTranslation.model';
 import { QUERIES, QueryKey } from './queries';
-import { SupportedLocale } from '../../../../../core/locales';
 import { DeepAiService, SentimentService } from '../../../../../services';
 import { parseDate } from '../../../../../utils';
 import { BulkMetadataResponse } from '../../../controllers';
@@ -357,15 +355,6 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     
     const filteredRecords = await fetch();
 
-    if (locale !== 'en') {
-      const untranslated = filteredRecords.rows.filter((r: PublicSummaryGroup) => !r.translations);
-      for (const summary of untranslated.slice(0, 5)) {
-        const attributes = ['title', 'shortSummary', 'summary', 'bullets'];
-        const { rows } = await SummaryTranslation.translate(summary, attributes, locale as SupportedLocale);
-        summary.translations = Object.fromEntries(rows.map((r) => [r.attribute, r.value]));
-      }
-    }
-    
     const response = {
       count: filteredRecords.count,
       metadata: filteredRecords.metadata,
