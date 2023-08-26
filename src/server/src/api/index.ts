@@ -14,12 +14,14 @@ import {
   Queue,
   Role,
   SentimentMethod,
+  Service,
 } from './v1/schema';
 import { DBService } from '../services';
 
 async function main() {
   
   await DBService.prepare();
+  Service.prepare();
   Locale.prepare();
   Queue.prepare();
   Role.prepare();
