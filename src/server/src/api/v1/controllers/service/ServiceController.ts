@@ -34,6 +34,8 @@ import {
   RecapTranslation,
   Service,
   ServiceAttributes,
+  ServiceStatus,
+  ServiceStatusAttributes,
   Summary,
   SummaryMedia,
   SummaryTranslation,
@@ -54,6 +56,21 @@ export class ServiceController {
     const options: FindAndCountOptions<Service> = { order: [['name', 'ASC']] };
     const services = await Service.scope('public').findAndCountAll(options);
     return services;
+  }
+
+  @Get('/release/:service')
+  public static async getReleaseInfo(
+    @Request() _req: ExpressRequest,
+    @Path() service: string
+  ): Promise<BulkResponse<ServiceStatusAttributes>> {
+    return await ServiceStatus.findAndCountAll({
+      include: {
+        model: Service,
+        required: true,
+        where: { name: service },
+      }, 
+      order: [['createdAt', 'DESC']],
+    });
   }
 
   @Get('/messages')

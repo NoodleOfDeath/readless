@@ -53,14 +53,8 @@ export function makeAssociations() {
 
   // system associations
   
-  ServiceStatus.belongsTo(Service, { 
-    as: 'statuses',
-    foreignKey: 'serviceId',
-  });
-  Service.hasMany(ServiceStatus, { 
-    as: 'statuses',
-    foreignKey: 'serviceId',
-  });
+  ServiceStatus.belongsTo(Service, { foreignKey: 'serviceId' });
+  Service.hasMany(ServiceStatus, { foreignKey: 'serviceId' });
 
   // user/auth associations
   

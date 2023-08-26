@@ -23,6 +23,19 @@ router.get(
 );
 
 router.get(
+  '/release/:service',
+  async (req, res) => {
+    try {
+      const service = req.params.service;
+      const response = await ServiceController.getReleaseInfo(req, service);
+      return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
   '/messages',
   async (req, res) => {
     try {

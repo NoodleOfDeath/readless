@@ -14,6 +14,19 @@ import { BaseModel } from '../../base';
 })
 export class Service<A extends ServiceAttributes = ServiceAttributes, B extends ServiceCreationAttributes = ServiceCreationAttributes> extends BaseModel<A, B> implements ServiceAttributes {
 
+  static SERVICES = {
+    mobile: {
+      description: 'Mobile Application',
+      name: 'mobile',
+    },
+  };
+
+  static async prepare() {
+    for (const value of Object.values(Service.SERVICES)) {
+      await Service.upsert(value);
+    }
+  }
+
   @Column({
     allowNull: false, 
     type: DataType.STRING, 
