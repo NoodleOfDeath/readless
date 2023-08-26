@@ -1,7 +1,6 @@
 import React from 'react';
 import {  Platform, useWindowDimensions } from 'react-native';
 
-import analytics from '@react-native-firebase/analytics';
 import { useFocusEffect } from '@react-navigation/native';
 import { format as formatDate, formatDistance } from 'date-fns';
 import ms from 'ms';
@@ -43,7 +42,7 @@ import {
   useTheme,
 } from '~/hooks';
 import { getFnsLocale, strings } from '~/locales';
-import { fixedSentiment, getUserAgent } from '~/utils';
+import { fixedSentiment, usePlatformTools } from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   sample?: boolean;
@@ -175,6 +174,7 @@ export function Summary({
   const { openURL } = useInAppBrowser();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   
+  const { emitEvent } = usePlatformTools();
   const theme = useTheme();
   const style = useStyles(props);
   
@@ -349,7 +349,7 @@ export function Summary({
     return (
       <Popover
         disabled={ disableInteractions }
-        event={ { name: 'summary_view_sentiment', params: { summary } } }
+        event={ { name: 'view-sentiment-summary' } }
         anchor={ (
           <View flexRow itemsCenter gap={ 3 }>
             <Text
@@ -432,7 +432,7 @@ export function Summary({
       actions.push(
         {
           onPress: async () => {
-            analytics().logEvent('summary_open_article_1', { summary, userAgent: getUserAgent() });
+            emitEvent('open-article-summary', summary);
             openURL(summary.url);
           },
           systemIcon: 'book',
@@ -440,7 +440,7 @@ export function Summary({
         },
         {
           onPress: async () => {
-            analytics().logEvent('summary_intent_to_share_1', { summary, userAgent: getUserAgent() });
+            emitEvent('intent-to-share-summary', summary);
             await SheetManager.show('share', {
               payload: {
                 format: preferredShortPressFormat,
@@ -488,7 +488,7 @@ export function Summary({
       },
       {
         onPress: () => { 
-          analytics().logEvent('summary_report', { summary, userAgent: getUserAgent() });
+          emitEvent('report-summary', summary);
           SheetManager.show('feedback', { payload: { summary } });
         },
         systemIcon: 'flag',
@@ -522,7 +522,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, openURL, preferredShortPressFormat, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
+  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, emitEvent, openURL, preferredShortPressFormat, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
 
   const shareActions = React.useMemo(() => showcase ? null : (
     <React.Fragment>
@@ -539,7 +539,7 @@ export function Summary({
                 if (disableInteractions) {
                   return;
                 }
-                analytics().logEvent('summary_open_article_2', { summary, userAgent: getUserAgent() });
+                emitEvent('open-article-summary-2', summary);
                 openURL(summary.url);
               } }>
               {strings.summary_fullArticle}
@@ -553,7 +553,7 @@ export function Summary({
                 if (disableInteractions) {
                   return;
                 }
-                analytics().logEvent('summary_intent_to_share_2', { summary, userAgent: getUserAgent() });
+                emitEvent('intent-to-share-summary-2', summary);
                 await SheetManager.show('share', {
                   payload: {
                     format: initialFormat,
@@ -568,7 +568,7 @@ export function Summary({
         )}  
         <ContextMenu
           dropdownMenuMode
-          event={ { name: 'summary_more', params: { summary, userAgent: getUserAgent() } } }
+          event={ { name: 'expand-summary' } }
           actions={ menuActions as ContextMenuAction[] }>
           <Chip
             gap={ 3 }
@@ -580,7 +580,7 @@ export function Summary({
         </ContextMenu>
       </View>
     </React.Fragment>
-  ), [showcase, footerOnly, theme.colors.textSecondary, summary, menuActions, disableInteractions, openURL, initialFormat, interactWithSummary]);
+  ), [showcase, footerOnly, theme.colors.textSecondary, menuActions, disableInteractions, emitEvent, summary, openURL, initialFormat, interactWithSummary]);
   
   const header = React.useMemo(() => {
     if ((!forceExpanded && isCompact) && !initialFormat) {
@@ -917,11 +917,7 @@ export function Summary({
         ((disableInteractions || showcase || Platform.OS !== 'ios')) ? card : (
           <ContextMenu 
             actions={ menuActions }
-            event={ {
-              name: 'summary_preview', params: {
-                preferredShortPressFormat, summary, userAgent: getUserAgent(), 
-              }, 
-            } }
+            event={ { name: 'preview-summary' } }
             preview={ contextMenuPreview }>
             {card}
           </ContextMenu>

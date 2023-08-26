@@ -18,22 +18,21 @@ import {
   ReadingFormat,
   RecapAttributes,
 } from '~/api';
-import {
-  emitEvent,
-  getItem,
-  getUserAgent,
-  removeAll,
-  removeItem,
-  setItem,
-} from '~/utils';
+import { useLocalStorage, usePlatformTools } from '~/utils';
 
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
 
 export function SessionContextProvider({ children }: React.PropsWithChildren) { 
+
+  const {
+    getItem, removeItem, removeAll, setItem, 
+  } = useLocalStorage();
+  const { emitEvent, getUserAgent } = usePlatformTools();
   
   // system state
   const [ready, setReady] = React.useState(false);
 
+  const [latestVersion, setLatestVersion] = React.useState<string>();
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
   const [searchHistory, setSearchHistory] = React.useState<string[]>();
   const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: string]: Bookmark<boolean>}>();
@@ -147,6 +146,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     switch (key) {
       
     // system state
+    case 'latestVersion':
+      setLatestVersion(newValue);
+      break;
     case 'rotationLock':
       setRotationLock(newValue);
       break;
@@ -476,6 +478,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // Load preferences on mount
   const load = async () => {
     // system state
+    setLatestVersion(await getPreference('latestVersion'));
     setRotationLock(await getPreference('rotationLock'));
     setSearchHistory(await getPreference('searchHistory'));
     setViewedFeatures(await getPreference('viewedFeatures'));
@@ -562,6 +565,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         isFollowingCategory,
         isFollowingPublisher,
         lastRequestForReview,
+        latestVersion,
         letterSpacing,
         lineHeightMultiplier,
         preferredReadingFormat,

@@ -4,7 +4,6 @@ import { DeviceEventEmitter, Platform } from 'react-native';
 import { BASE_DOMAIN } from '@env';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Clipboard from '@react-native-clipboard/clipboard';
-import analytics from '@react-native-firebase/analytics';
 import RNFS from 'react-native-fs';
 import Share, { ShareOptions as RNShareOptions, Social } from 'react-native-share';
 import ViewShot from 'react-native-view-shot';
@@ -15,7 +14,7 @@ import {
   ReadingFormat,
 } from '~/api';
 import { useApiClient, useTheme } from '~/hooks';
-import { shareableLink } from '~/utils';
+import { shareableLink, usePlatformTools } from '~/utils';
 
 const SocialAppIds: Record<string, string> = {
   [Social.Facebook]: 'com.facebook.Facebook',
@@ -52,6 +51,7 @@ export type ShareOptions = Partial<RNShareOptions> & {
 
 export function useShare({ callback }: UseShareProps) {
 
+  const { emitEvent } = usePlatformTools();
   const { interactWithSummary } = useApiClient();
   const theme = useTheme();
 
@@ -61,14 +61,14 @@ export function useShare({ callback }: UseShareProps) {
     }
     const content = summary[property] as string;
     try {
-      analytics().logEvent('copy_to_clipboard', { content });
+      emitEvent('copy-to-clipboard', content);
       Clipboard.setString(content);
       interactWithSummary(summary.id, InteractionType.Copy, { content });
     } catch (e) {
       console.error(e);
     }
     callback?.();
-  }, [callback, interactWithSummary]);
+  }, [callback, emitEvent, interactWithSummary]);
 
   const saveToCameraRoll = React.useCallback(async (summary: PublicSummaryGroup, { viewshot }: ShareOptions) => {
     if (!summary || !viewshot) {
@@ -79,7 +79,7 @@ export function useShare({ callback }: UseShareProps) {
       if (!uri) {
         return;
       }
-      analytics().logEvent('save_as_image', { summary });
+      emitEvent('save-as-image-summary', summary);
       CameraRoll.save(uri, { type: 'photo' });
       interactWithSummary(summary.id, InteractionType.Share, { metadata: { summary } });
     } catch (e) {
@@ -87,7 +87,7 @@ export function useShare({ callback }: UseShareProps) {
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, interactWithSummary]);
+  }, [callback, emitEvent, interactWithSummary]);
   
   const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, {
     format, originalUrl, viewshot, 
@@ -96,7 +96,7 @@ export function useShare({ callback }: UseShareProps) {
       return;
     }
     try {
-      analytics().logEvent('share_standard', { summary });
+      emitEvent('share-standard-summary', summary);
       let url = originalUrl ? summary.url : shareableLink(summary, BASE_DOMAIN, format);
       const imageUrl = await viewshot?.capture?.();
       const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
@@ -117,17 +117,14 @@ export function useShare({ callback }: UseShareProps) {
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, interactWithSummary]);
+  }, [callback, emitEvent, interactWithSummary]);
   
   const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, { social, viewshot }: ShareOptions) => {
     if (!summary || !social) {
       return;
     }
     try {
-      analytics().logEvent('share_social', {
-        social,
-        summary,
-      });
+      emitEvent('share-social', social);
       const url = shareableLink(summary, BASE_DOMAIN);
       const viewshotData = await viewshot?.capture?.();
       const base64ImageUrl = viewshotData ? `data:image/png;base64,${await RNFS.readFile(viewshotData, 'base64')}` : undefined;
@@ -151,7 +148,7 @@ export function useShare({ callback }: UseShareProps) {
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, interactWithSummary, theme.colors.headerBackground, theme.colors.primaryDark]);
+  }, [callback, emitEvent, interactWithSummary, theme.colors.headerBackground, theme.colors.primaryDark]);
 
   return {
     copyToClipboard,

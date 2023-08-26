@@ -1,6 +1,5 @@
 import React from 'react';
 
-import analytics from '@react-native-firebase/analytics';
 import { useNavigation as useRNNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -11,22 +10,21 @@ import {
 } from '~/api';
 import { SessionContext } from '~/contexts';
 import { RoutingParams } from '~/screens';
-import { getUserAgent, readingFormat } from '~/utils';
+import { readingFormat, usePlatformTools } from '~/utils';
 
 export function useNavigation() {
 
+  const { emitEvent } = usePlatformTools();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useRNNavigation<NativeStackNavigationProp<RoutingParams>>() as any;
   
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
 
   const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R]) => {
-    analytics().logEvent('navigate', {
-      params, route, userAgent: getUserAgent(), 
-    });
+    emitEvent('navigate', route);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return ((navigation as any).push ?? navigation.navigate)(route, params as RoutingParams[R]);
-  }, [navigation]);
+  }, [emitEvent, navigation]);
 
   const search = React.useCallback((params: RoutingParams['search']) => {
     const prefilter = params.prefilter;

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import analytics from '@react-native-firebase/analytics';
-
 import { PublicSummaryGroup, RecapAttributes } from '~/api';
 import {
   ActivityIndicator,
@@ -11,7 +9,7 @@ import {
 } from '~/components';
 import { useApiClient } from '~/core';
 import { getLocale, strings } from '~/locales';
-import { getUserAgent } from '~/utils';
+import { usePlatformTools } from '~/utils';
 
 export type TranslateToggleProps<Type extends 'summary' | 'recap', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes> = ChildlessViewProps & {
   type: Type;
@@ -33,6 +31,8 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
   localize,
   onLocalize,
 }: TranslateToggleProps<Type, Target>, ref?: React.ForwardedRef<Partial<TranslateToggleRef<Target>>>) {
+
+  const { emitEvent, getUserAgent } = usePlatformTools();
   
   const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string } | undefined>(translations0);
   const [isLocalizing, setIsLocalizing] = React.useState(false);
@@ -43,7 +43,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
     if (/^en/i.test(getLocale()) || isLocalizing) {
       return; 
     }
-    analytics().logEvent('localize', { target, userAgent: getUserAgent() });
+    emitEvent('localize', { target, userAgent: getUserAgent() });
     setIsLocalizing(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,7 +65,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
     } finally {
       setIsLocalizing(false);
     }
-  }, [isLocalizing, localize, onLocalize, type, target]);
+  }, [isLocalizing, emitEvent, target, getUserAgent, localize, type, onLocalize]);
 
   React.useImperativeHandle(ref, () => ({ 
     setTranslations: (translations) => {

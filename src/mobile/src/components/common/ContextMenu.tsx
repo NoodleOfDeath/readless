@@ -1,12 +1,14 @@
 import React from 'react';
 import { NativeSyntheticEvent } from 'react-native';
 
-import analytics from '@react-native-firebase/analytics';
 import RNContextMenu, {
   ContextMenuOnPressNativeEvent,
   ContextMenuAction as RNContextMenuAction,
   ContextMenuProps as RNContextMenuProps,
 } from 'react-native-context-menu-view';
+
+import { SessionEvent } from '~/core';
+import { usePlatformTools } from '~/utils';
 
 export type ContextMenuRef = React.ForwardedRef<RNContextMenu>;
 
@@ -17,7 +19,7 @@ export type ContextMenuAction = Omit<RNContextMenuAction, | 'systemIcon'> & {
 
 export type ContextMenuProps = Omit<RNContextMenuProps, 'actions'> & {
   actions?: ContextMenuAction[];
-  event?: { name: string, params?: Record<string, unknown> };
+  event?: { name: SessionEvent, params?: Record<string, string> };
 };
 
 export const ContextMenu = React.forwardRef(function ContextMenu({
@@ -27,12 +29,14 @@ export const ContextMenu = React.forwardRef(function ContextMenu({
   ...props
 }: ContextMenuProps, ref: ContextMenuRef) {
 
+  const { emitEvent } = usePlatformTools();
+
   const menuHandler = React.useCallback((e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
     if (event) {
-      analytics().logEvent(event.name, event.params);
+      emitEvent(event.name, event.params);
     }
     onPress ?? actions?.[e.nativeEvent.index].onPress?.();
-  }, [event, onPress, actions]);
+  }, [event, onPress, actions, emitEvent]);
 
   return (
     <RNContextMenu

@@ -5,7 +5,9 @@ import {
   View,
 } from 'react-native';
 
+import { useFocusEffect } from '@react-navigation/native';
 import ContextMenu from 'react-native-context-menu-view';
+import InAppReview from 'react-native-in-app-review';
 
 function Test() {
   const titles = ['one', 'two', 'three'];
@@ -28,6 +30,12 @@ function Test() {
 }
 
 export function TestScreen() {
+
+  useFocusEffect(React.useCallback(() => {
+    InAppReview.RequestInAppReview();
+    alert(__DEV__);
+  }, []));
+
   return (
     <SafeAreaView style={ { flex: 1 } }>
       <View style={ { padding: 24 } }>

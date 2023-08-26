@@ -1,7 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
 
-import analytics from '@react-native-firebase/analytics';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import { SubscriptionEvent } from '~/api';
@@ -16,9 +15,11 @@ import {
 } from '~/components';
 import { NotificationContext, SessionContext } from '~/contexts';
 import { strings } from '~/locales';
+import { usePlatformTools } from '~/utils';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
+  const { emitEvent } = usePlatformTools();
   const { viewFeature } = React.useContext(SessionContext);
   const { subscribe, unsubscribe } = React.useContext(NotificationContext);
 
@@ -41,7 +42,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                analytics().logEvent('poll_i_hate_reading');
+                emitEvent('poll-i-hate-reading');
                 setILikeReading(false);
                 console.log(walkthroughRef.current);
                 walkthroughRef.current?.next?.();
@@ -51,7 +52,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                analytics().logEvent('poll_the_news_is_negative');
+                emitEvent('poll-the-news-is-negative');
                 setILikeReading(false);
                 console.log(walkthroughRef.current);
                 walkthroughRef.current?.next?.();
@@ -61,7 +62,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                analytics().logEvent('poll_the_news_is_boring');
+                emitEvent('poll-the-news-is-boring');
                 setILikeReading(false);
                 console.log(walkthroughRef.current);
                 walkthroughRef.current?.next?.();
@@ -71,7 +72,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                analytics().logEvent('poll_reading_is_enjoyable');
+                emitEvent('poll-reading-is-enjoyable');
                 setILikeReading(true);
                 walkthroughRef.current?.next?.();
               } }>
@@ -186,7 +187,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
       }
     );
     return steps;
-  }, [enableDailyReminders, fireTime, iLikeReading, onDone, subscribe, unsubscribe]);
+  }, [emitEvent, enableDailyReminders, fireTime, iLikeReading, onDone, subscribe, unsubscribe]);
   
   return (
     <Walkthrough

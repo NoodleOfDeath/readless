@@ -17,7 +17,7 @@ import {
 import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
-import { getUserAgent } from '~/utils';
+import { usePlatformTools } from '~/utils';
 
 export function LeftDrawerContent(props: DrawerContentComponentProps) {
   
@@ -25,6 +25,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     router,
     navigate,
   } = useNavigation();
+  const { getUserAgent } = usePlatformTools();
   
   const { viewFeature, hasViewedFeature } = React.useContext(SessionContext);
 
