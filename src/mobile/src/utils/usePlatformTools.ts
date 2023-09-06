@@ -1,5 +1,9 @@
 import React from 'react';
-import { DeviceEventEmitter, Platform } from 'react-native';
+import {
+  AccessibilityInfo,
+  DeviceEventEmitter,
+  Platform,
+} from 'react-native';
 
 import analytics from '@react-native-firebase/analytics';
 import VersionCheck from 'react-native-version-check';
@@ -15,6 +19,7 @@ import * as Localization from '~/locales';
 export function usePlatformTools() {
 
   const { latestVersion = '', setPreference } = React.useContext(SessionContext);
+  const [screenReaderEnabled, setScreenReaderEnabled] = React.useState(false);
 
   const getUserAgent = () => {
     const userAgent = { 
@@ -43,9 +48,15 @@ export function usePlatformTools() {
     DeviceEventEmitter.emit(event, mutation, state);
   }, [latestVersion, setPreference]);
 
+  React.useEffect(() => {
+    const subscription = AccessibilityInfo.addEventListener('screenReaderChanged', setScreenReaderEnabled);
+    return () => subscription.remove();
+  }, []);
+
   return {
     emitEvent,
     getUserAgent,
+    screenReaderEnabled,
   };
 
 }

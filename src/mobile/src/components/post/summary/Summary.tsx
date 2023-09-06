@@ -351,7 +351,12 @@ export function Summary({
         disabled={ disableInteractions }
         event={ { name: 'view-sentiment-summary' } }
         anchor={ (
-          <View flexRow itemsCenter gap={ 3 }>
+          <View
+            flexRow
+            itemsCenter
+            gap={ 3 }
+            accessible
+            accessibilityHint={ strings.axe_openSentimentAnalysis }>
             <Text
               subscript
               adjustsFontSizeToFit>
@@ -407,6 +412,7 @@ export function Summary({
   
   const publisherChip = React.useMemo(() => (
     <Chip
+      accessibilityHint={ strings.axe_openPublisher }
       flexRow
       itemsCenter
       gap={ 6 }
@@ -571,6 +577,7 @@ export function Summary({
           event={ { name: 'expand-summary' } }
           actions={ menuActions as ContextMenuAction[] }>
           <Chip
+            accessibilityHint={ strings.axe_openContextMenu }
             gap={ 3 }
             caption={ !footerOnly }
             color={ theme.colors.textSecondary }
@@ -605,6 +612,7 @@ export function Summary({
           <View flex={ 3 } flexRow itemsCenter gap={ 6 }>
             {!halfBig && (
               <Text
+                accessible={ false }
                 caption
                 color={ theme.colors.textSecondary }>
                 •
@@ -636,6 +644,7 @@ export function Summary({
           <React.Fragment>
             {publisherChip}
             <Text
+              accessible={ false }
               caption
               color={ theme.colors.textSecondary }>
               •
@@ -657,6 +666,7 @@ export function Summary({
         {!footerOnly && !hideArticleCount && (
           <React.Fragment>
             <Text
+              accessible={ false }
               caption
               color={ theme.colors.textSecondary }>
               •
@@ -703,6 +713,7 @@ export function Summary({
     }
     return (
       <View
+        accessible={ false }
         onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Bullets) }
         flexGrow={ 1 }
         maxWidth={ big ? Math.min(screenWidth, 480) - 12 : 64 }
@@ -784,6 +795,8 @@ export function Summary({
   const coverContent = React.useMemo(() => footerOnly ? null : (
     <View flex={ !initialFormat ? 1 : undefined } mb={ 6 }>
       <View
+        accessible
+        accessibilityHint={ !initialFormat ? strings.axe_openSummary : undefined }
         row
         onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Bullets) }>
         <View
@@ -818,7 +831,7 @@ export function Summary({
         {!hideFooter && footer}
       </View>
     </View>
-  ), [footerOnly, initialFormat, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, showcase, keywords, cleanString, localizedStrings.shortSummary, big, image, hideFooter, footer, handleFormatChange, preferredReadingFormat]);
+  ), [footerOnly, initialFormat, showcase, title, translateToggle, forceExpanded, isCompact, showShortSummary, forceShortSummary, bulletsAsShortSummary, renderContent, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, localizedStrings.shortSummary, big, image, hideFooter, footer, handleFormatChange, preferredReadingFormat]);
   
   const cardBody = React.useMemo(() => footerOnly ? null : (
     <View gap={ 12 }>

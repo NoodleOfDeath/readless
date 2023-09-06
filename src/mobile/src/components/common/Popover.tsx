@@ -1,12 +1,19 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import {
+  AccessibilityInfo,
+  View as RNView,
+  TouchableOpacity,
+  findNodeHandle,
+} from 'react-native';
 
 import { Menu } from 'react-native-paper';
 import  RNPopover from 'react-native-popover-view';
 import { PublicPopoverProps } from 'react-native-popover-view/dist/Popover';
 
+import { Chip, View } from '~/components';
 import { SessionEvent } from '~/core';
 import { useTheme } from '~/hooks';
+import { strings } from '~/locales';
 import { usePlatformTools } from '~/utils';
 
 export type PopoverProps = PublicPopoverProps & {
@@ -35,6 +42,32 @@ export function Popover({
   const theme = useTheme();
 
   const [visible, setVisible] = React.useState(false);
+  const ref = React.useRef<RNView>(null);
+
+  const contents = React.useMemo(() => (
+    <RNView ref={ ref }>
+      <View p={ 4 } row>
+        <View row />
+        <Chip
+          accessible
+          accessibilityLabel={ strings.action_close }
+          leftIcon="close"
+          onPress={ () => setVisible(false) } />
+      </View>
+      {children}
+    </RNView>
+  ), [children]);
+
+  React.useEffect(() => {
+    if (!ref.current) {
+      return; 
+    }
+    const handle = findNodeHandle(ref.current);
+    if (!handle) {
+      return; 
+    }
+    AccessibilityInfo.setAccessibilityFocus(handle);
+  }, [ref]);
 
   if (disabled) {
     return <TouchableOpacity disabled>{anchor}</TouchableOpacity>;
@@ -60,7 +93,7 @@ export function Popover({
         visible={ visible }
         onDismiss={ () => setVisible(false) }
         style={ theme.components.card }>
-        {children}
+        {contents}
       </Menu>
     );
   }
@@ -82,7 +115,7 @@ export function Popover({
         </TouchableOpacity>
       ) }
       popoverStyle={ theme.components.card }>
-      {children}
+      {contents}
     </RNPopover>
   );
 }

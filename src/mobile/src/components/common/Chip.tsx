@@ -70,6 +70,7 @@ export function Chip({
     if (typeof leftIcon === 'string') {
       return (
         <Icon 
+          accessible={ false }
           { ...iconProps }
           name={ leftIcon } 
           size={ iconSize ?? textStyle.fontSize } 
@@ -83,6 +84,7 @@ export function Chip({
     if (typeof rightIcon === 'string') {
       return (
         <Icon 
+          accessible={ false }
           { ...iconProps }
           name={ rightIcon } 
           size={ iconSize ?? textStyle.fontSize } 
@@ -94,6 +96,8 @@ export function Chip({
 
   return (
     <View 
+      accessible
+      accessibilityLabel={ props.accessibilityLabel ?? (typeof leftIcon === 'string' ? leftIcon : undefined) }
       elevated={ variant === 'contained' }
       { ...props } 
       style={ buttonStyle }>

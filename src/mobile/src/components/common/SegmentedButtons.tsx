@@ -54,6 +54,7 @@ export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T ext
           key={ `${option.value}${index}` }
           actions={ buttonMenuItems?.(option, value === option.value) ?? [] }>
           <Button
+            accessibilityLabel={ `${option.value}` }
             px={ 12 }
             gap={ 6 }
             flex={ 1 }

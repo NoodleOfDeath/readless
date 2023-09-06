@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextInput } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
 
@@ -12,6 +13,11 @@ import {
 import { LayoutContext, SessionContext } from '~/contexts';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
+
+type TextInputHandles = Pick<
+  TextInput,
+  'setNativeProps' | 'isFocused' | 'clear' | 'blur' | 'focus'
+>;
 
 type SearchMenuProps = ChildlessViewProps & {
   initialValue?: string;
@@ -42,6 +48,8 @@ export function SearchMenu({
   const { screenWidth } = React.useContext(LayoutContext);
 
   const [value, setValue] = React.useState(initialValue);
+
+  const searchRef = React.useRef<TextInputHandles>(null);
   
   const submit = React.useCallback((text?: string) => {
     if (text) {
@@ -63,6 +71,9 @@ export function SearchMenu({
       width={ screenWidth - (220 / 2) }
       { ...props }>
       <Searchbar
+        ref={ searchRef }
+        accessible
+        onIconPress={ () => searchRef.current?.focus() }
         placeholder={ placeholder }
         onChangeText={ handleChangeText }
         style={ { height: 32, padding: 0 } }

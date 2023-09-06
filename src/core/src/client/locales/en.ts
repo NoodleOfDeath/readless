@@ -20,10 +20,18 @@ export const enStrings = {
   action_skip: 'Skip',
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
   action_translate: 'Translate',
-  
-  action_unexclude: 'Unhide',
-  
+  action_unexclude: 'Unhide',  
   action_unfollow: 'Unfollow', 
+
+  //
+  axe_menu: 'Menu',
+  axe_openCategory: 'Opens the category page of this category',
+  axe_openContextMenu: 'Open Context Menu',
+  axe_openPublisher: 'Opens the publisher page of this publisher',
+  axe_openSentimentAnalysis: 'Opens the sentiment analysis of this summary',
+  axe_openSummary: 'Opens this summary',
+  axe_settings: 'Settings',
+
   // bookmarks
   bookmarks_bookmarkArticlesAreNotSaved: 'Note: The original articles themselves are not saved for offline reading',
   bookmarks_bookmarksAvailableOffline: 'Bookmarks are always available offline',
