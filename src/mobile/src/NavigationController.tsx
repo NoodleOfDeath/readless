@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, Platform } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import ms from 'ms';
@@ -26,10 +26,11 @@ import {
 } from '~/contexts';
 import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
-import { emitEvent } from '~/utils';
+import { usePlatformTools } from '~/utils';
 
 export default function NavigationController() {
   
+  const { emitEvent } = usePlatformTools();
   const theme = useTheme();
   const { getCategories, getPublishers } = useApiClient();
   
@@ -40,7 +41,7 @@ export default function NavigationController() {
     setCategories, 
     setPublishers,
     hasViewedFeature,
-    hasReviewed,
+    lastRequestForReview = 0,
     readSummaries,
     setPreference,
   } = React.useContext(SessionContext);   
@@ -54,30 +55,9 @@ export default function NavigationController() {
   
   const [lastFetch, setLastFetch] = React.useState(0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
-  const [launchedTime] = React.useState(Date.now());
 
   const [showedReview, setShowedReview] = React.useState(false);
   const [alreadyShowedOnboarding, setAlreadyShowedOnboarding] = React.useState(false);
-  
-  const inAppReviewHandler = React.useCallback(() => {
-    if ((Object.keys({ ...readSummaries }).length < 1)) {
-      return;
-    }
-    setTimeout(() => {
-      emitEvent('in-app-review');
-      InAppReview.RequestInAppReview()
-        .then((hasFlowFinishedSuccessfully) => {
-          if (hasFlowFinishedSuccessfully) {
-            setShowedReview(true);
-            setPreference('hasReviewed', true);
-            setPreference('lastRequestForReview', Date.now());
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }, ms('5s'));
-  }, [launchedTime, readSummaries, setPreference]);
 
   React.useEffect(() => {
     if (!ready) {
@@ -88,13 +68,40 @@ export default function NavigationController() {
     } else {
       unlockRotation();
     }
-    if (!showedReview && !hasReviewed && InAppReview.isAvailable()) {
+    if (!showedReview && 
+      (Date.now() - lastRequestForReview > ms('2w') && 
+      (Object.keys({ ...readSummaries }).length > 1))) {
+
+      const inAppReviewHandler = async () => {
+        try {
+          const available = InAppReview.isAvailable();
+          if (!available) {
+            emitEvent('in-app-review-failed', 'unavailable');
+            return;
+          }
+          let success = false;
+          if (Platform.OS === 'ios') {
+            success = await InAppReview.RequestInAppReview();
+          } else {
+            success = await InAppReview.requestInAppCommentAppGallery();
+          }
+          setShowedReview(success);
+          emitEvent(success ? 'in-app-review' : 'in-app-review-failed');
+          setPreference('lastRequestForReview', Date.now());
+        } catch (error) {
+          console.error(error);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          emitEvent('in-app-review-failed', JSON.stringify(error));
+        }
+      };
+
       // in-app review handlers
       const reviewHandlerA = DeviceEventEmitter.addListener('follow-category', inAppReviewHandler);
       const reviewHandlerB = DeviceEventEmitter.addListener('follow-publisher', inAppReviewHandler);
       const reviewHandlerC = DeviceEventEmitter.addListener('bookmark-summary', inAppReviewHandler);
       const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
       const reviewHandlerE = DeviceEventEmitter.addListener('read-recap', inAppReviewHandler);
+
       return () => {
         reviewHandlerA.remove();
         reviewHandlerB.remove();
@@ -102,8 +109,9 @@ export default function NavigationController() {
         reviewHandlerD.remove();
         reviewHandlerE.remove();
       };
+
     }
-  }, [ready, inAppReviewHandler, isTablet, lockRotation, showedReview, hasReviewed, unlockRotation]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setPreference, emitEvent]);
   
   const refreshSources = React.useCallback(() => {
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {

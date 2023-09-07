@@ -34,7 +34,10 @@ export function ReadingFormatPicker({
     <SegmentedButtons 
       { ...props }
       ref={ buttonsRef }
-      buttonProps={ { py: 3, system: true } }
+      buttonProps={ () => ({
+        py: 3, 
+        system: true,
+      }) }
       buttonMenuItems={ (option) => [
         {
           onPress: () => {

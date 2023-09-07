@@ -2,50 +2,44 @@ import React from 'react';
 
 import {
   Chip,
-  ContextMenu,
-  ContextMenuAction,
-  ScrollView,
-  SearchMenu,
-  Text,
+  ChipProps,
   View,
-  ViewProps,
 } from '~/components';
-import { SessionContext } from '~/core';
-import { useNavigation, useTheme } from '~/hooks';
+import { useNavigation } from '~/hooks';
+import { strings } from '~/locales';
 
-export function DrawerToggle() {
+export function DrawerToggle(props: ChipProps) {
   const { navigation } = useNavigation();
-  const { hasViewedFeature, unreadBookmarkCount } = React.useContext(SessionContext);
   return (
     <View>
       <Chip
         haptic
-        indicator={ !hasViewedFeature('first-view-publishers', 'first-view-categories') || (unreadBookmarkCount > 0 && !hasViewedFeature('unread-bookmarks')) }
-        leftIcon='menu' 
+        leftIcon='menu'
         iconSize={ 24 }
+        accessible
+        accessibilityLabel={ strings.axe_menu }
         onPress={ () => {
           navigation?.getParent('LeftDrawer')?.openDrawer?.(); 
-        } } />
+        } }
+        { ...props } />
     </View>
   );
 }
 
-export function SettingsToggle() {
+export function SettingsToggle(props: ChipProps) {
   const { navigation } = useNavigation();
-  const { hasViewedFeature } = React.useContext(SessionContext);
   return (
     <View>
       <Chip
         haptic
-        indicator={ !hasViewedFeature(
-          'first-view-settings',
-          'first-view-notifs'
-        ) }
         leftIcon='cog' 
+        accessible
+        accessibilityLabel={ strings.axe_settings }
         iconSize={ 24 }
         onPress={ () => {
           navigation?.getParent('RightDrawer')?.openDrawer?.();
-        } } />
+        } }
+        { ...props } />
     </View>
   );
 }

@@ -18,6 +18,7 @@ import {
   SearchMenu,
   SettingsToggle,
 } from '~/components';
+import { SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 import {
   BookmarksScreen,
@@ -40,6 +41,25 @@ import {
   TriggerWordPickerScreen,
 } from '~/screens';
 
+const DrawerToggleWithIndicator = () => {
+  const { hasViewedFeature, unreadBookmarkCount } = React.useContext(SessionContext);
+  return (
+    <DrawerToggle
+      indicator={ !hasViewedFeature('first-view-publishers', 'first-view-categories') || (unreadBookmarkCount > 0 && !hasViewedFeature('unread-bookmarks')) } />
+  );
+};
+
+const SettingsToggleWithIndicator = () => {
+  const { hasViewedFeature } = React.useContext(SessionContext);
+  return (
+    <SettingsToggle
+      indicator={ !hasViewedFeature(
+        'first-view-settings',
+        'first-view-notifs'
+      ) } />
+  );
+};
+
 export const STACK_SCREENS: RouteConfig<
   RoutingParams,
   keyof RoutingParams,
@@ -53,8 +73,8 @@ export const STACK_SCREENS: RouteConfig<
     name: 'home',
     options: { 
       headerBackTitle: '',
-      headerLeft: () => <DrawerToggle />,
-      headerRight: () => <SettingsToggle />,
+      headerLeft: () => <DrawerToggleWithIndicator />,
+      headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: () => <SearchMenu />,
     },
   },
@@ -64,7 +84,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'search',
     options: { 
       headerBackTitle: '',
-      headerRight: () => <SettingsToggle />,
+      headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
   },
@@ -73,7 +93,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'summary',  
     options: { 
       headerBackTitle: '',
-      headerRight: () => <SettingsToggle />,
+      headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
   },
@@ -82,7 +102,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'recap',  
     options: {
       headerBackTitle: '',
-      headerRight: () => <SettingsToggle />,
+      headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
   },
@@ -91,7 +111,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'category',
     options: { 
       headerBackTitle: '', 
-      headerRight: () => <SettingsToggle />,
+      headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
   },
@@ -100,7 +120,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'publisher',
     options: {
       headerBackTitle: '', 
-      headerRight: () => <SettingsToggle />,
+      headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
   },
@@ -109,7 +129,7 @@ export const STACK_SCREENS: RouteConfig<
     name: 'bookmarks', 
     options: {
       headerBackTitle: '',
-      headerRight: () => <SettingsToggle />,
+      headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: strings.screens_bookmarks, 
     }, 
   }, 

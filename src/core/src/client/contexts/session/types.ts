@@ -65,7 +65,15 @@ export type PushNotificationSettings = {
   scheduled?: number[];
 };
 
-export type Activity = 'in-app-review' | 'set-preference';
+export const ACTIVITY_KEYS = [
+  'in-app-review',
+  'in-app-review-failed',
+  'set-preference',
+  'localize',
+  'navigate',
+] as const;
+
+export type Activity = typeof ACTIVITY_KEYS[number];
 
 export type ResourceActivity = 
  | 'read'
@@ -78,10 +86,17 @@ export type ResourceActivity =
  | 'unfollow'
  | 'exclude'
  | 'unexclude'
+ | 'copy-to-clipboard'
  | 'intent-to-share'
- | 'standard-share'
- | 'social-share'
- | 'set-preference';
+ | 'save-as-image'
+ | 'share-standard'
+ | 'share-social'
+ | 'set-preference'
+ | 'report'
+ | 'expand'
+ | 'preview'
+ | 'view-sentiment'
+ | 'open-article';
 
 export type Resource =
  | 'category'
@@ -89,11 +104,12 @@ export type Resource =
  | 'recap'
  | 'summary';
  
-export type SessionEvent = Activity | `${ResourceActivity}-${Resource}`;
+export type SessionEvent = Activity | ResourceActivity | `${ResourceActivity}-${Resource}` | `${ResourceActivity}-${Resource}-${number}` | `poll-${string}`;
 
 export type Preferences = {
   
   // system state
+  latestVersion?: string;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
   viewedFeatures?: { [key: string]: Bookmark<boolean> };
@@ -198,7 +214,9 @@ export type PreferenceMutation<E extends SessionEvent> =
   E extends `${string}-recap` ? RecapAttributes :
   E extends `${string}-publisher` ? PublicPublisherAttributes :
   E extends `${string}-category` ? PublicCategoryAttributes :
-  undefined;
+  E extends `in-app-review-${string}` ? string :
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any;
   
 export type PreferenceState<E extends SessionEvent> =
   E extends `${'unbookmark' | 'bookmark'}-summary` ? Preferences['bookmarkedSummaries'] :
@@ -207,7 +225,8 @@ export type PreferenceState<E extends SessionEvent> =
   E extends `${string}-summary` ? Preferences['removedSummaries'] :
   E extends `${string}-publisher` ? Preferences['followedPublishers'] :
   E extends `${string}-category` ? Preferences['followedCategories'] :
-  undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any;
 
 export type SessionContextType = Preferences & {
   ready?: boolean;

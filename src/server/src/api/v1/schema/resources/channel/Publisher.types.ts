@@ -14,6 +14,7 @@ export type Selector = {
 
 export type SpiderSelector = Selector & {
   dateSelector?: Selector;
+  imageSelector?: Selector;
   urlSelector?: Selector;
 };
 
@@ -63,7 +64,10 @@ export type PublisherCreationAttributes = Partial<DatedAttributes & Sentimental>
   disabled?: boolean;
 };
 
-const DEFAULT_TIMEZONE = process.env.DEFAULT_TIMZONE || 'EST';
+const TIMEZONES = {
+  default: process.env.DEFAULT_TIMEZONE || 'EST',
+  uk: 'UTC+1',
+};
 
 export const PUBLIC_PUBLISHER_ATTRIBUTES = [
   'name',
@@ -140,7 +144,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       { url: 'https://abcnews.go.com/Travel' },
       { url: 'https://abcnews.go.com/WhatWouldYouDo' },
     ],
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   advocate: {
     baseUrl: 'https://www.advocate.com',
@@ -156,7 +160,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   aei: {
     baseUrl: 'https://www.aei.org',
@@ -173,7 +177,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: '.post .post__title a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   apnews: {
     baseUrl: 'https://apnews.com',
@@ -190,7 +194,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/article/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   arstechnica: {
     baseUrl: 'https://www.arstechnica.com',
@@ -205,7 +209,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   axios: {
     baseUrl: 'https://www.axios.com',
@@ -223,7 +227,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   barrons: {
     baseUrl: 'https://www.barrons.com/real-time',
@@ -239,7 +243,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[class*="headline-link"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   bbc: {
     baseUrl: 'https://www.bbc.com',
@@ -252,7 +256,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector: 'article time, .author-unit' },
       spider:{ attribute: 'href', selector: 'a[class*="media__link"]' }, 
     },
-    timezone: 'UTC+1',
+    timezone: TIMEZONES.uk,
   },
   billboard: {
     baseUrl: 'https://www.billboard.com',
@@ -273,7 +277,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   bleepingcomputer: {
     baseUrl: 'https://www.bleepingcomputer.com',
@@ -288,7 +292,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: '.bc_latest_news_img a, #pop-stories li a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   bloomberg: {
     baseUrl: 'https://www.bloomberg.com',
@@ -303,7 +307,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/articles/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   businessinsider: {
     baseUrl: 'https://www.businessinsider.com',
@@ -319,7 +323,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a.tout-title-link',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   bustle: {
     baseUrl: 'https://www.bustle.com',
@@ -342,7 +346,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   buzzfeed: {
     baseUrl: 'https://www.buzzfeed.com',
@@ -360,7 +364,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   cbsnews: {
     baseUrl: 'https://www.cbsnews.com',
@@ -372,7 +376,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector: 'article time' },
       spider:{ attribute: 'href', selector: 'a[href*="/news/"]' },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   cnbc: {
     baseUrl: 'https://www.cnbc.com',
@@ -391,7 +395,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   cnn: {
     baseUrl: 'https://www.cnn.com',
@@ -416,7 +420,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         url: 'https://www.cnn.com/article/sitemap-${YYYY}-${M}.html',
       },
     ],
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   coindesk: {
     baseUrl: 'https://www.coindesk.com',
@@ -431,7 +435,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a.card-title-link',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   cryptoglobe: {
     baseUrl: 'https://www.cryptoglobe.com',
@@ -448,7 +452,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   csis: {
     baseUrl: 'https://www.csis.org',
@@ -463,7 +467,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   cultofmac: {
     baseUrl: 'https://www.cultofmac.com',
@@ -478,7 +482,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[class*="post-title"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   dailymail: {
     baseUrl: 'https://www.dailymail.co.uk/ushome/index.html',
@@ -498,7 +502,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.uk,
   },
   daringfireball: {
     baseUrl: 'https://www.daringfireball.net',
@@ -516,7 +520,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   defenseone: {
     baseUrl: 'https://www.defenseone.com',
@@ -535,7 +539,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   developertech: {
     baseUrl: 'https://www.developer-tech.com',
@@ -550,7 +554,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/news/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   digitaltrends: {
     baseUrl: 'https://www.digitaltrends.com',
@@ -572,7 +576,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   economist: {
     baseUrl: 'https://www.economist.com',
@@ -585,7 +589,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector: 'disabled' },
       spider : { selector: 'disabled' },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   enews: {
     baseUrl: 'https://www.eonline.com',
@@ -635,7 +639,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   essence: {
     baseUrl: 'https://www.essence.com',
@@ -661,7 +665,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   ew: {
     baseUrl: 'https://www.ew.com',
@@ -676,7 +680,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a.entityTout__link',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   fiercebiotech: {
     baseUrl: 'https://www.fiercebiotech.com',
@@ -697,7 +701,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   forbes: {
     baseUrl: 'https://www.forbes.com',
@@ -727,7 +731,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[class*="hed-heading"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   fortune: {
     baseUrl: 'https://www.fortune.com',
@@ -758,7 +762,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   ft: {
     baseUrl: 'https://www.ft.com',
@@ -771,7 +775,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector: 'disabled' },
       spider : { selector: 'disabled' },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   futurism: {
     baseUrl: 'https://www.futurism.com',
@@ -791,7 +795,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   gizmodo: {
     baseUrl: 'https://www.gizmodo.com', 
@@ -806,7 +810,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   huffpost: {
     baseUrl: 'https://www.huffpost.com',
@@ -822,7 +826,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/entry/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   ieeespectrum: {
     baseUrl: 'https://spectrum.ieee.org',
@@ -839,7 +843,34 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
+  },
+  independent: {
+    baseUrl: 'https://www.independent.co.uk/',
+    displayName: 'The Independent',
+    name: 'independent',
+    selectors: {
+      article: { selector: 'article p' },
+      author: { selector: 'article a[href*="/author/"]' },
+      date: { selector: 'article time' },
+      spider:{
+        attribute: 'href',
+        selector: [
+          'a[href*="/asia/"]',
+          'a[href*="/extras/"]',
+          'a[href*="/lifestyle/"]',
+          'a[href*="/life-style/"]',
+          'a[href*="/news/"]',
+          'a[href*="/pride-month/"]',
+          'a[href*="/space/"]',
+          'a[href*="/sport/"]',
+          'a[href*="/tech/"]',
+          'a[href*="/travel/"]',
+          'a[href*="/voices/"]',
+        ].join(','),
+      },
+    },
+    timezone: TIMEZONES.uk,
   },
   inews: {
     baseUrl: 'https://inews.co.uk',
@@ -856,7 +887,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   inverse: {
     baseUrl: 'https://www.inverse.com',
@@ -877,7 +908,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   investors: {
     baseUrl: 'https://www.investors.com/tag/all-news-and-stock-ideas/',
@@ -896,7 +927,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   jalopnik: {
     baseUrl: 'https://jalopnik.com/sitemap/${YYYY}/${MMMM}',
@@ -911,7 +942,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   kotaku: {
     baseUrl: 'https://www.kotaku.com',
@@ -926,7 +957,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   ksl: {
     baseUrl: 'https://www.ksl.com',
@@ -941,7 +972,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/article/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   latimes: {
     baseUrl: 'https://www.latimes.com',
@@ -991,7 +1022,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/article/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   menshealth: {
     baseUrl: 'https://www.menshealth.com',
@@ -1012,7 +1043,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   morningstar: {
     baseUrl: 'https://www.morningstar.com',
@@ -1029,7 +1060,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   nationalgeographic: {
     baseUrl: 'https://www.nationalgeographic.com',
@@ -1047,7 +1078,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   nature: {
     baseUrl: 'https://www.nature.org',
@@ -1064,7 +1095,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   nbcnews: {
     baseUrl: 'https://www.nbcnews.com',
@@ -1086,7 +1117,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   newsweek: {
     baseUrl: 'https://www.newsweek.com',
@@ -1101,7 +1132,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: '.news-title a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   newyorker: {
     baseUrl: 'https://www.newyorker.com',
@@ -1120,7 +1151,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   npr: {
     baseUrl: 'https://www.npr.org',
@@ -1139,7 +1170,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   nytimes: {
     baseUrl: 'https://www.nytimes.com',
@@ -1152,7 +1183,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector: 'disabled' },
       spider:{ selector: 'disabled' },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   out: {
     baseUrl: 'https://www.out.com',
@@ -1167,7 +1198,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   people: {
     baseUrl: 'https://www.people.com',
@@ -1195,7 +1226,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   politico: {
     baseUrl: 'https://www.politico.com',
@@ -1212,7 +1243,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   polygon: {
     baseUrl: 'https://www.polygon.com',
@@ -1229,7 +1260,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   popsci: {
     baseUrl: 'https://www.popsci.com',
@@ -1250,7 +1281,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   popularmechanics: {
     baseUrl: 'https://www.popularmechanics.com',
@@ -1275,7 +1306,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   psychologytoday: {
     baseUrl: 'https://www.psychologytoday.com',
@@ -1292,7 +1323,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   reuters: {
     baseUrl: 'https://www.reuters.com', 
@@ -1317,7 +1348,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   rollingstone: {
     baseUrl: 'https://www.rollingstone.com',
@@ -1337,7 +1368,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   science: {
     baseUrl: 'https://www.science.org',
@@ -1354,7 +1385,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   sciencedaily: {
     baseUrl: 'https://www.sciencedaily.com',
@@ -1365,12 +1396,34 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       article: { selector: '#story_text p' },
       author: { selector: '#source' },
       date: { selector: '#date_posted' },
-      spider:{
+      spider: {
         attribute: 'href',
         selector: 'a[href*="/releases/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
+  },
+  scitechnewsnetwork: {
+    baseUrl: 'https://www.scitechnewsnetwork.com',
+    displayName: 'Sci-Tech News Network',
+    name: 'scitechnewsnetwork',
+    selectors: {
+      date: { selector: '' },
+      spider: {
+        attribute: 'href',
+        selector: 'a[href*="/article/"]',
+      },
+    },
+    sitemaps: [
+      {
+        spider: {
+          dateSelector: { selector: '.date-published' },
+          selector: '.article-item',
+        },
+        url: 'https://www.scitechnewsnetwork.com/latest-news/',
+      },
+    ],
+    timezone: TIMEZONES.default,
   },
   space: {
     baseUrl: 'https://www.space.com',
@@ -1386,7 +1439,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   stockhead: {
     baseUrl: 'https://stockhead.com.au',
@@ -1409,7 +1462,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   sundaytimes: {
     baseUrl: 'https://www.thetimes.co.uk',
@@ -1426,7 +1479,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: 'UTC+1',
+    timezone: TIMEZONES.uk,
   },
   techcrunch: {
     baseUrl: 'https://www.techcrunch.com',
@@ -1443,7 +1496,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   telegraph: {
     baseUrl: 'https://www.telegraph.co.uk',
@@ -1458,7 +1511,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a, a[class*="headline__link"]',
       },
     },
-    timezone: 'UTC+1',
+    timezone: TIMEZONES.uk,
   },
   theatlantic: {
     baseUrl: 'https://www.theatlantic.com',
@@ -1473,7 +1526,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[class*="titleLink"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   thedrive: {
     baseUrl: 'https://www.thedrive.com',
@@ -1493,7 +1546,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   thefastmode: {
     baseUrl: 'https://www.thefastmode.com',
@@ -1519,7 +1572,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   theguardian: {
     baseUrl: 'https://www.theguardian.com',
@@ -1534,7 +1587,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[data-link-name="article"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   thehill: {
     baseUrl: 'https://www.thehill.com',
@@ -1553,34 +1606,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
-  },
-  theindependent: {
-    baseUrl: 'https://www.independent.co.uk/',
-    displayName: 'The Independent',
-    name: 'independent',
-    selectors: {
-      article: { selector: 'article p' },
-      author: { selector: 'article a[href*="/author/"]' },
-      date: { selector: 'article time' },
-      spider:{
-        attribute: 'href',
-        selector: [
-          'a[href*="/asia/"]',
-          'a[href*="/extras/"]',
-          'a[href*="/lifestyle/"]',
-          'a[href*="/life-style/"]',
-          'a[href*="/news/"]',
-          'a[href*="/pride-month/"]',
-          'a[href*="/space/"]',
-          'a[href*="/sport/"]',
-          'a[href*="/tech/"]',
-          'a[href*="/travel/"]',
-          'a[href*="/voices/"]',
-        ].join(','),
-      },
-    },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   thestar: {
     baseUrl: 'https://www.thestar.com',
@@ -1604,7 +1630,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   thestreet: {
     baseUrl: 'https://www.thestreet.com',
@@ -1628,7 +1654,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         // ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   theverge: {
     baseUrl: 'https://www.theverge.com',
@@ -1643,7 +1669,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'li[class*="duet--content-cards"] a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   time: {
     baseUrl: 'https://www.time.com',
@@ -1658,7 +1684,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   usatoday: {
     baseUrl: 'https://www.usatoday.com',
@@ -1673,7 +1699,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/story/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   usnews: {
     baseUrl: 'https://www.usnews.com',
@@ -1693,7 +1719,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   variety: {
     baseUrl: 'https://www.variety.com',
@@ -1713,7 +1739,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   venturebeat: {
     baseUrl: 'https://www.venturebeat.com',
@@ -1729,7 +1755,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   vice: {
     baseUrl: 'https://www.vice.com',
@@ -1744,7 +1770,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/article/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   vox: {
     baseUrl: 'https://www.vox.com',
@@ -1781,7 +1807,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         ].join(','),
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   washingtonpost: {
     baseUrl: 'https://www.washingtonpost.com',
@@ -1794,7 +1820,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector:'disabled' },
       spider:{ selector: 'disabled' },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   wilsoncenter: {
     baseUrl: 'https://www.wilsoncenter.org',
@@ -1807,7 +1833,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
       date: { selector:'disabled' },
       spider:{ selector: 'disabled' },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   wired: {
     baseUrl: 'https://www.wired.com',
@@ -1822,7 +1848,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'a[href*="/story/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
   wsj: {
     baseUrl: 'https://www.wsj.com',
@@ -1837,6 +1863,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
         selector: 'article a, a[href*="/articles/"]',
       },
     },
-    timezone: DEFAULT_TIMEZONE,
+    timezone: TIMEZONES.default,
   },
 };

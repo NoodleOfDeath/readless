@@ -24,6 +24,7 @@ export async function doWork() {
         let fetchMax: RateLimit;
         try {
           const {
+            imageUrls,
             outlet, 
             publisher: publisherName = outlet, 
             content, 
@@ -61,7 +62,8 @@ export async function doWork() {
           }
           const summary = await ScribeService.readAndSummarize(
             {
-              content, 
+              content,
+              imageUrls: JSON.parse(imageUrls) as string[], 
               priority: job.priority,
               publisher, 
               url,

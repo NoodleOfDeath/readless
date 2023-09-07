@@ -17,32 +17,12 @@ import {
 import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
-import { getUserAgent } from '~/utils';
+import { usePlatformTools } from '~/utils';
 
-export function LeftDrawerContent(props: DrawerContentComponentProps) {
-  
-  const {
-    router,
-    navigate,
-  } = useNavigation();
-  
+function RightDrawerContent(props: DrawerContentComponentProps) {
+  const { navigate } = useNavigation();
+  const { getUserAgent } = usePlatformTools();
   const { viewFeature, hasViewedFeature } = React.useContext(SessionContext);
-
-  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
-
-  React.useEffect(() => {
-    const subscriber = Linking.addEventListener('url', router);
-    if (!loadedInitialUrl) {
-      Linking.getInitialURL().then((url) => {
-        if (url) {
-          router({ url } );
-          setLoadedInitialUrl(true);
-        }
-      });
-    }
-    return () => subscriber.remove();
-  }, [router, loadedInitialUrl]);
-  
   return (
     <DrawerContentScrollView { ...props }>
       <DrawerSection>
@@ -82,6 +62,24 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
 const RightDrawer = createDrawerNavigator();
 
 export function RightDrawerScreen() {
+  
+  const { router } = useNavigation();
+  
+  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
+
+  React.useEffect(() => {
+    const subscriber = Linking.addEventListener('url', router);
+    if (!loadedInitialUrl) {
+      Linking.getInitialURL().then((url) => {
+        if (url) {
+          router({ url } );
+          setLoadedInitialUrl(true);
+        }
+      });
+    }
+    return () => subscriber.remove();
+  }, [router, loadedInitialUrl]);
+
   return (
     <RightDrawer.Navigator 
       id="RightDrawer"
@@ -91,7 +89,7 @@ export function RightDrawerScreen() {
         headerShown: false,
         swipeEnabled: false,
       }) }
-      drawerContent={ (props) => <LeftDrawerContent { ...props } /> }>
+      drawerContent={ (props) => <RightDrawerContent { ...props } /> }>
       <RightDrawer.Screen
         name='LeftDrawer'
         component={ LeftDrawerScreen } />

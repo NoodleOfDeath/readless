@@ -5,53 +5,76 @@ import {
   NestableDraggableFlatList,
   NestableScrollContainer,
 } from 'react-native-draggable-flatlist';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { ScrollViewProps, View } from '~/components';
+import {
+  ScrollViewProps,
+  Text,
+  View,
+} from '~/components';
 import { useStyles } from '~/hooks';
 
-export type DraggableListProps<T> = ScrollViewProps & Pick<React.ComponentProps<typeof NestableDraggableFlatList<T>>, 'renderItem'> & {
-  datasets: T[][];
+export type DataItem = {
+  key: string | number;
+  label: React.ReactNode;
+};
+
+export type DataSection<T extends DataItem = DataItem> = {
+  data: T[];
+  key: string | number;
+  title?: string;
+};
+
+export type DraggableListProps<T extends DataItem = DataItem> = ScrollViewProps & {
+  sections: DataSection<T>[];
+  renderItem: (props: {
+    drag: () => void;
+    getIndex: () => number | undefined;
+    isActive: boolean;
+    item: T;
+  }) => React.ReactNode;
   flatListProps?: React.ComponentProps<typeof NestableDraggableFlatList<T>> | ((index: number) => React.ComponentProps<typeof NestableDraggableFlatList<T>>);
 };
 
-export function DraggableList<T>({
-  datasets: datasets0,
+export function DraggableList<T extends DataItem = DataItem>({
+  sections: sections0,
+  renderItem,
   flatListProps,
   ...props
 }: DraggableListProps<T>) {
   const style = useStyles(props);
 
-  const [datasets, setDatasets] = React.useState(datasets0);
+  const [sections, setSections] = React.useState(sections0);
 
   useFocusEffect(React.useCallback(() => {
-    setDatasets(datasets0);
-  }, [datasets0]));
+    setSections(sections0);
+  }, [sections0]));
 
   return (
-    <NestableScrollContainer style={ style }>
-      {datasets.map((data, index) => (
-        <NestableDraggableFlatList
-          key={ ['section', index].join('-') }
-          data={ data }
-          renderItem={ ({
-            item, getIndex, drag, isActive, 
-          }) => (
-            <View
-              key={ ['draggable-item', index].join('-') }
-              onLongPress={ drag }>
-              {props.renderItem({
-                drag, getIndex, isActive, item,
-              })}
-            </View>
-          ) }
-          keyExtractor={ (item, index) => ['draggable-item', index].join('-') }
-          onDragEnd={ ({ data }) => setDatasets((prev) => {
-            const state = [...prev];
-            state[index] = data as T[];
-            return prev = state;  
-          }) }
-          { ...(flatListProps instanceof Function ? flatListProps(index) : flatListProps) } />
-      ))}
-    </NestableScrollContainer>
+    <GestureHandlerRootView>
+      <NestableScrollContainer style={ style }>
+        {sections.map((section, index) => (
+          <NestableDraggableFlatList
+            key={ section.key }
+            data={ section.data }
+            renderItem={ ({
+              item, getIndex, drag, isActive, 
+            }) => (
+              <View
+                touchable
+                onLongPress={ drag }>
+                <Text>fuck</Text>
+              </View>
+            ) }
+            keyExtractor={ (item) => `${item.key}` }
+            onDragEnd={ ({ data }) => setSections((prev) => {
+              const state = [...prev];
+              state[index].data = data;
+              return prev = state;
+            }) }
+            { ...(flatListProps instanceof Function ? flatListProps(index) : flatListProps) } />
+        ))}
+      </NestableScrollContainer>
+    </GestureHandlerRootView>
   );
 }

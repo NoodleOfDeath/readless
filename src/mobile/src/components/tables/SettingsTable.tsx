@@ -176,12 +176,17 @@ export function SettingsTable() {
           title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
           onPress={ () => {
             setPreference('readSummaries', {}); 
+          } }
+          onLongPress={ () => {
+            navigate('test'); 
           } } />
         <TableViewCell
           bold
           title={ `${strings.settings_resetHiddenSummaries} (${Object.keys({ ...removedSummaries }).length})` }
           onPress={ () => {
             setPreference('removedSummaries', {}); 
+            setPreference('excludedCategories', {}); 
+            setPreference('excludedPublishers', {}); 
           } } />
         <TableViewCell
           bold

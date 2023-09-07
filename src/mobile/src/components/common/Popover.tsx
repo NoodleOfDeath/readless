@@ -1,18 +1,26 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import {
+  AccessibilityInfo,
+  View as RNView,
+  TouchableOpacity,
+  findNodeHandle,
+} from 'react-native';
 
-import analytics from '@react-native-firebase/analytics';
 import { Menu } from 'react-native-paper';
 import  RNPopover from 'react-native-popover-view';
 import { PublicPopoverProps } from 'react-native-popover-view/dist/Popover';
 
+import { Chip, View } from '~/components';
+import { SessionEvent } from '~/core';
 import { useTheme } from '~/hooks';
+import { strings } from '~/locales';
+import { usePlatformTools } from '~/utils';
 
 export type PopoverProps = PublicPopoverProps & {
   anchor?: React.ReactNode;
   disabled?: boolean;
   onPress?: () => void;
-  event?: { name: string, params?: Record<string, unknown> };
+  event?: { name: SessionEvent, params?: Record<string, unknown> };
   longPress?: boolean;
   variant?: 'default' | 'menu';
   menu?: boolean;
@@ -29,9 +37,37 @@ export function Popover({
   variant = menu ? 'menu' : 'default',
   ...props
 }: PopoverProps) {
+
+  const { emitEvent } = usePlatformTools();
   const theme = useTheme();
 
   const [visible, setVisible] = React.useState(false);
+  const ref = React.useRef<RNView>(null);
+
+  const contents = React.useMemo(() => (
+    <RNView ref={ ref }>
+      <View p={ 4 } row>
+        <View row />
+        <Chip
+          accessible
+          accessibilityLabel={ strings.action_close }
+          leftIcon="close"
+          onPress={ () => setVisible(false) } />
+      </View>
+      {children}
+    </RNView>
+  ), [children]);
+
+  React.useEffect(() => {
+    if (!ref.current) {
+      return; 
+    }
+    const handle = findNodeHandle(ref.current);
+    if (!handle) {
+      return; 
+    }
+    AccessibilityInfo.setAccessibilityFocus(handle);
+  }, [ref]);
 
   if (disabled) {
     return <TouchableOpacity disabled>{anchor}</TouchableOpacity>;
@@ -44,7 +80,7 @@ export function Popover({
           <TouchableOpacity
             onPress={ () => {
               if (event) {
-                analytics().logEvent(event.name, event.params);
+                emitEvent(event.name);
               }
               onPress?.();
               !longPress && setVisible(true); 
@@ -57,7 +93,7 @@ export function Popover({
         visible={ visible }
         onDismiss={ () => setVisible(false) }
         style={ theme.components.card }>
-        {children}
+        {contents}
       </Menu>
     );
   }
@@ -79,7 +115,7 @@ export function Popover({
         </TouchableOpacity>
       ) }
       popoverStyle={ theme.components.card }>
-      {children}
+      {contents}
     </RNPopover>
   );
 }
