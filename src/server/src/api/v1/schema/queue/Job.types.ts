@@ -57,6 +57,7 @@ export type SiteMapJobData = {
   outlet: string;
   publisher?: string;
   url: string; 
+  imageUrls?: string;
   content?: string;
   force?: boolean;
 };

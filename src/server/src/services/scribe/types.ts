@@ -2,6 +2,7 @@ import { Publisher } from '../../api/v1/schema';
 
 export type ReadAndSummarizePayload = {
   url: string;
+  imageUrls?: string[];
   content?: string;
   publisher?: Publisher;
   force?: boolean;

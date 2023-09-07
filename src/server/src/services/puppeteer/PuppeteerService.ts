@@ -24,6 +24,7 @@ type ReplacePattern = string | RegExp | {
 
 type SelectorAction = {
   selector: string;
+  waitFor?: string[];
   action: (el: ElementHandle<Element>) => Promise<void>;
   selectAll?: boolean;
   pageOptions?: PageOptions;
@@ -107,6 +108,17 @@ export function replaceDatePlaceholders(
       return $0;
     }
   });
+}
+
+export function concatSelector(
+  base: string, 
+  selector: string, 
+  delimiter = ' '
+) {
+  if (!base.endsWith(`${delimiter}${selector}`)) {
+    return [base, selector].join(delimiter);
+  }
+  return base;
 }
 
 export function fixRelativeUrl(url: string, {
@@ -213,7 +225,8 @@ export class PuppeteerService extends BaseService {
       });
       
       const page = await browser.newPage();
-      await page.goto(url, { timeout, waitUntil : 'domcontentloaded' });
+      // handle pages that might lag to load content
+      await page.goto(url, { timeout, waitUntil : 'networkidle0' });
       await page.setViewport(viewport);
 
       const rawText = await page.evaluate(() => document.body.innerText);
@@ -221,12 +234,15 @@ export class PuppeteerService extends BaseService {
       for (const selectorAction of actions) {
         try {
           const {
-            selector, selectAll, pageOptions, action, 
+            selector, waitFor = [], selectAll, pageOptions, action, 
           } = selectorAction;
           if (selector === 'disabled') {
             return '';
           }
           await page.setViewport(pageOptions?.viewport ?? viewport);
+          for (const wait of waitFor) {
+            await page.waitForSelector(wait, { timeout: pageOptions?.timeout ?? ms('3s') });
+          }
           if (selectAll) {
             const els = await page.$$(selector);
             for (const el of els) {
@@ -267,8 +283,8 @@ export class PuppeteerService extends BaseService {
     const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
     targetUrl = replaceDatePlaceholders(targetUrl);
-    let urls: Record<string, number> = {};
-    const rawHtml = await PuppeteerService.fetch(targetUrl);
+    let urls: Record<string, { priority: number, imageUrls: string[] }> = {};
+    const rawHtml = await this.fetch(targetUrl);
     const $ = load(rawHtml);
     const cleanUrl = (url?: string) => {
       if (!url) {
@@ -281,70 +297,84 @@ export class PuppeteerService extends BaseService {
       // fix relative hrefs
       return fixRelativeUrl(url, { excludeExternal: true, publisher });
     };
-    urls = Object.fromEntries([...$(replaceDatePlaceholders(spider.selector)).map((i, el) => {
+    const topSelector = replaceDatePlaceholders(spider.selector);
+    urls = Object.fromEntries([...$(topSelector).map((_, el) => {
       let priority = 0;
-      let url: string;
-      if (spider.urlSelector) {
-        url = cleanUrl($(el).find(replaceDatePlaceholders(spider.urlSelector.selector)).first()?.attr(spider.urlSelector.attribute || spider.attribute || 'href'));
-        if (!url) {
-          return undefined;
-        }
-        if (spider.dateSelector) {
-          const date = $(el).find(replaceDatePlaceholders(spider.dateSelector.selector)).first();
-          const dates = [date?.attr(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.text()].filter(Boolean).map((d) => parseDate(d));
-          priority = maxDate(...dates)?.valueOf() || 0;
-        }
-      } else {
-        url = cleanUrl($(el).attr(spider.attribute || 'href'));
-        if (!url) {
-          return undefined;
-        }
+      const target = /\ba(?:\[.*?\])?$/.test(topSelector) ? $(el).first() : $(el).find(replaceDatePlaceholders(spider.urlSelector?.selector || 'a')).first();
+      const url = cleanUrl(target?.attr(spider.urlSelector?.attribute || spider.attribute || 'href'));
+      if (!url) {
+        return undefined;
       }
-      return { priority, url };
-    })].filter(Boolean).map(({ priority, url }) => [url, priority]));
-    await PuppeteerService.open(targetUrl, [
+      if (spider.dateSelector) {
+        const date = $(el).find(replaceDatePlaceholders(spider.dateSelector.selector)).first();
+        const dates = [date?.attr(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.text()].filter(Boolean).map((d) => parseDate(d));
+        priority = maxDate(...dates)?.valueOf() || 0;
+      } else {
+        const date = parseDate($(el).text());
+        priority = maxDate(date)?.valueOf() || 0;
+      }
+      const image = $(el).find(replaceDatePlaceholders(spider.imageSelector?.selector ?? 'img')).first();
+      const imageUrls = fallbackImageAttributes.map((attr) => image?.attr(attr)).filter(Boolean).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
+      return {
+        imageUrls, priority, url, 
+      };
+    })].filter(Boolean).map(({
+      priority, imageUrls, url, 
+    }) => [url, { imageUrls, priority }]));
+    await this.open(targetUrl, [
       {
         action: async (el) => {
           let priority = 0;
           let url: string;
-          if (spider.urlSelector) {
-            try {
-              url = cleanUrl(await el.evaluate((el, selector, attr) => el.querySelector(selector)?.getAttribute(attr), replaceDatePlaceholders(spider.urlSelector.selector), spider.urlSelector.attribute || spider.attribute || 'href'));
+          let imageUrls: string[];
+          try {
+            if (/\ba(?:\[.*?\])?$/.test(topSelector)) {
+              url = cleanUrl(await el.evaluate((el, attr) => el.getAttribute(attr || 'href'), spider.attribute));
               if (!url || url in urls) {
                 return;
+              }
+            } else {
+              url = cleanUrl(await el.evaluate((el, selector, attr) => el.querySelector(selector)?.getAttribute(attr), replaceDatePlaceholders(spider.urlSelector?.selector || 'a'), spider.urlSelector?.attribute || spider.attribute || 'href'));
+              if (!url || url in urls) {
+                return;
+              }
+            }
+          } catch (e) {
+            if (process.env.ERROR_REPORTING) {
+              console.error(e);
+            }
+            return;
+          }
+          if (spider.dateSelector) {
+            try {
+              const date = await el.evaluate((el, selector) => el.querySelector(selector), replaceDatePlaceholders(spider.dateSelector.selector));
+              const dates = [date?.getAttribute(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.textContent].filter(Boolean).map((d) => parseDate(d));
+              if (dates.length > 0) {
+                priority = maxDate(...dates)?.valueOf() || 0;
               }
             } catch (e) {
               if (process.env.ERROR_REPORTING) {
                 console.error(e);
               }
-              return;
-            }
-            if (spider.dateSelector) {
-              try {
-                const date = await el.evaluate((el, selector) => el.querySelector(selector), replaceDatePlaceholders(spider.dateSelector.selector));
-                const dates = [date?.getAttribute(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.textContent].filter(Boolean).map((d) => parseDate(d));
-                if (dates.length > 0) {
-                  priority = maxDate(...dates)?.valueOf() || 0;
-                }
-              } catch (e) {
-                if (process.env.ERROR_REPORTING) {
-                  console.error(e);
-                }
-              }
-            }
-          } else {
-            url = cleanUrl(await el.evaluate((el, attr) => el.getAttribute(attr || 'href'), spider.attribute));
-            if (!url || url in urls) {
-              return;
             }
           }
-          urls[url] = priority;
+          try {
+            const image = await el.evaluate((el, selector) => el.querySelector(selector), replaceDatePlaceholders(spider.imageSelector?.selector ?? 'img'));
+            console.log(image);
+            imageUrls = fallbackImageAttributes.map((attr) => image?.getAttribute(attr)).filter(Boolean).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
+          } catch (e) {
+            if (process.env.ERROR_REPORTING) {
+              console.error(e);
+            }
+          }
+          urls[url] = { imageUrls, priority };
         }, 
         selectAll: true,
-        selector: replaceDatePlaceholders(spider.selector),
+        selector: topSelector,
+        waitFor: [spider.urlSelector?.selector, spider.dateSelector?.selector].filter(Boolean),
       },
     ]);
-    return Object.entries(urls).map(([url, priority]) => ({ priority, url })).sort((a, b) => b.priority - a.priority);
+    return Object.entries(urls).map(([url, data]) => ({ ...data, url })).sort((a, b) => b.priority - a.priority);
   }
 
   public static async crawl(
@@ -416,7 +446,7 @@ export class PuppeteerService extends BaseService {
         article, author, date, title, image,
       } = publisher.selectors;
       
-      const rawHtml = await PuppeteerService.fetch(url);
+      const rawHtml = await this.fetch(url);
       
       const authors: string[] = [];
       const dates: string[] = [];
@@ -583,7 +613,7 @@ export class PuppeteerService extends BaseService {
         selector: author?.selector,
       });*/
       
-      await PuppeteerService.open(url, actions);
+      await this.open(url, actions);
       
       loot.dateMatches = dates;
       loot.date = maxDate(...dates.map((d) => parseDate(d)));

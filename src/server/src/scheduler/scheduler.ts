@@ -9,7 +9,6 @@ import {
   Summary,
   Worker,
 } from '../api/v1/schema';
-import { SUPPORTED_LOCALES } from '../core/locales';
 import { DBService, PuppeteerService } from '../services';
 
 const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
@@ -71,12 +70,13 @@ export async function pollForNews() {
           await queue.add(
             url.url,
             { 
+              imageUrls: JSON.stringify(url.imageUrls),
               publisher: publisher.name,
               url: url.url,
             },
             {
               group: publisher.name,
-              priority: BigInt(url.priority), 
+              priority: BigInt(url.priority),
             }
           );
         }

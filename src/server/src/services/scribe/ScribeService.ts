@@ -56,7 +56,7 @@ export class ScribeService extends BaseService {
   
   public static async readAndSummarize(
     {
-      url, content, publisher, force, priority,
+      url, imageUrls, content, publisher, force, priority,
     }: ReadAndSummarizePayload
   ): Promise<Summary> {
     if (this.categories.length === 0) {
@@ -85,6 +85,7 @@ export class ScribeService extends BaseService {
         loot.date = parsedDate;
       }
     }
+    loot.imageUrls = Array.from(new Set([...loot.imageUrls, ...imageUrls]));
     // create the prompt onReply map to be sentto ChatGPT
     if (!force) {
       const existingMedia = await SummaryMedia.findOne({ where: { originalUrl: loot.imageUrls } });

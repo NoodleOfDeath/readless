@@ -17,7 +17,7 @@ import {
 } from '../src/services/puppeteer';
 
 const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' | 'date' | 'imageUrls'> } = {
-  abc: {
+  abcnews: {
     authors: ['Shannon K. Crawford', 'Luis Martinez'],
     date: new Date('2023-04-23T14:52:00.000Z'),
     url: 'https://abcnews.go.com/International/us-embassy-staff-sudan-evacuated-amid-fighting/story?id=98767748',
@@ -174,11 +174,6 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     date: new Date('placeholder'),
     url: 'https://www.theguardian.com/news/gallery/2023/may/29/burning-flags-and-big-red-lips-mondays-best-photos',
   },
-  hill: {
-    authors: [],
-    date: new Date('placeholder'),
-    url: 'https://thehill.com/homenews/media/3962900-what-fox-news-dominion-settlement-means-for-its-next-major-legal-fight/',
-  },
   huffpost: {
     authors: [],
     date: new Date('placeholder'),
@@ -220,7 +215,7 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     date: new Date('placeholder'),
     url: 'https://www.menshealth.com/health/a43498777/daytime-tv-doctor-requiem/',
   },
-  natgeo: {
+  nationalgeographic: {
     authors: [],
     date: new Date('placeholder'),
     url: 'https://www.nationalgeographic.com/premium/graphics/asian-elephants-behavior-coexistence-survival-feature',
@@ -261,7 +256,7 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     date: new Date('placeholder'),
     url: 'https://www.politico.com/news/magazine/2023/04/21/political-violence-2024-magazine-00093028',
   },
-  popmechs: {
+  popularmechanics: {
     authors: [],
     date: new Date('placeholder'),
     url: 'https://www.popularmechanics.com/space/moon-mars/a43633761/blowing-up-the-moon/',
@@ -287,21 +282,15 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     date: new Date('placeholder'),
     url: 'https://www.sciencedaily.com/releases/2023/04/230419125056.htm',
   },
+  scitechnewsnetwork: {
+    authors: [],
+    date: new Date('2023-09-06'),
+    url: 'https://www.scitechnewsnetwork.com/article/653914703-read-less-with-ai-makes-the-chore-of-staying-informed-more-accessible-effortless-and-empowering',
+  },
   space: {
     authors: [],
     date: new Date('placeholder'),
     url: 'https://www.space.com/the-expanse-dragon-tooth-comic-series-creators',
-  },
-  street: {
-    authors: [],
-    date: new Date('placeholder'),
-    url: 'https://www.thestreet.com/technology/elon-musk-shares-stunning-starship-video-and-photo',
-  },
-  sundaytimes: {
-    authors: [],
-    date: new Date('placeholder'),
-    imageUrls: ['https://www.thetimes.co.uk/imageserver/image/%2Fmethode%2Ftimes%2Fprod%2Fweb%2Fbin%2F785fe892-2cc2-11ee-b33d-6d3f5a636b40.jpg?crop=6690%2C3763%2C137%2C37&resize=1500'],
-    url: 'https://www.thetimes.co.uk/article/tesla-range-miles-electric-battery-wddfq7z5r',
   },
   telegraph: {
     authors: [],
@@ -313,6 +302,22 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     authors: [],
     date: new Date('placeholder'),
     url: 'https://cdn.theatlantic.com/thumbor/V6dZ4_O0a4054tchlComWJ1bWms=/0x0:2000x1125/960x540/media/img/mt/2023/07/ups_final_2/original.jpg',
+  },
+  thehill: {
+    authors: [],
+    date: new Date('placeholder'),
+    url: 'https://thehill.com/homenews/media/3962900-what-fox-news-dominion-settlement-means-for-its-next-major-legal-fight/',
+  },
+  thestreet: {
+    authors: [],
+    date: new Date('placeholder'),
+    url: 'https://www.thestreet.com/technology/elon-musk-shares-stunning-starship-video-and-photo',
+  },
+  thetimes: {
+    authors: [],
+    date: new Date('placeholder'),
+    imageUrls: ['https://www.thetimes.co.uk/imageserver/image/%2Fmethode%2Ftimes%2Fprod%2Fweb%2Fbin%2F785fe892-2cc2-11ee-b33d-6d3f5a636b40.jpg?crop=6690%2C3763%2C137%2C37&resize=1500'],
+    url: 'https://www.thetimes.co.uk/article/tesla-range-miles-electric-battery-wddfq7z5r',
   },
   time: {
     authors: [],
