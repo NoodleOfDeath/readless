@@ -63,7 +63,7 @@ export async function doWork() {
           const summary = await ScribeService.readAndSummarize(
             {
               content,
-              imageUrls: JSON.parse(imageUrls) as string[], 
+              imageUrls: JSON.parse(imageUrls ?? '[]') as string[], 
               priority: job.priority,
               publisher, 
               url,
