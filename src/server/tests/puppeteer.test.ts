@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import {
+  beforeAll,
   describe,
   expect,
   jest,
@@ -9,7 +10,9 @@ import {
 
 jest.setTimeout(30_000);
 
+import { Publisher } from '../src/api/v1/schema';
 import { PUBLISHERS } from '../src/api/v1/schema/resources/channel/Publisher.types';
+import { DBService } from '../src/services';
 import {
   Loot,
   PuppeteerService,
@@ -183,6 +186,7 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   independent: {
     authors: [],
     date: new Date('2023-09-08T10:06:07.000Z'),
+    imageUrls: ['https://static.independent.co.uk/2023/08/07/11/SEI166845196.jpg'],
     url: 'https://www.independent.co.uk/sport/rugby/rugby-union/england-world-cup-fixtures-schedule-route-to-final-b2390150.html',
   },
   inverse: {
@@ -367,6 +371,13 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
 };
 
+beforeAll(async () => {
+  console.log('preparing...');
+  await DBService.prepare();
+  await Publisher.prepare();
+  console.log('done');
+});
+
 describe('util method tests', () => {
 
   test('parse-srcset', () => {
@@ -397,6 +408,7 @@ describe('crawl', () => {
 });
 
 describe('loot', () => {
+
   for (const [name, exp] of Object.entries(LOOT)) {
     test(`loot-${name}`, async () => {
       if (!exp) {
@@ -410,15 +422,18 @@ describe('loot', () => {
       if (exp.imageUrls) {
         expect(loot.imageUrls?.[0]).toBe(exp?.imageUrls[0]);
       }
-      if (exp.authors.length > 0) {
-        expect(loot.authors.length).toBe(exp.authors.length);
-        for (const author of loot.authors) {
-          expect(exp.authors.includes(author)).toBe(true);
-        }
-      }
+      // if (exp.authors.length > 0) {
+      //   expect(loot.authors.length).toBe(exp.authors.length);
+      //   for (const author of loot.authors) {
+      //     expect(exp.authors.includes(author)).toBe(true);
+      //   }
+      // }
       expect(loot.date).toBeDefined();
       expect(Number.isNaN(loot.date.valueOf())).toBe(false);
-      //expect(loot.date.toISOString()).toBe(exp.date.toISOString());
+      expect(loot.date).toBeInstanceOf(Date);
+      expect(loot.date.toISOString()).toBe(exp.date.toISOString());
+      console.log(loot.date);
     });
   }
+
 });

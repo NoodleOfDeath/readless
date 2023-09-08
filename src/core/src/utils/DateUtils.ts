@@ -5,9 +5,9 @@ import {
 } from 'date-fns';
 import ms from 'ms';
 
-export const TIME_EXPR = /(\d\d?)\s*(a\.?m\.?|p\.?m\.?)|(\d\d?)[.:](\d\d?)(?:[.:](\d\d?))?(?:\s*(a\.?m\.?|p\.?m\.?))?(?:.*(?:\s*\b(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))\b)?/i;
+export const TIME_EXPR = /(\d\d?)\s*(a\.?m\.?|p\.?m\.?)|(\d\d?)[.:](\d\d?)(?:[.:](\d\d?))?(?:\s*(a\.?m\.?|p\.?m\.?))?(?:.*?(?:\s*\b(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IST|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))\b)?/i;
 
-export const DATE_EXPR = /(\d\d?\s*(?:h(?:rs?|ours?)?|m(?:in(?:utes?)?)?|d(?:ays?)?|w(?:ks?|eeks?)?|months?|y(?:rs?|ears?)?))\s*ago|(?:(\d\d?)([-./])(\d\d?)\3(\d{4}|\d{2})|(\d{4})([-./])(\d\d?)\7(\d\d?)|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?(?:[,\s]\s*(\d{4})?))(?:.*(?:\s*\b(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IS?T|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))\b)?|(\d\d\d\d+)/i;
+export const DATE_EXPR = /(\d\d?\s*(?:h(?:rs?|ours?)?|m(?:in(?:utes?)?)?|d(?:ays?)?|w(?:ks?|eeks?)?|months?|y(?:rs?|ears?)?))\s*ago|(?:(\d\d?)([-./])(\d\d?)\3(\d{4}|\d{2})|(\d{4})([-./])(\d\d?)\7(\d\d?)|(?:(\d\d?)(?:st|nd|rd|th)?\s*)?(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+(\d\d?)(?:st|nd|rd|th)?)?(?:[,\s]\s*(\d{4})?))(?:.*?(?:\s*\b(ACDT|ACS?T|AES?T|AKDT|AKS?T|BS?T|CES?T|CDT|CS?T|EDT|ES?T|IST|JS?T|MDT|MSK|NZS?T|PDT|PS?T|UTC))\b)?|(\d\d\d\d+)/i;
 
 export function monthToString(month: number | string) {
   const m = parseInt(`${month}`);
@@ -17,15 +17,19 @@ export function monthToString(month: number | string) {
   return new Date(`2023-${m}-07`).toLocaleString('en-US', { month: 'long' });
 }
 
-export function dateOrUndefined(date: Date) {
-  return !Number.isNaN(date.valueOf()) && date.valueOf() > 0 ? date : undefined;
+export function dateOrUndefined(date?: Date | string): Date | undefined {
+  if (!date) {
+    return undefined;
+  }
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return !Number.isNaN(d.valueOf()) && d.valueOf() > 0 ? d : undefined;
 }
 
 export function parseDate(context?: string) {
   if (!context) {
     return undefined;
   }
-  const date = dateOrUndefined(new Date(context.trim()));
+  const date = dateOrUndefined(context?.trim());
   if (date) {
     return date;
   }
@@ -67,16 +71,15 @@ export function parseDate(context?: string) {
       timezone = timezone2;
     }
   }
-  const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : ''}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEIJP])T$/i, ($0, $1) => `${$1}ST`)].join(' ');
+  const dateMatch = [`${month} ${day}, ${String(year).length === 2 ? `20${year}` : year} ${hour}:${min}:${sec} ${amOrPm ? amOrPm : (hour < 12) ? 'am' : ''}`, timezone.replace(/^(A[CEK]|CE|NZ|[BCEJP])T$/i, ($0, $1) => `${$1}ST`)].join(' ');
   const parsedDate = dateOrUndefined(new Date(dateMatch));
   return parsedDate;
 }
 
-export function filterDates(dates: (Date | undefined | null)[], filterOutFutureDatesBy = '1d') {
-  return [...dates].filter((d) => 
-    d != null && 
-    !Number.isNaN(d.valueOf()) && 
-    d < new Date(Date.now() + ms(filterOutFutureDatesBy))) as Date[];
+export function filterDates(dates: (Date | string | undefined | null)[], filterOutFutureDatesBy = '1d') {
+  return dates.filter(Boolean).map((d) => typeof d === 'string' ? parseDate(d) : d).filter((date) => {
+    return date != null && !Number.isNaN(date.valueOf()) && (date.valueOf() < Date.now() + ms(filterOutFutureDatesBy));
+  });
 }
 
 export const DateSorter = (a?: Date | string, b?: Date | string) => { 
@@ -85,11 +88,11 @@ export const DateSorter = (a?: Date | string, b?: Date | string) => {
   return lhs && rhs ? lhs.valueOf() - rhs.valueOf() : 0;
 };
 
-export function sortDates(...dates: (Date | undefined | null)[]) {
+export function sortDates(...dates: (Date | string | undefined | null)[]) {
   return filterDates(dates).sort(DateSorter);
 }
 
-export function minDate(...dates: (Date | undefined | null)[]) {
+export function minDate(...dates: (Date | string | undefined | null)[]) {
   const sortedDates = sortDates(...dates);
   if (sortedDates.length === 0) {
     return undefined;
@@ -97,7 +100,7 @@ export function minDate(...dates: (Date | undefined | null)[]) {
   return sortedDates[0];
 }
 
-export function maxDate(...dates: (Date | undefined | null)[]) {
+export function maxDate(...dates: (Date | string | undefined | null)[]) {
   const sortedDates = sortDates(...dates);
   if (sortedDates.length === 0) {
     return undefined;
