@@ -127,9 +127,9 @@ export async function cleanUpDeadWorkers() {
 async function scheduleCacheJobs() {
   try {
     console.log('scheduling cache jobs');
-    const queue = await Queue.from(Queue.QUEUES.caches);
-    await queue.clear();
-    await queue.add(
+    const cacheQueue = await Queue.from(Queue.QUEUES.caches);
+    await cacheQueue.clear();
+    await cacheQueue.add(
       'cache-getTopStories-en', 
       {
         depth: 3,
@@ -140,9 +140,9 @@ async function scheduleCacheJobs() {
     );
     console.log('done scheduling cache jobs');
     console.log('queuing topic jobs');
-    const queue = await Queue.from(Queue.QUEUES.topics);
-    await queue.clear();
-    await queue.add(
+    const topicQueue = await Queue.from(Queue.QUEUES.topics);
+    await topicQueue.clear();
+    await topicQueue.add(
       'topics-resolution', 
       { summary: 0 },
       { group: 'topics' }

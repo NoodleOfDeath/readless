@@ -172,11 +172,6 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     date: new Date('placeholder'),
     url: 'https://gizmodo.com/twitter-elon-musk-blue-check-verified-removed-memes-1850363062',
   },
-  guardian: {
-    authors: [],
-    date: new Date('placeholder'),
-    url: 'https://www.theguardian.com/news/gallery/2023/may/29/burning-flags-and-big-red-lips-mondays-best-photos',
-  },
   huffpost: {
     authors: [],
     date: new Date('placeholder'),
@@ -311,6 +306,11 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     authors: [],
     date: new Date('placeholder'),
     url: 'https://cdn.theatlantic.com/thumbor/V6dZ4_O0a4054tchlComWJ1bWms=/0x0:2000x1125/960x540/media/img/mt/2023/07/ups_final_2/original.jpg',
+  },
+  theguardian: {
+    authors: [],
+    date: new Date('Sep 8, 2023 12:53 PM EDT'),
+    url: 'https://www.theguardian.com/us-news/2023/sep/08/philadelphia-police-shooting-mark-dial-surrenders',
   },
   thehill: {
     authors: [],
