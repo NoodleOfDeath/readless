@@ -29,15 +29,6 @@ export async function preparePublishers() {
   try {
     console.log('prepping publishers');
     await Publisher.prepare({ translate: true });
-    console.log('queuing topic jobs');
-    const queue = await Queue.from(Queue.QUEUES.topics);
-    await queue.clear();
-    await queue.add(
-      'topics-resolution', 
-      { summary: 0 },
-      { group: 'topics' }
-    );
-    console.log('done scheduling topic jobs');
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
       console.error(e);
@@ -183,12 +174,21 @@ async function scheduleRecapJobs() {
     console.log('scheduling recaps');
     await scheduleRecapJob();
     console.log('done scheduling recap jobs');
+    console.log('queuing topic jobs');
+    const queue = await Queue.from(Queue.QUEUES.topics);
+    await queue.clear();
+    await queue.add(
+      'topics-resolution', 
+      { summary: 0 },
+      { group: 'topics' }
+    );
+    console.log('done scheduling topic jobs');
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
       console.error(e);
     }
   } finally {
-    setTimeout(scheduleRecapJobs, ms('10m'));
+    setTimeout(scheduleRecapJobs, ms('5m'));
   }
 }
 
