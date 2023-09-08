@@ -4,6 +4,7 @@ import ms from 'ms';
 import puppeteer, {
   Browser,
   ElementHandle,
+  PuppeteerLifeCycleEvent,
   Viewport,
   WaitForSelectorOptions,
 } from 'puppeteer';
@@ -15,7 +16,8 @@ import { BaseService } from '../base';
 
 type PageOptions = WaitForSelectorOptions & {
   viewport?: Viewport;
-};
+  waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
+}; 
 
 type ReplacePattern = string | RegExp | {
   expr: string | RegExp,
@@ -212,6 +214,7 @@ export class PuppeteerService extends BaseService {
     { 
       timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('5s'),
       viewport = { height: 1080, width: 1920 },
+      waitUntil = 'domcontentloaded',
     }: PageOptions = {}
   ) {
 
@@ -226,7 +229,7 @@ export class PuppeteerService extends BaseService {
       
       const page = await browser.newPage();
       // handle pages that might lag to load content
-      await page.goto(url, { timeout, waitUntil : 'networkidle0' });
+      await page.goto(url, { timeout, waitUntil });
       await page.setViewport(viewport);
 
       const rawText = await page.evaluate(() => document.body.innerText);

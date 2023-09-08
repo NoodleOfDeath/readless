@@ -140,7 +140,7 @@ export class Publisher<
   declare maxAge: string;
   
   @Column({ type: DataType.JSON })
-  declare fetchPolicy?: Record<string, FetchPolicy>;
+  declare fetchPolicy?: FetchPolicy;
   
   @Column({ 
     defaultValue: 'UTC',

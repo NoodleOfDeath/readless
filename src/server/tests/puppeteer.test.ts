@@ -180,6 +180,11 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
     imageUrls: ['https://img.connatix.com/d0db5e84-ba12-4782-8439-fc8cffee6013/1_th.jpg?crop=629:354,smart&width=629&height=354&format=jpeg&quality=60&fit=crop'],
     url: 'https://www.huffpost.com/entry/trump-arraignment-jan-6-live-updates_n_64c993d1e4b03ad2b89b7bbe',
   },
+  independent: {
+    authors: [],
+    date: new Date('2023-09-08T10:06:07.000Z'),
+    url: 'https://www.independent.co.uk/sport/rugby/rugby-union/england-world-cup-fixtures-schedule-route-to-final-b2390150.html',
+  },
   inverse: {
     authors: [],
     date: new Date('placeholder'),
