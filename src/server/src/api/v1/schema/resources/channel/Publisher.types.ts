@@ -187,7 +187,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     selectors: {
       article: { selector: '.Content .Article p' },
       author: { selector: '.Content .CardHeadline *[class*="Component-bylines"]' },
-      date: { attribute: 'data-source', selector: '.Content .CardHeadline .Timestamp' },
+      date: { attribute: 'data-timestamp', selector: '.Page-byline bsp-timestamp' },
       image: { selector: 'img.Image.flickity-lazyloaded' },
       spider:{
         attribute: 'href',
