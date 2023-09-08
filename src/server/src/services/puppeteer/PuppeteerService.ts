@@ -10,35 +10,33 @@ import puppeteer, {
 } from 'puppeteer';
 import UserAgent from 'user-agents';
 
-import { PublisherCreationAttributes, SpiderSelector } from '../../api/v1/schema';
+import {
+  UrlOptions,
+  clean,
+  fixRelativeUrl,
+  parseSrcset,
+  replaceDatePlaceholders,
+} from './utils';
+import { PublisherCreationAttributes } from '../../api/v1/schema';
 import { maxDate, parseDate } from '../../utils';
 import { BaseService } from '../base';
 
-type PageOptions = WaitForSelectorOptions & {
+export type PageOptions = WaitForSelectorOptions & {
   viewport?: Viewport;
   waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
 }; 
 
-type ReplacePattern = string | RegExp | {
-  expr: string | RegExp,
-  repl: string,
-};
-
-type SelectorAction = {
+export type SelectorAction = {
   selector: string;
-  waitFor?: string[];
   action: (el: ElementHandle<Element>) => Promise<void>;
-  selectAll?: boolean;
+  finally?: () => void;
+  firstMatchOnly?: boolean;
   pageOptions?: PageOptions;
 };
 
-type UrlOptions = {
-  publisher: PublisherCreationAttributes;
-  spider?: SpiderSelector;
-  baseUrl?: string;
-  targetUrl?: string;
-  excludeExternal?: boolean;
-  removeQuery?: boolean;
+export type FetchOptions = {
+  usePuppet?: boolean;
+  pageOptions?: PageOptions;
 };
 
 export type Loot = {
@@ -59,122 +57,34 @@ export type LootOptions = {
   exclude?: string[];
 };
 
-const fallbackImageSelectors = [
-  'article :not(header) figure picture img:not([src*=".svg"]):not([src*=".gif"])',
-  'article :not(header) figure picture source:not([srcset*=".svg"]):not([srcset*=".gif"])',
-  'article :not(header) figure img:not([src*=".svg"]):not([src*=".gif"]), article :not(header) picture img:not([src*=".svg"]):not([src*=".gif"])',
-  'article :not(header) figure source:not([srcset*=".svg"]):not([srcset*=".gif"])',
-  'article :not(header) picture source:not([srcset*=".svg"]):not([srcset*=".gif"])',
-  'article video',
-  // dont grab just any images
-  //'article :not(header) img:not([src*=".svg"]):not([src*=".gif"]), :not(header) figure img:not([src*=".svg"]):not([src*=".gif"])',
-  //':not(header) picture img:not([src*=".svg"]):not([src*=".gif"]), :not(header) article img:not([src*=".svg"]):not([src*=".gif"])',
-];
+const SELECTORS = {
+  article: 'h1,h2,h3,h4,h5,h6,p,blockquote',
+  image: [
+    'article :not(header) figure picture img:not([src*=".svg"]):not([src*=".gif"])',
+    'article :not(header) figure picture source:not([srcset*=".svg"]):not([srcset*=".gif"])',
+    'article :not(header) figure img:not([src*=".svg"]):not([src*=".gif"]), article :not(header) picture img:not([src*=".svg"]):not([src*=".gif"])',
+    'article :not(header) figure source:not([srcset*=".svg"]):not([srcset*=".gif"])',
+    'article :not(header) picture source:not([srcset*=".svg"]):not([srcset*=".gif"])',
+    'article video',
+    // dont grab just any images
+    //'article :not(header) img:not([src*=".svg"]):not([src*=".gif"]), :not(header) figure img:not([src*=".svg"]):not([src*=".gif"])',
+    //':not(header) picture img:not([src*=".svg"]):not([src*=".gif"]), :not(header) article img:not([src*=".svg"]):not([src*=".gif"])',
+  ],
+};
 
-const fallbackImageAttributes = [
-  'poster', // -- video thumbails
-  'src',
-  'data-gallery-src',
-  'data-src',
-  'srcset',
-];
+const ATTRIBUTES = {
+  a: 'href',
+  date: ['datetime', 'data-datetime'],
+  image: [
+    'poster', // -- video thumbails
+    'src',
+    'data-gallery-src',
+    'data-src',
+    'srcset',
+  ],
+};
 
 const MAX_IMAGE_COUNT = Number(process.env.MAX_IMAGE_COUNT || 3);
-
-export function replaceDatePlaceholders(
-  url: string
-) {
-  return url.replace(/\$\{(.*?)(?:(-?\d\d?)|\+(\d\d?))?\}/g, ($0, $1, $2, $3) => {
-    const offset = Number($2 ?? 0) + Number($3 ?? 0);
-    switch ($1) {
-    case 'YYYY':
-      return new Date(Date.now() + offset * ms('1y'))
-        .getFullYear()
-        .toString();
-    case 'M':
-      return (((new Date().getMonth() + offset) % 12) + 1).toString();
-    case 'MM':
-      return (((new Date().getMonth() + offset) % 12) + 1)
-        .toString()
-        .padStart(2, '0');
-    case 'MMMM':
-      return new Date(`2050-${((new Date().getMonth() + offset) % 12) + 1}-01`).toLocaleString('default', { month: 'long' });
-    case 'D':
-      return new Date(Date.now() + offset * ms('1d')).getDate().toString();
-    case 'DD':
-      return new Date(Date.now() + offset * ms('1d'))
-        .getDate()
-        .toString()
-        .padStart(2, '0');
-    default:
-      return $0;
-    }
-  });
-}
-
-export function concatSelector(
-  base: string, 
-  selector: string, 
-  delimiter = ' '
-) {
-  if (!base.endsWith(`${delimiter}${selector}`)) {
-    return [base, selector].join(delimiter);
-  }
-  return base;
-}
-
-export function fixRelativeUrl(url: string, {
-  publisher,
-  targetUrl = publisher.baseUrl,
-  excludeExternal,
-  removeQuery,
-}: UrlOptions) {
-  const { baseUrl } = publisher;
-  const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
-  const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
-  const baseDomain = `https://${new URL(targetUrl).hostname.replace(/\/*$/, '')}`;
-  if (removeQuery) {
-    url = url.replace(/\?.*$/, '');
-  }
-  // fix relative hrefs
-  if (/^\/\//.test(url)) {
-    return `https:${url}`;
-  } else
-  if (/^\//.test(url)) {
-    return `${baseDomain}${url}`;
-  } else
-  if (/^\.\//.test(url)) {
-    return `${targetUrl.replace(/\/.*?$/, '')}${url.replace(/^\./, '')}`;
-  } else
-  if (excludeExternal && /^https?:\/\//.test(url)) {
-    // exclude external links
-    if (!domainExpr.test(url)) {
-      return '';
-    }
-  }
-  return url;
-}
-  
-export function parseSrcset(str: string, options: UrlOptions) {
-  const splitSet = (srcset: string) => {
-    const [path = '', widthStr = ''] = srcset.split(/\s+/);
-    const widthSubstr = widthStr.replace(/[wx]/ig, '');
-    const width = Number.isNaN(Number(widthSubstr)) ? undefined : Number(widthSubstr);
-    if (path && width) {
-      const url = fixRelativeUrl(path, options);
-      return { url, width };
-    }
-  };
-  if (/\S+\s+\d+[wx]\s*,/i.test(str)) {
-    return str.split(/\s*,\s*/)
-      .map((url) => splitSet(url))
-      .filter(Boolean)
-      .sort((a, b) => b.width - a.width)
-      .map((img) => img.url)
-      .filter(Boolean);
-  }
-  return [fixRelativeUrl(str, options)].filter(Boolean);
-}
 
 export class PuppeteerService extends BaseService {
   
@@ -192,14 +102,32 @@ export class PuppeteerService extends BaseService {
     ],
   };
 
-  static async fetch(url: string) {
+  /** 
+   * Simply fetches the raw text of a url without using a puppet. Equivalent to cURL 
+   * @param url the url to fetch
+   * @param usePuppet whether to use a puppet to fetch the url
+   * @param pageOptions options to pass to the puppet
+   */
+  static async fetch(url: string, { usePuppet, pageOptions }: FetchOptions = {}) {
+    if (usePuppet) {
+      try {
+        return await this.open(url, [], pageOptions);
+      } catch (e) {
+        if (process.env.ERROR_REPORTING) {
+          console.error(e);
+        }
+      }
+    }
     try {
-      const { data: text } = await axios.get(url, {
+      const { data: text, status } = await axios.get(url, {
         headers: { 
           Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
           'User-Agent': new UserAgent().random().toString(),
         }, 
       });
+      if (status !== 200) {
+        throw new Error(`Status ${status}`);
+      }
       return text;
     } catch (e) {
       if (process.env.ERROR_REPORTING) {
@@ -208,15 +136,23 @@ export class PuppeteerService extends BaseService {
     }
   }
 
+  /**
+   * Opens a url in a puppet and performs actions on the page
+   * @param {string} url the url to open
+   * @param {SelectorAction[]} actions actions to perform on the page
+   * @param {PageOptions} pageOptions options to pass to the puppet
+   * @returns {Promise<string>} the raw text of the page
+   * @throws if the page fails to load
+   */
   public static async open(
     url: string, 
-    actions: SelectorAction[], 
+    actions: SelectorAction[] = [], 
     { 
       timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('5s'),
       viewport = { height: 1080, width: 1920 },
       waitUntil = 'domcontentloaded',
     }: PageOptions = {}
-  ) {
+  ): Promise<string> {
 
     let browser: Browser;
     try {
@@ -229,6 +165,7 @@ export class PuppeteerService extends BaseService {
       
       const page = await browser.newPage();
       // handle pages that might lag to load content
+      console.log(`waiting for ${waitUntil} events to fire...`);
       await page.goto(url, { timeout, waitUntil });
       await page.setViewport(viewport);
 
@@ -237,24 +174,20 @@ export class PuppeteerService extends BaseService {
       for (const selectorAction of actions) {
         try {
           const {
-            selector, waitFor = [], selectAll, pageOptions, action, 
+            selector, firstMatchOnly, pageOptions, action, 
           } = selectorAction;
           if (selector === 'disabled') {
             return '';
           }
           await page.setViewport(pageOptions?.viewport ?? viewport);
-          for (const wait of waitFor) {
-            await page.waitForSelector(wait, { timeout: pageOptions?.timeout ?? ms('3s') });
-          }
-          if (selectAll) {
-            const els = await page.$$(selector);
-            for (const el of els) {
-              await action(el);
-            }
-          } else {
+          if (firstMatchOnly) {
             const el = await page.waitForSelector(selector, { timeout: pageOptions?.timeout ?? ms('3s') });
             await action(el);
+          } else {
+            const els = await page.$$(selector);
+            await Promise.all(els.map(async (el) => await action(el)));
           }
+          selectorAction.finally?.();
         } catch (e) {
           if (process.env.ERROR_REPORTING) {
             console.error(e);
@@ -317,7 +250,7 @@ export class PuppeteerService extends BaseService {
         priority = maxDate(date)?.valueOf() || 0;
       }
       const image = $(el).find(replaceDatePlaceholders(spider.imageSelector?.selector ?? 'img')).first();
-      const imageUrls = fallbackImageAttributes.map((attr) => image?.attr(attr)).filter(Boolean).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
+      const imageUrls = ATTRIBUTES.image.map((attr) => image?.attr(attr)).filter(Boolean).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
       return {
         imageUrls, priority, url, 
       };
@@ -363,8 +296,7 @@ export class PuppeteerService extends BaseService {
           }
           try {
             const image = await el.evaluate((el, selector) => el.querySelector(selector), replaceDatePlaceholders(spider.imageSelector?.selector ?? 'img'));
-            console.log(image);
-            imageUrls = fallbackImageAttributes.map((attr) => image?.getAttribute(attr)).filter(Boolean).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
+            imageUrls = ATTRIBUTES.image.map((attr) => image?.getAttribute(attr)).filter(Boolean).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
           } catch (e) {
             if (process.env.ERROR_REPORTING) {
               console.error(e);
@@ -372,11 +304,9 @@ export class PuppeteerService extends BaseService {
           }
           urls[url] = { imageUrls, priority };
         }, 
-        selectAll: true,
         selector: topSelector,
-        waitFor: [spider.urlSelector?.selector, spider.dateSelector?.selector].filter(Boolean),
       },
-    ]);
+    ], { waitUntil: publisher.fetchPolicy?.waitUntil });
     return Object.entries(urls).map(([url, data]) => ({ ...data, url })).sort((a, b) => b.priority - a.priority);
   }
 
@@ -406,15 +336,7 @@ export class PuppeteerService extends BaseService {
   public static async loot(
     url: string, 
     publisher: PublisherCreationAttributes, 
-    {
-      content,
-      exclude = [
-        'img',
-        'script',
-        'source',
-        'style',
-      ],
-    }: LootOptions = {}
+    { content }: LootOptions = {}
   ): Promise<Loot> {
     
     const loot: Loot = {
@@ -427,206 +349,101 @@ export class PuppeteerService extends BaseService {
       url,
     };
     
-    function clean(text?: string, ...patterns: ReplacePattern[]) {
-      let newText = (text ?? '')
-        .replace(/\s\s+/g, ' ')
-        .replace(/\t\t+/g, '\t')
-        .replace(/\n\n+/g, '\n')
-        .trim();
-      for (const pattern of patterns) {
-        if (typeof pattern === 'string' || pattern instanceof RegExp) {
-          newText = newText.replace(pattern, '');
-        } else {
-          newText = newText.replace(pattern.expr, pattern.repl);
-        }
+    const {
+      article, date, title, image,
+    } = publisher.selectors;
+      
+    const authors: string[] = [];
+    const dates: string[] = [];
+    const imageUrls: string[] = [];
+    const actions: SelectorAction[] = [];
+      
+    // content
+    if (!loot.content) {
+      const parts: string[] = [];
+      for (const selector of [article?.selector, SELECTORS.article].filter(Boolean)) {
+        actions.push({
+          action: async (el) => {
+            const text = (await el.evaluate((el) => el.textContent.trim() || el.innerHTML)).replace(/\n/g, '').replace(/\s+/g, ' ').trim();
+            parts.push(text);
+          },
+          finally: () => {
+            loot.content = parts.filter(Boolean).join('\n');
+          },
+          selector,
+        });
       }
-      return newText.trim();
     }
-    
-    if (!content) {
       
-      const {
-        article, author, date, title, image,
-      } = publisher.selectors;
+    // title
+    if (!loot.title) {
+      actions.push({
+        action: async (el) => {
+          loot.title = clean(await el.evaluate((el) => el.textContent));
+        },
+        firstMatchOnly: true,
+        selector: title?.selector || 'title',
+      });
+    }
       
-      const rawHtml = await this.fetch(url);
-      
-      const authors: string[] = [];
-      const dates: string[] = [];
-      const imageUrls: string[] = [];
-      
-      if (rawHtml) {
-        
-        loot.rawText = rawHtml;
-        const $ = load(rawHtml);
-        
-        const nextData = $('script#__NEXT_DATA__').text();
-        if (nextData) {
-          try {
-            console.log(nextData.substring(0, 500));
-            const match = nextData.match(/"date"[\s\n]*:[\s\n]*"(.*?)"/m);
-            console.log(match);
-            if (match) {
-              dates.push(match[1]);
+    // image
+    if (!loot.imageUrls || loot.imageUrls.length === 0) {
+      for (const selector of [image?.selector, ...SELECTORS.image].filter(Boolean)) {
+        actions.push({
+          action: async (el) => {
+            console.log(`testing image selector ${selector.slice(0, 20)}...`);
+            if (imageUrls.length >= MAX_IMAGE_COUNT) {
+              return;
             }
-          } catch (e) {
-            if (process.env.ERROR_REPORTING) {
-              console.error(e);
+            for (const attr of [image?.attribute, ...ATTRIBUTES.image].filter(Boolean)) {
+              const urls = parseSrcset(
+                await el.evaluate((el, attr) => {
+                  return el.getAttribute(attr);
+                }, attr), 
+                { publisher, targetUrl: url }
+              );
+              imageUrls.push(...urls);
             }
-          }
-        }
-        
-        const extract = (
-          sel: string, 
-          attr?: string,
-          first?: boolean
-        ): string => {
-          if (attr && clean($(sel)?.attr(attr))) {
-            if (first) {
-              return clean($(sel)?.first()?.attr(attr));
-            }
-            return clean($(sel).attr(attr));
-          }
-          if (first) {
-            return clean($(sel)?.first()?.text());
-          }
-          return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ').trim();
-        };
-        
-        const extractAll = (sel: string, attr?: string): string[] => {
-          return $(sel)?.map((i, el) => clean(attr ? $(el).attr(attr) : $(el).text())).get().filter(Boolean) ?? [];
-        };
-
-        // image
-        for (const selector of [image?.selector, ...fallbackImageSelectors].filter(Boolean)) {
-          for (const attr of [image?.attribute, ...fallbackImageAttributes].filter(Boolean)) {
-            imageUrls.push(...extractAll(selector, attr).flatMap((src) => parseSrcset(src, { publisher, targetUrl: url })));
-          }
-        }
-        
-        exclude.forEach((tag) => $(tag).remove());
-        
-        // title
-        loot.title = extract(title?.selector || 'title', title?.attribute);
-        // content
-        loot.content = extract(article?.selector || 'h1,h2,h3,h4,h5,h6,p,blockquote', article?.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote');
-        
-        // dates
-        
+          },
+          selector,
+        });
+      }
+    }
+      
+    // dates
+    actions.push({
+      action: async (el) => {
         dates.push(
-          ...extractAll(date.selector),
-          ...extractAll(date.selector, 'datetime')
+          await el.evaluate((el) => { 
+            if (el.childNodes.length > 1) {
+              const parts: string[] = [];
+              el.childNodes.forEach((n) => parts.push(n.textContent.trim()));
+              return parts.join(' ');
+            } else {
+              return el.textContent.trim();
+            }
+          }),
+          await el.evaluate((el) => el.getAttribute('datetime'))
         );
         if (date.attribute) {
           dates.push(
-            ...extractAll(date.selector, date.attribute),
-            extract(date.selector, date.attribute)
+            await el.evaluate((el, attr) => el.getAttribute(attr), date.attribute)
           );
         }
-        dates.push(
-          extract(date.selector),
-          extract(date.selector, 'datetime')
-        );
-        
-        // authors
-        authors.push(...$(author?.selector || 'author').map((i, el) => $(el).text()).get());
-      }
+      },
+      selector: date.selector || SELECTORS.article,
+    });
       
-      const actions: SelectorAction[] = [];
+    await this.open(url, actions, { waitUntil: publisher.fetchPolicy?.waitUntil });
       
-      // content
-      if (!loot.content) {
-        actions.push({
-          action: async (el) => {
-            const $ = load(await el.evaluate((el) => el.innerHTML));
-            exclude.forEach((tag) => $(tag).remove());
-            loot.content = $.text();
-          },
-          selector: article?.selector || 'h1,h2,h3,h4,h5,h6,p,blockquote',
-        });
-      }
-      
-      // title
-      if (!loot.title) {
-        actions.push({
-          action: async (el) => {
-            loot.title = clean(await el.evaluate((el) => el.textContent));
-          },
-          selector: title?.selector || 'title',
-        });
-      }
-      
-      // image
-      if (!loot.imageUrls || loot.imageUrls.length === 0) {
-        for (const selector of [image?.selector, ...fallbackImageSelectors].filter(Boolean)) {
-          actions.push({
-            action: async (el) => {
-              if (imageUrls.length >= MAX_IMAGE_COUNT) {
-                return;
-              }
-              for (const attr of [image?.attribute, ...fallbackImageAttributes].filter(Boolean)) {
-                const urls = parseSrcset(
-                  await el.evaluate((el, attr) => {
-                    return el.getAttribute(attr);
-                  }, attr), 
-                  { publisher, targetUrl: url }
-                );
-                imageUrls.push(...urls);
-              }
-            },
-            selector,
-          });
-        }
-      }
-      
-      // dates
-      actions.push({
-        action: async (el) => {
-          dates.push(...[
-            await el.evaluate((el) => { 
-              if (el.childNodes.length > 1) {
-                const parts: string[] = [];
-                el.childNodes.forEach((n) => parts.push(n.textContent));
-                return parts.join(' ');
-              } else {
-                return el.textContent; 
-              }
-            }),
-            await el.evaluate((el) => el.getAttribute('datetime')),
-          ]);
-          if (date.attribute) {
-            dates.push(
-              await el.evaluate((el, attr) => el.getAttribute(attr), date.attribute)
-            );
-          }
-        },
-        selector: date.selector,
-      });
-      
-      // ignore authors for now
-      // authors
-      /*actions.push({
-        action: async (el) => {
-          authors.push(...await el.evaluate((el) => {
-            const names: string[] = [];
-            el.childNodes.forEach((e) => names.push(e.textContent));
-            return names;
-          }));
-        },
-        selector: author?.selector,
-      });*/
-      
-      await this.open(url, actions);
-      
-      loot.dateMatches = dates;
-      loot.date = maxDate(...dates.map((d) => parseDate(d)));
-      if (!loot.date || Number.isNaN(loot.date.valueOf())) {
-        loot.date = parseDate(dates.join(' '));
-      }
-      loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
-      loot.imageUrls = Array.from(new Set(imageUrls.filter((url) => url && !/\.(gif|svg)/i.test(url)))).slice(0, MAX_IMAGE_COUNT);
-      
+    loot.dateMatches = dates.filter(Boolean);
+    loot.date = maxDate(...dates);
+    if (!loot.date || Number.isNaN(loot.date.valueOf())) {
+      loot.date = parseDate(dates.join(' '));
     }
+    loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
+    loot.imageUrls = Array.from(new Set(imageUrls.filter((url) => url && !/\.(gif|svg)/i.test(url)))).slice(0, MAX_IMAGE_COUNT);
+      
     return loot;
   }
 

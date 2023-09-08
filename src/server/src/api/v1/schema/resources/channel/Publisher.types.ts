@@ -12,6 +12,7 @@ export type Selector = {
   selector: string;
   exclude?: string[];
   attribute?: string;
+  firstOnly?: boolean;
 };
 
 export type SpiderSelector = Selector & {
@@ -1411,7 +1412,8 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     fetchPolicy: { waitUntil: 'networkidle0' },
     name: 'scitechnewsnetwork',
     selectors: {
-      date: { selector: '' },
+      article: { selector: '.content, .article-content' },
+      date: { firstOnly: true, selector: '.content, .article-content' },
       spider: {
         attribute: 'href',
         selector: 'a[href*="/article/"]',

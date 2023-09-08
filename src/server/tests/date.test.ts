@@ -7,7 +7,7 @@ import {
 } from '@jest/globals';
 import ms from 'ms';
 
-import { parseDate } from '../src/utils';
+import { maxDate, parseDate } from '../src/utils';
 
 jest.setTimeout(30_000);
 
@@ -121,9 +121,14 @@ const DATES: Test[] = [
     date: '2023-09-08T10:06:07.000Z',
     expect: new Date('2023-09-08T10:06:07.000Z'),
   },
+  { 
+    date: '"I first made Read Less for myself, but having lived with a disability for 14 years, I wanted to make the news more accessible and faster to read for marginalized groups.”— Thom MorganALEXANDRIA, VA, UNITED STATES, September 6, 2023 /EINPresswire.com/ -- "Read Less" is set to change the narrative for those who struggle to read or keep up with current events. Going beyond just delivering efficient, digestible news - It aims to disrupt the cycle of digital addiction and integrate naturally into users',
+    expect: new Date('September 6, 2023'),
+  },
 ];
 
 describe('date tests', () => {
+
   DATES.forEach((date, i) => {
     test(`parse-${i}`, async () => {
       const parsedDate = parseDate(date.date);
@@ -133,4 +138,13 @@ describe('date tests', () => {
       expect(parsedDate?.toTimeString()).toEqual(date.expect.toTimeString());
     });
   });
+
+  test('max-date', () => {
+    const dates = ['20 hours ago', '2023-09-08T10:06:07.000Z'];
+    const max = maxDate(...dates);
+    expect(max).toBeDefined();
+    expect(max).toBeInstanceOf(Date);
+    expect(max).toEqual(new Date('2023-09-08T10:06:07.000Z'));
+  });
+
 });
