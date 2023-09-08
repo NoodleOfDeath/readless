@@ -1412,8 +1412,8 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     fetchPolicy: { waitUntil: 'networkidle0' },
     name: 'scitechnewsnetwork',
     selectors: {
-      article: { selector: '.content, .article-content' },
-      date: { firstOnly: true, selector: '.content, .article-content' },
+      article: { selector: '.content, .article-content, body > .container' },
+      date: { firstOnly: true, selector: '.content, .article-content, body > .container > .row' },
       spider: {
         attribute: 'href',
         selector: 'a[href*="/article/"]',
