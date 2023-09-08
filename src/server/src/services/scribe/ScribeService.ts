@@ -101,7 +101,7 @@ export class ScribeService extends BaseService {
       await this.error('Article too short', [url, loot.content].join('\n\n'));
     }
     if (!loot.date || Number.isNaN(loot.date.valueOf())) {
-      await this.error('Invalid date found', [url, JSON.stringify(publisher.selectors.date), loot.dateMatches.join('\n-----\n')].join('\n\n'));
+      await this.error('Invalid date found', [url, JSON.stringify(publisher.selectors.date), loot.dateMatches.join('\n-----\n'), loot.content].join('\n\n'));
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`${loot.date} -- News is older than ${OLD_NEWS_THRESHOLD}`);
