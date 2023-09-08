@@ -1,9 +1,11 @@
+import { PuppeteerLifeCycleEvent } from 'puppeteer';
+
 import { DatedAttributes } from '../../types';
 import { Sentimental } from '../sentiment/Sentiment.types';
 
 export type FetchPolicy = {
-  limit: number;
-  window: string;
+  /** indicate if the website needs to be scraped after a certain amount of time, default is `domcontentloaded` to avoid paywalls */
+  waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
 };
 
 export type Selector = {
@@ -43,7 +45,7 @@ export type PublisherAttributes = DatedAttributes & Sentimental & {
   geolocation?: string;
   radius?: string;
   maxAge: string;
-  fetchPolicy?: Record<string, FetchPolicy>;
+  fetchPolicy?: FetchPolicy;
   timezone: string;
   disabled?: boolean;
 };
@@ -59,7 +61,7 @@ export type PublisherCreationAttributes = Partial<DatedAttributes & Sentimental>
   geolocation?: string;
   radius?: string;
   maxAge?: string;
-  fetchPolicy?: Record<string, FetchPolicy>;
+  fetchPolicy?: FetchPolicy;
   timezone?: string;
   disabled?: boolean;
 };
@@ -1406,6 +1408,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   scitechnewsnetwork: {
     baseUrl: 'https://www.scitechnewsnetwork.com',
     displayName: 'Sci-Tech News Network',
+    fetchPolicy: { waitUntil: 'networkidle0' },
     name: 'scitechnewsnetwork',
     selectors: {
       date: { selector: '' },

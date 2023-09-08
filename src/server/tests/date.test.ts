@@ -117,6 +117,10 @@ const DATES: Test[] = [
     date: 'Wed 7 Jun 2023 20.19 EDT',
     expect: new Date('Jun 7, 2023 8:19 PM EDT'),
   },
+  {
+    date: '2023-09-08T10:06:07.000Z',
+    expect: new Date('2023-09-08T10:06:07.000Z'),
+  },
 ];
 
 describe('date tests', () => {
