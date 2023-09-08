@@ -304,7 +304,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     selectors: {
       article: { selector: 'article p' },
       author: { selector: 'address p[class*="author/"] a' },
-      date: { selector: 'article time[itemprop="datePublished"], article time' },
+      date: { selector: 'article [class*="Byline_"] time' },
       spider:{
         attribute: 'href',
         selector: 'a[href*="/articles/"]',
