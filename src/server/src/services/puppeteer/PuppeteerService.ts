@@ -411,33 +411,42 @@ export class PuppeteerService extends BaseService {
     }
       
     // dates
-    actions.push({
-      action: async (el) => {
-        dates.push(
-          await el.evaluate((el) => { 
-            if (el.childNodes.length > 1) {
-              const parts: string[] = [];
-              el.childNodes.forEach((n) => parts.push(n.textContent.trim()));
-              return parts.join(' ');
-            } else {
-              return el.textContent.trim();
-            }
-          }),
-          await el.evaluate((el) => el.getAttribute('datetime'))
-        );
-        if (date.attribute) {
+    const dateSelectors = [date.selector, 'article time'];
+    if (date.firstOnly) {
+      dateSelectors.push(SELECTORS.article);
+    }
+    for (const selector of dateSelectors) {
+      actions.push({
+        action: async (el) => {
           dates.push(
-            await el.evaluate((el, attr) => el.getAttribute(attr), date.attribute)
+            await el.evaluate((el) => { 
+              if (el.childNodes.length > 1) {
+                const parts: string[] = [];
+                el.childNodes.forEach((n) => parts.push(n.textContent.trim()));
+                return parts.join(' ');
+              } else {
+                return el.textContent.trim();
+              }
+            }),
+            await el.evaluate((el) => el.getAttribute('datetime'))
           );
-        }
-      },
-      selector: date.selector || SELECTORS.article,
-    });
+          if (date.attribute) {
+            dates.push(
+              await el.evaluate((el, attr) => el.getAttribute(attr), date.attribute)
+            );
+          }
+        },
+        firstMatchOnly: !date.firstOnly,
+        selector,
+      });
+    }
       
     await this.open(url, actions, { waitUntil: publisher.fetchPolicy?.waitUntil });
       
     loot.dateMatches = dates.filter(Boolean);
     loot.date = maxDate(...dates);
+    console.log(loot.date);
+    console.log(dates);
     if (!loot.date || Number.isNaN(loot.date.valueOf())) {
       loot.date = parseDate(dates.join(' '));
     }

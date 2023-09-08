@@ -125,6 +125,10 @@ const DATES: Test[] = [
     date: '"I first made Read Less for myself, but having lived with a disability for 14 years, I wanted to make the news more accessible and faster to read for marginalized groups.”— Thom MorganALEXANDRIA, VA, UNITED STATES, September 6, 2023 /EINPresswire.com/ -- "Read Less" is set to change the narrative for those who struggle to read or keep up with current events. Going beyond just delivering efficient, digestible news - It aims to disrupt the cycle of digital addiction and integrate naturally into users',
     expect: new Date('September 6, 2023'),
   },
+  {
+    date: 'Updated\n        11:08 AM EDT, Sun April 23, 2023',
+    expect: new Date('Apr 23, 2023 11:08 AM EDT'),
+  },
 ];
 
 describe('date tests', () => {
