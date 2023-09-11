@@ -97,7 +97,7 @@ export class ScribeService extends BaseService {
         for (const job of jobs) {
           await job.delay(ms(process.env.BACKOFF_INTERVAL || '1h') * job.attempts);
         }
-        await this.error('Bad response', [url, e.message].join('\n\n'));
+        await this.error('Bad response', [url, e.message].join('\n\n'), false);
       }
       throw e;
     }

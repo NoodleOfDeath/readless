@@ -5,7 +5,11 @@ import {
   Summary,
   Worker,
 } from '../api/v1/schema/models';
-import { DBService, ScribeService } from '../services';
+import {
+  DBService,
+  PuppeteerError,
+  ScribeService,
+} from '../services';
 
 export async function main() {
   await DBService.prepare();
@@ -76,7 +80,11 @@ export async function doWork() {
         } catch (e) {
           console.log(e);
           await fetchMax.advance();
-          await job.moveToFailed(e);
+          if (e instanceof PuppeteerError) {
+            // do nothing
+          } else {
+            await job.moveToFailed(e);
+          }
         } finally {
           next();
         }
