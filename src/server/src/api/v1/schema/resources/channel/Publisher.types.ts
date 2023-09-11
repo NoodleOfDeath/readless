@@ -405,7 +405,6 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     displayName: 'CNN',
     name: 'cnn',
     selectors: {
-      article: { selector: 'main.article__main p' },
       author: { selector: '.headline__sub-text .byline_name' },
       date: { selector: '.headline__sub-text .timestamp' },
       spider:{

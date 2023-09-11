@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { load } from 'cheerio';
 import ms from 'ms';
 import puppeteer, {
   Browser,
@@ -56,6 +55,17 @@ export type LootOptions = {
   /** selectors to remove from DOM */
   exclude?: string[];
 };
+
+export class PuppeteerError extends Error {
+
+  url: string;
+  status: number;
+  
+  constructor(url: string, status: number) {
+    super(`Bad response ${status} connecting to ${url}`);
+  }
+
+}
 
 const SELECTORS = {
   article: 'h1,h2,h3,h4,h5,h6,p,blockquote',
@@ -164,10 +174,16 @@ export class PuppeteerService extends BaseService {
       });
       
       const page = await browser.newPage();
+      await page.setViewport(viewport);
+      
       // handle pages that might lag to load content
       console.log(`waiting for ${waitUntil} events to fire...`);
-      await page.goto(url, { timeout, waitUntil });
-      await page.setViewport(viewport);
+      const response = await page.goto(url, { timeout, waitUntil });
+      const status = await response.status();
+      
+      if (status >= 400) {
+        throw new PuppeteerError(url, status);
+      }
 
       const rawText = await page.evaluate(() => document.body.innerText);
 
@@ -198,6 +214,9 @@ export class PuppeteerService extends BaseService {
       return rawText;
       
     } catch (e) {
+      if (e instanceof PuppeteerError) {
+        throw e;
+      }
       if (process.env.ERROR_REPORTING) {
         console.error(e);
       }
@@ -219,9 +238,7 @@ export class PuppeteerService extends BaseService {
     const domain = new URL(baseUrl).hostname.replace(/^www\./, '');
     const domainExpr = new RegExp(`^https?://(?:www\\.)?${domain}`);
     targetUrl = replaceDatePlaceholders(targetUrl);
-    let urls: Record<string, { priority: number, imageUrls: string[] }> = {};
-    const rawHtml = await this.fetch(targetUrl);
-    const $ = load(rawHtml);
+    const urls: Record<string, { priority: number, imageUrls: string[] }> = {};
     const cleanUrl = (url?: string) => {
       if (!url) {
         return;
@@ -234,7 +251,7 @@ export class PuppeteerService extends BaseService {
       return fixRelativeUrl(url, { excludeExternal: true, publisher });
     };
     const topSelector = replaceDatePlaceholders(spider.selector);
-    urls = Object.fromEntries([...$(topSelector).map((_, el) => {
+    /*urls = Object.fromEntries([...$(topSelector).map((_, el) => {
       let priority = 0;
       const target = /\ba(?:\[.*?\])?$/.test(topSelector) ? $(el).first() : $(el).find(replaceDatePlaceholders(spider.urlSelector?.selector || 'a')).first();
       const url = cleanUrl(target?.attr(spider.urlSelector?.attribute || spider.attribute || 'href'));
@@ -256,7 +273,7 @@ export class PuppeteerService extends BaseService {
       };
     })].filter(Boolean).map(({
       priority, imageUrls, url, 
-    }) => [url, { imageUrls, priority }]));
+    }) => [url, { imageUrls, priority }]));*/
     await this.open(targetUrl, [
       {
         action: async (el) => {
@@ -284,6 +301,7 @@ export class PuppeteerService extends BaseService {
           if (spider.dateSelector) {
             try {
               const date = await el.evaluate((el, selector) => el.querySelector(selector), replaceDatePlaceholders(spider.dateSelector.selector));
+              console.log(date);
               const dates = [date?.getAttribute(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.textContent].filter(Boolean).map((d) => parseDate(d));
               if (dates.length > 0) {
                 priority = maxDate(...dates)?.valueOf() || 0;

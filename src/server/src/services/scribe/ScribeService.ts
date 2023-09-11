@@ -2,9 +2,11 @@ import ms from 'ms';
 
 import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
+  Loot,
   MailService,
   OpenAIService,
   Prompt,
+  PuppeteerError,
   PuppeteerService,
   S3Service,
   TtsService,
@@ -78,7 +80,15 @@ export class ScribeService extends BaseService {
       throw new Error('Probably not a news article');
     }
     // fetch web content with the spider
-    const loot = await PuppeteerService.loot(url, publisher, { content });
+    let loot: Loot; 
+    try {
+      loot = await PuppeteerService.loot(url, publisher, { content });
+    } catch (e) {
+      if (e instanceof PuppeteerError) {
+        await this.error('Bad response', JSON.stringify(e));
+      }
+      throw e;
+    }
     if (priority > 0) {
       const parsedDate = new Date(parseInt(`${priority}`));
       if (!Number.isNaN(parsedDate.valueOf())) {
