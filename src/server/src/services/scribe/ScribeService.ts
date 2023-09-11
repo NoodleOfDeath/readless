@@ -85,7 +85,7 @@ export class ScribeService extends BaseService {
       loot = await PuppeteerService.loot(url, publisher, { content });
     } catch (e) {
       if (e instanceof PuppeteerError) {
-        await this.error('Bad response', JSON.stringify(e));
+        await this.error('Bad response', [url, e.message].join('\n\n'));
       }
       throw e;
     }
