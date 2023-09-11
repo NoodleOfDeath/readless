@@ -97,8 +97,8 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   cnn: {
     authors: [],
-    date: new Date('placeholder'),
-    url: 'https://www.cnn.com/2023/04/23/health/abortion-lessons-jane-wellness/index.html',
+    date: new Date('Sept 11, 2023 10:12 AM EDT'),
+    url: 'https://www.cnn.com/2023/09/11/politics/impeachment-government-shutdown-house-return/index.html',
   },
   coindesk: {
     authors: [],
@@ -418,6 +418,7 @@ describe('loot', () => {
       expect(loot).toBeDefined();
       expect(loot.url).toBe(exp.url);
       expect(loot.content.length).toBeGreaterThan(0);
+      console.log(loot.content);
       console.log(loot.imageUrls);
       if (exp.imageUrls) {
         expect(loot.imageUrls?.[0]).toBe(exp?.imageUrls[0]);
