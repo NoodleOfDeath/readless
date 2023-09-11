@@ -251,29 +251,6 @@ export class PuppeteerService extends BaseService {
       return fixRelativeUrl(url, { excludeExternal: true, publisher });
     };
     const topSelector = replaceDatePlaceholders(spider.selector);
-    /*urls = Object.fromEntries([...$(topSelector).map((_, el) => {
-      let priority = 0;
-      const target = /\ba(?:\[.*?\])?$/.test(topSelector) ? $(el).first() : $(el).find(replaceDatePlaceholders(spider.urlSelector?.selector || 'a')).first();
-      const url = cleanUrl(target?.attr(spider.urlSelector?.attribute || spider.attribute || 'href'));
-      if (!url) {
-        return undefined;
-      }
-      if (spider.dateSelector) {
-        const date = $(el).find(replaceDatePlaceholders(spider.dateSelector.selector)).first();
-        const dates = [date?.attr(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.text()].filter(Boolean).map((d) => parseDate(d));
-        priority = maxDate(...dates)?.valueOf() || 0;
-      } else {
-        const date = parseDate($(el).text());
-        priority = maxDate(date)?.valueOf() || 0;
-      }
-      const image = $(el).find(replaceDatePlaceholders(spider.imageSelector?.selector ?? 'img')).first();
-      const imageUrls = ATTRIBUTES.image.map((attr) => image?.attr(attr)).filter(Boolean).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
-      return {
-        imageUrls, priority, url, 
-      };
-    })].filter(Boolean).map(({
-      priority, imageUrls, url, 
-    }) => [url, { imageUrls, priority }]));*/
     await this.open(targetUrl, [
       {
         action: async (el) => {
