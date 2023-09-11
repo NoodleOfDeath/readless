@@ -133,6 +133,10 @@ const DATES: Test[] = [
     date: 'Fri 8 Sep 2023 12.53 EDT',
     expect: new Date('Sept 8, 2023 12:53 EDT'),
   },
+  {
+    date: 'Sept. 9, 2023 9:00 am ET',
+    expect: new Date('Sept 9, 2023 9:00 AM EST'),
+  },
 ];
 
 describe('date tests', () => {
@@ -148,11 +152,11 @@ describe('date tests', () => {
   });
 
   test('max-date', () => {
-    const dates = ['20 hours ago', '2023-09-08T10:06:07.000Z'];
+    const dates = ['20 years ago', '20 days ago'];
     const max = maxDate(...dates);
     expect(max).toBeDefined();
     expect(max).toBeInstanceOf(Date);
-    expect(max).toEqual(new Date('2023-09-08T10:06:07.000Z'));
+    expect(max).toEqual(new Date(Date.now() - ms('20d')));
   });
 
 });
