@@ -298,11 +298,16 @@ export class PuppeteerService extends BaseService {
             }
             return;
           }
-          if (spider.dateSelector) {
+          if (spider.dateSelector?.selector) {
             try {
-              const date = await el.evaluate((el, selector) => el.querySelector(selector), replaceDatePlaceholders(spider.dateSelector.selector));
-              console.log(date);
-              const dates = [date?.getAttribute(spider.dateSelector.attribute || spider.attribute || 'datetime'), date?.textContent].filter(Boolean).map((d) => parseDate(d));
+              const strs = await el.evaluate((el, selector, attr) => {
+                const date = el.querySelector(selector);
+                if (!date) {
+                  return;
+                }
+                return [date.getAttribute(attr), date.textContent];
+              }, replaceDatePlaceholders(spider.dateSelector.selector), spider.dateSelector.attribute || spider.attribute || 'datetime');
+              const dates = strs.filter(Boolean).map((d) => parseDate(d));
               if (dates.length > 0) {
                 priority = maxDate(...dates)?.valueOf() || 0;
               }
@@ -463,8 +468,6 @@ export class PuppeteerService extends BaseService {
       
     loot.dateMatches = dates.filter(Boolean);
     loot.date = maxDate(...dates);
-    console.log(loot.date);
-    console.log(dates);
     if (!loot.date || Number.isNaN(loot.date.valueOf())) {
       loot.date = parseDate(dates.join(' '));
     }
