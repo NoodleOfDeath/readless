@@ -110,6 +110,7 @@ jobs:
     if: ${{ contains(github.event.head_commit.message, '~worker') || contains(github.event.head_commit.message, '~topics') }}
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
+      BACKOFF_INTERVAL: ${{ vars.BACKOFF_INTERVAL }}
       BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
       CONTAINER_NAME: ${{ github.event.repository.name }}-worker-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}-topics
