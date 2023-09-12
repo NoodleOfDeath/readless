@@ -9,7 +9,11 @@ import {
   Summary,
   Worker,
 } from '../api/v1/schema';
-import { DBService, PuppeteerService } from '../services';
+import {
+  DBService,
+  PuppeteerError,
+  PuppeteerService,
+} from '../services';
 
 const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
@@ -19,22 +23,22 @@ async function main() {
   await Queue.prepare();
   await Publisher.prepare();
   cleanUpDeadWorkers();
-  scheduleCacheJobs();
+  scheduleJobs();
   scheduleRecapJobs();
-  preparePublishers();
+  translatePublishers();
   pollForNews();
 }
 
-export async function preparePublishers() {
+export async function translatePublishers() {
   try {
-    console.log('prepping publishers');
+    console.log('translating publishers');
     await Publisher.prepare({ translate: true });
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
       console.error(e);
     }
   } finally {
-    setTimeout(preparePublishers, ms('5m'));
+    setTimeout(translatePublishers, ms('5m'));
   }
 }
 
@@ -45,6 +49,10 @@ export async function pollForNews() {
     const queue = await Queue.from(Queue.QUEUES.sitemaps);
     for (const publisher of publishers) {
       try {
+        if (publisher.delayedUntil && publisher.delayedUntil > new Date()) {
+          console.log(`skipping ${publisher.name} until ${new Date(publisher.fetchPolicy.delayedUntil).toISOString()}`);
+          continue;
+        }
         console.log(`fetching sitemaps for ${publisher.name}`);
         const fetchedUrls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
         console.log(`fetched ${fetchedUrls.length} urls for ${publisher.name}`);
@@ -71,7 +79,13 @@ export async function pollForNews() {
             }
           );
         }
+        // reset failures on success
+        await publisher.reset();
       } catch (e) {
+        if (e instanceof PuppeteerError) {
+          console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
+          await publisher.failAndDelay();
+        }
         if (process.env.ERROR_REPORTING) {
           console.error(e);
         }
@@ -113,7 +127,7 @@ export async function cleanUpDeadWorkers() {
           { createdAt: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } }, 
           { delayedUntil: { [Op.lt]: new Date(Date.now() - ms(OLD_NEWS_THRESHOLD)) } },
         ], 
-      }, 
+      },
     });
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
@@ -124,7 +138,7 @@ export async function cleanUpDeadWorkers() {
   }
 }
 
-async function scheduleCacheJobs() {
+async function scheduleJobs() {
   try {
     console.log('scheduling cache jobs');
     const cacheQueue = await Queue.from(Queue.QUEUES.caches);
@@ -153,7 +167,7 @@ async function scheduleCacheJobs() {
       console.error(e);
     }
   } finally {
-    setTimeout(scheduleCacheJobs, ms('30s'));
+    setTimeout(scheduleJobs, ms('30s'));
   }
 }
 

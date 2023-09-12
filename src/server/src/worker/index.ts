@@ -1,13 +1,18 @@
 export async function main() {
-  if (process.env.WORKER_QUEUE === 'sitemaps') {
-    await import('./SiteMapWorker');
-  } else if (process.env.WORKER_QUEUE === 'topics') {
+  switch (process.env.WORKER_QUEUE) {
+  case 'sitemaps':
+    await import('./SitemapWorker');
+    break;
+  case 'topics':
     await import('./TopicWorker');
-  } else if (process.env.WORKER_QUEUE === 'notifs') {
+    break;
+  case 'notifs':
     await import('./NotificationsWorker');
-  } else if (process.env.WORKER_QUEUE === 'caches') {
+    break;
+  case 'caches':
     await import('./CacheWorker');
-  } else {
+    break;
+  default:
     console.error('No worker queue specified');
     process.exit(1);
   }

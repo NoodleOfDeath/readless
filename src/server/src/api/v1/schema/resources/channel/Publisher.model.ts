@@ -19,6 +19,7 @@ import { PublisherTranslation } from './PublisherTranslation.model';
 import { PUBLIC_PUBLISHERS } from './queries';
 import { SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
+import { Job } from '../../models';
 import { RateLimit } from '../../system/RateLimit.model';
 import { PrepareOptions } from '../../types';
 
@@ -141,6 +142,15 @@ export class Publisher<
   
   @Column({ type: DataType.JSON })
   declare fetchPolicy?: FetchPolicy;
+
+  @Column({
+    defaultValue: 0, 
+    type: DataType.INTEGER, 
+  })
+  declare failureCount?: number;
+  
+  @Column({ type: DataType.DATE })
+  declare delayedUntil?: Date;
   
   @Column({ 
     defaultValue: 'UTC',
@@ -152,7 +162,40 @@ export class Publisher<
   declare disabled?: boolean;
 
   declare sentiment?: number;
+
+  async reset() {
+    this.set('failureCount', 0);
+    this.set('delayedUntil', null);
+    await this.save();
+  }
+
+  async fail() {
+    this.set('failureCount', this.failureCount + 1);
+    await this.save();
+  }
   
+  async delay() {
+    const date = new Date(Date.now() + ms(process.env.BACKOFF_INTERVAL || '1h') * this.failureCount);
+    this.set('delayedUntil', date);
+    const jobs = await Job.findAll({
+      where: {
+        group: this.name,
+        queue: 'sitemaps',
+      },
+    });
+    console.log(`Delaying ${jobs.length} for publisher ${this.name}`);
+    for (const job of jobs) {
+      const newDate = new Date(ms(process.env.BACKOFF_INTERVAL || '1h') * Math.max(this.failureCount, job.attempts));
+      await job.schedule(newDate);
+    }
+    await this.save();
+  }
+
+  async failAndDelay() {
+    await this.fail();
+    await this.delay();
+  }
+
   async getRateLimit(namespace = 'default') {
     const key = ['//publisher', this.id, this.name, namespace].join('§§');
     let limit = await RateLimit.findOne({ where: { key } });

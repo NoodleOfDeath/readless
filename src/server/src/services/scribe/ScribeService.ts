@@ -13,7 +13,6 @@ import {
 } from '../';
 import {
   Category,
-  Job,
   Recap,
   SentimentMethod,
   Subscription,
@@ -87,17 +86,8 @@ export class ScribeService extends BaseService {
     } catch (e) {
       if (e instanceof PuppeteerError) {
         // backoff because we got a non 200 response
-        const jobs = await Job.findAll({
-          where: {
-            group: publisher.name,
-            queue: 'sitemaps',
-          },
-        });
-        console.log(`Delaying ${jobs.length} for publisher ${publisher.name}`);
-        for (const job of jobs) {
-          await job.delay(ms(process.env.BACKOFF_INTERVAL || '1h') * job.attempts);
-        }
-        await this.error('Bad response', [url, e.message].join('\n\n'));
+        await publisher.failAndDelay();
+        await this.error('Bad response', [url, e.message].join('\n\n'), false);
       }
       throw e;
     }

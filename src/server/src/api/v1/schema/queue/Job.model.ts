@@ -28,7 +28,6 @@ export class Job<D extends Serializable, R, Q extends string = string, A extends
   @Index({
     name: 'jobs_queue_name_unique_key',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -39,7 +38,6 @@ export class Job<D extends Serializable, R, Q extends string = string, A extends
   @Index({
     name: 'jobs_queue_name_unique_key',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -149,7 +147,6 @@ export class Job<D extends Serializable, R, Q extends string = string, A extends
   async moveToFailed(reason?: string | Error) {
     this.set('lockedBy', null);
     this.set('startedAt', null);
-    this.set('attempts', this.toJSON().attempts + 1);
     this.set('failedAt', new Date());
     this.set('failureReason', reason instanceof Error ? reason.message : reason);
     await this.save();
