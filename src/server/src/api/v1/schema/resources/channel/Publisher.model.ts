@@ -143,6 +143,9 @@ export class Publisher<
   @Column({ type: DataType.JSON })
   declare fetchPolicy?: FetchPolicy;
 
+  @Column({ type: DataType.DATE })
+  declare lastFetchedAt?: Date;
+
   @Column({
     defaultValue: 0, 
     type: DataType.INTEGER, 
@@ -151,7 +154,7 @@ export class Publisher<
   
   @Column({ type: DataType.DATE })
   declare delayedUntil?: Date;
-  
+
   @Column({ 
     defaultValue: 'UTC',
     type: DataType.STRING,
@@ -166,6 +169,12 @@ export class Publisher<
   async reset() {
     this.set('failureCount', 0);
     this.set('delayedUntil', null);
+    await this.save();
+  }
+
+  async success() {
+    await this.reset();
+    this.set('lastFetchedAt', new Date());
     await this.save();
   }
 
@@ -196,18 +205,32 @@ export class Publisher<
     await this.delay();
   }
 
-  async getRateLimit(namespace = 'default') {
+  async setRateLimit(
+    namespace = 'default', 
+    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT, 
+    window = PUBLISHER_FETCH_INTERVAL
+  ) {
     const key = ['//publisher', this.id, this.name, namespace].join('§§');
-    let limit = await RateLimit.findOne({ where: { key } });
-    if (!limit) {
-      limit = await RateLimit.create({
-        expiresAt: new Date(Date.now() + ms(PUBLISHER_FETCH_INTERVAL)),
-        key,
-        limit: namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
-        window: ms(PUBLISHER_FETCH_INTERVAL),
-      });
+    const [rateLimit] = await RateLimit.upsert({
+      expiresAt: new Date(Date.now() + ms(window)),
+      key,
+      limit,
+      window: ms(window),
+    });
+    return rateLimit;
+  }
+
+  async getRateLimit(
+    namespace = 'default',
+    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT, 
+    window = PUBLISHER_FETCH_INTERVAL
+  ) {
+    const key = ['//publisher', this.id, this.name, namespace].join('§§');
+    let rateLimit = await RateLimit.findOne({ where: { key } });
+    if (!rateLimit) {
+      rateLimit = await this.setRateLimit(namespace, limit, window);
     }
-    return limit;
+    return rateLimit;
   }
 
 }
