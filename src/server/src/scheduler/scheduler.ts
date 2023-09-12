@@ -89,6 +89,7 @@ export async function pollForNews() {
         // reset failures on success
         if (publisher.failureCount && publisher.lastFetchedAt) {
           await publisher.setRateLimit('default', 1, Date.now() - publisher.lastFetchedAt.valueOf());
+          await publisher.setRateLimit('maxAttempt', 1, Date.now() - publisher.lastFetchedAt.valueOf());
         }
         await publisher.success();
       } catch (e) {
