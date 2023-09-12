@@ -55,7 +55,7 @@ export async function pollForNews() {
         }
         
         console.log(`fetching sitemaps for ${publisher.name}`);
-        const limit = await publisher.getRateLimit();
+        const limit = await publisher.getRateLimit('maxAttempt');
         if (await limit.isSaturated()) {
           console.log(`Publisher ${publisher.name} has reached its limit of ${limit.limit} per ${limit.window}ms`);
           continue;
@@ -88,8 +88,7 @@ export async function pollForNews() {
         }
         // reset failures on success
         if (publisher.failureCount && publisher.lastFetchedAt) {
-          await publisher.setRateLimit('default', 1, Date.now() - publisher.lastFetchedAt.valueOf());
-          await publisher.setRateLimit('maxAttempt', 2, Date.now() - publisher.lastFetchedAt.valueOf());
+          await publisher.setRateLimit('maxAttempt', 1, Date.now() - publisher.lastFetchedAt.valueOf());
         }
         await publisher.success();
       } catch (e) {
