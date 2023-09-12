@@ -29,8 +29,7 @@ export async function doWork() {
         try {
           const {
             imageUrls,
-            outlet, 
-            publisher: publisherName = outlet, 
+            publisher: publisherName, 
             content, 
             url, 
             force, //  -- legacy support
@@ -39,6 +38,11 @@ export async function doWork() {
           if (!publisher) {
             console.log(`Publisher ${publisherName} not found`);
             await job.moveToFailed(`Publisher ${publisherName} not found`);
+            return;
+          }
+          if (publisher.delayedUntil && publisher.delayedUntil > new Date()) {
+            console.log(`skipping ${publisher.name} until ${new Date(publisher.delayedUntil).toISOString()}`);
+            await job.schedule(publisher.delayedUntil);
             return;
           }
           const limit = await publisher.getRateLimit();
