@@ -50,10 +50,17 @@ export async function pollForNews() {
     for (const publisher of publishers) {
       try {
         if (publisher.delayedUntil && publisher.delayedUntil > new Date()) {
-          console.log(`skipping ${publisher.name} until ${new Date(publisher.fetchPolicy.delayedUntil).toISOString()}`);
+          console.log(`skipping ${publisher.name} until ${new Date(publisher.delayedUntil).toISOString()}`);
           continue;
         }
+        
         console.log(`fetching sitemaps for ${publisher.name}`);
+        const limit = await publisher.getRateLimit();
+        if (await limit.isSaturated()) {
+          console.log(`Publisher ${publisher.name} has reached its limit of ${limit.limit} per ${limit.window}ms`);
+          continue;
+        }
+        await limit.advance();
         const fetchedUrls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
         console.log(`fetched ${fetchedUrls.length} urls for ${publisher.name}`);
         const existingJobs = await Job.findAll({ 
@@ -80,7 +87,10 @@ export async function pollForNews() {
           );
         }
         // reset failures on success
-        await publisher.reset();
+        if (publisher.failureCount && publisher.lastFetchedAt) {
+          await publisher.setRateLimit('default', 1, `${(Date.now() - publisher.lastFetchedAt.valueOf()) / 1000}s`);
+        }
+        await publisher.success();
       } catch (e) {
         if (e instanceof PuppeteerError) {
           console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
