@@ -6,6 +6,7 @@ import { Sentimental } from '../sentiment/Sentiment.types';
 export type FetchPolicy = {
   /** indicate if the website needs to be scraped after a certain amount of time, default is `domcontentloaded` to avoid paywalls */
   waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
+  delayedUntil?: Date;
 };
 
 export type Selector = {
@@ -47,6 +48,8 @@ export type PublisherAttributes = DatedAttributes & Sentimental & {
   radius?: string;
   maxAge: string;
   fetchPolicy?: FetchPolicy;
+  failureCount?: number;
+  delayedUntil?: Date;
   timezone: string;
   disabled?: boolean;
 };
@@ -63,6 +66,8 @@ export type PublisherCreationAttributes = Partial<DatedAttributes & Sentimental>
   radius?: string;
   maxAge?: string;
   fetchPolicy?: FetchPolicy;
+  failureCount?: number;
+  delayedUntil?: Date;
   timezone?: string;
   disabled?: boolean;
 };

@@ -50,7 +50,7 @@ export type CacheJobData = {
 };
 
 export type CrawlJobData = {
-  publisher: number;
+  publisher: string;
 };
 
 export type SiteMapJobData = {

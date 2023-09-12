@@ -28,7 +28,6 @@ export class Job<D extends Serializable, R, Q extends string = string, A extends
   @Index({
     name: 'jobs_queue_name_unique_key',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -39,7 +38,6 @@ export class Job<D extends Serializable, R, Q extends string = string, A extends
   @Index({
     name: 'jobs_queue_name_unique_key',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
