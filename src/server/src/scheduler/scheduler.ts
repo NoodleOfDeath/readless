@@ -88,7 +88,7 @@ export async function pollForNews() {
         }
         // reset failures on success
         if (publisher.failureCount && publisher.lastFetchedAt) {
-          await publisher.setRateLimit('default', 1, `${(Date.now() - publisher.lastFetchedAt.valueOf()) / 1000}s`);
+          await publisher.setRateLimit('default', 1, `${((Date.now() - publisher.lastFetchedAt.valueOf()) / 1000).toFixed(0)}s`);
         }
         await publisher.success();
       } catch (e) {
