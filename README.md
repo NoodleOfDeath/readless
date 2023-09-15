@@ -1,6 +1,6 @@
 # Read Less <!-- omit in toc -->
 
-[![License](https://img.shields.io/badge/Proprietary-CLA_License-purple)](https://github.com/NoodleOfDeath/readless/LICENSE)
+[![License](https://img.shields.io/badge/Proprietary-CLA_License-purple)](https://github.com/NoodleOfDeath/readless/blob/dev/LICENSE)
 
 [![Web Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml)
 [![Mobile Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml)
