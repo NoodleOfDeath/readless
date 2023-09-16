@@ -46,7 +46,7 @@ export async function translatePublishers() {
 export async function pollForNews() {
   console.log('fetching news!');
   try {
-    const { rows: publishers } = await Publisher.findAndCountAll();
+    const publishers = await Publisher.findAll();
     const queue = await Queue.from(Queue.QUEUES.sitemaps);
     for (const publisher of publishers) {
       let limit: RateLimit;
@@ -55,7 +55,6 @@ export async function pollForNews() {
           console.log(`skipping ${publisher.name} until ${new Date(publisher.delayedUntil).toISOString()}`);
           continue;
         }
-        
         console.log(`fetching sitemaps for ${publisher.name}`);
         limit = await publisher.getRateLimit('maxAttempt');
         if (await limit.isSaturated()) {
@@ -101,7 +100,7 @@ export async function pollForNews() {
           console.error(e);
         }
       } finally {
-        await limit.advance();
+        await limit?.advance();
       }
     }
   } catch (e) {
