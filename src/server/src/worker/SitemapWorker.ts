@@ -93,7 +93,7 @@ export async function doWork() {
             await job.moveToFailed(e);
           }
         } finally {
-          await fetchMax.advance();
+          await fetchMax?.advance();
           next();
         }
       }
