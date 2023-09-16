@@ -207,8 +207,8 @@ export class Publisher<
 
   async setRateLimit(
     namespace = 'default', 
-    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT, 
-    window: string | number = PUBLISHER_FETCH_INTERVAL
+    window: string | number = PUBLISHER_FETCH_INTERVAL,
+    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
   ) {
     const key = ['//publisher', this.id, this.name, namespace].join('§§');
     window = typeof window === 'number' ? window : ms(window);
@@ -223,14 +223,14 @@ export class Publisher<
 
   async getRateLimit(
     namespace = 'default',
-    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT, 
-    window: string | number = PUBLISHER_FETCH_INTERVAL
+    window: string | number = PUBLISHER_FETCH_INTERVAL,
+    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
   ) {
     const key = ['//publisher', this.id, this.name, namespace].join('§§');
     let rateLimit = await RateLimit.findOne({ where: { key } });
     window = typeof window === 'number' ? window : ms(window);
     if (!rateLimit) {
-      rateLimit = await this.setRateLimit(namespace, limit, window);
+      rateLimit = await this.setRateLimit(namespace, window, limit);
     }
     return rateLimit;
   }

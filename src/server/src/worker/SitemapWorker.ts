@@ -77,19 +77,23 @@ export async function doWork() {
               url,
             }
           );
-          await fetchMax.advance();
           await limit.advance();
           await job.moveToCompleted();
+          if (publisher.failureCount && publisher.lastFetchedAt) {
+            await publisher.setRateLimit('maxAttempt', Date.now() - publisher.lastFetchedAt.valueOf());
+          }
+          await publisher.success();
           return summary;
         } catch (e) {
           console.log(e);
-          await fetchMax.advance();
           if (e instanceof PuppeteerError) {
-            // do nothing
+            console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
+            await publisher.failAndDelay();
           } else {
             await job.moveToFailed(e);
           }
         } finally {
+          await fetchMax.advance();
           next();
         }
       }
