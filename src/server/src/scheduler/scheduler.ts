@@ -5,6 +5,7 @@ import {
   Job,
   Publisher,
   Queue,
+  RateLimit,
   Recap,
   Summary,
   Worker,
@@ -48,6 +49,7 @@ export async function pollForNews() {
     const { rows: publishers } = await Publisher.findAndCountAll();
     const queue = await Queue.from(Queue.QUEUES.sitemaps);
     for (const publisher of publishers) {
+      let limit: RateLimit;
       try {
         if (publisher.delayedUntil && publisher.delayedUntil > new Date()) {
           console.log(`skipping ${publisher.name} until ${new Date(publisher.delayedUntil).toISOString()}`);
@@ -55,12 +57,11 @@ export async function pollForNews() {
         }
         
         console.log(`fetching sitemaps for ${publisher.name}`);
-        const limit = await publisher.getRateLimit('maxAttempt');
+        limit = await publisher.getRateLimit('maxAttempt');
         if (await limit.isSaturated()) {
           console.log(`Publisher ${publisher.name} has reached its limit of ${limit.limit} per ${limit.window}ms`);
           continue;
         }
-        await limit.advance();
         const fetchedUrls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
         console.log(`fetched ${fetchedUrls.length} urls for ${publisher.name}`);
         const existingJobs = await Job.findAll({ 
@@ -88,7 +89,7 @@ export async function pollForNews() {
         }
         // reset failures on success
         if (publisher.failureCount && publisher.lastFetchedAt) {
-          await publisher.setRateLimit('maxAttempt', 1, Date.now() - publisher.lastFetchedAt.valueOf());
+          await publisher.setRateLimit('maxAttempt', Date.now() - publisher.lastFetchedAt.valueOf());
         }
         await publisher.success();
       } catch (e) {
@@ -99,6 +100,8 @@ export async function pollForNews() {
         if (process.env.ERROR_REPORTING) {
           console.error(e);
         }
+      } finally {
+        await limit.advance();
       }
     }
   } catch (e) {
