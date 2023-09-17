@@ -87,8 +87,12 @@ export async function doWork() {
         } catch (e) {
           console.log(e);
           if (e instanceof PuppeteerError) {
-            console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
-            await publisher.failAndDelay();
+            if (e.status === 403) {
+              console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
+              await publisher.failAndDelay();
+            } else {
+              await job.moveToFailed(e);
+            }
           } else {
             await job.moveToFailed(e);
           }
