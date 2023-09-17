@@ -93,8 +93,12 @@ export async function pollForNews() {
         await publisher.success();
       } catch (e) {
         if (e instanceof PuppeteerError) {
-          console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
-          await publisher.failAndDelay();
+          if (e.status === 403) {
+            console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
+            await publisher.failAndDelay();
+          } else {
+            await job.moveToFailed(e);
+          }
         }
         if (process.env.ERROR_REPORTING) {
           console.error(e);
