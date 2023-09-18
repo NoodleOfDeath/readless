@@ -343,7 +343,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
           selector: 'p',
         },
         url: 'https://www.businessinsider.com/sitemap/html/${YYYY}-${MM}.html',
-      }
+      },
     ],
     timezone: TIMEZONES.default,
   },

@@ -60,6 +60,7 @@ jobs:
       OLD_NEWS_THRESHOLD: ${{ vars.OLD_NEWS_THRESHOLD }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
+      PUBLISHER_MAX_ATTEMPT_LIMIT: ${{ vars.PUBLISHER_MAX_ATTEMPT_LIMIT }}
       SPIDER_FETCH_INTERVAL: ${{ vars.SPIDER_FETCH_INTERVAL }}
     steps:
       - name: Print Job Description
