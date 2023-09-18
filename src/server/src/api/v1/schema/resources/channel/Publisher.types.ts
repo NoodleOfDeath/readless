@@ -5,6 +5,7 @@ import { Sentimental } from '../sentiment/Sentiment.types';
 
 export type FetchPolicy = {
   /** indicate if the website needs to be scraped after a certain amount of time, default is `domcontentloaded` to avoid paywalls */
+  timeout?: string | number;
   waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
   fetchRate?: string | number;
 };
@@ -322,17 +323,27 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   businessinsider: {
     baseUrl: 'https://www.businessinsider.com',
     displayName: 'Business Insider',
+    fetchPolicy: { timeout: '10s' },
     name: 'businessinsider',
     selectors: {
       article: { selector: 'article p' },
       author: { selector: '.byline .byline-author-name' },
       date: { selector: '.byline .byline-timestamp' },
       image: { selector: 'figure img[src*="i.insider.com"]' },
-      spider:{
+      spider: {
         attribute: 'href',
-        selector: 'a.tout-title-link',
+        selector: 'a[href^="/"]',
       },
     },
+    sitemaps: [
+      {
+        spider: {
+          dateSelector: { selector: '_' },
+          selector: 'p',
+        },
+        url: 'https://www.businessinsider.com/sitemap/html/${YYYY}-${MM}.html',
+      },
+    ],
     timezone: TIMEZONES.default,
   },
   bustle: {

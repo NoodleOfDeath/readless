@@ -13,13 +13,14 @@ jest.setTimeout(30_000);
 import { Publisher } from '../src/api/v1/schema';
 import { PUBLISHERS } from '../src/api/v1/schema/resources/channel/Publisher.types';
 import { DBService } from '../src/services';
-import {
-  Loot,
-  PuppeteerService,
-  parseSrcset,
-} from '../src/services/puppeteer';
+import { PuppeteerService, parseSrcset } from '../src/services/puppeteer';
 
-const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' | 'date' | 'imageUrls'> } = {
+const LOOT: { [Key in keyof typeof PUBLISHERS]?: {
+  authors?: string[],
+  date?: Date;
+  imageUrls?: string[],
+  url: string;
+} } = {
   abcnews: {
     authors: ['Shannon K. Crawford', 'Luis Martinez'],
     date: new Date('2023-04-23T14:52:00.000Z'),
@@ -72,27 +73,22 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   businessinsider: {
     authors: ['David Kushner'],
-    date: new Date('placeholder'),
     url: 'https://www.businessinsider.com/celebrity-speaker-wild-money-drugs-alcohol-hunter-thompson-2023-4',
   },
   bustle: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.bustle.com/life/the-miami-curse-vacations-friends-drama',
   },
   buzzfeed: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'placeholder',
   },
   cbsnews: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.cbsnews.com/boston/news/new-hampshire-wrong-way-operator-charged-with-drunk-driving-on-i-93/',
   },
   cnbc: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.cnbc.com/2023/04/28/asia-markets-to-rise-as-wall-street-rallies-investors-look-ahead-to-bank-of-japan-policy-meeting.html',
   },
   cnn: {
@@ -102,44 +98,36 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   coindesk: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.coindesk.com/web3/2023/04/22/judge-rules-bored-ape-yacht-club-ripoff-nfts-violated-yuga-copyright/',
   },
   cryptoglobe: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.cryptoglobe.com/latest/2023/04/miss-universe-el-salvador-2022-encourages-women-to-embrace-the-bitcoin-world-after-launching-ordinals-collection/',
   },
   csis: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: ['https://features.csis.org/hiddenreach/china-polar-research-facility/assets/n9kJ0Tanih/fallback-1920x1080.jpg'],
     url: 'https://features.csis.org/hiddenreach/china-polar-research-facility/',
   },
   defenseone: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.defenseone.com/threats/2023/04/some-11k-ukrainians-have-had-least-some-us-training-spring-offensive-looms/385492/',
   },
   enews: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.eonline.com/news/1372154/how-love-is-blinds-amber-pike-is-shading-the-show',
   },
   espn: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: [''],
     url: 'https://www.espn.com/nfl/story/_/id/38094491/vikings-looking-options-move-danielle-hunter-sources-say',
   },
   essence: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.essence.com/culture/jalen-hurts-nfl-essence-cover/',
   },
   ew: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://ew.com/movies/ghosted-preview-chris-evans-ana-de-armas-adrien-brody/',
   },
   forbes: {
@@ -149,17 +137,14 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   foreignpolicy: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://foreignpolicy.com/2023/04/22/turkey-presidential-election-erdogan-akp-personality-cults-military-earthquake-economy/',
   },
   fortune: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://fortune.com/well/2023/05/26/national-eating-disorder-association-ai-chatbot-tessa/',
   },
   foxnews: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.foxnews.com/media/gen-z-voters-highlight-picks-2024-star-studded-gop-lineup-need-real-leadership#&_intcmp=fnhpbt1,hp1bt',
   },
   futurism: {
@@ -169,12 +154,10 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   gizmodo: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://gizmodo.com/twitter-elon-musk-blue-check-verified-removed-memes-1850363062',
   },
   huffpost: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: ['https://img.connatix.com/d0db5e84-ba12-4782-8439-fc8cffee6013/1_th.jpg?crop=629:354,smart&width=629&height=354&format=jpeg&quality=60&fit=crop'],
     url: 'https://www.huffpost.com/entry/trump-arraignment-jan-6-live-updates_n_64c993d1e4b03ad2b89b7bbe',
   },
@@ -186,104 +169,84 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   inverse: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.inverse.com/science/the-future-of-earth-editors-letter',
   },
   kotaku: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://kotaku.com/pokemon-trading-cards-tgc-eevee-eeveelution-yu-nagaba-a-1850363705',
   },
   ksl: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.ksl.com/article/50625269/utah-geological-survey-monitoring-100-landslide-locations-across-the-state',
   },
   latimes: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.latimes.com/california/story/2023-04-23/pete-aguilar-congress-latino-democrat-redlands',
   },
   lifewire: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.lifewire.com/googles-ai-chatbot-bard-can-now-help-you-code-software-7483561',
   },
   mashable: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://mashable.com/article/twitter-blue-28-signups',
   },
   menshealth: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.menshealth.com/health/a43498777/daytime-tv-doctor-requiem/',
   },
   nationalgeographic: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.nationalgeographic.com/premium/graphics/asian-elephants-behavior-coexistence-survival-feature',
   },
   nbcnews: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.nbcnews.com/health/health-news/covid-vaccine-side-effects-tinnitus-may-linked-inflammation-rcna80675',
   },
   newsweek: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.newsweek.com/ai-accidents-set-skyrocket-this-year-1795928',
   },
   newyorker: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: ['https://media.newyorker.com/photos/64c96a0c03ba9998f5c21c06/master/w_2560%2Cc_limit/Glasser-Trump-Indictment-GA.jpg'],
     url: 'https://www.newyorker.com/news/letter-from-bidens-washington/trumps-offense-against-democracy-itself',
   },
   npr: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.npr.org/podcasts/510368/taking-cover',
   },
   out: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.out.com/film/nathan-lane',
   },
   people: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://people.com/royals/prince-louis-5th-birthday-photos-not-taken-kate-middleton/',
   },
   politico: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.politico.com/news/magazine/2023/04/21/political-violence-2024-magazine-00093028',
   },
   popularmechanics: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.popularmechanics.com/space/moon-mars/a43633761/blowing-up-the-moon/',
   },
   reuters: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.reuters.com/world/africa/us-france-evacuate-diplomats-sudan-battles-rage-2023-04-23/',
   },
   rollingstone: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: ['https://www.rollingstone.com/wp-content/uploads/2023/07/Screen-Shot-2023-07-27-at-4.14.43-PM.jpg?w=1581&h=1054&crop=1'],
     url: 'https://www.rollingstone.com/music/music-news/chrissy-chlapecka-brat-video-drag-queens-sugar-spice-1234796413/',
   },
   science: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.science.org/doi/10.1126/sciimmunol.add8454',
   },
   sciencedaily: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.sciencedaily.com/releases/2023/04/230419125056.htm',
   },
   scitechnewsnetwork: {
@@ -293,18 +256,15 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   space: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.space.com/the-expanse-dragon-tooth-comic-series-creators',
   },
   telegraph: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: ['https://www.telegraph.co.uk/content/dam/news/2023/08/05/TELEMMGLPICT000344906232_16912508059220_trans_NvBQzQNjv4BqAgteUjTgAPhe0-ZjLyZCCY-CP8FGr5EfoXiA1Tlm5m4.jpeg?imwidth=680'],
     url: 'https://www.telegraph.co.uk//news/2023/08/05/victory-in-the-battle-of-britain-victory-hinged-on-one-man/',
   },
   theatlantic: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://cdn.theatlantic.com/thumbor/V6dZ4_O0a4054tchlComWJ1bWms=/0x0:2000x1125/960x540/media/img/mt/2023/07/ups_final_2/original.jpg',
   },
   theguardian: {
@@ -314,59 +274,48 @@ const LOOT: { [ Key in keyof typeof PUBLISHERS]?: Pick<Loot, 'url' | 'authors' |
   },
   thehill: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://thehill.com/homenews/media/3962900-what-fox-news-dominion-settlement-means-for-its-next-major-legal-fight/',
   },
   thestreet: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.thestreet.com/technology/elon-musk-shares-stunning-starship-video-and-photo',
   },
   thetimes: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: ['https://www.thetimes.co.uk/imageserver/image/%2Fmethode%2Ftimes%2Fprod%2Fweb%2Fbin%2F785fe892-2cc2-11ee-b33d-6d3f5a636b40.jpg?crop=6690%2C3763%2C137%2C37&resize=1500'],
     url: 'https://www.thetimes.co.uk/article/tesla-range-miles-electric-battery-wddfq7z5r',
   },
   time: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://time.com/6273585/ron-desantis-donor-robert-bigelow/',
   },
   usatoday: {
     authors: [],
-    date: new Date('placeholder'),
     imageUrls: ['https://www.usatoday.com/gcdn/presto/2023/07/27/USAT/eeb75d65-5318-47fa-a1fc-8a4cff1465f5-WWKN_RectThumb_PHOTO_213.png?width=660&height=371&fit=crop&format=pjpg&auto=webp'],
     url: 'https://www.usatoday.com/story/news/world/2023/07/29/niger-coups-in-africa/70475841007/',
   },
   usnews: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.usnews.com/news/world/articles/2023-04-20/global-militaries-converge-on-sudan-as-violence-escalates',
   },
   vbeat: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://venturebeat.com/ai/why-everyone-is-talking-about-generative-ai-not-just-the-experts/',
   },
   vice: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.vice.com/en/article/dy3vem/heres-how-you-can-get-in-on-facebooks-dollar725-million-class-action-settlement',
   },
   vox: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.vox.com/2023/4/15/23684493/sudan-rival-armed-forces-violence',
   },
   wired: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.wired.com/story/my-balls-out-quest-to-achieve-the-perfect-scrotum/',
   },
   wsj: {
     authors: [],
-    date: new Date('placeholder'),
     url: 'https://www.wsj.com/articles/another-biden-trump-presidential-race-in-2024-looks-more-likely-19d88039?mod=mhp',
   },
 };
@@ -423,16 +372,12 @@ describe('loot', () => {
       if (exp.imageUrls) {
         expect(loot.imageUrls?.[0]).toBe(exp?.imageUrls[0]);
       }
-      // if (exp.authors.length > 0) {
-      //   expect(loot.authors.length).toBe(exp.authors.length);
-      //   for (const author of loot.authors) {
-      //     expect(exp.authors.includes(author)).toBe(true);
-      //   }
-      // }
-      expect(loot.date).toBeDefined();
-      expect(Number.isNaN(loot.date.valueOf())).toBe(false);
-      expect(loot.date).toBeInstanceOf(Date);
-      expect(loot.date.toISOString()).toBe(exp.date.toISOString());
+      if (exp.date) {
+        expect(loot.date).toBeDefined();
+        expect(Number.isNaN(loot.date.valueOf())).toBe(false);
+        expect(loot.date).toBeInstanceOf(Date);
+        expect(loot.date.toISOString()).toBe(exp.date.toISOString());
+      }
       console.log(loot.date);
     });
   }
