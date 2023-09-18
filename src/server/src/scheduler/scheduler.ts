@@ -35,9 +35,7 @@ export async function translatePublishers() {
     console.log('translating publishers');
     await Publisher.prepare({ translate: true });
   } catch (e) {
-    if (process.env.ERROR_REPORTING) {
-      console.error(e);
-    }
+    console.error(e);
   } finally {
     setTimeout(translatePublishers, ms('5m'));
   }
@@ -95,17 +93,13 @@ export async function pollForNews() {
             await publisher.failAndDelay();
           }
         }
-        if (process.env.ERROR_REPORTING) {
-          console.error(e);
-        }
+        console.error(e);
       } finally {
         await fetchMax?.advance();
       }
     }
   } catch (e) {
-    if (process.env.ERROR_REPORTING) {
-      console.error(e);
-    }
+    console.error(e);
   } finally {
     setTimeout(pollForNews, ms(SPIDER_FETCH_INTERVAL));
   }
@@ -141,9 +135,7 @@ export async function cleanUpDeadWorkers() {
       },
     });
   } catch (e) {
-    if (process.env.ERROR_REPORTING) {
-      console.error(e);
-    }
+    console.error(e);
   } finally {
     setTimeout(cleanUpDeadWorkers, ms('2m'));
   }
@@ -174,9 +166,7 @@ async function scheduleJobs() {
     );
     console.log('done scheduling topic jobs');
   } catch (e) {
-    if (process.env.ERROR_REPORTING) {
-      console.error(e);
-    }
+    console.error(e);
   } finally {
     setTimeout(scheduleJobs, ms('30s'));
   }
@@ -209,9 +199,7 @@ async function scheduleRecapJobs() {
     await scheduleRecapJob();
     console.log('done scheduling recap jobs');
   } catch (e) {
-    if (process.env.ERROR_REPORTING) {
-      console.error(e);
-    }
+    console.error(e);
   } finally {
     setTimeout(scheduleRecapJobs, ms('5m'));
   }

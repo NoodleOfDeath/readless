@@ -23,7 +23,7 @@ import { RateLimit } from '../../system/RateLimit.model';
 import { PrepareOptions } from '../../types';
 
 const PUBLISHER_FETCH_LIMIT = process.env.PUBLISHER_FETCH_LIMIT ? Number(process.env.PUBLISHER_FETCH_LIMIT) : 1; // 1 for dev and testing
-const PUBLISHER_MAX_ATTEMPT_LIMIT = process.env.PUBLISHER_MAX_ATTEMPT_LIMIT ? Number(process.env.PUBLISHER_MAX_ATTEMPT_LIMIT) : 5;
+const PUBLISHER_MAX_ATTEMPT_LIMIT = process.env.PUBLISHER_MAX_ATTEMPT_LIMIT ? Number(process.env.PUBLISHER_MAX_ATTEMPT_LIMIT) : 10;
 const PUBLISHER_FETCH_INTERVAL = process.env.PUBLISHER_FETCH_INTERVAL || '1d';
 
 @Table({
@@ -100,12 +100,12 @@ export class Publisher<
   }
 
   async fail() {
-    this.set('failureCount', this.failureCount + 1);
+    this.set('failureCount', (this.failureCount ?? 0) + 1);
     await this.save();
   }
   
   async delay() {
-    const date = new Date(Date.now() + ms(process.env.BACKOFF_INTERVAL || '10m') * this.failureCount);
+    const date = new Date(Date.now() + ms(process.env.BACKOFF_INTERVAL || '10m') * (this.failureCount ?? 0));
     this.set('delayedUntil', date);
     await this.save();
   }
