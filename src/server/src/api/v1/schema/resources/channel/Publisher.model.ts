@@ -19,7 +19,6 @@ import { PublisherTranslation } from './PublisherTranslation.model';
 import { PUBLIC_PUBLISHERS } from './queries';
 import { SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
-import { Job } from '../../models';
 import { RateLimit } from '../../system/RateLimit.model';
 import { PrepareOptions } from '../../types';
 
@@ -184,19 +183,8 @@ export class Publisher<
   }
   
   async delay() {
-    const date = new Date(Date.now() + ms(process.env.BACKOFF_INTERVAL || '1h') * this.failureCount);
+    const date = new Date(Date.now() + ms(process.env.BACKOFF_INTERVAL || '10m') * this.failureCount);
     this.set('delayedUntil', date);
-    const jobs = await Job.findAll({
-      where: {
-        group: this.name,
-        queue: 'sitemaps',
-      },
-    });
-    console.log(`Delaying ${jobs.length} for publisher ${this.name}`);
-    for (const job of jobs) {
-      const newDate = new Date(ms(process.env.BACKOFF_INTERVAL || '1h') * Math.max(this.failureCount, job.attempts));
-      await job.schedule(newDate);
-    }
     await this.save();
   }
 
