@@ -121,11 +121,17 @@ export class PuppeteerService extends BaseService {
   static async fetch(url: string, { usePuppet, pageOptions }: FetchOptions = {}) {
     if (usePuppet) {
       try {
-        return await this.open(url, [], pageOptions);
+        const parts: string[] = [];
+        await this.open(url, [{
+          action: async (el) => {
+            const text = (await el.evaluate((el) => el.textContent.trim() || el.innerHTML)).replace(/\n/g, '').replace(/\s+/g, ' ').trim();
+            parts.push(text);
+          },
+          selector: 'body',
+        }], pageOptions);
+        return parts.filter(Boolean).join('\n');
       } catch (e) {
-        if (process.env.ERROR_REPORTING) {
-          console.error(e);
-        }
+        console.error(e);
       }
     }
     try {
@@ -140,9 +146,7 @@ export class PuppeteerService extends BaseService {
       }
       return text;
     } catch (e) {
-      if (process.env.ERROR_REPORTING) {
-        console.error(e);
-      }
+      console.error(e);
     }
   }
 
@@ -151,18 +155,18 @@ export class PuppeteerService extends BaseService {
    * @param {string} url the url to open
    * @param {SelectorAction[]} actions actions to perform on the page
    * @param {PageOptions} pageOptions options to pass to the puppet
-   * @returns {Promise<string>} the raw text of the page
+   * @returns {Promise<void>}
    * @throws if the page fails to load
    */
   public static async open(
     url: string, 
     actions: SelectorAction[] = [], 
     { 
-      timeout = process.env.PUPPETEER_TIMEOUT ? Number(process.env.PUPPETEER_TIMEOUT) : ms('5s'),
+      timeout = process.env.PUPPETEER_TIMEOUT ? ms(process.env.PUPPETEER_TIMEOUT) : ms('5s'),
       viewport = { height: 1080, width: 1920 },
       waitUntil = 'domcontentloaded',
     }: PageOptions = {}
-  ): Promise<string> {
+  ): Promise<void> {
 
     let browser: Browser;
     try {
@@ -185,15 +189,13 @@ export class PuppeteerService extends BaseService {
         throw new PuppeteerError(url, status);
       }
 
-      const rawText = await page.evaluate(() => document.body.innerText);
-
       for (const selectorAction of actions) {
         try {
           const {
             selector, firstMatchOnly, pageOptions, action, 
           } = selectorAction;
           if (selector === 'disabled') {
-            return '';
+            return;
           }
           await page.setViewport(pageOptions?.viewport ?? viewport);
           if (firstMatchOnly) {
@@ -205,22 +207,15 @@ export class PuppeteerService extends BaseService {
           }
           selectorAction.finally?.();
         } catch (e) {
-          if (process.env.ERROR_REPORTING) {
-            console.error(e);
-          }
+          console.error(e);
         }
       }
-
-      return rawText;
       
     } catch (e) {
       if (e instanceof PuppeteerError) {
         throw e;
       }
-      if (process.env.ERROR_REPORTING) {
-        console.error(e);
-      }
-      return '';
+      console.error(e);
     } finally {
       await browser?.close();
     }
@@ -270,28 +265,28 @@ export class PuppeteerService extends BaseService {
               }
             }
           } catch (e) {
-            if (process.env.ERROR_REPORTING) {
-              console.error(e);
-            }
+            console.error(e);
             return;
           }
           if (spider.dateSelector?.selector) {
             try {
-              const strs = await el.evaluate((el, selector, attr) => {
-                const date = el.querySelector(selector);
-                if (!date) {
-                  return;
+              if (spider.dateSelector.selector === '_') {
+                priority = parseDate(await el.evaluate((el) => el.textContent))?.valueOf() ?? 0;
+              } else {
+                const strs = await el.evaluate((el, selector, attr) => {
+                  const date = el.querySelector(selector);
+                  if (!date) {
+                    return;
+                  }
+                  return [date.getAttribute(attr), date.textContent];
+                }, replaceDatePlaceholders(spider.dateSelector.selector), spider.dateSelector.attribute || spider.attribute || 'datetime');
+                const dates = strs.filter(Boolean).map((d) => parseDate(d));
+                if (dates.length > 0) {
+                  priority = maxDate(...dates)?.valueOf() || 0;
                 }
-                return [date.getAttribute(attr), date.textContent];
-              }, replaceDatePlaceholders(spider.dateSelector.selector), spider.dateSelector.attribute || spider.attribute || 'datetime');
-              const dates = strs.filter(Boolean).map((d) => parseDate(d));
-              if (dates.length > 0) {
-                priority = maxDate(...dates)?.valueOf() || 0;
               }
             } catch (e) {
-              if (process.env.ERROR_REPORTING) {
-                console.error(e);
-              }
+              console.error(e);
             }
           }
           try {
@@ -300,15 +295,16 @@ export class PuppeteerService extends BaseService {
               return image ? ATTRIBUTES.image.map((attr) => image.getAttribute(attr)).filter(Boolean) : [];
             }, replaceDatePlaceholders(spider.imageSelector?.selector ?? 'img'), ATTRIBUTES)).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
           } catch (e) {
-            if (process.env.ERROR_REPORTING) {
-              console.error(e);
-            }
+            console.error(e);
           }
           urls[url] = { imageUrls, priority };
         }, 
         selector: topSelector,
       },
-    ], { waitUntil: publisher.fetchPolicy?.waitUntil });
+    ], { 
+      timeout: typeof publisher.fetchPolicy?.timeout === 'string' ? ms(publisher.fetchPolicy.timeout) : publisher.fetchPolicy?.timeout,
+      waitUntil: publisher.fetchPolicy?.waitUntil,
+    });
     return Object.entries(urls).map(([url, data]) => ({ ...data, url })).sort((a, b) => b.priority - a.priority);
   }
 
@@ -443,7 +439,10 @@ export class PuppeteerService extends BaseService {
       });
     }
       
-    await this.open(url, actions, { waitUntil: publisher.fetchPolicy?.waitUntil });
+    await this.open(url, actions, {
+      timeout: typeof publisher.fetchPolicy?.timeout === 'string' ? ms(publisher.fetchPolicy.timeout) : publisher.fetchPolicy?.timeout,
+      waitUntil: publisher.fetchPolicy?.waitUntil,
+    });
       
     loot.dateMatches = dates.filter(Boolean);
     loot.date = maxDate(...dates);
