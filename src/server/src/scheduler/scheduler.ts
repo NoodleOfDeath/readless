@@ -49,16 +49,16 @@ export async function pollForNews() {
     const publishers = await Publisher.findAll();
     const queue = await Queue.from(Queue.QUEUES.sitemaps);
     for (const publisher of publishers) {
-      let limit: RateLimit;
+      let fetchMax: RateLimit;
       try {
         if (publisher.delayedUntil && publisher.delayedUntil > new Date()) {
           console.log(`skipping ${publisher.name} until ${new Date(publisher.delayedUntil).toISOString()}`);
           continue;
         }
         console.log(`fetching sitemaps for ${publisher.name}`);
-        limit = await publisher.getRateLimit('maxAttempt');
-        if (await limit.isSaturated()) {
-          console.log(`Publisher ${publisher.name} has reached its limit of ${limit.limit} per ${limit.window}ms`);
+        fetchMax = await publisher.getRateLimit('maxAttempt');
+        if (await fetchMax.isSaturated()) {
+          console.log(`Publisher ${publisher.name} has reached its maximum limit of ${limit.limit} per ${limit.window}ms`);
           continue;
         }
         const fetchedUrls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
@@ -87,9 +87,6 @@ export async function pollForNews() {
           );
         }
         // reset failures on success
-        if (publisher.failureCount && publisher.lastFetchedAt) {
-          await publisher.setRateLimit('maxAttempt', Date.now() - publisher.lastFetchedAt.valueOf());
-        }
         await publisher.success();
       } catch (e) {
         if (e instanceof PuppeteerError) {
@@ -104,7 +101,7 @@ export async function pollForNews() {
           console.error(e);
         }
       } finally {
-        await limit?.advance();
+        await fetchMax?.advance();
       }
     }
   } catch (e) {

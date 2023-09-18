@@ -6,7 +6,7 @@ import { Sentimental } from '../sentiment/Sentiment.types';
 export type FetchPolicy = {
   /** indicate if the website needs to be scraped after a certain amount of time, default is `domcontentloaded` to avoid paywalls */
   waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
-  fetchRate?: string;
+  fetchRate?: string | number;
 };
 
 export type Selector = {
