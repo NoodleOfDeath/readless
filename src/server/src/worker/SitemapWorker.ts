@@ -1,3 +1,5 @@
+import ms from 'ms';
+
 import {
   Publisher,
   Queue,
@@ -77,12 +79,9 @@ export async function doWork() {
               url,
             }
           );
+          await publisher.success();
           await limit.advance();
           await job.moveToCompleted();
-          if (publisher.failureCount && publisher.lastFetchedAt) {
-            await publisher.setRateLimit('maxAttempt', Date.now() - publisher.lastFetchedAt.valueOf());
-          }
-          await publisher.success();
           return summary;
         } catch (e) {
           console.log(e);

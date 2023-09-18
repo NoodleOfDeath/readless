@@ -79,6 +79,71 @@ export class Publisher<
       rows: publishers ?? [],
     };
   }
+  
+  async reset() {
+    this.set('failureCount', 0);
+    this.set('delayedUntil', null);
+    await this.save();
+  }
+
+  async success() {
+    if (this.failureCount) {
+      this.set('fetchPolicy', {
+        ...this.fetchPolicy,
+        fetchRate: this.failureCount * ms('10m'),
+      });
+      await this.save();
+    }
+    await this.reset();
+    this.set('lastFetchedAt', new Date());
+    await this.save();
+  }
+
+  async fail() {
+    this.set('failureCount', this.failureCount + 1);
+    await this.save();
+  }
+  
+  async delay() {
+    const date = new Date(Date.now() + ms(process.env.BACKOFF_INTERVAL || '10m') * this.failureCount);
+    this.set('delayedUntil', date);
+    await this.save();
+  }
+
+  async failAndDelay() {
+    await this.fail();
+    await this.delay();
+  }
+
+  async setRateLimit(
+    namespace = 'default', 
+    window: string | number = PUBLISHER_FETCH_INTERVAL,
+    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
+  ) {
+    const key = ['//publisher', this.id, this.name, namespace].join('§§');
+    window = typeof window === 'number' ? window : ms(window);
+    const [rateLimit] = await RateLimit.upsert({
+      expiresAt: new Date(Date.now() + window),
+      key,
+      limit,
+      window,
+    });
+    return rateLimit;
+  }
+
+  async getRateLimit(
+    namespace = 'default',
+    window: string | number = PUBLISHER_FETCH_INTERVAL,
+    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
+  ) {
+    const key = ['//publisher', this.id, this.name, namespace].join('§§');
+    let rateLimit = await RateLimit.findOne({ where: { key } });
+    window = typeof window === 'number' ? window : ms(window);
+    if (!rateLimit) {
+      rateLimit = await this.setRateLimit(namespace, window, limit);
+    }
+    return rateLimit;
+  }
 
   async getTranslations(locale: SupportedLocale = 'en') {
     return PublisherTranslation.findAll({
@@ -164,63 +229,5 @@ export class Publisher<
   declare disabled?: boolean;
 
   declare sentiment?: number;
-
-  async reset() {
-    this.set('failureCount', 0);
-    this.set('delayedUntil', null);
-    await this.save();
-  }
-
-  async success() {
-    await this.reset();
-    this.set('lastFetchedAt', new Date());
-    await this.save();
-  }
-
-  async fail() {
-    this.set('failureCount', this.failureCount + 1);
-    await this.save();
-  }
-  
-  async delay() {
-    const date = new Date(Date.now() + ms(process.env.BACKOFF_INTERVAL || '10m') * this.failureCount);
-    this.set('delayedUntil', date);
-    await this.save();
-  }
-
-  async failAndDelay() {
-    await this.fail();
-    await this.delay();
-  }
-
-  async setRateLimit(
-    namespace = 'default', 
-    window: string | number = PUBLISHER_FETCH_INTERVAL,
-    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
-  ) {
-    const key = ['//publisher', this.id, this.name, namespace].join('§§');
-    window = typeof window === 'number' ? window : ms(window);
-    const [rateLimit] = await RateLimit.upsert({
-      expiresAt: new Date(Date.now() + window),
-      key,
-      limit,
-      window,
-    });
-    return rateLimit;
-  }
-
-  async getRateLimit(
-    namespace = 'default',
-    window: string | number = PUBLISHER_FETCH_INTERVAL,
-    limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT,
-  ) {
-    const key = ['//publisher', this.id, this.name, namespace].join('§§');
-    let rateLimit = await RateLimit.findOne({ where: { key } });
-    window = typeof window === 'number' ? window : ms(window);
-    if (!rateLimit) {
-      rateLimit = await this.setRateLimit(namespace, window, limit);
-    }
-    return rateLimit;
-  }
 
 }
