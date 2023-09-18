@@ -307,6 +307,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   },
   bloomberg: {
     baseUrl: 'https://www.bloomberg.com',
+    disabled: true,
     displayName: 'Bloomberg',
     name: 'bloomberg',
     selectors: {
@@ -342,7 +343,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
           selector: 'p',
         },
         url: 'https://www.businessinsider.com/sitemap/html/${YYYY}-${MM}.html',
-      },
+      }
     ],
     timezone: TIMEZONES.default,
   },
