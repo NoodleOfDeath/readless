@@ -85,9 +85,12 @@ export class ScribeService extends BaseService {
       loot = await PuppeteerService.loot(url, publisher, { content });
     } catch (e) {
       if (e instanceof PuppeteerError) {
-        // backoff because we got a non 200 response
-        await publisher.failAndDelay();
-        await this.error('Bad response', [url, e.message].join('\n\n'), false);
+        if (e.status === 403) {
+          await this.error('Bad response', [url, e.message].join('\n\n'), false);
+        } else
+        if (e.status === 404) {
+          await this.error('Page not found', [url, e.message].join('\n\n'), false);
+        }
       }
       throw e;
     }
