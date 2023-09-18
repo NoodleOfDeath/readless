@@ -205,7 +205,7 @@ const LOOT: { [Key in keyof typeof PUBLISHERS]?: {
   },
   newsweek: {
     authors: [],
-    url: 'https://www.newsweek.com/ai-accidents-set-skyrocket-this-year-1795928',
+    url: 'https://www.newsweek.com/thousands-minks-descend-county-after-being-set-loose-fur-farm-1827934',
   },
   newyorker: {
     authors: [],
@@ -340,6 +340,12 @@ describe('util method tests', () => {
     expect(urls).toBeDefined();
     expect(urls.length).toBe(2);
     expect(urls[0]).toBe('https://www.wsj.com/test2x.png');
+    console.log(urls);
+    srcset = 'https://d.newsweek.com/en/full/2283598/mink.jpg?w=450&f=3b4a2782db67614aa4a96f1e09459bc0 1x';
+    urls = parseSrcset(srcset, { publisher: PUBLISHERS.newsweek });
+    expect(urls).toBeDefined();
+    expect(urls.length).toBe(1);
+    expect(urls[0]).toBe('https://d.newsweek.com/en/full/2283598/mink.jpg?w=450&f=3b4a2782db67614aa4a96f1e09459bc0');
     console.log(urls);
   });
 

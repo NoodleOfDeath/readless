@@ -14,7 +14,7 @@ import {
 export async function main() {
   await DBService.prepare();
   await Queue.prepare();
-  Publisher.prepare();
+  await Publisher.prepare();
   ScribeService.prepare();
   doWork();
 }
@@ -83,20 +83,16 @@ export async function doWork() {
             await job.moveToCompleted();
             return summary;
           } catch (e) {
-            console.log(e);
             if (e instanceof PuppeteerError) {
               if (e.status === 403) {
                 console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
                 await publisher.failAndDelay();
-              } else {
-                await job.moveToFailed(e);
               }
-            } else {
-              await job.moveToFailed(e);
             }
+            throw e;
           }
         } catch (e) {
-          console.log(e);
+          console.error(e);
           await job.moveToFailed(e);
         } finally {
           await fetchMax?.advance();
@@ -105,9 +101,7 @@ export async function doWork() {
       }
     );
   } catch (e) {
-    if (process.env.ERROR_REPORTING) {
-      console.error(e);
-    }
+    console.error(e);
     setTimeout(() => doWork, 3_000);
   }
 }

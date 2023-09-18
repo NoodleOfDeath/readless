@@ -84,7 +84,7 @@ export function parseSrcset(str: string, options: UrlOptions) {
     const widthSubstr = widthStr.replace(/[wx]/ig, '');
     const width = Number.isNaN(Number(widthSubstr)) ? undefined : Number(widthSubstr);
     if (path && width) {
-      const url = fixRelativeUrl(path, options);
+      const url = fixRelativeUrl(path, options).replace(/\s+.*$/, '');
       return { url, width };
     }
   };
@@ -95,6 +95,9 @@ export function parseSrcset(str: string, options: UrlOptions) {
       .sort((a, b) => b.width - a.width)
       .map((img) => img.url)
       .filter(Boolean);
+  } else
+  if (/^\s*\S+\s+\d+[wx]\s*$/i.test(str)) {
+    return [splitSet(str).url].filter(Boolean);
   }
   return [fixRelativeUrl(str, options)].filter(Boolean);
 }
