@@ -1,5 +1,3 @@
-import ms from 'ms';
-
 import {
   Publisher,
   Queue,
@@ -70,31 +68,36 @@ export async function doWork() {
               return existingSummary;
             }
           }
-          const summary = await ScribeService.readAndSummarize(
-            {
-              content,
-              imageUrls: JSON.parse(imageUrls ?? '[]') as string[], 
-              priority: job.priority,
-              publisher, 
-              url,
-            }
-          );
-          await publisher.success();
-          await limit.advance();
-          await job.moveToCompleted();
-          return summary;
-        } catch (e) {
-          console.log(e);
-          if (e instanceof PuppeteerError) {
-            if (e.status === 403) {
-              console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
-              await publisher.failAndDelay();
+          try {
+            const summary = await ScribeService.readAndSummarize(
+              {
+                content,
+                imageUrls: JSON.parse(imageUrls ?? '[]') as string[], 
+                priority: job.priority,
+                publisher, 
+                url,
+              }
+            );
+            await publisher.success();
+            await limit.advance();
+            await job.moveToCompleted();
+            return summary;
+          } catch (e) {
+            console.log(e);
+            if (e instanceof PuppeteerError) {
+              if (e.status === 403) {
+                console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
+                await publisher.failAndDelay();
+              } else {
+                await job.moveToFailed(e);
+              }
             } else {
               await job.moveToFailed(e);
             }
-          } else {
-            await job.moveToFailed(e);
           }
+        } catch (e) {
+          console.log(e);
+          await job.moveToFailed(e);
         } finally {
           await fetchMax?.advance();
           next();

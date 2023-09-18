@@ -299,7 +299,6 @@ export class PuppeteerService extends BaseService {
               const image = el.querySelector(selector);
               return image ? ATTRIBUTES.image.map((attr) => image.getAttribute(attr)).filter(Boolean) : [];
             }, replaceDatePlaceholders(spider.imageSelector?.selector ?? 'img'), ATTRIBUTES)).flatMap((src) => parseSrcset(src, { publisher, targetUrl }));
-            console.log(`found ${imageUrls.length} images for ${url}`);
           } catch (e) {
             if (process.env.ERROR_REPORTING) {
               console.error(e);

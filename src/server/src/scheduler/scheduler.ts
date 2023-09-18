@@ -58,7 +58,7 @@ export async function pollForNews() {
         console.log(`fetching sitemaps for ${publisher.name}`);
         fetchMax = await publisher.getRateLimit('maxAttempt');
         if (await fetchMax.isSaturated()) {
-          console.log(`Publisher ${publisher.name} has reached its maximum limit of ${limit.limit} per ${limit.window}ms`);
+          console.log(`Publisher ${publisher.name} has reached its maximum limit of ${fetchMax.limit} per ${fetchMax.window}ms`);
           continue;
         }
         const fetchedUrls = (await PuppeteerService.crawl(publisher)).filter((url) => url.priority === 0 || url.priority > Date.now() - ms(OLD_NEWS_THRESHOLD));
@@ -93,8 +93,6 @@ export async function pollForNews() {
           if (e.status === 403) {
             console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
             await publisher.failAndDelay();
-          } else {
-            await job.moveToFailed(e);
           }
         }
         if (process.env.ERROR_REPORTING) {
