@@ -10,7 +10,7 @@ import { Menu } from 'react-native-paper';
 import  RNPopover from 'react-native-popover-view';
 import { PublicPopoverProps } from 'react-native-popover-view/dist/Popover';
 
-import { Chip, View } from '~/components';
+import { Button, View } from '~/components';
 import { SessionEvent } from '~/core';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
@@ -48,7 +48,7 @@ export function Popover({
     <RNView ref={ ref }>
       <View p={ 4 } row>
         <View row />
-        <Chip
+        <Button
           accessible
           accessibilityLabel={ strings.action_close }
           leftIcon="close"

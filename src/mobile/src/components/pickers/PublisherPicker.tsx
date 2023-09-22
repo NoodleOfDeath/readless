@@ -3,7 +3,7 @@ import React from 'react';
 import { 
   ChannelIcon,
   ChildlessViewProps,
-  GridPicker,
+  TablePicker,
 } from '~/components';
 import { SessionContext } from '~/core';
 
@@ -21,9 +21,10 @@ export const PublisherPicker = React.forwardRef(function PublisherPicker(props: 
   })), [publishers]);
   React.useImperativeHandle(ref, React.useCallback(() => ({ value: selectedPublishers }), [selectedPublishers]));
   return (
-    <GridPicker
+    <TablePicker
       { ...props }
       options={ options }
+      searchable
       multi
       initialValue={ selectedPublishers }
       onValueChange={ (publishers) => { 

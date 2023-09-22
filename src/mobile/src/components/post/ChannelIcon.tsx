@@ -2,8 +2,8 @@ import React from 'react';
 
 import { PublicCategoryAttributes, PublicPublisherAttributes } from '~/api';
 import {
+  Button,
   ChildlessViewProps,
-  Chip,
   Icon,
   Image,
   View,
@@ -27,7 +27,7 @@ export function ChannelIcon({
 }: Props) {
   const theme = useTheme();
   const fallbackComponent = React.useMemo(() => (
-    <Chip
+    <Button
       bg={ theme.colors.primaryLight }
       color={ theme.colors.contrastText }
       beveled
@@ -40,7 +40,7 @@ export function ChannelIcon({
       width={ size }
       height={ size }>
       {publisher?.displayName && publisher?.displayName[0]}
-    </Chip>
+    </Button>
   ), [theme, category, publisher, size]);
   return (
     <View

@@ -3,7 +3,7 @@ import React from 'react';
 import { 
   ChannelIcon,
   ChildlessViewProps,
-  GridPicker,
+  TablePicker,
 } from '~/components';
 import { SessionContext } from '~/core';
 
@@ -16,8 +16,9 @@ export const CategoryPicker = React.forwardRef(function CategoryPicker(props: Ca
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>(Object.keys({ ...followedCategories }));
   React.useImperativeHandle(ref, React.useCallback(() => ({ value: selectedCategories }), [selectedCategories]));
   return (
-    <GridPicker
+    <TablePicker
       { ...props }
+      searchable
       options={ Object.values({ ...categories }).map((category) => ({
         icon: <ChannelIcon category={ category } />,
         label: category.displayName,

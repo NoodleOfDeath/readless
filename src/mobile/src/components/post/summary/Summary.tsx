@@ -16,9 +16,9 @@ import {
 
 import { PublicSummaryGroup, ReadingFormat } from '~/api';
 import {
+  Button,
   ChannelIcon,
   ChildlessViewProps,
-  Chip,
   ContextMenu,
   ContextMenuAction,
   Highlighter,
@@ -277,7 +277,7 @@ export function Summary({
   const renderContent = React.useCallback((format?: ReadingFormat) => content && (
     <React.Fragment>
       {content.split('\n').map((content, i) => (
-        <Chip
+        <Button
           key={ `${content}-${i}` }
           gap={ 12 }
           body2={ bulletsAsShortSummary || summaryAsShortSummary }
@@ -292,7 +292,7 @@ export function Summary({
             searchWords={ keywords }>
             { cleanString(content) }
           </Highlighter>
-        </Chip>
+        </Button>
       ))}
     </React.Fragment>
   ), [content, bulletsAsShortSummary, initialFormat, summaryAsShortSummary, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString]);
@@ -406,7 +406,7 @@ export function Summary({
   ), [forceExpanded, showcase, isCompact, initialFormat, isRead, theme.colors.textDisabled, theme.colors.text, theme.colors.textHighlightBackground, theme.colors.textDark, keywords, cleanString, showShortSummary, forceShortSummary, localizedStrings.shortSummary, localizedStrings.title]);
   
   const publisherChip = React.useMemo(() => (
-    <Chip
+    <Button
       flexRow
       itemsCenter
       gap={ 6 }
@@ -420,7 +420,7 @@ export function Summary({
         color={ halfBig ? theme.colors.contrastText : theme.colors.textSecondary }>
         {summary.publisher?.displayName}
       </Text>
-    </Chip>
+    </Button>
   ), [disableInteractions, halfBig, openPublisher, summary.publisher, theme.colors.contrastText, theme.colors.textSecondary]);
   
   const menuActions = React.useMemo(() => {
@@ -530,7 +530,7 @@ export function Summary({
       <View flexRow itemsCenter gap={ 12 }>
         {footerOnly && (
           <React.Fragment>
-            <Chip
+            <Button
               color={ theme.colors.textSecondary }
               leftIcon="book-open-variant"
               haptic
@@ -543,8 +543,8 @@ export function Summary({
                 openURL(summary.url);
               } }>
               {strings.summary_fullArticle}
-            </Chip>
-            <Chip
+            </Button>
+            <Button
               color={ theme.colors.textSecondary }
               leftIcon="export-variant"
               haptic
@@ -563,20 +563,20 @@ export function Summary({
                 });
               } }>
               {strings.action_share}
-            </Chip>
+            </Button>
           </React.Fragment>
         )}  
         <ContextMenu
           dropdownMenuMode
           event={ { name: 'expand-summary' } }
           actions={ menuActions as ContextMenuAction[] }>
-          <Chip
+          <Button
             gap={ 3 }
             caption={ !footerOnly }
             color={ theme.colors.textSecondary }
             leftIcon="menu-down">
             {strings.misc_more}
-          </Chip>
+          </Button>
         </ContextMenu>
       </View>
     </React.Fragment>
@@ -643,7 +643,7 @@ export function Summary({
           </React.Fragment>
         )}
         {!footerOnly && (
-          <Chip
+          <Button
             caption
             color={ theme.colors.textSecondary }
             itemsCenter
@@ -652,7 +652,7 @@ export function Summary({
             gap={ 3 }
             onPress={ () => !disableInteractions && openCategory(summary.category) }>
             {summary.category?.displayName}
-          </Chip>
+          </Button>
         )}
         {!footerOnly && !hideArticleCount && (
           <React.Fragment>
@@ -661,11 +661,11 @@ export function Summary({
               color={ theme.colors.textSecondary }>
               •
             </Text>
-            <Chip
+            <Button
               caption
               color={ theme.colors.textSecondary }>
               {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.misc_article, (summary.siblings?.length ?? 0) + 1)}`}
-            </Chip>
+            </Button>
           </React.Fragment>
         )}
         {isBookmarked && (
@@ -675,13 +675,13 @@ export function Summary({
               color={ theme.colors.textSecondary }>
               •
             </Text>
-            <Chip
+            <Button
               caption
               color={ theme.colors.textSecondary }
               leftIcon="bookmark"
               onPress={ () => !disableInteractions && navigate('bookmarks') }>
               {strings.summary_bookmarked}
-            </Chip>
+            </Button>
           </React.Fragment>
         )}
         {shareActions}

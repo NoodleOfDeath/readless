@@ -9,8 +9,8 @@ import {
 import { StackNavigation } from './StackNavigation';
 
 import {
+  Button,
   ChannelIcon,
-  Chip,
   DrawerItem,
   DrawerSection,
   Icon,
@@ -86,7 +86,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           navigate('publisherPicker');
         } }
         icon={ (_props) => (
-          <Chip
+          <Button
             leftIcon="pen"
             iconSize={ 24 }
             indicator={ !hasViewedFeature('first-view-publishers') } />
@@ -133,7 +133,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           navigate('categoryPicker');
         } }
         icon={ (_props) => (
-          <Chip
+          <Button
             leftIcon="shape"
             iconSize={ 24 }
             indicator={ !hasViewedFeature('first-view-categories') } />
@@ -149,7 +149,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem
           label={ `${strings.screens_bookmarks} (${bookmarkCount})` }
           icon={ (props) => (
-            <Chip 
+            <Button 
               { ...props }
               badge={ unreadBookmarkCount }
               iconSize={ 24 }

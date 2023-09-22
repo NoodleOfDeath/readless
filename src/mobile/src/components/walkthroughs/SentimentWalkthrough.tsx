@@ -5,7 +5,6 @@ import { Ellipse, Svg } from 'react-native-svg';
 
 import {
   Button,
-  Chip,
   Divider,
   Markdown,
   MeterDial,
@@ -159,7 +158,7 @@ export function SentimentWalkthrough(props: SheetProps) {
             onPress={ () => openURL('https://en.wikipedia.org/wiki/Lexical_analysis') }>
             {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription1}
           </Markdown>
-          <Chip contained itemsCenter gap={ 3 }>
+          <Button contained itemsCenter gap={ 3 }>
             <Text
               subtitle1 
               color="link"
@@ -177,7 +176,7 @@ export function SentimentWalkthrough(props: SheetProps) {
               bold>
               VADER
             </Text>
-          </Chip>
+          </Button>
           <Markdown subtitle1 textCenter system contained>
             {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription2}
           </Markdown>

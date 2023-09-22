@@ -21,24 +21,23 @@ import {
 
 type TableViewCellImageProps = ChildlessViewProps & {
   icon?: React.ReactNode;
+  size?: number;
 };
 
 export function TableViewCellImage({
   icon,
+  size = 24,
   ...props
 }: TableViewCellImageProps) {
   const style = useStyles(props);
   return icon && (
     <View
-      outlined
-      p={ 4 }
-      beveled
       mr={ 12 }
       style={ style }>
       {typeof icon === 'string' ? (
         <Icon
           name={ icon }
-          size={ 24 } />
+          size={ size } />
       ) : icon}
     </View>
   );

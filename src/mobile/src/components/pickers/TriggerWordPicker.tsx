@@ -3,7 +3,6 @@ import React from 'react';
 import {
   Button,
   ChildlessViewProps,
-  Chip,
   ScrollView,
   TextInput,
   View,
@@ -32,9 +31,9 @@ export function TriggerWordPicker({
 
   return (
     <View gap={ 12 }>
-      <Chip system contained>
+      <Button system contained>
         {strings.settings_enterYourTriggerWords}
-      </Chip>
+      </Button>
       <ScrollView>
         {words.map(([word, replacement], i) => (
           <View key={ i } row gap={ 6 } itemsCenter>
