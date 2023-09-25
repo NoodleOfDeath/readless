@@ -57,6 +57,7 @@ export const csStrings: typeof enStrings = {
   misc_categories: 'Kategorie',
   misc_category: 'Kategorie',
   misc_duhIAlreadyKnow: 'Fuj, už vím',
+  misc_favorites: 'Oblíbené',
   misc_iEnjoyReading: 'Vlastně mě baví číst',
   misc_inTheLast: 'v posledním',
   misc_maybeLater: 'Možná později',

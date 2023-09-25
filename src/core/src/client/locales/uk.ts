@@ -57,6 +57,7 @@ export const ukStrings: typeof enStrings = {
   misc_categories: 'Категорії',
   misc_category: 'Категорія',
   misc_duhIAlreadyKnow: 'Ну, я вже знаю',
+  misc_favorites: 'Вибране',
   misc_iEnjoyReading: 'Я справді люблю читати',
   misc_inTheLast: 'в останньому',
   misc_maybeLater: 'Можливо пізніше',

@@ -57,6 +57,7 @@ export const faStrings: typeof enStrings = {
   misc_categories: 'دسته بندی ها',
   misc_category: 'دسته بندی',
   misc_duhIAlreadyKnow: 'اوه، من از قبل می دانم',
+  misc_favorites: 'موارد دلخواه',
   misc_iEnjoyReading: 'من واقعا از خواندن لذت می برم',
   misc_inTheLast: 'در آخر',
   misc_maybeLater: 'شاید بعدا',

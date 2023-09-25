@@ -57,6 +57,7 @@ export const daStrings: typeof enStrings = {
   misc_categories: 'Kategorier',
   misc_category: 'Kategori',
   misc_duhIAlreadyKnow: 'Duh, jeg ved det allerede',
+  misc_favorites: 'Favoritter',
   misc_iEnjoyReading: 'Jeg nyder faktisk at læse',
   misc_inTheLast: 'i den sidste',
   misc_maybeLater: 'Måske senere',

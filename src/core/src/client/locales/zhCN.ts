@@ -57,6 +57,7 @@ export const zhCNStrings: typeof enStrings = {
   misc_categories: '类别',
   misc_category: '类别',
   misc_duhIAlreadyKnow: '呃，我已经知道了',
+  misc_favorites: '收藏夹',
   misc_iEnjoyReading: '我其实很喜欢读书',
   misc_inTheLast: '在最后',
   misc_maybeLater: '也许稍后',

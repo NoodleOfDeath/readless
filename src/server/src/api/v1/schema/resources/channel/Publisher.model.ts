@@ -23,7 +23,7 @@ import { RateLimit } from '../../system/RateLimit.model';
 import { PrepareOptions } from '../../types';
 
 const PUBLISHER_FETCH_LIMIT = process.env.PUBLISHER_FETCH_LIMIT ? Number(process.env.PUBLISHER_FETCH_LIMIT) : 1; // 1 for dev and testing
-const PUBLISHER_MAX_ATTEMPT_LIMIT = process.env.PUBLISHER_MAX_ATTEMPT_LIMIT ? Number(process.env.PUBLISHER_MAX_ATTEMPT_LIMIT) : 30;
+const PUBLISHER_MAX_ATTEMPT_LIMIT = process.env.PUBLISHER_MAX_ATTEMPT_LIMIT ? Number(process.env.PUBLISHER_MAX_ATTEMPT_LIMIT) : 999;
 const PUBLISHER_FETCH_INTERVAL = process.env.PUBLISHER_FETCH_INTERVAL || '1d';
 
 @Table({
@@ -95,12 +95,14 @@ export class Publisher<
       await this.save();
     }
     await this.reset();
+    this.set('lastStatusCode', 200);
     this.set('lastFetchedAt', new Date());
     await this.save();
   }
 
-  async fail() {
+  async fail(statusCode = 403) {
     this.set('failureCount', (this.failureCount ?? 0) + 1);
+    this.set('lastStatusCode', statusCode);
     await this.save();
   }
   
@@ -110,8 +112,8 @@ export class Publisher<
     await this.save();
   }
 
-  async failAndDelay() {
-    await this.fail();
+  async failAndDelay(statusCode = 403) {
+    await this.fail(statusCode);
     await this.delay();
   }
 
@@ -209,6 +211,12 @@ export class Publisher<
 
   @Column({ type: DataType.DATE })
   declare lastFetchedAt?: Date;
+  
+  @Column({ type: DataType.INTEGER })
+  declare lastStatusCode?: number;
+  
+  @Column({ type: DataType.TEXT })
+  declare lastFetchResponse?: string;
 
   @Column({
     defaultValue: 0, 

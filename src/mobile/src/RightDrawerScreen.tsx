@@ -10,7 +10,7 @@ import {
 import { LeftDrawerScreen } from './LeftDrawerScreen';
 
 import {
-  Chip,
+  Button,
   DrawerItem,
   DrawerSection,
 } from '~/components';
@@ -33,7 +33,7 @@ function RightDrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem
           label={ strings.screens_notifications }
           icon={ (_props) => (
-            <Chip 
+            <Button 
               iconSize={ 24 }
               leftIcon="bell"
               indicator={ !hasViewedFeature('first-view-notifs') } />
@@ -45,7 +45,7 @@ function RightDrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem
           label={ strings.screens_settings }
           icon={ (_props) => (
-            <Chip 
+            <Button 
               iconSize={ 24 }
               leftIcon="cog"
               indicator={ !hasViewedFeature('first-view-settings') } />

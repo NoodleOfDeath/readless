@@ -57,6 +57,7 @@ export const nlStrings: typeof enStrings = {
   misc_categories: 'Categorieën',
   misc_category: 'Categorie',
   misc_duhIAlreadyKnow: 'Duh, ik weet het al',
+  misc_favorites: 'Favorieten',
   misc_iEnjoyReading: 'Ik geniet eigenlijk van lezen',
   misc_inTheLast: 'als laatste',
   misc_maybeLater: 'Misschien later',

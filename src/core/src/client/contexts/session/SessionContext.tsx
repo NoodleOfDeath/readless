@@ -63,10 +63,12 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   // publisher state
   const [followedPublishers, setFollowedPublishers] = React.useState<{ [key: string]: boolean }>();
+  const [favoritedPublishers, setFavoritedPublishers] = React.useState<{ [key: string]: boolean }>();
   const [excludedPublishers, setExcludedPublishers] = React.useState<{ [key: string]: boolean }>();
   
   // category state
   const [followedCategories, setFollowedCategories] = React.useState<{ [key: string]: boolean }>();
+  const [favoritedCategories, setFavoritedCategories] = React.useState<{ [key: string]: boolean }>();
   const [excludedCategories, setExcludedCategories] = React.useState<{ [key: string]: boolean }>();
 
   // following computed state
@@ -202,11 +204,12 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       break;
       
     // publisher state
-    case 'followedOutlets':
     case 'followedPublishers':
       setFollowedPublishers(newValue);
       break;
-    case 'excludedOutlets':
+    case 'favoritedPublishers':
+      setFavoritedPublishers(newValue);
+      break;
     case 'excludedPublishers':
       setExcludedPublishers(newValue);
       break;
@@ -214,6 +217,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     // category state
     case 'followedCategories':
       setFollowedCategories(newValue);
+      break;
+    case 'favoritedCategories':
+      setFavoritedCategories(newValue);
       break;
     case 'excludedCategories':
       setExcludedCategories(newValue);
@@ -398,6 +404,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
+        setPreference('favoritedPublishers', (prev) => {
+          delete prev?.[publisher.name];
+          return prev;
+        }, false);
         emitEvent('unfollow-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
@@ -412,6 +422,22 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   };
   
   const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...followedPublishers }), [followedPublishers]);
+  
+  const favoritePublisher = async (publisher: PublicPublisherAttributes) => {
+    await setPreference('favoritedPublishers', (prev) => {
+      const state = { ...prev };
+      if (publisher.name in state) {
+        delete state[publisher.name];
+        emitEvent('unfavorite-publisher', publisher, state);
+      } else {
+        state[publisher.name] = true;
+        emitEvent('favorite-publisher', publisher, state);
+      }
+      return (prev = state);
+    }, false);
+  };
+  
+  const publisherIsFavorited = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...favoritedPublishers }), [favoritedPublishers]);
   
   const excludePublisher = async (publisher: PublicPublisherAttributes) => {
     await setPreference('excludedPublishers', (prev) => {
@@ -440,13 +466,17 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
-        setPreference('excludedCategories', (prev) => {
+        setPreference('followedCategories', (prev) => {
           delete prev?.[category.name];
           return prev;
         }, false);
         emitEvent('unfollow-category', category, state);
       } else {
         state[category.name] = true;
+        setPreference('excludedCategories', (prev) => {
+          delete prev?.[category.name];
+          return prev;
+        }, false);
         emitEvent('follow-category', category, state);
       }
       return (prev = state);
@@ -454,6 +484,22 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   };
   
   const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...followedCategories }), [followedCategories]);
+  
+  const favoriteCategory = async (category: PublicCategoryAttributes) => {
+    await setPreference('favoritedCategories', (prev) => {
+      const state = { ...prev };
+      if (category.name in state) {
+        delete state[category.name];
+        emitEvent('unfavorite-category', category, state);
+      } else {
+        state[category.name] = true;
+        emitEvent('favorite-category', category, state);
+      }
+      return (prev = state);
+    }, false);
+  };
+  
+  const categoryIsFavorited = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...favoritedCategories }), [favoritedCategories]);
 
   const excludeCategory = async (category: PublicCategoryAttributes) => {
     await setPreference('excludedCategories', (prev) => {
@@ -499,10 +545,14 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setReadRecaps(await getPreference('readRecaps'));
     setRecapTranslations(await getPreference('recapTranslations'));
     
-    // publisher/category states
-    setFollowedPublishers(await getPreference('followedPublishers') ?? await getPreference('followedOutlets'));
-    setExcludedPublishers(await getPreference('excludedPublishers') ?? await getPreference('excludedOutlets'));
+    // publisher states
+    setFollowedPublishers(await getPreference('followedPublishers'));
+    setFavoritedPublishers(await getPreference('favoritedPublishers'));
+    setExcludedPublishers(await getPreference('excludedPublishers'));
+
+    // category states
     setFollowedCategories(await getPreference('followedCategories'));
+    setFavoritedCategories(await getPreference('favoritedCategories'));
     setExcludedCategories(await getPreference('excludedCategories'));
     
     // system preferences
@@ -539,6 +589,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         bookmarkSummary,
         bookmarkedSummaries,
         categories,
+        categoryIsFavorited,
         colorScheme,
         compactSummaries,
         enablePush,
@@ -547,6 +598,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         excludePublisher,
         excludedCategories,
         excludedPublishers,
+        favoriteCategory,
+        favoritePublisher,
+        favoritedCategories,
+        favoritedPublishers,
         fcmToken,
         followCategory,
         followCount,
@@ -570,6 +625,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         lineHeightMultiplier,
         preferredReadingFormat,
         preferredShortPressFormat,
+        publisherIsFavorited,
         publishers,
         pushNotifications,
         pushNotificationsEnabled,

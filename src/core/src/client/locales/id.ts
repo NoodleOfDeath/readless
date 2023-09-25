@@ -57,6 +57,7 @@ export const idStrings: typeof enStrings = {
   misc_categories: 'Kategori',
   misc_category: 'Kategori',
   misc_duhIAlreadyKnow: 'Duh, saya sudah tahu',
+  misc_favorites: 'Favorit',
   misc_iEnjoyReading: 'Saya sebenarnya senang membaca',
   misc_inTheLast: 'terakhir',
   misc_maybeLater: 'Mungkin nanti',

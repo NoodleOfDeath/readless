@@ -57,6 +57,7 @@ export const nbStrings: typeof enStrings = {
   misc_categories: 'Kategorier',
   misc_category: 'Kategori',
   misc_duhIAlreadyKnow: 'Duh, jeg vet allerede',
+  misc_favorites: 'Favoritter',
   misc_iEnjoyReading: 'Jeg liker faktisk å lese',
   misc_inTheLast: 'i den siste',
   misc_maybeLater: 'Kanskje senere',

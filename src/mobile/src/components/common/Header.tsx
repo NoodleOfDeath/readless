@@ -1,18 +1,18 @@
 import React from 'react';
 
 import {
-  Chip,
-  ChipProps,
+  Button,
+  ButtonProps,
   View,
 } from '~/components';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
-export function DrawerToggle(props: ChipProps) {
+export function DrawerToggle(props: ButtonProps) {
   const { navigation } = useNavigation();
   return (
     <View>
-      <Chip
+      <Button
         haptic
         leftIcon='menu'
         iconSize={ 24 }
@@ -26,11 +26,11 @@ export function DrawerToggle(props: ChipProps) {
   );
 }
 
-export function SettingsToggle(props: ChipProps) {
+export function SettingsToggle(props: ButtonProps) {
   const { navigation } = useNavigation();
   return (
     <View>
-      <Chip
+      <Button
         haptic
         leftIcon='cog' 
         accessible

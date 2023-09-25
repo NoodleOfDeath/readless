@@ -57,6 +57,7 @@ export const caStrings: typeof enStrings = {
   misc_categories: 'Categories',
   misc_category: 'Categoria',
   misc_duhIAlreadyKnow: 'Vaja, ja ho sé',
+  misc_favorites: 'Preferits',
   misc_iEnjoyReading: 'Realment m\'agrada llegir',
   misc_inTheLast: 'en l\'últim',
   misc_maybeLater: 'Potser després',

@@ -26,7 +26,7 @@ async function main() {
   cleanUpDeadWorkers();
   scheduleJobs();
   scheduleRecapJobs();
-  translatePublishers();
+  //translatePublishers();
   pollForNews();
 }
 
@@ -90,7 +90,7 @@ export async function pollForNews() {
         if (e instanceof PuppeteerError) {
           if (e.status === 403) {
             console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
-            await publisher.failAndDelay();
+            await publisher.failAndDelay(e.status);
           }
         }
         console.error(e);
@@ -198,6 +198,15 @@ async function scheduleRecapJobs() {
     console.log('scheduling recaps');
     await scheduleRecapJob();
     console.log('done scheduling recap jobs');
+    console.log('queuing topic jobs');
+    const queue = await Queue.from(Queue.QUEUES.topics);
+    await queue.clear();
+    await queue.add(
+      'topics-resolution', 
+      { summary: 0 },
+      { group: 'topics' }
+    );
+    console.log('done scheduling topic jobs');
   } catch (e) {
     console.error(e);
   } finally {

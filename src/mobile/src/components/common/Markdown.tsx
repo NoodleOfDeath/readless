@@ -1,14 +1,14 @@
 import React from 'react';
 
 import {
-  ChipProps,
+  ButtonProps,
   Highlighter,
   HighlighterProps,
 } from '~/components';
 
 export const MarkdownSearchPattern = { default: /\*\*(.*?)\*\*/g };
 
-export type MarkdownProps = Omit<ChipProps & HighlighterProps, 'searchWords'> & {
+export type MarkdownProps = Omit<ButtonProps & HighlighterProps, 'searchWords'> & {
   searchPattern?: string | RegExp;
 };
 

@@ -63,6 +63,8 @@ export class PuppeteerError extends Error {
   
   constructor(url: string, status: number) {
     super(`Bad response ${status} connecting to ${url}`);
+    this.url = url;
+    this.status = status;
   }
 
 }

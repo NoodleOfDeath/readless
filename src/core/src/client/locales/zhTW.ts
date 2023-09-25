@@ -57,6 +57,7 @@ export const zhTWStrings: typeof enStrings = {
   misc_categories: '類別',
   misc_category: '類別',
   misc_duhIAlreadyKnow: '呃，我已經知道了',
+  misc_favorites: '收藏夾',
   misc_iEnjoyReading: '我其實很喜歡讀書',
   misc_inTheLast: '在最後',
   misc_maybeLater: '也許稍後',

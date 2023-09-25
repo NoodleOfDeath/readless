@@ -57,6 +57,7 @@ export const jaStrings: typeof enStrings = {
   misc_categories: 'カテゴリー',
   misc_category: 'カテゴリー',
   misc_duhIAlreadyKnow: 'ああ、もう知っています',
+  misc_favorites: 'お気に入り',
   misc_iEnjoyReading: '私は実際に読書を楽しんでいます',
   misc_inTheLast: '最後に',
   misc_maybeLater: 'たぶん後で',

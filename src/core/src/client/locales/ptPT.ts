@@ -57,6 +57,7 @@ export const ptPTStrings: typeof enStrings = {
   misc_categories: 'Categorias',
   misc_category: 'Categoria',
   misc_duhIAlreadyKnow: 'Nossa eu já sei',
+  misc_favorites: 'Favoritos',
   misc_iEnjoyReading: 'eu realmente gosto de ler',
   misc_inTheLast: 'no ultimo',
   misc_maybeLater: 'Talvez mais tarde',

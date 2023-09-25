@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PrefSwitch } from './PrefSwitch';
 
-import { Chip, View } from '~/components';
+import { Button, View } from '~/components';
 import { SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 
@@ -22,11 +22,11 @@ export function CompactModePicker({
 
   const compactSummariesSwitch = React.useMemo(() => {
     return labeled ? (
-      <Chip system contained gap={ 12 }>
+      <Button system contained gap={ 12 }>
         {strings.settings_compactSummaries}
         <View row />
         <PrefSwitch prefKey={ 'compactSummaries' } />
-      </Chip>
+      </Button>
     ) : (
       <PrefSwitch prefKey={ 'compactSummaries' } />
     );
@@ -34,11 +34,11 @@ export function CompactModePicker({
   
   const shortSummarySwitch = React.useMemo(() => {
     return labeled ? (
-      <Chip system contained gap={ 12 }>
+      <Button system contained gap={ 12 }>
         {compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries}
         <View row />
         <PrefSwitch prefKey={ 'showShortSummary' } />
-      </Chip>
+      </Button>
     ) : (
       <PrefSwitch prefKey={ 'showShortSummary' } />
     );

@@ -7,7 +7,7 @@ import RNActionSheet, {
 } from 'react-native-actions-sheet';
 
 import {
-  Chip,
+  Button,
   View,
   ViewProps,
 } from '~/components';
@@ -40,7 +40,7 @@ export function ActionSheet({
             right= { 5 }
             p={ 12 }
             zIndex={ 3 }>
-            <Chip
+            <Button
               rounded
               elevated
               p={ 12 }

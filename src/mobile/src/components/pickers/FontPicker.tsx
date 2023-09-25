@@ -3,9 +3,9 @@ import React from 'react';
 import {
   AVAILABLE_FONTS,
   Button,
+  ChipPicker,
   DEFAULT_PREFERRED_FONT,
   FontFamily,
-  GridPicker,
   ScrollView,
   Summary,
   TablePicker,
@@ -33,7 +33,7 @@ export function FontPicker({
   
   if (variant === 'grid') {
     return (
-      <GridPicker
+      <ChipPicker
         options={ [...AVAILABLE_FONTS] }
         initialValue={ fontFamily as FontFamily }
         buttonProps={ ({ option }) => ({ fontFamily: option.value }) }

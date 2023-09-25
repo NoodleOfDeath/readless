@@ -50,6 +50,7 @@ export type PublisherAttributes = DatedAttributes & Sentimental & {
   maxAge: string;
   fetchPolicy?: FetchPolicy;
   lastFetchedAt?: Date;
+  lastStatusCode?: number;
   failureCount?: number;
   delayedUntil?: Date;
   timezone: string;
@@ -69,6 +70,7 @@ export type PublisherCreationAttributes = Partial<DatedAttributes & Sentimental>
   maxAge?: string;
   fetchPolicy?: FetchPolicy;
   lastFetchedAt?: Date;
+  lastStatusCode?: number;
   failureCount?: number;
   delayedUntil?: Date;
   timezone?: string;

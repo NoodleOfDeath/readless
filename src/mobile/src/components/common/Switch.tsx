@@ -3,7 +3,7 @@ import React from 'react';
 import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native-paper';
 
 import { 
-  Chip,
+  Button,
   Text, 
   View,
 } from '~/components';
@@ -26,9 +26,9 @@ export const Switch = ({
   return (
     <View flexRow itemsCenter gap={ 12 }>
       {leftLabel && (
-        <Chip contained onPress={ () => onValueChange?.(false) }>
+        <Button contained onPress={ () => onValueChange?.(false) }>
           { typeof leftLabel === 'string' ? <Text>{ leftLabel }</Text> : leftLabel }
-        </Chip>
+        </Button>
       )}
       <RNSwitch 
         value={ value }
@@ -36,9 +36,9 @@ export const Switch = ({
         color={ theme.colors.primary } 
         { ...props } />
       { rightLabel && (
-        <Chip contained onPress={ () => onValueChange?.(true) }>
+        <Button contained onPress={ () => onValueChange?.(true) }>
           { typeof rightLabel === 'string' ? <Text>{ rightLabel }</Text> : rightLabel }
-        </Chip>
+        </Button>
       )}
     </View>
   );

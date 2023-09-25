@@ -57,6 +57,7 @@ export const msStrings: typeof enStrings = {
   misc_categories: 'Kategori',
   misc_category: 'kategori',
   misc_duhIAlreadyKnow: 'Duh, saya sudah tahu',
+  misc_favorites: 'Kegemaran',
   misc_iEnjoyReading: 'Saya sebenarnya seronok membaca',
   misc_inTheLast: 'pada yang terakhir',
   misc_maybeLater: 'Mungkin kemudian',

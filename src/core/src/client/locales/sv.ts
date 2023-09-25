@@ -57,6 +57,7 @@ export const svStrings: typeof enStrings = {
   misc_categories: 'Kategorier',
   misc_category: 'Kategori',
   misc_duhIAlreadyKnow: 'Duh, jag vet redan',
+  misc_favorites: 'Favoriter',
   misc_iEnjoyReading: 'Jag tycker faktiskt om att läsa',
   misc_inTheLast: 'i den sista',
   misc_maybeLater: 'Kanske senare',

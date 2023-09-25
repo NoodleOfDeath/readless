@@ -57,6 +57,7 @@ export const hiStrings: typeof enStrings = {
   misc_categories: 'श्रेणियाँ',
   misc_category: 'वर्ग',
   misc_duhIAlreadyKnow: 'दुह, मुझे पहले से ही पता है',
+  misc_favorites: 'पसंदीदा',
   misc_iEnjoyReading: 'मुझे वास्तव में पढ़ने में आनंद आता है',
   misc_inTheLast: 'आखिर में',
   misc_maybeLater: 'शायद बाद में',

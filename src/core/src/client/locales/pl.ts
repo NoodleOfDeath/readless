@@ -57,6 +57,7 @@ export const plStrings: typeof enStrings = {
   misc_categories: 'Kategorie',
   misc_category: 'Kategoria',
   misc_duhIAlreadyKnow: 'Duuużo już wiem',
+  misc_favorites: 'Ulubione',
   misc_iEnjoyReading: 'Właściwie lubię czytać',
   misc_inTheLast: 'w ostatnim',
   misc_maybeLater: 'Może później',
