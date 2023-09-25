@@ -26,7 +26,7 @@ async function main() {
   cleanUpDeadWorkers();
   scheduleJobs();
   scheduleRecapJobs();
-  translatePublishers();
+  //translatePublishers();
   pollForNews();
 }
 
@@ -90,7 +90,7 @@ export async function pollForNews() {
         if (e instanceof PuppeteerError) {
           if (e.status === 403) {
             console.log(`failed to fetch sitemaps for ${publisher.name}: ${e.message}`);
-            await publisher.failAndDelay();
+            await publisher.failAndDelay(e.status);
           }
         }
         console.error(e);
