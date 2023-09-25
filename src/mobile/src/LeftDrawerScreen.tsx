@@ -44,10 +44,64 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     bookmarkCount,
     unreadBookmarkCount,
     followedCategories,
+    favoritedCategories,
     followedPublishers,
+    favoritedPublishers,
+    favoriteCategory,
+    favoritePublisher,
+    categoryIsFavorited,
+    publisherIsFavorited,
     viewFeature,
     hasViewedFeature,
   } = React.useContext(SessionContext);
+
+  const topPublishers = React.useMemo(() => {
+    if (!publishers) {
+      return [];
+    }
+    const items = Object.keys({ ...favoritedPublishers }).sort().map((p) => {
+      const publisher = publishers[p];
+      if (!publisher) {
+        return undefined;
+      }
+      return (
+        <DrawerItem
+          key={ publisher.name }
+          label={ publisher.displayName }
+          icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
+          onPress={ () => openPublisher(publisher) }
+          right={ () => (
+            <Button leftIcon="star" onPress={ () => favoritePublisher(publisher) } />
+          ) } />
+      );
+    }).filter(Boolean);
+    return items;
+  }, [publishers, favoritedPublishers, openPublisher, favoritePublisher]);
+
+  const topCategories = React.useMemo(() => {
+    if (!categories) {
+      return [];
+    }
+    const items = Object.keys({ ...favoritedCategories }).sort().map((c) => {
+      const category = categories[c];
+      if (!category) {
+        return undefined;
+      }
+      return (
+        <DrawerItem
+          key={ category.name }
+          label={ category.displayName }
+          icon={ (props) => <ChannelIcon { ...props } category={ category } /> }
+          onPress={ () => openCategory(category) }
+          right={ () => (
+            <Button leftIcon="star" onPress={ () => favoriteCategory(category) } />
+          ) } />
+      );
+    }).filter(Boolean);
+    return items;
+  }, [categories, favoriteCategory, favoritedCategories, openCategory]);
+
+  const favorites = React.useMemo(() => [...topPublishers, ...topCategories], [topPublishers, topCategories]);
   
   const publisherItems = React.useMemo(() => {
     if (!publishers) {
@@ -63,7 +117,12 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           key={ publisher.name }
           label={ publisher.displayName }
           icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
-          onPress={ () => openPublisher(publisher) } />
+          onPress={ () => openPublisher(publisher) }
+          right={ () => (
+            <Button 
+              leftIcon={ publisherIsFavorited(publisher) ? 'star' : 'star-outline' }
+              onPress={ () => favoritePublisher(publisher) } />
+          ) } />
       );
     }).filter(Boolean);
     if (items.length === 0) {
@@ -94,7 +153,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
         right={ (props) => <Icon { ...props } name="menu-right" /> } />
     );
     return items;
-  }, [publishers, followedPublishers, viewFeature, hasViewedFeature, openPublisher, navigate]);
+  }, [publishers, followedPublishers, openPublisher, publisherIsFavorited, favoritePublisher, viewFeature, navigate, hasViewedFeature]);
   
   const categoryItems = React.useMemo(() => {
     if (!categories) {
@@ -110,7 +169,12 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           key={ category.name }
           label={ category.displayName }
           icon={ (props) => <Icon { ...props } name={ category.icon } /> }
-          onPress={ () => openCategory(category) } />
+          onPress={ () => openCategory(category) }
+          right={ () => (
+            <Button
+              leftIcon={ categoryIsFavorited(category) ? 'star' : 'star-outline' }
+              onPress={ () => favoriteCategory(category) } />
+          ) } />
       );
     }).filter(Boolean);
     if (items.length === 0) {
@@ -141,7 +205,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
         right={ (props) => <Icon { ...props } name="menu-right" /> } />
     );
     return items;
-  }, [categories, followedCategories, viewFeature, hasViewedFeature, openCategory, navigate]);
+  }, [categories, followedCategories, openCategory, categoryIsFavorited, favoriteCategory, viewFeature, navigate, hasViewedFeature]);
   
   return (
     <DrawerContentScrollView { ...props }>
@@ -157,6 +221,12 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           ) }
           onPress= { () => navigate('bookmarks') } />
       </DrawerSection>
+      {favorites.length > 0 && (
+        <DrawerSection
+          title={ strings.misc_favorites }>
+          {favorites}
+        </DrawerSection>
+      )}
       <DrawerSection 
         title={ strings.misc_publishers }>
         {publisherItems}

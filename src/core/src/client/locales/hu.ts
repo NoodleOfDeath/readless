@@ -57,6 +57,7 @@ export const huStrings: typeof enStrings = {
   misc_categories: 'Kategóriák',
   misc_category: 'Kategória',
   misc_duhIAlreadyKnow: 'Hú, már tudom',
+  misc_favorites: 'Kedvencek',
   misc_iEnjoyReading: 'Valójában szeretek olvasni',
   misc_inTheLast: 'az utolsóban',
   misc_maybeLater: 'Talán később',

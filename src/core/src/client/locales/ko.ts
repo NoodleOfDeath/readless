@@ -57,6 +57,7 @@ export const koStrings: typeof enStrings = {
   misc_categories: '카테고리',
   misc_category: '범주',
   misc_duhIAlreadyKnow: '야, 이미 알고 있어',
+  misc_favorites: '즐겨찾기',
   misc_iEnjoyReading: '나는 실제로 독서를 즐긴다',
   misc_inTheLast: '마지막으로',
   misc_maybeLater: '나중에',

@@ -57,6 +57,7 @@ export const skStrings: typeof enStrings = {
   misc_categories: 'Kategórie',
   misc_category: 'Kategória',
   misc_duhIAlreadyKnow: 'Fuj, už viem',
+  misc_favorites: 'Obľúbené',
   misc_iEnjoyReading: 'Čítanie ma vlastne baví',
   misc_inTheLast: 'v poslednom',
   misc_maybeLater: 'Možno neskôr',

@@ -57,6 +57,7 @@ export const roStrings: typeof enStrings = {
   misc_categories: 'Categorii',
   misc_category: 'Categorie',
   misc_duhIAlreadyKnow: 'Da, știu deja',
+  misc_favorites: 'Favorite',
   misc_iEnjoyReading: 'Chiar îmi place să citesc',
   misc_inTheLast: 'în final',
   misc_maybeLater: 'Poate mai târziu',

@@ -57,6 +57,7 @@ export const arStrings: typeof enStrings = {
   misc_categories: 'فئات',
   misc_category: 'فئة',
   misc_duhIAlreadyKnow: 'دوه ، أعرف بالفعل',
+  misc_favorites: 'المفضلة',
   misc_iEnjoyReading: 'أنا فعلا أستمتع بالقراءة',
   misc_inTheLast: 'في الاخير',
   misc_maybeLater: 'ربما في وقت لاحق',

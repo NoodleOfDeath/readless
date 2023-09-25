@@ -57,6 +57,7 @@ export const viStrings: typeof enStrings = {
   misc_categories: 'Thể loại',
   misc_category: 'Loại',
   misc_duhIAlreadyKnow: 'Hừ, tôi biết rồi',
+  misc_favorites: 'Yêu thích',
   misc_iEnjoyReading: 'tôi thực sự thích đọc',
   misc_inTheLast: 'cuối cùng',
   misc_maybeLater: 'Có lẽ sau này',

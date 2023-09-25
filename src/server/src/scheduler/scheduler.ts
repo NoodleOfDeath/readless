@@ -198,6 +198,15 @@ async function scheduleRecapJobs() {
     console.log('scheduling recaps');
     await scheduleRecapJob();
     console.log('done scheduling recap jobs');
+    console.log('queuing topic jobs');
+    const queue = await Queue.from(Queue.QUEUES.topics);
+    await queue.clear();
+    await queue.add(
+      'topics-resolution', 
+      { summary: 0 },
+      { group: 'topics' }
+    );
+    console.log('done scheduling topic jobs');
   } catch (e) {
     console.error(e);
   } finally {

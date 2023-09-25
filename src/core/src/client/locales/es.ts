@@ -57,6 +57,7 @@ export const esStrings: typeof enStrings = {
   misc_categories: 'Categorías',
   misc_category: 'Categoría',
   misc_duhIAlreadyKnow: 'jaja ya lo se',
+  misc_favorites: 'Favoritos',
   misc_iEnjoyReading: 'en realidad disfruto leyendo',
   misc_inTheLast: 'en el último',
   misc_maybeLater: 'Quizas mas tarde',

@@ -57,6 +57,7 @@ export const ruStrings: typeof enStrings = {
   misc_categories: 'Категории',
   misc_category: 'Категория',
   misc_duhIAlreadyKnow: 'Да я уже знаю',
+  misc_favorites: 'Избранное',
   misc_iEnjoyReading: 'я на самом деле люблю читать',
   misc_inTheLast: 'напоследок',
   misc_maybeLater: 'Может быть позже',

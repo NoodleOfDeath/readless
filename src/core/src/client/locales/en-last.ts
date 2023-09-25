@@ -55,6 +55,7 @@ export const enStrings = {
   misc_categories: 'Categories',
   misc_category: 'Category',
   misc_duhIAlreadyKnow: 'Duh, I already know',
+  misc_favorites: 'Favorites',
   misc_iEnjoyReading: 'I actually enjoy reading',
   misc_inTheLast: 'in the last',
   misc_maybeLater: 'Maybe Later',

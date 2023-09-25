@@ -57,6 +57,7 @@ export const frStrings: typeof enStrings = {
   misc_categories: 'Catégories',
   misc_category: 'Catégorie',
   misc_duhIAlreadyKnow: 'Duh, je sais déjà',
+  misc_favorites: 'Favoris',
   misc_iEnjoyReading: 'en fait j\'aime lire',
   misc_inTheLast: 'à la fin',
   misc_maybeLater: 'Peut-être plus tard',

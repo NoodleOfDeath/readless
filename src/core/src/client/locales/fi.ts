@@ -57,6 +57,7 @@ export const fiStrings: typeof enStrings = {
   misc_categories: 'Luokat',
   misc_category: 'Kategoria',
   misc_duhIAlreadyKnow: 'Juu, tiedän jo',
+  misc_favorites: 'Suosikit',
   misc_iEnjoyReading: 'Itseasiassa nautin lukemisesta',
   misc_inTheLast: 'viimeisessä',
   misc_maybeLater: 'Ehkä myöhemmin',

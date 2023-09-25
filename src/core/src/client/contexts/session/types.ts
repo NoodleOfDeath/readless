@@ -135,13 +135,13 @@ export type Preferences = {
   recapTranslations?: { [key: number]: { [key in keyof RecapAttributes]?: string } };
   
   // followed publishers
-  followedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
   followedPublishers?: { [key: string]: boolean };
-  excludedOutlets?: { [key: string]: boolean }; // legacy 1.10.0
+  favoritedPublishers?: { [key: string]: boolean }; 
   excludedPublishers?: { [key: string]: boolean };
   
   // followed categories
   followedCategories?: { [key: string]: boolean };
+  favoritedCategories?: { [key: string]: boolean };
   excludedCategories?: { [key: string]: boolean };
   
   followCount: number;
@@ -260,12 +260,16 @@ export type SessionContextType = Preferences & {
   // follow publisher convenience functions
   followPublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   isFollowingPublisher: (publisher: PublicPublisherAttributes) => boolean;
+  favoritePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
+  publisherIsFavorited: (publisher: PublicPublisherAttributes) => boolean;
   excludePublisher: (publisher: PublicPublisherAttributes) => Promise<void>;
   isExcludingPublisher: (publisher: PublicPublisherAttributes) => boolean;
 
   // follow category convenience functions
   followCategory: (category: PublicCategoryAttributes) => Promise<void>;
   isFollowingCategory: (publisher: PublicCategoryAttributes) => boolean;
+  favoriteCategory: (category: PublicCategoryAttributes) => Promise<void>;
+  categoryIsFavorited: (category: PublicCategoryAttributes) => boolean;
   excludeCategory: (category: PublicCategoryAttributes) => Promise<void>;
   isExcludingCategory: (publisher: PublicCategoryAttributes) => boolean;
   
@@ -276,9 +280,12 @@ export type SessionContextType = Preferences & {
 export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   bookmarkCount: 0,
   bookmarkSummary: () => Promise.resolve(),
+  categoryIsFavorited: () => false,
   enablePush: () => Promise.resolve(),
   excludeCategory: () => Promise.resolve(),
   excludePublisher: () => Promise.resolve(),
+  favoriteCategory: () => Promise.resolve(),
+  favoritePublisher: () => Promise.resolve(),
   followCategory: () => Promise.resolve(),
   followCount: 0,
   followFilter: '',
@@ -291,6 +298,7 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   isFollowingCategory: () => false,
   isFollowingPublisher: () => false,
   lastRequestForReview: 0,
+  publisherIsFavorited: () => false,
   readRecap: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),

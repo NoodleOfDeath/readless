@@ -57,6 +57,7 @@ export const heStrings: typeof enStrings = {
   misc_categories: 'קטגוריות',
   misc_category: 'קטגוריה',
   misc_duhIAlreadyKnow: 'חח, אני כבר יודע',
+  misc_favorites: 'מועדפים',
   misc_iEnjoyReading: 'אני דווקא נהנה לקרוא',
   misc_inTheLast: 'באחרון',
   misc_maybeLater: 'אולי אחר כך',

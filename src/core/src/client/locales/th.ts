@@ -57,6 +57,7 @@ export const thStrings: typeof enStrings = {
   misc_categories: 'หมวดหมู่',
   misc_category: 'หมวดหมู่',
   misc_duhIAlreadyKnow: 'หึ ฉันรู้แล้ว',
+  misc_favorites: 'รายการโปรด',
   misc_iEnjoyReading: 'ฉันสนุกกับการอ่านจริงๆ',
   misc_inTheLast: 'ในที่สุด',
   misc_maybeLater: 'ไว้ก่อน',

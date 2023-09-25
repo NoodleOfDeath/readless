@@ -57,6 +57,7 @@ export const trStrings: typeof enStrings = {
   misc_categories: 'Kategoriler',
   misc_category: 'Kategori',
   misc_duhIAlreadyKnow: 'Ah, zaten biliyorum',
+  misc_favorites: 'Favoriler',
   misc_iEnjoyReading: 'aslında okumaktan zevk alıyorum',
   misc_inTheLast: 'sonunda',
   misc_maybeLater: 'Belki sonra',

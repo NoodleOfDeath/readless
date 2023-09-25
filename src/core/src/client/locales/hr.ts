@@ -57,6 +57,7 @@ export const hrStrings: typeof enStrings = {
   misc_categories: 'Kategorije',
   misc_category: 'Kategorija',
   misc_duhIAlreadyKnow: 'Duh, već znam',
+  misc_favorites: 'Favoriti',
   misc_iEnjoyReading: 'Zapravo uživam čitati',
   misc_inTheLast: 'u posljednjih',
   misc_maybeLater: 'Možda kasnije',

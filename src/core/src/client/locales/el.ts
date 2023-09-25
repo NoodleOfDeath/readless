@@ -57,6 +57,7 @@ export const elStrings: typeof enStrings = {
   misc_categories: 'Κατηγορίες',
   misc_category: 'Κατηγορία',
   misc_duhIAlreadyKnow: 'Μπα, το ξέρω ήδη',
+  misc_favorites: 'Αγαπημένα',
   misc_iEnjoyReading: 'Μου αρέσει πραγματικά να διαβάζω',
   misc_inTheLast: 'Στο τέλος',
   misc_maybeLater: 'Ισως αργότερα',
