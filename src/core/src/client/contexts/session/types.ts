@@ -84,6 +84,8 @@ export type ResourceActivity =
  | 'unbookmark' 
  | 'follow'
  | 'unfollow'
+ | 'favorite'
+ | 'unfavorite'
  | 'exclude'
  | 'unexclude'
  | 'copy-to-clipboard'
@@ -173,13 +175,13 @@ export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number
   compactSummaries: 'boolean',
   excludeFilter: 'string',
   excludedCategories: 'object',
-  excludedOutlets: 'object',
   excludedPublishers: 'object',
+  favoritedCategories: 'object',
+  favoritedPublishers: 'object',
   fcmToken: 'string',
   followCount: 'number',
   followFilter: 'string',
   followedCategories: 'object',
-  followedOutlets: 'object',
   followedPublishers: 'object',
   fontFamily: 'string',
   fontSizeOffset: 'number',

@@ -302,7 +302,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     return (...args: T) => {
       return fn(...args, { headers });
     };
-  }, [uuid]);
+  }, [uuid, getUserAgent]);
 
   const hasPushEnabled = React.useCallback((type: string) => {
     return type in ({ ...pushNotifications });
@@ -405,16 +405,18 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       if (publisher.name in state) {
         delete state[publisher.name];
         setPreference('favoritedPublishers', (prev) => {
-          delete prev?.[publisher.name];
-          return prev;
+          const state = { ...prev };
+          delete state[publisher.name];
+          return (prev = state);
         }, false);
         emitEvent('unfollow-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
         setPreference('excludedPublishers', (prev) => {
-          delete prev?.[publisher.name];
-          return prev;
-        });
+          const state = { ...prev };
+          delete state[publisher.name];
+          return (prev = state);
+        }, false);
         emitEvent('follow-publisher', publisher, state);
       }
       return (prev = state);
@@ -448,9 +450,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       } else {
         state[publisher.name] = true;
         setPreference('followedPublishers', (prev) => {
-          delete prev?.[publisher.name];
-          return prev;
-        });
+          const state = { ...prev };
+          delete state[publisher.name];
+          return (prev = state);
+        }, false);
         emitEvent('exclude-publisher', publisher, state);
       }
       return (prev = state);
@@ -467,15 +470,17 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       if (category.name in state) {
         delete state[category.name];
         setPreference('followedCategories', (prev) => {
-          delete prev?.[category.name];
-          return prev;
+          const state = { ...prev };
+          delete state[category.name];
+          return (prev = state);
         }, false);
         emitEvent('unfollow-category', category, state);
       } else {
         state[category.name] = true;
         setPreference('excludedCategories', (prev) => {
-          delete prev?.[category.name];
-          return prev;
+          const state = { ...prev };
+          delete state[category.name];
+          return (prev = state);
         }, false);
         emitEvent('follow-category', category, state);
       }
@@ -510,8 +515,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       } else {
         state[category.name] = true;
         setPreference('followedCategories', (prev) => {
-          delete prev?.[category.name];
-          return prev;
+          const state = { ...prev };
+          delete state[category.name];
+          return (prev = state);
         }, false);
         emitEvent('exclude-category', category, state);
       }

@@ -15,8 +15,18 @@ export function CategoryPickerScreen() {
 
   useFocusEffect(React.useCallback(() => {
     navigation?.addListener('beforeRemove', async () => {
-      const { value } = pickerRef.current ?? {};
-      setPreference('followedCategories', Object.fromEntries(value?.map((category) => [category, true]) ?? []));
+      const { value = [] } = pickerRef.current ?? {};
+      setPreference('followedCategories', (prev) => {
+        const removed = Object.keys({ ...prev }).filter((publisher) => !value.includes(publisher)) ?? [];
+        setPreference('favoritedCategories', (favorited) => {
+          const state = { ...favorited };
+          for (const publisher of removed) {
+            delete state[publisher];
+          }
+          return (favorited = state);
+        });
+        return (prev = Object.fromEntries(value.map((publisher) => [publisher, true]) ?? []));
+      });
     });
   }, [pickerRef, navigation, setPreference]));
 
