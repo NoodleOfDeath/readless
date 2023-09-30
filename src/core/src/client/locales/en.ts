@@ -5,6 +5,7 @@ export const enStrings = {
   action_clearSelection: 'Clear Selection',
   action_close: 'Close', 
   action_exclude: 'Hide',
+  action_favorite: 'Favorite',
   action_follow: 'Follow',
   action_loading: 'Loading...',
   action_next: 'Next ', 
@@ -21,6 +22,7 @@ export const enStrings = {
   action_tapToLearnMoreAndEnable: 'Tap to learn more and enable',
   action_translate: 'Translate',
   action_unexclude: 'Unhide',  
+  action_unfavorite: 'Unfavorite',
   action_unfollow: 'Unfollow', 
 
   //

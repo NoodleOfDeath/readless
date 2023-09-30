@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS publisher_view;
 
-CREATE OR REPLACE VIEW publisher_view AS
+CREATE MATERIALIZED VIEW publisher_view AS
 SELECT
   trans.locale,
   pub.id,
@@ -11,11 +11,3 @@ SELECT
 FROM
   publishers pub
   LEFT OUTER JOIN publisher_translation_view trans ON pub.id = trans."parentId";
-
-SELECT
-  *
-FROM
-  publisher_view
-WHERE
-  locale IS NOT NULL;
-

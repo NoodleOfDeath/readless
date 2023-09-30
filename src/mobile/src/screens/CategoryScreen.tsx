@@ -24,14 +24,17 @@ export function CategoryScreen({
 
   const {
     categories,
-    followedCategories,
+    isFollowingCategory,
     followCategory,
+    categoryIsFavorited,
+    favoriteCategory,
   } = React.useContext(SessionContext);
 
   const category0 = React.useMemo(() => route?.params?.category, [route]);
   const category = React.useMemo(() => category0 && categories?.[category0.name], [category0, categories]);
 
-  const [followed, setFollowed] = React.useState((category?.name ?? '') in { ...followedCategories });
+  const [followed, setFollowed] = React.useState(category && isFollowingCategory(category));
+  const [favorited, setFavorited] = React.useState(category && categoryIsFavorited(category));
 
   const prefilter = React.useMemo(() => {
     if (!category) {
@@ -47,6 +50,14 @@ export function CategoryScreen({
     setFollowed((prev) => !prev);
     followCategory(category);
   }, [category, followCategory]);
+  
+  const toggleFavorited = React.useCallback(() => {
+    if (!category) {
+      return;
+    }
+    setFavorited((prev) => !prev);
+    favoriteCategory(category);
+  }, [category, favoriteCategory]);
   
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({
@@ -64,8 +75,9 @@ export function CategoryScreen({
     if (!category) {
       return;
     }
-    setFollowed(category.name in { ...followedCategories });
-  }, [category, followedCategories, navigation]));
+    setFollowed(isFollowingCategory(category));
+    setFavorited(categoryIsFavorited(category));
+  }, [category, isFollowingCategory, categoryIsFavorited, navigation]));
   
   return (
     <Screen>
@@ -79,13 +91,19 @@ export function CategoryScreen({
             justifyCenter
             itemsCenter>
             <ChannelIcon rounded size={ 80 } category={ category } />
-            <View>
+            <View flexRow gap={ 6 }>
               <Button
                 contained
                 haptic
                 onPress={ toggleFollowed }>
                 {`${ followed ? strings.action_unfollow : strings.action_follow } ${ strings.misc_category }`}
               </Button>
+              <Button
+                leftIcon={ favorited ? 'star' : 'star-outline' }
+                haptic 
+                iconSize={ 24 }
+                onPress={ toggleFavorited }
+                accessibilityLabel={ favorited ? strings.action_unfavorite : strings.action_favorite } />
             </View>
           </View>
         ) } />

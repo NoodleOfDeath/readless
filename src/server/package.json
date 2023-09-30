@@ -23,6 +23,7 @@
     "build:worker": "rimraf dist/serve-worker.cjs && esbuild ./src/worker --bundle --platform=node --outfile=./dist/serve-worker.cjs",
     "gen:site": "yarn test gen",
     "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core/utils && cp -rf ../core/src/utils/* ./src/core/utils && cp -rf ../core/src/client/locales ./src/core/locales",
+    "sql": "ts-node ./gen-sql-queries",
     "test": "jest",
     "tsoa": "tsoa spec -c tsoa.config.json",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

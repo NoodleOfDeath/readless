@@ -903,7 +903,7 @@ export function Summary({
       disableInteractions
       disableNavigation
       keywords={ keywords }
-      bulletsAsShortSummary={ preferredShortPressFormat !== ReadingFormat.ShortSummary }
+      bulletsAsShortSummary={ preferredShortPressFormat === ReadingFormat.Bullets }
       summary={ summary } />
   ), [isTablet, screenWidth, keywords, preferredShortPressFormat, summary]);
 

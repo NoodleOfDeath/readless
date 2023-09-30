@@ -15,8 +15,18 @@ export function PublisherPickerScreen() {
 
   useFocusEffect(React.useCallback(() => {
     navigation?.addListener('beforeRemove', async () => {
-      const { value } = pickerRef.current ?? {};
-      setPreference('followedPublishers', Object.fromEntries(value?.map((publisher) => [publisher, true]) ?? []));
+      const { value = [] } = pickerRef.current ?? {};
+      setPreference('followedPublishers', (prev) => {
+        const removed = Object.keys({ ...prev }).filter((publisher) => !value.includes(publisher)) ?? [];
+        setPreference('favoritedPublishers', (favorited) => {
+          const state = { ...favorited };
+          for (const publisher of removed) {
+            delete state[publisher];
+          }
+          return (favorited = state);
+        });
+        return (prev = Object.fromEntries(value.map((publisher) => [publisher, true]) ?? []));
+      });
     });
   }, [pickerRef, navigation, setPreference]));
 

@@ -11,6 +11,7 @@ struct SummaryCard: View {
   let summary: PublicSummaryAttributes
   let compact: Bool
   @State private var image: Image? = nil
+  @State private var publisherIcon: Image? = nil
 
   @Environment(\.colorScheme) private var colorScheme
 
@@ -24,6 +25,16 @@ struct SummaryCard: View {
     VStack(spacing: 1) {
       VStack(alignment: .leading) {
         HStack {
+          if let image = publisherIcon {
+            image
+              .fixedSize()
+              .aspectRatio(contentMode: .fit)
+          } else {
+            Text((summary.publisher.displayName as NSString).substring(to: 1))
+              .onAppear {
+                loadImage(summary.publisher.icon) { image in self.publisherIcon = image }
+              }
+          }
           Text(summary.publisher.displayName)
             .frame(maxWidth: .infinity)
             .padding(3)
@@ -47,7 +58,11 @@ struct SummaryCard: View {
               .aspectRatio(contentMode: .fit)
         } else {
             Text("Loading Image...")
-                .onAppear(perform: loadImage)
+            .onAppear {
+              if let url = summary.media?["imageArticle"] ?? summary.media?["imageAi1"] ?? summary.imageUrl {
+                loadImage(url) { image in self.image = image }
+              }
+            }
         }
         Text(compact ? (summary.translations?["title"] ?? summary.title) : (summary.translations?["shortSummary"] ?? summary.shortSummary ?? ""))
           .padding(3)
@@ -64,15 +79,15 @@ struct SummaryCard: View {
     .cornerRadius(8)
   }
   
-  func loadImage() {
-    guard let url = summary.media?["imageArticle"] ?? summary.media?["imageAi1"] ?? summary.imageUrl, let imageUrl = URL(string: url) else { return }
-      URLSession.shared.dataTask(with: imageUrl) { data, _, error in
-          if let data = data, let uiImage = UIImage(data: data) {
-              DispatchQueue.main.async {
-                  self.image = Image(uiImage: uiImage)
-              }
-          }
-      }.resume()
-  }
-  
+}
+
+func loadImage(_ url: String, completionHandler: @escaping @Sendable (_ image: Image) -> Void) {
+  guard let imageUrl = URL(string: url) else { return }
+    URLSession.shared.dataTask(with: imageUrl) { data, _, error in
+        if let data = data, let uiImage = UIImage(data: data) {
+            DispatchQueue.main.async {
+                completionHandler(Image(uiImage: uiImage))
+            }
+        }
+    }.resume()
 }

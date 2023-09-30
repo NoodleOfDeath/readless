@@ -26,12 +26,15 @@ export function PublisherScreen({
     followedPublishers,
     followPublisher,
     publishers,
+    publisherIsFavorited,
+    favoritePublisher,
   } = React.useContext(SessionContext);
 
   const publisher0 = React.useMemo(() => route?.params?.publisher, [route]);
   const publisher = React.useMemo(() => publisher0 && publishers?.[publisher0.name], [publisher0, publishers]);
 
   const [followed, setFollowed] = React.useState((publisher?.name ?? '') in { ...followedPublishers });
+  const [favorited, setFavorited] = React.useState(publisher && publisherIsFavorited(publisher));
 
   const prefilter = React.useMemo(() => {
     if (!publisher) {
@@ -47,6 +50,14 @@ export function PublisherScreen({
     setFollowed((prev) => !prev);
     followPublisher(publisher);
   }, [publisher, followPublisher]);
+  
+  const toggleFavorited = React.useCallback(() => {
+    if (!publisher) {
+      return;
+    }
+    setFavorited((prev) => !prev);
+    favoritePublisher(publisher);
+  }, [publisher, favoritePublisher]);
   
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({
@@ -65,7 +76,8 @@ export function PublisherScreen({
       return;
     }
     setFollowed(publisher.name in { ...followedPublishers });
-  }, [followedPublishers, navigation, publisher]));
+    setFavorited(publisherIsFavorited(publisher));
+  }, [followedPublishers, navigation, publisher, publisherIsFavorited]));
   
   return (
     <Screen>
@@ -79,7 +91,7 @@ export function PublisherScreen({
             justifyCenter
             itemsCenter>
             <ChannelIcon rounded size={ 80 } publisher={ publisher } />
-            <View>
+            <View flexRow gap={ 6 }>
               <Button
                 body2
                 contained
@@ -87,6 +99,12 @@ export function PublisherScreen({
                 onPress={ toggleFollowed }>
                 {`${ followed ? strings.action_unfollow : strings.action_follow } ${ strings.misc_publisher }`}
               </Button>
+              <Button
+                leftIcon={ favorited ? 'star' : 'star-outline' }
+                haptic 
+                iconSize={ 24 }
+                onPress={ toggleFavorited }
+                accessibilityLabel={ favorited ? strings.action_unfavorite : strings.action_favorite } />
             </View>
             {publisher?.description && (
               <View px={ 12 }>

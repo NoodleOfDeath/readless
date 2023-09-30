@@ -1,4 +1,5 @@
 import React from 'react';
+import { LayoutRectangle } from 'react-native';
 
 import {
   Chip,
@@ -17,6 +18,7 @@ import {
   TextInput,
   View,
 } from '~/components';
+import { LayoutContext } from '~/contexts';
   
 export type TablePickerProps<
   T extends string,
@@ -43,7 +45,10 @@ export function TablePicker<
   ...props
 }: TablePickerProps<T, Multi, Value, OptionValue>) {
 
+  const { screenHeight } = React.useContext(LayoutContext);
+
   const [filter, setFilter] = React.useState('');
+  const [layout, setLayout] = React.useState<LayoutRectangle>();
 
   const sectionProps = React.useCallback((value: T[], section: number) => {
     return sectionProps0 instanceof Function ? sectionProps0({
@@ -63,62 +68,69 @@ export function TablePicker<
   }, [cellProps0, props.multi]);
 
   return (
-    <Picker
+    <View 
       { ...props }
-      filter={ filter }
-      render={ ({
-        options, filteredOptions, value, onSelect, 
-      }) => (
-        <React.Fragment>
-          {searchable && (
-            <React.Fragment>
-              <TextInput
-                placeholder="Search"
-                value={ filter }
-                onChangeText={ setFilter }
-                clearButtonMode="while-editing" />
-              <View flexRow p={ 6 } flexWrap='wrap' gap={ 6 }>
-                {value.map((value) => {
-                  const option = options.find((option) => option.value === value);
-                  if (!option) {
-                    return null;
-                  }
-                  return (
-                    <Chip
-                      key={ value }
-                      avatar={ option.icon }
-                      onClose={ () => onSelect(value) }>
-                      {option.label}
-                    </Chip>
-                  );
-                })}
-              </View>
-            </React.Fragment>
-          )}
-          <ScrollView flex={ 1 }>
-            <TableView { ...props }>
-              {children && (
-                <TableViewSection { ...sectionProps(value, 0) }>
-                  <TableViewCell
-                    cellContentView={ children } />
-                </TableViewSection>
-              )}
-              <TableViewSection { ...sectionProps(value, 1) }>
-                {filteredOptions.map((option, index) => {
-                  return (
+      flex={ 1 }
+      onLayout={ (e) => setLayout(e.nativeEvent.layout) }>
+      <Picker
+        { ...props }
+        filter={ filter }
+        render={ ({
+          options, filteredOptions, value, onSelect, 
+        }) => (
+          <React.Fragment>
+            {searchable && (
+              <React.Fragment>
+                <TextInput
+                  placeholder="Search"
+                  value={ filter }
+                  onChangeText={ setFilter }
+                  clearButtonMode="while-editing" />
+                <ScrollView maxHeight={ (layout?.height ?? screenHeight) / 3 }>
+                  <View flexRow p={ 6 } flexWrap='wrap' gap={ 6 }>
+                    {value.sort().map((value) => {
+                      const option = options.find((option) => option.value === value);
+                      if (!option) {
+                        return null;
+                      }
+                      return (
+                        <Chip
+                          key={ value }
+                          avatar={ option.icon }
+                          onClose={ () => onSelect(value) }>
+                          {option.label}
+                        </Chip>
+                      );
+                    })}
+                  </View>
+                </ScrollView>
+              </React.Fragment>
+            )}
+            <ScrollView flex={ 1 }>
+              <TableView>
+                {children && (
+                  <TableViewSection { ...sectionProps(value, 0) }>
                     <TableViewCell
-                      key={ option.value }
-                      accessory={ value.includes(option.value) ? 'Checkmark' : undefined }
-                      title={ option.label }
-                      cellIcon={ option.icon }
-                      { ...cellProps(option, value, index, 1) }
-                      onPress={ () => onSelect(option.value) } />
-                  );
-                })}
-              </TableViewSection>
-            </TableView>
-          </ScrollView>
-        </React.Fragment>
-      ) } />
+                      cellContentView={ children } />
+                  </TableViewSection>
+                )}
+                <TableViewSection { ...sectionProps(value, 1) }>
+                  {filteredOptions.map((option, index) => {
+                    return (
+                      <TableViewCell
+                        key={ option.value }
+                        accessory={ value.includes(option.value) ? 'Checkmark' : undefined }
+                        title={ option.label }
+                        cellIcon={ option.icon }
+                        { ...cellProps(option, value, index, 1) }
+                        onPress={ () => onSelect(option.value) } />
+                    );
+                  })}
+                </TableViewSection>
+              </TableView>
+            </ScrollView>
+          </React.Fragment>
+        ) } />
+    </View>
   );
 }

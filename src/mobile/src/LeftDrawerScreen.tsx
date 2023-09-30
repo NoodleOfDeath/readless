@@ -15,7 +15,6 @@ import {
   DrawerSection,
   Icon,
   Screen,
-  Text,
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
@@ -71,7 +70,11 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
           onPress={ () => openPublisher(publisher) }
           right={ () => (
-            <Button leftIcon="star" onPress={ () => favoritePublisher(publisher) } />
+            <Button
+              haptic
+              leftIcon="star" 
+              accessibilityLabel={ strings.action_unfavorite }
+              onPress={ () => favoritePublisher(publisher) } />
           ) } />
       );
     }).filter(Boolean);
@@ -94,7 +97,11 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           icon={ (props) => <ChannelIcon { ...props } category={ category } /> }
           onPress={ () => openCategory(category) }
           right={ () => (
-            <Button leftIcon="star" onPress={ () => favoriteCategory(category) } />
+            <Button
+              haptic
+              leftIcon="star" 
+              accessibilityLabel={ strings.action_unfavorite }
+              onPress={ () => favoriteCategory(category) } />
           ) } />
       );
     }).filter(Boolean);
@@ -120,40 +127,15 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           onPress={ () => openPublisher(publisher) }
           right={ () => (
             <Button 
+              haptic
               leftIcon={ publisherIsFavorited(publisher) ? 'star' : 'star-outline' }
+              accessibilityLabel={ publisherIsFavorited(publisher) ? strings.action_unfavorite : strings.action_favorite }
               onPress={ () => favoritePublisher(publisher) } />
           ) } />
       );
     }).filter(Boolean);
-    if (items.length === 0) {
-      items.push(
-        <DrawerItem 
-          key="missing-publishers"
-          label={ (
-            <Text flex={ 1 } numberOfLines={ 3 }>
-              { strings.misc_noPublishers }
-            </Text>
-          ) } />
-      );
-    }
-    items.push(
-      <DrawerItem 
-        key="browse-publishers"
-        label={ strings.nav_browsePublishers }
-        onPress={ () => {
-          viewFeature('first-view-publishers');
-          navigate('publisherPicker');
-        } }
-        icon={ (_props) => (
-          <Button
-            leftIcon="pen"
-            iconSize={ 24 }
-            indicator={ !hasViewedFeature('first-view-publishers') } />
-        ) }
-        right={ (props) => <Icon { ...props } name="menu-right" /> } />
-    );
     return items;
-  }, [publishers, followedPublishers, openPublisher, publisherIsFavorited, favoritePublisher, viewFeature, navigate, hasViewedFeature]);
+  }, [publishers, followedPublishers, openPublisher, publisherIsFavorited, favoritePublisher]);
   
   const categoryItems = React.useMemo(() => {
     if (!categories) {
@@ -172,40 +154,15 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           onPress={ () => openCategory(category) }
           right={ () => (
             <Button
+              haptic
               leftIcon={ categoryIsFavorited(category) ? 'star' : 'star-outline' }
+              accessibilityLabel={ categoryIsFavorited(category) ? strings.action_unfavorite : strings.action_favorite }
               onPress={ () => favoriteCategory(category) } />
           ) } />
       );
     }).filter(Boolean);
-    if (items.length === 0) {
-      items.push(
-        <DrawerItem 
-          key="missing-categories"
-          label={ (
-            <Text flex={ 1 } numberOfLines={ 3 }>
-              { strings.misc_noCategories }
-            </Text>
-          ) } />
-      );
-    }
-    items.push(
-      <DrawerItem 
-        key="browse-categories"
-        label={ strings.nav_browseCategories }
-        onPress={ () => {
-          viewFeature('first-view-categories');
-          navigate('categoryPicker');
-        } }
-        icon={ (_props) => (
-          <Button
-            leftIcon="shape"
-            iconSize={ 24 }
-            indicator={ !hasViewedFeature('first-view-categories') } />
-        ) }
-        right={ (props) => <Icon { ...props } name="menu-right" /> } />
-    );
     return items;
-  }, [categories, followedCategories, openCategory, categoryIsFavorited, favoriteCategory, viewFeature, navigate, hasViewedFeature]);
+  }, [categories, followedCategories, openCategory, categoryIsFavorited, favoriteCategory]);
   
   return (
     <DrawerContentScrollView { ...props }>
@@ -228,11 +185,25 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
         </DrawerSection>
       )}
       <DrawerSection 
-        title={ strings.misc_publishers }>
+        title={ strings.misc_publishers }
+        gap={ 6 }
+        indicator={ !hasViewedFeature('first-view-publishers') } 
+        rightIcon="menu-right"
+        onPress={ () => {
+          viewFeature('first-view-publishers');
+          navigate('publisherPicker');
+        } }>
         {publisherItems}
       </DrawerSection>
       <DrawerSection
-        title={ strings.misc_categories }>
+        title={ strings.misc_categories }
+        gap={ 6 }
+        indicator={ !hasViewedFeature('first-view-categories') } 
+        rightIcon="menu-right"
+        onPress={ () => {
+          viewFeature('first-view-categories');
+          navigate('categoryPicker');
+        } }>
         {categoryItems}
       </DrawerSection>
       <View my={ 12 } />

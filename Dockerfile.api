@@ -12,6 +12,8 @@ COPY src/server/tsconfig.json ./
 COPY src/server/tsconfig.build.json ./
 
 FROM pre-build AS build
+COPY src/server/gen-sql-queries.ts ./
+RUN yarn sql
 # swagger.json file
 COPY src/server/tsoa.config.json ./
 RUN yarn cp:core

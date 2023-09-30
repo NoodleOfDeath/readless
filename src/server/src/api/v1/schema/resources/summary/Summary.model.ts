@@ -218,6 +218,10 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   declare sentiments?: PublicSummarySentimentAttributes[];
 
   declare siblingCount?: number;
+  
+  public static async refreshViews() {
+    await this.store.query(QUERIES.refreshViews);
+  }
 
   public static async getSitemapData() {
     const [summaries] = await this.store.query(QUERIES.getSiteMap);

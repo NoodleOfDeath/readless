@@ -26,6 +26,8 @@ COPY src/server/tsconfig.build.json ./
 
 FROM pre-build AS build
 ENV NODE_ENV=production
+COPY src/server/gen-sql-queries.ts ./
+RUN yarn sql
 RUN yarn cp:core
 RUN yarn build:scheduler
 

@@ -2,14 +2,10 @@ import React from 'react';
 
 import { Drawer } from 'react-native-paper';
 
-import { 
-  ChildlessViewProps,
-  Text,
-  TextProps,
-} from '~/components';
+import { Button, ButtonProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type DrawerSectionProps = ChildlessViewProps & TextProps & Parameters<typeof Drawer.Section>[0];
+export type DrawerSectionProps = ButtonProps & Parameters<typeof Drawer.Section>[0];
 
 export function DrawerSection({
   title,
@@ -21,13 +17,14 @@ export function DrawerSection({
     <Drawer.Section
       { ...props }
       title={ typeof title === 'string' ? (
-        <Text 
+        <Button 
           system
           h6
           color={ theme.colors.textSecondary }
+          justifyStart
           { ...props }>
           {title}
-        </Text> as unknown as string
+        </Button> as unknown as string
       ) : title }
       style={ style } />
   );
