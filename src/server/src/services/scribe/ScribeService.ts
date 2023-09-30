@@ -324,6 +324,12 @@ export class ScribeService extends BaseService {
         
       }
       
+      try {
+        await Summary.refreshViews();
+      } catch (e) {
+        console.error(e);
+      }
+      
       this.log('🥳 Created new summary from', url, newSummary.title);
       
       return summary;
