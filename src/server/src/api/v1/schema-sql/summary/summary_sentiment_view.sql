@@ -1,4 +1,6 @@
-CREATE OR REPLACE VIEW summary_sentiments_view AS
+DROP VIEW IF EXISTS summary_sentiment_view;
+
+CREATE MATERIALIZED VIEW summary_sentiment_view AS
 SELECT
   s.id AS "parentId",
   COALESCE(AVG(ss.score) FILTER (WHERE ss.score IS NOT NULL), 0) AS sentiment,

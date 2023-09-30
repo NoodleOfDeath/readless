@@ -2,11 +2,13 @@ import { ModelCtor, Sequelize } from 'sequelize-typescript';
 
 import { addScopes, makeAssociations } from '../../api/v1/schema';
 import * as Models from '../../api/v1/schema/models';
+import { VIEWS } from '../../api/v1/schema/views';
 import { BaseService } from '../base';
 
 export type DBServiceInitProps = {
   connectionString?: string;
   models?: ModelCtor[];
+  initializeViews?: boolean;
 };
 
 export class DBService extends BaseService {
@@ -16,6 +18,7 @@ export class DBService extends BaseService {
   static async prepare({
     connectionString = process.env.PG_CONNECTION_STRING,
     models = [...Object.values(Models)],
+    initializeViews,
   }: DBServiceInitProps = {}) {
     this.sq = new Sequelize(connectionString, {
       dialect: 'postgres',
@@ -29,6 +32,11 @@ export class DBService extends BaseService {
     // TODO: run prepare for all models here instead of all over the place
     // TODO: run SQL view update scripts
     await this.sq.sync();
+    if (initializeViews) {
+      for (const QUERY of Object.values(VIEWS)) {
+        await this.sq.query(QUERY);
+      }
+    }
   }
 
 }

@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS publisher_translation_view;
 
-CREATE OR REPLACE VIEW publisher_translation_view AS
+CREATE MATERIALIZED VIEW publisher_translation_view AS
 SELECT
   l.code AS locale,
   trans."parentId",
@@ -11,10 +11,3 @@ FROM
 GROUP BY
   l.code,
   trans."parentId";
-
-SELECT
-  *
-FROM
-  publisher_translation_view
-LIMIT 10;
-

@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS category_view;
 
-CREATE OR REPLACE VIEW category_view AS
+CREATE MATERIALIZED VIEW category_view AS
 SELECT
   trans.locale,
   cat.id,
@@ -10,10 +10,4 @@ SELECT
 FROM
   categories cat
   LEFT OUTER JOIN category_translation_view trans ON cat.id = trans."parentId";
-
-SELECT
-  *
-FROM
-  category_view
-LIMIT 10;
 

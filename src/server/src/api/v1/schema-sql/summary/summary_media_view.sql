@@ -1,4 +1,6 @@
-CREATE OR REPLACE VIEW summary_media_view AS
+DROP VIEW IF EXISTS summary_media_view;
+
+CREATE MATERIALIZED VIEW summary_media_view AS
 SELECT
   s.id AS "parentId",
   COALESCE(JSON_OBJECT_AGG(sm.key, sm.url) FILTER (WHERE sm.key IS NOT NULL), '{}'::json) AS media
