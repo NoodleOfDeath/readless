@@ -28,9 +28,10 @@ struct SummaryCard: View {
           if let image = publisherIcon {
             image
               .fixedSize()
+              .frame(width: 20, height: 20)
               .aspectRatio(contentMode: .fit)
           } else {
-            Text((summary.publisher.displayName as NSString).substring(to: 1))
+            Text("")
               .onAppear {
                 loadImage(summary.publisher.icon) { image in self.publisherIcon = image }
               }

@@ -77,3 +77,4 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   
 }
 
+public var MOCK_SUMMARY = PublicSummaryAttributes(id: 1, url: "https://readless.ai", title: "Summary Preview", shortSummary: "Short Summary", publisher: PublicPublisherAttributes(name: "cnn", displayName: "CNN"), category: PublicCategoryAttributes(name: "sports", displayName: "Sports", icon: "basketball"))

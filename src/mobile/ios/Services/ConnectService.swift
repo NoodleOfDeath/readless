@@ -20,7 +20,7 @@ class ConnectService: ObservableObject {
     self.summaries = summaries
   }
 
-  func fetchHandler(_ data: Data?) {
+  func fetchHandler(_ data: Data?) -> [PublicSummaryAttributes] {
     if let data = data {
       let decoder = JSONDecoder()
       decoder.dateDecodingStrategy = .custom { (decoder) -> Date in
@@ -38,29 +38,48 @@ class ConnectService: ObservableObject {
         }
         throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date format")
       }
-      DispatchQueue.main.async {
-         do {
-           let decodedResponse = try decoder.decode(BulkResponse<PublicSummaryAttributes, SentimentMetadata>.self, from: data)
-           self.summaries = decodedResponse.rows
-         } catch {
-           print(error)
-           self.error = error.localizedDescription
-         }
-        self.loading = false
+      do {
+        let decodedResponse = try decoder.decode(BulkResponse<PublicSummaryAttributes, SentimentMetadata>.self, from: data)
+        self.summaries = decodedResponse.rows
+      } catch {
+        print(error)
+        self.error = error.localizedDescription
       }
     }
     self.loading = false
+    return self.summaries
   }
   
   @Sendable func fetchSync() {
-    guard let url = URL(string: Endpoints.GetSummaries + "?locale=es") else {
+    return self.fetchSync(nil)
+  }
+  
+  @Sendable func fetchSync(_ callback: ((_ summaries: [PublicSummaryAttributes]) -> ())?) {
+    guard let url = URL(string: Endpoints.GetSummaries) else {
       return
     }
     loading = true
     error = nil
     let request = URLRequest(url: url)
-    URLSession.shared.dataTask(with: request) { data, _, _ in
-      self.fetchHandler(data)
+    URLSession.shared.dataTask(with: request) { (data, _, _) in
+      DispatchQueue.main.async {
+        let summaries = self.fetchHandler(data)
+        callback?(summaries)
+      }
     }.resume()
   }
+  
+  @Sendable func fetchAsync() async -> [PublicSummaryAttributes] {
+    guard let url = URL(string: Endpoints.GetSummaries) else {
+      return []
+    }
+    loading = true
+    error = nil
+    let request = URLRequest(url: url)
+    guard let (data, _) = try? await URLSession.shared.data(for: request) else {
+      return []
+    }
+    return self.fetchHandler(data)
+  }
+  
 }
