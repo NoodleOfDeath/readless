@@ -61,6 +61,13 @@ const Main = ({ scrollToRef, downloadRef }: MainProps) => (
           ))}
         </div>
       </div>
+      <div className={ styles.fixed }>
+        <div
+          className={ cn('button', styles.button) }
+          onClick={ () => downloadRef.current?.scrollIntoView({ behavior: 'smooth' }) }>
+          Download now
+        </div>
+      </div>
       <Scroll
         title="Scroll down"
         onScroll={ () =>
