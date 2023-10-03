@@ -115,6 +115,8 @@
 		CDE15FF02ACB499E0036F0A4 /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
 		CDE15FF12ACB499E0036F0A4 /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE15FF22ACB499E0036F0A4 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2529D791EC00EAC61C /* AntDesign.ttf */; };
+		CDE160092ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CDE160082ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition */; };
+		CDE1600C2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE1600B2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift */; };
 		CDE9EB4E2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB502A48A3770057217B /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
@@ -204,6 +206,16 @@
 				CDE15FC72ACB497F0036F0A4 /* ReadLessWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CDE160072ACC8C390036F0A4 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed ExtensionKit Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -318,6 +330,8 @@
 		CDE15FC02ACB497E0036F0A4 /* ReadLessWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidget.swift; sourceTree = "<group>"; };
 		CDE15FC22ACB497F0036F0A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CDE15FC42ACB497F0036F0A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDE160082ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = ReadLessIntents.intentdefinition; sourceTree = "<group>"; };
+		CDE1600B2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomConfigurationAppIntent.swift; path = /Users/thom/git/noodleofdeath/readless/src/mobile/ios/ReadLessWidget/CustomConfigurationAppIntent.swift; sourceTree = "<absolute>"; };
 		CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-BoldItalic.ttf"; sourceTree = "<group>"; };
 		CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Italic.ttf"; sourceTree = "<group>"; };
 		CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekLatin-Regular.ttf"; sourceTree = "<group>"; };
@@ -641,6 +655,8 @@
 			children = (
 				CDE15FBC2ACB497E0036F0A4 /* ReadLessWidgetBundle.swift */,
 				CDE15FC02ACB497E0036F0A4 /* ReadLessWidget.swift */,
+				CDE1600B2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift */,
+				CDE160082ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition */,
 				CDE15FC22ACB497F0036F0A4 /* Assets.xcassets */,
 				CDE15FC42ACB497F0036F0A4 /* Info.plist */,
 			);
@@ -741,6 +757,7 @@
 				01F6EA7829E6FA3C00F51BBA /* Embed Watch Content */,
 				CD6345222A192BF100CB264B /* Embed Foundation Extensions */,
 				0C61BC585057FDAEA7DDC87A /* [CP-User] [RNFB] Core Configuration */,
+				CDE160072ACC8C390036F0A4 /* Embed ExtensionKit Extensions */,
 			);
 			buildRules = (
 			);
@@ -1278,7 +1295,9 @@
 				CDE15FD12ACB49920036F0A4 /* View.swift in Sources */,
 				CDE15FCC2ACB498E0036F0A4 /* PublicSummaryAttributes.swift in Sources */,
 				CDE15FCB2ACB498E0036F0A4 /* PublicPublisherAttributes.swift in Sources */,
+				CDE1600C2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift in Sources */,
 				CDE15FCD2ACB498E0036F0A4 /* BulkResponse.swift in Sources */,
+				CDE160092ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition in Sources */,
 				CDE15FCF2ACB49920036F0A4 /* Color.swift in Sources */,
 				CDE15FBD2ACB497E0036F0A4 /* ReadLessWidgetBundle.swift in Sources */,
 				CDE15FD22ACB49920036F0A4 /* Date.swift in Sources */,

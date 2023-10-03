@@ -29,7 +29,6 @@ struct SummaryCard: View {
             image
               .fixedSize()
               .frame(width: 20, height: 20)
-              .aspectRatio(contentMode: .fit)
           } else {
             Text("")
               .onAppear {
