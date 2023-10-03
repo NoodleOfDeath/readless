@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { SubscriptionEvent } from '~/api';
 import Layout from '~/components/Layout';
 import { useApiClient } from '~/core';
 import { useRouter } from '~/hooks';
@@ -20,7 +21,7 @@ export default function UnsubcribePage() {
         setLoading(false);
         return;
       }
-      const { error } = await unsubscribe({ unsubscribeToken: token });
+      const { error } = await unsubscribe({ event: SubscriptionEvent.Default, unsubscribeToken: token });
       if (error) {
         throw error;
       }
