@@ -56,7 +56,7 @@
 		018173BF29EA1842006D3509 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
 		018173C129EA4529006D3509 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C029EA4529006D3509 /* SummaryCard.swift */; };
 		018173C329EA4833006D3509 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C229EA4833006D3509 /* Date.swift */; };
-		018CE3B029E98AB9005E6391 /* BulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkResponse.swift */; };
+		018CE3B029E98AB9005E6391 /* BulkMetadataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkMetadataResponse.swift */; };
 		01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 01BC567B29DCF36700C69F9A /* main.jsbundle */; };
 		07A1D8E328E1A8A03D5EA3A8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CAFCC9631D60DF42ACBD13 /* ExpoModulesProvider.swift */; };
 		0C80B921A6F3F58F76C31292 /* libPods-ReadLess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */; };
@@ -65,6 +65,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-ReadLess-ReadLessTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */; };
+		CD47EDED2ACF22A0009FB2EB /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CDE160082ACC8CDB0036F0A4 /* Intents.intentdefinition */; };
 		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
 		CDE11B1F2A7701BE00C0BC39 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */; };
 		CDE11B212A786FF500C0BC39 /* PublicPublisherAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */; };
@@ -77,7 +78,7 @@
 		CDE15FC72ACB497F0036F0A4 /* ReadLessWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CDE15FB82ACB497E0036F0A4 /* ReadLessWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CDE15FCB2ACB498E0036F0A4 /* PublicPublisherAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */; };
 		CDE15FCC2ACB498E0036F0A4 /* PublicSummaryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */; };
-		CDE15FCD2ACB498E0036F0A4 /* BulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkResponse.swift */; };
+		CDE15FCD2ACB498E0036F0A4 /* BulkMetadataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkMetadataResponse.swift */; };
 		CDE15FCE2ACB498E0036F0A4 /* PublicCategoryAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */; };
 		CDE15FCF2ACB49920036F0A4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F0D8029E89D770064DD97 /* Color.swift */; };
 		CDE15FD02ACB49920036F0A4 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
@@ -115,8 +116,12 @@
 		CDE15FF02ACB499E0036F0A4 /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
 		CDE15FF12ACB499E0036F0A4 /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE15FF22ACB499E0036F0A4 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2529D791EC00EAC61C /* AntDesign.ttf */; };
-		CDE160092ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CDE160082ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition */; };
+		CDE160092ACC8CDB0036F0A4 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CDE160082ACC8CDB0036F0A4 /* Intents.intentdefinition */; };
 		CDE1600C2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE1600B2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift */; };
+		CDE160102ACDEF770036F0A4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE1600F2ACDEF770036F0A4 /* Image.swift */; };
+		CDE160112ACDEF770036F0A4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE1600F2ACDEF770036F0A4 /* Image.swift */; };
+		CDE160122ACE08120036F0A4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		CDE160132ACE08130036F0A4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		CDE9EB4E2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB502A48A3770057217B /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
@@ -263,7 +268,7 @@
 		018173C229EA4833006D3509 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		018CE3AD29E9892B005E6391 /* ReadLessWatch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ReadLessWatch-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		018CE3AE29E989F5005E6391 /* ReadLessWatch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ReadLessWatch Watch App.entitlements"; sourceTree = "<group>"; };
-		018CE3AF29E98AB9005E6391 /* BulkResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponse.swift; sourceTree = "<group>"; };
+		018CE3AF29E98AB9005E6391 /* BulkMetadataResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkMetadataResponse.swift; sourceTree = "<group>"; };
 		01BC567B29DCF36700C69F9A /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ReadLess/main.jsbundle; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReadLess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReadLess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReadLess/AppDelegate.h; sourceTree = "<group>"; };
@@ -330,8 +335,11 @@
 		CDE15FC02ACB497E0036F0A4 /* ReadLessWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadLessWidget.swift; sourceTree = "<group>"; };
 		CDE15FC22ACB497F0036F0A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CDE15FC42ACB497F0036F0A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CDE160082ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = ReadLessIntents.intentdefinition; sourceTree = "<group>"; };
+		CDE160082ACC8CDB0036F0A4 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
 		CDE1600B2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomConfigurationAppIntent.swift; path = /Users/thom/git/noodleofdeath/readless/src/mobile/ios/ReadLessWidget/CustomConfigurationAppIntent.swift; sourceTree = "<absolute>"; };
+		CDE1600F2ACDEF770036F0A4 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		CDE1601A2ACE23950036F0A4 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		CDE160252ACE23950036F0A4 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 		CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-BoldItalic.ttf"; sourceTree = "<group>"; };
 		CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Italic.ttf"; sourceTree = "<group>"; };
 		CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekLatin-Regular.ttf"; sourceTree = "<group>"; };
@@ -463,7 +471,7 @@
 				CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */,
 				010F0D2529E88EC40064DD97 /* PublicSummaryAttributes.swift */,
 				010F0D2129E88EC40064DD97 /* PublicCategoryAttributes.swift */,
-				018CE3AF29E98AB9005E6391 /* BulkResponse.swift */,
+				018CE3AF29E98AB9005E6391 /* BulkMetadataResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -512,6 +520,7 @@
 				018173BE29EA1842006D3509 /* PressActions.swift */,
 				018173C229EA4833006D3509 /* Date.swift */,
 				015A19D029EAEB1A0072EEE3 /* View.swift */,
+				CDE1600F2ACDEF770036F0A4 /* Image.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -562,6 +571,8 @@
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */,
 				0150ACA429F9577400875CF7 /* WidgetKit.framework */,
 				0150ACA629F9577400875CF7 /* SwiftUI.framework */,
+				CDE1601A2ACE23950036F0A4 /* Intents.framework */,
+				CDE160252ACE23950036F0A4 /* IntentsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -656,7 +667,7 @@
 				CDE15FBC2ACB497E0036F0A4 /* ReadLessWidgetBundle.swift */,
 				CDE15FC02ACB497E0036F0A4 /* ReadLessWidget.swift */,
 				CDE1600B2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift */,
-				CDE160082ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition */,
+				CDE160082ACC8CDB0036F0A4 /* Intents.intentdefinition */,
 				CDE15FC22ACB497F0036F0A4 /* Assets.xcassets */,
 				CDE15FC42ACB497F0036F0A4 /* Info.plist */,
 			);
@@ -914,6 +925,7 @@
 				CDE9EB5B2A48A3770057217B /* Newsreader72pt-Bold.ttf in Resources */,
 				0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */,
 				0143022B29FACEDC00D40293 /* MaterialCommunityIcons.ttf in Resources */,
+				CDE160132ACE08130036F0A4 /* Images.xcassets in Resources */,
 				CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */,
 				0143022529FACEDC00D40293 /* EvilIcons.ttf in Resources */,
 				CDE9EB5D2A48A3770057217B /* AnekLatin-Bold.ttf in Resources */,
@@ -994,6 +1006,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDE15FE12ACB499E0036F0A4 /* Faustina-BoldItalic.ttf in Resources */,
+				CDE160122ACE08120036F0A4 /* Images.xcassets in Resources */,
 				CDE15FE82ACB499E0036F0A4 /* AnekLatin-Regular.ttf in Resources */,
 				CDE15FC32ACB497F0036F0A4 /* Assets.xcassets in Resources */,
 				CDE15FDB2ACB499E0036F0A4 /* FontAwesome5_Solid.ttf in Resources */,
@@ -1250,7 +1263,8 @@
 				018173C329EA4833006D3509 /* Date.swift in Sources */,
 				013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */,
 				CDE11B212A786FF500C0BC39 /* PublicPublisherAttributes.swift in Sources */,
-				018CE3B029E98AB9005E6391 /* BulkResponse.swift in Sources */,
+				CDE160102ACDEF770036F0A4 /* Image.swift in Sources */,
+				018CE3B029E98AB9005E6391 /* BulkMetadataResponse.swift in Sources */,
 				010F0D8129E89D770064DD97 /* Color.swift in Sources */,
 				010F0CE429E88D470064DD97 /* ReadLessWatchApp.swift in Sources */,
 				010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */,
@@ -1282,6 +1296,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				CD47EDED2ACF22A0009FB2EB /* Intents.intentdefinition in Sources */,
 				5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1294,10 +1309,11 @@
 				CDE15FD32ACB49950036F0A4 /* ConnectService.swift in Sources */,
 				CDE15FD12ACB49920036F0A4 /* View.swift in Sources */,
 				CDE15FCC2ACB498E0036F0A4 /* PublicSummaryAttributes.swift in Sources */,
+				CDE160112ACDEF770036F0A4 /* Image.swift in Sources */,
 				CDE15FCB2ACB498E0036F0A4 /* PublicPublisherAttributes.swift in Sources */,
 				CDE1600C2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift in Sources */,
-				CDE15FCD2ACB498E0036F0A4 /* BulkResponse.swift in Sources */,
-				CDE160092ACC8CDB0036F0A4 /* ReadLessIntents.intentdefinition in Sources */,
+				CDE15FCD2ACB498E0036F0A4 /* BulkMetadataResponse.swift in Sources */,
+				CDE160092ACC8CDB0036F0A4 /* Intents.intentdefinition in Sources */,
 				CDE15FCF2ACB49920036F0A4 /* Color.swift in Sources */,
 				CDE15FBD2ACB497E0036F0A4 /* ReadLessWidgetBundle.swift in Sources */,
 				CDE15FD22ACB49920036F0A4 /* Date.swift in Sources */,
@@ -1687,6 +1703,7 @@
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Read Less ";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1700,7 +1717,6 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios;
 				PRODUCT_NAME = ReadLess;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1728,6 +1744,7 @@
 				INFOPLIST_FILE = ReadLess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Read Less ";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.magazines-and-newspapers";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1741,7 +1758,6 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios;
 				PRODUCT_NAME = ReadLess;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_VERSION = 5.0;

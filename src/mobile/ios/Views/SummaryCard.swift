@@ -7,87 +7,147 @@
 
 import SwiftUI
 
+enum SummaryCardStyle {
+  case small
+  case medium
+}
+
 struct SummaryCard: View {
-  let summary: PublicSummaryAttributes
-  let compact: Bool
-  @State private var image: Image? = nil
-  @State private var publisherIcon: Image? = nil
+  var summary: Summary?
+  let style: SummaryCardStyle
+  var truncated: Bool = true
+  
+  @State var image: Image? = nil
+  @State var publisherIcon: Image? = nil
 
   @Environment(\.colorScheme) private var colorScheme
 
   var card: Color {
-    return colorScheme == .light ? Color(hex: 0xEEEEEE) : Color(hex: 0x111111)
+    return colorScheme == .light ? Color(hex: 0xFFFFFF) : Color(hex: 0x242424)
   }
 
-  var primary = Color(hex: 0x8B0000)
-
-  var body: some View {
-    VStack(spacing: 1) {
-      VStack(alignment: .leading) {
-        HStack {
-          if let image = publisherIcon {
-            image
-              .fixedSize()
-              .frame(width: 20, height: 20)
-          } else {
-            Text("")
-              .onAppear {
-                loadImage(summary.publisher.icon) { image in self.publisherIcon = image }
-              }
-          }
-          Text(summary.publisher.displayName)
-            .frame(maxWidth: .infinity)
-            .padding(3)
-        }
-        .background(self.primary)
-        .cornerRadius(8)
-        .frame(maxWidth: .infinity)
-        .multilineTextAlignment(.leading)
-        Text(summary.category.displayName)
-          .frame(maxWidth: .infinity)
-          .padding(3)
-        Text(summary.originalDate?.distanceFromNow() ?? "")
-          .font(.footnote)
-          .frame(maxWidth: .infinity)
-          .padding(3)
-          .multilineTextAlignment(.leading)
-        Divider()
-        if let image = image {
-          image
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-        } else {
-            Text("Loading Image...")
-            .onAppear {
-              if let url = summary.media?["imageArticle"] ?? summary.media?["imageAi1"] ?? summary.imageUrl {
-                loadImage(url) { image in self.image = image }
-              }
-            }
-        }
-        Text(compact ? (summary.translations?["title"] ?? summary.title) : (summary.translations?["shortSummary"] ?? summary.shortSummary ?? ""))
-          .padding(3)
-          .if(compact) { view in
-            view
-              .truncationMode(.tail)
-              .lineLimit(compact ? 3 : 10)
-          }
-      }
-      .frame(maxWidth: .infinity)
-      .padding(10)
-    }
-    .background(self.card)
-    .cornerRadius(8)
+  var placeholder: Color {
+    return colorScheme == .light ? Color(hex: 0xf0f0f0) : Color(hex: 0x303030)
   }
   
-}
+  var headerHeight: CGFloat {
+    return 15.0
+  }
+  
+  var headerFont: Font {
+    return .system(size: 10)
+  }
+  
+  var titleFont: Font {
+    return .caption
+  }
+  
+  var imageHeight: CGFloat {
+    return 55.0
+  }
+  
+  var TITLE: some View {
+    HStack {
+      if let summary = summary {
+        Text(truncated ? (summary.translations?["title"] ?? summary.title) : (summary.translations?["shortSummary"] ?? summary.shortSummary ?? ""))
+          .font(titleFont)
+          .bold()
+          .lineSpacing(-10.0)
+          .if(truncated) { view in
+            view
+              .truncationMode(.tail)
+              .lineLimit(truncated ? 2 : 10)
+          }
+      }
+      Spacer()
+    }
+    .multilineTextAlignment(.leading)
+  }
 
-func loadImage(_ url: String, completionHandler: @escaping @Sendable (_ image: Image) -> Void) {
-  guard let imageUrl = URL(string: url) else { return }
-    URLSession.shared.dataTask(with: imageUrl) { data, _, error in
-        if let data = data, let uiImage = UIImage(data: data) {
-            DispatchQueue.main.async {
-                completionHandler(Image(uiImage: uiImage))
+  var body: some View {
+    if let summary = summary {
+      Link(destination: summary.deeplink, label: {
+        if style == .small  {
+          TITLE
+        } else
+        if style == .medium {
+            HStack {
+              VStack(spacing: 4.0) {
+                HStack {
+                  if let image = summary.publisherIcon ?? publisherIcon {
+                    image
+                      .resizable()
+                      .frame(width: headerHeight, height: headerHeight)
+                      .aspectRatio(contentMode: .fit)
+                  } else {
+                    Text((summary.publisher.displayName as NSString).substring(to: 1).uppercased())
+                      .frame(width: headerHeight, height: headerHeight)
+                      .onAppear {
+                        Image.load(from: summary.publisher.icon) { image in DispatchQueue.main.async { self.publisherIcon = image } }
+                      }
+                  }
+                  Text(summary.publisher.displayName)
+                    .font(headerFont)
+                  Text("•")
+                    .font(headerFont)
+                  Text(summary.originalDate?.distanceFromNow() ?? "")
+                    .font(headerFont)
+                  Spacer()
+                }
+                .multilineTextAlignment(.leading)
+                TITLE
+              }
+              .multilineTextAlignment(.leading)
+              VStack {
+                if let image = summary.image ?? image {
+                  image
+                    .resizable()
+                    .frame(width: imageHeight, height: imageHeight)
+                    .aspectRatio(contentMode: .fit)
+                } else {
+                  Text("Loading Image...")
+                    .font(headerFont)
+                    .frame(width: imageHeight, height: imageHeight)
+                    .onAppear {
+                      if let url = summary.primaryImageUrl {
+                        Image.load(from: url) { image in DispatchQueue.main.async { self.image = image } }
+                      }
+                    }
+                }
+              }
+              .cornerRadius(8.0)
             }
+            .frame(maxWidth: .infinity)
         }
-    }.resume()
+      })
+    } else {
+      if style == .small {
+        
+      } else
+      if style == .medium {
+        HStack {
+          VStack(spacing: 4.0) {
+            HStack {
+              Spacer()
+            }
+            .frame(height: headerHeight)
+            .background(placeholder)
+            HStack {
+              Spacer()
+            }
+            .frame(height: headerHeight)
+            .background(placeholder)
+          }
+          VStack {
+            Spacer()
+          }
+          .frame(width: imageHeight, height: imageHeight)
+          .background(placeholder)
+          .cornerRadius(8.0)
+        }
+        .frame(maxWidth: .infinity)
+      }
+    }
+  }
+  
 }

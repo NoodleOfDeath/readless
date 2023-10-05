@@ -19,48 +19,20 @@
 		<dict>
 			<key>INIntentCategory</key>
 			<string>information</string>
-			<key>INIntentClassName</key>
-			<string>CustomConfiguration</string>
 			<key>INIntentClassPrefix</key>
 			<string>I</string>
-			<key>INIntentConfigurable</key>
-			<true/>
+			<key>INIntentDescription</key>
+			<string>Intent for configuring the topic of a widget</string>
 			<key>INIntentDescriptionID</key>
 			<string>vlfd95</string>
 			<key>INIntentEligibleForWidgets</key>
 			<true/>
+			<key>INIntentIneligibleForSuggestions</key>
+			<true/>
 			<key>INIntentLastParameterTag</key>
-			<integer>5</integer>
-			<key>INIntentManagedParameterCombinations</key>
-			<dict>
-				<key>topic</key>
-				<dict>
-					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
-					<true/>
-					<key>INIntentParameterCombinationTitle</key>
-					<string>Topic</string>
-					<key>INIntentParameterCombinationTitleID</key>
-					<string>UqQd0q</string>
-					<key>INIntentParameterCombinationUpdatesLinked</key>
-					<true/>
-				</dict>
-			</dict>
+			<integer>7</integer>
 			<key>INIntentName</key>
-			<string>CustomConfiguration</string>
-			<key>INIntentParameterCombinations</key>
-			<dict>
-				<key>topic</key>
-				<dict>
-					<key>INIntentParameterCombinationIsLinked</key>
-					<true/>
-					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
-					<true/>
-					<key>INIntentParameterCombinationTitle</key>
-					<string>Topic</string>
-					<key>INIntentParameterCombinationTitleID</key>
-					<string>H8QNDl</string>
-				</dict>
-			</dict>
+			<string>WidgetTopicConfiguration</string>
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
@@ -75,9 +47,17 @@
 					<key>INIntentParameterMetadata</key>
 					<dict>
 						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
+						<string>None</string>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<string>Technology</string>
 						<key>INIntentParameterMetadataDefaultValueID</key>
 						<string>2Lnniv</string>
+						<key>INIntentParameterMetadataDisableAutocorrect</key>
+						<true/>
+						<key>INIntentParameterMetadataDisableSmartDashes</key>
+						<true/>
+						<key>INIntentParameterMetadataDisableSmartQuotes</key>
+						<true/>
 					</dict>
 					<key>INIntentParameterName</key>
 					<string>topic</string>
@@ -98,6 +78,26 @@
 							<string>YAndPU</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${topic}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>nzu0NT</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${topic}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>ULyI5c</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
 						</dict>
 					</array>
 					<key>INIntentParameterTag</key>
@@ -121,9 +121,11 @@
 						<string>failure</string>
 					</dict>
 				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>1</integer>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Custom Configuration</string>
+			<string>Widget Topic Configuration</string>
 			<key>INIntentTitleID</key>
 			<string>jtISxm</string>
 			<key>INIntentType</key>

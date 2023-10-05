@@ -11,11 +11,11 @@ extension Date {
   func distanceFromNow() -> String {
     let interval = Calendar.current.dateComponents([.minute, .hour, .day], from: self, to: Date())
     if let day = interval.day, day > 0 {
-      return "\(day) day\(day == 1 ? "" : "s") ago"
+      return "\(day)d"
     } else if let hour = interval.hour, hour > 0 {
-      return "\(hour) hour\(hour == 1 ? "" : "s") ago"
+      return "\(hour)h"
     } else if let minute = interval.minute, minute > 0 {
-      return "\(minute) minute\(minute == 1 ? "" : "s") ago"
+      return "\(minute)m"
     } else {
       return "just now"
     }

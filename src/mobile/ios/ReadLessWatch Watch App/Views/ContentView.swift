@@ -32,11 +32,11 @@ struct ContentView: View {
             } else {
               List(self.service.summaries, id: \.id) { summary in
                 NavigationLink(
-                  destination: ScrollView { SummaryCard(summary: summary, compact: false)
+                  destination: ScrollView { SummaryCard(summary: summary, style: .small)
                   }.navigationTitle(summary.translations?["title"] ?? summary.title) ,
-                  tag: summary,
+                  tag: summary.root,
                   selection: $selectedSummary) {
-                    SummaryCard(summary: summary, compact: true)
+                    SummaryCard(summary: summary, style: .small, truncated: false)
                   }
               }.refreshable {
                 self.service.fetchSync()
