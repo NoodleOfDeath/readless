@@ -118,8 +118,13 @@ public class Summary {
   @Published public var publisherIcon: Image?
   
   public func loadImages() {
-    Image.load(from: primaryImageUrl) { self.image = $0 }
+    Image.load(from: primaryImageUrl, maxWidth: 400) { self.image = $0 }
     Image.load(from: publisher.icon) { self.publisherIcon = $0 }
+  }
+  
+  public func loadImagesAsync() async {
+    image = await Image.loadAsync(from: primaryImageUrl, maxWidth: 400)
+    publisherIcon = await Image.loadAsync(from: publisher.icon)
   }
   
 }

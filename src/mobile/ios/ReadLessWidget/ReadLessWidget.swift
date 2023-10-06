@@ -18,7 +18,7 @@ struct SummaryEntry: TimelineEntry {
 }
 
 var WidgetPageSize: Dictionary<WidgetFamily, Int> = [
-  .systemSmall: 3,
+  .systemSmall: 1,
   .systemMedium: 2,
   .systemLarge: 4,
   .systemExtraLarge: 4,
@@ -70,7 +70,6 @@ struct TopicQuery: EntityQuery {
 struct AppIntentProvider: AppIntentTimelineProvider {
   
   typealias Entry = SummaryEntry
-  
   typealias Intent = CustomConfigurationAppIntent
   
   func placeholder(in context: Context) -> SummaryEntry {
@@ -79,28 +78,29 @@ struct AppIntentProvider: AppIntentTimelineProvider {
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
   
-  func snapshot(for configuration: CustomConfigurationAppIntent, in context: Context) async -> SummaryEntry {
-    SummaryEntry(context: context, 
-                 topic: configuration.topic,
-                 summaries: WidgetPlaceholders[context.family] ?? [])
+  func snapshot(for configuration: CustomConfigurationAppIntent, 
+                in context: Context) async -> SummaryEntry {
+    SummaryEntry(context: context,
+                 topic: configuration.topic)
   }
   
-  func timeline(for configuration: CustomConfigurationAppIntent, in context: Context) async -> Timeline<SummaryEntry> {
-    var entries: [SummaryEntry] = []
-    let summaries = await ConnectService().fetchAsync(filter: configuration.topic)
+  func timeline(for configuration: CustomConfigurationAppIntent,
+                in context: Context) async -> Timeline<SummaryEntry> {
+    let summaries = Array(await ConnectService().fetchAsync(filter: configuration.topic).reversed())
     let pageSize = WidgetPageSize[context.family] ?? 2
+    var entries: [SummaryEntry] = []
     for i in stride(from: 0, to: summaries.count, by: pageSize) {
       let first = summaries[i]
       if context.family != .systemSmall {
-        first.loadImages()
+        await first.loadImagesAsync()
       }
       var subset = [first]
       for j in 1 ..< pageSize {
         if let next = i + j < summaries.count ? summaries[i + j] : nil {
           if context.family != .systemSmall {
-            next.loadImages()
+            await next.loadImagesAsync()
           }
-          subset.append(next)
+          subset.insert(next, at: 0)
         }
       }
       let entry = SummaryEntry(context: context,
@@ -127,34 +127,40 @@ struct Provider: IntentTimelineProvider {
                    in context: Context,
                    completion: @escaping (SummaryEntry) -> ()) {
     let entry = SummaryEntry(context: context, 
-                             topic: configuration.topic,
-                             summaries: WidgetPlaceholders[context.family] ?? [])
+                             topic: configuration.topic)
     completion(entry)
   }
   
   func getTimeline(for configuration: IWidgetTopicConfigurationIntent,
                    in context: Context,
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
-    var entries: [SummaryEntry] = []
     let pageSize = WidgetPageSize[context.family] ?? 2
-    ConnectService().fetchSync(filter: configuration.topic) { summaries in
-      for i in stride(from: 0, to: summaries.count, by: pageSize) {
-        let first = summaries[i]
-        if context.family != .systemSmall {
-          first.loadImages()
-        }
-        var subset = [first]
-        for j in 1 ..< pageSize {
-          if let next = i + j < summaries.count ? summaries[i + j] : nil {
-            if context.family != .systemSmall {
-              next.loadImages()
-            }
-            subset.append(next)
+    ConnectService().fetchSync(filter: configuration.topic) { s in
+      let summaries = Array(s.reversed())
+      Task {
+        var entries: [SummaryEntry] = []
+        for i in stride(from: 0, to: summaries.count, by: pageSize) {
+          let first = summaries[i]
+          if context.family != .systemSmall {
+            await first.loadImagesAsync()
           }
+          var subset = [first]
+          for j in 1 ..< pageSize {
+            if let next = i + j < summaries.count ? summaries[i + j] : nil {
+              if context.family != .systemSmall {
+                await next.loadImagesAsync()
+              }
+              subset.insert(next, at: 0)
+            }
+          }
+          let entry = SummaryEntry(context: context,
+                                   topic: configuration.topic,
+                                   summaries: subset)
+          entries.append(entry)
         }
+        let timeline = Timeline(entries: entries, policy: .atEnd)
+        completion(timeline)
       }
-      let timeline = Timeline(entries: entries, policy: .atEnd)
-      completion(timeline)
     }
   }
 }
@@ -178,7 +184,7 @@ struct ReadLessWidgetEntryView : View {
           .aspectRatio(contentMode: .fit)
       }
       if (entry.topic == nil) {
-        ForEach(0..<2) { _ in
+        ForEach(0 ..< 2) { _ in
           SummaryCard(style: entry.context?.family == .systemSmall ? .small : .medium)
         }
       } else
@@ -207,7 +213,7 @@ struct ReadLessWidget: Widget {
       }
       .configurationDisplayName("Topic")
       .description("Choose a topic")
-      .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+      .supportedFamilies([.systemMedium])
     } else {
       return IntentConfiguration(kind: kind, 
                                  intent: IWidgetTopicConfigurationIntent.self,
@@ -218,7 +224,7 @@ struct ReadLessWidget: Widget {
       }
       .configurationDisplayName("Topic")
       .description("Choose a topic")
-      .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+      .supportedFamilies([.systemMedium])
     }
   }
 }

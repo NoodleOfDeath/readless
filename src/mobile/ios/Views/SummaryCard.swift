@@ -15,15 +15,15 @@ enum SummaryCardStyle {
 struct SummaryCard: View {
   var summary: Summary?
   let style: SummaryCardStyle
-  var truncated: Bool = true
+  var expanded: Bool = false
   
   @State var image: Image? = nil
   @State var publisherIcon: Image? = nil
 
   @Environment(\.colorScheme) private var colorScheme
 
-  var card: Color {
-    return colorScheme == .light ? Color(hex: 0xFFFFFF) : Color(hex: 0x242424)
+  var backdrop: Color {
+    return colorScheme == .light ? Color(hex: 0xffffff, alpha: 0.3) : Color(hex: 0x000000, alpha: 0.3)
   }
 
   var placeholder: Color {
@@ -43,78 +43,121 @@ struct SummaryCard: View {
   }
   
   var imageHeight: CGFloat {
-    return 55.0
+    return style == .small ? 170 : 55.0
+  }
+  
+  var HEADER: some View {
+    HStack {
+      if let summary = summary {
+        if let image = summary.publisherIcon ?? publisherIcon {
+          image
+            .resizable()
+            .frame(width: headerHeight, height: headerHeight)
+            .aspectRatio(contentMode: .fit)
+        } else {
+          Text((summary.publisher.displayName as NSString).substring(to: 1).uppercased())
+            .frame(width: headerHeight, height: headerHeight)
+            .onAppear {
+              Image.load(from: summary.publisher.icon) { image in DispatchQueue.main.async { self.publisherIcon = image } }
+            }
+        }
+        Text(summary.publisher.displayName)
+          .font(headerFont)
+        Text("•")
+          .font(headerFont)
+        Text(summary.originalDate?.distanceFromNow() ?? "")
+          .font(headerFont)
+        Spacer()
+      }
+    }
+    .multilineTextAlignment(.leading)
   }
   
   var TITLE: some View {
     HStack {
       if let summary = summary {
-        Text(truncated ? (summary.translations?["title"] ?? summary.title) : (summary.translations?["shortSummary"] ?? summary.shortSummary ?? ""))
+        Text(summary.translations?["title"] ?? summary.title)
           .font(titleFont)
           .bold()
           .lineSpacing(-10.0)
-          .if(truncated) { view in
-            view
-              .truncationMode(.tail)
-              .lineLimit(truncated ? 2 : 10)
-          }
+          .truncationMode(.tail)
+          .lineLimit(!expanded ? 2 : 10)
       }
       Spacer()
     }
     .multilineTextAlignment(.leading)
+  }
+  
+  var DESCRIPTION: some View {
+    HStack {
+      if let summary = summary {
+        Text(summary.translations?["shortSummary"] ?? summary.shortSummary ?? "")
+          .font(titleFont)
+          .bold()
+          .lineSpacing(-10.0)
+      }
+    }
+    .multilineTextAlignment(.leading)
+  }
+  
+  var IMAGE: some View {
+    VStack {
+      if let summary = summary {
+        if let image = summary.image ?? image {
+          image
+            .resizable()
+            .scaledToFill()
+            .frame(width: imageHeight, height: imageHeight)
+        } else {
+          Text("Loading Image...")
+            .font(headerFont)
+            .frame(width: imageHeight, height: imageHeight)
+            .onAppear {
+              if let url = summary.primaryImageUrl {
+                Image.load(from: url) { image in DispatchQueue.main.async { self.image = image } }
+              }
+            }
+        }
+      }
+    }
   }
 
   var body: some View {
     if let summary = summary {
       Link(destination: summary.deeplink, label: {
         if style == .small  {
-          TITLE
+          if !expanded {
+            IMAGE
+              .overlay {
+                VStack {
+                  Spacer()
+                  VStack {
+                    HEADER
+                    TITLE
+                  }
+                  .background(backdrop)
+                  .padding(4.0)
+                  .cornerRadius(8.0)
+                }
+              }
+              .padding(4.0)
+          } else {
+            VStack(spacing: 8.0) {
+              HEADER
+              TITLE
+              IMAGE
+              DESCRIPTION
+            }
+          }
         } else
         if style == .medium {
             HStack {
               VStack(spacing: 4.0) {
-                HStack {
-                  if let image = summary.publisherIcon ?? publisherIcon {
-                    image
-                      .resizable()
-                      .frame(width: headerHeight, height: headerHeight)
-                      .aspectRatio(contentMode: .fit)
-                  } else {
-                    Text((summary.publisher.displayName as NSString).substring(to: 1).uppercased())
-                      .frame(width: headerHeight, height: headerHeight)
-                      .onAppear {
-                        Image.load(from: summary.publisher.icon) { image in DispatchQueue.main.async { self.publisherIcon = image } }
-                      }
-                  }
-                  Text(summary.publisher.displayName)
-                    .font(headerFont)
-                  Text("•")
-                    .font(headerFont)
-                  Text(summary.originalDate?.distanceFromNow() ?? "")
-                    .font(headerFont)
-                  Spacer()
-                }
-                .multilineTextAlignment(.leading)
+                HEADER
                 TITLE
               }
               .multilineTextAlignment(.leading)
-              VStack {
-                if let image = summary.image ?? image {
-                  image
-                    .resizable()
-                    .frame(width: imageHeight, height: imageHeight)
-                    .aspectRatio(contentMode: .fit)
-                } else {
-                  Text("Loading Image...")
-                    .font(headerFont)
-                    .frame(width: imageHeight, height: imageHeight)
-                    .onAppear {
-                      if let url = summary.primaryImageUrl {
-                        Image.load(from: url) { image in DispatchQueue.main.async { self.image = image } }
-                      }
-                    }
-                }
-              }
+              IMAGE
               .cornerRadius(8.0)
             }
             .frame(maxWidth: .infinity)

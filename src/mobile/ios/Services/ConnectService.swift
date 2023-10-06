@@ -14,7 +14,8 @@ struct Endpoints {
 }
 
 func parseQuery(_ filter: String?) -> URL? {
-  guard let filter = filter else { return URL(string: Endpoints.GetSummaries) }
+  guard let filter = filter?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) 
+    else { return URL(string: Endpoints.GetSummaries) }
   return URL(string: Endpoints.GetSummaries + "?filter=\(filter)")
 }
 

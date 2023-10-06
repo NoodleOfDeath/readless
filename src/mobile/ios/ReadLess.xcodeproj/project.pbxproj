@@ -54,7 +54,6 @@
 		0143022E29FACEDC00D40293 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
 		015A19D129EAEB1A0072EEE3 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A19D029EAEB1A0072EEE3 /* View.swift */; };
 		018173BF29EA1842006D3509 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
-		018173C129EA4529006D3509 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C029EA4529006D3509 /* SummaryCard.swift */; };
 		018173C329EA4833006D3509 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C229EA4833006D3509 /* Date.swift */; };
 		018CE3B029E98AB9005E6391 /* BulkMetadataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018CE3AF29E98AB9005E6391 /* BulkMetadataResponse.swift */; };
 		01BC567C29DCF36700C69F9A /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 01BC567B29DCF36700C69F9A /* main.jsbundle */; };
@@ -122,6 +121,9 @@
 		CDE160112ACDEF770036F0A4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE1600F2ACDEF770036F0A4 /* Image.swift */; };
 		CDE160122ACE08120036F0A4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		CDE160132ACE08130036F0A4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		CDE1AC1D2AD04CB800F0E430 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE1AC1C2AD04CB800F0E430 /* UIImage.swift */; };
+		CDE1AC1E2AD04CB800F0E430 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE1AC1C2AD04CB800F0E430 /* UIImage.swift */; };
+		CDE1AC252AD0585D00F0E430 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C029EA4529006D3509 /* SummaryCard.swift */; };
 		CDE9EB4E2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */; };
 		CDE9EB502A48A3770057217B /* Faustina-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */; };
@@ -340,6 +342,7 @@
 		CDE1600F2ACDEF770036F0A4 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		CDE1601A2ACE23950036F0A4 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		CDE160252ACE23950036F0A4 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
+		CDE1AC1C2AD04CB800F0E430 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		CDE9EB402A48A3770057217B /* Newsreader72pt-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Newsreader72pt-BoldItalic.ttf"; sourceTree = "<group>"; };
 		CDE9EB412A48A3770057217B /* Faustina-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Faustina-Italic.ttf"; sourceTree = "<group>"; };
 		CDE9EB422A48A3770057217B /* AnekLatin-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekLatin-Regular.ttf"; sourceTree = "<group>"; };
@@ -521,6 +524,7 @@
 				018173C229EA4833006D3509 /* Date.swift */,
 				015A19D029EAEB1A0072EEE3 /* View.swift */,
 				CDE1600F2ACDEF770036F0A4 /* Image.swift */,
+				CDE1AC1C2AD04CB800F0E430 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1257,7 +1261,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				018173C129EA4529006D3509 /* SummaryCard.swift in Sources */,
 				010F0CE629E88D470064DD97 /* ContentView.swift in Sources */,
 				018173BF29EA1842006D3509 /* PressActions.swift in Sources */,
 				018173C329EA4833006D3509 /* Date.swift in Sources */,
@@ -1268,8 +1271,10 @@
 				010F0D8129E89D770064DD97 /* Color.swift in Sources */,
 				010F0CE429E88D470064DD97 /* ReadLessWatchApp.swift in Sources */,
 				010F0D5629E88EC40064DD97 /* PublicSummaryAttributes.swift in Sources */,
+				CDE1AC252AD0585D00F0E430 /* SummaryCard.swift in Sources */,
 				015A19D129EAEB1A0072EEE3 /* View.swift in Sources */,
 				010F0D5229E88EC40064DD97 /* PublicCategoryAttributes.swift in Sources */,
+				CDE1AC1D2AD04CB800F0E430 /* UIImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1314,6 +1319,7 @@
 				CDE1600C2ACC90DE0036F0A4 /* CustomConfigurationAppIntent.swift in Sources */,
 				CDE15FCD2ACB498E0036F0A4 /* BulkMetadataResponse.swift in Sources */,
 				CDE160092ACC8CDB0036F0A4 /* Intents.intentdefinition in Sources */,
+				CDE1AC1E2AD04CB800F0E430 /* UIImage.swift in Sources */,
 				CDE15FCF2ACB49920036F0A4 /* Color.swift in Sources */,
 				CDE15FBD2ACB497E0036F0A4 /* ReadLessWidgetBundle.swift in Sources */,
 				CDE15FD22ACB49920036F0A4 /* Date.swift in Sources */,
@@ -1495,7 +1501,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -1541,7 +1547,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.readless.ios.watchkitapp;
