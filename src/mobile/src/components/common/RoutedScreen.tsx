@@ -5,7 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { Screen, ScreenProps } from '~/components';
 import { SessionContext } from '~/contexts';
-import { useNavigation, useTheme } from '~/hooks';
+import { useNavigation } from '~/hooks';
 
 export function RoutedScreen({ ...props }: ScreenProps) {
 

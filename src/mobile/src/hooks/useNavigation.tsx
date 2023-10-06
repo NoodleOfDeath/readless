@@ -20,13 +20,13 @@ export function useNavigation() {
   
   const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
 
-  const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R], navigator?: NativeStackNavigationProp<RoutingParams>) => {
+  const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R], navigator?: any) => {
     emitEvent('navigate', route);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (navigator?.push ?? (navigation as any).push ?? navigation.navigate)(route, params as RoutingParams[R]);
   }, [emitEvent, navigation]);
 
-  const search = React.useCallback((params: RoutingParams['search'], navigator?: NativeStackNavigationProp<RoutingParams>) => {
+  const search = React.useCallback((params: RoutingParams['search'], navigator?: any) => {
     const prefilter = params.prefilter;
     if (!prefilter) {
       return;
@@ -35,7 +35,7 @@ export function useNavigation() {
     navigate('search', params, navigator);
   }, [navigate, setPreference]);
   
-  const openSummary = React.useCallback((props: RoutingParams['summary'], navigator?: NativeStackNavigationProp<RoutingParams>) => {
+  const openSummary = React.useCallback((props: RoutingParams['summary'], navigator?: any) => {
     navigate('summary', {
       ...props,
       initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets,
@@ -50,7 +50,7 @@ export function useNavigation() {
     navigate('category', { category });
   }, [navigate]);
 
-  const router = React.useCallback(({ url, navigator }: { url: string, navigator?: NativeStackNavigationProp<RoutingParams> }) => {
+  const router = React.useCallback(({ url, navigator }: { url: string, navigator?: any }) => {
     // http://localhost:6969/read/?s=158&f=casual
     // https://dev.readless.ai/read/?s=158&f=casual
     // https://www.readless.ai/read/?s=4070&f=bullets
@@ -79,8 +79,22 @@ export function useNavigation() {
         return;
       }
       search({ prefilter: filter }, navigator);
-    }
-  }, [search, openSummary]);
+    } else
+    if (route === 'publisher') {
+      const publisher = params['publisher']?.trim();
+      if (!publisher) {
+        return;
+      }
+      openPublisher({ name: publisher });
+    } else
+    if (route === 'category') {
+      const category = params['category']?.trim();
+      if (!category) {
+        return;
+      }
+      openCategory({ name: category });
+    } 
+  }, [navigation, search, openSummary, openPublisher, openCategory]);
   
   return {
     navigate,
