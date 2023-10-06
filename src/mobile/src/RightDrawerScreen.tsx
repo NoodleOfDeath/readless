@@ -1,5 +1,4 @@
 import React from 'react';
-import { Linking } from 'react-native';
 
 import {
   DrawerContentComponentProps,
@@ -62,24 +61,6 @@ function RightDrawerContent(props: DrawerContentComponentProps) {
 const RightDrawer = createDrawerNavigator();
 
 export function RightDrawerScreen() {
-  
-  const { router } = useNavigation();
-  
-  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
-
-  React.useEffect(() => {
-    const subscriber = Linking.addEventListener('url', router);
-    if (!loadedInitialUrl) {
-      Linking.getInitialURL().then((url) => {
-        if (url) {
-          router({ url } );
-          setLoadedInitialUrl(true);
-        }
-      });
-    }
-    return () => subscriber.remove();
-  }, [router, loadedInitialUrl]);
-
   return (
     <RightDrawer.Navigator 
       id="RightDrawer"

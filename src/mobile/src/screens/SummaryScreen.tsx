@@ -11,7 +11,7 @@ import {
 import {
   ActivityIndicator,
   FlatList,
-  Screen,
+  RoutedScreen,
   Summary,
   Text,
   View,
@@ -106,7 +106,7 @@ export function SummaryScreen({
   }, [summary, format, navigation]));
 
   return (
-    <Screen>
+    <RoutedScreen>
       {loading ? (
         <View flexGrow={ 1 } itemsCenter justifyCenter>
           <ActivityIndicator size="large" />
@@ -147,6 +147,6 @@ export function SummaryScreen({
           ListFooterComponentStyle={ { paddingBottom: 64 } }
           estimatedItemSize={ 114 } />
       ))}
-    </Screen>
+    </RoutedScreen>
   );
 }

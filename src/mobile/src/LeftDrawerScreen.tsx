@@ -14,7 +14,7 @@ import {
   DrawerItem,
   DrawerSection,
   Icon,
-  Screen,
+  RoutedScreen,
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
@@ -23,9 +23,9 @@ import { strings } from '~/locales';
 
 function HomeDrawer() {
   return (
-    <Screen>
-      <StackNavigation />
-    </Screen>
+    <RoutedScreen>
+      <StackNavigation /> 
+    </RoutedScreen>
   );
 }
 

@@ -10,10 +10,18 @@ import AppIntents
 import Intents
 import SwiftUI
 
+let DEFAULT_TIMELINE_INTERVAL = 10 * 60
+
+struct CustomWidgetConfiguration {
+  var topStories: Bool?
+  let topic: String?
+  let updateInterval: Measurement<UnitDuration>?
+}
+
 struct SummaryEntry: TimelineEntry {
   var date: Date = .now
   var context: TimelineProviderContext?
-  var topic: String? = "Technology"
+  var topic: String?
   var summaries: [Summary] = []
 }
 
@@ -30,6 +38,35 @@ var WidgetPlaceholders: Dictionary<WidgetFamily, [Summary]> = [
   .systemLarge: [MOCK_SUMMARY_1, MOCK_SUMMARY_2, MOCK_SUMMARY_3, MOCK_SUMMARY_4],
   .systemExtraLarge: [MOCK_SUMMARY_1, MOCK_SUMMARY_2, MOCK_SUMMARY_3, MOCK_SUMMARY_4],
 ]
+
+func buildEntries(in context: TimelineProviderContext,
+                  for configuration: CustomWidgetConfiguration) async -> [SummaryEntry] {
+  let summaries = Array(await ConnectService().fetchAsync(filter: configuration.topic).reversed())
+  let pageSize = WidgetPageSize[context.family] ?? 2
+  var entries: [SummaryEntry] = []
+  for i in stride(from: 0, to: summaries.count, by: pageSize) {
+    let first = summaries[i]
+    if context.family != .systemSmall {
+      await first.loadImagesAsync()
+    }
+    var subset = [first]
+    for j in 1 ..< pageSize {
+      if let next = i + j < summaries.count ? summaries[i + j] : nil {
+        if context.family != .systemSmall {
+          await next.loadImagesAsync()
+        }
+        subset.insert(next, at: 0)
+      }
+    }
+    let fireDate = Date.now
+    let entry = SummaryEntry(date: fireDate,
+                             context: context,
+                             topic: configuration.topic,
+                             summaries: subset)
+    entries.append(entry)
+  }
+  return entries
+}
 
 @available(iOS 17.0, *)
 struct TopicDetail: AppEntity {
@@ -70,7 +107,7 @@ struct TopicQuery: EntityQuery {
 struct AppIntentProvider: AppIntentTimelineProvider {
   
   typealias Entry = SummaryEntry
-  typealias Intent = CustomConfigurationAppIntent
+  typealias Intent = WidgetTopicConfiguration
   
   func placeholder(in context: Context) -> SummaryEntry {
     return SummaryEntry(context: context,
@@ -78,47 +115,28 @@ struct AppIntentProvider: AppIntentTimelineProvider {
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
   
-  func snapshot(for configuration: CustomConfigurationAppIntent, 
+  func snapshot(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> SummaryEntry {
     SummaryEntry(context: context,
                  topic: configuration.topic)
   }
   
-  func timeline(for configuration: CustomConfigurationAppIntent,
+  func timeline(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> Timeline<SummaryEntry> {
-    let summaries = Array(await ConnectService().fetchAsync(filter: configuration.topic).reversed())
-    let pageSize = WidgetPageSize[context.family] ?? 2
-    var entries: [SummaryEntry] = []
-    for i in stride(from: 0, to: summaries.count, by: pageSize) {
-      let first = summaries[i]
-      if context.family != .systemSmall {
-        await first.loadImagesAsync()
-      }
-      var subset = [first]
-      for j in 1 ..< pageSize {
-        if let next = i + j < summaries.count ? summaries[i + j] : nil {
-          if context.family != .systemSmall {
-            await next.loadImagesAsync()
-          }
-          subset.insert(next, at: 0)
-        }
-      }
-      let entry = SummaryEntry(context: context,
-                               topic: configuration.topic,
-                               summaries: subset)
-      entries.append(entry)
-    }
+    let config = CustomWidgetConfiguration(topStories: configuration.topStories,
+                                           topic: configuration.topic,
+                                           updateInterval: configuration.updateInterval)
+    let entries = await buildEntries(in: context, for: config)
     let timeline = Timeline(entries: entries, policy: .atEnd)
     return timeline
   }
-  
   
 }
 
 struct Provider: IntentTimelineProvider {
   
   func placeholder(in context: Context) -> SummaryEntry {
-    return SummaryEntry(context: context, 
+    return SummaryEntry(context: context,
                         topic: "technology",
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
@@ -126,7 +144,7 @@ struct Provider: IntentTimelineProvider {
   func getSnapshot(for configuration: IWidgetTopicConfigurationIntent,
                    in context: Context,
                    completion: @escaping (SummaryEntry) -> ()) {
-    let entry = SummaryEntry(context: context, 
+    let entry = SummaryEntry(context: context,
                              topic: configuration.topic)
     completion(entry)
   }
@@ -134,41 +152,26 @@ struct Provider: IntentTimelineProvider {
   func getTimeline(for configuration: IWidgetTopicConfigurationIntent,
                    in context: Context,
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
-    let pageSize = WidgetPageSize[context.family] ?? 2
-    ConnectService().fetchSync(filter: configuration.topic) { s in
-      let summaries = Array(s.reversed())
-      Task {
-        var entries: [SummaryEntry] = []
-        for i in stride(from: 0, to: summaries.count, by: pageSize) {
-          let first = summaries[i]
-          if context.family != .systemSmall {
-            await first.loadImagesAsync()
-          }
-          var subset = [first]
-          for j in 1 ..< pageSize {
-            if let next = i + j < summaries.count ? summaries[i + j] : nil {
-              if context.family != .systemSmall {
-                await next.loadImagesAsync()
-              }
-              subset.insert(next, at: 0)
-            }
-          }
-          let entry = SummaryEntry(context: context,
-                                   topic: configuration.topic,
-                                   summaries: subset)
-          entries.append(entry)
-        }
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
-      }
+    Task {
+      let config = CustomWidgetConfiguration(topStories: configuration.topStories?.boolValue ?? false,
+                                             topic: configuration.topic,
+                                             updateInterval: nil)
+      let entries = await buildEntries(in: context, for: config)
+      let timeline = Timeline(entries: entries, policy: .atEnd)
+      completion(timeline)
     }
   }
+  
 }
 
 struct ReadLessWidgetEntryView : View {
   var entry: Provider.Entry
   
   let iconSize = 20.0
+  
+  var deeplink: URL {
+    return URL(string: "https://readless.ai/search?filter=\(entry.topic ?? "")")!
+  }
   
   var body: some View {
     VStack(spacing: 8.0) {
@@ -192,11 +195,12 @@ struct ReadLessWidgetEntryView : View {
         Text("No results found")
       } else {
         ForEach(entry.summaries, id: \.id) {
-          SummaryCard(summary: $0, 
+          SummaryCard(summary: $0,
                       style: entry.context?.family == .systemSmall ? .small : .medium)
         }
       }
     }
+    .widgetURL(deeplink)
   }
 }
 
@@ -205,26 +209,26 @@ struct ReadLessWidget: Widget {
   
   var body: some WidgetConfiguration {
     if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
-      return AppIntentConfiguration(kind: kind,
-                                    intent: CustomConfigurationAppIntent.self,
+      return  AppIntentConfiguration(kind: kind,
+                                    intent: WidgetTopicConfiguration.self,
                                     provider: AppIntentProvider()) {
         ReadLessWidgetEntryView(entry: $0)
           .containerBackground(.fill.tertiary, for: .widget)
       }
-      .configurationDisplayName("Topic")
-      .description("Choose a topic")
-      .supportedFamilies([.systemMedium])
+                                    .configurationDisplayName("Topic")
+                                    .description("Choose a topic")
+                                    .supportedFamilies([.systemMedium])
     } else {
-      return IntentConfiguration(kind: kind, 
+      return IntentConfiguration(kind: kind,
                                  intent: IWidgetTopicConfigurationIntent.self,
                                  provider: Provider()) {
         ReadLessWidgetEntryView(entry: $0)
           .padding()
           .background()
       }
-      .configurationDisplayName("Topic")
-      .description("Choose a topic")
-      .supportedFamilies([.systemMedium])
+                                 .configurationDisplayName("Topic")
+                                 .description("Choose a topic")
+                                 .supportedFamilies([.systemMedium])
     }
   }
 }
@@ -253,3 +257,6 @@ struct ReadLessWidget: Widget {
   SummaryEntry(topic: "Sports", summaries: WidgetPlaceholders[.systemLarge] ?? [])
   SummaryEntry(topic: "Politics", summaries: WidgetPlaceholders[.systemLarge] ?? [])
 }
+
+
+

@@ -40,6 +40,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [lastRequestForReview, setLastRequestForReview] = React.useState(0);
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
+  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
   
   // user state
   const [uuid, setUuid] = React.useState<string>();
@@ -165,6 +166,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       break;
     case 'lastRequestForReview':
       setLastRequestForReview(newValue);
+      break;
+    case 'loadedInitialUrl':
+      setLoadedInitialUrl(newValue);
       break;
       
     // user state
@@ -540,6 +544,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setPushNotificationsEnabled(await getPreference('pushNotificationsEnabled'));
     setPushNotifications(await getPreference('pushNotifications'));
     setFcmToken(await getPreference('fcmToken'));
+    setLoadedInitialUrl(false);
     
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
@@ -567,7 +572,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setFontSizeOffset(await getPreference('fontSizeOffset'));
     setLetterSpacing(await getPreference('letterSpacing'));
     setLineHeightMultiplier(await getPreference('lineHeightMultiplier'));
-    
+  
     // summary preferences
     setCompactSummaries(await getPreference('compactSummaries') ?? await getPreference('compactMode'));
     setShowShortSummary(await getPreference('showShortSummary'));
@@ -629,6 +634,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         latestVersion,
         letterSpacing,
         lineHeightMultiplier,
+        loadedInitialUrl,
         preferredReadingFormat,
         preferredShortPressFormat,
         publisherIsFavorited,

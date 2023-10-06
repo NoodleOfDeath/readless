@@ -30,7 +30,7 @@
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
 			<key>INIntentLastParameterTag</key>
-			<integer>8</integer>
+			<integer>16</integer>
 			<key>INIntentName</key>
 			<string>WidgetTopicConfiguration</string>
 			<key>INIntentParameters</key>
@@ -39,15 +39,57 @@
 					<key>INIntentParameterConfigurable</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Topic</string>
+					<string>Top Stories</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>Q88ETS</string>
+					<string>INvacD</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>1</integer>
 					<key>INIntentParameterMetadata</key>
 					<dict>
+						<key>INIntentParameterMetadataFalseDisplayName</key>
+						<string>false</string>
+						<key>INIntentParameterMetadataFalseDisplayNameID</key>
+						<string>24uiMi</string>
+						<key>INIntentParameterMetadataTrueDisplayName</key>
+						<string>true</string>
+						<key>INIntentParameterMetadataTrueDisplayNameID</key>
+						<string>kUvWEd</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>topStories</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterTag</key>
+					<integer>16</integer>
+					<key>INIntentParameterType</key>
+					<string>Boolean</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Topic</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>Q88ETS</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
 						<key>INIntentParameterMetadataCapitalization</key>
-						<string>None</string>
+						<string>Words</string>
 						<key>INIntentParameterMetadataDefaultValue</key>
 						<string>Technology</string>
 						<key>INIntentParameterMetadataDefaultValueID</key>
@@ -80,10 +122,65 @@
 							<string>Primary</string>
 						</dict>
 					</array>
+					<key>INIntentParameterRelationship</key>
+					<dict>
+						<key>INIntentParameterRelationshipParentName</key>
+						<string>topStories</string>
+						<key>INIntentParameterRelationshipPredicateName</key>
+						<string>BooleanHasExactValue</string>
+					</dict>
 					<key>INIntentParameterTag</key>
 					<integer>5</integer>
 					<key>INIntentParameterType</key>
 					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Update Interval</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>AnaQy4</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultUnit</key>
+						<string>Seconds</string>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<real>10</real>
+						<key>INIntentParameterMetadataMaximumUnit</key>
+						<string>Days</string>
+						<key>INIntentParameterMetadataMaximumValue</key>
+						<real>360</real>
+						<key>INIntentParameterMetadataMinimumUnit</key>
+						<string>Seconds</string>
+						<key>INIntentParameterMetadataMinimumValue</key>
+						<real>1</real>
+						<key>INIntentParameterMetadataUnit</key>
+						<string>Minutes</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>updateInterval</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterTag</key>
+					<integer>12</integer>
+					<key>INIntentParameterType</key>
+					<string>TimeInterval</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>

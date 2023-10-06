@@ -117,6 +117,7 @@ export type Preferences = {
   viewedFeatures?: { [key: string]: Bookmark<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
+  loadedInitialUrl?: boolean;
   
   // user state
   uuid?: string;
@@ -189,6 +190,7 @@ export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number
   lastRequestForReview: 'number',
   letterSpacing: 'number',
   lineHeightMultiplier: 'number',
+  loadedInitialUrl: 'boolean',
   preferredReadingFormat: 'string',
   preferredShortPressFormat: 'string',
   pushNotifications: 'object',
