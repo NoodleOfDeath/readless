@@ -35,7 +35,7 @@
 		0125BD5229D791ED00EAC61C /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3229D791EC00EAC61C /* EvilIcons.ttf */; };
 		0125BD5829D791ED00EAC61C /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */; };
 		0125BD5929D791ED00EAC61C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */; };
-		013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* ConnectService.swift */; };
+		013F32C329E8BA2E00CE8555 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* APIClient.swift */; };
 		0143021C29FACEDC00D40293 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2C29D791EC00EAC61C /* FontAwesome5_Regular.ttf */; };
 		0143021D29FACEDC00D40293 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD3129D791EC00EAC61C /* Zocial.ttf */; };
 		0143021E29FACEDC00D40293 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2B29D791EC00EAC61C /* FontAwesome5_Solid.ttf */; };
@@ -85,7 +85,7 @@
 		CDE15FD02ACB49920036F0A4 /* PressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173BE29EA1842006D3509 /* PressActions.swift */; };
 		CDE15FD12ACB49920036F0A4 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A19D029EAEB1A0072EEE3 /* View.swift */; };
 		CDE15FD22ACB49920036F0A4 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C229EA4833006D3509 /* Date.swift */; };
-		CDE15FD32ACB49950036F0A4 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* ConnectService.swift */; };
+		CDE15FD32ACB49950036F0A4 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F32C229E8BA2D00CE8555 /* APIClient.swift */; };
 		CDE15FD42ACB49970036F0A4 /* SummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018173C029EA4529006D3509 /* SummaryCard.swift */; };
 		CDE15FD52ACB499E0036F0A4 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2F29D791EC00EAC61C /* FontAwesome.ttf */; };
 		CDE15FD62ACB499E0036F0A4 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0125BD2A29D791EC00EAC61C /* Ionicons.ttf */; };
@@ -262,7 +262,7 @@
 		0125BD3229D791EC00EAC61C /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		0125BD3829D791EC00EAC61C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		0125BD3929D791EC00EAC61C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
-		013F32C229E8BA2D00CE8555 /* ConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectService.swift; sourceTree = "<group>"; };
+		013F32C229E8BA2D00CE8555 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		0150ACA429F9577400875CF7 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0150ACA629F9577400875CF7 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		015A19D029EAEB1A0072EEE3 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
@@ -533,7 +533,7 @@
 		0150ACC229F957E400875CF7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				013F32C229E8BA2D00CE8555 /* ConnectService.swift */,
+				013F32C229E8BA2D00CE8555 /* APIClient.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1265,7 +1265,7 @@
 				010F0CE629E88D470064DD97 /* ContentView.swift in Sources */,
 				018173BF29EA1842006D3509 /* PressActions.swift in Sources */,
 				018173C329EA4833006D3509 /* Date.swift in Sources */,
-				013F32C329E8BA2E00CE8555 /* ConnectService.swift in Sources */,
+				013F32C329E8BA2E00CE8555 /* APIClient.swift in Sources */,
 				CDE11B212A786FF500C0BC39 /* PublicPublisherAttributes.swift in Sources */,
 				CDE160102ACDEF770036F0A4 /* Image.swift in Sources */,
 				018CE3B029E98AB9005E6391 /* BulkMetadataResponse.swift in Sources */,
@@ -1313,7 +1313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDE15FC12ACB497E0036F0A4 /* ReadLessWidget.swift in Sources */,
-				CDE15FD32ACB49950036F0A4 /* ConnectService.swift in Sources */,
+				CDE15FD32ACB49950036F0A4 /* APIClient.swift in Sources */,
 				CDE15FD12ACB49920036F0A4 /* View.swift in Sources */,
 				CDE15FCC2ACB498E0036F0A4 /* PublicSummaryAttributes.swift in Sources */,
 				CDE160112ACDEF770036F0A4 /* Image.swift in Sources */,

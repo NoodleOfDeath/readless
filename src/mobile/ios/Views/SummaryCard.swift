@@ -16,6 +16,7 @@ struct SummaryCard: View {
   var summary: Summary?
   let style: SummaryCardStyle
   var expanded: Bool = false
+  var deeplink: Bool = false
   
   @State var image: Image? = nil
   @State var publisherIcon: Image? = nil
@@ -43,7 +44,7 @@ struct SummaryCard: View {
   }
   
   var imageHeight: CGFloat {
-    return style == .small ? 170 : 55.0
+    return style == .small ? 170.0 : 55.0
   }
   
   var HEADER: some View {
@@ -55,7 +56,7 @@ struct SummaryCard: View {
             .frame(width: headerHeight, height: headerHeight)
             .aspectRatio(contentMode: .fit)
         } else {
-          Text((summary.publisher.displayName as NSString).substring(to: 1).uppercased())
+          Text("")
             .frame(width: headerHeight, height: headerHeight)
             .onAppear {
               Image.load(from: summary.publisher.icon) { image in DispatchQueue.main.async { self.publisherIcon = image } }
@@ -121,48 +122,58 @@ struct SummaryCard: View {
       }
     }
   }
+  
+  var CONTENT: some View {
+    VStack {
+      if style == .small  {
+        if !expanded {
+          IMAGE
+            .overlay {
+              VStack {
+                Spacer()
+                VStack {
+                  HEADER
+                  TITLE
+                }
+                .padding(4.0)
+                .cornerRadius(8.0)
+                .background(backdrop)
+              }
+            }
+            .padding(4.0)
+        } else {
+          VStack(spacing: 8.0) {
+            HEADER
+            TITLE
+            IMAGE
+            DESCRIPTION
+          }
+        }
+      } else
+      if style == .medium {
+        HStack {
+          VStack(spacing: 4.0) {
+            HEADER
+            TITLE
+          }
+          .multilineTextAlignment(.leading)
+          IMAGE
+            .cornerRadius(8.0)
+        }
+        .frame(maxWidth: .infinity)
+      }
+    }
+  }
 
   var body: some View {
     if let summary = summary {
-      Link(destination: summary.deeplink, label: {
-        if style == .small  {
-          if !expanded {
-            IMAGE
-              .overlay {
-                VStack {
-                  Spacer()
-                  VStack {
-                    HEADER
-                    TITLE
-                  }
-                  .background(backdrop)
-                  .padding(4.0)
-                  .cornerRadius(8.0)
-                }
-              }
-              .padding(4.0)
-          } else {
-            VStack(spacing: 8.0) {
-              HEADER
-              TITLE
-              IMAGE
-              DESCRIPTION
-            }
-          }
-        } else
-        if style == .medium {
-            HStack {
-              VStack(spacing: 4.0) {
-                HEADER
-                TITLE
-              }
-              .multilineTextAlignment(.leading)
-              IMAGE
-              .cornerRadius(8.0)
-            }
-            .frame(maxWidth: .infinity)
-        }
-      })
+      if deeplink == true {
+        Link(destination: summary.deeplink, label: {
+          CONTENT
+        })
+      } else {
+        CONTENT
+      }
     } else {
       if style == .small {
         

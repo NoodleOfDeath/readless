@@ -169,9 +169,7 @@ export default function NavigationController() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          <Screen safeArea={ false }>
-            <RightDrawerScreen />
-          </Screen>
+          <RightDrawerScreen />
           <MediaPlayer visible={ Boolean(currentTrack) } />
         </SheetProvider>
       </PaperProvider>

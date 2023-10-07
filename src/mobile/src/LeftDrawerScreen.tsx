@@ -23,7 +23,7 @@ import { strings } from '~/locales';
 
 function HomeDrawer() {
   return (
-    <RoutedScreen>
+    <RoutedScreen safeArea={ false }>
       <StackNavigation /> 
     </RoutedScreen>
   );

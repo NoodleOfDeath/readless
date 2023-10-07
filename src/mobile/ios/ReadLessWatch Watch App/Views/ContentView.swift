@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-  @ObservedObject private var service: ConnectService = ConnectService()
-  
   @Environment(\.colorScheme) private var colorScheme
+  @ObservedObject private var service = APIClient()
+  
   @State var selectedSummary: PublicSummaryAttributes?
 
   var background: Color {

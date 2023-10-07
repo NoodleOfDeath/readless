@@ -17,10 +17,10 @@ struct Endpoints {
 func parseQuery(endpoint: String = Endpoints.GetSummaries, filter: String?) -> URL? {
   guard let filter = filter?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     else { return URL(string: endpoint) }
-  return URL(string: Endpoints.GetSummaries + "?filter=\(filter)")
+  return URL(string: endpoint + "?filter=\(filter)")
 }
 
-class ConnectService: ObservableObject {
+class APIClient: ObservableObject {
   @Published var summaries = [Summary]()
   @Published var loading = false
   @Published var error: String?

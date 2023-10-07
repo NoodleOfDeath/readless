@@ -73,6 +73,9 @@ export function useNavigation() {
       const initialFormat = readingFormat(params['f']);
       openSummary({ initialFormat, summary }, navigator);
     } else
+    if (route === 'top') {
+      navigate('topStories');
+    } else
     if (route === 'search') {
       const filter = params['filter']?.trim();
       if (!filter) {
@@ -94,7 +97,7 @@ export function useNavigation() {
       }
       openCategory({ name: category });
     } 
-  }, [navigation, search, openSummary, openPublisher, openCategory]);
+  }, [navigate, navigation, search, openSummary, openPublisher, openCategory]);
   
   return {
     navigate,
