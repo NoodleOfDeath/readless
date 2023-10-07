@@ -18,7 +18,7 @@ struct WidgetTopicConfiguration: AppIntent, WidgetConfigurationIntent, CustomInt
   @Parameter(title: "Top Stories")
   var topStories: Bool?
   
-  @Parameter(title: "Topic", default: "Technology")
+  @Parameter(title: "Topic", default: "")
   var topic: String?
   
   @Parameter(title: "Update Interval", defaultValue: 10, defaultUnit: .minutes)

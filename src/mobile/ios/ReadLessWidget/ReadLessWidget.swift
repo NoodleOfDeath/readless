@@ -173,8 +173,11 @@ struct AppIntentProvider: AppIntentTimelineProvider {
 }
 
 struct ReadLessWidgetEntryView : View {
-  var entry: Provider.Entry
   
+  @Environment(\.colorScheme) private var colorScheme
+  
+  var entry: Provider.Entry
+    
   let iconSize = 20.0
   
   var deeplink: URL {
@@ -190,15 +193,24 @@ struct ReadLessWidgetEntryView : View {
   var body: some View {
     VStack(spacing: 8.0) {
       HStack {
-        Text(entry.config?.topStories == true ? "Top Stories" : entry.config?.topic ?? "Topic")
+        Text(entry.config?.topStories == true ? "Top Stories" : entry.config?.topic == "" ? "Live Feed" : entry.config?.topic ?? "Topic")
+          .textCase(.uppercase)
           .font(.subheadline)
           .bold()
           .padding(0)
         Spacer()
-        Image("LogoCompact")
-          .resizable()
-          .frame(width: iconSize * 1.25, height: iconSize)
-          .aspectRatio(contentMode: .fit)
+        if colorScheme == .light {
+          Image("LogoCompact")
+            .resizable()
+            .scaleToFit()
+            .frame(width: iconSize, height: iconSize)
+        } else {
+          Image("LogoCompact")
+            .resizable()
+            .colorInvert()
+            .scaleToFit()
+            .frame(width: iconSize, height: iconSize)
+        }
       }
       if (entry.config?.topic == nil) {
         ForEach(0 ..< 2) { _ in

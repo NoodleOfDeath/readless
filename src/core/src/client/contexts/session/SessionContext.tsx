@@ -18,6 +18,7 @@ import {
   ReadingFormat,
   RecapAttributes,
 } from '~/api';
+import { getLocale, Locale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
 
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
@@ -52,6 +53,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
+  const [locale, setLocale] = React.useState<Locale>();
   const [summaryTranslations, setSummaryTranslations] = React.useState<{ [key: number]: { [key in keyof PublicSummaryGroup]?: string } }>();
   
   // bookmark state
@@ -544,13 +546,14 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     setPushNotificationsEnabled(await getPreference('pushNotificationsEnabled'));
     setPushNotifications(await getPreference('pushNotifications'));
     setFcmToken(await getPreference('fcmToken'));
-    setLoadedInitialUrl(false);
     
     // summary state
     setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
     setReadSummaries(await getPreference('readSummaries'));
     setRemovedSummaries(await getPreference('removedSummaries'));
-    setSummaryTranslations(await getPreference('summaryTranslations'));
+    const locale = await getPreference('locale');
+    setLocale(locale);
+    setSummaryTranslations(locale !== getLocale() ? {} : await getPreference('summaryTranslations'));
     
     // recap state
     setReadRecaps(await getPreference('readRecaps'));
