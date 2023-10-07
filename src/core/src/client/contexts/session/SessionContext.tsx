@@ -18,7 +18,7 @@ import {
   ReadingFormat,
   RecapAttributes,
 } from '~/api';
-import { getLocale, Locale } from '~/locales';
+import { Locale, getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
 
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
