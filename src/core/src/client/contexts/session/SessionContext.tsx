@@ -557,7 +557,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     
     // recap state
     setReadRecaps(await getPreference('readRecaps'));
-    setRecapTranslations(await getPreference('recapTranslations'));
+    setRecapTranslations(locale !== getLocale() ? {} : await getPreference('recapTranslations'));
     
     // publisher states
     setFollowedPublishers(await getPreference('followedPublishers'));
