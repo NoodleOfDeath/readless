@@ -66,8 +66,8 @@
 		7699B88040F8A987B510C191 /* libPods-ReadLess-ReadLessTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */; };
 		CD4BF5A52AD074F7006BDC35 /* WidgetTopicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */; };
 		CD4BF5A62AD0797C006BDC35 /* WidgetTopicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */; };
-		CD4BF5A72AD07B82006BDC35 /* ReadLessWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE15FC02ACB497E0036F0A4 /* ReadLessWidget.swift */; };
 		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
+		CD92BEB22AD093940096D6DA /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CDE160082ACC8CDB0036F0A4 /* Intents.intentdefinition */; };
 		CDE11B1F2A7701BE00C0BC39 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */; };
 		CDE11B212A786FF500C0BC39 /* PublicPublisherAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */; };
 		CDE15EEA2ACB27A00036F0A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDE15EEB2ACB27A00036F0A4 /* LaunchScreen.storyboard */; };
@@ -812,7 +812,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				CLASSPREFIX = I;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -1303,8 +1303,8 @@
 				CD4BF5A62AD0797C006BDC35 /* WidgetTopicConfiguration.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				CD92BEB22AD093940096D6DA /* Intents.intentdefinition in Sources */,
 				5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */,
-				CD4BF5A72AD07B82006BDC35 /* ReadLessWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,12 +10,13 @@ import SwiftUI
 struct Endpoints {
   static let Root = "https://api.readless.ai/v1"
   static let GetSummaries = "\(Root)/summary"
+  static let GetTopStories = "\(Root)/summary/top"
   static let GetCategories = "\(Root)/category"
 }
 
-func parseQuery(_ filter: String?) -> URL? {
-  guard let filter = filter?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) 
-    else { return URL(string: Endpoints.GetSummaries) }
+func parseQuery(endpoint: String = Endpoints.GetSummaries, filter: String?) -> URL? {
+  guard let filter = filter?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+    else { return URL(string: endpoint) }
   return URL(string: Endpoints.GetSummaries + "?filter=\(filter)")
 }
 
@@ -51,7 +52,7 @@ class ConnectService: ObservableObject {
   func fetchHandler(_ data: Data?) -> [Summary] {
     if let data = data {
       do {
-        let decodedResponse = try decoder.decode(BulkMetadataResponse<PublicSummaryAttributes, SentimentMetadata>.self, from: data)
+        let decodedResponse = try decoder.decode(BulkResponse<PublicSummaryAttributes>.self, from: data)
         self.summaries = decodedResponse.rows.map { Summary($0) }
       } catch {
         print(error)
@@ -66,8 +67,8 @@ class ConnectService: ObservableObject {
     return self.fetchSync(nil)
   }
   
-  @Sendable func fetchSync(filter: String? = "", _ callback: ((_ summaries: [Summary]) -> ())?) {
-    guard let url = parseQuery(filter) else {
+  @Sendable func fetchSync(endpoint: String = Endpoints.GetSummaries, filter: String? = "", _ callback: ((_ summaries: [Summary]) -> ())?) {
+    guard let url = parseQuery(endpoint: endpoint, filter: filter) else {
       return
     }
     loading = true
@@ -81,8 +82,8 @@ class ConnectService: ObservableObject {
     }.resume()
   }
   
-  @Sendable func fetchAsync(filter: String? = "") async -> [Summary] {
-    guard let url = parseQuery(filter) else {
+  @Sendable func fetchAsync(endpoint: String = Endpoints.GetSummaries, filter: String? = "") async -> [Summary] {
+    guard let url = parseQuery(endpoint: endpoint, filter: filter) else {
       return []
     }
     loading = true

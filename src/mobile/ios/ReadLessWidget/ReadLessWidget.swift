@@ -10,21 +10,25 @@ import AppIntents
 import Intents
 import SwiftUI
 
-let DEFAULT_TIMELINE_INTERVAL = 10 * 60
+let DEFAULT_TIMELINE_INTERVAL: Double = 10
 
+@available(iOS 15, *)
 struct CustomWidgetConfiguration {
   var topStories: Bool?
-  let topic: String?
-  let updateInterval: Measurement<UnitDuration>?
+  var topic: String?
+  var updateInterval: Measurement<UnitDuration>?
 }
 
+@available(iOS 15, *)
 struct SummaryEntry: TimelineEntry {
   var date: Date = .now
   var context: TimelineProviderContext?
+  var config: CustomWidgetConfiguration?
   var topic: String?
   var summaries: [Summary] = []
 }
 
+@available(iOS 15, *)
 var WidgetPageSize: Dictionary<WidgetFamily, Int> = [
   .systemSmall: 1,
   .systemMedium: 2,
@@ -32,6 +36,7 @@ var WidgetPageSize: Dictionary<WidgetFamily, Int> = [
   .systemExtraLarge: 4,
 ]
 
+@available(iOS 15, *)
 var WidgetPlaceholders: Dictionary<WidgetFamily, [Summary]> = [
   .systemSmall: [MOCK_SUMMARY_1, MOCK_SUMMARY_2, MOCK_SUMMARY_3],
   .systemMedium: [MOCK_SUMMARY_1, MOCK_SUMMARY_2],
@@ -39,9 +44,11 @@ var WidgetPlaceholders: Dictionary<WidgetFamily, [Summary]> = [
   .systemExtraLarge: [MOCK_SUMMARY_1, MOCK_SUMMARY_2, MOCK_SUMMARY_3, MOCK_SUMMARY_4],
 ]
 
+@available(iOS 15, *)
 func buildEntries(in context: TimelineProviderContext,
                   for configuration: CustomWidgetConfiguration) async -> [SummaryEntry] {
-  let summaries = Array(await ConnectService().fetchAsync(filter: configuration.topic).reversed())
+  let summaries = Array(await ConnectService().fetchAsync(endpoint: configuration.topStories == true ? Endpoints.GetTopStories : Endpoints.GetSummaries,
+                                                          filter: configuration.topStories == true ? "" : configuration.topic).reversed())
   let pageSize = WidgetPageSize[context.family] ?? 2
   var entries: [SummaryEntry] = []
   for i in stride(from: 0, to: summaries.count, by: pageSize) {
@@ -58,9 +65,11 @@ func buildEntries(in context: TimelineProviderContext,
         subset.insert(next, at: 0)
       }
     }
-    let fireDate = Date.now
+    let offset = (configuration.updateInterval?.value ?? DEFAULT_TIMELINE_INTERVAL) * 60
+    let fireDate = Date(timeIntervalSinceNow: TimeInterval(floor(Double(i) / Double(pageSize)) * offset))
     let entry = SummaryEntry(date: fireDate,
                              context: context,
+                             config: configuration,
                              topic: configuration.topic,
                              summaries: subset)
     entries.append(entry)
@@ -111,14 +120,15 @@ struct AppIntentProvider: AppIntentTimelineProvider {
   
   func placeholder(in context: Context) -> SummaryEntry {
     return SummaryEntry(context: context,
-                        topic: "technology",
+                        config: CustomWidgetConfiguration(topic: "Technology"),
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
   
   func snapshot(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> SummaryEntry {
     SummaryEntry(context: context,
-                 topic: configuration.topic)
+                 config: CustomWidgetConfiguration(topic: configuration.topic,
+                                                   updateInterval: configuration.updateInterval))
   }
   
   func timeline(for configuration: WidgetTopicConfiguration,
@@ -133,11 +143,12 @@ struct AppIntentProvider: AppIntentTimelineProvider {
   
 }
 
+@available(iOS 15, *)
 struct Provider: IntentTimelineProvider {
   
   func placeholder(in context: Context) -> SummaryEntry {
     return SummaryEntry(context: context,
-                        topic: "technology",
+                        config: CustomWidgetConfiguration(topic: "Technology"),
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
   
@@ -145,7 +156,9 @@ struct Provider: IntentTimelineProvider {
                    in context: Context,
                    completion: @escaping (SummaryEntry) -> ()) {
     let entry = SummaryEntry(context: context,
-                             topic: configuration.topic)
+                             config: CustomWidgetConfiguration(topic: configuration.topic,
+                                                               updateInterval: Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
+                                                                                                         unit: .minutes)))
     completion(entry)
   }
   
@@ -155,7 +168,8 @@ struct Provider: IntentTimelineProvider {
     Task {
       let config = CustomWidgetConfiguration(topStories: configuration.topStories?.boolValue ?? false,
                                              topic: configuration.topic,
-                                             updateInterval: nil)
+                                             updateInterval: Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
+                                                                                       unit: .minutes))
       let entries = await buildEntries(in: context, for: config)
       let timeline = Timeline(entries: entries, policy: .atEnd)
       completion(timeline)
@@ -176,7 +190,7 @@ struct ReadLessWidgetEntryView : View {
   var body: some View {
     VStack(spacing: 8.0) {
       HStack {
-        Text(entry.topic ?? "Topic")
+        Text(entry.config?.topStories == true ? "Top Stories" : entry.topic ?? "Topic")
           .font(.subheadline)
           .bold()
           .padding(0)
@@ -204,6 +218,7 @@ struct ReadLessWidgetEntryView : View {
   }
 }
 
+@available(iOS 15, *)
 struct ReadLessWidget: Widget {
   let kind: String = "ReadLessWidget"
   
@@ -232,31 +247,3 @@ struct ReadLessWidget: Widget {
     }
   }
 }
-
-#Preview(as: .systemSmall) {
-  ReadLessWidget()
-} timeline: {
-  SummaryEntry(topic: "Sports", summaries: WidgetPlaceholders[.systemSmall] ?? [])
-}
-
-#Preview(as: .systemMedium) {
-  ReadLessWidget()
-} timeline: {
-  SummaryEntry(topic: "Sports", summaries: WidgetPlaceholders[.systemMedium] ?? [])
-}
-
-#Preview(as: .systemLarge) {
-  ReadLessWidget()
-} timeline: {
-  SummaryEntry(topic: "Sports", summaries: WidgetPlaceholders[.systemLarge] ?? [])
-}
-
-#Preview(as: .systemExtraLarge) {
-  ReadLessWidget()
-} timeline: {
-  SummaryEntry(topic: "Sports", summaries: WidgetPlaceholders[.systemLarge] ?? [])
-  SummaryEntry(topic: "Politics", summaries: WidgetPlaceholders[.systemLarge] ?? [])
-}
-
-
-
