@@ -15,8 +15,8 @@ struct WidgetTopicConfiguration: AppIntent, WidgetConfigurationIntent, CustomInt
   static var title: LocalizedStringResource = "Widget Topic Configuration"
   static var description = IntentDescription("Intent for configuring the topic of a widget")
   
-  @Parameter(title: "Top Stories")
-  var topStories: Bool?
+  @Parameter(title: "Channel", default: .liveFeed)
+  var channel: Channel?
   
   @Parameter(title: "Topic", default: "")
   var topic: String?
@@ -25,28 +25,28 @@ struct WidgetTopicConfiguration: AppIntent, WidgetConfigurationIntent, CustomInt
   var updateInterval: Measurement<UnitDuration>?
   
   static var parameterSummary: some ParameterSummary {
-    When(\.$topStories, .equalTo, false) {
+    When(\.$channel, .equalTo, .customTopic) {
       Summary {
-        \.$topStories
+        \.$channel
         \.$topic
         \.$updateInterval
       }
     } otherwise: {
       Summary {
-        \.$topStories
+        \.$channel
         \.$updateInterval
       }
     }
   }
   
   static var predictionConfiguration: some IntentPredictionConfiguration {
-    IntentPrediction(parameters: (\.$topStories, \.$topic, \.$updateInterval)) { topStories, topic, updateInterval in
+    IntentPrediction(parameters: (\.$channel, \.$topic, \.$updateInterval)) { feedType, topic, updateInterval in
       DisplayRepresentation(
         title: "",
         subtitle: ""
       )
     }
-    IntentPrediction(parameters: (\.$topStories, \.$updateInterval)) { topStories, updateInterval in
+    IntentPrediction(parameters: (\.$channel, \.$updateInterval)) { feedType, updateInterval in
       DisplayRepresentation(
         title: "",
         subtitle: ""

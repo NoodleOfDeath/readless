@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Enum.swift">
+   </FileRef>
+   <FileRef
       location = "group:ReadLess.xcodeproj">
    </FileRef>
    <FileRef

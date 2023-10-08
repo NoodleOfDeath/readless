@@ -13,7 +13,7 @@ import SwiftUI
 let DEFAULT_TIMELINE_INTERVAL: Double = 10
 
 struct CustomWidgetConfiguration {
-  var topStories: Bool?
+  var channel: Channel = .liveFeed
   var topic: String?
   var updateInterval: Measurement<UnitDuration>?
 }
@@ -41,9 +41,9 @@ var WidgetPlaceholders: Dictionary<WidgetFamily, [Summary]> = [
 
 func buildEntries(in context: TimelineProviderContext,
                   for configuration: CustomWidgetConfiguration) async -> [SummaryEntry] {
-  let endpoint = configuration.topStories == true ? Endpoints.GetTopStories : Endpoints.GetSummaries
-  let filter =  configuration.topStories == true ? "" : configuration.topic
-  var summaries = Array(await APIClient().fetchAsync(endpoint: endpoint,
+  let endpoint = configuration.channel == .topStories ? Endpoints.GetTopStories : Endpoints.GetSummaries
+  let filter =  configuration.channel == .topStories ? "" : configuration.channel == .liveFeed ? "" : configuration.topic
+  let summaries = Array(await APIClient().fetchAsync(endpoint: endpoint,
                                                      filter: filter).reversed())
   let pageSize = WidgetPageSize[context.family] ?? 2
   var entries: [SummaryEntry] = []
@@ -94,7 +94,7 @@ struct Provider: IntentTimelineProvider {
                    in context: Context,
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
     Task {
-      let config = CustomWidgetConfiguration(topStories: configuration.topStories?.boolValue ?? false,
+      let config = CustomWidgetConfiguration(channel: Channel.allCases[configuration.channel.rawValue],
                                              topic: configuration.topic,
                                              updateInterval: Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
                                                                                        unit: .minutes))
@@ -162,7 +162,7 @@ struct AppIntentProvider: AppIntentTimelineProvider {
   
   func timeline(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> Timeline<SummaryEntry> {
-    let config = CustomWidgetConfiguration(topStories: configuration.topStories,
+    let config = CustomWidgetConfiguration(channel: configuration.channel ?? .liveFeed,
                                            topic: configuration.topic,
                                            updateInterval: configuration.updateInterval)
     let entries = await buildEntries(in: context, for: config)
@@ -184,7 +184,10 @@ struct ReadLessWidgetEntryView : View {
     if entry.context?.family == .systemSmall {
       return entry.summaries.first?.deeplink ?? URL(string: "https://readless.ai/top")!
     }
-    if entry.config?.topStories == true {
+    if entry.config?.channel == .liveFeed {
+      return URL(string: "https://readless.ai/live")!
+    }
+    if entry.config?.channel == .topStories {
       return URL(string: "https://readless.ai/top")!
     }
     return URL(string: "https://readless.ai/search?filter=\(entry.config?.topic ?? "")")!
@@ -193,7 +196,9 @@ struct ReadLessWidgetEntryView : View {
   var body: some View {
     VStack(spacing: 8.0) {
       HStack {
-        Text(entry.config?.topStories == true ? "Top Stories" : entry.config?.topic == "" ? "Live Feed" : entry.config?.topic ?? "Topic")
+        Text(entry.config?.channel == .liveFeed ? "Live Feed" :
+               entry.config?.channel == .topStories ? "Top Stories" :
+               entry.config?.topic ?? "Topic")
           .textCase(.uppercase)
           .font(.subheadline)
           .bold()
@@ -202,13 +207,13 @@ struct ReadLessWidgetEntryView : View {
         if colorScheme == .light {
           Image("LogoCompact")
             .resizable()
-            .scaleToFit()
+            .scaledToFit()
             .frame(width: iconSize, height: iconSize)
         } else {
           Image("LogoCompact")
             .resizable()
             .colorInvert()
-            .scaleToFit()
+            .scaledToFit()
             .frame(width: iconSize, height: iconSize)
         }
       }
