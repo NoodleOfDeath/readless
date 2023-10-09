@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { load } from 'cheerio';
 import ms from 'ms';
 import puppeteer, {
   Browser,
@@ -170,8 +169,6 @@ export class PuppeteerService extends BaseService {
       waitUntil = 'domcontentloaded',
     }: PageOptions = {}
   ): Promise<void> {
-    
-    console.log(`loaded ${actions.length} actions`);
 
     let browser: Browser;
     try {
@@ -195,7 +192,6 @@ export class PuppeteerService extends BaseService {
       }
 
       for (const selectorAction of actions) {
-        console.log(`running action "${selectorAction?.selector}"`);
         try {
           const {
             selector, firstMatchOnly, pageOptions, action, 
@@ -340,14 +336,7 @@ export class PuppeteerService extends BaseService {
   public static async loot(
     url: string, 
     publisher: PublisherCreationAttributes, 
-    {
-      content, exclude = [
-        'img',
-        'script',
-        'source',
-        'style',
-      ], 
-    }: LootOptions = {}
+    { content }: LootOptions = {}
   ): Promise<Loot> {
     
     const loot: Loot = {
@@ -368,102 +357,6 @@ export class PuppeteerService extends BaseService {
     const dates: string[] = [];
     const imageUrls: string[] = [];
     const actions: SelectorAction[] = [];
-    
-    if (!content) {
-      
-      const {
-        article, author, date, title, image,
-      } = publisher.selectors;
-      
-      const rawHtml = await PuppeteerService.fetch(url);
-      
-      const authors: string[] = [];
-      const dates: string[] = [];
-      const imageUrls: string[] = [];
-      
-      if (rawHtml) {
-        
-        loot.rawText = rawHtml;
-        const $ = load(rawHtml);
-        
-        const nextData = $('script#__NEXT_DATA__').text();
-        if (nextData) {
-          try {
-            console.log(nextData.substring(0, 500));
-            const match = nextData.match(/"date"[\s\n]*:[\s\n]*"(.*?)"/m);
-            console.log(match);
-            if (match) {
-              dates.push(match[1]);
-            }
-          } catch (e) {
-            console.error(e);
-          }
-        }
-        
-        const extract = (
-          sel: string, 
-          attr?: string,
-          first?: boolean
-        ): string => {
-          if (attr && clean($(sel)?.attr(attr))) {
-            if (first) {
-              return clean($(sel)?.first()?.attr(attr));
-            }
-            return clean($(sel).attr(attr));
-          }
-          if (first) {
-            return clean($(sel)?.first()?.text());
-          }
-          return $(sel)?.map((i, el) => clean($(el).text())).get().filter(Boolean).join(' ');
-        };
-        
-        const extractAll = (sel: string, attr?: string): string[] => {
-          return $(sel)?.map((i, el) => clean(attr ? $(el).attr(attr) : $(el).text())).get().filter(Boolean) ?? [];
-        };
-
-        // image
-        for (const selector of [image?.selector, ...SELECTORS.image].filter(Boolean)) {
-          for (const attr of [image?.attribute, ...ATTRIBUTES.image].filter(Boolean)) {
-            imageUrls.push(...extractAll(selector, attr).flatMap((src) => parseSrcset(src, { publisher, targetUrl: url })));
-          }
-        }
-        
-        exclude.forEach((tag) => $(tag).remove());
-        
-        // title
-        loot.title = extract(title?.selector || 'title', title?.attribute);
-        // content
-        loot.content = article ? extract(article.selector, article.attribute) || extract('h1,h2,h3,h4,h5,h6,p,blockquote') : extract('h1,h2,h3,h4,h5,h6,p,blockquote');
-        
-        // dates
-        
-        dates.push(
-          ...extractAll(date.selector),
-          ...extractAll(date.selector, 'datetime')
-        );
-        if (date.attribute) {
-          dates.push(
-            ...extractAll(date.selector, date.attribute),
-            extract(date.selector, date.attribute)
-          );
-        }
-        dates.push(
-          extract(date.selector),
-          extract(date.selector, 'datetime')
-        );
-        
-        loot.date = maxDate(...dates);
-        if (!loot.date || Number.isNaN(loot.date.valueOf())) {
-          loot.date = parseDate(dates.join(' '));
-        }
-        
-        loot.imageUrls = Array.from(new Set(imageUrls.filter((url) => url && !/\.(gif|svg)/i.test(url)))).slice(0, MAX_IMAGE_COUNT);
-        
-        // authors
-        authors.push(...$(author.selector || 'author').map((i, el) => $(el).text()).get());
-      }
-      
-    }
       
     // content
     if (!loot.content) {
@@ -518,57 +411,49 @@ export class PuppeteerService extends BaseService {
     }
       
     // dates
-    if (!loot.date) {
-      const dateSelectors = [date.selector, 'article time'];
-      if (date.firstOnly) {
-        dateSelectors.push(SELECTORS.article);
-      }
-      for (const selector of dateSelectors) {
-        actions.push({
-          action: async (el) => {
-            dates.push(
-              await el.evaluate((el) => { 
-                if (el.childNodes.length > 1) {
-                  const parts: string[] = [];
-                  el.childNodes.forEach((n) => parts.push(n.textContent.trim()));
-                  return parts.join(' ');
-                } else {
-                  return el.textContent.trim();
-                }
-              }),
-              await el.evaluate((el) => el.getAttribute('datetime'))
-            );
-            if (date.attribute) {
-              dates.push(
-                await el.evaluate((el, attr) => el.getAttribute(attr), date.attribute)
-              );
-            }
-          },
-          firstMatchOnly: !date.firstOnly,
-          selector,
-        });
-      }
+    const dateSelectors = [date.selector, 'article time'];
+    if (date.firstOnly) {
+      dateSelectors.push(SELECTORS.article);
     }
-    
-    if (actions.length > 0) {
-      await this.open(url, actions, {
-        timeout: typeof publisher.fetchPolicy?.timeout === 'string' ? ms(publisher.fetchPolicy.timeout) : publisher.fetchPolicy?.timeout,
-        waitUntil: publisher.fetchPolicy?.waitUntil,
+    for (const selector of dateSelectors) {
+      actions.push({
+        action: async (el) => {
+          dates.push(
+            await el.evaluate((el) => { 
+              if (el.childNodes.length > 1) {
+                const parts: string[] = [];
+                el.childNodes.forEach((n) => parts.push(n.textContent.trim()));
+                return parts.join(' ');
+              } else {
+                return el.textContent.trim();
+              }
+            }),
+            await el.evaluate((el) => el.getAttribute('datetime'))
+          );
+          if (date.attribute) {
+            dates.push(
+              await el.evaluate((el, attr) => el.getAttribute(attr), date.attribute)
+            );
+          }
+        },
+        firstMatchOnly: !date.firstOnly,
+        selector,
       });
     }
       
+    await this.open(url, actions, {
+      timeout: typeof publisher.fetchPolicy?.timeout === 'string' ? ms(publisher.fetchPolicy.timeout) : publisher.fetchPolicy?.timeout,
+      waitUntil: publisher.fetchPolicy?.waitUntil,
+    });
+      
     loot.dateMatches = dates.filter(Boolean);
-    if (!loot.date) {
-      loot.date = maxDate(...dates);
-      if (!loot.date || Number.isNaN(loot.date.valueOf())) {
-        loot.date = parseDate(dates.join(' '));
-      }
+    loot.date = maxDate(...dates);
+    if (!loot.date || Number.isNaN(loot.date.valueOf())) {
+      loot.date = parseDate(dates.join(' '));
     }
     loot.authors = [...new Set(authors.map((a) => clean(a, /^\s*by:?\s*/i).split(/\s*(?:,|and)\s*/).flat()).flat().filter(Boolean))];
-    if (!loot.imageUrls || loot.imageUrls.length === 0) {
-      loot.imageUrls = Array.from(new Set(imageUrls.filter((url) => url && !/\.(gif|svg)/i.test(url)))).slice(0, MAX_IMAGE_COUNT);
-    }
-    
+    loot.imageUrls = Array.from(new Set(imageUrls.filter((url) => url && !/\.(gif|svg)/i.test(url)))).slice(0, MAX_IMAGE_COUNT);
+      
     return loot;
   }
 
