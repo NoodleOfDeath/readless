@@ -11,12 +11,12 @@ import {
 } from '~/components';
 import { SessionContext, useApiClient } from '~/core';
 import { strings } from '~/locales';
-import {  ScreenProps } from '~/screens';
+import {  ScreenComponent } from '~/screens';
 
 export function OldNewsTab({
   route: _route,
   navigation: _navigation,
-}: ScreenProps<'oldNews'>) {
+}: ScreenComponent<'oldNews'>) {
   return (
     <RecapList
       header={ (
@@ -33,7 +33,7 @@ export function OldNewsTab({
 export function YourNewsTab({ 
   route: _route,
   navigation: _navigation,
-}: ScreenProps<'yourNews'>) {
+}: ScreenComponent<'yourNews'>) {
   const { getSummaries } = useApiClient();
   const { followFilter } = React.useContext(SessionContext);
   const [filter, setFilter] = React.useState(followFilter);
@@ -53,7 +53,7 @@ export function YourNewsTab({
 export function TopStoriesTab({ 
   route: _route,
   navigation: _navigation,
-}: ScreenProps<'topStories'>) {
+}: ScreenComponent<'topStories'>) {
   const { getTopStories } = useApiClient();
   return ( 
     <SummaryList
@@ -68,7 +68,7 @@ export function TopStoriesTab({
 export function LiveFeedTab({ 
   route: _route,
   navigation: _navigation,
-}: ScreenProps<'liveFeed'>) {
+}: ScreenComponent<'liveFeed'>) {
   const { getSummaries } = useApiClient();
   return ( 
     <SummaryList 

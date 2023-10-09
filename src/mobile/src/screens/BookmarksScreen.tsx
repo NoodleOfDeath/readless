@@ -21,11 +21,11 @@ import {
 import { SessionContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
-import { ScreenProps } from '~/screens';
+import { ScreenComponent } from '~/screens';
 
 const pageSize = 10;
 
-export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
+export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
   
   const { 
     bookmarkedSummaries,
@@ -58,7 +58,7 @@ export function BookmarksScreen({ navigation }: ScreenProps<'bookmarks'>) {
       headerRight: () => undefined,
       headerTitle: `${strings.bookmarks_header} (${bookmarkCount})`,
     });
-  }, [bookmarkCount, navigation]));
+  }, [bookmarkCount, navigation, viewFeature]));
   
   return (
     <Screen>

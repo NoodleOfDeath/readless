@@ -9,12 +9,12 @@ import {
   View,
 } from '~/components';
 import { SessionContext } from '~/core';
-import { ScreenProps } from '~/screens';
+import { ScreenComponent } from '~/screens';
 
 export function StatsScreen({
   route: _route,
   navigation: _navigation,
-}: ScreenProps<'stats'>) {
+}: ScreenComponent<'stats'>) {
   const { setPreference } = React.useContext(SessionContext);
   return (
     <Screen>

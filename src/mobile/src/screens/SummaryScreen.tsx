@@ -19,12 +19,12 @@ import {
 import {  SessionContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
-import { ScreenProps } from '~/screens';
+import { ScreenComponent } from '~/screens';
 
 export function SummaryScreen({
   route,
   navigation,
-}: ScreenProps<'summary'>) {
+}: ScreenComponent<'summary'>) {
 
   const { getSummary, interactWithSummary } = useApiClient();
   const { preferredReadingFormat } = React.useContext(SessionContext);

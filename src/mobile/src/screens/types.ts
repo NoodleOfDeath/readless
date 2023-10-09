@@ -1,10 +1,6 @@
 import React from 'react';
 
-import {
-  LinkingOptions,
-  ParamListBase,
-  RouteProp,
-} from '@react-navigation/native';
+import { LinkingOptions, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import {
@@ -14,6 +10,8 @@ import {
   ReadingFormat,
   RecapAttributes,
 } from '~/api';
+
+export type NavigationID = 'stackNav' | 'leftDrawerNav' | 'rightDrawerNav';
 
 export type RoutingParams = {
   // main
@@ -82,19 +80,7 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   ],
 };
 
-export type ScreenComponentType<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList
-> =
-  | React.ComponentType<{
-      route: RouteProp<ParamList, RouteName>;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      navigation: any;
-    }>
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  | React.ComponentType<{}>;
-
-export type ScreenProps<Path extends keyof RoutingParams = keyof RoutingParams, C extends React.ComponentType = React.ComponentType> = {
+export type ScreenComponent<Path extends keyof RoutingParams = keyof RoutingParams, C extends React.ComponentType = React.ComponentType> = {
   name?: Path;
   component?: C;
   icon?: string;

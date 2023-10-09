@@ -19,7 +19,7 @@ import {
   LiveFeedTab,
   OldNewsTab,
   RoutingParams,
-  ScreenProps,
+  ScreenComponent,
   TopStoriesTab,
   YourNewsTab,
 } from '~/screens';
@@ -29,7 +29,7 @@ const Tab = createMaterialTopTabNavigator();
 export function HomeScreen({ 
   route: _route,
   navigation: _navigation,
-}: ScreenProps<'home'>) {
+}: ScreenComponent<'home'>) {
   
   const theme = useTheme();
   const { followCount } = React.useContext(SessionContext);

@@ -16,7 +16,7 @@ export function Screen({
   children,
   safeArea = true,
   ...props
-}: ScreenViewProps) {
+}: ScreenProps) {
   const theme = useTheme();
   return (
     <React.Fragment>

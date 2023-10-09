@@ -2,12 +2,12 @@ import React from 'react';
 
 import { RoutedScreen, SummaryList } from '~/components';
 import { useApiClient } from '~/hooks';
-import { ScreenProps } from '~/screens';
+import { ScreenComponent } from '~/screens';
 
 export function SearchScreen({ 
   route,
   navigation: _navigation,
-}: ScreenProps<'search'>) {
+}: ScreenComponent<'search'>) {
   
   const { getSummaries } = useApiClient();
   return (

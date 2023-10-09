@@ -18,7 +18,7 @@ export function RoutedScreen({ ...props }: ScreenProps) {
       Linking.getInitialURL().then((url) => {
         if (url) {
           setPreference('loadedInitialUrl', true);
-          router({ navigator: navigation?.getParent('Stack'), url });
+          router({ stackNav: navigation?.getParent('stackNav'), url });
         }
       });
     }
