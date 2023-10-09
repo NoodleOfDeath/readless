@@ -50,7 +50,7 @@ function SCREENS(formFactor = '') {
     bullets: { image: imageName('ss-bullets') },
     customFeed: { image: imageName('ss-custom-feed') },
     localization: { image: imageName('ss-localization') },
-    main: { image: imageName('ss-main') },
+    main: { image: imageName('ss-main'), invert: true },
     preview: { image: imageName('ss-quick-preview') },
     publishers: { image: imageName('ss-publishers') },
     reader: { image: imageName('ss-reader') },
@@ -331,7 +331,7 @@ type ScreenshotCarouselProps = Partial<CarouselProps> & {
 };
 
 export const SLIDE_ORDER = [
-  'main',
+  'bullets',
   'customFeed',
   'publishers',
   'reader',

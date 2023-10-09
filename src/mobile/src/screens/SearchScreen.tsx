@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RoutedScreen, SummaryList } from '~/components';
+import { Screen, SummaryList } from '~/components';
 import { useApiClient } from '~/hooks';
 import { ScreenProps } from '~/screens';
 
@@ -11,13 +11,13 @@ export function SearchScreen({
   
   const { getSummaries } = useApiClient();
   return (
-    <RoutedScreen>
+    <Screen>
       <SummaryList
         landscapeEnabled
         enableTts
         fetch={ getSummaries }
         filter={ route?.params?.prefilter }
         specificIds={ route?.params?.specificIds } />
-    </RoutedScreen>
+    </Screen>
   );
 }

@@ -14,7 +14,7 @@ import {
   DrawerItem,
   DrawerSection,
   Icon,
-  RoutedScreen,
+  Screen,
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
@@ -23,9 +23,9 @@ import { strings } from '~/locales';
 
 function HomeDrawer() {
   return (
-    <RoutedScreen safeArea={ false }>
-      <StackNavigation /> 
-    </RoutedScreen>
+    <Screen>
+      <StackNavigation />
+    </Screen>
   );
 }
 

@@ -25,7 +25,6 @@ export * from './Markdown';
 export * from './Popover';
 export * from './Pulse';
 export * from './MeterDial';
-export * from './RoutedScreen';
 export * from './Screen';
 export * from './ScrollView';
 export * from './SearchMenu';
