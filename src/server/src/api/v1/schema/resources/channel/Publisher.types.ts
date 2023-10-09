@@ -213,6 +213,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.arstechnica.com',
     displayName: 'ars technica',
     name: 'arstechnica',
+    geolocation: 'New York City, New York, United States',
     selectors: {
       article:{ selector: 'article p' }, 
       author: { selector: 'article header section *[itemprop*="author creator"] a' },
@@ -274,6 +275,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   billboard: {
     baseUrl: 'https://www.billboard.com',
     displayName: 'billboard',
+    geolocation: 'New York City, New York, United States',
     name: 'billboard',
     selectors: {
       article: { selector: 'article p' },
@@ -295,6 +297,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   bleepingcomputer: {
     baseUrl: 'https://www.bleepingcomputer.com',
     displayName: 'Bleeping Computer',
+    geolocation: 'Huntington Station, New York, United States',
     name: 'bleepingcomputer',
     selectors: {
       article: { selector: 'article p' },
@@ -311,6 +314,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.bloomberg.com',
     disabled: true,
     displayName: 'Bloomberg',
+    geolocation: 'New York City, New York, United States',
     name: 'bloomberg',
     selectors: {
       article: { selector: 'article p' },
@@ -327,6 +331,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.businessinsider.com',
     displayName: 'Business Insider',
     fetchPolicy: { timeout: '10s' },
+    geolocation: 'New York City, New York, United States',
     name: 'businessinsider',
     selectors: {
       article: { selector: 'article p' },
@@ -352,6 +357,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   bustle: {
     baseUrl: 'https://www.bustle.com',
     displayName: 'Bustle',
+    geolocation: 'Park Avenue South, New York, United States',
     name: 'bustle',
     selectors: {
       article: { selector: 'article p' },
@@ -375,6 +381,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   buzzfeed: {
     baseUrl: 'https://www.buzzfeed.com',
     displayName: 'BuzzFeed',
+    geolocation: 'New York City, New York, United States',
     name: 'buzzfeed',
     selectors: {
       article: { selector: 'article p' },
@@ -393,6 +400,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   cbsnews: {
     baseUrl: 'https://www.cbsnews.com',
     displayName: 'CBS News',
+    geolocation: 'New York City, New York, United States',
     name: 'cbsnews',
     selectors: {
       article: { selector: 'article p' },
@@ -405,6 +413,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   cnbc: {
     baseUrl: 'https://www.cnbc.com',
     displayName: 'CNBC',
+    geolocation: 'Englewood Cliffs, New Jersey, United States',
     name: 'cnbc',
     selectors: {
       article: { selector: '.ArticleBody-articleBody p' },
@@ -424,6 +433,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   cnn: {
     baseUrl: 'https://www.cnn.com',
     displayName: 'CNN',
+    geolocation: 'Atlanta, Georgia, United States',
     name: 'cnn',
     selectors: {
       author: { selector: '.headline__sub-text .byline_name' },
@@ -448,6 +458,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   coindesk: {
     baseUrl: 'https://www.coindesk.com',
     displayName: 'CoinDesk',
+    geolocation: 'Broadway, New York, United States',
     name: 'coindesk',
     selectors: {
       article: { selector: 'article p' },
@@ -463,6 +474,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   cryptoglobe: {
     baseUrl: 'https://www.cryptoglobe.com',
     displayName: 'Cryptoglobe',
+    geolocation: 'London, United Kingdom',
     name: 'cryptoglobe',
     selectors: {
       article: { selector: 'article p' },
@@ -480,6 +492,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   csis: {
     baseUrl: 'https://www.csis.org',
     displayName: 'CSIS',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'csis',
     selectors: {
       article: { selector: 'div[role*="article"] .column p' },
@@ -495,6 +508,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   cultofmac: {
     baseUrl: 'https://www.cultofmac.com',
     displayName: 'Cult of Mac',
+    geolocation: 'San Francisco, California, United States',
     name: 'cultofmac',
     selectors: {
       article: { selector: 'article p' },
@@ -510,6 +524,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   dailymail: {
     baseUrl: 'https://www.dailymail.co.uk/ushome/index.html',
     displayName: 'Daily Mail',
+    geolocation: 'Kensington, London, United Kingdom',
     name: 'dailymail',
     selectors: {
       article: { selector: 'article p' },
@@ -530,6 +545,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   daringfireball: {
     baseUrl: 'https://www.daringfireball.net',
     displayName: 'Daring Fireball',
+    geolocation: 'Philadelphia, Pennsylvania, United States',
     name: 'daringfireball',
     selectors: {
       article: { selector: '.article p' },
@@ -548,6 +564,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   defenseone: {
     baseUrl: 'https://www.defenseone.com',
     displayName: 'Defense One',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'defenseone',
     selectors: {
       article: { selector: 'div[role*="article"] .column' },
@@ -567,6 +584,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   developertech: {
     baseUrl: 'https://www.developer-tech.com',
     displayName: 'Developer Tech',
+    geolocation: 'Bristol, London, United Kingdom',
     name: 'developer-tech',
     selectors: {
       article: { selector: 'article p' },
@@ -582,6 +600,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   digitaltrends: {
     baseUrl: 'https://www.digitaltrends.com',
     displayName: 'digitaltrends',
+    geolocation: 'Portland, Oregon, United States',
     name: 'digitaltrends',
     selectors: {
       article: { selector: 'article p' },
@@ -605,6 +624,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.economist.com',
     disabled: true,
     displayName: 'The Economist (Coming Soon)',
+    geolocation: 'London, United Kingdom',
     name: 'economist',
     selectors: {
       article: { selector: 'disabled' },
@@ -617,6 +637,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   enews: {
     baseUrl: 'https://www.eonline.com',
     displayName: 'E! News',
+    geolocation: 'New York, New York, United States',
     name: 'enews',
     selectors: {
       article: { selector: '.article-detail__text-only p' },
@@ -648,6 +669,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   espn: {
     baseUrl: 'https://www.espn.com',
     displayName: 'ESPN',
+    geolocation: 'Bristol, Connecticut, United States',
     name: 'espn',
     selectors: {
       article: { selector: 'article p' },
@@ -667,6 +689,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   essence: {
     baseUrl: 'https://www.essence.com',
     displayName: 'Essence',
+    geolocation: 'Brooklyn, New York, United States',
     name: 'essence',
     selectors: {
       article: { selector: 'article p' },
@@ -693,6 +716,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   ew: {
     baseUrl: 'https://www.ew.com',
     displayName: 'Entertainment Weekly',
+    geolocation: 'New York City, New York, United States',
     name: 'ew',
     selectors: {
       article: { selector: 'main > .longformContent, article p' },
@@ -709,6 +733,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.fiercebiotech.com',
     disabled: true,
     displayName: 'Fierce Biotech',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'fiercebiotech',
     selectors: {
       article: { selector: 'article p' },
@@ -729,6 +754,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   forbes: {
     baseUrl: 'https://www.forbes.com',
     displayName: 'Forbes',
+    geolocation: 'Jersey City, New Jersey, United States',
     name: 'forbes',
     selectors: {
       article: { selector: 'article p' },
@@ -744,6 +770,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   foreignpolicy: {
     baseUrl: 'https://www.foreignpolicy.com',
     displayName: 'Foreign Policy',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'foreignpolicy',
     selectors: {
       article: { selector: 'article p' },
@@ -759,6 +786,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   fortune: {
     baseUrl: 'https://www.fortune.com',
     displayName: 'Fortune',
+    geolocation: 'New York City, New York, United States',
     name: 'fortune',
     selectors: {
       article: { selector: '#article-content p' },
@@ -775,6 +803,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   foxnews: {
     baseUrl: 'https://www.foxnews.com',
     displayName: 'Fox News',
+    geolocation: 'New York City, New York, United States',
     name: 'foxnews',
     selectors: {
       article: { selector: 'article p' },
@@ -791,6 +820,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.ft.com',
     disabled: true,
     displayName: 'Financial Times',
+    geolocation: 'London, United Kingdom',
     name: 'ft',
     selectors: {
       article: { selector: 'disabled' },
@@ -803,6 +833,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   futurism: {
     baseUrl: 'https://www.futurism.com',
     displayName: 'Furturism',
+    geolocation: 'Brooklyn, New York, United',
     name: 'futurism',
     selectors: {
       article: { selector: 'article p' },
@@ -823,6 +854,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   gizmodo: {
     baseUrl: 'https://www.gizmodo.com', 
     displayName: 'Gizmodo',
+    geolocation: 'New York City, New York, United States',
     name: 'gizmodo',
     selectors: {
       article: { selector: '.js_post-content p' },
@@ -838,6 +870,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   huffpost: {
     baseUrl: 'https://www.huffpost.com',
     displayName: 'HuffPost',
+    geolocation: 'Broadway, New York City, United States',
     name: 'huffpost',
     selectors: {
       article: { selector: 'article p' },
@@ -854,6 +887,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   ieeespectrum: {
     baseUrl: 'https://spectrum.ieee.org',
     displayName: 'IEEE Spectrum',
+    geolocation: 'New York City, New York, United States',
     name: 'ieeespectrum',
     selectors: {
       article: { selector: 'article p' },
@@ -871,6 +905,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   independent: {
     baseUrl: 'https://www.independent.co.uk/',
     displayName: 'The Independent',
+    geolocation: 'London, United Kingdom',
     name: 'independent',
     selectors: {
       article: { selector: 'article p' },
@@ -898,6 +933,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   inews: {
     baseUrl: 'https://inews.co.uk',
     displayName: 'inews',
+    geolocation: 'Northcliffe House, London, England',
     name: 'inews',
     selectors: {
       article: { selector: 'article p' },
@@ -915,6 +951,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   inverse: {
     baseUrl: 'https://www.inverse.com',
     displayName: 'Inverse',
+    geolocation: 'New York City, New York, United States',
     name: 'inverse',
     selectors: {
       article: { selector: 'article p' },
@@ -936,6 +973,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   investors: {
     baseUrl: 'https://www.investors.com/tag/all-news-and-stock-ideas/',
     displayName: 'Investors\'s Business Daily',
+    geolocation: 'Los Angeles, California, United States',
     name: 'investors',
     selectors: {
       article: { selector: 'article p' },
@@ -955,6 +993,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   jalopnik: {
     baseUrl: 'https://jalopnik.com/sitemap/${YYYY}/${MMMM}',
     displayName: 'Jalopnik',
+    geolocation: 'Durham, North Carolina, United States',
     name: 'jalopnik',
     selectors: {
       article: { selector: 'article p' },
@@ -970,6 +1009,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   kotaku: {
     baseUrl: 'https://www.kotaku.com',
     displayName: 'Kotaku',
+    geolocation: 'Surry Hills, New South Wales, Australia',
     name: 'kotaku',
     selectors: {
       article: { selector: 'main p' },
@@ -985,6 +1025,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   ksl: {
     baseUrl: 'https://www.ksl.com',
     displayName: 'KSL',
+    geolocation: 'Salt Lake City, Utah, United States',
     name: 'ksl',
     selectors: {
       article: { selector: 'article p' },
@@ -1000,6 +1041,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   latimes: {
     baseUrl: 'https://www.latimes.com',
     displayName: 'Los Angeles Times',
+    geolocation: 'El Segundo, California, United States',
     name: 'latimes',
     selectors: {
       article: { selector: 'article p' },
@@ -1017,6 +1059,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   lifewire: {
     baseUrl: 'https://www.lifewire.com',
     displayName: 'Lifewire',
+    geolocation: 'New York City, New York, United States',
     name: 'lifewire',
     selectors: {
       article: { selector: 'article p' },
@@ -1035,6 +1078,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   mashable: {
     baseUrl: 'https://www.mashable.com',
     displayName: 'Mashable',
+    geolocation: 'New York City, New York, United States',
     name: 'mashable',
     selectors: {
       article: { selector: 'article p' },
@@ -1050,6 +1094,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   menshealth: {
     baseUrl: 'https://www.menshealth.com',
     displayName: 'Men\'s Health',
+    geolocation: 'New York City, New York, United States',
     name: 'menshealth',
     selectors: {
       article: { selector: '.article-body-content p' },
@@ -1071,6 +1116,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   morningstar: {
     baseUrl: 'https://www.morningstar.com',
     displayName: 'Morning Star',
+    geolocation: 'Chicago, Illinois, United States',
     name: 'morningstar',
     selectors: {
       article: { selector: 'article p' },
@@ -1088,6 +1134,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   nationalgeographic: {
     baseUrl: 'https://www.nationalgeographic.com',
     displayName: 'National Geographic',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'nationalgeographic',
     selectors: {
       article: { selector: 'article p' },
@@ -1106,6 +1153,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   nature: {
     baseUrl: 'https://www.nature.org',
     displayName: 'Nature',
+    geolocation: 'London, England',
     name: 'nature',
     selectors: {
       article: { selector: 'article p' },
@@ -1123,6 +1171,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   nbcnews: {
     baseUrl: 'https://www.nbcnews.com',
     displayName: 'NBC News',
+    geolocation: 'New York City, New York, United States',
     name: 'nbcnews',
     selectors: {
       article: { selector: 'article p' },
@@ -1145,6 +1194,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   newsweek: {
     baseUrl: 'https://www.newsweek.com',
     displayName: 'Newsweek',
+    geolocation: 'New York City, New York, United States',
     name: 'newsweek',
     selectors: {
       article: { selector: 'article p' },
@@ -1160,6 +1210,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   newyorker: {
     baseUrl: 'https://www.newyorker.com',
     displayName: 'The New Yorker',
+    geolocation: 'New York City, New York, United States',
     name: 'newyorker',
     selectors: {
       article: { selector: 'article p' },
@@ -1179,6 +1230,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   npr: {
     baseUrl: 'https://www.npr.org',
     displayName: 'NPR',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'npr',
     selectors: {
       article: { selector: 'article p' },
@@ -1199,6 +1251,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.nytimes.com',
     disabled: true,
     displayName: 'New York Times (Coming Soon)',
+    geolocation: 'New York City, New York, United States',
     name: 'nytimes',
     selectors: {
       article: { selector: 'disabled' },
@@ -1211,6 +1264,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   out: {
     baseUrl: 'https://www.out.com',
     displayName: 'Out',
+    geolocation: 'Los Angeles, California, United States',
     name: 'out',
     selectors: {
       article: { selector: 'article p' },
@@ -1226,6 +1280,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   people: {
     baseUrl: 'https://www.people.com',
     displayName: 'People',
+    geolocation: 'New York City, New York, United States',
     name: 'people',
     selectors: {
       article: { selector: 'article p' },
@@ -1254,6 +1309,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   politico: {
     baseUrl: 'https://www.politico.com',
     displayName: 'Politico',
+    geolocation: 'Arlington County, Virginia, United States',
     name: 'politico',
     selectors: {
       article: { selector: '.article__container .article__content' },
@@ -1271,6 +1327,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   polygon: {
     baseUrl: 'https://www.polygon.com',
     displayName: 'Polygon',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'polygon',
     selectors: {
       article: { selector: 'article p' },
@@ -1288,6 +1345,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   popsci: {
     baseUrl: 'https://www.popsci.com',
     displayName: 'Popular Science ',
+    geolocation: 'New York City, New York, United States',
     name: 'popsci',
     selectors: {
       article: { selector: 'article p' },
@@ -1309,6 +1367,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   popularmechanics: {
     baseUrl: 'https://www.popularmechanics.com',
     displayName: 'Popular Mechanics ',
+    geolocation: 'New York City, New York, United States',
     name: 'popularmechanics',
     selectors: {
       article: { selector: '.article-body-content' },
@@ -1334,6 +1393,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   psychologytoday: {
     baseUrl: 'https://www.psychologytoday.com',
     displayName: 'Psychology Today',
+    geolocation: 'New York City, New York, United States',
     name: 'psychologytoday',
     selectors: {
       article: { selector: 'article p' },
@@ -1351,6 +1411,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   reuters: {
     baseUrl: 'https://www.reuters.com', 
     displayName: 'Reuters',
+    geolocation: 'London, England, United Kingdom',
     name: 'reuters',
     selectors: {
       article: { selector: 'article p' },
@@ -1376,6 +1437,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   rollingstone: {
     baseUrl: 'https://www.rollingstone.com',
     displayName: 'Rolling Stone',
+    geolocation: 'New York City, New York, United States',
     name: 'rollingstone',
     selectors: {
       article: { selector: 'article p' },
@@ -1396,6 +1458,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   science: {
     baseUrl: 'https://www.science.org',
     displayName: 'Science',
+    geolocation: 'New York City, New York, United States',
     maxAge: '7d',
     name: 'science',
     selectors: {
@@ -1413,6 +1476,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   sciencedaily: {
     baseUrl: 'https://www.sciencedaily.com',
     displayName: 'Science Daily',
+    geolocation: 'Rockville, Maryland, United States',
     maxAge: '4d',
     name: 'sciencedaily',
     selectors: {
@@ -1430,6 +1494,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.scitechnewsnetwork.com',
     displayName: 'Sci-Tech News Network',
     fetchPolicy: { waitUntil: 'networkidle0' },
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'scitechnewsnetwork',
     selectors: {
       article: { selector: '.content, .article-content, body > .container' },
@@ -1453,6 +1518,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   space: {
     baseUrl: 'https://www.space.com',
     displayName: 'Space',
+    geolocation: 'New York City, New York, United States',
     name: 'space',
     selectors: {
       article: { selector: 'article p' },
@@ -1469,6 +1535,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   stockhead: {
     baseUrl: 'https://stockhead.com.au',
     displayName: 'Stockhead ',
+    geolocation: 'Western Australia, Australia',
     name: 'stockhead',
     selectors: {
       article: { selector: 'article p' },
@@ -1492,6 +1559,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   sundaytimes: {
     baseUrl: 'https://www.thetimes.co.uk',
     displayName: 'The Sunday Times ',
+    geolocation: 'London, England, United Kingdom',
     name: 'thetimes',
     selectors: {
       article: { selector: 'article p' },
@@ -1509,6 +1577,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   techcrunch: {
     baseUrl: 'https://www.techcrunch.com',
     displayName: 'TechCrunch ',
+    geolocation: 'San Francisco, California, United States',
     name: 'techcrunch',
     selectors: {
       article: { selector: 'article p' },
@@ -1526,6 +1595,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   telegraph: {
     baseUrl: 'https://www.telegraph.co.uk',
     displayName: 'The Telegraph',
+    geolocation: 'Victoria, London, United Kingdom',
     name: 'telegraph',
     selectors: {
       article: { selector: 'article p' },
@@ -1541,6 +1611,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   theatlantic: {
     baseUrl: 'https://www.theatlantic.com',
     displayName: 'The Atlantic',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'theatlantic',
     selectors: {
       article: { selector: 'article p' },
@@ -1556,6 +1627,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   thedrive: {
     baseUrl: 'https://www.thedrive.com',
     displayName: 'The Drive',
+    geolocation: 'New York City, New York, United States',
     name: 'thedrive',
     selectors: {
       article: { selector: 'article p' },
@@ -1576,6 +1648,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   thefastmode: {
     baseUrl: 'https://www.thefastmode.com',
     displayName: 'The Fast Mode',
+    geolocation: 'New York, New York, United States',
     name: 'thefastmode',
     selectors: {
       article: { selector: '.itemFullText p' },
@@ -1602,6 +1675,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   theguardian: {
     baseUrl: 'https://www.theguardian.com',
     displayName: 'The Guardian',
+    geolocation: 'London, United Kingdom',
     name: 'theguardian',
     selectors: {
       article: { selector: 'article p' },
@@ -1617,6 +1691,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   thehill: {
     baseUrl: 'https://www.thehill.com',
     displayName: 'The Hill',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'thehill',
     selectors: {
       article: { selector: 'article p' },
@@ -1636,6 +1711,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   thestar: {
     baseUrl: 'https://www.thestar.com',
     displayName: 'Toronto Star',
+    geolocation: 'Toronto, Ontario',
     name: 'thestar',
     selectors: {
       article: { selector: '.c-article-body p' },
@@ -1661,6 +1737,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.thestreet.com',
     disabled: true,
     displayName: 'The Street',
+    geolocation: 'New York City, New York, United States',
     name: 'thestreet',
     selectors: {
       article: { selector: 'article p' },
@@ -1684,6 +1761,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   theverge: {
     baseUrl: 'https://www.theverge.com',
     displayName: 'The Verge',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'theverge',
     selectors: {
       article: { selector: 'article p' },
@@ -1699,6 +1777,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   time: {
     baseUrl: 'https://www.time.com',
     displayName: 'Time',
+    geolocation: 'New York City, New York, United States',
     name: 'time',
     selectors: {
       article: { selector: '#article-body p' },
@@ -1714,6 +1793,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   usatoday: {
     baseUrl: 'https://www.usatoday.com',
     displayName: 'USA Today',
+    geolocation: 'Tysons, Virginia, United States',
     name: 'usatoday',
     selectors: {
       article: { selector: 'article p' },
@@ -1729,6 +1809,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   usnews: {
     baseUrl: 'https://www.usnews.com',
     displayName: 'U.S. News',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'usnews',
     selectors: {
       article: { selector: '#main-column p' },
@@ -1749,6 +1830,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   variety: {
     baseUrl: 'https://www.variety.com',
     displayName: 'Variety',
+    geolocation: 'Los Angeles, California, United States',
     name: 'variety',
     selectors: {
       article: { selector: 'article p' },
@@ -1769,6 +1851,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   venturebeat: {
     baseUrl: 'https://www.venturebeat.com',
     displayName: 'Venture Beat',
+    geolocation: 'San Francisco, California, United States',
     name: 'venturebeat',
     selectors: {
       article: { selector: 'article p' },
@@ -1785,6 +1868,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   vice: {
     baseUrl: 'https://www.vice.com',
     displayName: 'Vice',
+    geolocation: 'Brooklyn, New York, United States',
     name: 'vice',
     selectors: {
       article: { selector: 'main p' },
@@ -1800,6 +1884,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   vox: {
     baseUrl: 'https://www.vox.com',
     displayName: 'Vox',
+    geolocation: 'Washington, Distric of Columbia, United States',
     name: 'vox',
     selectors: {
       article: { selector: 'article p' },
@@ -1819,6 +1904,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   vulture: {
     baseUrl: 'https://www.vulture.com',
     displayName: 'Vulture',
+    geolocation: 'New York, United States',
     name: 'vulture',
     selectors: {
       article: { selector: 'article p' },
@@ -1838,6 +1924,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.washingtonpost.com',
     disabled: true,
     displayName: 'The Washington Post (Coming Soon)',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'washingtonpost',
     selectors: {
       article: { selector: 'disabled' },
@@ -1851,6 +1938,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
     baseUrl: 'https://www.wilsoncenter.org',
     disabled: true,
     displayName: 'Wilson Center',
+    geolocation: 'Washington, District of Columbia, United States',
     name: 'wilsoncenter',
     selectors: {
       article: { selector: 'disabled' },
@@ -1863,6 +1951,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   wired: {
     baseUrl: 'https://www.wired.com',
     displayName: 'Wired',
+    geolocation: 'San Francisco, California, United States',
     name: 'wired',
     selectors: {
       article: { selector: 'article p' },
@@ -1878,6 +1967,7 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   wsj: {
     baseUrl: 'https://www.wsj.com',
     displayName: 'The Wall Street Journal',
+    geolocation: 'New York City, New York, United States',
     name: 'wsj',
     selectors: {
       article: { selector: 'article p' },
