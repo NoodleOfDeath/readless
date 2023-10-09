@@ -248,9 +248,7 @@ const Stack = createNativeStackNavigator();
 
 export function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
   return (
-    <Stack.Navigator 
-      id="Stack"
-      initialRouteName={ initialRouteName }>
+    <Stack.Navigator initialRouteName={ initialRouteName }>
       {STACK_SCREENS.map((screen) => (
         <Stack.Screen
           key={ String(screen.name) }

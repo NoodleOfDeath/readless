@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 
 import { View, ViewProps } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type ScreenProps = ViewProps & {
+export type ScreenViewProps = ViewProps & {
   safeArea?: boolean;
 };
 
