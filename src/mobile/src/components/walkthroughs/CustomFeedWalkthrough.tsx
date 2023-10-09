@@ -14,41 +14,41 @@ import {
   View,
   Walkthrough,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext, TimelineEvent } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function CustomFeedWalkthrough(props: SheetProps) {
   
   const theme = useTheme();
-  const { setPreference } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(SessionContext);
   
   const [categories, setCategories] = React.useState<string[]>();
   const [publishers, setPublishers] = React.useState<string[]>();
 
   const saveChanges = React.useCallback(async () => {
     if (categories) {
-      setPreference(
+      setStoredValue(
         'followedCategories', 
         Object.fromEntries(categories.map((category) => [category, true]))
       );
     }
     if (publishers) {
-      setPreference(
+      setStoredValue(
         'followedPublishers', 
         Object.fromEntries(publishers.map((publisher) => [publisher, true]))
       );
     }
-  }, [categories, publishers, setPreference]);
+  }, [categories, publishers, setStoredValue]);
 
   const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
+    setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
+      state[props.sheetId] = new TimelineEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
+  }, [props.sheetId, setStoredValue]);
     
   const steps = React.useMemo(() => [
     {

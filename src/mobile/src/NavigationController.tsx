@@ -43,7 +43,7 @@ export default function NavigationController() {
     hasViewedFeature,
     lastRequestForReview = 0,
     readSummaries,
-    setPreference,
+    setStoredValue,
   } = React.useContext(SessionContext);   
   const {
     isTablet,
@@ -87,7 +87,7 @@ export default function NavigationController() {
           }
           setShowedReview(success);
           emitEvent(success ? 'in-app-review' : 'in-app-review-failed');
-          setPreference('lastRequestForReview', Date.now());
+          setStoredValue('lastRequestForReview', Date.now());
         } catch (error) {
           console.error(error);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,7 +111,7 @@ export default function NavigationController() {
       };
 
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setPreference, emitEvent]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent]);
   
   const refreshSources = React.useCallback(() => {
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {

@@ -216,7 +216,7 @@ const LeftDrawer = createDrawerNavigator();
 export function LeftDrawerScreen() {
   return (
     <LeftDrawer.Navigator 
-      id="LeftDrawer"
+      id="leftDrawerNav"
       initialRouteName={ 'home' }
       screenOptions={ ({ route: _route }) => ({
         headerShown: false,

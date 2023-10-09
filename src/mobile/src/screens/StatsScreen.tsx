@@ -15,7 +15,7 @@ export function StatsScreen({
   route: _route,
   navigation: _navigation,
 }: ScreenComponent<'stats'>) {
-  const { setPreference } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(SessionContext);
   return (
     <Screen>
       <View gap={ 12 } m={ 64 } flex={ 1 } justifyCenter>
@@ -25,7 +25,7 @@ export function StatsScreen({
         <Button
           contained
           onPress={ () => {
-            setPreference('viewedFeatures', {});
+            setStoredValue('viewedFeatures', {});
           } }>
           DO NOT PRESS ME
         </Button>

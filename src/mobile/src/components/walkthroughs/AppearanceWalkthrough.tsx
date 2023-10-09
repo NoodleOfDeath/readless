@@ -15,21 +15,21 @@ import {
   View,
   Walkthrough,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext, TimelineEvent } from '~/contexts';
 import { strings } from '~/locales';
 
 export function AppearanceWalkthrough(props: SheetProps) {
   
-  const { setPreference } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(SessionContext);
   
   const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
+    setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
+      state[props.sheetId] = new TimelineEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
+  }, [props.sheetId, setStoredValue]);
   
   const steps = React.useMemo(() => {
     return [
@@ -79,7 +79,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
                 hideCard
                 scrollEnabled={ false }
                 initialFormat={ ReadingFormat.Summary }
-                onFormatChange={ (format) => setPreference('preferredReadingFormat', format) } />
+                onFormatChange={ (format) => setStoredValue('preferredReadingFormat', format) } />
             </ScrollView>
           </View>
         ),
@@ -113,7 +113,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
         title: strings.walkthroughs_appearance_selectTheme,
       },
     ];
-  }, [onDone, setPreference]);
+  }, [onDone, setStoredValue]);
   
   return (
     <Walkthrough

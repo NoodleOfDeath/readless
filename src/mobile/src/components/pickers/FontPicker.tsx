@@ -28,7 +28,7 @@ export function FontPicker({
   ...props
 }: FontPickerProps = {}) {
   
-  const { fontFamily = DEFAULT_PREFERRED_FONT, setPreference } = React.useContext(SessionContext);
+  const { fontFamily = DEFAULT_PREFERRED_FONT, setStoredValue } = React.useContext(SessionContext);
   const style = useStyles(props);
   
   if (variant === 'grid') {
@@ -38,7 +38,7 @@ export function FontPicker({
         initialValue={ fontFamily as FontFamily }
         buttonProps={ ({ option }) => ({ fontFamily: option.value }) }
         onValueChange={ (font) => {
-          setPreference('fontFamily', font); 
+          setStoredValue('fontFamily', font); 
         } } />
     );
   } else
@@ -59,7 +59,7 @@ export function FontPicker({
               leftIcon={ fontFamily === font ? 'check' : undefined } 
               fontFamily={ font }
               onPress={ () => {
-                setPreference('fontFamily', font); 
+                setStoredValue('fontFamily', font); 
               } }>
               {font}
             </Button>
@@ -74,7 +74,7 @@ export function FontPicker({
       options={ [...AVAILABLE_FONTS] }
       initialValue={ fontFamily as FontFamily }
       cellProps={ ({ option }) => ({ titleTextStyle: { fontFamily: option.value } }) }
-      onValueChange={ (font) => setPreference('fontFamily', font) }>
+      onValueChange={ (font) => setStoredValue('fontFamily', font) }>
       <ScrollView my={ 12 } scrollEnabled={ false }>
         <Summary
           sample

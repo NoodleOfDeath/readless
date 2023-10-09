@@ -10,20 +10,20 @@ import { useNavigation } from '~/hooks';
 export function RoutedScreen({ ...props }: ScreenProps) {
 
   const { navigation, router } = useNavigation();
-  const { loadedInitialUrl, setPreference } = React.useContext(SessionContext); 
+  const { loadedInitialUrl, setLoadedInitialUrl } = React.useContext(SessionContext); 
   
   useFocusEffect(React.useCallback(() => {
     const subscriber = Linking.addEventListener('url', router);
     if (!loadedInitialUrl) {
       Linking.getInitialURL().then((url) => {
         if (url) {
-          setPreference('loadedInitialUrl', true);
+          setLoadedInitialUrl(true);
           router({ stackNav: navigation?.getParent('stackNav'), url });
         }
       });
     }
     return () => subscriber.remove();
-  }, [router, navigation, loadedInitialUrl, setPreference]));
+  }, [router, navigation, loadedInitialUrl, setLoadedInitialUrl]));
   
   return (
     <Screen { ...props } />

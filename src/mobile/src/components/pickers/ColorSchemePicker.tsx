@@ -21,7 +21,7 @@ export function ColorSchemePicker({
   ...props
 }: ColorSchemePickerProps) {
   
-  const { colorScheme, setPreference } = React.useContext(SessionContext);
+  const { colorScheme, setStoredValue } = React.useContext(SessionContext);
   
   if (variant === 'table') {
     return (
@@ -33,7 +33,7 @@ export function ColorSchemePicker({
         ] }
         initialValue={ colorScheme ?? 'system' }
         onValueChange={ (colorScheme) => {
-          setPreference('colorScheme', colorScheme); 
+          setStoredValue('colorScheme', colorScheme); 
         } }>
         <ScrollView my={ 12 } scrollEnabled={ false }>
           <Summary
@@ -58,7 +58,7 @@ export function ColorSchemePicker({
         textCenter: true,
       } }
       initialValue={ colorScheme ?? 'system' }
-      onValueChange={ (value) => setPreference('colorScheme', value) }
+      onValueChange={ (value) => setStoredValue('colorScheme', value) }
       options={ [
         { label: strings.settings_light, value: 'light' as ColorScheme },
         { label: strings.settings_system, value: 'system' as ColorScheme },

@@ -26,7 +26,7 @@ export function PrefSwitch<K extends keyof BooleanPreferences>({
       value={ value }
       onValueChange={ (value) => {
         setValue(value);
-        context.setPreference(prefKey, value);
+        context.setStoredValue(prefKey, value);
         onValueChange?.(value);
       } }
       { ...props } />

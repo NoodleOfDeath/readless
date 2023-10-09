@@ -19,7 +19,7 @@ export function DrawerToggle(props: ButtonProps) {
         accessible
         accessibilityLabel={ strings.axe_menu }
         onPress={ () => {
-          navigation?.getParent('LeftDrawer')?.openDrawer?.(); 
+          (navigation?.getParent('leftDrawerNav') as typeof navigation)?.openDrawer?.(); 
         } }
         { ...props } />
     </View>
@@ -37,7 +37,7 @@ export function SettingsToggle(props: ButtonProps) {
         accessibilityLabel={ strings.axe_settings }
         iconSize={ 24 }
         onPress={ () => {
-          navigation?.getParent('RightDrawer')?.openDrawer?.();
+          (navigation?.getParent('rightDrawerNav') as typeof navigation)?.openDrawer?.();
         } }
         { ...props } />
     </View>

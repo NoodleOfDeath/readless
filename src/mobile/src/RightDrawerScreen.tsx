@@ -63,8 +63,8 @@ const RightDrawer = createDrawerNavigator();
 export function RightDrawerScreen() {
   return (
     <RightDrawer.Navigator 
-      id="RightDrawer"
-      initialRouteName="LeftDrawer"
+      id="rightDrawerNav"
+      initialRouteName="leftDrawer"
       screenOptions={ ({ route: _route }) => ({
         drawerPosition: 'right',
         headerShown: false,
@@ -72,7 +72,7 @@ export function RightDrawerScreen() {
       }) }
       drawerContent={ (props) => <RightDrawerContent { ...props } /> }>
       <RightDrawer.Screen
-        name='LeftDrawer'
+        name='leftDrawer'
         component={ LeftDrawerScreen } />
     </RightDrawer.Navigator>
   );

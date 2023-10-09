@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation as useRNNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -12,7 +13,9 @@ import { SessionContext } from '~/contexts';
 import { NavigationID, RoutingParams } from '~/screens';
 import { readingFormat, usePlatformTools } from '~/utils';
 
-export type Navigation = NativeStackNavigationProp<RoutingParams, keyof RoutingParams, NavigationID>;
+export type DrawerNavigation = DrawerNavigationProp<RoutingParams, keyof RoutingParams, NavigationID>;
+export type StackNavigation = NativeStackNavigationProp<RoutingParams, keyof RoutingParams, NavigationID>;
+export type Navigation = DrawerNavigation & StackNavigation;
 
 export function useNavigation() {
 
@@ -20,12 +23,12 @@ export function useNavigation() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useRNNavigation<Navigation>();
   
-  const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
+  const { preferredReadingFormat, setStoredValue } = React.useContext(SessionContext);
 
   const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R], stackNav?: Navigation) => {
     emitEvent('navigate', route);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (stackNav?.push ?? (navigation as any).push ?? navigation.navigate)(route, params as RoutingParams[R]);
+    return (stackNav?.push ?? navigation.push ?? navigation.navigate)(route, params as RoutingParams[R]);
   }, [emitEvent, navigation]);
 
   const search = React.useCallback((params: RoutingParams['search'], stackNav?: Navigation) => {
@@ -33,9 +36,9 @@ export function useNavigation() {
     if (!prefilter) {
       return;
     }
-    setPreference('searchHistory', (prev) => Array.from(new Set([prefilter, ...(prev ?? [])])).slice(0, 10));
+    setStoredValue('searchHistory', (prev) => Array.from(new Set([prefilter, ...(prev ?? [])])).slice(0, 10));
     navigate('search', params, stackNav);
-  }, [navigate, setPreference]);
+  }, [navigate, setStoredValue]);
   
   const openSummary = React.useCallback((props: RoutingParams['summary'], stackNav?: Navigation) => {
     navigate('summary', {

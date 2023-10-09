@@ -24,7 +24,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
 
   const { summary, onClose } = React.useMemo(() => ({ ...payload }), [payload]);
   
-  const { setPreference } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(SessionContext);
 
   const { interactWithSummary } = useApiClient();
 
@@ -65,7 +65,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
       selectedValues.includes('offensive') ||
       selectedValues.includes('spam')
     ) {
-      setPreference('removedSummaries', (prev) => {
+      setStoredValue('removedSummaries', (prev) => {
         const summaries = { ...prev };
         if (summaries[summary.id]) {
           delete summaries[summary.id];
@@ -84,7 +84,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
     setSelectedValues([]);
     setOtherValue('');
     setSuccess(true);
-  }, [selectedValues, interactWithSummary, summary, setPreference]);
+  }, [selectedValues, interactWithSummary, summary, setStoredValue]);
   
   return (
     <ActionSheet id={ props.sheetId }>

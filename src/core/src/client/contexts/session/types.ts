@@ -10,12 +10,12 @@ import {
 } from '~/api';
 import { Locale } from '~/locales';
 
-export type BookmarkConstructorProps = {
+export type TimelineEventProps = {
   createdAt: Date;
   expiresIn?: string;
 };
 
-export class Bookmark<T> {
+export class TimelineEvent<T> {
 
   item: T;
   createdAt: Date;
@@ -31,7 +31,7 @@ export class Bookmark<T> {
   constructor(item: T, {
     createdAt = new Date(), 
     expiresIn,
-  }: Partial<BookmarkConstructorProps> = {}) {
+  }: Partial<TimelineEventProps> = {}) {
     this.item = item;
     this.createdAt = createdAt;
     if (expiresIn) {
@@ -109,26 +109,26 @@ export type Resource =
  
 export type SessionEvent = Activity | ResourceActivity | `${ResourceActivity}-${Resource}` | `${ResourceActivity}-${Resource}-${number}` | `poll-${string}`;
 
-export type Preferences = {
+export type StoredValues = {
   
   // system state
   latestVersion?: string;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
-  viewedFeatures?: { [key: string]: Bookmark<boolean> };
+  viewedFeatures?: { [key: string]: TimelineEvent<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
-  loadedInitialUrl?: boolean;
   
   // user state
   uuid?: string;
   pushNotificationsEnabled?: boolean;
   pushNotifications?: { [key: string]: PushNotificationSettings };
   fcmToken?: string;
+  userStats?: UserStats;
   
   // summary state
-  readSummaries?: { [key: number]: Bookmark<boolean> };
-  bookmarkedSummaries?: { [key: number]: Bookmark<PublicSummaryGroup> };
+  readSummaries?: { [key: number]: TimelineEvent<boolean> };
+  bookmarkedSummaries?: { [key: number]: TimelineEvent<PublicSummaryGroup> };
   bookmarkCount: number;
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
@@ -170,7 +170,7 @@ export type Preferences = {
   triggerWords?: { [key: string]: string };
 };
 
-export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number' | 'string' | 'object' | 'array' } = {
+export const STORED_VALUE_TYPES: { [key in keyof StoredValues]: 'boolean' | 'number' | 'string' | 'object' | 'array' } = {
   bookmarkCount: 'number',
   bookmarkedSummaries: 'object',
   colorScheme: 'string',
@@ -192,7 +192,6 @@ export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number
   lastRequestForReview: 'number',
   letterSpacing: 'number',
   lineHeightMultiplier: 'number',
-  loadedInitialUrl: 'boolean',
   locale: 'string',
   preferredReadingFormat: 'string',
   preferredShortPressFormat: 'string',
@@ -209,6 +208,7 @@ export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number
   summaryTranslations: 'object',
   triggerWords: 'object',
   unreadBookmarkCount: 'number',
+  userStats: 'object',
   uuid: 'string',
   viewedFeatures: 'object',
 };
@@ -226,31 +226,47 @@ export type PreferenceMutation<E extends SessionEvent> =
   any;
   
 export type PreferenceState<E extends SessionEvent> =
-  E extends `${'unbookmark' | 'bookmark'}-summary` ? Preferences['bookmarkedSummaries'] :
-  E extends `${'read' | 'unread'}-summary` ? Preferences['readSummaries'] :
-  E extends `${'read' | 'unread'}-recap` ? Preferences['readRecaps'] :
-  E extends `${string}-summary` ? Preferences['removedSummaries'] :
-  E extends `${string}-publisher` ? Preferences['followedPublishers'] :
-  E extends `${string}-category` ? Preferences['followedCategories'] :
+  E extends `${'unbookmark' | 'bookmark'}-summary` ? StoredValues['bookmarkedSummaries'] :
+  E extends `${'read' | 'unread'}-summary` ? StoredValues['readSummaries'] :
+  E extends `${'read' | 'unread'}-recap` ? StoredValues['readRecaps'] :
+  E extends `${string}-summary` ? StoredValues['removedSummaries'] :
+  E extends `${string}-publisher` ? StoredValues['followedPublishers'] :
+  E extends `${string}-category` ? StoredValues['followedCategories'] :
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any;
 
-export type SessionContextType = Preferences & {
+export type Streak = {
+  start: Date;
+  end: Date;
+  length: number;
+};
+
+export type UserStats = {
+  lastSeen?: Date;
+  streak?: Streak;
+  longestStreak?: Streak;
+};
+
+export type SessionContextType = StoredValues & {
   ready?: boolean;
 
+  loadedInitialUrl?: boolean;
+  setLoadedInitialUrl: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   categories?: Record<string, PublicCategoryAttributes>;
   setCategories: React.Dispatch<React.SetStateAction<Record<string, PublicCategoryAttributes> | undefined>>;
   publishers?: Record<string, PublicPublisherAttributes>;
   setPublishers: React.Dispatch<React.SetStateAction<Record<string, PublicPublisherAttributes> | undefined>>;
-  
+
+  userStats?: UserStats;
+
   // state setters
-  setPreference: <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V, emit?: boolean) => Promise<void>;
-  getPreference: <K extends keyof Preferences>(key: K) => Promise<Preferences[K] | undefined>;
-  resetPreferences: (hard?: boolean) => Promise<void>;
+  setStoredValue: <K extends keyof StoredValues, V extends StoredValues[K] | ((value?: StoredValues[K]) => (StoredValues[K] | undefined))>(key: K, value?: V, emit?: boolean) => Promise<void>;
+  getStoredValue: <K extends keyof StoredValues>(key: K) => Promise<StoredValues[K] | undefined>;
+  resetStoredValues: (hard?: boolean) => Promise<void>;
   storeTranslations: <
     Target extends RecapAttributes | PublicSummaryGroup, 
-    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
-  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => Promise<void>;
+    StoredValueKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
+  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: StoredValueKey) => Promise<void>;
   hasPushEnabled: (key: string) => boolean;
   enablePush: (key: string, settings?: PushNotificationSettings) => Promise<void>;
   hasViewedFeature: (...features: string[]) => boolean;
@@ -297,7 +313,7 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   followCount: 0,
   followFilter: '',
   followPublisher: () => Promise.resolve(),
-  getPreference: () => Promise.resolve(undefined),
+  getStoredValue: () => Promise.resolve(undefined),
   hasPushEnabled: () => false,
   hasViewedFeature: () => false,
   isExcludingCategory: () => false,
@@ -309,10 +325,11 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   readRecap: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),
-  resetPreferences: () => Promise.resolve(),
+  resetStoredValues: () => Promise.resolve(),
   setCategories: () => Promise.resolve(),
-  setPreference: () => Promise.resolve(),
+  setLoadedInitialUrl: () => Promise.resolve(),
   setPublishers: () => Promise.resolve(),
+  setStoredValue: () => Promise.resolve(),
   storeTranslations: () => Promise.resolve(undefined),
   unreadBookmarkCount: 0,
   viewFeature: () => Promise.resolve(),

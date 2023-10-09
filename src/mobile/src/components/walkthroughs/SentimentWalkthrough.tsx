@@ -16,24 +16,24 @@ import {
   Walkthrough,
   WalkthroughStep,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext, TimelineEvent } from '~/contexts';
 import { useInAppBrowser, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function SentimentWalkthrough(props: SheetProps) {
   
-  const { setPreference } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(SessionContext);
   const { openURL } = useInAppBrowser();
   const theme = useTheme();
 
   const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
+    setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
+      state[props.sheetId] = new TimelineEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
+  }, [props.sheetId, setStoredValue]);
   
   const steps: WalkthroughStep[] = React.useMemo(() => [
     {
@@ -233,7 +233,7 @@ export function SentimentWalkthrough(props: SheetProps) {
               color={ 'white' }
               haptic
               onPress={ () => {
-                setPreference('sentimentEnabled', true);
+                setStoredValue('sentimentEnabled', true);
                 onDone();
               } }>
               {strings.walkthroughs_sentiment_enable}
@@ -243,7 +243,7 @@ export function SentimentWalkthrough(props: SheetProps) {
       ),
       title: strings.walkthroughs_sentiment_enableQuestion,
     },
-  ], [theme.colors.link, theme.colors.text, theme.colors.success, openURL, onDone, setPreference]);
+  ], [theme.colors.link, theme.colors.text, theme.colors.success, openURL, onDone, setStoredValue]);
   
   return (
     <Walkthrough

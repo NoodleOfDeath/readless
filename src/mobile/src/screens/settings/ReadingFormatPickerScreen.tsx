@@ -9,7 +9,7 @@ import {
 import { SessionContext } from '~/contexts';
 
 export function ReadingFormatPickerScreen() {
-  const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
+  const { preferredReadingFormat, setStoredValue } = React.useContext(SessionContext);
   return (
     <Screen>
       <ScrollView>
@@ -17,7 +17,7 @@ export function ReadingFormatPickerScreen() {
           sample
           hideCard
           initialFormat={ preferredReadingFormat ?? ReadingFormat.Bullets }
-          onFormatChange={ (format) => setPreference('preferredReadingFormat', format) } />
+          onFormatChange={ (format) => setStoredValue('preferredReadingFormat', format) } />
       </ScrollView>
     </Screen>
   );

@@ -32,7 +32,7 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
     bookmarkCount,
     readSummaries,
     preferredReadingFormat, 
-    setPreference,
+    setStoredValue,
     viewFeature,
   } = React.useContext(SessionContext);
   const { interactWithSummary } = useApiClient();
@@ -95,7 +95,7 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
                   contained
                   beveled
                   p={ 6 }
-                  onPress={ () => setPreference('bookmarkedSummaries', (prev) => {
+                  onPress={ () => setStoredValue('bookmarkedSummaries', (prev) => {
                     const state = { ...prev };
                     for (const [id] of Object.entries(state)) {
                       if (id in (readSummaries ?? {})) {

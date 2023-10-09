@@ -21,14 +21,14 @@ const OPTIONS: SelectOption<ReadingFormat>[] = [{
 }];
 
 export function ShortPressFormatPicker({ ...props }: Props = {}) {
-  const { preferredShortPressFormat, setPreference } = React.useContext(SessionContext);
+  const { preferredShortPressFormat, setStoredValue } = React.useContext(SessionContext);
   return (
     <TablePicker
       { ...props }
       options={ OPTIONS }
       initialValue={ preferredShortPressFormat ?? ReadingFormat.Bullets }
       onValueChange={ (value) => {
-        setPreference('preferredShortPressFormat', value); 
+        setStoredValue('preferredShortPressFormat', value); 
       } }>
     </TablePicker>
   );

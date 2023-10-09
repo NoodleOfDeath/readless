@@ -43,7 +43,7 @@ export function SearchMenu({
   
   const {
     searchHistory,
-    setPreference,
+    setStoredValue,
   } = React.useContext(SessionContext);
   const { screenWidth } = React.useContext(LayoutContext);
 
@@ -102,7 +102,7 @@ export function SearchMenu({
               </Button>
             </View>
             <View gap={ 6 }>
-              <Button caption onPress={ () => setPreference('searchHistory', []) }>
+              <Button caption onPress={ () => setStoredValue('searchHistory', []) }>
                 {strings.action_clearSearchHistory}
               </Button>
               <Divider />

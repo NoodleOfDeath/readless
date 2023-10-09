@@ -7,21 +7,21 @@ import {
   Walkthrough,
   WalkthroughStep,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/contexts';
+import { SessionContext, TimelineEvent } from '~/contexts';
 import { strings } from '~/locales';
 
 export function WhatsNewWalkthrough(props: SheetProps) {
   
-  const { setPreference } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(SessionContext);
   
   const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
+    setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
+      state[props.sheetId] = new TimelineEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
+  }, [props.sheetId, setStoredValue]);
   
   const steps: WalkthroughStep[] = React.useMemo(() => [
     {
