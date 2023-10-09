@@ -16,8 +16,8 @@ public struct PublicPublisherAttributes: Codable, Hashable {
   public var displayName: String
   public var description: String?
   
-  public var icon: String {
-    return "https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/\(self.name).png"
+  public var icon: URL {
+    return URL(string: "https://readless.nyc3.cdn.digitaloceanspaces.com/img/pub/\(self.name).png")!
   }
 
   public init(name: String, displayName: String, description: String? = nil) {

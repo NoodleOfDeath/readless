@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 #if canImport(AnyCodable)
 import AnyCodable
 #endif
@@ -77,4 +78,102 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   
 }
 
-public var MOCK_SUMMARY = PublicSummaryAttributes(id: 1, url: "https://readless.ai", title: "Summary Preview", shortSummary: "Short Summary", publisher: PublicPublisherAttributes(name: "cnn", displayName: "CNN"), category: PublicCategoryAttributes(name: "sports", displayName: "Sports", icon: "basketball"))
+public class Summary {
+  
+  public var root: PublicSummaryAttributes
+  public var id: Int
+  public var url: String
+  public var title: String
+  public var shortSummary: String?
+  public var publisher: PublicPublisherAttributes
+  public var category: PublicCategoryAttributes
+  public var imageUrl: String?
+  public var media: [String: String]?
+  public var originalDate: Date?
+  public var translations: [String: String]?
+  
+  public var deeplink: URL {
+    return URL(string: "https://readless.ai/read/?s=\(id)")!
+  }
+  
+  public var primaryImageUrl: URL? {
+    return URL(string: media?["imageArticle"] ?? media?["imageAi1"] ?? imageUrl ?? "")
+  }
+  
+  public init(_ summary: PublicSummaryAttributes) {
+    self.root = summary
+    self.id = summary.id
+    self.url = summary.url
+    self.title = summary.title
+    self.shortSummary = summary.shortSummary
+    self.publisher = summary.publisher
+    self.category = summary.category
+    self.imageUrl = summary.imageUrl
+    self.media = summary.media
+    self.originalDate = summary.originalDate
+    self.translations = summary.translations
+  }
+  
+  @Published public var image: Image?
+  @Published public var publisherIcon: Image?
+  
+  public func loadImages() {
+    Image.load(from: primaryImageUrl, maxWidth: 400) { self.image = $0 }
+    Image.load(from: publisher.icon) { self.publisherIcon = $0 }
+  }
+  
+  public func loadImagesAsync() async {
+    image = await Image.loadAsync(from: primaryImageUrl, maxWidth: 400)
+    publisherIcon = await Image.loadAsync(from: publisher.icon)
+  }
+  
+}
+
+
+public var MOCK_SUMMARY_1 = Summary(
+  PublicSummaryAttributes(id: 1,
+                          url: "https://readless.ai",
+                          title: "Summary Preview",
+                          shortSummary: "Short Summary",
+                          publisher: PublicPublisherAttributes(name: "cnn", 
+                                                               displayName: "CNN"),
+                          category: PublicCategoryAttributes(name: "sports", 
+                                                             displayName: "Sports",
+                                                             icon: "basketball")
+                         ))
+
+public var MOCK_SUMMARY_2 = Summary(
+  PublicSummaryAttributes(id: 2,
+                          url: "https://readless.ai",
+                          title: "Summary Preview",
+                          shortSummary: "Short Summary",
+                          publisher: PublicPublisherAttributes(name: "forbes",
+                                                               displayName: "Forbes"),
+                          category: PublicCategoryAttributes(name: "politics",
+                                                             displayName: "politics",
+                                                             icon: "bank")
+                         ))
+
+public var MOCK_SUMMARY_3 = Summary(
+  PublicSummaryAttributes(id: 3,
+                          url: "https://readless.ai",
+                          title: "Summary Preview",
+                          shortSummary: "Short Summary",
+                          publisher: PublicPublisherAttributes(name: "forbes",
+                                                               displayName: "Forbes"),
+                          category: PublicCategoryAttributes(name: "politics",
+                                                             displayName: "politics",
+                                                             icon: "bank")
+                         ))
+
+public var MOCK_SUMMARY_4 = Summary(
+  PublicSummaryAttributes(id: 4,
+                          url: "https://readless.ai",
+                          title: "Summary Preview",
+                          shortSummary: "Short Summary",
+                          publisher: PublicPublisherAttributes(name: "forbes",
+                                                               displayName: "Forbes"),
+                          category: PublicCategoryAttributes(name: "politics",
+                                                             displayName: "politics",
+                                                             icon: "bank")
+                         ))

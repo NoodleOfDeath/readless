@@ -8,6 +8,7 @@ import {
   RecapAttributes,
   RequestParams,
 } from '~/api';
+import { Locale } from '~/locales';
 
 export type BookmarkConstructorProps = {
   createdAt: Date;
@@ -117,6 +118,7 @@ export type Preferences = {
   viewedFeatures?: { [key: string]: Bookmark<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
+  loadedInitialUrl?: boolean;
   
   // user state
   uuid?: string;
@@ -130,6 +132,7 @@ export type Preferences = {
   bookmarkCount: number;
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
+  locale?: Locale;
   summaryTranslations?: { [key: number]: { [key in keyof PublicSummaryGroup]?: string } };
   
   // recap state
@@ -189,6 +192,8 @@ export const PREFERENCE_TYPES: { [key in keyof Preferences]: 'boolean' | 'number
   lastRequestForReview: 'number',
   letterSpacing: 'number',
   lineHeightMultiplier: 'number',
+  loadedInitialUrl: 'boolean',
+  locale: 'string',
   preferredReadingFormat: 'string',
   preferredShortPressFormat: 'string',
   pushNotifications: 'object',

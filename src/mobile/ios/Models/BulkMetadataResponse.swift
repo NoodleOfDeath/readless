@@ -10,7 +10,31 @@ import Foundation
 import AnyCodable
 #endif
 
-public struct BulkResponse<T: Codable, M: Codable>: Codable {
+public struct BulkResponse<T: Codable>: Codable {
+  
+  public var count: Int
+  public var rows: [T]
+  
+  public init(count: Int, rows: [T]) {
+    self.count = count
+    self.rows = rows
+  }
+  
+  public enum CodingKeys: String, CodingKey, CaseIterable {
+    case count
+    case rows
+  }
+  
+  // Encodable protocol methods
+  
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(count, forKey: .count)
+    try container.encode(rows, forKey: .rows)
+  }
+}
+
+public struct BulkMetadataResponse<T: Codable, M: Codable>: Codable {
   
   public var count: Int
   public var rows: [T]
