@@ -23,7 +23,6 @@ import {
   Divider,
   FlatList,
   FlatListProps,
-  SearchMenu,
   Summary,
   Text,
   View,
@@ -40,6 +39,7 @@ import {
   useTheme,
 } from '~/hooks';
 import { getLocale, strings } from '~/locales';
+import { SearchMenu } from '~/navigation';
 import { parseKeywords } from '~/utils';
 
 export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
