@@ -11,13 +11,18 @@ import {
   RecapAttributes,
 } from '~/api';
 
-export type NavigationID = 'stackNav' | 'leftDrawerNav' | 'rightDrawerNav';
+export type NavigationID = `${string}StackNav` | `${string}TabNav` | `${string}DrawerNav`;
 
-export type RoutingParams = {
+export type NavigationTabParams = {
+  news: undefined;
+  games: undefined;
+};
+
+export type NewsRoutingParams = {
   // main
   default: undefined;
   home: undefined;
-  // tabs
+  // top-tabs
   oldNews: undefined;
   topStories: undefined;
   yourNews: undefined;
@@ -58,6 +63,15 @@ export type RoutingParams = {
   stats: undefined;
   test: undefined;
 };
+
+export type GamesRoutingParams = {
+  default: undefined;
+  play: {
+    name: string;
+  }
+};
+
+export type RoutingParams = NavigationTabParams & NewsRoutingParams & GamesRoutingParams;
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   config: {

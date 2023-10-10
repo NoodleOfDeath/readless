@@ -11,7 +11,7 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 
-import { RightDrawerScreen } from './RightDrawerScreen';
+import { RightDrawerNavigator } from './RightDrawerNavigator';
 
 import {
   ActivityIndicator,
@@ -28,7 +28,7 @@ import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
-export default function NavigationController() {
+export function RootNavigator() {
   
   const { emitEvent } = usePlatformTools();
   const theme = useTheme();
@@ -169,7 +169,7 @@ export default function NavigationController() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          <RightDrawerScreen />
+          <RightDrawerNavigator />
           <MediaPlayer visible={ Boolean(currentTrack) } />
         </SheetProvider>
       </PaperProvider>

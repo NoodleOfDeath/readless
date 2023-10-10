@@ -6,7 +6,7 @@ import {
   createDrawerNavigator,
 } from '@react-navigation/drawer';
 
-import { LeftDrawerScreen } from './LeftDrawerScreen';
+import { LeftDrawerNavigator } from './LeftDrawerNavigator';
 
 import {
   Button,
@@ -60,7 +60,7 @@ function RightDrawerContent(props: DrawerContentComponentProps) {
 
 const RightDrawer = createDrawerNavigator();
 
-export function RightDrawerScreen() {
+export function RightDrawerNavigator() {
   return (
     <RightDrawer.Navigator 
       id="rightDrawerNav"
@@ -73,7 +73,7 @@ export function RightDrawerScreen() {
       drawerContent={ (props) => <RightDrawerContent { ...props } /> }>
       <RightDrawer.Screen
         name='leftDrawer'
-        component={ LeftDrawerScreen } />
+        component={ LeftDrawerNavigator } />
     </RightDrawer.Navigator>
   );
 }

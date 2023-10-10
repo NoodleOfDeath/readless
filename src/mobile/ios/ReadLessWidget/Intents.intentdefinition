@@ -19,7 +19,7 @@
 			<array>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Live Feed</string>
+					<string>Top Stories</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>yHsbIT</string>
 					<key>INEnumValueName</key>
@@ -27,13 +27,13 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Top Stories</string>
+					<string>Live Feed</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>jjAaOW</string>
 					<key>INEnumValueIndex</key>
 					<integer>1</integer>
 					<key>INEnumValueName</key>
-					<string>topStories</string>
+					<string>liveFeed</string>
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>

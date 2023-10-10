@@ -3,6 +3,7 @@ import React from 'react';
 import {
   EventMapBase,
   NavigationState,
+  ParamListBase,
   RouteConfig,
 } from '@react-navigation/native';
 import {
@@ -10,24 +11,22 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 
-import { CategoryPickerScreen } from './screens/settings/CategoryPickerScreen';
-import { PublisherPickerScreen } from './screens/settings/PublisherPickerScreen';
+import { SearchMenu } from './header';
 
-import {
-  DrawerToggle,
-  SearchMenu,
-  SettingsToggle,
-} from '~/components';
+import { DrawerToggle, SettingsToggle } from '~/components';
 import { SessionContext } from '~/contexts';
 import { strings } from '~/locales';
 import {
   BookmarksScreen,
+  CategoryPickerScreen,
   CategoryScreen,
   ColorSchemePickerScreen,
   FontPickerScreen,
   HomeScreen,
   LegalScreen,
+  NavigationID,
   NotificationSettingsScreen,
+  PublisherPickerScreen,
   PublisherScreen,
   ReadingFormatPickerScreen,
   RecapScreen,
@@ -230,7 +229,7 @@ export const STACK_SCREENS: RouteConfig<
     options: {
       headerBackTitle: '',
       headerRight: () => undefined,
-      headerTitle: 'stats', 
+      headerTitle: 'stats',
     },
   },
   {
@@ -246,12 +245,30 @@ export const STACK_SCREENS: RouteConfig<
 
 const Stack = createNativeStackNavigator();
 
-export function StackNavigation({ initialRouteName = 'default' }: { initialRouteName?: string } = {}) {
+export type StackNavigatorProps<T> = {
+  id: NavigationID;
+  initialRouteName?: keyof T;
+  screens: RouteConfig<
+    RoutingParams,
+    keyof RoutingParams,
+    NavigationState,
+    NativeStackNavigationOptions,
+    EventMapBase
+  >[];
+};
+
+export function StackNavigator<R extends ParamListBase>(
+  { 
+    id,
+    initialRouteName = 'default',
+    screens,
+  }: StackNavigatorProps<R>
+) {
   return (
     <Stack.Navigator 
-      id="Stack"
-      initialRouteName={ initialRouteName }>
-      {STACK_SCREENS.map((screen) => (
+      id={ id }
+      initialRouteName={ initialRouteName as string }>
+      {screens.map((screen) => (
         <Stack.Screen
           key={ String(screen.name) }
           { ...screen }

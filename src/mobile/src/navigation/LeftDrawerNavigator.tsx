@@ -6,7 +6,7 @@ import {
   createDrawerNavigator,
 } from '@react-navigation/drawer';
 
-import { StackNavigation } from './StackNavigation';
+import { TabbedNavigator } from './TabbedNavigator';
 
 import {
   Button,
@@ -14,18 +14,18 @@ import {
   DrawerItem,
   DrawerSection,
   Icon,
-  RoutedScreen,
+  Screen,
   View,
 } from '~/components';
 import { SessionContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
-function HomeDrawer() {
+function TabbedScreen() {
   return (
-    <RoutedScreen safeArea={ false }>
-      <StackNavigation /> 
-    </RoutedScreen>
+    <Screen safeArea={ false }>
+      <TabbedNavigator />
+    </Screen>
   );
 }
 
@@ -213,7 +213,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
 
 const LeftDrawer = createDrawerNavigator();
 
-export function LeftDrawerScreen() {
+export function LeftDrawerNavigator() {
   return (
     <LeftDrawer.Navigator 
       id="leftDrawerNav"
@@ -225,7 +225,7 @@ export function LeftDrawerScreen() {
       drawerContent={ (props) => <LeftDrawerContent { ...props } /> }>
       <LeftDrawer.Screen 
         name={ strings.screens_home } 
-        component={ HomeDrawer } />
+        component={ TabbedScreen } />
     </LeftDrawer.Navigator>
   );
 }

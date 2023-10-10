@@ -14,8 +14,8 @@ import { NavigationID, RoutingParams } from '~/screens';
 import { readingFormat, usePlatformTools } from '~/utils';
 
 export type DrawerNavigation = DrawerNavigationProp<RoutingParams, keyof RoutingParams, NavigationID>;
-export type StackNavigation = NativeStackNavigationProp<RoutingParams, keyof RoutingParams, NavigationID>;
-export type Navigation = DrawerNavigation & StackNavigation;
+export type StackNavigator = NativeStackNavigationProp<RoutingParams, keyof RoutingParams, NavigationID>;
+export type Navigation = DrawerNavigation & StackNavigator;
 
 export function useNavigation() {
 

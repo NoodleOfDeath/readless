@@ -1,7 +1,11 @@
 import React from 'react';
-import { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
+import {
+  NativeSyntheticEvent,
+  TextInput as RNTextInput,
+  TextInputKeyPressEventData,
+} from 'react-native';
 
-import { TextInput as RNTextInput, TextInputProps as RNTextInputProps } from 'react-native-paper';
+import { TextInput as RNPTextInput, TextInputProps as RNTextInputProps } from 'react-native-paper';
 
 import {
   ChildlessViewProps,
@@ -10,20 +14,23 @@ import {
 } from '~/components';
 import { useTheme } from '~/hooks';
 
+export type NativeTextInput = RNTextInput;
+
 export type TextInputProps = RNTextInputProps & TextProps & ChildlessViewProps & {
   flat?: boolean;
 };
 
 export type InputEvent = NativeSyntheticEvent<TextInputKeyPressEventData>;
 
-export function TextInput(props: TextInputProps) {
+export const TextInput = React.forwardRef(function TextInput(props: TextInputProps, ref: React.ForwardedRef<NativeTextInput>) {
   const theme = useTheme();
   return (
     <View borderRadius={ 500 } overflow='hidden' { ...props }>
-      <RNTextInput
+      <RNPTextInput
+        ref={ ref }
         dense
         { ...props }
         contentStyle={ [theme.components.input, props.color ? { color: props.color } : {} ] } />
     </View>
   );
-}
+}) as React.ForwardRefExoticComponent<TextInputProps & React.RefAttributes<NativeTextInput>>;

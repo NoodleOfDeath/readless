@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { RoutedScreen, SummaryList } from '~/components';
+import { SummaryList } from '~/components';
 import { useApiClient } from '~/hooks';
+import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
 
 export function SearchScreen({ 
@@ -11,7 +12,7 @@ export function SearchScreen({
   
   const { getSummaries } = useApiClient();
   return (
-    <RoutedScreen>
+    <RoutedScreen navigationID='newsStackNav'>
       <SummaryList
         landscapeEnabled
         enableTts

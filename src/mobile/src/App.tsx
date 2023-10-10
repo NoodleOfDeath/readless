@@ -15,13 +15,13 @@ import {
   WhatsNewWalkthrough,
 } from './components';
 
-import NavigationController from '~/NavigationController';
 import {
   LayoutContextProvider,
   MediaContextProvider,
   NotificationContextProvider,
   SessionContextProvider,
 } from '~/contexts';
+import { RootNavigator } from '~/navigation';
 
 registerSheet('appearance-walkthrough', AppearanceWalkthrough);
 registerSheet('bookmark-walkthrough', BookmarkWalkthrough);
@@ -41,7 +41,7 @@ export default function App() {
       <LayoutContextProvider>
         <NotificationContextProvider>
           <MediaContextProvider>
-            <NavigationController />
+            <RootNavigator />
           </MediaContextProvider>
         </NotificationContextProvider>
       </LayoutContextProvider>
