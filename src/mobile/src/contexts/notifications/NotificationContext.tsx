@@ -29,7 +29,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
   const { 
     fcmToken, 
     enablePush,
-    setPreference,
+    setStoredValue,
   } = React.useContext(SessionContext);
 
   const [redirectToSettings, setRedirectToSettings] = React.useState(false);
@@ -46,7 +46,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       if (!data) {
         return;
       }
-      await setPreference('pushNotifications', (prev) => {
+      await setStoredValue('pushNotifications', (prev) => {
         const newState = { ...prev };
         for (const [event] of (Object.keys(newState) as SubscriptionEvent[]).entries()) {
           if (!(event in data)) {
@@ -64,13 +64,13 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     } catch (e) {
       console.log(e);
     }
-  }, [fcmToken, getSubscriptionStatus, setPreference]);
+  }, [fcmToken, getSubscriptionStatus, setStoredValue]);
 
   const isRegisteredForRemoteNotifications = React.useCallback(async (redirectOnFail = false) => {
     const fail = () => {
-      setPreference('pushNotificationsEnabled', false);
-      setPreference('fcmToken', undefined);
-      setPreference('pushNotifications', {});
+      setStoredValue('pushNotificationsEnabled', false);
+      setStoredValue('fcmToken', undefined);
+      setStoredValue('pushNotifications', {});
       if (redirectOnFail) {
         Linking.openSettings();
       }
@@ -96,7 +96,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       return false;
     }
     return true;
-  }, [setPreference]);
+  }, [setStoredValue]);
 
   const registerRemoteNotifications = React.useCallback((redirectOnFail = false) => {
     try {
@@ -121,8 +121,8 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
             return;
           }
           const newFcmToken = await messaging().getToken();
-          setPreference('pushNotificationsEnabled', true);
-          setPreference('fcmToken', newFcmToken);
+          setStoredValue('pushNotificationsEnabled', true);
+          setStoredValue('fcmToken', newFcmToken);
           await subscribe({
             channel,
             event: SubscriptionEvent.Default,
@@ -184,7 +184,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       listeners.forEach(listener => listener.remove());
     };
 
-  }, [isRegisteredForRemoteNotifications, redirectToSettings, setPreference, subscribe, syncWithServer]);
+  }, [isRegisteredForRemoteNotifications, redirectToSettings, setStoredValue, subscribe, syncWithServer]);
 
   return (
     <NotificationContext.Provider value={ { 
@@ -209,8 +209,8 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
           throw new Error('FCM token not available');
         }
         if (params.event === SubscriptionEvent.Default) {
-          await setPreference('pushNotificationsEnabled', false);
-          await setPreference('fcmToken', undefined);
+          await setStoredValue('pushNotificationsEnabled', false);
+          await setStoredValue('fcmToken', undefined);
         } else {
           await enablePush(params.event, undefined);
         }

@@ -13,23 +13,23 @@ import {
   View,
   Walkthrough,
 } from '~/components';
-import { Bookmark, SessionContext } from '~/core';
+import { SessionContext, TimelineEvent } from '~/core';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function BookmarkWalkthrough(props: SheetProps) {
   
   const theme = useTheme();
-  const { setPreference } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(SessionContext);
 
   const onDone = React.useCallback(async () => {
-    setPreference('viewedFeatures', (prev) => {
+    setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new Bookmark(true);
+      state[props.sheetId] = new TimelineEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);
-  }, [props.sheetId, setPreference]);
+  }, [props.sheetId, setStoredValue]);
   
   const steps = React.useMemo(() => [
     {

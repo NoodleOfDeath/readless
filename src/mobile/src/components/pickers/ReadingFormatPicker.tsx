@@ -28,7 +28,7 @@ export function ReadingFormatPicker({
   pressOnly,
   ...props
 }: Props = {}) {
-  const { preferredReadingFormat, setPreference } = React.useContext(SessionContext);
+  const { preferredReadingFormat, setStoredValue } = React.useContext(SessionContext);
   const buttonsRef = React.useRef<SegmentedButtonsRef<ReadingFormat>>(null);
   return (
     <SegmentedButtons 
@@ -41,7 +41,7 @@ export function ReadingFormatPicker({
       buttonMenuItems={ (option) => [
         {
           onPress: () => {
-            setPreference('preferredReadingFormat', option.value);
+            setStoredValue('preferredReadingFormat', option.value);
             if (option.value !== ReadingFormat.FullArticle) {
               buttonsRef.current?.setValue(option.value);
             }

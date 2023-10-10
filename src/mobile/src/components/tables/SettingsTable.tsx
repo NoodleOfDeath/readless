@@ -31,11 +31,11 @@ export function SettingsTable() {
     fontFamily, 
     preferredShortPressFormat,
     preferredReadingFormat,
-    resetPreferences, 
+    resetStoredValues, 
     triggerWords,
     readSummaries,
     removedSummaries,
-    setPreference,
+    setStoredValue,
   } = React.useContext(SessionContext);
   
   const [loading, setLoading] = React.useState(false);
@@ -175,7 +175,7 @@ export function SettingsTable() {
           bold
           title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
           onPress={ () => {
-            setPreference('readSummaries', {}); 
+            setStoredValue('readSummaries', {}); 
           } }
           onLongPress={ () => {
             navigate('test'); 
@@ -184,9 +184,9 @@ export function SettingsTable() {
           bold
           title={ `${strings.settings_resetHiddenSummaries} (${Object.keys({ ...removedSummaries }).length})` }
           onPress={ () => {
-            setPreference('removedSummaries', {}); 
-            setPreference('excludedCategories', {}); 
-            setPreference('excludedPublishers', {}); 
+            setStoredValue('removedSummaries', {}); 
+            setStoredValue('excludedCategories', {}); 
+            setStoredValue('excludedPublishers', {}); 
           } } />
         <TableViewCell
           bold
@@ -201,10 +201,10 @@ export function SettingsTable() {
           bold
           title={ strings.settings_resetAllSettings }
           onPress={ () => {
-            resetPreferences(); 
+            resetStoredValues(); 
           } }
           onLongPress={ () => {
-            resetPreferences(true);
+            resetStoredValues(true);
           } } />
       </TableViewSection>
     </TableView>

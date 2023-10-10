@@ -1,21 +1,18 @@
 import React from 'react';
 
-import { Recap, Screen } from '~/components';
-import { getLocale } from '~/locales';
-import { ScreenProps } from '~/screens';
+import { Recap } from '~/components';
+import { RoutedScreen } from '~/navigation';
+import { ScreenComponent } from '~/screens';
 
-export function RecapScreen({
-  route,
-  navigation,
-}: ScreenProps<'recap'>) {
+export function RecapScreen({ route }: ScreenComponent<'recap'>) {
   const recap = React.useMemo(() => route?.params?.recap, [route]);
   return (
-    <Screen>
+    <RoutedScreen navigationID='newsStackNav'>
       {recap && (
         <Recap
           expanded
           recap={ recap } />
       )}
-    </Screen>
+    </RoutedScreen>
   );
 }

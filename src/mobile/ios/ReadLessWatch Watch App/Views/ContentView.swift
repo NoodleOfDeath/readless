@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-  @ObservedObject private var service: ConnectService = ConnectService()
-  
   @Environment(\.colorScheme) private var colorScheme
+  @ObservedObject private var service = APIClient()
+  
   @State var selectedSummary: PublicSummaryAttributes?
 
   var background: Color {
@@ -32,11 +32,11 @@ struct ContentView: View {
             } else {
               List(self.service.summaries, id: \.id) { summary in
                 NavigationLink(
-                  destination: ScrollView { SummaryCard(summary: summary, compact: false)
+                  destination: ScrollView { SummaryCard(summary: summary, style: .small, expanded: true)
                   }.navigationTitle(summary.translations?["title"] ?? summary.title) ,
-                  tag: summary,
+                  tag: summary.root,
                   selection: $selectedSummary) {
-                    SummaryCard(summary: summary, compact: true)
+                    SummaryCard(summary: summary, style: .small)
                   }
               }.refreshable {
                 self.service.fetchSync()

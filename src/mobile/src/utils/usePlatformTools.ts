@@ -18,7 +18,7 @@ import * as Localization from '~/locales';
 
 export function usePlatformTools() {
 
-  const { latestVersion = '', setPreference } = React.useContext(SessionContext);
+  const { latestVersion = '', setStoredValue } = React.useContext(SessionContext);
   const [screenReaderEnabled, setScreenReaderEnabled] = React.useState(false);
 
   const getUserAgent = () => {
@@ -34,7 +34,7 @@ export function usePlatformTools() {
   const emitEvent = React.useCallback(async <E extends SessionEvent>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) => {
     const version = latestVersion || await VersionCheck.getLatestVersion();
     if (!latestVersion) {
-      setPreference('latestVersion', version);
+      setStoredValue('latestVersion', version);
     }
     if (!__DEV__ && VersionCheck.getCurrentVersion() <= version) {
       analytics().logEvent(event.replace(/-/g, '_'), {
@@ -46,7 +46,7 @@ export function usePlatformTools() {
       });
     }
     DeviceEventEmitter.emit(event, mutation, state);
-  }, [latestVersion, setPreference]);
+  }, [latestVersion, setStoredValue]);
 
   React.useEffect(() => {
     const subscription = AccessibilityInfo.addEventListener('screenReaderChanged', setScreenReaderEnabled);

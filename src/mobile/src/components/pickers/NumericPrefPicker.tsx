@@ -39,7 +39,7 @@ export function NumericPrefPicker<K extends keyof NumericPreferences>({
       }
     }
     setValue(newValue);
-    context.setPreference(prefKey, newValue);
+    context.setStoredValue(prefKey, newValue);
   }, [min, max, context, prefKey]);
 
   return (

@@ -11,7 +11,6 @@ import {
 import {
   ActivityIndicator,
   FlatList,
-  Screen,
   Summary,
   Text,
   View,
@@ -19,12 +18,13 @@ import {
 import {  SessionContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
-import { ScreenProps } from '~/screens';
+import { RoutedScreen } from '~/navigation';
+import { ScreenComponent } from '~/screens';
 
 export function SummaryScreen({
   route,
   navigation,
-}: ScreenProps<'summary'>) {
+}: ScreenComponent<'summary'>) {
 
   const { getSummary, interactWithSummary } = useApiClient();
   const { preferredReadingFormat } = React.useContext(SessionContext);
@@ -106,7 +106,7 @@ export function SummaryScreen({
   }, [summary, format, navigation]));
 
   return (
-    <Screen>
+    <RoutedScreen navigationID='newsStackNav'>
       {loading ? (
         <View flexGrow={ 1 } itemsCenter justifyCenter>
           <ActivityIndicator size="large" />
@@ -147,6 +147,6 @@ export function SummaryScreen({
           ListFooterComponentStyle={ { paddingBottom: 64 } }
           estimatedItemSize={ 114 } />
       ))}
-    </Screen>
+    </RoutedScreen>
   );
 }

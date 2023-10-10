@@ -5,9 +5,9 @@ import {
   ScrollView,
   SettingsTable,
 } from '~/components';
-import { ScreenProps } from '~/screens';
+import { ScreenComponent } from '~/screens';
 
-export function SettingsScreen({ navigation }: ScreenProps<'settings'>) {
+export function SettingsScreen({ navigation }: ScreenComponent<'settings'>) {
   React.useEffect(() => {
     navigation?.setOptions({ headerRight: () => undefined });
   }, [navigation]);

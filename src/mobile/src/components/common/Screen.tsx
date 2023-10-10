@@ -1,11 +1,14 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView, StatusBar } from 'react-native';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+} from 'react-native';
 
 import { View, ViewProps } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type ScreenViewProps = ViewProps & {
+export type ScreenProps = ViewProps & {
   safeArea?: boolean;
 };
 
@@ -13,7 +16,7 @@ export function Screen({
   children,
   safeArea = true,
   ...props
-}: ScreenViewProps) {
+}: ScreenProps) {
   const theme = useTheme();
   return (
     <React.Fragment>

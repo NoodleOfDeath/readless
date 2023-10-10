@@ -13,12 +13,12 @@ import { ChannelIcon } from '~/components/post/ChannelIcon';
 import { SessionContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
-import { ScreenProps } from '~/screens';
+import { ScreenComponent } from '~/screens';
 
 export function CategoryScreen({
   route,
   navigation,
-}: ScreenProps<'category'>) {
+}: ScreenComponent<'category'>) {
 
   const { getSummaries } = useApiClient();
 

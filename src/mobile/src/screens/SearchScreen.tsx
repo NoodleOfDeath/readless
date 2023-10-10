@@ -1,23 +1,24 @@
 import React from 'react';
 
-import { Screen, SummaryList } from '~/components';
+import { SummaryList } from '~/components';
 import { useApiClient } from '~/hooks';
-import { ScreenProps } from '~/screens';
+import { RoutedScreen } from '~/navigation';
+import { ScreenComponent } from '~/screens';
 
 export function SearchScreen({ 
   route,
   navigation: _navigation,
-}: ScreenProps<'search'>) {
+}: ScreenComponent<'search'>) {
   
   const { getSummaries } = useApiClient();
   return (
-    <Screen>
+    <RoutedScreen navigationID='newsStackNav'>
       <SummaryList
         landscapeEnabled
         enableTts
         fetch={ getSummaries }
         filter={ route?.params?.prefilter }
         specificIds={ route?.params?.specificIds } />
-    </Screen>
+    </RoutedScreen>
   );
 }

@@ -1,14 +1,15 @@
 import React from 'react';
 
 import {
-  Bookmark,
   ColorScheme,
   DEFAULT_SESSION_CONTEXT,
   FunctionWithRequestParams,
   OrientationType,
-  PREFERENCE_TYPES,
-  Preferences,
   PushNotificationSettings,
+  STORED_VALUE_TYPES,
+  StoredValues,
+  TimelineEvent,
+  UserStats,
 } from './types';
 
 import {
@@ -18,6 +19,7 @@ import {
   ReadingFormat,
   RecapAttributes,
 } from '~/api';
+import { Locale, getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
 
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
@@ -35,22 +37,25 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [latestVersion, setLatestVersion] = React.useState<string>();
   const [rotationLock, setRotationLock] = React.useState<OrientationType>();
   const [searchHistory, setSearchHistory] = React.useState<string[]>();
-  const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: string]: Bookmark<boolean>}>();
+  const [viewedFeatures, setViewedFeatures] = React.useState<{ [key: string]: TimelineEvent<boolean>}>();
   const [hasReviewed, setHasReviewed] = React.useState<boolean>();
   const [lastRequestForReview, setLastRequestForReview] = React.useState(0);
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
+  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
   
   // user state
   const [uuid, setUuid] = React.useState<string>();
   const [pushNotificationsEnabled, setPushNotificationsEnabled] = React.useState<boolean>();
   const [pushNotifications, setPushNotifications] = React.useState<{[key: string]: PushNotificationSettings}>();
   const [fcmToken, setFcmToken] = React.useState<string>();
+  const [userStats, setUserStats] = React.useState<UserStats>();
   
   // summary state
-  const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: Bookmark<PublicSummaryGroup> }>();
-  const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: Bookmark<boolean> }>();
+  const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: TimelineEvent<PublicSummaryGroup> }>();
+  const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: TimelineEvent<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
+  const [_, setLocale] = React.useState<Locale>();
   const [summaryTranslations, setSummaryTranslations] = React.useState<{ [key: number]: { [key in keyof PublicSummaryGroup]?: string } }>();
   
   // bookmark state
@@ -116,15 +121,15 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   // system functions
   
-  const getPreference = async <K extends keyof Preferences>(key: K): Promise<Preferences[K] | undefined> => {
+  const getStoredValue = async <K extends keyof StoredValues>(key: K): Promise<StoredValues[K] | undefined> => {
 
     const value = await getItem(key);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const serialize = (key: K, value: Preferences[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
+    const serialize = (key: K, value: StoredValues[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
       const isCorrectType = type === 'array' ? Array.isArray(value) : typeof value === type;
       if (!isCorrectType) {
-        setPreference(key, undefined, false);
+        setStoredValue(key, undefined, false);
         return undefined;
       }
       return value;
@@ -132,7 +137,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
 
     if (value) {
       try {
-        return serialize(key, JSON.parse(value), PREFERENCE_TYPES[key]);
+        return serialize(key, JSON.parse(value), STORED_VALUE_TYPES[key]);
       } catch (e) {
         return undefined;
       }
@@ -140,10 +145,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     return undefined;
   };
 
-  const setPreference = async <K extends keyof Preferences, V extends Preferences[K] | ((value?: Preferences[K]) => (Preferences[K] | undefined))>(key: K, value?: V, emit = true) => {
+  const setStoredValue = async <K extends keyof StoredValues, V extends StoredValues[K] | ((value?: StoredValues[K]) => (StoredValues[K] | undefined))>(key: K, value?: V, emit = true) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newValue = (value instanceof Function ? value(await getPreference(key)) : value) as any;
+    const newValue = (value instanceof Function ? value(await getStoredValue(key)) : value) as any;
 
     switch (key) {
       
@@ -179,6 +184,9 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
       break;
     case 'fcmToken':
       setFcmToken(newValue);
+      break;
+    case 'userStat':
+      setUserStats(newValue);
       break;
       
     // summary state
@@ -278,10 +286,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   
   const storeTranslations = async <
     Target extends RecapAttributes | PublicSummaryGroup, 
-    PrefKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
-    State extends NonNullable<PrefKey extends 'recapTranslations' ? typeof recapTranslations : PrefKey extends 'summaryTranslations' ? typeof summaryTranslations : never>,
-  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: PrefKey) => {
-    await setPreference(prefKey, (prev) => {
+    StoredValueKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
+    State extends NonNullable<StoredValueKey extends 'recapTranslations' ? typeof recapTranslations : StoredValueKey extends 'summaryTranslations' ? typeof summaryTranslations : never>,
+  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: StoredValueKey) => {
+    await setStoredValue(prefKey, (prev) => {
       const state = { ...prev } as State;
       state[item.id] = translations;
       return (prev = state);
@@ -309,7 +317,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   }, [pushNotifications]);
 
   const enablePush = async (type: string, settings?: PushNotificationSettings) => {
-    await setPreference('pushNotifications', (prev) => {
+    await setStoredValue('pushNotifications', (prev) => {
       const newState = { ...prev };
       if (settings) {
         newState[type] = settings;
@@ -325,10 +333,10 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   }, [viewedFeatures]);
   
   const viewFeature = async (feature: string, state = true) => {
-    await setPreference('viewedFeatures', (prev) => {
+    await setStoredValue('viewedFeatures', (prev) => {
       const newState = { ...prev };
       if (state) {
-        newState[feature] = new Bookmark(true);
+        newState[feature] = new TimelineEvent(true);
       } else {
         delete newState[feature];
       }
@@ -339,13 +347,13 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // summary functions
   
   const bookmarkSummary = async (summary: PublicSummaryGroup) => {
-    await setPreference('bookmarkedSummaries', (prev) => {
+    await setStoredValue('bookmarkedSummaries', (prev) => {
       const state = { ...prev };
       if (summary.id in state) {
         delete state[summary.id];
         emitEvent('unbookmark-summary', summary, state);
       } else {
-        state[summary.id] = new Bookmark(summary);
+        state[summary.id] = new TimelineEvent(summary);
         viewFeature('unread-bookmarks', false);
         emitEvent('bookmark-summary', summary, state);
       }
@@ -354,13 +362,13 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   };
   
   const readSummary = async (summary: PublicSummaryGroup, force = false) => {
-    await setPreference('readSummaries', (prev) => {
+    await setStoredValue('readSummaries', (prev) => {
       const state = { ...prev };
       if (force && summary.id in state) {
         delete state[summary.id];
         emitEvent('unread-summary', summary, state);
       } else {
-        state[summary.id] = new Bookmark(true);
+        state[summary.id] = new TimelineEvent(true);
         emitEvent('read-summary', summary, state);
       }
       return (prev = state);
@@ -368,7 +376,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   };
   
   const removeSummary = async (summary: PublicSummaryGroup) => {
-    await setPreference('removedSummaries', (prev) => {
+    await setStoredValue('removedSummaries', (prev) => {
       const state = { ...prev };
       if (summary.id in state) {
         delete state[summary.id];
@@ -384,7 +392,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // recap functions
   
   const readRecap = async (recap: RecapAttributes, force = false) => {
-    await setPreference('readRecaps', (prev) => {
+    await setStoredValue('readRecaps', (prev) => {
       const state = { ...prev };
       if (force && recap.id in state) {
         delete state[recap.id];
@@ -400,11 +408,11 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // publisher functions
   
   const followPublisher = async (publisher: PublicPublisherAttributes) => {
-    await setPreference('followedPublishers', (prev) => {
+    await setStoredValue('followedPublishers', (prev) => {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
-        setPreference('favoritedPublishers', (prev) => {
+        setStoredValue('favoritedPublishers', (prev) => {
           const state = { ...prev };
           delete state[publisher.name];
           return (prev = state);
@@ -412,7 +420,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('unfollow-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
-        setPreference('excludedPublishers', (prev) => {
+        setStoredValue('excludedPublishers', (prev) => {
           const state = { ...prev };
           delete state[publisher.name];
           return (prev = state);
@@ -426,7 +434,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...followedPublishers }), [followedPublishers]);
   
   const favoritePublisher = async (publisher: PublicPublisherAttributes) => {
-    await setPreference('favoritedPublishers', (prev) => {
+    await setStoredValue('favoritedPublishers', (prev) => {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
@@ -442,14 +450,14 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const publisherIsFavorited = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...favoritedPublishers }), [favoritedPublishers]);
   
   const excludePublisher = async (publisher: PublicPublisherAttributes) => {
-    await setPreference('excludedPublishers', (prev) => {
+    await setStoredValue('excludedPublishers', (prev) => {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
         emitEvent('unexclude-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
-        setPreference('followedPublishers', (prev) => {
+        setStoredValue('followedPublishers', (prev) => {
           const state = { ...prev };
           delete state[publisher.name];
           return (prev = state);
@@ -465,11 +473,11 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // category functions
   
   const followCategory = async (category: PublicCategoryAttributes) => {
-    await setPreference('followedCategories', (prev) => {
+    await setStoredValue('followedCategories', (prev) => {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
-        setPreference('followedCategories', (prev) => {
+        setStoredValue('followedCategories', (prev) => {
           const state = { ...prev };
           delete state[category.name];
           return (prev = state);
@@ -477,7 +485,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('unfollow-category', category, state);
       } else {
         state[category.name] = true;
-        setPreference('excludedCategories', (prev) => {
+        setStoredValue('excludedCategories', (prev) => {
           const state = { ...prev };
           delete state[category.name];
           return (prev = state);
@@ -491,7 +499,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...followedCategories }), [followedCategories]);
   
   const favoriteCategory = async (category: PublicCategoryAttributes) => {
-    await setPreference('favoritedCategories', (prev) => {
+    await setStoredValue('favoritedCategories', (prev) => {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
@@ -507,14 +515,14 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const categoryIsFavorited = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...favoritedCategories }), [favoritedCategories]);
 
   const excludeCategory = async (category: PublicCategoryAttributes) => {
-    await setPreference('excludedCategories', (prev) => {
+    await setStoredValue('excludedCategories', (prev) => {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
         emitEvent('unexclude-category', category, state);
       } else {
         state[category.name] = true;
-        setPreference('followedCategories', (prev) => {
+        setStoredValue('followedCategories', (prev) => {
           const state = { ...prev };
           delete state[category.name];
           return (prev = state);
@@ -530,56 +538,62 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   // Load preferences on mount
   const load = async () => {
     // system state
-    setLatestVersion(await getPreference('latestVersion'));
-    setRotationLock(await getPreference('rotationLock'));
-    setSearchHistory(await getPreference('searchHistory'));
-    setViewedFeatures(await getPreference('viewedFeatures'));
-    setHasReviewed(await getPreference('hasReviewed'));
-    setLastRequestForReview(await getPreference('lastRequestForReview') ?? 0);
-    setUuid(await getPreference('uuid'));
-    setPushNotificationsEnabled(await getPreference('pushNotificationsEnabled'));
-    setPushNotifications(await getPreference('pushNotifications'));
-    setFcmToken(await getPreference('fcmToken'));
+    setLatestVersion(await getStoredValue('latestVersion'));
+    setRotationLock(await getStoredValue('rotationLock'));
+    setSearchHistory(await getStoredValue('searchHistory'));
+    setViewedFeatures(await getStoredValue('viewedFeatures'));
+    setHasReviewed(await getStoredValue('hasReviewed'));
+    setLastRequestForReview(await getStoredValue('lastRequestForReview') ?? 0);
+    setUuid(await getStoredValue('uuid'));
+    setPushNotificationsEnabled(await getStoredValue('pushNotificationsEnabled'));
+    setPushNotifications(await getStoredValue('pushNotifications'));
+    setFcmToken(await getStoredValue('fcmToken'));
+    setUserStats(await getStoredValue('userStats'));
     
     // summary state
-    setBookmarkedSummaries(await getPreference('bookmarkedSummaries'));
-    setReadSummaries(await getPreference('readSummaries'));
-    setRemovedSummaries(await getPreference('removedSummaries'));
-    setSummaryTranslations(await getPreference('summaryTranslations'));
+    setBookmarkedSummaries(await getStoredValue('bookmarkedSummaries'));
+    setReadSummaries(await getStoredValue('readSummaries'));
+    setRemovedSummaries(await getStoredValue('removedSummaries'));
+
+    const locale = await getStoredValue('locale');
+    setLocale(locale);
+    setSummaryTranslations(locale !== getLocale() ? {} : await getStoredValue('summaryTranslations'));
     
     // recap state
-    setReadRecaps(await getPreference('readRecaps'));
-    setRecapTranslations(await getPreference('recapTranslations'));
+    setReadRecaps(await getStoredValue('readRecaps'));
+    setRecapTranslations(locale !== getLocale() ? {} : await getStoredValue('recapTranslations'));
+
+    setLocale(getLocale());
     
     // publisher states
-    setFollowedPublishers(await getPreference('followedPublishers'));
-    setFavoritedPublishers(await getPreference('favoritedPublishers'));
-    setExcludedPublishers(await getPreference('excludedPublishers'));
+    setFollowedPublishers(await getStoredValue('followedPublishers'));
+    setFavoritedPublishers(await getStoredValue('favoritedPublishers'));
+    setExcludedPublishers(await getStoredValue('excludedPublishers'));
 
     // category states
-    setFollowedCategories(await getPreference('followedCategories'));
-    setFavoritedCategories(await getPreference('favoritedCategories'));
-    setExcludedCategories(await getPreference('excludedCategories'));
+    setFollowedCategories(await getStoredValue('followedCategories'));
+    setFavoritedCategories(await getStoredValue('favoritedCategories'));
+    setExcludedCategories(await getStoredValue('excludedCategories'));
     
     // system preferences
-    setColorScheme(await getPreference('colorScheme')); 
-    setFontFamily(await getPreference('fontFamily'));
-    setFontSizeOffset(await getPreference('fontSizeOffset'));
-    setLetterSpacing(await getPreference('letterSpacing'));
-    setLineHeightMultiplier(await getPreference('lineHeightMultiplier'));
-    
+    setColorScheme(await getStoredValue('colorScheme')); 
+    setFontFamily(await getStoredValue('fontFamily'));
+    setFontSizeOffset(await getStoredValue('fontSizeOffset'));
+    setLetterSpacing(await getStoredValue('letterSpacing'));
+    setLineHeightMultiplier(await getStoredValue('lineHeightMultiplier'));
+  
     // summary preferences
-    setCompactSummaries(await getPreference('compactSummaries') ?? await getPreference('compactMode'));
-    setShowShortSummary(await getPreference('showShortSummary'));
-    setPreferredReadingFormat(await getPreference('preferredReadingFormat'));
-    setPreferredShortPressFormat(await getPreference('preferredShortPressFormat'));
-    setSentimentEnabled(await getPreference('sentimentEnabled'));
-    setTriggerWords(await getPreference('triggerWords'));
+    setCompactSummaries(await getStoredValue('compactSummaries') ?? await getStoredValue('compactMode'));
+    setShowShortSummary(await getStoredValue('showShortSummary'));
+    setPreferredReadingFormat(await getStoredValue('preferredReadingFormat'));
+    setPreferredShortPressFormat(await getStoredValue('preferredShortPressFormat'));
+    setSentimentEnabled(await getStoredValue('sentimentEnabled'));
+    setTriggerWords(await getStoredValue('triggerWords'));
     
     setReady(true);
   };
   
-  const resetPreferences = async (hard = false) => {
+  const resetStoredValues = async (hard = false) => {
     await removeAll(hard);
     load();
   };
@@ -617,7 +631,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         followedPublishers,
         fontFamily,
         fontSizeOffset,
-        getPreference,
+        getStoredValue,
         hasPushEnabled,
         hasReviewed,
         hasViewedFeature,
@@ -629,6 +643,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         latestVersion,
         letterSpacing,
         lineHeightMultiplier,
+        loadedInitialUrl,
         preferredReadingFormat,
         preferredShortPressFormat,
         publisherIsFavorited,
@@ -643,18 +658,19 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         recapTranslations,
         removeSummary,
         removedSummaries,
-        resetPreferences,
+        resetStoredValues,
         rotationLock,
         searchHistory,
         sentimentEnabled,
         setCategories,
-        setPreference,
-        setPublishers,
+        setLoadedInitialUrl, setPublishers,
+        setStoredValue,
         showShortSummary,
         storeTranslations,
         summaryTranslations,
         triggerWords,
         unreadBookmarkCount,
+        userStats,
         uuid,
         viewFeature,
         viewedFeatures,
