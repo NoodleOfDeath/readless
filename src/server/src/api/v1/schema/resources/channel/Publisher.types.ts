@@ -212,8 +212,8 @@ export const PUBLISHERS: Record<string, PublisherCreationAttributes> = {
   arstechnica: {
     baseUrl: 'https://www.arstechnica.com',
     displayName: 'ars technica',
-    name: 'arstechnica',
     geolocation: 'New York City, New York, United States',
+    name: 'arstechnica',
     selectors: {
       article:{ selector: 'article p' }, 
       author: { selector: 'article header section *[itemprop*="author creator"] a' },
