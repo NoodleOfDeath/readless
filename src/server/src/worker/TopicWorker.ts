@@ -58,7 +58,7 @@ export async function doWork() {
                 console.log();
                 const chatService = new OpenAIService();
                 const yesOrNo = await chatService.send(`
-                  Are the following articles about the same specific topic? Please respond only with YES or NO:
+                  Are the following articles about the same exact topic? Please respond only with YES or NO:
                   [Article 1] ${summary.title}: ${summary.shortSummary}
                   [Article 2] ${possibleSibling.title}: ${possibleSibling.shortSummary}
                 `);
