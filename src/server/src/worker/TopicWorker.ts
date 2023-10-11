@@ -30,12 +30,12 @@ export async function doWork() {
             where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } },
           });
           for (const summary of summaries) {
-            console.log('checking', summary.id);
+            console.log('finding siblings for', summary.id);
             const siblings: Summary[] = [];
             const words = summary.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
             const existingSiblings = await summary.getSiblings();
             const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.includes(s.id));
-            console.log('filters summaries', filteredSummaries.length);
+            console.log('filtered summaries', filteredSummaries.length);
             for (const possibleSibling of filteredSummaries) {
               const siblingWords = possibleSibling.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
               const score = words.map((a) => {
@@ -67,7 +67,7 @@ export async function doWork() {
                 }
               }
             }
-            console.log('linking for', summary.id);
+            console.log('making associations for', summary.id);
             for (const sibling of siblings) {
               await summary.associateWith(sibling);
             }
