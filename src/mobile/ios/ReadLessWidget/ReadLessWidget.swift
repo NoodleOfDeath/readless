@@ -12,8 +12,13 @@ import SwiftUI
 
 let DEFAULT_TIMELINE_INTERVAL: Double = 10
 
+struct DEEPLINKS {
+  static let topStories = "https://readless.ai/top"
+  static let liveFeed = "https://readless.ai/live"
+}
+
 struct CustomWidgetConfiguration {
-  var channel: Channel = .liveFeed
+  var channel: Channel = .topStories
   var topic: String?
   var updateInterval: Measurement<UnitDuration>?
 }
@@ -41,7 +46,7 @@ var WidgetPlaceholders: Dictionary<WidgetFamily, [Summary]> = [
 
 func buildEntries(in context: TimelineProviderContext,
                   for configuration: CustomWidgetConfiguration) async -> [SummaryEntry] {
-  let endpoint = configuration.channel == .topStories ? Endpoints.GetTopStories : Endpoints.GetSummaries
+  let endpoint = configuration.channel == .topStories ? ENDPOINTS.GetTopStories : ENDPOINTS.GetSummaries
   let filter =  configuration.channel == .topStories ? "" : configuration.channel == .liveFeed ? "" : configuration.topic
   let summaries = Array(await APIClient().fetchAsync(endpoint: endpoint,
                                                      filter: filter).reversed())
@@ -50,13 +55,13 @@ func buildEntries(in context: TimelineProviderContext,
   for i in stride(from: 0, to: summaries.count, by: pageSize) {
     let first = summaries[i]
     if context.family != .systemSmall {
-      await first.loadImagesAsync()
+      first.loadImages()
     }
     var subset = [first]
     for j in 1 ..< pageSize {
       if let next = i + j < summaries.count ? summaries[i + j] : nil {
         if context.family != .systemSmall {
-          await next.loadImagesAsync()
+          next.loadImages()
         }
         subset.insert(next, at: 0)
       }
@@ -182,13 +187,13 @@ struct ReadLessWidgetEntryView : View {
   
   var deeplink: URL {
     if entry.context?.family == .systemSmall {
-      return entry.summaries.first?.deeplink ?? URL(string: "https://readless.ai/top")!
+      return entry.summaries.first?.deeplink ?? URL(string: DEEPLINKS.topStories)!
     }
     if entry.config?.channel == .liveFeed {
-      return URL(string: "https://readless.ai/live")!
+      return URL(string: DEEPLINKS.liveFeed)!
     }
     if entry.config?.channel == .topStories {
-      return URL(string: "https://readless.ai/top")!
+      return URL(string: DEEPLINKS.topStories)!
     }
     return URL(string: "https://readless.ai/search?filter=\(entry.config?.topic ?? "")")!
   }
