@@ -18,6 +18,9 @@ struct SummaryCard: View {
   var expanded: Bool = false
   var deeplink: Bool = false
   
+  @State var image: Image? = nil
+  @State var publisherIcon: Image? = nil
+
   @Environment(\.colorScheme) private var colorScheme
 
   var backdrop: Color {
@@ -47,7 +50,7 @@ struct SummaryCard: View {
   var HEADER: some View {
     HStack {
       if let summary = summary {
-        if let image = summary.publisherIcon {
+        if let image = summary.publisherIcon ?? publisherIcon {
           image
             .resizable()
             .frame(width: headerHeight, height: headerHeight)
@@ -56,7 +59,7 @@ struct SummaryCard: View {
           Text("")
             .frame(width: headerHeight, height: headerHeight)
             .onAppear {
-              Image.load(from: summary.publisher.icon) { image in DispatchQueue.main.async { self.summary?.publisherIcon = image } }
+              Image.load(from: summary.publisher.icon) { image in DispatchQueue.main.async { self.publisherIcon = image } }
             }
         }
         Text(summary.publisher.displayName)
@@ -101,7 +104,7 @@ struct SummaryCard: View {
   var IMAGE: some View {
     VStack {
       if let summary = summary {
-        if let image = summary.image {
+        if let image = summary.image ?? image {
           image
             .resizable()
             .scaledToFill()
@@ -112,7 +115,7 @@ struct SummaryCard: View {
             .frame(width: imageHeight, height: imageHeight)
             .onAppear {
               if let url = summary.primaryImageUrl {
-                Image.load(from: url) { image in DispatchQueue.main.async { self.summary?.image = image } }
+                Image.load(from: url) { image in DispatchQueue.main.async { self.image = image } }
               }
             }
         }

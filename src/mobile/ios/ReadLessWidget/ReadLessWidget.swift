@@ -10,6 +10,14 @@ import AppIntents
 import Intents
 import SwiftUI
 
+let SUPPORTED_FAMILIES: [WidgetFamily] = [
+  .systemMedium,
+  .systemLarge,
+  .accessoryCircular,
+  .accessoryRectangular,
+  .accessoryInline
+]
+
 let DEFAULT_TIMELINE_INTERVAL: Double = 10
 
 struct DEEPLINKS {
@@ -81,17 +89,20 @@ struct Provider: IntentTimelineProvider {
   
   func placeholder(in context: Context) -> SummaryEntry {
     return SummaryEntry(context: context,
-                        config: CustomWidgetConfiguration(topic: "Technology"),
+                        config: CustomWidgetConfiguration(channel: .customTopic,
+                                                          topic: "Technology"),
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
   
   func getSnapshot(for configuration: IWidgetTopicConfigurationIntent,
                    in context: Context,
                    completion: @escaping (SummaryEntry) -> ()) {
+    let updateInterval = Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
+                                                   unit: .minutes)
     let entry = SummaryEntry(context: context,
-                             config: CustomWidgetConfiguration(topic: configuration.topic,
-                                                               updateInterval: Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
-                                                                                                         unit: .minutes)))
+                             config: CustomWidgetConfiguration(channel: .customTopic,
+                                                               topic: configuration.topic,
+                                                               updateInterval: updateInterval))
     completion(entry)
   }
   
@@ -99,10 +110,12 @@ struct Provider: IntentTimelineProvider {
                    in context: Context,
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
     Task {
-      let config = CustomWidgetConfiguration(channel: Channel.allCases[configuration.channel.rawValue],
+      let channel = Channel.allCases[configuration.channel.rawValue]
+      let updateInterval = Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
+                                                     unit: .minutes)
+      let config = CustomWidgetConfiguration(channel: channel,
                                              topic: configuration.topic,
-                                             updateInterval: Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
-                                                                                       unit: .minutes))
+                                             updateInterval: updateInterval)
       let entries = await buildEntries(in: context, for: config)
       let timeline = Timeline(entries: entries, policy: .atEnd)
       completion(timeline)
@@ -182,7 +195,7 @@ struct ReadLessWidgetEntryView : View {
   @Environment(\.colorScheme) private var colorScheme
   
   var entry: Provider.Entry
-    
+  
   let iconSize = 20.0
   
   var deeplink: URL {
@@ -201,13 +214,13 @@ struct ReadLessWidgetEntryView : View {
   var body: some View {
     VStack(spacing: 8.0) {
       HStack {
-        Text(entry.config?.channel == .liveFeed ? "Live Feed" :
-               entry.config?.channel == .topStories ? "Top Stories" :
-               entry.config?.topic ?? "Topic")
-          .textCase(.uppercase)
-          .font(.subheadline)
-          .bold()
-          .padding(0)
+        Text(entry.config?.channel == .topStories ? "Top Stories" :
+              entry.config?.channel == .liveFeed ? "Live Feed" :
+              entry.config?.topic ?? "Topic")
+        .textCase(.uppercase)
+        .font(.subheadline)
+        .bold()
+        .padding(0)
         Spacer()
         if colorScheme == .light {
           Image("LogoCompact")
@@ -223,7 +236,8 @@ struct ReadLessWidgetEntryView : View {
         }
       }
       if (entry.config?.topic == nil) {
-        ForEach(0 ..< 2) { _ in
+        let size = WidgetPageSize[entry.context?.family ?? .systemMedium] ?? 2
+        ForEach(0 ..< size, id: \.self) { _ in
           SummaryCard(style: entry.context?.family == .systemSmall ? .small : .medium)
         }
       } else
@@ -254,7 +268,7 @@ struct ReadLessWidget: Widget {
       }
                                      .configurationDisplayName("Topic")
                                      .description("Choose a topic")
-                                     .supportedFamilies([.systemMedium, .systemLarge])
+                                     .supportedFamilies(SUPPORTED_FAMILIES)
     } else {
       return IntentConfiguration(kind: kind,
                                  intent: IWidgetTopicConfigurationIntent.self,
@@ -265,8 +279,11 @@ struct ReadLessWidget: Widget {
       }
                                  .configurationDisplayName("Topic")
                                  .description("Choose a topic")
-                                 .supportedFamilies([.systemMedium, .systemLarge])
+                                 .supportedFamilies(SUPPORTED_FAMILIES)
     }
   }
 }
+
+
+
 

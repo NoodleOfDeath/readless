@@ -21,7 +21,6 @@ func parseQuery(endpoint: String = ENDPOINTS.GetSummaries, filter: String?) -> U
 }
 
 class APIClient: ObservableObject {
-  @Published var summaries = [Summary]()
   @Published var loading = false
   @Published var error: String?
   
@@ -45,22 +44,19 @@ class APIClient: ObservableObject {
     return decoder
   }
 
-  init(summaries: [Summary] = [Summary]()) {
-    self.summaries = summaries
-  }
-
   func fetchHandler(_ data: Data?) -> [Summary] {
+    var summaries: [Summary] = []
     if let data = data {
       do {
         let decodedResponse = try decoder.decode(BulkResponse<PublicSummaryAttributes>.self, from: data)
-        self.summaries = decodedResponse.rows.map { Summary($0) }
+        summaries = decodedResponse.rows.map { Summary($0) }
       } catch {
         print(error)
         self.error = error.localizedDescription
       }
     }
     self.loading = false
-    return self.summaries
+    return summaries
   }
   
   @Sendable func fetchSync() {
