@@ -14,7 +14,7 @@ enum Channel: String, AppEnum {
   case liveFeed
   case customTopic
   
-  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Feed Type")
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Channel")
   static var caseDisplayRepresentations: [Self: DisplayRepresentation] = [
     .topStories: "Top Stories",
     .liveFeed: "Live Feed",
