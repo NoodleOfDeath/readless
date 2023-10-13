@@ -1,2 +1,2 @@
 export * from './GamesSelectionScreen';
-export * from './WordleGame';
+export * from './wordle';
