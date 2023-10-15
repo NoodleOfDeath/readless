@@ -1,8 +1,7 @@
-import fs from 'fs';
-
+import ms from 'ms';
 import sharp from 'sharp';
 
-import { SummaryMedia } from '../api/v1/schema/models';
+import { Summary, SummaryMedia } from '../api/v1/schema/models';
 import { SummaryMediaAttributes } from '../api/v1/schema/types';
 import { DBService, S3Service } from '../services';
 
@@ -88,16 +87,6 @@ async function downsampleImage({
             type: 'image',
             url: response.url,
           });
-          try {
-            fs.unlinkSync(file);
-          } catch (e) {
-            console.error(e); 
-          }
-          try {
-            fs.unlinkSync(target);
-          } catch (e) {
-            console.error(e); 
-          }
           results.push(media);
           if (index + 1 === sizes.length) {
             resolve(results);
@@ -112,18 +101,33 @@ export async function doWork() {
   try {
     const items = await S3Service.listObjects();
     console.log(items.length);
+    setInterval(async () => {
+      try {
+        await Summary.refreshViews();
+      } catch (e) {
+        console.error(e);
+      }
+    }, ms('3m'));
     for (const item of items) {
       if (/^img\/s/.test(item)) {
         const media = await SummaryMedia.findOne({ where: { path: item } });
         if (!media) {
           console.log('Unlinking dangling media', item);
-          await S3Service.deleteObject({ Key: item });
-        }
+          try {
+            await S3Service.deleteObject({ Key: item });
+          } catch (e) {
+            console.error(e);
+          }
+        } else
         if (!/@(?:xs|sm|md|lg|x+l)\.\w+$/.test(item)) {
           console.log('Downsampling', item);
           const folders = item.split('/');
           folders.pop();
-          await downsampleImage(media, folders.join('/'));
+          try {
+            await downsampleImage(media, folders.join('/'));
+          } catch (e) {
+            console.error(e);
+          }
         }
       }
     }
