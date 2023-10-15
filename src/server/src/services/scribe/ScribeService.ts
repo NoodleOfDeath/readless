@@ -299,6 +299,12 @@ export class ScribeService extends BaseService {
           await summary.save();
         }
       }
+      
+      try {
+        await summary.generateThumbnails();
+      } catch (e) {
+        console.error(e);
+      }
         
       // Generate sentiment scores
       await summary.generateSentiment();
