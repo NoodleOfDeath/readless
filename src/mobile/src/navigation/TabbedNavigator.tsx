@@ -29,7 +29,8 @@ function GamesStack() {
 export function TabbedNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={ { headerShown: false } }>
+      screenOptions={ { headerShown: false } }
+      tabBar={ () => null }>
       <Tab.Screen 
         name="news"
         component={ NewsStack }
