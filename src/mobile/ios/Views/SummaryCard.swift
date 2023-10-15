@@ -110,7 +110,7 @@ struct SummaryCard: View {
             .scaledToFill()
             .frame(width: imageHeight, height: imageHeight)
         } else {
-          Text("Loading Image...")
+          Text("")
             .font(headerFont)
             .frame(width: imageHeight, height: imageHeight)
             .onAppear {

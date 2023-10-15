@@ -15,7 +15,7 @@ struct WidgetTopicConfiguration: AppIntent, WidgetConfigurationIntent, CustomInt
   static var title: LocalizedStringResource = "Widget Topic Configuration"
   static var description = IntentDescription("Intent for configuring the topic of a widget")
   
-  @Parameter(title: "Channel", default: .liveFeed)
+  @Parameter(title: "Channel", default: .topStories)
   var channel: Channel?
   
   @Parameter(title: "Topic", default: "")

@@ -81,6 +81,9 @@ export function useNavigation() {
     if (route === 'top') {
       navigate('topStories');
     } else
+    if (route === 'live') {
+      navigate('liveFeed');
+    } else
     if (route === 'search') {
       const filter = params['filter']?.trim();
       if (!filter) {

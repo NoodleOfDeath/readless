@@ -3,10 +3,16 @@ import p from 'path';
 import { Readable } from 'stream';
 
 import {
+  DeleteObjectCommand,
+  DeleteObjectCommandInput,
   GetObjectCommand,
   GetObjectCommandInput,
+  ListObjectsV2Command,
+  ListObjectsV2CommandInput,
   PutObjectCommand,
   PutObjectCommandInput,
+  RestoreObjectCommand,
+  RestoreObjectCommandInput,
   S3Client,
 } from '@aws-sdk/client-s3';
 import axios from 'axios';
@@ -28,6 +34,11 @@ export type GetOptions = Omit<GetObjectCommandInput, 'Bucket'> & {
   Provider?: string;
 };
 
+export type ListOptions = Omit<ListObjectsV2CommandInput, 'Bucket'> & {
+  Bucket?: string;
+  Provider?: string;
+};
+
 export type PutOptions = Omit<PutObjectCommandInput, 'Body' | 'Bucket' | 'ContentType' | 'Key'> & {
   Bucket?: string;
   Body?: string;
@@ -38,6 +49,17 @@ export type PutOptions = Omit<PutObjectCommandInput, 'Body' | 'Bucket' | 'Conten
   Provider?: string;
   Accept?: string;
   MinSize?: number;
+};
+
+export type DeleteOptions = Omit<DeleteObjectCommandInput, 'Bucket'> & {
+  Bucket?: string;
+  Provider?: string;
+  Folder?: string;
+};
+
+export type RestoreOptions = Omit<RestoreObjectCommandInput, 'Bucket'> & {
+  Bucket?: string;
+  Provider?: string;
 };
 
 export class S3Service extends BaseService {
@@ -104,6 +126,7 @@ export class S3Service extends BaseService {
     if (!filepath) {
       filepath = `/tmp/${filename}`;
     }
+    console.log('Downloaded', filepath);
     return new Promise((resolve, reject) => {
       response.data.pipe(fs.createWriteStream(filepath))
         .on('error', reject)
@@ -124,12 +147,37 @@ export class S3Service extends BaseService {
       throw new Error('Malformed key');
     }
     const response = await this.s3Client.send(new GetObjectCommand(params));
+    filepath = `${filepath}.${mime.extension(response.ContentType) || mime.extension(mime.lookup(response.ContentType) || '')}`;
     const stream = response.Body as Readable;
     return new Promise((resolve, reject) => {
       stream.pipe(fs.createWriteStream(filepath))
         .on('error', reject)
         .once('close', () => resolve(filepath));
     });
+  }
+  
+  public static async listObjects(options: ListOptions = {}) {
+    const params = {
+      ...options,
+      Bucket: options.Bucket || process.env.S3_BUCKET,
+      MaxKeys: options.MaxKeys,
+      Provider: options.Provider || process.env.S3_PROVIDER || 'nyc3.digitaloceanspaces.com',
+    };
+    if (!params.Bucket) {
+      throw new Error('Malformed bucket');
+    }
+    let isTruncated = true;
+    const items: string[] = [];
+    const command = new ListObjectsV2Command(params);
+    while (isTruncated) {
+      const {
+        Contents, IsTruncated, NextContinuationToken, 
+      } = await this.s3Client.send(command);
+      items.push(...Contents.map((c) => c.Key));
+      isTruncated = IsTruncated;
+      command.input.ContinuationToken = NextContinuationToken;
+    }
+    return items;
   }
 
   public static async putObject(options: PutOptions) {
@@ -157,6 +205,30 @@ export class S3Service extends BaseService {
       key: params.Key,
       url,
     };
+  }
+  
+  public static async deleteObject(options: DeleteOptions) {
+    const params = {
+      ...options,
+      Bucket: options.Bucket || process.env.S3_BUCKET,
+      Key: options.Folder ? [options.Folder, options.Key].join('/') : options.Key,
+      Provider: options.Provider || process.env.S3_PROVIDER || 'nyc3.digitaloceanspaces.com',
+    };
+    const data = await this.s3Client.send(new DeleteObjectCommand(params));
+    return data;
+  }
+  
+  public static async restoreObject(options: RestoreOptions) {
+    const params = {
+      ...options,
+      Bucket: options.Bucket || process.env.S3_BUCKET,
+      Provider: options.Provider || process.env.S3_PROVIDER || 'nyc3.digitaloceanspaces.com',
+    };
+    if (!params.Bucket) {
+      throw new Error('Malformed bucket');
+    }
+    const data = await this.s3Client.send(new RestoreObjectCommand(params));
+    return data;
   }
   
   public static async mirror(url: string, options: PutOptions) {

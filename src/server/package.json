@@ -58,6 +58,7 @@
     "sentiment": "^5.0.2",
     "sequelize": "^6.29.0",
     "sequelize-typescript": "^2.1.5",
+    "sharp": "^0.32.6",
     "swagger-ui-express": "^4.6.2",
     "tsoa": "^5.1.1",
     "user-agents": "^1.0.1307",

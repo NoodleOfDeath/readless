@@ -7,21 +7,20 @@
 
 import SwiftUI
 
-struct Endpoints {
+struct ENDPOINTS {
   static let Root = "https://api.readless.ai/v1"
   static let GetSummaries = "\(Root)/summary"
   static let GetTopStories = "\(Root)/summary/top"
   static let GetCategories = "\(Root)/category"
 }
 
-func parseQuery(endpoint: String = Endpoints.GetSummaries, filter: String?) -> URL? {
+func parseQuery(endpoint: String = ENDPOINTS.GetSummaries, filter: String?) -> URL? {
   guard let filter = filter?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     else { return URL(string: endpoint) }
   return URL(string: endpoint + "?filter=\(filter)")
 }
 
 class APIClient: ObservableObject {
-  @Published var summaries = [Summary]()
   @Published var loading = false
   @Published var error: String?
   
@@ -45,29 +44,26 @@ class APIClient: ObservableObject {
     return decoder
   }
 
-  init(summaries: [Summary] = [Summary]()) {
-    self.summaries = summaries
-  }
-
   func fetchHandler(_ data: Data?) -> [Summary] {
+    var summaries: [Summary] = []
     if let data = data {
       do {
         let decodedResponse = try decoder.decode(BulkResponse<PublicSummaryAttributes>.self, from: data)
-        self.summaries = decodedResponse.rows.map { Summary($0) }
+        summaries = decodedResponse.rows.map { Summary($0) }
       } catch {
         print(error)
         self.error = error.localizedDescription
       }
     }
     self.loading = false
-    return self.summaries
+    return summaries
   }
   
   @Sendable func fetchSync() {
     return self.fetchSync(nil)
   }
   
-  @Sendable func fetchSync(endpoint: String = Endpoints.GetSummaries, filter: String? = "", _ callback: ((_ summaries: [Summary]) -> ())?) {
+  @Sendable func fetchSync(endpoint: String = ENDPOINTS.GetSummaries, filter: String? = "", _ callback: ((_ summaries: [Summary]) -> ())?) {
     guard let url = parseQuery(endpoint: endpoint, filter: filter) else {
       return
     }
@@ -82,7 +78,7 @@ class APIClient: ObservableObject {
     }.resume()
   }
   
-  @Sendable func fetchAsync(endpoint: String = Endpoints.GetSummaries, filter: String? = "") async -> [Summary] {
+  @Sendable func fetchAsync(endpoint: String = ENDPOINTS.GetSummaries, filter: String? = "") async -> [Summary] {
     guard let url = parseQuery(endpoint: endpoint, filter: filter) else {
       return []
     }
@@ -96,7 +92,7 @@ class APIClient: ObservableObject {
   }
   
   @Sendable func getCategories() async -> [PublicCategoryAttributes] {
-    guard let url = URL(string: Endpoints.GetCategories) else { return [] }
+    guard let url = URL(string: ENDPOINTS.GetCategories) else { return [] }
     print("fetching categories")
     let request = URLRequest(url: url)
     guard let (data, _) = try? await URLSession.shared.data(for: request) else {

@@ -6,6 +6,9 @@ export async function main() {
   case 'topics':
     await import('./TopicWorker');
     break;
+  case 'media':
+    await import('./MediaWorker');
+    break;
   case 'notifs':
     await import('./NotificationsWorker');
     break;

@@ -10,10 +10,23 @@ import AppIntents
 import Intents
 import SwiftUI
 
+let SUPPORTED_FAMILIES: [WidgetFamily] = [
+  .systemMedium,
+  .systemLarge,
+  .accessoryCircular,
+  .accessoryRectangular,
+  .accessoryInline
+]
+
 let DEFAULT_TIMELINE_INTERVAL: Double = 10
 
+struct DEEPLINKS {
+  static let topStories = "https://readless.ai/top"
+  static let liveFeed = "https://readless.ai/live"
+}
+
 struct CustomWidgetConfiguration {
-  var channel: Channel = .liveFeed
+  var channel: Channel = .topStories
   var topic: String?
   var updateInterval: Measurement<UnitDuration>?
 }
@@ -41,7 +54,7 @@ var WidgetPlaceholders: Dictionary<WidgetFamily, [Summary]> = [
 
 func buildEntries(in context: TimelineProviderContext,
                   for configuration: CustomWidgetConfiguration) async -> [SummaryEntry] {
-  let endpoint = configuration.channel == .topStories ? Endpoints.GetTopStories : Endpoints.GetSummaries
+  let endpoint = configuration.channel == .topStories ? ENDPOINTS.GetTopStories : ENDPOINTS.GetSummaries
   let filter =  configuration.channel == .topStories ? "" : configuration.channel == .liveFeed ? "" : configuration.topic
   let summaries = Array(await APIClient().fetchAsync(endpoint: endpoint,
                                                      filter: filter).reversed())
@@ -50,13 +63,13 @@ func buildEntries(in context: TimelineProviderContext,
   for i in stride(from: 0, to: summaries.count, by: pageSize) {
     let first = summaries[i]
     if context.family != .systemSmall {
-      await first.loadImagesAsync()
+      first.loadImages()
     }
     var subset = [first]
     for j in 1 ..< pageSize {
       if let next = i + j < summaries.count ? summaries[i + j] : nil {
         if context.family != .systemSmall {
-          await next.loadImagesAsync()
+          next.loadImages()
         }
         subset.insert(next, at: 0)
       }
@@ -76,17 +89,20 @@ struct Provider: IntentTimelineProvider {
   
   func placeholder(in context: Context) -> SummaryEntry {
     return SummaryEntry(context: context,
-                        config: CustomWidgetConfiguration(topic: "Technology"),
+                        config: CustomWidgetConfiguration(channel: .customTopic,
+                                                          topic: "Technology"),
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
   
   func getSnapshot(for configuration: IWidgetTopicConfigurationIntent,
                    in context: Context,
                    completion: @escaping (SummaryEntry) -> ()) {
+    let updateInterval = Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
+                                                   unit: .minutes)
     let entry = SummaryEntry(context: context,
-                             config: CustomWidgetConfiguration(topic: configuration.topic,
-                                                               updateInterval: Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
-                                                                                                         unit: .minutes)))
+                             config: CustomWidgetConfiguration(channel: .customTopic,
+                                                               topic: configuration.topic,
+                                                               updateInterval: updateInterval))
     completion(entry)
   }
   
@@ -94,10 +110,12 @@ struct Provider: IntentTimelineProvider {
                    in context: Context,
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
     Task {
-      let config = CustomWidgetConfiguration(channel: Channel.allCases[configuration.channel.rawValue],
+      let channel = Channel.allCases[configuration.channel.rawValue]
+      let updateInterval = Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
+                                                     unit: .minutes)
+      let config = CustomWidgetConfiguration(channel: channel,
                                              topic: configuration.topic,
-                                             updateInterval: Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
-                                                                                       unit: .minutes))
+                                             updateInterval: updateInterval)
       let entries = await buildEntries(in: context, for: config)
       let timeline = Timeline(entries: entries, policy: .atEnd)
       completion(timeline)
@@ -177,18 +195,18 @@ struct ReadLessWidgetEntryView : View {
   @Environment(\.colorScheme) private var colorScheme
   
   var entry: Provider.Entry
-    
+  
   let iconSize = 20.0
   
   var deeplink: URL {
     if entry.context?.family == .systemSmall {
-      return entry.summaries.first?.deeplink ?? URL(string: "https://readless.ai/top")!
+      return entry.summaries.first?.deeplink ?? URL(string: DEEPLINKS.topStories)!
     }
     if entry.config?.channel == .liveFeed {
-      return URL(string: "https://readless.ai/live")!
+      return URL(string: DEEPLINKS.liveFeed)!
     }
     if entry.config?.channel == .topStories {
-      return URL(string: "https://readless.ai/top")!
+      return URL(string: DEEPLINKS.topStories)!
     }
     return URL(string: "https://readless.ai/search?filter=\(entry.config?.topic ?? "")")!
   }
@@ -196,13 +214,13 @@ struct ReadLessWidgetEntryView : View {
   var body: some View {
     VStack(spacing: 8.0) {
       HStack {
-        Text(entry.config?.channel == .liveFeed ? "Live Feed" :
-               entry.config?.channel == .topStories ? "Top Stories" :
-               entry.config?.topic ?? "Topic")
-          .textCase(.uppercase)
-          .font(.subheadline)
-          .bold()
-          .padding(0)
+        Text(entry.config?.channel == .topStories ? "Top Stories" :
+              entry.config?.channel == .liveFeed ? "Live Feed" :
+              entry.config?.topic ?? "Topic")
+        .textCase(.uppercase)
+        .font(.subheadline)
+        .bold()
+        .padding(0)
         Spacer()
         if colorScheme == .light {
           Image("LogoCompact")
@@ -218,7 +236,8 @@ struct ReadLessWidgetEntryView : View {
         }
       }
       if (entry.config?.topic == nil) {
-        ForEach(0 ..< 2) { _ in
+        let size = WidgetPageSize[entry.context?.family ?? .systemMedium] ?? 2
+        ForEach(0 ..< size, id: \.self) { _ in
           SummaryCard(style: entry.context?.family == .systemSmall ? .small : .medium)
         }
       } else
@@ -249,7 +268,7 @@ struct ReadLessWidget: Widget {
       }
                                      .configurationDisplayName("Topic")
                                      .description("Choose a topic")
-                                     .supportedFamilies([.systemMedium, .systemLarge])
+                                     .supportedFamilies(SUPPORTED_FAMILIES)
     } else {
       return IntentConfiguration(kind: kind,
                                  intent: IWidgetTopicConfigurationIntent.self,
@@ -260,8 +279,11 @@ struct ReadLessWidget: Widget {
       }
                                  .configurationDisplayName("Topic")
                                  .description("Choose a topic")
-                                 .supportedFamilies([.systemMedium, .systemLarge])
+                                 .supportedFamilies(SUPPORTED_FAMILIES)
     }
   }
 }
+
+
+
 
