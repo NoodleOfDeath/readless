@@ -45,5 +45,11 @@ describe('uploads to the s3 bucket', () => {
     console.log(response);
     expect(response).toBeDefined();
   });
+  
+  test('list files', async () => {
+    const response = await S3Service.listObjects();
+    console.log(response);
+    expect(response).toBeDefined();
+  });
 
 });
