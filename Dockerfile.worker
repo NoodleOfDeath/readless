@@ -19,7 +19,7 @@ COPY src/server/package.json ./
 COPY src/server/yarn.lock ./
 COPY src/server/src ./src
 RUN yarn install --non-interactive --immutable
-RUN npm install --arch=x64 --platform=linux --verbose sharp
+RUN npm install --verbose sharp
 
 FROM copy AS pre-build
 COPY src/server/tsconfig.json ./
