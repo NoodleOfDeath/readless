@@ -1,4 +1,4 @@
-FROM node:19.3.0 AS base
+FROM --platform=linux/amd64 node:19.3.0 AS base
 
 # install required clintools
 RUN npm i -g tsoa

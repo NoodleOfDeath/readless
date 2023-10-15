@@ -94,7 +94,7 @@ public class Summary {
   }
   
   public var primaryImageUrl: URL? {
-    return URL(string: media?["imageArticle"] ?? media?["imageAi1"] ?? imageUrl ?? "")
+    return URL(string: (media?["imageArticle"] ?? media?["imageAi1"] ?? imageUrl ?? "") + "@sm")
   }
   
   public init(_ summary: PublicSummaryAttributes) {

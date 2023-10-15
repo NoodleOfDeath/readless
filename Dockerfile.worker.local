@@ -1,4 +1,4 @@
-FROM node:19.3.0 AS base
+FROM --platform=linux/amd64 node:19.3.0 AS base
 
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true

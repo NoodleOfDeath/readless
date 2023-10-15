@@ -1,7 +1,10 @@
-FROM node:19.3.0 AS base
+FROM --platform=linux/amd64 node:19.3.0 AS base
 
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+
+# install libvips
+RUN apt-get update && apt-get install -y libvips
 
 # install chromium for puppeteer
 RUN apt-get update && apt-get install gnupg wget -y && \
@@ -10,7 +13,7 @@ RUN apt-get update && apt-get install gnupg wget -y && \
   apt-get update && \
   apt-get install google-chrome-stable -y --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
-
+  
 FROM base AS copy
 WORKDIR /home/node
 COPY src/core ./core
@@ -18,8 +21,9 @@ WORKDIR /home/node/app
 COPY src/server/package.json ./
 COPY src/server/yarn.lock ./
 COPY src/server/src ./src
+RUN chown root.root .
 RUN yarn install --non-interactive --immutable
-RUN npm rebuild --arch=x64 --platform=linux --libc=musl sharp
+RUN npm rebuild --platform=linux --arch=x64 --verbose sharp
 
 FROM copy AS pre-build
 COPY src/server/tsconfig.json ./
@@ -31,6 +35,7 @@ COPY src/server/gen-sql-queries.ts ./
 RUN yarn sql
 RUN yarn cp:core
 RUN yarn build:worker
+RUN find / -name libvips.so.42
 
 FROM build AS worker
 CMD yarn start:worker

@@ -6671,6 +6671,11 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+libvips@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/libvips/-/libvips-0.0.2.tgz#9c7c87916f5b324358eb721fef8097cbc2644e54"
+  integrity sha512-E+jHGKSgWuep9t2oFvV9ll6i0YUVVWyNaMgr3zKP4hLYZmaP2qTQeSrGe7tvhUgwcLD8gn2nacgdi1WxMmOJMw==
+
 limiter@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/limiter/-/limiter-1.1.5.tgz#8f92a25b3b16c6131293a0cc834b4a838a2aa7c2"
