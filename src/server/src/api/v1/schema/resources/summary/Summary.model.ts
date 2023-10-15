@@ -4,6 +4,7 @@ import {
   DataType,
   Table,
 } from 'sequelize-typescript';
+import sharp from 'sharp';
 
 import {
   PublicSummaryGroup,
@@ -11,11 +12,17 @@ import {
   SummaryCreationAttributes,
 } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
+import { SummaryMedia } from './SummaryMedia.model';
+import { SummaryMediaAttributes } from './SummaryMedia.types';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import { QUERIES, QueryKey } from './queries';
-import { DeepAiService, SentimentService } from '../../../../../services';
+import {
+  DeepAiService,
+  S3Service,
+  SentimentService,
+} from '../../../../../services';
 import { parseDate } from '../../../../../utils';
 import { BulkMetadataResponse } from '../../../controllers';
 import { Cache } from '../../system/Cache.model';
@@ -41,6 +48,30 @@ export type SearchSummariesPayload = {
   version?: string;
   forceCache?: boolean;
   cacheHalflife?: string;
+};
+
+class Size {
+
+  name: string;
+  value: number;
+  
+  static xs = new Size('xs', 60);
+  static sm = new Size('sm', 120);
+  static md = new Size('md', 240);
+  static lg = new Size('lg', 360);
+  static xl = new Size('xl', 480);
+  static xxl = new Size('xxl', 720);
+  static xxxl = new Size('xxxl', 1920);
+  
+  constructor(name: string, value: number) {
+    this.name = name;
+    this.value = value;
+  }
+  
+}
+
+type DownsampleOptions = Pick<SummaryMediaAttributes, 'key' | 'parentId' | 'path'> & {
+  sizes?: Size[];
 };
 
 function parseTimeInterval(str: string) {
@@ -480,6 +511,77 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     } catch (e) {
       console.error(e);
     }
+  }
+  
+  async generateThumbnails(
+    {
+      key,
+      parentId,
+      path,
+      sizes = [Size.xs, Size.sm, Size.md, Size.lg],
+    }: DownsampleOptions, 
+    folder: string
+  ) {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise<SummaryMedia[]>(async (resolve, reject) => {
+      const allMedia = await SummaryMedia.findAll({ where: { parentId: this.id } });
+      const results: SummaryMedia[] = [];
+      for (const [i, m] of allMedia.entries()) {
+        if (!/^img\/s/.test(m.path) || /@(?:xs|sm|md|lg|x+l)\.\w+$/.test(m.path)) {
+          continue;
+        }
+        const file = await S3Service.getObject({ Key: m.path });
+        if (!file) {
+          reject('Missing file');
+          return;
+        }
+        for (const [j, size] of sizes.entries()) {
+          const subkey = `${key}@${size.name}`;
+          const media = await SummaryMedia.findOne({
+            where: {
+              key: subkey,
+              parentId,
+            },
+          });
+          if (media) {
+            console.log('media already exists');
+            results.push(media);
+            if (i + 1 === allMedia.length && j + 1 === sizes.length) {
+              resolve(results);
+              return;
+            }
+            continue;
+          }
+          const target = file.replace(/(\.\w+)$/, (_, $1) => `@${size.name}${$1}`);
+          sharp(file)
+            .resize(size.value)
+            .jpeg()
+            .toFile(target, async (err) => {
+              if (err) {
+                reject(err);
+                return;
+              }
+              const response = await S3Service.putObject({
+                ACL: 'public-read',
+                Accept: 'image',
+                File: target,
+                Folder: folder,
+              });
+              const media = await SummaryMedia.create({
+                key: subkey,
+                parentId,
+                path: response.key,
+                type: 'image',
+                url: response.url,
+              });
+              results.push(media);
+              if (i + 1 === allMedia.length && j + 1 === sizes.length) {
+                resolve(results);
+              }
+            });
+        }
+      }
+    });
   }
   
   async generateSentiment(...props: (keyof SummaryAttributes)[]) {
