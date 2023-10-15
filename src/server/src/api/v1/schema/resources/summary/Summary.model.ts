@@ -13,7 +13,6 @@ import {
 } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummaryMedia } from './SummaryMedia.model';
-import { SummaryMediaAttributes } from './SummaryMedia.types';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
@@ -69,10 +68,6 @@ class Size {
   }
   
 }
-
-type DownsampleOptions = Pick<SummaryMediaAttributes, 'key' | 'parentId' | 'path'> & {
-  sizes?: Size[];
-};
 
 function parseTimeInterval(str: string) {
   const matches = str.match(/(\d+)\s*(months?|m(?:in(?:ute)?s?)?|h(?:(?:ou)?rs?)?|d(?:ays?)?|w(?:(?:ee)?ks?)?|y(?:(?:ea)?rs?)?)/i);
@@ -514,19 +509,16 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   }
   
   async generateThumbnails(
-    {
-      key,
-      parentId,
-      path,
-      sizes = [Size.xs, Size.sm, Size.md, Size.lg],
-    }: DownsampleOptions, 
-    folder: string
+    sizes = [Size.xs, Size.sm, Size.md, Size.lg],
+    folder = 'img/s'
   ) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise<SummaryMedia[]>(async (resolve, reject) => {
+      console.log('generating thumbnails');
       const allMedia = await SummaryMedia.findAll({ where: { parentId: this.id } });
       const results: SummaryMedia[] = [];
       for (const [i, m] of allMedia.entries()) {
+        console.log(`generating thumbnails for ${m.path}`);
         if (!/^img\/s/.test(m.path) || /@(?:xs|sm|md|lg|x+l)\.\w+$/.test(m.path)) {
           continue;
         }
@@ -536,11 +528,11 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
           return;
         }
         for (const [j, size] of sizes.entries()) {
-          const subkey = `${key}@${size.name}`;
+          const subkey = `${m.key}@${size.name}`;
           const media = await SummaryMedia.findOne({
             where: {
               key: subkey,
-              parentId,
+              parentId: this.id,
             },
           });
           if (media) {
@@ -569,7 +561,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
               });
               const media = await SummaryMedia.create({
                 key: subkey,
-                parentId,
+                parentId: this.id,
                 path: response.key,
                 type: 'image',
                 url: response.url,

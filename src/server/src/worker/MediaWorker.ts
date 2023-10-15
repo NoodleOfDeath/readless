@@ -1,3 +1,4 @@
+import ms from 'ms';
 import sharp from 'sharp';
 
 import { Summary, SummaryMedia } from '../api/v1/schema/models';
@@ -100,6 +101,13 @@ export async function doWork() {
   try {
     const items = await S3Service.listObjects();
     console.log(items.length);
+    setInterval(async () => {
+      try {
+        await Summary.refreshViews();
+      } catch (e) {
+        console.error(e);
+      }
+    }, ms('3m'));
     for (const item of items) {
       if (/^img\/s/.test(item)) {
         const media = await SummaryMedia.findOne({ where: { path: item } });
@@ -117,11 +125,6 @@ export async function doWork() {
           folders.pop();
           try {
             await downsampleImage(media, folders.join('/'));
-            try {
-              await Summary.refreshViews();
-            } catch (e) {
-              console.error(e);
-            }
           } catch (e) {
             console.error(e);
           }
