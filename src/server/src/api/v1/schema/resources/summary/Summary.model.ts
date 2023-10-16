@@ -82,7 +82,7 @@ function parseTimeInterval(str: string) {
 
 function buildFilter(
   filter = '',
-  matchType: 'any' | 'exact' = 'exact',
+  matchType: 'any' | 'exact' = 'exact'
 ) {
   const categories: string[] = [];
   const excludedCategories: string[] = [];
@@ -144,7 +144,7 @@ function buildFilter(
       .replace(/\s\s+/g, ' ')
       .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`);
     if (matchType === 'exact') {
-      parts.push(`(?:(?:^|\\y)${query.replace(/['"]/g, ($0) => `\\${$0}`))}(?:\\y|$))`);
+      parts.push(`(?:(?:^|\\y)${query.replace(/['"]/g, ($0) => `\\${$0}`)}(?:\\y|$))`);
     } else {
       const matches = query.matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
       if (matches) {
@@ -158,7 +158,7 @@ function buildFilter(
     categories,
     excludedCategories,
     excludedPublishers,
-    filter: regex,
+    filter: regex.length > 2 ? regex : '',
     interval,
     publishers,
   };
