@@ -3,6 +3,9 @@ FROM --platform=linux/amd64 node:19.3.0 AS base
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
+# install libvips
+RUN apt-get update && apt-get install -y libvips
+
 # install chromium for puppeteer
 RUN apt-get update && apt-get install gnupg wget -y && \
   wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
