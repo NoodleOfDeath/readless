@@ -80,9 +80,9 @@ function parseTimeInterval(str: string) {
   }
 }
 
-function applyFilter(
-  filter = '', 
-  matchType: 'any' | 'all' = 'any'
+function buildFilter(
+  filter = '',
+  matchType: 'any' | 'exact' = 'exact',
 ) {
   const categories: string[] = [];
   const excludedCategories: string[] = [];
@@ -109,7 +109,6 @@ function applyFilter(
         const [_, exclude, prefix, prefixValues] = match;
         const pf = prefixValues.split(',');
         if (/^(?:source|src|pub(lisher)?)$/i.test(prefix)) {
-          console.log(match);
           if (exclude) {
             excludedPublishers.push(...pf);
           } else {
@@ -141,24 +140,25 @@ function applyFilter(
         query = timeMatches[1];
       }
     }
-    const matches = 
-      query.replace(/\s\s+/g, ' ')
-        .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`)
-        .matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
-    if (matches) {
-      const subqueries = [...matches].map((match) => (match[1] ? match[2] : match[3]).replace(/['"]/g, ($0) => `\\${$0}`));
-      if (matchType === 'all') {
-        //
-      } else {
+    query = query
+      .replace(/\s\s+/g, ' ')
+      .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`);
+    if (matchType === 'exact') {
+      parts.push(`(?:(?:^|\\y)${query.replace(/['"]/g, ($0) => `\\${$0}`))}(?:\\y|$))`);
+    } else {
+      const matches = query.matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);
+      if (matches) {
+        const subqueries = [...matches].map((m) => (m[1] ? m[2] : m[3]).replace(/['"]/g, ($0) => `\\${$0}`));
         parts.push(...subqueries.map((subquery) => `(?:(?:^|\\y)${subquery}(?:\\y|$))`));
       }
     }
   }
+  const regex = parts.join('|');
   return {
     categories,
     excludedCategories,
     excludedPublishers,
-    filter: parts.join('|'),
+    filter: regex,
     interval,
     publishers,
   };
@@ -281,7 +281,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       publishers,
       interval: pastInterval,
       filter: query,
-    } = applyFilter(filter, matchType);
+    } = buildFilter(filter, 'exact');
     
     const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
     const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
@@ -338,7 +338,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     const siblings: PublicSummaryGroup[] = [];
     const fetch = async (previousRecords: PublicSummaryGroup[] = []) => {
       
-      const records = ((await this.store.query(QUERIES[queryKey], {
+      let records = ((await this.store.query(QUERIES[queryKey], {
         nest: true,
         replacements,
         type: QueryTypes.SELECT,
@@ -350,6 +350,18 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
           count: 0,
           rows: [],
         };
+      }
+      
+      // If exact search fails search partial words
+      if (records.rows.length === 0) {
+        const { filter: partialFilter } = buildFilter(filter, 'any');
+        replacements.filter = partialFilter;
+        records = ((await this.store.query(QUERIES[queryKey], {
+          nest: true,
+          replacements,
+          type: QueryTypes.SELECT,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
       }
       
       if (filter || records.rows.length < replacements.limit) {

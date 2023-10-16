@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS summary_media_view;
+DROP MATERIALIZED VIEW IF EXISTS summary_media_view;
 
 CREATE MATERIALIZED VIEW summary_media_view AS
 SELECT
