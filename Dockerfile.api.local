@@ -1,5 +1,8 @@
 FROM --platform=linux/amd64 node:19.3.0 AS base
 
+# install libvips
+RUN apt-get update && apt-get install -y libvips
+
 WORKDIR /home/node
 COPY src/core ./core
 WORKDIR /home/node/app
