@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS summary_translation_view;
+DROP MATERIALIZED VIEW IF EXISTS summary_translation_view;
 
 CREATE MATERIALIZED VIEW summary_translation_view AS
 SELECT

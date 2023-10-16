@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS summary_sentiment_view;
+DROP MATERIALIZED VIEW IF EXISTS summary_sentiment_view;
 
 CREATE MATERIALIZED VIEW summary_sentiment_view AS
 SELECT
