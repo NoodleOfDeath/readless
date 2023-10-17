@@ -11,7 +11,7 @@ import UIKit
 
 extension UIImage {
   
-  static func load(from imageURL: URL, maxWidth: CGFloat) -> UIImage? {
+  static func load(from imageURL: URL, maxWidth: CGFloat = .infinity) -> UIImage? {
     
     // Create an CGImageSource that represent an image
     let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
