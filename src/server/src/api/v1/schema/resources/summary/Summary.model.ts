@@ -143,6 +143,9 @@ function buildFilter(
     query = query
       .replace(/\s\s+/g, ' ')
       .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`);
+    if (/^\w+$/.test(query)) {
+      parts.push(query);
+    } else
     if (matchType === 'exact') {
       parts.push(`(?:(?:^|\\y)${query.replace(/['"]/g, ($0) => `\\${$0}`)}(?:\\y|$))`);
     } else {
