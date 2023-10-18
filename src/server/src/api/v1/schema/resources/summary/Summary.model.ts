@@ -143,7 +143,10 @@ function buildFilter(
     query = query
       .replace(/\s\s+/g, ' ')
       .replace(/[-+*|=<>.^$!?(){}[\]\\]/g, ($0) => `\\${$0}`);
-    if (matchType === 'exact') {
+    if (/^\w+$/.test(query) && query.length >= 3) {
+      parts.push(query);
+    } else
+    if (query.length < 3 || matchType === 'exact') {
       parts.push(`(?:(?:^|\\y)${query.replace(/['"]/g, ($0) => `\\${$0}`)}(?:\\y|$))`);
     } else {
       const matches = query.matchAll(/(['"])(.+?)\1|\b([\S]+)\b/gm);

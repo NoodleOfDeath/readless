@@ -75,52 +75,71 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   
 }
 
+public enum SummaryMediaType {
+  case image
+  case publisherIcon
+}
+
+public enum AssetResolution: String {
+  case xs
+  case sm
+  case md
+  case lg
+  case xl
+  case xxl
+  case xxxl
+}
+
 public class Summary {
   
   public var root: PublicSummaryAttributes
-  public var id: Int
-  public var url: String
-  public var title: String
-  public var shortSummary: String?
-  public var publisher: PublicPublisherAttributes
-  public var category: PublicCategoryAttributes
-  public var imageUrl: String?
-  public var media: [String: String]?
-  public var originalDate: Date?
-  public var translations: [String: String]?
+  
+  public var id: Int { root.id }
+  public var url: String { root.url }
+  public var title: String { root.title }
+  public var shortSummary: String? { root.shortSummary }
+  public var publisher: PublicPublisherAttributes { root.publisher }
+  public var category: PublicCategoryAttributes { root.category }
+  public var imageUrl: String? { root.imageUrl }
+  public var media: [String: String]? { root.media }
+  public var originalDate: Date? { root.originalDate }
+  public var translations: [String: String]? { root.translations }
   
   public var deeplink: URL {
-    return URL(string: "https://readless.ai/read/?s=\(id)")!
-  }
-  
-  public var primaryImageUrl: URL? {
-    return URL(string: (media?["imageArticle@sm"] ??
-                        media?["imageAi1@sm"] ??
-                        media?["imageArticle"] ??
-                        media?["imageAi1"] ??
-                        imageUrl ?? ""))
-  }
-  
-  public init(_ summary: PublicSummaryAttributes) {
-    self.root = summary
-    self.id = summary.id
-    self.url = summary.url
-    self.title = summary.title
-    self.shortSummary = summary.shortSummary
-    self.publisher = summary.publisher
-    self.category = summary.category
-    self.imageUrl = summary.imageUrl
-    self.media = summary.media
-    self.originalDate = summary.originalDate
-    self.translations = summary.translations
+    URL(string: "https://readless.ai/read/?s=\(id)")!
   }
   
   @Published public var image: Image?
   @Published public var publisherIcon: Image?
   
-  public func loadImages() {
-    if let url = primaryImageUrl {
-      image = Image.load(from: url, maxWidth: 100)
+  public init(_ summary: PublicSummaryAttributes) {
+    self.root = summary
+  }
+  
+  public func getMediaURL(type: SummaryMediaType, resolution: AssetResolution? = nil) -> URL? {
+    if type == .image {
+      let keys = ["imageArticle", "imageAi1"].map {
+        guard let resolution = resolution else { return $0 }
+        return "\($0)@\(resolution.rawValue)"
+      }
+      for key in keys {
+        if let string = media?[key], let url = URL(string: string) {
+          return url
+        }
+      }
+      if let url = imageUrl {
+        return URL(string: url)
+      }
+    } else
+    if type == .publisherIcon {
+      return publisher.icon
+    }
+    return nil
+  }
+  
+  public func loadImages(resolution: AssetResolution? = nil) {
+    if let url = getMediaURL(type: .image, resolution: resolution) {
+      image = Image.load(from: url)
     }
     publisherIcon = Image.load(from: publisher.icon, maxWidth: 40)
   }
@@ -175,4 +194,5 @@ public var MOCK_SUMMARY_4 = Summary(
                                                              displayName: "politics",
                                                              icon: "bank")
                          ))
+
 

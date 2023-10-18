@@ -10,7 +10,7 @@ import SwiftUI
 
 public extension Image {
   
-  static func load(from imageURL: URL, maxWidth: CGFloat) -> Image? {
+  static func load(from imageURL: URL, maxWidth: CGFloat = .infinity) -> Image? {
     guard let uiImage = UIImage.load(from: imageURL, maxWidth: maxWidth) else { return nil }
     return Image(uiImage: uiImage)
   }

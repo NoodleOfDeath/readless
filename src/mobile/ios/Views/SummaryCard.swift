@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+let bundleUrl: URL = Bundle.main.bundleURL
+let bundlePathExtension: String = bundleUrl.pathExtension
+let isAppex: Bool = bundlePathExtension == "appex"
+
 enum SummaryCardStyle {
   case small
   case medium
@@ -59,7 +63,9 @@ struct SummaryCard: View {
           Text("")
             .frame(width: headerHeight, height: headerHeight)
             .onAppear {
-              Image.load(from: summary.publisher.icon) { image in DispatchQueue.main.async { self.publisherIcon = image } }
+              if let url = summary.getMediaURL(type: .publisherIcon) {
+                Image.load(from: url) { image in DispatchQueue.main.async { self.publisherIcon = image } }
+              }
             }
         }
         Text(summary.publisher.displayName)
@@ -114,7 +120,7 @@ struct SummaryCard: View {
             .font(headerFont)
             .frame(width: imageHeight, height: imageHeight)
             .onAppear {
-              if let url = summary.primaryImageUrl {
+              if let url = summary.getMediaURL(type: .image, resolution: isAppex ? .sm : nil) {
                 Image.load(from: url) { image in DispatchQueue.main.async { self.image = image } }
               }
             }

@@ -7,8 +7,8 @@ import {
   test,
 } from '@jest/globals';
 
-import { DBService, S3Service } from '../src/services';
 import { Publisher } from '../src/api/v1/schema';
+import { DBService, S3Service } from '../src/services';
 
 jest.setTimeout(30_000);
 
