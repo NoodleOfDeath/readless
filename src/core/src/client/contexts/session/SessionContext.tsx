@@ -19,7 +19,7 @@ import {
   ReadingFormat,
   RecapAttributes,
 } from '~/api';
-import { Locale, getLocale } from '~/locales';
+import { SupportedLocale, getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
 
 export const SessionContext = React.createContext(DEFAULT_SESSION_CONTEXT);
@@ -42,7 +42,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [lastRequestForReview, setLastRequestForReview] = React.useState(0);
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
-  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState(false);
+  const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
   
   // user state
   const [uuid, setUuid] = React.useState<string>();
@@ -55,7 +55,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
   const [bookmarkedSummaries, setBookmarkedSummaries] = React.useState<{ [key: number]: TimelineEvent<PublicSummaryGroup> }>();
   const [readSummaries, setReadSummaries] = React.useState<{ [key: number]: TimelineEvent<boolean> }>();
   const [removedSummaries, setRemovedSummaries] = React.useState<{ [key: number]: boolean }>();
-  const [_, setLocale] = React.useState<Locale>();
+  const [_, setLocale] = React.useState<SupportedLocale>();
   const [summaryTranslations, setSummaryTranslations] = React.useState<{ [key: number]: { [key in keyof PublicSummaryGroup]?: string } }>();
   
   // bookmark state
@@ -185,7 +185,7 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
     case 'fcmToken':
       setFcmToken(newValue);
       break;
-    case 'userStat':
+    case 'userStats':
       setUserStats(newValue);
       break;
       
@@ -663,7 +663,8 @@ export function SessionContextProvider({ children }: React.PropsWithChildren) {
         searchHistory,
         sentimentEnabled,
         setCategories,
-        setLoadedInitialUrl, setPublishers,
+        setLoadedInitialUrl, 
+        setPublishers,
         setStoredValue,
         showShortSummary,
         storeTranslations,

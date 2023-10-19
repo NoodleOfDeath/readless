@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.RemoteViews
 import android.widget.RemoteViews.RemoteCollectionItems
+import android.widget.RemoteViews.RemoteResponse
 import androidx.annotation.RequiresApi
 import org.json.JSONObject
 import java.lang.Exception
@@ -93,8 +94,9 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
                 val summary = Summary(row)
                 val subviews = RemoteViews(context.packageName, R.layout.read_less_app_widget_item)
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(summary.deeplink))
-                val intent = PendingIntent.getActivity(context, 0, browserIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                subviews.setOnClickPendingIntent(R.id.appwidget_card, intent)
+                val remoteResponse = RemoteResponse()
+                remoteResponse.
+                subviews.setOnClickResponse(R.id.appwidget_card, RemoteViews.RemoteResponse())
                 subviews.setImageViewUri(R.id.appwidget_card_publisher, summary.getMediaUrl(MediaType.PublisherIcon))
                 subviews.setTextViewText(R.id.appwidget_card_header, "${summary.publisher.displayName} • ${distanceFromNow(summary.originalDate)}")
                 subviews.setTextViewText(R.id.appwidget_card_title, summary.title)
