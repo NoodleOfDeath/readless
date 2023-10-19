@@ -13,11 +13,15 @@ struct ContentView: View {
   
   @State var summaries: [Summary] = []
   @State var selectedSummary: PublicSummaryAttributes?
-
+  
   var background: Color {
     return colorScheme == .light ? Color(hex: 0xFFFFFF) : Color(hex: 0x222222)
   }
-
+  
+  var computerSummaries: [Summary] {
+    return [MOCK_SUMMARY_1] + summaries
+  }
+  
   var body: some View {
     NavigationView {
       self.background.ignoresSafeArea()
@@ -31,11 +35,10 @@ struct ContentView: View {
               Text(error)
               Button("Reload", action: self.fetchSummaries)
             } else {
-              List(self.summaries.enumerated().map({ $0 }), id: \.element.id) { index, summary in
-                VStack {
-                  if index == 0 {
-                    Button("Reload", action: self.fetchSummaries)
-                  }
+              List(self.computerSummaries.enumerated().map({ $0 }), id: \.element.id) { index, summary in
+                if index == 0 {
+                  Button("Reload", action: self.fetchSummaries)
+                } else {
                   NavigationLink(
                     destination: ScrollView { SummaryCard(summary: summary,
                                                           style: .small,
@@ -43,7 +46,7 @@ struct ContentView: View {
                     }.navigationTitle(summary.translations?["title"] ?? summary.title) ,
                     tag: summary.root,
                     selection: $selectedSummary) {
-                      SummaryCard(summary: summary, 
+                      SummaryCard(summary: summary,
                                   style: .small)
                     }
                 }
@@ -52,7 +55,7 @@ struct ContentView: View {
               }
             }
           }
-          .padding(EdgeInsets(top: 10.0, leading: 0, bottom: 0, trailing: 0))
+            .padding(EdgeInsets(top: 10.0, leading: 0, bottom: 0, trailing: 0))
         )
     }
     .navigationViewStyle(.stack)
@@ -70,3 +73,4 @@ struct ContentView_Previews: PreviewProvider {
     ContentView().preferredColorScheme(.dark)
   }
 }
+

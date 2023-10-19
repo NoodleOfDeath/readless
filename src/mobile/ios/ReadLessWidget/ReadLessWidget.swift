@@ -28,7 +28,6 @@ struct DEEPLINKS {
 struct CustomWidgetConfiguration {
   var channel: Channel = .topStories
   var topic: String?
-  var updateInterval: Measurement<UnitDuration>?
 }
 
 struct SummaryEntry: TimelineEntry {
@@ -74,8 +73,8 @@ func buildEntries(in context: TimelineProviderContext,
         subset.insert(next, at: 0)
       }
     }
-    let offset = (configuration.updateInterval?.value ?? DEFAULT_TIMELINE_INTERVAL) * 60
-    let fireDate = Date(timeIntervalSinceNow: TimeInterval(floor(Double(i) / Double(pageSize)) * offset))
+    let offset = DEFAULT_TIMELINE_INTERVAL + floor(Double(i) / Double(pageSize))
+    let fireDate = Date.now.addingTimeInterval(offset)
     let entry = SummaryEntry(date: fireDate,
                              context: context,
                              config: configuration,
@@ -97,12 +96,9 @@ struct Provider: IntentTimelineProvider {
   func getSnapshot(for configuration: IWidgetTopicConfigurationIntent,
                    in context: Context,
                    completion: @escaping (SummaryEntry) -> ()) {
-    let updateInterval = Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
-                                                   unit: .minutes)
     let entry = SummaryEntry(context: context,
                              config: CustomWidgetConfiguration(channel: .customTopic,
-                                                               topic: configuration.topic,
-                                                               updateInterval: updateInterval))
+                                                               topic: configuration.topic))
     completion(entry)
   }
   
@@ -111,11 +107,8 @@ struct Provider: IntentTimelineProvider {
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
     Task {
       let channel = Channel.allCases[configuration.channel.rawValue]
-      let updateInterval = Measurement<UnitDuration>(value: configuration.updateInterval?.doubleValue ?? DEFAULT_TIMELINE_INTERVAL,
-                                                     unit: .minutes)
       let config = CustomWidgetConfiguration(channel: channel,
-                                             topic: configuration.topic,
-                                             updateInterval: updateInterval)
+                                             topic: configuration.topic)
       let entries = await buildEntries(in: context, for: config)
       let timeline = Timeline(entries: entries, policy: .atEnd)
       completion(timeline)
@@ -174,15 +167,13 @@ struct AppIntentProvider: AppIntentTimelineProvider {
   func snapshot(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> SummaryEntry {
     SummaryEntry(context: context,
-                 config: CustomWidgetConfiguration(topic: configuration.topic,
-                                                   updateInterval: configuration.updateInterval))
+                 config: CustomWidgetConfiguration(topic: configuration.topic))
   }
   
   func timeline(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> Timeline<SummaryEntry> {
     let config = CustomWidgetConfiguration(channel: configuration.channel ?? .liveFeed,
-                                           topic: configuration.topic,
-                                           updateInterval: configuration.updateInterval)
+                                           topic: configuration.topic)
     let entries = await buildEntries(in: context, for: config)
     let timeline = Timeline(entries: entries, policy: .atEnd)
     return timeline

@@ -21,32 +21,27 @@ struct WidgetTopicConfiguration: AppIntent, WidgetConfigurationIntent, CustomInt
   @Parameter(title: "Topic", default: "")
   var topic: String?
   
-  @Parameter(title: "Update Interval", defaultValue: 10, defaultUnit: .minutes)
-  var updateInterval: Measurement<UnitDuration>?
-  
   static var parameterSummary: some ParameterSummary {
     When(\.$channel, .equalTo, .customTopic) {
       Summary {
         \.$channel
         \.$topic
-        \.$updateInterval
       }
     } otherwise: {
       Summary {
         \.$channel
-        \.$updateInterval
       }
     }
   }
   
   static var predictionConfiguration: some IntentPredictionConfiguration {
-    IntentPrediction(parameters: (\.$channel, \.$topic, \.$updateInterval)) { feedType, topic, updateInterval in
+    IntentPrediction(parameters: (\.$channel, \.$topic)) { feedType, topic in
       DisplayRepresentation(
         title: "",
         subtitle: ""
       )
     }
-    IntentPrediction(parameters: (\.$channel, \.$updateInterval)) { feedType, updateInterval in
+    IntentPrediction(parameters: (\.$channel)) { feedType in
       DisplayRepresentation(
         title: "",
         subtitle: ""

@@ -198,54 +198,6 @@
 					<key>INIntentParameterType</key>
 					<string>String</string>
 				</dict>
-				<dict>
-					<key>INIntentParameterConfigurable</key>
-					<true/>
-					<key>INIntentParameterDisplayName</key>
-					<string>Update Interval</string>
-					<key>INIntentParameterDisplayNameID</key>
-					<string>AnaQy4</string>
-					<key>INIntentParameterDisplayPriority</key>
-					<integer>3</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataDefaultUnit</key>
-						<string>Seconds</string>
-						<key>INIntentParameterMetadataDefaultValue</key>
-						<real>10</real>
-						<key>INIntentParameterMetadataMaximumUnit</key>
-						<string>Days</string>
-						<key>INIntentParameterMetadataMaximumValue</key>
-						<real>360</real>
-						<key>INIntentParameterMetadataMinimumUnit</key>
-						<string>Seconds</string>
-						<key>INIntentParameterMetadataMinimumValue</key>
-						<real>1</real>
-						<key>INIntentParameterMetadataUnit</key>
-						<string>Minutes</string>
-					</dict>
-					<key>INIntentParameterName</key>
-					<string>updateInterval</string>
-					<key>INIntentParameterPromptDialogs</key>
-					<array>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Configuration</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Primary</string>
-						</dict>
-					</array>
-					<key>INIntentParameterTag</key>
-					<integer>12</integer>
-					<key>INIntentParameterType</key>
-					<string>TimeInterval</string>
-				</dict>
 			</array>
 			<key>INIntentResponse</key>
 			<dict>
