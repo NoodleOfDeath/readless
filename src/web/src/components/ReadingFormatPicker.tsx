@@ -58,7 +58,7 @@ const FORMAT_ICONS: Record<ReadingFormat, string> = {
 export default function ReadingFormatPicker({ format, onChange }: Props = {}) {
     
   const theme = useTheme();
-  const xsAndDown = useMediaQuery({ maxWidth: 400 });
+  const xsAndDown = useMediaQuery({ maxWidth: 401 });
 
   const ReadingFormatButton = React.useCallback((buttonFormat: ReadingFormat) => {
     return (
