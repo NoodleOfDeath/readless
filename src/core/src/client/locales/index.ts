@@ -76,6 +76,8 @@ import { viStrings } from './vi';
 import { zhCNStrings } from './zhCN';
 import { zhTWStrings } from './zhTW';
 
+import { SupportedLocale } from '~/api';
+
 export const LOCALE_MAP = {
   ar: arStrings,
   'ar-SA': arStrings,
@@ -174,7 +176,7 @@ export const SUPPORTED_LOCALES = [
   'zh-TW',
 ] as const;
 
-export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
+export type ClientSupportedLocale = typeof SUPPORTED_LOCALES[number];
 
 export const FNS_LOCALES: Record<keyof typeof LOCALE_MAP, Locale> = {
   ar,
@@ -232,4 +234,23 @@ export const FNS_LOCALES: Record<keyof typeof LOCALE_MAP, Locale> = {
   'zh-CN': zhCN,
   'zh-HK': zhHK,
   'zh-TW': zhTW,
+};
+
+export const getLocaleBase = (lang = navigator.language) => (): SupportedLocale => {
+  const parts = lang.split('-');
+  if (/^zh/i.test(lang) && parts.length > 2) {
+    lang = `${parts[0]}-${parts[2].toUpperCase()}`;
+  }
+  if (!SUPPORTED_LOCALES.includes(lang as SupportedLocale)) {
+    if (parts.length > 0 && SUPPORTED_LOCALES.includes(parts[0] as SupportedLocale)) {
+      lang = parts[0] as SupportedLocale;
+    } else {
+      return SupportedLocale.En;
+    }
+  }
+  return lang as SupportedLocale;
+};
+
+export const getFnsLocaleBase = (lang = navigator.language) => () => {
+  return FNS_LOCALES[lang as keyof typeof FNS_LOCALES] ?? FNS_LOCALES[getLocaleBase(lang)() as keyof typeof FNS_LOCALES];
 };
