@@ -1,7 +1,10 @@
 import { Column, DataType } from 'sequelize-typescript';
 
 import { TranslationAttributes, TranslationCreationAttributes } from './Translation.types';
-import { SUPPORTED_LOCALES, SupportedLocale } from '../../../../../core/locales';
+import {
+  SUPPORTED_LOCALES,
+  ClientSupportedLocale as SupportedLocale,
+} from '../../../../../core/locales';
 import { GoogleService } from '../../../../../services';
 import { BaseModel } from '../../base';
 

@@ -1,4 +1,4 @@
-import { SupportedLocale } from '../../../../../core/locales';
+import { ClientSupportedLocale as SupportedLocale } from '../../../../../core/locales';
 import { DatedAttributes } from '../../types';
 
 export type LocaleAttributes = DatedAttributes & {
