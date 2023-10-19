@@ -7,8 +7,8 @@ import {
   ReadingFormat,
   RecapAttributes,
   RequestParams,
+  SupportedLocale,
 } from '~/api';
-import { Locale } from '~/locales';
 
 export type TimelineEventProps = {
   createdAt: Date;
@@ -132,7 +132,7 @@ export type StoredValues = {
   bookmarkCount: number;
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
-  locale?: Locale;
+  locale?: SupportedLocale;
   summaryTranslations?: { [key: number]: { [key in keyof PublicSummaryGroup]?: string } };
   
   // recap state
