@@ -22,7 +22,7 @@ import {
   InteractionRequest,
 } from '../';
 import { BaseControllerWithPersistentStorageAccess } from '../';
-import { ClientSupportedLocale as SupportedLocale } from '../../../../core/locales';
+import { SupportedLocale } from '../../../../core/locales';
 import { MailService } from '../../../../services';
 import { PayloadWithUserId } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';

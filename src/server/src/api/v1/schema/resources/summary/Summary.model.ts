@@ -16,7 +16,7 @@ import { SummaryMedia } from './SummaryMedia.model';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
-import { QUERIES, QueryKey } from './queries';
+import { QueryFactory, QueryKey } from '../../../../../api/v1/schema';
 import {
   DeepAiService,
   S3Service,
@@ -248,17 +248,19 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
 
   declare siblingCount?: number;
   
-  public static async refreshViews() {
-    await this.store.query(QUERIES.refreshViews);
+  public static async refreshViews(views: QueryKey | QueryKey[] = ['refresh_summary_media_view', 'refresh_summary_sentiment_view', 'refresh_summary_translation_view']) {
+    for (const view of Array.isArray(views) ? views : [views]) {
+      await this.store.query(QueryFactory.getQuery(view));
+    }
   }
 
   public static async getSitemapData() {
-    const [summaries] = await this.store.query(QUERIES.getSiteMap);
+    const [summaries] = await this.store.query(QueryFactory.getQuery('sitemap'));
     return summaries as Summary[];
   }
 
   public static async getTopStories(payload: SearchSummariesPayload) {
-    return await this.getSummaries(payload, 'getTopStories');
+    return await this.getSummaries(payload, 'top_stories');
   }
   
   public static async getSummaries({
@@ -275,7 +277,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     offset = pageSize * page,
     forceCache,
     cacheHalflife = process.env.CACHE_HALFLIFE || '3m',
-  }: SearchSummariesPayload, queryKey: QueryKey = 'getSummaries'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
+  }: SearchSummariesPayload, queryKey: QueryKey = 'search'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
     
     const { 
       categories, 
@@ -320,14 +322,14 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       excludeIds,
       matchType,
       interval,
-      queryKey === 'getTopStories' ? '' : locale,
+      queryKey === 'top_stories' ? '' : locale,
       start,
       end,
       pageSize,
       offset,
     ].join(':');
     
-    if (queryKey === 'getTopStories' && !forceCache) {
+    if (queryKey === 'top_stories' && !forceCache) {
       const cache = await Cache.fromKey(cacheKey);
       if (cache && cache.expiresSoon === false) {
         try {
@@ -341,7 +343,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     const siblings: PublicSummaryGroup[] = [];
     const fetch = async (previousRecords: PublicSummaryGroup[] = []) => {
       
-      let records = ((await this.store.query(QUERIES[queryKey], {
+      let records = ((await this.store.query(QueryFactory.getQuery(queryKey), {
         nest: true,
         replacements,
         type: QueryTypes.SELECT,
@@ -359,7 +361,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       if (records.rows.length === 0) {
         const { filter: partialFilter } = buildFilter(filter, 'any');
         replacements.filter = partialFilter;
-        records = ((await this.store.query(QUERIES[queryKey], {
+        records = ((await this.store.query(QueryFactory.getQuery(queryKey), {
           nest: true,
           replacements,
           type: QueryTypes.SELECT,

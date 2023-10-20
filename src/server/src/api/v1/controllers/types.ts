@@ -1,5 +1,5 @@
 // record management
-import { ClientSupportedLocale as SupportedLocale } from '../../../core/locales';
+import { SupportedLocale } from '../../../core/locales';
 
 // custom headers
 export enum CustomHeader {

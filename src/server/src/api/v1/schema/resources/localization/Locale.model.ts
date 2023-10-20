@@ -5,10 +5,7 @@ import {
 } from 'sequelize-typescript';
 
 import { LocaleAttributes, LocaleCreationAttributes } from './Locale.types';
-import {
-  SUPPORTED_LOCALES,
-  ClientSupportedLocale as SupportedLocale,
-} from '../../../../../core/locales';
+import { SUPPORTED_LOCALES, SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
 
 @Table({

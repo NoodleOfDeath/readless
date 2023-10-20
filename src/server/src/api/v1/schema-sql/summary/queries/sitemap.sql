@@ -1,4 +1,3 @@
-export const SITE_MAP_QUERY = `
 SELECT
   s.id,
   s.title,
@@ -19,5 +18,5 @@ GROUP BY
   s."createdAt",
   s."updatedAt"
 ORDER BY
-  "siblingCount" DESC
-`;
+  "siblingCount" DESC;
+

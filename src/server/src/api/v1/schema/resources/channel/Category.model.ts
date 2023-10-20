@@ -11,7 +11,7 @@ import {
   CategoryCreationAttributes,
 } from './Category.types';
 import { CategoryTranslation } from './CategoryTranslation.model';
-import { PUBLIC_CATEGORIES } from './queries';
+import { QueryFactory } from '../../';
 import { SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
 
@@ -42,7 +42,7 @@ export class Category<
 
   static async getCategories(locale: SupportedLocale = 'en') {
     const replacements = { locale };
-    const categories: CategoryAttributes[] = await this.store.query(PUBLIC_CATEGORIES, {
+    const categories: CategoryAttributes[] = await this.store.query(QueryFactory.getQuery('get_categories'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
