@@ -12,7 +12,7 @@ import { GoogleService } from '../server/src/services/google/GoogleService';
 
 const LOCALE_DIR = p.resolve('./src/client/locales');
 const HISTORY_FILE = p.resolve('./src/client/locales/en-last.ts');
-const locales = fs.readdirSync(LOCALE_DIR).filter((locale) => !/(en(-last)?|index)\.ts/.test(locale));
+const locales = fs.readdirSync(LOCALE_DIR).filter((locale) => !/(?:en(?:-last)?|index|types)\.ts/.test(locale));
 
 async function translate(obj: unknown, translatedObject: unknown = {}, locale: string) {
   if (typeof obj === 'string') {

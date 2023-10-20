@@ -1,8 +1,8 @@
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 
 import { addScopes, makeAssociations } from '../../api/v1/schema';
+import { QUERIES } from '../../api/v1/schema';
 import * as Models from '../../api/v1/schema/models';
-import { VIEWS } from '../../api/v1/schema/views';
 import { BaseService } from '../base';
 
 export type DBServiceInitProps = {
@@ -33,8 +33,10 @@ export class DBService extends BaseService {
     // TODO: run SQL view update scripts
     await this.sq.sync();
     if (initializeViews) {
-      for (const QUERY of Object.values(VIEWS)) {
-        await this.sq.query(QUERY);
+      for (const group of Object.values(QUERIES)) {
+        for (const query of group.order ?? []) {
+          await this.sq.query(group.queries[query]);
+        }
       }
     }
   }

@@ -11,7 +11,7 @@ import {
 } from 'tsoa';
   
 import { BaseController, BulkResponse } from '../';
-import { ClientSupportedLocale as SupportedLocale } from '../../../../core/locales';
+import { SupportedLocale } from '../../../../core/locales';
 import { AuthError, InternalError } from '../../middleware';
 import { Category, PublicCategoryAttributes } from '../../schema';
 
