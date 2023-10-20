@@ -8,6 +8,8 @@ import Animation from '~/components/Animation';
 import Image from '~/components/Image';
 import Scroll from '~/components/Scroll';
 
+const publishers = ['abc', 'cbs', 'nbc', 'yahoo-finance', 'foxnews'];
+
 type MainProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   scrollToRef: any;
@@ -40,26 +42,21 @@ const Main = ({ scrollToRef, downloadRef }: MainProps) => (
             Read Less uses large language models to reduce bias and clickbait in the news while still preserving the original facts.
           </div>
         </section>
-        <div className={ styles.image }>
-          <Image
-            src="/images/main.png"
-            width={ 320 }
-            height={ 540 }
-            alt="Hero" />
+        <div className={ cn('h2') }>
+          As seen on
         </div>
-        <div className={ styles.ball }></div>
-        <div className={ styles.circles }>
-          {Array.from(Array(4).keys()).map((x) => (
-            <Animation
-              className={ styles.circle }
-              animateIn="fadeAlways"
-              speed={ -4 }
-              key={ x }
-              initiallyVisible={ true }>
-              <span></span>
-            </Animation>
-          ))}
-        </div>
+        <section>
+          <div className={ styles.image }>
+            {publishers.map((publisher) => (
+              <Image
+                key={ publisher }
+                src={ `/images/media-logos/${publisher}.png` }
+                width={ 60 }
+                height={ 60 }
+                alt={ publisher } />
+            ))}
+          </div>
+        </section>
       </div>
       <div className={ styles.fixed }>
         <div
