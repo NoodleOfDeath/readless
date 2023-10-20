@@ -1,13 +1,12 @@
-DROP VIEW IF EXISTS category_view;
+DROP MATERIALIZED VIEW IF EXISTS category_view;
 
 CREATE MATERIALIZED VIEW category_view AS
-SELECT
-  trans.locale,
+SELECT trans.locale,
   cat.id,
   cat.name,
-  COALESCE(translations ->> 'displayName', cat."displayName") AS "displayName",
-  cat.icon
-FROM
+  COALESCE(trans.translations ->> 'displayName'::text, cat."displayName"::text) AS "displayName",
+  cat.icon,
+  trans.translations
+FROM 
   categories cat
-  LEFT OUTER JOIN category_translation_view trans ON cat.id = trans."parentId";
-
+  LEFT JOIN category_translation_view trans ON cat.id = trans."parentId";

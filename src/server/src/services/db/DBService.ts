@@ -34,8 +34,17 @@ export class DBService extends BaseService {
     await this.sq.sync();
     if (initializeViews) {
       for (const group of Object.values(QUERIES)) {
+        if (!group.runOnStartUp) {
+          continue; 
+        }
         for (const query of group.order ?? []) {
-          await this.sq.query(group.queries[query]);
+          const q = group.queries[query].query;
+          console.log('running query', q);
+          try {
+            await this.sq.query(q);
+          } catch (e) {
+            console.error(e);
+          }
         }
       }
     }
