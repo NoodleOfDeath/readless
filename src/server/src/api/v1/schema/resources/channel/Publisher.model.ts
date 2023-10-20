@@ -16,7 +16,7 @@ import {
   Sitemap,
 } from './Publisher.types';
 import { PublisherTranslation } from './PublisherTranslation.model';
-import { PUBLIC_PUBLISHERS } from './queries';
+import { QueryFactory } from '../../';
 import { SupportedLocale } from '../../../../../core/locales';
 import { BaseModel } from '../../base';
 import { RateLimit } from '../../system/RateLimit.model';
@@ -69,7 +69,7 @@ export class Publisher<
 
   static async getPublishers(locale: SupportedLocale = 'en') {
     const replacements = { locale };
-    const publishers: PublisherAttributes[] = await this.store.query(PUBLIC_PUBLISHERS, {
+    const publishers: PublisherAttributes[] = await this.store.query(QueryFactory.getQuery('get_publishers'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
