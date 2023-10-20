@@ -168,7 +168,7 @@ async function scheduleJobs() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleJobs, ms('30s'));
+    setTimeout(scheduleJobs, ms(process.env.TOP_STORIES_CACHE_RATE || '5m'));
   }
 }
 

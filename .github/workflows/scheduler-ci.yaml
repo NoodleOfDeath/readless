@@ -62,6 +62,7 @@ jobs:
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PUBLISHER_MAX_ATTEMPT_LIMIT: ${{ vars.PUBLISHER_MAX_ATTEMPT_LIMIT }}
       SPIDER_FETCH_INTERVAL: ${{ vars.SPIDER_FETCH_INTERVAL }}
+      TOP_STORIES_CACHE_RATE: ${{ vars.TOP_STORIES_CACHE_RATE }}
     steps:
       - name: Print Job Description
         run: |
