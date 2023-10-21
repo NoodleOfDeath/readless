@@ -19,6 +19,11 @@ fun parseDate(string: String): LocalDateTime {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
+fun formatDate(dateTime: LocalDateTime, format: String = "MM/dd h:mm a"): String {
+    return dateTime.format(DateTimeFormatter.ofPattern(format))
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
 fun distanceFromNow(dateTime: LocalDateTime): String {
     val now = LocalDateTime.now()
     val minutes = abs(ChronoUnit.MINUTES.between(now, dateTime))

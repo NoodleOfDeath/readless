@@ -93,12 +93,12 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
                 val row = rows.getJSONObject(i)
                 val summary = Summary(row)
                 val subviews = RemoteViews(context.packageName, R.layout.read_less_app_widget_item)
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(summary.deeplink))
-                val remoteResponse = RemoteResponse()
-                remoteResponse.
-                subviews.setOnClickResponse(R.id.appwidget_card, RemoteViews.RemoteResponse())
+//                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(summary.deeplink))
+//                val remoteResponse = RemoteResponse()
+//                subviews.setOnClickResponse(R.id.appwidget_card, RemoteViews.RemoteResponse())
                 subviews.setImageViewUri(R.id.appwidget_card_publisher, summary.getMediaUrl(MediaType.PublisherIcon))
-                subviews.setTextViewText(R.id.appwidget_card_header, "${summary.publisher.displayName} • ${distanceFromNow(summary.originalDate)}")
+
+                subviews.setTextViewText(R.id.appwidget_card_header, "${summary.publisher.displayName} • ${formatDate(summary.originalDate)}")
                 subviews.setTextViewText(R.id.appwidget_card_title, summary.title)
                 subviews.setImageViewUri(R.id.appwidget_card_image, summary.getMediaUrl(MediaType.Image, MediaResolution.SM))
                 builder.addItem(summary.id, subviews)
