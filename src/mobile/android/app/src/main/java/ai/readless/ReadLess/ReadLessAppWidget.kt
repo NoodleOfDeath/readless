@@ -97,7 +97,6 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 //                val remoteResponse = RemoteResponse()
 //                subviews.setOnClickResponse(R.id.appwidget_card, RemoteViews.RemoteResponse())
                 subviews.setImageViewUri(R.id.appwidget_card_publisher, summary.getMediaUrl(MediaType.PublisherIcon))
-
                 subviews.setTextViewText(R.id.appwidget_card_header, "${summary.publisher.displayName} • ${formatDate(summary.originalDate)}")
                 subviews.setTextViewText(R.id.appwidget_card_title, summary.title)
                 subviews.setImageViewUri(R.id.appwidget_card_image, summary.getMediaUrl(MediaType.Image, MediaResolution.SM))

@@ -26,8 +26,9 @@ struct DEEPLINKS {
 }
 
 struct CustomWidgetConfiguration {
-  var channel: Channel = .topStories
+  var channel: WidgetChannel = .topStories
   var topic: String?
+  var dateFormat: WidgetDateFormat = .relative
 }
 
 struct SummaryEntry: TimelineEntry {
@@ -61,15 +62,11 @@ func buildEntries(in context: TimelineProviderContext,
   var entries: [SummaryEntry] = []
   for i in stride(from: 0, to: summaries.count, by: pageSize) {
     let first = summaries[i]
-    if context.family != .systemSmall {
-      first.loadImages(resolution: .sm)
-    }
+    first.loadImages(resolution: .sm)
     var subset = [first]
     for j in 1 ..< pageSize {
       if let next = i + j < summaries.count ? summaries[i + j] : nil {
-        if context.family != .systemSmall {
-          next.loadImages(resolution: .sm)
-        }
+        next.loadImages(resolution: .sm)
         subset.insert(next, at: 0)
       }
     }
@@ -106,9 +103,10 @@ struct Provider: IntentTimelineProvider {
                    in context: Context,
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
     Task {
-      let channel = Channel.allCases[configuration.channel.rawValue]
+      let channel = WidgetChannel.allCases[configuration.channel.rawValue]
       let config = CustomWidgetConfiguration(channel: channel,
-                                             topic: configuration.topic)
+                                             topic: configuration.topic,
+                                             dateFormat: WidgetDateFormat.allCases[configuration.dateFormat.rawValue])
       let entries = await buildEntries(in: context, for: config)
       let timeline = Timeline(entries: entries, policy: .atEnd)
       completion(timeline)
@@ -160,20 +158,23 @@ struct AppIntentProvider: AppIntentTimelineProvider {
   
   func placeholder(in context: Context) -> SummaryEntry {
     return SummaryEntry(context: context,
-                        config: CustomWidgetConfiguration(topic: "Technology"),
+                        config: CustomWidgetConfiguration(channel: .customTopic,
+                                                          topic: "Technology"),
                         summaries: WidgetPlaceholders[context.family] ?? [])
   }
   
   func snapshot(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> SummaryEntry {
     SummaryEntry(context: context,
-                 config: CustomWidgetConfiguration(topic: configuration.topic))
+                 config: CustomWidgetConfiguration(channel: .customTopic,
+                                                   topic: configuration.topic))
   }
   
   func timeline(for configuration: WidgetTopicConfiguration,
                 in context: Context) async -> Timeline<SummaryEntry> {
-    let config = CustomWidgetConfiguration(channel: configuration.channel ?? .liveFeed,
-                                           topic: configuration.topic)
+    let config = CustomWidgetConfiguration(channel: configuration.channel ?? .topStories,
+                                           topic: configuration.topic,
+                                           dateFormat: configuration.dateFormat ?? .relative)
     let entries = await buildEntries(in: context, for: config)
     let timeline = Timeline(entries: entries, policy: .atEnd)
     return timeline
@@ -238,6 +239,7 @@ struct ReadLessWidgetEntryView : View {
         ForEach(entry.summaries, id: \.id) {
           SummaryCard(summary: $0,
                       style: entry.context?.family == .systemSmall ? .small : .medium,
+                      dateFormat: entry.config?.dateFormat == .timestamp ? "MMM dd h:mm a" : nil,
                       deeplink: true)
         }
       }

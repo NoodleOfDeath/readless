@@ -20,7 +20,7 @@ struct SummaryCard: View {
   var summary: Summary?
   let style: SummaryCardStyle
   var expanded: Bool = false
-  var dateFormat: String = "MM/dd h:mm a"
+  var dateFormat: String?
   var deeplink: Bool = false
   
   @State var image: Image? = nil
@@ -73,7 +73,7 @@ struct SummaryCard: View {
           .font(headerFont)
         Text("•")
           .font(headerFont)
-        if Bundle.main.bundlePath.hasSuffix(".appex") {
+        if let dateFormat = dateFormat {
           Text(summary.originalDate?.formatted(dateFormat) ?? "")
           .font(headerFont)
         } else {

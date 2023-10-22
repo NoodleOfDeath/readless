@@ -75,12 +75,12 @@ public struct PublicSummaryAttributes: Codable, Hashable {
   
 }
 
-public enum SummaryMediaType {
+public enum MediaType {
   case image
   case publisherIcon
 }
 
-public enum AssetResolution: String {
+public enum MediaResolution: String {
   case xs
   case sm
   case md
@@ -116,7 +116,7 @@ public class Summary {
     self.root = summary
   }
   
-  public func getMediaURL(type: SummaryMediaType, resolution: AssetResolution? = nil) -> URL? {
+  public func getMediaURL(type: MediaType, resolution: MediaResolution? = nil) -> URL? {
     if type == .image {
       let keys = ["imageArticle", "imageAi1"].map {
         guard let resolution = resolution else { return $0 }
@@ -137,7 +137,7 @@ public class Summary {
     return nil
   }
   
-  public func loadImages(resolution: AssetResolution? = nil) {
+  public func loadImages(resolution: MediaResolution? = nil) {
     if let url = getMediaURL(type: .image, resolution: resolution) {
       image = Image.load(from: url)
     }

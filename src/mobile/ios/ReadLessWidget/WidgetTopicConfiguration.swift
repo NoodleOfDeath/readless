@@ -16,32 +16,37 @@ struct WidgetTopicConfiguration: AppIntent, WidgetConfigurationIntent, CustomInt
   static var description = IntentDescription("Intent for configuring the topic of a widget")
   
   @Parameter(title: "Channel", default: .topStories)
-  var channel: Channel?
+  var channel: WidgetChannel?
   
   @Parameter(title: "Topic", default: "")
   var topic: String?
+  
+  @Parameter(title: "Date Format", default: .relative)
+  var dateFormat: WidgetDateFormat?
   
   static var parameterSummary: some ParameterSummary {
     When(\.$channel, .equalTo, .customTopic) {
       Summary {
         \.$channel
         \.$topic
+        \.$dateFormat
       }
     } otherwise: {
       Summary {
         \.$channel
+        \.$dateFormat
       }
     }
   }
   
   static var predictionConfiguration: some IntentPredictionConfiguration {
-    IntentPrediction(parameters: (\.$channel, \.$topic)) { feedType, topic in
+    IntentPrediction(parameters: (\.$channel, \.$topic, \.$dateFormat)) { feedType, topic, dateFormat in
       DisplayRepresentation(
         title: "",
         subtitle: ""
       )
     }
-    IntentPrediction(parameters: (\.$channel)) { feedType in
+    IntentPrediction(parameters: (\.$channel, \.$dateFormat)) { feedType, dateFormat in
       DisplayRepresentation(
         title: "",
         subtitle: ""
