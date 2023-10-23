@@ -70,8 +70,8 @@
 		CD777A542AD9D3D500804569 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CD777A572AD9D3D500804569 /* Intents.intentdefinition */; };
 		CD777A552AD9D3D500804569 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CD777A572AD9D3D500804569 /* Intents.intentdefinition */; };
 		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
-		CDA6AD302AD22FD900514CD1 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA6AD2F2AD22FD900514CD1 /* Channel.swift */; };
-		CDA6AD312AD22FD900514CD1 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA6AD2F2AD22FD900514CD1 /* Channel.swift */; };
+		CDA6AD302AD22FD900514CD1 /* IntentEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA6AD2F2AD22FD900514CD1 /* IntentEnums.swift */; };
+		CDA6AD312AD22FD900514CD1 /* IntentEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA6AD2F2AD22FD900514CD1 /* IntentEnums.swift */; };
 		CDE11B1F2A7701BE00C0BC39 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */; };
 		CDE11B212A786FF500C0BC39 /* PublicPublisherAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */; };
 		CDE15FB92ACB497E0036F0A4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0150ACA429F9577400875CF7 /* WidgetKit.framework */; };
@@ -423,7 +423,7 @@
 		CD8472562ACB26CD00683959 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = tr; path = tr.lproj/Info.plist; sourceTree = "<group>"; };
 		CD8472572ACB26CD00683959 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = uk; path = uk.lproj/Info.plist; sourceTree = "<group>"; };
 		CD8472582ACB26CE00683959 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = vi; path = vi.lproj/Info.plist; sourceTree = "<group>"; };
-		CDA6AD2F2AD22FD900514CD1 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		CDA6AD2F2AD22FD900514CD1 /* IntentEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntentEnums.swift; sourceTree = "<group>"; };
 		CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CDE11B202A786FF500C0BC39 /* PublicPublisherAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicPublisherAttributes.swift; sourceTree = "<group>"; };
 		CDE15FB82ACB497E0036F0A4 /* ReadLessWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReadLessWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -762,7 +762,7 @@
 			children = (
 				CDE15FBC2ACB497E0036F0A4 /* ReadLessWidgetBundle.swift */,
 				CDE15FC02ACB497E0036F0A4 /* ReadLessWidget.swift */,
-				CDA6AD2F2AD22FD900514CD1 /* Channel.swift */,
+				CDA6AD2F2AD22FD900514CD1 /* IntentEnums.swift */,
 				CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */,
 				CDE15FC42ACB497F0036F0A4 /* Info.plist */,
 				CD777A572AD9D3D500804569 /* Intents.intentdefinition */,
@@ -1394,7 +1394,7 @@
 			files = (
 				CD4BF5A62AD0797C006BDC35 /* WidgetTopicConfiguration.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
-				CDA6AD302AD22FD900514CD1 /* Channel.swift in Sources */,
+				CDA6AD302AD22FD900514CD1 /* IntentEnums.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				CD777A542AD9D3D500804569 /* Intents.intentdefinition in Sources */,
 				5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */,
@@ -1418,7 +1418,7 @@
 				CDE15FBD2ACB497E0036F0A4 /* ReadLessWidgetBundle.swift in Sources */,
 				CDE15FD22ACB49920036F0A4 /* Date.swift in Sources */,
 				CDE15FD02ACB49920036F0A4 /* PressActions.swift in Sources */,
-				CDA6AD312AD22FD900514CD1 /* Channel.swift in Sources */,
+				CDA6AD312AD22FD900514CD1 /* IntentEnums.swift in Sources */,
 				CDE15FCE2ACB498E0036F0A4 /* PublicCategoryAttributes.swift in Sources */,
 				CDE15FD42ACB49970036F0A4 /* SummaryCard.swift in Sources */,
 				CD4BF5A52AD074F7006BDC35 /* WidgetTopicConfiguration.swift in Sources */,
@@ -1915,7 +1915,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.16.8;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1956,7 +1956,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.16.8;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

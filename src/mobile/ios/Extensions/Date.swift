@@ -8,6 +8,7 @@
 import Foundation
 
 extension Date {
+  
   func distanceFromNow() -> String {
     let interval = Calendar.current.dateComponents([.minute, .hour, .day], from: self, to: Date())
     if let day = interval.day, day > 0 {
@@ -20,4 +21,11 @@ extension Date {
       return "just now"
     }
   }
+  
+  func formatted(_ format: String) -> String? {
+    let formatter = DateFormatter();
+    formatter.dateFormat = format
+    return formatter.string(from: self)
+  }
+  
 }
