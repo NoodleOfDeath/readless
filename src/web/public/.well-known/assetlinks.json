@@ -3,6 +3,9 @@
   "target" : { 
     "namespace": "android_app", 
     "package_name": "ai.readless.ReadLess",
-    "sha256_cert_fingerprints": ["71:AA:28:1B:EB:C0:B8:7C:CB:EE:C9:06:09:66:22:CA:33:AF:ED:C7:1F:F0:0D:81:60:88:35:7F:1F:F6:01:71"]
+    "sha256_cert_fingerprints": [
+      "71:AA:28:1B:EB:C0:B8:7C:CB:EE:C9:06:09:66:22:CA:33:AF:ED:C7:1F:F0:0D:81:60:88:35:7F:1F:F6:01:71",
+      "B9:7F:49:C4:6E:32:51:B3:59:33:41:DA:AB:0C:78:94:B7:7E:0E:7C:40:44:40:1D:5D:7B:A0:66:6C:9C:66:E7"
+    ]
   }
 }]
