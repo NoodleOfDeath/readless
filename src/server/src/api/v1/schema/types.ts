@@ -74,6 +74,7 @@ export * from './resources/channel/Category.types';
 export * from './resources/channel/CategoryTranslation.types';
 
 export * from './resources/summary/Summary.types';
+export * from './resources/summary/SummaryCategory.types';
 export * from './resources/summary/SummarySentiment.types';
 export * from './resources/summary/SummaryInteraction.types';
 export * from './resources/summary/SummaryTranslation.types';

@@ -22,6 +22,7 @@ import {
   ServiceStatus,
   Subscription,
   Summary,
+  SummaryCategory,
   SummaryInteraction,
   SummaryMedia,
   SummaryRelation,
@@ -110,7 +111,14 @@ export function makeAssociations() {
   Summary.belongsTo(Publisher, { foreignKey: 'publisherId' });
   Publisher.hasMany(Summary, { foreignKey: 'publisherId' });
 
-  Summary.belongsTo(Category, { foreignKey: 'categoryId' });
+  Summary.belongsToMany(Category, {
+    foreignKey: 'parentId',
+    through: SummaryCategory,
+  });
+  SummaryCategory.hasMany(Summary, {
+    foreignKey: 'categoryId',
+    sourceKey: 'parentId',
+  });
   Category.hasMany(Summary, { foreignKey: 'categoryId' });
   
   SentimentMethod.hasMany(SummarySentiment, { foreignKey: 'method', sourceKey: 'name' });

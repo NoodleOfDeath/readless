@@ -30,6 +30,7 @@ export * from './resources/channel/Category.model';
 export * from './resources/channel/CategoryTranslation.model';
 
 export * from './resources/summary/Summary.model';
+export * from './resources/summary/SummaryCategory.model';
 export * from './resources/summary/SummarySentiment.model';
 export * from './resources/summary/SummaryInteraction.model';
 export * from './resources/summary/SummaryTranslation.model';
