@@ -7,7 +7,11 @@
     <string name="live_feed">Live Feed</string>
     <string name="custom_topic">Custom Topic</string>
     <string name="topic">Topic</string>
-    <string name="update_interval">Update Interval (minutes)</string>
-    <string name="add_widget">Add widget</string>
+    <string name="date_format">Date Format</string>
+    <string name="relative">Relative</string>
+    <string name="timestamp">Oct 12 2:35 PM</string>
+    <string name="done">Done</string>
     <string name="app_widget_description">Custom news feed for the home and lock screen</string>
+    <string name="publisher">Publisher</string>
+    <string name="article_title">Article title</string>
 </resources>

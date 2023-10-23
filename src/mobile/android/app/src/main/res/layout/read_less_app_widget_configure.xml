@@ -9,52 +9,57 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:text="@string/configure" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:labelFor="@id/appwidget_channel"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:text="@string/channel" />
-    <RadioGroup
-        android:id="@+id/appwidget_channel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:minHeight="48dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/appwidget_top_stories"
-            android:text="@string/top_stories" />
-        <RadioButton
-            android:id="@+id/appwidget_top_stories"
+        <RadioGroup
+            android:id="@+id/appwidget_channel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:labelFor="@id/appwidget_live_feed"
-            android:text="@string/live_feed" />
-        <RadioButton
-            android:id="@+id/appwidget_live_feed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/appwidget_custom_topic"
-            android:text="@string/custom_topic" />
-        <RadioButton
-            android:id="@+id/appwidget_custom_topic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RadioGroup>
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/appwidget_top_stories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/appwidget_top_stories"
+                android:text="@string/top_stories" />
+            <RadioButton
+                android:id="@+id/appwidget_live_feed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/appwidget_live_feed"
+                android:text="@string/live_feed" />
+            <RadioButton
+                android:id="@+id/appwidget_custom_topic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/appwidget_custom_topic"
+                android:text="@string/custom_topic" />
+        </RadioGroup>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/appwidget_topic_container"
@@ -67,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:labelFor="@id/appwidget_topic"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:text="@string/topic" />
         <EditText
             android:id="@+id/appwidget_topic"
@@ -79,28 +84,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:labelFor="@id/appwidget_update_interval"
-            android:textSize="16dp"
-            android:text="@string/update_interval" />
-        <EditText
-            android:id="@+id/appwidget_update_interval"
-            android:layout_width="match_parent"
+            android:labelFor="@id/appwidget_date_format"
+            android:textSize="16sp"
+            android:text="@string/date_format" />
+        <RadioGroup
+            android:id="@+id/appwidget_date_format"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
             android:layout_marginBottom="8dp"
-            android:inputType="number" />
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/appwidget_relative_date_format"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/appwidget_relative_date_format"
+                android:text="@string/relative" />
+            <RadioButton
+                android:id="@+id/appwidget_timestamp_date_format"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/appwidget_timestamp_date_format"
+                android:text="@string/timestamp" />
+        </RadioGroup>
     </LinearLayout>
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/done_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_widget"
+        android:text="@string/done"
         android:layout_marginTop="8dp" />
 
 </LinearLayout>

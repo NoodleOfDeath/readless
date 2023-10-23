@@ -1,9 +1,11 @@
 package ai.readless.ReadLess
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import org.json.JSONObject
+import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -19,7 +21,7 @@ fun parseDate(string: String): LocalDateTime {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun formatDate(dateTime: LocalDateTime, format: String = "MM/dd h:mm a"): String {
+fun formatDate(dateTime: LocalDateTime, format: String = "MMM dd h:mm a"): String {
     return dateTime.format(DateTimeFormatter.ofPattern(format))
 }
 
@@ -88,29 +90,6 @@ class Summary {
 
     val deeplink get(): String = "https://readless.ai/read/?s=$id"
 
-    fun getMediaUrl(type: MediaType, resolution: MediaResolution? = null): Uri? {
-        if (type == MediaType.Image) {
-            if (media == null) {
-                return if (imageUrl != null) Uri.parse(imageUrl) else null
-            }
-            val img = try { media?.getString("imageArticle@${resolution?.name?.lowercase() ?: ""}") }
-            catch(e: Exception) {
-                try { media?.getString("imageAi1@${resolution?.name?.lowercase() ?: ""}") }
-                catch (e: Exception) {
-                    try { media?.getString("imageArticle") }
-                    catch (e: Exception) {
-                        try { media?.getString("imageAi1") }
-                        catch(e: Exception) { null }
-                    }
-                }
-            } ?: return null
-            return Uri.parse(img)
-        } else if( type == MediaType.PublisherIcon) {
-            return Uri.parse(publisher.icon)
-        }
-        return null
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     constructor(obj: JSONObject) {
         this.id = obj.getInt("id").toLong()
@@ -124,4 +103,28 @@ class Summary {
         this.originalDate = parseDate(obj.getString("originalDate"))
         this.translations = try { obj.getJSONObject("translations") } catch (e: Exception) { null }
     }
+
+    fun getMediaBitmap(type: MediaType, resolution: MediaResolution? = null): Bitmap? {
+        if (type == MediaType.Image) {
+            if (media == null) {
+                return if (imageUrl != null) urlToBitmap(imageUrl) else null
+            }
+            val img = try { media?.getString("imageArticle@${resolution?.name?.lowercase() ?: ""}") }
+            catch(e: Exception) {
+                try { media?.getString("imageAi1@${resolution?.name?.lowercase() ?: ""}") }
+                catch (e: Exception) {
+                    try { media?.getString("imageArticle") }
+                    catch (e: Exception) {
+                        try { media?.getString("imageAi1") }
+                        catch(e: Exception) { null }
+                    }
+                }
+            } ?: return null
+            return urlToBitmap(img)
+        } else if( type == MediaType.PublisherIcon) {
+            return urlToBitmap(publisher.icon)
+        }
+        return null
+    }
+
 }
