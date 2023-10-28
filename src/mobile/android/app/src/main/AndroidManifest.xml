@@ -52,6 +52,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" />
+                <data android:host="readless.ai" />
                 <data android:host="www.readless.ai" />
             </intent-filter>
         </activity>
