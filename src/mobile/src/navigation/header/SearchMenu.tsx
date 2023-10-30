@@ -10,7 +10,7 @@ import {
   ScrollView,
   View,
 } from '~/components';
-import { LayoutContext, SessionContext } from '~/contexts';
+import { LayoutContext, StorageContext } from '~/contexts';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -44,7 +44,7 @@ export function SearchMenu({
   const {
     searchHistory,
     setStoredValue,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
   const { screenWidth } = React.useContext(LayoutContext);
 
   const [value, setValue] = React.useState(initialValue);

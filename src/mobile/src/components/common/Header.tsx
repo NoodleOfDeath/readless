@@ -36,9 +36,7 @@ export function SettingsToggle(props: ButtonProps) {
         accessible
         accessibilityLabel={ strings.axe_settings }
         iconSize={ 24 }
-        onPress={ () => {
-          (navigation?.getParent('rightDrawerNav') as typeof navigation)?.openDrawer?.();
-        } }
+        onPress={ () => navigation?.navigate('settings') } 
         { ...props } />
     </View>
   );

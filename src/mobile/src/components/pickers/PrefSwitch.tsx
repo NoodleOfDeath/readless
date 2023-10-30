@@ -1,24 +1,24 @@
 import React from 'react';
 
 import { Switch, SwitchProps } from '~/components';
-import { Preferences, SessionContext } from '~/contexts';
+import { Storage, StorageContext } from '~/contexts';
 
 type ValueOf<T> = T[keyof T];
-type BooleanPreferencesKeys = NonNullable<ValueOf<{ [I in keyof Preferences]: Preferences[I] extends (boolean | undefined) ? I : never }>>;
-type BooleanPreferences = { [I in BooleanPreferencesKeys]: Preferences[I] };
+type BooleanStorageKeys = NonNullable<ValueOf<{ [I in keyof Storage]: Storage[I] extends (boolean | undefined) ? I : never }>>;
+type BooleanStorage = { [I in BooleanStorageKeys]: Storage[I] };
 
-type PrefSwitchProps<K extends keyof BooleanPreferences> = Omit<SwitchProps, 'value'> & {
+type PrefSwitchProps<K extends keyof BooleanStorage> = Omit<SwitchProps, 'value'> & {
   prefKey: K;
-  onValueChange?: (value?: BooleanPreferences[K]) => void;
+  onValueChange?: (value?: BooleanStorage[K]) => void;
 };
 
-export function PrefSwitch<K extends keyof BooleanPreferences>({
+export function PrefSwitch<K extends keyof BooleanStorage>({
   prefKey,
   onValueChange,
   ...props
 }: PrefSwitchProps<K>) {
 
-  const context = React.useContext(SessionContext);
+  const context = React.useContext(StorageContext);
   const [value, setValue] = React.useState(context[prefKey]);
 
   return (

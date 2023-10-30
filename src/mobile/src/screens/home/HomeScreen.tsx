@@ -10,7 +10,7 @@ import {
   RouteConfig,
 } from '@react-navigation/native';
 
-import { SessionContext } from '../../core';
+import { StorageContext } from '../../core';
 
 import { SYSTEM_FONT, Screen } from '~/components';
 import { useTheme } from '~/hooks';
@@ -32,7 +32,7 @@ export function HomeScreen({
 }: ScreenComponent<'home'>) {
   
   const theme = useTheme();
-  const { followCount } = React.useContext(SessionContext);
+  const { followCount } = React.useContext(StorageContext);
 
   const tabs = React.useMemo(() => {
     const tabs: RouteConfig<

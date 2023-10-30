@@ -12,7 +12,7 @@ import {
   TextProps,
   ViewProps,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
 export function useTextStyles({
@@ -72,7 +72,7 @@ export function useTextStyles({
     fontSizeOffset = 0,
     letterSpacing: letterSpacing0 = 0,
     lineHeightMultiplier = 0,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
   
   const theme = useTheme();
   

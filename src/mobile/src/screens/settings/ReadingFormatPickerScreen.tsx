@@ -6,10 +6,10 @@ import {
   ScrollView,
   Summary,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 
 export function ReadingFormatPickerScreen() {
-  const { preferredReadingFormat, setStoredValue } = React.useContext(SessionContext);
+  const { preferredReadingFormat, setStoredValue } = React.useContext(StorageContext);
   return (
     <Screen>
       <ScrollView>

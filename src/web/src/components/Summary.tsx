@@ -45,7 +45,7 @@ import {
   ReadingFormat,
 } from '~/api';
 import ReadingFormatPicker from '~/components/ReadingFormatPicker';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import {
   fixedSentiment,
   publisherIcon,
@@ -92,7 +92,7 @@ export default function Summary({
 }: Props) {
 
   const { interactWithSummary } = useApiClient();
-  const { preferredReadingFormat } = React.useContext(SessionContext);
+  const { preferredReadingFormat } = React.useContext(StorageContext);
 
   const mdAndDown = useMediaQuery({ maxWidth: 960 });
   const smAndDown = useMediaQuery({ maxWidth: 600 });

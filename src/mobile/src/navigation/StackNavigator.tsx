@@ -14,7 +14,7 @@ import {
 import { SearchMenu } from './header';
 
 import { DrawerToggle, SettingsToggle } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 import {
   BookmarksScreen,
@@ -41,7 +41,7 @@ import {
 } from '~/screens';
 
 const DrawerToggleWithIndicator = () => {
-  const { hasViewedFeature, unreadBookmarkCount } = React.useContext(SessionContext);
+  const { hasViewedFeature, unreadBookmarkCount } = React.useContext(StorageContext);
   return (
     <DrawerToggle
       indicator={ !hasViewedFeature('first-view-publishers', 'first-view-categories') || (unreadBookmarkCount > 0 && !hasViewedFeature('unread-bookmarks')) } />
@@ -49,7 +49,7 @@ const DrawerToggleWithIndicator = () => {
 };
 
 const SettingsToggleWithIndicator = () => {
-  const { hasViewedFeature } = React.useContext(SessionContext);
+  const { hasViewedFeature } = React.useContext(StorageContext);
   return (
     <SettingsToggle
       indicator={ !hasViewedFeature(

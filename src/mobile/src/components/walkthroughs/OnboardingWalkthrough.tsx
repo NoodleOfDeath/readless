@@ -13,14 +13,14 @@ import {
   WalkthroughSliderRef,
   WalkthroughStep,
 } from '~/components';
-import { NotificationContext, SessionContext } from '~/contexts';
+import { NotificationContext, StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 import { usePlatformTools } from '~/utils';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
   const { emitEvent } = usePlatformTools();
-  const { viewFeature } = React.useContext(SessionContext);
+  const { viewFeature } = React.useContext(StorageContext);
   const { subscribe, unsubscribe } = React.useContext(NotificationContext);
 
   const [iLikeReading, setILikeReading] = React.useState(false);

@@ -11,7 +11,7 @@ import {
   TableViewCell,
   TableViewSection,
 } from '~/components';
-import { NotificationContext, SessionContext } from '~/contexts';
+import { NotificationContext, StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 
 export function NotificationSettingsTable() {
@@ -19,7 +19,7 @@ export function NotificationSettingsTable() {
   const {
     pushNotifications,
     pushNotificationsEnabled,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
   
   const {
     registerRemoteNotifications,

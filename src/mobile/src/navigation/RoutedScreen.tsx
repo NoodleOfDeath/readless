@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { Screen, ScreenProps } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { NavigationID } from '~/screens';
 
@@ -15,7 +15,7 @@ export type RoutedScreenProps = ScreenProps & {
 export function RoutedScreen({ navigationID, ...props }: RoutedScreenProps) {
 
   const { navigation, router } = useNavigation();
-  const { loadedInitialUrl, setLoadedInitialUrl } = React.useContext(SessionContext); 
+  const { loadedInitialUrl, setLoadedInitialUrl } = React.useContext(StorageContext); 
   
   useFocusEffect(React.useCallback(() => {
     const subscriber = Linking.addEventListener('url', router);

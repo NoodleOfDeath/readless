@@ -8,14 +8,14 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext } from '~/core';
+import { StorageContext } from '~/core';
 import { ScreenComponent } from '~/screens';
 
 export function StatsScreen({
   route: _route,
   navigation: _navigation,
 }: ScreenComponent<'stats'>) {
-  const { setStoredValue } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(StorageContext);
   return (
     <Screen>
       <View gap={ 12 } m={ 64 } flex={ 1 } justifyCenter>

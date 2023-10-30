@@ -17,7 +17,7 @@ import {
   TableViewCell,
   TableViewSection,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -31,12 +31,12 @@ export function SettingsTable() {
     fontFamily, 
     preferredShortPressFormat,
     preferredReadingFormat,
-    resetStoredValues, 
+    resetStorage, 
     triggerWords,
     readSummaries,
     removedSummaries,
     setStoredValue,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
   
   const [loading, setLoading] = React.useState(false);
   const [cacheSize, setCacheSize] = React.useState('');
@@ -64,6 +64,14 @@ export function SettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
+      <TableViewSection header={ strings.settings_pushNotifications }>
+        <TableViewCell
+          bold
+          title={ strings.settings_pushNotifications }
+          cellIcon="bell"
+          accessory="DisclosureIndicator"
+          onPress={ () => navigate('notifications') } />
+      </TableViewSection>
       <TableViewSection header={ strings.settings_system }>
         <TableViewCell
           bold
@@ -201,10 +209,10 @@ export function SettingsTable() {
           bold
           title={ strings.settings_resetAllSettings }
           onPress={ () => {
-            resetStoredValues(); 
+            resetStorage(); 
           } }
           onLongPress={ () => {
-            resetStoredValues(true);
+            resetStorage(true);
           } } />
       </TableViewSection>
     </TableView>

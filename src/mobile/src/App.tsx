@@ -19,7 +19,7 @@ import {
   LayoutContextProvider,
   MediaContextProvider,
   NotificationContextProvider,
-  SessionContextProvider,
+  StorageContextProvider,
 } from '~/contexts';
 import { RootNavigator } from '~/navigation';
 
@@ -37,7 +37,7 @@ registerSheet('feedback', FeedbackDialog);
 
 export default function App() {
   return (
-    <SessionContextProvider>
+    <StorageContextProvider>
       <LayoutContextProvider>
         <NotificationContextProvider>
           <MediaContextProvider>
@@ -45,6 +45,6 @@ export default function App() {
           </MediaContextProvider>
         </NotificationContextProvider>
       </LayoutContextProvider>
-    </SessionContextProvider>
+    </StorageContextProvider>
   );
 }

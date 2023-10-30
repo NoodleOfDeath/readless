@@ -7,7 +7,7 @@ import {
   CardStackEntryProps,
   CardStackProps,
 } from '~/components';
-import { SessionContext } from '~/core';
+import { StorageContext } from '~/core';
 import { strings } from '~/locales';
 
 export const FEATURES: CardStackEntryProps[] = [
@@ -51,7 +51,7 @@ type Props = CardStackProps & {
 
 export function WalkthroughStack({ onClose, ...props }: Props = {}) {
   
-  const { viewedFeatures } = React.useContext(SessionContext);
+  const { viewedFeatures } = React.useContext(StorageContext);
   const cards = React.useMemo(() => FEATURES.filter((feature) => !(feature.id in (viewedFeatures ?? {}))), [viewedFeatures]);
   
   return cards.length > 0 && (

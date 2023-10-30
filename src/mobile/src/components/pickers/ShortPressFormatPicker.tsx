@@ -8,7 +8,7 @@ import {
   SelectOption,
   TablePicker,
 } from '~/components';
-import { SessionContext } from '~/core';
+import { StorageContext } from '~/core';
 
 type Props = ChildlessViewProps;
 
@@ -21,7 +21,7 @@ const OPTIONS: SelectOption<ReadingFormat>[] = [{
 }];
 
 export function ShortPressFormatPicker({ ...props }: Props = {}) {
-  const { preferredShortPressFormat, setStoredValue } = React.useContext(SessionContext);
+  const { preferredShortPressFormat, setStoredValue } = React.useContext(StorageContext);
   return (
     <TablePicker
       { ...props }

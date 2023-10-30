@@ -17,9 +17,10 @@ import {
   Screen,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
+import { usePlatformTools } from '~/utils';
 
 function TabbedScreen() {
   return (
@@ -36,6 +37,8 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     openCategory,
     openPublisher,
   } = useNavigation();
+  
+  const { getUserAgent } = usePlatformTools();
 
   const {
     categories,
@@ -52,7 +55,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     publisherIsFavorited,
     viewFeature,
     hasViewedFeature,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
 
   const topPublishers = React.useMemo(() => {
     if (!publishers) {
@@ -205,6 +208,10 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           navigate('categoryPicker');
         } }>
         {categoryItems}
+      </DrawerSection>      
+      <DrawerSection>
+        <DrawerItem 
+          label={ getUserAgent().currentVersion } />
       </DrawerSection>
       <View my={ 12 } />
     </DrawerContentScrollView>

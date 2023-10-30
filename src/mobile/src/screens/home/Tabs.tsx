@@ -9,7 +9,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { SessionContext, useApiClient } from '~/core';
+import { StorageContext, useApiClient } from '~/core';
 import { strings } from '~/locales';
 import {  ScreenComponent } from '~/screens';
 
@@ -35,7 +35,7 @@ export function YourNewsTab({
   navigation: _navigation,
 }: ScreenComponent<'yourNews'>) {
   const { getSummaries } = useApiClient();
-  const { followFilter } = React.useContext(SessionContext);
+  const { followFilter } = React.useContext(StorageContext);
   const [filter, setFilter] = React.useState(followFilter);
   useFocusEffect(React.useCallback(() => {
     setFilter(followFilter);

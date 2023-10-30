@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import {
   PreferenceMutation,
   PreferenceState,
-  SessionEvent,
+  StorageEventName,
 } from '~/contexts';
 
 export function usePlatformTools() {
@@ -17,7 +17,7 @@ export function usePlatformTools() {
     };
   };
 
-  const emitEvent = <E extends SessionEvent>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) => {
+  const emitEvent = <E extends StorageEventName>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) => {
     new EventEmitter().emit(event, mutation, state);
   };
 
