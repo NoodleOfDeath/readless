@@ -89,7 +89,7 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     categoryId: 0,
     id: 0,
     imageUrl: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg',
-    media: { imageAi1: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg' },
+    media: { imageAi1: 'https://readless.nyc3.digitaloceanspaces.com/img/s/1b131290-775e-11ee-93b5-2b37be086969.jpeg' },
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
     publisher: {
       displayName: strings.misc_publisher,

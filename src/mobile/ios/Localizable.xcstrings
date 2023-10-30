@@ -1,0 +1,3019 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Channel": {
+      "localizations": {
+        "zh": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "頻道"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قناة"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanál"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanal"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanal"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Κανάλι"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کانال"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kanava"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "עָרוּץ"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "चैनल"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanal"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Csatorna"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saluran"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canale"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "チャネル"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "채널"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saluran"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanal"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanaal"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanał"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Канал"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kanál"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanal"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ช่อง"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanal"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Канал"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kênh"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "渠道"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "頻道"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "頻道"
+          }
+        }
+      }
+    },
+    "Choose a topic": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇一個主題"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اختر موضوعا"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trieu un tema"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyberte si téma"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vælg et emne"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle ein Thema"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Επιλέξτε ένα θέμα"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige un tema"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موضوعی را انتخاب کنید"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valitse aihe"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir un sujet"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בחר נושא"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "एक विषय चुनें"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odaberite temu"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Válassz egy témát"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pilih topik"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli un argomento"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トピックを選ぶ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "주제를 선택하세요"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pilih topik"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Velg et emne"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kies een onderwerp"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wybierz temat"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolha um tópico"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolha um tópico"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alege un subiect"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите тему"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyberte tému"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Välj ett ämne"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เลือกหัวข้อ"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir konu seç"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виберіть тему"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn một chủ đề"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择一个主题"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇一個主題"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇一個主題"
+          }
+        }
+      }
+    },
+    "Custom Topic": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موضوع مخصص"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema personalitzat"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vlastní téma"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilpasset emne"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benutzerdefiniertes Thema"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Προσαρμοσμένο θέμα"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema personalizado"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موضوع سفارشی"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mukautettu aihe"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sujet personnalisé"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "נושא מותאם אישית"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कस्टम विषय"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prilagođena tema"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Egyéni téma"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topik Khusus"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Argomento personalizzato"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カスタムトピック"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "맞춤 주제"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topik Tersuai"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Egendefinert emne"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aangepast onderwerp"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temat niestandardowy"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tópico personalizado"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tópico personalizado"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subiect personalizat"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пользовательская тема"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vlastná téma"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anpassat ämne"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "หัวข้อที่กำหนดเอง"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Özel Konu"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спеціальна тема"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chủ đề tùy chỉnh"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自定义主题"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自訂主題"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自訂主題"
+          }
+        }
+      }
+    },
+    "Date Format": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صيغة التاريخ"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format de data"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datový formát"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoformat"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datumsformat"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Μορφή ημερομηνίας"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato de fecha"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فرمت تاریخ"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Päivämäärämuoto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format de date"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "פורמט תאריך"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "तारिख का प्रारूप"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oblik datuma"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dátum formátum"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format tanggal"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato data"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日付形式"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "날짜 형식"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format tarikh"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoformat"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datumnotatie"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format daty"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato de data"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato de data"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formatul datei"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Формат даты"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formát dátumu"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datumformat"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รูปแบบวันที่"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarih formatı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Формат дати"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Định dạng ngày tháng"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日期格式"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日期格式"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日期格式"
+          }
+        }
+      }
+    },
+    "Error loading": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خطأ في تحميل"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error en carregar"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chyba při načítání"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fejl ved indlæsning"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladefehler"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Σφάλμα φόρτωσης"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error al cargar"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خطا در بارگزاری"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Virhe ladattaessa"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erreur de chargement"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "שגיאה בטעינה"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "लोड होने मे त्रुटि"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Greška pri učitavanju"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiba a betöltés során"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terjadi kesalahan saat memuat"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Errore nel caricamento"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "読み込みエラー"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "로드 중 오류 발생"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ralat memuatkan"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feil ved innlasting"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fout bij het laden"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Błąd ładowania"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erro a carregar"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erro a carregar"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eroare la încărcare"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ошибка загрузки"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chyba načítania"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Problem att ladda"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เกิดข้อผิดพลาดในการโหลด"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yükleme hatası"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Помилка завантаження"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lỗi tải"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "错误加载"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "錯誤載入"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "錯誤載入"
+          }
+        }
+      }
+    },
+    "Intent for configuring the topic of a widget": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نية لتكوين موضوع القطعة"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intenció de configurar el tema d'un widget"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Záměr pro konfiguraci tématu widgetu"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hensigt til at konfigurere emnet for en widget"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Absicht zum Konfigurieren des Themas eines Widgets"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Πρόθεση για τη διαμόρφωση του θέματος ενός γραφικού στοιχείου"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intención de configurar el tema de un widget"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قصد برای پیکربندی موضوع یک ویجت"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarkoitus widgetin aiheen määrittämiseen"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intention de configurer le sujet d'un widget"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כוונה להגדרת נושא של יישומון"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "विजेट के विषय को कॉन्फ़िगर करने का इरादा"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namjera za konfiguriranje teme widgeta"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Célja egy widget témájának konfigurálása"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maksud untuk mengonfigurasi topik widget"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intento per la configurazione dell'argomento di un widget"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ウィジェットのトピックを構成するための意図"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "위젯의 주제 구성 의도"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niat untuk mengkonfigurasi topik widget"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hensikt for å konfigurere emnet for en widget"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intentie voor het configureren van het onderwerp van een widget"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamiar konfiguracji tematu widżetu"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intenção de configurar o tópico de um widget"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intenção de configurar o tópico de um widget"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intenția de a configura subiectul unui widget"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Намерение настроить тему виджета"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zámer na konfiguráciu témy miniaplikácie"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avsikt för att konfigurera ämnet för en widget"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "จุดประสงค์ในการกำหนดค่าหัวข้อของวิดเจ็ต"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir widget'ın konusunu yapılandırma amacı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Намір налаштувати тему віджета"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mục đích định cấu hình chủ đề của một widget"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置小部件主题的意图"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置小部件主題的意圖"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置小部件主題的意圖"
+          }
+        }
+      }
+    },
+    "Live Feed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البث المباشر"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feed en directe"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Živý kanál"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live feed"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live-Feed"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ζωντανή μετάδοση"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transmisión en vivo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فید زنده"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live-syöte"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flux en direct"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "עדכון חי"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "लाइव फ़ीड"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prijenos uživo"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Élő közvetítés"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umpan Langsung"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alimentazione dal vivo"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ライブフィード"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "생방송"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Makanan hidup"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Direktesending"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live feed"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przekaz na żywo"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transmissão ao vivo"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transmissão ao vivo"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live Feed"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прямой эфир"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Priamy prenos"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Direktsändning"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ฟีดสด"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canlı yem"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жива стрічка"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nguồn cấp dữ liệu trực tiếp"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "动态信息"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動態訊息"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動態訊息"
+          }
+        }
+      }
+    },
+    "No results found": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لم يتم العثور على نتائج"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sense resultats"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nebyly nalezeny žádné výsledky"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingen resultater fundet"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "keine Ergebnisse gefunden"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Δεν βρέθηκαν αποτελέσματα"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se han encontrado resultados"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نتیجه ای پیدا نشد"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ei tuloksia"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun résultat trouvé"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לא נמצאו תוצאות"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कोई परिणाम नहीं मिला"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nema rezultata"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nincs találat"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tidak ada hasil yang ditemukan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nessun risultato trovato"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "結果が見つかりません"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "검색 결과가 없습니다"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiada keputusan dijumpai"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingen resultater"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "geen resultaten gevonden"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie znaleziono wyników"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum resultado encontrado"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum resultado encontrado"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nici un rezultat gasit"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "результатов не найдено"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neboli nájdené žiadne výsledky"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga resultat funna"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ไม่พบผลลัพธ์"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonuç bulunamadı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нічого не знайдено"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "không có kết quả nào được tìm thấy"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到结果"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到結果"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到結果"
+          }
+        }
+      }
+    },
+    "Oct. 21 3:22 PM": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 أكتوبر الساعة 3:22 مساءً"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 d'octubre 15.22 h"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21. října 15:22"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21. oktober 15:22"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21. Okt. 15:22 Uhr"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 Οκτωβρίου 3:22 μ.μ"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 de octubre 15:22"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اکتبر 21 3:22 PM"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21. lokakuuta 15:22"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 octobre 15h22"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 באוקטובר 15:22"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 अक्टूबर 3:22 अपराह्न"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21. listopada 15:22"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "október 21. 15:22"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 Oktober 15.22"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 ottobre 15:22"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10月21日午後3時22分"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10월 21일 오후 3시 22분"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 Okt. 3:22 PTG"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21. oktober 15:22"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 oktober 15:22 uur"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 października, 15:22"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 de outubro 15h22"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 de outubro 15h22"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 octombrie 15:22"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 октября 15:22"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21. októbra 15:22"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 oktober 15:22"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 ต.ค. 15:22 น"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 Ekim 15:22"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 жовтня 15:22"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3:22 chiều ngày 21 tháng 10"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 月 21 日下午 3:22"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 月 21 日下午 3:22"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 月 21 日下午 3:22"
+          }
+        }
+      }
+    },
+    "Relative": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نسبي"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relatiu"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relativní"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I forhold"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relativ"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Συγγενής"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relativo"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نسبت فامیلی"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suhteellinen"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relatif"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "קרוב משפחה"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "रिश्तेदार"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Srodnik"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relatív"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relatif"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parente"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相対的"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대적인"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "relatif"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slektning"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familielid"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Względny"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relativo"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relativo"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relativ"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Родственник"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relatívna"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relativ"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ญาติ"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Akraba"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відносна"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liên quan đến"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相对的"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相對的"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相對的"
+          }
+        }
+      }
+    },
+    "Reload": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إعادة تحميل"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recarregar"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Znovu načíst"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genindlæs"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neu laden"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Γεμίζω πάλι"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recargar"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بارگذاری مجدد"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lataa uudelleen"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recharger"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "לִטעוֹן מִחָדָשׁ"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "पुनः लोड करें"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponovno učitati"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Újratöltés"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muat ulang"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ricaricare"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リロード"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새로고침"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tambah nilai"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last inn på nytt"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Herladen"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przeładować"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "recarregar"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "recarregar"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reîncărcați"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перезагрузить"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Znovu načítať"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladda om"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "โหลดซ้ำ"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tekrar yükle"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перезавантажити"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tải lại"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新加载"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新載入"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新載入"
+          }
+        }
+      }
+    },
+    "Top Stories": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أهم الأخبار"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Top Stories"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nejlepší historky"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Top historier"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Top-Geschichten"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Καλύτερες ιστορίες"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Historias destacadas"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "داستان های برتر"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parhaat tarinat"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meilleures histoires"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הסיפורים הטובים ביותר"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "शीर्ष आलेख"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najvažnije priče"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Legjobb történetek"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerita populer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storie principali"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トップストーリー"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "주요 뉴스"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerita Teratas"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hovedsakene"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topverhalen"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kultowe historie"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melhores histórias"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melhores histórias"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stiri de top"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Главные новости"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najlepšie príbehy"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mest lästa artiklar"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เรื่องเด่น"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En iyi hikayeler"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Найкращі історії"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Câu chuyện hàng đầu"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "热门故事"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "熱門故事"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "熱門故事"
+          }
+        }
+      }
+    },
+    "Topic": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عنوان"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Téma"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emne"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thema"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Θέμα"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موضوع"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aihe"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sujet"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "נוֹשֵׂא"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "विषय"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Téma"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Argomento"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トピック"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "주제"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topik"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emne"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Onderwerp"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temat"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subiect"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тема"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Téma"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ämne"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "หัวข้อ"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başlık"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тема"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đề tài"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "话题"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "話題"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "話題"
+          }
+        }
+      }
+    },
+    "Widget Topic Configuration": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "القطعة تكوين الموضوع"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuració del tema del widget"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfigurace tématu widgetu"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfiguration af widget-emne"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget-Themenkonfiguration"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Διαμόρφωση θέματος widget"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuración del tema del widget"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پیکربندی موضوع ویجت"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widgetin aiheen määritys"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuration du sujet du widget"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "תצורת נושא ווידג'ט"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "विजेट विषय विन्यास"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfiguracija teme widgeta"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget téma beállítása"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfigurasi Topik Widget"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurazione argomento widget"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ウィジェットのトピック構成"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "위젯 주제 구성"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfigurasi Topik Widget"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfigurasjon av widgetemne"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widgetonderwerpconfiguratie"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfiguracja tematu widgetu"
+          }
+        },
+        "pt-bR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuração do tópico do widget"
+          }
+        },
+        "pt-pT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuração do tópico do widget"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurarea subiectului widgetului"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Конфигурация темы виджета"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfigurácia témy miniaplikácie"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfiguration av widgetämne"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "การกำหนดค่าหัวข้อวิดเจ็ต"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget Konu Yapılandırması"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Конфігурація теми віджета"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cấu hình chủ đề widget"
+          }
+        },
+        "zh-cN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小部件主题配置"
+          }
+        },
+        "zh-hK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小工具主題配置"
+          }
+        },
+        "zh-tW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小工具主題配置"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

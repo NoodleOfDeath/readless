@@ -64,6 +64,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5FFC8B3A3B346CCC17615C08 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C7041D39DDE482042B57D /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-ReadLess-ReadLessTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReadLess-ReadLessTests.a */; };
+		CD2C1A692AF0524A009C0FB2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */; };
+		CD2C1A6A2AF0524A009C0FB2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */; };
+		CD2C1A6B2AF0524A009C0FB2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */; };
 		CD4BF5A52AD074F7006BDC35 /* WidgetTopicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */; };
 		CD4BF5A62AD0797C006BDC35 /* WidgetTopicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */; };
 		CD777A222AD9D16600804569 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD777A242AD9D16600804569 /* LaunchScreen.storyboard */; };
@@ -286,6 +289,7 @@
 		5B7EB9410499542E8C5724F5 /* Pods-ReadLess-ReadLessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.debug.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadLess.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-ReadLess-ReadLessTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.release.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.release.xcconfig"; sourceTree = "<group>"; };
+		CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WidgetTopicConfiguration.swift; path = /Users/thom/git/noodleofdeath/readless/src/mobile/ios/ReadLessWidget/WidgetTopicConfiguration.swift; sourceTree = "<absolute>"; };
 		CD777A232AD9D16600804569 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD777A272AD9D18800804569 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -652,6 +656,7 @@
 				0125BD1829D791EC00EAC61C /* ReadLess.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				CD777A242AD9D16600804569 /* LaunchScreen.storyboard */,
+				CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */,
 				CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */,
 				01BC567B29DCF36700C69F9A /* main.jsbundle */,
 			);
@@ -1025,6 +1030,7 @@
 				CDE160132ACE08130036F0A4 /* Images.xcassets in Resources */,
 				CDE9EB4F2A48A3770057217B /* Newsreader72pt-BoldItalic.ttf in Resources */,
 				0143022529FACEDC00D40293 /* EvilIcons.ttf in Resources */,
+				CD2C1A6A2AF0524A009C0FB2 /* Localizable.xcstrings in Resources */,
 				CDE9EB5D2A48A3770057217B /* AnekLatin-Bold.ttf in Resources */,
 				0143022729FACEDC00D40293 /* SimpleLineIcons.ttf in Resources */,
 				CDE9EB692A48A3770057217B /* PitagonSerif-Bold.ttf in Resources */,
@@ -1087,6 +1093,7 @@
 				CDE9EB522A48A3770057217B /* AnekLatin-Regular.ttf in Resources */,
 				CDE9EB662A48A3770057217B /* Faustina-Bold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				CD2C1A692AF0524A009C0FB2 /* Localizable.xcstrings in Resources */,
 				0125BD4329D791ED00EAC61C /* FontAwesome5_Brands.ttf in Resources */,
 				0125BD5829D791ED00EAC61C /* SimpleLineIcons.ttf in Resources */,
 				0125BD4429D791ED00EAC61C /* MaterialCommunityIcons.ttf in Resources */,
@@ -1107,6 +1114,7 @@
 				CDE15FE82ACB499E0036F0A4 /* AnekLatin-Regular.ttf in Resources */,
 				CDE15FC32ACB497F0036F0A4 /* Assets.xcassets in Resources */,
 				CDE15FDB2ACB499E0036F0A4 /* FontAwesome5_Solid.ttf in Resources */,
+				CD2C1A6B2AF0524A009C0FB2 /* Localizable.xcstrings in Resources */,
 				CDE15FEA2ACB499E0036F0A4 /* EvilIcons.ttf in Resources */,
 				CDE15FEB2ACB499E0036F0A4 /* SimpleLineIcons.ttf in Resources */,
 				CDE15FD72ACB499E0036F0A4 /* FontAwesome5_Brands.ttf in Resources */,

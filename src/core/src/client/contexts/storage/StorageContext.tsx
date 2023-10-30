@@ -358,60 +358,62 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   // Load preferences on mount
   const load = async () => {
-    // system state
     const state = DEFAULT_STORAGE_CONTEXT;
-    state.latestVersion = (await getStoredValue('latestVersion'));
-    state.rotationLock = (await getStoredValue('rotationLock'));
-    state.searchHistory = (await getStoredValue('searchHistory'));
-    state.viewedFeatures = (await getStoredValue('viewedFeatures'));
-    state.hasReviewed = (await getStoredValue('hasReviewed'));
-    state.lastRequestForReview = (await getStoredValue('lastRequestForReview') ?? 0);
-    state.uuid = (await getStoredValue('uuid'));
-    state.pushNotificationsEnabled = (await getStoredValue('pushNotificationsEnabled'));
-    state.pushNotifications = (await getStoredValue('pushNotifications'));
-    state.fcmToken = (await getStoredValue('fcmToken'));
-    state.userStats = (await getStoredValue('userStats'));
+    
+    // system state
+    state.latestVersion = await getStoredValue('latestVersion');
+    state.rotationLock = await getStoredValue('rotationLock');
+    state.searchHistory = await getStoredValue('searchHistory');
+    state.viewedFeatures = await getStoredValue('viewedFeatures');
+    state.hasReviewed = await getStoredValue('hasReviewed');
+    state.lastRequestForReview = await getStoredValue('lastRequestForReview') ?? 0;
+    state.uuid = await getStoredValue('uuid');
+    state.pushNotificationsEnabled = await getStoredValue('pushNotificationsEnabled');
+    state.pushNotifications = await getStoredValue('pushNotifications');
+    state.fcmToken = await getStoredValue('fcmToken');
+    state.userStats = await getStoredValue('userStats');
     
     // summary state
-    state.bookmarkedSummaries = (await getStoredValue('bookmarkedSummaries'));
-    state.readSummaries = (await getStoredValue('readSummaries'));
-    state.removedSummaries = (await getStoredValue('removedSummaries'));
+    state.bookmarkedSummaries = await getStoredValue('bookmarkedSummaries');
+    state.readSummaries = await getStoredValue('readSummaries');
+    state.removedSummaries = await getStoredValue('removedSummaries');
 
     const locale = await getStoredValue('locale');
     state.summaryTranslations = (locale !== getLocale() ? {} : await getStoredValue('summaryTranslations'));
     
     // recap state
-    state.readRecaps = (await getStoredValue('readRecaps'));
+    state.readRecaps = await getStoredValue('readRecaps');
     state.recapTranslations = (locale !== getLocale() ? {} : await getStoredValue('recapTranslations'));
 
-    state.locale = (getLocale());
+    state.locale = getLocale();
     
     // publisher states
-    state.followedPublishers = (await getStoredValue('followedPublishers'));
-    state.favoritedPublishers = (await getStoredValue('favoritedPublishers'));
-    state.excludedPublishers = (await getStoredValue('excludedPublishers'));
+    state.followedPublishers = await getStoredValue('followedPublishers');
+    state.favoritedPublishers = await getStoredValue('favoritedPublishers');
+    state.excludedPublishers = await getStoredValue('excludedPublishers');
 
     // category states
-    state.followedCategories = (await getStoredValue('followedCategories'));
-    state.favoritedCategories = (await getStoredValue('favoritedCategories'));
-    state.excludedCategories = (await getStoredValue('excludedCategories'));
+    state.followedCategories = await getStoredValue('followedCategories');
+    state.favoritedCategories = await getStoredValue('favoritedCategories');
+    state.excludedCategories = await getStoredValue('excludedCategories');
     
     // system preferences
-    state.colorScheme = (await getStoredValue('colorScheme')); 
-    state.fontFamily = (await getStoredValue('fontFamily'));
-    state.fontSizeOffset = (await getStoredValue('fontSizeOffset'));
-    state.letterSpacing = (await getStoredValue('letterSpacing'));
-    state.lineHeightMultiplier = (await getStoredValue('lineHeightMultiplier'));
+    state.colorScheme = await getStoredValue('colorScheme'); 
+    state.fontFamily = await getStoredValue('fontFamily');
+    state.fontSizeOffset = await getStoredValue('fontSizeOffset');
+    state.letterSpacing = await getStoredValue('letterSpacing');
+    state.lineHeightMultiplier = await getStoredValue('lineHeightMultiplier');
   
     // summary preferences
-    state.compactSummaries = (await getStoredValue('compactSummaries'));
-    state.showShortSummary = (await getStoredValue('showShortSummary'));
-    state.preferredReadingFormat = (await getStoredValue('preferredReadingFormat'));
-    state.preferredShortPressFormat = (await getStoredValue('preferredShortPressFormat'));
-    state.sentimentEnabled = (await getStoredValue('sentimentEnabled'));
-    state.triggerWords = (await getStoredValue('triggerWords'));
+    state.compactSummaries = await getStoredValue('compactSummaries');
+    state.showShortSummary = await getStoredValue('showShortSummary');
+    state.preferredReadingFormat = await getStoredValue('preferredReadingFormat');
+    state.preferredShortPressFormat = await getStoredValue('preferredShortPressFormat');
+    state.sentimentEnabled = await getStoredValue('sentimentEnabled');
+    state.triggerWords = await getStoredValue('triggerWords');
     
-    state.ready = (true);
+    state.ready = true;
+
     setStorage(state);
   };
   

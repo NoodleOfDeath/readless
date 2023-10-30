@@ -21,6 +21,7 @@ import {
 import {
   LayoutContext,
   MediaContext,
+  NotificationContext,
   OrientationType,
   StorageContext,
 } from '~/contexts';
@@ -43,6 +44,7 @@ export function RootNavigator() {
     hasViewedFeature,
     lastRequestForReview = 0,
     readSummaries,
+    pushNotificationsEnabled,
     setStoredValue,
   } = React.useContext(StorageContext);   
   const {
@@ -51,6 +53,7 @@ export function RootNavigator() {
     unlockRotation,
   } = React.useContext(LayoutContext);
   
+  const { isRegisteredForRemoteNotifications, registerRemoteNotifications } = React.useContext(NotificationContext);
   const { currentTrack } = React.useContext(MediaContext);
   
   const [lastFetch, setLastFetch] = React.useState(0);
@@ -67,6 +70,9 @@ export function RootNavigator() {
       lockRotation(OrientationType.PORTRAIT);
     } else {
       unlockRotation();
+    }
+    if (pushNotificationsEnabled !== false && !isRegisteredForRemoteNotifications()) {
+      registerRemoteNotifications();
     }
     if (!showedReview && 
       (Date.now() - lastRequestForReview > ms('2w') && 
@@ -111,7 +117,7 @@ export function RootNavigator() {
       };
 
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications]);
   
   const refreshSources = React.useCallback(() => {
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
