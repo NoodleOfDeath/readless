@@ -33,7 +33,7 @@ import {
   TranslateToggleRef,
   View,
 } from '~/components';
-import { LayoutContext, SessionContext } from '~/contexts';
+import { LayoutContext, StorageContext } from '~/contexts';
 import {
   useApiClient,
   useInAppBrowser,
@@ -204,7 +204,7 @@ export function Summary({
     excludedCategories,
     followCategory,
     excludeCategory,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
 
   const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
 

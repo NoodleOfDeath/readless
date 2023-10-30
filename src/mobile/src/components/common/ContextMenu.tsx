@@ -7,7 +7,7 @@ import RNContextMenu, {
   ContextMenuProps as RNContextMenuProps,
 } from 'react-native-context-menu-view';
 
-import { SessionEvent } from '~/core';
+import { StorageEventName } from '~/core';
 import { usePlatformTools } from '~/utils';
 
 export type ContextMenuRef = React.ForwardedRef<RNContextMenu>;
@@ -19,7 +19,7 @@ export type ContextMenuAction = Omit<RNContextMenuAction, | 'systemIcon'> & {
 
 export type ContextMenuProps = Omit<RNContextMenuProps, 'actions'> & {
   actions?: ContextMenuAction[];
-  event?: { name: SessionEvent, params?: Record<string, string> };
+  event?: { name: StorageEventName, params?: Record<string, string> };
 };
 
 export const ContextMenu = React.forwardRef(function ContextMenu({

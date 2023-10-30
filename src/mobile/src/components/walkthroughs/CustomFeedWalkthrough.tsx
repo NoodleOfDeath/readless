@@ -14,14 +14,14 @@ import {
   View,
   Walkthrough,
 } from '~/components';
-import { SessionContext, TimelineEvent } from '~/contexts';
+import { DatedEvent, StorageContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function CustomFeedWalkthrough(props: SheetProps) {
   
   const theme = useTheme();
-  const { setStoredValue } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(StorageContext);
   
   const [categories, setCategories] = React.useState<string[]>();
   const [publishers, setPublishers] = React.useState<string[]>();
@@ -44,7 +44,7 @@ export function CustomFeedWalkthrough(props: SheetProps) {
   const onDone = React.useCallback(async () => {
     setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new TimelineEvent(true);
+      state[props.sheetId] = new DatedEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);

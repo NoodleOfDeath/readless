@@ -11,7 +11,7 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 
-import { RightDrawerNavigator } from './RightDrawerNavigator';
+import { LeftDrawerNavigator } from './LeftDrawerNavigator';
 
 import {
   ActivityIndicator,
@@ -22,7 +22,7 @@ import {
   LayoutContext,
   MediaContext,
   OrientationType,
-  SessionContext,
+  StorageContext,
 } from '~/contexts';
 import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
@@ -44,7 +44,7 @@ export function RootNavigator() {
     lastRequestForReview = 0,
     readSummaries,
     setStoredValue,
-  } = React.useContext(SessionContext);   
+  } = React.useContext(StorageContext);   
   const {
     isTablet,
     lockRotation,
@@ -169,7 +169,7 @@ export function RootNavigator() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          <RightDrawerNavigator />
+          <LeftDrawerNavigator />
           <MediaPlayer visible={ Boolean(currentTrack) } />
         </SheetProvider>
       </PaperProvider>

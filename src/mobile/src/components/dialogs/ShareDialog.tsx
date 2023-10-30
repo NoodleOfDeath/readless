@@ -17,7 +17,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { LayoutContext, SessionContext } from '~/contexts';
+import { LayoutContext, StorageContext } from '~/contexts';
 import { useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -57,7 +57,7 @@ export function ShareDialog({
   const viewshot = React.useRef<ViewShot>(null);
   
   const { screenWidth, screenHeight } = React.useContext(LayoutContext);
-  const { compactSummaries, preferredReadingFormat } = React.useContext(SessionContext);
+  const { compactSummaries, preferredReadingFormat } = React.useContext(StorageContext);
   
   const {
     summary,

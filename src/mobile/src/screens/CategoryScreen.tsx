@@ -10,7 +10,7 @@ import {
   View,
 } from '~/components';
 import { ChannelIcon } from '~/components/post/ChannelIcon';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
@@ -28,7 +28,7 @@ export function CategoryScreen({
     followCategory,
     categoryIsFavorited,
     favoriteCategory,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
 
   const category0 = React.useMemo(() => route?.params?.category, [route]);
   const category = React.useMemo(() => category0 && categories?.[category0.name], [category0, categories]);

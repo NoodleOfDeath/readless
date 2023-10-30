@@ -15,17 +15,17 @@ import {
   View,
   Walkthrough,
 } from '~/components';
-import { SessionContext, TimelineEvent } from '~/contexts';
+import { DatedEvent, StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 
 export function AppearanceWalkthrough(props: SheetProps) {
   
-  const { setStoredValue } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(StorageContext);
   
   const onDone = React.useCallback(async () => {
     setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new TimelineEvent(true);
+      state[props.sheetId] = new DatedEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);

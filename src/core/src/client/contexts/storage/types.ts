@@ -10,12 +10,12 @@ import {
   SupportedLocale,
 } from '~/api';
 
-export type TimelineEventProps = {
+export type DatedEventProps = {
   createdAt: Date;
   expiresIn?: string;
 };
 
-export class TimelineEvent<T> {
+export class DatedEvent<T> {
 
   item: T;
   createdAt: Date;
@@ -31,7 +31,7 @@ export class TimelineEvent<T> {
   constructor(item: T, {
     createdAt = new Date(), 
     expiresIn,
-  }: Partial<TimelineEventProps> = {}) {
+  }: Partial<DatedEventProps> = {}) {
     this.item = item;
     this.createdAt = createdAt;
     if (expiresIn) {
@@ -107,15 +107,15 @@ export type Resource =
  | 'recap'
  | 'summary';
  
-export type SessionEvent = Activity | ResourceActivity | `${ResourceActivity}-${Resource}` | `${ResourceActivity}-${Resource}-${number}` | `poll-${string}`;
+export type StorageEventName = Activity | ResourceActivity | `${ResourceActivity}-${Resource}` | `${ResourceActivity}-${Resource}-${number}` | `poll-${string}`;
 
-export type StoredValues = {
+export type Storage = {
   
   // system state
   latestVersion?: string;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
-  viewedFeatures?: { [key: string]: TimelineEvent<boolean> };
+  viewedFeatures?: { [key: string]: DatedEvent<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
   
@@ -127,8 +127,8 @@ export type StoredValues = {
   userStats?: UserStats;
   
   // summary state
-  readSummaries?: { [key: number]: TimelineEvent<boolean> };
-  bookmarkedSummaries?: { [key: number]: TimelineEvent<PublicSummaryGroup> };
+  readSummaries?: { [key: number]: DatedEvent<boolean> };
+  bookmarkedSummaries?: { [key: number]: DatedEvent<PublicSummaryGroup> };
   bookmarkCount: number;
   unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
@@ -161,7 +161,6 @@ export type StoredValues = {
   lineHeightMultiplier?: number;
   
   // display preferences
-  compactMode?: boolean; // legacy 1.11.0
   compactSummaries?: boolean;
   showShortSummary?: boolean;
   preferredShortPressFormat?: ReadingFormat;
@@ -170,11 +169,10 @@ export type StoredValues = {
   triggerWords?: { [key: string]: string };
 };
 
-export const STORED_VALUE_TYPES: { [key in keyof StoredValues]: 'boolean' | 'number' | 'string' | 'object' | 'array' } = {
+export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'string' | 'object' | 'array' } = {
   bookmarkCount: 'number',
   bookmarkedSummaries: 'object',
   colorScheme: 'string',
-  compactMode: 'boolean',
   compactSummaries: 'boolean',
   excludeFilter: 'string',
   excludedCategories: 'object',
@@ -216,7 +214,7 @@ export const STORED_VALUE_TYPES: { [key in keyof StoredValues]: 'boolean' | 'num
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
 
-export type PreferenceMutation<E extends SessionEvent> =
+export type PreferenceMutation<E extends StorageEventName> =
   E extends `${string}-summary` ? PublicSummaryGroup :
   E extends `${string}-recap` ? RecapAttributes :
   E extends `${string}-publisher` ? PublicPublisherAttributes :
@@ -225,13 +223,13 @@ export type PreferenceMutation<E extends SessionEvent> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any;
   
-export type PreferenceState<E extends SessionEvent> =
-  E extends `${'unbookmark' | 'bookmark'}-summary` ? StoredValues['bookmarkedSummaries'] :
-  E extends `${'read' | 'unread'}-summary` ? StoredValues['readSummaries'] :
-  E extends `${'read' | 'unread'}-recap` ? StoredValues['readRecaps'] :
-  E extends `${string}-summary` ? StoredValues['removedSummaries'] :
-  E extends `${string}-publisher` ? StoredValues['followedPublishers'] :
-  E extends `${string}-category` ? StoredValues['followedCategories'] :
+export type PreferenceState<E extends StorageEventName> =
+  E extends `${'unbookmark' | 'bookmark'}-summary` ? Storage['bookmarkedSummaries'] :
+  E extends `${'read' | 'unread'}-summary` ? Storage['readSummaries'] :
+  E extends `${'read' | 'unread'}-recap` ? Storage['readRecaps'] :
+  E extends `${string}-summary` ? Storage['removedSummaries'] :
+  E extends `${string}-publisher` ? Storage['followedPublishers'] :
+  E extends `${string}-category` ? Storage['followedCategories'] :
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any;
 
@@ -247,7 +245,7 @@ export type UserStats = {
   longestStreak?: Streak;
 };
 
-export type SessionContextType = StoredValues & {
+export type StorageContextType = Storage & {
   ready?: boolean;
 
   loadedInitialUrl?: boolean;
@@ -260,9 +258,9 @@ export type SessionContextType = StoredValues & {
   userStats?: UserStats;
 
   // state setters
-  setStoredValue: <K extends keyof StoredValues, V extends StoredValues[K] | ((value?: StoredValues[K]) => (StoredValues[K] | undefined))>(key: K, value?: V, emit?: boolean) => Promise<void>;
-  getStoredValue: <K extends keyof StoredValues>(key: K) => Promise<StoredValues[K] | undefined>;
-  resetStoredValues: (hard?: boolean) => Promise<void>;
+  setStoredValue: <K extends keyof Storage, V extends Storage[K] | ((value?: Storage[K]) => (Storage[K] | undefined))>(key: K, value?: V, emit?: boolean) => Promise<void>;
+  getStoredValue: <K extends keyof Storage>(key: K) => Promise<Storage[K] | undefined>;
+  resetStorage: (hard?: boolean) => Promise<void>;
   storeTranslations: <
     Target extends RecapAttributes | PublicSummaryGroup, 
     StoredValueKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
@@ -300,7 +298,7 @@ export type SessionContextType = StoredValues & {
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
 };
 
-export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
+export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   bookmarkCount: 0,
   bookmarkSummary: () => Promise.resolve(),
   categoryIsFavorited: () => false,
@@ -325,7 +323,7 @@ export const DEFAULT_SESSION_CONTEXT: SessionContextType = {
   readRecap: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),
-  resetStoredValues: () => Promise.resolve(),
+  resetStorage: () => Promise.resolve(),
   setCategories: () => Promise.resolve(),
   setLoadedInitialUrl: () => Promise.resolve(),
   setPublishers: () => Promise.resolve(),

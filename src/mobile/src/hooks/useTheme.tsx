@@ -4,7 +4,7 @@ import { StyleSheet, useColorScheme } from 'react-native';
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
 import { SYSTEM_FONT } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 
 const makeTheme = (darkMode: boolean) => {
   return {
@@ -99,7 +99,7 @@ const makeTheme = (darkMode: boolean) => {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function useTheme() {
-  const preferences = React.useContext(SessionContext);
+  const preferences = React.useContext(StorageContext);
   const LIGHT_THEME = makeTheme(false);
   const DARK_THEME = makeTheme(true);
   const colorScheme = useColorScheme();

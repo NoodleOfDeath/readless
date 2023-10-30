@@ -11,7 +11,7 @@ import {
   TextInput,
   View,
 } from '~/components';
-import {  SessionContext } from '~/contexts';
+import {  StorageContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -24,7 +24,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
 
   const { summary, onClose } = React.useMemo(() => ({ ...payload }), [payload]);
   
-  const { setStoredValue } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(StorageContext);
 
   const { interactWithSummary } = useApiClient();
 

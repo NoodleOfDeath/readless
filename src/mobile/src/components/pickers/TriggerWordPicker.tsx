@@ -7,7 +7,7 @@ import {
   TextInput,
   View,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 
 type TriggerWordPickerProps = ChildlessViewProps & {
@@ -20,7 +20,7 @@ export function TriggerWordPicker({
   saveLabel = strings.action_save,
 }: TriggerWordPickerProps) {
 
-  const { triggerWords, setStoredValue } = React.useContext(SessionContext);
+  const { triggerWords, setStoredValue } = React.useContext(StorageContext);
   
   const [words, setWords] = React.useState([...Object.entries({ ...triggerWords }).map(([word, replacement]) => [word, replacement]), ['', '']]);
 

@@ -10,7 +10,7 @@ import {
   View,
 } from '~/components';
 import { ChannelIcon } from '~/components/post/ChannelIcon';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
@@ -28,7 +28,7 @@ export function PublisherScreen({
     publishers,
     publisherIsFavorited,
     favoritePublisher,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
 
   const publisher0 = React.useMemo(() => route?.params?.publisher, [route]);
   const publisher = React.useMemo(() => publisher0 && publishers?.[publisher0.name], [publisher0, publishers]);

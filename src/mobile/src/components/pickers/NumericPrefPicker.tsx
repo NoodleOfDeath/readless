@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { Stepper } from '~/components';
-import { Preferences, SessionContext } from '~/contexts';
+import { Storage, StorageContext } from '~/contexts';
 
 type ValueOf<T> = T[keyof T];
-type NumericPreferencesKeys = NonNullable<ValueOf<{ [I in keyof Preferences]: Preferences[I] extends (number | undefined) ? I : never }>>;
-type NumericPreferences = { [I in NumericPreferencesKeys]: Preferences[I] };
+type NumericStorageKeys = NonNullable<ValueOf<{ [I in keyof Storage]: Storage[I] extends (number | undefined) ? I : never }>>;
+type NumericStorage = { [I in NumericStorageKeys]: Storage[I] };
 
-export type PrefPickerProps<K extends keyof NumericPreferences> = {
+export type PrefPickerProps<K extends keyof NumericStorage> = {
   prefKey: K;
   offset?: number;
   min?: number;
@@ -17,7 +17,7 @@ export type PrefPickerProps<K extends keyof NumericPreferences> = {
   slider?: boolean;
 };
 
-export function NumericPrefPicker<K extends keyof NumericPreferences>({
+export function NumericPrefPicker<K extends keyof NumericStorage>({
   prefKey,
   offset,
   min = 0,
@@ -25,9 +25,9 @@ export function NumericPrefPicker<K extends keyof NumericPreferences>({
   step = 0.1,
 }: PrefPickerProps<K>) {
   
-  const context = React.useContext(SessionContext);  
+  const context = React.useContext(StorageContext);  
   
-  const [value, setValue] = React.useState<Preferences[K] | undefined>(context[prefKey]);
+  const [value, setValue] = React.useState<Storage[K] | undefined>(context[prefKey]);
 
   const onValueChange = React.useCallback((values?: number | number[]) => {
     let newValue = typeof values === 'number' ? values : values && values[0];

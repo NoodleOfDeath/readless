@@ -30,7 +30,7 @@ import {
 import {
   LayoutContext,
   MediaContext,
-  SessionContext,
+  StorageContext,
 } from '~/contexts';
 import {
   useApiClient,
@@ -83,7 +83,7 @@ export function SummaryList({
     preferredReadingFormat,
     removedSummaries,
     excludeFilter,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
   
   // search state
   const [loaded, setLoaded] = React.useState(false);

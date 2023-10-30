@@ -12,7 +12,7 @@ import { Provider } from 'react-native-paper';
 import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
 
 import { SubscriptionChannel, SubscriptionEvent } from '~/api';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -30,7 +30,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     fcmToken, 
     enablePush,
     setStoredValue,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
 
   const [redirectToSettings, setRedirectToSettings] = React.useState(false);
   

@@ -11,14 +11,14 @@ import VersionCheck from 'react-native-version-check';
 import {
   PreferenceMutation,
   PreferenceState,
-  SessionContext,
-  SessionEvent,
+  StorageContext,
+  StorageEventName,
 } from '~/contexts';
 import * as Localization from '~/locales';
 
 export function usePlatformTools() {
 
-  const { latestVersion = '', setStoredValue } = React.useContext(SessionContext);
+  const { latestVersion = '', setStoredValue } = React.useContext(StorageContext);
   const [screenReaderEnabled, setScreenReaderEnabled] = React.useState(false);
 
   const getUserAgent = () => {
@@ -31,7 +31,7 @@ export function usePlatformTools() {
     return userAgent;
   };
 
-  const emitEvent = React.useCallback(async <E extends SessionEvent>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) => {
+  const emitEvent = React.useCallback(async <E extends StorageEventName>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) => {
     const version = latestVersion || await VersionCheck.getLatestVersion();
     if (!latestVersion) {
       setStoredValue('latestVersion', version);
