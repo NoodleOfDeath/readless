@@ -127,3 +127,8 @@ export class QueryFactory {
 `
 );
 
+for (const [name, group] of Object.entries(queries)) {
+  console.log(name);
+  console.log(Object.keys(group.queries));
+  console.log('-----');
+}
