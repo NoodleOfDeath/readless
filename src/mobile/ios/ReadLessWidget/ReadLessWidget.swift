@@ -18,7 +18,7 @@ let SUPPORTED_FAMILIES: [WidgetFamily] = [
   .accessoryInline
 ]
 
-let DEFAULT_TIMELINE_INTERVAL: Double = 10
+let DEFAULT_TIMELINE_INTERVAL: Double = 10 * 60
 
 struct DEEPLINKS {
   static let topStories = "https://readless.ai/top"

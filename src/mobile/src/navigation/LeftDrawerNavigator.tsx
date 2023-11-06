@@ -20,7 +20,6 @@ import {
 import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
-import { usePlatformTools } from '~/utils';
 
 function TabbedScreen() {
   return (
@@ -38,8 +37,6 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     openPublisher,
   } = useNavigation();
   
-  const { getUserAgent } = usePlatformTools();
-
   const {
     categories,
     publishers,
@@ -209,10 +206,6 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
         } }>
         {categoryItems}
       </DrawerSection>      
-      <DrawerSection>
-        <DrawerItem 
-          label={ getUserAgent().currentVersion } />
-      </DrawerSection>
       <View my={ 12 } />
     </DrawerContentScrollView>
   );

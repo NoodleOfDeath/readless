@@ -6,6 +6,7 @@ import {
   View,
 } from '~/components';
 import { Icon } from '~/components/common/Icon';
+import { LayoutContext } from '~/contexts';
 import { useTheme } from '~/hooks';
 
 type Key = {
@@ -33,6 +34,8 @@ function KeyboardRow({
   
   const theme = useTheme();
   
+  const { screenWidth, screenHeight } = React.useContext(LayoutContext);
+  
   return (
     <View 
       flexRow
@@ -47,7 +50,8 @@ function KeyboardRow({
           haptic
           beveled
           key={ key.value }
-          p={ 12 }
+          p={ 8 }
+          minWidth={ screenWidth / (keys.length + 2) }
           bg={ theme.colors.paper }
           onPress={ () => onKeyPress?.(key) }>
           {key.label ?? key.value}

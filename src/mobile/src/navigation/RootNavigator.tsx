@@ -76,7 +76,7 @@ export function RootNavigator() {
     }
     if (!showedReview && 
       (Date.now() - lastRequestForReview > ms('2w') && 
-      (Object.keys({ ...readSummaries }).length > 1))) {
+      (Object.keys({ ...readSummaries }).length > 2))) {
 
       const inAppReviewHandler = async () => {
         try {

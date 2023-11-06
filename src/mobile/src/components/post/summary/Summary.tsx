@@ -41,7 +41,11 @@ import {
   useStyles,
   useTheme,
 } from '~/hooks';
-import { getFnsLocale, strings } from '~/locales';
+import {
+  getFnsLocale,
+  getLocale,
+  strings,
+} from '~/locales';
 import { fixedSentiment, usePlatformTools } from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
@@ -305,6 +309,9 @@ export function Summary({
     if (summaryTranslations?.[summary.id]) {
       setTranslations(summaryTranslations[summary.id]);
       translateToggleRef.current?.setTranslations(summaryTranslations[summary.id]);
+    } else
+    if (getLocale() !== 'en') {
+      translateToggleRef.current?.translate();
     }
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });

@@ -21,7 +21,8 @@ export type TranslateToggleProps<Type extends 'summary' | 'recap', Target extend
 };
 
 export type TranslateToggleRef<Target extends RecapAttributes | PublicSummaryGroup> = {
-  setTranslations: React.Dispatch<React.SetStateAction<{ [key in keyof Target]?: string | undefined; } | undefined>>
+  setTranslations: React.Dispatch<React.SetStateAction<{ [key in keyof Target]?: string | undefined; } | undefined>>;
+  translate: () => Promise<void>;
 };
 
 export const TranslateToggle = React.forwardRef(function TranslateToggle<Type extends 'summary' | 'recap', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes>({
@@ -73,6 +74,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
       setTranslated(Boolean(translations));
       setShowTranslations(Boolean(translations));
     },
+    translate: handleLocalization,
   }));
   
   if (/^en/i.test(getLocale())) {

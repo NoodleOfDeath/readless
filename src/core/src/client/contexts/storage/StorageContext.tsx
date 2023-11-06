@@ -358,7 +358,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   // Load preferences on mount
   const load = async () => {
-    const state = DEFAULT_STORAGE_CONTEXT;
+    const state = { ...DEFAULT_STORAGE_CONTEXT };
     
     // system state
     state.latestVersion = await getStoredValue('latestVersion');
@@ -413,13 +413,14 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.triggerWords = await getStoredValue('triggerWords');
     
     state.ready = true;
-
+    emitEvent('ready');
+    
     setStorage(state);
   };
   
   const resetStorage = async (hard = false) => {
     await removeAll(hard);
-    load();
+    await load();
   };
 
   React.useEffect(() => {

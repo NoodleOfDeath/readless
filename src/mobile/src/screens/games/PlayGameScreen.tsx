@@ -17,7 +17,7 @@ export function PlayGameScreen({ route, navigation }: ScreenComponent<'play'>) {
     return (
       <Screen>
         <View flex={ 1 } itemsCenter justifyCenter>
-          <WordleGame word="chime" />
+          <WordleGame word="berry" />
         </View>
       </Screen>
     );

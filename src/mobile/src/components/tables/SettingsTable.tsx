@@ -21,10 +21,12 @@ import {
 import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
+import { usePlatformTools } from '~/utils';
 
 export function SettingsTable() {
   
   const { navigate } = useNavigation();
+  const { getUserAgent } = usePlatformTools();
   
   const {
     compactSummaries,
@@ -224,6 +226,10 @@ export function SettingsTable() {
           onLongPress={ () => {
             resetStorage(true);
           } } />
+      </TableViewSection>
+      <TableViewSection>
+        <TableViewCell 
+          title={ getUserAgent().currentVersion } />
       </TableViewSection>
     </TableView>
   );
