@@ -12,7 +12,7 @@ import {
 import { BaseModel } from '../../base';
 
 @Table({
-  modelName: 'message',
+  modelName: 'log',
   paranoid: true,
   timestamps: true,
 })
