@@ -1,5 +1,7 @@
 import ms from 'ms';
 
+import { UserData } from './UserData';
+
 import {
   PublicCategoryAttributes,
   PublicPublisherAttributes,
@@ -124,6 +126,7 @@ export type Storage = {
   pushNotificationsEnabled?: boolean;
   pushNotifications?: { [key: string]: PushNotificationSettings };
   fcmToken?: string;
+  userData?: UserData;
   userStats?: UserStats;
   
   // summary state
@@ -206,6 +209,7 @@ export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'st
   summaryTranslations: 'object',
   triggerWords: 'object',
   unreadBookmarkCount: 'number',
+  userData: 'object',
   userStats: 'object',
   uuid: 'string',
   viewedFeatures: 'object',

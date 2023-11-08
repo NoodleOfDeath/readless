@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { UserData } from './UserData';
 import {
   DEFAULT_STORAGE_CONTEXT,
   DatedEvent,
@@ -79,6 +80,9 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
     if (value) {
       try {
+        if (key === 'userData') {
+          return new UserData(JSON.parse(value)) as Storage[K];
+        }
         return serialize(key, JSON.parse(value), STORAGE_TYPES[key]);
       } catch (e) {
         return undefined;
@@ -128,10 +132,13 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     if (storage.uuid) {
       headers['x-uuid'] = storage.uuid;
     }
+    if (storage.userData?.token) {
+      headers.authorization = `Bearer ${storage.userData.token?.signed}`;
+    }
     return (...args: T) => {
       return fn(...args, { headers });
     };
-  }, [storage.uuid, getUserAgent]);
+  }, [storage.uuid, storage.userData?.token, getUserAgent]);
 
   const hasPushEnabled = React.useCallback((type: string) => {
     return type in ({ ...storage.pushNotifications });
@@ -371,6 +378,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.pushNotificationsEnabled = await getStoredValue('pushNotificationsEnabled');
     state.pushNotifications = await getStoredValue('pushNotifications');
     state.fcmToken = await getStoredValue('fcmToken');
+    state.userData = await getStoredValue('userData');
     state.userStats = await getStoredValue('userStats');
     
     // summary state
