@@ -31,7 +31,7 @@ export function RecapList({ header }: RecapListProps = {}) {
       setRecaps(recaps.rows);
       setLastFetchFailed(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setLastFetchFailed(true);
     } finally {
       setLoading(false);

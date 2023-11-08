@@ -44,7 +44,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
               onPress={ () => {
                 emitEvent('poll-i-hate-reading');
                 setILikeReading(false);
-                console.log(walkthroughRef.current);
                 walkthroughRef.current?.next?.();
               } }>
               {strings.misc_yesReading}
@@ -54,7 +53,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
               onPress={ () => {
                 emitEvent('poll-the-news-is-negative');
                 setILikeReading(false);
-                console.log(walkthroughRef.current);
                 walkthroughRef.current?.next?.();
               } }>
               {strings.misc_yesNegative}
@@ -64,7 +62,6 @@ export function OnboardingWalkthrough(props: SheetProps) {
               onPress={ () => {
                 emitEvent('poll-the-news-is-boring');
                 setILikeReading(false);
-                console.log(walkthroughRef.current);
                 walkthroughRef.current?.next?.();
               } }>
               {strings.misc_yesBoring}
