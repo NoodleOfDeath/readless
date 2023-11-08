@@ -5,14 +5,14 @@ import {
   ChildlessViewProps,
   TablePicker,
 } from '~/components';
-import { SessionContext } from '~/core';
+import { StorageContext } from '~/core';
 
 export type PublisherPickerProps = ChildlessViewProps & {
   onValueChange?: (publishers?: string[]) => void;
 };
 
 export const PublisherPicker = React.forwardRef(function PublisherPicker(props: PublisherPickerProps, ref: React.ForwardedRef<{ value: string[] }>) {
-  const { followedPublishers, publishers } = React.useContext(SessionContext);
+  const { followedPublishers, publishers } = React.useContext(StorageContext);
   const [selectedPublishers, setSelectedPublishers] = React.useState<string[]>(Object.keys({ ...followedPublishers }));
   const options = React.useMemo(() => Object.values({ ...publishers }).map((publisher) => ({
     icon: <ChannelIcon publisher={ publisher } />,

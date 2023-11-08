@@ -14,11 +14,15 @@ import android.widget.RadioGroup
 import androidx.annotation.RequiresApi
 
 enum class PrefKey {
-    Channel, Topic, UpdateInterval
+    Channel, Topic, DateFormat
 }
 
 enum class Channel {
     TopStories, LiveFeed, CustomTopic
+}
+
+enum class DateFormat {
+    Relative, Timestamp
 }
 
 /**
@@ -30,10 +34,12 @@ class ReadLessAppWidgetConfigureActivity : Activity() {
     private lateinit var appwidgetChannel: RadioGroup
     private lateinit var appwidgetTopicContainer: LinearLayout
     private lateinit var appwidgetTopic: EditText
-    private lateinit var appwidgetUpdateInterval: EditText
+    private lateinit var appwidgetDateFormat: RadioGroup
 
     private var onCheckChangedListener = RadioGroup.OnCheckedChangeListener { group, checkdId ->
-        appwidgetTopicContainer.visibility = if (checkdId == R.id.appwidget_custom_topic) View.VISIBLE else View.GONE
+        if (group.id == R.id.appwidget_channel) {
+            appwidgetTopicContainer.visibility = if (checkdId == R.id.appwidget_custom_topic) View.VISIBLE else View.GONE
+        }
     }
 
     private var onClickListener = View.OnClickListener {
@@ -45,8 +51,8 @@ class ReadLessAppWidgetConfigureActivity : Activity() {
         val widgetTopic = appwidgetTopic.text.toString()
         savePref(context, appWidgetId, PrefKey.Topic, widgetTopic)
 
-        val widgetUpdateInterval = appwidgetUpdateInterval.text.toString()
-        savePref(context, appWidgetId, PrefKey.UpdateInterval, widgetUpdateInterval)
+        val widgetDateFormat = if (appwidgetDateFormat.checkedRadioButtonId == R.id.appwidget_timestamp_date_format) DateFormat.Timestamp else DateFormat.Relative
+        savePref(context, appWidgetId, PrefKey.DateFormat, widgetDateFormat.name)
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -74,11 +80,14 @@ class ReadLessAppWidgetConfigureActivity : Activity() {
         appwidgetChannel = binding.appwidgetChannel as RadioGroup
         appwidgetTopicContainer = binding.appwidgetTopicContainer as LinearLayout
         appwidgetTopic = binding.appwidgetTopic as EditText
-        appwidgetUpdateInterval = binding.appwidgetUpdateInterval as EditText
+        appwidgetDateFormat = binding.appwidgetDateFormat as RadioGroup
 
         binding.appwidgetChannel.setOnCheckedChangeListener(onCheckChangedListener)
         binding.appwidgetTopicContainer.visibility = if (binding.appwidgetCustomTopic.isChecked) View.VISIBLE else View.GONE
-        binding.addButton.setOnClickListener(onClickListener)
+
+        binding.appwidgetDateFormat.setOnCheckedChangeListener(onCheckChangedListener)
+
+        binding.doneButton.setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
         val intent = intent
@@ -100,7 +109,12 @@ class ReadLessAppWidgetConfigureActivity : Activity() {
 
         appwidgetChannel.check(channelId)
         appwidgetTopic.setText(loadPref(this@ReadLessAppWidgetConfigureActivity, appWidgetId, PrefKey.Topic) ?: "")
-        appwidgetUpdateInterval.setText(loadPref(this@ReadLessAppWidgetConfigureActivity, appWidgetId, PrefKey.Topic) ?: "10")
+
+        val dateFormatStr = loadPref(this@ReadLessAppWidgetConfigureActivity, appWidgetId, PrefKey.DateFormat)
+        val dateFormat = if (dateFormatStr != null) DateFormat.valueOf(dateFormatStr) else DateFormat.Relative
+        val dateFormatId = if (dateFormat == DateFormat.Timestamp) R.id.appwidget_timestamp_date_format else R.id.appwidget_relative_date_format
+
+        appwidgetDateFormat.check(dateFormatId)
     }
 
 }

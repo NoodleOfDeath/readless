@@ -16,7 +16,7 @@ import {
   Summary,
   ViewProps,
 } from '~/components';
-import { MediaContext, SessionContext } from '~/contexts';
+import { MediaContext, StorageContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { RoutingParams } from '~/screens';
 
@@ -27,7 +27,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
   const {
     canSkipToPrevious, canSkipToNext, currentTrack, trackState, playTrack, pauseTrack, stopAndClearTracks, 
   } = React.useContext(MediaContext);
-  const { preferredReadingFormat } = React.useContext(SessionContext);
+  const { preferredReadingFormat } = React.useContext(StorageContext);
   const { interactWithSummary } = useApiClient();
 
   const navigation = useNavigation<NativeStackNavigationProp<RoutingParams>>();

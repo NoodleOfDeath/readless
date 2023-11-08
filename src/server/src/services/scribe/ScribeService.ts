@@ -331,7 +331,7 @@ export class ScribeService extends BaseService {
       }
       
       try {
-        await Summary.refreshViews();
+        await Summary.refreshViews(['refresh_summary_media_view', 'refresh_summary_sentiment_view']);
       } catch (e) {
         console.error(e);
       }

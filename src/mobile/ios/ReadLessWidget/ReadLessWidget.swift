@@ -18,7 +18,7 @@ let SUPPORTED_FAMILIES: [WidgetFamily] = [
   .accessoryInline
 ]
 
-let DEFAULT_TIMELINE_INTERVAL: Double = 10
+let DEFAULT_TIMELINE_INTERVAL: Double = 5 * 60
 
 struct DEEPLINKS {
   static let topStories = "https://readless.ai/top"
@@ -206,9 +206,9 @@ struct ReadLessWidgetEntryView : View {
   var body: some View {
     VStack(spacing: 8.0) {
       HStack {
-        Text(entry.config?.channel == .topStories ? "Top Stories" :
-              entry.config?.channel == .liveFeed ? "Live Feed" :
-              entry.config?.topic ?? "Topic")
+        Text(entry.config?.channel == .topStories ? String(localized: "Top Stories") :
+              entry.config?.channel == .liveFeed ? String(localized: "Live Feed") :
+              entry.config?.topic ?? String(localized: "Topic"))
         .textCase(.uppercase)
         .font(.subheadline)
         .bold()
@@ -259,8 +259,8 @@ struct ReadLessWidget: Widget {
         ReadLessWidgetEntryView(entry: $0)
           .containerBackground(.fill.tertiary, for: .widget)
       }
-                                     .configurationDisplayName("Topic")
-                                     .description("Choose a topic")
+                                     .configurationDisplayName(String(localized: "Topic"))
+                                     .description(String(localized: "Choose a topic"))
                                      .supportedFamilies(SUPPORTED_FAMILIES)
     } else {
       return IntentConfiguration(kind: kind,
@@ -270,8 +270,8 @@ struct ReadLessWidget: Widget {
           .padding()
           .background()
       }
-                                 .configurationDisplayName("Topic")
-                                 .description("Choose a topic")
+                                 .configurationDisplayName(String(localized: "Topic"))
+                                 .description(String(localized: "Choose a topic"))
                                  .supportedFamilies(SUPPORTED_FAMILIES)
     }
   }

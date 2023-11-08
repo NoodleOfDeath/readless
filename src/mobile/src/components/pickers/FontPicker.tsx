@@ -12,7 +12,7 @@ import {
   View,
   ViewProps,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useStyles } from '~/hooks';
 
 export type FontPickerProps = ViewProps & {
@@ -28,7 +28,7 @@ export function FontPicker({
   ...props
 }: FontPickerProps = {}) {
   
-  const { fontFamily = DEFAULT_PREFERRED_FONT, setStoredValue } = React.useContext(SessionContext);
+  const { fontFamily = DEFAULT_PREFERRED_FONT, setStoredValue } = React.useContext(StorageContext);
   const style = useStyles(props);
   
   if (variant === 'grid') {

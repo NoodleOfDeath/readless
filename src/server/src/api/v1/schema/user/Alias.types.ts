@@ -1,3 +1,4 @@
+import { JwtRequest } from './../../controllers/account/jwt';
 import { DatedAttributes } from '../types';
 
 export const THIRD_PARTIES = { google: 'google' } as const;
@@ -23,10 +24,10 @@ export const ALIAS_TYPES = {
 export type AliasType = typeof ALIAS_TYPES[keyof typeof ALIAS_TYPES] | `thirdParty/${ThirdParty}`;
 
 export type DestructuredAliasPayload = {
-  [key in AliasType]: key extends 'thirdParty' ? ThirdPartyAuth : key extends 'userId' ? number : string;
+  [key in AliasType]?: key extends 'thirdParty' ? ThirdPartyAuth : key extends 'userId' ? number | string : string;
 };
 
-export type AliasPayload = Partial<DestructuredAliasPayload> & {
+export type AliasPayload = JwtRequest & DestructuredAliasPayload & {
   type: AliasType;
   value: string | number | ThirdPartyAuth;
 };

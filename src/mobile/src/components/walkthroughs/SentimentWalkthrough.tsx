@@ -16,20 +16,20 @@ import {
   Walkthrough,
   WalkthroughStep,
 } from '~/components';
-import { SessionContext, TimelineEvent } from '~/contexts';
+import { DatedEvent, StorageContext } from '~/contexts';
 import { useInAppBrowser, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 export function SentimentWalkthrough(props: SheetProps) {
   
-  const { setStoredValue } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(StorageContext);
   const { openURL } = useInAppBrowser();
   const theme = useTheme();
 
   const onDone = React.useCallback(async () => {
     setStoredValue('viewedFeatures', (prev) => {
       const state = { ...prev };
-      state[props.sheetId] = new TimelineEvent(true);
+      state[props.sheetId] = new DatedEvent(true);
       return (prev = state);
     });
     await SheetManager.hide(props.sheetId);

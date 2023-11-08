@@ -7,6 +7,7 @@ import { ReadingFormat } from '~/api';
 import {
   BASE_LETTER_SPACING,
   BASE_LINE_HEIGHT_MULTIPLIER,
+  Button,
   FONT_SIZES,
   NumericPrefPicker,
   PrefSwitch,
@@ -17,13 +18,15 @@ import {
   TableViewCell,
   TableViewSection,
 } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
+import { usePlatformTools } from '~/utils';
 
 export function SettingsTable() {
   
   const { navigate } = useNavigation();
+  const { getUserAgent } = usePlatformTools();
   
   const {
     compactSummaries,
@@ -31,12 +34,14 @@ export function SettingsTable() {
     fontFamily, 
     preferredShortPressFormat,
     preferredReadingFormat,
-    resetStoredValues, 
+    resetStorage, 
     triggerWords,
     readSummaries,
     removedSummaries,
     setStoredValue,
-  } = React.useContext(SessionContext);
+    hasViewedFeature,
+    viewFeature,
+  } = React.useContext(StorageContext);
   
   const [loading, setLoading] = React.useState(false);
   const [cacheSize, setCacheSize] = React.useState('');
@@ -64,6 +69,72 @@ export function SettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
+      <TableViewSection header={ strings.settings_pushNotifications }>
+        <TableViewCell
+          bold
+          title={ strings.settings_pushNotifications }
+          cellIcon={ (
+            <Button
+              leftIcon="bell" 
+              indicator={ !hasViewedFeature('first-view-notifs') } />
+          ) }
+          accessory="DisclosureIndicator"
+          onPress={ () => {
+            viewFeature('first-view-notifs');
+            navigate('notifications');
+          } } />
+      </TableViewSection>
+      <TableViewSection header={ strings.settings_summaryDisplay }>
+        <TableViewCell
+          cellContentView={ (
+            <ScrollView my={ 12 } scrollEnabled={ false }>
+              <Summary 
+                sample
+                forceUnread
+                disableInteractions 
+                disableNavigation /> 
+            </ScrollView>
+          ) } />
+        <TableViewCell
+          bold
+          title={ strings.settings_compactSummaries }
+          cellIcon="view-headline"
+          cellAccessoryView={ <PrefSwitch prefKey='compactSummaries' /> } />
+        <TableViewCell
+          bold
+          title={ compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries }
+          cellIcon="text-short"
+          cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
+        {Platform.OS === 'ios' && (
+          <TableViewCell
+            bold
+            cellStyle="RightDetail"
+            title={ strings.settings_preferredShortPressFormat }
+            sentenceCase
+            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_shortSummary }
+            accessory="DisclosureIndicator"
+            cellIcon="gesture-tap-hold"
+            onPress={ () => navigate('shortPressFormatPicker') } />
+        )}
+        <TableViewCell
+          bold
+          cellStyle="RightDetail"
+          title={ strings.settings_preferredReadingFormat }
+          detail={ preferredReadingFormat === ReadingFormat.Summary ? strings.summary_summary : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_bullets }
+          accessory="DisclosureIndicator"
+          cellIcon="gesture-tap"
+          onPress={ () => navigate('readingFormatPicker') } />
+      </TableViewSection>
+      <TableViewSection header={ strings.settings_customization }>
+        <TableViewCell
+          bold
+          cellStyle="RightDetail"
+          title={ strings.settings_triggerWords }
+          detail={ Object.keys({ ...triggerWords }).length }
+          accessory="DisclosureIndicator"
+          cellIcon="alphabetical-off"
+          onPress={ () => navigate('triggerWordPicker') } />
+      </TableViewSection>
       <TableViewSection header={ strings.settings_system }>
         <TableViewCell
           bold
@@ -119,57 +190,6 @@ export function SettingsTable() {
               step={ 0.05 } />
           ) } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_summaryDisplay }>
-        <TableViewCell
-          cellContentView={ (
-            <ScrollView my={ 12 } scrollEnabled={ false }>
-              <Summary 
-                sample
-                forceUnread
-                disableInteractions 
-                disableNavigation /> 
-            </ScrollView>
-          ) } />
-        <TableViewCell
-          bold
-          title={ strings.settings_compactSummaries }
-          cellIcon="view-headline"
-          cellAccessoryView={ <PrefSwitch prefKey='compactSummaries' /> } />
-        <TableViewCell
-          bold
-          title={ compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries }
-          cellIcon="text-short"
-          cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
-        {Platform.OS === 'ios' && (
-          <TableViewCell
-            bold
-            cellStyle="RightDetail"
-            title={ strings.settings_preferredShortPressFormat }
-            sentenceCase
-            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_shortSummary }
-            accessory="DisclosureIndicator"
-            cellIcon="gesture-tap-hold"
-            onPress={ () => navigate('shortPressFormatPicker') } />
-        )}
-        <TableViewCell
-          bold
-          cellStyle="RightDetail"
-          title={ strings.settings_preferredReadingFormat }
-          detail={ preferredReadingFormat === ReadingFormat.Summary ? strings.summary_summary : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_bullets }
-          accessory="DisclosureIndicator"
-          cellIcon="gesture-tap"
-          onPress={ () => navigate('readingFormatPicker') } />
-      </TableViewSection>
-      <TableViewSection header={ strings.settings_customization }>
-        <TableViewCell
-          bold
-          cellStyle="RightDetail"
-          title={ strings.settings_triggerWords }
-          detail={ Object.keys({ ...triggerWords }).length }
-          accessory="DisclosureIndicator"
-          cellIcon="alphabetical-off"
-          onPress={ () => navigate('triggerWordPicker') } />
-      </TableViewSection>
       <TableViewSection header={ strings.settings_general }>
         <TableViewCell
           bold
@@ -201,11 +221,15 @@ export function SettingsTable() {
           bold
           title={ strings.settings_resetAllSettings }
           onPress={ () => {
-            resetStoredValues(); 
+            resetStorage(); 
           } }
           onLongPress={ () => {
-            resetStoredValues(true);
+            resetStorage(true);
           } } />
+      </TableViewSection>
+      <TableViewSection>
+        <TableViewCell 
+          title={ getUserAgent().currentVersion } />
       </TableViewSection>
     </TableView>
   );

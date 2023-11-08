@@ -87,7 +87,6 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
   }
 
   public async formatAsHTML(summaries0: PublicSummaryAttributes[] = [], baseUrl = process.env.BASE_DOMAIN) {
-    console.log('fuck', this.summaries);
     const summaries = Object.fromEntries(summaries0.map((s) => [s.id, s]));
     const sources: string[] = [];
     const body = this.text.replace(/\[([\d,\s]+)\]/g, (_, $1) => {

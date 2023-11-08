@@ -6,7 +6,7 @@ export type ReadAndSummarizePayload = {
   content?: string;
   publisher?: Publisher;
   force?: boolean;
-  priority?: bigint;
+  priority?: number;
 };
 
 export type RecapPayload = {

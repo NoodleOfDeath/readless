@@ -10,7 +10,7 @@ export const CREDENTIAL_TYPES = {
 export type CredentialType = typeof CREDENTIAL_TYPES[keyof typeof CREDENTIAL_TYPES];
 
 export type DestructuredCredentialPayload = Omit<{
-  [key in CredentialType]: string;
+  [key in CredentialType]?: string;
 }, 'jwt'>;
 
 export type CredentialAttributes = DatedAttributes & {

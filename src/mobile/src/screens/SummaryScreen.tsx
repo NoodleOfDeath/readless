@@ -15,7 +15,7 @@ import {
   Text,
   View,
 } from '~/components';
-import {  SessionContext } from '~/contexts';
+import {  StorageContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { RoutedScreen } from '~/navigation';
@@ -27,7 +27,7 @@ export function SummaryScreen({
 }: ScreenComponent<'summary'>) {
 
   const { getSummary, interactWithSummary } = useApiClient();
-  const { preferredReadingFormat } = React.useContext(SessionContext);
+  const { preferredReadingFormat } = React.useContext(StorageContext);
 
   const [loading, setLoading] = React.useState(false);
   const [summaryId, setSummaryId] = React.useState(0);

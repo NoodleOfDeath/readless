@@ -11,7 +11,7 @@ import  RNPopover from 'react-native-popover-view';
 import { PublicPopoverProps } from 'react-native-popover-view/dist/Popover';
 
 import { Button, View } from '~/components';
-import { SessionEvent } from '~/core';
+import { StorageEventName } from '~/core';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { usePlatformTools } from '~/utils';
@@ -20,7 +20,7 @@ export type PopoverProps = PublicPopoverProps & {
   anchor?: React.ReactNode;
   disabled?: boolean;
   onPress?: () => void;
-  event?: { name: SessionEvent, params?: Record<string, unknown> };
+  event?: { name: StorageEventName, params?: Record<string, unknown> };
   longPress?: boolean;
   variant?: 'default' | 'menu';
   menu?: boolean;

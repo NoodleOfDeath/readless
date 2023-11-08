@@ -33,7 +33,6 @@ export class PublisherController extends BaseController {
     @Query() _filter?: string
   ): Promise<BulkResponse<PublicPublisherAttributes>> {
     const params = this.serializeParams(req);
-    console.log('fuck', params);
     const publishers = await Publisher.getPublishers(locale ?? params.locale);
     return publishers;
   }

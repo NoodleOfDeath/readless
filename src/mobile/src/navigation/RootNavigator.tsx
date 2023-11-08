@@ -11,7 +11,7 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 
-import { RightDrawerNavigator } from './RightDrawerNavigator';
+import { LeftDrawerNavigator } from './LeftDrawerNavigator';
 
 import {
   ActivityIndicator,
@@ -21,8 +21,9 @@ import {
 import {
   LayoutContext,
   MediaContext,
+  NotificationContext,
   OrientationType,
-  SessionContext,
+  StorageContext,
 } from '~/contexts';
 import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
@@ -43,14 +44,16 @@ export function RootNavigator() {
     hasViewedFeature,
     lastRequestForReview = 0,
     readSummaries,
+    pushNotificationsEnabled,
     setStoredValue,
-  } = React.useContext(SessionContext);   
+  } = React.useContext(StorageContext);   
   const {
     isTablet,
     lockRotation,
     unlockRotation,
   } = React.useContext(LayoutContext);
   
+  const { isRegisteredForRemoteNotifications, registerRemoteNotifications } = React.useContext(NotificationContext);
   const { currentTrack } = React.useContext(MediaContext);
   
   const [lastFetch, setLastFetch] = React.useState(0);
@@ -68,9 +71,12 @@ export function RootNavigator() {
     } else {
       unlockRotation();
     }
+    if (pushNotificationsEnabled !== false && !isRegisteredForRemoteNotifications()) {
+      registerRemoteNotifications();
+    }
     if (!showedReview && 
       (Date.now() - lastRequestForReview > ms('2w') && 
-      (Object.keys({ ...readSummaries }).length > 1))) {
+      (Object.keys({ ...readSummaries }).length > 2))) {
 
       const inAppReviewHandler = async () => {
         try {
@@ -111,7 +117,7 @@ export function RootNavigator() {
       };
 
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications]);
   
   const refreshSources = React.useCallback(() => {
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
@@ -169,7 +175,7 @@ export function RootNavigator() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          <RightDrawerNavigator />
+          <LeftDrawerNavigator />
           <MediaPlayer visible={ Boolean(currentTrack) } />
         </SheetProvider>
       </PaperProvider>

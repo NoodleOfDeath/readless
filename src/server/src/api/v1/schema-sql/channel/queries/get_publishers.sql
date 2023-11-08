@@ -5,4 +5,5 @@ FROM
 WHERE
   pub.locale = :locale
 ORDER BY
-pub.name ASC;
+  pub.name ASC;
+

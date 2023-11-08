@@ -1,7 +1,11 @@
 import { Transporter, createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-import { VerifySubscriptionProps, VerifySubscriptionTemplate } from './templates';
+import {
+  VerifySubscriptionProps,
+  VerifySubscriptionTemplate,
+  WelcomeTemplate,
+} from './templates';
 import {
   ResetPasswordProps,
   ResetPasswordTemplate,
@@ -16,6 +20,7 @@ const TEMPLATES = {
   resetPassword: ResetPasswordTemplate,
   verifyEmail: VerifyEmailTemplate,
   verifySubscription: VerifySubscriptionTemplate,
+  welcome: WelcomeTemplate,
 } as const;
 
 export class MailService extends BaseService {

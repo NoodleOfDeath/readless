@@ -6,7 +6,7 @@ import {
   SegmentedButtons,
   SegmentedButtonsRef,
 } from '~/components';
-import { SessionContext } from '~/core';
+import { StorageContext } from '~/core';
 import { strings } from '~/locales';
 
 type Props = ChildlessViewProps & {
@@ -28,7 +28,7 @@ export function ReadingFormatPicker({
   pressOnly,
   ...props
 }: Props = {}) {
-  const { preferredReadingFormat, setStoredValue } = React.useContext(SessionContext);
+  const { preferredReadingFormat, setStoredValue } = React.useContext(StorageContext);
   const buttonsRef = React.useRef<SegmentedButtonsRef<ReadingFormat>>(null);
   return (
     <SegmentedButtons 

@@ -24,7 +24,7 @@ import {
 import { BaseControllerWithPersistentStorageAccess } from '../';
 import { SupportedLocale } from '../../../../core/locales';
 import { MailService } from '../../../../services';
-import { PayloadWithUserId } from '../../../../services/types';
+import { JwtRequest } from '../../../../services/types';
 import { AuthError, InternalError } from '../../middleware';
 import {
   InteractionType,
@@ -159,7 +159,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   public static async destroySummary(
     @Request() _request: ExpressRequest,
     @Path() targetId: number,
-    @Body() body: PayloadWithUserId
+    @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
     const { user } = await User.from(body);
     await user.destroySummary(targetId);
@@ -171,7 +171,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   public static async restoreSummary(
     @Request() _request: ExpressRequest,
     @Path() targetId: number,
-    @Body() body: PayloadWithUserId
+    @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
     const { user } = await User.from(body);
     await user.restoreSummary(targetId);

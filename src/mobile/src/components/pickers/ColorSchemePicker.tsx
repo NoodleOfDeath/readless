@@ -7,7 +7,7 @@ import {
   Summary,
   TablePicker,
 } from '~/components';
-import { ColorScheme, SessionContext } from '~/contexts';
+import { ColorScheme, StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 
 type ColorSchemePickerProps = Omit<SegmentedButtonsProps, 'options'> & {
@@ -21,7 +21,7 @@ export function ColorSchemePicker({
   ...props
 }: ColorSchemePickerProps) {
   
-  const { colorScheme, setStoredValue } = React.useContext(SessionContext);
+  const { colorScheme, setStoredValue } = React.useContext(StorageContext);
   
   if (variant === 'table') {
     return (

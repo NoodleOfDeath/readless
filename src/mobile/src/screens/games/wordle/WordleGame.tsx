@@ -1,4 +1,5 @@
 import React from 'react';
+import { Animated } from 'react-native';
 
 import {
   Button,
@@ -6,10 +7,11 @@ import {
   DEFAULT_KEYS,
   OnscreenKeyboard,
   View,
+  ViewProps,
 } from '~/components';
 import { LayoutContext } from '~/contexts';
 
-type LetterClue = 'exact' | 'close' | 'wrong';
+type LetterClue = 'exact' | 'close' | 'wrong' | 'unknown';
 
 const LETTER_COLORS = {
   close: {
@@ -28,14 +30,95 @@ const LETTER_COLORS = {
     bg: 'red',
     color: 'white',
   },
-};
+} as const;
+
+type LetterPalette = typeof LETTER_COLORS[LetterColor];
+
+function exactMatches(answer: string, guess: string): number[] {
+  const matches: number[] = [];
+  [...answer].forEach((letter, index) => {
+    if (index < guess.length && letter === guess[index]) {
+      matches.push(index);
+    }
+  });
+  return matches;
+}
+
+function charCount(str: string, letter: string, offset: number = str.length) {
+  return str.substring(0, offset).split(letter).length - 1;
+}
 
 function letterClue(answer: string, guess: string, index: number): LetterClue {
   if (answer.length < index || guess.length < index) {
     return 'wrong';
   }
+  answer = answer.toLowerCase();
+  guess = guess.toLowerCase();
   const letter = guess[index];
-  return letter === answer[index] ? 'exact' : answer.includes(letter) ? 'close' : 'wrong';
+  const correct = answer[index];
+  if (letter === correct) {
+    return 'exact';
+  }
+  const guessCount = charCount(guess, letter, index);
+  const count = charCount(answer, letter);
+  if (count - guessCount > 0 && answer.includes(letter)) {
+    return 'close';
+  }
+  return 'wrong';
+}
+
+type WordleLetterProps = ViewProps & {
+  revealed?: boolean;
+  duration?: number;
+  delay?: number;
+  clue?: LetterClue;
+};
+
+function WordleLetter({
+  children,
+  revealed,
+  duration = 500,
+  delay = 0,
+  clue,
+  ...props
+}: WordleLetterProps = {}) {
+  
+  const animation = React.useRef(new Animated.Value(0)).current;
+  const [colors, setColors] = React.useState<LetterPalette>(LETTER_COLORS.unknown);
+  
+  React.useEffect(() => {
+    if (revealed) {
+      setTimeout(() => {
+        Animated.timing(animation, {
+          duration,
+          toValue: 1,
+          useNativeDriver: true,
+        }).start();
+      }, delay);
+      setTimeout(() => setColors(revealed ? LETTER_COLORS[clue] : LETTER_COLORS.unknown), delay + (duration * 0.75));
+    }
+  }, [revealed, delay]);
+  
+  return (
+    <Animated.View
+      flex={ 1 }
+      style={ {
+        transform: [{ 
+          rotateX: animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '360deg'],
+          }),
+        }],
+      } }>
+      <Button
+        h1
+        flex={ 1 }
+        { ...colors }>
+        {children}
+      </Button>
+    </Animated.View>
+  );
+  
 }
 
 type WordleRowProps = ChildlessViewProps & {
@@ -49,21 +132,19 @@ function WordleRow({
   text, maxLength, correctAnswer, revealed, ...props 
 }: WordleRowProps) {
   const { screenHeight } = React.useContext(LayoutContext);
+  
   return (
     <View gap={ 6 } { ...props } flex={ 1 } flexRow>
       {[...Array(maxLength).keys()].map((_, index) => {
         const clue = letterClue(correctAnswer, text, index);
-        const bg = revealed ? LETTER_COLORS[clue].bg : LETTER_COLORS.unknown.bg;
-        const color = revealed ? LETTER_COLORS[clue].color : LETTER_COLORS.unknown.color;
         return (
-          <Button
+          <WordleLetter
             key={ index }
-            flex={ 1 }
-            h1
-            bg={ bg }
-            color={ color }>
+            revealed={ revealed }
+            delay={ index * 500 }
+            clue={ clue }>
             {text[index]?.toUpperCase()}
-          </Button>
+          </WordleLetter>
         );
       })}
     </View>
@@ -115,12 +196,11 @@ export function WordleGame({
             if (currentGuess.length === maxLength) {
               setGuesses((prev) => [...prev, currentGuess]);
               setKeys((prev) => {
-                const state = prev;
-                alert(state);
+                const state = { ...prev };
                 for (const [index, k] in currentGuess.split('').entries()) {
                   const clue = letterClue(correctAnswer, currentGuess, index);
                   for (const row in state) {
-                    const key = row.find((r) => r.value === k);
+                    const key = row.find((r) => r.value.toLowerCase() === k.toLowerCase());
                     if (!key) {
                       continue;
                     }
@@ -128,7 +208,6 @@ export function WordleGame({
                     key.color = LETTER_COLORS[clue].color;
                   }
                 }
-                alert(JSON.stringify(state));
                 return (prev = state);
               });
               setCurrentGuess('');

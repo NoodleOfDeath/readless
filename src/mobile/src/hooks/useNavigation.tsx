@@ -9,7 +9,7 @@ import {
   PublicPublisherAttributes,
   ReadingFormat,
 } from '~/api';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { NavigationID, RoutingParams } from '~/screens';
 import { readingFormat, usePlatformTools } from '~/utils';
 
@@ -23,7 +23,7 @@ export function useNavigation() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useRNNavigation<Navigation>();
   
-  const { preferredReadingFormat, setStoredValue } = React.useContext(SessionContext);
+  const { preferredReadingFormat, setStoredValue } = React.useContext(StorageContext);
 
   const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R], stackNav?: Navigation) => {
     emitEvent('navigate', route);

@@ -17,7 +17,7 @@ import {
   TranslateToggle,
   View,
 } from '~/components';
-import { LayoutContext, SessionContext } from '~/contexts';
+import { LayoutContext, StorageContext } from '~/contexts';
 import { 
   useApiClient,
   useNavigation,
@@ -45,7 +45,7 @@ export function Recap({
   const { getSummaries, localize } = useApiClient();
   const { screenHeight } = React.useContext(LayoutContext);
   
-  const { readRecap, readRecaps } = React.useContext(SessionContext);
+  const { readRecap, readRecaps } = React.useContext(StorageContext);
   
   const [isRead, setIsRead] = React.useState(!forceUnread && recap.id in ({ ...readRecaps }));
   const [translations, setTranslations] = React.useState<{ [key in keyof RecapAttributes]?: string }>({ text: recap.text, title: recap.title });

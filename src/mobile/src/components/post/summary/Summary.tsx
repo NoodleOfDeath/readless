@@ -33,7 +33,7 @@ import {
   TranslateToggleRef,
   View,
 } from '~/components';
-import { LayoutContext, SessionContext } from '~/contexts';
+import { LayoutContext, StorageContext } from '~/contexts';
 import {
   useApiClient,
   useInAppBrowser,
@@ -41,7 +41,11 @@ import {
   useStyles,
   useTheme,
 } from '~/hooks';
-import { getFnsLocale, strings } from '~/locales';
+import {
+  getFnsLocale,
+  getLocale,
+  strings,
+} from '~/locales';
 import { fixedSentiment, usePlatformTools } from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
@@ -89,7 +93,7 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     categoryId: 0,
     id: 0,
     imageUrl: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg',
-    media: { imageAi1: 'https://readless.nyc3.digitaloceanspaces.com/img/s/02df6070-0963-11ee-81c0-85b89936402b.jpg' },
+    media: { imageAi1: 'https://readless.nyc3.digitaloceanspaces.com/img/s/1b131290-775e-11ee-93b5-2b37be086969.jpeg' },
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
     publisher: {
       displayName: strings.misc_publisher,
@@ -204,7 +208,7 @@ export function Summary({
     excludedCategories,
     followCategory,
     excludeCategory,
-  } = React.useContext(SessionContext);
+  } = React.useContext(StorageContext);
 
   const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
 
@@ -305,6 +309,9 @@ export function Summary({
     if (summaryTranslations?.[summary.id]) {
       setTranslations(summaryTranslations[summary.id]);
       translateToggleRef.current?.setTranslations(summaryTranslations[summary.id]);
+    } else
+    if (getLocale() !== 'en') {
+      translateToggleRef.current?.translate();
     }
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SessionContext } from '../contexts';
+import { StorageContext } from '../contexts';
 
 import { API, RequestParams } from '~/api';
 
@@ -13,7 +13,7 @@ type Methods = {
 
 export function useApiClient() {
 
-  const { withHeaders } = React.useContext(SessionContext);
+  const { withHeaders } = React.useContext(StorageContext);
   
   const api = React.useMemo(() => {
     return Object.fromEntries(Object.entries(API)

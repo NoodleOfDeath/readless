@@ -14,7 +14,7 @@
     "start": "react-native start",
     "build": "yarn build:ios && yarn build:android",
     "build:ios": "react-native bundle --entry-file='./index.js' --bundle-output='./ios/readless/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
-    "build:android": "react-native bundle --entry-file='./index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --platform='android' --assets-dest='./android/app/src/main/res/' && rm -rf ./android/app/src/main/res/drawable-*",
+    "build:android": "react-native bundle --entry-file='./index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --platform='android' --assets-dest='./android/app/src/main/res/' && rm -rf ./android/app/src/main/res/drawable-*hdpi && rm -rf ./android/app/src/main/res/drawable-mdpi",
     "test": "jest",
     "gen": "npx swagger-typescript-api --disable-throw-on-error -p ./swagger.json -o ./src/gen && yarn cp:core",
     "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core && cp -rf ../core/src/client/* ./src/core && cp -rf ../core/src/utils/* src/core/utils",

@@ -11,3 +11,4 @@ FROM
 GROUP BY
   l.code,
   trans."parentId";
+

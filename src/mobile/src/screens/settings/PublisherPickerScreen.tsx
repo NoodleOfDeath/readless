@@ -3,13 +3,13 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { PublisherPicker, Screen } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 
 export function PublisherPickerScreen() {
 
   const { navigation } = useNavigation();
-  const { setStoredValue } = React.useContext(SessionContext);
+  const { setStoredValue } = React.useContext(StorageContext);
 
   const pickerRef = React.useRef<{ value: string[] }>(null);
 

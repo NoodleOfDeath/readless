@@ -3,7 +3,7 @@ import React from 'react';
 import { PrefSwitch } from './PrefSwitch';
 
 import { Button, View } from '~/components';
-import { SessionContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 
 type CompactModePickerProps = {
@@ -18,7 +18,7 @@ export function CompactModePicker({
   labeled,
 }: CompactModePickerProps) {
   
-  const { compactSummaries } = React.useContext(SessionContext);
+  const { compactSummaries } = React.useContext(StorageContext);
 
   const compactSummariesSwitch = React.useMemo(() => {
     return labeled ? (

@@ -1,49 +1,60 @@
 import jwt from 'jsonwebtoken';
 import ms from 'ms';
 
-import { AuthError } from '../../api/v1/middleware';
-import { Credential, User } from '../../api/v1/schema';
+import { AuthError } from '../../middleware';
+import { Credential, User } from '../../schema';
 
 export type JwtBaseAccessOperation = '*' | 'has' | 'read' | 'write' | 'delete';
 export type JwtAccessOperation = JwtBaseAccessOperation | `deny.${JwtBaseAccessOperation}`;
 
-export const JWT_REFERSH_THRESHOLD_MS = ms(process.env.JWT_REFERSH_THRESHOLD || '6h');
+export const JWT_REFERSH_THRESHOLD_MS = ms(process.env.JWT_REFERSH_THRESHOLD || '100y');
 
 export type JsonWebToken = {
-  userId?: number;
+  userId: number;
   scope: string[];
   priority: number;
   createdAt: Date;
   expiresIn: string;
   refreshable: boolean;
+  defaultsTo: string;
   signed: string;
 };
 
-export type JwtOptions = {
-  userId?: number;
-  scope?: string[];
-  priority?: number;
-  expiresIn?: string;
-  refreshable?: boolean;
-  defaultsTo?: string;
+export type WrappedJwt = {
+  userId: number;
+  priority: number;
+  createdAt: number;
+  expiresAt: number;
+  signed: string;
 };
 
-export class Jwt implements JsonWebToken {
+export type JwtRequest = {
+  token?: WrappedJwt;
+};
 
-  userId?: number; 
+export type JwtResponse = {
+  userId: number;
+  token?: WrappedJwt;
+};
+
+export class JWT implements JsonWebToken {
+
+  userId: number; 
   scope: string[];
   priority: number;
   createdAt: Date;
   expiresIn: string;
   refreshable = false;
-  defaultsTo: string;
+  defaultsTo = 'standard';
   signed: string;
 
-  get serialized() {
+  get wrapped(): WrappedJwt {
     return {
+      createdAt: this.createdAt.valueOf(),
       expiresAt: new Date(this.createdAt.getTime() + ms(this.expiresIn)).valueOf(),
       priority: this.priority,
-      value: this.signed,
+      signed: this.signed,
+      userId: this.userId,
     };
   }
 
@@ -67,8 +78,8 @@ export class Jwt implements JsonWebToken {
     });
   }
   
-  static from(token: string | JwtOptions) {
-    return new Jwt(token);
+  static from(token: string | Partial<JsonWebToken>) {
+    return new JWT(token);
   }
 
   static async as(role: string, userId: number) {
@@ -78,7 +89,7 @@ export class Jwt implements JsonWebToken {
     if (!rbac) {
       throw new AuthError('INSUFFICIENT_PERMISSIONS');
     }
-    return new Jwt({
+    return new JWT({
       defaultsTo: rbac.defaultsTo,
       expiresIn: rbac.lifetime,
       priority: rbac.priority,
@@ -88,7 +99,7 @@ export class Jwt implements JsonWebToken {
     });
   }
 
-  constructor(opts: string | JwtOptions) {
+  constructor(opts: string | Partial<JsonWebToken>) {
     try {
       if (typeof opts === 'string') {
         const { 
@@ -99,7 +110,7 @@ export class Jwt implements JsonWebToken {
           expiresIn,
           refreshable,
           defaultsTo,
-        } = jwt.verify(opts, process.env.JWT_SECRET) as Jwt;
+        } = jwt.verify(opts, process.env.JWT_SECRET) as JWT;
         if (!userId || !scope) {
           throw new AuthError('INVALID_CREDENTIALS');
         }
@@ -162,7 +173,7 @@ export class Jwt implements JsonWebToken {
   
   public async validate(refresh?: boolean) {
     let expired = false;
-    let refreshed: Jwt;
+    let refreshed: JWT;
     if (this.expired) {
       expired = true;
       await Credential.destroy({
@@ -206,11 +217,11 @@ export class Jwt implements JsonWebToken {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
     await credential.destroy();
-    let token: Jwt;
+    let token: JWT;
     if (!this.refreshable) {
-      token = await Jwt.as(this.defaultsTo, this.userId);
+      token = await JWT.as(this.defaultsTo, this.userId);
     } else {
-      token = new Jwt({
+      token = new JWT({
         expiresIn: this.expiresIn,
         priority: this.priority,
         refreshable: true,
