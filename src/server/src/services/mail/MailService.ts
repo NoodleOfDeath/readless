@@ -1,16 +1,9 @@
 import { Transporter, createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-import {
-  VerifySubscriptionProps,
-  VerifySubscriptionTemplate,
-  WelcomeTemplate,
-} from './templates';
-import {
-  ResetPasswordProps,
-  ResetPasswordTemplate,
-} from './templates/resetPassword/ResetPasswordTemplate';
-import { VerifyEmailProps, VerifyEmailTemplate } from './templates/verifyEmail/VerifyEmailTemplate';
+import { VerifySubscriptionTemplate, WelcomeTemplate } from './templates';
+import { ResetPasswordTemplate } from './templates/resetPassword/ResetPasswordTemplate';
+import { VerifyEmailTemplate } from './templates/verifyEmail/VerifyEmailTemplate';
 import { Optional } from '../../types';
 import { BaseService } from '../base';
 
@@ -66,13 +59,8 @@ export class MailService extends BaseService {
     if (templateName) {
       const template = new TEMPLATES[templateName]();
       options.subject = template.subject;
-      if (template instanceof VerifyEmailTemplate) {
-        options.html = template.render(params as VerifyEmailProps);
-      } else if (template instanceof ResetPasswordTemplate) {
-        options.html = template.render(params as ResetPasswordProps);
-      } else if (template instanceof VerifySubscriptionTemplate) {
-        options.html = template.render(params as VerifySubscriptionProps);
-      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      options.html = template.render(params as any);
     }
     return await this.client.sendMail(options);
   }
