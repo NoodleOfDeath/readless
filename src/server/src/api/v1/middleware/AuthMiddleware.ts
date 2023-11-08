@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 
 import { AuthError, internalErrorHandler } from './internal-errors';
-import { Jwt } from '../../../services/types';
+import { JWT } from '../../../services/types';
 
 type AuthMiddlewareOptions = {
   required?: boolean;
@@ -11,11 +11,12 @@ type AuthMiddlewareOptions = {
 export const authMiddleware = (securityName: string, { required = false, scope = [] }: AuthMiddlewareOptions = {}): RequestHandler => async (req, res, next) => {
   try {
     if (securityName === 'jwt') {
-      if (req.get('authorization')) {
-        const [type, token] = req.get('authorization').split(' ');
+      const auth = req.get('authorization');
+      if (auth) {
+        const [type, token] = auth.split(' ');
         if (type === 'Bearer') {
           try {
-            const jwt = Jwt.from(token);
+            const jwt = JWT.from(token);
             if (required && !jwt.canAccess(scope)) {
               throw new AuthError('INSUFFICIENT_PERMISSIONS');
             }

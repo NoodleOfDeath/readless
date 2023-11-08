@@ -3,7 +3,7 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
-import { Jwt } from '../../../../services/types';
+import { JWT } from '../../../../services/types';
 import { AuthError } from '../../middleware';
 import { BaseModel } from '../base';
 import {
@@ -22,6 +22,7 @@ import {
   CredentialType,
   FindAliasOptions,
   InteractionType,
+  Profile,
   UserAttributes,
   UserCreationAttributes,
 } from '../types';
@@ -35,10 +36,14 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   extends BaseModel<A, B>
   implements UserAttributes {
 
+  profile?: Profile;
+
+  // authentication methods
+
   /** Resolves a user from an alias request/payload */
   public static async from(req: Partial<AliasPayload>, opts?: Partial<FindAliasOptions>) {
     if (req.userId) {
-      const user = await User.findOne({ where: { id: req.userId } });
+      const user = await User.findOne({ where: { id: req.userId ?? req.token?.userId } });
       if (!user && !opts?.ignoreIfNotResolved) {
         if (!opts?.ignoreIfNotResolved) {
           throw new AuthError('INVALID_CREDENTIALS');
@@ -59,7 +64,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         alias,
         otp,
         payload, 
-        user: await User.findOne({ where: { id: alias.toJSON().userId } }),
+        user: await User.findOne({ where: { id: alias.userId } }),
       };
     }
   }
@@ -68,7 +73,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Alias.findOne({ 
       where: {
         type,
-        userId: this.toJSON().id,
+        userId: this.id,
       },
     });
   }
@@ -77,7 +82,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Alias.findAll({ 
       where: {
         type: { [Op.in]: [type, ...other] },
-        userId: this.toJSON().id,
+        userId: this.id,
       },
     });
   }
@@ -85,18 +90,20 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public async createAlias(type: AliasType, value: string, attr: Omit<AliasCreationAttributes, 'type' | 'userId' | 'value'>) {
     return await Alias.create({
       type,
-      userId: this.toJSON().id,
+      userId: this.id,
       value,
       ...attr,
     });
   }
+
+  // authorization methods
 
   public async findCredential(type: CredentialType, value?: string) {
     if (value) {
       return await Credential.findOne({
         where: {
           type,
-          userId: this.toJSON().id,
+          userId: this.id,
           value,
         }, 
       });
@@ -104,7 +111,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.findOne({
       where: {
         type,
-        userId: this.toJSON().id,
+        userId: this.id,
       }, 
     });
   }
@@ -113,12 +120,12 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.findAll({
       where: {
         type: { [Op.in]: [type, ...other] },
-        userId: this.toJSON().id,
+        userId: this.id,
       }, 
     });
   }
 
-  public async createCredential<C extends CredentialType, V extends C extends 'jwt' ? Jwt : string>(type: C, rawValue: V, attr: Omit<CredentialCreationAttributes, 'type' | 'userId' | 'value'> = {}) {
+  public async createCredential<C extends CredentialType, V extends C extends 'jwt' ? JWT : string>(type: C, rawValue: V, attr: Omit<CredentialCreationAttributes, 'type' | 'userId' | 'value'> = {}) {
     let value: string;
     let expiresAt: Date;
     if (typeof rawValue === 'string') {
@@ -136,7 +143,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.create({ 
       expiresAt,
       type,
-      userId: this.toJSON().id,
+      userId: this.id,
       value,
       ...attr,
     });
@@ -147,7 +154,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       return await Credential.destroy({
         where: {
           type,
-          userId: this.toJSON().id,
+          userId: this.id,
           value,
         },
       });
@@ -155,13 +162,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return await Credential.destroy({
       where: {
         type,
-        userId: this.toJSON().id,
+        userId: this.id,
       },
     });
   }
 
   public async getRoles() {
-    return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.toJSON().id } })).map(async (role) => (await Role.findOne({ where: { id: role.toJSON().roleId } }))?.toJSON() ))).map((role) => [role.name, role]));
+    return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.id } })).map(async (role) => (await Role.findOne({ where: { id: role.roleId } })) ))).map((role) => [role.name, role]));
   }
   
   public async highestRole() {
@@ -186,7 +193,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!roleModel) {
       throw new AuthError('BAD_REQUEST');
     }
-    await RefUserRole.create({ roleId: roleModel.id, userId: this.toJSON().id });
+    await RefUserRole.create({ roleId: roleModel.id, userId: this.id });
     return roleModel;
   }
 
@@ -195,9 +202,11 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!roleModel) {
       throw new AuthError('BAD_REQUEST');
     }
-    const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.toJSON().id } });
+    const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.id } });
     return count;
   }
+
+  // summary methods
   
   public async destroySummary(targetId: number) {
     if (this.hasRole('god')) {
@@ -216,7 +225,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public async interactWithSummary(targetId: number, type: InteractionType, remoteAddr?: string, content?: string, metadata?: Record<string, unknown>) {
     const createInteraction = async () => {
       await SummaryInteraction.create({
-        content, metadata, remoteAddr, targetId, type, userId: this.toJSON().id,
+        content, metadata, remoteAddr, targetId, type, userId: this.id,
       });
     };
     const destroy = !['comment', 'impression', 'share', 'view'].includes(type);
@@ -227,16 +236,16 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       }
       const interaction = await SummaryInteraction.findOne({
         where: {
-          targetId, type: searchType, userId: this.toJSON().id,
+          targetId, type: searchType, userId: this.id,
         }, 
       });
       if (interaction) {
         await SummaryInteraction.destroy({
           where: {
-            targetId, type: searchType, userId: this.toJSON().id, 
+            targetId, type: searchType, userId: this.id, 
           },
         });
-        const create = ((type === 'downvote' || type === 'upvote') && interaction.toJSON().type !== type) || type === 'view';
+        const create = ((type === 'downvote' || type === 'upvote') && interaction.type !== type) || type === 'view';
         if (create) {
           await createInteraction();
         }
