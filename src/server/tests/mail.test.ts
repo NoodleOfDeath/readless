@@ -17,7 +17,7 @@ describe('tests mail service', () => {
       from: process.env.MAIL_REPLY_TO,
       subject: 'test',
       text: 'test',
-      to: 'thommy.morgan@gmail.com',
+      to: 'thom@readless.ai',
     });
     expect(true).toBe(true);
   });
