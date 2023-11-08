@@ -39,6 +39,7 @@ export function orderByToItems(orderBy: string | string[]): OrderItem[] {
 export * from './system/Query.types';
 export * from './system/RateLimit.types';
 export * from './system/Cache.types';
+export * from './system/log/SystemLog.types';
 export * from './system/service/Service.types';
 export * from './system/service/ServiceStatus.types';
 export * from './system/message/Message.types';

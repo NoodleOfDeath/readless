@@ -3,7 +3,6 @@ import ms from 'ms';
 import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
   Loot,
-  MailService,
   OpenAIService,
   Prompt,
   PuppeteerError,
@@ -18,6 +17,7 @@ import {
   Subscription,
   Summary,
   SummaryMedia,
+  SystemLog,
 } from '../../api/v1/schema';
 import { BaseService } from '../base';
 
@@ -43,16 +43,14 @@ export class ScribeService extends BaseService {
     await SentimentMethod.prepare();
   }
 
-  public static async error(subject: string, text = subject, throws = true): Promise<void> {
-    console.log(subject);
-    await new MailService().sendMail({
-      from: 'debug@readless.ai',
-      subject,
-      text,
-      to: 'debug@readless.ai',
+  public static async error(message: string, throws = true): Promise<void> {
+    console.log(message);
+    await SystemLog.create({
+      level: 'error',
+      message,
     });
     if (throws === true) {
-      throw new Error(subject);
+      throw new Error(message);
     }
   }
   
@@ -86,10 +84,10 @@ export class ScribeService extends BaseService {
     } catch (e) {
       if (e instanceof PuppeteerError) {
         if (e.status === 403) {
-          await this.error('Bad response', [url, e.message].join('\n\n'), false);
+          await this.error(['Bad response', url, e.message].join('\n\n'), false);
         } else
         if (e.status === 404) {
-          await this.error('Page not found', [url, e.message].join('\n\n'), false);
+          await this.error(['Page not found', url, e.message].join('\n\n'), false);
         }
       }
       throw e;
@@ -113,16 +111,16 @@ export class ScribeService extends BaseService {
       loot.content = abbreviate(loot.content, MAX_OPENAI_TOKEN_COUNT);
     }
     if (loot.content.split(' ').length < MIN_TOKEN_COUNT) {
-      await this.error('Article too short', [url, loot.content].join('\n\n'));
+      await this.error(['Article too short', url, loot.content].join('\n\n'));
     }
     if (!loot.date || Number.isNaN(loot.date.valueOf())) {
-      await this.error('Invalid date found', [url, JSON.stringify(publisher.selectors.date), loot.dateMatches.join('\n-----\n'), loot.content].join('\n\n'));
+      await this.error(['Invalid date found', url, JSON.stringify(publisher.selectors.date), loot.dateMatches.join('\n-----\n'), loot.content].join('\n\n'));
     }
     if (Date.now() - loot.date.valueOf() > ms(OLD_NEWS_THRESHOLD)) {
       throw new Error(`${loot.date} -- News is older than ${OLD_NEWS_THRESHOLD}`);
     }
     if (loot.date > new Date(Date.now() + ms('3h'))) {
-      await this.error('News is from the future', [url, loot.date.toISOString()].join('\n\n'));
+      await this.error(['News is from the future', url, loot.date.toISOString()].join('\n\n'));
     }
     while (loot.date > new Date()) {
       loot.date = new Date(loot.date.valueOf() - ms('1h'));
@@ -157,7 +155,7 @@ export class ScribeService extends BaseService {
             .replace(/\.$/, '')
             .trim();
           if (!this.categories.some((c) => new RegExp(`^${c}$`, 'i').test(categoryDisplayName))) {
-            await this.error('Bad category', [url, categoryDisplayName, reply].join('\n\n'));
+            await this.error(['Bad category', url, categoryDisplayName, reply].join('\n\n'));
           }
         },
         text: `Please select a best category for this article from the following choices: ${this.categories.join(',')}. Respond with only the category name`,
@@ -165,7 +163,7 @@ export class ScribeService extends BaseService {
       {
         handleReply: async (reply) => { 
           if (reply.split(' ').length > 15) {
-            await this.error('Title too long', `Title too long for ${url}\n\n${reply}`);
+            await this.error(`Title too long for ${url}\n\n${reply}`);
           }
           newSummary.title = reply;
         },
@@ -176,7 +174,7 @@ export class ScribeService extends BaseService {
       {
         handleReply: async (reply) => { 
           if (reply.split(' ').length > 40) {
-            await this.error('Short summary too long', `Short summary too long for ${url}\n\n${reply}`);
+            await this.error(`Short summary too long for ${url}\n\n${reply}`);
           }
           newSummary.shortSummary = reply;
         },
@@ -187,7 +185,7 @@ export class ScribeService extends BaseService {
       {
         handleReply: async (reply) => { 
           if (reply.split(' ').length > 120) {
-            await this.error('Summary too long', `Summary too long for ${url}\n\n${reply}`);
+            await this.error(`Summary too long for ${url}\n\n${reply}`);
           }
           newSummary.summary = reply;
         },
@@ -223,7 +221,7 @@ export class ScribeService extends BaseService {
         // attempt single retry
         reply = await chatService.send(prompt.text);
         if (BAD_RESPONSE_EXPR.test(reply)) {
-          await this.error('Bad response from chatService', ['--repl--', reply, '--prompt--', prompt.text].join('\n'));
+          await this.error(['Bad response from chatService', '--repl--', reply, '--prompt--', prompt.text].join('\n'));
         }
       }
       try {
@@ -281,7 +279,7 @@ export class ScribeService extends BaseService {
             }
             imageCount++;
           } catch (e) {
-            await this.error('Failed to download image', [loot.imageUrls, JSON.stringify(e)].join('\n\n'), false);
+            await this.error(['Failed to download image', loot.imageUrls, JSON.stringify(e)].join('\n\n'), false);
           }
         }
       } else {
@@ -341,7 +339,7 @@ export class ScribeService extends BaseService {
       return summary;
       
     } catch (e) {
-      await this.error('😤 Unexpected Error Encountered', [url, JSON.stringify(e), JSON.stringify(newSummary, null, 2)].join('\n\n'));
+      await this.error(['😤 Unexpected Error Encountered', url, JSON.stringify(e), JSON.stringify(newSummary, null, 2)].join('\n\n'));
     }
     
   }
@@ -414,7 +412,7 @@ export class ScribeService extends BaseService {
           // attempt single retry
           reply = await chatService.send(prompt.text);
           if (BAD_RESPONSE_EXPR.test(reply)) {
-            await this.error('Bad response from chatService', ['--repl--', reply, '--prompt--', prompt.text].join('\n'));
+            await this.error(['Bad response from chatService', '--repl--', reply, '--prompt--', prompt.text].join('\n'));
           }
         }
         try {
