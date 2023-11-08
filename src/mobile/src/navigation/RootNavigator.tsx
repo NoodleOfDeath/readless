@@ -3,7 +3,7 @@ import { DeviceEventEmitter, Platform } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import ms from 'ms';
-import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
+import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
 import {
   DefaultTheme,
@@ -12,6 +12,8 @@ import {
 } from 'react-native-paper';
 
 import { LeftDrawerNavigator } from './LeftDrawerNavigator';
+import { StackNavigator } from './StackNavigator';
+import { LOGIN_STACK } from './stacks';
 
 import {
   ActivityIndicator,
@@ -41,11 +43,11 @@ export function RootNavigator() {
     publishers,
     setCategories, 
     setPublishers,
-    hasViewedFeature,
     lastRequestForReview = 0,
     readSummaries,
     pushNotificationsEnabled,
     setStoredValue,
+    userData,
   } = React.useContext(StorageContext);   
   const {
     isTablet,
@@ -60,7 +62,6 @@ export function RootNavigator() {
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
 
   const [showedReview, setShowedReview] = React.useState(false);
-  const [alreadyShowedOnboarding, setAlreadyShowedOnboarding] = React.useState(false);
 
   React.useEffect(() => {
     if (!ready) {
@@ -144,39 +145,38 @@ export function RootNavigator() {
       });
     }
   }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers]);
-  
-  React.useEffect(() => {
-    if (!ready) {
-      return;
-    }
-    if (lastFetchFailed && (lastFetch < Date.now() - ms('10s'))) {
-      setTimeout(refreshSources, ms('10s'));
-    } else {
-      refreshSources();
-    }
-    if (!hasViewedFeature('onboarding-walkthrough')) {
-      if (alreadyShowedOnboarding) {
-        return;
-      }
-      SheetManager.show('onboarding-walkthrough');
-      setAlreadyShowedOnboarding(true);
-    }
-  }, [hasViewedFeature, ready, refreshSources, lastFetchFailed, lastFetch, alreadyShowedOnboarding]);
+
+  React.useEffect(() => refreshSources(), [refreshSources]);
   
   const currentTheme = React.useMemo(() => theme.isDarkMode ? MD3DarkTheme : DefaultTheme, [theme.isDarkMode]);
 
-  return !ready ? (
-    <Screen>
-      <ActivityIndicator />
-    </Screen>
-  ) : (
+  if (!ready) {
+    return (
+      <Screen>
+        <ActivityIndicator />
+      </Screen>
+    );
+  }
+   
+  return (
     <NavigationContainer
       theme= { theme.navContainerTheme }
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          <LeftDrawerNavigator />
-          <MediaPlayer visible={ Boolean(currentTrack) } />
+          {userData ? (
+            <React.Fragment>
+              <LeftDrawerNavigator />
+              <MediaPlayer visible={ Boolean(currentTrack) } />
+            </React.Fragment>
+          ) : (
+            <Screen>
+              <StackNavigator
+                id="loginStackNav" 
+                screens={ LOGIN_STACK }
+                screenOptions={ { headerShown: false } } />
+            </Screen>
+          )}
         </SheetProvider>
       </PaperProvider>
     </NavigationContainer>

@@ -3,6 +3,8 @@ export * from './types';
 export * from './home';
 export * from './settings';
 export * from './games';
+export * from './profile';
+export * from './login';
 
 export * from './BookmarksScreen';
 export * from './CategoryScreen';

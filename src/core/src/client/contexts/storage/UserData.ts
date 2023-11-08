@@ -1,17 +1,13 @@
-import { JwtTokenResponse } from '~/api';
+import { LoginResponse, WrappedJwt } from '~/api';
 
-export type UserDataProps = {
-  userId: number;
-  isLoggedIn?: boolean;
-  token?: JwtTokenResponse;
-  tokens?: JwtTokenResponse | JwtTokenResponse[];
+export type UserDataProps = LoginResponse & {
+  tokens?: WrappedJwt | WrappedJwt[];
 };
 
 export class UserData implements UserDataProps {
 
   userId: number;
-  isLoggedIn?: boolean;
-  tokens: JwtTokenResponse[];
+  tokens: WrappedJwt[] = [];
 
   get token() {
     if (this.tokens.length === 0) {
@@ -21,14 +17,14 @@ export class UserData implements UserDataProps {
   }
 
   get tokenString() {
-    return this.token?.value;
+    return this.token?.signed;
   }
 
   get expired() {
     return this.tokens.length > 0 && this.tokens.every((t) => UserData.tokenHasExpired(t));
   }
   
-  static tokenHasExpired(token: JwtTokenResponse) {
+  static tokenHasExpired(token: WrappedJwt) {
     return token.expiresAt < Date.now();
   }
 
@@ -36,14 +32,12 @@ export class UserData implements UserDataProps {
     userId, 
     token, 
     tokens = token ? [token] : [],
-    isLoggedIn = false, 
   }: UserDataProps) {
     this.userId = userId;
     this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
-    this.isLoggedIn = isLoggedIn;
   }
   
-  addToken(token: JwtTokenResponse) {
+  addToken(token: WrappedJwt) {
     this.tokens = [...this.tokens, token].filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
   }
 

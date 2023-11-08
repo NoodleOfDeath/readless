@@ -16,9 +16,29 @@ export type NavigationID = `${string}StackNav` | `${string}TabNav` | `${string}D
 export type NavigationTabParams = {
   news: undefined;
   games: undefined;
+  profile: undefined;
 };
 
-export type NewsRoutingParams = {
+export type LoginRoutingParams = {
+  login: undefined;
+  passwordLogin: undefined;
+  register: undefined;
+};
+
+export type SettingsRoutingParams = {
+  // settings and pickers
+  settings: undefined;
+  notifications: undefined;
+  colorSchemePicker: undefined;
+  fontPicker: undefined;
+  publisherPicker: undefined;
+  categoryPicker: undefined;
+  shortPressFormatPicker: undefined;
+  readingFormatPicker: undefined;
+  triggerWordPicker: undefined;
+};
+
+export type NewsRoutingParams = SettingsRoutingParams & {
   // main
   default: undefined;
   home: undefined;
@@ -49,16 +69,6 @@ export type NewsRoutingParams = {
     summary: PublicSummaryGroup | number;
     showAnalytics?: boolean;
   };
-  // settings and pickers
-  settings: undefined;
-  notifications: undefined;
-  colorSchemePicker: undefined;
-  fontPicker: undefined;
-  publisherPicker: undefined;
-  categoryPicker: undefined;
-  shortPressFormatPicker: undefined;
-  readingFormatPicker: undefined;
-  triggerWordPicker: undefined;
   // other
   stats: undefined;
   test: undefined;
@@ -71,7 +81,11 @@ export type GamesRoutingParams = {
   }
 };
 
-export type RoutingParams = NavigationTabParams & NewsRoutingParams & GamesRoutingParams;
+export type ProfileRoutingParams = SettingsRoutingParams & {
+  default: undefined;
+};
+
+export type RoutingParams = NavigationTabParams & LoginRoutingParams & NewsRoutingParams & GamesRoutingParams & ProfileRoutingParams;
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   config: {

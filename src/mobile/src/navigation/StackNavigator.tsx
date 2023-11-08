@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {
+  DefaultNavigatorOptions,
   EventMapBase,
   NavigationState,
-  ParamListBase,
   RouteConfig,
 } from '@react-navigation/native';
 import {
@@ -245,9 +245,14 @@ export const STACK_SCREENS: RouteConfig<
 
 const Stack = createNativeStackNavigator();
 
-export type StackNavigatorProps<T> = {
+export type StackNavigatorProps = 
+Omit<DefaultNavigatorOptions<
+  RoutingParams,
+  NavigationState,
+  NativeStackNavigationOptions,
+  EventMapBase
+>, 'children'> & {
   id: NavigationID;
-  initialRouteName?: keyof T;
   screens: RouteConfig<
     RoutingParams,
     keyof RoutingParams,
@@ -257,17 +262,23 @@ export type StackNavigatorProps<T> = {
   >[];
 };
 
-export function StackNavigator<R extends ParamListBase>(
+export function StackNavigator(
   { 
     id,
     initialRouteName = 'default',
+    screenListeners,
+    screenOptions,
     screens,
-  }: StackNavigatorProps<R>
+  }: StackNavigatorProps
 ) {
   return (
     <Stack.Navigator 
       id={ id }
-      initialRouteName={ initialRouteName as string }>
+      initialRouteName={ initialRouteName }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      screenListeners={ screenListeners as any }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      screenOptions={ screenOptions as any }>
       {screens.map((screen) => (
         <Stack.Screen
           key={ String(screen.name) }
