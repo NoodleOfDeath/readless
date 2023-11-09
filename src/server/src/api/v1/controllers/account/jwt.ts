@@ -29,7 +29,7 @@ export type WrappedJwt = {
 };
 
 export type JwtRequest = {
-  token?: WrappedJwt;
+  jwt?: string;
 };
 
 export type JwtResponse = {
@@ -103,7 +103,7 @@ export class JWT implements JsonWebToken {
     try {
       if (typeof opts === 'string') {
         const { 
-          userId, 
+          userId,
           scope, 
           priority,
           createdAt,
@@ -150,6 +150,7 @@ export class JWT implements JsonWebToken {
         }, process.env.JWT_SECRET, { expiresIn: this.expiresIn });
       } 
     } catch (e) {
+      console.log(e);
       throw new AuthError('INVALID_CREDENTIALS');
     }
   }

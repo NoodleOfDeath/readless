@@ -5,6 +5,8 @@ export type Profile = {
   emails?: string[];
   username?: string;
   firstName?: string;
+  lastName?: string;
+  preferences?: { [key: string]: unknown };
 };
 
 export type UserAttributes = DatedAttributes & {

@@ -13,6 +13,7 @@ import {
   Role,
   Summary,
   SummaryInteraction,
+  UserMetadata,
 } from '../models';
 import {
   AliasCreationAttributes,
@@ -42,8 +43,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   /** Resolves a user from an alias request/payload */
   public static async from(req: Partial<AliasPayload>, opts?: Partial<FindAliasOptions>) {
-    if (req.userId) {
-      const user = await User.findOne({ where: { id: req.userId ?? req.token?.userId } });
+    if (req.userId || req.jwt) {
+      const id = req.userId ?? new JWT(req.jwt).userId;
+      const user = await User.findOne({ where: { id } });
       if (!user && !opts?.ignoreIfNotResolved) {
         if (!opts?.ignoreIfNotResolved) {
           throw new AuthError('INVALID_CREDENTIALS');
@@ -78,10 +80,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     });
   }
   
-  public async findAliases(type: AliasType, ...other: AliasType[]) {
+  public async findAliases(...types: AliasType[]) {
+    if (types.length === 0) {
+      return await Alias.findAll({ where: { userId: this.id } });
+    }
     return await Alias.findAll({ 
       where: {
-        type: { [Op.in]: [type, ...other] },
+        type: { [Op.in]: types },
         userId: this.id,
       },
     });
@@ -204,6 +209,39 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }
     const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.id } });
     return count;
+  }
+
+  // profile
+
+  public async sync() {
+    const aliases = await this.findAliases('email');
+    if (aliases.length === 0) {
+      throw new AuthError('UNKNOWN_ALIAS');
+    }
+    const profile: Profile = {
+      email: aliases.sort((a, b) => a.priority - b.priority)[0].value,
+      emails: aliases.map((a) => a.value),
+      preferences: Object.fromEntries((await UserMetadata.findAll({ where: { userId: this.id } })).map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value])),
+      username: (await this.findAlias('username'))?.value,
+    };
+    this.set('profile', profile, { raw: true });
+  }
+
+  public async setMetadata(key: string, value: Record<string, unknown> | string) {
+    if (await UserMetadata.findOne({ where: { key, userId: this.id } })) {
+      await UserMetadata.update({ value }, {
+        where: {
+          key, 
+          userId: this.id, 
+        },
+      });
+    } else {
+      await UserMetadata.create({
+        key, 
+        userId: this.id, 
+        value,
+      });
+    }
   }
 
   // summary methods

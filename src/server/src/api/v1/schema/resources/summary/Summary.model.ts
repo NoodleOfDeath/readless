@@ -290,7 +290,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     
     const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
     const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
-    const idArray = typeof ids === 'number' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
+    const idArray = typeof ids === 'number' || typeof ids === 'string' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
     const interval = (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval0 ?? '100y');
     
     const replacements = {

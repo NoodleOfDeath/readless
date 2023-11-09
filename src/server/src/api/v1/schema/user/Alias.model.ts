@@ -6,6 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
+import { JWT } from './../../controllers/account/jwt';
 import {
   ALIAS_TYPES,
   AliasAttributes,
@@ -59,6 +60,12 @@ export class Alias<
     type: DataType.STRING(2083),
   })
   declare value: string;
+  
+  @Column({
+    defaultValue: 0, 
+    type: DataType.INTEGER,
+  })
+  declare priority: number;
 
   @Index({
     name: 'aliases_verificationCode_unique_key',
@@ -90,6 +97,19 @@ export class Alias<
   }
     
   public static async from(req: Partial<AliasPayload>, opts?: FindAliasOptions): Promise<{alias: Alias, payload: AliasPayload, otp?: Credential}> {
+    if (req.jwt) {
+      const jwt = new JWT(req.jwt);
+      const { userId } = jwt;
+      const alias = await Alias.findOne({ where: { userId } });
+      return {
+        alias,
+        payload: {
+          type: 'jwt',
+          value: req.jwt,
+          ...jwt,
+        },
+      };
+    }
     const payload = Alias.parsePayload(req);
     if (payload.type === 'thirdParty' && typeof payload.value === 'object') {
       if (payload.value.name === 'google') {

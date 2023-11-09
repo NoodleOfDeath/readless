@@ -9,15 +9,19 @@ import { DestructuredCredentialPayload } from '../../schema/user/Credential.type
 
 export * from './jwt';
 
+export type ProfileRequest = JwtRequest;
+
+export type ProfileResponse = {
+  profile: Profile;
+};
+
 export type LoginRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
   createIfNotExists?: boolean;
   requestedRole?: string;
   requestedScope?: string[];
 };
 
-export type LoginResponse = JwtResponse & {
-  profile?: Profile;
-};
+export type LoginResponse = JwtResponse & ProfileResponse;
 
 export type LogoutRequest = JwtRequest & {
   force?: boolean;
@@ -55,8 +59,16 @@ export type VerifyOTPResponse = {
   userId: number;
 };
 
-export type UpdateCredentialRequest = {
-  userId: number;
+export type UpdateMetadataRequest = JwtRequest & {
+  key: string;
+  value: Record<string, unknown>;
+};
+
+export type UpdateMetadataResponse = {
+  success: boolean;
+};
+
+export type UpdateCredentialRequest = JwtRequest & {
   password: string;
 };
 

@@ -43,6 +43,6 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
     allowNull: false,
     type: DataType.JSON,
   })
-    value: Record<string, unknown>;
+  declare value: Record<string, unknown> | string;
 
 }

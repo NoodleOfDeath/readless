@@ -111,6 +111,34 @@ router.post(
   }
 );
 
+router.get(
+  '/profile',
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.getProfile(req);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.patch(
+  '/update/metadata',
+  body('key').isString(),
+  body('value').isString(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.updateMetadata(req, req.body);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
 router.put(
   '/update/credential', 
   rateLimitMiddleware('10 per 15m'),

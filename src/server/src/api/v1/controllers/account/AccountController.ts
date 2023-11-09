@@ -4,6 +4,8 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 import {
   Body,
+  Get,
+  Patch,
   Post,
   Put,
   Request,
@@ -22,10 +24,13 @@ import {
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
+  ProfileResponse,
   RegistrationRequest,
   RegistrationResponse,
   UpdateCredentialRequest,
   UpdateCredentialResponse,
+  UpdateMetadataRequest,
+  UpdateMetadataResponse,
   VerifyAliasRequest,
   VerifyAliasResponse,
   VerifyOTPRequest,
@@ -83,7 +88,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: RegistrationRequest
   ): Promise<RegistrationResponse> {
-    if (body.token || body.userId) {
+    if (body.jwt || body.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
     const { payload, user } = await User.from(body, { ignoreIfNotResolved: true });
@@ -161,7 +166,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: LoginRequest
   ): Promise<LoginResponse> {
-    if (body.userId) {
+    if (body.jwt || body.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
     const ticket = await User.from(body, { ignoreIfNotResolved: body.createIfNotExists });
@@ -191,6 +196,7 @@ export class AccountController {
       }
     }
     // user is authenticated, generate JWT
+    await user.sync();
     const userData = user.toJSON();
     const token = await JWT.as(body.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
@@ -201,23 +207,35 @@ export class AccountController {
     };
   }
 
+  @Get('/profile')
+  @Security('jwt', ['standard:read'])
+  public static async getProfile(
+    @Request() req: ExpressRequest
+  ): Promise<ProfileResponse> {
+    const { user } = await User.from({ jwt: req.body.token });
+    await user.sync();
+    const userData = user.toJSON();
+    return { profile: userData.profile };
+  }
+
   @Post('/logout')
   public static async logout(
     @Request() req: ExpressRequest,
     @Body() body: LogoutRequest
   ): Promise<LogoutResponse> {
     let count = 0;
-    if (body.token) {
+    if (body.jwt) {
+      const token = new JWT(body.jwt);
       count += await Credential.destroy({
         where: {
           type: 'jwt',
-          userId: body.token?.userId,
-          value: body.token,
+          userId: token.userId,
+          value: body.jwt,
         },
       });
-    }
-    if (body.force) {
-      count += await Credential.destroy({ where: { userId: body.token?.userId } });
+      if (body.force) {
+        count += await Credential.destroy({ where: { userId: token.userId } });
+      }
     }
     return { count, success: true };
   }
@@ -294,6 +312,17 @@ export class AccountController {
       token: token.wrapped,
       userId: userData.id,
     };
+  }
+
+  @Patch('/update/metadata')
+  @Security('jwt', ['standard:write'])
+  public static async updateMetadata(
+    @Request() req: ExpressRequest,
+    @Body() body: UpdateMetadataRequest
+  ): Promise<UpdateMetadataResponse> {
+    const { user } = await User.from({ jwt: req.body.token });
+    await user.setMetadata(body.key, body.value);
+    return { success: true };
   }
   
   @Put('/update/credential')
