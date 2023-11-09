@@ -21,14 +21,14 @@ export function LoginScreen({
   navigation, 
 }: ScreenComponent<'login'>) {
 
-  const { setStoredValue } = React.useContext(StorageContext);
+  const { setStoredValue, resetStorage } = React.useContext(StorageContext);
   const { login } = useApiClient();
 
   const signInWithGoogle = React.useCallback(async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const userData = await GoogleSignin.signIn();
-      const { idToken, user: { id: userId } } = userData as GoogleUser;
+      const user = await GoogleSignin.signIn();
+      const { idToken, user: { id: userId } } = user as GoogleUser;
       if (!idToken || !userId) {
         throw new Error('Missing data');
       }
@@ -40,11 +40,17 @@ export function LoginScreen({
           userId, 
         },
       });
-      setStoredValue('userData', new UserData(response));
+      const userData = new UserData(response);
+      setStoredValue('userData', userData);
+      setStoredValue('readSummaries', userData.profile?.preferences?.readSummaries ?? {});
     } catch (error) {
       console.error(error);
     }
   }, [login, setStoredValue]);
+
+  React.useEffect(() => {
+    resetStorage();
+  }, [resetStorage]);
 
   return (
     <Screen>

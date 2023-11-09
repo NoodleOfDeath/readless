@@ -11,11 +11,6 @@ import { SETTINGS_STACK } from './SettingsStack';
 
 import { strings } from '~/locales';
 import {
-  DrawerToggleWithIndicator,
-  SearchMenu,
-  SettingsToggleWithIndicator,
-} from '~/navigation';
-import {
   BookmarksScreen,
   CategoryScreen,
   HomeScreen,
@@ -26,6 +21,11 @@ import {
   StatsScreen,
   SummaryScreen,
   TestScreen,
+} from '~/screens';
+import {
+  DrawerToggleWithIndicator,
+  SearchMenu,
+  SettingsToggleWithIndicator,
 } from '~/screens';
 
 export const NEWS_STACK: RouteConfig<

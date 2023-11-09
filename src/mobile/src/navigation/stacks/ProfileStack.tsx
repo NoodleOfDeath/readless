@@ -8,12 +8,12 @@ import {
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { strings } from '~/locales';
-import { SettingsToggleWithIndicator } from '~/navigation';
 import {
   ProfileScreen,
   RoutingParams,
   SettingsScreen,
 } from '~/screens';
+import { SettingsToggleWithIndicator } from '~/screens';
 
 export const PROFILE_STACK: RouteConfig<
   RoutingParams,
@@ -28,6 +28,7 @@ export const PROFILE_STACK: RouteConfig<
     options: {
       headerBackTitle: '',
       headerRight: () => <SettingsToggleWithIndicator />, 
+      headerTitle: strings.screens_profile,
     },
   },
   {

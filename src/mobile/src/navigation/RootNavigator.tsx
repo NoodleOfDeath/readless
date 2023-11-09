@@ -11,8 +11,8 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 
-import { LeftDrawerNavigator } from './LeftDrawerNavigator';
 import { StackNavigator } from './StackNavigator';
+import { TabbedNavigator } from './TabbedNavigator';
 import { LOGIN_STACK } from './stacks';
 
 import {
@@ -25,18 +25,40 @@ import {
   MediaContext,
   NotificationContext,
   OrientationType,
+  Storage,
   StorageContext,
 } from '~/contexts';
 import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
+const SYNCABLE_KEYS: (keyof Storage)[] = [
+  'followedPublishers',
+  'favoritedPublishers',
+  'favoritedCategories',
+  'followedCategories',
+  'readSummaries',
+] as const;
+
+type SyncableKey = typeof SYNCABLE_KEYS[number];
+
+const SYNC_TRANSFORMATIONS: { [key in SyncableKey]?: ((value?: Storage[key]) => string) } = {
+  favoritedCategories: (value) => JSON.stringify(Object.keys(value ?? {})),
+  favoritedPublishers: (value) => JSON.stringify(Object.keys(value ?? {})),
+  followedCategories: (value) => JSON.stringify(Object.keys(value ?? {})),
+  followedPublishers: (value) => JSON.stringify(Object.keys(value ?? {})),
+  readSummaries: (value) => JSON.stringify(value),
+};
+
 export function RootNavigator() {
   
   const { emitEvent } = usePlatformTools();
   const theme = useTheme();
-  const { getCategories, getPublishers } = useApiClient();
+  const {
+    getCategories, getPublishers, updateMetadata, getProfile,
+  } = useApiClient();
   
+  const storage = React.useContext(StorageContext);
   const {
     ready, 
     categories,
@@ -48,7 +70,7 @@ export function RootNavigator() {
     pushNotificationsEnabled,
     setStoredValue,
     userData,
-  } = React.useContext(StorageContext);   
+  } = storage;
   const {
     isTablet,
     lockRotation,
@@ -60,13 +82,56 @@ export function RootNavigator() {
   
   const [lastFetch, setLastFetch] = React.useState(0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
+  const [hasSyncedPrefs, setHasSyncedPrefs] = React.useState(false);
 
   const [showedReview, setShowedReview] = React.useState(false);
+
+  const onPrefsChanged = React.useCallback((key: keyof Storage) => {
+    if (!SYNCABLE_KEYS.includes(key)) {
+      return;
+    }
+    const rawValue = storage[key];
+    const trans = SYNC_TRANSFORMATIONS[key] as ((value?: Storage[typeof key]) => string) | undefined;
+    const value = trans?.(rawValue);
+    updateMetadata({ 
+      key, 
+      value: value as unknown as object,
+    });
+  }, [storage, updateMetadata]);
+
+  const syncPrefs = React.useCallback(async() => {
+    if (!userData) {
+      return;
+    }
+    const { data, error } = await getProfile();
+    if (error) {
+      console.error(error);
+      return;
+    }
+    const { profile } = data;
+    if (!profile) {
+      return;
+    }
+    console.log('syncing prefs');
+    for (const key of SYNCABLE_KEYS) {
+      const remoteValue = profile.preferences?.[key];
+      console.log('updating', key, remoteValue);
+      if (key === 'readSummaries') {
+        setStoredValue(key, JSON.parse(remoteValue), false);
+      }
+    }
+  }, [getProfile, setStoredValue, userData]);
 
   React.useEffect(() => {
     if (!ready) {
       return;
     }
+
+    if (!hasSyncedPrefs) {
+      setHasSyncedPrefs(true);
+      syncPrefs();
+    }
+
     if (!isTablet) {
       lockRotation(OrientationType.PORTRAIT);
     } else {
@@ -75,6 +140,7 @@ export function RootNavigator() {
     if (pushNotificationsEnabled !== false && !isRegisteredForRemoteNotifications()) {
       registerRemoteNotifications();
     }
+
     if (!showedReview && 
       (Date.now() - lastRequestForReview > ms('2w') && 
       (Object.keys({ ...readSummaries }).length > 2))) {
@@ -109,18 +175,29 @@ export function RootNavigator() {
       const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
       const reviewHandlerE = DeviceEventEmitter.addListener('read-recap', inAppReviewHandler);
 
+      const prefHandler = DeviceEventEmitter.addListener('set-preference', onPrefsChanged);
+
       return () => {
         reviewHandlerA.remove();
         reviewHandlerB.remove();
         reviewHandlerC.remove();
         reviewHandlerD.remove();
         reviewHandlerE.remove();
+        prefHandler.remove();
       };
 
+    } else {
+      const prefHandler = DeviceEventEmitter.addListener('set-preference', onPrefsChanged);
+      return () => {
+        prefHandler.remove();
+      };
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, onPrefsChanged, syncPrefs, hasSyncedPrefs]);
   
   const refreshSources = React.useCallback(() => {
+    if (!userData) {
+      return;
+    }
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
       return;
     }
@@ -144,7 +221,7 @@ export function RootNavigator() {
         setLastFetch(Date.now());
       });
     }
-  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers]);
+  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers, userData]);
 
   React.useEffect(() => refreshSources(), [refreshSources]);
   
@@ -166,7 +243,7 @@ export function RootNavigator() {
         <SheetProvider>
           {userData ? (
             <React.Fragment>
-              <LeftDrawerNavigator />
+              <TabbedNavigator />
               <MediaPlayer visible={ Boolean(currentTrack) } />
             </React.Fragment>
           ) : (

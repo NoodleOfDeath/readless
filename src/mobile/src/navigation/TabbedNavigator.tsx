@@ -30,7 +30,7 @@ function ProfileStack() {
   );
 }
 
-function GamesStack() {
+function _GamesStack() {
   return (
     <RoutedScreen safeArea={ false } navigationID='gamesStackNav'>
       <StackNavigator id="gamesStackNav" screens={ GAMES_STACK } />

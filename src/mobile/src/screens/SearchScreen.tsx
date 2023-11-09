@@ -2,8 +2,8 @@ import React from 'react';
 
 import { SummaryList } from '~/components';
 import { useApiClient } from '~/hooks';
-import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
+import { RoutedScreen } from '~/screens';
 
 export function SearchScreen({ 
   route,

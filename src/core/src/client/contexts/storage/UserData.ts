@@ -1,4 +1,8 @@
-import { LoginResponse, WrappedJwt } from '~/api';
+import {
+  LoginResponse,
+  Profile,
+  WrappedJwt,
+} from '~/api';
 
 export type UserDataProps = LoginResponse & {
   tokens?: WrappedJwt | WrappedJwt[];
@@ -8,6 +12,7 @@ export class UserData implements UserDataProps {
 
   userId: number;
   tokens: WrappedJwt[] = [];
+  profile?: Profile;
 
   get token() {
     if (this.tokens.length === 0) {
@@ -32,9 +37,11 @@ export class UserData implements UserDataProps {
     userId, 
     token, 
     tokens = token ? [token] : [],
+    profile,
   }: UserDataProps) {
     this.userId = userId;
     this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
+    this.profile = profile;
   }
   
   addToken(token: WrappedJwt) {

@@ -6,7 +6,6 @@ import {
   TableView,
   TableViewCell,
   TableViewSection,
-  Text,
 } from '~/components';
 import { StorageContext } from '~/contexts';
 
@@ -21,16 +20,14 @@ export function ProfileScreen() {
           <TableViewSection>
             <TableViewCell 
               bold
-              cellAccessoryView={ (
-                <Text>
-                  {JSON.stringify(userData, null, 2)}
-                </Text>
-              ) } />
+              title={ userData?.profile?.email } />
+          </TableViewSection>
+          <TableViewSection>
             <TableViewCell
               bold
               title={ 'Sign Out' }
               onPress={ () => {
-                setStoredValue('userData');
+                setStoredValue('userData'); 
               } } />
           </TableViewSection>
         </TableView>

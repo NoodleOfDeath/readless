@@ -72,7 +72,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     const serialize = (key: K, value: Storage[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
       const isCorrectType = type === 'array' ? Array.isArray(value) : typeof value === type;
       if (!isCorrectType) {
-        setStoredValue(key, undefined, false);
+        setStoredValue(key, undefined);
         return undefined;
       }
       return value;
@@ -103,7 +103,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         setItem(key, JSON.stringify(newValue));
       }
       if (emit) {
-        emitEvent('set-preference');
+        emitEvent('set-preference', key);
       }
       return (prev = state);
     });
@@ -118,7 +118,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev } as State;
       state[item.id] = translations;
       return (prev = state);
-    }, false);
+    });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,7 +153,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         delete newState[type];
       }
       return (prev = newState);
-    }, false);
+    });
   };
   
   const hasViewedFeature = React.useCallback((...features: string[]) => {
@@ -169,7 +169,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         delete newState[feature];
       }
       return (prev = newState);
-    }, false);
+    });
   };
   
   // summary functions
@@ -182,11 +182,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('unbookmark-summary', summary, state);
       } else {
         state[summary.id] = new DatedEvent(summary);
-        viewFeature('unread-bookmarks', false);
+        viewFeature('unread-bookmarks');
         emitEvent('bookmark-summary', summary, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const readSummary = async (summary: PublicSummaryGroup, force = false) => {
@@ -200,7 +200,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('read-summary', summary, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const removeSummary = async (summary: PublicSummaryGroup) => {
@@ -214,7 +214,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('hide-summary', summary, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   // recap functions
@@ -230,7 +230,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('read-recap', recap, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
 
   // publisher functions
@@ -244,7 +244,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           const state = { ...prev };
           delete state[publisher.name];
           return (prev = state);
-        }, false);
+        });
         emitEvent('unfollow-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
@@ -252,11 +252,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           const state = { ...prev };
           delete state[publisher.name];
           return (prev = state);
-        }, false);
+        });
         emitEvent('follow-publisher', publisher, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.followedPublishers }), [storage.followedPublishers]);
@@ -272,7 +272,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('favorite-publisher', publisher, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const publisherIsFavorited = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.favoritedPublishers }), [storage.favoritedPublishers]);
@@ -289,11 +289,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           const state = { ...prev };
           delete state[publisher.name];
           return (prev = state);
-        }, false);
+        });
         emitEvent('exclude-publisher', publisher, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const isExcludingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.excludedPublishers }), [storage.excludedPublishers]);
@@ -309,7 +309,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           const state = { ...prev };
           delete state[category.name];
           return (prev = state);
-        }, false);
+        });
         emitEvent('unfollow-category', category, state);
       } else {
         state[category.name] = true;
@@ -317,11 +317,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           const state = { ...prev };
           delete state[category.name];
           return (prev = state);
-        }, false);
+        });
         emitEvent('follow-category', category, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.followedCategories }), [storage.followedCategories]);
@@ -337,7 +337,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitEvent('favorite-category', category, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const categoryIsFavorited = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.favoritedCategories }), [storage.favoritedCategories]);
@@ -354,11 +354,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           const state = { ...prev };
           delete state[category.name];
           return (prev = state);
-        }, false);
+        });
         emitEvent('exclude-category', category, state);
       }
       return (prev = state);
-    }, false);
+    });
   };
   
   const isExcludingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.excludedCategories }), [storage.excludedCategories]);
