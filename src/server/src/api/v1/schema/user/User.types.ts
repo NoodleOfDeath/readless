@@ -7,6 +7,7 @@ export type Profile = {
   firstName?: string;
   lastName?: string;
   preferences?: { [key: string]: unknown };
+  updatedAt?: Date;
 };
 
 export type UserAttributes = DatedAttributes & {

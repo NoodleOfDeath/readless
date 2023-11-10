@@ -218,10 +218,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (aliases.length === 0) {
       throw new AuthError('UNKNOWN_ALIAS');
     }
+    const metadata = await UserMetadata.findAll({ where: { userId: this.id } });
+    const updatedAt = new Date(Math.max(...[...aliases, ...metadata].map((m) => m.updatedAt.valueOf())));
     const profile: Profile = {
       email: aliases.sort((a, b) => a.priority - b.priority)[0].value,
       emails: aliases.map((a) => a.value),
-      preferences: Object.fromEntries((await UserMetadata.findAll({ where: { userId: this.id } })).map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value])),
+      preferences: Object.fromEntries(metadata.map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value])),
+      updatedAt,
       username: (await this.findAlias('username'))?.value,
     };
     this.set('profile', profile, { raw: true });
