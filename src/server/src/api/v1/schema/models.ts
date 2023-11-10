@@ -26,8 +26,10 @@ export * from './resources/localization/Locale.model';
 export * from './resources/sentiment/SentimentMethod.model';
 
 export * from './resources/channel/Publisher.model';
+export * from './resources/channel/PublisherInteraction.model';
 export * from './resources/channel/PublisherTranslation.model';
 export * from './resources/channel/Category.model';
+export * from './resources/channel/CategoryInteraction.model';
 export * from './resources/channel/CategoryTranslation.model';
 
 export * from './resources/summary/Summary.model';
