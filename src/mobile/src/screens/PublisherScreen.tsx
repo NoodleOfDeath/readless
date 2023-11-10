@@ -11,7 +11,6 @@ import {
 } from '~/components';
 import { ChannelIcon } from '~/components/post/ChannelIcon';
 import { StorageContext } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
 
@@ -20,14 +19,13 @@ export function PublisherScreen({
   navigation,
 }: ScreenComponent<'publisher'>) {
 
-  const { getSummaries } = useApiClient();
-
   const {
     followedPublishers,
     followPublisher,
     publishers,
     publisherIsFavorited,
     favoritePublisher,
+    api: { getSummaries },
   } = React.useContext(StorageContext);
 
   const publisher0 = React.useMemo(() => route?.params?.publisher, [route]);

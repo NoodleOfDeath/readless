@@ -9,7 +9,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { StorageContext, useApiClient } from '~/core';
+import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 import {  ScreenComponent } from '~/screens';
 
@@ -34,8 +34,7 @@ export function YourNewsTab({
   route: _route,
   navigation: _navigation,
 }: ScreenComponent<'yourNews'>) {
-  const { getSummaries } = useApiClient();
-  const { followFilter } = React.useContext(StorageContext);
+  const { followFilter, api: { getSummaries } } = React.useContext(StorageContext);
   const [filter, setFilter] = React.useState(followFilter);
   useFocusEffect(React.useCallback(() => {
     setFilter(followFilter);
@@ -54,7 +53,7 @@ export function TopStoriesTab({
   route: _route,
   navigation: _navigation,
 }: ScreenComponent<'topStories'>) {
-  const { getTopStories } = useApiClient();
+  const { api: { getTopStories } } = React.useContext(StorageContext);
   return ( 
     <SummaryList
       fancy
@@ -69,7 +68,7 @@ export function LiveFeedTab({
   route: _route,
   navigation: _navigation,
 }: ScreenComponent<'liveFeed'>) {
-  const { getSummaries } = useApiClient();
+  const { api: { getSummaries } } = React.useContext(StorageContext);
   return ( 
     <SummaryList 
       enableTts

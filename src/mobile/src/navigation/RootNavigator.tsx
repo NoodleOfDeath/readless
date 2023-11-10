@@ -25,13 +25,9 @@ import {
   MediaContext,
   NotificationContext,
   OrientationType,
-  SYNCABLE_SETTINGS,
-  Storage,
   StorageContext,
-  SyncableIoIn,
-  SyncableIoOut,
 } from '~/contexts';
-import { useApiClient, useTheme } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
@@ -39,9 +35,6 @@ export function RootNavigator() {
   
   const { emitEvent } = usePlatformTools();
   const theme = useTheme();
-  const {
-    getCategories, getPublishers, updateMetadata, getProfile,
-  } = useApiClient();
   
   const storage = React.useContext(StorageContext);
   const {
@@ -55,6 +48,9 @@ export function RootNavigator() {
     pushNotificationsEnabled,
     setStoredValue,
     userData,
+    api: {
+      getCategories, getPublishers, updateMetadata,
+    },
   } = storage;
   const {
     isTablet,
@@ -67,61 +63,8 @@ export function RootNavigator() {
   
   const [lastFetch, setLastFetch] = React.useState(0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
-  const [hasSyncedPrefs, setHasSyncedPrefs] = React.useState(false);
 
   const [showedReview, setShowedReview] = React.useState(false);
-
-  const onPrefsChanged = React.useCallback((key: keyof Storage) => {
-    if (!userData) {
-      return;
-    }
-    if (!SYNCABLE_SETTINGS.includes(key)) {
-      return;
-    }
-    const localValue = storage[key];
-    try {
-      const trans = SyncableIoOut(key);
-      const value = trans(localValue);
-      updateMetadata({ 
-        key, 
-        value: value as unknown as object,
-      });
-    } catch (e) {
-      console.log(localValue);
-      console.error(e);
-    }
-  }, [storage, updateMetadata, userData]);
-
-  const syncPrefs = React.useCallback(async() => {
-    if (!userData) {
-      return;
-    }
-    if (hasSyncedPrefs) {
-      return;
-    }
-    const { data, error } = await getProfile();
-    if (error) {
-      console.error(error);
-      return;
-    }
-    const { profile } = data;
-    if (!profile) {
-      return;
-    }
-    console.log('syncing prefs');
-    for (const key of SYNCABLE_SETTINGS) {
-      const remoteValue = profile.preferences?.[key];
-      console.log('updating', key, remoteValue);
-      try {
-        const trans = SyncableIoIn(key);
-        const value = trans(remoteValue);
-        setStoredValue(key, value, false);
-      } catch (e) {
-        console.log(remoteValue);
-        console.error(e);
-      }
-    }
-  }, [getProfile, setStoredValue, userData]);
 
   React.useEffect(() => {
     if (!ready) {
@@ -130,11 +73,6 @@ export function RootNavigator() {
 
     if (!userData) {
       return;
-    }
-
-    if (!hasSyncedPrefs) {
-      setHasSyncedPrefs(true);
-      syncPrefs();
     }
 
     if (!isTablet) {
@@ -180,24 +118,16 @@ export function RootNavigator() {
       const reviewHandlerD = DeviceEventEmitter.addListener('read-summary', inAppReviewHandler);
       const reviewHandlerE = DeviceEventEmitter.addListener('read-recap', inAppReviewHandler);
 
-      const prefHandler = DeviceEventEmitter.addListener('set-preference', onPrefsChanged);
-
       return () => {
         reviewHandlerA.remove();
         reviewHandlerB.remove();
         reviewHandlerC.remove();
         reviewHandlerD.remove();
         reviewHandlerE.remove();
-        prefHandler.remove();
       };
 
-    } else {
-      const prefHandler = DeviceEventEmitter.addListener('set-preference', onPrefsChanged);
-      return () => {
-        prefHandler.remove();
-      };
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, onPrefsChanged, syncPrefs, hasSyncedPrefs, userData]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData]);
   
   const refreshSources = React.useCallback(() => {
     if (!userData) {

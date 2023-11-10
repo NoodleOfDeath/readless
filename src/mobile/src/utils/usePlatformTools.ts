@@ -9,9 +9,9 @@ import analytics from '@react-native-firebase/analytics';
 import VersionCheck from 'react-native-version-check';
 
 import {
-  PreferenceMutation,
-  PreferenceState,
   StorageEventName,
+  StorageMutation,
+  StorageState,
 } from '~/contexts';
 import * as Localization from '~/locales';
 
@@ -29,7 +29,7 @@ export function usePlatformTools() {
     return userAgent;
   };
 
-  const emitEvent = async <E extends StorageEventName>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) => {
+  const emitEvent = async <E extends StorageEventName>(event: E, mutation?: StorageMutation<E>, state?: StorageState<E>) => {
     if (!__DEV__) {
       const version = await VersionCheck.getLatestVersion();
       if (VersionCheck.getCurrentVersion() < version) {

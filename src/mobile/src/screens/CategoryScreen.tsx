@@ -11,7 +11,6 @@ import {
 } from '~/components';
 import { ChannelIcon } from '~/components/post/ChannelIcon';
 import { StorageContext } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
 
@@ -20,14 +19,13 @@ export function CategoryScreen({
   navigation,
 }: ScreenComponent<'category'>) {
 
-  const { getSummaries } = useApiClient();
-
   const {
     categories,
     isFollowingCategory,
     followCategory,
     categoryIsFavorited,
     favoriteCategory,
+    api: { getSummaries },
   } = React.useContext(StorageContext);
 
   const category0 = React.useMemo(() => route?.params?.category, [route]);

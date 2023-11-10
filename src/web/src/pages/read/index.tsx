@@ -20,7 +20,7 @@ import {
 import Layout from '~/components/Layout';
 import Summary from '~/components/Summary';
 import { StorageContext } from '~/contexts';
-import { useApiClient, useRouter } from '~/hooks';
+import { useRouter } from '~/hooks';
 import { readingFormat } from '~/utils';
 
 type Props = {
@@ -35,9 +35,8 @@ export default function AppPage({
 
   const { replace, searchParams } = useRouter();
   const isMobile = useMediaQuery({ query: '(max-width: 762px)' });
-  const { getSummaries } = useApiClient();
 
-  const { preferredReadingFormat } = React.useContext(StorageContext);
+  const { preferredReadingFormat, api: { getSummaries } } = React.useContext(StorageContext);
   
   const initialFormat = React.useMemo(() => readingFormat(searchParams.get('f') ?? initialFormat0 ?? preferredReadingFormat ?? ReadingFormat.Bullets), [initialFormat0, preferredReadingFormat, searchParams]);
 

@@ -8,7 +8,8 @@ import {
   PROFILE_STACK,
 } from './stacks';
 
-import { Icon } from '~/components';
+import { Button, Icon } from '~/components';
+import { StorageContext } from '~/core';
 import { RoutedScreen, StackNavigator } from '~/navigation';
 import { RoutingParams } from '~/screens';
 
@@ -39,6 +40,9 @@ function _GamesStack() {
 }
 
 export function TabbedNavigator() {
+
+  const { bookmarkCount } = React.useContext(StorageContext);
+
   return (
     <Tab.Navigator
       screenOptions={ { headerShown: false } }>
@@ -65,7 +69,11 @@ export function TabbedNavigator() {
         component={ ProfileStack }
         options={ {
           tabBarIcon: ({ color, size }) => (
-            <Icon name="account" color={ color } size={ size } />
+            <Button 
+              badge={ bookmarkCount }
+              leftIcon="account"
+              color={ color }
+              iconSize={ size } />
           ),
           tabBarLabel: () => null,
         } } />

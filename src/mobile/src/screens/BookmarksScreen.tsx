@@ -19,7 +19,6 @@ import {
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
 
@@ -34,8 +33,8 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
     preferredReadingFormat, 
     setStoredValue,
     viewFeature,
+    api: { interactWithSummary },
   } = React.useContext(StorageContext);
-  const { interactWithSummary } = useApiClient();
   
   const bookmarks = React.useMemo(() => Object.entries({ ...bookmarkedSummaries }), [bookmarkedSummaries]);
   

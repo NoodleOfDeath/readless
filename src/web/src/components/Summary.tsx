@@ -50,7 +50,6 @@ import {
   fixedSentiment,
   publisherIcon,
   shareableLink,
-  useApiClient,
 } from '~/core';
 
 type Props = {
@@ -91,8 +90,7 @@ export default function Summary({
   onChange,
 }: Props) {
 
-  const { interactWithSummary } = useApiClient();
-  const { preferredReadingFormat } = React.useContext(StorageContext);
+  const { preferredReadingFormat, api: { interactWithSummary } } = React.useContext(StorageContext);
 
   const mdAndDown = useMediaQuery({ maxWidth: 960 });
   const smAndDown = useMediaQuery({ maxWidth: 600 });

@@ -9,10 +9,8 @@ import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { SETTINGS_STACK } from './SettingsStack';
 
-import { strings } from '~/locales';
 import { SearchMenu, SettingsToggleWithIndicator } from '~/navigation';
 import {
-  BookmarksScreen,
   CategoryScreen,
   HomeScreen,
   PublisherScreen,
@@ -93,16 +91,6 @@ export const NEWS_STACK: RouteConfig<
       headerTitle: '', 
     },
   },
-  {
-    component: BookmarksScreen, 
-    name: 'bookmarks', 
-    options: {
-      headerBackTitle: '',
-      headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: strings.screens_bookmarks, 
-    }, 
-  }, 
   // Other
   {
     component: StatsScreen,

@@ -5,9 +5,13 @@ import {
   DEFAULT_STORAGE_CONTEXT,
   DatedEvent,
   FunctionWithRequestParams,
+  Methods,
   PushNotificationSettings,
   STORAGE_TYPES,
+  SYNCABLE_SETTINGS,
   Storage,
+  SyncableIoIn,
+  SyncableIoOut,
 } from './types';
 
 import {
@@ -35,7 +39,16 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
+  const [hasSyncedWithServer, setHasSyncedWithServer] = React.useState<boolean>(false);
 
+  const bookmarkCount = React.useMemo(() => {
+    return Object.keys({ ...storage.bookmarkedSummaries }).length;
+  }, [storage.bookmarkedSummaries]);
+
+  const unreadBookmarkCount = React.useMemo(() => {
+    return Object.keys({ ...storage.bookmarkedSummaries }).filter((id) => !(id in ({ ...storage.readSummaries }))).length;
+  }, [storage.bookmarkedSummaries, storage.readSummaries]);
+  
   // following computed state
   const followCount = React.useMemo(() => Object.keys({ ...storage.followedPublishers }).length + Object.keys({ ...storage.followedCategories }).length, [storage.followedPublishers, storage.followedCategories]);
 
@@ -106,14 +119,17 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       }
       if (key === 'userData') {
         for (const [key, value] of Object.entries((newValue as UserData)?.profile?.preferences ?? {})) {
-          state[key] = value;
+          state[key as K] = value;
           setItem(key, JSON.stringify(value));
         }
+      }
+      if (SYNCABLE_SETTINGS.includes(key)) {
+        updateRemotePref(key, newValue);
       }
       if (emit) {
         emitEvent('set-preference', key);
       }
-      return (prev = state);
+      return state;
     });
   };
   
@@ -125,7 +141,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     await setStoredValue(prefKey, (prev) => {
       const state = { ...prev } as State;
       state[item.id] = translations;
-      return (prev = state);
+      return state;
     });
   };
 
@@ -148,246 +164,82 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     };
   }, [storage.uuid, storage.userData?.token, getUserAgent]);
 
-  const api = React.useMemo(() => {
+  const api: Methods = React.useMemo(() => {
     const guts = Object.fromEntries(Object.entries(API)
       .filter(([, f]) => f instanceof Function)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map(([k, f]) => [k, withHeaders(f as (...args: [...Parameters<typeof f>, RequestParams | undefined]) => ReturnType<typeof f>)])) as unknown as Methods;
     return {
       ...guts,
       getSummary: (id: number) => guts.getSummaries({ ids: [id] }),
     };
   }, [withHeaders]);
+  
+  const updateRemotePref = React.useCallback(async <K extends keyof Storage>(key: K, newState?: Storage[K]) => {
+    if (!SYNCABLE_SETTINGS.includes(key)) {
+      return;
+    }
+    try {
+      const trans = SyncableIoOut(key);
+      const value = trans(newState);
+      await api.updateMetadata({
+        key, 
+        value: value as unknown as object,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, [api]);
 
-  const hasPushEnabled = React.useCallback((type: string) => {
-    return type in ({ ...storage.pushNotifications });
-  }, [storage.pushNotifications]);
-
-  const enablePush = async (type: string, settings?: PushNotificationSettings) => {
-    await setStoredValue('pushNotifications', (prev) => {
-      const newState = { ...prev };
-      if (settings) {
-        newState[type] = settings;
+  const syncWithRemotePrefs = React.useCallback(async () => {
+    if (!storage.userData) {
+      return;
+    }
+    const { data, error } = await api.getProfile();
+    if (error) {
+      console.error(error);
+      return;
+    }
+    const { profile } = data;
+    if (!profile) {
+      return;
+    }
+    console.log('syncing prefs');
+    for (const key of SYNCABLE_SETTINGS) {
+      const remoteValue = profile.preferences?.[key];
+      console.log('updating', key, remoteValue);
+      if (key === 'bookmarkedSummaries') {
+        const remoteIds = Object.keys(remoteValue ?? {});
+        const { data, error } = await api.getSummaries({ ids: remoteIds.map((id) => parseInt(id)) });
+        if (error) {
+          console.error(error);
+          return;
+        }
+        const { rows: summaries } = data;
+        if (!summaries) {
+          return;
+        }
+        await setStoredValue('bookmarkedSummaries', Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), false);
       } else {
-        delete newState[type];
+        try {
+          if (remoteValue) {
+            const trans = SyncableIoIn(key);
+            const value = trans(remoteValue);
+            await setStoredValue(key, value, false);
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }
-      return (prev = newState);
-    });
-  };
+    }
+    await setStoredValue('lastRemoteSync', new Date());
+  }, [api, storage.userData]);
   
-  const hasViewedFeature = React.useCallback((...features: string[]) => {
-    return features.every((f) => f in ({ ...storage.viewedFeatures }));
-  }, [storage.viewedFeatures]);
-  
-  const viewFeature = async (feature: string, state = true) => {
-    await setStoredValue('viewedFeatures', (prev) => {
-      const newState = { ...prev };
-      if (state) {
-        newState[feature] = new DatedEvent(true);
-      } else {
-        delete newState[feature];
-      }
-      return (prev = newState);
-    });
-  };
-  
-  // summary functions
-  
-  const bookmarkSummary = async (summary: PublicSummaryGroup) => {
-    await setStoredValue('bookmarkedSummaries', (prev) => {
-      const state = { ...prev };
-      if (summary.id in state) {
-        delete state[summary.id];
-        emitEvent('unbookmark-summary', summary, state);
-      } else {
-        state[summary.id] = new DatedEvent(summary);
-        viewFeature('unread-bookmarks');
-        emitEvent('bookmark-summary', summary, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const readSummary = async (summary: PublicSummaryGroup, force = false) => {
-    await setStoredValue('readSummaries', (prev) => {
-      const state = { ...prev };
-      if (force && summary.id in state) {
-        delete state[summary.id];
-        emitEvent('unread-summary', summary, state);
-      } else {
-        state[summary.id] = new DatedEvent(true);
-        emitEvent('read-summary', summary, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const removeSummary = async (summary: PublicSummaryGroup) => {
-    await setStoredValue('removedSummaries', (prev) => {
-      const state = { ...prev };
-      if (summary.id in state) {
-        delete state[summary.id];
-        emitEvent('unhide-summary', summary, state);
-      } else {
-        state[summary.id] = true;
-        emitEvent('hide-summary', summary, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  // recap functions
-  
-  const readRecap = async (recap: RecapAttributes, force = false) => {
-    await setStoredValue('readRecaps', (prev) => {
-      const state = { ...prev };
-      if (force && recap.id in state) {
-        delete state[recap.id];
-        emitEvent('unread-recap', recap, state);
-      } else {
-        state[recap.id] = true;
-        emitEvent('read-recap', recap, state);
-      }
-      return (prev = state);
-    });
-  };
-
-  // publisher functions
-  
-  const followPublisher = async (publisher: PublicPublisherAttributes) => {
-    await setStoredValue('followedPublishers', (prev) => {
-      const state = { ...prev };
-      if (publisher.name in state) {
-        delete state[publisher.name];
-        setStoredValue('favoritedPublishers', (prev) => {
-          const state = { ...prev };
-          delete state[publisher.name];
-          return (prev = state);
-        });
-        emitEvent('unfollow-publisher', publisher, state);
-      } else {
-        state[publisher.name] = true;
-        setStoredValue('excludedPublishers', (prev) => {
-          const state = { ...prev };
-          delete state[publisher.name];
-          return (prev = state);
-        });
-        emitEvent('follow-publisher', publisher, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.followedPublishers }), [storage.followedPublishers]);
-  
-  const favoritePublisher = async (publisher: PublicPublisherAttributes) => {
-    await setStoredValue('favoritedPublishers', (prev) => {
-      const state = { ...prev };
-      if (publisher.name in state) {
-        delete state[publisher.name];
-        emitEvent('unfavorite-publisher', publisher, state);
-      } else {
-        state[publisher.name] = true;
-        emitEvent('favorite-publisher', publisher, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const publisherIsFavorited = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.favoritedPublishers }), [storage.favoritedPublishers]);
-  
-  const excludePublisher = async (publisher: PublicPublisherAttributes) => {
-    await setStoredValue('excludedPublishers', (prev) => {
-      const state = { ...prev };
-      if (publisher.name in state) {
-        delete state[publisher.name];
-        emitEvent('unexclude-publisher', publisher, state);
-      } else {
-        state[publisher.name] = true;
-        setStoredValue('followedPublishers', (prev) => {
-          const state = { ...prev };
-          delete state[publisher.name];
-          return (prev = state);
-        });
-        emitEvent('exclude-publisher', publisher, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const isExcludingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.excludedPublishers }), [storage.excludedPublishers]);
-
-  // category functions
-  
-  const followCategory = async (category: PublicCategoryAttributes) => {
-    await setStoredValue('followedCategories', (prev) => {
-      const state = { ...prev };
-      if (category.name in state) {
-        delete state[category.name];
-        setStoredValue('followedCategories', (prev) => {
-          const state = { ...prev };
-          delete state[category.name];
-          return (prev = state);
-        });
-        emitEvent('unfollow-category', category, state);
-      } else {
-        state[category.name] = true;
-        setStoredValue('excludedCategories', (prev) => {
-          const state = { ...prev };
-          delete state[category.name];
-          return (prev = state);
-        });
-        emitEvent('follow-category', category, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.followedCategories }), [storage.followedCategories]);
-  
-  const favoriteCategory = async (category: PublicCategoryAttributes) => {
-    await setStoredValue('favoritedCategories', (prev) => {
-      const state = { ...prev };
-      if (category.name in state) {
-        delete state[category.name];
-        emitEvent('unfavorite-category', category, state);
-      } else {
-        state[category.name] = true;
-        emitEvent('favorite-category', category, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const categoryIsFavorited = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.favoritedCategories }), [storage.favoritedCategories]);
-
-  const excludeCategory = async (category: PublicCategoryAttributes) => {
-    await setStoredValue('excludedCategories', (prev) => {
-      const state = { ...prev };
-      if (category.name in state) {
-        delete state[category.name];
-        emitEvent('unexclude-category', category, state);
-      } else {
-        state[category.name] = true;
-        setStoredValue('followedCategories', (prev) => {
-          const state = { ...prev };
-          delete state[category.name];
-          return (prev = state);
-        });
-        emitEvent('exclude-category', category, state);
-      }
-      return (prev = state);
-    });
-  };
-  
-  const isExcludingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.excludedCategories }), [storage.excludedCategories]);
-
   // Load preferences on mount
   const load = async () => {
     const state = { ...DEFAULT_STORAGE_CONTEXT };
     
     // system state
-    state.latestVersion = await getStoredValue('latestVersion');
     state.rotationLock = await getStoredValue('rotationLock');
     state.searchHistory = await getStoredValue('searchHistory');
     state.viewedFeatures = await getStoredValue('viewedFeatures');
@@ -440,15 +292,246 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.triggerWords = await getStoredValue('triggerWords');
     
     state.ready = true;
-    emitEvent('ready');
     
     setStorage(state);
   };
+
+  React.useEffect(() => {
+    if (!hasSyncedWithServer && storage.ready) {
+      setHasSyncedWithServer(true);
+      syncWithRemotePrefs();
+    }
+  }, [storage.ready, hasSyncedWithServer, syncWithRemotePrefs]);
   
   const resetStorage = async (hard = false) => {
     await removeAll(hard);
     await load();
   };
+  
+  // push notification functions
+
+  const hasPushEnabled = React.useCallback((type: string) => {
+    return type in ({ ...storage.pushNotifications });
+  }, [storage.pushNotifications]);
+
+  const enablePush = async (type: string, settings?: PushNotificationSettings) => {
+    await setStoredValue('pushNotifications', (prev) => {
+      const newState = { ...prev };
+      if (settings) {
+        newState[type] = settings;
+      } else {
+        delete newState[type];
+      }
+      return (prev = newState);
+    });
+  };
+  
+  const hasViewedFeature = React.useCallback((...features: string[]) => {
+    return features.every((f) => f in ({ ...storage.viewedFeatures }));
+  }, [storage.viewedFeatures]);
+  
+  const viewFeature = async (feature: string, state = true) => {
+    await setStoredValue('viewedFeatures', (prev) => {
+      const newState = { ...prev };
+      if (state) {
+        newState[feature] = new DatedEvent(true);
+      } else {
+        delete newState[feature];
+      }
+      return (prev = newState);
+    });
+  };
+  
+  // summary functions
+  
+  const bookmarkSummary = async (summary: PublicSummaryGroup) => {
+    await setStoredValue('bookmarkedSummaries', (prev) => {
+      const state = { ...prev };
+      if (summary.id in state) {
+        delete state[summary.id];
+        emitEvent('unbookmark-summary', summary, state);
+      } else {
+        state[summary.id] = new DatedEvent(summary);
+        viewFeature('unread-bookmarks');
+        emitEvent('bookmark-summary', summary, state);
+      }
+      return state;
+    });
+  };
+  
+  const readSummary = async (summary: PublicSummaryGroup, force = false) => {
+    await setStoredValue('readSummaries', (prev) => {
+      const state = { ...prev };
+      if (force && summary.id in state) {
+        delete state[summary.id];
+        emitEvent('unread-summary', summary, state);
+      } else {
+        state[summary.id] = new DatedEvent(true);
+        emitEvent('read-summary', summary, state);
+      }
+      return state;
+    });
+  };
+  
+  const removeSummary = async (summary: PublicSummaryGroup) => {
+    await setStoredValue('removedSummaries', (prev) => {
+      const state = { ...prev };
+      if (summary.id in state) {
+        delete state[summary.id];
+        emitEvent('unhide-summary', summary, state);
+      } else {
+        state[summary.id] = true;
+        emitEvent('hide-summary', summary, state);
+      }
+      return state;
+    });
+  };
+  
+  // recap functions
+  
+  const readRecap = async (recap: RecapAttributes, force = false) => {
+    await setStoredValue('readRecaps', (prev) => {
+      const state = { ...prev };
+      if (force && recap.id in state) {
+        delete state[recap.id];
+        emitEvent('unread-recap', recap, state);
+      } else {
+        state[recap.id] = true;
+        emitEvent('read-recap', recap, state);
+      }
+      return state;
+    });
+  };
+
+  // publisher functions
+  
+  const followPublisher = async (publisher: PublicPublisherAttributes) => {
+    await setStoredValue('followedPublishers', (prev) => {
+      const state = { ...prev };
+      if (publisher.name in state) {
+        delete state[publisher.name];
+        setStoredValue('favoritedPublishers', (prev) => {
+          const state = { ...prev };
+          delete state[publisher.name];
+          return state;
+        });
+        emitEvent('unfollow-publisher', publisher, state);
+      } else {
+        state[publisher.name] = true;
+        setStoredValue('excludedPublishers', (prev) => {
+          const state = { ...prev };
+          delete state[publisher.name];
+          return state;
+        });
+        emitEvent('follow-publisher', publisher, state);
+      }
+      return state;
+    });
+  };
+  
+  const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.followedPublishers }), [storage.followedPublishers]);
+  
+  const favoritePublisher = async (publisher: PublicPublisherAttributes) => {
+    await setStoredValue('favoritedPublishers', (prev) => {
+      const state = { ...prev };
+      if (publisher.name in state) {
+        delete state[publisher.name];
+        emitEvent('unfavorite-publisher', publisher, state);
+      } else {
+        state[publisher.name] = true;
+        emitEvent('favorite-publisher', publisher, state);
+      }
+      return state;
+    });
+  };
+  
+  const publisherIsFavorited = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.favoritedPublishers }), [storage.favoritedPublishers]);
+  
+  const excludePublisher = async (publisher: PublicPublisherAttributes) => {
+    await setStoredValue('excludedPublishers', (prev) => {
+      const state = { ...prev };
+      if (publisher.name in state) {
+        delete state[publisher.name];
+        emitEvent('unexclude-publisher', publisher, state);
+      } else {
+        state[publisher.name] = true;
+        setStoredValue('followedPublishers', (prev) => {
+          const state = { ...prev };
+          delete state[publisher.name];
+          return state;
+        });
+        emitEvent('exclude-publisher', publisher, state);
+      }
+      return state;
+    });
+  };
+  
+  const isExcludingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.excludedPublishers }), [storage.excludedPublishers]);
+
+  // category functions
+  
+  const followCategory = async (category: PublicCategoryAttributes) => {
+    await setStoredValue('followedCategories', (prev) => {
+      const state = { ...prev };
+      if (category.name in state) {
+        delete state[category.name];
+        setStoredValue('followedCategories', (prev) => {
+          const state = { ...prev };
+          delete state[category.name];
+          return state;
+        });
+        emitEvent('unfollow-category', category, state);
+      } else {
+        state[category.name] = true;
+        setStoredValue('excludedCategories', (prev) => {
+          const state = { ...prev };
+          delete state[category.name];
+          return state;
+        });
+        emitEvent('follow-category', category, state);
+      }
+      return state;
+    });
+  };
+  
+  const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.followedCategories }), [storage.followedCategories]);
+  
+  const favoriteCategory = async (category: PublicCategoryAttributes) => {
+    await setStoredValue('favoritedCategories', (prev) => {
+      const state = { ...prev };
+      if (category.name in state) {
+        delete state[category.name];
+        emitEvent('unfavorite-category', category, state);
+      } else {
+        state[category.name] = true;
+        emitEvent('favorite-category', category, state);
+      }
+      return state;
+    });
+  };
+  
+  const categoryIsFavorited = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.favoritedCategories }), [storage.favoritedCategories]);
+
+  const excludeCategory = async (category: PublicCategoryAttributes) => {
+    await setStoredValue('excludedCategories', (prev) => {
+      const state = { ...prev };
+      if (category.name in state) {
+        delete state[category.name];
+        emitEvent('unexclude-category', category, state);
+      } else {
+        state[category.name] = true;
+        setStoredValue('followedCategories', (prev) => {
+          const state = { ...prev };
+          delete state[category.name];
+          return state;
+        });
+        emitEvent('exclude-category', category, state);
+      }
+      return state;
+    });
+  };
+  
+  const isExcludingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.excludedCategories }), [storage.excludedCategories]);
 
   React.useEffect(() => {
     load();
@@ -459,6 +542,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       value={ {
         ...storage,
         api,
+        bookmarkCount,
         bookmarkSummary,
         categories,
         categoryIsFavorited,
@@ -491,6 +575,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         setPublishers,
         setStoredValue,
         storeTranslations,
+        unreadBookmarkCount,
         viewFeature,
         withHeaders,
       } }>

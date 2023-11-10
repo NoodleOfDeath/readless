@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { ScreenComponent } from '../types';
+
 import {
   Screen,
   ScrollView,
@@ -9,10 +11,21 @@ import {
   Text,
 } from '~/components';
 import { StorageContext } from '~/contexts';
+import { strings } from '~/locales';
 
-export function ProfileScreen() {
+export function ProfileScreen({
+  route: _route,
+  navigation,
+}: ScreenComponent<'profile'>) {
 
-  const { userData, setStoredValue } = React.useContext(StorageContext);
+  const {
+    bookmarkCount,
+    unreadBookmarkCount,
+    followedPublishers,
+    followedCategories,
+    userData, 
+    setStoredValue, 
+  } = React.useContext(StorageContext);
 
   return (
     <Screen>
@@ -21,8 +34,26 @@ export function ProfileScreen() {
           <TableViewSection>
             <TableViewCell 
               bold
-              title={ userData?.profile?.email }
-              cellContentView={ <Text>{JSON.stringify(userData, null, 2) }</Text> } />
+              title={ userData?.profile?.email } />
+          </TableViewSection>
+          <TableViewSection>
+            <TableViewCell 
+              bold
+              title={ `${strings.screens_bookmarks} (${bookmarkCount})` }
+              cellAccessoryView={ <Text>{ `${unreadBookmarkCount} ${strings.misc_unread}` }</Text> } 
+              onPress={ () => navigation?.push('bookmarks') } />
+          </TableViewSection>
+          <TableViewSection>
+            <TableViewCell 
+              bold
+              title={ strings.misc_publishers }
+              cellAccessoryView={ <Text>{ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.misc_following}` }</Text> }
+              onPress={ () => navigation?.push('publisherPicker') } />
+            <TableViewCell 
+              bold
+              title={ strings.misc_categories }
+              cellAccessoryView={ <Text>{ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.misc_following}` }</Text> }
+              onPress={ () => navigation?.push('categoryPicker') } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell

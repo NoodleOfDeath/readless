@@ -11,7 +11,13 @@ import { SETTINGS_STACK } from './SettingsStack';
 
 import { strings } from '~/locales';
 import { SettingsToggleWithIndicator } from '~/navigation';
-import { ProfileScreen, RoutingParams } from '~/screens';
+import {
+  BookmarksScreen,
+  CategoryScreen,
+  ProfileScreen,
+  PublisherScreen,
+  RoutingParams,
+} from '~/screens';
 
 export const PROFILE_STACK: RouteConfig<
   RoutingParams,
@@ -28,6 +34,36 @@ export const PROFILE_STACK: RouteConfig<
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />, 
       headerTitle: strings.screens_profile,
+    },
+  },
+  {
+    component: BookmarksScreen, 
+    name: 'bookmarks', 
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: strings.screens_bookmarks, 
+    }, 
+  }, 
+  {
+    component: CategoryScreen, 
+    name: 'category',
+    options: { 
+      headerBackTitle: '', 
+      headerLeft: () => null,
+      headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: '', 
+    },
+  },
+  {
+    component: PublisherScreen, 
+    name: 'publisher',
+    options: {
+      headerBackTitle: '', 
+      headerLeft: () => null,
+      headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: '', 
     },
   },
   ...SETTINGS_STACK,

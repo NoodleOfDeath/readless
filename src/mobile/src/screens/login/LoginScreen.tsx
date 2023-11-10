@@ -11,7 +11,6 @@ import {
   View,
 } from '~/components';
 import { StorageContext, UserData } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { ScreenComponent } from '~/screens';
 
 GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
@@ -21,8 +20,9 @@ export function LoginScreen({
   navigation, 
 }: ScreenComponent<'login'>) {
 
-  const { setStoredValue, resetStorage } = React.useContext(StorageContext);
-  const { login } = useApiClient();
+  const {
+    setStoredValue, resetStorage, api: { login }, 
+  } = React.useContext(StorageContext);
 
   const signInWithGoogle = React.useCallback(async () => {
     try {
