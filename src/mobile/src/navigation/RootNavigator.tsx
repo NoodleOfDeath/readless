@@ -25,30 +25,15 @@ import {
   MediaContext,
   NotificationContext,
   OrientationType,
+  SYNCABLE_SETTINGS,
   Storage,
   StorageContext,
+  SyncableIoIn,
+  SyncableIoOut,
 } from '~/contexts';
 import { useApiClient, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
-
-const SYNCABLE_KEYS: (keyof Storage)[] = [
-  'followedPublishers',
-  'favoritedPublishers',
-  'favoritedCategories',
-  'followedCategories',
-  'readSummaries',
-] as const;
-
-type SyncableKey = typeof SYNCABLE_KEYS[number];
-
-const SYNC_TRANSFORMATIONS: { [key in SyncableKey]?: ((value?: Storage[key]) => string) } = {
-  favoritedCategories: (value) => JSON.stringify(Object.keys(value ?? {})),
-  favoritedPublishers: (value) => JSON.stringify(Object.keys(value ?? {})),
-  followedCategories: (value) => JSON.stringify(Object.keys(value ?? {})),
-  followedPublishers: (value) => JSON.stringify(Object.keys(value ?? {})),
-  readSummaries: (value) => JSON.stringify(value),
-};
 
 export function RootNavigator() {
   
@@ -87,20 +72,31 @@ export function RootNavigator() {
   const [showedReview, setShowedReview] = React.useState(false);
 
   const onPrefsChanged = React.useCallback((key: keyof Storage) => {
-    if (!SYNCABLE_KEYS.includes(key)) {
+    if (!userData) {
       return;
     }
-    const rawValue = storage[key];
-    const trans = SYNC_TRANSFORMATIONS[key] as ((value?: Storage[typeof key]) => string) | undefined;
-    const value = trans?.(rawValue);
-    updateMetadata({ 
-      key, 
-      value: value as unknown as object,
-    });
-  }, [storage, updateMetadata]);
+    if (!SYNCABLE_SETTINGS.includes(key)) {
+      return;
+    }
+    const localValue = storage[key];
+    try {
+      const trans = SyncableIoOut(key);
+      const value = trans(localValue);
+      updateMetadata({ 
+        key, 
+        value: value as unknown as object,
+      });
+    } catch (e) {
+      console.log(localValue);
+      console.error(e);
+    }
+  }, [storage, updateMetadata, userData]);
 
   const syncPrefs = React.useCallback(async() => {
     if (!userData) {
+      return;
+    }
+    if (hasSyncedPrefs) {
       return;
     }
     const { data, error } = await getProfile();
@@ -113,17 +109,26 @@ export function RootNavigator() {
       return;
     }
     console.log('syncing prefs');
-    for (const key of SYNCABLE_KEYS) {
+    for (const key of SYNCABLE_SETTINGS) {
       const remoteValue = profile.preferences?.[key];
       console.log('updating', key, remoteValue);
-      if (key === 'readSummaries') {
-        setStoredValue(key, JSON.parse(remoteValue), false);
+      try {
+        const trans = SyncableIoIn(key);
+        const value = trans(remoteValue);
+        setStoredValue(key, value, false);
+      } catch (e) {
+        console.log(remoteValue);
+        console.error(e);
       }
     }
   }, [getProfile, setStoredValue, userData]);
 
   React.useEffect(() => {
     if (!ready) {
+      return;
+    }
+
+    if (!userData) {
       return;
     }
 
@@ -192,7 +197,7 @@ export function RootNavigator() {
         prefHandler.remove();
       };
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, onPrefsChanged, syncPrefs, hasSyncedPrefs]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, onPrefsChanged, syncPrefs, hasSyncedPrefs, userData]);
   
   const refreshSources = React.useCallback(() => {
     if (!userData) {
@@ -201,17 +206,17 @@ export function RootNavigator() {
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
       return;
     }
-    if (!categories || (Date.now() - lastFetch < ms('1h'))) {
+    if (!categories) {
       getCategories().then((response) => {
         setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
       }).catch((error) => {
-        console.log(error);
+        console.log(error); 
         setLastFetchFailed(true);
       }).finally(() => {
         setLastFetch(Date.now());
       });
     }
-    if (!publishers || (Date.now() - lastFetch < ms('1h'))) {
+    if (!publishers) {
       getPublishers().then((response) => {
         setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
       }).catch((error) => {

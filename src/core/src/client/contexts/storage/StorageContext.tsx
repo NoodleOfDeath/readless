@@ -11,10 +11,12 @@ import {
 } from './types';
 
 import {
+  API,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
   RecapAttributes,
+  RequestParams,
 } from '~/api';
 import { getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
@@ -102,6 +104,12 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         state[key] = newValue;
         setItem(key, JSON.stringify(newValue));
       }
+      if (key === 'userData') {
+        for (const [key, value] of Object.entries((newValue as UserData)?.profile?.preferences ?? {})) {
+          state[key] = value;
+          setItem(key, JSON.stringify(value));
+        }
+      }
       if (emit) {
         emitEvent('set-preference', key);
       }
@@ -139,6 +147,17 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       return fn(...args, { headers });
     };
   }, [storage.uuid, storage.userData?.token, getUserAgent]);
+
+  const api = React.useMemo(() => {
+    const guts = Object.fromEntries(Object.entries(API)
+      .filter(([, f]) => f instanceof Function)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map(([k, f]) => [k, withHeaders(f as (...args: [...Parameters<typeof f>, RequestParams | undefined]) => ReturnType<typeof f>)])) as unknown as Methods;
+    return {
+      ...guts,
+      getSummary: (id: number) => guts.getSummaries({ ids: [id] }),
+    };
+  }, [withHeaders]);
 
   const hasPushEnabled = React.useCallback((type: string) => {
     return type in ({ ...storage.pushNotifications });
@@ -439,6 +458,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     <StorageContext.Provider
       value={ {
         ...storage,
+        api,
         bookmarkSummary,
         categories,
         categoryIsFavorited,

@@ -32,7 +32,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'settings', 
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_settings, 
     },
   },
@@ -41,7 +41,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'publisherPicker',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_publishers, 
     },
   },
@@ -50,7 +50,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'categoryPicker',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_categories, 
     },
   },
@@ -59,7 +59,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'notifications',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_notifications, 
     },
   },
@@ -68,7 +68,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'colorSchemePicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_colorScheme, 
     },
   },
@@ -77,7 +77,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'fontPicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_font, 
     },
   },
@@ -86,7 +86,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'shortPressFormatPicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_preferredShortPressFormat, 
     },
   },
@@ -95,7 +95,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'readingFormatPicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_preferredReadingFormat, 
     },
   },
@@ -103,7 +103,7 @@ export const SETTINGS_STACK: RouteConfig<
     component: TriggerWordPickerScreen,
     name: 'triggerWordPicker',  
     options: {
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_triggerWords, 
     },
   },
@@ -112,7 +112,7 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'legal', 
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
+      headerRight: () => null, 
       headerTitle: strings.screens_legal, 
     },
   },

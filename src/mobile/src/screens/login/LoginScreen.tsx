@@ -42,7 +42,6 @@ export function LoginScreen({
       });
       const userData = new UserData(response);
       setStoredValue('userData', userData);
-      setStoredValue('readSummaries', userData.profile?.preferences?.readSummaries ?? {});
     } catch (error) {
       console.error(error);
     }
@@ -50,7 +49,8 @@ export function LoginScreen({
 
   React.useEffect(() => {
     resetStorage();
-  }, [resetStorage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Screen>

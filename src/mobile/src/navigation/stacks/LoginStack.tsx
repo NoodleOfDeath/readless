@@ -24,6 +24,7 @@ export const LOGIN_STACK: RouteConfig<
     name: 'login',
     options: {
       headerBackTitle: '',
+      headerLeft: () => null,
       headerRight: () => null,
       headerTitle: '', 
     },
@@ -33,6 +34,8 @@ export const LOGIN_STACK: RouteConfig<
     name: 'passwordLogin',
     options: {
       headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
       headerTitle: '',
     },
   },
@@ -41,6 +44,8 @@ export const LOGIN_STACK: RouteConfig<
     name: 'register',
     options: {
       headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
       headerTitle: '',
     },
   },

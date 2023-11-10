@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { RecapAttributes } from '~/api';
 import { FlatList, Recap } from '~/components';
-import { useApiClient } from '~/core';
+import { StorageContext } from '~/contexts';
 
 export type RecapListProps = {
   header?: React.ReactNode;
@@ -12,7 +12,7 @@ export type RecapListProps = {
 
 export function RecapList({ header }: RecapListProps = {}) {
   
-  const { getRecaps } = useApiClient();
+  const { api: { getRecaps } } = React.useContext(StorageContext);
 
   const [recaps, setRecaps] = React.useState<RecapAttributes[]>([]);
   const [loading, setLoading] = React.useState(false);

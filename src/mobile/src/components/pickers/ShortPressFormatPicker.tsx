@@ -26,7 +26,7 @@ export function ShortPressFormatPicker({ ...props }: Props = {}) {
     <TablePicker
       { ...props }
       options={ OPTIONS }
-      initialValue={ preferredShortPressFormat ?? ReadingFormat.Bullets }
+      initialValue={ preferredShortPressFormat ?? ReadingFormat.ShortSummary }
       onValueChange={ (value) => {
         setStoredValue('preferredShortPressFormat', value); 
       } }>

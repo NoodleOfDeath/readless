@@ -6,6 +6,7 @@ import {
   TableView,
   TableViewCell,
   TableViewSection,
+  Text,
 } from '~/components';
 import { StorageContext } from '~/contexts';
 
@@ -20,7 +21,8 @@ export function ProfileScreen() {
           <TableViewSection>
             <TableViewCell 
               bold
-              title={ userData?.profile?.email } />
+              title={ userData?.profile?.email }
+              cellContentView={ <Text>{JSON.stringify(userData, null, 2) }</Text> } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell

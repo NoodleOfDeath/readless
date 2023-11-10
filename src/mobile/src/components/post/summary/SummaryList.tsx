@@ -33,13 +33,12 @@ import {
   StorageContext,
 } from '~/contexts';
 import {
-  useApiClient,
   useAppState,
   useNavigation,
   useTheme,
 } from '~/hooks';
 import { getLocale, strings } from '~/locales';
-import { SearchMenu } from '~/screens';
+import { SearchMenu } from '~/navigation';
 import { parseKeywords } from '~/utils';
 
 export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
@@ -73,7 +72,6 @@ export function SummaryList({
 
   // hooks
   const { navigation } = useNavigation();
-  const { interactWithSummary } = useApiClient();
   const theme = useTheme();
 
   // contexts
@@ -83,6 +81,7 @@ export function SummaryList({
     preferredReadingFormat,
     removedSummaries,
     excludeFilter,
+    api: { interactWithSummary },
   } = React.useContext(StorageContext);
   
   // search state

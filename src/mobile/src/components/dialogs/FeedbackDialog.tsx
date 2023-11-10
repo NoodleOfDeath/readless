@@ -12,7 +12,6 @@ import {
   View,
 } from '~/components';
 import {  StorageContext } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 
 export type FeedbackDialogProps = {
@@ -24,9 +23,7 @@ export function FeedbackDialog({ payload, ...props }: SheetProps<FeedbackDialogP
 
   const { summary, onClose } = React.useMemo(() => ({ ...payload }), [payload]);
   
-  const { setStoredValue } = React.useContext(StorageContext);
-
-  const { interactWithSummary } = useApiClient();
+  const { setStoredValue, api: { interactWithSummary } } = React.useContext(StorageContext);
 
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
   const [otherValue, setOtherValue] = React.useState('');

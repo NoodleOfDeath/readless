@@ -18,8 +18,8 @@ import {
 import {  StorageContext } from '~/contexts';
 import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
+import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
-import { RoutedScreen } from '~/screens';
 
 export function SummaryScreen({
   route,

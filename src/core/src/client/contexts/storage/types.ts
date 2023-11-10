@@ -3,6 +3,7 @@ import ms from 'ms';
 import { UserData } from './UserData';
 
 import {
+  API,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
@@ -114,7 +115,6 @@ export type StorageEventName = Activity | ResourceActivity | `${ResourceActivity
 export type Storage = {
   
   // system state
-  latestVersion?: string;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
   viewedFeatures?: { [key: string]: DatedEvent<boolean> };
@@ -239,7 +239,6 @@ export type PreferenceState<E extends StorageEventName> =
 
 export type Streak = {
   start: Date;
-  end: Date;
   length: number;
 };
 
@@ -247,6 +246,75 @@ export type UserStats = {
   lastSeen?: Date;
   streak?: Streak;
   longestStreak?: Streak;
+};
+
+export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
+  'colorScheme',
+  'compactSummaries',
+  'showShortSummary',
+  'preferredReadingFormat',
+  'preferredShortPressFormat',
+  'fontFamily',
+  'fontSizeOffset',
+  'letterSpacing',
+  'lineHeightMultiplier',
+  'pushNotifications',
+  'pushNotificationsEnabled',
+  // 'bookmarkedSummaries',
+  'readSummaries',
+  'followedPublishers',
+  'favoritedPublishers',
+  'excludedPublishers',
+  'followedCategories',
+  'favoritedCategories',
+  'excludedCategories',
+  'userStats',
+] as const;
+
+export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];
+
+export const SYNCABLE_IO_IN_DEFAULT = <key extends SyncableSetting>(value?: string) => value as Storage[key];
+export const SYNCABLE_IO_OUT_DEFAULT = <key extends SyncableSetting>(value?: Storage[key]) => JSON.stringify(value);
+export const SYNCABLE_IO_IN_BOOLEAN_MAP = (value: string) => {
+  if (value) {
+    const keys = JSON.parse(value);
+    if (Array.isArray(keys)) {
+      return keys.reduce((acc, key) => ({ ...acc, [key]: true }), {});
+    }
+  }
+  return {};
+};
+
+export const SYNCABLE_IO_IN: { [key in SyncableSetting]?: ((value?: string) => Storage[key]) } = {
+  // bookmarkedSummaries: (value) => value ? JSON.parse(value) : {},
+  excludedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP,
+  excludedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP,
+  favoritedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP,
+  favoritedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP,
+  followedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP,
+  followedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP,
+};
+
+export const SYNCABLE_IO_OUT: { [key in SyncableSetting]?: ((value?: Storage[key]) => string) } = {
+  // bookmarkedSummaries: (value) => JSON.stringify(Object.keys(value || {})),
+  excludedCategories: (value) => JSON.stringify(Object.keys(value || {})),
+  excludedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
+  favoritedCategories: (value) => JSON.stringify(Object.keys(value || {})),
+  favoritedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
+  followedCategories: (value) => JSON.stringify(Object.keys(value || {})),
+  followedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
+};
+
+export const SyncableIoIn = (key?: SyncableSetting) => SYNCABLE_IO_IN[key] || SYNCABLE_IO_IN_DEFAULT;
+export const SyncableIoOut = (key?: SyncableSetting) => SYNCABLE_IO_OUT[key] || SYNCABLE_IO_OUT_DEFAULT;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Methods = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [k in keyof typeof API]: typeof API[k] extends (...args: [...Parameters<typeof API[k]>, RequestParams | undefined]) => infer R ? 
+  (...args: Parameters<typeof API[k]>) => R : never;
+} & {
+  getSummary: (id: number) => Promise<PublicSummaryGroup>;
 };
 
 export type StorageContextType = Storage & {
@@ -300,9 +368,11 @@ export type StorageContextType = Storage & {
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
+  api: Methods;
 };
 
 export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
+  api: API,
   bookmarkCount: 0,
   bookmarkSummary: () => Promise.resolve(),
   categoryIsFavorited: () => false,

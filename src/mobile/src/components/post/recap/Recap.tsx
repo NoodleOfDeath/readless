@@ -18,11 +18,7 @@ import {
   View,
 } from '~/components';
 import { LayoutContext, StorageContext } from '~/contexts';
-import { 
-  useApiClient,
-  useNavigation,
-  useTheme,
-} from '~/hooks';
+import { useNavigation, useTheme } from '~/hooks';
 import { getFnsLocale, strings } from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
@@ -42,10 +38,11 @@ export function Recap({
   
   const theme = useTheme();
   const { navigation, openSummary } = useNavigation();
-  const { getSummaries, localize } = useApiClient();
   const { screenHeight } = React.useContext(LayoutContext);
   
-  const { readRecap, readRecaps } = React.useContext(StorageContext);
+  const {
+    readRecap, readRecaps, api: { getSummaries, localize }, 
+  } = React.useContext(StorageContext);
   
   const [isRead, setIsRead] = React.useState(!forceUnread && recap.id in ({ ...readRecaps }));
   const [translations, setTranslations] = React.useState<{ [key in keyof RecapAttributes]?: string }>({ text: recap.text, title: recap.title });

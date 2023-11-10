@@ -68,7 +68,7 @@ export function SearchMenu({
     <View
       gap={ 8 } 
       alignCenter
-      width={ screenWidth - (220 / 2) }
+      width={ screenWidth - (160 / 2) }
       { ...props }>
       <Searchbar
         ref={ searchRef }

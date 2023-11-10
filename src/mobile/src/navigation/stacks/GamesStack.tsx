@@ -7,8 +7,8 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
+import { SettingsToggleWithIndicator } from '~/navigation';
 import { RoutingParams } from '~/screens';
-import { SettingsToggleWithIndicator } from '~/screens';
 import { GamesSelectionScreen } from '~/screens/games';
 import { PlayGameScreen } from '~/screens/games/PlayGameScreen';
 

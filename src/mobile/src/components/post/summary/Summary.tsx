@@ -35,7 +35,6 @@ import {
 } from '~/components';
 import { LayoutContext, StorageContext } from '~/contexts';
 import {
-  useApiClient,
   useInAppBrowser,
   useNavigation,
   useStyles,
@@ -174,7 +173,6 @@ export function Summary({
     openPublisher, 
     openCategory, 
   } = useNavigation();
-  const { interactWithSummary, localize } = useApiClient();
   const { openURL } = useInAppBrowser();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   
@@ -208,6 +206,7 @@ export function Summary({
     excludedCategories,
     followCategory,
     excludeCategory,
+    api: { interactWithSummary, localize },
   } = React.useContext(StorageContext);
 
   const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
