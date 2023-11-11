@@ -17,6 +17,7 @@ export type ProfileResponse = {
 
 export type LoginRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
   createIfNotExists?: boolean;
+  anonymous?: string;
   requestedRole?: string;
   requestedScope?: string[];
 };
@@ -32,7 +33,9 @@ export type LogoutResponse = Partial<JwtResponse> & {
   count: number;
 };
 
-export type RegistrationRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload;
+export type RegistrationRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
+  anonymous?: string;
+};
 
 export type RegistrationResponse = Omit<JwtResponse, 'token'> & {
   token?: WrappedJwt;

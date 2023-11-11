@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import CryptoJS from 'crypto-js';
 import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
 import { Op } from 'sequelize';
@@ -91,6 +92,12 @@ export class AccountController {
     if (body.jwt || body.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
+    if (body.anonymous) {
+      console.log('anonymous registration');
+      const token = CryptoJS.AES.decrypt(JSON.parse(body.anonymous), process.env.REGISTRATION_PUBLIC_KEY);
+      console.log(token);
+      return { userId: 0 };
+    }
     const { payload, user } = await User.from(body, { ignoreIfNotResolved: true });
     let newAliasType: AliasType;
     let newAliasValue: string;
@@ -166,9 +173,11 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: LoginRequest
   ): Promise<LoginResponse> {
+    console.log('trying login');
     if (body.jwt || body.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
+    console.log('login');
     const ticket = await User.from(body, { ignoreIfNotResolved: body.createIfNotExists });
     const { payload } = ticket;
     let { alias, user } = ticket;

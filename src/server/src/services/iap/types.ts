@@ -38,7 +38,7 @@ export type ApplePurchaseResponse = {
     original_purchase_date: string;
     original_purchase_date_ms: string;
     original_purchase_date_pst: string;
-    original_transaction_id: string;
+    original_transid: string;
     product_id: string;
     promotional_offer_id: string;
     purchase_date: string;
@@ -46,7 +46,7 @@ export type ApplePurchaseResponse = {
     purchase_date_pst: string;
     quantity: string;
     subscription_group_identifier: string;
-    transaction_id: string;
+    transid: string;
     web_order_line_item_id: string;
   }[];
   pending_renewal_info: {
@@ -57,7 +57,7 @@ export type ApplePurchaseResponse = {
     grace_period_expires_date_ms: string;
     grace_period_expires_date_pst: string;
     is_in_billing_retry_period: string;
-    original_transaction_id: string;
+    original_transid: string;
     price_consent_status: string;
     product_id: string;
   }[];
@@ -83,7 +83,7 @@ export type ApplePurchaseResponse = {
       original_purchase_date: string;
       original_purchase_date_ms: string;
       original_purchase_date_pst: string;
-      original_transaction_id: string;
+      original_transid: string;
       product_id: string;
       promotional_offer_id: string;
       purchase_date: string;
@@ -91,7 +91,7 @@ export type ApplePurchaseResponse = {
       purchase_date_pst: string;
       quantity: string;
       subscription_group_identifier: string;
-      transaction_id: string;
+      transid: string;
       web_order_line_item_id: string;
     }[];
     original_application_version: string;
@@ -133,14 +133,14 @@ export class PurchaseResponse<
       if (!receipt) {
         throw new Error('Invalid receipt');
       }
-      this.uuid = receipt.original_transaction_id;
+      this.uuid = receipt.original_transid;
       this.vendor = vendor;
       this.productId = receipt.product_id;
       this.data = JSON.stringify(purchase);
       this.expiresAt = new Date(Number(receipt.expires_date_ms));
       this.token = jwt.sign({
         productId: receipt.product_id,
-        uuid: receipt.original_transaction_id,
+        uuid: receipt.original_transid,
         vendor,
       }, process.env.JWT_SECRET, { expiresIn: JWT_TOKEN_LIFESPAN });
     } else

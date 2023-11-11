@@ -18,6 +18,7 @@ router.post(
     body('eth2address'),
     body('username').isString(),
     body('thirdParty').isObject(),
+    body('anonymous').isString(),
   ]),
   body('password')
     .if(body('eth2address').not().exists())
@@ -41,6 +42,7 @@ router.post(
     body('eth2address'),
     body('username').isString(),
     body('thirdParty').isObject(),
+    body('anonymous').isString(),
   ]),
   body('password')
     .if(body('eth2address').not().exists())
