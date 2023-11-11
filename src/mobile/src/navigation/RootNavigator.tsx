@@ -19,6 +19,8 @@ import {
   ActivityIndicator,
   MediaPlayer,
   Screen,
+  Text,
+  View,
 } from '~/components';
 import {
   LayoutContext,
@@ -39,6 +41,9 @@ export function RootNavigator() {
   const storage = React.useContext(StorageContext);
   const {
     ready, 
+    hasLoadedLocalState,
+    isSyncingWithRemote,
+    hasSyncedWithRemote,
     categories,
     publishers,
     setCategories, 
@@ -163,9 +168,19 @@ export function RootNavigator() {
   const currentTheme = React.useMemo(() => theme.isDarkMode ? MD3DarkTheme : DefaultTheme, [theme.isDarkMode]);
 
   if (!ready) {
+    const text = isSyncingWithRemote ? 'Syncing with remote...' : 'Loading...';
     return (
       <Screen>
-        <ActivityIndicator />
+        <View
+          p={ 24 }
+          gap={ 12 }
+          itemsCenter
+          justifyCenter>
+          <ActivityIndicator />
+          <Text textCenter>
+            {text}
+          </Text>
+        </View>
       </Screen>
     );
   }

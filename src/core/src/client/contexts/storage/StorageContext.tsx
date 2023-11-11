@@ -36,11 +36,16 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   
   // system state
   const [storage, setStorage] = React.useState<Storage>(DEFAULT_STORAGE_CONTEXT);
+  const [hasLoadedLocalState, setHasLoadedLocalState] = React.useState<boolean>();
+  const [isSyncingWithRemote, setIsSyncingWithRemote] = React.useState<boolean>();
+  const [hasSyncedWithRemote, setHasSyncedWithRemote] = React.useState<boolean>();
+  
+  const ready = React.useMemo(() => hasLoadedLocalState && hasSyncedWithRemote, [hasLoadedLocalState, hasSyncedWithRemote]);
+  
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
-  const [hasSyncedWithServer, setHasSyncedWithServer] = React.useState<boolean>(false);
-
+  
   const bookmarkCount = React.useMemo(() => {
     return Object.keys({ ...storage.bookmarkedSummaries }).length;
   }, [storage.bookmarkedSummaries]);
@@ -190,9 +195,26 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       console.error(e);
     }
   }, [api]);
+  
+  const loadBookmarks = React.useCallback(async (ids: number) => {
+    const { data, error } = await api.getSummaries({ ids });
+    if (error) {
+      console.error(error);
+      return;
+    }
+    const { rows: summaries } = data;
+    if (!summaries) {
+      return;
+    }
+    await setStoredValue('bookmarkedSummaries', Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), false);
+  }, [api]);
 
   const syncWithRemotePrefs = React.useCallback(async () => {
+    if (!hasLoadedLocalState) {
+      return;
+    }
     if (!storage.userData) {
+      setHasSyncedWithRemote(true);
       return;
     }
     const { data, error } = await api.getProfile();
@@ -209,17 +231,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const remoteValue = profile.preferences?.[key];
       console.log('updating', key, remoteValue);
       if (key === 'bookmarkedSummaries') {
-        const remoteIds = Object.keys(remoteValue ?? {});
-        const { data, error } = await api.getSummaries({ ids: remoteIds.map((id) => parseInt(id)) });
-        if (error) {
-          console.error(error);
-          return;
-        }
-        const { rows: summaries } = data;
-        if (!summaries) {
-          return;
-        }
-        await setStoredValue('bookmarkedSummaries', Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), false);
+        loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
       } else {
         try {
           if (remoteValue) {
@@ -233,7 +245,9 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       }
     }
     await setStoredValue('lastRemoteSync', new Date());
-  }, [api, storage.userData]);
+    setHasSyncedWithRemote(true);
+    setIsSyncingWithRemote(false);
+  }, [hasLoadedLocalState, api, storage.userData, loadBookmarks]);
   
   // Load preferences on mount
   const load = async () => {
@@ -291,17 +305,16 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.sentimentEnabled = await getStoredValue('sentimentEnabled');
     state.triggerWords = await getStoredValue('triggerWords');
     
-    state.ready = true;
-    
     setStorage(state);
+    setHasLoadedLocalState(true);
   };
 
   React.useEffect(() => {
-    if (!hasSyncedWithServer && storage.ready) {
-      setHasSyncedWithServer(true);
+    if (!isSyncingWithRemote && !hasSyncedWithRemote && hasLoadedLocalState) {
       syncWithRemotePrefs();
+      setIsSyncingWithRemote(true);
     }
-  }, [storage.ready, hasSyncedWithServer, syncWithRemotePrefs]);
+  }, [hasLoadedLocalState, isSyncingWithRemote, hasSyncedWithRemote, syncWithRemotePrefs]);
   
   const resetStorage = async (hard = false) => {
     await removeAll(hard);
@@ -558,16 +571,19 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         followPublisher,
         getStoredValue,
         hasPushEnabled,
+        hasSyncedWithRemote,
         hasViewedFeature,
         isExcludingCategory,
         isExcludingPublisher,
         isFollowingCategory,
         isFollowingPublisher,
+        isSyncingWithRemote,
         loadedInitialUrl,
         publisherIsFavorited,
         publishers,
         readRecap,
         readSummary,
+        ready,
         removeSummary,
         resetStorage,
         setCategories,

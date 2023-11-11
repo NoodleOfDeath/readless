@@ -25,6 +25,7 @@ export function ProfileScreen({
     followedCategories,
     userData, 
     setStoredValue, 
+    api: { logout },
   } = React.useContext(StorageContext);
 
   return (
@@ -39,27 +40,34 @@ export function ProfileScreen({
           <TableViewSection>
             <TableViewCell 
               bold
-              title={ `${strings.screens} (${bookmarkCount})` }
-              cellAccessoryView={ <Text>{ `${unreadBookmarkCount} ${strings.unread}` }</Text> } 
+              cellStyle="RightDetail"
+              title={ `${strings.bookmarks} (${bookmarkCount})` }
+              accessory="DisclosureIndicator"
+              detail={ `${unreadBookmarkCount} ${strings.unread}` } 
               onPress={ () => navigation?.push('bookmarks') } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell 
               bold
+              cellStyle="RightDetail"
               title={ strings.publishers }
-              cellAccessoryView={ <Text>{ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.following}` }</Text> }
+              accessory="DisclosureIndicator"
+              detail={ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.following}` }
               onPress={ () => navigation?.push('publisherPicker') } />
             <TableViewCell 
               bold
+              cellStyle="RightDetail"
               title={ strings.categories }
-              cellAccessoryView={ <Text>{ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.following}` }</Text> }
+              accessory="DisclosureIndicator"
+              detail={ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.following}` }
               onPress={ () => navigation?.push('categoryPicker') } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell
               bold
               title={ 'Sign Out' }
-              onPress={ () => {
+              onPress={ async () => {
+                await logout();
                 setStoredValue('userData'); 
               } } />
           </TableViewSection>

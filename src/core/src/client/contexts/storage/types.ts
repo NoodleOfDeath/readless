@@ -115,7 +115,6 @@ export type StorageEventName = Activity | ResourceActivity | `${ResourceActivity
 export type Storage = {
   
   // system state
-  ready?: boolean;
   lastRemoteSync?: Date;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
@@ -320,10 +319,15 @@ export type Methods = {
 };
 
 export type StorageContextType = Storage & {
+  
   ready?: boolean;
-
+  hasLoadedLocalState?: boolean;
+  isSyncingWithRemote?: boolean;
+  hasSyncedWithRemote?: boolean;
+  
   loadedInitialUrl?: boolean;
   setLoadedInitialUrl: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  
   categories?: Record<string, PublicCategoryAttributes>;
   setCategories: React.Dispatch<React.SetStateAction<Record<string, PublicCategoryAttributes> | undefined>>;
   publishers?: Record<string, PublicPublisherAttributes>;
