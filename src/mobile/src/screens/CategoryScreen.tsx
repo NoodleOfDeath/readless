@@ -94,14 +94,14 @@ export function CategoryScreen({
                 contained
                 haptic
                 onPress={ toggleFollowed }>
-                {`${ followed ? strings.action_unfollow : strings.action_follow } ${ strings.misc_category }`}
+                {`${ followed ? strings.unfollow : strings.follow } ${ strings.category }`}
               </Button>
               <Button
                 leftIcon={ favorited ? 'star' : 'star-outline' }
                 haptic 
                 iconSize={ 24 }
                 onPress={ toggleFavorited }
-                accessibilityLabel={ favorited ? strings.action_unfavorite : strings.action_favorite } />
+                accessibilityLabel={ favorited ? strings.unfavorite : strings.favorite } />
             </View>
           </View>
         ) } />

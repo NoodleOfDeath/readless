@@ -59,9 +59,10 @@ function letterClue(answer: string, guess: string, index: number): LetterClue {
   if (letter === correct) {
     return 'exact';
   }
+  const exactCount = exactMatches(answer, guess).length;
   const guessCount = charCount(guess, letter, index);
   const count = charCount(answer, letter);
-  if (count - guessCount > 0 && answer.includes(letter)) {
+  if (count - Math.min(guessCount, exactCount) > 0 && answer.includes(letter)) {
     return 'close';
   }
   return 'wrong';
@@ -97,7 +98,7 @@ function WordleLetter({
       }, delay);
       setTimeout(() => setColors(revealed ? LETTER_COLORS[clue] : LETTER_COLORS.unknown), delay + (duration * 0.75));
     }
-  }, [revealed, delay]);
+  }, [revealed, delay, duration, animation, clue]);
   
   return (
     <Animated.View
@@ -195,21 +196,6 @@ export function WordleGame({
           if (key.value === 'enter') {
             if (currentGuess.length === maxLength) {
               setGuesses((prev) => [...prev, currentGuess]);
-              setKeys((prev) => {
-                const state = { ...prev };
-                for (const [index, k] in currentGuess.split('').entries()) {
-                  const clue = letterClue(correctAnswer, currentGuess, index);
-                  for (const row in state) {
-                    const key = row.find((r) => r.value.toLowerCase() === k.toLowerCase());
-                    if (!key) {
-                      continue;
-                    }
-                    key.bg = LETTER_COLORS[clue].bg;
-                    key.color = LETTER_COLORS[clue].color;
-                  }
-                }
-                return (prev = state);
-              });
               setCurrentGuess('');
             }
           } else

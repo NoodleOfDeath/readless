@@ -33,7 +33,7 @@ export const PROFILE_STACK: RouteConfig<
       headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />, 
-      headerTitle: strings.screens_profile,
+      headerTitle: strings.screens,
     },
   },
   {
@@ -43,7 +43,7 @@ export const PROFILE_STACK: RouteConfig<
       headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: strings.screens_bookmarks, 
+      headerTitle: strings.screens, 
     }, 
   }, 
   {

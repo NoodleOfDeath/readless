@@ -4,5 +4,6 @@ declare module '@env' {
   export const BASE_DOMAIN: string;
   export const GOOGLE_CLIENT_ID: string;
   export const PACKAGE_NAME: string;
+  export const REGISTRATION_PRIVATE_KEY: string;
   export const SSL: string;
 }

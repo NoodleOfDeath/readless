@@ -69,10 +69,10 @@ export function SettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
-      <TableViewSection header={ strings.settings_pushNotifications }>
+      <TableViewSection header={ strings.pushNotifications }>
         <TableViewCell
           bold
-          title={ strings.settings_pushNotifications }
+          title={ strings.pushNotifications }
           cellIcon={ (
             <Button
               leftIcon="bell" 
@@ -84,7 +84,7 @@ export function SettingsTable() {
             navigate('notifications');
           } } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_summaryDisplay }>
+      <TableViewSection header={ strings.summaryDisplay }>
         <TableViewCell
           cellContentView={ (
             <ScrollView my={ 12 } scrollEnabled={ false }>
@@ -97,21 +97,21 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ strings.settings_compactSummaries }
+          title={ strings.compactSummaries }
           cellIcon="view-headline"
           cellAccessoryView={ <PrefSwitch prefKey='compactSummaries' /> } />
         <TableViewCell
           bold
-          title={ compactSummaries ? strings.settings_shortSummariesInsteadOfTitles : strings.settings_shortSummaries }
+          title={ compactSummaries ? strings.shortSummariesInsteadOfTitles : strings.shortSummaries }
           cellIcon="text-short"
           cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
         {Platform.OS === 'ios' && (
           <TableViewCell
             bold
             cellStyle="RightDetail"
-            title={ strings.settings_preferredShortPressFormat }
+            title={ strings.preferredShortPressFormat }
             sentenceCase
-            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.summary_bullets : strings.summary_shortSummary }
+            detail={ preferredShortPressFormat === ReadingFormat.Bullets ? strings.bullets : strings.shortSummary }
             accessory="DisclosureIndicator"
             cellIcon="gesture-tap-hold"
             onPress={ () => navigate('shortPressFormatPicker') } />
@@ -119,35 +119,35 @@ export function SettingsTable() {
         <TableViewCell
           bold
           cellStyle="RightDetail"
-          title={ strings.settings_preferredReadingFormat }
-          detail={ preferredReadingFormat === ReadingFormat.Summary ? strings.summary_summary : preferredReadingFormat === ReadingFormat.FullArticle ? strings.summary_fullArticle : strings.summary_bullets }
+          title={ strings.preferredReadingFormat }
+          detail={ preferredReadingFormat === ReadingFormat.Summary ? strings.summary : preferredReadingFormat === ReadingFormat.FullArticle ? strings.fullArticle : strings.bullets }
           accessory="DisclosureIndicator"
           cellIcon="gesture-tap"
           onPress={ () => navigate('readingFormatPicker') } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_customization }>
+      <TableViewSection header={ strings.customization }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
-          title={ strings.settings_triggerWords }
+          title={ strings.triggerWords }
           detail={ Object.keys({ ...triggerWords }).length }
           accessory="DisclosureIndicator"
           cellIcon="alphabetical-off"
           onPress={ () => navigate('triggerWordPicker') } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_system }>
+      <TableViewSection header={ strings.system }>
         <TableViewCell
           bold
           cellStyle="RightDetail"
-          title={ strings.settings_colorScheme }
-          detail={ colorScheme === 'light' ? strings.settings_light : colorScheme === 'dark' ? strings.settings_dark : strings.settings_system }
+          title={ strings.colorScheme }
+          detail={ colorScheme === 'light' ? strings.light : colorScheme === 'dark' ? strings.dark : strings.system }
           accessory="DisclosureIndicator"
           cellIcon="theme-light-dark"
           onPress={ () => navigate('colorSchemePicker') } />
         <TableViewCell
           bold
           cellStyle="RightDetail"
-          title={ strings.settings_font }
+          title={ strings.font }
           detail={ fontFamily ?? SYSTEM_FONT }
           detailTextStyle={ { fontFamily: fontFamily ?? SYSTEM_FONT } }
           accessory="DisclosureIndicator"
@@ -155,7 +155,7 @@ export function SettingsTable() {
           onPress={ () => navigate('fontPicker') } />
         <TableViewCell
           bold
-          title={ strings.settings_fontSize }
+          title={ strings.fontSize }
           cellIcon="format-size"
           cellAccessoryView={ (
             <NumericPrefPicker
@@ -167,7 +167,7 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ strings.settings_letterSpacing }
+          title={ strings.letterSpacing }
           cellIcon="format-letter-spacing"
           cellAccessoryView={ (
             <NumericPrefPicker
@@ -179,7 +179,7 @@ export function SettingsTable() {
           ) } />
         <TableViewCell
           bold
-          title={ strings.settings_lineHeight }
+          title={ strings.lineHeight }
           cellIcon="format-line-spacing"
           cellAccessoryView={ (
             <NumericPrefPicker
@@ -190,10 +190,10 @@ export function SettingsTable() {
               step={ 0.05 } />
           ) } />
       </TableViewSection>
-      <TableViewSection header={ strings.settings_general }>
+      <TableViewSection header={ strings.general }>
         <TableViewCell
           bold
-          title={ `${strings.settings_resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
+          title={ `${strings.resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
           onPress={ () => {
             setStoredValue('readSummaries', {}); 
           } }
@@ -202,7 +202,7 @@ export function SettingsTable() {
           } } />
         <TableViewCell
           bold
-          title={ `${strings.settings_resetHiddenSummaries} (${Object.keys({ ...removedSummaries }).length})` }
+          title={ `${strings.resetHiddenSummaries} (${Object.keys({ ...removedSummaries }).length})` }
           onPress={ () => {
             setStoredValue('removedSummaries', {}); 
             setStoredValue('excludedCategories', {}); 
@@ -210,7 +210,7 @@ export function SettingsTable() {
           } } />
         <TableViewCell
           bold
-          title={ loading ? strings.action_loading : `${strings.settings_clearCache} (${cacheSize})` }
+          title={ loading ? strings.loading : `${strings.clearCache} (${cacheSize})` }
           onPress={ () => {
             clearCache(); 
           } } 
@@ -219,7 +219,7 @@ export function SettingsTable() {
           } } />
         <TableViewCell
           bold
-          title={ strings.settings_resetAllSettings }
+          title={ strings.resetAllSettings }
           onPress={ () => {
             resetStorage(); 
           } }

@@ -276,7 +276,7 @@ export function SummaryList({
       <Divider my={ 6 } />
       {detailSummarySiblings.length > 0 && (
         <Text system h6 m={ 12 }>
-          {`${strings.summary_relatedNews} (${detailSummarySiblings.length})`}
+          {`${strings.relatedNews} (${detailSummarySiblings.length})`}
         </Text>
       )}
     </React.Fragment>
@@ -313,7 +313,7 @@ export function SummaryList({
                           await loadMore();
                         }
                       } }>
-                      {strings.search_loadMore}
+                      {strings.loadMore}
                     </Button>
                   </View>
                 )}
@@ -327,7 +327,7 @@ export function SummaryList({
                 {summaries.length === 0 && !loading && loaded && (
                   <View col gap={ 12 } itemsCenter justifyCenter>
                     <Text textCenter mx={ 16 }>
-                      {strings.search_noResults}
+                      {strings.noResults}
                       {' '}
                       🥺
                     </Text>
@@ -343,7 +343,7 @@ export function SummaryList({
                           await loadMore();
                         }
                       } }>
-                      {strings.search_reload}
+                      {strings.reload}
                     </Button>
                   </View>
                 )}

@@ -82,22 +82,22 @@ export function ShareDialog({
       [
         {
           icon: 'export-variant',
-          label: strings.share_shareAsLink,
+          label: strings.shareAsLink,
           onPress: () => shareStandard(summary, { format }), 
         },
         {
           icon: 'link-variant',
-          label: strings.share_shareOriginalLink,
+          label: strings.shareOriginalLink,
           onPress: () => shareStandard(summary, { originalUrl: true }),
         },
         {
           icon: 'download',
-          label: strings.share_saveToCameraRoll,
+          label: strings.saveToCameraRoll,
           onPress: () => saveToCameraRoll(summary, { viewshot: viewshot.current }), 
         },
         {
           icon: 'camera-outline',
-          label: strings.share_shareAsImage,
+          label: strings.shareAsImage,
           onPress: () => shareStandard(summary, {
             format,
             viewshot: viewshot.current,
@@ -108,7 +108,7 @@ export function ShareDialog({
       [
         {
           icon: 'facebook',
-          label: strings.share_facebook,
+          label: strings.facebook,
           onPress: () => shareSocial(summary, {
             format,
             social: Social.Facebook,
@@ -116,7 +116,7 @@ export function ShareDialog({
         },
         {
           icon: 'twitter',
-          label: strings.share_twitter,
+          label: strings.twitter,
           onPress:() => shareSocial(summary, { 
             format,
             social: Social.Twitter,
@@ -125,7 +125,7 @@ export function ShareDialog({
         },
         {
           icon: 'instagram',
-          label: strings.share_instagram,
+          label: strings.instagram,
           onPress: () => shareSocial(summary, {
             format,
             social: Social.Instagram,
@@ -134,7 +134,7 @@ export function ShareDialog({
         },
         {
           icon: 'instagram',
-          label: strings.share_instagramStories,
+          label: strings.instagramStories,
           onPress: () => shareSocial(summary, {
             format,
             social: Social.InstagramStories,
@@ -143,7 +143,7 @@ export function ShareDialog({
         },
         {
           icon: 'linkedin',
-          label: strings.share_linkedin,
+          label: strings.linkedin,
           onPress: () => {
             shareSocial(summary, {
               format,
@@ -153,7 +153,7 @@ export function ShareDialog({
         },
         {
           icon: 'send',
-          label: strings.share_telegram,
+          label: strings.telegram,
           onPress: () => shareSocial(summary, {
             format,
             social: Social.Telegram,
@@ -162,7 +162,7 @@ export function ShareDialog({
         },
         {
           icon: 'whatsapp',
-          label: strings.share_whatsapp,
+          label: strings.whatsapp,
           onPress: () => shareSocial(summary, {
             format,
             social: Social.Whatsapp,

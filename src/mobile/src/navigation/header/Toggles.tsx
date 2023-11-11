@@ -12,7 +12,7 @@ export const SettingsToggleWithIndicator = () => {
   return (
     <SettingsToggle
       accessible
-      accessibilityLabel={ strings.axe_settings }
+      accessibilityLabel={ strings.settings }
       indicator={ !hasViewedFeature(
         'first-view-settings',
         'first-view-notifs'

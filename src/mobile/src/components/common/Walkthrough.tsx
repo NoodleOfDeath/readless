@@ -48,7 +48,7 @@ export const Walkthrough = React.forwardRef(function Walkthrough<Step extends Wa
     onClose,
     onDone,
     closable,
-    closeLabel = strings.action_close,
+    closeLabel = strings.close,
   } = React.useMemo(() => ({ ...payload }), [payload]);
   
   const computedSteps: React.ReactNode[] = React.useMemo(() => {
@@ -141,7 +141,7 @@ export const Walkthrough = React.forwardRef(function Walkthrough<Step extends Wa
         contained
         untouchable
         system>
-        {strings.action_skip}
+        {strings.skip}
       </Button>
     );
   }, []);

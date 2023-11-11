@@ -5,7 +5,9 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
+import { strings } from '~/locales';
 import {
+  ForgotPasswordScreen,
   LoginScreen,
   PasswordLoginScreen,
   RegisterScreen,
@@ -26,7 +28,7 @@ export const LOGIN_STACK: RouteConfig<
       headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => null,
-      headerTitle: '', 
+      headerTitle: strings.login,
     },
   },
   {
@@ -36,7 +38,7 @@ export const LOGIN_STACK: RouteConfig<
       headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => null,
-      headerTitle: '',
+      headerTitle: strings.login,
     },
   },
   {
@@ -46,7 +48,17 @@ export const LOGIN_STACK: RouteConfig<
       headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => null,
-      headerTitle: '',
+      headerTitle: strings.register,
+    },
+  },
+  {
+    component: ForgotPasswordScreen,
+    name: 'forgotPassword',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.forgotPassword,
     },
   },
 ];

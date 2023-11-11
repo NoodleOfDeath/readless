@@ -30,7 +30,7 @@ type SearchMenuProps = ChildlessViewProps & {
 
 export function SearchMenu({
   initialValue = '',
-  placeholder = strings.search_title,
+  placeholder = strings.search,
   showHistory,
   onChangeText,
   onClear,
@@ -98,12 +98,12 @@ export function SearchMenu({
                 elevated 
                 contained
                 onPress={ () => submit() }>
-                {strings.action_search}
+                {strings.search}
               </Button>
             </View>
             <View gap={ 6 }>
               <Button caption onPress={ () => setStoredValue('searchHistory', []) }>
-                {strings.action_clearSearchHistory}
+                {strings.clearSearchHistory}
               </Button>
               <Divider />
               <ScrollView>

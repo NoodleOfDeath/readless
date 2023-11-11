@@ -95,14 +95,14 @@ export function PublisherScreen({
                 contained
                 haptic
                 onPress={ toggleFollowed }>
-                {`${ followed ? strings.action_unfollow : strings.action_follow } ${ strings.misc_publisher }`}
+                {`${ followed ? strings.unfollow : strings.follow } ${ strings.publisher }`}
               </Button>
               <Button
                 leftIcon={ favorited ? 'star' : 'star-outline' }
                 haptic 
                 iconSize={ 24 }
                 onPress={ toggleFavorited }
-                accessibilityLabel={ favorited ? strings.action_unfavorite : strings.action_favorite } />
+                accessibilityLabel={ favorited ? strings.unfavorite : strings.favorite } />
             </View>
             {publisher?.description && (
               <View px={ 12 }>

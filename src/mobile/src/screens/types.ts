@@ -23,6 +23,7 @@ export type LoginRoutingParams = {
   login: undefined;
   passwordLogin: undefined;
   register: undefined;
+  forgotPassword: undefined;
 };
 
 export type SettingsRoutingParams = {

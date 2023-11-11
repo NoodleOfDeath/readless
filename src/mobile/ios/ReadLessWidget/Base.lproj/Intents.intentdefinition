@@ -27,21 +27,31 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Live Feed</string>
+					<string>Top Stories</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>jjAaOW</string>
 					<key>INEnumValueIndex</key>
 					<integer>1</integer>
 					<key>INEnumValueName</key>
-					<string>liveFeed</string>
+					<string>topStories</string>
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Custom Topic</string>
+					<string>Live Feed</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>GHz1XP</string>
 					<key>INEnumValueIndex</key>
 					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>liveFeed</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Custom Topics</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>mHnEgQ</string>
+					<key>INEnumValueIndex</key>
+					<integer>3</integer>
 					<key>INEnumValueName</key>
 					<string>customTopic</string>
 				</dict>
@@ -70,11 +80,21 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Oct. 21 3:25 PM</string>
+					<string>Relative</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>VdLDap</string>
 					<key>INEnumValueIndex</key>
 					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>relative</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Oct. 21 3:25 PM</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>jAX8fc</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
 					<key>INEnumValueName</key>
 					<string>timestamp</string>
 				</dict>
@@ -88,9 +108,9 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>22G91</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>15A240d</string>
+	<string>15A507</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>15.0</string>
+	<string>15.0.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -224,7 +244,7 @@
 						<key>INIntentParameterRelationshipPredicateName</key>
 						<string>EnumHasExactValue</string>
 						<key>INIntentParameterRelationshipPredicateValue</key>
-						<string>customTopic</string>
+						<string>liveFeed</string>
 					</dict>
 					<key>INIntentParameterTag</key>
 					<integer>5</integer>

@@ -27,9 +27,9 @@ export function ColorSchemePicker({
     return (
       <TablePicker
         options={ [
-          { label: strings.settings_light, value: 'light' as ColorScheme },
-          { label: strings.settings_system, value: 'system' as ColorScheme },
-          { label: strings.settings_dark, value: 'dark' as ColorScheme },
+          { label: strings.settings, value: 'light' as ColorScheme },
+          { label: strings.settings, value: 'system' as ColorScheme },
+          { label: strings.settings, value: 'dark' as ColorScheme },
         ] }
         initialValue={ colorScheme ?? 'system' }
         onValueChange={ (colorScheme) => {
@@ -60,9 +60,9 @@ export function ColorSchemePicker({
       initialValue={ colorScheme ?? 'system' }
       onValueChange={ (value) => setStoredValue('colorScheme', value) }
       options={ [
-        { label: strings.settings_light, value: 'light' as ColorScheme },
-        { label: strings.settings_system, value: 'system' as ColorScheme },
-        { label: strings.settings_dark, value: 'dark' as ColorScheme },
+        { label: strings.settings, value: 'light' as ColorScheme },
+        { label: strings.settings, value: 'system' as ColorScheme },
+        { label: strings.settings, value: 'dark' as ColorScheme },
       ] } />
   );
 }

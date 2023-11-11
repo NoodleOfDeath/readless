@@ -56,7 +56,7 @@ export function Recap({
         readRecap(recap, true);
       },
       systemIcon: isRead ? 'envelope' : 'envelope.open',
-      title: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
+      title: isRead ? strings.markAsUnRead : strings.markAsRead,
     },
   ], [isRead, recap, readRecap]);
   
@@ -158,7 +158,7 @@ export function Recap({
   return expanded ? (
     <React.Fragment>
       <View p={ 12 }>
-        <Text>{strings.recaps_headlines}</Text>
+        <Text>{strings.headlines}</Text>
       </View>
       <SummaryList
         flex={ 1 }

@@ -55,7 +55,7 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
     viewFeature('unread-bookmarks');
     navigation?.setOptions({ 
       headerRight: () => undefined,
-      headerTitle: `${strings.bookmarks_header} (${bookmarkCount})`,
+      headerTitle: `${strings.bookmarks} (${bookmarkCount})`,
     });
   }, [bookmarkCount, navigation, viewFeature]));
   
@@ -72,7 +72,7 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
               m={ 8 }
               textCenter
               onPress={ () => SheetManager.show('custom-feed-walkthrough') }>
-              {strings.screens_browse}
+              {strings.screens}
             </Button>
           </View>
         ) : (
@@ -80,13 +80,13 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
             <View mx={ 16 } gap={ 6 }>
               <View row gap={ 6 }>
                 <Text>
-                  {strings.bookmarks_bookmarksAvailableOffline}
+                  {strings.bookmarks}
                 </Text>
                 <Popover
                   anchor={
                     <Icon size={ 24 } name="information" />
                   }>
-                  <Text>{strings.bookmarks_bookmarkArticlesAreNotSaved}</Text>
+                  <Text>{strings.bookmarks}</Text>
                 </Popover>
               </View>
               <View row>
@@ -103,7 +103,7 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
                     }
                     return (prev = state);
                   }) }>
-                  {strings.bookmarks_removeReadFromBookmarks}
+                  {strings.bookmarks}
                 </Button>
               </View>
             </View>

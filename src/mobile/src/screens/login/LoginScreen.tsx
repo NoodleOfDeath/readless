@@ -1,7 +1,9 @@
+
 import React from 'react';
 
-import { GOOGLE_CLIENT_ID } from '@env';
+import { GOOGLE_CLIENT_ID, REGISTRATION_PRIVATE_KEY } from '@env';
 import { GoogleSignin, User as GoogleUser } from '@react-native-google-signin/google-signin';
+import { HmacSHA1 } from 'crypto-js';
 
 import { ThirdParty } from '~/api';
 import {
@@ -47,6 +49,20 @@ export function LoginScreen({
     }
   }, [login, setStoredValue]);
 
+  const continueWithoutAccount = React.useCallback(async () => {
+    try {
+      const anonymous = JSON.stringify(HmacSHA1('readless.ai', REGISTRATION_PRIVATE_KEY));
+      const { data: response } = await login({
+        anonymous,
+        createIfNotExists: true,
+      });
+      const userData = new UserData(response);
+      setStoredValue('userData', userData);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [login, setStoredValue]);
+
   React.useEffect(() => {
     resetStorage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,7 +99,7 @@ export function LoginScreen({
         </Button>
         <Button
           textCenter
-          onPress={ () => navigation?.push('passwordLogin') }>
+          onPress={ continueWithoutAccount }>
           Continue without an account
         </Button>
         <View flex={ 1 } />

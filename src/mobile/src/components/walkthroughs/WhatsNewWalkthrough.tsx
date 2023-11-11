@@ -26,7 +26,7 @@ export function WhatsNewWalkthrough(props: SheetProps) {
   const steps: WalkthroughStep[] = React.useMemo(() => [
     {
       content: <View />,
-      title: strings.walkthroughs_whatsNew,
+      title: strings.whatsNew,
     },
   ], []);
   

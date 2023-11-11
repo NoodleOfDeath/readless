@@ -22,7 +22,7 @@ export function OldNewsTab({
       header={ (
         <View gap={ 12 }>
           <Text mx={ 12 }>
-            {strings.recaps_information}
+            {strings.information}
           </Text>
           <Divider mb={ 12 } />
         </View>

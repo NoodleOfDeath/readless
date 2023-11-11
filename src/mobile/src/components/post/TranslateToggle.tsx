@@ -90,7 +90,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
             bold
             underline
             onPress={ handleLocalization }>
-            {strings.action_translate}
+            {strings.translate}
           </Text>
         )
           : (
@@ -107,7 +107,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
             onLocalize?.(showTranslations ? undefined : translations);
             setShowTranslations((prev) => !prev);
           } }>
-          {showTranslations ? strings.action_showOriginalText : strings.action_showTranslatedText}
+          {showTranslations ? strings.showOriginalText : strings.showTranslatedText}
         </Text>
       )}
     </View>

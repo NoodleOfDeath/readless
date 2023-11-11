@@ -50,7 +50,7 @@ export function Popover({
         <View row />
         <Button
           accessible
-          accessibilityLabel={ strings.action_close }
+          accessibilityLabel={ strings.close }
           leftIcon="close"
           onPress={ () => setVisible(false) } />
       </View>

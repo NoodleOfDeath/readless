@@ -39,20 +39,20 @@ export function ProfileScreen({
           <TableViewSection>
             <TableViewCell 
               bold
-              title={ `${strings.screens_bookmarks} (${bookmarkCount})` }
-              cellAccessoryView={ <Text>{ `${unreadBookmarkCount} ${strings.misc_unread}` }</Text> } 
+              title={ `${strings.screens} (${bookmarkCount})` }
+              cellAccessoryView={ <Text>{ `${unreadBookmarkCount} ${strings.unread}` }</Text> } 
               onPress={ () => navigation?.push('bookmarks') } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell 
               bold
-              title={ strings.misc_publishers }
-              cellAccessoryView={ <Text>{ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.misc_following}` }</Text> }
+              title={ strings.publishers }
+              cellAccessoryView={ <Text>{ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.following}` }</Text> }
               onPress={ () => navigation?.push('publisherPicker') } />
             <TableViewCell 
               bold
-              title={ strings.misc_categories }
-              cellAccessoryView={ <Text>{ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.misc_following}` }</Text> }
+              title={ strings.categories }
+              cellAccessoryView={ <Text>{ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.following}` }</Text> }
               onPress={ () => navigation?.push('categoryPicker') } />
           </TableViewSection>
           <TableViewSection>

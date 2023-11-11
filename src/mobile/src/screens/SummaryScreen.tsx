@@ -140,7 +140,7 @@ export function SummaryScreen({
                 onFormatChange={ (format) => handleFormatChange(summary, format) } />
               {siblings.length > 0 && (
                 <Text system h6 m={ 12 }>
-                  {`${strings.summary_relatedNews} (${siblings.length})`}
+                  {`${strings.relatedNews} (${siblings.length})`}
                 </Text>
               )}
             </React.Fragment>

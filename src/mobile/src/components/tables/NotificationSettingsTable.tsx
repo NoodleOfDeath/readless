@@ -56,11 +56,11 @@ export function NotificationSettingsTable() {
         });
         setSettings({ ...settings, [SubscriptionEvent.DailyReminder]: reminders });
         await subscribe({
-          body: strings.notifications_dailyReminderDescription,
+          body: strings.dailyReminderDescription,
           event: SubscriptionEvent.DailyReminder,
           fireTime: fireTime.toISOString(),
           repeats: '1d',
-          title: strings.notifications_dailyReminder,
+          title: strings.dailyReminder,
         });
       } else {
         setSettings((prev) => {
@@ -94,10 +94,10 @@ export function NotificationSettingsTable() {
   return (
     <TableView 
       flexGrow={ 1 }>
-      <TableViewSection header={ strings.settings_pushNotifications }>
+      <TableViewSection header={ strings.settings }>
         <TableViewCell
           bold
-          title={ strings.settings_pushNotifications }
+          title={ strings.settings }
           cellIcon="bell"
           cellAccessoryView={ (
             <PrefSwitch 
@@ -114,7 +114,7 @@ export function NotificationSettingsTable() {
         <TableViewCell
           bold
           disabled={ !enabled }
-          title={ strings.settings_dailyRecaps }
+          title={ strings.settings }
           cellIcon="history"
           cellAccessoryView={ (
             <Switch 
@@ -133,7 +133,7 @@ export function NotificationSettingsTable() {
                 if (value === true) {
                   await subscribe({
                     event: SubscriptionEvent.DailyRecap,
-                    title: strings.settings_dailyRecaps,
+                    title: strings.settings,
                   });
                 } else {
                   await unsubscribe({ event: SubscriptionEvent.DailyRecap });
@@ -143,7 +143,7 @@ export function NotificationSettingsTable() {
         <TableViewCell
           bold
           disabled={ !enabled }
-          title={ strings.settings_dailyReminders }
+          title={ strings.settings }
           cellIcon="calendar"
           cellAccessoryView={ (
             <Switch 
@@ -158,7 +158,7 @@ export function NotificationSettingsTable() {
         <TableViewCell
           bold
           disabled={ !settings[SubscriptionEvent.DailyReminder] }
-          title={ strings.settings_dailyReminderTime }
+          title={ strings.settings }
           cellIcon="clock"
           cellAccessoryView={ Boolean(settings[SubscriptionEvent.DailyReminder]) && fireTime && (
             <DateTimePicker 

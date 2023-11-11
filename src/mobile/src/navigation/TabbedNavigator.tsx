@@ -41,7 +41,7 @@ function _GamesStack() {
 
 export function TabbedNavigator() {
 
-  const { bookmarkCount } = React.useContext(StorageContext);
+  const { unreadBookmarkCount } = React.useContext(StorageContext);
 
   return (
     <Tab.Navigator
@@ -70,7 +70,7 @@ export function TabbedNavigator() {
         options={ {
           tabBarIcon: ({ color, size }) => (
             <Button 
-              badge={ bookmarkCount }
+              indicator={ unreadBookmarkCount > 0 }
               leftIcon="account"
               color={ color }
               iconSize={ size } />

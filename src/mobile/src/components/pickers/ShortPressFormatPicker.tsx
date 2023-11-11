@@ -13,10 +13,10 @@ import { StorageContext } from '~/core';
 type Props = ChildlessViewProps;
 
 const OPTIONS: SelectOption<ReadingFormat>[] = [{
-  label: strings.summary_shortSummary, 
+  label: strings.shortSummary, 
   value: ReadingFormat.ShortSummary,
 }, {
-  label: strings.summary_bullets,
+  label: strings.bullets,
   value: ReadingFormat.Bullets,
 }];
 

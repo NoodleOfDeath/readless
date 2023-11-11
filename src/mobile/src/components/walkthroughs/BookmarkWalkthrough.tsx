@@ -35,7 +35,7 @@ export function BookmarkWalkthrough(props: SheetProps) {
     {
       body: (
         <View itemsCenter gap={ 12 }>
-          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_bookmark_niceJob}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.niceJob}</Markdown>
           <View width="100%">
             <View
               absolute
@@ -65,13 +65,13 @@ export function BookmarkWalkthrough(props: SheetProps) {
             </View>
           </View>
           <Divider />
-          <Markdown system subtitle1 contained>{strings.walkthroughs_bookmark_happyReading}</Markdown>
+          <Markdown system subtitle1 contained>{strings.happyReading}</Markdown>
           <Button
             system
             contained
             h4
             onPress={ onDone }>
-            {strings.misc_awesome}
+            {strings.awesome}
           </Button>
         </View>
       ),
