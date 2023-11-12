@@ -61,7 +61,7 @@ const html = `
         reset your password. This link will expire in 15 minutes.
       </p>
       <p class="center">
-        <a href="{{domain}}/verify?otp={{otp}}">Reset Password</a>
+        <a href="{{domain}}/verify/?otp={{otp}}">Reset Password</a>
       </p>
       <p>If you did not request a password reset, please disregard this message.</p>
     </div>

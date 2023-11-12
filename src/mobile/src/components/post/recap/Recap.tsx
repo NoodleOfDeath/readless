@@ -18,11 +18,7 @@ import {
   View,
 } from '~/components';
 import { LayoutContext, StorageContext } from '~/contexts';
-import { 
-  useApiClient,
-  useNavigation,
-  useTheme,
-} from '~/hooks';
+import { useNavigation, useTheme } from '~/hooks';
 import { getFnsLocale, strings } from '~/locales';
 
 export type RecapProps = ChildlessViewProps & {
@@ -42,10 +38,11 @@ export function Recap({
   
   const theme = useTheme();
   const { navigation, openSummary } = useNavigation();
-  const { getSummaries, localize } = useApiClient();
   const { screenHeight } = React.useContext(LayoutContext);
   
-  const { readRecap, readRecaps } = React.useContext(StorageContext);
+  const {
+    readRecap, readRecaps, api: { getSummaries, localize }, 
+  } = React.useContext(StorageContext);
   
   const [isRead, setIsRead] = React.useState(!forceUnread && recap.id in ({ ...readRecaps }));
   const [translations, setTranslations] = React.useState<{ [key in keyof RecapAttributes]?: string }>({ text: recap.text, title: recap.title });
@@ -59,7 +56,7 @@ export function Recap({
         readRecap(recap, true);
       },
       systemIcon: isRead ? 'envelope' : 'envelope.open',
-      title: isRead ? strings.summary_markAsUnRead : strings.summary_markAsRead,
+      title: isRead ? strings.markAsUnRead : strings.markAsRead,
     },
   ], [isRead, recap, readRecap]);
   
@@ -161,7 +158,7 @@ export function Recap({
   return expanded ? (
     <React.Fragment>
       <View p={ 12 }>
-        <Text>{strings.recaps_headlines}</Text>
+        <Text>{strings.headlines}</Text>
       </View>
       <SummaryList
         flex={ 1 }

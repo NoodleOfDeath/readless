@@ -46,7 +46,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
                 setILikeReading(false);
                 walkthroughRef.current?.next?.();
               } }>
-              {strings.misc_yesReading}
+              {strings.yesReading}
             </Button>
             <Button
               contained
@@ -55,7 +55,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
                 setILikeReading(false);
                 walkthroughRef.current?.next?.();
               } }>
-              {strings.misc_yesNegative}
+              {strings.yesNegative}
             </Button>
             <Button
               contained
@@ -64,7 +64,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
                 setILikeReading(false);
                 walkthroughRef.current?.next?.();
               } }>
-              {strings.misc_yesBoring}
+              {strings.yesBoring}
             </Button>
             <Button
               contained
@@ -73,12 +73,12 @@ export function OnboardingWalkthrough(props: SheetProps) {
                 setILikeReading(true);
                 walkthroughRef.current?.next?.();
               } }>
-              {strings.misc_iEnjoyReading}
+              {strings.iEnjoyReading}
             </Button>
-            <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_isReadingForYouAChoreDescription}</Text>
+            <Text subtitle1 textCenter>{strings.isReadingForYouAChoreDescription}</Text>
           </View>
         ),
-        title: strings.walkthroughs_onboarding_isReadingForYouAChore,
+        title: strings.isReadingForYouAChore,
       },
     ];
     if (!iLikeReading) {
@@ -86,7 +86,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
         {
           body: (
             <View itemsCenter gap={ 12 }>
-              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription}</Text>
+              <Text subtitle1 textCenter>{strings.enableRemindersDescription}</Text>
               <Button
                 contained
                 onPress={ async () => {
@@ -94,7 +94,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
                   subscribe({ event: SubscriptionEvent.DailyReminder });
                   walkthroughRef.current?.next?.();
                 } }>
-                {strings.misc_yes}
+                {strings.yes}
               </Button> 
               <Button
                 contained
@@ -103,12 +103,12 @@ export function OnboardingWalkthrough(props: SheetProps) {
                   unsubscribe({ event: SubscriptionEvent.DailyReminder });
                   walkthroughRef.current?.next?.();
                 } }>
-                {strings.misc_maybeLater}
+                {strings.maybeLater}
               </Button>
-              <Text subtitle1 textCenter>{strings.walkthroughs_onboarding_enableRemindersDescription2}</Text>
+              <Text subtitle1 textCenter>{strings.enableRemindersDescription2}</Text>
             </View>
           ),
-          title: strings.walkthroughs_onboarding_enableReminders,
+          title: strings.enableReminders,
         }
       );
     }
@@ -135,18 +135,18 @@ export function OnboardingWalkthrough(props: SheetProps) {
                     setFireTime(newDate);
                     await unsubscribe({ event: SubscriptionEvent.DailyReminder });
                     await subscribe({ 
-                      body: strings.notifications_dailyReminderDescription, 
+                      body: strings.dailyReminderDescription, 
                       event: SubscriptionEvent.DailyReminder,
                       fireTime: newDate.toISOString(),
                       repeats: '1d',
-                      title: strings.notifications_dailyReminder, 
+                      title: strings.dailyReminder, 
                     });
                   }
                 } }
                 mode="time" />
             </View>
           ),
-          title: strings.walkthroughs_onboarding_enableRemindersDescription3,
+          title: strings.enableRemindersDescription3,
         }
       );
     }
@@ -154,19 +154,19 @@ export function OnboardingWalkthrough(props: SheetProps) {
       steps.push({
         artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/short-press-preview.gif',
         tallImage: true,
-        title: strings.walkthroughs_onboarding_shortPress,
+        title: strings.shortPress,
       });
     }
     steps.push(
       {
         artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/sentiment-preview.gif',
         tallImage: true,
-        title: strings.walkthroughs_onboarding_readSentiment,
+        title: strings.readSentiment,
       },
       {
         artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/settings-preview.gif',
         tallImage: true,
-        title: strings.walkthroughs_onboarding_settings,
+        title: strings.settings,
       },
       {
         artwork: 'https://readless.nyc3.cdn.digitaloceanspaces.com/img/guides/walkthrough-start-reading.png',
@@ -176,11 +176,11 @@ export function OnboardingWalkthrough(props: SheetProps) {
               h4
               contained
               onPress={ onDone }>
-              {strings.walkthroughs_onboarding_yesLetsGetStarted}
+              {strings.yesLetsGetStarted}
             </Button>
           </View>
         ),
-        title: strings.walkthroughs_onboarding_areYouReady,
+        title: strings.areYouReady,
       }
     );
     return steps;

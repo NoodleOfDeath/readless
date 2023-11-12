@@ -45,7 +45,7 @@ export function HomeScreen({
       {
         component: OldNewsTab,
         name: 'oldNews',
-        options: { title: strings.tabs_oldNews },
+        options: { title: strings.oldNews },
       },
     ];
     if (followCount > 0) {
@@ -53,7 +53,7 @@ export function HomeScreen({
         {
           component: YourNewsTab,
           name: 'yourNews',
-          options: { title: strings.tabs_yourNews },
+          options: { title: strings.yourNews },
         }
       );
     }
@@ -61,12 +61,12 @@ export function HomeScreen({
       {
         component: TopStoriesTab,
         name: 'topStories',
-        options: { title: strings.tabs_topStories },
+        options: { title: strings.topStories },
       },
       {
         component: LiveFeedTab,
         name: 'liveFeed',
-        options: { title: strings.tabs_liveFeed },
+        options: { title: strings.liveFeed },
       }
     );
     return tabs;

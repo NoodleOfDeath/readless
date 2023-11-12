@@ -34,7 +34,7 @@ export function SharingWalkthrough(props: SheetProps) {
       body: (
         <View gap={ 12 }>
           <Markdown subtitle1 textCenter contained system>
-            {strings.walkthroughs_sharing_shareArticles}
+            {strings.shareArticles}
           </Markdown>
           <View
             absolute
@@ -57,12 +57,12 @@ export function SharingWalkthrough(props: SheetProps) {
               contained
               system
               onPress={ onDone }>
-              {strings.misc_duhIAlreadyKnow}
+              {strings.duhIAlreadyKnow}
             </Button>
           </View>
         </View>
       ),
-      title: strings.walkthroughs_sharing_noteworthyArticle,
+      title: strings.noteworthyArticle,
     },
   ], [onDone]);
 

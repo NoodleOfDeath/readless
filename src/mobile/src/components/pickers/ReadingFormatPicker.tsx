@@ -48,7 +48,7 @@ export function ReadingFormatPicker({
             onChange?.(option.value);
           },
           systemIcon: ICONS[option.value],
-          title: strings.action_setAsDefault,
+          title: strings.setAsDefault,
         },
       ] }
       initialValue={ format ?? preferredReadingFormat }
@@ -56,17 +56,17 @@ export function ReadingFormatPicker({
       options={ [
         {
           icon: 'view-list',
-          label: strings.summary_bullets,
+          label: strings.bullets,
           value: ReadingFormat.Bullets,
         },
         {
           icon: 'text-long',
-          label: strings.summary_summary,
+          label: strings.summary,
           value: ReadingFormat.Summary,
         },
         {
           icon: 'book-open-variant',
-          label: strings.summary_fullArticle,
+          label: strings.fullArticle,
           pressOnly,
           value: ReadingFormat.FullArticle,
         },

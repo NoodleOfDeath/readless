@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from '~/components';
-import { useApiClient } from '~/core';
+import { StorageContextType } from '~/contexts';
 import { getLocale, strings } from '~/locales';
 import { usePlatformTools } from '~/utils';
 
@@ -15,8 +15,8 @@ export type TranslateToggleProps<Type extends 'summary' | 'recap', Target extend
   type: Type;
   target: Target;
   translations?: { [key in keyof Target]?: string };
-  localize: Target extends RecapAttributes ? ReturnType<typeof useApiClient>['localize'] : 
-    Target extends PublicSummaryGroup ? ReturnType<typeof useApiClient>['localize'] : never;
+  localize: Target extends RecapAttributes ? StorageContextType['api']['localize'] : 
+    Target extends PublicSummaryGroup ? StorageContextType['api']['localize'] : never;
   onLocalize: (translations?: { [key in keyof Target]?: string }) => void;
 };
 
@@ -90,7 +90,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
             bold
             underline
             onPress={ handleLocalization }>
-            {strings.action_translate}
+            {strings.translate}
           </Text>
         )
           : (
@@ -107,7 +107,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
             onLocalize?.(showTranslations ? undefined : translations);
             setShowTranslations((prev) => !prev);
           } }>
-          {showTranslations ? strings.action_showOriginalText : strings.action_showTranslatedText}
+          {showTranslations ? strings.showOriginalText : strings.showTranslatedText}
         </Text>
       )}
     </View>

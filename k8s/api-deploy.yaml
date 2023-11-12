@@ -20,72 +20,74 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              memory: '$K8S_MEMORY_REQUESTS'
-              cpu: '$K8S_CPU_REQUESTS'
+              memory: "$K8S_MEMORY_REQUESTS"
+              cpu: "$K8S_CPU_REQUESTS"
             limits:
-              memory: '$K8S_MEMORY_LIMITS'
-              cpu: '$K8S_CPU_LIMITS'
+              memory: "$K8S_MEMORY_LIMITS"
+              cpu: "$K8S_CPU_LIMITS"
           env:
             - name: API_RATE_LIMIT
-              value: '$API_RATE_LIMIT'
+              value: "$API_RATE_LIMIT"
             - name: API_RATE_LIMIT_DURATION
-              value: '$API_RATE_LIMIT_DURATION'
+              value: "$API_RATE_LIMIT_DURATION"
             - name: APPLE_SECRET_KEY
-              value: '$APPLE_SECRET_KEY'
+              value: "$APPLE_SECRET_KEY"
             - name: BASE_DOMAIN
-              value: '$BASE_DOMAIN'
+              value: "$BASE_DOMAIN"
             - name: CACHE_HALFLIFE
-              value: '$CACHE_HALFLIFE'
+              value: "$CACHE_HALFLIFE"
             - name: CORS_ORIGIN
-              value: '$CORS_ORIGIN'
+              value: "$CORS_ORIGIN"
             - name: ENABLED_FEATURES
-              value: '$ENABLED_FEATURES'
+              value: "$ENABLED_FEATURES"
             - name: FIREBASE_CREDENTIALS
-              value: '$FIREBASE_CREDENTIALS'
+              value: "$FIREBASE_CREDENTIALS"
             - name: GOOGLE_CLIENT_ID
-              value: '$GOOGLE_CLIENT_ID'
+              value: "$GOOGLE_CLIENT_ID"
             - name: GOOGLE_CLIENT_SECRET
-              value: '$GOOGLE_CLIENT_SECRET'
+              value: "$GOOGLE_CLIENT_SECRET"
             - name: GOOGLE_CREDENTIALS
-              value: '$GOOGLE_CREDENTIALS'
+              value: "$GOOGLE_CREDENTIALS"
             - name: GOOGLE_MEASUREMENT_API_SECRET
-              value: '$GOOGLE_MEASUREMENT_API_SECRET'
+              value: "$GOOGLE_MEASUREMENT_API_SECRET"
             - name: GOOGLE_MEASUREMENT_CLIENT_ID
-              value: '$GOOGLE_MEASUREMENT_CLIENT_ID'
+              value: "$GOOGLE_MEASUREMENT_CLIENT_ID"
             - name: GOOGLE_MEASUREMENT_ID
-              value: '$GOOGLE_MEASUREMENT_ID'
+              value: "$GOOGLE_MEASUREMENT_ID"
             - name: JWT_SECRET
-              value: '$JWT_SECRET'
+              value: "$JWT_SECRET"
             - name: MAIL_HOST
-              value: '$MAIL_HOST'
+              value: "$MAIL_HOST"
             - name: MAIL_PASS
-              value: '$MAIL_PASS'
+              value: "$MAIL_PASS"
             - name: MAIL_PORT
-              value: '$MAIL_PORT'
+              value: "$MAIL_PORT"
             - name: MAIL_REPLY_TO
-              value: '$MAIL_REPLY_TO'
+              value: "$MAIL_REPLY_TO"
             - name: MAIL_USER
-              value: '$MAIL_USER'
+              value: "$MAIL_USER"
             - name: OPENAI_API_KEY
-              value: '$OPENAI_API_KEY'
+              value: "$OPENAI_API_KEY"
             - name: PG_CONNECTION_STRING
-              value: '$PG_CONNECTION_STRING'
+              value: "$PG_CONNECTION_STRING"
             - name: PLAY_HT_SECRET_KEY
-              value: '$PLAY_HT_SECRET_KEY'
+              value: "$PLAY_HT_SECRET_KEY"
             - name: PLAY_HT_USER_ID
-              value: '$PLAY_HT_USER_ID'
+              value: "$PLAY_HT_USER_ID"
             - name: PORT
-              value: '$PORT'
+              value: "$PORT"
             - name: RECAPTCHA_SECRET_KEY
-              value: '$RECAPTCHA_SECRET_KEY'
+              value: "$RECAPTCHA_SECRET_KEY"
+            - name: REGISTRATION_PRIVATE_KEY
+              value: "$REGISTRATION_PRIVATE_KEY"
             - name: S3_BUCKET
-              value: '$S3_BUCKET'
+              value: "$S3_BUCKET"
             - name: S3_KEY
-              value: '$S3_KEY'
+              value: "$S3_KEY"
             - name: S3_SECRET
-              value: '$S3_SECRET'
+              value: "$S3_SECRET"
             - name: SSL
-              value: '$SSL'
+              value: "$SSL"
           livenessProbe:
             httpGet:
               path: /v1/healthz
@@ -111,3 +113,4 @@ spec:
   selector:
     app: $IMAGE
 ---
+

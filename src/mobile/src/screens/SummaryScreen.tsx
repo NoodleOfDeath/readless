@@ -16,7 +16,6 @@ import {
   View,
 } from '~/components';
 import {  StorageContext } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
@@ -26,8 +25,10 @@ export function SummaryScreen({
   navigation,
 }: ScreenComponent<'summary'>) {
 
-  const { getSummary, interactWithSummary } = useApiClient();
-  const { preferredReadingFormat } = React.useContext(StorageContext);
+  const {
+    preferredReadingFormat, 
+    api: { interactWithSummary, getSummary },
+  } = React.useContext(StorageContext);
 
   const [loading, setLoading] = React.useState(false);
   const [summaryId, setSummaryId] = React.useState(0);
@@ -139,7 +140,7 @@ export function SummaryScreen({
                 onFormatChange={ (format) => handleFormatChange(summary, format) } />
               {siblings.length > 0 && (
                 <Text system h6 m={ 12 }>
-                  {`${strings.summary_relatedNews} (${siblings.length})`}
+                  {`${strings.relatedNews} (${siblings.length})`}
                 </Text>
               )}
             </React.Fragment>

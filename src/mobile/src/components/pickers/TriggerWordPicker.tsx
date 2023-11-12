@@ -17,7 +17,7 @@ type TriggerWordPickerProps = ChildlessViewProps & {
 
 export function TriggerWordPicker({ 
   onSubmit,
-  saveLabel = strings.action_save,
+  saveLabel = strings.save,
 }: TriggerWordPickerProps) {
 
   const { triggerWords, setStoredValue } = React.useContext(StorageContext);
@@ -32,14 +32,14 @@ export function TriggerWordPicker({
   return (
     <View gap={ 12 }>
       <Button system contained>
-        {strings.settings_enterYourTriggerWords}
+        {strings.settings}
       </Button>
       <ScrollView>
         {words.map(([word, replacement], i) => (
           <View key={ i } row gap={ 6 } itemsCenter>
             <TextInput
               flex={ 1 }
-              label={ strings.settings_triggerWord }
+              label={ strings.settings }
               onChangeText={ (text) => setWords((prev) => {
                 const state = [ ...prev ];
                 state[i][0] = text;
@@ -48,7 +48,7 @@ export function TriggerWordPicker({
               value={ word } />
             <TextInput
               flex={ 1 }
-              label={ strings.settings_replacement }
+              label={ strings.settings }
               onChangeText={ (text) => setWords((prev) => {
                 const state = [ ...prev ];
                 state[i][1] = text;

@@ -1,17 +1,18 @@
+
 import React from 'react';
 
-import { GOOGLE_CLIENT_ID } from '@env';
+import { GOOGLE_CLIENT_ID, REGISTRATION_PRIVATE_KEY } from '@env';
 import { GoogleSignin, User as GoogleUser } from '@react-native-google-signin/google-signin';
+import CryptoJS from 'react-native-crypto-js';
 
 import { ThirdParty } from '~/api';
 import {
   Button,
-  Image,
   Screen,
+  Text,
   View,
 } from '~/components';
 import { StorageContext, UserData } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { ScreenComponent } from '~/screens';
 
 GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
@@ -19,16 +20,21 @@ GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
 export function LoginScreen({
   route: _route,
   navigation, 
-}: ScreenComponent<'login'>) {
+}: ScreenComponent<'start'>) {
 
-  const { setStoredValue } = React.useContext(StorageContext);
-  const { login } = useApiClient();
+  const {
+    api: { login },
+    setStoredValue, 
+    syncWithRemotePrefs,
+  } = React.useContext(StorageContext);
+
+  const [message, setMessage] = React.useState('');
 
   const signInWithGoogle = React.useCallback(async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const userData = await GoogleSignin.signIn();
-      const { idToken, user: { id: userId } } = userData as GoogleUser;
+      const user = await GoogleSignin.signIn();
+      const { idToken, user: { id: userId } } = user as GoogleUser;
       if (!idToken || !userId) {
         throw new Error('Missing data');
       }
@@ -40,11 +46,30 @@ export function LoginScreen({
           userId, 
         },
       });
-      setStoredValue('userData', new UserData(response));
+      const userData = new UserData(response);
+      setStoredValue('userData', userData);
+      syncWithRemotePrefs(userData);
     } catch (error) {
       console.error(error);
+      setMessage('Failed to sign in with Google');
     }
-  }, [login, setStoredValue]);
+  }, [login, setStoredValue, syncWithRemotePrefs]);
+
+  const continueWithoutAccount = React.useCallback(async () => {
+    try {
+      const anonymous = CryptoJS.AES.encrypt(JSON.stringify({ timestamp: new Date().toISOString() }), REGISTRATION_PRIVATE_KEY).toString();
+      const { data: response } = await login({
+        anonymous,
+        createIfNotExists: true,
+      });
+      const userData = new UserData(response);
+      setStoredValue('userData', userData);
+      syncWithRemotePrefs(userData);
+    } catch (error) {
+      console.error(error);
+      setMessage('Failed to continue without an account');
+    }
+  }, [login, setStoredValue, syncWithRemotePrefs]);
 
   return (
     <Screen>
@@ -55,12 +80,8 @@ export function LoginScreen({
         <View
           flex={ 20 }
           itemsCenter
-          justifyCenter>
-          <Image
-            source={ { uri: 'Logo' } }
-            width={ 150 } 
-            height={ 150 } /> 
-        </View>
+          justifyCenter />
+        <Text>{message}</Text>
         <Button
           contained
           leftIcon="google"
@@ -72,12 +93,12 @@ export function LoginScreen({
           contained
           leftIcon="account"
           gap={ 12 }
-          onPress={ () => navigation?.push('passwordLogin') }>
+          onPress={ () => navigation?.push('passwordLogin', {}) }>
           Continue with email
         </Button>
         <Button
           textCenter
-          onPress={ () => navigation?.push('passwordLogin') }>
+          onPress={ continueWithoutAccount }>
           Continue without an account
         </Button>
         <View flex={ 1 } />

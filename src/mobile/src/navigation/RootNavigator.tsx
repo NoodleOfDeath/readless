@@ -11,14 +11,17 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 
-import { LeftDrawerNavigator } from './LeftDrawerNavigator';
+import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
+import { TabbedNavigator } from './TabbedNavigator';
 import { LOGIN_STACK } from './stacks';
 
 import {
   ActivityIndicator,
   MediaPlayer,
   Screen,
+  Text,
+  View,
 } from '~/components';
 import {
   LayoutContext,
@@ -27,7 +30,7 @@ import {
   OrientationType,
   StorageContext,
 } from '~/contexts';
-import { useApiClient, useTheme } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
@@ -35,10 +38,11 @@ export function RootNavigator() {
   
   const { emitEvent } = usePlatformTools();
   const theme = useTheme();
-  const { getCategories, getPublishers } = useApiClient();
   
+  const storage = React.useContext(StorageContext);
   const {
     ready, 
+    isSyncingWithRemote,
     categories,
     publishers,
     setCategories, 
@@ -48,7 +52,10 @@ export function RootNavigator() {
     pushNotificationsEnabled,
     setStoredValue,
     userData,
-  } = React.useContext(StorageContext);   
+    api: {
+      getCategories, getPublishers, updateMetadata,
+    },
+  } = storage;
   const {
     isTablet,
     lockRotation,
@@ -67,6 +74,10 @@ export function RootNavigator() {
     if (!ready) {
       return;
     }
+    if (!userData?.valid) {
+      return;
+    }
+
     if (!isTablet) {
       lockRotation(OrientationType.PORTRAIT);
     } else {
@@ -75,6 +86,7 @@ export function RootNavigator() {
     if (pushNotificationsEnabled !== false && !isRegisteredForRemoteNotifications()) {
       registerRemoteNotifications();
     }
+
     if (!showedReview && 
       (Date.now() - lastRequestForReview > ms('2w') && 
       (Object.keys({ ...readSummaries }).length > 2))) {
@@ -118,23 +130,29 @@ export function RootNavigator() {
       };
 
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData]);
   
   const refreshSources = React.useCallback(() => {
+    if (!ready) {
+      return;
+    }
+    if (!userData?.valid) {
+      return;
+    }
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
       return;
     }
-    if (!categories || (Date.now() - lastFetch < ms('1h'))) {
+    if (!categories) {
       getCategories().then((response) => {
         setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
       }).catch((error) => {
-        console.log(error);
+        console.log(error); 
         setLastFetchFailed(true);
       }).finally(() => {
         setLastFetch(Date.now());
       });
     }
-    if (!publishers || (Date.now() - lastFetch < ms('1h'))) {
+    if (!publishers) {
       getPublishers().then((response) => {
         setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
       }).catch((error) => {
@@ -144,16 +162,26 @@ export function RootNavigator() {
         setLastFetch(Date.now());
       });
     }
-  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers]);
+  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, ready, setCategories, setPublishers, userData?.valid]);
 
   React.useEffect(() => refreshSources(), [refreshSources]);
   
   const currentTheme = React.useMemo(() => theme.isDarkMode ? MD3DarkTheme : DefaultTheme, [theme.isDarkMode]);
 
   if (!ready) {
+    const text = isSyncingWithRemote ? 'Syncing with remote...' : 'Loading...';
     return (
       <Screen>
-        <ActivityIndicator />
+        <View
+          p={ 24 }
+          gap={ 12 }
+          itemsCenter
+          justifyCenter>
+          <ActivityIndicator />
+          <Text textCenter>
+            {text}
+          </Text>
+        </View>
       </Screen>
     );
   }
@@ -164,18 +192,18 @@ export function RootNavigator() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          {userData ? (
+          {(userData?.valid || userData?.unlinked) ? (
             <React.Fragment>
-              <LeftDrawerNavigator />
+              <TabbedNavigator />
               <MediaPlayer visible={ Boolean(currentTrack) } />
             </React.Fragment>
           ) : (
-            <Screen>
+            <RoutedScreen safeArea={ false } navigationID='loginStackNav'>
               <StackNavigator
                 id="loginStackNav" 
                 screens={ LOGIN_STACK }
                 screenOptions={ { headerShown: false } } />
-            </Screen>
+            </RoutedScreen>
           )}
         </SheetProvider>
       </PaperProvider>

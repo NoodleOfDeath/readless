@@ -1,6 +1,7 @@
 import {
   Alias,
   Category,
+  CategoryInteraction,
   CategoryTranslation,
   Credential,
   IapVoucher,
@@ -8,6 +9,7 @@ import {
   Locale,
   Message,
   Publisher,
+  PublisherInteraction,
   PublisherTranslation,
   Queue,
   Recap,
@@ -76,6 +78,16 @@ export function makeAssociations() {
   
   // publisher associations
   
+  PublisherInteraction.belongsTo(Publisher, { foreignKey: 'targetId' });
+  Publisher.hasMany(PublisherInteraction, { foreignKey: 'targetId' });
+  
+  PublisherInteraction.belongsTo(User, {
+    foreignKey: {
+      allowNull: true,
+      name: 'userId',
+    },
+  });
+  
   PublisherTranslation.belongsTo(Publisher, { 
     as: 'translations',
     foreignKey: 'parentId',
@@ -91,6 +103,16 @@ export function makeAssociations() {
   });
   
   // category associations
+  
+  CategoryInteraction.belongsTo(Category, { foreignKey: 'targetId' });
+  Category.hasMany(CategoryInteraction, { foreignKey: 'targetId' });
+  
+  CategoryInteraction.belongsTo(User, {
+    foreignKey: {
+      allowNull: true,
+      name: 'userId',
+    },
+  });
   
   CategoryTranslation.belongsTo(Category, { 
     as: 'translations',

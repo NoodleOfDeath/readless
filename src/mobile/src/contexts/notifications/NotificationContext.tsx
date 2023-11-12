@@ -13,7 +13,6 @@ import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
 
 import { SubscriptionChannel, SubscriptionEvent } from '~/api';
 import { StorageContext } from '~/contexts';
-import { useApiClient } from '~/hooks';
 import { strings } from '~/locales';
 
 export const NotificationContext = React.createContext(DEFAULT_NOTIFICATION_CONTEXT);
@@ -21,15 +20,14 @@ export const NotificationContext = React.createContext(DEFAULT_NOTIFICATION_CONT
 export function NotificationContextProvider({ children }: React.PropsWithChildren) {
 
   const { 
-    getSubscriptionStatus,
-    subscribe, 
-    unsubscribe,
-  } = useApiClient();
-
-  const { 
     fcmToken, 
     enablePush,
     setStoredValue,
+    api: { 
+      getSubscriptionStatus,
+      subscribe, 
+      unsubscribe,
+    },
   } = React.useContext(StorageContext);
 
   const [redirectToSettings, setRedirectToSettings] = React.useState(false);
@@ -81,8 +79,8 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       Platform.select({
         android: (await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS, {
           buttonPositive: 'OK',
-          message: strings.settings_enablePushNotifications, 
-          title: strings.settings_pushNotifications,
+          message: strings.settings, 
+          title: strings.settings,
         })) === PermissionsAndroid.RESULTS.GRANTED, 
         ios: true, 
       });

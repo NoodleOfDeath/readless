@@ -1,9 +1,12 @@
 import bcrypt from 'bcryptjs';
+import CryptoJS from 'crypto-js';
 import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
 import { Op } from 'sequelize';
 import {
   Body,
+  Get,
+  Patch,
   Post,
   Put,
   Request,
@@ -15,23 +18,30 @@ import {
 } from 'tsoa';
 
 import {
-  GenerateOTPRequest,
-  GenerateOTPResponse,
   JWT,
   LoginRequest,
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
+  ProfileResponse,
   RegistrationRequest,
   RegistrationResponse,
+  RequestOtpRequest,
+  RequestOtpResponse,
   UpdateCredentialRequest,
   UpdateCredentialResponse,
+  UpdateMetadataRequest,
+  UpdateMetadataResponse,
   VerifyAliasRequest,
   VerifyAliasResponse,
   VerifyOTPRequest,
   VerifyOTPResponse,
 } from './types';
-import { GoogleService, MailService } from '../../../../services';
+import {
+  GoogleService,
+  MailService,
+  OpenAIService,
+} from '../../../../services';
 import { randomString } from '../../../../utils';
 import { AuthError, InternalError } from '../../middleware';
 import {
@@ -83,39 +93,53 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: RegistrationRequest
   ): Promise<RegistrationResponse> {
-    if (body.token || body.userId) {
-      throw new AuthError('ALREADY_LOGGED_IN');
-    }
-    const { payload, user } = await User.from(body, { ignoreIfNotResolved: true });
+    let user: User | null = null;
     let newAliasType: AliasType;
     let newAliasValue: string;
     let thirdPartyId: string;
     let verificationCode: string;
     let verified = false;
-    if (user) {
-      throw new AuthError('DUPLICATE_USER');
+    if (body.jwt || body.userId) {
+      throw new AuthError('ALREADY_LOGGED_IN');
     }
-    if (body.thirdParty) {
-      if (body.thirdParty.name === 'google') {
-        const ticket = await GoogleService.verify(body.thirdParty.credential);
-        const { email, email_verified: emailVerified } = ticket.getPayload();
-        thirdPartyId = ticket.getPayload().sub;
-        if (!email) {
-          throw new AuthError('NO_THIRD_PARTY_ALIAS');
-        }
-        if (!emailVerified) {
-          throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
-        }
-        // auto-create new alias by email, as well
-        newAliasType = 'email';
-        newAliasValue = email;
-        verified = true;
+    if (body.anonymous) {
+      console.log('anonymous registration');
+      try {
+        const bytes = CryptoJS.AES.decrypt(body.anonymous, process.env.REGISTRATION_PRIVATE_KEY);
+        bytes.toString(CryptoJS.enc.Utf8);
+        user;
+      } catch (e) {
+        throw new AuthError('BAD_REQUEST');
       }
-    } else if (typeof payload.value === 'string') {
-      newAliasType = payload.type;
-      newAliasValue = payload.value;
     } else {
-      throw new AuthError('BAD_REQUEST');
+      const result = await User.from(body, { ignoreIfNotResolved: true });
+      const { payload } = result;
+      user = result.user;
+      if (user) {
+        throw new AuthError('DUPLICATE_USER');
+      }
+      if (body.thirdParty) {
+        if (body.thirdParty.name === 'google') {
+          const ticket = await GoogleService.verify(body.thirdParty.credential);
+          const { email, email_verified: emailVerified } = ticket.getPayload();
+          thirdPartyId = ticket.getPayload().sub;
+          if (!email) {
+            throw new AuthError('NO_THIRD_PARTY_ALIAS');
+          }
+          if (!emailVerified) {
+            throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
+          }
+          // auto-create new alias by email, as well
+          newAliasType = 'email';
+          newAliasValue = email;
+          verified = true;
+        }
+      } else if (typeof payload.value === 'string') {
+        newAliasType = payload.type;
+        newAliasValue = payload.value;
+      } else {
+        throw new AuthError('BAD_REQUEST');
+      }
     }
     const newUser = new User();
     await newUser.save();
@@ -129,6 +153,20 @@ export class AccountController {
         thirdPartyId,
         { verifiedAt: new Date() }
       );
+    } else
+    if (body.anonymous) {
+      let validUsername = false;
+      let alias: Alias | null = null;
+      let reply: string;
+      while (!validUsername) {
+        const chatService = new OpenAIService();
+        reply = await chatService.send('Create a very very unique username between 8 and 16 characters long that contains only letters and numbers. And would never be guessed by anyone else.');
+        alias = await Alias.findOne({ where: { value: reply } });
+        validUsername = alias == null && reply.length > 8 && reply.length < 16 && Boolean(reply.match(/^[a-zA-Z0-9]+$/));
+      }
+      newAliasType = 'username';
+      newAliasValue = reply;
+      verified = true;
     }
     console.log('creating alias', newAliasType, newAliasValue);
     await newUser.createAlias(newAliasType, newAliasValue, {
@@ -143,15 +181,28 @@ export class AccountController {
     if (body.password) {
       await newUser.createCredential('password', body.password);
     }
+    if (body.anonymous) {
+      const credential = await JWT.as('standard', newUser.id);
+      await newUser.createCredential('jwt', credential);
+      await newUser.grantRole('verified');
+      return {
+        token: credential.wrapped,
+        userId: newUser.id,
+      };
+    }
     if (verified) {
       await newUser.grantRole('verified');
-      await new MailService().sendMailFromTemplate({ to: newAliasValue }, 'welcome', { email: newAliasValue });
+      if (newAliasType === 'email') {
+        await new MailService().sendMailFromTemplate({ to: newAliasValue }, 'welcome', { email: newAliasValue });
+      }
       return await this.login(req, body);
     } else {
-      await new MailService().sendMailFromTemplate({ to: newAliasValue }, 'verifyEmail', {
-        email: newAliasValue,
-        verificationCode,
-      });
+      if (newAliasType === 'email') {
+        await new MailService().sendMailFromTemplate({ to: newAliasValue }, 'verifyEmail', {
+          email: newAliasValue,
+          verificationCode,
+        });
+      }
       return { userId: newUser.id };
     }
   }
@@ -161,18 +212,51 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: LoginRequest
   ): Promise<LoginResponse> {
-    if (body.userId) {
-      throw new AuthError('ALREADY_LOGGED_IN');
+    console.log('trying login');
+    if (req.body.token) {
+      const token = new JWT(req.body.token);
+      const credential = await Credential.findOne({
+        where: {
+          type: 'jwt',
+          userId: token.userId,
+          value: req.body.token,
+        },
+      });
+      if (!credential) {
+        throw new AuthError('INVALID_CREDENTIALS');
+      }
+      if (token.expired) {
+        throw new AuthError('EXPIRED_CREDENTIALS');
+      }
+      console.log(token);
+      const user = await User.findOne({ where: { id: token.userId } });
+      return {
+        profile: user?.toJSON().profile ?? {},
+        token: token.wrapped,
+        userId: token.userId,
+      };
     }
-    const ticket = await User.from(body, { ignoreIfNotResolved: body.createIfNotExists });
+    const ticket = await User.from(body, { ignoreIfNotResolved: Boolean(body.anonymous || body.createIfNotExists) });
     const { payload } = ticket;
     let { alias, user } = ticket;
-    if (!alias) {
-      const { userId } = await this.register(req, body);
+    if (!alias && !user) {
+      const { token, userId } = await this.register(req, body);
       user = await User.findOne({ where: { id: userId } });
+      await user.sync();
+      if (!user) {
+        throw new AuthError('UNKNOWN_ALIAS');
+      }
+      if (token) {
+        return {
+          profile: user.toJSON().profile ?? {}, 
+          token, 
+          unlinked: true, 
+          userId,
+        };
+      }
       alias = await user.findAlias(payload.type);
     }
-    if (!alias.verifiedAt) {
+    if (!alias?.verifiedAt) {
       throw new AuthError('ALIAS_UNVERIFIED');
     }
     if (payload.type === 'eth2Address') {
@@ -191,6 +275,7 @@ export class AccountController {
       }
     }
     // user is authenticated, generate JWT
+    await user.sync();
     const userData = user.toJSON();
     const token = await JWT.as(body.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
@@ -201,32 +286,44 @@ export class AccountController {
     };
   }
 
+  @Get('/profile')
+  @Security('jwt', ['standard:read'])
+  public static async getProfile(
+    @Request() req: ExpressRequest
+  ): Promise<ProfileResponse> {
+    const { user } = await User.from({ jwt: req.body.token });
+    await user.sync();
+    const userData = user.toJSON();
+    return { profile: userData.profile };
+  }
+
   @Post('/logout')
   public static async logout(
     @Request() req: ExpressRequest,
     @Body() body: LogoutRequest
   ): Promise<LogoutResponse> {
     let count = 0;
-    if (body.token) {
+    if (body.jwt) {
+      const token = new JWT(body.jwt);
       count += await Credential.destroy({
         where: {
           type: 'jwt',
-          userId: body.token?.userId,
-          value: body.token,
+          userId: token.userId,
+          value: body.jwt,
         },
       });
-    }
-    if (body.force) {
-      count += await Credential.destroy({ where: { userId: body.token?.userId } });
+      if (body.force) {
+        count += await Credential.destroy({ where: { userId: token.userId } });
+      }
     }
     return { count, success: true };
   }
   
   @Post('/otp')
-  public static async generateOTP(
+  public static async requestOtp(
     @Request() req: ExpressRequest,
-    @Body() body: GenerateOTPRequest
-  ): Promise<GenerateOTPResponse> {
+    @Body() body: RequestOtpRequest
+  ): Promise<RequestOtpResponse> {
     const { user } = await User.from(body, { ignoreIfNotResolved: true });
     if (!user) {
       return { success: false };
@@ -275,12 +372,13 @@ export class AccountController {
   }
   
   @Post('/verify/otp')
-  public static async verifyOTP(
+  public static async verifyOtp(
     @Request() req: ExpressRequest,
     @Body() body: VerifyOTPRequest
   ): Promise<VerifyOTPResponse> {
     const { user } = await User.from(body);
     const otp = await user.findCredential('otp', body.otp);
+    await otp.destroy();
     if (!otp) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
@@ -294,6 +392,17 @@ export class AccountController {
       token: token.wrapped,
       userId: userData.id,
     };
+  }
+
+  @Patch('/update/metadata')
+  @Security('jwt', ['standard:write'])
+  public static async updateMetadata(
+    @Request() req: ExpressRequest,
+    @Body() body: UpdateMetadataRequest
+  ): Promise<UpdateMetadataResponse> {
+    const { user } = await User.from({ jwt: req.body.token });
+    await user.setMetadata(body.key, body.value);
+    return { success: true };
   }
   
   @Put('/update/credential')

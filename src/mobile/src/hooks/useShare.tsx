@@ -13,7 +13,8 @@ import {
   PublicSummaryGroup,
   ReadingFormat,
 } from '~/api';
-import { useApiClient, useTheme } from '~/hooks';
+import { StorageContext } from '~/core';
+import { useTheme } from '~/hooks';
 import { shareableLink, usePlatformTools } from '~/utils';
 
 const SocialAppIds: Record<string, string> = {
@@ -52,8 +53,9 @@ export type ShareOptions = Partial<RNShareOptions> & {
 export function useShare({ callback }: UseShareProps) {
 
   const { emitEvent } = usePlatformTools();
-  const { interactWithSummary } = useApiClient();
   const theme = useTheme();
+  
+  const { api:  { interactWithSummary } } = React.useContext(StorageContext);
 
   const copyToClipboard = React.useCallback(async (summary: PublicSummaryGroup, property: keyof PublicSummaryGroup) => {
     if (!property) {

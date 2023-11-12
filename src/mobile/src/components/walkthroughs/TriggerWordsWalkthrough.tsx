@@ -36,19 +36,19 @@ export function TriggerWordsWalkthrough(props: SheetProps) {
             textCenter
             system
             contained>
-            {strings.walkthroughs_triggerWords_description}
+            {strings.triggerWords_description}
           </Markdown>
           <Divider />
-          <Text caption system>{strings.walkthroughs_triggerWords_limitedLocalizationSupport}</Text>
+          <Text caption system>{strings.triggerWords_limitedLocalizationSupport}</Text>
         </View>
       ),
-      title: strings.walkthroughs_triggerWords,
+      title: strings.triggerWords,
     },
     {
       body: <TriggerWordPicker 
-        saveLabel={ strings.action_saveAndClose }
+        saveLabel={ strings.saveAndClose }
         onSubmit={ onDone } />,
-      title: strings.walkthroughs_triggerWords,
+      title: strings.triggerWords,
     },
   ], [onDone]);
 

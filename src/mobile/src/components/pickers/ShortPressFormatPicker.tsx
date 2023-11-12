@@ -13,10 +13,10 @@ import { StorageContext } from '~/core';
 type Props = ChildlessViewProps;
 
 const OPTIONS: SelectOption<ReadingFormat>[] = [{
-  label: strings.summary_shortSummary, 
+  label: strings.shortSummary, 
   value: ReadingFormat.ShortSummary,
 }, {
-  label: strings.summary_bullets,
+  label: strings.bullets,
   value: ReadingFormat.Bullets,
 }];
 
@@ -26,7 +26,7 @@ export function ShortPressFormatPicker({ ...props }: Props = {}) {
     <TablePicker
       { ...props }
       options={ OPTIONS }
-      initialValue={ preferredShortPressFormat ?? ReadingFormat.Bullets }
+      initialValue={ preferredShortPressFormat ?? ReadingFormat.ShortSummary }
       onValueChange={ (value) => {
         setStoredValue('preferredShortPressFormat', value); 
       } }>

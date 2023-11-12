@@ -2,12 +2,12 @@ import React from 'react';
 
 import { SubscriptionEvent } from '~/api';
 import Layout from '~/components/Layout';
-import { useApiClient } from '~/core';
+import { StorageContext } from '~/contexts';
 import { useRouter } from '~/hooks';
 
 export default function UnsubcribePage() {
 
-  const { unsubscribe } = useApiClient();
+  const { api: { unsubscribe } } = React.useContext(StorageContext);
   const { searchParams } = useRouter();
 
   const [loading, setLoading] = React.useState<boolean>(true);

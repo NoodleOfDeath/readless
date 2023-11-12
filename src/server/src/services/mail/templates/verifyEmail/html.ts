@@ -61,7 +61,7 @@ const html = `
         the button below to verify your email address:
       </p>
       <p class="center">
-        <a href="{{domain}}/verify?channel=email&code={{verificationCode}}">Verify Email</a>
+        <a href="{{domain}}/verify/?channel=email&code={{verificationCode}}">Verify Email</a>
       </p>
       <p>If you did not create an account, please disregard this message.</p>
     </div>

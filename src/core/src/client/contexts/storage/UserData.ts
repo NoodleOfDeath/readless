@@ -1,4 +1,8 @@
-import { LoginResponse, WrappedJwt } from '~/api';
+import {
+  LoginResponse,
+  Profile,
+  WrappedJwt,
+} from '~/api';
 
 export type UserDataProps = LoginResponse & {
   tokens?: WrappedJwt | WrappedJwt[];
@@ -8,6 +12,8 @@ export class UserData implements UserDataProps {
 
   userId: number;
   tokens: WrappedJwt[] = [];
+  profile?: Profile;
+  unlinked?: boolean;
 
   get token() {
     if (this.tokens.length === 0) {
@@ -23,18 +29,26 @@ export class UserData implements UserDataProps {
   get expired() {
     return this.tokens.length > 0 && this.tokens.every((t) => UserData.tokenHasExpired(t));
   }
+
+  get valid() {
+    return this.profile && !this.expired;
+  }
   
   static tokenHasExpired(token: WrappedJwt) {
     return token.expiresAt < Date.now();
   }
 
   constructor({
-    userId, 
+    userId = -1, 
     token, 
     tokens = token ? [token] : [],
+    profile,
+    unlinked,
   }: UserDataProps) {
     this.userId = userId;
     this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
+    this.profile = profile;
+    this.unlinked = unlinked;
   }
   
   addToken(token: WrappedJwt) {

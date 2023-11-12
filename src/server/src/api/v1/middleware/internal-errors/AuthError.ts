@@ -19,7 +19,7 @@ const ERROR_MESSAGES = {
   EXPIRED_CREDENTIALS: new ErrorMessage('Credential has expired'),
   EXPIRED_VERIFICATION_CODE: new ErrorMessage('Verification code has expired'),
   INSUFFICIENT_PERMISSIONS: new ErrorMessage('Insufficient permissions'),
-  INVALID_CREDENTIALS: new ErrorMessage('Credential is invalid'),
+  INVALID_CREDENTIALS: new ErrorMessage('Unauthorized'),
   INVALID_PASSWORD: new ErrorMessage('Email or password is incorrect'),
   MISSING_AUTHORIZATION_HEADER: new ErrorMessage('Missing authorization header'),
   MISSING_PASSWORD: new ErrorMessage('User does not have a password set. Please use a third party login method or request a password reset.'),
@@ -47,7 +47,7 @@ export class AuthError extends InternalError implements AuthErrorOptions {
   
   constructor(
     errorKey: keyof typeof ERROR_MESSAGES,
-    statusCodeOrParams: number | typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] = 500,
+    statusCodeOrParams: number | typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] = 401,
     params: typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] = typeof statusCodeOrParams === 'number' ? undefined : statusCodeOrParams
   ) {
     let message: string = ERROR_MESSAGES[errorKey].message;

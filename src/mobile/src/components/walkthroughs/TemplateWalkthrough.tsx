@@ -30,7 +30,7 @@ export function SharingWalkthrough(props: SheetProps) {
     {
       body: (
         <View itemsCenter gap={ 12 }>
-          <Markdown>{strings.walkthroughs_promoCodeDescription}</Markdown>
+          <Markdown>{strings.promoCodeDescription}</Markdown>
           <Divider />
           <Text subtitle1 bold textCenter>READLESSFIRST500</Text>
           <Button
@@ -38,11 +38,11 @@ export function SharingWalkthrough(props: SheetProps) {
             p={ 6 }
             beveled
             onPress={ onDone }>
-            {strings.misc_awesome}
+            {strings.awesome}
           </Button>
         </View>
       ),
-      title: strings.walkthroughs_promoCodeTitle,
+      title: strings.promoCodeTitle,
     },
   ], [onDone]);
 

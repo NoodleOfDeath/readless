@@ -35,7 +35,6 @@ import {
 } from '~/components';
 import { LayoutContext, StorageContext } from '~/contexts';
 import {
-  useApiClient,
   useInAppBrowser,
   useNavigation,
   useStyles,
@@ -79,11 +78,11 @@ type SummaryProps = ChildlessViewProps & ScrollViewProps & {
 const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
   summary: {
     bullets: [
-      strings.summary_example_bullet1,
-      strings.summary_example_bullet2,
-      strings.summary_example_bullet3,
-      strings.summary_example_bullet4,
-      strings.summary_example_bullet5,
+      strings.bullet1,
+      strings.bullet2,
+      strings.bullet3,
+      strings.bullet4,
+      strings.bullet5,
     ],
     category: {
       displayName: 'Entertainment',
@@ -96,7 +95,7 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
     media: { imageAi1: 'https://readless.nyc3.digitaloceanspaces.com/img/s/1b131290-775e-11ee-93b5-2b37be086969.jpeg' },
     originalDate: new Date(Date.now() - ms('5m')).toISOString(),
     publisher: {
-      displayName: strings.misc_publisher,
+      displayName: strings.publisher,
       name: 'forbes',
     },
     publisherId: 0,
@@ -105,10 +104,10 @@ const DEFAULT_PROPS: { summary: PublicSummaryGroup } = {
       method: 'openai',
       score: 0.3,
     }],
-    shortSummary: strings.summary_example_shortSummary,
+    shortSummary: strings.shortSummary,
     siblings: [],
-    summary: [strings.summary_example_summary, strings.summary_example_summary, strings.summary_example_summary].join('\n'),
-    title: strings.summary_example_title,
+    summary: [strings.exampleSummaryTitle, strings.exampleSummaryTitle, strings.exampleSummaryTitle].join('\n'),
+    title: strings.exampleSummaryTitle,
     url: 'https://readless.ai',
   },
 };
@@ -126,7 +125,7 @@ const EMPTY_SUMMARY: PublicSummaryGroup = {
   imageUrl: '',
   originalDate: new Date(Date.now() - ms('5m')).toISOString(),
   publisher: {
-    displayName: strings.misc_publisher,
+    displayName: strings.publisher,
     name: '',
   },
   publisherId: 0,
@@ -174,7 +173,6 @@ export function Summary({
     openPublisher, 
     openCategory, 
   } = useNavigation();
-  const { interactWithSummary, localize } = useApiClient();
   const { openURL } = useInAppBrowser();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   
@@ -208,6 +206,7 @@ export function Summary({
     excludedCategories,
     followCategory,
     excludeCategory,
+    api: { interactWithSummary, localize },
   } = React.useContext(StorageContext);
 
   const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
@@ -258,7 +257,7 @@ export function Summary({
       content = localizedStrings.bullets?.replace(/•\s*/g, '');
     } else if (format === ReadingFormat.FullArticle) {
       if (hideCard) {
-        content = strings.summary_fullArticleInfo;
+        content = strings.fullArticleInfo;
       }
     }
     return content;
@@ -392,7 +391,7 @@ export function Summary({
               data={ data } />
           </VictoryChart>
           <Text>
-            {strings.summary_sentimentScore}
+            {strings.sentimentScore}
           </Text>
         </View>
       </Popover>
@@ -443,7 +442,7 @@ export function Summary({
             openURL(summary.url);
           },
           systemIcon: 'book',
-          title: strings.action_readArticle,
+          title: strings.readArticle,
         },
         {
           onPress: async () => {
@@ -456,7 +455,7 @@ export function Summary({
             });
           },
           systemIcon: 'square.and.arrow.up',
-          title: strings.action_share,
+          title: strings.share,
         }
       );
     }
@@ -467,7 +466,7 @@ export function Summary({
           bookmarkSummary(summary);
         },
         systemIcon: isBookmarked ? 'bookmark.fill' : 'bookmark',
-        title: isBookmarked ? strings.summary_unbookmark : strings.summary_bookmark,
+        title: isBookmarked ? strings.unbookmark : strings.bookmark,
       },
       {
         onPress: () => {
@@ -475,7 +474,7 @@ export function Summary({
           readSummary(summary, true);
         },
         systemIcon: isRead ? 'envelope' : 'envelope.open',
-        title: isRead || initialFormat || footerOnly ? strings.summary_markAsUnRead : strings.summary_markAsRead,
+        title: isRead || initialFormat || footerOnly ? strings.markAsUnRead : strings.markAsRead,
       },
       {
         onPress: async () => {
@@ -483,7 +482,7 @@ export function Summary({
           followPublisher(summary.publisher);
         },
         systemIcon: isFollowingPublisher ? 'magazine.fill' : 'magazine',
-        title: `${isFollowingPublisher ? strings.action_unfollow : strings.action_follow} ${summary.publisher.displayName}`,
+        title: `${isFollowingPublisher ? strings.unfollow : strings.follow} ${summary.publisher.displayName}`,
       },
       {
         onPress: async () => {
@@ -491,7 +490,7 @@ export function Summary({
           followCategory(summary.category);
         },
         systemIcon: isFollowingCategory ? 'minus.square.fill' : 'plus.square',
-        title: `${isFollowingCategory ? strings.action_unfollow : strings.action_follow} ${summary.category.displayName}`,
+        title: `${isFollowingCategory ? strings.unfollow : strings.follow} ${summary.category.displayName}`,
       },
       {
         onPress: () => { 
@@ -499,7 +498,7 @@ export function Summary({
           SheetManager.show('feedback', { payload: { summary } });
         },
         systemIcon: 'flag',
-        title: strings.action_report,
+        title: strings.report,
       },
       {
         destructive: true,
@@ -508,7 +507,7 @@ export function Summary({
           excludePublisher(summary.publisher);
         },
         systemIcon: 'eye.slash',
-        title: `${isExcludingPublisher ? strings.action_unexclude : strings.action_exclude} ${summary.publisher.displayName}`,
+        title: `${isExcludingPublisher ? strings.unexclude : strings.exclude} ${summary.publisher.displayName}`,
       },
       {
         destructive: true,
@@ -517,7 +516,7 @@ export function Summary({
           excludeCategory(summary.category);
         },
         systemIcon: 'eye.slash',
-        title: `${isExcludingCategory ? strings.action_unexclude : strings.action_exclude} ${summary.category.displayName}`,
+        title: `${isExcludingCategory ? strings.unexclude : strings.exclude} ${summary.category.displayName}`,
       },
       {
         destructive: true,
@@ -525,7 +524,7 @@ export function Summary({
           removeSummary(summary);
         },
         systemIcon: 'eye.slash',
-        title: strings.summary_hide,
+        title: strings.hideThisArticle,
       }
     );
     return actions;
@@ -549,7 +548,7 @@ export function Summary({
                 emitEvent('open-article-summary-2', summary);
                 openURL(summary.url);
               } }>
-              {strings.summary_fullArticle}
+              {strings.fullArticle}
             </Button>
             <Button
               color={ theme.colors.textSecondary }
@@ -569,7 +568,7 @@ export function Summary({
                   },
                 });
               } }>
-              {strings.action_share}
+              {strings.share}
             </Button>
           </React.Fragment>
         )}  
@@ -582,7 +581,7 @@ export function Summary({
             caption={ !footerOnly }
             color={ theme.colors.textSecondary }
             leftIcon="menu-down">
-            {strings.misc_more}
+            {strings.more}
           </Button>
         </ContextMenu>
       </View>
@@ -671,7 +670,7 @@ export function Summary({
             <Button
               caption
               color={ theme.colors.textSecondary }>
-              {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.misc_article, (summary.siblings?.length ?? 0) + 1)}`}
+              {`${(summary.siblings?.length ?? 0) + 1} ${pluralize(strings.article, (summary.siblings?.length ?? 0) + 1)}`}
             </Button>
           </React.Fragment>
         )}
@@ -687,7 +686,7 @@ export function Summary({
               color={ theme.colors.textSecondary }
               leftIcon="bookmark"
               onPress={ () => !disableInteractions && navigate('bookmarks') }>
-              {strings.summary_bookmarked}
+              {strings.bookmarked}
             </Button>
           </React.Fragment>
         )}
@@ -759,7 +758,7 @@ export function Summary({
               <Text 
                 caption
                 p={ 12 }>
-                {articleImage == null ? strings.summary_thisIsNotARealImage : strings.summary_thisImageWasTakenFromTheArticle}
+                {articleImage == null ? strings.thisIsNotARealImage : strings.thisImageWasTakenFromTheArticle}
               </Text>
             </Popover>
           )}

@@ -53,7 +53,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
               step={ 0.5 } />
           </View>
         ),
-        title: strings.walkthroughs_appearance_selectFont,
+        title: strings.selectFont,
       },
       {
         artwork:( 
@@ -69,7 +69,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
             <CompactModePicker labeled />
           </View>
         ),
-        title: strings.walkthroughs_appearance_compactSummariesDescription,
+        title: strings.compactSummariesDescription,
       },
       {
         body: (
@@ -83,7 +83,7 @@ export function AppearanceWalkthrough(props: SheetProps) {
             </ScrollView>
           </View>
         ),
-        title: strings.walkthroughs_appearance_preferredReadingFormat,
+        title: strings.preferredReadingFormat,
       },
       {
         artwork:( 
@@ -105,12 +105,12 @@ export function AppearanceWalkthrough(props: SheetProps) {
                 system
                 contained
                 onPress={ onDone }>
-                {strings.action_allDone}
+                {strings.allDone}
               </Button>
             </View>
           </View>
         ),
-        title: strings.walkthroughs_appearance_selectTheme,
+        title: strings.selectTheme,
       },
     ];
   }, [onDone, setStoredValue]);

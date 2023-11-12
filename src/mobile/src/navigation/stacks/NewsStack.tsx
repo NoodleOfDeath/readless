@@ -9,14 +9,8 @@ import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { SETTINGS_STACK } from './SettingsStack';
 
-import { strings } from '~/locales';
+import { SearchMenu, SettingsToggleWithIndicator } from '~/navigation';
 import {
-  DrawerToggleWithIndicator,
-  SearchMenu,
-  SettingsToggleWithIndicator,
-} from '~/navigation';
-import {
-  BookmarksScreen,
   CategoryScreen,
   HomeScreen,
   PublisherScreen,
@@ -41,9 +35,9 @@ export const NEWS_STACK: RouteConfig<
     name: 'home',
     options: { 
       headerBackTitle: '',
-      headerLeft: () => <DrawerToggleWithIndicator />,
+      headerLeft: () => <SearchMenu />,
       headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: () => <SearchMenu />,
+      headerTitle: '',
     },
   },
   // Screens
@@ -52,6 +46,7 @@ export const NEWS_STACK: RouteConfig<
     name: 'search',
     options: { 
       headerBackTitle: '',
+      headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
@@ -61,6 +56,7 @@ export const NEWS_STACK: RouteConfig<
     name: 'summary',  
     options: { 
       headerBackTitle: '',
+      headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
@@ -70,6 +66,7 @@ export const NEWS_STACK: RouteConfig<
     name: 'recap',  
     options: {
       headerBackTitle: '',
+      headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
@@ -79,6 +76,7 @@ export const NEWS_STACK: RouteConfig<
     name: 'category',
     options: { 
       headerBackTitle: '', 
+      headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
@@ -88,26 +86,19 @@ export const NEWS_STACK: RouteConfig<
     name: 'publisher',
     options: {
       headerBackTitle: '', 
+      headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
     },
   },
-  {
-    component: BookmarksScreen, 
-    name: 'bookmarks', 
-    options: {
-      headerBackTitle: '',
-      headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: strings.screens_bookmarks, 
-    }, 
-  }, 
   // Other
   {
     component: StatsScreen,
     name: 'stats',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined,
+      headerLeft: () => null,
+      headerRight: () => null,
       headerTitle: 'stats',
     },
   },
@@ -116,7 +107,8 @@ export const NEWS_STACK: RouteConfig<
     name: 'test',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined,
+      headerLeft: () => null,
+      headerRight: () => null,
       headerTitle: 'test', 
     },
   },

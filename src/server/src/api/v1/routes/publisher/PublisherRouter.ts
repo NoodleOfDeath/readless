@@ -1,8 +1,16 @@
 import { Router } from 'express';
-import { query } from 'express-validator';
+import {
+  body,
+  param,
+  query,
+} from 'express-validator';
 
 import { PublisherController } from '../../controllers';
-import { internalErrorHandler, validationMiddleware } from '../../middleware';
+import {
+  internalErrorHandler,
+  rateLimitMiddleware,
+  validationMiddleware,
+} from '../../middleware';
 
 const router = Router();
 
@@ -14,6 +22,25 @@ router.get(
     try {
       const response = await PublisherController.getPublishers(req);
       return res.json(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.post(
+  '/interact/:targetId/:type',
+  rateLimitMiddleware('30 per 1m'),
+  param('targetId').isNumeric(),
+  param('type').isString(),
+  body('value').isString().optional(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const { targetId, type } = req.params;
+      req.body.remoteAddr = req.ip;
+      const interactions = await PublisherController.interactWithPublisher(req, targetId, type, req.body);
+      return res.json(interactions);
     } catch (e) {
       internalErrorHandler(res, e);
     }

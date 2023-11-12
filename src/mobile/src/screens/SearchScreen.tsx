@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { SummaryList } from '~/components';
-import { useApiClient } from '~/hooks';
+import { StorageContext } from '~/core';
 import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
 
@@ -10,7 +10,7 @@ export function SearchScreen({
   navigation: _navigation,
 }: ScreenComponent<'search'>) {
   
-  const { getSummaries } = useApiClient();
+  const { api: { getSummaries } } = React.useContext(StorageContext);
   return (
     <RoutedScreen navigationID='newsStackNav'>
       <SummaryList

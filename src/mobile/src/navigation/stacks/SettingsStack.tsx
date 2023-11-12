@@ -32,8 +32,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'settings', 
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_settings, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -41,8 +41,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'publisherPicker',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_publishers, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -50,8 +50,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'categoryPicker',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_categories, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -59,8 +59,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'notifications',
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_notifications, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -68,8 +68,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'colorSchemePicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_colorScheme, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -77,8 +77,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'fontPicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_font, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -86,8 +86,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'shortPressFormatPicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_preferredShortPressFormat, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -95,16 +95,16 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'readingFormatPicker',  
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_preferredReadingFormat, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
     component: TriggerWordPickerScreen,
     name: 'triggerWordPicker',  
     options: {
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_triggerWords, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
   {
@@ -112,8 +112,8 @@ export const SETTINGS_STACK: RouteConfig<
     name: 'legal', 
     options: {
       headerBackTitle: '',
-      headerRight: () => undefined, 
-      headerTitle: strings.screens_legal, 
+      headerRight: () => null, 
+      headerTitle: strings.screens, 
     },
   },
 ];

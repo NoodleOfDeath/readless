@@ -3,6 +3,8 @@ import ms from 'ms';
 import { UserData } from './UserData';
 
 import {
+  API,
+  ProfileResponse,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
@@ -114,7 +116,7 @@ export type StorageEventName = Activity | ResourceActivity | `${ResourceActivity
 export type Storage = {
   
   // system state
-  latestVersion?: string;
+  lastRemoteSync?: Date;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
   viewedFeatures?: { [key: string]: DatedEvent<boolean> };
@@ -132,8 +134,6 @@ export type Storage = {
   // summary state
   readSummaries?: { [key: number]: DatedEvent<boolean> };
   bookmarkedSummaries?: { [key: number]: DatedEvent<PublicSummaryGroup> };
-  bookmarkCount: number;
-  unreadBookmarkCount: number;
   removedSummaries?: { [key: number]: boolean };
   locale?: SupportedLocale;
   summaryTranslations?: { [key: number]: { [key in keyof PublicSummaryGroup]?: string } };
@@ -152,10 +152,6 @@ export type Storage = {
   favoritedCategories?: { [key: string]: boolean };
   excludedCategories?: { [key: string]: boolean };
   
-  followCount: number;
-  followFilter?: string;
-  excludeFilter?: string;
-  
   // system preferences
   colorScheme?: ColorScheme;
   fontFamily?: string;
@@ -173,18 +169,14 @@ export type Storage = {
 };
 
 export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'string' | 'object' | 'array' } = {
-  bookmarkCount: 'number',
   bookmarkedSummaries: 'object',
   colorScheme: 'string',
   compactSummaries: 'boolean',
-  excludeFilter: 'string',
   excludedCategories: 'object',
   excludedPublishers: 'object',
   favoritedCategories: 'object',
   favoritedPublishers: 'object',
   fcmToken: 'string',
-  followCount: 'number',
-  followFilter: 'string',
   followedCategories: 'object',
   followedPublishers: 'object',
   fontFamily: 'string',
@@ -208,7 +200,6 @@ export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'st
   showShortSummary: 'boolean',
   summaryTranslations: 'object',
   triggerWords: 'object',
-  unreadBookmarkCount: 'number',
   userData: 'object',
   userStats: 'object',
   uuid: 'string',
@@ -218,7 +209,7 @@ export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'st
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionWithRequestParams<T extends any[], R> = ((...args: [...T, RequestParams]) => R);
 
-export type PreferenceMutation<E extends StorageEventName> =
+export type StorageMutation<E extends StorageEventName> =
   E extends `${string}-summary` ? PublicSummaryGroup :
   E extends `${string}-recap` ? RecapAttributes :
   E extends `${string}-publisher` ? PublicPublisherAttributes :
@@ -227,7 +218,7 @@ export type PreferenceMutation<E extends StorageEventName> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any;
   
-export type PreferenceState<E extends StorageEventName> =
+export type StorageState<E extends StorageEventName> =
   E extends `${'unbookmark' | 'bookmark'}-summary` ? Storage['bookmarkedSummaries'] :
   E extends `${'read' | 'unread'}-summary` ? Storage['readSummaries'] :
   E extends `${'read' | 'unread'}-recap` ? Storage['readRecaps'] :
@@ -239,7 +230,6 @@ export type PreferenceState<E extends StorageEventName> =
 
 export type Streak = {
   start: Date;
-  end: Date;
   length: number;
 };
 
@@ -249,17 +239,117 @@ export type UserStats = {
   longestStreak?: Streak;
 };
 
-export type StorageContextType = Storage & {
-  ready?: boolean;
+export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
+  'colorScheme',
+  'compactSummaries',
+  'showShortSummary',
+  'preferredReadingFormat',
+  'preferredShortPressFormat',
+  'fontFamily',
+  'fontSizeOffset',
+  'letterSpacing',
+  'lineHeightMultiplier',
+  'pushNotifications',
+  'pushNotificationsEnabled',
+  'bookmarkedSummaries',
+  'readSummaries',
+  'removedSummaries',
+  'followedPublishers',
+  'favoritedPublishers',
+  'excludedPublishers',
+  'followedCategories',
+  'favoritedCategories',
+  'excludedCategories',
+  'userStats',
+] as const;
 
+export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];
+
+export const SYNCABLE_IO_IN_DEFAULT = <K extends SyncableSetting>(value?: object) => value as Storage[K];
+export const SYNCABLE_IO_OUT_DEFAULT = <K extends SyncableSetting>(value?: Storage[K]) => JSON.stringify(value);
+
+export const SYNCABLE_IO_IN_BOOLEAN_MAP = <K extends SyncableSetting>(value?: object): Storage[K] => {
+  if (value) {
+    if (Array.isArray(value)) {
+      return value.reduce((acc, key) => ({ ...acc, [key]: true }), {}) as Storage[K];
+    }
+  }
+  return {} as Storage[K];
+};
+
+export const SYNCABLE_IO_OUT_DATED_MAP = <K extends SyncableSetting>(value?: Storage[K]) => {
+  if (value) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const remap = Object.fromEntries(Object.keys(value || {}).map((key) => [key, (value as any)[key].createdAt ?? new Date()]));
+    return JSON.stringify(remap);
+  }
+  return '{}';
+};
+
+export const SYNCABLE_IO_IN: { [K in SyncableSetting]?: ((value?: object) => Storage[K]) } = {
+  excludedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP<'excludedCategories'>,
+  excludedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP<'excludedPublishers'>,
+  favoritedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP<'favoritedCategories'>,
+  favoritedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP<'favoritedPublishers'>,
+  followedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP<'followedCategories'>,
+  followedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP<'followedPublishers'>,
+  removedSummaries: SYNCABLE_IO_IN_BOOLEAN_MAP<'removedSummaries'>,
+};
+
+export const SYNCABLE_IO_OUT: { [K in SyncableSetting]?: ((value?: Storage[K]) => string) } = {
+  bookmarkedSummaries: SYNCABLE_IO_OUT_DATED_MAP,
+  excludedCategories: (value) => JSON.stringify(Object.keys(value || {})),
+  excludedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
+  favoritedCategories: (value) => JSON.stringify(Object.keys(value || {})),
+  favoritedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
+  followedCategories: (value) => JSON.stringify(Object.keys(value || {})),
+  followedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
+  removedSummaries: (value) => JSON.stringify(Object.keys(value || {})),
+};
+
+export const SyncableIoIn = <K extends SyncableSetting>(key?: K) => key ? SYNCABLE_IO_IN[key] || SYNCABLE_IO_IN_DEFAULT : SYNCABLE_IO_IN_DEFAULT;
+export const SyncableIoOut = <K extends SyncableSetting>(key?: K) => key ? SYNCABLE_IO_OUT[key] || SYNCABLE_IO_OUT_DEFAULT : SYNCABLE_IO_OUT_DEFAULT;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Methods = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [k in keyof typeof API]: typeof API[k] extends (...args: [...Parameters<typeof API[k]>, RequestParams | undefined]) => infer R ? 
+  (...args: Parameters<typeof API[k]>) => R : never;
+} & {
+  getSummary: (id: number) => ReturnType<typeof API['getSummaries']>;
+};
+
+export type SyncState = {
+  hasLoadedLocalState?: boolean;
+  
+  isSyncingWithRemote?: boolean;
+  hasSyncedWithRemote?: boolean;
+  
+  isFetchingProfile?: boolean;
+  hasFetchedProfile?: boolean;
+  
+  isSyncingBookmarks?: boolean;
+  hasSyncedBookmarks?: boolean;
+};
+
+export type StorageContextType = Storage & SyncState & {
+  
+  ready?: boolean;
+  
   loadedInitialUrl?: boolean;
   setLoadedInitialUrl: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  
   categories?: Record<string, PublicCategoryAttributes>;
   setCategories: React.Dispatch<React.SetStateAction<Record<string, PublicCategoryAttributes> | undefined>>;
   publishers?: Record<string, PublicPublisherAttributes>;
   setPublishers: React.Dispatch<React.SetStateAction<Record<string, PublicPublisherAttributes> | undefined>>;
 
-  userStats?: UserStats;
+  bookmarkCount: number;
+  unreadBookmarkCount: number;
+  
+  followCount: number;
+  followFilter?: string;
+  excludeFilter?: string;
 
   // state setters
   setStoredValue: <K extends keyof Storage, V extends Storage[K] | ((value?: Storage[K]) => (Storage[K] | undefined))>(key: K, value?: V, emit?: boolean) => Promise<void>;
@@ -300,9 +390,12 @@ export type StorageContextType = Storage & {
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
+  syncWithRemotePrefs: (pref?: ProfileResponse) => Promise<void>;
+  api: Methods;
 };
 
 export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
+  api: API as Methods,
   bookmarkCount: 0,
   bookmarkSummary: () => Promise.resolve(),
   categoryIsFavorited: () => false,
@@ -333,6 +426,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   setPublishers: () => Promise.resolve(),
   setStoredValue: () => Promise.resolve(),
   storeTranslations: () => Promise.resolve(undefined),
+  syncWithRemotePrefs: () => Promise.resolve(),
   unreadBookmarkCount: 0,
   viewFeature: () => Promise.resolve(),
   withHeaders: (fn) => (...args) => fn(...args, {}),

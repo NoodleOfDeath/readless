@@ -9,14 +9,21 @@ import { DestructuredCredentialPayload } from '../../schema/user/Credential.type
 
 export * from './jwt';
 
+export type ProfileRequest = JwtRequest;
+
+export type ProfileResponse = {
+  profile?: Profile;
+};
+
 export type LoginRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
   createIfNotExists?: boolean;
+  anonymous?: string;
   requestedRole?: string;
   requestedScope?: string[];
 };
 
-export type LoginResponse = JwtResponse & {
-  profile?: Profile;
+export type LoginResponse = JwtResponse & ProfileResponse & {
+  unlinked?: boolean;
 };
 
 export type LogoutRequest = JwtRequest & {
@@ -28,15 +35,17 @@ export type LogoutResponse = Partial<JwtResponse> & {
   count: number;
 };
 
-export type RegistrationRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload;
+export type RegistrationRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
+  anonymous?: string;
+};
 
 export type RegistrationResponse = Omit<JwtResponse, 'token'> & {
   token?: WrappedJwt;
 };
 
-export type GenerateOTPRequest = Omit<DestructuredAliasPayload, 'otp'>;
+export type RequestOtpRequest = Omit<DestructuredAliasPayload, 'otp'>;
 
-export type GenerateOTPResponse = {
+export type RequestOtpResponse = {
   success: boolean;
 };
 
@@ -55,8 +64,16 @@ export type VerifyOTPResponse = {
   userId: number;
 };
 
-export type UpdateCredentialRequest = {
-  userId: number;
+export type UpdateMetadataRequest = JwtRequest & {
+  key: string;
+  value: Record<string, unknown>;
+};
+
+export type UpdateMetadataResponse = {
+  success: boolean;
+};
+
+export type UpdateCredentialRequest = JwtRequest & {
   password: string;
 };
 

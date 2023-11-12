@@ -8,7 +8,8 @@ import {
   PROFILE_STACK,
 } from './stacks';
 
-import { Icon } from '~/components';
+import { Button, Icon } from '~/components';
+import { StorageContext } from '~/core';
 import { RoutedScreen, StackNavigator } from '~/navigation';
 import { RoutingParams } from '~/screens';
 
@@ -24,13 +25,13 @@ function NewsStack() {
 
 function ProfileStack() {
   return (
-    <RoutedScreen safeArea={ false } navigationID='gamesStackNav'>
+    <RoutedScreen safeArea={ false } navigationID='profileStackNav'>
       <StackNavigator id="profileStackNav" screens={ PROFILE_STACK } />
     </RoutedScreen>
   );
 }
 
-function GamesStack() {
+function _GamesStack() {
   return (
     <RoutedScreen safeArea={ false } navigationID='gamesStackNav'>
       <StackNavigator id="gamesStackNav" screens={ GAMES_STACK } />
@@ -39,6 +40,9 @@ function GamesStack() {
 }
 
 export function TabbedNavigator() {
+
+  const { unreadBookmarkCount } = React.useContext(StorageContext);
+
   return (
     <Tab.Navigator
       screenOptions={ { headerShown: false } }>
@@ -65,7 +69,11 @@ export function TabbedNavigator() {
         component={ ProfileStack }
         options={ {
           tabBarIcon: ({ color, size }) => (
-            <Icon name="account" color={ color } size={ size } />
+            <Button 
+              indicator={ unreadBookmarkCount > 0 }
+              leftIcon="account"
+              color={ color }
+              iconSize={ size } />
           ),
           tabBarLabel: () => null,
         } } />

@@ -1,9 +1,9 @@
 import EventEmitter from 'events';
 
 import {
-  PreferenceMutation,
-  PreferenceState,
   StorageEventName,
+  StorageMutation,
+  StorageState,
 } from '~/contexts';
 
 export function usePlatformTools() {
@@ -17,7 +17,7 @@ export function usePlatformTools() {
     };
   };
 
-  const emitEvent = <E extends StorageEventName>(event: E, mutation?: PreferenceMutation<E>, state?: PreferenceState<E>) => {
+  const emitEvent = <E extends StorageEventName>(event: E, mutation?: StorageMutation<E>, state?: StorageState<E>) => {
     new EventEmitter().emit(event, mutation, state);
   };
 

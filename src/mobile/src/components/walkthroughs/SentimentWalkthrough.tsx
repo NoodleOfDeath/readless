@@ -41,14 +41,14 @@ export function SentimentWalkthrough(props: SheetProps) {
       body: (
         <View gap={ 12 }>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_tooMuchSentiment}
+            {strings.tooMuchSentiment}
           </Markdown>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_insteadOfRemoving}
+            {strings.insteadOfRemoving}
           </Markdown>
         </View>
       ),
-      title: strings.walkthroughs_sentiment_whatMakesNews,
+      title: strings.whatMakesNews,
     },
     {
       body: (
@@ -70,19 +70,19 @@ export function SentimentWalkthrough(props: SheetProps) {
             </View>
           </View>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription1}
+            {strings.whatIsSentimentAnalysisDescription1}
           </Markdown>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_whatIsSentimentAnalysisDescription2}
+            {strings.whatIsSentimentAnalysisDescription2}
           </Markdown>
         </View>
       ),
-      title: strings.walkthroughs_sentiment_whatIsSentimentAnalysis,
+      title: strings.whatIsSentimentAnalysis,
     },
     {
       body: (
         <View gap={ 12 }>
-          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP1}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.whatIsSentimentUsedForDescriptionP1}</Markdown>
           <View elevated p={ 12 } beveled>
             <View flexRow flexWrap="wrap" justifyCenter gap={ 3 }>
               <Text h5 bold>&quot;</Text>
@@ -98,10 +98,10 @@ export function SentimentWalkthrough(props: SheetProps) {
               </Text>
             </View>
           </View>
-          <Markdown subtitle1 textCenter system contained>{strings.walkthroughs_sentiment_whatIsSentimentUsedForDescriptionP2}</Markdown>
+          <Markdown subtitle1 textCenter system contained>{strings.whatIsSentimentUsedForDescriptionP2}</Markdown>
         </View>
       ),
-      title: strings.walkthroughs_sentiment_whatIsSentimentUsedFor,
+      title: strings.whatIsSentimentUsedFor,
     },
     {
       artwork: (
@@ -113,7 +113,7 @@ export function SentimentWalkthrough(props: SheetProps) {
                 textCenter
                 system
                 color="red">
-                {strings.summary_veryNegative}
+                {strings.veryNegative}
               </Text>
             </View>
             <MeterDial value={ 0.3 } />
@@ -123,27 +123,27 @@ export function SentimentWalkthrough(props: SheetProps) {
                 textCenter
                 system
                 color="green">
-                {strings.summary_veryPositive}
+                {strings.veryPositive}
               </Text>
             </View>
           </View>
           <View itemsCenter>
             <Text h4 system>+0</Text>
-            <Text textCenter system>{strings.summary_neutral}</Text>
+            <Text textCenter system>{strings.neutral}</Text>
           </View>
         </View>
       ),
       body: (
         <View gap={ 12 }>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription1}
+            {strings.howIsSentimetMeasuredDescription1}
           </Markdown>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_howIsSentimetMeasuredDescription2}
+            {strings.howIsSentimetMeasuredDescription2}
           </Markdown>
         </View>
       ),
-      title: strings.walkthroughs_sentiment_howIsSentimetMeasured,
+      title: strings.howIsSentimetMeasured,
     },
     {
       body: (
@@ -156,7 +156,7 @@ export function SentimentWalkthrough(props: SheetProps) {
               color: theme.colors.link, fontWeight: '500', textDecorationLine: 'underline', 
             } }
             onPress={ () => openURL('https://en.wikipedia.org/wiki/Lexical_analysis') }>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription1}
+            {strings.howDoWeMeasureSentimentDescription1}
           </Markdown>
           <Button contained itemsCenter gap={ 3 }>
             <Text
@@ -167,7 +167,7 @@ export function SentimentWalkthrough(props: SheetProps) {
               bold>
               AFINN
             </Text>
-            <Text subtitle1>{strings.misc_and}</Text>
+            <Text subtitle1>{strings.and}</Text>
             <Text
               subtitle1 
               color="link"
@@ -178,21 +178,21 @@ export function SentimentWalkthrough(props: SheetProps) {
             </Text>
           </Button>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription2}
+            {strings.howDoWeMeasureSentimentDescription2}
           </Markdown>
           <Divider />
           <Markdown textCenter system>
-            {strings.walkthroughs_sentiment_howDoWeMeasureSentimentDescription3}
+            {strings.howDoWeMeasureSentimentDescription3}
           </Markdown>
         </View>
       ),
-      title: strings.walkthroughs_sentiment_howDoWeMeasureSentiment,
+      title: strings.howDoWeMeasureSentiment,
     },
     {
       body: (
         <View gap={ 12 }>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_sentiment_score}
+            {strings.score}
           </Markdown>
           <ScrollView scrollEnabled={ false }>
             <View
@@ -224,7 +224,7 @@ export function SentimentWalkthrough(props: SheetProps) {
               onPress={ () => {
                 onDone();
               } }>
-              {strings.walkthroughs_sentiment_dontEnable}
+              {strings.dontEnable}
             </Button>
             <Button
               subtitle1
@@ -236,12 +236,12 @@ export function SentimentWalkthrough(props: SheetProps) {
                 setStoredValue('sentimentEnabled', true);
                 onDone();
               } }>
-              {strings.walkthroughs_sentiment_enable}
+              {strings.enable}
             </Button>
           </View>
         </View>
       ),
-      title: strings.walkthroughs_sentiment_enableQuestion,
+      title: strings.enableQuestion,
     },
   ], [theme.colors.link, theme.colors.text, theme.colors.success, openURL, onDone, setStoredValue]);
   

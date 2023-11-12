@@ -1,6 +1,9 @@
 import { Request as ExpressRequest } from 'express';
 import {
+  Body,
   Get,
+  Path,
+  Post,
   Query,
   Request,
   Response,
@@ -10,10 +13,20 @@ import {
   Tags,
 } from 'tsoa';
  
-import { BaseController, BulkResponse } from '..';
+import {
+  BaseController,
+  BulkResponse,
+  InteractionRequest,
+} from '..';
 import { SupportedLocale } from '../../../../core/locales';
 import { AuthError, InternalError } from '../../middleware';
-import { PublicPublisherAttributes, Publisher } from '../../schema';
+import { 
+  InteractionType,
+  PublicPublisherAttributes, 
+  Publisher,
+  PublisherInteraction,
+  User,
+} from '../../schema';
 
 @Route('/v1/publisher')
 @Tags('Publisher')
@@ -37,4 +50,25 @@ export class PublisherController extends BaseController {
     return publishers;
   }
   
+  @Post('/interact/:targetId/:type')
+  public static async interactWithPublisher(
+    @Request() _request: ExpressRequest,
+    @Path() targetId: number,
+    @Path() type: InteractionType,
+    @Body() body: InteractionRequest
+  ): Promise<PublicPublisherAttributes> {
+    const { user } = await User.from(body, { ignoreIfNotResolved: true });
+    const {
+      content, metadata, remoteAddr, 
+    } = body;
+    const interaction = await PublisherInteraction.create({
+      content, metadata, remoteAddr, targetId, type, userId: user?.id,
+    });
+    if (!interaction) {
+      throw new InternalError('Failed to create interaction');
+    }
+    const resource = await Publisher.scope('public').findByPk(targetId);
+    return resource;
+  }
+
 }

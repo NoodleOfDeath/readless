@@ -55,27 +55,27 @@ export function CustomFeedWalkthrough(props: SheetProps) {
       body: (
         <View gap={ 12 } mb={ 24 }>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_customFeed_letsStart}
+            {strings.customFeed_letsStart}
           </Markdown>
           <CategoryPicker
             onValueChange={ setCategories }
             height={ 500 } />
         </View>
       ),
-      title: strings.walkthroughs_customFeed_addCategories,
+      title: strings.customFeed_addCategories,
     },
     {
       body: (
         <View gap={ 12 } mb={ 24 }>
           <Markdown subtitle1 textCenter system contained>
-            {strings.walkthroughs_customFeed_readlessPulls}
+            {strings.customFeed_readlessPulls}
           </Markdown>
           <PublisherPicker 
             onValueChange={ setPublishers }
             height={ 500 } />
         </View>
       ),
-      title: strings.walkthroughs_customFeed_addNewsSources,
+      title: strings.customFeed_addNewsSources,
     },
     {
       body: (
@@ -122,11 +122,11 @@ export function CustomFeedWalkthrough(props: SheetProps) {
             system
             contained
             onPress={ onDone }>
-            {strings.misc_sweetGotIt}
+            {strings.sweetGotIt}
           </Button>
         </View>
       ),
-      title: strings.walkthroughs_customFeed_toggleFilters,
+      title: strings.customFeed_toggleFilters,
     },
   ], [onDone, theme.colors.text]);
   

@@ -1,5 +1,7 @@
 import { Optional } from '../../../types';
 
+const BASE_DOMAIN = /localhost/.test(process.env.BASE_DOMAIN) ? 'readless://' : process.env.BASE_DOMAIN;
+
 export type MailTemplateParams = {
   domain: string;
   email: string;
@@ -28,9 +30,10 @@ export abstract class MailTemplate<Params extends MailTemplateParams> implements
 
   render({
     ssl = Boolean(process.env.SSL),
-    domain = [ssl ? 'https://' : 'http://', process.env.BASE_DOMAIN].join(''),
+    domain = [BASE_DOMAIN === 'readless://' ? '' : (ssl ? 'https://' : 'http://'), BASE_DOMAIN].filter(Boolean).join(''),
     ...rest
   }: Optional<Params, 'domain' | 'ssl'> = {} as Params) {
+    console.log('fuckkkkkk', domain);
     let html = this.body;
     Object.entries({ domain, ...rest }).forEach(([key, value]) => {
       html = html.replaceAll(`{{${key}}}`, value);

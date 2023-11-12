@@ -70,8 +70,10 @@ export * from './resources/sentiment/SentimentMethod.types';
 export * from './resources/sentiment/Sentiment.types';
 
 export * from './resources/channel/Publisher.types';
+export * from './resources/channel/PublisherInteraction.types';
 export * from './resources/channel/PublisherTranslation.types';
 export * from './resources/channel/Category.types';
+export * from './resources/channel/CategoryInteraction.types';
 export * from './resources/channel/CategoryTranslation.types';
 
 export * from './resources/summary/Summary.types';

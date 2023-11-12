@@ -5,12 +5,16 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
+import { strings } from '~/locales';
 import {
+  ForgotPasswordScreen,
   LoginScreen,
   PasswordLoginScreen,
   RegisterScreen,
   RoutingParams,
+  SetNewPasswordScreen,
 } from '~/screens';
+import { VerifyOtpScreen } from '~/screens/login/VerifyOtpScreen';
 
 export const LOGIN_STACK: RouteConfig<
   RoutingParams,
@@ -24,8 +28,10 @@ export const LOGIN_STACK: RouteConfig<
     name: 'login',
     options: {
       headerBackTitle: '',
+      headerLeft: () => null,
       headerRight: () => null,
-      headerTitle: '', 
+      headerShown: false,
+      headerTitle: '',
     },
   },
   {
@@ -33,7 +39,9 @@ export const LOGIN_STACK: RouteConfig<
     name: 'passwordLogin',
     options: {
       headerBackTitle: '',
-      headerTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.login,
     },
   },
   {
@@ -41,7 +49,40 @@ export const LOGIN_STACK: RouteConfig<
     name: 'register',
     options: {
       headerBackTitle: '',
-      headerTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.register,
     },
   },
+  {
+    component: ForgotPasswordScreen,
+    name: 'forgotPassword',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.forgotPassword,
+    },
+  },
+  {
+    component: VerifyOtpScreen,
+    name: 'verifyOtp',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.forgotPassword,
+    },
+  },
+  {
+    component: SetNewPasswordScreen,
+    name: 'setNewPassword',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.forgotPassword,
+    },
+  },
+  
 ];

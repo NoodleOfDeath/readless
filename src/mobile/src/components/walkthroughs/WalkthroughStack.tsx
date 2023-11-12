@@ -17,7 +17,7 @@ export const FEATURES: CardStackEntryProps[] = [
     onPress: async () => {
       await SheetManager.show('appearance-walkthrough');
     },
-    title: strings.walkthroughs_appearance_stackTitle,
+    title: strings.stackTitle,
   },
   {
     id: 'custom-feed-walkthrough',
@@ -25,7 +25,7 @@ export const FEATURES: CardStackEntryProps[] = [
     onPress: async () => {
       await SheetManager.show('custom-feed-walkthrough');
     },
-    title:  strings.walkthroughs_customFeed_stackTitle,
+    title:  strings.customFeed_stackTitle,
   },
   {
     id: 'sentiment-walkthrough', 
@@ -33,7 +33,7 @@ export const FEATURES: CardStackEntryProps[] = [
     onPress: async () => {
       await SheetManager.show('sentiment-walkthrough');
     },
-    title: strings.walkthroughs_sentiment_whatIsSentimentAnalysis,
+    title: strings.whatIsSentimentAnalysis,
   },
   {
     id: 'trigger-words-walkthrough',
@@ -41,7 +41,7 @@ export const FEATURES: CardStackEntryProps[] = [
     onPress: async () => {
       await SheetManager.show('trigger-words-walkthrough');
     },
-    title: strings.walkthroughs_triggerWords,
+    title: strings.triggerWords,
   },
 ];
 

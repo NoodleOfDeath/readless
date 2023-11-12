@@ -7,12 +7,16 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
+import { SETTINGS_STACK } from './SettingsStack';
+
 import { strings } from '~/locales';
 import { SettingsToggleWithIndicator } from '~/navigation';
 import {
+  BookmarksScreen,
+  CategoryScreen,
   ProfileScreen,
+  PublisherScreen,
   RoutingParams,
-  SettingsScreen,
 } from '~/screens';
 
 export const PROFILE_STACK: RouteConfig<
@@ -27,15 +31,40 @@ export const PROFILE_STACK: RouteConfig<
     name: 'default',
     options: {
       headerBackTitle: '',
+      headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />, 
+      headerTitle: strings.screens,
     },
   },
   {
-    component: SettingsScreen,
-    name: 'settings',
+    component: BookmarksScreen, 
+    name: 'bookmarks', 
     options: {
       headerBackTitle: '',
-      headerTitle: strings.screens_settings,
+      headerLeft: () => null,
+      headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: strings.screens, 
+    }, 
+  }, 
+  {
+    component: CategoryScreen, 
+    name: 'category',
+    options: { 
+      headerBackTitle: '', 
+      headerLeft: () => null,
+      headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: '', 
     },
   },
+  {
+    component: PublisherScreen, 
+    name: 'publisher',
+    options: {
+      headerBackTitle: '', 
+      headerLeft: () => null,
+      headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: '', 
+    },
+  },
+  ...SETTINGS_STACK,
 ];

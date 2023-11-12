@@ -21,8 +21,11 @@ export type NavigationTabParams = {
 
 export type LoginRoutingParams = {
   login: undefined;
-  passwordLogin: undefined;
-  register: undefined;
+  passwordLogin: { email?: string };
+  register: { email?: string };
+  forgotPassword: { email?: string };
+  verifyOtp: { otp: string };
+  setNewPassword: undefined;
 };
 
 export type SettingsRoutingParams = {

@@ -18,12 +18,15 @@ router.post(
     body('eth2address'),
     body('username').isString(),
     body('thirdParty').isObject(),
+    body('anonymous').isString(),
   ]),
   body('password')
     .if(body('eth2address').not().exists())
     .if(body('thirdParty').not().exists())
+    .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
+  rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.register(req, req.body);
@@ -41,12 +44,15 @@ router.post(
     body('eth2address'),
     body('username').isString(),
     body('thirdParty').isObject(),
+    body('anonymous').isString(),
   ]),
   body('password')
     .if(body('eth2address').not().exists())
     .if(body('thirdParty').not().exists())
+    .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
+  // rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.login(req, req.body);
@@ -76,7 +82,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.generateOTP(req, req.body);
+      const response = await AccountController.requestOtp(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -103,8 +109,36 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.verifyOTP(req, req.body);
+      const response = await AccountController.verifyOtp(req, req.body);
       return res.json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
+  '/profile',
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.getProfile(req);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.patch(
+  '/update/metadata',
+  body('key').isString(),
+  body('value').isString(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.updateMetadata(req, req.body);
+      return res.status(200).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
     }
