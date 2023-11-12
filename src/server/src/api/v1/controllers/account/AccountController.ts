@@ -105,7 +105,7 @@ export class AccountController {
     if (body.anonymous) {
       console.log('anonymous registration');
       try {
-        const bytes = CryptoJS.AES.decrypt(body.anonymous, process.env.REGISTRATION_PUBLIC_KEY);
+        const bytes = CryptoJS.AES.decrypt(body.anonymous, process.env.REGISTRATION_PRIVATE_KEY);
         bytes.toString(CryptoJS.enc.Utf8);
         user;
       } catch (e) {
