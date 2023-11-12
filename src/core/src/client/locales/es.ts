@@ -42,6 +42,7 @@ export const esStrings: typeof enStrings = {
   compactSummaries: 'Compacto',
   compactSummariesDescription: 'Mueva los interruptores a continuación para ver cuál prefiere',
   confirmPassword: 'confirmar Contraseña',
+  continueToLogin: 'Continuar para iniciar sesión',
   customFaddCategories: 'Añadir categorías',
   customFaddNewsSources: 'Agregar fuentes de noticias',
   customFletsStart: 'Empecemos eligiendo alguna de las siguientes categorías que te pueda interesar',
@@ -256,6 +257,7 @@ export const esStrings: typeof enStrings = {
   unfollow: 'Dejar de seguir',
   unread: 'No leído',
   username: 'Nombre de usuario',
+  verify: 'Verificar',
   verifyYourEmailToContinue: 'Por favor verifique su correo electrónico para continuar. Asegúrate de revisar tu carpeta de spam si no lo ves en tu bandeja de entrada.',
   veryNegative: 'muy negativo',
   veryPositive: 'Muy positivo',
@@ -282,6 +284,7 @@ export const esStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'No estás siguiendo ninguna categoría.',
   youAreNotFollowingAnyPublishers: 'No estás siguiendo a ningún editor.',
   youCanAlwaysSee: 'Siempre puede ver los enlaces de origen después de tocar una tarjeta.\n\nUna pulsación prolongada también copiará la URL.',
+  yourEmailHasBeenVerified: 'Su correo electrónico ha sido verificado. Ahora puedes iniciar sesión',
   yourFollows: 'Tus seguidores',
   yourNews: 'Tus noticias',
 };

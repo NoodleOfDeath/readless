@@ -3,6 +3,7 @@ import React from 'react';
 import { ScreenComponent } from '../types';
 
 import { 
+  ActivityIndicator,
   Button,
   Screen, 
   Text, 
@@ -19,9 +20,11 @@ export function ForgotPasswordScreen({ route }: ScreenComponent<'forgotPassword'
   const [success, setSuccess] = React.useState(false);
   const [email, setEmail] = React.useState(route?.params?.email ?? '');
   const [message, setMessage] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   
   const handleRequest = React.useCallback(async () => {
     try {
+      setLoading(true);
       const { data, error } = await requestOtp({ email });
       if (error) {
         setMessage(error.message);
@@ -33,13 +36,15 @@ export function ForgotPasswordScreen({ route }: ScreenComponent<'forgotPassword'
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);
     }
   }, [email, requestOtp]);
   
   return (
     <Screen>
       <View p={ 24 } gap={ 12 }>
-        { !success && (
+        { (!success && !loading) && (
           <React.Fragment>
             <TextInput
               value={ email }
@@ -52,6 +57,7 @@ export function ForgotPasswordScreen({ route }: ScreenComponent<'forgotPassword'
             </Button>
           </React.Fragment>
         )}
+        { loading && <ActivityIndicator animating /> }
         { message && <Text>{ message }</Text> }
       </View>
     </Screen>

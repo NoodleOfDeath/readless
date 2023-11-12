@@ -42,6 +42,7 @@ export const daStrings: typeof enStrings = {
   compactSummaries: 'Kompakt',
   compactSummariesDescription: 'Skift kontakterne nedenfor for at se, hvilken du foretrækker',
   confirmPassword: 'Bekræft kodeord',
+  continueToLogin: 'Fortsæt til login',
   customFaddCategories: 'Tilføj kategorier',
   customFaddNewsSources: 'Tilføj nyhedskilder',
   customFletsStart: 'Lad os starte med at vælge en af følgende kategorier, der kan interessere dig',
@@ -256,6 +257,7 @@ export const daStrings: typeof enStrings = {
   unfollow: 'Slut med at følge',
   unread: 'Ulæst',
   username: 'Brugernavn',
+  verify: 'Verificere',
   verifyYourEmailToContinue: 'Bekræft venligst din e-mail for at fortsætte. Sørg for at tjekke din spam-mappe, hvis du ikke kan se den i din indbakke.',
   veryNegative: 'Meget negativ',
   veryPositive: 'Meget positiv',
@@ -282,6 +284,7 @@ export const daStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Du følger ikke nogen kategorier',
   youAreNotFollowingAnyPublishers: 'Du følger ikke nogen udgivere',
   youCanAlwaysSee: 'Du kan altid se kildelinkene, når du har trykket på selve kortet.\n\nLangt tryk kopierer også url\'en.',
+  yourEmailHasBeenVerified: 'Din e-mail er blevet bekræftet. Du kan nu logge ind',
   yourFollows: 'Dine følgere',
   yourNews: 'Dine nyheder',
 };

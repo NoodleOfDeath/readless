@@ -42,6 +42,7 @@ export const msStrings: typeof enStrings = {
   compactSummaries: 'Padat',
   compactSummariesDescription: 'Togol suis di bawah untuk melihat pilihan yang anda suka',
   confirmPassword: 'Sahkan Kata Laluan',
+  continueToLogin: 'Teruskan Log Masuk',
   customFaddCategories: 'Tambah kategori',
   customFaddNewsSources: 'Tambah sumber berita',
   customFletsStart: 'Mari mulakan dengan memilih mana-mana kategori berikut yang mungkin menarik minat anda',
@@ -256,6 +257,7 @@ export const msStrings: typeof enStrings = {
   unfollow: 'nyahikut',
   unread: 'Belum dibaca',
   username: 'Nama pengguna',
+  verify: 'Sahkan',
   verifyYourEmailToContinue: 'Sila sahkan e-mel anda untuk meneruskan. Pastikan anda menyemak folder spam anda jika anda tidak melihatnya dalam peti masuk anda.',
   veryNegative: 'Sangat Negatif',
   veryPositive: 'Sangat Positif',
@@ -282,6 +284,7 @@ export const msStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Anda tidak mengikuti mana-mana kategori',
   youAreNotFollowingAnyPublishers: 'Anda tidak mengikuti mana-mana penerbit',
   youCanAlwaysSee: 'Anda sentiasa boleh melihat pautan sumber selepas mengetik kad itu sendiri.\n\nMenekan lama juga akan menyalin url.',
+  yourEmailHasBeenVerified: 'E-mel anda telah disahkan. Anda kini boleh log masuk',
   yourFollows: 'Pengikut Anda',
   yourNews: 'Berita Anda',
 };

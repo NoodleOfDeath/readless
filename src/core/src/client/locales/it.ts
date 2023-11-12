@@ -42,6 +42,7 @@ export const itStrings: typeof enStrings = {
   compactSummaries: 'Compatto',
   compactSummariesDescription: 'Attiva o disattiva gli interruttori sottostanti per vedere quale preferisci',
   confirmPassword: 'Conferma password',
+  continueToLogin: 'Continua ad accedere',
   customFaddCategories: 'Aggiungi categorie',
   customFaddNewsSources: 'Aggiungi fonti di notizie',
   customFletsStart: 'Iniziamo scegliendo una delle seguenti categorie che potrebbero interessarti',
@@ -256,6 +257,7 @@ export const itStrings: typeof enStrings = {
   unfollow: 'Smetti di seguire',
   unread: 'Non letto',
   username: 'Nome utente',
+  verify: 'Verificare',
   verifyYourEmailToContinue: 'Verifica la tua email per continuare. Assicurati di controllare la cartella spam se non la vedi nella tua casella di posta.',
   veryNegative: 'Molto negativo',
   veryPositive: 'Molto positivo',
@@ -282,6 +284,7 @@ export const itStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Non stai seguendo nessuna categoria',
   youAreNotFollowingAnyPublishers: 'Non stai seguendo nessun editore',
   youCanAlwaysSee: 'Puoi sempre vedere i collegamenti di origine dopo aver toccato una scheda stessa.\n\nPremendo a lungo verrà copiato anche l\'URL.',
+  yourEmailHasBeenVerified: 'La tua email è stata verificata. Ora puoi accedere',
   yourFollows: 'I tuoi follower',
   yourNews: 'Tue notizie',
 };

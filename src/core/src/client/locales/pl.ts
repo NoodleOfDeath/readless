@@ -42,6 +42,7 @@ export const plStrings: typeof enStrings = {
   compactSummaries: 'Kompaktowy',
   compactSummariesDescription: 'Przełącz przełączniki poniżej, aby zobaczyć, który wolisz',
   confirmPassword: 'Potwierdź hasło',
+  continueToLogin: 'Kontynuuj logowanie',
   customFaddCategories: 'Dodaj kategorie',
   customFaddNewsSources: 'Dodaj źródła wiadomości',
   customFletsStart: 'Zacznijmy od wybrania dowolnej z poniższych kategorii, które mogą Cię zainteresować',
@@ -256,6 +257,7 @@ export const plStrings: typeof enStrings = {
   unfollow: 'Przestań obserwować',
   unread: 'nieprzeczytane',
   username: 'Nazwa użytkownika',
+  verify: 'Zweryfikować',
   verifyYourEmailToContinue: 'Aby kontynuować, zweryfikuj swój adres e-mail. Pamiętaj, aby sprawdzić folder ze spamem, jeśli nie widzisz go w skrzynce odbiorczej.',
   veryNegative: 'Bardzo negatywne',
   veryPositive: 'Bardzo pozytywny',
@@ -282,6 +284,7 @@ export const plStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Nie obserwujesz żadnych kategorii',
   youAreNotFollowingAnyPublishers: 'Nie obserwujesz żadnych wydawców',
   youCanAlwaysSee: 'Zawsze możesz zobaczyć linki źródłowe po dotknięciu samej karty.\n\nDługie naciśnięcie spowoduje również skopiowanie adresu URL.',
+  yourEmailHasBeenVerified: 'Twój email został zweryfikowany. Możesz się teraz zalogować',
   yourFollows: 'Twoje obserwowane',
   yourNews: 'Twoje wiadomości',
 };

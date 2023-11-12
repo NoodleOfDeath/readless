@@ -69,7 +69,7 @@ export function SetNewPasswordScreen({
         </React.Fragment>
       )}
       {message && <Text textCenter>{ message }</Text>}
-      {success && (<Button onPress={ () => navigation?.replace('login', {}) } contained>{strings.login}</Button>)}
+      {success && (<Button onPress={ () => navigation?.replace('passwordLogin', {}) } contained>{strings.login}</Button>)}
     </View>
   );
 }

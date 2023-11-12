@@ -42,6 +42,7 @@ export const svStrings: typeof enStrings = {
   compactSummaries: 'Kompakt',
   compactSummariesDescription: 'Växla omkopplarna nedan för att se vilken du föredrar',
   confirmPassword: 'Bekräfta lösenord',
+  continueToLogin: 'Fortsätt till inloggning',
   customFaddCategories: 'Lägg till kategorier',
   customFaddNewsSources: 'Lägg till nyhetskällor',
   customFletsStart: 'Låt oss börja med att välja någon av följande kategorier som kan intressera dig',
@@ -256,6 +257,7 @@ export const svStrings: typeof enStrings = {
   unfollow: 'Sluta följa',
   unread: 'Oläst',
   username: 'Användarnamn',
+  verify: 'Kontrollera',
   verifyYourEmailToContinue: 'Vänligen verifiera din e-postadress för att fortsätta. Se till att kolla din skräppostmapp om du inte ser den i din inkorg.',
   veryNegative: 'Mycket negativ',
   veryPositive: 'Mycket positiv',
@@ -282,6 +284,7 @@ export const svStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Du följer inga kategorier',
   youAreNotFollowingAnyPublishers: 'Du följer inga utgivare',
   youCanAlwaysSee: 'Du kan alltid se källlänkarna efter att ha tryckt på själva kortet.\n\nLångt tryck kopierar också webbadressen.',
+  yourEmailHasBeenVerified: 'Din e-postadress har verifierats. Du kan nu logga in',
   yourFollows: 'Dina följare',
   yourNews: 'Dina nyheter',
 };

@@ -42,6 +42,7 @@ export const nlStrings: typeof enStrings = {
   compactSummaries: 'Compact',
   compactSummariesDescription: 'Zet de schakelaars hieronder om te zien welke je voorkeur heeft',
   confirmPassword: 'bevestig wachtwoord',
+  continueToLogin: 'Ga verder naar Inloggen',
   customFaddCategories: 'Categorieën toevoegen',
   customFaddNewsSources: 'Voeg nieuwsbronnen toe',
   customFletsStart: 'Laten we beginnen met het kiezen van een van de volgende categorieën die u mogelijk interesseren',
@@ -256,6 +257,7 @@ export const nlStrings: typeof enStrings = {
   unfollow: 'Ontvolgen',
   unread: 'Ongelezen',
   username: 'Gebruikersnaam',
+  verify: 'Verifiëren',
   verifyYourEmailToContinue: 'Verifieer uw e-mailadres om door te gaan. Zorg ervoor dat u uw spammap controleert als u deze niet in uw inbox ziet.',
   veryNegative: 'Zeer negatief',
   veryPositive: 'Heel positief',
@@ -282,6 +284,7 @@ export const nlStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'U volgt geen categorieën',
   youAreNotFollowingAnyPublishers: 'Je volgt geen enkele uitgever',
   youCanAlwaysSee: 'Je kunt altijd de bronlinks zien nadat je op een kaart zelf hebt getikt.\n\nLang indrukken zal ook de url kopiëren.',
+  yourEmailHasBeenVerified: 'Je e-mail is geverifieerd. U kunt nu inloggen',
   yourFollows: 'Uw volgers',
   yourNews: 'Jouw nieuws',
 };

@@ -42,6 +42,7 @@ export const ukStrings: typeof enStrings = {
   compactSummaries: 'Компактний',
   compactSummariesDescription: 'Перемкніть перемикачі нижче, щоб побачити, який ви віддаєте перевагу',
   confirmPassword: 'Підтвердьте пароль',
+  continueToLogin: 'Продовжуйте входити',
   customFaddCategories: 'Додайте категорії',
   customFaddNewsSources: 'Додайте джерела новин',
   customFletsStart: 'Давайте почнемо з вибору будь-якої з наступних категорій, яка може вас зацікавити',
@@ -256,6 +257,7 @@ export const ukStrings: typeof enStrings = {
   unfollow: 'Відписатися',
   unread: 'Непрочитаний',
   username: 'Ім\'я користувача',
+  verify: 'Підтвердити',
   verifyYourEmailToContinue: 'Щоб продовжити, підтвердьте свою електронну адресу. Обов’язково перевірте папку зі спамом, якщо ви не бачите її у папці «Вхідні».',
   veryNegative: 'Дуже негативно',
   veryPositive: 'Дуже позитивно',
@@ -282,6 +284,7 @@ export const ukStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Ви не стежите за жодною категорією',
   youAreNotFollowingAnyPublishers: 'Ви не стежите за жодним видавцем',
   youCanAlwaysSee: 'Ви завжди можете побачити посилання на джерело, торкнувшись самої картки.\n\nДовге натискання також скопіює URL-адресу.',
+  yourEmailHasBeenVerified: 'Вашу електронну адресу перевірено. Тепер ви можете увійти',
   yourFollows: 'Ваші підписки',
   yourNews: 'Ваші новини',
 };

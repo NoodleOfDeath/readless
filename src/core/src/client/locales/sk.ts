@@ -42,6 +42,7 @@ export const skStrings: typeof enStrings = {
   compactSummaries: 'Kompaktný',
   compactSummariesDescription: 'Prepnite prepínače nižšie a zistite, ktoré preferujete',
   confirmPassword: 'Potvrďte heslo',
+  continueToLogin: 'Pokračujte na Prihlásenie',
   customFaddCategories: 'Pridajte kategórie',
   customFaddNewsSources: 'Pridajte zdroje správ',
   customFletsStart: 'Začnime výberom niektorej z nasledujúcich kategórií, ktoré by vás mohli zaujímať',
@@ -256,6 +257,7 @@ export const skStrings: typeof enStrings = {
   unfollow: 'Prestať sledovať',
   unread: 'Neprečítané',
   username: 'Používateľské meno',
+  verify: 'Overiť',
   verifyYourEmailToContinue: 'Ak chcete pokračovať, overte svoj e-mail. Ak ho nevidíte v priečinku doručenej pošty, skontrolujte si priečinok so spamom.',
   veryNegative: 'Veľmi negatívne',
   veryPositive: 'Veľmi pozitívne',
@@ -282,6 +284,7 @@ export const skStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Nesledujete žiadne kategórie',
   youAreNotFollowingAnyPublishers: 'Nesledujete žiadnych vydavateľov',
   youCanAlwaysSee: 'Zdrojové odkazy môžete vždy vidieť po klepnutí na samotnú kartu.\n\nDlhým stlačením sa skopíruje aj adresa URL.',
+  yourEmailHasBeenVerified: 'Váš email bol overený. Teraz sa môžete prihlásiť',
   yourFollows: 'Vaši sledovaní',
   yourNews: 'Vaše novinky',
 };

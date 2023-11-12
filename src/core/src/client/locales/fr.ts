@@ -42,6 +42,7 @@ export const frStrings: typeof enStrings = {
   compactSummaries: 'Compact',
   compactSummariesDescription: 'Basculez les commutateurs ci-dessous pour voir celui que vous préférez',
   confirmPassword: 'Confirmez le mot de passe',
+  continueToLogin: 'Continuer à vous connecter',
   customFaddCategories: 'Ajouter des catégories',
   customFaddNewsSources: 'Ajouter des sources d\'actualités',
   customFletsStart: 'Commençons par choisir l\'une des catégories suivantes qui pourraient vous intéresser',
@@ -256,6 +257,7 @@ export const frStrings: typeof enStrings = {
   unfollow: 'Ne plus suivre',
   unread: 'Non lu',
   username: 'Nom d\'utilisateur',
+  verify: 'Vérifier',
   verifyYourEmailToContinue: 'Veuillez vérifier votre adresse e-mail pour continuer. Assurez-vous de vérifier votre dossier spam si vous ne le voyez pas dans votre boîte de réception.',
   veryNegative: 'Très négatif',
   veryPositive: 'Très positif',
@@ -282,6 +284,7 @@ export const frStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Vous ne suivez aucune catégorie',
   youAreNotFollowingAnyPublishers: 'Vous ne suivez aucun éditeur',
   youCanAlwaysSee: 'Vous pouvez toujours voir les liens source après avoir appuyé sur une carte elle-même.\n\nUn appui long copiera également l\'url.',
+  yourEmailHasBeenVerified: 'Votre mail a été vérifié. Vous pouvez maintenant vous connecter',
   yourFollows: 'Vos suivis',
   yourNews: 'Vos nouvelles',
 };

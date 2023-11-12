@@ -42,6 +42,7 @@ export const thStrings: typeof enStrings = {
   compactSummaries: 'กะทัดรัด',
   compactSummariesDescription: 'สลับสวิตช์ด้านล่างเพื่อดูว่าคุณต้องการอะไร',
   confirmPassword: 'ยืนยันรหัสผ่าน',
+  continueToLogin: 'ดำเนินการต่อเพื่อเข้าสู่ระบบ',
   customFaddCategories: 'เพิ่มหมวดหมู่',
   customFaddNewsSources: 'เพิ่มแหล่งข่าว',
   customFletsStart: 'เริ่มจากการเลือกหมวดหมู่ต่อไปนี้ที่คุณอาจสนใจ',
@@ -256,6 +257,7 @@ export const thStrings: typeof enStrings = {
   unfollow: 'เลิกติดตาม',
   unread: 'ยังไม่ได้อ่าน',
   username: 'ชื่อผู้ใช้',
+  verify: 'ตรวจสอบ',
   verifyYourEmailToContinue: 'โปรดยืนยันอีเมลของคุณเพื่อดำเนินการต่อ อย่าลืมตรวจสอบโฟลเดอร์สแปมของคุณหากคุณไม่เห็นมันในกล่องจดหมายของคุณ',
   veryNegative: 'เชิงลบมาก',
   veryPositive: 'แง่บวกมาก',
@@ -282,6 +284,7 @@ export const thStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'คุณไม่ได้ติดตามหมวดหมู่ใดๆ',
   youAreNotFollowingAnyPublishers: 'คุณไม่ได้ติดตามผู้เผยแพร่รายใด',
   youCanAlwaysSee: 'คุณสามารถดูลิงก์แหล่งที่มาได้เสมอหลังจากแตะที่การ์ด\n\nการกดค้างจะเป็นการคัดลอก URL',
+  yourEmailHasBeenVerified: 'อีเมลของคุณได้รับการยืนยันแล้ว ตอนนี้คุณสามารถเข้าสู่ระบบ',
   yourFollows: 'ติดตามของคุณ',
   yourNews: 'ข่าวของคุณ',
 };

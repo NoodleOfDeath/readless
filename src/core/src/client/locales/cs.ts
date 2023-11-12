@@ -42,6 +42,7 @@ export const csStrings: typeof enStrings = {
   compactSummaries: 'Kompaktní',
   compactSummariesDescription: 'Přepněte přepínače níže, abyste viděli, které dáváte přednost',
   confirmPassword: 'Potvrďte heslo',
+  continueToLogin: 'Pokračujte k přihlášení',
   customFaddCategories: 'Přidat kategorie',
   customFaddNewsSources: 'Přidejte zdroje zpráv',
   customFletsStart: 'Začněme výběrem některé z následujících kategorií, které by vás mohly zajímat',
@@ -256,6 +257,7 @@ export const csStrings: typeof enStrings = {
   unfollow: 'Přestat sledovat',
   unread: 'Nepřečtený',
   username: 'Uživatelské jméno',
+  verify: 'Ověřte',
   verifyYourEmailToContinue: 'Chcete-li pokračovat, ověřte svůj e-mail. Nezapomeňte zkontrolovat složku se spamem, pokud ji nevidíte ve své doručené poště.',
   veryNegative: 'Velmi negativní',
   veryPositive: 'Velmi pozitivní',
@@ -282,6 +284,7 @@ export const csStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Nesledujete žádné kategorie',
   youAreNotFollowingAnyPublishers: 'Nesledujete žádné vydavatele',
   youCanAlwaysSee: 'Po klepnutí na samotnou kartu vždy uvidíte zdrojové odkazy.\n\nDlouhé stisknutí zkopíruje také adresu URL.',
+  yourEmailHasBeenVerified: 'Váš email byl ověřen. Nyní se můžete přihlásit',
   yourFollows: 'Vaši sledující',
   yourNews: 'Vaše novinky',
 };

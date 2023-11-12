@@ -71,7 +71,7 @@ export const LOGIN_STACK: RouteConfig<
       headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => null,
-      headerTitle: strings.forgotPassword,
+      headerTitle: strings.verify,
     },
   },
   {

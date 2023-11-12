@@ -42,6 +42,7 @@ export const elStrings: typeof enStrings = {
   compactSummaries: 'Συμπαγής',
   compactSummariesDescription: 'Εναλλάξτε τους παρακάτω διακόπτες για να δείτε ποιον προτιμάτε',
   confirmPassword: 'Επιβεβαίωση Κωδικού',
+  continueToLogin: 'Συνεχίστε στη σύνδεση',
   customFaddCategories: 'Προσθήκη κατηγοριών',
   customFaddNewsSources: 'Προσθέστε πηγές ειδήσεων',
   customFletsStart: 'Ας ξεκινήσουμε επιλέγοντας οποιαδήποτε από τις παρακάτω κατηγορίες που μπορεί να σας ενδιαφέρουν',
@@ -256,6 +257,7 @@ export const elStrings: typeof enStrings = {
   unfollow: 'Κατάργηση παρακολούθησης',
   unread: 'Αδιάβαστος',
   username: 'Όνομα χρήστη',
+  verify: 'Επαληθεύω',
   verifyYourEmailToContinue: 'Επαληθεύστε το email σας για να συνεχίσετε. Βεβαιωθείτε ότι έχετε ελέγξει τον φάκελο ανεπιθύμητης αλληλογραφίας εάν δεν τον βλέπετε στα εισερχόμενά σας.',
   veryNegative: 'Πολύ Αρνητικό',
   veryPositive: 'Πολύ θετικό',
@@ -282,6 +284,7 @@ export const elStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Δεν ακολουθείτε καμία κατηγορία',
   youAreNotFollowingAnyPublishers: 'Δεν ακολουθείτε κανέναν εκδότη',
   youCanAlwaysSee: 'Μπορείτε πάντα να δείτε τους συνδέσμους της πηγής αφού πατήσετε μια ίδια κάρτα.\n\nΠατώντας παρατεταμένα θα αντιγραφεί και το url.',
+  yourEmailHasBeenVerified: 'Το email σας έχει επαληθευτεί. Μπορείτε τώρα να συνδεθείτε',
   yourFollows: 'Οι ακόλουθοί σας',
   yourNews: 'Τα ΝΕΑ σας',
 };

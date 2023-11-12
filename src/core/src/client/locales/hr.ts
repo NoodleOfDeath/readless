@@ -42,6 +42,7 @@ export const hrStrings: typeof enStrings = {
   compactSummaries: 'Kompaktan',
   compactSummariesDescription: 'Uključite prekidače u nastavku da biste vidjeli što vam se više sviđa',
   confirmPassword: 'Potvrdi lozinku',
+  continueToLogin: 'Nastavite do prijave',
   customFaddCategories: 'Dodajte kategorije',
   customFaddNewsSources: 'Dodajte izvore vijesti',
   customFletsStart: 'Započnimo odabirom bilo koje od sljedećih kategorija koje bi vas mogle zanimati',
@@ -256,6 +257,7 @@ export const hrStrings: typeof enStrings = {
   unfollow: 'Prestani pratiti',
   unread: 'Nepročitano',
   username: 'Korisničko ime',
+  verify: 'Potvrdi',
   verifyYourEmailToContinue: 'Za nastavak potvrdite svoju e-poštu. Obavezno provjerite mapu neželjene pošte ako je ne vidite u pristigloj pošti.',
   veryNegative: 'Vrlo negativno',
   veryPositive: 'Vrlo pozitivno',
@@ -282,6 +284,7 @@ export const hrStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Ne pratite nijednu kategoriju',
   youAreNotFollowingAnyPublishers: 'Ne pratite nijednog izdavača',
   youCanAlwaysSee: 'Uvijek možete vidjeti izvorne veze nakon što dodirnete samu karticu.\n\nDugi pritisak također će kopirati url.',
+  yourEmailHasBeenVerified: 'Vaša e-pošta je potvrđena. Sada se možete prijaviti',
   yourFollows: 'Vaši pratitelji',
   yourNews: 'Vaše Vijesti',
 };

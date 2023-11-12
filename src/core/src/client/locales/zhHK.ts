@@ -42,6 +42,7 @@ export const zhHKStrings: typeof enStrings = {
   compactSummaries: '袖珍的',
   compactSummariesDescription: '切換下面的開關，看看您喜歡哪一個',
   confirmPassword: '確認密碼',
+  continueToLogin: '繼續登入',
   customFaddCategories: '添加類別',
   customFaddNewsSources: '添加新聞來源',
   customFletsStart: '讓我們從選擇您可能感興趣的以下任何類別開始',
@@ -256,6 +257,7 @@ export const zhHKStrings: typeof enStrings = {
   unfollow: '取消關注',
   unread: '未讀',
   username: '使用者名稱',
+  verify: '核實',
   verifyYourEmailToContinue: '請驗證您的電子郵件以繼續。如果您在收件匣中沒有看到垃圾郵件，請務必檢查您的垃圾郵件資料夾。',
   veryNegative: '非常消極',
   veryPositive: '非常積極',
@@ -282,6 +284,7 @@ export const zhHKStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: '您沒有關注任何類別',
   youAreNotFollowingAnyPublishers: '您沒有關注任何發布者',
   youCanAlwaysSee: '點擊卡片本身後，您始終可以看到源鏈接。\n\n長按也會復製網址。',
+  yourEmailHasBeenVerified: '您的電子郵件已被驗證。您現在可以登入',
   yourFollows: '您的關注',
   yourNews: '你的消息',
 };

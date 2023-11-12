@@ -40,6 +40,7 @@ export const enStrings = {
   compactSummaries: 'Compact',
   compactSummariesDescription: 'Toggle the switches below to see which you prefer',
   confirmPassword: 'Confirm Password',
+  continueToLogin: 'Continue to Login',
   customFaddCategories: 'Add categories',
   customFaddNewsSources: 'Add news sources',
   customFletsStart: 'Let\'s start by choosing any of the following categories that may interest you',
@@ -254,6 +255,7 @@ export const enStrings = {
   unfollow: 'Unfollow',
   unread: 'Unread',
   username: 'Username',
+  verify: 'Verify',
   verifyYourEmailToContinue: 'Please verify your email to continue. Make sure to check your spam folder if you do not see it in your inbox.',
   veryNegative: 'Very Negative',
   veryPositive: 'Very Positive',
@@ -280,6 +282,7 @@ export const enStrings = {
   youAreNotFollowingAnyCategories: 'You are not following any categories',
   youAreNotFollowingAnyPublishers: 'You are not following any publishers',
   youCanAlwaysSee: 'You can always see the source links after tapping a card itself.\n\nLong pressing will also copy the url.',
+  yourEmailHasBeenVerified: 'Your email has been verified. You may now login',
   yourFollows: 'Your Follows',
   yourNews: 'Your News',
 };

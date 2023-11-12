@@ -42,6 +42,7 @@ export const roStrings: typeof enStrings = {
   compactSummaries: 'Compact',
   compactSummariesDescription: 'Comutați întrerupătoarele de mai jos pentru a vedea care preferați',
   confirmPassword: 'Confirmă parola',
+  continueToLogin: 'Continuați să vă autentificați',
   customFaddCategories: 'Adăugați categorii',
   customFaddNewsSources: 'Adăugați surse de știri',
   customFletsStart: 'Să începem prin a alege oricare dintre următoarele categorii care te-ar putea interesa',
@@ -256,6 +257,7 @@ export const roStrings: typeof enStrings = {
   unfollow: 'Anulați urmărirea',
   unread: 'Necitit',
   username: 'Nume de utilizator',
+  verify: 'Verifica',
   verifyYourEmailToContinue: 'Vă rugăm să vă verificați adresa de e-mail pentru a continua. Asigurați-vă că verificați dosarul de spam dacă nu îl vedeți în căsuța de e-mail.',
   veryNegative: 'Foarte Negativ',
   veryPositive: 'Foarte pozitiv',
@@ -282,6 +284,7 @@ export const roStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Nu urmați nicio categorie',
   youAreNotFollowingAnyPublishers: 'Nu urmăriți niciun editor',
   youCanAlwaysSee: 'Puteți vedea oricând linkurile sursă după ce atingeți un card în sine.\n\nApăsarea lungă va copia și adresa URL.',
+  yourEmailHasBeenVerified: 'E-mailul dvs. a fost verificat. Acum vă puteți autentifica',
   yourFollows: 'Urmărește-ți',
   yourNews: 'Stirile tale',
 };
