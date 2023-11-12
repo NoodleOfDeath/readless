@@ -42,6 +42,7 @@ export const nbStrings: typeof enStrings = {
   compactSummaries: 'Kompakt',
   compactSummariesDescription: 'Slå på bryterne nedenfor for å se hvilken du foretrekker',
   confirmPassword: 'bekreft passord',
+  continueToLogin: 'Fortsett til pålogging',
   customFaddCategories: 'Legg til kategorier',
   customFaddNewsSources: 'Legg til nyhetskilder',
   customFletsStart: 'La oss starte med å velge en av følgende kategorier som kan interessere deg',
@@ -256,6 +257,7 @@ export const nbStrings: typeof enStrings = {
   unfollow: 'Slutt å følge',
   unread: 'Ulest',
   username: 'Brukernavn',
+  verify: 'Bekrefte',
   verifyYourEmailToContinue: 'Bekreft e-postadressen din for å fortsette. Sørg for å sjekke søppelpostmappen din hvis du ikke ser den i innboksen din.',
   veryNegative: 'Veldig negativ',
   veryPositive: 'Veldig positiv',
@@ -282,6 +284,7 @@ export const nbStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Du følger ingen kategorier',
   youAreNotFollowingAnyPublishers: 'Du følger ingen utgivere',
   youCanAlwaysSee: 'Du kan alltid se kildelenkene etter å ha trykket på selve kortet.\n\nLangt trykk vil også kopiere url.',
+  yourEmailHasBeenVerified: 'E-posten din er bekreftet. Du kan nå logge på',
   yourFollows: 'Dine følgere',
   yourNews: 'Dine nyheter',
 };

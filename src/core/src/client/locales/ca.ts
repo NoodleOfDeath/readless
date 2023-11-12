@@ -42,6 +42,7 @@ export const caStrings: typeof enStrings = {
   compactSummaries: 'Compacte',
   compactSummariesDescription: 'Commuta els interruptors següents per veure quins prefereixes',
   confirmPassword: 'Confirma la contrassenya',
+  continueToLogin: 'Continueu per iniciar sessió',
   customFaddCategories: 'Afegeix categories',
   customFaddNewsSources: 'Afegeix fonts de notícies',
   customFletsStart: 'Comencem escollint qualsevol de les categories següents que et puguin interessar',
@@ -256,6 +257,7 @@ export const caStrings: typeof enStrings = {
   unfollow: 'Deixa de seguir',
   unread: 'Sense llegir',
   username: 'Nom d\'usuari',
+  verify: 'Verificar',
   verifyYourEmailToContinue: 'Verifiqueu el vostre correu electrònic per continuar. Assegureu-vos de comprovar la vostra carpeta de correu brossa si no la veieu a la safata d\'entrada.',
   veryNegative: 'Molt negatiu',
   veryPositive: 'Molt positiu',
@@ -282,6 +284,7 @@ export const caStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'No esteu seguint cap categoria',
   youAreNotFollowingAnyPublishers: 'No esteu seguint cap editor',
   youCanAlwaysSee: 'Sempre podeu veure els enllaços d\'origen després de tocar una targeta.\n\nSi premeu llargament també es copiarà l\'URL.',
+  yourEmailHasBeenVerified: 'El teu correu electrònic s\'ha verificat. Ara podeu iniciar sessió',
   yourFollows: 'Els teus seguidors',
   yourNews: 'Les teves notícies',
 };

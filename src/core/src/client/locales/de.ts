@@ -42,6 +42,7 @@ export const deStrings: typeof enStrings = {
   compactSummaries: 'Kompakt',
   compactSummariesDescription: 'Schalten Sie die Schalter unten um, um zu sehen, welche Sie bevorzugen',
   confirmPassword: 'Bestätige das Passwort',
+  continueToLogin: 'Weiter zum Anmelden',
   customFaddCategories: 'Kategorien hinzufügen',
   customFaddNewsSources: 'Nachrichtenquellen hinzufügen',
   customFletsStart: 'Beginnen wir mit der Auswahl einer der folgenden Kategorien, die Sie interessieren könnte',
@@ -256,6 +257,7 @@ export const deStrings: typeof enStrings = {
   unfollow: 'Nicht mehr folgen',
   unread: 'Ungelesen',
   username: 'Nutzername',
+  verify: 'Verifizieren',
   verifyYourEmailToContinue: 'Bitte bestätigen Sie Ihre E-Mail-Adresse, um fortzufahren. Überprüfen Sie unbedingt Ihren Spam-Ordner, wenn Sie ihn nicht in Ihrem Posteingang sehen.',
   veryNegative: 'Sehr negativ',
   veryPositive: 'Sehr positiv',
@@ -282,6 +284,7 @@ export const deStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Sie folgen keiner Kategorie',
   youAreNotFollowingAnyPublishers: 'Sie folgen keinem Verlag',
   youCanAlwaysSee: 'Sie können die Quelllinks immer sehen, nachdem Sie auf eine Karte selbst getippt haben.\n\nDurch langes Drücken wird auch die URL kopiert.',
+  yourEmailHasBeenVerified: 'Deine Email wurde verifiziert. Du darfst dich jetzt einloggen',
   yourFollows: 'Deine Follower',
   yourNews: 'Deine Neuigkeiten',
 };

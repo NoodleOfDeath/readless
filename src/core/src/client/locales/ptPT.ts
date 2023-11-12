@@ -42,6 +42,7 @@ export const ptPTStrings: typeof enStrings = {
   compactSummaries: 'Compactar',
   compactSummariesDescription: 'Alterne as opções abaixo para ver qual você prefere',
   confirmPassword: 'Confirme sua senha',
+  continueToLogin: 'Continuar para fazer login',
   customFaddCategories: 'Adicionar categorias',
   customFaddNewsSources: 'Adicionar fontes de notícias',
   customFletsStart: 'Vamos começar escolhendo qualquer uma das seguintes categorias que podem lhe interessar',
@@ -256,6 +257,7 @@ export const ptPTStrings: typeof enStrings = {
   unfollow: 'Deixar de seguir',
   unread: 'Não lida',
   username: 'Nome de usuário',
+  verify: 'Verificar',
   verifyYourEmailToContinue: 'Verifique seu e-mail para continuar. Certifique-se de verificar sua pasta de spam caso não o encontre em sua caixa de entrada.',
   veryNegative: 'muito negativo',
   veryPositive: 'Muito positivo',
@@ -282,6 +284,7 @@ export const ptPTStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Você não está seguindo nenhuma categoria',
   youAreNotFollowingAnyPublishers: 'Você não está seguindo nenhum editor',
   youCanAlwaysSee: 'Você sempre pode ver os links de origem depois de tocar no próprio cartão.\n\nPressionar longamente também copiará o URL.',
+  yourEmailHasBeenVerified: 'Seu e-mail foi verificado. Agora você pode fazer login',
   yourFollows: 'Seus seguidores',
   yourNews: 'Suas notícias',
 };

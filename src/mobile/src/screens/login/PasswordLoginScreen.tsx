@@ -3,6 +3,7 @@ import React from 'react';
 import { ScreenComponent } from '../types';
 
 import {
+  ActivityIndicator,
   Button,
   Text,
   TextInput,
@@ -25,6 +26,7 @@ export function PasswordLoginScreen({
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [message, setMessage] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   const handleLogin = React.useCallback(async () => {
     try {
@@ -48,21 +50,26 @@ export function PasswordLoginScreen({
   
   return (
     <View p={ 24 } gap={ 12 }>
-      <TextInput
-        value={ email }
-        onChangeText={ setEmail }
-        placeholder={ strings.email }
-        keyboardType='email-address' />
-      <TextInput
-        value={ password }
-        onChangeText={ setPassword }
-        placeholder={ strings.password }
-        secureTextEntry />
-      <Button
-        onPress={ handleLogin }
-        contained>
-        {strings.login}
-      </Button>
+      {!loading && (
+        <React.Fragment>
+          <TextInput
+            value={ email }
+            onChangeText={ setEmail }
+            placeholder={ strings.email }
+            keyboardType='email-address' />
+          <TextInput
+            value={ password }
+            onChangeText={ setPassword }
+            placeholder={ strings.password }
+            secureTextEntry />
+          <Button
+            onPress={ handleLogin }
+            contained>
+            {strings.login}
+          </Button>
+        </React.Fragment>
+      )}
+      {loading && <ActivityIndicator animating />}
       {message && <Text textCenter>{ message }</Text>}
       <Button
         onPress={ () => navigation?.push('forgotPassword', { email }) }

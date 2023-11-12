@@ -42,6 +42,7 @@ export const faStrings: typeof enStrings = {
   compactSummaries: 'فشرده - جمع و جور',
   compactSummariesDescription: 'سوئیچ های زیر را تغییر دهید تا ببینید کدام را ترجیح می دهید',
   confirmPassword: 'رمز عبور را تایید کنید',
+  continueToLogin: 'به ورود ادامه دهید',
   customFaddCategories: 'اضافه کردن دسته ها',
   customFaddNewsSources: 'افزودن منابع خبری',
   customFletsStart: 'بیایید با انتخاب هر یک از دسته بندی های زیر که ممکن است برای شما جالب باشد شروع کنیم',
@@ -256,6 +257,7 @@ export const faStrings: typeof enStrings = {
   unfollow: 'لغو دنبال کردن',
   unread: 'خوانده نشده',
   username: 'نام کاربری',
+  verify: 'تأیید کنید',
   verifyYourEmailToContinue: 'لطفاً برای ادامه ایمیل خود را تأیید کنید. اگر پوشه هرزنامه خود را در صندوق ورودی خود نمی بینید، حتماً آن را بررسی کنید.',
   veryNegative: 'خیلی منفی',
   veryPositive: 'خیلی مثبته',
@@ -282,6 +284,7 @@ export const faStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'شما هیچ دسته ای را دنبال نمی کنید',
   youAreNotFollowingAnyPublishers: 'شما هیچ ناشر را دنبال نمی کنید',
   youCanAlwaysSee: 'همیشه می‌توانید پس از ضربه زدن روی خود کارت، پیوندهای منبع را ببینید.\n\nبا فشار طولانی، آدرس اینترنتی نیز کپی می شود.',
+  yourEmailHasBeenVerified: 'ایمیل شما تایید شده است. اکنون می توانید وارد شوید',
   yourFollows: 'دنبال کننده های شما',
   yourNews: 'اخبار شما',
 };

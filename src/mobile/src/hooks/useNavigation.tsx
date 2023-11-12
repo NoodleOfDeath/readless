@@ -74,9 +74,8 @@ export function useNavigation() {
         params[decodeURIComponent(key)] = decodeURIComponent(value || '');
       });
     }
-    alert(path);
     if (route === 'verify') {
-      navigate('verifyOtp', { otp: params['otp'] }, stackNav);
+      navigate('verifyOtp', { code: params['code'], otp: params['otp'] }, stackNav);
     } else
     if (route === 'read') {
       const summary = Number.parseInt(params['s'] ?? '0');

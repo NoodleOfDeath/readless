@@ -42,6 +42,7 @@ export const jaStrings: typeof enStrings = {
   compactSummaries: 'コンパクト',
   compactSummariesDescription: '以下のスイッチを切り替えて、好みのスイッチを確認してください',
   confirmPassword: 'パスワードを認証する',
+  continueToLogin: 'ログインを続ける',
   customFaddCategories: 'カテゴリを追加する',
   customFaddNewsSources: 'ニュースソースを追加する',
   customFletsStart: 'まずは、興味がありそうな次のカテゴリのいずれかを選択してください',
@@ -256,6 +257,7 @@ export const jaStrings: typeof enStrings = {
   unfollow: 'フォローを解除する',
   unread: '未読',
   username: 'ユーザー名',
+  verify: '確認する',
   verifyYourEmailToContinue: '続行するには電子メールを確認してください。受信箱に迷惑メールフォルダーが見つからない場合は、必ず迷惑メールフォルダーを確認してください。',
   veryNegative: 'とてもネガティブ',
   veryPositive: 'とてもポジティブ',
@@ -282,6 +284,7 @@ export const jaStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'どのカテゴリーもフォローしていません',
   youAreNotFollowingAnyPublishers: 'どの出版社もフォローしていません',
   youCanAlwaysSee: 'カード自体をタップすると、いつでもソース リンクが表示されます。\n\n長押しするとURLもコピーされます。',
+  yourEmailHasBeenVerified: 'あなたのメールアドレスが確認されました。これでログインできるようになりました',
   yourFollows: 'あなたのフォロー',
   yourNews: 'あなたのニュース',
 };

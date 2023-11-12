@@ -42,6 +42,7 @@ export const viStrings: typeof enStrings = {
   compactSummaries: 'gọn nhẹ',
   compactSummariesDescription: 'Chuyển đổi các công tắc bên dưới để xem bạn thích công tắc nào hơn',
   confirmPassword: 'Xác nhận mật khẩu',
+  continueToLogin: 'Tiếp tục đăng nhập',
   customFaddCategories: 'Thêm danh mục',
   customFaddNewsSources: 'Thêm nguồn tin tức',
   customFletsStart: 'Hãy bắt đầu bằng cách chọn bất kỳ danh mục nào sau đây mà bạn có thể quan tâm',
@@ -256,6 +257,7 @@ export const viStrings: typeof enStrings = {
   unfollow: 'Hủy theo dõi',
   unread: 'Chưa đọc',
   username: 'tên tài khoản',
+  verify: 'Xác minh',
   verifyYourEmailToContinue: 'Vui lòng xác minh email của bạn để tiếp tục. Đảm bảo kiểm tra thư mục thư rác nếu bạn không thấy nó trong hộp thư đến của mình.',
   veryNegative: 'Rất tiêu cực',
   veryPositive: 'Rất tích cực',
@@ -282,6 +284,7 @@ export const viStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Bạn không theo dõi danh mục nào',
   youAreNotFollowingAnyPublishers: 'Bạn không theo dõi bất kỳ nhà xuất bản nào',
   youCanAlwaysSee: 'Bạn luôn có thể xem các liên kết nguồn sau khi chạm vào chính thẻ đó.\n\nNhấn và giữ cũng sẽ sao chép url.',
+  yourEmailHasBeenVerified: 'Email của bạn đã được xác minh. Bây giờ bạn có thể đăng nhập',
   yourFollows: 'Theo dõi của bạn',
   yourNews: 'Tin tức của bạn',
 };

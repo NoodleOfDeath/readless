@@ -42,6 +42,7 @@ export const hiStrings: typeof enStrings = {
   compactSummaries: 'सघन',
   compactSummariesDescription: 'आप किसे पसंद करते हैं यह देखने के लिए नीचे दिए गए स्विच को टॉगल करें',
   confirmPassword: 'पासवर्ड की पुष्टि कीजिये',
+  continueToLogin: 'लॉग इन करना जारी रखें',
   customFaddCategories: 'श्रेणियां जोड़ें',
   customFaddNewsSources: 'समाचार स्रोत जोड़ें',
   customFletsStart: 'आइए निम्न में से किसी भी श्रेणी को चुनकर प्रारंभ करें जिसमें आपकी रुचि हो सकती है',
@@ -256,6 +257,7 @@ export const hiStrings: typeof enStrings = {
   unfollow: 'करें',
   unread: 'अपठित ग',
   username: 'उपयोगकर्ता नाम',
+  verify: 'सत्यापित करें',
   verifyYourEmailToContinue: 'जारी रखने के लिए कृपया अपना ईमेल सत्यापित करें। यदि आप इसे अपने इनबॉक्स में नहीं देखते हैं तो अपने स्पैम फ़ोल्डर की जांच करना सुनिश्चित करें।',
   veryNegative: 'बहुत नकारात्मक',
   veryPositive: 'बहुत सकारात्मक',
@@ -282,6 +284,7 @@ export const hiStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'आप किसी भी श्रेणी का अनुसरण नहीं कर रहे हैं',
   youAreNotFollowingAnyPublishers: 'आप किसी प्रकाशक का अनुसरण नहीं कर रहे हैं',
   youCanAlwaysSee: 'आप कार्ड को टैप करने के बाद हमेशा स्रोत लिंक देख सकते हैं।\n\nदेर तक दबाने से url भी कॉपी हो जाएगा।',
+  yourEmailHasBeenVerified: 'आपका ईमेल सत्यापित किया गया है। अब आप लॉगइन कर सकते हैं',
   yourFollows: 'आपके फ़ॉलोअर्स',
   yourNews: 'अपका समाचार',
 };

@@ -42,6 +42,7 @@ export const zhCNStrings: typeof enStrings = {
   compactSummaries: '袖珍的',
   compactSummariesDescription: '切换下面的开关，看看您喜欢哪一个',
   confirmPassword: '确认密码',
+  continueToLogin: '继续登录',
   customFaddCategories: '添加类别',
   customFaddNewsSources: '添加新闻来源',
   customFletsStart: '让我们从选择您可能感兴趣的以下任何类别开始',
@@ -256,6 +257,7 @@ export const zhCNStrings: typeof enStrings = {
   unfollow: '取消关注',
   unread: '未读',
   username: '用户名',
+  verify: '核实',
   verifyYourEmailToContinue: '请验证您的电子邮件以继续。如果您在收件箱中没有看到垃圾邮件，请务必检查您的垃圾邮件文件夹。',
   veryNegative: '非常消极',
   veryPositive: '非常积极',
@@ -282,6 +284,7 @@ export const zhCNStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: '您没有关注任何类别',
   youAreNotFollowingAnyPublishers: '您没有关注任何发布者',
   youCanAlwaysSee: '点击卡片本身后，您始终可以看到源链接。\n\n长按也会复制网址。',
+  yourEmailHasBeenVerified: '您的电子邮件已被验证。您现在可以登录',
   yourFollows: '您的关注',
   yourNews: '你的消息',
 };

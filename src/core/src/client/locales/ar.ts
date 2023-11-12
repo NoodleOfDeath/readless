@@ -42,6 +42,7 @@ export const arStrings: typeof enStrings = {
   compactSummaries: 'المدمج',
   compactSummariesDescription: 'قم بتبديل المفاتيح أدناه لمعرفة ما تفضله',
   confirmPassword: 'تأكيد كلمة المرور',
+  continueToLogin: 'الاستمرار في تسجيل الدخول',
   customFaddCategories: 'أضف فئات',
   customFaddNewsSources: 'أضف مصادر الأخبار',
   customFletsStart: 'لنبدأ باختيار أي من الفئات التالية التي قد تهمك',
@@ -256,6 +257,7 @@ export const arStrings: typeof enStrings = {
   unfollow: 'الغاء المتابعة',
   unread: 'غير مقروءة',
   username: 'اسم المستخدم',
+  verify: 'يؤكد',
   verifyYourEmailToContinue: 'يرجى التحقق من بريدك الإلكتروني للمتابعة. تأكد من التحقق من مجلد البريد العشوائي الخاص بك إذا كنت لا تراه في صندوق الوارد الخاص بك.',
   veryNegative: 'سلبي جدا',
   veryPositive: 'إيجابي جدا',
@@ -282,6 +284,7 @@ export const arStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'أنت لا تتابع أي فئات',
   youAreNotFollowingAnyPublishers: 'أنت لا تتابع أي ناشرين',
   youCanAlwaysSee: 'يمكنك دائمًا رؤية روابط المصدر بعد النقر على البطاقة نفسها.\n\nالضغط لفترة طويلة سيؤدي أيضًا إلى نسخ عنوان url.',
+  yourEmailHasBeenVerified: 'تم التحقق من بريدك الالكتروني. يمكنك الآن تسجيل الدخول',
   yourFollows: 'المتابعات الخاصة بك',
   yourNews: 'أخبارك',
 };

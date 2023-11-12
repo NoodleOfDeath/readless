@@ -42,6 +42,7 @@ export const koStrings: typeof enStrings = {
   compactSummaries: '콤팩트',
   compactSummariesDescription: '아래 스위치를 토글하여 선호하는 스위치를 확인하십시오.',
   confirmPassword: '비밀번호 확인',
+  continueToLogin: '계속해서 로그인하세요',
   customFaddCategories: '카테고리 추가',
   customFaddNewsSources: '뉴스 매체 추가',
   customFletsStart: '관심을 가질 수 있는 다음 범주 중 하나를 선택하여 시작하겠습니다.',
@@ -256,6 +257,7 @@ export const koStrings: typeof enStrings = {
   unfollow: '언팔로우',
   unread: '읽히지 않는',
   username: '사용자 이름',
+  verify: '확인하다',
   verifyYourEmailToContinue: '계속하려면 이메일을 확인하세요. 받은편지함에 스팸메일함이 보이지 않는다면 꼭 스팸메일함을 확인해 보세요.',
   veryNegative: '매우 부정적',
   veryPositive: '매우 긍정적',
@@ -282,6 +284,7 @@ export const koStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: '팔로우 중인 카테고리가 없습니다.',
   youAreNotFollowingAnyPublishers: '팔로우 중인 게시자가 없습니다.',
   youCanAlwaysSee: '카드 자체를 탭하면 항상 소스 링크를 볼 수 있습니다.\n\n길게 누르면 URL도 복사됩니다.',
+  yourEmailHasBeenVerified: '귀하의 이메일이 확인되었습니다. 이제 로그인하실 수 있습니다',
   yourFollows: '팔로우',
   yourNews: '당신의 뉴스',
 };

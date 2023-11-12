@@ -2,7 +2,6 @@ import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
-import { Op } from 'sequelize';
 import {
   Body,
   Get,
@@ -94,11 +93,13 @@ export class AccountController {
     @Body() body: RegistrationRequest
   ): Promise<RegistrationResponse> {
     let user: User | null = null;
+    let newUser: User | null = null;
     let newAliasType: AliasType;
     let newAliasValue: string;
     let thirdPartyId: string;
     let verificationCode: string;
     let verified = false;
+    let createAlias = true;
     if (body.jwt || body.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
@@ -129,6 +130,8 @@ export class AccountController {
           if (!emailVerified) {
             throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
           }
+          newUser = (await User.from({ email }))?.user;
+          createAlias = !newUser;
           // auto-create new alias by email, as well
           newAliasType = 'email';
           newAliasValue = email;
@@ -141,8 +144,12 @@ export class AccountController {
         throw new AuthError('BAD_REQUEST');
       }
     }
-    const newUser = new User();
-    await newUser.save();
+    if (!newUser) {
+      newUser = new User();
+      await newUser.save();
+    }
+    await newUser.grantRole('standard');
+    await newUser.grantRole('account');
     if (!verified) {
       verificationCode = await generateVerificationCode();
     }
@@ -168,16 +175,16 @@ export class AccountController {
       newAliasValue = reply;
       verified = true;
     }
-    console.log('creating alias', newAliasType, newAliasValue);
-    await newUser.createAlias(newAliasType, newAliasValue, {
-      verificationCode,
-      verificationExpiresAt: verified
-        ? undefined
-        : new Date(Date.now() + ms('20m')),
-      verifiedAt: verified ? new Date() : undefined,
-    });
-    await newUser.grantRole('standard');
-    await newUser.grantRole('account');
+    if (createAlias) {
+      console.log('creating alias', newAliasType, newAliasValue);
+      await newUser.createAlias(newAliasType, newAliasValue, {
+        verificationCode,
+        verificationExpiresAt: verified
+          ? undefined
+          : new Date(Date.now() + ms('20m')),
+        verifiedAt: verified ? new Date() : undefined,
+      });
+    }
     if (body.password) {
       await newUser.createCredential('password', body.password);
     }
@@ -349,12 +356,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: VerifyAliasRequest
   ): Promise<VerifyAliasResponse> {
-    const alias = await Alias.findOne({ 
-      where: { 
-        verificationCode: body.verificationCode,
-        verifiedAt: { [Op.ne] : null },
-      }, 
-    });
+    const alias = await Alias.findOne({ where: { verificationCode: body.verificationCode } });
     if (!alias) {
       throw new AuthError('UNKNOWN_ALIAS', { alias: 'user identifier' });
     } else if (alias.verificationExpiresAt < new Date()) {

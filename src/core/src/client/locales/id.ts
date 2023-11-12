@@ -42,6 +42,7 @@ export const idStrings: typeof enStrings = {
   compactSummaries: 'Kompak',
   compactSummariesDescription: 'Alihkan sakelar di bawah untuk melihat mana yang Anda sukai',
   confirmPassword: 'konfirmasi sandi',
+  continueToLogin: 'Lanjutkan Masuk',
   customFaddCategories: 'Tambahkan kategori',
   customFaddNewsSources: 'Tambahkan sumber berita',
   customFletsStart: 'Mari kita mulai dengan memilih salah satu kategori berikut yang mungkin menarik bagi Anda',
@@ -256,6 +257,7 @@ export const idStrings: typeof enStrings = {
   unfollow: 'Berhenti mengikuti',
   unread: 'Belum dibaca',
   username: 'Nama belakang',
+  verify: 'Memeriksa',
   verifyYourEmailToContinue: 'Harap verifikasi email Anda untuk melanjutkan. Pastikan untuk memeriksa folder spam Anda jika Anda tidak melihatnya di kotak masuk Anda.',
   veryNegative: 'Sangat Negatif',
   veryPositive: 'Sangat positif',
@@ -282,6 +284,7 @@ export const idStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Anda tidak mengikuti kategori apa pun',
   youAreNotFollowingAnyPublishers: 'Anda tidak mengikuti penerbit mana pun',
   youCanAlwaysSee: 'Anda selalu dapat melihat tautan sumber setelah mengetuk kartu itu sendiri.\n\nMenekan lama juga akan menyalin url.',
+  yourEmailHasBeenVerified: 'Email Anda telah diverifikasi. Anda sekarang dapat masuk',
   yourFollows: 'Pengikut Anda',
   yourNews: 'Kabar mu',
 };

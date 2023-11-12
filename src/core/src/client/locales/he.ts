@@ -42,6 +42,7 @@ export const heStrings: typeof enStrings = {
   compactSummaries: 'קוֹמפָּקטִי',
   compactSummariesDescription: 'החלף את המתגים למטה כדי לראות מה אתה מעדיף',
   confirmPassword: 'אשר סיסמה',
+  continueToLogin: 'המשך להתחבר',
   customFaddCategories: 'הוסף קטגוריות',
   customFaddNewsSources: 'הוסף מקורות חדשותיים',
   customFletsStart: 'נתחיל בבחירת כל אחת מהקטגוריות הבאות שעשויות לעניין אותך',
@@ -256,6 +257,7 @@ export const heStrings: typeof enStrings = {
   unfollow: 'בטל את המעקב',
   unread: 'לא נקרא',
   username: 'שם משתמש',
+  verify: 'תאשר',
   verifyYourEmailToContinue: 'אנא אמת את האימייל שלך כדי להמשיך. הקפד לבדוק את תיקיית הספאם שלך אם אינך רואה אותה בתיבת הדואר הנכנס שלך.',
   veryNegative: 'מאוד שלילי',
   veryPositive: 'חיובי מאוד',
@@ -282,6 +284,7 @@ export const heStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'אתה לא עוקב אחר קטגוריות כלשהן',
   youAreNotFollowingAnyPublishers: 'אתה לא עוקב אחר אף שותף',
   youCanAlwaysSee: 'אתה תמיד יכול לראות את קישורי המקור לאחר הקשה על כרטיס עצמו.\n\nלחיצה ארוכה גם תעתיק את כתובת האתר.',
+  yourEmailHasBeenVerified: 'האימייל שלך אומת. כעת תוכל להתחבר',
   yourFollows: 'העוקבים שלך',
   yourNews: 'החדשות שלך',
 };

@@ -42,6 +42,7 @@ export const ruStrings: typeof enStrings = {
   compactSummaries: 'Компактный',
   compactSummariesDescription: 'Переключите переключатели ниже, чтобы увидеть, что вы предпочитаете',
   confirmPassword: 'Подтвердите пароль',
+  continueToLogin: 'Продолжить вход',
   customFaddCategories: 'Добавить категории',
   customFaddNewsSources: 'Добавьте источники новостей',
   customFletsStart: 'Начнем с выбора любой из следующих категорий, которые могут вас заинтересовать.',
@@ -256,6 +257,7 @@ export const ruStrings: typeof enStrings = {
   unfollow: 'Отписаться',
   unread: 'Не прочитано',
   username: 'Имя пользователя',
+  verify: 'Проверять',
   verifyYourEmailToContinue: 'Пожалуйста, подтвердите свой адрес электронной почты, чтобы продолжить. Обязательно проверьте папку со спамом, если вы не видите письмо во входящих.',
   veryNegative: 'Очень отрицательно',
   veryPositive: 'Очень позитивно',
@@ -282,6 +284,7 @@ export const ruStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Вы не подписаны ни на одну категорию',
   youAreNotFollowingAnyPublishers: 'Вы не подписаны ни на одного издателя',
   youCanAlwaysSee: 'Вы всегда можете увидеть исходные ссылки после нажатия на саму карту.\n\nДлительное нажатие также скопирует URL-адрес.',
+  yourEmailHasBeenVerified: 'Ваш адрес электронной почты подтвержден. Теперь вы можете войти',
   yourFollows: 'Ваши подписчики',
   yourNews: 'Твои новости',
 };

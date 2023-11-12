@@ -24,7 +24,7 @@ export type LoginRoutingParams = {
   passwordLogin: { email?: string };
   register: { email?: string };
   forgotPassword: { email?: string };
-  verifyOtp: { otp: string };
+  verifyOtp: { otp?: string, code: string };
   setNewPassword: undefined;
 };
 

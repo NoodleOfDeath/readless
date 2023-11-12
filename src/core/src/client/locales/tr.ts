@@ -42,6 +42,7 @@ export const trStrings: typeof enStrings = {
   compactSummaries: 'Kompakt',
   compactSummariesDescription: 'Hangisini tercih ettiğinizi görmek için aşağıdaki anahtarları değiştirin',
   confirmPassword: 'Şifreyi Onayla',
+  continueToLogin: 'Giriş yapmaya devam et',
   customFaddCategories: 'kategori ekle',
   customFaddNewsSources: 'Haber kaynakları ekleyin',
   customFletsStart: 'Aşağıdaki kategorilerden ilginizi çekebilecek herhangi birini seçerek başlayalım.',
@@ -256,6 +257,7 @@ export const trStrings: typeof enStrings = {
   unfollow: 'takibi bırak',
   unread: 'Okunmamış',
   username: 'Kullanıcı adı',
+  verify: 'Doğrulamak',
   verifyYourEmailToContinue: 'Devam etmek için lütfen e-posta adresinizi doğrulayın. Gelen kutunuzda göremiyorsanız spam klasörünüzü kontrol ettiğinizden emin olun.',
   veryNegative: 'Çok Olumsuz',
   veryPositive: 'Çok pozitif',
@@ -282,6 +284,7 @@ export const trStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Herhangi bir kategoriyi takip etmiyorsunuz',
   youAreNotFollowingAnyPublishers: 'Herhangi bir yayıncıyı takip etmiyorsunuz',
   youCanAlwaysSee: 'Bir kartın kendisine dokunduktan sonra her zaman kaynak bağlantılarını görebilirsiniz.\n\nUzun basmak da url\'yi kopyalar.',
+  yourEmailHasBeenVerified: 'Email adresin onaylandı. Şimdi giriş yapabilirsin',
   yourFollows: 'Takipleriniz',
   yourNews: 'Haberleriniz',
 };

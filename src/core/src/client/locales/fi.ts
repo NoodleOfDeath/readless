@@ -42,6 +42,7 @@ export const fiStrings: typeof enStrings = {
   compactSummaries: 'Kompakti',
   compactSummariesDescription: 'Vaihda alla olevia kytkimiä nähdäksesi, kumpaa haluat',
   confirmPassword: 'Vahvista salasana',
+  continueToLogin: 'Jatka kirjautumiseen',
   customFaddCategories: 'Lisää luokkia',
   customFaddNewsSources: 'Lisää uutislähteitä',
   customFletsStart: 'Aloitetaan valitsemalla jokin seuraavista luokista, jotka saattavat kiinnostaa sinua',
@@ -256,6 +257,7 @@ export const fiStrings: typeof enStrings = {
   unfollow: 'Lopeta seuraaminen',
   unread: 'Lukematon',
   username: 'Käyttäjätunnus',
+  verify: 'Vahvista',
   verifyYourEmailToContinue: 'Jatka vahvistamalla sähköpostiosoitteesi. Muista tarkistaa roskapostikansiosi, jos et näe sitä postilaatikossasi.',
   veryNegative: 'Erittäin negatiivinen',
   veryPositive: 'Erittäin positiivinen',
@@ -282,6 +284,7 @@ export const fiStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Et seuraa mitään luokkia',
   youAreNotFollowingAnyPublishers: 'Et seuraa yhtään julkaisijaa',
   youCanAlwaysSee: 'Näet aina lähdelinkit napautettuasi itse korttia.\n\nPitkä painallus kopioi myös URL-osoitteen.',
+  yourEmailHasBeenVerified: 'Sähköpostisi on vahvistettu. Voit nyt kirjautua sisään',
   yourFollows: 'Sinun seuraamisesi',
   yourNews: 'Sinun uutiset',
 };

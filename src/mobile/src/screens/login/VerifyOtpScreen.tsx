@@ -4,11 +4,13 @@ import { ScreenComponent } from '../types';
 
 import { 
   ActivityIndicator,
+  Button,
   Screen, 
   Text,
   View, 
 } from '~/components';
 import { StorageContext, UserData } from '~/contexts';
+import { strings } from '~/locales';
 
 export function VerifyOtpScreen({
   route,
@@ -16,7 +18,7 @@ export function VerifyOtpScreen({
 }: ScreenComponent<'verifyOtp'>) {
   
   const { 
-    api: { verifyOtp },
+    api: { verifyOtp, verifyAlias },
     setStoredValue,
   } = React.useContext(StorageContext);
 
@@ -24,20 +26,34 @@ export function VerifyOtpScreen({
 
   const onMount = React.useCallback(async () => {
     try {
-      const { data, error } = await verifyOtp({ otp: route?.params?.otp });
-      if (error) {
-        setMessage(error.message);
-        return;
-      }
-      if (data) {
-        await setStoredValue('userData', new UserData(data));
-        navigation?.push('setNewPassword');
+      const otp = route?.params?.otp;
+      const code = route?.params?.code;
+      if (otp) {
+        const { data, error } = await verifyOtp({ otp: route?.params?.otp });
+        if (error) {
+          setMessage(error.message);
+          return;
+        }
+        if (data) {
+          await setStoredValue('userData', new UserData(data));
+          navigation?.push('setNewPassword');
+        }
+      } else 
+      if (code) {
+        const { error } = await verifyAlias({ verificationCode: code });
+        if (error) {
+          setMessage(error.message);
+          return;
+        }
+        setMessage(strings.yourEmailHasBeenVerified);
+      } else {
+        setMessage(strings.anUnknownErrorOccurred);
       }
     } catch (e) {
-      setMessage('unknown error');
+      setMessage(strings.anUnknownErrorOccurred);
       console.error(e);
     }
-  }, [navigation, route?.params?.otp, setStoredValue, verifyOtp]);
+  }, [navigation, route?.params?.code, route?.params?.otp, setStoredValue, verifyAlias, verifyOtp]);
 
   React.useEffect(() => {
     onMount();
@@ -46,10 +62,15 @@ export function VerifyOtpScreen({
   
   return (
     <Screen>
-      <View itemsCenter p={ 24 }>
+      <View itemsCenter p={ 24 } gap={ 12 }>
         {message ? <Text>{message}</Text> : (
           <ActivityIndicator />
         )}
+        <Button
+          contained
+          onPress={ () => navigation?.replace('passwordLogin', {}) }>
+          {strings.continueToLogin}
+        </Button>
       </View>
     </Screen>
   );

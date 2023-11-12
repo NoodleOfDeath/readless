@@ -42,6 +42,7 @@ export const huStrings: typeof enStrings = {
   compactSummaries: 'Kompakt',
   compactSummariesDescription: 'Váltsa át az alábbi kapcsolókat, hogy megtudja, melyiket részesíti előnyben',
   confirmPassword: 'Jelszó megerősítése',
+  continueToLogin: 'Tovább a Bejelentkezéshez',
   customFaddCategories: 'Kategóriák hozzáadása',
   customFaddNewsSources: 'Hírforrások hozzáadása',
   customFletsStart: 'Kezdjük a következő kategóriák valamelyikének kiválasztásával, amelyek érdekelhetik Önt',
@@ -256,6 +257,7 @@ export const huStrings: typeof enStrings = {
   unfollow: 'Követés megszüntetése',
   unread: 'Nem olvasott',
   username: 'Felhasználónév',
+  verify: 'Ellenőrizze',
   verifyYourEmailToContinue: 'A folytatáshoz igazolja e-mail-címét. Ügyeljen arra, hogy ellenőrizze a spam mappát, ha nem látja a beérkező levelek között.',
   veryNegative: 'Nagyon negatív',
   veryPositive: 'Nagyon pozitív',
@@ -282,6 +284,7 @@ export const huStrings: typeof enStrings = {
   youAreNotFollowingAnyCategories: 'Nem követsz egyetlen kategóriát sem',
   youAreNotFollowingAnyPublishers: 'Nem követsz egyetlen kiadót sem',
   youCanAlwaysSee: 'A kártya megérintése után mindig láthatja a forráshivatkozásokat.\n\nA hosszan tartó lenyomás az url-t is másolja.',
+  yourEmailHasBeenVerified: 'E-mail-címét ellenőriztük. Most már bejelentkezhet',
   yourFollows: 'Az Ön követései',
   yourNews: 'A híreid',
 };
