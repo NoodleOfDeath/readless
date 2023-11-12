@@ -19,7 +19,7 @@
 			<array>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Top Stories</string>
+					<string>Unknown</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>yHsbIT</string>
 					<key>INEnumValueName</key>
@@ -47,7 +47,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Custom Topics</string>
+					<string>Custom Topic</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>mHnEgQ</string>
 					<key>INEnumValueIndex</key>
@@ -72,7 +72,7 @@
 			<array>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Relative</string>
+					<string>Unknown</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>bDJg9C</string>
 					<key>INEnumValueName</key>
@@ -148,7 +148,7 @@
 					<key>INIntentParameterMetadata</key>
 					<dict>
 						<key>INIntentParameterMetadataDefaultValue</key>
-						<string>liveFeed</string>
+						<string>topStories</string>
 					</dict>
 					<key>INIntentParameterName</key>
 					<string>channel</string>
@@ -244,7 +244,7 @@
 						<key>INIntentParameterRelationshipPredicateName</key>
 						<string>EnumHasExactValue</string>
 						<key>INIntentParameterRelationshipPredicateValue</key>
-						<string>liveFeed</string>
+						<string>customTopic</string>
 					</dict>
 					<key>INIntentParameterTag</key>
 					<integer>5</integer>
@@ -264,6 +264,11 @@
 					<string>DateFormat</string>
 					<key>INIntentParameterEnumTypeNamespace</key>
 					<string>4Ax91W</string>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<string>relative</string>
+					</dict>
 					<key>INIntentParameterName</key>
 					<string>dateFormat</string>
 					<key>INIntentParameterPromptDialogs</key>

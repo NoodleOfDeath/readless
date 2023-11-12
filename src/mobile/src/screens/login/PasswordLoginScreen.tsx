@@ -16,11 +16,15 @@ export function PasswordLoginScreen({
   navigation, 
 }: ScreenComponent<'passwordLogin'>) {
 
-  const { setStoredValue, api: { login } } = React.useContext(StorageContext);
+  const { 
+    api: { login }, 
+    setStoredValue, 
+    syncWithRemotePrefs,
+  } = React.useContext(StorageContext);
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [error, setError] = React.useState('');
+  const [message, setMessage] = React.useState('');
 
   const handleLogin = React.useCallback(async () => {
     try {
@@ -29,15 +33,18 @@ export function PasswordLoginScreen({
         password,
       });
       if (error) {
-        setError(error.message);
+        setMessage(error.message);
         return;
       }
       const userData = new UserData(response);
       setStoredValue('userData', userData);
+      syncWithRemotePrefs(userData);
     } catch (error) {
       console.error(error);
     }
-  }, [email, login, password, setStoredValue]);
+  }, [email, login, password, setStoredValue, syncWithRemotePrefs]);
+
+  React.useEffect(() => setMessage(''), [email, password]);
   
   return (
     <View p={ 24 } gap={ 12 }>
@@ -56,11 +63,15 @@ export function PasswordLoginScreen({
         contained>
         {strings.login}
       </Button>
-      {error && <Text textCenter>{ error }</Text>}
+      {message && <Text textCenter>{ message }</Text>}
       <Button
-        onPress={ () => navigation?.push('forgotPassword') }
+        onPress={ () => navigation?.push('forgotPassword', { email }) }
         textCenter>
         {strings.forgotPassword}
+      </Button>
+      <Button
+        onPress={ () => navigation?.replace('register', { email }) }>
+        {strings.dontHaveAnAccount}
       </Button>
     </View>
   );

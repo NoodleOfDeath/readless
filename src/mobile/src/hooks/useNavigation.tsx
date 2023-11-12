@@ -23,7 +23,10 @@ export function useNavigation() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useRNNavigation<Navigation>();
   
-  const { preferredReadingFormat, setStoredValue } = React.useContext(StorageContext);
+  const { 
+    preferredReadingFormat, 
+    setStoredValue,
+  } = React.useContext(StorageContext);
 
   const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R], stackNav?: Navigation) => {
     emitEvent('navigate', route);
@@ -60,8 +63,9 @@ export function useNavigation() {
     // https://dev.readless.ai/read/?s=158&f=casual
     // https://www.readless.ai/read/?s=4070&f=bullets
     // readless://read/?s=4070
+    // readless://verify/?otp=e29h715gti
     const [path, query] = url.split('?');
-    const expr = /^(?:readless|https?):\/\/(?:(?:dev|www\.)?readless\.ai\/)?(\w+)\/?/;
+    const expr = /^(?:readless|https?):\/\/(?:(?:(?:(?:dev|www)\.)?readless\.ai)|localhost(?::\d+)?)?\/?(\w+)\/?/;
     const [, route] = path.match(expr) ?? [];
     const params: Record<string, string> = {};
     if (query) {
@@ -70,6 +74,10 @@ export function useNavigation() {
         params[decodeURIComponent(key)] = decodeURIComponent(value || '');
       });
     }
+    alert(path);
+    if (route === 'verify') {
+      navigate('verifyOtp', { otp: params['otp'] }, stackNav);
+    } else
     if (route === 'read') {
       const summary = Number.parseInt(params['s'] ?? '0');
       if (!summary) {

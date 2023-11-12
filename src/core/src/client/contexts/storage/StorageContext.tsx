@@ -10,12 +10,15 @@ import {
   STORAGE_TYPES,
   SYNCABLE_SETTINGS,
   Storage,
+  SyncState,
   SyncableIoIn,
   SyncableIoOut,
 } from './types';
 
 import {
   API,
+  AuthError,
+  ProfileResponse,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
@@ -24,6 +27,13 @@ import {
 } from '~/api';
 import { getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
+
+export const LOGOUT_ERROR_KEYS: AuthError['errorKey'][] = [
+  'EXPIRED_CREDENTIALS',
+  'INVALID_CREDENTIALS',
+  'ALIAS_UNVERIFIED',
+  'UNKNOWN_ALIAS',
+];
 
 export const StorageContext = React.createContext(DEFAULT_STORAGE_CONTEXT);
 
@@ -36,11 +46,9 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   
   // system state
   const [storage, setStorage] = React.useState<Storage>(DEFAULT_STORAGE_CONTEXT);
-  const [hasLoadedLocalState, setHasLoadedLocalState] = React.useState<boolean>();
-  const [isSyncingWithRemote, setIsSyncingWithRemote] = React.useState<boolean>();
-  const [hasSyncedWithRemote, setHasSyncedWithRemote] = React.useState<boolean>();
+  const [syncState, setSyncState] = React.useState<SyncState>({});
   
-  const ready = React.useMemo(() => hasLoadedLocalState && hasSyncedWithRemote, [hasLoadedLocalState, hasSyncedWithRemote]);
+  const ready = React.useMemo(() => syncState.hasLoadedLocalState && syncState.hasSyncedWithRemote, [syncState.hasLoadedLocalState, syncState.hasSyncedWithRemote]);
   
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
@@ -122,12 +130,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         state[key] = newValue;
         setItem(key, JSON.stringify(newValue));
       }
-      if (key === 'userData') {
-        for (const [key, value] of Object.entries((newValue as UserData)?.profile?.preferences ?? {})) {
-          state[key as K] = value;
-          setItem(key, JSON.stringify(value));
-        }
-      }
       if (SYNCABLE_SETTINGS.includes(key)) {
         updateRemotePref(key, newValue);
       }
@@ -195,8 +197,31 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       console.error(e);
     }
   }, [api]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleBadRequest = React.useCallback(async (e?: any) => {
+    if (e) {
+      console.error(e); 
+    }
+    if (e?.errorKey) {
+      const error = e as AuthError;
+      if (LOGOUT_ERROR_KEYS.includes(error.errorKey)) {
+        await setStoredValue('userData', undefined);
+      }
+    }
+    setSyncState((prev) => ({ 
+      ...prev, 
+      hasSyncedWithRemote: true,
+      isFetchingProfile: false,
+      isSyncingWithRemote: false,
+    }));
+  }, []);
   
-  const loadBookmarks = React.useCallback(async (ids: number) => {
+  const loadBookmarks = React.useCallback(async (ids: number[]) => {
+    setSyncState((prev) => ({ 
+      ...prev, 
+      isSyncingBookmarks: true,
+    }));
     const { data, error } = await api.getSummaries({ ids });
     if (error) {
       console.error(error);
@@ -207,24 +232,47 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       return;
     }
     await setStoredValue('bookmarkedSummaries', Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), false);
+    setSyncState((prev) => ({ 
+      ...prev, 
+      hasSyncedBookmarks: true,
+      isSyncingBookmarks: false,
+    }));
   }, [api]);
 
-  const syncWithRemotePrefs = React.useCallback(async () => {
-    if (!hasLoadedLocalState) {
+  const syncWithRemotePrefs = React.useCallback(async (prefs?: ProfileResponse) => {
+    if (!syncState.hasLoadedLocalState) {
       return;
     }
-    if (!storage.userData) {
-      setHasSyncedWithRemote(true);
-      return;
+    let data: ProfileResponse | undefined = prefs;
+    if (!prefs) {
+      if (!storage.userData?.valid || storage.userData.unlinked) {
+        return handleBadRequest();
+      }
+      setSyncState((prev) => ({ 
+        ...prev, 
+        isFetchingProfile: true,
+      }));
+      try {
+        const response = await api.getProfile();
+        data = response.data;
+        setSyncState((prev) => ({ 
+          ...prev, 
+          hasFetchedProfile: true,
+          isFetchingProfile: false,
+        }));
+        if (response.error) {
+          return handleBadRequest(response.error);
+        }
+      } catch (e) {
+        return handleBadRequest(e);
+      }
     }
-    const { data, error } = await api.getProfile();
-    if (error) {
-      console.error(error);
-      return;
+    if (!data) {
+      return handleBadRequest();
     }
     const { profile } = data;
     if (!profile) {
-      return;
+      return handleBadRequest();
     }
     console.log('syncing prefs');
     for (const key of SYNCABLE_SETTINGS) {
@@ -241,19 +289,24 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           }
         } catch (e) {
           console.error(e);
+          return handleBadRequest(e);
         }
       }
     }
     await setStoredValue('lastRemoteSync', new Date());
-    setHasSyncedWithRemote(true);
-    setIsSyncingWithRemote(false);
-  }, [hasLoadedLocalState, api, storage.userData, loadBookmarks]);
+    setSyncState((prev) => ({ 
+      ...prev, 
+      hasSyncedWithRemote: true,
+      isSyncingWithRemote: false,
+    }));
+  }, [syncState.hasLoadedLocalState, storage.userData?.valid, handleBadRequest, api, loadBookmarks]);
   
   // Load preferences on mount
   const load = async () => {
     const state = { ...DEFAULT_STORAGE_CONTEXT };
     
     // system state
+    state.lastRemoteSync = await getStoredValue('lastRemoteSync');
     state.rotationLock = await getStoredValue('rotationLock');
     state.searchHistory = await getStoredValue('searchHistory');
     state.viewedFeatures = await getStoredValue('viewedFeatures');
@@ -306,20 +359,26 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.triggerWords = await getStoredValue('triggerWords');
     
     setStorage(state);
-    setHasLoadedLocalState(true);
+    setSyncState((prev) => ({ ...prev, hasLoadedLocalState: true }));
   };
 
   React.useEffect(() => {
-    if (!isSyncingWithRemote && !hasSyncedWithRemote && hasLoadedLocalState) {
+    if (!syncState.isSyncingWithRemote && !syncState.hasSyncedWithRemote && syncState.hasLoadedLocalState) {
       syncWithRemotePrefs();
-      setIsSyncingWithRemote(true);
+      setSyncState((prev) => ({ ...prev, isSyncingWithRemote: true }));
     }
-  }, [hasLoadedLocalState, isSyncingWithRemote, hasSyncedWithRemote, syncWithRemotePrefs]);
+  }, [syncState.hasLoadedLocalState, syncState.isSyncingWithRemote, syncState.hasSyncedWithRemote, syncWithRemotePrefs]);
   
   const resetStorage = async (hard = false) => {
     await removeAll(hard);
     await load();
   };
+
+  React.useEffect(() => {
+    if (storage.lastRemoteSync && !storage.userData?.valid) {
+      resetStorage();
+    }
+  }, [storage.lastRemoteSync, storage.userData]);
   
   // push notification functions
 
@@ -554,6 +613,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     <StorageContext.Provider
       value={ {
         ...storage,
+        ...syncState,
         api,
         bookmarkCount,
         bookmarkSummary,
@@ -571,13 +631,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         followPublisher,
         getStoredValue,
         hasPushEnabled,
-        hasSyncedWithRemote,
         hasViewedFeature,
         isExcludingCategory,
         isExcludingPublisher,
         isFollowingCategory,
         isFollowingPublisher,
-        isSyncingWithRemote,
         loadedInitialUrl,
         publisherIsFavorited,
         publishers,
@@ -591,6 +649,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         setPublishers,
         setStoredValue,
         storeTranslations,
+        syncWithRemotePrefs,
         unreadBookmarkCount,
         viewFeature,
         withHeaders,

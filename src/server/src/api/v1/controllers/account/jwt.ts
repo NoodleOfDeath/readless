@@ -51,7 +51,7 @@ export class JWT implements JsonWebToken {
   get wrapped(): WrappedJwt {
     return {
       createdAt: this.createdAt.valueOf(),
-      expiresAt: new Date(this.createdAt.getTime() + ms(this.expiresIn)).valueOf(),
+      expiresAt: new Date(this.createdAt.valueOf() + ms(this.expiresIn)).valueOf(),
       priority: this.priority,
       signed: this.signed,
       userId: this.userId,

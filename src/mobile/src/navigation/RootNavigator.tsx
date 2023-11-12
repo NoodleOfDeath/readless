@@ -11,6 +11,7 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 
+import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
 import { TabbedNavigator } from './TabbedNavigator';
 import { LOGIN_STACK } from './stacks';
@@ -41,9 +42,7 @@ export function RootNavigator() {
   const storage = React.useContext(StorageContext);
   const {
     ready, 
-    hasLoadedLocalState,
     isSyncingWithRemote,
-    hasSyncedWithRemote,
     categories,
     publishers,
     setCategories, 
@@ -75,8 +74,7 @@ export function RootNavigator() {
     if (!ready) {
       return;
     }
-
-    if (!userData) {
+    if (!userData?.valid) {
       return;
     }
 
@@ -135,7 +133,10 @@ export function RootNavigator() {
   }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData]);
   
   const refreshSources = React.useCallback(() => {
-    if (!userData) {
+    if (!ready) {
+      return;
+    }
+    if (!userData?.valid) {
       return;
     }
     if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
@@ -161,7 +162,7 @@ export function RootNavigator() {
         setLastFetch(Date.now());
       });
     }
-  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, setCategories, setPublishers, userData]);
+  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, ready, setCategories, setPublishers, userData?.valid]);
 
   React.useEffect(() => refreshSources(), [refreshSources]);
   
@@ -191,18 +192,18 @@ export function RootNavigator() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <PaperProvider theme={ currentTheme }>
         <SheetProvider>
-          {userData ? (
+          {(userData?.valid || userData?.unlinked) ? (
             <React.Fragment>
               <TabbedNavigator />
               <MediaPlayer visible={ Boolean(currentTrack) } />
             </React.Fragment>
           ) : (
-            <Screen>
+            <RoutedScreen safeArea={ false } navigationID='loginStackNav'>
               <StackNavigator
                 id="loginStackNav" 
                 screens={ LOGIN_STACK }
                 screenOptions={ { headerShown: false } } />
-            </Screen>
+            </RoutedScreen>
           )}
         </SheetProvider>
       </PaperProvider>

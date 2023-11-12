@@ -23,8 +23,10 @@ router.post(
   body('password')
     .if(body('eth2address').not().exists())
     .if(body('thirdParty').not().exists())
+    .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
+  rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.register(req, req.body);
@@ -47,8 +49,10 @@ router.post(
   body('password')
     .if(body('eth2address').not().exists())
     .if(body('thirdParty').not().exists())
+    .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
+  // rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.login(req, req.body);
@@ -78,7 +82,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.generateOTP(req, req.body);
+      const response = await AccountController.requestOtp(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -105,7 +109,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.verifyOTP(req, req.body);
+      const response = await AccountController.verifyOtp(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);

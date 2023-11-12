@@ -43,6 +43,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   /** Resolves a user from an alias request/payload */
   public static async from(req: Partial<AliasPayload>, opts?: Partial<FindAliasOptions>) {
+    console.log(req.userId, req.jwt);
     if (req.userId || req.jwt) {
       const id = req.userId ?? new JWT(req.jwt).userId;
       const user = await User.findOne({ where: { id } });
@@ -51,7 +52,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
           throw new AuthError('INVALID_CREDENTIALS');
         }
       }
-      return { user };
+      const payload: AliasPayload = { type: req.jwt ? 'jwt' : 'userId', value: req.jwt ? req.jwt : id };
+      const alias = new Alias({
+        type: 'userId', value: `${id}`, verifiedAt: new Date(), 
+      });
+      return {
+        alias, payload, user, 
+      };
     } else {
       const {
         alias, otp, payload, 
@@ -72,6 +79,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
   
   public async findAlias(type: AliasType) {
+    if (type === 'userId') {
+      return new Alias({
+        type,
+        value: `${this.id}`,
+        verifiedAt: new Date(),
+      });
+    }
     return await Alias.findOne({ 
       where: {
         type,
@@ -215,18 +229,15 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   public async sync() {
     const aliases = await this.findAliases('email');
-    if (aliases.length === 0) {
-      throw new AuthError('UNKNOWN_ALIAS');
-    }
+    const profile: Profile = {};
     const metadata = await UserMetadata.findAll({ where: { userId: this.id } });
     const updatedAt = new Date(Math.max(...[...aliases, ...metadata].map((m) => m.updatedAt.valueOf())));
-    const profile: Profile = {
-      email: aliases.sort((a, b) => a.priority - b.priority)[0].value,
-      emails: aliases.map((a) => a.value),
-      preferences: Object.fromEntries(metadata.map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value])),
-      updatedAt,
-      username: (await this.findAlias('username'))?.value,
-    };
+    profile.email = aliases.length > 0 ? aliases.sort((a, b) => a.priority - b.priority)[0].value : '',
+    profile.emails = aliases.length > 0 ? aliases.map((a) => a.value) : [],
+    profile.username = (await this.findAlias('username'))?.value,
+    profile.preferences = Object.fromEntries(metadata.map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
+    profile.createdAt = this.createdAt;
+    profile.updatedAt = updatedAt;
     this.set('profile', profile, { raw: true });
   }
 

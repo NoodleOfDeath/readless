@@ -12,7 +12,7 @@ export * from './jwt';
 export type ProfileRequest = JwtRequest;
 
 export type ProfileResponse = {
-  profile: Profile;
+  profile?: Profile;
 };
 
 export type LoginRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
@@ -22,7 +22,9 @@ export type LoginRequest = JwtRequest & DestructuredAliasPayload & DestructuredC
   requestedScope?: string[];
 };
 
-export type LoginResponse = JwtResponse & ProfileResponse;
+export type LoginResponse = JwtResponse & ProfileResponse & {
+  unlinked?: boolean;
+};
 
 export type LogoutRequest = JwtRequest & {
   force?: boolean;
@@ -41,9 +43,9 @@ export type RegistrationResponse = Omit<JwtResponse, 'token'> & {
   token?: WrappedJwt;
 };
 
-export type GenerateOTPRequest = Omit<DestructuredAliasPayload, 'otp'>;
+export type RequestOtpRequest = Omit<DestructuredAliasPayload, 'otp'>;
 
-export type GenerateOTPResponse = {
+export type RequestOtpResponse = {
   success: boolean;
 };
 

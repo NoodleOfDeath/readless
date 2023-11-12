@@ -134,7 +134,7 @@ export class Subscription<
     switch (subscription.channel) {
     case 'email':
       await new MailService().sendMailFromTemplate({
-        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/verify?t=${subscription.verificationCode}`,
+        text: `Please verify your subscription by clicking the following link: ${process.env.SSL ? 'https://' : 'http://'}${process.env.BASE_DOMAIN}/verify?code=${subscription.verificationCode}`,
         to: subscription.uuid,
       }, 'verifySubscription', {
         email: subscription.uuid, 

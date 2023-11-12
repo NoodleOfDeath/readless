@@ -3,13 +3,13 @@ import React from 'react';
 
 import { GOOGLE_CLIENT_ID, REGISTRATION_PRIVATE_KEY } from '@env';
 import { GoogleSignin, User as GoogleUser } from '@react-native-google-signin/google-signin';
-import { HmacSHA1 } from 'crypto-js';
+import CryptoJS from 'react-native-crypto-js';
 
 import { ThirdParty } from '~/api';
 import {
   Button,
-  Image,
   Screen,
+  Text,
   View,
 } from '~/components';
 import { StorageContext, UserData } from '~/contexts';
@@ -20,11 +20,15 @@ GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
 export function LoginScreen({
   route: _route,
   navigation, 
-}: ScreenComponent<'login'>) {
+}: ScreenComponent<'start'>) {
 
   const {
-    setStoredValue, resetStorage, api: { login }, 
+    api: { login },
+    setStoredValue, 
+    syncWithRemotePrefs,
   } = React.useContext(StorageContext);
+
+  const [message, setMessage] = React.useState('');
 
   const signInWithGoogle = React.useCallback(async () => {
     try {
@@ -44,29 +48,28 @@ export function LoginScreen({
       });
       const userData = new UserData(response);
       setStoredValue('userData', userData);
+      syncWithRemotePrefs(userData);
     } catch (error) {
       console.error(error);
+      setMessage('Failed to sign in with Google');
     }
-  }, [login, setStoredValue]);
+  }, [login, setStoredValue, syncWithRemotePrefs]);
 
   const continueWithoutAccount = React.useCallback(async () => {
     try {
-      const anonymous = JSON.stringify(HmacSHA1('readless.ai', REGISTRATION_PRIVATE_KEY));
+      const anonymous = CryptoJS.AES.encrypt(JSON.stringify({ timestamp: new Date().toISOString() }), REGISTRATION_PRIVATE_KEY).toString();
       const { data: response } = await login({
         anonymous,
         createIfNotExists: true,
       });
       const userData = new UserData(response);
       setStoredValue('userData', userData);
+      syncWithRemotePrefs(userData);
     } catch (error) {
       console.error(error);
+      setMessage('Failed to continue without an account');
     }
-  }, [login, setStoredValue]);
-
-  React.useEffect(() => {
-    resetStorage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [login, setStoredValue, syncWithRemotePrefs]);
 
   return (
     <Screen>
@@ -77,12 +80,8 @@ export function LoginScreen({
         <View
           flex={ 20 }
           itemsCenter
-          justifyCenter>
-          <Image
-            source={ { uri: 'Logo' } }
-            width={ 150 } 
-            height={ 150 } /> 
-        </View>
+          justifyCenter />
+        <Text>{message}</Text>
         <Button
           contained
           leftIcon="google"
@@ -94,7 +93,7 @@ export function LoginScreen({
           contained
           leftIcon="account"
           gap={ 12 }
-          onPress={ () => navigation?.push('passwordLogin') }>
+          onPress={ () => navigation?.push('passwordLogin', {}) }>
           Continue with email
         </Button>
         <Button

@@ -103,10 +103,10 @@ struct Provider: IntentTimelineProvider {
                    in context: Context,
                    completion: @escaping (Timeline<SummaryEntry>) -> Void) {
     Task {
-      let channel = WidgetChannel.allCases[configuration.channel.rawValue]
+      let channel = WidgetChannel.allCases[configuration.channel.rawValue - 1]
       let config = CustomWidgetConfiguration(channel: channel,
                                              topic: configuration.topic,
-                                             dateFormat: WidgetDateFormat.allCases[configuration.dateFormat.rawValue])
+                                             dateFormat: WidgetDateFormat.allCases[configuration.dateFormat.rawValue - 1])
       let entries = await buildEntries(in: context, for: config)
       let timeline = Timeline(entries: entries, policy: .atEnd)
       completion(timeline)

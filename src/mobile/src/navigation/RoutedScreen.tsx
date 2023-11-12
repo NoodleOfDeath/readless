@@ -18,7 +18,9 @@ export function RoutedScreen({ navigationID, ...props }: RoutedScreenProps) {
   const { loadedInitialUrl, setLoadedInitialUrl } = React.useContext(StorageContext); 
   
   useFocusEffect(React.useCallback(() => {
-    const subscriber = Linking.addEventListener('url', router);
+    const subscriber = Linking.addEventListener('url', ({ url }) => {
+      router({ stackNav: navigation?.getParent(navigationID), url });
+    });
     if (!loadedInitialUrl) {
       Linking.getInitialURL().then((url) => {
         if (url) {

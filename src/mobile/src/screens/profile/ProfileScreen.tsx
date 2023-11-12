@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 
 import { ScreenComponent } from '../types';
 
@@ -8,7 +9,6 @@ import {
   TableView,
   TableViewCell,
   TableViewSection,
-  Text,
 } from '~/components';
 import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
@@ -19,6 +19,7 @@ export function ProfileScreen({
 }: ScreenComponent<'profile'>) {
 
   const {
+    isSyncingBookmarks,
     bookmarkCount,
     unreadBookmarkCount,
     followedPublishers,
@@ -28,20 +29,59 @@ export function ProfileScreen({
     api: { logout },
   } = React.useContext(StorageContext);
 
+  const signOut = React.useCallback(async () => {
+    await logout({});
+    setStoredValue('userData');
+  }, [logout, setStoredValue]);
+
+  const handleSignOut = React.useCallback(() => {
+    if (userData?.unlinked) {
+      Alert.alert(
+        strings.accountIsNotLinkedToAnEmail, 
+        strings.ifYouSignOutYouWillNotBeAbleToRecover,
+        [
+          {
+            style: 'cancel',
+            text: strings.cancel,
+          },
+          {
+            onPress: () => signOut(), 
+            text: strings.yesSignOut,
+          },
+        ]
+      );
+    } else {
+      signOut();
+    }
+  }, [signOut, userData?.unlinked]);
+
   return (
     <Screen>
       <ScrollView>
         <TableView>
           <TableViewSection>
-            <TableViewCell 
+            {/* <TableViewCell 
               bold
-              title={ userData?.profile?.email } />
+              cellContentView={ <Text>{JSON.stringify(userData, null, 2)}</Text> } /> */}
+            {userData?.profile?.email && (
+              <TableViewCell 
+                bold
+                title={ userData?.profile?.email } />
+            )}
+            {userData?.profile?.username && (
+              <TableViewCell 
+                bold
+                cellStyle="RightDetail"
+                title={ strings.username }
+                detail={ userData?.profile?.username } />
+            )}
           </TableViewSection>
           <TableViewSection>
             <TableViewCell 
               bold
+              disabled={ isSyncingBookmarks }
               cellStyle="RightDetail"
-              title={ `${strings.bookmarks} (${bookmarkCount})` }
+              title={ `${strings.bookmarks} (${isSyncingBookmarks ? 'syncing...' : bookmarkCount})` }
               accessory="DisclosureIndicator"
               detail={ `${unreadBookmarkCount} ${strings.unread}` } 
               onPress={ () => navigation?.push('bookmarks') } />
@@ -66,10 +106,7 @@ export function ProfileScreen({
             <TableViewCell
               bold
               title={ 'Sign Out' }
-              onPress={ async () => {
-                await logout();
-                setStoredValue('userData'); 
-              } } />
+              onPress={ handleSignOut } />
           </TableViewSection>
         </TableView>
       </ScrollView>

@@ -4,6 +4,7 @@ import { UserData } from './UserData';
 
 import {
   API,
+  ProfileResponse,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
@@ -318,12 +319,22 @@ export type Methods = {
   getSummary: (id: number) => ReturnType<typeof API['getSummaries']>;
 };
 
-export type StorageContextType = Storage & {
-  
-  ready?: boolean;
+export type SyncState = {
   hasLoadedLocalState?: boolean;
+  
   isSyncingWithRemote?: boolean;
   hasSyncedWithRemote?: boolean;
+  
+  isFetchingProfile?: boolean;
+  hasFetchedProfile?: boolean;
+  
+  isSyncingBookmarks?: boolean;
+  hasSyncedBookmarks?: boolean;
+};
+
+export type StorageContextType = Storage & SyncState & {
+  
+  ready?: boolean;
   
   loadedInitialUrl?: boolean;
   setLoadedInitialUrl: React.Dispatch<React.SetStateAction<boolean | undefined>>;
@@ -379,6 +390,7 @@ export type StorageContextType = Storage & {
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
+  syncWithRemotePrefs: (pref?: ProfileResponse) => Promise<void>;
   api: Methods;
 };
 
@@ -414,6 +426,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   setPublishers: () => Promise.resolve(),
   setStoredValue: () => Promise.resolve(),
   storeTranslations: () => Promise.resolve(undefined),
+  syncWithRemotePrefs: () => Promise.resolve(),
   unreadBookmarkCount: 0,
   viewFeature: () => Promise.resolve(),
   withHeaders: (fn) => (...args) => fn(...args, {}),

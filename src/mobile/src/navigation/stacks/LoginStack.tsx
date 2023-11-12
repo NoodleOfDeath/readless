@@ -12,7 +12,9 @@ import {
   PasswordLoginScreen,
   RegisterScreen,
   RoutingParams,
+  SetNewPasswordScreen,
 } from '~/screens';
+import { VerifyOtpScreen } from '~/screens/login/VerifyOtpScreen';
 
 export const LOGIN_STACK: RouteConfig<
   RoutingParams,
@@ -28,7 +30,8 @@ export const LOGIN_STACK: RouteConfig<
       headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => null,
-      headerTitle: strings.login,
+      headerShown: false,
+      headerTitle: '',
     },
   },
   {
@@ -61,4 +64,25 @@ export const LOGIN_STACK: RouteConfig<
       headerTitle: strings.forgotPassword,
     },
   },
+  {
+    component: VerifyOtpScreen,
+    name: 'verifyOtp',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.forgotPassword,
+    },
+  },
+  {
+    component: SetNewPasswordScreen,
+    name: 'setNewPassword',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.forgotPassword,
+    },
+  },
+  
 ];

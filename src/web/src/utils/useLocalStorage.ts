@@ -1,8 +1,7 @@
 export function useLocalStorage() {
 
   const getItem = async (name: string) => {
-    const value = window.localStorage.getItem(name);
-    return value ? value : undefined;
+    return window.localStorage.getItem(name);
   };
   
   const setItem = async (name: string, value?: string) => {
@@ -18,7 +17,7 @@ export function useLocalStorage() {
 
   const removeAll = async (_hard = false) => {
     return window.localStorage.clear();
-  } ;
+  };
 
   return {
     getItem,

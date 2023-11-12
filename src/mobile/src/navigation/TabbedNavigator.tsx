@@ -25,7 +25,7 @@ function NewsStack() {
 
 function ProfileStack() {
   return (
-    <RoutedScreen safeArea={ false } navigationID='gamesStackNav'>
+    <RoutedScreen safeArea={ false } navigationID='profileStackNav'>
       <StackNavigator id="profileStackNav" screens={ PROFILE_STACK } />
     </RoutedScreen>
   );

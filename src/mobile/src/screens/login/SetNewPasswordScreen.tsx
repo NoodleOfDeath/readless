@@ -11,55 +11,46 @@ import {
 import { StorageContext } from '~/core';
 import { strings } from '~/locales';
 
-export function RegisterScreen({
-  route, 
-  navigation,
-}: ScreenComponent<'register'>) {
+export function SetNewPasswordScreen({
+  route: _route,
+  navigation, 
+}: ScreenComponent<'setNewPassword'>) {
 
-  const { api: { register } } = React.useContext(StorageContext);
+  const { 
+    api: { updateCredential }, 
+    setStoredValue,
+  } = React.useContext(StorageContext);
 
   const [success, setSuccess] = React.useState(false);
-  const [email, setEmail] = React.useState(route?.params?.email ?? '');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [message, setMessage] = React.useState('');
 
-  React.useEffect(() => setMessage(''), [email, password, confirmPassword]);
-
-  const handleRegister = React.useCallback(async () => {
+  const handlePasswordReset = React.useCallback(async () => {
     try {
       if (password !== confirmPassword) {
         setMessage(strings.passwordsDoNotMatch);
         return;
       }
-      const { error } = await register({
-        email,
-        password,
-      });
+      const { data, error } = await updateCredential({ password });
       if (error) {
         setMessage(error.message);
         return;
       }
-      setSuccess(true);
-      setMessage(strings.verifyYourEmailToContinue);
+      if (data.success) {
+        setSuccess(true);
+        setMessage(strings.successYouMayNowLogin);
+        setStoredValue('userData');
+      }
     } catch (error) {
       console.error(error);
-      setMessage(strings.anUnknownErrorOccurred);
     }
-  }, [confirmPassword, email, password, register]);
-
+  }, [confirmPassword, password, setStoredValue, updateCredential]);
+  
   return (
-    <View
-      flex={ 1 }
-      p={ 24 }
-      gap={ 12 }>
+    <View p={ 24 } gap={ 12 }>
       {!success && (
         <React.Fragment>
-          <TextInput
-            value={ email }
-            onChangeText={ setEmail }
-            placeholder={ strings.email }
-            keyboardType='email-address' />
           <TextInput
             value={ password }
             onChangeText={ setPassword }
@@ -71,17 +62,14 @@ export function RegisterScreen({
             placeholder={ strings.confirmPassword }
             secureTextEntry />
           <Button
-            contained
-            onPress={ handleRegister }>
-            {strings.register}
+            onPress={ handlePasswordReset }
+            contained>
+            {strings.resetPassword}
           </Button>
         </React.Fragment>
       )}
-      {message && <Text textCenter>{message}</Text>}
-      <Button
-        onPress={ () => navigation?.replace('passwordLogin', { email }) }>
-        {strings.alreadyHaveAnAccount}
-      </Button>
+      {message && <Text textCenter>{ message }</Text>}
+      {success && (<Button onPress={ () => navigation?.replace('login', {}) } contained>{strings.login}</Button>)}
     </View>
   );
 }

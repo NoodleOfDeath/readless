@@ -1,12 +1,13 @@
 import { DatedAttributes } from '../types';
 
 export type Profile = {
-  email: string;
+  email?: string;
   emails?: string[];
   username?: string;
   firstName?: string;
   lastName?: string;
   preferences?: { [key: string]: unknown };
+  createdAt?: Date;
   updatedAt?: Date;
 };
 

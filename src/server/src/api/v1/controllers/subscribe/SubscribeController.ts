@@ -46,7 +46,7 @@ export class SubscribeController {
   }
 
   @Post('/verify')
-  public static async verify(
+  public static async verifySubscription(
     @Request() req: ExpressRequest,
     @Body() body: Pick<SubscriptionCreationAttributes, 'verificationCode'>
   ): Promise<PublicSubscriptionAttributes> {
