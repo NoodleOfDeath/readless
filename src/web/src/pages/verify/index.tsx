@@ -47,6 +47,7 @@ export default function VerifyPage() {
         }
         if (data) {
           setStoredValue('userData', new UserData(data));
+          setMessage('Please set a new password that is at least 8 characters long.');
         }
       } else
       if (code) {
