@@ -154,7 +154,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
       steps.push({
         artwork: 'https://readless.nyc3.digitaloceanspaces.com/img/guides/short-press-preview.gif',
         tallImage: true,
-        title: strings.shortPress,
+        title: strings.shortPressToQuickView,
       });
     }
     steps.push(

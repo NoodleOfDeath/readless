@@ -8,11 +8,13 @@ import CryptoJS from 'react-native-crypto-js';
 import { ThirdParty } from '~/api';
 import {
   Button,
+  Image,
   Screen,
   Text,
   View,
 } from '~/components';
 import { StorageContext, UserData } from '~/contexts';
+import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
 
 GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
@@ -20,7 +22,7 @@ GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
 export function LoginScreen({
   route: _route,
   navigation, 
-}: ScreenComponent<'start'>) {
+}: ScreenComponent<'login'>) {
 
   const {
     api: { login },
@@ -80,7 +82,16 @@ export function LoginScreen({
         <View
           flex={ 20 }
           itemsCenter
-          justifyCenter />
+          justifyCenter
+          bg="white">
+          <Image
+            native
+            contain
+            source={ { uri: 'Logo' } }
+            width={ 300 }
+            height={ 300 } />
+          <Text color="invertText">{strings.informationWithoutTheNoise}</Text>
+        </View>
         <Text>{message}</Text>
         <Button
           contained

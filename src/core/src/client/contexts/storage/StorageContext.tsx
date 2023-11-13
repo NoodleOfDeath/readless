@@ -183,6 +183,9 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [withHeaders]);
   
   const updateRemotePref = React.useCallback(async <K extends keyof Storage>(key: K, newState?: Storage[K]) => {
+    if (!storage.userData?.valid) {
+      return; 
+    }
     if (!SYNCABLE_SETTINGS.includes(key)) {
       return;
     }
@@ -196,7 +199,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     } catch (e) {
       console.error(e);
     }
-  }, [api]);
+  }, [api, storage]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleBadRequest = React.useCallback(async (e?: any) => {
@@ -215,6 +218,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       isFetchingProfile: false,
       isSyncingWithRemote: false,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   const loadBookmarks = React.useCallback(async (ids: number[]) => {
@@ -237,6 +241,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       hasSyncedBookmarks: true,
       isSyncingBookmarks: false,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api]);
 
   const syncWithRemotePrefs = React.useCallback(async (prefs?: ProfileResponse) => {
@@ -299,6 +304,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       hasSyncedWithRemote: true,
       isSyncingWithRemote: false,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncState.hasLoadedLocalState, storage.userData?.valid, handleBadRequest, api, loadBookmarks]);
   
   // Load preferences on mount
@@ -378,7 +384,13 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     if (storage.lastRemoteSync && !storage.userData?.valid) {
       resetStorage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storage.lastRemoteSync, storage.userData]);
+
+  React.useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   // push notification functions
 
@@ -604,10 +616,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   };
   
   const isExcludingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.excludedCategories }), [storage.excludedCategories]);
-
-  React.useEffect(() => {
-    load();
-  }, []);
 
   return (
     <StorageContext.Provider

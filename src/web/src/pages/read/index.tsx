@@ -127,6 +127,10 @@ export default function AppPage({
               key="og:image"
               property="og:image"
               content={ rootSummary.media?.imageArticle || rootSummary.media?.imageAi1 || rootSummary.imageUrl } />
+            <meta
+              key='twitter:image'
+              property="twitter:image"
+              content={ rootSummary.media?.imageArticle || rootSummary.media?.imageAi1 || rootSummary.imageUrl } />
             <meta 
               key="og:title"
               property="og:title"

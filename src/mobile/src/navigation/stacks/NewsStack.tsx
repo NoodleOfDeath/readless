@@ -9,7 +9,7 @@ import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { SETTINGS_STACK } from './SettingsStack';
 
-import { SearchMenu, SettingsToggleWithIndicator } from '~/navigation';
+import { SearchViewController, SettingsToggleWithIndicator } from '~/navigation';
 import {
   CategoryScreen,
   HomeScreen,
@@ -35,7 +35,7 @@ export const NEWS_STACK: RouteConfig<
     name: 'home',
     options: { 
       headerBackTitle: '',
-      headerLeft: () => <SearchMenu />,
+      headerLeft: () => <SearchViewController />,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '',
     },

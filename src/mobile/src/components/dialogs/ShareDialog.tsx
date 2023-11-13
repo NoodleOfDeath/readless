@@ -82,7 +82,7 @@ export function ShareDialog({
       [
         {
           icon: 'export-variant',
-          label: strings.shareAsLink,
+          label: strings.share,
           onPress: () => shareStandard(summary, { format }), 
         },
         {

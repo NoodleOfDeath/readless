@@ -9,7 +9,7 @@ import {
   Header,
   Markdown,
   Pulse,
-  SearchMenu,
+  SearchViewController,
   View,
   Walkthrough,
 } from '~/components';
@@ -60,7 +60,7 @@ export function BookmarkWalkthrough(props: SheetProps) {
             </View>
             <View flexRow elevated p={ 8 } itemsCenter justifyEvenly>
               <Header menu flex={ 1 } flexRow flexGrow={ 1 }>
-                <SearchMenu flexGrow={ 1 } />
+                <SearchViewController flexGrow={ 1 } />
               </Header>
             </View>
           </View>

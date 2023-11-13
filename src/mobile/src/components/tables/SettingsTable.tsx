@@ -102,7 +102,7 @@ export function SettingsTable() {
           cellAccessoryView={ <PrefSwitch prefKey='compactSummaries' /> } />
         <TableViewCell
           bold
-          title={ compactSummaries ? strings.shortSummariesInsteadOfTitles : strings.shortSummaries }
+          title={ compactSummaries ? strings.shortSummariesInsteadOfTitles : strings.shortSummariesUnderTitles }
           cellIcon="text-short"
           cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
         {Platform.OS === 'ios' && (

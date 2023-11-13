@@ -1,6 +1,6 @@
 import { DatedAttributes } from '../types';
 
-export const THIRD_PARTIES = { google: 'google' } as const;
+export const THIRD_PARTIES = { apple: 'apple', google: 'google' } as const;
 
 export type ThirdParty = typeof THIRD_PARTIES[keyof typeof THIRD_PARTIES];
 

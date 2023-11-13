@@ -261,7 +261,7 @@ export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'favoritedCategories',
   'excludedCategories',
   'userStats',
-] as const;
+];
 
 export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];
 

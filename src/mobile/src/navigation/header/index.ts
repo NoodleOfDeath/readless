@@ -1,2 +1,2 @@
 export * from './Toggles';
-export * from './SearchMenu';
+export * from './SearchViewController';
