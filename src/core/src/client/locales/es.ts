@@ -164,6 +164,7 @@ export const esStrings: typeof enStrings = {
   other: 'Algo más',
   password: 'Contraseña',
   passwordsDoNotMatch: 'Las contraseñas no coinciden',
+  pleaseEnterValidEmail: 'Por favor introduzca una dirección de correo electrónico válida',
   positive: 'Positivo',
   preferredReadingFormat: 'Toque **Resumen** o **Viñetas** para elegir su formato de lectura predeterminado',
   preferredShortPressFormat: 'Modo de lectura predeterminado en pulsación corta',

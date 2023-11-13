@@ -41,7 +41,11 @@ import {
   MailService,
   OpenAIService,
 } from '../../../../services';
-import { randomString } from '../../../../utils';
+import {
+  randomString,
+  validateEmail,
+  validatePassword,
+} from '../../../../utils';
 import { AuthError, InternalError } from '../../middleware';
 import {
   Alias,
@@ -113,6 +117,12 @@ export class AccountController {
         throw new AuthError('BAD_REQUEST');
       }
     } else {
+      if (!validateEmail(body.email)) {
+        throw new InternalError('Email has invalid format');
+      }
+      if (!validatePassword(body.password)) {
+        throw new InternalError('Password does not meet requirements');
+      }
       const result = await User.from(body, { ignoreIfNotResolved: true });
       const { payload } = result;
       user = result.user;
@@ -178,7 +188,7 @@ export class AccountController {
     if (createAlias) {
       console.log('creating alias', newAliasType, newAliasValue);
       await newUser.createAlias(newAliasType, newAliasValue, {
-        verificationCode,
+        verificationCode: verified ? undefined : verificationCode,
         verificationExpiresAt: verified
           ? undefined
           : new Date(Date.now() + ms('20m')),
@@ -415,6 +425,9 @@ export class AccountController {
   ): Promise<UpdateCredentialResponse> {
     const { user } = await User.from(body);
     if (typeof body.password === 'string') {
+      if (!validatePassword(body.password)) {
+        throw new InternalError('Password does not meet requirements');
+      }
       const password = await user.findCredential('password');
       if (password) {
         await password.destroy();

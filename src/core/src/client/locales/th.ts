@@ -164,6 +164,7 @@ export const thStrings: typeof enStrings = {
   other: 'อื่น ๆ อีก',
   password: 'รหัสผ่าน',
   passwordsDoNotMatch: 'รหัสผ่านไม่ตรงกัน',
+  pleaseEnterValidEmail: 'กรุณาใส่อีเมลที่ถูกต้อง',
   positive: 'เชิงบวก',
   preferredReadingFormat: 'แตะ **สรุป** หรือ **หัวข้อย่อย** เพื่อเลือกรูปแบบการอ่านเริ่มต้นของคุณ',
   preferredShortPressFormat: 'โหมดการอ่านเริ่มต้นเมื่อกดสั้นๆ',

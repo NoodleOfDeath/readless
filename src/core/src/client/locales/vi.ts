@@ -164,6 +164,7 @@ export const viStrings: typeof enStrings = {
   other: 'Thứ gì khác',
   password: 'Mật khẩu',
   passwordsDoNotMatch: 'Mật khẩu không phù hợp',
+  pleaseEnterValidEmail: 'Vui lòng nhập email hợp lệ',
   positive: 'Tích cực',
   preferredReadingFormat: 'Chạm vào **Tóm tắt** hoặc **Dấu đầu dòng** để chọn định dạng đọc mặc định của bạn',
   preferredShortPressFormat: 'Chế độ đọc mặc định khi bấm nhanh',

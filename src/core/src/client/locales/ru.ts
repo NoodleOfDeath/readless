@@ -164,6 +164,7 @@ export const ruStrings: typeof enStrings = {
   other: 'Что-то другое',
   password: 'Пароль',
   passwordsDoNotMatch: 'Пароли не совпадают',
+  pleaseEnterValidEmail: 'Введите, пожалуйста, действительный адрес электронной почты',
   positive: 'Положительный',
   preferredReadingFormat: 'Нажмите **Сводка** или **Пункты**, чтобы выбрать формат чтения по умолчанию.',
   preferredShortPressFormat: 'Режим чтения по умолчанию при коротком нажатии',

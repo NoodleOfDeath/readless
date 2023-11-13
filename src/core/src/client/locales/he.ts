@@ -164,6 +164,7 @@ export const heStrings: typeof enStrings = {
   other: 'משהו אחר',
   password: 'סיסמה',
   passwordsDoNotMatch: 'סיסמאות לא תואמות',
+  pleaseEnterValidEmail: 'נא להזין אימייל חוקי',
   positive: 'חִיוּבִי',
   preferredReadingFormat: 'הקש על **סיכום** או **תבליטים** כדי לבחור את פורמט הקריאה המוגדר כברירת מחדל',
   preferredShortPressFormat: 'מצב קריאה ברירת מחדל בלחיצה קצרה',

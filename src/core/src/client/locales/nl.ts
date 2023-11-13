@@ -164,6 +164,7 @@ export const nlStrings: typeof enStrings = {
   other: 'Iets anders',
   password: 'Wachtwoord',
   passwordsDoNotMatch: 'Wachtwoorden komen niet overeen',
+  pleaseEnterValidEmail: 'Gelieve een geldig e-mailadres in te vullen',
   positive: 'Positief',
   preferredReadingFormat: 'Tik op **Samenvatting** of **Bullets** om je standaard leesformaat te kiezen',
   preferredShortPressFormat: 'Standaard leesmodus bij kort indrukken',

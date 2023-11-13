@@ -164,6 +164,7 @@ export const csStrings: typeof enStrings = {
   other: 'Něco jiného',
   password: 'Heslo',
   passwordsDoNotMatch: 'Hesla se neshodují',
+  pleaseEnterValidEmail: 'prosím zadejte platný email',
   positive: 'Pozitivní',
   preferredReadingFormat: 'Klepnutím na **Souhrn** nebo **Odrážky** vyberte výchozí formát čtení',
   preferredShortPressFormat: 'Výchozí režim čtení krátkým stisknutím',

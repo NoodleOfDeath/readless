@@ -164,6 +164,7 @@ export const trStrings: typeof enStrings = {
   other: 'Başka bir şey',
   password: 'Şifre',
   passwordsDoNotMatch: 'Parolalar uyuşmuyor',
+  pleaseEnterValidEmail: 'lütfen geçerli eposta adresini giriniz',
   positive: 'Pozitif',
   preferredReadingFormat: 'Varsayılan okuma biçiminizi seçmek için **Özet** veya **Madde İşaretleri** üzerine dokunun',
   preferredShortPressFormat: 'Kısa basışta varsayılan okuma modu',

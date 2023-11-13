@@ -164,6 +164,7 @@ export const ukStrings: typeof enStrings = {
   other: 'Щось ще',
   password: 'Пароль',
   passwordsDoNotMatch: 'Паролі не збігаються',
+  pleaseEnterValidEmail: 'Введіть дійсну адресу електронної пошти',
   positive: 'Позитивний',
   preferredReadingFormat: 'Натисніть **Підсумок** або **Маркери**, щоб вибрати формат читання за умовчанням',
   preferredShortPressFormat: 'Стандартний режим читання при короткому натисканні',

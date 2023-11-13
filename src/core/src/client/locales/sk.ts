@@ -164,6 +164,7 @@ export const skStrings: typeof enStrings = {
   other: 'Niečo iné',
   password: 'heslo',
   passwordsDoNotMatch: 'Heslá sa nezhodujú',
+  pleaseEnterValidEmail: 'Prosím zadajte platný e-mail',
   positive: 'Pozitívny',
   preferredReadingFormat: 'Klepnutím na **Súhrn** alebo **Odrážky** vyberte predvolený formát čítania',
   preferredShortPressFormat: 'Predvolený režim čítania po krátkom stlačení',

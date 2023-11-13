@@ -164,6 +164,7 @@ export const jaStrings: typeof enStrings = {
   other: '何か他のもの',
   password: 'パスワード',
   passwordsDoNotMatch: 'パスワードが一致していません',
+  pleaseEnterValidEmail: '正しいメールアドレスを入力してください',
   positive: 'ポジティブ',
   preferredReadingFormat: '**概要** または **箇条書き** をタップして、デフォルトの読み上げ形式を選択します',
   preferredShortPressFormat: '短押し時のデフォルトの読み取りモード',

@@ -164,6 +164,7 @@ export const nbStrings: typeof enStrings = {
   other: 'Noe annet',
   password: 'Passord',
   passwordsDoNotMatch: 'passordene er ikke like',
+  pleaseEnterValidEmail: 'Vennligst skriv inn en gyldig e-postadresse',
   positive: 'Positivt',
   preferredReadingFormat: 'Trykk på **Sammendrag** eller **Puletter** for å velge standard leseformat',
   preferredShortPressFormat: 'Standard lesemodus ved kort trykk',

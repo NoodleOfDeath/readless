@@ -164,6 +164,7 @@ export const faStrings: typeof enStrings = {
   other: 'یک چیز دیگر',
   password: 'کلمه عبور',
   passwordsDoNotMatch: 'رمزهای ورود مطابقت ندارند',
+  pleaseEnterValidEmail: 'لطفا یک ایمیل معتبر وارد کنید',
   positive: 'مثبت',
   preferredReadingFormat: 'برای انتخاب قالب خواندن پیش فرض خود، روی **خلاصه** یا **گلوله** ضربه بزنید',
   preferredShortPressFormat: 'حالت خواندن پیش فرض در فشار کوتاه',

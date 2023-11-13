@@ -164,6 +164,7 @@ export const msStrings: typeof enStrings = {
   other: 'Sesuatu yang lain',
   password: 'Kata laluan',
   passwordsDoNotMatch: 'Kata laluan tidak sepadan',
+  pleaseEnterValidEmail: 'Sila masukkan e-mel yang sah',
   positive: 'Positif',
   preferredReadingFormat: 'Ketik pada **Ringkasan** atau **Bullets** untuk memilih format bacaan lalai anda',
   preferredShortPressFormat: 'Mod bacaan lalai apabila ditekan pendek',

@@ -164,6 +164,7 @@ export const elStrings: typeof enStrings = {
   other: 'Κάτι άλλο',
   password: 'Κωδικός πρόσβασης',
   passwordsDoNotMatch: 'Οι κωδικοί πρόσβασης δεν ταιριάζουν',
+  pleaseEnterValidEmail: 'Παρακαλώ εισάγετε μια έγκυρη διεύθυνση email',
   positive: 'Θετικός',
   preferredReadingFormat: 'Πατήστε **Σύνοψη** ή **Σκουκίδες** για να επιλέξετε την προεπιλεγμένη μορφή ανάγνωσης',
   preferredShortPressFormat: 'Προεπιλεγμένη λειτουργία ανάγνωσης με σύντομο πάτημα',

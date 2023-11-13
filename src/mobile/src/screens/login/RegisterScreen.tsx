@@ -10,6 +10,7 @@ import {
 } from '~/components';
 import { StorageContext } from '~/core';
 import { strings } from '~/locales';
+import { validateEmail, validatePassword } from '~/utils';
 
 export function RegisterScreen({
   route, 
@@ -28,8 +29,17 @@ export function RegisterScreen({
 
   const handleRegister = React.useCallback(async () => {
     try {
+      if (!validateEmail(email)) {
+        setMessage(strings.pleaseEnterValidEmail);
+        return;
+      }
       if (password !== confirmPassword) {
         setMessage(strings.passwordsDoNotMatch);
+        return;
+      }
+      const result = validatePassword(password);
+      if (result.error) {
+        setMessage(result.error);
         return;
       }
       const { error } = await register({
@@ -72,6 +82,7 @@ export function RegisterScreen({
             secureTextEntry />
           <Button
             contained
+            disabled={ !email.trim() || !password.trim() || !confirmPassword.trim() }
             onPress={ handleRegister }>
             {strings.register}
           </Button>

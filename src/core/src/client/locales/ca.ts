@@ -164,6 +164,7 @@ export const caStrings: typeof enStrings = {
   other: 'Alguna cosa més',
   password: 'Contrasenya',
   passwordsDoNotMatch: 'Les contrasenyes no coincideixen',
+  pleaseEnterValidEmail: 'Introduïu un correu electrònic vàlid',
   positive: 'Positiu',
   preferredReadingFormat: 'Toqueu **Resum** o **Vinetes** per triar el format de lectura predeterminat',
   preferredShortPressFormat: 'Mode de lectura predeterminat en premer breument',
