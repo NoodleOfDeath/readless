@@ -87,7 +87,7 @@ export function TableViewCell(props: TableViewCellProps) {
   const theme= useTheme();
   const style = useStyles(props);
   const textStyles = useTextStyles({ ...props, system: true });
-  const stylesWithoutFontScaling = { ...textStyles };
+  const stylesWithoutFontScaling = { padding: 3, ...textStyles };
   return (
     <Cell
       { ...props }

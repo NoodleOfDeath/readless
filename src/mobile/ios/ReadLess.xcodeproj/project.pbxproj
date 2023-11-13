@@ -67,9 +67,9 @@
 		CD2C1A692AF0524A009C0FB2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */; };
 		CD2C1A6A2AF0524A009C0FB2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */; };
 		CD2C1A6B2AF0524A009C0FB2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */; };
+		CD3909AC2B02A4BC00680ABB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD3909AD2B02A4BC00680ABB /* LaunchScreen.storyboard */; };
 		CD4BF5A52AD074F7006BDC35 /* WidgetTopicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */; };
 		CD4BF5A62AD0797C006BDC35 /* WidgetTopicConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */; };
-		CD777A222AD9D16600804569 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD777A242AD9D16600804569 /* LaunchScreen.storyboard */; };
 		CD777A542AD9D3D500804569 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CD777A572AD9D3D500804569 /* Intents.intentdefinition */; };
 		CD777A552AD9D3D500804569 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CD777A572AD9D3D500804569 /* Intents.intentdefinition */; };
 		CD78217A2A28FA2100F3B33A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD7821792A28FA2100F3B33A /* StoreKit.framework */; };
@@ -290,8 +290,14 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReadLess.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReadLess.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-ReadLess-ReadLessTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadLess-ReadLessTests.release.xcconfig"; path = "Target Support Files/Pods-ReadLess-ReadLessTests/Pods-ReadLess-ReadLessTests.release.xcconfig"; sourceTree = "<group>"; };
 		CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		CD3909AA2B02A4A800680ABB /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Intents.strings; sourceTree = "<group>"; };
+		CD3909AB2B02A4A800680ABB /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = pt; path = pt.lproj/Info.plist; sourceTree = "<group>"; };
+		CD3909AD2B02A4BC00680ABB /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReadLess/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CD3909AE2B02A4E700680ABB /* zh-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-CN"; path = "zh-CN.lproj/Intents.strings"; sourceTree = "<group>"; };
+		CD3909AF2B02A4E700680ABB /* zh-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-CN"; path = "zh-CN.lproj/Info.plist"; sourceTree = "<group>"; };
+		CD3909B02B02A50400680ABB /* zh-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-TW"; path = "zh-TW.lproj/Intents.strings"; sourceTree = "<group>"; };
+		CD3909B12B02A50400680ABB /* zh-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-TW"; path = "zh-TW.lproj/Info.plist"; sourceTree = "<group>"; };
 		CD4BF5A42AD074F7006BDC35 /* WidgetTopicConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WidgetTopicConfiguration.swift; path = /Users/thom/git/noodleofdeath/readless/src/mobile/ios/ReadLessWidget/WidgetTopicConfiguration.swift; sourceTree = "<absolute>"; };
-		CD777A232AD9D16600804569 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD777A562AD9D3D500804569 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
 		CD777A592AD9D3D900804569 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Intents.strings; sourceTree = "<group>"; };
 		CD777A5B2AD9D3D900804569 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Intents.strings; sourceTree = "<group>"; };
@@ -611,7 +617,7 @@
 				CD84722B2ACB266C00683959 /* Info.plist */,
 				0125BD1829D791EC00EAC61C /* ReadLess.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				CD777A242AD9D16600804569 /* LaunchScreen.storyboard */,
+				CD3909AD2B02A4BC00680ABB /* LaunchScreen.storyboard */,
 				CD2C1A682AF0524A009C0FB2 /* Localizable.xcstrings */,
 				CDE11B1E2A7701BE00C0BC39 /* GoogleService-Info.plist */,
 				01BC567B29DCF36700C69F9A /* main.jsbundle */,
@@ -940,6 +946,9 @@
 				ca,
 				ms,
 				fa,
+				pt,
+				"zh-CN",
+				"zh-TW",
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -1045,7 +1054,7 @@
 				CDE9EB502A48A3770057217B /* Faustina-Italic.ttf in Resources */,
 				0125BD3D29D791ED00EAC61C /* Feather.ttf in Resources */,
 				CDE9EB642A48A3770057217B /* Newsreader72pt-Italic.ttf in Resources */,
-				CD777A222AD9D16600804569 /* LaunchScreen.storyboard in Resources */,
+				CD3909AC2B02A4BC00680ABB /* LaunchScreen.storyboard in Resources */,
 				CDE9EB522A48A3770057217B /* AnekLatin-Regular.ttf in Resources */,
 				CDE9EB662A48A3770057217B /* Faustina-Bold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
@@ -1420,15 +1429,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		CD777A242AD9D16600804569 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CD777A232AD9D16600804569 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			path = ReadLess;
-			sourceTree = "<group>";
-		};
 		CD777A572AD9D3D500804569 /* Intents.intentdefinition */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1477,6 +1477,9 @@
 				CD777AAB2AD9D3F600804569 /* tr */,
 				CD777AAD2AD9D3F700804569 /* uk */,
 				CD777AAF2AD9D3F700804569 /* vi */,
+				CD3909AA2B02A4A800680ABB /* pt */,
+				CD3909AE2B02A4E700680ABB /* zh-CN */,
+				CD3909B02B02A50400680ABB /* zh-TW */,
 			);
 			name = Intents.intentdefinition;
 			sourceTree = "<group>";
@@ -1529,6 +1532,9 @@
 				CD8472562ACB26CD00683959 /* tr */,
 				CD8472572ACB26CD00683959 /* uk */,
 				CD8472582ACB26CE00683959 /* vi */,
+				CD3909AB2B02A4A800680ABB /* pt */,
+				CD3909AF2B02A4E700680ABB /* zh-CN */,
+				CD3909B12B02A50400680ABB /* zh-TW */,
 			);
 			name = Info.plist;
 			path = ReadLess;

@@ -1,16 +1,10 @@
 import React from 'react';
-import { TextInput } from 'react-native';
+import { LayoutRectangle, TextInput } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
 
-import {
-  Button,
-  ChildlessViewProps,
-  Divider,
-  ScrollView,
-  View,
-} from '~/components';
-import { LayoutContext, StorageContext } from '~/contexts';
+import { ChildlessViewProps, View } from '~/components';
+import { LayoutContext } from '~/contexts';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -19,35 +13,33 @@ type TextInputHandles = Pick<
   'setNativeProps' | 'isFocused' | 'clear' | 'blur' | 'focus'
 >;
 
-type SearchMenuProps = ChildlessViewProps & {
+type SearchViewControllerProps = ChildlessViewProps & {
   initialValue?: string;
   placeholder?: string;
-  showHistory?: boolean;
   onChangeText?: (value: string) => void;
   onClear?: () => void;
   onSubmit?: (value: string) => void;
 };
 
-export function SearchMenu({
+export function SearchViewController({
   initialValue = '',
   placeholder = strings.search,
-  showHistory,
   onChangeText,
   onClear,
   onSubmit,
   ...props
-}: SearchMenuProps) {
+}: SearchViewControllerProps) {
 
   const theme = useTheme();
   const { search } = useNavigation();
   
-  const {
-    searchHistory,
-    setStoredValue,
-  } = React.useContext(StorageContext);
   const { screenWidth } = React.useContext(LayoutContext);
 
   const [value, setValue] = React.useState(initialValue);
+  const [_showMenu, setShowMenu] = React.useState(false);
+  const [_searchbarLayout, setSearchbarLayout] = React.useState<LayoutRectangle>({
+    height: 0, width: 0, x: 0, y: 0, 
+  });
 
   const searchRef = React.useRef<TextInputHandles>(null);
   
@@ -73,8 +65,11 @@ export function SearchMenu({
       <Searchbar
         ref={ searchRef }
         accessible
+        onLayout={ (e) => setSearchbarLayout(e.nativeEvent.layout) }
         onIconPress={ () => searchRef.current?.focus() }
         placeholder={ placeholder }
+        onFocus={ () => setShowMenu(true) }
+        onBlur={ () => setShowMenu(false) }
         onChangeText={ handleChangeText }
         style={ { height: 32, padding: 0 } }
         inputStyle={ {
@@ -90,38 +85,6 @@ export function SearchMenu({
           onClear?.();
         } } 
         onSubmitEditing={ () => submit() } />
-      {showHistory && (
-        <View style={ theme.components.card }>
-          <View gap={ 12 } p={ 12 }>
-            <View>
-              <Button 
-                elevated 
-                contained
-                onPress={ () => submit() }>
-                {strings.search}
-              </Button>
-            </View>
-            <View gap={ 6 }>
-              <Button caption onPress={ () => setStoredValue('searchHistory', []) }>
-                {strings.clearSearchHistory}
-              </Button>
-              <Divider />
-              <ScrollView>
-                {searchHistory?.map((item) => (
-                  <Button
-                    key={ item }
-                    underline
-                    onPress={ () => {
-                      submit(item);
-                    } }>
-                    {item}
-                  </Button>
-                ))}
-              </ScrollView>
-            </View>
-          </View>
-        </View>
-      )}
     </View>
   );
 }

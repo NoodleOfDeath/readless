@@ -38,7 +38,7 @@ import {
   useTheme,
 } from '~/hooks';
 import { getLocale, strings } from '~/locales';
-import { SearchMenu } from '~/navigation';
+import { SearchViewController } from '~/navigation';
 import { parseKeywords } from '~/utils';
 
 export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
@@ -228,7 +228,7 @@ export function SummaryList({
       setFilter(filter0);
       navigation?.setOptions({
         headerTitle: () => {
-          return <SearchMenu initialValue={ filter0 } />;
+          return <SearchViewController initialValue={ filter0 } />;
         },
       });
       load(true, filter0);

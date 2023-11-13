@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { ScreenComponent } from '../types';
 
 import {
+  Button,
   Screen,
   ScrollView,
   TableView,
@@ -79,6 +80,7 @@ export function ProfileScreen({
           <TableViewSection>
             <TableViewCell 
               bold
+              cellIcon={ <Button leftIcon="bookmark" /> }
               disabled={ isSyncingBookmarks }
               cellStyle="RightDetail"
               title={ `${strings.bookmarks} (${isSyncingBookmarks ? 'syncing...' : bookmarkCount})` }
@@ -89,6 +91,7 @@ export function ProfileScreen({
           <TableViewSection>
             <TableViewCell 
               bold
+              cellIcon={ <Button leftIcon="pen" /> }
               cellStyle="RightDetail"
               title={ strings.publishers }
               accessory="DisclosureIndicator"
@@ -96,6 +99,7 @@ export function ProfileScreen({
               onPress={ () => navigation?.push('publisherPicker') } />
             <TableViewCell 
               bold
+              cellIcon={ <Button leftIcon="bucket" /> }
               cellStyle="RightDetail"
               title={ strings.categories }
               accessory="DisclosureIndicator"
@@ -105,7 +109,8 @@ export function ProfileScreen({
           <TableViewSection>
             <TableViewCell
               bold
-              title={ 'Sign Out' }
+              cellIcon={ <Button leftIcon="logout" /> }
+              title={ strings.signOut }
               onPress={ handleSignOut } />
           </TableViewSection>
         </TableView>

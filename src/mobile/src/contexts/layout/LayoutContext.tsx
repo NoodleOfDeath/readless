@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWindowDimensions } from 'react-native';
+import { Keyboard, useWindowDimensions } from 'react-native';
 
 import Orientation, { OrientationType } from 'react-native-orientation-locker';
 
@@ -11,11 +11,25 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   
   const [orientation, setOrientation] = React.useState<OrientationType>(Orientation.getInitialOrientation());
   const {
-    width: screenWidth, height: screenHeight, scale, fontScale, 
+    width: screenWidth, height: screenHeight, scale, fontScale,
   } = useWindowDimensions();
+  const [keyboardHeight, setKeyboardHeight] = React.useState(0);
   
-  const isTablet = React.useMemo(() =>screenWidth >= 1024, [screenWidth]);
+  const isTablet = React.useMemo(() => screenWidth >= 1024, [screenWidth]);
   const supportsMasterDetail = React.useMemo(() => screenWidth > 1200, [screenWidth]);
+
+  React.useEffect(() => {
+    const keyboardWillShow = Keyboard.addListener('keyboardWillShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    const keyboardDidHide = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+    return () => {
+      keyboardWillShow.remove();
+      keyboardDidHide.remove();
+    };
+  }, []);
 
   const lockRotation = React.useCallback((newOrientaion?: OrientationType) => {
     switch (newOrientaion ?? orientation) {
@@ -54,6 +68,7 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
     <LayoutContext.Provider value={ {
       fontScale,
       isTablet,
+      keyboardHeight,
       lockRotation,
       orientation,
       scale,
