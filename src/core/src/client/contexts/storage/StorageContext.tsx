@@ -183,6 +183,9 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [withHeaders]);
   
   const updateRemotePref = React.useCallback(async <K extends keyof Storage>(key: K, newState?: Storage[K]) => {
+    if (!storage.userData?.valid) {
+      return; 
+    }
     if (!SYNCABLE_SETTINGS.includes(key)) {
       return;
     }
@@ -196,7 +199,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     } catch (e) {
       console.error(e);
     }
-  }, [api]);
+  }, [api, storage]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleBadRequest = React.useCallback(async (e?: any) => {

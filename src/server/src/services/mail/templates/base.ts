@@ -33,7 +33,6 @@ export abstract class MailTemplate<Params extends MailTemplateParams> implements
     domain = [BASE_DOMAIN === 'readless://' ? '' : (ssl ? 'https://' : 'http://'), BASE_DOMAIN].filter(Boolean).join(''),
     ...rest
   }: Optional<Params, 'domain' | 'ssl'> = {} as Params) {
-    console.log('fuckkkkkk', domain);
     let html = this.body;
     Object.entries({ domain, ...rest }).forEach(([key, value]) => {
       html = html.replaceAll(`{{${key}}}`, value);

@@ -30,6 +30,9 @@ export default function VerifyPage() {
   const [repeatPassword, setRepeatPassword] = React.useState('');
 
   const validateToken = React.useCallback(async () => {
+    if (!loading) {
+      return;
+    }
     try {
       const otp = searchParams.get('otp');
       const code = searchParams.get('code');
@@ -59,7 +62,7 @@ export default function VerifyPage() {
     } finally {
       setLoading(false);
     }
-  }, [searchParams, setStoredValue, verifyOtp, verifySubscription]);
+  }, [loading, searchParams, setStoredValue, verifyOtp, verifySubscription]);
 
   const handlePasswordReset = React.useCallback(async () => {
     try {
@@ -83,7 +86,6 @@ export default function VerifyPage() {
 
   return (
     <Layout>
-      {`fuck ${colorScheme}`}
       <Stack spacing={ 2 }>
         <div>{message}</div>
         {loading && <CircularProgress variant='indeterminate' />}
