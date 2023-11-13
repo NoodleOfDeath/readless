@@ -17,22 +17,24 @@ export default function VerifyPage() {
     api: {
       verifyOtp, verifySubscription, updateCredential, 
     },
-    colorScheme,
     userData,
     setStoredValue,
   } = React.useContext(StorageContext);
   const { searchParams } = useRouter();
 
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [attemptedToVerify, setAttemptedToVerify] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [message, setMessage] = React.useState('Verifying...');
 
   const [password, setPassword] = React.useState('');
   const [repeatPassword, setRepeatPassword] = React.useState('');
+  const [_resetSuccess, setResetSuccess] = React.useState(false);
 
   const validateToken = React.useCallback(async () => {
-    if (!loading) {
+    if (loading || attemptedToVerify) {
       return;
     }
+    setLoading(true);
     try {
       const otp = searchParams.get('otp');
       const code = searchParams.get('code');
@@ -40,7 +42,7 @@ export default function VerifyPage() {
       if (otp) {
         const { data, error } = await verifyOtp({ otp });
         if (error) {
-          setMessage(error.message);
+          setMessage('Error, bad request');
           return;
         }
         if (data) {
@@ -50,7 +52,7 @@ export default function VerifyPage() {
       if (code) {
         const { error } = await verifySubscription({ verificationCode: code });
         if (error) {
-          setMessage(error.message);
+          setMessage('Error, bad request');
           return;
         }
         setMessage('Success! You are now subscribed!');
@@ -61,8 +63,9 @@ export default function VerifyPage() {
       setMessage('Error, bad request');
     } finally {
       setLoading(false);
+      setAttemptedToVerify(true);
     }
-  }, [loading, searchParams, setStoredValue, verifyOtp, verifySubscription]);
+  }, [loading, searchParams, setStoredValue, attemptedToVerify, verifyOtp, verifySubscription]);
 
   const handlePasswordReset = React.useCallback(async () => {
     try {
@@ -75,10 +78,13 @@ export default function VerifyPage() {
         throw error;
       }
       setMessage('Success! You may now login.');
+      setResetSuccess(true);
     } catch (e) {
       setMessage('Error, bad request');
+    } finally {
+      setStoredValue('userData');
     }
-  }, [password, repeatPassword, updateCredential]);
+  }, [password, repeatPassword, setStoredValue, updateCredential]);
 
   React.useEffect(() => {
     validateToken();
@@ -91,15 +97,17 @@ export default function VerifyPage() {
         {loading && <CircularProgress variant='indeterminate' />}
       </Stack>
       {userData && (
-        <Stack>
+        <Stack gap={ 2 }>
           <TextField
             value={ password }
             onChange={ (e) => setPassword(e.target.value) }
-            placeholder="Password" />
+            placeholder="Password" 
+            type='password' />
           <TextField
             value={ repeatPassword }
             onChange={ (e) => setRepeatPassword(e.target.value) }
-            placeholder="Confirm Password" />
+            placeholder="Confirm Password"
+            type='password' />
           <Button
             onClick={ handlePasswordReset }>
             Reset Password
