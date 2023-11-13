@@ -164,6 +164,7 @@ export const koStrings: typeof enStrings = {
   other: '다른 것',
   password: '비밀번호',
   passwordsDoNotMatch: '비밀번호가 일치하지 않습니다',
+  pleaseEnterValidEmail: '유효한 이메일을 입력해주세요',
   positive: '긍정적인',
   preferredReadingFormat: '**요약** 또는 **글머리기호**를 탭하여 기본 읽기 형식을 선택합니다.',
   preferredShortPressFormat: '짧게 누를 때 기본 읽기 모드',

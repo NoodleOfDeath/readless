@@ -164,6 +164,7 @@ export const arStrings: typeof enStrings = {
   other: 'شيء آخر',
   password: 'كلمة المرور',
   passwordsDoNotMatch: 'كلمة المرور غير مطابقة',
+  pleaseEnterValidEmail: 'يرجى إدخال البريد الإلكتروني الصحيح',
   positive: 'إيجابي',
   preferredReadingFormat: 'اضغط على ** Summary ** أو ** Bullets ** لاختيار تنسيق القراءة الافتراضي الخاص بك',
   preferredShortPressFormat: 'وضع القراءة الافتراضي في الضغط القصير',

@@ -164,6 +164,7 @@ export const huStrings: typeof enStrings = {
   other: 'Valami más',
   password: 'Jelszó',
   passwordsDoNotMatch: 'A jelszavak nem egyeznek',
+  pleaseEnterValidEmail: 'Kérlek létező email címet adj meg',
   positive: 'Pozitív',
   preferredReadingFormat: 'Az alapértelmezett olvasási formátum kiválasztásához érintse meg az **Summary** vagy **Lullets** elemet',
   preferredShortPressFormat: 'Alapértelmezett olvasási mód rövid megnyomásra',

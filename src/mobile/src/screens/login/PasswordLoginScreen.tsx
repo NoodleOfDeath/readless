@@ -63,6 +63,7 @@ export function PasswordLoginScreen({
             placeholder={ strings.password }
             secureTextEntry />
           <Button
+            disabled={ !email.trim() || !password.trim() }
             onPress={ handleLogin }
             contained>
             {strings.login}

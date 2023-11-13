@@ -164,6 +164,7 @@ export const plStrings: typeof enStrings = {
   other: 'Coś innego',
   password: 'Hasło',
   passwordsDoNotMatch: 'Hasła nie pasują do siebie',
+  pleaseEnterValidEmail: 'Proszę podać poprawny adres e-mail',
   positive: 'Pozytywny',
   preferredReadingFormat: 'Stuknij w **Podsumowanie** lub **Wypunktowania**, aby wybrać domyślny format czytania',
   preferredShortPressFormat: 'Domyślny tryb czytania po krótkim naciśnięciu',

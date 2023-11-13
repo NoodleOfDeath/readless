@@ -164,6 +164,7 @@ export const idStrings: typeof enStrings = {
   other: 'Sesuatu yang lain',
   password: 'Kata sandi',
   passwordsDoNotMatch: 'Sandi tidak cocok',
+  pleaseEnterValidEmail: 'tolong masukkan email yang benar',
   positive: 'Positif',
   preferredReadingFormat: 'Ketuk **Ringkasan** atau **Bullet** untuk memilih format bacaan default Anda',
   preferredShortPressFormat: 'Mode membaca default saat ditekan singkat',

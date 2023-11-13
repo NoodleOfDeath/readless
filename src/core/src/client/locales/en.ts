@@ -161,6 +161,7 @@ export const enStrings = {
   other: 'Something else',
   password: 'Password',
   passwordsDoNotMatch: 'Passwords do not match',
+  pleaseEnterValidEmail: 'Please enter a valid email',
   positive: 'Positive',
   preferredReadingFormat: 'Preferred Reading Format',
   preferredShortPressFormat: 'Preferred Short Press Format',

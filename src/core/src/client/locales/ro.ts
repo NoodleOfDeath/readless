@@ -164,6 +164,7 @@ export const roStrings: typeof enStrings = {
   other: 'Altceva',
   password: 'Parola',
   passwordsDoNotMatch: 'parolele nu se potrivesc',
+  pleaseEnterValidEmail: 'te rog introdu un email valid',
   positive: 'Pozitiv',
   preferredReadingFormat: 'Atingeți **Rezumat** sau **Maranțe** pentru a alege formatul de citire prestabilit',
   preferredShortPressFormat: 'Modul de citire implicit la apăsare scurtă',

@@ -164,6 +164,7 @@ export const deStrings: typeof enStrings = {
   other: 'Etwas anderes',
   password: 'Passwort',
   passwordsDoNotMatch: 'Passwörter stimmen nicht überein',
+  pleaseEnterValidEmail: 'Bitte geben Sie eine gültige Email-Adresse ein',
   positive: 'Positiv',
   preferredReadingFormat: 'Tippen Sie auf **Zusammenfassung** oder **Aufzählungszeichen**, um Ihr Standardleseformat auszuwählen',
   preferredShortPressFormat: 'Standard-Lesemodus bei kurzem Drücken',

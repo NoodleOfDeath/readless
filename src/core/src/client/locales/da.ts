@@ -164,6 +164,7 @@ export const daStrings: typeof enStrings = {
   other: 'Noget andet',
   password: 'Adgangskode',
   passwordsDoNotMatch: 'Kodeordene er ikke ens',
+  pleaseEnterValidEmail: 'Indtast venligst en gyldig e-mail',
   positive: 'Positiv',
   preferredReadingFormat: 'Tryk på **Oversigt** eller **Punkter** for at vælge dit standardlæseformat',
   preferredShortPressFormat: 'Standard læsetilstand ved kort tryk',

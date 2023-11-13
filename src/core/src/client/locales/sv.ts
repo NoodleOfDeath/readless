@@ -164,6 +164,7 @@ export const svStrings: typeof enStrings = {
   other: 'Något annat',
   password: 'Lösenord',
   passwordsDoNotMatch: 'Lösenorden matchar inte',
+  pleaseEnterValidEmail: 'Ange en giltig e-postadress',
   positive: 'Positiv',
   preferredReadingFormat: 'Tryck på **Sammanfattning** eller **Puls** för att välja ditt standardformat för läsning',
   preferredShortPressFormat: 'Standardläsläge vid kort tryckning',

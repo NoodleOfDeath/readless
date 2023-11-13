@@ -164,6 +164,7 @@ export const zhHKStrings: typeof enStrings = {
   other: '別的東西',
   password: '密碼',
   passwordsDoNotMatch: '密碼不匹配',
+  pleaseEnterValidEmail: '請輸入有效電子郵件',
   positive: '積極的',
   preferredReadingFormat: '點擊 **Summary** 或 **Bullets** 以選擇您的默認閱讀格式',
   preferredShortPressFormat: '短按默認閱讀模式',

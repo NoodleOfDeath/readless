@@ -164,6 +164,7 @@ export const ptBRStrings: typeof enStrings = {
   other: 'Algo mais',
   password: 'Senha',
   passwordsDoNotMatch: 'As senhas não coincidem',
+  pleaseEnterValidEmail: 'por favor digite um email válido',
   positive: 'Positivo',
   preferredReadingFormat: 'Toque em **Resumo** ou **Marcadores** para escolher seu formato de leitura padrão',
   preferredShortPressFormat: 'Modo de leitura padrão ao pressionar rapidamente',

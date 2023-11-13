@@ -164,6 +164,7 @@ export const hiStrings: typeof enStrings = {
   other: 'कुछ और',
   password: 'पासवर्ड',
   passwordsDoNotMatch: 'सांकेतिक शब्द मेल नहीं खाते',
+  pleaseEnterValidEmail: 'कृपया एक मान्य ईमेल दर्ज करें',
   positive: 'सकारात्मक',
   preferredReadingFormat: 'अपना डिफ़ॉल्ट पढ़ने का प्रारूप चुनने के लिए **सारांश** या **बुलेट** पर टैप करें',
   preferredShortPressFormat: 'लघु प्रेस पर डिफ़ॉल्ट रीडिंग मोड',

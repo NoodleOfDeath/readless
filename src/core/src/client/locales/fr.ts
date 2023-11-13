@@ -164,6 +164,7 @@ export const frStrings: typeof enStrings = {
   other: 'Autre chose',
   password: 'Mot de passe',
   passwordsDoNotMatch: 'Les mots de passe ne correspondent pas',
+  pleaseEnterValidEmail: 'Veuillez entrer un email valide',
   positive: 'Positif',
   preferredReadingFormat: 'Appuyez sur **Résumé** ou **Puces** pour choisir votre format de lecture par défaut',
   preferredShortPressFormat: 'Mode de lecture par défaut sur appui court',

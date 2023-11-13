@@ -164,6 +164,7 @@ export const hrStrings: typeof enStrings = {
   other: 'Nešto drugo',
   password: 'Lozinka',
   passwordsDoNotMatch: 'Lozinke se ne podudaraju',
+  pleaseEnterValidEmail: 'Unesite valjanu e-poštu',
   positive: 'Pozitivan',
   preferredReadingFormat: 'Dodirnite **Sažetak** ili **Bullets** za odabir zadanog formata čitanja',
   preferredShortPressFormat: 'Zadani način čitanja kratkim pritiskom',

@@ -164,6 +164,7 @@ export const zhCNStrings: typeof enStrings = {
   other: '别的东西',
   password: '密码',
   passwordsDoNotMatch: '密码不匹配',
+  pleaseEnterValidEmail: '请输入有效电子邮件',
   positive: '积极的',
   preferredReadingFormat: '点击 **Summary** 或 **Bullets** 以选择您的默认阅读格式',
   preferredShortPressFormat: '短按默认阅读模式',

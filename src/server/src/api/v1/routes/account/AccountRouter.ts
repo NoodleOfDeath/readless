@@ -52,7 +52,7 @@ router.post(
     .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
-  // rateLimitMiddleware('2 per 5m'),
+  rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.login(req, req.body);

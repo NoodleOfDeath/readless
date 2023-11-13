@@ -164,6 +164,7 @@ export const fiStrings: typeof enStrings = {
   other: 'Jotain muuta',
   password: 'Salasana',
   passwordsDoNotMatch: 'Salasanat eivät täsmää',
+  pleaseEnterValidEmail: 'Anna kelvollinen sähköpostiosoite',
   positive: 'Positiivinen',
   preferredReadingFormat: 'Valitse oletusarvoinen lukumuoto napauttamalla **Yhteenveto** tai **Luettelomerkit**',
   preferredShortPressFormat: 'Oletuslukutila lyhyellä painalluksella',
