@@ -78,8 +78,8 @@ spec:
               value: '$PORT'
             - name: RECAPTCHA_SECRET_KEY
               value: '$RECAPTCHA_SECRET_KEY'
-            - name: REGISTRATION_PUBLIC_KEY
-              value: '$REGISTRATION_PUBLIC_KEY'
+            - name: REGISTRATION_PRIVATE_KEY
+              value: '$REGISTRATION_PRIVATE_KEY'
             - name: S3_BUCKET
               value: '$S3_BUCKET'
             - name: S3_KEY
