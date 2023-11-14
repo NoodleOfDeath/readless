@@ -15,7 +15,10 @@ export default function VerifyPage() {
 
   const { 
     api: {
-      verifyOtp, verifySubscription, updateCredential, 
+      verifyOtp,
+      verifyAlias,
+      verifySubscription,
+      updateCredential, 
     },
     userData,
     setStoredValue,
@@ -38,6 +41,7 @@ export default function VerifyPage() {
     try {
       const otp = searchParams.get('otp');
       const code = searchParams.get('code');
+      const sub = searchParams.get('sub');
       setStoredValue('colorScheme', 'dark');
       if (otp) {
         const { data, error } = await verifyOtp({ otp });
@@ -51,7 +55,15 @@ export default function VerifyPage() {
         }
       } else
       if (code) {
-        const { error } = await verifySubscription({ verificationCode: code });
+        const { error } = await verifyAlias({ verificationCode: code });
+        if (error) {
+          setMessage('Error, bad request');
+          return;
+        }
+        setMessage('Success! You are now subscribed!');
+      } else
+      if (sub) {
+        const { error } = await verifySubscription({ verificationCode: sub });
         if (error) {
           setMessage('Error, bad request');
           return;
@@ -66,7 +78,7 @@ export default function VerifyPage() {
       setLoading(false);
       setAttemptedToVerify(true);
     }
-  }, [loading, searchParams, setStoredValue, attemptedToVerify, verifyOtp, verifySubscription]);
+  }, [loading, attemptedToVerify, searchParams, setStoredValue, verifyOtp, verifyAlias, verifySubscription]);
 
   const handlePasswordReset = React.useCallback(async () => {
     try {
