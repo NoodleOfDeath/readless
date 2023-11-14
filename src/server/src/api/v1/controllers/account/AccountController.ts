@@ -1,3 +1,4 @@
+import appleSignin from 'apple-signin-auth';
 import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 import { Request as ExpressRequest } from 'express';
@@ -117,11 +118,13 @@ export class AccountController {
         throw new AuthError('BAD_REQUEST');
       }
     } else {
-      if (!validateEmail(body.email)) {
-        throw new InternalError('Email has invalid format');
-      }
-      if (!validatePassword(body.password)) {
-        throw new InternalError('Password does not meet requirements');
+      if (!body.thirdParty) {
+        if (!validateEmail(body.email)) {
+          throw new InternalError('Email has invalid format');
+        }
+        if (!validatePassword(body.password)) {
+          throw new InternalError('Password does not meet requirements');
+        }
       }
       const result = await User.from(body, { ignoreIfNotResolved: true });
       const { payload } = result;
@@ -130,6 +133,24 @@ export class AccountController {
         throw new AuthError('DUPLICATE_USER');
       }
       if (body.thirdParty) {
+        if (body.thirdParty.name === 'apple') {
+          const claims = await appleSignin.verifyIdToken(body.thirdParty.credential);
+          const { email, email_verified: emailVerified } = claims;
+          thirdPartyId = claims.sub;
+          if (email && emailVerified) {
+            const user = (await User.from({ email }, { ignoreIfNotResolved: true }))?.user;
+            if (user) {
+              newUser = user;
+            }
+            createAlias = !newUser;
+            // auto-create new alias by email, as well
+            newAliasType = 'email';
+            newAliasValue = email;
+            verified = true;
+          } else {
+            newUser = (await User.from({ 'thirdParty/apple': thirdPartyId }))?.user;
+          }
+        } else
         if (body.thirdParty.name === 'google') {
           const ticket = await GoogleService.verify(body.thirdParty.credential);
           const { email, email_verified: emailVerified } = ticket.getPayload();
@@ -140,7 +161,10 @@ export class AccountController {
           if (!emailVerified) {
             throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
           }
-          newUser = (await User.from({ email }))?.user;
+          const user = (await User.from({ email }, { ignoreIfNotResolved: true }))?.user;
+          if (user) {
+            newUser = user;
+          }
           createAlias = !newUser;
           // auto-create new alias by email, as well
           newAliasType = 'email';
@@ -186,16 +210,23 @@ export class AccountController {
       verified = true;
     }
     if (createAlias) {
-      console.log('creating alias', newAliasType, newAliasValue);
-      await newUser.createAlias(newAliasType, newAliasValue, {
-        verificationCode: verified ? undefined : verificationCode,
-        verificationExpiresAt: verified
-          ? undefined
-          : new Date(Date.now() + ms('20m')),
-        verifiedAt: verified ? new Date() : undefined,
-      });
+      try {
+        console.log('creating alias', newAliasType, newAliasValue);
+        await newUser.createAlias(newAliasType, newAliasValue, {
+          verificationCode: verified ? undefined : verificationCode,
+          verificationExpiresAt: verified
+            ? undefined
+            : new Date(Date.now() + ms('20m')),
+          verifiedAt: verified ? new Date() : undefined,
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
     if (body.password) {
+      if (!validatePassword(body.password)) {
+        throw new InternalError('Password does not meet requirements');
+      }
       await newUser.createCredential('password', body.password);
     }
     if (body.anonymous) {
@@ -280,7 +311,23 @@ export class AccountController {
       // auth by eth2Address
       console.log('web3');
     } else if (payload.type.startsWith('thirdParty/')) {
-      // auth by thirdParty
+      if (body.thirdParty?.name === 'apple') {
+        const claims = await appleSignin.verifyIdToken(body.thirdParty?.credential);
+        const alias = await Alias.findOne({ where: { type: payload.type, value: claims.sub } });
+        if (!alias) {
+          throw new AuthError('UNKNOWN_ALIAS');
+        }
+      } else 
+      if (body.thirdParty?.name === 'google') {
+        const ticket = await GoogleService.verify(body.thirdParty?.credential);
+        if ((ticket.getPayload().exp * 1000) < Date.now()) {
+          throw new AuthError('EXPIRED_CREDENTIALS');
+        }
+        const alias = await Alias.findOne({ where: { type: payload.type, value: ticket.getPayload().sub } });
+        if (!alias) {
+          throw new AuthError('UNKNOWN_ALIAS');
+        }
+      }
     } else {
       // auth by password
       const credential = await user.findCredential('password');
