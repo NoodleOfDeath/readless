@@ -17,6 +17,7 @@ import {
   ProfileScreen,
   PublisherScreen,
   RoutingParams,
+  SummaryScreen,
 } from '~/screens';
 
 export const PROFILE_STACK: RouteConfig<
@@ -47,13 +48,13 @@ export const PROFILE_STACK: RouteConfig<
     }, 
   }, 
   {
-    component: CategoryScreen, 
-    name: 'category',
+    component: SummaryScreen, 
+    name: 'summary',  
     options: { 
-      headerBackTitle: '', 
+      headerBackTitle: '',
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: '',
+      headerTitle: '', 
     },
   },
   {
@@ -64,6 +65,16 @@ export const PROFILE_STACK: RouteConfig<
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
+    },
+  },
+  {
+    component: CategoryScreen, 
+    name: 'category',
+    options: { 
+      headerBackTitle: '', 
+      headerLeft: () => null,
+      headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: '',
     },
   },
   ...SETTINGS_STACK,

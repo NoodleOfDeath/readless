@@ -62,80 +62,65 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
   return (
     <Screen>
       <ScrollView pt={ 12 }>
-        {Object.entries(bookmarks ?? {}).length === 0 ? (
-          <View justifyCenter itemsCenter>
-            <Button
-              beveled
-              outlined
-              selectable
-              p={ 8 }
-              m={ 8 }
-              textCenter
-              onPress={ () => SheetManager.show('custom-feed-walkthrough') }>
-              {strings.screens}
-            </Button>
-          </View>
-        ) : (
-          <View gap={ 12 }>
-            <View mx={ 16 } gap={ 6 }>
-              <View row gap={ 6 }>
-                <Text>
-                  {strings.bookmarks}
-                </Text>
-                <Popover
-                  anchor={
-                    <Icon size={ 24 } name="information" />
-                  }>
-                  <Text>{strings.bookmarks}</Text>
-                </Popover>
-              </View>
-              <View row>
-                <Button
-                  contained
-                  beveled
-                  p={ 6 }
-                  onPress={ () => setStoredValue('bookmarkedSummaries', (prev) => {
-                    const state = { ...prev };
-                    for (const [id] of Object.entries(state)) {
-                      if (id in (readSummaries ?? {})) {
-                        delete state[Number(id)];
-                      }
+        <View gap={ 12 }>
+          <View mx={ 16 } gap={ 6 }>
+            <View row gap={ 6 }>
+              <Text>
+                {strings.bookmarks}
+              </Text>
+              <Popover
+                anchor={
+                  <Icon size={ 24 } name="information" />
+                }>
+                <Text>{strings.bookmarks}</Text>
+              </Popover>
+            </View>
+            <View row>
+              <Button
+                contained
+                beveled
+                p={ 6 }
+                onPress={ () => setStoredValue('bookmarkedSummaries', (prev) => {
+                  const state = { ...prev };
+                  for (const [id] of Object.entries(state)) {
+                    if (id in (readSummaries ?? {})) {
+                      delete state[Number(id)];
                     }
-                    return (prev = state);
-                  }) }>
-                  {strings.bookmarks}
+                  }
+                  return state;
+                }) }>
+                {strings.removeReadBookmarks}
+              </Button>
+            </View>
+          </View>
+          <View>
+            {(bookmarks ?? []).slice(0, unreadPage * pageSize + pageSize)
+              .map(([id, bookmark]) => {
+                return (
+                  <Summary
+                    key={ id }
+                    mx={ 12 }
+                    mb={ 12 }
+                    summary={ bookmark.item }
+                    onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) } />
+                );
+              })}
+            {(bookmarks ?? []).length > unreadPage * pageSize + pageSize && (
+              <View justifyCenter itemsCenter>
+                <Button
+                  beveled
+                  outlined
+                  selectable
+                  p={ 8 }
+                  m={ 8 }
+                  textCenter
+                  onPress={ () => setUnreadPage((prev) => prev + 1) }>
+                  Load More
                 </Button>
               </View>
-            </View>
-            <View>
-              {(bookmarks ?? []).slice(0, unreadPage * pageSize + pageSize)
-                .map(([id, bookmark]) => {
-                  return (
-                    <Summary
-                      key={ id }
-                      mx={ 12 }
-                      mb={ 12 }
-                      summary={ bookmark.item }
-                      onFormatChange={ (format) => handleFormatChange(bookmark.item, InteractionType.Read, format) } />
-                  );
-                })}
-              {(bookmarks ?? []).length > unreadPage * pageSize + pageSize && (
-                <View justifyCenter itemsCenter>
-                  <Button
-                    beveled
-                    outlined
-                    selectable
-                    p={ 8 }
-                    m={ 8 }
-                    textCenter
-                    onPress={ () => setUnreadPage((prev) => prev + 1) }>
-                    Load More
-                  </Button>
-                </View>
-              )}
-            </View>
+            )}
           </View>
-        )}
+        </View>
       </ScrollView>
     </Screen>
   );

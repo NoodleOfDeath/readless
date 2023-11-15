@@ -113,7 +113,6 @@ export class AccountController {
       try {
         const bytes = CryptoJS.AES.decrypt(body.anonymous, process.env.REGISTRATION_PRIVATE_KEY);
         bytes.toString(CryptoJS.enc.Utf8);
-        user;
       } catch (e) {
         throw new AuthError('BAD_REQUEST');
       }

@@ -43,7 +43,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   /** Resolves a user from an alias request/payload */
   public static async from(req: Partial<AliasPayload>, opts?: Partial<FindAliasOptions>) {
-    console.log(req.userId, req.jwt);
     if (req.userId || req.jwt) {
       const id = req.userId ?? new JWT(req.jwt).userId;
       const user = await User.findOne({ where: { id } });

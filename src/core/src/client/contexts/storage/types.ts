@@ -281,6 +281,7 @@ export const SYNCABLE_IO_OUT_DATED_MAP = <K extends SyncableSetting>(value?: Sto
   if (value) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const remap = Object.fromEntries(Object.keys(value || {}).map((key) => [key, (value as any)[key].createdAt ?? new Date()]));
+    console.log('fuck', JSON.stringify(remap, null, 2));
     return JSON.stringify(remap);
   }
   return '{}';

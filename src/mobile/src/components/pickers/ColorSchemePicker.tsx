@@ -60,9 +60,9 @@ export function ColorSchemePicker({
       initialValue={ colorScheme ?? 'system' }
       onValueChange={ (value) => setStoredValue('colorScheme', value) }
       options={ [
-        { label: strings.settings, value: 'light' as ColorScheme },
-        { label: strings.settings, value: 'system' as ColorScheme },
-        { label: strings.settings, value: 'dark' as ColorScheme },
+        { label: strings.light, value: 'light' as ColorScheme },
+        { label: strings.system, value: 'system' as ColorScheme },
+        { label: strings.dark, value: 'dark' as ColorScheme },
       ] } />
   );
 }

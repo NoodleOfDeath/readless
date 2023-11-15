@@ -272,18 +272,19 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         return handleBadRequest(e);
       }
     }
-    if (!data) {
+    if (!data?.profile?.preferences) {
       return handleBadRequest();
     }
-    const { profile } = data;
-    if (!profile) {
+    const { profile: { preferences } } = data;
+    if (!preferences) {
       return handleBadRequest();
     }
     console.log('syncing prefs');
     for (const key of SYNCABLE_SETTINGS) {
-      const remoteValue = profile.preferences?.[key];
+      const remoteValue = preferences[key];
       console.log('updating', key, remoteValue);
       if (key === 'bookmarkedSummaries') {
+        console.log('shit', JSON.stringify(remoteValue, null, 2));
         loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
       } else {
         try {
