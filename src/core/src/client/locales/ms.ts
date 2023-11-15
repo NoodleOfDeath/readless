@@ -196,6 +196,7 @@ export const msStrings: typeof enStrings = {
   register: 'Daftar',
   relatedNews: 'Berita Berkaitan',
   reload: 'Tambah nilai',
+  removeReadBookmarks: 'Alih keluar Penanda Halaman Baca',
   removeReadFromBookmarks: 'Alih keluar Baca daripada Penanda Halaman',
   replacement: 'Penggantian',
   report: 'Berita Berkaitan',

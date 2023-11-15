@@ -196,6 +196,7 @@ export const heStrings: typeof enStrings = {
   register: 'הירשם',
   relatedNews: 'חדשות קשורות',
   reload: 'לִטעוֹן מִחָדָשׁ',
+  removeReadBookmarks: 'הסר סימניות קריאה',
   removeReadFromBookmarks: 'הסר קריאה מסימניות',
   replacement: 'תַחֲלִיף',
   report: 'חדשות קשורות',

@@ -196,6 +196,7 @@ export const jaStrings: typeof enStrings = {
   register: '登録する',
   relatedNews: '関連ニュース',
   reload: 'リロード',
+  removeReadBookmarks: '既読ブックマークを削除する',
   removeReadFromBookmarks: 'ブックマークから既読を削除',
   replacement: '置換',
   report: '関連ニュース',

@@ -196,6 +196,7 @@ export const itStrings: typeof enStrings = {
   register: 'Registrati',
   relatedNews: 'Notizie correlate',
   reload: 'Ricaricare',
+  removeReadBookmarks: 'Rimuovi i segnalibri di lettura',
   removeReadFromBookmarks: 'Rimuovi Leggi dai segnalibri',
   replacement: 'Sostituzione',
   report: 'Notizie correlate',

@@ -196,6 +196,7 @@ export const thStrings: typeof enStrings = {
   register: 'ลงทะเบียน',
   relatedNews: 'ข่าวที่เกี่ยวข้อง',
   reload: 'โหลดใหม่',
+  removeReadBookmarks: 'ลบบุ๊กมาร์กการอ่าน',
   removeReadFromBookmarks: 'ลบการอ่านออกจากบุ๊กมาร์ก',
   replacement: 'เปลี่ยน',
   report: 'ข่าวที่เกี่ยวข้อง',

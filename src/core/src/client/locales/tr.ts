@@ -196,6 +196,7 @@ export const trStrings: typeof enStrings = {
   register: 'Kayıt olmak',
   relatedNews: 'Alakalı haberler',
   reload: 'Tekrar yükle',
+  removeReadBookmarks: 'Okuma Yer İmlerini Kaldır',
   removeReadFromBookmarks: 'Okumayı Yer İşaretlerinden Kaldır',
   replacement: 'Yenisiyle değiştirme',
   report: 'Alakalı haberler',

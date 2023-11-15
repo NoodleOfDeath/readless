@@ -196,6 +196,7 @@ export const huStrings: typeof enStrings = {
   register: 'Regisztráció',
   relatedNews: 'Kapcsolódó hírek',
   reload: 'Újratöltés',
+  removeReadBookmarks: 'Távolítsa el az Olvasás könyvjelzőket',
   removeReadFromBookmarks: 'Az Olvasás eltávolítása a könyvjelzők közül',
   replacement: 'Csere',
   report: 'Kapcsolódó hírek',

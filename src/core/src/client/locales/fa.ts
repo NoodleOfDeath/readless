@@ -196,6 +196,7 @@ export const faStrings: typeof enStrings = {
   register: 'ثبت نام',
   relatedNews: 'اخبار مرتبط',
   reload: 'بارگذاری مجدد',
+  removeReadBookmarks: 'حذف نشانک‌های خواندنی',
   removeReadFromBookmarks: 'خواندن را از نشانک‌ها حذف کنید',
   replacement: 'جایگزینی',
   report: 'اخبار مرتبط',

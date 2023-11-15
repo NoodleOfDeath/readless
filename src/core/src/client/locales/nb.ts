@@ -196,6 +196,7 @@ export const nbStrings: typeof enStrings = {
   register: 'Registrere',
   relatedNews: 'Relaterte nyheter',
   reload: 'Last inn på nytt',
+  removeReadBookmarks: 'Fjern lesebokmerker',
   removeReadFromBookmarks: 'Fjern Les fra bokmerker',
   replacement: 'Erstatning',
   report: 'Relaterte nyheter',

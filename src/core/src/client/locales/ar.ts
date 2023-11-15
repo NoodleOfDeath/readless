@@ -196,6 +196,7 @@ export const arStrings: typeof enStrings = {
   register: 'يسجل',
   relatedNews: 'أخبار ذات صلة',
   reload: 'إعادة تحميل',
+  removeReadBookmarks: 'إزالة الإشارات المرجعية للقراءة',
   removeReadFromBookmarks: 'إزالة القراءة من الإشارات المرجعية',
   replacement: 'إستبدال',
   report: 'أخبار ذات صلة',

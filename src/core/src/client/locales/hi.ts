@@ -196,6 +196,7 @@ export const hiStrings: typeof enStrings = {
   register: 'पंजीकरण करवाना',
   relatedNews: 'सम्बंधित खबर',
   reload: 'पुनः लोड करें',
+  removeReadBookmarks: 'पढ़े गए बुकमार्क हटाएँ',
   removeReadFromBookmarks: 'बुकमार्क से पढ़ें हटाएं',
   replacement: 'प्रतिस्थापन',
   report: 'सम्बंधित खबर',

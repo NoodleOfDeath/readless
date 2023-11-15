@@ -196,6 +196,7 @@ export const ruStrings: typeof enStrings = {
   register: 'регистр',
   relatedNews: 'Связанные новости',
   reload: 'Перезагрузить',
+  removeReadBookmarks: 'Удалить прочитанные закладки',
   removeReadFromBookmarks: 'Удалить прочитанное из закладок',
   replacement: 'Замена',
   report: 'Связанные новости',

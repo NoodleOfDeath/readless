@@ -42,8 +42,10 @@ import { SearchViewController } from '~/navigation';
 import { parseKeywords } from '~/utils';
 
 export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
+  summaries?: PublicSummaryGroup[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetch: typeof API.getSummaries | typeof API.getTopStories;
+  fetch?: typeof API.getSummaries | typeof API.getTopStories;
+  fetchOnLoad?: boolean;
   onFormatChange?: (summary: PublicSummaryGroup, format: ReadingFormat) => void;
   filter?: string;
   interval?: string;
@@ -57,7 +59,9 @@ export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
 };
 
 export function SummaryList({ 
+  summaries: summaries0 = [],
   fetch,
+  fetchOnLoad = true,
   onFormatChange,
   filter: filter0,
   interval,
@@ -101,7 +105,7 @@ export function SummaryList({
 
   // display state
   const [layout, setLayout] = React.useState<LayoutRectangle>();
-  const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>([]);
+  const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>(summaries0);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [lastActive, setLastActive] = React.useState(Date.now());
@@ -116,6 +120,9 @@ export function SummaryList({
 
   const load = React.useCallback(async (reset = false, overrideFilter = filter) => {
     if (loading) {
+      return;
+    }
+    if (!fetch || (!loaded && !fetchOnLoad)) {
       return;
     }
     setLoaded(false);
@@ -170,7 +177,7 @@ export function SummaryList({
       setLoaded(true);
       setLoading(false);
     }
-  }, [filter, loading, fetch, specificIds, excludeIds, excludeFilter, interval, cursor, pageSize, removedSummaries]);
+  }, [filter, loading, fetch, loaded, fetchOnLoad, specificIds, excludeIds, excludeFilter, interval, cursor, pageSize, removedSummaries]);
 
   const loadMore = React.useCallback(async () => {
     if (loading || lastFetchFailed || totalResultCount <= summaries.length) {
@@ -380,7 +387,7 @@ export function SummaryList({
           contained
           opacity={ 0.95 }
           leftIcon="volume-high"
-          onPress={ () => queueStream(fetch, { filter, interval }) } />
+          onPress={ () => fetch ? queueStream(fetch, { filter, interval }) : undefined } />
       )}
     </View>
   );

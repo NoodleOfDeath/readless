@@ -196,6 +196,7 @@ export const plStrings: typeof enStrings = {
   register: 'Rejestr',
   relatedNews: 'Powiązane wiadomości',
   reload: 'Przeładować',
+  removeReadBookmarks: 'Usuń zakładki Czytaj',
   removeReadFromBookmarks: 'Usuń przeczytane z zakładek',
   replacement: 'Wymiana',
   report: 'Powiązane wiadomości',

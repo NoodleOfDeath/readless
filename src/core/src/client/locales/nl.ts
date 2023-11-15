@@ -196,6 +196,7 @@ export const nlStrings: typeof enStrings = {
   register: 'Register',
   relatedNews: 'Gerelateerd nieuws',
   reload: 'Herladen',
+  removeReadBookmarks: 'Verwijder leesbladwijzers',
   removeReadFromBookmarks: 'Verwijder lezen uit bladwijzers',
   replacement: 'Vervanging',
   report: 'Gerelateerd nieuws',

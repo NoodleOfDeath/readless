@@ -196,6 +196,7 @@ export const hrStrings: typeof enStrings = {
   register: 'Registar',
   relatedNews: 'Povezane vijesti',
   reload: 'Ponovno učitati',
+  removeReadBookmarks: 'Ukloni čitanje knjižnih oznaka',
   removeReadFromBookmarks: 'Uklonite Read iz oznaka',
   replacement: 'Zamjena',
   report: 'Povezane vijesti',

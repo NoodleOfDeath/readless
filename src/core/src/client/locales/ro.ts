@@ -196,6 +196,7 @@ export const roStrings: typeof enStrings = {
   register: 'Inregistreaza-te',
   relatedNews: 'Știri similare',
   reload: 'Reîncărcați',
+  removeReadBookmarks: 'Eliminați marcajele de citire',
   removeReadFromBookmarks: 'Eliminați Citirea din Marcaje',
   replacement: 'Înlocuire',
   report: 'Știri similare',

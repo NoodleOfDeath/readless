@@ -24,6 +24,7 @@ import {
   LogoutRequest,
   LogoutResponse,
   ProfileResponse,
+  RegisterAliasRequest,
   RegistrationRequest,
   RegistrationResponse,
   RequestOtpRequest,
@@ -262,6 +263,9 @@ export class AccountController {
     console.log('trying login');
     if (req.body.token) {
       const token = new JWT(req.body.token);
+      if (token.expired) {
+        throw new AuthError('EXPIRED_CREDENTIALS');
+      }
       const credential = await Credential.findOne({
         where: {
           type: 'jwt',
@@ -272,10 +276,6 @@ export class AccountController {
       if (!credential) {
         throw new AuthError('INVALID_CREDENTIALS');
       }
-      if (token.expired) {
-        throw new AuthError('EXPIRED_CREDENTIALS');
-      }
-      console.log(token);
       const user = await User.findOne({ where: { id: token.userId } });
       return {
         profile: user?.toJSON().profile ?? {},
@@ -405,6 +405,33 @@ export class AccountController {
       otp,
     });
     return { success: true };
+  }
+
+  @Post('/register/alias')
+  public static async registerAlias(
+    @Request() req: ExpressRequest,
+    @Body() body: RegisterAliasRequest
+  ): Promise<RegistrationResponse> {
+    const { payload, user } = await User.from(body);
+    const alias = await Alias.findOne({ where: { type: payload.type, value: payload.value } });
+    if (alias) {
+      throw new AuthError('DUPLICATE_USER');
+    }
+    const verificationCode = await generateVerificationCode();
+    const options: Partial<Alias> = payload.type === 'thirdParty' ? 
+      { verifiedAt: new Date() } : {
+        verificationCode,
+        verificationExpiresAt: new Date(Date.now() + ms('20m')),
+      };
+    await user.createAlias(payload.type, payload.value, options);
+    if (payload.type === 'email') {
+      await new MailService().sendMailFromTemplate(
+        { to: payload.value as string },
+        'verifyEmail',
+        { email: payload.value as string, verificationCode }
+      );
+    }
+    return { userId: user.id };
   }
   
   @Post('/verify/alias')

@@ -196,6 +196,7 @@ export const csStrings: typeof enStrings = {
   register: 'Registrovat',
   relatedNews: 'Související novinky',
   reload: 'Znovu načíst',
+  removeReadBookmarks: 'Odebrat přečtené záložky',
   removeReadFromBookmarks: 'Odebrat přečtené ze záložek',
   replacement: 'Výměna, nahrazení',
   report: 'Související novinky',

@@ -196,6 +196,7 @@ export const idStrings: typeof enStrings = {
   register: 'Daftar',
   relatedNews: 'Berita Terkait',
   reload: 'Muat ulang',
+  removeReadBookmarks: 'Hapus Baca Bookmark',
   removeReadFromBookmarks: 'Hapus Baca dari Bookmark',
   replacement: 'Penggantian',
   report: 'Berita Terkait',

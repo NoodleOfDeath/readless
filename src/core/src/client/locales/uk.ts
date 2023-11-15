@@ -196,6 +196,7 @@ export const ukStrings: typeof enStrings = {
   register: 'зареєструватися',
   relatedNews: 'Схожі новини',
   reload: 'Перезавантажити',
+  removeReadBookmarks: 'Видаліть читання закладок',
   removeReadFromBookmarks: 'Видалити Read із закладок',
   replacement: 'Заміна',
   report: 'Схожі новини',

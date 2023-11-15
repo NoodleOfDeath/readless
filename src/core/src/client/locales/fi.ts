@@ -196,6 +196,7 @@ export const fiStrings: typeof enStrings = {
   register: 'Rekisteröidy',
   relatedNews: 'Aiheeseen liittyviä uutisia',
   reload: 'Lataa uudelleen',
+  removeReadBookmarks: 'Poista lukukirjanmerkit',
   removeReadFromBookmarks: 'Poista Lue kirjanmerkeistä',
   replacement: 'Korvaus',
   report: 'Aiheeseen liittyviä uutisia',

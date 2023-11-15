@@ -196,6 +196,7 @@ export const zhCNStrings: typeof enStrings = {
   register: '登记',
   relatedNews: '相关新闻',
   reload: '重新加载',
+  removeReadBookmarks: '删除已读书签',
   removeReadFromBookmarks: '从书签中删除阅读',
   replacement: '替代品',
   report: '相关新闻',

@@ -39,6 +39,10 @@ export type RegistrationRequest = JwtRequest & DestructuredAliasPayload & Destru
   anonymous?: string;
 };
 
+export type RegisterAliasRequest = JwtRequest & {
+  alias: DestructuredAliasPayload;
+};
+
 export type RegistrationResponse = Omit<JwtResponse, 'token'> & {
   token?: WrappedJwt;
 };

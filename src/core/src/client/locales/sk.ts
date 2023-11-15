@@ -196,6 +196,7 @@ export const skStrings: typeof enStrings = {
   register: 'Registrovať',
   relatedNews: 'Súvisiace správy',
   reload: 'Znovu načítať',
+  removeReadBookmarks: 'Odstrániť prečítané záložky',
   removeReadFromBookmarks: 'Odstrániť prečítané zo záložiek',
   replacement: 'Výmena',
   report: 'Súvisiace správy',

@@ -1,3 +1,4 @@
+import appleSignin from 'apple-signin-auth';
 import { Op } from 'sequelize';
 import {
   Column,
@@ -111,7 +112,14 @@ export class Alias<
       };
     }
     const payload = Alias.parsePayload(req);
-    if (payload.type === 'thirdParty' && typeof payload.value === 'object') {
+    if (payload.type === 'thirdParty' && typeof payload.value === 'object') {      
+      if (payload.value.name === 'apple') {
+        const claims = await appleSignin.verifyIdToken(payload.value.credential);
+        return await this.from({
+          type: `thirdParty/${payload.value.name}`,
+          value: claims.sub,
+        }, opts);
+      } else
       if (payload.value.name === 'google') {
         const ticket = await GoogleService.verify(payload.value.credential);
         const {

@@ -196,6 +196,7 @@ export const zhTWStrings: typeof enStrings = {
   register: '登記',
   relatedNews: '相關新聞',
   reload: '重新加載',
+  removeReadBookmarks: '刪除已讀書籤',
   removeReadFromBookmarks: '從書籤中刪除閱讀',
   replacement: '替代品',
   report: '相關新聞',

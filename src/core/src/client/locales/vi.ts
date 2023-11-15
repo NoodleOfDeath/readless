@@ -196,6 +196,7 @@ export const viStrings: typeof enStrings = {
   register: 'Đăng ký',
   relatedNews: 'Tin tức liên quan',
   reload: 'tải lại',
+  removeReadBookmarks: 'Xóa dấu trang đã đọc',
   removeReadFromBookmarks: 'Xóa Đã đọc khỏi Dấu trang',
   replacement: 'thay thế',
   report: 'Tin tức liên quan',

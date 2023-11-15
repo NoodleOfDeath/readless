@@ -196,6 +196,7 @@ export const svStrings: typeof enStrings = {
   register: 'Registrera',
   relatedNews: 'Relaterade nyheter',
   reload: 'Ladda om',
+  removeReadBookmarks: 'Ta bort läsbokmärken',
   removeReadFromBookmarks: 'Ta bort Läs från bokmärken',
   replacement: 'Ersättning',
   report: 'Relaterade nyheter',

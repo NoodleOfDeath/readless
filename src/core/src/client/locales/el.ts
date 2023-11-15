@@ -196,6 +196,7 @@ export const elStrings: typeof enStrings = {
   register: 'Κανω ΕΓΓΡΑΦΗ',
   relatedNews: 'Σχετικά Νέα',
   reload: 'Γεμίζω πάλι',
+  removeReadBookmarks: 'Αφαιρέστε τους σελιδοδείκτες ανάγνωσης',
   removeReadFromBookmarks: 'Καταργήστε την ανάγνωση από τους σελιδοδείκτες',
   replacement: 'Αντικατάσταση',
   report: 'Σχετικά Νέα',

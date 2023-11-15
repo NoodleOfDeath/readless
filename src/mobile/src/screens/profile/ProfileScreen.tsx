@@ -86,7 +86,7 @@ export function ProfileScreen({
               title={ `${strings.bookmarks} (${isSyncingBookmarks ? 'syncing...' : bookmarkCount})` }
               accessory="DisclosureIndicator"
               detail={ `${unreadBookmarkCount} ${strings.unread}` } 
-              onPress={ () => navigation?.push('bookmarks') } />
+              onPress={ isSyncingBookmarks ? undefined : () => navigation?.push('bookmarks') } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell 

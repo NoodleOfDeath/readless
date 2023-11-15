@@ -196,6 +196,7 @@ export const caStrings: typeof enStrings = {
   register: 'Registra\'t',
   relatedNews: 'Notícies relacionades',
   reload: 'Recarregar',
+  removeReadBookmarks: 'Elimina els marcadors de lectura',
   removeReadFromBookmarks: 'Suprimeix la lectura de les adreces d\'interès',
   replacement: 'Substitució',
   report: 'Notícies relacionades',

@@ -196,6 +196,7 @@ export const koStrings: typeof enStrings = {
   register: '등록하다',
   relatedNews: '관련 뉴스',
   reload: '새로고침',
+  removeReadBookmarks: '읽은 북마크 제거',
   removeReadFromBookmarks: '책갈피에서 읽기 제거',
   replacement: '대사',
   report: '관련 뉴스',

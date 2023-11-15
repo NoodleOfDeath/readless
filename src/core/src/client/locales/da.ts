@@ -196,6 +196,7 @@ export const daStrings: typeof enStrings = {
   register: 'Tilmeld',
   relatedNews: 'Relaterede nyheder',
   reload: 'Genindlæs',
+  removeReadBookmarks: 'Fjern læsebogmærker',
   removeReadFromBookmarks: 'Fjern læst fra bogmærker',
   replacement: 'Udskiftning',
   report: 'Relaterede nyheder',

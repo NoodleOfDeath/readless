@@ -21,6 +21,7 @@ import {
   AliasType,
   CredentialCreationAttributes,
   CredentialType,
+  DestructuredAliasPayload,
   FindAliasOptions,
   InteractionType,
   Profile,
@@ -105,11 +106,11 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     });
   }
 
-  public async createAlias(type: AliasType, value: string, attr: Omit<AliasCreationAttributes, 'type' | 'userId' | 'value'>) {
+  public async createAlias<A extends AliasType>(type: A, value: DestructuredAliasPayload[A], attr: Omit<AliasCreationAttributes, 'type' | 'userId' | 'value'>) {
     return await Alias.create({
       type,
       userId: this.id,
-      value,
+      value: `${value}`,
       ...attr,
     });
   }

@@ -194,6 +194,7 @@ export const enStrings = {
   register: 'Register',
   relatedNews: 'Related News',
   reload: 'Reload',
+  removeReadBookmarks: 'Remove Read Bookmarks',
   removeReadFromBookmarks: 'Remove Read from Bookmarks',
   replacement: 'Replacement',
   report: 'Report',

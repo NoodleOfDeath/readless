@@ -196,6 +196,7 @@ export const esStrings: typeof enStrings = {
   register: 'Registro',
   relatedNews: 'Noticias relacionadas',
   reload: 'Recargar',
+  removeReadBookmarks: 'Eliminar marcadores de lectura',
   removeReadFromBookmarks: 'Eliminar lectura de marcadores',
   replacement: 'Reemplazo',
   report: 'Informe',

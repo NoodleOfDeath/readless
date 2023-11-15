@@ -196,6 +196,7 @@ export const ptPTStrings: typeof enStrings = {
   register: 'Registro',
   relatedNews: 'Notícias relacionadas',
   reload: 'recarregar',
+  removeReadBookmarks: 'Remover marcadores de leitura',
   removeReadFromBookmarks: 'Remover leitura dos favoritos',
   replacement: 'Substituição',
   report: 'Notícias relacionadas',

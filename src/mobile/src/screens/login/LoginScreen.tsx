@@ -42,22 +42,26 @@ export function LoginScreen({
       const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
       if (credentialState === appleAuth.State.AUTHORIZED) {
         const { identityToken } = appleAuthRequestResponse;
-        const { data: response } = await login({
+        const { data: response, error } = await login({
           createIfNotExists: true, 
           thirdParty: {
             credential: identityToken ?? undefined, 
             name: ThirdParty.Apple, 
           },
         });
+        if (error) {
+          throw error;
+        }
         const userData = new UserData(response);
         setStoredValue('userData', userData);
         syncWithRemotePrefs(userData);
       } else {
         setMessage(strings.failedToSignInWithApple);
       }
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
-      setMessage(strings.failedToSignInWithApple);
+      setMessage([strings.failedToSignInWithApple, error.message].join('\n'));
     }
   }, [login, setStoredValue, syncWithRemotePrefs]);
 
@@ -69,37 +73,46 @@ export function LoginScreen({
       if (!idToken) {
         throw new Error('Missing data');
       }
-      const { data: response } = await login({
+      const { data: response, error } = await login({
         createIfNotExists: true, 
         thirdParty: {
           credential: idToken, 
           name: ThirdParty.Google, 
         },
       });
+      if (error) {
+        throw error;
+      }
       const userData = new UserData(response);
       setStoredValue('userData', userData);
       syncWithRemotePrefs(userData);
-    } catch (error) {
+      navigation?.getParent()?.navigate('news');
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
-      setMessage(strings.failedToSignInWithGoogle);
+      setMessage([strings.failedToSignInWithGoogle, error.message].join('\n'));
     }
-  }, [login, setStoredValue, syncWithRemotePrefs]);
+  }, [login, navigation, setStoredValue, syncWithRemotePrefs]);
 
   const continueWithoutAccount = React.useCallback(async () => {
     try {
       const anonymous = CryptoJS.AES.encrypt(JSON.stringify({ timestamp: new Date().toISOString() }), REGISTRATION_PRIVATE_KEY).toString();
-      const { data: response } = await login({
+      const { data: response, error } = await login({
         anonymous,
         createIfNotExists: true,
       });
+      if (error) {
+        throw error;
+      }
       const userData = new UserData(response);
       setStoredValue('userData', userData);
       syncWithRemotePrefs(userData);
+      navigation?.getParent()?.navigate('news');
     } catch (error) {
       console.error(error);
-      setMessage('Failed to continue without an account');
+      setMessage(['Failed to continue without an account:', error].join(' '));
     }
-  }, [login, setStoredValue, syncWithRemotePrefs]);
+  }, [login, navigation, setStoredValue, syncWithRemotePrefs]);
 
   return (
     <Screen>

@@ -196,6 +196,7 @@ export const deStrings: typeof enStrings = {
   register: 'Registrieren',
   relatedNews: 'Ähnliche Neuigkeiten',
   reload: 'Neu laden',
+  removeReadBookmarks: 'Leselesezeichen entfernen',
   removeReadFromBookmarks: 'Entfernen Sie „Lesen“ aus den Lesezeichen',
   replacement: 'Ersatz',
   report: 'Ähnliche Neuigkeiten',
