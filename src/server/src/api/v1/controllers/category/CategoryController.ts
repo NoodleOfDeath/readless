@@ -52,12 +52,12 @@ export class CategoryController extends BaseController {
   
   @Post('/interact/:targetId/:type')
   public static async interactWithCategory(
-    @Request() _request: ExpressRequest,
+    @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicCategoryAttributes> {
-    const { user } = await User.from(body, { ignoreIfNotResolved: true });
+    const user = await User.from(body, { ignoreIfNotResolved: true, ...req.body });
     const {
       content, metadata, remoteAddr, 
     } = body;

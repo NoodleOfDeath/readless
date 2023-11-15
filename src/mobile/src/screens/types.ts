@@ -86,6 +86,7 @@ export type GamesRoutingParams = {
 
 export type ProfileRoutingParams = SettingsRoutingParams & {
   default: undefined;
+  account: undefined;
 };
 
 export type RoutingParams = NavigationTabParams & LoginRoutingParams & NewsRoutingParams & GamesRoutingParams & ProfileRoutingParams;

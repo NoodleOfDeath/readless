@@ -29,6 +29,7 @@ import {
   RegistrationResponse,
   RequestOtpRequest,
   RequestOtpResponse,
+  UnregisterAliasRequest,
   UpdateCredentialRequest,
   UpdateCredentialResponse,
   UpdateMetadataRequest,
@@ -98,6 +99,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: RegistrationRequest
   ): Promise<RegistrationResponse> {
+
     let user: User | null = null;
     let newUser: User | null = null;
     let newAliasType: AliasType;
@@ -106,11 +108,19 @@ export class AccountController {
     let verificationCode: string;
     let verified = false;
     let createAlias = true;
-    if (body.jwt || body.userId) {
+
+    if (req.body.jwt || body.userId) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
+    if (body.email && !validateEmail(body.email)) {
+      throw new InternalError('Email has invalid format');
+    }
+    if (body.password && !validatePassword(body.password)) {
+      throw new InternalError('Password does not meet requirements');
+    }
+
     if (body.anonymous) {
-      console.log('anonymous registration');
+      // Anonymous registration
       try {
         const bytes = CryptoJS.AES.decrypt(body.anonymous, process.env.REGISTRATION_PRIVATE_KEY);
         bytes.toString(CryptoJS.enc.Utf8);
@@ -118,27 +128,20 @@ export class AccountController {
         throw new AuthError('BAD_REQUEST');
       }
     } else {
-      if (!body.thirdParty) {
-        if (!validateEmail(body.email)) {
-          throw new InternalError('Email has invalid format');
-        }
-        if (!validatePassword(body.password)) {
-          throw new InternalError('Password does not meet requirements');
-        }
-      }
-      const result = await User.from(body, { ignoreIfNotResolved: true });
-      const { payload } = result;
-      user = result.user;
+      // Don't register if user already exists
+      user = await User.from(body, { ignoreIfNotResolved: true, ...req.body });
       if (user) {
         throw new AuthError('DUPLICATE_USER');
       }
       if (body.thirdParty) {
+        // third-party registration
         if (body.thirdParty.name === 'apple') {
+          // verify apple sign-in
           const claims = await appleSignin.verifyIdToken(body.thirdParty.credential);
           const { email, email_verified: emailVerified } = claims;
           thirdPartyId = claims.sub;
           if (email && emailVerified) {
-            const user = (await User.from({ email }, { ignoreIfNotResolved: true }))?.user;
+            const user = (await User.from({ email }, { ignoreIfNotResolved: true, ...req.body }));
             if (user) {
               newUser = user;
             }
@@ -148,32 +151,35 @@ export class AccountController {
             newAliasValue = email;
             verified = true;
           } else {
-            newUser = (await User.from({ 'thirdParty/apple': thirdPartyId }))?.user;
+            newUser = (await User.from({ 'thirdParty/apple': thirdPartyId }));
           }
         } else
         if (body.thirdParty.name === 'google') {
+          // verify google sign-in
           const ticket = await GoogleService.verify(body.thirdParty.credential);
           const { email, email_verified: emailVerified } = ticket.getPayload();
           thirdPartyId = ticket.getPayload().sub;
-          if (!email) {
-            throw new AuthError('NO_THIRD_PARTY_ALIAS');
+          if (email) {
+            const user = (await User.from({ email }, { ignoreIfNotResolved: true }));
+            if (user) {
+              newUser = user;
+            }
+            createAlias = !newUser;
+            // auto-create new alias by email, as well
+            newAliasType = 'email';
+            newAliasValue = email;
+            verified = emailVerified;  
+          } else {
+            newUser = (await User.from({ 'thirdParty/google': thirdPartyId }));
           }
-          if (!emailVerified) {
-            throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
-          }
-          const user = (await User.from({ email }, { ignoreIfNotResolved: true }))?.user;
-          if (user) {
-            newUser = user;
-          }
-          createAlias = !newUser;
-          // auto-create new alias by email, as well
-          newAliasType = 'email';
-          newAliasValue = email;
-          verified = true;
+        } else {
+          throw new AuthError('BAD_REQUEST');
         }
-      } else if (typeof payload.value === 'string') {
-        newAliasType = payload.type;
-        newAliasValue = payload.value;
+      } else 
+      if (body.email) {
+        // Standard registration
+        newAliasType = 'email';
+        newAliasValue = body.email;
       } else {
         throw new AuthError('BAD_REQUEST');
       }
@@ -209,6 +215,7 @@ export class AccountController {
       newAliasValue = reply;
       verified = true;
     }
+    
     if (createAlias) {
       try {
         console.log('creating alias', newAliasType, newAliasValue);
@@ -223,21 +230,23 @@ export class AccountController {
         console.log(e);
       }
     }
-    if (body.password) {
+
+    if (body.email && body.password) {
       if (!validatePassword(body.password)) {
         throw new InternalError('Password does not meet requirements');
       }
       await newUser.createCredential('password', body.password);
     }
+
     if (body.anonymous) {
       const credential = await JWT.as('standard', newUser.id);
       await newUser.createCredential('jwt', credential);
-      await newUser.grantRole('verified');
       return {
         token: credential.wrapped,
         userId: newUser.id,
       };
     }
+
     if (verified) {
       await newUser.grantRole('verified');
       if (newAliasType === 'email') {
@@ -251,6 +260,9 @@ export class AccountController {
           verificationCode,
         });
       }
+      if (thirdPartyId) {
+        return await this.login(req, body);
+      }
       return { userId: newUser.id };
     }
   }
@@ -261,8 +273,10 @@ export class AccountController {
     @Body() body: LoginRequest
   ): Promise<LoginResponse> {
     console.log('trying login');
-    if (req.body.token) {
-      const token = new JWT(req.body.token);
+
+    if (req.body.jwt) {
+      // User is already logged in. Send back updated profile.
+      const token = new JWT(req.body.jwt);
       if (token.expired) {
         throw new AuthError('EXPIRED_CREDENTIALS');
       }
@@ -270,7 +284,7 @@ export class AccountController {
         where: {
           type: 'jwt',
           userId: token.userId,
-          value: req.body.token,
+          value: req.body.jwt,
         },
       });
       if (!credential) {
@@ -283,17 +297,22 @@ export class AccountController {
         userId: token.userId,
       };
     }
-    const ticket = await User.from(body, { ignoreIfNotResolved: Boolean(body.anonymous || body.createIfNotExists) });
-    const { payload } = ticket;
-    let { alias, user } = ticket;
-    if (!alias && !user) {
+
+    // Try to find user, if not found, register but only for anonymous and third-party
+    let user = await User.from(
+      body, 
+      { ignoreIfNotResolved: Boolean(body.anonymous || body.createIfNotExists), ...req.body }
+    );
+    
+    if (!user) {
       const { token, userId } = await this.register(req, body);
       user = await User.findOne({ where: { id: userId } });
-      await user.sync();
       if (!user) {
         throw new AuthError('UNKNOWN_ALIAS');
       }
+      await user.sync(); // get profile
       if (token) {
+        // account is anonymous, return JWT
         return {
           profile: user.toJSON().profile ?? {}, 
           token, 
@@ -301,33 +320,50 @@ export class AccountController {
           userId,
         };
       }
-      alias = await user.findAlias(payload.type);
+    } else {
+      await user.sync(); // get profile
     }
-    if (!alias?.verifiedAt) {
-      throw new AuthError('ALIAS_UNVERIFIED');
-    }
-    if (payload.type === 'eth2Address') {
+
+    if (body.eth2Address) {
       // auth by eth2Address
       console.log('web3');
-    } else if (payload.type.startsWith('thirdParty/')) {
-      if (body.thirdParty?.name === 'apple') {
+    } else
+    if (body.thirdParty) {
+      // third-party login
+      if (body.thirdParty.name === 'apple') {
         const claims = await appleSignin.verifyIdToken(body.thirdParty?.credential);
-        const alias = await Alias.findOne({ where: { type: payload.type, value: claims.sub } });
+        const { email, email_verified: emailVerified } = claims;
+        let alias: Alias;
+        if (email && emailVerified) {
+          alias = await Alias.findOne({ where: { type: 'email', value: email } });
+        } if (!alias) {
+          alias = await Alias.findOne({ where: { type: 'thirdParty/apple', value: claims.sub } });
+        }
         if (!alias) {
           throw new AuthError('UNKNOWN_ALIAS');
         }
       } else 
-      if (body.thirdParty?.name === 'google') {
+      if (body.thirdParty.name === 'google') {
         const ticket = await GoogleService.verify(body.thirdParty?.credential);
         if ((ticket.getPayload().exp * 1000) < Date.now()) {
           throw new AuthError('EXPIRED_CREDENTIALS');
         }
-        const alias = await Alias.findOne({ where: { type: payload.type, value: ticket.getPayload().sub } });
+        const { email, email_verified: emailVerified } = ticket.getPayload();
+        let alias: Alias;
+        if (email && emailVerified) {
+          alias = await Alias.findOne({ where: { type: 'email', value: email } });
+        } if (!alias) {
+          alias = await Alias.findOne({ where: { type: 'thirdParty/google', value: ticket.getPayload().sub } });
+        } 
         if (!alias) {
           throw new AuthError('UNKNOWN_ALIAS');
         }
       }
     } else {
+      const type = body.email ? 'email' : body.phone ? 'phone' : 'username';
+      if (!(await user.findAlias(type))?.verifiedAt) {
+        throw new AuthError('ALIAS_UNVERIFIED');
+      }
       // auth by password
       const credential = await user.findCredential('password');
       if (!credential) {
@@ -338,7 +374,6 @@ export class AccountController {
       }
     }
     // user is authenticated, generate JWT
-    await user.sync();
     const userData = user.toJSON();
     const token = await JWT.as(body.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
@@ -354,7 +389,7 @@ export class AccountController {
   public static async getProfile(
     @Request() req: ExpressRequest
   ): Promise<ProfileResponse> {
-    const { user } = await User.from({ jwt: req.body.token });
+    const user = await User.from({ jwt: req.body.token });
     await user.sync();
     const userData = user.toJSON();
     return { profile: userData.profile };
@@ -366,13 +401,13 @@ export class AccountController {
     @Body() body: LogoutRequest
   ): Promise<LogoutResponse> {
     let count = 0;
-    if (body.jwt) {
-      const token = new JWT(body.jwt);
+    if (req.body.jwt) {
+      const token = new JWT(req.body.jwt);
       count += await Credential.destroy({
         where: {
           type: 'jwt',
           userId: token.userId,
-          value: body.jwt,
+          value: req.body.jwt,
         },
       });
       if (body.force) {
@@ -387,7 +422,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: RequestOtpRequest
   ): Promise<RequestOtpResponse> {
-    const { user } = await User.from(body, { ignoreIfNotResolved: true });
+    const user = await User.from(body, { ignoreIfNotResolved: true });
     if (!user) {
       return { success: false };
     }
@@ -412,24 +447,71 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: RegisterAliasRequest
   ): Promise<RegistrationResponse> {
-    const { payload, user } = await User.from(body);
-    const alias = await Alias.findOne({ where: { type: payload.type, value: payload.value } });
+    const user = await User.from(body, req.body);
+    await user.sync();
+    if (user.toJSON().profile?.linkedThirdPartyAccounts?.includes(body.otherAlias.thirdParty.name)) {
+      throw new AuthError('DUPLICATE_USER');
+    }
+    const alias = await Alias.from(body.otherAlias);
     if (alias) {
       throw new AuthError('DUPLICATE_USER');
     }
+    let thirdPartyId: string;
+    if (body.otherAlias.thirdParty) {
+      if (body.otherAlias.thirdParty.name === 'apple') {
+        const claims = await appleSignin.verifyIdToken(body.otherAlias.thirdParty.credential);
+        const alias = await Alias.findOne({ where: { type: 'thirdParty/apple', value: claims.sub } });
+        thirdPartyId = claims.sub;
+        if (alias) {
+          throw new AuthError('DUPLICATE_USER');
+        }
+      } else
+      if (body.otherAlias.thirdParty.name === 'google') {
+        const ticket = await GoogleService.verify(body.otherAlias.thirdParty.credential);
+        const alias = await Alias.findOne({ where: { type: 'thirdParty/google', value: ticket.getPayload().sub } });
+        thirdPartyId = ticket.getPayload().sub;
+        if (alias) {
+          throw new AuthError('DUPLICATE_USER');
+        }
+      }
+    }
     const verificationCode = await generateVerificationCode();
-    const options: Partial<Alias> = payload.type === 'thirdParty' ? 
+    const options: Partial<Alias> = body.otherAlias.thirdParty ? 
       { verifiedAt: new Date() } : {
         verificationCode,
         verificationExpiresAt: new Date(Date.now() + ms('20m')),
       };
-    await user.createAlias(payload.type, payload.value, options);
-    if (payload.type === 'email') {
+    const type = body.otherAlias.thirdParty ? `thirdParty/${body.otherAlias.thirdParty.name}` : body.otherAlias.email ? 'email' : body.otherAlias.phone ? 'phone' : 'username';
+    const value = body.otherAlias.thirdParty ? thirdPartyId : body.otherAlias[type];
+    await user.createAlias(type as AliasType, value, options);
+    if (body.otherAlias.email) {
       await new MailService().sendMailFromTemplate(
-        { to: payload.value as string },
+        { to: body.otherAlias.email },
         'verifyEmail',
-        { email: payload.value as string, verificationCode }
+        {
+          email: body.otherAlias.email, 
+          verificationCode, 
+        }
       );
+    }
+    return { userId: user.id };
+  }
+
+  @Post('/unregister/alias')
+  public static async unregisterAlias(
+    @Request() req: ExpressRequest,
+    @Body() body: RegisterAliasRequest | UnregisterAliasRequest
+  ): Promise<RegistrationResponse> {
+    const user = await User.from(body, req.body);
+    if (body.otherAlias.thirdParty) {
+      const alias = await user.findAlias(`thirdParty/${(body as UnregisterAliasRequest).otherAlias.thirdParty}`);
+      await alias.destroy();
+    } else {
+      const alias = await Alias.from((body as RegisterAliasRequest).otherAlias);
+      if (!alias) {
+        throw new AuthError('UNKNOWN_ALIAS');
+      }
+      await alias.destroy();
     }
     return { userId: user.id };
   }
@@ -461,7 +543,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: VerifyOTPRequest
   ): Promise<VerifyOTPResponse> {
-    const { user } = await User.from(body);
+    const user = await User.from(body, req.body);
     const otp = await user.findCredential('otp', body.otp);
     await otp.destroy();
     if (!otp) {
@@ -485,7 +567,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: UpdateMetadataRequest
   ): Promise<UpdateMetadataResponse> {
-    const { user } = await User.from({ jwt: req.body.token });
+    const user = await User.from(body, req.body);
     await user.setMetadata(body.key, body.value);
     return { success: true };
   }
@@ -496,7 +578,7 @@ export class AccountController {
     @Request() req: ExpressRequest,
     @Body() body: UpdateCredentialRequest
   ): Promise<UpdateCredentialResponse> {
-    const { user } = await User.from(body);
+    const user = await User.from(body, req.body);
     if (typeof body.password === 'string') {
       if (!validatePassword(body.password)) {
         throw new InternalError('Password does not meet requirements');

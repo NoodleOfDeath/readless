@@ -12,6 +12,7 @@ import { SETTINGS_STACK } from './SettingsStack';
 import { strings } from '~/locales';
 import { SettingsToggleWithIndicator } from '~/navigation';
 import {
+  AccountScreen,
   BookmarksScreen,
   CategoryScreen,
   ProfileScreen,
@@ -35,6 +36,16 @@ export const PROFILE_STACK: RouteConfig<
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />, 
       headerTitle: strings.profile,
+    },
+  },
+  {
+    component: AccountScreen, 
+    name: 'account',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null, 
+      headerTitle: strings.account,
     },
   },
   {

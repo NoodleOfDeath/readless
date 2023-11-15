@@ -127,12 +127,12 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
-    @Request() _request: ExpressRequest,
+    @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicSummaryAttributes> {
-    const { user } = await User.from(body, { ignoreIfNotResolved: true });
+    const user = await User.from(body, { ignoreIfNotResolved: true, ...req.body });
     const {
       content, metadata, remoteAddr, 
     } = body;
@@ -157,11 +157,11 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Security('jwt', ['god:*'])
   @Delete('/:targetId')
   public static async destroySummary(
-    @Request() _request: ExpressRequest,
+    @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const { user } = await User.from(body);
+    const user = await User.from(body, req.body);
     await user.destroySummary(targetId);
     return { success: true };
   }
@@ -169,11 +169,11 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
   @Security('jwt', ['god:*'])
   @Patch('/restore/:targetId')
   public static async restoreSummary(
-    @Request() _request: ExpressRequest,
+    @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const { user } = await User.from(body);
+    const user = await User.from(body, req.body);
     await user.restoreSummary(targetId);
     return { success: true };
   }

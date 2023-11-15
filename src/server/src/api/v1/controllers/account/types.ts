@@ -4,7 +4,7 @@ import {
   WrappedJwt,
 } from './jwt';
 import { Profile } from '../../schema';
-import { DestructuredAliasPayload  } from '../../schema/user/Alias.types';
+import { AliasPayload, ThirdParty  } from '../../schema/user/Alias.types';
 import { DestructuredCredentialPayload } from '../../schema/user/Credential.types';
 
 export * from './jwt';
@@ -15,7 +15,7 @@ export type ProfileResponse = {
   profile?: Profile;
 };
 
-export type LoginRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
+export type LoginRequest = JwtRequest & AliasPayload & DestructuredCredentialPayload & {
   createIfNotExists?: boolean;
   anonymous?: string;
   requestedRole?: string;
@@ -35,19 +35,25 @@ export type LogoutResponse = Partial<JwtResponse> & {
   count: number;
 };
 
-export type RegistrationRequest = JwtRequest & DestructuredAliasPayload & DestructuredCredentialPayload & {
+export type RegistrationRequest = JwtRequest & AliasPayload & DestructuredCredentialPayload & {
   anonymous?: string;
 };
 
 export type RegisterAliasRequest = JwtRequest & {
-  alias: DestructuredAliasPayload;
+  otherAlias: AliasPayload;
+};
+
+export type UnregisterAliasRequest = JwtRequest & {
+  otherAlias: Omit<AliasPayload, 'thirdParty'> & {
+    thirdParty?: ThirdParty;
+  }
 };
 
 export type RegistrationResponse = Omit<JwtResponse, 'token'> & {
   token?: WrappedJwt;
 };
 
-export type RequestOtpRequest = Omit<DestructuredAliasPayload, 'otp'>;
+export type RequestOtpRequest = Omit<AliasPayload, 'otp'>;
 
 export type RequestOtpResponse = {
   success: boolean;
@@ -61,7 +67,7 @@ export type VerifyAliasResponse = {
   success: boolean;
 };
 
-export type VerifyOTPRequest = DestructuredAliasPayload;
+export type VerifyOTPRequest = AliasPayload;
 
 export type VerifyOTPResponse = {
   token: WrappedJwt;

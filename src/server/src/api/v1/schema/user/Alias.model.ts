@@ -9,13 +9,11 @@ import {
 
 import { JWT } from './../../controllers/account/jwt';
 import {
-  ALIAS_TYPES,
   AliasAttributes,
   AliasCreationAttributes,
   AliasPayload,
   AliasType,
   FindAliasOptions,
-  ThirdPartyAuth,
 } from './Alias.types';
 import { Credential } from './Credential.model';
 import { GoogleService } from '../../../../services';
@@ -82,104 +80,95 @@ export class Alias<
   @Column({ type: DataType.DATE })
   declare verifiedAt: Date;
     
-  public static parsePayload(payload: Partial<AliasPayload>): AliasPayload {
-    let type: AliasType = payload.type;
-    let value: string | number | ThirdPartyAuth = payload.value;
-    Object.values(ALIAS_TYPES).forEach((aliasType) => {
-      if (payload[aliasType]) {
-        type = aliasType;
-        value = payload[aliasType];
-      }
-    });
-    return {
-      type,
-      value,
-    };
-  }
-    
-  public static async from(req: Partial<AliasPayload>, opts?: FindAliasOptions): Promise<{alias: Alias, payload: AliasPayload, otp?: Credential}> {
-    if (req.jwt) {
-      const jwt = new JWT(req.jwt);
+  public static async from(payload: AliasPayload, opts?: FindAliasOptions): Promise<Alias> {
+
+    // Resolve from JWT
+    if (payload.jwt) {
+      const jwt = new JWT(payload.jwt);
       const { userId } = jwt;
       const alias = await Alias.findOne({ where: { userId } });
-      return {
-        alias,
-        payload: {
-          type: 'jwt',
-          value: req.jwt,
-          ...jwt,
-        },
-      };
+      return alias;
     }
-    const payload = Alias.parsePayload(req);
-    if (payload.type === 'thirdParty' && typeof payload.value === 'object') {      
-      if (payload.value.name === 'apple') {
-        const claims = await appleSignin.verifyIdToken(payload.value.credential);
-        return await this.from({
-          type: `thirdParty/${payload.value.name}`,
-          value: claims.sub,
-        }, opts);
+
+    // Resolve from a third-party token
+    if (payload.thirdParty) {      
+      if (payload.thirdParty.name === 'apple') {
+        const claims = await appleSignin.verifyIdToken(payload.thirdParty.credential);
+        const { email, email_verified: emailVerified } = claims;
+        let alias: Alias;
+        if (email && emailVerified) {
+          alias = await Alias.findOne({ where: { type: 'email', value: email } });
+        } if (!alias) {
+          alias = await Alias.findOne({ where: { type: 'thirdParty/google', value: claims.sub } });
+        } 
+        return alias;
       } else
-      if (payload.value.name === 'google') {
-        const ticket = await GoogleService.verify(payload.value.credential);
+      if (payload.thirdParty.name === 'google') {
+        const ticket = await GoogleService.verify(payload.thirdParty.credential);
         const {
           email, email_verified: emailVerified, sub: thirdPartyId, 
         } = ticket.getPayload();
-        if (!email) {
-          throw new AuthError('NO_THIRD_PARTY_ALIAS');
-        }
-        if (!emailVerified) {
-          throw new AuthError('THIRD_PARTY_ALIAS_NOT_VERIFIED');
-        }
-        return await this.from({
-          type: `thirdParty/${payload.value.name}`,
-          value: thirdPartyId,
-        }, opts);
+        let alias: Alias;
+        if (email && emailVerified) {
+          alias = await Alias.findOne({ where: { type: 'email', value: email } });
+        } if (!alias) {
+          alias = await Alias.findOne({ where: { type: 'thirdParty/google', value: thirdPartyId } });
+        } 
+        return alias;
+      } else {
+        throw new AuthError('BAD_REQUEST');
       }
-    } else if (payload.type === 'otp' && typeof payload.value === 'string') {
+    }
+
+    // Resolve from OTP
+    if (payload.otp) {
       const otp = await Credential.findOne({
         where: {
           type: 'otp',
-          value: payload.value,
+          value: payload.otp,
         },
       });
       if (!otp) {
         throw new AuthError('INVALID_CREDENTIALS');
       }
-      const alias = await Alias.findOne({ where: { userId: otp.toJSON().userId } });
+      const alias = await Alias.findOne({ where: { userId: otp.userId } });
       if (!alias && !opts?.ignoreIfNotResolved) {
-        throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
+        throw new AuthError('UNKNOWN_ALIAS', { alias: 'otp' });
       }
-      return {
-        alias, otp, payload, 
-      };
-    } else if (typeof payload.value === 'string') {
+      return alias;
+    } 
+    
+    // Resolve from email, phone, or username
+    if (payload.email || payload.phone || payload.username) {
+      const type = payload.email ? 'email' : payload.phone ? 'phone' : 'username';
       let alias: Alias;
       if (opts?.skipVerification) {
         alias = await Alias.findOne({
           where: {
-            type: payload.type,
-            value: payload.value,
+            type,
+            value: payload[type],
           },
         });
       } else {
         alias = await Alias.findOne({ 
           where: {
-            type: payload.type,
-            value: payload.value,
+            type,
+            value: payload[type],
             verifiedAt: { [Op.ne]: null },
           },
         });
       }
       if (!alias && !opts?.ignoreIfNotResolved) {
-        throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
+        throw new AuthError('UNKNOWN_ALIAS', { alias: type });
       }
-      return { alias, payload };
+      return alias;
     }
+
     if (!opts?.ignoreIfNotResolved) {
-      throw new AuthError('UNKNOWN_ALIAS', { alias: payload.type });
+      throw new AuthError('UNKNOWN_ALIAS');
     }
-    return { alias: null, payload };
+    
+    return undefined;
   }
 
 }

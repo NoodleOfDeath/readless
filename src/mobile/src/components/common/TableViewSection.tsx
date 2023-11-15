@@ -42,8 +42,7 @@ export function TableViewSection({
     <View mx={ grouped ? 12 : 0 }>
       <Section
         { ...props }
-        hideSeparator={ grouped }
-        beveledCorners={ grouped }>
+        hideSeparator={ grouped }>
         <View style={ style }>
           {children}
         </View>

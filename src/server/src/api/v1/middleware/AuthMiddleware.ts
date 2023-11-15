@@ -23,13 +23,13 @@ export const authMiddleware = (securityName: string, { required = false, scope =
             const { expired, refreshed } = await jwt.validate(false);
             if (!expired) {
               req.body.userId = jwt.userId;
-              req.body.token = jwt.signed;
+              req.body.jwt = jwt.signed;
               req.query.userId = String(jwt.userId);
-              req.query.token = jwt.signed;
+              req.query.jwt = jwt.signed;
             }
             if (refreshed) {
-              req.body.refreshedToken = refreshed.signed;
-              req.query.refreshedToken = refreshed.signed;
+              req.body.refreshedJwt = refreshed.signed;
+              req.query.refreshedJwt = refreshed.signed;
             }
           } catch (e) {
             if (required) {
