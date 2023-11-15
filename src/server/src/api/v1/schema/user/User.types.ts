@@ -1,9 +1,12 @@
+import { ThirdParty } from './Alias.types';
 import { DatedAttributes } from '../types';
 
 export type Profile = {
   email?: string;
   emails?: string[];
+  pendingEmails?: string[];
   username?: string;
+  linkedThirdPartyAccounts?: ThirdParty[];
   firstName?: string;
   lastName?: string;
   preferences?: { [key: string]: unknown };

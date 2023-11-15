@@ -130,10 +130,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         state[key] = newValue;
         setItem(key, JSON.stringify(newValue));
       }
-      if (SYNCABLE_SETTINGS.includes(key)) {
-        updateRemotePref(key, newValue);
-      }
       if (emit) {
+        if (SYNCABLE_SETTINGS.includes(key)) {
+          updateRemotePref(key, newValue);
+        }
         emitEvent('set-preference', key);
       }
       return state;
@@ -209,7 +209,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     if (e?.errorKey) {
       const error = e as AuthError;
       if (LOGOUT_ERROR_KEYS.includes(error.errorKey)) {
-        await setStoredValue('userData', undefined);
+        await setStoredValue('userData', undefined, false);
       }
     }
     setSyncState((prev) => ({ 
@@ -226,16 +226,26 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       ...prev, 
       isSyncingBookmarks: true,
     }));
-    const { data, error } = await api.getSummaries({ ids });
-    if (error) {
-      console.error(error);
-      return;
+    let offset = 0;
+    let summaries: PublicSummaryGroup[] = [];
+    while (offset < ids.length) {
+      const { data, error } = await api.getSummaries({ ids, offset });
+      if (error) {
+        console.error(error);
+        return;
+      }
+      const { rows, next } = data;
+      if (!rows || !next) {
+        break;
+      }
+      summaries = summaries.concat(rows);
+      offset = next;
     }
-    const { rows: summaries } = data;
-    if (!summaries) {
-      return;
-    }
-    await setStoredValue('bookmarkedSummaries', Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), false);
+    await setStoredValue(
+      'bookmarkedSummaries', 
+      Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), 
+      false
+    );
     setSyncState((prev) => ({ 
       ...prev, 
       hasSyncedBookmarks: true,
@@ -272,18 +282,19 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         return handleBadRequest(e);
       }
     }
-    if (!data) {
+    if (!data?.profile?.preferences) {
       return handleBadRequest();
     }
-    const { profile } = data;
-    if (!profile) {
+    const { profile: { preferences } } = data;
+    if (!preferences) {
       return handleBadRequest();
     }
     console.log('syncing prefs');
     for (const key of SYNCABLE_SETTINGS) {
-      const remoteValue = profile.preferences?.[key];
+      const remoteValue = preferences[key];
       console.log('updating', key, remoteValue);
       if (key === 'bookmarkedSummaries') {
+        console.log('shit', Object.keys(remoteValue).length);
         loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
       } else {
         try {

@@ -24,6 +24,7 @@ import {
   FindAliasOptions,
   InteractionType,
   Profile,
+  ThirdParty,
   UserAttributes,
   UserCreationAttributes,
 } from '../types';
@@ -42,39 +43,25 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   // authentication methods
 
   /** Resolves a user from an alias request/payload */
-  public static async from(req: Partial<AliasPayload>, opts?: Partial<FindAliasOptions>) {
-    console.log(req.userId, req.jwt);
-    if (req.userId || req.jwt) {
-      const id = req.userId ?? new JWT(req.jwt).userId;
+  public static async from(payload: AliasPayload, opts?: Partial<FindAliasOptions>) {
+    if (payload.userId || opts.jwt) {
+      const id = payload.userId ?? new JWT(opts.jwt).userId;
       const user = await User.findOne({ where: { id } });
       if (!user && !opts?.ignoreIfNotResolved) {
         if (!opts?.ignoreIfNotResolved) {
           throw new AuthError('INVALID_CREDENTIALS');
         }
       }
-      const payload: AliasPayload = { type: req.jwt ? 'jwt' : 'userId', value: req.jwt ? req.jwt : id };
-      const alias = new Alias({
-        type: 'userId', value: `${id}`, verifiedAt: new Date(), 
-      });
-      return {
-        alias, payload, user, 
-      };
+      return user;
     } else {
-      const {
-        alias, otp, payload, 
-      } = await Alias.from(req, opts);
+      const alias = await Alias.from(payload);
       if (!alias) {
         if (!opts?.ignoreIfNotResolved) {
           throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });
         }
-        return { alias, payload };
+        return undefined;
       }
-      return {
-        alias,
-        otp,
-        payload, 
-        user: await User.findOne({ where: { id: alias.userId } }),
-      };
+      return await User.findOne({ where: { id: alias.userId } });
     }
   }
   
@@ -106,11 +93,11 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     });
   }
 
-  public async createAlias(type: AliasType, value: string, attr: Omit<AliasCreationAttributes, 'type' | 'userId' | 'value'>) {
+  public async createAlias<A extends AliasType>(type: A, value: AliasPayload[A], attr: Omit<AliasCreationAttributes, 'type' | 'userId' | 'value'>) {
     return await Alias.create({
       type,
       userId: this.id,
-      value,
+      value: `${value}`,
       ...attr,
     });
   }
@@ -234,7 +221,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     const updatedAt = new Date(Math.max(...[...aliases, ...metadata].map((m) => m.updatedAt.valueOf())));
     profile.email = aliases.length > 0 ? aliases.sort((a, b) => a.priority - b.priority)[0].value : '',
     profile.emails = aliases.length > 0 ? aliases.map((a) => a.value) : [],
+    profile.pendingEmails = aliases.length > 0 ? aliases.filter((a) => a.verifiedAt === null).map((a) => a.value) : [],
     profile.username = (await this.findAlias('username'))?.value,
+    profile.linkedThirdPartyAccounts = (await this.findAliases('thirdParty/apple', 'thirdParty/google')).map((a) => a.type.split('/')[1] as ThirdParty);
     profile.preferences = Object.fromEntries(metadata.map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
     profile.createdAt = this.createdAt;
     profile.updatedAt = updatedAt;

@@ -23,16 +23,12 @@ export const ALIAS_TYPES = {
 
 export type AliasType = typeof ALIAS_TYPES[keyof typeof ALIAS_TYPES] | `thirdParty/${ThirdParty}`;
 
-export type DestructuredAliasPayload = {
+export type AliasPayload = {
   [key in AliasType]?: key extends 'thirdParty' ? ThirdPartyAuth : key extends 'userId' ? number | string : string;
 };
 
-export type AliasPayload = DestructuredAliasPayload & {
-  type?: AliasType;
-  value?: string | number | ThirdPartyAuth;
-};
-
 export type FindAliasOptions = {
+  jwt?: string;
   ignoreIfNotResolved?: boolean;
   skipVerification?: boolean;
 };

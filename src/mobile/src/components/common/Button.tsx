@@ -37,7 +37,7 @@ export function Button({
   rightIcon,
   iconProps,
   vertical,
-  iconSize = 24,
+  iconSize,
   contained,
   variant = contained ? 'contained' : 'default',
   primary,

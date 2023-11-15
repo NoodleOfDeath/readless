@@ -61,36 +61,24 @@ export function ProfileScreen({
       <ScrollView>
         <TableView>
           <TableViewSection>
-            {/* <TableViewCell 
-              bold
-              cellContentView={ <Text>{JSON.stringify(userData, null, 2)}</Text> } /> */}
-            {userData?.profile?.email && (
-              <TableViewCell 
-                bold
-                title={ userData?.profile?.email } />
-            )}
-            {userData?.profile?.username && (
-              <TableViewCell 
-                bold
-                cellStyle="RightDetail"
-                title={ strings.username }
-                detail={ userData?.profile?.username } />
-            )}
+            <TableViewCell 
+              cellStyle="RightDetail"
+              accessory="DisclosureIndicator"
+              title={ strings.account }
+              onPress={ () => navigation?.push('account') } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell 
-              bold
               cellIcon={ <Button leftIcon="bookmark" /> }
               disabled={ isSyncingBookmarks }
               cellStyle="RightDetail"
               title={ `${strings.bookmarks} (${isSyncingBookmarks ? 'syncing...' : bookmarkCount})` }
               accessory="DisclosureIndicator"
               detail={ `${unreadBookmarkCount} ${strings.unread}` } 
-              onPress={ () => navigation?.push('bookmarks') } />
+              onPress={ isSyncingBookmarks ? undefined : () => navigation?.push('bookmarks') } />
           </TableViewSection>
           <TableViewSection>
             <TableViewCell 
-              bold
               cellIcon={ <Button leftIcon="pen" /> }
               cellStyle="RightDetail"
               title={ strings.publishers }
@@ -98,7 +86,6 @@ export function ProfileScreen({
               detail={ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.following}` }
               onPress={ () => navigation?.push('publisherPicker') } />
             <TableViewCell 
-              bold
               cellIcon={ <Button leftIcon="bucket" /> }
               cellStyle="RightDetail"
               title={ strings.categories }
@@ -108,7 +95,6 @@ export function ProfileScreen({
           </TableViewSection>
           <TableViewSection>
             <TableViewCell
-              bold
               cellIcon={ <Button leftIcon="logout" /> }
               title={ strings.signOut }
               onPress={ handleSignOut } />

@@ -52,7 +52,7 @@ router.post(
     .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
-  rateLimitMiddleware('2 per 5m'),
+  // rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.login(req, req.body);
@@ -80,6 +80,7 @@ router.post(
 router.post(
   '/otp',
   validationMiddleware,
+  rateLimitMiddleware('2 per 10m'),
   async (req, res) => {
     try {
       const response = await AccountController.requestOtp(req, req.body);
@@ -91,8 +92,39 @@ router.post(
 );
 
 router.post(
+  '/register/alias',
+  body('otherAlias').isObject(),
+  validationMiddleware,
+  // rateLimitMiddleware('5 per 2m'),
+  async (req, res) => {
+    try {
+      const response = await AccountController.registerAlias(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.post(
+  '/unregister/alias',
+  body('otherAlias').isObject(),
+  validationMiddleware,
+  // rateLimitMiddleware('5 per 2m'),
+  async (req, res) => {
+    try {
+      const response = await AccountController.unregisterAlias(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.post(
   '/verify/alias',
   validationMiddleware,
+  rateLimitMiddleware('2 per 10m'),
   async (req, res) => {
     try {
       const response = await AccountController.verifyAlias(req, req.body);
@@ -107,6 +139,7 @@ router.post(
   '/verify/otp',
   body('otp').isString(),
   validationMiddleware,
+  rateLimitMiddleware('2 per 10m'),
   async (req, res) => {
     try {
       const response = await AccountController.verifyOtp(req, req.body);

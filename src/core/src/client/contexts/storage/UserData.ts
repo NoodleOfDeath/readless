@@ -44,7 +44,7 @@ export class UserData implements UserDataProps {
     tokens = token ? [token] : [],
     profile,
     unlinked,
-  }: UserDataProps) {
+  }: Partial<UserDataProps> = {}) {
     this.userId = userId;
     this.tokens = (Array.isArray(tokens) ? tokens : [tokens]).filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
     this.profile = profile;
