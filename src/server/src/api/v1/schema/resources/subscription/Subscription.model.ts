@@ -120,6 +120,14 @@ export class Subscription<
     locale,
   }: SubscriptionCreationAttributes): Promise<Subscription> {
     const verificationCode = v4();
+    const sub = await Subscription.findOne({
+      where: {
+        channel, event, uuid, 
+      }, 
+    });
+    if (sub) {
+      return await this.scope('public').findByPk(sub.id);
+    }
     const subscription = await Subscription.create({
       body,
       channel,
