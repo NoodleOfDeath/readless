@@ -1,10 +1,12 @@
 import React from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 
 import { GOOGLE_CLIENT_ID, REGISTRATION_PRIVATE_KEY } from '@env';
-import { appleAuth } from '@invertase/react-native-apple-authentication';
+import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { GoogleSignin, User as GoogleUser } from '@react-native-google-signin/google-signin';
 import CryptoJS from 'react-native-crypto-js';
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid';
 
 import { ThirdParty } from '~/api';
 import { StorageContext, UserData } from '~/contexts';
@@ -13,12 +15,26 @@ import { strings } from '~/locales';
 GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
 
 const authWithApple = async () => {
-  const appleAuthRequestResponse = await appleAuth.performRequest({
-    requestedOperation: appleAuth.Operation.LOGIN,
-    requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
-  });
-  const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
-  return credentialState === appleAuth.State.AUTHORIZED ? appleAuthRequestResponse.identityToken : undefined;
+  if (Platform.OS === 'ios') {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+    });
+    const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+    return credentialState === appleAuth.State.AUTHORIZED ? appleAuthRequestResponse.identityToken : undefined;
+  } else
+  if (Platform.OS === 'android') {
+    appleAuthAndroid.configure({
+      clientId: 'ai.readless.readless.apple-sign-in',
+      nonce: uuid(),
+      redirectUri: 'https://api.readless.ai/auth/apple',
+      responseType: appleAuthAndroid.ResponseType.ALL,
+      scope: appleAuthAndroid.Scope.ALL,
+      state: uuid(),
+    });
+    const response = await appleAuthAndroid.signIn();
+    return response.id_token;
+  }
 };
 
 const authWithGoogle = async () => {

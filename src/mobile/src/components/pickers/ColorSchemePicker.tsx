@@ -7,7 +7,7 @@ import {
   Summary,
   TablePicker,
 } from '~/components';
-import { ColorScheme, StorageContext } from '~/contexts';
+import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 
 type ColorSchemePickerProps = Omit<SegmentedButtonsProps, 'options'> & {
@@ -27,9 +27,9 @@ export function ColorSchemePicker({
     return (
       <TablePicker
         options={ [
-          { label: strings.settings, value: 'light' as ColorScheme },
-          { label: strings.settings, value: 'system' as ColorScheme },
-          { label: strings.settings, value: 'dark' as ColorScheme },
+          { label: strings.settings, value: 'light' },
+          { label: strings.settings, value: 'system' },
+          { label: strings.settings, value: 'dark' },
         ] }
         initialValue={ colorScheme ?? 'system' }
         onValueChange={ (colorScheme) => {
@@ -60,9 +60,9 @@ export function ColorSchemePicker({
       initialValue={ colorScheme ?? 'system' }
       onValueChange={ (value) => setStoredValue('colorScheme', value) }
       options={ [
-        { label: strings.light, value: 'light' as ColorScheme },
-        { label: strings.system, value: 'system' as ColorScheme },
-        { label: strings.dark, value: 'dark' as ColorScheme },
+        { label: strings.light, value: 'light' },
+        { label: strings.system, value: 'system' },
+        { label: strings.dark, value: 'dark' },
       ] } />
   );
 }

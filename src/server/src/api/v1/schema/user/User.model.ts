@@ -54,7 +54,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       }
       return user;
     } else {
-      const alias = await Alias.from(payload);
+      const alias = await Alias.from(payload, opts);
       if (!alias) {
         if (!opts?.ignoreIfNotResolved) {
           throw new AuthError('UNKNOWN_ALIAS', { alias: 'email' });

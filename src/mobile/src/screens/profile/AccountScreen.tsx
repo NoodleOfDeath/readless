@@ -10,7 +10,6 @@ import {
   TableView,
   TableViewCell,
   TableViewSection,
-  Text,
 } from '~/components';
 import { StorageContext } from '~/contexts';
 import { useThirdPartyLogin } from '~/hooks';
@@ -33,8 +32,8 @@ export function AccountScreen({
       <ScrollView>
         <TableView>
           <TableViewSection>
-            <TableViewCell
-              cellContentView={ <Text>{JSON.stringify(userData, null, 2)}</Text> } />
+            {/* <TableViewCell
+              cellContentView={ <Text>{JSON.stringify(userData, null, 2)}</Text> } /> */}
             {userData?.profile?.email && (
               <TableViewCell 
                 cellStyle="RightDetail"
