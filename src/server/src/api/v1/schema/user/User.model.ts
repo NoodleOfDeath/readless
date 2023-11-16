@@ -48,9 +48,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       const id = payload.userId ?? new JWT(opts.jwt).userId;
       const user = await User.findOne({ where: { id } });
       if (!user && !opts?.ignoreIfNotResolved) {
-        if (!opts?.ignoreIfNotResolved) {
-          throw new AuthError('INVALID_CREDENTIALS');
-        }
+        throw new AuthError('INVALID_CREDENTIALS');
       }
       return user;
     } else {

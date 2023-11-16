@@ -60,7 +60,7 @@ export default function VerifyPage() {
           setMessage('Error, bad request');
           return;
         }
-        setMessage('Success! You are now subscribed!');
+        setMessage('Success! Your email was verifid!');
       } else
       if (sub) {
         const { error } = await verifySubscription({ verificationCode: sub });
