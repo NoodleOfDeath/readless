@@ -276,7 +276,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     page = 0,
     offset = pageSize * page,
     forceCache,
-    cacheHalflife = process.env.CACHE_HALFLIFE || '3m',
+    cacheHalflife = process.env.CACHE_HALFLIFE || '150s',
   }: SearchSummariesPayload, queryKey: QueryKey = 'search'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
     
     const { 

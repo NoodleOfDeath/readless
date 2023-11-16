@@ -18,7 +18,7 @@ import {
 
 const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
-const TOP_STORIES_CACHE_RATE = Number.isNaN(process.env.TOP_STORIES_CACHE_RATE) ? 0.5 : Number.parseFloat(process.env.TOP_STORIES_CACHE_RATE);
+const TOP_STORIES_RECACHE_RATE = Number.isNaN(process.env.TOP_STORIES_RECACHE_RATE) ? 0.5 : Number.parseFloat(process.env.TOP_STORIES_RECACHE_RATE);
 
 async function main() {
   await DBService.prepare();
@@ -169,7 +169,7 @@ async function scheduleJobs() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '3m') * TOP_STORIES_CACHE_RATE);
+    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '150s') * 2 * TOP_STORIES_RECACHE_RATE);
   }
 }
 
