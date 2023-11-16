@@ -52,6 +52,7 @@ export function AccountScreen({
             {Object.values(ThirdParty).map((p) => (
               <TableViewCell 
                 key={ p }
+                capitalize
                 cellIcon={ <Icon name={ p } /> }
                 cellStyle="RightDetail"
                 title={ p }
