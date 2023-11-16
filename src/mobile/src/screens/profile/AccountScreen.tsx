@@ -10,7 +10,6 @@ import {
   TableView,
   TableViewCell,
   TableViewSection,
-  Text,
 } from '~/components';
 import { StorageContext } from '~/contexts';
 import { useThirdPartyLogin } from '~/hooks';

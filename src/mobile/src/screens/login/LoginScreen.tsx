@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Platform } from 'react-native';
 
 import {
   Button,
@@ -8,7 +9,6 @@ import {
   Text,
   View,
 } from '~/components';
-import { StorageContext } from '~/contexts';
 import { useThirdPartyLogin } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
@@ -18,13 +18,7 @@ export function LoginScreen({
   navigation, 
 }: ScreenComponent<'login'>) {
 
-  const {
-    api: { login },
-    setStoredValue, 
-    syncWithRemotePrefs,
-  } = React.useContext(StorageContext);
-
-  const [message, setMessage] = React.useState('');
+  const [message, setMessage] = React.useState<string>();
 
   const { 
     signInWithApple,
@@ -46,7 +40,7 @@ export function LoginScreen({
           <Image
             native
             contain
-            source={ { uri: 'Logo' } }
+            source={ { uri: Platform.select({ android: 'asset:/logo.svg', ios: 'Logo' }) } }
             width={ 300 }
             height={ 300 } />
           <Text color="invertText">{strings.informationWithoutTheNoise}</Text>

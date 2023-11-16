@@ -27,7 +27,7 @@ const authWithApple = async () => {
     appleAuthAndroid.configure({
       clientId: 'ai.readless.readless.apple-sign-in',
       nonce: uuid(),
-      redirectUri: 'https://api/readless.ai/auth/apple',
+      redirectUri: 'https://api.readless.ai/auth/apple',
       responseType: appleAuthAndroid.ResponseType.ALL,
       scope: appleAuthAndroid.Scope.ALL,
       state: uuid(),
