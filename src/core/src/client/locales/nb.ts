@@ -166,6 +166,7 @@ export const nbStrings: typeof enStrings = {
   noteworthyArticle: 'Bemerkelsesverdig artikkel?',
   notifications: 'Varsler',
   offensive: 'Dette er støtende',
+  ok: 'Ok',
   oldNews: 'Gamle nyheter',
   openCategory: 'Åpner kategorisiden for denne kategorien',
   openContextMenu: 'Åpne kontekstmenyen',

@@ -166,6 +166,7 @@ export const nlStrings: typeof enStrings = {
   noteworthyArticle: 'Opmerkelijk artikel?',
   notifications: 'Meldingen',
   offensive: 'Dit is beledigend',
+  ok: 'OK',
   oldNews: 'Oud nieuws',
   openCategory: 'Opent de categoriepagina van deze categorie',
   openContextMenu: 'Contextmenu openen',

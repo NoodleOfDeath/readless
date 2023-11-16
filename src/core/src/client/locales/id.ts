@@ -166,6 +166,7 @@ export const idStrings: typeof enStrings = {
   noteworthyArticle: 'Artikel yang patut diperhatikan?',
   notifications: 'Notifikasi',
   offensive: 'Ini ofensif',
+  ok: 'Oke',
   oldNews: 'Berita lama',
   openCategory: 'Membuka halaman kategori dari kategori ini',
   openContextMenu: 'Buka Menu Konteks',

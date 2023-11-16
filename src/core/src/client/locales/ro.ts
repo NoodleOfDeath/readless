@@ -166,6 +166,7 @@ export const roStrings: typeof enStrings = {
   noteworthyArticle: 'articol demn de remarcat?',
   notifications: 'Notificări',
   offensive: 'Acest lucru este ofensator',
+  ok: 'Bine',
   oldNews: 'Stiri vechi',
   openCategory: 'Deschide pagina categorie a acestei categorii',
   openContextMenu: 'Deschideți meniul contextual',

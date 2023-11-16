@@ -99,7 +99,7 @@ export function NotificationSettingsScreen() {
         <TableViewSection header={ strings.settings }>
           <TableViewCell
             bold
-            title={ strings.settings }
+            title={ strings.pushNotifications }
             cellIcon="bell"
             cellAccessoryView={ (
               <PrefSwitch 
@@ -116,7 +116,7 @@ export function NotificationSettingsScreen() {
           <TableViewCell
             bold
             disabled={ !enabled }
-            title={ strings.settings }
+            title={ strings.dailyRecaps }
             cellIcon="history"
             cellAccessoryView={ (
               <Switch 
@@ -145,7 +145,7 @@ export function NotificationSettingsScreen() {
           <TableViewCell
             bold
             disabled={ !enabled }
-            title={ strings.settings }
+            title={ strings.dailyReminder }
             cellIcon="calendar"
             cellAccessoryView={ (
               <Switch 
@@ -160,7 +160,7 @@ export function NotificationSettingsScreen() {
           <TableViewCell
             bold
             disabled={ !settings[SubscriptionEvent.DailyReminder] }
-            title={ strings.settings }
+            title={ strings.dailyReminderTime }
             cellIcon="clock"
             cellAccessoryView={ Boolean(settings[SubscriptionEvent.DailyReminder]) && fireTime && (
               <DateTimePicker 

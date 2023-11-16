@@ -166,6 +166,7 @@ export const trStrings: typeof enStrings = {
   noteworthyArticle: 'Dikkate değer makale?',
   notifications: 'Bildirimler',
   offensive: 'Bu saldırgan',
+  ok: 'Tamam',
   oldNews: 'Eski Haberler',
   openCategory: 'Bu kategorinin kategori sayfasını açar',
   openContextMenu: 'İçerik Menüsünü Aç',

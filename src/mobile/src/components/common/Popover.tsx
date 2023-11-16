@@ -38,7 +38,7 @@ export function Popover({
   ...props
 }: PopoverProps) {
 
-  const { emitStorageEvent } = usePlatformTools();
+  const { emitStorageEvent, screenReaderEnabled } = usePlatformTools();
   const theme = useTheme();
 
   const [visible, setVisible] = React.useState(false);
@@ -46,17 +46,19 @@ export function Popover({
 
   const contents = React.useMemo(() => (
     <RNView ref={ ref }>
-      <View p={ 4 } row>
-        <View row />
-        <Button
-          accessible
-          accessibilityLabel={ strings.close }
-          leftIcon="close"
-          onPress={ () => setVisible(false) } />
-      </View>
+      {screenReaderEnabled && (
+        <View p={ 4 } row>
+          <View row />
+          <Button
+            accessible
+            accessibilityLabel={ strings.close }
+            leftIcon="close"
+            onPress={ () => setVisible(false) } />
+        </View>
+      )}
       {children}
     </RNView>
-  ), [children]);
+  ), [children, screenReaderEnabled]);
 
   React.useEffect(() => {
     if (!ref.current) {

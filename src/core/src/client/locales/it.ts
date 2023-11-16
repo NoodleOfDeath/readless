@@ -166,6 +166,7 @@ export const itStrings: typeof enStrings = {
   noteworthyArticle: 'Articolo degno di nota?',
   notifications: 'Notifiche',
   offensive: 'Questo è offensivo',
+  ok: 'OK',
   oldNews: 'Vecchie notizie',
   openCategory: 'Apre la pagina di categoria di questa categoria',
   openContextMenu: 'Apri il menu contestuale',

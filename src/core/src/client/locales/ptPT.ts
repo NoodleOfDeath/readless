@@ -166,6 +166,7 @@ export const ptPTStrings: typeof enStrings = {
   noteworthyArticle: 'Artigo digno de nota?',
   notifications: 'Notificações',
   offensive: 'isso é ofensivo',
+  ok: 'OK',
   oldNews: 'Noticias antigas',
   openCategory: 'Abre a página da categoria desta categoria',
   openContextMenu: 'Abrir menu de contexto',

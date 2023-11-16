@@ -18,7 +18,6 @@ import { ScreenComponent } from '~/screens';
 export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
   
   const { 
-    api: { getSummaries },
     bookmarkedSummaries,
     bookmarkCount,
     readSummaries,
@@ -40,40 +39,39 @@ export function BookmarksScreen({ navigation }: ScreenComponent<'bookmarks'>) {
   return (
     <Screen>
       <View gap={ 12 } flex={ 1 }>
-        <View mx={ 16 } gap={ 6 }>
-          <View row gap={ 6 }>
-            <Text>
-              {strings.bookmarks}
-            </Text>
-            <Popover
-              anchor={
-                <Icon size={ 24 } name="information" />
-              }>
-              <Text>{strings.bookmarks}</Text>
-            </Popover>
-          </View>
-          <View row>
-            <Button
-              contained
-              beveled
-              p={ 6 }
-              onPress={ () => setStoredValue('bookmarkedSummaries', (prev) => {
-                const state = { ...prev };
-                for (const [id] of Object.entries(state)) {
-                  if (id in (readSummaries ?? {})) {
-                    delete state[Number(id)];
-                  }
-                }
-                return state;
-              }) }>
-              {strings.removeReadBookmarks}
-            </Button>
-          </View>
-        </View>
         <SummaryList
-          flex={ 1 }
-          fetch={ getSummaries }
-          fetchOnLoad={ false }
+          headerComponent={ (
+            <View flex={ 1 } m={ 16 } gap={ 6 }>
+              <View row gap={ 6 }>
+                <Text>
+                  {strings.bookmarks}
+                </Text>
+                <Popover
+                  anchor={
+                    <Icon size={ 24 } name="information" />
+                  }>
+                  <Text>{strings.bookmarks}</Text>
+                </Popover>
+              </View>
+              <View row>
+                <Button
+                  contained
+                  beveled
+                  p={ 6 }
+                  onPress={ () => setStoredValue('bookmarkedSummaries', (prev) => {
+                    const state = { ...prev };
+                    for (const [id] of Object.entries(state)) {
+                      if (id in (readSummaries ?? {})) {
+                        delete state[Number(id)];
+                      }
+                    }
+                    return state;
+                  }) }>
+                  {strings.removeReadBookmarks}
+                </Button>
+              </View>
+            </View>
+          ) }
           summaries={ bookmarks } />
       </View>
     </Screen>

@@ -166,6 +166,7 @@ export const fiStrings: typeof enStrings = {
   noteworthyArticle: 'Huomionarvoinen artikkeli?',
   notifications: 'Ilmoitukset',
   offensive: 'Tämä on loukkaavaa',
+  ok: 'Ok',
   oldNews: 'Vanhoja uutisia',
   openCategory: 'Avaa tämän luokan luokkasivun',
   openContextMenu: 'Avaa kontekstivalikko',

@@ -25,6 +25,7 @@ import {
   RecapAttributes,
   RequestParams,
 } from '~/api';
+import { ToastContext } from '~/contexts';
 import { getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
 
@@ -43,10 +44,12 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     getItem, removeItem, removeAll, setItem, 
   } = useLocalStorage();
   const { emitStorageEvent, getUserAgent } = usePlatformTools();
-  
+
   // system state
   const [storage, setStorage] = React.useState<Storage>(DEFAULT_STORAGE_CONTEXT);
   const [syncState, setSyncState] = React.useState<SyncState>({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [errorHandler, setErrorHandler] = React.useState<((e?: any) => void)>();
   
   const ready = React.useMemo(() => syncState.hasLoadedLocalState && syncState.hasSyncedWithRemote, [syncState.hasLoadedLocalState, syncState.hasSyncedWithRemote]);
   
@@ -171,6 +174,27 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     };
   }, [storage.uuid, storage.userData?.token, getUserAgent]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleBadRequest = React.useCallback(async (e?: any) => {
+    if (e) {
+      console.error(e); 
+      errorHandler?.(e);
+    }
+    if (e?.errorKey) {
+      const error = e as AuthError;
+      if (LOGOUT_ERROR_KEYS.includes(error.errorKey)) {
+        resetStorage(true);
+      }
+    }
+    setSyncState((prev) => ({ 
+      ...prev, 
+      hasSyncedWithRemote: true,
+      isFetchingProfile: false,
+      isSyncingWithRemote: false,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errorHandler]);
+
   const api: Methods = React.useMemo(() => {
     const guts = Object.fromEntries(Object.entries(API)
       .filter(([, f]) => f instanceof Function)
@@ -198,28 +222,9 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       });
     } catch (e) {
       console.error(e);
+      handleBadRequest(e);
     }
-  }, [api, storage]);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleBadRequest = React.useCallback(async (e?: any) => {
-    if (e) {
-      console.error(e); 
-    }
-    if (e?.errorKey) {
-      const error = e as AuthError;
-      if (LOGOUT_ERROR_KEYS.includes(error.errorKey)) {
-        await setStoredValue('userData', undefined, false);
-      }
-    }
-    setSyncState((prev) => ({ 
-      ...prev, 
-      hasSyncedWithRemote: true,
-      isFetchingProfile: false,
-      isSyncingWithRemote: false,
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [api, storage, handleBadRequest]);
   
   const loadBookmarks = React.useCallback(async (ids: number[]) => {
     setSyncState((prev) => ({ 
@@ -279,6 +284,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           return handleBadRequest(response.error);
         }
       } catch (e) {
+        console.error(e);
         return handleBadRequest(e);
       }
     }
@@ -295,7 +301,12 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       console.log('updating', key, remoteValue);
       if (key === 'bookmarkedSummaries') {
         console.log('shit', Object.keys(remoteValue).length);
-        loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
+        try {
+          loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
+        } catch (e) {
+          console.error(e);
+          handleBadRequest(e);
+        }
       } else {
         try {
           if (remoteValue) {
@@ -664,6 +675,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         removeSummary,
         resetStorage,
         setCategories,
+        setErrorHandler,
         setLoadedInitialUrl,
         setPublishers,
         setStoredValue,

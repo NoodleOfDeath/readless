@@ -166,6 +166,7 @@ export const msStrings: typeof enStrings = {
   noteworthyArticle: 'Artikel yang patut diberi perhatian?',
   notifications: 'Pemberitahuan',
   offensive: 'Ini menyinggung perasaan',
+  ok: 'Okey',
   oldNews: 'Berita Lama',
   openCategory: 'Membuka halaman kategori kategori ini',
   openContextMenu: 'Buka Menu Konteks',

@@ -166,6 +166,7 @@ export const zhCNStrings: typeof enStrings = {
   noteworthyArticle: '值得注意的文章？',
   notifications: '通知',
   offensive: '这是令人反感的',
+  ok: '好的',
   oldNews: '旧闻',
   openCategory: '打开该类别的类别页面',
   openContextMenu: '打开上下文菜单',

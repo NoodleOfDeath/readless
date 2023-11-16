@@ -15,7 +15,7 @@ import {
   Text,
   View,
 } from '~/components';
-import {  StorageContext } from '~/contexts';
+import {  StorageContext, ToastContext } from '~/contexts';
 import { strings } from '~/locales';
 import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
@@ -29,6 +29,7 @@ export function SummaryScreen({
     preferredReadingFormat, 
     api: { interactWithSummary, getSummary },
   } = React.useContext(StorageContext);
+  const { showToast } = React.useContext(ToastContext);
 
   const [loading, setLoading] = React.useState(false);
   const [summaryId, setSummaryId] = React.useState(0);
@@ -49,12 +50,14 @@ export function SummaryScreen({
       if (data && data.rows && data.rows.length) {
         setSummary(data.rows[0]);
       }
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       console.error(e);
+      showToast(e?.errorKey ?? e.message);
     } finally {
       setLoading(false);
     }
-  }, [getSummary]);
+  }, [getSummary, showToast]);
 
   React.useEffect(() => {
     if (summary) {

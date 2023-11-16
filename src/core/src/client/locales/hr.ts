@@ -166,6 +166,7 @@ export const hrStrings: typeof enStrings = {
   noteworthyArticle: 'Članak vrijedan pažnje?',
   notifications: 'Obavijesti',
   offensive: 'Ovo je uvredljivo',
+  ok: 'U redu',
   oldNews: 'Stare vijesti',
   openCategory: 'Otvara stranicu kategorije ove kategorije',
   openContextMenu: 'Otvorite kontekstni izbornik',
