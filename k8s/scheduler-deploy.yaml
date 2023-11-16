@@ -44,8 +44,8 @@ spec:
               value: '$PUBLISHER_MAX_ATTEMPT_LIMIT'
             - name: SPIDER_FETCH_INTERVAL
               value: '$SPIDER_FETCH_INTERVAL'
-            - name: TOP_STORIES_CACHE_RATE
-              value: '$TOP_STORIES_CACHE_RATE'
+            - name: TOP_STORIES_RECACHE_RATE
+              value: '$TOP_STORIES_RECACHE_RATE'
 ---
 apiVersion: v1
 kind: Service
