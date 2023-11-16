@@ -33,7 +33,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
   onLocalize,
 }: TranslateToggleProps<Type, Target>, ref?: React.ForwardedRef<Partial<TranslateToggleRef<Target>>>) {
 
-  const { emitEvent, getUserAgent } = usePlatformTools();
+  const { emitStorageEvent, getUserAgent } = usePlatformTools();
   
   const [translations, setTranslations] = React.useState<{ [key in keyof Target]?: string } | undefined>(translations0);
   const [isLocalizing, setIsLocalizing] = React.useState(false);
@@ -44,7 +44,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
     if (/^en/i.test(getLocale()) || isLocalizing) {
       return; 
     }
-    emitEvent('localize', { target, userAgent: getUserAgent() });
+    emitStorageEvent('localize', { target, userAgent: getUserAgent() });
     setIsLocalizing(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,7 +66,7 @@ export const TranslateToggle = React.forwardRef(function TranslateToggle<Type ex
     } finally {
       setIsLocalizing(false);
     }
-  }, [isLocalizing, emitEvent, target, getUserAgent, localize, type, onLocalize]);
+  }, [isLocalizing, emitStorageEvent, target, getUserAgent, localize, type, onLocalize]);
 
   React.useImperativeHandle(ref, () => ({ 
     setTranslations: (translations) => {

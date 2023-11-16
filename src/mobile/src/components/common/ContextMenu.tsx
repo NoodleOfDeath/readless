@@ -29,14 +29,14 @@ export const ContextMenu = React.forwardRef(function ContextMenu({
   ...props
 }: ContextMenuProps, ref: ContextMenuRef) {
 
-  const { emitEvent } = usePlatformTools();
+  const { emitStorageEvent } = usePlatformTools();
 
   const menuHandler = React.useCallback((e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
     if (event) {
-      emitEvent(event.name, event.params);
+      emitStorageEvent(event.name, event.params);
     }
     onPress ?? actions?.[e.nativeEvent.index].onPress?.();
-  }, [event, onPress, actions, emitEvent]);
+  }, [event, onPress, actions, emitStorageEvent]);
 
   return (
     <RNContextMenu

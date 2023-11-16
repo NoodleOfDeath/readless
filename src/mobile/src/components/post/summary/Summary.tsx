@@ -176,7 +176,7 @@ export function Summary({
   const { openURL } = useInAppBrowser();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   
-  const { emitEvent } = usePlatformTools();
+  const { emitStorageEvent } = usePlatformTools();
   const theme = useTheme();
   const style = useStyles(props);
   
@@ -438,7 +438,7 @@ export function Summary({
       actions.push(
         {
           onPress: async () => {
-            emitEvent('open-article-summary', summary);
+            emitStorageEvent('open-article-summary', summary);
             openURL(summary.url);
           },
           systemIcon: 'book',
@@ -446,7 +446,7 @@ export function Summary({
         },
         {
           onPress: async () => {
-            emitEvent('intent-to-share-summary', summary);
+            emitStorageEvent('intent-to-share-summary', summary);
             await SheetManager.show('share', {
               payload: {
                 format: preferredShortPressFormat,
@@ -494,7 +494,7 @@ export function Summary({
       },
       {
         onPress: () => { 
-          emitEvent('report-summary', summary);
+          emitStorageEvent('report-summary', summary);
           SheetManager.show('feedback', { payload: { summary } });
         },
         systemIcon: 'flag',
@@ -528,7 +528,7 @@ export function Summary({
       }
     );
     return actions;
-  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, emitEvent, openURL, preferredShortPressFormat, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
+  }, [showcase, footerOnly, initialFormat, isBookmarked, isRead, isFollowingPublisher, summary, isFollowingCategory, isExcludingPublisher, isExcludingCategory, emitStorageEvent, openURL, preferredShortPressFormat, bookmarkSummary, readSummary, followPublisher, followCategory, excludePublisher, excludeCategory, removeSummary]);
 
   const shareActions = React.useMemo(() => showcase ? null : (
     <React.Fragment>
@@ -545,7 +545,7 @@ export function Summary({
                 if (disableInteractions) {
                   return;
                 }
-                emitEvent('open-article-summary-2', summary);
+                emitStorageEvent('open-article-summary-2', summary);
                 openURL(summary.url);
               } }>
               {strings.fullArticle}
@@ -559,7 +559,7 @@ export function Summary({
                 if (disableInteractions) {
                   return;
                 }
-                emitEvent('intent-to-share-summary-2', summary);
+                emitStorageEvent('intent-to-share-summary-2', summary);
                 await SheetManager.show('share', {
                   payload: {
                     format: initialFormat,
@@ -586,7 +586,7 @@ export function Summary({
         </ContextMenu>
       </View>
     </React.Fragment>
-  ), [showcase, footerOnly, theme.colors.textSecondary, menuActions, disableInteractions, emitEvent, summary, openURL, initialFormat, interactWithSummary]);
+  ), [showcase, footerOnly, theme.colors.textSecondary, menuActions, disableInteractions, emitStorageEvent, summary, openURL, initialFormat, interactWithSummary]);
   
   const header = React.useMemo(() => {
     if ((!forceExpanded && isCompact) && !initialFormat) {

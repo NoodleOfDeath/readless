@@ -36,7 +36,7 @@ import { usePlatformTools } from '~/utils';
 
 export function RootNavigator() {
   
-  const { emitEvent } = usePlatformTools();
+  const { emitStorageEvent } = usePlatformTools();
   const theme = useTheme();
   
   const storage = React.useContext(StorageContext);
@@ -95,7 +95,7 @@ export function RootNavigator() {
         try {
           const available = InAppReview.isAvailable();
           if (!available) {
-            emitEvent('in-app-review-failed', 'unavailable');
+            emitStorageEvent('in-app-review-failed', 'unavailable');
             return;
           }
           let success = false;
@@ -105,12 +105,12 @@ export function RootNavigator() {
             success = await InAppReview.requestInAppCommentAppGallery();
           }
           setShowedReview(success);
-          emitEvent(success ? 'in-app-review' : 'in-app-review-failed');
+          emitStorageEvent(success ? 'in-app-review' : 'in-app-review-failed');
           setStoredValue('lastRequestForReview', Date.now());
         } catch (error) {
           console.error(error);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          emitEvent('in-app-review-failed', JSON.stringify(error));
+          emitStorageEvent('in-app-review-failed', JSON.stringify(error));
         }
       };
 
@@ -130,7 +130,7 @@ export function RootNavigator() {
       };
 
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitStorageEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData]);
   
   const refreshSources = React.useCallback(() => {
     if (!ready) {

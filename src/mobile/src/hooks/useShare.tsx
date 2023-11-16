@@ -52,7 +52,7 @@ export type ShareOptions = Partial<RNShareOptions> & {
 
 export function useShare({ callback }: UseShareProps) {
 
-  const { emitEvent } = usePlatformTools();
+  const { emitStorageEvent } = usePlatformTools();
   const theme = useTheme();
   
   const { api:  { interactWithSummary } } = React.useContext(StorageContext);
@@ -63,14 +63,14 @@ export function useShare({ callback }: UseShareProps) {
     }
     const content = summary[property] as string;
     try {
-      emitEvent('copy-to-clipboard', content);
+      emitStorageEvent('copy-to-clipboard', content);
       Clipboard.setString(content);
       interactWithSummary(summary.id, InteractionType.Copy, { content });
     } catch (e) {
       console.error(e);
     }
     callback?.();
-  }, [callback, emitEvent, interactWithSummary]);
+  }, [callback, emitStorageEvent, interactWithSummary]);
 
   const saveToCameraRoll = React.useCallback(async (summary: PublicSummaryGroup, { viewshot }: ShareOptions) => {
     if (!summary || !viewshot) {
@@ -81,7 +81,7 @@ export function useShare({ callback }: UseShareProps) {
       if (!uri) {
         return;
       }
-      emitEvent('save-as-image-summary', summary);
+      emitStorageEvent('save-as-image-summary', summary);
       CameraRoll.save(uri, { type: 'photo' });
       interactWithSummary(summary.id, InteractionType.Share, { metadata: { summary } });
     } catch (e) {
@@ -89,7 +89,7 @@ export function useShare({ callback }: UseShareProps) {
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, emitEvent, interactWithSummary]);
+  }, [callback, emitStorageEvent, interactWithSummary]);
   
   const shareStandard = React.useCallback(async (summary: PublicSummaryGroup, {
     format, originalUrl, viewshot, 
@@ -98,7 +98,7 @@ export function useShare({ callback }: UseShareProps) {
       return;
     }
     try {
-      emitEvent('share-standard-summary', summary);
+      emitStorageEvent('share-standard-summary', summary);
       let url = originalUrl ? summary.url : shareableLink(summary, BASE_DOMAIN, format);
       const imageUrl = await viewshot?.capture?.();
       const base64ImageUrl = imageUrl ? `data:image/png;base64,${await RNFS.readFile(imageUrl, 'base64')}` : undefined;
@@ -119,14 +119,14 @@ export function useShare({ callback }: UseShareProps) {
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, emitEvent, interactWithSummary]);
+  }, [callback, emitStorageEvent, interactWithSummary]);
   
   const shareSocial = React.useCallback(async (summary: PublicSummaryGroup, { social, viewshot }: ShareOptions) => {
     if (!summary || !social) {
       return;
     }
     try {
-      emitEvent('share-social', social);
+      emitStorageEvent('share-social', social);
       const url = shareableLink(summary, BASE_DOMAIN);
       const viewshotData = await viewshot?.capture?.();
       const base64ImageUrl = viewshotData ? `data:image/png;base64,${await RNFS.readFile(viewshotData, 'base64')}` : undefined;
@@ -150,7 +150,7 @@ export function useShare({ callback }: UseShareProps) {
     }
     DeviceEventEmitter.emit('share');
     callback?.();
-  }, [callback, emitEvent, interactWithSummary, theme.colors.headerBackground, theme.colors.primaryDark]);
+  }, [callback, emitStorageEvent, interactWithSummary, theme.colors.headerBackground, theme.colors.primaryDark]);
 
   return {
     copyToClipboard,

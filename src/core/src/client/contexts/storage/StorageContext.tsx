@@ -42,7 +42,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const {
     getItem, removeItem, removeAll, setItem, 
   } = useLocalStorage();
-  const { emitEvent, getUserAgent } = usePlatformTools();
+  const { emitStorageEvent, getUserAgent } = usePlatformTools();
   
   // system state
   const [storage, setStorage] = React.useState<Storage>(DEFAULT_STORAGE_CONTEXT);
@@ -134,7 +134,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         if (SYNCABLE_SETTINGS.includes(key)) {
           updateRemotePref(key, newValue);
         }
-        emitEvent('set-preference', key);
+        emitStorageEvent('set-preference', key);
       }
       return state;
     });
@@ -444,11 +444,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (summary.id in state) {
         delete state[summary.id];
-        emitEvent('unbookmark-summary', summary, state);
+        emitStorageEvent('unbookmark-summary', summary, state);
       } else {
         state[summary.id] = new DatedEvent(summary);
         viewFeature('unread-bookmarks');
-        emitEvent('bookmark-summary', summary, state);
+        emitStorageEvent('bookmark-summary', summary, state);
       }
       return state;
     });
@@ -459,10 +459,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (force && summary.id in state) {
         delete state[summary.id];
-        emitEvent('unread-summary', summary, state);
+        emitStorageEvent('unread-summary', summary, state);
       } else {
         state[summary.id] = new DatedEvent(true);
-        emitEvent('read-summary', summary, state);
+        emitStorageEvent('read-summary', summary, state);
       }
       return state;
     });
@@ -473,10 +473,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (summary.id in state) {
         delete state[summary.id];
-        emitEvent('unhide-summary', summary, state);
+        emitStorageEvent('unhide-summary', summary, state);
       } else {
         state[summary.id] = true;
-        emitEvent('hide-summary', summary, state);
+        emitStorageEvent('hide-summary', summary, state);
       }
       return state;
     });
@@ -489,10 +489,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (force && recap.id in state) {
         delete state[recap.id];
-        emitEvent('unread-recap', recap, state);
+        emitStorageEvent('unread-recap', recap, state);
       } else {
         state[recap.id] = true;
-        emitEvent('read-recap', recap, state);
+        emitStorageEvent('read-recap', recap, state);
       }
       return state;
     });
@@ -510,7 +510,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           delete state[publisher.name];
           return state;
         });
-        emitEvent('unfollow-publisher', publisher, state);
+        emitStorageEvent('unfollow-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
         setStoredValue('excludedPublishers', (prev) => {
@@ -518,7 +518,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           delete state[publisher.name];
           return state;
         });
-        emitEvent('follow-publisher', publisher, state);
+        emitStorageEvent('follow-publisher', publisher, state);
       }
       return state;
     });
@@ -531,10 +531,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
-        emitEvent('unfavorite-publisher', publisher, state);
+        emitStorageEvent('unfavorite-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
-        emitEvent('favorite-publisher', publisher, state);
+        emitStorageEvent('favorite-publisher', publisher, state);
       }
       return state;
     });
@@ -547,7 +547,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (publisher.name in state) {
         delete state[publisher.name];
-        emitEvent('unexclude-publisher', publisher, state);
+        emitStorageEvent('unexclude-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
         setStoredValue('followedPublishers', (prev) => {
@@ -555,7 +555,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           delete state[publisher.name];
           return state;
         });
-        emitEvent('exclude-publisher', publisher, state);
+        emitStorageEvent('exclude-publisher', publisher, state);
       }
       return state;
     });
@@ -575,7 +575,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           delete state[category.name];
           return state;
         });
-        emitEvent('unfollow-category', category, state);
+        emitStorageEvent('unfollow-category', category, state);
       } else {
         state[category.name] = true;
         setStoredValue('excludedCategories', (prev) => {
@@ -583,7 +583,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           delete state[category.name];
           return state;
         });
-        emitEvent('follow-category', category, state);
+        emitStorageEvent('follow-category', category, state);
       }
       return state;
     });
@@ -596,10 +596,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
-        emitEvent('unfavorite-category', category, state);
+        emitStorageEvent('unfavorite-category', category, state);
       } else {
         state[category.name] = true;
-        emitEvent('favorite-category', category, state);
+        emitStorageEvent('favorite-category', category, state);
       }
       return state;
     });
@@ -612,7 +612,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       if (category.name in state) {
         delete state[category.name];
-        emitEvent('unexclude-category', category, state);
+        emitStorageEvent('unexclude-category', category, state);
       } else {
         state[category.name] = true;
         setStoredValue('followedCategories', (prev) => {
@@ -620,7 +620,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           delete state[category.name];
           return state;
         });
-        emitEvent('exclude-category', category, state);
+        emitStorageEvent('exclude-category', category, state);
       }
       return state;
     });

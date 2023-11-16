@@ -29,7 +29,7 @@ export function usePlatformTools() {
     return userAgent;
   };
 
-  const emitEvent = async <E extends StorageEventName>(event: E, mutation?: StorageMutation<E>, state?: StorageState<E>) => {
+  const emitStorageEvent = async <E extends StorageEventName>(event: E, mutation?: StorageMutation<E>, state?: StorageState<E>) => {
     if (!__DEV__) {
       const version = await VersionCheck.getLatestVersion();
       if (VersionCheck.getCurrentVersion() < version) {
@@ -51,7 +51,7 @@ export function usePlatformTools() {
   }, []);
 
   return {
-    emitEvent,
+    emitStorageEvent,
     getUserAgent,
     screenReaderEnabled,
   };
