@@ -389,7 +389,7 @@ export class AccountController {
   public static async getProfile(
     @Request() req: ExpressRequest
   ): Promise<ProfileResponse> {
-    const user = await User.from({ jwt: req.body.token });
+    const user = await User.from({ jwt: req.body.jwt });
     await user.sync();
     const userData = user.toJSON();
     return { profile: userData.profile };
