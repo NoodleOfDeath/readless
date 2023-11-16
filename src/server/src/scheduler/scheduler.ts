@@ -169,7 +169,7 @@ async function scheduleJobs() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '3m') * TOP_STORIES_CACHE_RATE);
+    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '150s') * 2 * TOP_STORIES_CACHE_RATE);
   }
 }
 
