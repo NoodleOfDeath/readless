@@ -164,6 +164,7 @@ export const enStrings = {
   noteworthyArticle: 'Noteworthy article?',
   notifications: 'Notifications',
   offensive: 'This is offensive',
+  ok: 'Ok',
   oldNews: 'Old News',
   openCategory: 'Opens the category page of this category',
   openContextMenu: 'Open Context Menu',

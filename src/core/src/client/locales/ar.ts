@@ -166,6 +166,7 @@ export const arStrings: typeof enStrings = {
   noteworthyArticle: 'مقال جدير بالملاحظة؟',
   notifications: 'إشعارات',
   offensive: 'هذا مسيء',
+  ok: 'نعم',
   oldNews: 'أخبار قديمة',
   openCategory: 'يفتح صفحة الفئة الخاصة بهذه الفئة',
   openContextMenu: 'افتح قائمة السياق',

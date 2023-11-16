@@ -166,6 +166,7 @@ export const huStrings: typeof enStrings = {
   noteworthyArticle: 'Figyelemre méltó cikk?',
   notifications: 'Értesítések',
   offensive: 'Ez sértő',
+  ok: 'Rendben',
   oldNews: 'Régi Hírek',
   openCategory: 'Megnyitja a kategória kategóriaoldalát',
   openContextMenu: 'Nyissa meg a helyi menüt',

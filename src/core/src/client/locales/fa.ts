@@ -166,6 +166,7 @@ export const faStrings: typeof enStrings = {
   noteworthyArticle: 'مقاله قابل توجه؟',
   notifications: 'اطلاعیه',
   offensive: 'این توهین آمیز است',
+  ok: 'خوب',
   oldNews: 'اخبار قدیمی',
   openCategory: 'صفحه دسته بندی این دسته را باز می کند',
   openContextMenu: 'منوی زمینه را باز کنید',

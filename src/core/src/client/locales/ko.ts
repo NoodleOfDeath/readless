@@ -166,6 +166,7 @@ export const koStrings: typeof enStrings = {
   noteworthyArticle: '주목할만한 기사?',
   notifications: '알림',
   offensive: '이것은 공격적입니다',
+  ok: '좋아요',
   oldNews: '오래된 뉴스',
   openCategory: '이 카테고리의 카테고리 페이지를 엽니다.',
   openContextMenu: '컨텍스트 메뉴 열기',

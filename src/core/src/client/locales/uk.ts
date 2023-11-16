@@ -166,6 +166,7 @@ export const ukStrings: typeof enStrings = {
   noteworthyArticle: 'Варта уваги стаття?',
   notifications: 'Сповіщення',
   offensive: 'Це образливо',
+  ok: 'В порядку',
   oldNews: 'Старі новини',
   openCategory: 'Відкриває сторінку цієї категорії',
   openContextMenu: 'Відкрийте контекстне меню',

@@ -4,6 +4,7 @@ import { UserData } from './UserData';
 
 import {
   API,
+  AuthError,
   ProfileResponse,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
@@ -392,6 +393,7 @@ export type StorageContextType = Storage & SyncState & {
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
   syncWithRemotePrefs: (pref?: ProfileResponse) => Promise<void>;
   api: Methods;
+  setErrorHandler: React.Dispatch<React.SetStateAction<(error: Error | AuthError) => void>>;
 };
 
 export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
@@ -422,6 +424,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   removeSummary: () => Promise.resolve(),
   resetStorage: () => Promise.resolve(),
   setCategories: () => Promise.resolve(),
+  setErrorHandler: () => Promise.resolve(),
   setLoadedInitialUrl: () => Promise.resolve(),
   setPublishers: () => Promise.resolve(),
   setStoredValue: () => Promise.resolve(),

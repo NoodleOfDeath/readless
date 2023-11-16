@@ -166,6 +166,7 @@ export const elStrings: typeof enStrings = {
   noteworthyArticle: 'Αξιοσημείωτο άρθρο;',
   notifications: 'Ειδοποιήσεις',
   offensive: 'Αυτό είναι προσβλητικό',
+  ok: 'Εντάξει',
   oldNews: 'Παλιά Νέα',
   openCategory: 'Ανοίγει τη σελίδα κατηγορίας αυτής της κατηγορίας',
   openContextMenu: 'Ανοίξτε το μενού περιβάλλοντος',

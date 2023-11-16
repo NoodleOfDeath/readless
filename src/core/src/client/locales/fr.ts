@@ -166,6 +166,7 @@ export const frStrings: typeof enStrings = {
   noteworthyArticle: 'Article remarquable ?',
   notifications: 'Avis',
   offensive: 'C\'est offensant',
+  ok: 'D\'accord',
   oldNews: 'Anciennes nouvelles',
   openCategory: 'Ouvre la page de catégorie de cette catégorie',
   openContextMenu: 'Ouvrir le menu contextuel',

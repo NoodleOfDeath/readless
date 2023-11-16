@@ -166,6 +166,7 @@ export const skStrings: typeof enStrings = {
   noteworthyArticle: 'Pozoruhodný článok?',
   notifications: 'Upozornenia',
   offensive: 'Toto je urážlivé',
+  ok: 'Dobre',
   oldNews: 'Staré správy',
   openCategory: 'Otvorí stránku kategórie tejto kategórie',
   openContextMenu: 'Otvorte kontextovú ponuku',

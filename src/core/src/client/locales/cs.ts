@@ -166,6 +166,7 @@ export const csStrings: typeof enStrings = {
   noteworthyArticle: 'Pozoruhodný článek?',
   notifications: 'Oznámení',
   offensive: 'To je urážlivé',
+  ok: 'OK',
   oldNews: 'Staré zprávy',
   openCategory: 'Otevře stránku kategorie této kategorie',
   openContextMenu: 'Otevřete Kontextovou nabídku',

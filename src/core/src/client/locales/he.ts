@@ -166,6 +166,7 @@ export const heStrings: typeof enStrings = {
   noteworthyArticle: 'מאמר ראוי לציון?',
   notifications: 'התראות',
   offensive: 'זה פוגעני',
+  ok: 'בסדר',
   oldNews: 'חדשות ישנות',
   openCategory: 'פותח את דף הקטגוריות של קטגוריה זו',
   openContextMenu: 'פתח את תפריט ההקשר',

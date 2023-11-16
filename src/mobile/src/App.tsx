@@ -14,12 +14,14 @@ import {
   TriggerWordsWalkthrough,
   WhatsNewWalkthrough,
 } from './components';
+import { PaperContextProvider } from './contexts/paper';
 
 import {
   LayoutContextProvider,
   MediaContextProvider,
   NotificationContextProvider,
   StorageContextProvider,
+  ToastContextProvider,
 } from '~/contexts';
 import { RootNavigator } from '~/navigation';
 
@@ -37,14 +39,18 @@ registerSheet('feedback', FeedbackDialog);
 
 export default function App() {
   return (
-    <StorageContextProvider>
-      <LayoutContextProvider>
-        <NotificationContextProvider>
-          <MediaContextProvider>
-            <RootNavigator />
-          </MediaContextProvider>
-        </NotificationContextProvider>
-      </LayoutContextProvider>
-    </StorageContextProvider>
+    <LayoutContextProvider>
+      <StorageContextProvider>
+        <PaperContextProvider>
+          <ToastContextProvider>
+            <NotificationContextProvider>
+              <MediaContextProvider>
+                <RootNavigator />
+              </MediaContextProvider>
+            </NotificationContextProvider>
+          </ToastContextProvider>
+        </PaperContextProvider>
+      </StorageContextProvider>
+    </LayoutContextProvider>
   );
 }

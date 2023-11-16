@@ -107,7 +107,6 @@ export function SettingsScreen() {
               cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
             {Platform.OS === 'ios' && (
               <TableViewCell
-                bold
                 cellStyle="RightDetail"
                 title={ strings.preferredShortPressFormat }
                 sentenceCase

@@ -166,6 +166,7 @@ export const svStrings: typeof enStrings = {
   noteworthyArticle: 'Anmärkningsvärd artikel?',
   notifications: 'Aviseringar',
   offensive: 'Det här är stötande',
+  ok: 'Ok',
   oldNews: 'Gamla nyheter',
   openCategory: 'Öppnar kategorisidan för denna kategori',
   openContextMenu: 'Öppna snabbmenyn',

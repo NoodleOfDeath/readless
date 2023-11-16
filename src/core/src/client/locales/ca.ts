@@ -166,6 +166,7 @@ export const caStrings: typeof enStrings = {
   noteworthyArticle: 'Article destacable?',
   notifications: 'Notificacions',
   offensive: 'Això és ofensiu',
+  ok: 'D\'acord',
   oldNews: 'Notícies antigues',
   openCategory: 'Obre la pàgina de categoria d\'aquesta categoria',
   openContextMenu: 'Obre el menú contextual',

@@ -5,11 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
-import {
-  DefaultTheme,
-  MD3DarkTheme,
-  PaperProvider,
-} from 'react-native-paper';
 
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
@@ -29,6 +24,7 @@ import {
   NotificationContext,
   OrientationType,
   StorageContext,
+  ToastContext,
 } from '~/contexts';
 import { useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
@@ -39,28 +35,30 @@ export function RootNavigator() {
   const { emitStorageEvent } = usePlatformTools();
   const theme = useTheme();
   
-  const storage = React.useContext(StorageContext);
-  const {
-    ready, 
-    isSyncingWithRemote,
-    categories,
-    publishers,
-    setCategories, 
-    setPublishers,
-    lastRequestForReview = 0,
-    readSummaries,
-    pushNotificationsEnabled,
-    setStoredValue,
-    userData,
-    api: {
-      getCategories, getPublishers, updateMetadata,
-    },
-  } = storage;
   const {
     isTablet,
     lockRotation,
     unlockRotation,
   } = React.useContext(LayoutContext);
+  const storage = React.useContext(StorageContext);
+  const {
+    api: {
+      getCategories, getPublishers, updateMetadata,
+    },
+    ready, 
+    isSyncingWithRemote,
+    categories,
+    publishers,
+    lastRequestForReview = 0,
+    readSummaries,
+    pushNotificationsEnabled,
+    userData,
+    setStoredValue,
+    setCategories, 
+    setPublishers,
+    setErrorHandler,
+  } = storage;
+  const { showToast } = React.useContext(ToastContext);
   
   const { isRegisteredForRemoteNotifications, registerRemoteNotifications } = React.useContext(NotificationContext);
   const { currentTrack } = React.useContext(MediaContext);
@@ -107,8 +105,10 @@ export function RootNavigator() {
           setShowedReview(success);
           emitStorageEvent(success ? 'in-app-review' : 'in-app-review-failed');
           setStoredValue('lastRequestForReview', Date.now());
-        } catch (error) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
           console.error(error);
+          showToast(error?.errorKey ?? error?.message ?? 'Unknown error');
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           emitStorageEvent('in-app-review-failed', JSON.stringify(error));
         }
@@ -130,9 +130,9 @@ export function RootNavigator() {
       };
 
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitStorageEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData]);
+  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitStorageEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData, showToast]);
   
-  const refreshSources = React.useCallback(() => {
+  const refreshSources = React.useCallback(async () => {
     if (!ready) {
       return;
     }
@@ -143,31 +143,45 @@ export function RootNavigator() {
       return;
     }
     if (!categories) {
-      getCategories().then((response) => {
+      try {
+        const response = await getCategories();
         setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-      }).catch((error) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
         console.log(error); 
+        showToast(error?.errorKey ?? error?.message ?? 'Unknown error');
         setLastFetchFailed(true);
-      }).finally(() => {
+      } finally {
         setLastFetch(Date.now());
-      });
+      }
     }
     if (!publishers) {
-      getPublishers().then((response) => {
+      try {
+        const response = await getPublishers();
         setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-      }).catch((error) => {
-        console.log(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.log(error); 
+        showToast(error?.errorKey ?? error?.message ?? 'Unknown error');
         setLastFetchFailed(true);
-      }).finally(() => {
+      } finally {
         setLastFetch(Date.now());
-      });
+      }
     }
-  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, ready, setCategories, setPublishers, userData?.valid]);
+  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, ready, setCategories, setPublishers, showToast, userData?.valid]);
 
-  React.useEffect(() => refreshSources(), [refreshSources]);
+  React.useEffect(() => {
+    refreshSources(); 
+  }, [refreshSources]);
+
+  React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setErrorHandler((error: any) => {
+      console.log(error);
+      showToast(error?.errorKey ?? error?.message ?? 'Unknown error');
+    });
+  }, [setErrorHandler, showToast]);
   
-  const currentTheme = React.useMemo(() => theme.isDarkMode ? MD3DarkTheme : DefaultTheme, [theme.isDarkMode]);
-
   if (!ready) {
     const text = isSyncingWithRemote ? 'Syncing with remote...' : 'Loading...';
     return (
@@ -190,23 +204,21 @@ export function RootNavigator() {
     <NavigationContainer
       theme= { theme.navContainerTheme }
       linking={ NAVIGATION_LINKING_OPTIONS }>
-      <PaperProvider theme={ currentTheme }>
-        <SheetProvider>
-          {(userData?.valid || userData?.unlinked) ? (
-            <React.Fragment>
-              <TabbedNavigator />
-              <MediaPlayer visible={ Boolean(currentTrack) } />
-            </React.Fragment>
-          ) : (
-            <RoutedScreen safeArea={ false } navigationID='loginStackNav'>
-              <StackNavigator
-                id="loginStackNav" 
-                screens={ LOGIN_STACK }
-                screenOptions={ { headerShown: false } } />
-            </RoutedScreen>
-          )}
-        </SheetProvider>
-      </PaperProvider>
+      <SheetProvider>
+        {(userData?.valid || userData?.unlinked) ? (
+          <React.Fragment>
+            <TabbedNavigator />
+            <MediaPlayer visible={ Boolean(currentTrack) } />
+          </React.Fragment>
+        ) : (
+          <RoutedScreen safeArea={ false } navigationID='loginStackNav'>
+            <StackNavigator
+              id="loginStackNav" 
+              screens={ LOGIN_STACK }
+              screenOptions={ { headerShown: false } } />
+          </RoutedScreen>
+        )}
+      </SheetProvider>
     </NavigationContainer>
   );
 }

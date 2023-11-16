@@ -7,12 +7,11 @@ import {
 
 import messaging from '@react-native-firebase/messaging';
 import { Notifications } from 'react-native-notifications';
-import { Provider } from 'react-native-paper';
 
 import { DEFAULT_NOTIFICATION_CONTEXT } from './types';
 
 import { SubscriptionChannel, SubscriptionEvent } from '~/api';
-import { StorageContext } from '~/contexts';
+import { StorageContext, ToastContext } from '~/contexts';
 import { strings } from '~/locales';
 
 export const NotificationContext = React.createContext(DEFAULT_NOTIFICATION_CONTEXT);
@@ -20,20 +19,22 @@ export const NotificationContext = React.createContext(DEFAULT_NOTIFICATION_CONT
 export function NotificationContextProvider({ children }: React.PropsWithChildren) {
 
   const { 
-    fcmToken, 
-    enablePush,
-    setStoredValue,
     api: { 
       getSubscriptionStatus,
       subscribe, 
       unsubscribe,
     },
+    userData,
+    fcmToken, 
+    enablePush,
+    setStoredValue,
   } = React.useContext(StorageContext);
+  const { showToast } = React.useContext(ToastContext);
 
   const [redirectToSettings, setRedirectToSettings] = React.useState(false);
   
   const syncWithServer = React.useCallback(async () => {
-    if (!fcmToken) {
+    if (userData?.valid || !fcmToken) {
       return;
     }
     try {
@@ -59,10 +60,12 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
         }
         return (prev = newState);
       });
-    } catch (e) {
-      console.log(e);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      console.error(e);
+      showToast(e?.errorKey ?? e.message);
     }
-  }, [fcmToken, getSubscriptionStatus, setStoredValue]);
+  }, [userData?.valid, fcmToken, getSubscriptionStatus, setStoredValue, showToast]);
 
   const isRegisteredForRemoteNotifications = React.useCallback(async (redirectOnFail = false) => {
     const fail = () => {
@@ -100,10 +103,12 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     try {
       setRedirectToSettings(redirectOnFail);
       Notifications.registerRemoteNotifications();
-    } catch (error) {
-      console.log(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      console.error(e);
+      showToast(e?.errorKey ?? e.message);
     }
-  }, []);
+  }, [showToast]);
 
   React.useEffect(() => {
 
@@ -126,8 +131,10 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
             event: SubscriptionEvent.Default,
             uuid: newFcmToken,
           });
-        } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
           console.error(error);
+          showToast(error?.errorKey ?? error.message);
           return;
         }
       }),
@@ -182,7 +189,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       listeners.forEach(listener => listener.remove());
     };
 
-  }, [isRegisteredForRemoteNotifications, redirectToSettings, setStoredValue, subscribe, syncWithServer]);
+  }, [isRegisteredForRemoteNotifications, redirectToSettings, setStoredValue, showToast, subscribe, syncWithServer]);
 
   return (
     <NotificationContext.Provider value={ { 
@@ -218,9 +225,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
         });
       },
     } }>
-      <Provider>
-        {children}
-      </Provider>
+      {children}
     </NotificationContext.Provider>
   );
 }

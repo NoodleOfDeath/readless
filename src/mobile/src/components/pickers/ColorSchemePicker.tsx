@@ -27,9 +27,9 @@ export function ColorSchemePicker({
     return (
       <TablePicker
         options={ [
-          { label: strings.settings, value: 'light' },
-          { label: strings.settings, value: 'system' },
-          { label: strings.settings, value: 'dark' },
+          { label: strings.light, value: 'light' },
+          { label: strings.system, value: 'system' },
+          { label: strings.dark, value: 'dark' },
         ] }
         initialValue={ colorScheme ?? 'system' }
         onValueChange={ (colorScheme) => {

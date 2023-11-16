@@ -166,6 +166,7 @@ export const thStrings: typeof enStrings = {
   noteworthyArticle: 'บทความน่ารู้?',
   notifications: 'การแจ้งเตือน',
   offensive: 'นี้เป็นที่น่ารังเกียจ',
+  ok: 'ตกลง',
   oldNews: 'ข่าวเก่า',
   openCategory: 'เปิดหน้าหมวดหมู่ของหมวดหมู่นี้',
   openContextMenu: 'เปิดเมนูบริบท',

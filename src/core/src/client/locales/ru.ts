@@ -166,6 +166,7 @@ export const ruStrings: typeof enStrings = {
   noteworthyArticle: 'Достойная внимания статья?',
   notifications: 'Уведомления',
   offensive: 'это оскорбительно',
+  ok: 'Хорошо',
   oldNews: 'Старые новости',
   openCategory: 'Открывает страницу категории этой категории.',
   openContextMenu: 'Открыть контекстное меню',

@@ -166,6 +166,7 @@ export const plStrings: typeof enStrings = {
   noteworthyArticle: 'Artykuł godny uwagi?',
   notifications: 'Powiadomienia',
   offensive: 'To jest obraźliwe',
+  ok: 'OK',
   oldNews: 'Stare wiadomości',
   openCategory: 'Otwiera stronę kategorii tej kategorii',
   openContextMenu: 'Otwórz menu kontekstowe',

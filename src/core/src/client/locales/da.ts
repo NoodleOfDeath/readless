@@ -166,6 +166,7 @@ export const daStrings: typeof enStrings = {
   noteworthyArticle: 'Bemærkelsesværdig artikel?',
   notifications: 'Meddelelser',
   offensive: 'Det er stødende',
+  ok: 'Okay',
   oldNews: 'Gamle nyheder',
   openCategory: 'Åbner kategorisiden for denne kategori',
   openContextMenu: 'Åbn kontekstmenuen',

@@ -166,6 +166,7 @@ export const jaStrings: typeof enStrings = {
   noteworthyArticle: '注目の記事?',
   notifications: '通知',
   offensive: 'これは攻撃的です',
+  ok: 'わかりました',
   oldNews: '古いニュース',
   openCategory: 'このカテゴリーのカテゴリーページを開きます',
   openContextMenu: 'コンテキストメニューを開く',

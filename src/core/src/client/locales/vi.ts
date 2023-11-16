@@ -166,6 +166,7 @@ export const viStrings: typeof enStrings = {
   noteworthyArticle: 'Bài viết đáng chú ý?',
   notifications: 'thông báo',
   offensive: 'điều này là xúc phạm',
+  ok: 'Được rồi',
   oldNews: 'Tin cũ',
   openCategory: 'Mở trang danh mục của danh mục này',
   openContextMenu: 'Mở menu ngữ cảnh',

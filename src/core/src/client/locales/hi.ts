@@ -166,6 +166,7 @@ export const hiStrings: typeof enStrings = {
   noteworthyArticle: 'उल्लेखनीय लेख?',
   notifications: 'सूचनाएं',
   offensive: 'यह आपत्तिजनक है',
+  ok: 'ठीक है',
   oldNews: 'पुराना समाचार',
   openCategory: 'इस श्रेणी का श्रेणी पृष्ठ खुलता है',
   openContextMenu: 'संदर्भ मेनू खोलें',

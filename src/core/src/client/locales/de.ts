@@ -166,6 +166,7 @@ export const deStrings: typeof enStrings = {
   noteworthyArticle: 'Bemerkenswerter Artikel?',
   notifications: 'Benachrichtigungen',
   offensive: 'Das ist beleidigend',
+  ok: 'OK',
   oldNews: 'Schnee von gestern',
   openCategory: 'Öffnet die Kategorieseite dieser Kategorie',
   openContextMenu: 'Kontextmenü öffnen',
