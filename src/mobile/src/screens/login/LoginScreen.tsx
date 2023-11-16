@@ -40,7 +40,7 @@ export function LoginScreen({
           <Image
             native
             contain
-            source={ { uri: Platform.select({ android: 'asset:/logo.svg', ios: 'Logo' }) } }
+            source={ { uri: Platform.select({ android: 'logo', ios: 'Logo' }) } }
             width={ 300 }
             height={ 300 } />
           <Text color="invertText">{strings.informationWithoutTheNoise}</Text>
