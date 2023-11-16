@@ -168,7 +168,7 @@ async function scheduleJobs() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleJobs, Math.min(ms(process.env.TOP_STORIES_CACHE_RATE || '3m'), ms(process.env.CACHE_HALFLIFE || '3m')) * 0.75);
+    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '3m') / 3);
   }
 }
 
