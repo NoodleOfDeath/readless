@@ -21,7 +21,7 @@ export function usePlatformTools() {
     };
   }, [navigator]);
 
-  const emitEvent = <E extends StorageEventName>(event: E, mutation?: StorageMutation<E>, state?: StorageState<E>) => {
+  const emitStorageEvent = <E extends StorageEventName>(event: E, mutation?: StorageMutation<E>, state?: StorageState<E>) => {
     new EventEmitter().emit(event, mutation, state);
   };
 
@@ -30,7 +30,7 @@ export function usePlatformTools() {
   }, []);
 
   return {
-    emitEvent,
+    emitStorageEvent,
     getUserAgent,
   };
 

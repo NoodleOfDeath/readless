@@ -38,7 +38,7 @@ export function Popover({
   ...props
 }: PopoverProps) {
 
-  const { emitEvent } = usePlatformTools();
+  const { emitStorageEvent } = usePlatformTools();
   const theme = useTheme();
 
   const [visible, setVisible] = React.useState(false);
@@ -80,7 +80,7 @@ export function Popover({
           <TouchableOpacity
             onPress={ () => {
               if (event) {
-                emitEvent(event.name);
+                emitStorageEvent(event.name);
               }
               onPress?.();
               !longPress && setVisible(true); 

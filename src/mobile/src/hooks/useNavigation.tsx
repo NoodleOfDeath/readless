@@ -19,7 +19,7 @@ export type Navigation = DrawerNavigation & StackNavigator;
 
 export function useNavigation() {
 
-  const { emitEvent } = usePlatformTools();
+  const { emitStorageEvent } = usePlatformTools();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useRNNavigation<Navigation>();
   
@@ -29,10 +29,10 @@ export function useNavigation() {
   } = React.useContext(StorageContext);
 
   const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R], stackNav?: Navigation) => {
-    emitEvent('navigate', route);
+    emitStorageEvent('navigate', route);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (stackNav?.push ?? navigation.push ?? navigation.navigate)(route, params as RoutingParams[R]);
-  }, [emitEvent, navigation]);
+  }, [emitStorageEvent, navigation]);
 
   const search = React.useCallback((params: RoutingParams['search'], stackNav?: Navigation) => {
     const prefilter = params.prefilter;

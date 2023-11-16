@@ -13,7 +13,6 @@ export * from './DataTable';
 export * from './DateTimePicker';
 export * from './Dialog';
 export * from './Divider';
-export * from './DraggableList';
 export * from './DrawerItem';
 export * from './DrawerSection';
 export * from './FlatList';

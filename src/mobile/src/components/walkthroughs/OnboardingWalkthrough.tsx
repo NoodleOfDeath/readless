@@ -19,7 +19,7 @@ import { usePlatformTools } from '~/utils';
 
 export function OnboardingWalkthrough(props: SheetProps) {
   
-  const { emitEvent } = usePlatformTools();
+  const { emitStorageEvent } = usePlatformTools();
   const { viewFeature } = React.useContext(StorageContext);
   const { subscribe, unsubscribe } = React.useContext(NotificationContext);
 
@@ -42,7 +42,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                emitEvent('poll-i-hate-reading');
+                emitStorageEvent('poll-i-hate-reading');
                 setILikeReading(false);
                 walkthroughRef.current?.next?.();
               } }>
@@ -51,7 +51,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                emitEvent('poll-the-news-is-negative');
+                emitStorageEvent('poll-the-news-is-negative');
                 setILikeReading(false);
                 walkthroughRef.current?.next?.();
               } }>
@@ -60,7 +60,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                emitEvent('poll-the-news-is-boring');
+                emitStorageEvent('poll-the-news-is-boring');
                 setILikeReading(false);
                 walkthroughRef.current?.next?.();
               } }>
@@ -69,7 +69,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
             <Button
               contained
               onPress={ () => {
-                emitEvent('poll-reading-is-enjoyable');
+                emitStorageEvent('poll-reading-is-enjoyable');
                 setILikeReading(true);
                 walkthroughRef.current?.next?.();
               } }>
@@ -184,7 +184,7 @@ export function OnboardingWalkthrough(props: SheetProps) {
       }
     );
     return steps;
-  }, [emitEvent, enableDailyReminders, fireTime, iLikeReading, onDone, subscribe, unsubscribe]);
+  }, [emitStorageEvent, enableDailyReminders, fireTime, iLikeReading, onDone, subscribe, unsubscribe]);
   
   return (
     <Walkthrough
