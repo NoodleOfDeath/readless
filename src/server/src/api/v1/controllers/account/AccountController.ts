@@ -325,8 +325,6 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
           userId,
         };
       }
-    } else {
-      await user.sync(); // get profile
     }
 
     if (body.eth2Address) {
@@ -378,7 +376,8 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
         throw new AuthError('INVALID_PASSWORD');
       }
     }
-    // user is authenticated, generate JWT
+    // user is authenticated, generate JWT else {
+    await user.sync(); // get profile
     const userData = user.toJSON();
     const token = await JWT.as(body.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
@@ -584,17 +583,18 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: UpdateCredentialRequest
   ): Promise<UpdateCredentialResponse> {
     const user = await User.from(body, req.body);
-    if (typeof body.password === 'string') {
-      if (!validatePassword(body.password)) {
+    await user.authenticate(req.body);
+    if (body.newPassword) {
+      if (!validatePassword(body.newPassword)) {
         throw new InternalError('Password does not meet requirements');
       }
-      await Credential.destroy({ 
+      await Credential.destroy({
         where: { 
           type: 'password', 
-          userId: user.id 
+          userId: user.id, 
         },
       });
-      await user.createCredential('password', body.password);
+      await user.createCredential('password', body.newPassword);
       return { success: true };
     }
     return { success: false };
@@ -607,21 +607,9 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: DeleteUserRequest
   ): Promise<DeleteUserResponse> {
     const user = await User.from(body, req.body);
-    const credential = await user.findCredential('password');
-    if (!credential) {
-      throw new AuthError('BAD_REQUEST');
-    }
-    if (!bcrypt.compareSync(body.password, credential.value)) {
-      throw new AuthError('INVALID_PASSWORD');
-    }
-    await this.store.query(
-      'delete from users cascade where id = :id',
-      { 
-        replacements: { id: user.id },
-        type: QueryTypes.DELETE,
-      },
-    );
-    return { success: true }
+    await user.authenticate(req.body);
+    await user.destroy({ force: true });
+    return { success: true };
   }
 
 }

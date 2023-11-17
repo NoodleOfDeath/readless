@@ -4,7 +4,7 @@ const html = `
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Welcome To Read Less</title>
+    <title>Reset Password</title>
     <style>
       body {
         margin: 0;
@@ -53,21 +53,17 @@ const html = `
   </head>
   <body>
     <header>
-      <h1>Welcome to the Read Less community.</h1>
+      <h1>Read Less: Reset Password</h1>
     </header>
     <div class="container">
       <p>
-        Thank you for signing up! Make sure to follow us on social media to get the latest updates and news!
+        You have requested to reset your password. Please click the link below to
+        reset your password. This link will expire in 15 minutes.
       </p>
-      <p>
-        <a href="https://discord.gg/2gw3dP2a4u">
-          Discord
-        </a>
+      <p class="center">
+        <a href="{{domain}}/verify/?otp={{otp}}">Reset Password</a>
       </p>
-    </div>
-    <div class="center">
-      <img src="{{domain}}/logo.svg" alt="Read Less Logo" />
-      <p>Read Less</p>
+      <p>If you did not request a password reset, please disregard this message.</p>
     </div>
   </body>
 </html>

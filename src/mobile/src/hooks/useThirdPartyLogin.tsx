@@ -60,6 +60,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     userData,
     setStoredValue, 
     syncWithRemotePrefs,
+    resetStorage,
   } = React.useContext(StorageContext);
   const { showToast } = React.useContext(ToastContext);
 
@@ -244,7 +245,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
           if (error) {
             throw error;
           }
-          setStoredValue('userData', undefined, false);
+          resetStorage(true);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           console.error(e);
@@ -253,7 +254,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       },
       'secure-text'
     );
-  }, [deleteUser, setStoredValue, showToast, userData?.userId]);
+  }, [deleteUser, resetStorage, showToast, userData?.userId]);
   
   return {
     deleteAccount,

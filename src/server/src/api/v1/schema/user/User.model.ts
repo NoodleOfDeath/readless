@@ -21,6 +21,7 @@ import {
   AliasType,
   CredentialCreationAttributes,
   CredentialType,
+  DestructuredCredentialPayload,
   FindAliasOptions,
   InteractionType,
   Profile,
@@ -170,6 +171,34 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       },
     });
   }
+  
+  public async authenticate({
+    jwt,
+    password,
+  }: DestructuredCredentialPayload & { jwt?: string }) {
+    if (jwt) {
+      const token = new JWT(jwt);
+      if (token.userId !== this.id) {
+        throw new AuthError('INVALID_CREDENTIALS');
+      }
+      if (token.expired) {
+        throw new AuthError('EXPIRED_CREDENTIALS');
+      }
+    } else
+    if (password) {
+      const credential = await this.findCredential('password');
+      if (!credential) {
+        throw new AuthError('INVALID_CREDENTIALS');
+      }
+      if (!bcrypt.compareSync(password, credential.value)) {
+        throw new AuthError('INVALID_PASSWORD');
+      }
+    } else {
+      throw new AuthError('INVALID_CREDENTIALS');
+    }
+  }
+  
+  // roles
 
   public async getRoles() {
     return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.id } })).map(async (role) => (await Role.findOne({ where: { id: role.roleId } })) ))).map((role) => [role.name, role]));
