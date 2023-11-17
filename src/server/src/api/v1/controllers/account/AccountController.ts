@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
+import { QueryTypes } from 'sequelize';
 import {
   Body,
   Delete,
@@ -586,10 +587,12 @@ export class AccountController {
       if (!validatePassword(body.password)) {
         throw new InternalError('Password does not meet requirements');
       }
-      const password = await user.findCredential('password');
-      if (password) {
-        await password.destroy();
-      }
+      await Credential.destroy({ 
+        where: { 
+          type: 'password', 
+          userId: user.id 
+        },
+      });
       await user.createCredential('password', body.password);
       return { success: true };
     }
@@ -610,7 +613,13 @@ export class AccountController {
     if (!bcrypt.compareSync(body.password, credential.value)) {
       throw new AuthError('INVALID_PASSWORD');
     }
-    await user.destroy();
+    await this.store.query(
+      'delete from users cascade where id = :id',
+      { 
+        replacements: { id: user.id },
+        type: QueryTypes.UPDATE,
+      },
+    );
     return { success: true }
   }
 
