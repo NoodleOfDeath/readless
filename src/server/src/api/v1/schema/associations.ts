@@ -61,25 +61,28 @@ export function makeAssociations() {
 
   // user/auth associations
   
-  User.hasMany(Alias, { foreignKey: 'userId' });
+  User.hasMany(Alias, { foreignKey: 'userId', onDelete: 'cascade' });
   Alias.belongsTo(User, { foreignKey: 'userId' });
 
-  User.hasMany(UserMetadata, { foreignKey: 'userId' });
+  User.hasMany(UserMetadata, { foreignKey: 'userId', onDelete: 'cascade' });
   UserMetadata.belongsTo(User, { foreignKey: 'userId' });
 
-  User.hasMany(RefUserRole, { foreignKey: 'userId' });
+  User.hasMany(RefUserRole, { foreignKey: 'userId', onDelete: 'cascade' });
   RefUserRole.belongsTo(User, { foreignKey: 'userId' });
 
   Role.hasMany(RefUserRole, { foreignKey: 'roleId' });
   RefUserRole.belongsTo(Role, { foreignKey: 'roleId' });
   
-  User.hasMany(Credential, { foreignKey: 'userId' });
+  User.hasMany(Credential, { foreignKey: 'userId', onDelete: 'cascade' });
   Credential.belongsTo(User, { foreignKey: 'userId' });
   
   // publisher associations
   
   PublisherInteraction.belongsTo(Publisher, { foreignKey: 'targetId' });
-  Publisher.hasMany(PublisherInteraction, { foreignKey: 'targetId' });
+  Publisher.hasMany(PublisherInteraction, {
+    foreignKey: 'targetId',
+    onDelete: 'cascade',
+  });
   
   PublisherInteraction.belongsTo(User, {
     foreignKey: {
@@ -95,17 +98,22 @@ export function makeAssociations() {
   Publisher.hasMany(PublisherTranslation, {
     as: 'translations',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   Locale.hasMany(PublisherTranslation, { 
     foreignKey: 'locale',
+    onDelete: 'cascade',
     sourceKey: 'code',
   });
   
   // category associations
   
   CategoryInteraction.belongsTo(Category, { foreignKey: 'targetId' });
-  Category.hasMany(CategoryInteraction, { foreignKey: 'targetId' });
+  Category.hasMany(CategoryInteraction, { 
+    foreignKey: 'targetId',
+    onDelete: 'cascade',
+  });
   
   CategoryInteraction.belongsTo(User, {
     foreignKey: {
@@ -121,17 +129,22 @@ export function makeAssociations() {
   Category.hasMany(CategoryTranslation, {
     as: 'translations',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   Locale.hasMany(CategoryTranslation, { 
     foreignKey: 'locale',
+    onDelete: 'cascade',
     sourceKey: 'code',
   });
   
   // summary associations
   
   Summary.belongsTo(Publisher, { foreignKey: 'publisherId' });
-  Publisher.hasMany(Summary, { foreignKey: 'publisherId' });
+  Publisher.hasMany(Summary, { 
+    foreignKey: 'publisherId',
+    onDelete: 'cascade',
+  });
 
   Summary.belongsToMany(Category, {
     foreignKey: 'parentId',
@@ -141,9 +154,16 @@ export function makeAssociations() {
     foreignKey: 'categoryId',
     sourceKey: 'parentId',
   });
-  Category.hasMany(Summary, { foreignKey: 'categoryId' });
+  Category.hasMany(Summary, { 
+    foreignKey: 'categoryId',
+    onDelete: 'cascade',
+  });
   
-  SentimentMethod.hasMany(SummarySentiment, { foreignKey: 'method', sourceKey: 'name' });
+  SentimentMethod.hasMany(SummarySentiment, { 
+    foreignKey: 'method', 
+    onDelete: 'cascade',
+    sourceKey: 'name',
+  });
   
   SummarySentiment.belongsTo(Summary, {
     as: 'summary',
@@ -152,6 +172,7 @@ export function makeAssociations() {
   Summary.hasMany(SummarySentiment, {
     as: 'sentiments',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   SummaryTranslation.belongsTo(Summary, { 
@@ -161,10 +182,12 @@ export function makeAssociations() {
   Summary.hasMany(SummaryTranslation, {
     as: 'translations',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   Locale.hasMany(SummaryTranslation, { 
     foreignKey: 'locale',
+    onDelete: 'cascade',
     sourceKey: 'code',
   });
   
@@ -175,6 +198,7 @@ export function makeAssociations() {
   Summary.hasMany(SummaryMedia, {
     as: 'media',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   SummaryRelation.belongsTo(Summary, { 
@@ -184,6 +208,7 @@ export function makeAssociations() {
   Summary.hasMany(SummaryRelation, {
     as: 'parent',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   SummaryRelation.belongsTo(Summary, { 
@@ -193,10 +218,14 @@ export function makeAssociations() {
   Summary.hasMany(SummaryRelation, {
     as: 'sibling',
     foreignKey: 'siblingId',
+    onDelete: 'cascade',
   });
 
   SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
-  Summary.hasMany(SummaryInteraction, { foreignKey: 'targetId' });
+  Summary.hasMany(SummaryInteraction, { 
+    foreignKey: 'targetId',
+    onDelete: 'cascade',
+  });
   
   SummaryInteraction.belongsTo(User, {
     foreignKey: {
@@ -214,6 +243,7 @@ export function makeAssociations() {
   Summary.hasMany(RecapSummary, {
     as: 'child',
     foreignKey: 'summaryId',
+    onDelete: 'cascade',
   });
   
   RecapSummary.belongsTo(Recap, {
@@ -223,6 +253,7 @@ export function makeAssociations() {
   Recap.hasMany(RecapSummary, {
     as: 'parent',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   Summary.belongsToMany(Recap, {
     as: 'summaries',
@@ -242,10 +273,12 @@ export function makeAssociations() {
   Recap.hasMany(RecapTranslation, {
     as: 'translations',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   Locale.hasMany(RecapTranslation, { 
     foreignKey: 'locale',
+    onDelete: 'cascade',
     sourceKey: 'code',
   });
   
@@ -256,10 +289,14 @@ export function makeAssociations() {
   Recap.hasMany(RecapMedia, {
     as: 'media',
     foreignKey: 'parentId',
+    onDelete: 'cascade',
   });
   
   RecapInteraction.belongsTo(Recap, { foreignKey: 'targetId' });
-  Recap.hasMany(RecapInteraction, { foreignKey: 'targetId' });
+  Recap.hasMany(RecapInteraction, { 
+    foreignKey: 'targetId',
+    onDelete: 'cascade',
+  });
   
   RecapInteraction.belongsTo(User, {
     foreignKey: {
@@ -271,10 +308,12 @@ export function makeAssociations() {
   // queues
   Queue.hasMany(Job, {
     foreignKey: 'queue',
+    onDelete: 'cascade',
     sourceKey: 'name',
   });
   Queue.hasMany(Worker, {
     foreignKey: 'queue',
+    onDelete: 'cascade',
     sourceKey: 'name',
   });
   Worker.hasMany(Job, {
@@ -282,6 +321,7 @@ export function makeAssociations() {
       allowNull: true,
       name: 'lockedBy',
     },
+    onDelete: 'cascade',
   });
   
 }

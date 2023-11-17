@@ -24,6 +24,11 @@ export class Credential<
   extends BaseModel<A, B>
   implements CredentialAttributes {
 
+  @Index({
+    name: 'credentials_type_value_unique_key',
+    unique: true,
+    where: { deletedAt: null },
+  })
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
