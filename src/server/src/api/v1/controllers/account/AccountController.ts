@@ -5,6 +5,7 @@ import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
 import {
   Body,
+  Delete,
   Get,
   Patch,
   Post,
@@ -18,6 +19,8 @@ import {
 } from 'tsoa';
 
 import {
+  DeleteUserRequest,
+  DeleteUserResponse,
   JWT,
   LoginRequest,
   LoginResponse,
@@ -591,6 +594,24 @@ export class AccountController {
       return { success: true };
     }
     return { success: false };
+  }
+  
+  @Delete('/')
+  @Security('jwt', ['account:write'])
+  public static async deleteUser(
+    @Request() req: ExpressRequest,
+    @Body() body: DeleteUserRequest
+  ): Promise<DeleteUserResponse> {
+    const user = await User.from(body, req.body);
+    const credential = await user.findCredential('password');
+    if (!credential) {
+      throw new AuthError('BAD_REQUEST');
+    }
+    if (!bcrypt.compareSync(body.password, credential.value)) {
+      throw new AuthError('INVALID_PASSWORD');
+    }
+    await user.destroy({ force: true });
+    return { success: true };
   }
 
 }

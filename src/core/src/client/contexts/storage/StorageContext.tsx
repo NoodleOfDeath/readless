@@ -177,7 +177,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleBadRequest = React.useCallback(async (e?: any) => {
     if (e) {
-      console.error(e); 
+      console.error(e);
       errorHandler?.(e);
     }
     if (e?.errorKey) {
@@ -300,7 +300,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const remoteValue = preferences[key];
       console.log('updating', key, remoteValue);
       if (key === 'bookmarkedSummaries') {
-        console.log('shit', Object.keys(remoteValue).length);
         try {
           loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
         } catch (e) {

@@ -193,4 +193,20 @@ router.put(
   }
 );
 
+router.delete(
+  '/',
+  // rateLimitMiddleware('1 per 3m'),
+  body('userId').isNumeric(),
+  body('password').isString(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.deleteUser(req, req.body);
+      return res.status(204).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
 export default router;

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Platform } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 import {
   Button,
@@ -12,6 +12,36 @@ import {
 import { useThirdPartyLogin } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
+
+export function BySigningUpBlock() {
+  return (
+    <View>
+      <Text 
+        caption
+        textCenter>
+        {strings.bySigningUpYouAgreeToOurTermsAndConditions}
+      </Text>
+      <View 
+        justifyCenter
+        flexRow
+        flexWrap="wrap"
+        gap={ 12 }>
+        <Button
+          caption
+          underline
+          onPress={ () => Linking.openURL('https://readless.ai/terms') }>
+          {strings.termsAndConditions}
+        </Button>
+        <Button
+          caption
+          underline
+          onPress={ () => Linking.openURL('https://readless.ai/privacy') }>
+          {strings.privacyPolicy}
+        </Button>
+      </View>
+    </View>
+  );
+}
 
 export function LoginScreen({
   route: _route,
@@ -46,32 +76,35 @@ export function LoginScreen({
           <Text color="invertText">{strings.informationWithoutTheNoise}</Text>
         </View>
         <Text textCenter>{message}</Text>
-        <Button
-          contained
-          leftIcon="apple"
-          gap={ 12 }
-          onPress={ signInWithApple }>
-          {strings.continueWithApple}
-        </Button>
-        <Button
-          contained
-          leftIcon="google"
-          gap={ 12 }
-          onPress={ signInWithGoogle }>
-          {strings.continueWithGoogle}
-        </Button>
-        <Button
-          contained
-          leftIcon="account"
-          gap={ 12 }
-          onPress={ () => navigation?.push('passwordLogin', {}) }>
-          {strings.continueWithEmail}
-        </Button>
-        <Button
-          textCenter
-          onPress={ signInWithoutAccount }>
-          {strings.continueWithoutAnAccount}
-        </Button>
+        <View pb={ 24 } gap={ 12 }>
+          <Button
+            contained
+            leftIcon="apple"
+            gap={ 12 }
+            onPress={ signInWithApple }>
+            {strings.continueWithApple}
+          </Button>
+          <Button
+            contained
+            leftIcon="google"
+            gap={ 12 }
+            onPress={ signInWithGoogle }>
+            {strings.continueWithGoogle}
+          </Button>
+          <Button
+            contained
+            leftIcon="account"
+            gap={ 12 }
+            onPress={ () => navigation?.push('passwordLogin', {}) }>
+            {strings.continueWithEmail}
+          </Button>
+          <Button
+            textCenter
+            onPress={ signInWithoutAccount }>
+            {strings.continueWithoutAnAccount}
+          </Button>
+        </View>
+        <BySigningUpBlock />
         <View flex={ 1 } />
       </View>
     </Screen>

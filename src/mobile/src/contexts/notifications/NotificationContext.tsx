@@ -134,7 +134,7 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error);
-          showToast(error?.errorKey ?? error.message);
+          showToast(['fuck', error?.errorKey ?? error.message].join('\n'));
           return;
         }
       }),

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { BySigningUpBlock } from './LoginScreen';
 import { ScreenComponent } from '../types';
 
 import {
@@ -89,6 +90,7 @@ export function RegisterScreen({
         </React.Fragment>
       )}
       {message && <Text textCenter>{message}</Text>}
+      <BySigningUpBlock />
       <Button
         onPress={ () => navigation?.replace('passwordLogin', { email }) }>
         {strings.alreadyHaveAnAccount}

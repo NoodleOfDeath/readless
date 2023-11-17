@@ -39,16 +39,6 @@ export type RegistrationRequest = JwtRequest & AliasPayload & DestructuredCreden
   anonymous?: string;
 };
 
-export type RegisterAliasRequest = JwtRequest & {
-  otherAlias: AliasPayload;
-};
-
-export type UnregisterAliasRequest = JwtRequest & {
-  otherAlias: Omit<AliasPayload, 'thirdParty'> & {
-    thirdParty?: ThirdParty;
-  }
-};
-
 export type RegistrationResponse = Omit<JwtResponse, 'token'> & {
   token?: WrappedJwt;
 };
@@ -59,19 +49,29 @@ export type RequestOtpResponse = {
   success: boolean;
 };
 
+export type VerifyOTPRequest = AliasPayload;
+
+export type VerifyOTPResponse = {
+  token: WrappedJwt;
+  userId: number;
+};
+
+export type RegisterAliasRequest = JwtRequest & {
+  otherAlias: AliasPayload;
+};
+
+export type UnregisterAliasRequest = JwtRequest & {
+  otherAlias: Omit<AliasPayload, 'thirdParty'> & {
+    thirdParty?: ThirdParty;
+  }
+};
+
 export type VerifyAliasRequest = {
   verificationCode: string;
 };
 
 export type VerifyAliasResponse = {
   success: boolean;
-};
-
-export type VerifyOTPRequest = AliasPayload;
-
-export type VerifyOTPResponse = {
-  token: WrappedJwt;
-  userId: number;
 };
 
 export type UpdateMetadataRequest = JwtRequest & {
@@ -88,6 +88,14 @@ export type UpdateCredentialRequest = JwtRequest & {
 };
 
 export type UpdateCredentialResponse = {
+  success: boolean;
+};
+
+export type DeleteUserRequest = JwtRequest & AliasPayload & {
+  password: string;
+};
+
+export type DeleteUserResponse = {
   success: boolean;
 };
 
