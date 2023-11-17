@@ -295,6 +295,10 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
         throw new AuthError('INVALID_CREDENTIALS');
       }
       const user = await User.findOne({ where: { id: token.userId } });
+      if (!user) {
+        throw new AuthError('UNKNOWN_ALIAS');
+      }
+      await user.sync(); // get profile
       return {
         profile: user?.toJSON().profile ?? {},
         token: token.wrapped,

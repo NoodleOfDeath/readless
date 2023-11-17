@@ -248,8 +248,12 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
           resetStorage(true);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
-          console.error(e);
-          showToast(e?.errorKey ?? e.message);
+          if (e) {
+            console.error(e);
+            showToast(e?.errorKey ?? e.message);
+          } else {
+            resetStorage(true);
+          }
         }
       },
       'secure-text'
