@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
-import { QueryTypes } from 'sequelize';
 import {
   Body,
   Delete,
