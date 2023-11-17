@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
 import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
+import { QueryTypes } from 'sequelize';
 import {
   Body,
   Delete,
@@ -59,6 +60,7 @@ import {
   Credential,
   User,
 } from '../../schema';
+import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 const VERIFICATION_CODE_LENGTH = process.env.VERIFICATION_CODE_LENGTH ? parseInt(process.env.VERIFICATION_CODE_LENGTH) : 16;
 
@@ -95,7 +97,7 @@ async function generateOtp(): Promise<string> {
 @SuccessResponse('204', 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Server Error')
-export class AccountController {
+export class AccountController extends BaseControllerWithPersistentStorageAccess {
 
   @Post('/register')
   public static async register(
@@ -586,10 +588,12 @@ export class AccountController {
       if (!validatePassword(body.password)) {
         throw new InternalError('Password does not meet requirements');
       }
-      const password = await user.findCredential('password');
-      if (password) {
-        await password.destroy();
-      }
+      await Credential.destroy({ 
+        where: { 
+          type: 'password', 
+          userId: user.id 
+        },
+      });
       await user.createCredential('password', body.password);
       return { success: true };
     }
@@ -610,7 +614,13 @@ export class AccountController {
     if (!bcrypt.compareSync(body.password, credential.value)) {
       throw new AuthError('INVALID_PASSWORD');
     }
-    await user.destroy();
+    await this.store.query(
+      'delete from users cascade where id = :id',
+      { 
+        replacements: { id: user.id },
+        type: QueryTypes.DELETE,
+      },
+    );
     return { success: true }
   }
 
