@@ -29,7 +29,7 @@ export default function VerifyPage() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [message, setMessage] = React.useState('Verifying...');
 
-  const [password, setPassword] = React.useState('');
+  const [newPassword, setNewPassword] = React.useState('');
   const [repeatPassword, setRepeatPassword] = React.useState('');
   const [_resetSuccess, setResetSuccess] = React.useState(false);
 
@@ -82,11 +82,11 @@ export default function VerifyPage() {
 
   const handlePasswordReset = React.useCallback(async () => {
     try {
-      if (password !== repeatPassword) {
+      if (newPassword !== repeatPassword) {
         setMessage('Passwords do not match');
         return;
       }
-      const { error } = await updateCredential({ password });
+      const { error } = await updateCredential({ newPassword });
       if (error) {
         throw error;
       }
@@ -97,7 +97,7 @@ export default function VerifyPage() {
     } finally {
       setStoredValue('userData');
     }
-  }, [password, repeatPassword, setStoredValue, updateCredential]);
+  }, [newPassword, repeatPassword, setStoredValue, updateCredential]);
 
   React.useEffect(() => {
     validateToken();
@@ -112,8 +112,8 @@ export default function VerifyPage() {
       {userData && (
         <Stack gap={ 2 }>
           <TextField
-            value={ password }
-            onChange={ (e) => setPassword(e.target.value) }
+            value={ newPassword }
+            onChange={ (e) => setNewPassword(e.target.value) }
             placeholder="Password" 
             type='password' />
           <TextField

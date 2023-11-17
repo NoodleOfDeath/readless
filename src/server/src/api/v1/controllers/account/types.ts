@@ -84,7 +84,8 @@ export type UpdateMetadataResponse = {
 };
 
 export type UpdateCredentialRequest = JwtRequest & {
-  password: string;
+  password?: string;
+  newPassword?: string;
 };
 
 export type UpdateCredentialResponse = {

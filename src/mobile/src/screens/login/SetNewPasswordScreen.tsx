@@ -22,17 +22,17 @@ export function SetNewPasswordScreen({
   } = React.useContext(StorageContext);
 
   const [success, setSuccess] = React.useState(false);
-  const [password, setPassword] = React.useState('');
+  const [newPassword, setNewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [message, setMessage] = React.useState('');
 
   const handlePasswordReset = React.useCallback(async () => {
     try {
-      if (password !== confirmPassword) {
+      if (newPassword !== confirmPassword) {
         setMessage(strings.passwordsDoNotMatch);
         return;
       }
-      const { data, error } = await updateCredential({ password });
+      const { data, error } = await updateCredential({ newPassword });
       if (error) {
         setMessage(error.message);
         return;
@@ -45,15 +45,15 @@ export function SetNewPasswordScreen({
     } catch (error) {
       console.error(error);
     }
-  }, [confirmPassword, password, setStoredValue, updateCredential]);
+  }, [confirmPassword, newPassword, setStoredValue, updateCredential]);
   
   return (
     <View p={ 24 } gap={ 12 }>
       {!success && (
         <React.Fragment>
           <TextInput
-            value={ password }
-            onChangeText={ setPassword }
+            value={ newPassword }
+            onChangeText={ setNewPassword }
             placeholder={ strings.password }
             secureTextEntry />
           <TextInput
