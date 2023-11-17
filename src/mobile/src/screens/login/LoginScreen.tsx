@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Linking, Platform } from 'react-native';
+import { Platform } from 'react-native';
 
 import {
   Button,
@@ -9,11 +9,12 @@ import {
   Text,
   View,
 } from '~/components';
-import { useThirdPartyLogin } from '~/hooks';
+import { useInAppBrowser, useThirdPartyLogin } from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
 
 export function BySigningUpBlock() {
+  const { openURL } = useInAppBrowser();
   return (
     <View>
       <Text 
@@ -29,13 +30,13 @@ export function BySigningUpBlock() {
         <Button
           caption
           underline
-          onPress={ () => Linking.openURL('https://readless.ai/terms') }>
+          onPress={ () => openURL('https://readless.ai/terms') }>
           {strings.termsAndConditions}
         </Button>
         <Button
           caption
           underline
-          onPress={ () => Linking.openURL('https://readless.ai/privacy') }>
+          onPress={ () => openURL('https://readless.ai/privacy') }>
           {strings.privacyPolicy}
         </Button>
       </View>
