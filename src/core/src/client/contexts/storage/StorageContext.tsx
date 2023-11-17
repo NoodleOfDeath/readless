@@ -300,7 +300,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const remoteValue = preferences[key];
       console.log('updating', key, remoteValue);
       if (key === 'bookmarkedSummaries') {
-        console.log('shit', Object.keys(remoteValue).length);
         try {
           loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
         } catch (e) {

@@ -9,7 +9,11 @@ import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
 
 import { ThirdParty } from '~/api';
-import { StorageContext, UserData } from '~/contexts';
+import {
+  StorageContext,
+  ToastContext,
+  UserData,
+} from '~/contexts';
 import { strings } from '~/locales';
 
 GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
@@ -51,11 +55,13 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       login, 
       registerAlias, 
       unregisterAlias,
+      deleteUser,
     },
     userData,
     setStoredValue, 
     syncWithRemotePrefs,
   } = React.useContext(StorageContext);
+  const { showToast } = React.useContext(ToastContext);
 
   const signInWithApple = React.useCallback(async () => {
     try {
@@ -224,8 +230,33 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     }
     
   }, [unregisterAlias, setStoredValue, userData]);
+
+  const deleteAccount = React.useCallback(async () => {
+    Alert.prompt(
+      strings.deleteAccount,
+      strings.areYouSureYouWantToDeleteYourAccount,
+      async (password) => {
+        try {
+          const { error } = await deleteUser({
+            password,
+            userId: userData?.userId,
+          });
+          if (error) {
+            throw error;
+          }
+          setStoredValue('userData', undefined, false);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (e: any) {
+          console.error(e);
+          showToast(e?.errorKey ?? e.message);
+        }
+      },
+      'secure-text'
+    );
+  }, [deleteUser, setStoredValue, showToast, userData?.userId]);
   
   return {
+    deleteAccount,
     linkThirdPartyAccount,
     registerEmail,
     signInWithApple,

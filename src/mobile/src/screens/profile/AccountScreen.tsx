@@ -25,6 +25,7 @@ export function AccountScreen({
   const {
     linkThirdPartyAccount,
     unlinkThirdPartyAccount,
+    deleteAccount,
   } = useThirdPartyLogin();
   
   return (
@@ -66,6 +67,16 @@ export function AccountScreen({
                 } } />
             ))}
           </TableViewSection>
+          {!userData?.unlinked && (
+            <TableViewSection>
+              <TableViewCell
+                title={ strings.deleteAccount }
+                titleTextColor="red"
+                onPress={ () => {
+                  deleteAccount(); 
+                } } />
+            </TableViewSection>
+          )}
         </TableView>
       </ScrollView>
     </Screen>
