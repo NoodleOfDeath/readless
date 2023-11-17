@@ -60,6 +60,7 @@ import {
   Credential,
   User,
 } from '../../schema';
+import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 const VERIFICATION_CODE_LENGTH = process.env.VERIFICATION_CODE_LENGTH ? parseInt(process.env.VERIFICATION_CODE_LENGTH) : 16;
 
@@ -96,7 +97,7 @@ async function generateOtp(): Promise<string> {
 @SuccessResponse('204', 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Server Error')
-export class AccountController {
+export class AccountController extends BaseControllerWithPersistentStorageAccess {
 
   @Post('/register')
   public static async register(
