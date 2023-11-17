@@ -177,7 +177,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleBadRequest = React.useCallback(async (e?: any) => {
     if (e) {
-      console.error(e); 
+      console.error(e);
       errorHandler?.(e);
     }
     if (e?.errorKey) {

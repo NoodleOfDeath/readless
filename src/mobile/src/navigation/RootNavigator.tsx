@@ -177,8 +177,11 @@ export function RootNavigator() {
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setErrorHandler((error: any) => {
+      if (!error) { 
+        return;
+      }
       console.log(error);
-      showToast(error?.errorKey ?? error?.message ?? 'Unknown error');
+      showToast(error.errorKey ?? error.message ?? error.code ?? 'Unknown error');
     });
   }, [setErrorHandler, showToast]);
   
