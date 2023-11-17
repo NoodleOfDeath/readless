@@ -610,8 +610,8 @@ export class AccountController {
     if (!bcrypt.compareSync(body.password, credential.value)) {
       throw new AuthError('INVALID_PASSWORD');
     }
-    await user.destroy({ force: true });
-    return { success: true };
+    await user.destroy();
+    return { success: true }
   }
 
 }
