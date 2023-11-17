@@ -617,7 +617,7 @@ export class AccountController {
       'delete from users cascade where id = :id',
       { 
         replacements: { id: user.id },
-        type: QueryTypes.UPDATE,
+        type: QueryTypes.DELETE,
       },
     );
     return { success: true }
