@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const thStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'อีเมลยืนยันการลบบัญชีได้ถูกส่งไปยังอีเมลของคุณแล้ว',
   aPasswordResetLinkHasBeenSentToYourEmail: 'ลิงก์รีเซ็ตรหัสผ่านได้ถูกส่งไปยังอีเมลของคุณแล้ว',
   about: 'เกี่ยวกับ',
   accessAllNews: 'เข้าถึงข่าวสารทั้งหมด',
@@ -88,6 +89,7 @@ export const thStrings: typeof enStrings = {
   exclude: 'ซ่อน',
   extractTheFacts: 'แยกข้อเท็จจริง',
   facebook: 'เฟสบุ๊ค',
+  failedToContinueWithoutAnAccount: 'ไม่สามารถดำเนินการต่อโดยไม่มีบัญชี',
   failedToSignInWithApple: 'ไม่สามารถลงชื่อเข้าใช้ด้วย Apple',
   failedToSignInWithGoogle: 'ไม่สามารถลงชื่อเข้าใช้ด้วย Google',
   favorite: 'ที่ชื่นชอบ',

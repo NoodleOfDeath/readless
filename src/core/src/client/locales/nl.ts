@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const nlStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Er is een bevestigingsmail voor het verwijderen van uw account naar uw e-mailadres verzonden',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Er is een link voor het opnieuw instellen van uw wachtwoord naar uw e-mailadres verzonden',
   about: 'Over',
   accessAllNews: 'Toegang tot al het nieuws',
@@ -88,6 +89,7 @@ export const nlStrings: typeof enStrings = {
   exclude: 'Verbergen',
   extractTheFacts: 'haal de feiten eruit',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Kan niet doorgaan zonder account',
   failedToSignInWithApple: 'Inloggen met Apple is mislukt',
   failedToSignInWithGoogle: 'Inloggen met Google is mislukt',
   favorite: 'Favoriet',

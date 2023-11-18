@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const arStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'تم إرسال رسالة تأكيد حذف الحساب إلى بريدك الإلكتروني',
   aPasswordResetLinkHasBeenSentToYourEmail: 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني',
   about: 'عن',
   accessAllNews: 'الوصول إلى جميع الأخبار',
@@ -88,6 +89,7 @@ export const arStrings: typeof enStrings = {
   exclude: 'يخفي',
   extractTheFacts: 'استخرج الحقائق',
   facebook: 'فيسبوك',
+  failedToContinueWithoutAnAccount: 'فشلت المتابعة بدون حساب',
   failedToSignInWithApple: 'فشل تسجيل الدخول مع أبل',
   failedToSignInWithGoogle: 'فشل تسجيل الدخول باستخدام جوجل',
   favorite: 'مفضل',

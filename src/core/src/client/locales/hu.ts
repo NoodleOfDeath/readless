@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const huStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'A fiók törlését megerősítő e-mailt küldtünk az Ön e-mail címére',
   aPasswordResetLinkHasBeenSentToYourEmail: 'A jelszó-visszaállítási linket elküldtük az Ön e-mail címére',
   about: 'Ról ről',
   accessAllNews: 'Hozzáférés az összes hírhez',
@@ -88,6 +89,7 @@ export const huStrings: typeof enStrings = {
   exclude: 'Elrejt',
   extractTheFacts: 'kivonni a tényeket',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Fiók nélkül nem sikerült folytatni',
   failedToSignInWithApple: 'Nem sikerült bejelentkezni az Apple-lel',
   failedToSignInWithGoogle: 'Nem sikerült bejelentkezni a Google-lal',
   favorite: 'Kedvenc',

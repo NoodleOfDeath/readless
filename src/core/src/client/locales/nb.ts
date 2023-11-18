@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const nbStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'En e-postbekreftelse for sletting av konto er sendt til e-posten din',
   aPasswordResetLinkHasBeenSentToYourEmail: 'En lenke for tilbakestilling av passord er sendt til e-posten din',
   about: 'Om',
   accessAllNews: 'Få tilgang til alle nyheter',
@@ -88,6 +89,7 @@ export const nbStrings: typeof enStrings = {
   exclude: 'Gjemme seg',
   extractTheFacts: 'trekke ut fakta',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Kunne ikke fortsette uten konto',
   failedToSignInWithApple: 'Kunne ikke logge på med Apple',
   failedToSignInWithGoogle: 'Kunne ikke logge på med Google',
   favorite: 'Favoritt',

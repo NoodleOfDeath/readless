@@ -1,5 +1,6 @@
 
 export const enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'A delete account confirmation email has been sent to your email',
   aPasswordResetLinkHasBeenSentToYourEmail: 'A password reset link has been sent to your email',
   about: 'About',
   accessAllNews: 'Access all news',
@@ -86,6 +87,7 @@ export const enStrings = {
   exclude: 'Hide',
   extractTheFacts: 'extract the facts',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Failed to continue without an account',
   failedToSignInWithApple: 'Failed to sign in with Apple',
   failedToSignInWithGoogle: 'Failed to sign in with Google',
   favorite: 'Favorite',

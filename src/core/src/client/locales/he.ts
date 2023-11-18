@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const heStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'הודעת אימייל לאישור מחיקת החשבון נשלחה לאימייל שלך',
   aPasswordResetLinkHasBeenSentToYourEmail: 'קישור לאיפוס סיסמה נשלח לאימייל שלך',
   about: 'על אודות',
   accessAllNews: 'גישה לכל החדשות',
@@ -88,6 +89,7 @@ export const heStrings: typeof enStrings = {
   exclude: 'להתחבא',
   extractTheFacts: 'לחלץ את העובדות',
   facebook: 'פייסבוק',
+  failedToContinueWithoutAnAccount: 'נכשל המשך ללא חשבון',
   failedToSignInWithApple: 'הכניסה לאפל נכשלה',
   failedToSignInWithGoogle: 'הכניסה עם Google נכשלה',
   favorite: 'אהוב',

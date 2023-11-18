@@ -9,11 +9,7 @@ import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
 
 import { ThirdParty } from '~/api';
-import {
-  StorageContext,
-  ToastContext,
-  UserData,
-} from '~/contexts';
+import { StorageContext, UserData } from '~/contexts';
 import { strings } from '~/locales';
 
 GoogleSignin.configure({ webClientId: GOOGLE_CLIENT_ID });
@@ -55,15 +51,12 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       login, 
       registerAlias, 
       unregisterAlias,
-      deleteUser,
+      requestOtp,
     },
     userData,
     setStoredValue, 
     syncWithRemotePrefs,
-    resetStorage,
   } = React.useContext(StorageContext);
-  const { showToast } = React.useContext(ToastContext);
-
   const signInWithApple = React.useCallback(async () => {
     try {
       const identityToken = await authWithApple();
@@ -133,7 +126,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       callback?.(undefined);
     } catch (error) {
       console.error(error);
-      callback?.(['Failed to continue without an account:', error].join(' '));
+      callback?.([strings.failedToContinueWithoutAnAccount, error].join(' '));
     }
   }, [login, setStoredValue, syncWithRemotePrefs, callback]);
   
@@ -232,38 +225,18 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     
   }, [unregisterAlias, setStoredValue, userData]);
 
-  const deleteAccount = React.useCallback(async () => {
-    Alert.prompt(
-      strings.deleteAccount,
-      strings.areYouSureYouWantToDeleteYourAccount,
-      async (password) => {
-        try {
-          const { error } = await deleteUser({
-            password,
-            userId: userData?.userId,
-          });
-          if (error) {
-            throw error;
-          }
-          resetStorage(true);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (e: any) {
-          if (e) {
-            console.error(e);
-            showToast(e?.errorKey ?? e.message);
-          } else {
-            resetStorage(true);
-          }
-        }
-      },
-      'secure-text'
-    );
-  }, [deleteUser, resetStorage, showToast, userData?.userId]);
+  const requestDeleteAccount = React.useCallback(async () => {
+    try {
+      await requestOtp({ deleteAccount: true });
+    } catch (e) {
+      console.error(e);
+    }
+  }, [requestOtp]);
   
   return {
-    deleteAccount,
     linkThirdPartyAccount,
     registerEmail,
+    requestDeleteAccount,
     signInWithApple,
     signInWithGoogle,
     signInWithoutAccount,

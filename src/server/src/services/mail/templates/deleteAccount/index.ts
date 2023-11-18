@@ -1,1 +1,1 @@
-export * from './ResetPasswordTemplate';
+export * from './DeleteAccountTemplate';

@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const hiStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'आपके ईमेल पर एक डिलीट अकाउंट पुष्टिकरण ईमेल भेजा गया है',
   aPasswordResetLinkHasBeenSentToYourEmail: 'आपके ईमेल पर एक पासवर्ड रीसेट लिंक भेजा गया है',
   about: 'के बारे में',
   accessAllNews: 'सभी समाचारों तक पहुंचें',
@@ -88,6 +89,7 @@ export const hiStrings: typeof enStrings = {
   exclude: 'छिपाना',
   extractTheFacts: 'तथ्य निकालें',
   facebook: 'फेसबुक',
+  failedToContinueWithoutAnAccount: 'बिना किसी खाते के जारी रखने में विफल',
   failedToSignInWithApple: 'Apple के साथ साइन इन करने में विफल',
   failedToSignInWithGoogle: 'Google से साइन इन करने में विफल',
   favorite: 'पसंदीदा',

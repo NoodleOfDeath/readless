@@ -40,6 +40,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   implements UserAttributes {
 
   profile?: Profile;
+  jwt?: JWT;
 
   // authentication methods
 
@@ -48,6 +49,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (payload.userId || opts.jwt) {
       const id = payload.userId ?? new JWT(opts.jwt).userId;
       const user = await User.findOne({ where: { id } });
+      if (opts.jwt) {
+        user.jwt = new JWT(opts.jwt);
+      }
       if (!user && !opts?.ignoreIfNotResolved) {
         throw new AuthError('INVALID_CREDENTIALS');
       }
@@ -60,7 +64,11 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         }
         return undefined;
       }
-      return await User.findOne({ where: { id: alias.userId } });
+      const user = await User.findOne({ where: { id: alias.userId } });
+      if (opts.jwt) {
+        user.jwt = new JWT(opts.jwt);
+      }
+      return user;
     }
   }
   

@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const ruStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'На ваш адрес электронной почты было отправлено письмо с подтверждением удаления учетной записи.',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Ссылка для сброса пароля была отправлена на вашу электронную почту',
   about: 'О',
   accessAllNews: 'Доступ ко всем новостям',
@@ -88,6 +89,7 @@ export const ruStrings: typeof enStrings = {
   exclude: 'Скрывать',
   extractTheFacts: 'извлечь факты',
   facebook: 'Фейсбук',
+  failedToContinueWithoutAnAccount: 'Не удалось продолжить без учетной записи.',
   failedToSignInWithApple: 'Не удалось войти в систему с помощью Apple',
   failedToSignInWithGoogle: 'Не удалось войти в систему через Google.',
   favorite: 'Любимый',

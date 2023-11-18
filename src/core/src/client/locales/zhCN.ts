@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const zhCNStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: '删除帐户确认电子邮件已发送至您的电子邮箱',
   aPasswordResetLinkHasBeenSentToYourEmail: '密码重置链接已发送至您的电子邮件',
   about: '关于',
   accessAllNews: '访问所有新闻',
@@ -88,6 +89,7 @@ export const zhCNStrings: typeof enStrings = {
   exclude: '隐藏',
   extractTheFacts: '提取事实',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: '没有帐户无法继续',
   failedToSignInWithApple: '无法使用 Apple 登录',
   failedToSignInWithGoogle: '无法使用 Google 登录',
   favorite: '最喜欢的',

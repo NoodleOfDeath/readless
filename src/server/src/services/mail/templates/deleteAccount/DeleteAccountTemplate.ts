@@ -1,16 +1,16 @@
 import html from './html';
 import { MailTemplate, MailTemplateParams } from '../base';
 
-export type ResetPasswordProps = MailTemplateParams & {
+export type DeleteAccountProps = MailTemplateParams & {
   otp: string;
 };
 
-export class ResetPasswordTemplate extends MailTemplate<ResetPasswordProps> {
+export class DeleteAccountTemplate extends MailTemplate<DeleteAccountProps> {
 
   constructor() {
     super({
       body: html,
-      subject: 'Reset your password',
+      subject: 'Delete Your Account',
     });
   }
 
