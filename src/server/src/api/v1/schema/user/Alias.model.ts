@@ -124,7 +124,7 @@ export class Alias<
     if (payload.otp) {
       const otp = await Credential.findOne({
         where: {
-          type: 'otp',
+          type: opts?.deleteAccount ? 'deleteToken' : 'otp',
           value: payload.otp,
         },
       });

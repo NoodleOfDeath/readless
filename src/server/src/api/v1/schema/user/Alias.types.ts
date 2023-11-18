@@ -29,6 +29,7 @@ export type AliasPayload = {
 
 export type FindAliasOptions = {
   jwt?: string;
+  deleteAccount?: boolean;
   ignoreIfNotResolved?: boolean;
   skipVerification?: boolean;
 };
