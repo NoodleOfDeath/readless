@@ -13,6 +13,7 @@ const router = Router();
 
 router.post(
   '/register',
+  rateLimitMiddleware('10 per 5m'),
   oneOf([
     body('email').isEmail(),
     body('eth2address'),
@@ -26,7 +27,6 @@ router.post(
     .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
-  rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.register(req, req.body);
@@ -38,7 +38,8 @@ router.post(
 );
 
 router.post(
-  '/login',
+  '/login', 
+  rateLimitMiddleware('10 per 5m'),
   oneOf([
     body('email').isEmail(),
     body('eth2address'),
@@ -52,7 +53,6 @@ router.post(
     .if(body('anonymous').not().exists())
     .isString(),
   validationMiddleware,
-  // rateLimitMiddleware('2 per 5m'),
   async (req, res) => {
     try {
       const response = await AccountController.login(req, req.body);
@@ -79,7 +79,7 @@ router.post(
 
 router.post(
   '/alias/register',
-  rateLimitMiddleware('5 per 2m'),
+  rateLimitMiddleware('5 per 5m'),
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
@@ -95,7 +95,7 @@ router.post(
 // legacy v1.17.2
 router.post(
   '/register/alias',
-  rateLimitMiddleware('5 per 2m'),
+  rateLimitMiddleware('5 per 5m'),
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
@@ -110,7 +110,6 @@ router.post(
 
 router.post(
   '/alias/unregister',
-  // rateLimitMiddleware('5 per 2m'),
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
@@ -126,7 +125,6 @@ router.post(
 // legacy v1.17.2
 router.post(
   '/unregister/alias',
-  // rateLimitMiddleware('5 per 2m'),
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
@@ -141,7 +139,6 @@ router.post(
 
 router.post(
   '/alias/verify',
-  rateLimitMiddleware('2 per 10m'),
   validationMiddleware,
   async (req, res) => {
     try {
@@ -156,7 +153,6 @@ router.post(
 // legacy v1.17.2
 router.post(
   '/verify/alias',
-  rateLimitMiddleware('2 per 10m'),
   validationMiddleware,
   async (req, res) => {
     try {
@@ -170,7 +166,7 @@ router.post(
 
 router.post(
   '/otp',
-  // rateLimitMiddleware('2 per 10m'),
+  rateLimitMiddleware('5 per 5m'),
   body('deleteAccount').isBoolean().optional(),
   validationMiddleware,
   async (req, res) => {
@@ -185,7 +181,6 @@ router.post(
 
 router.post(
   '/otp/verify',
-  rateLimitMiddleware('2 per 10m'),
   body('otp').isString(),
   body('deleteAccount').isBoolean().optional(),
   validationMiddleware,
@@ -202,7 +197,6 @@ router.post(
 // legacy v1.17.2
 router.post(
   '/verify/otp',
-  rateLimitMiddleware('2 per 10m'),
   body('otp').isString(),
   body('deleteAccount').isBoolean().optional(),
   validationMiddleware,
