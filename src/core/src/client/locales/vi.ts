@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const viStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Email xác nhận xóa tài khoản đã được gửi đến email của bạn',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn',
   about: 'Về',
   accessAllNews: 'Truy cập tất cả các tin tức',
@@ -88,6 +89,7 @@ export const viStrings: typeof enStrings = {
   exclude: 'Trốn',
   extractTheFacts: 'trích xuất sự thật',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Không thể tiếp tục nếu không có tài khoản',
   failedToSignInWithApple: 'Không đăng nhập được bằng Apple',
   failedToSignInWithGoogle: 'Không thể đăng nhập bằng Google',
   favorite: 'Yêu thích',

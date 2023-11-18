@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const caStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'S\'ha enviat un correu electrònic de confirmació d\'eliminació del compte al vostre correu electrònic',
   aPasswordResetLinkHasBeenSentToYourEmail: 'S\'ha enviat un enllaç de restabliment de la contrasenya al vostre correu electrònic',
   about: 'Sobre',
   accessAllNews: 'Accedeix a totes les notícies',
@@ -88,6 +89,7 @@ export const caStrings: typeof enStrings = {
   exclude: 'Amaga',
   extractTheFacts: 'extreure els fets',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'No s\'ha pogut continuar sense un compte',
   failedToSignInWithApple: 'No s\'ha pogut iniciar la sessió amb Apple',
   failedToSignInWithGoogle: 'No s\'ha pogut iniciar la sessió amb Google',
   favorite: 'Favorit',

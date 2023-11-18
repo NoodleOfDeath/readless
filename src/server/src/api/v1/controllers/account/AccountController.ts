@@ -39,8 +39,8 @@ import {
   UpdateMetadataResponse,
   VerifyAliasRequest,
   VerifyAliasResponse,
-  VerifyOTPRequest,
-  VerifyOTPResponse,
+  VerifyOtpRequest,
+  VerifyOtpResponse,
 } from './types';
 import {
   GoogleService,
@@ -324,7 +324,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
         return {
           profile: user.toJSON().profile ?? {}, 
           token, 
-          unlinked: true, 
+          unlinked: user.toJSON().profile?.linkedThirdPartyAccounts?.length === 0, 
           userId,
         };
       }
@@ -423,33 +423,8 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     }
     return { count, success: true };
   }
-  
-  @Post('/otp')
-  public static async requestOtp(
-    @Request() req: ExpressRequest,
-    @Body() body: RequestOtpRequest
-  ): Promise<RequestOtpResponse> {
-    const user = await User.from(body, { ignoreIfNotResolved: true });
-    if (!user) {
-      return { success: false };
-    }
-    const email = await user.findAlias('email');
-    if (!email) {
-      return { success: false };
-    }
-    await user.revokeCredential('otp');
-    const otp = await generateOtp();
-    await user.createCredential('otp', otp);
-    const emailData = email;
-    const mailer = new MailService();
-    await mailer.sendMailFromTemplate({ to: emailData.value }, 'resetPassword', {
-      email: emailData.value,
-      otp,
-    });
-    return { success: true };
-  }
 
-  @Post('/register/alias')
+  @Post('/alias/register')
   public static async registerAlias(
     @Request() req: ExpressRequest,
     @Body() body: RegisterAliasRequest
@@ -504,7 +479,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     return { userId: user.id };
   }
 
-  @Post('/unregister/alias')
+  @Post('/alias/unregister')
   public static async unregisterAlias(
     @Request() req: ExpressRequest,
     @Body() body: RegisterAliasRequest | UnregisterAliasRequest
@@ -523,7 +498,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     return { userId: user.id };
   }
   
-  @Post('/verify/alias')
+  @Post('/alias/verify')
   public static async verifyAlias(
     @Request() req: ExpressRequest,
     @Body() body: VerifyAliasRequest
@@ -545,13 +520,42 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     return { success: true };
   }
   
-  @Post('/verify/otp')
+  @Post('/otp')
+  public static async requestOtp(
+    @Request() req: ExpressRequest,
+    @Body() body: RequestOtpRequest
+  ): Promise<RequestOtpResponse> {
+    const user = await User.from(body, { ignoreIfNotResolved: true });
+    if (!user) {
+      return { success: false };
+    }
+    const email = await user.findAlias('email');
+    if (!email) {
+      return { success: false };
+    }
+    await user.revokeCredential(body.deleteAccount ? 'deleteToken' : 'otp');
+    const otp = await generateOtp();
+    await user.createCredential(body.deleteAccount ? 'deleteToken' : 'otp', otp);
+    const emailData = email;
+    const mailer = new MailService();
+    await mailer.sendMailFromTemplate(
+      { to: emailData.value }, 
+      body.deleteAccount ? 'deleteAccount' : 'resetPassword',
+      {
+        email: emailData.value,
+        otp,
+      }
+    );
+    return { success: true };
+  }
+  
+  @Post('/otp/verify')
   public static async verifyOtp(
     @Request() req: ExpressRequest,
-    @Body() body: VerifyOTPRequest
-  ): Promise<VerifyOTPResponse> {
+    @Body() body: VerifyOtpRequest
+  ): Promise<VerifyOtpResponse> {
     const user = await User.from(body, req.body);
-    const otp = await user.findCredential('otp', body.otp);
+    const otp = await user.findCredential(body.deleteAccount ? 'deleteToken' : 'otp', body.otp);
     await otp.destroy();
     if (!otp) {
       throw new AuthError('INVALID_CREDENTIALS');
@@ -559,16 +563,15 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     if (otp.expiresAt.valueOf() < Date.now()) {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
-    const userData = user;
-    const token = await JWT.as('account', userData.id);
+    const token = await JWT.as('account', user.id);
     await user.createCredential('jwt', token);
     return {
       token: token.wrapped,
-      userId: userData.id,
+      userId: user.id,
     };
   }
 
-  @Patch('/update/metadata')
+  @Patch('/metadata')
   @Security('jwt', ['standard:write'])
   public static async updateMetadata(
     @Request() req: ExpressRequest,
@@ -579,7 +582,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     return { success: true };
   }
   
-  @Put('/update/credential')
+  @Put('/credential')
   @Security('jwt', ['account:write'])
   public static async updateCredential(
     @Request() req: ExpressRequest,
@@ -605,7 +608,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
   
   @Delete('/')
   @Security('jwt', ['account:write'])
-  public static async deleteUser(
+  public static async deleteAccount(
     @Request() req: ExpressRequest,
     @Body() body: DeleteUserRequest
   ): Promise<DeleteUserResponse> {

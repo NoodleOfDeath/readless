@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const jaStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'アカウント削除の確認メールがあなたのメールアドレスに送信されました',
   aPasswordResetLinkHasBeenSentToYourEmail: 'パスワードリセットリンクがメールに送信されました',
   about: 'だいたい',
   accessAllNews: 'すべてのニュースにアクセスする',
@@ -88,6 +89,7 @@ export const jaStrings: typeof enStrings = {
   exclude: '隠れる',
   extractTheFacts: '事実を抽出する',
   facebook: 'フェイスブック',
+  failedToContinueWithoutAnAccount: 'アカウントがないと続行できませんでした',
   failedToSignInWithApple: 'Apple でのサインインに失敗しました',
   failedToSignInWithGoogle: 'Google でのサインインに失敗しました',
   favorite: 'お気に入り',

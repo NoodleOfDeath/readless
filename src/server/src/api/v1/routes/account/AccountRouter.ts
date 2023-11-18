@@ -78,12 +78,13 @@ router.post(
 );
 
 router.post(
-  '/otp',
+  '/alias/register',
+  rateLimitMiddleware('5 per 2m'),
+  body('otherAlias').isObject(),
   validationMiddleware,
-  rateLimitMiddleware('2 per 10m'),
   async (req, res) => {
     try {
-      const response = await AccountController.requestOtp(req, req.body);
+      const response = await AccountController.registerAlias(req, req.body);
       return res.json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -91,11 +92,12 @@ router.post(
   }
 );
 
+// legacy v1.17.2
 router.post(
   '/register/alias',
+  rateLimitMiddleware('5 per 2m'),
   body('otherAlias').isObject(),
   validationMiddleware,
-  // rateLimitMiddleware('5 per 2m'),
   async (req, res) => {
     try {
       const response = await AccountController.registerAlias(req, req.body);
@@ -107,10 +109,26 @@ router.post(
 );
 
 router.post(
-  '/unregister/alias',
+  '/alias/unregister',
+  // rateLimitMiddleware('5 per 2m'),
   body('otherAlias').isObject(),
   validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.unregisterAlias(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+// legacy v1.17.2
+router.post(
+  '/unregister/alias',
   // rateLimitMiddleware('5 per 2m'),
+  body('otherAlias').isObject(),
+  validationMiddleware,
   async (req, res) => {
     try {
       const response = await AccountController.unregisterAlias(req, req.body);
@@ -122,9 +140,24 @@ router.post(
 );
 
 router.post(
-  '/verify/alias',
-  validationMiddleware,
+  '/alias/verify',
   rateLimitMiddleware('2 per 10m'),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.verifyAlias(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+// legacy v1.17.2
+router.post(
+  '/verify/alias',
+  rateLimitMiddleware('2 per 10m'),
+  validationMiddleware,
   async (req, res) => {
     try {
       const response = await AccountController.verifyAlias(req, req.body);
@@ -136,10 +169,43 @@ router.post(
 );
 
 router.post(
-  '/verify/otp',
-  body('otp').isString(),
+  '/otp',
+  // rateLimitMiddleware('2 per 10m'),
+  body('deleteAccount').isBoolean().optional(),
   validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.requestOtp(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.post(
+  '/otp/verify',
   rateLimitMiddleware('2 per 10m'),
+  body('otp').isString(),
+  body('deleteAccount').isBoolean().optional(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.verifyOtp(req, req.body);
+      return res.json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+// legacy v1.17.2
+router.post(
+  '/verify/otp',
+  rateLimitMiddleware('2 per 10m'),
+  body('otp').isString(),
+  body('deleteAccount').isBoolean().optional(),
+  validationMiddleware,
   async (req, res) => {
     try {
       const response = await AccountController.verifyOtp(req, req.body);
@@ -164,6 +230,22 @@ router.get(
 );
 
 router.patch(
+  '/metadata',
+  body('key').isString(),
+  body('value').isString(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.updateMetadata(req, req.body);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+// legacy v1.17.2
+router.patch(
   '/update/metadata',
   body('key').isString(),
   body('value').isString(),
@@ -178,6 +260,22 @@ router.patch(
   }
 );
 
+router.put(
+  '/credential', 
+  rateLimitMiddleware('10 per 15m'),
+  authMiddleware('jwt', { required: true, scope: ['account:write'] }),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.updateCredential(req, req.body);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+// legacy v1.17.2
 router.put(
   '/update/credential', 
   rateLimitMiddleware('10 per 15m'),
@@ -196,13 +294,13 @@ router.put(
 router.delete(
   '/',
   // rateLimitMiddleware('1 per 3m'),
-  body('userId').isNumeric(),
-  body('password').isString(),
+  body('userId').isNumeric().optional(),
+  body('password').isString().optional(),
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.deleteUser(req, req.body);
-      return res.status(204).json(response);
+      await AccountController.deleteAccount(req, req.body);
+      return res.status(204).send();
     } catch (e) {
       return internalErrorHandler(res, e);
     }

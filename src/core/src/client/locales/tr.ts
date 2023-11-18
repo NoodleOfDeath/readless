@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const trStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'E-postanıza bir hesap silme onay e-postası gönderildi',
   aPasswordResetLinkHasBeenSentToYourEmail: 'E-postanıza şifre sıfırlama bağlantısı gönderildi',
   about: 'Hakkında',
   accessAllNews: 'Tüm haberlere erişin',
@@ -88,6 +89,7 @@ export const trStrings: typeof enStrings = {
   exclude: 'Saklamak',
   extractTheFacts: 'gerçekleri çıkarmak',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Hesap olmadan devam edilemedi',
   failedToSignInWithApple: 'Apple ile oturum açılamadı',
   failedToSignInWithGoogle: 'Google ile oturum açılamadı',
   favorite: 'Favori',

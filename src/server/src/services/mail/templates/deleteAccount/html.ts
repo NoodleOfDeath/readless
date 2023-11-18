@@ -4,7 +4,7 @@ const html = `
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Reset Password</title>
+    <title>Delete Account</title>
     <style>
       body {
         margin: 0;
@@ -53,17 +53,17 @@ const html = `
   </head>
   <body>
     <header>
-      <h1>Read Less: Reset Password</h1>
+      <h1>Read Less: Delete Account</h1>
     </header>
     <div class="container">
       <p>
-        You have requested to reset your password. Please click the link below to
-        reset your password. This link will expire in 15 minutes.
+        You have requested for your account to be deleted. Please click the link below to
+        confirm this action. This link will expire in 15 minutes.
       </p>
       <p class="center">
-        <a href="{{domain}}/verify/?otp={{otp}}">Reset Password</a>
+        <a href="{{domain}}/delete/?otp={{otp}}">Confirm Delete Account</a>
       </p>
-      <p>If you did not request a password reset, please disregard this message.</p>
+      <p>If you did not request for your account to be deleted, please disregard this message.</p>
     </div>
   </body>
 </html>

@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const idStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Email konfirmasi penghapusan akun telah dikirimkan ke email Anda',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Tautan pengaturan ulang kata sandi telah dikirimkan ke email Anda',
   about: 'Tentang',
   accessAllNews: 'Akses semua berita',
@@ -88,6 +89,7 @@ export const idStrings: typeof enStrings = {
   exclude: 'Bersembunyi',
   extractTheFacts: 'mengekstrak fakta',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Gagal melanjutkan tanpa akun',
   failedToSignInWithApple: 'Gagal masuk dengan Apple',
   failedToSignInWithGoogle: 'Gagal masuk dengan Google',
   favorite: 'Favorit',

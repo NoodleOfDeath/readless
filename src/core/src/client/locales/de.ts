@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const deStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Eine Bestätigungs-E-Mail zum Löschen des Kontos wurde an Ihre E-Mail-Adresse gesendet',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Ein Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail-Adresse gesendet',
   about: 'Um',
   accessAllNews: 'Greifen Sie auf alle Neuigkeiten zu',
@@ -88,6 +89,7 @@ export const deStrings: typeof enStrings = {
   exclude: 'Verstecken',
   extractTheFacts: 'die Fakten extrahieren',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Ohne Konto konnte nicht fortgefahren werden',
   failedToSignInWithApple: 'Anmeldung bei Apple fehlgeschlagen',
   failedToSignInWithGoogle: 'Anmeldung bei Google fehlgeschlagen',
   favorite: 'Favorit',

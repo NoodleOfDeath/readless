@@ -25,7 +25,7 @@ export class Credential<
   implements CredentialAttributes {
 
   @Index({
-    name: 'credentials_type_value_unique_key',
+    name: 'credentials_userId_type_value_unique_key',
     unique: true,
     where: { deletedAt: null },
   })
@@ -34,9 +34,9 @@ export class Credential<
     type: DataType.INTEGER,
   })
   declare userId: number;
-  
+
   @Index({
-    name: 'credentials_type_value_unique_key',
+    name: 'credentials_userId_type_value_unique_key',
     unique: true,
     where: { deletedAt: null },
   })
@@ -47,7 +47,12 @@ export class Credential<
   declare type: CredentialType;
 
   @Index({
-    name: 'credentials_type_value_unique_key',
+    name: 'credentials_unique_value_key',
+    unique: true,
+    where: { deletedAt: null, type: ['otp', 'deleteToken', 'email', 'username', 'phone'] },
+  })
+  @Index({
+    name: 'credentials_userId_type_value_unique_key',
     unique: true,
     where: { deletedAt: null },
   })

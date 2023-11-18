@@ -43,15 +43,19 @@ export type RegistrationResponse = Omit<JwtResponse, 'token'> & {
   token?: WrappedJwt;
 };
 
-export type RequestOtpRequest = Omit<AliasPayload, 'otp'>;
+export type RequestOtpRequest = Omit<AliasPayload, 'otp'> & {
+  deleteAccount?: boolean;
+};
 
 export type RequestOtpResponse = {
   success: boolean;
 };
 
-export type VerifyOTPRequest = AliasPayload;
+export type VerifyOtpRequest = AliasPayload & {
+  deleteAccount?: boolean;
+};
 
-export type VerifyOTPResponse = {
+export type VerifyOtpResponse = {
   token: WrappedJwt;
   userId: number;
 };
@@ -93,7 +97,7 @@ export type UpdateCredentialResponse = {
 };
 
 export type DeleteUserRequest = JwtRequest & AliasPayload & {
-  password: string;
+  password?: string;
 };
 
 export type DeleteUserResponse = {
