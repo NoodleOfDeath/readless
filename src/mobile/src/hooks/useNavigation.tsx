@@ -4,6 +4,8 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation as useRNNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { useInAppBrowser } from './useInAppBrowser';
+
 import { 
   PublicCategoryAttributes, 
   PublicPublisherAttributes,
@@ -22,6 +24,7 @@ export function useNavigation() {
   const { emitStorageEvent } = usePlatformTools();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useRNNavigation<Navigation>();
+  const { openURL } = useInAppBrowser();
   
   const { 
     preferredReadingFormat, 
@@ -76,6 +79,9 @@ export function useNavigation() {
     }
     if (route === 'verify') {
       navigate('verifyOtp', { code: params['code'], otp: params['otp'] }, stackNav);
+    } else
+    if (route === 'delete') {
+      openURL(url); 
     } else
     if (route === 'read') {
       const summary = Number.parseInt(params['s'] ?? '0');
