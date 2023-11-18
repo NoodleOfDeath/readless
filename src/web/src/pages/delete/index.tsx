@@ -6,6 +6,7 @@ import {
   Stack,
 } from '@mui/material';
 
+import { AuthError } from '~/api';
 import Layout from '~/components/Layout';
 import { StorageContext, UserData } from '~/contexts';
 import { useRouter } from '~/hooks';
@@ -39,7 +40,7 @@ export default function VerifyPage() {
       if (otp) {
         const { data, error } = await verifyOtp({ deleteAccount: true, otp });
         if (error) {
-          setMessage('Error, bad request');
+          setMessage((error as AuthError).errorKey ?? 'Error, bad request');
           setError(true);
           return;
         }
@@ -48,11 +49,11 @@ export default function VerifyPage() {
           setMessage('Are you sure you want to delete your account? This is not reversable.');
         }
       } else {
-        setMessage('Error, bad request');
+        setMessage('Missing token');
         setError(true);
       }
     } catch (e) {
-      setMessage('Error, bad request');
+      setMessage((e as AuthError).errorKey ?? 'Error, bad request');
       setError(true);
     } finally {
       setLoading(false);
