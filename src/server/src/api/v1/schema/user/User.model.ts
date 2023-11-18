@@ -150,7 +150,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (type === 'password') {
       value = bcrypt.hashSync(value, process.env.PASSWORD_HASH_ROUNDS || 10);
     } else
-    if (type === 'otp') {
+    if (type === 'otp' || type === 'deleteToken') {
       expiresAt = new Date(Date.now() + ms('15m'));
     }
     return await Credential.create({ 

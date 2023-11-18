@@ -556,11 +556,11 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
   ): Promise<VerifyOtpResponse> {
     const user = await User.from(body, req.body);
     const otp = await user.findCredential(body.deleteAccount ? 'deleteToken' : 'otp', body.otp);
+    await otp.destroy();
     if (!otp) {
       throw new AuthError('INVALID_CREDENTIALS');
     }
-    await otp.destroy();
-    if (otp.expiresAt.valueOf() < Date.now()) {
+    if (otp.expiresAt && (otp.expiresAt.valueOf() < Date.now())) {
       throw new AuthError('EXPIRED_CREDENTIALS');
     }
     const token = await JWT.as('account', user.id);
