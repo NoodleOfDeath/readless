@@ -59,7 +59,12 @@ const html = `
       <p>
         Thank you for signing up! Make sure to follow us on social media to get the latest updates and news!
       </p>
-      <p>
+      <p class="center">
+        <a href="https://www.tiktok.com/@readless.ai">
+          TikTok
+        </a>
+      </p>
+      <p class="center">
         <a href="https://discord.gg/2gw3dP2a4u">
           Discord
         </a>

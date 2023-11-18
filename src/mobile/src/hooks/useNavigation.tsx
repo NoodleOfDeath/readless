@@ -120,7 +120,7 @@ export function useNavigation() {
         displayName: '', icon: '', name: category, 
       }, stackNav);
     } 
-  }, [navigate, search, openSummary, openPublisher, openCategory]);
+  }, [navigate, openURL, openSummary, search, openPublisher, openCategory]);
   
   return {
     navigate,
