@@ -91,10 +91,10 @@ export default function VerifyPage() {
         throw error;
       }
       setMessage('Success! You may now login.');
+      setStoredValue('userData');
       setResetSuccess(true);
     } catch (e) {
       setMessage('Error, bad request');
-    } finally {
       setStoredValue('userData');
     }
   }, [newPassword, repeatPassword, setStoredValue, updateCredential]);
