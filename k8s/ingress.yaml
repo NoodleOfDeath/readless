@@ -29,22 +29,32 @@ metadata:
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: |
-      https://www.readless.ai/$1
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $FLAGS "";
+      if ($request_uri = '/.well-known/assetlinks.json') {
+        set $FLAGS "W";
+      }
+      if ($host = 'readless.ai') {
+        set $FLAGS "${FLAGS}X";
+      }
+      if ($FLAGS !~ "W") {
+        rewrite ^ https://www.readless.ai$request_uri permanent;
+      }
 spec:
   tls:
     - hosts:
         - readless.ai
       secretName: tls-readless.ai
-      secretName: tls-www.readless.ai
   rules:
-    - http:
+    - host: readless.ai
+      http:
         paths:
-          - path: /(.*)
-            pathType: Prefix
+          - path: /
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: http-svc
+                name: readless-web-prod
                 port:
                   number: 80
 ---
@@ -108,36 +118,6 @@ spec:
                 name: readless-applink-prod
                 port:
                   number: 80
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: serge
-#   namespace: ingress-nginx
-#   annotations:
-#     kubernetes.io/ingress.class: nginx
-#     nginx.org/websocket-services: serge
-#     nginx.ingress.kubernetes.io/auth-type: basic
-#     # name of the secret that contains the user/password definitions
-#     nginx.ingress.kubernetes.io/auth-secret: serge-auth
-#     # message to display with an appropriate context why the authentication is required
-#     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
-# spec:
-#   tls:
-#     - hosts:
-#         - llama.readless.ai
-#       secretName: tls-llama.readless.ai
-#   rules:
-#     - host: llama.readless.ai
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: serge
-#                 port:
-#                   number: 8008
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
