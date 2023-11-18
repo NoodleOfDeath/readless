@@ -2,6 +2,7 @@ import { Transporter, createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 import { VerifySubscriptionTemplate, WelcomeTemplate } from './templates';
+import { DeleteAccountTemplate } from './templates/deleteAccount/DeleteAccountTemplate';
 import { ResetPasswordTemplate } from './templates/resetPassword/ResetPasswordTemplate';
 import { VerifyEmailTemplate } from './templates/verifyEmail/VerifyEmailTemplate';
 import { Optional } from '../../types';
@@ -10,6 +11,7 @@ import { BaseService } from '../base';
 export type MailServiceOptions = SMTPTransport.Options;
 
 const TEMPLATES = { 
+  deleteAccount: DeleteAccountTemplate,
   resetPassword: ResetPasswordTemplate,
   verifyEmail: VerifyEmailTemplate,
   verifySubscription: VerifySubscriptionTemplate,

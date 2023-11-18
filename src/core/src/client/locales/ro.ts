@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const roStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Un e-mail de confirmare a ștergerii contului a fost trimis la adresa dvs. de e-mail',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Un link de resetare a parolei a fost trimis la adresa dvs. de e-mail',
   about: 'Despre',
   accessAllNews: 'Accesați toate știrile',
@@ -88,6 +89,7 @@ export const roStrings: typeof enStrings = {
   exclude: 'Ascunde',
   extractTheFacts: 'extrage faptele',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Nu s-a putut continua fără cont',
   failedToSignInWithApple: 'Nu s-a putut conecta cu Apple',
   failedToSignInWithGoogle: 'Nu s-a putut conecta cu Google',
   favorite: 'Favorit',

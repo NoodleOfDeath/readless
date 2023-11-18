@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const hrStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'E-pošta s potvrdom brisanja računa poslana je na vašu e-poštu',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Veza za ponovno postavljanje lozinke poslana je na vašu e-poštu',
   about: 'Oko',
   accessAllNews: 'Pristup svim novostima',
@@ -88,6 +89,7 @@ export const hrStrings: typeof enStrings = {
   exclude: 'Sakriti',
   extractTheFacts: 'izvući činjenice',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Nastavak bez računa nije uspio',
   failedToSignInWithApple: 'Prijava s Appleom nije uspjela',
   failedToSignInWithGoogle: 'Prijava s Googleom nije uspjela',
   favorite: 'omiljena',

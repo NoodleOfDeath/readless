@@ -1,6 +1,7 @@
 import { DatedAttributes } from '../types';
 
 export const CREDENTIAL_TYPES = {
+  deleteToken: 'deleteToken',
   eth2SignedMessage: 'eth2SignedMessage',
   jwt: 'jwt',
   otp: 'otp',

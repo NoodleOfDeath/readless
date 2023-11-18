@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const svStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Ett e-postmeddelande med bekräftelse på radering av konto har skickats till din e-post',
   aPasswordResetLinkHasBeenSentToYourEmail: 'En länk för återställning av lösenord har skickats till din e-post',
   about: 'Handla om',
   accessAllNews: 'Få tillgång till alla nyheter',
@@ -88,6 +89,7 @@ export const svStrings: typeof enStrings = {
   exclude: 'Dölj',
   extractTheFacts: 'ta fram fakta',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Det gick inte att fortsätta utan ett konto',
   failedToSignInWithApple: 'Det gick inte att logga in med Apple',
   failedToSignInWithGoogle: 'Det gick inte att logga in med Google',
   favorite: 'Favorit',

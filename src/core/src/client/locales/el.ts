@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const elStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Ένα email επιβεβαίωσης διαγραφής λογαριασμού έχει σταλεί στο email σας',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Ένας σύνδεσμος επαναφοράς κωδικού πρόσβασης έχει σταλεί στο email σας',
   about: 'Σχετικά με',
   accessAllNews: 'Πρόσβαση σε όλες τις ειδήσεις',
@@ -88,6 +89,7 @@ export const elStrings: typeof enStrings = {
   exclude: 'Κρύβω',
   extractTheFacts: 'εξάγετε τα γεγονότα',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Αποτυχία συνέχισης χωρίς λογαριασμό',
   failedToSignInWithApple: 'Αποτυχία σύνδεσης με την Apple',
   failedToSignInWithGoogle: 'Αποτυχία σύνδεσης με το Google',
   favorite: 'Αγαπημένη',

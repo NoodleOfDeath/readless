@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const zhTWStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: '刪除帳戶確認電子郵件已發送至您的電子郵件信箱',
   aPasswordResetLinkHasBeenSentToYourEmail: '密碼重設連結已發送至您的電子郵件',
   about: '關於',
   accessAllNews: '訪問所有新聞',
@@ -88,6 +89,7 @@ export const zhTWStrings: typeof enStrings = {
   exclude: '隱藏',
   extractTheFacts: '提取事實',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: '沒有帳戶無法繼續',
   failedToSignInWithApple: '無法使用 Apple 登入',
   failedToSignInWithGoogle: '無法使用 Google 登入',
   favorite: '最喜歡的',

@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const fiStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Sähköpostiisi on lähetetty tilin poistamisen vahvistussähköposti',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Salasanan palautuslinkki on lähetetty sähköpostiisi',
   about: 'Noin',
   accessAllNews: 'Pääsy kaikkiin uutisiin',
@@ -88,6 +89,7 @@ export const fiStrings: typeof enStrings = {
   exclude: 'Piilottaa',
   extractTheFacts: 'poimi tosiasiat',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Jatkaminen ilman tiliä epäonnistui',
   failedToSignInWithApple: 'Kirjautuminen Applella epäonnistui',
   failedToSignInWithGoogle: 'Kirjautuminen Googlella epäonnistui',
   favorite: 'Suosikki',

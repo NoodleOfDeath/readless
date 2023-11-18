@@ -11,7 +11,7 @@ import {
   TableViewCell,
   TableViewSection,
 } from '~/components';
-import { StorageContext } from '~/contexts';
+import { StorageContext, ToastContext } from '~/contexts';
 import { useThirdPartyLogin } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -21,12 +21,22 @@ export function AccountScreen({
 }: ScreenComponent<'account'>) {
   
   const { userData } = React.useContext(StorageContext);
+  const { showToast } = React.useContext(ToastContext);
   
   const {
     linkThirdPartyAccount,
     unlinkThirdPartyAccount,
-    deleteAccount,
+    requestDeleteAccount,
   } = useThirdPartyLogin();
+
+  const handleRequestDeleteAccount = React.useCallback(async () => {
+    try {
+      await requestDeleteAccount();
+      showToast(strings.aDeleteAccountConfirmationEmailHasBeenSentToYourEmail);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [requestDeleteAccount, showToast]);
   
   return (
     <Screen>
@@ -73,7 +83,7 @@ export function AccountScreen({
                 title={ strings.deleteAccount }
                 titleTextColor="red"
                 onPress={ () => {
-                  deleteAccount(); 
+                  handleRequestDeleteAccount();
                 } } />
             </TableViewSection>
           )}

@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const koStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: '계정 삭제 확인 이메일이 귀하의 이메일로 전송되었습니다',
   aPasswordResetLinkHasBeenSentToYourEmail: '비밀번호 재설정 링크가 귀하의 이메일로 전송되었습니다',
   about: '에 대한',
   accessAllNews: '모든 뉴스에 액세스',
@@ -88,6 +89,7 @@ export const koStrings: typeof enStrings = {
   exclude: '숨다',
   extractTheFacts: '사실을 추출하다',
   facebook: '페이스북',
+  failedToContinueWithoutAnAccount: '계정 없이 계속할 수 없습니다.',
   failedToSignInWithApple: 'Apple로 로그인하지 못했습니다.',
   failedToSignInWithGoogle: 'Google로 로그인하지 못했습니다.',
   favorite: '가장 좋아하는',

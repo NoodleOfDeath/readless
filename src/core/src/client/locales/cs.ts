@@ -2,6 +2,7 @@
 import { enStrings } from './en';
 
 export const csStrings: typeof enStrings = {
+  aDeleteAccountConfirmationEmailHasBeenSentToYourEmail: 'Na váš e-mail byl odeslán e-mail s potvrzením o smazání účtu',
   aPasswordResetLinkHasBeenSentToYourEmail: 'Na váš e-mail byl odeslán odkaz pro obnovení hesla',
   about: 'O',
   accessAllNews: 'Přístup ke všem novinkám',
@@ -88,6 +89,7 @@ export const csStrings: typeof enStrings = {
   exclude: 'Skrýt',
   extractTheFacts: 'extrahovat fakta',
   facebook: 'Facebook',
+  failedToContinueWithoutAnAccount: 'Bez účtu se nepodařilo pokračovat',
   failedToSignInWithApple: 'Nepodařilo se přihlásit pomocí Apple',
   failedToSignInWithGoogle: 'Nepodařilo se přihlásit pomocí Google',
   favorite: 'Oblíbený',
