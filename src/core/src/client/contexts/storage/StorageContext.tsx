@@ -53,6 +53,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const ready = React.useMemo(() => syncState.hasLoadedLocalState && syncState.hasSyncedWithRemote, [syncState.hasLoadedLocalState, syncState.hasSyncedWithRemote]);
   
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
+
+  const currentStreak = React.useMemo(() => storage.userData?.profile?.stats?.streak, [storage.userData?.profile?.stats?.streak]);
+  const longestStreak = React.useMemo(() => storage.userData?.profile?.stats?.longestStreak, [storage.userData?.profile?.stats?.longestStreak]);
+
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
   
@@ -647,6 +651,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         bookmarkSummary,
         categories,
         categoryIsFavorited,
+        currentStreak,
         enablePush,
         excludeCategory,
         excludeFilter,
@@ -665,6 +670,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         isFollowingCategory,
         isFollowingPublisher,
         loadedInitialUrl,
+        longestStreak,
         publisherIsFavorited,
         publishers,
         readRecap,

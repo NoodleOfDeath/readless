@@ -36,7 +36,7 @@ export function orderByToItems(orderBy: string | string[]): OrderItem[] {
 // Model Types
 
 // System
-export * from './system/Query.types';
+export * from './system/RequestLog.types';
 export * from './system/RateLimit.types';
 export * from './system/Cache.types';
 export * from './system/log/SystemLog.types';

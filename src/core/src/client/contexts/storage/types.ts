@@ -12,6 +12,7 @@ import {
   ReadingFormat,
   RecapAttributes,
   RequestParams,
+  Streak,
   SupportedLocale,
 } from '~/api';
 
@@ -326,6 +327,9 @@ export type StorageContextType = Storage & SyncState & {
   loadedInitialUrl?: boolean;
   setLoadedInitialUrl: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   
+  currentStreak?: Streak;
+  longestStreak?: Streak;
+
   categories?: Record<string, PublicCategoryAttributes>;
   setCategories: React.Dispatch<React.SetStateAction<Record<string, PublicCategoryAttributes> | undefined>>;
   publishers?: Record<string, PublicPublisherAttributes>;

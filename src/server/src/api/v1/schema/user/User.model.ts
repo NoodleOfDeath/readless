@@ -19,9 +19,9 @@ import {
   InteractionType,
   MetadataType,
   Profile,
-  Query,
   QueryFactory,
   RefUserRole,
+  RequestLog,
   Role,
   Streak,
   Summary,
@@ -315,7 +315,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   public async getStats(): Promise<UserStats> {
-    const lastSeen = (await Query.findOne({ 
+    const lastSeen = (await RequestLog.findOne({ 
       order: [['createdAt', 'desc']], 
       where: { userId: this.id },
     }))?.createdAt;

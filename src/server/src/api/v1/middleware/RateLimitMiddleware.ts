@@ -3,8 +3,8 @@ import ms from 'ms';
 
 import { AuthError, internalErrorHandler } from './internal-errors';
 import {
-  Query,
   RateLimit,
+  RequestLog,
   User,
 } from '../schema';
 
@@ -53,7 +53,7 @@ export const rateLimitMiddleware = (
         res.status(200).send('OK');
         return;
       }
-      await Query.create({
+      await RequestLog.create({
         appVersion,
         locale,
         path,

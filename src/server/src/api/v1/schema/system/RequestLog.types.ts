@@ -1,6 +1,6 @@
 import { DatedAttributes } from '../types';
 
-export type QueryAttributes = DatedAttributes & {
+export type RequestLogAttributes = DatedAttributes & {
   remoteAddr: string;
   path: string;
   userAgent?: string;
@@ -10,7 +10,7 @@ export type QueryAttributes = DatedAttributes & {
   userId?: number;
 };
 
-export type QueryCreationAttributes = Partial<DatedAttributes> & { 
+export type RequestLogCreationAttributes = Partial<DatedAttributes> & { 
   remoteAddr: string;
   path: string;
   userAgent?: string;

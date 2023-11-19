@@ -12,7 +12,11 @@ import {
 
 import { StorageContext } from '../../core';
 
-import { SYSTEM_FONT, Screen } from '~/components';
+import {
+  SYSTEM_FONT,
+  Screen,
+  View,
+} from '~/components';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import {
@@ -74,22 +78,24 @@ export function HomeScreen({
 
   return (
     <Screen>
-      <Tab.Navigator 
-        screenOptions={ {
-          tabBarAllowFontScaling: true,
-          tabBarLabelStyle: { fontFamily: SYSTEM_FONT },
-          tabBarScrollEnabled: true,
-          tabBarStyle: { backgroundColor: theme.navContainerTheme.colors.background },
-        } }
-        initialRouteName={ followCount > 0 ? 'yourNews' : 'topStories' }>
-        { tabs.map((tab) => (
-          <Tab.Screen
-            key={ String(tab.name) }
-            { ...tab }
-            name={ tab.name }
-            options={ { ...tab.options } } />
-        )) }
-      </Tab.Navigator>
+      <View flex={ 1 }>
+        <Tab.Navigator 
+          screenOptions={ {
+            tabBarAllowFontScaling: true,
+            tabBarLabelStyle: { fontFamily: SYSTEM_FONT },
+            tabBarScrollEnabled: true,
+            tabBarStyle: { backgroundColor: theme.navContainerTheme.colors.background },
+          } }
+          initialRouteName={ followCount > 0 ? 'yourNews' : 'topStories' }>
+          { tabs.map((tab) => (
+            <Tab.Screen
+              key={ String(tab.name) }
+              { ...tab }
+              name={ tab.name }
+              options={ { ...tab.options } } />
+          )) }
+        </Tab.Navigator>
+      </View>
     </Screen>
   );
 

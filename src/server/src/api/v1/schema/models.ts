@@ -1,5 +1,5 @@
 // system
-export * from './system/Query.model';
+export * from './system/RequestLog.model';
 export * from './system/RateLimit.model';
 export * from './system/Cache.model';
 
