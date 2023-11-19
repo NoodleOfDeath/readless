@@ -130,7 +130,6 @@ export type Storage = {
   pushNotifications?: { [key: string]: PushNotificationSettings };
   fcmToken?: string;
   userData?: UserData;
-  userStats?: UserStats;
   
   // summary state
   readSummaries?: { [key: number]: DatedEvent<boolean> };
@@ -202,7 +201,6 @@ export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'st
   summaryTranslations: 'object',
   triggerWords: 'object',
   userData: 'object',
-  userStats: 'object',
   uuid: 'string',
   viewedFeatures: 'object',
 };
@@ -229,17 +227,6 @@ export type StorageState<E extends StorageEventName> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any;
 
-export type Streak = {
-  start: Date;
-  length: number;
-};
-
-export type UserStats = {
-  lastSeen?: Date;
-  streak?: Streak;
-  longestStreak?: Streak;
-};
-
 export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'colorScheme',
   'compactSummaries',
@@ -261,7 +248,6 @@ export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'followedCategories',
   'favoritedCategories',
   'excludedCategories',
-  'userStats',
 ];
 
 export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];

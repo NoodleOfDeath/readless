@@ -7,6 +7,7 @@ export type QueryAttributes = DatedAttributes & {
   appVersion?: string;
   locale?: string;
   platform?: string;
+  userId?: number;
 };
 
 export type QueryCreationAttributes = Partial<DatedAttributes> & { 
@@ -16,4 +17,5 @@ export type QueryCreationAttributes = Partial<DatedAttributes> & {
   appVersion?: string;
   locale?: string;
   platform?: string;
+  userId?: number;
 };

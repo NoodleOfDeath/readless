@@ -227,6 +227,7 @@ router.patch(
   '/metadata',
   body('key').isString(),
   body('value').isString(),
+  body('type').isString().optional(),
   validationMiddleware,
   async (req, res) => {
     try {
@@ -243,6 +244,7 @@ router.patch(
   '/update/metadata',
   body('key').isString(),
   body('value').isString(),
+  body('type').isString().optional(),
   validationMiddleware,
   async (req, res) => {
     try {

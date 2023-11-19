@@ -37,5 +37,8 @@ export class Query<A extends QueryAttributes = QueryAttributes, B extends QueryC
   
   @Column({ type: DataType.STRING })
   declare platform?: string;
+  
+  @Column({ type: DataType.INTEGER })
+  declare userId?: number;
 
 }

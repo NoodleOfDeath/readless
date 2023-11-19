@@ -238,4 +238,6 @@ export class Publisher<
 
   declare sentiment?: number;
 
+  icon?: string;
+
 }

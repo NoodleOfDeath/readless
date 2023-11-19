@@ -11,6 +11,7 @@ import {
   Publisher,
   PublisherInteraction,
   PublisherTranslation,
+  Query,
   Queue,
   Recap,
   RecapInteraction,
@@ -63,6 +64,17 @@ export function makeAssociations() {
   });
   Service.hasMany(ServiceStatus, {
     foreignKey: 'serviceId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade', 
+  });
+  
+  Query.belongsTo(User, {
+    foreignKey: 'userId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade', 
+  });
+  User.hasMany(Query, {
+    foreignKey: 'userId',
     onDelete: 'cascade',
     onUpdate: 'cascade', 
   });
