@@ -2,7 +2,11 @@ import { Request, RequestHandler } from 'express';
 import ms from 'ms';
 
 import { AuthError, internalErrorHandler } from './internal-errors';
-import { Query, RateLimit } from '../schema';
+import {
+  Query,
+  RateLimit,
+  User,
+} from '../schema';
 
 export type Duration = `${number}${'ms'|'s'|'m'|'h'|'d'|'w'|'M'|'y'}`;
 export type RateLimitString = `${number}${'/'|'every'|'per'}${Duration}`;
@@ -44,6 +48,7 @@ export const rateLimitMiddleware = (
       const platform = req.get('x-platform');
       const uuid = req.get('x-uuid');
       const userAgent = req.get('user-agent');
+      const user = await User.from(req.body, { ignoreIfNotResolved: true });
       if (/kube-probe/i.test(userAgent)) {
         res.status(200).send('OK');
         return;
@@ -55,6 +60,7 @@ export const rateLimitMiddleware = (
         platform,
         remoteAddr: [uuid, req.ip].filter(Boolean).join('-'),
         userAgent,
+        userId: user?.id,
       });
       const key = path ? [req.ip, path].join(':') : req.ip;
       const limit = await RateLimit.findOne({ where: { key } });
